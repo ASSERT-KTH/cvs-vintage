@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.headercache;
 
 import org.columba.core.xml.XmlElement;
@@ -23,10 +24,9 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.ColumbaHeader;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.Vector;
-
 
 /**
  *
@@ -39,16 +39,28 @@ import java.util.Vector;
 public class CachedHeaderfields {
     protected static XmlElement headercache;
 
+    static {
+        // see if we have to cache additional headerfields
+        // which are added by the user
+        XmlElement options = MailConfig.get("options").getElement("/options");
+        headercache = options.getElement("headercache");
+
+        if (headercache == null) {
+            // create xml-node
+            headercache = new XmlElement("headercache");
+            options.addElement(headercache);
+        }
+    }
+    
     // internally used headerfields
     // these are all boolean values, which are saved using
     // a single int value
-    public static String[] INTERNAL_COMPRESSED_HEADERFIELDS = {
+    public static final String[] INTERNAL_COMPRESSED_HEADERFIELDS = {
         
         // message flags
         "columba.flags.seen", "columba.flags.recent", "columba.flags.answered",
         "columba.flags.flagged", "columba.flags.expunged", "columba.flags.draft",
         
-
         //	true, if message has attachments, false otherwise
         "columba.attachment", 
         //	true/false
@@ -57,35 +69,28 @@ public class CachedHeaderfields {
 
     // this internally used headerfields can be of every basic
     // type, including String, Integer, Boolean, Date, etc.
-    public static String[] INTERNAL_HEADERFIELDS = {
+    public static final String[] INTERNAL_HEADERFIELDS = {
         
         // priority as integer value
         "columba.priority",
-        
 
         // short from, containing only name of person
         "columba.from",
-        
 
         // host from which this message was downloaded
         "columba.host",
-        
 
         // date
         "columba.date",
-        
 
         // size of message
         "columba.size",
-        
 
         // properly decoded subject
         "columba.subject",
-        
 
         // message color
         "columba.color",
-        
 
         // account ID
         "columba.accountuid"
@@ -97,34 +102,25 @@ public class CachedHeaderfields {
     // -> whitespace separated list of additionally
     // -> to be cached headerfields
     // -----> only for power-users who want to tweak their search speed
-    public static String[] DEFAULT_HEADERFIELDS = {
+    public static final String[] DEFAULT_HEADERFIELDS = {
         "Subject", "From", "To", "Cc", "Date", "Message-Id", "In-Reply-To",
         "References", "Content-Type"
     };
-    public static String[] POP3_HEADERFIELDS = {
+    
+    public static final String[] POP3_HEADERFIELDS = {
         "Subject", "From", "columba.date", "columba.size",
         
-
         // POP3 message UID
         "columba.pop3uid",
-        
 
         // was this message already fetched from the server?
         "columba.alreadyfetched"
     };
 
-    public CachedHeaderfields() {
-        //		see if we have to cache additional headerfields
-        // which are added by the user
-        XmlElement options = MailConfig.get("options").getElement("/options");
-        headercache = options.getElement("headercache");
-
-        if (headercache == null) {
-            // create xml-node
-            headercache = new XmlElement("headercache");
-            options.addElement(headercache);
-        }
-    }
+    /**
+     * No need for creating instances of this class.
+     */
+    private CachedHeaderfields() {}
 
     /**
      *
@@ -155,14 +151,13 @@ public class CachedHeaderfields {
         }
 
         // copy all user defined headerfields
-        String[] userList = (String[]) getUserDefinedHeaderfieldArray();
+        String[] userList = getUserDefinedHeaderfields();
 
         if (userList != null) {
             for (int i = 0; i < userList.length; i++) {
-                String s = (String) userList[i];
-                Object item = h.get(s);
+                Object item = h.get(userList[i]);
 
-                strippedHeader.set(s, item);
+                strippedHeader.set(userList[i], item);
             }
         }
 
@@ -172,12 +167,11 @@ public class CachedHeaderfields {
     /**
      * @return array containing all user defined headerfields
      */
-    public static String[] getUserDefinedHeaderfieldArray() {
+    public static String[] getUserDefinedHeaderfields() {
+        List list = new LinkedList();
         String additionalHeaderfields = headercache.getAttribute("headerfields");
-
-        if ((additionalHeaderfields != null) &&
-                (additionalHeaderfields.length() > 0)) {
-            List list = new Vector();
+        if (additionalHeaderfields != null &&
+                additionalHeaderfields.length() > 0) {
             StringTokenizer tok = new StringTokenizer(additionalHeaderfields,
                     " ");
 
@@ -185,38 +179,23 @@ public class CachedHeaderfields {
                 String s = (String) tok.nextToken();
                 list.add(s);
             }
-
-            String[] stringList = new String[list.size()];
-
-            for (int i = 0; i < list.size(); i++) {
-                stringList[i] = (String) list.get(i);
-            }
-
-            return stringList;
         }
-
-        return new String[] {};
+        return (String[])list.toArray(new String[0]);
     }
 
     /**
      * @return array containing default + user-defined headerfields
      */
-    public static String[] getCachedHeaderfieldArray() {
-        List list = new Vector(Arrays.asList(DEFAULT_HEADERFIELDS));
+    public static String[] getCachedHeaderfields() {
+        List list = new LinkedList(Arrays.asList(DEFAULT_HEADERFIELDS));
 
-        String[] userList = getUserDefinedHeaderfieldArray();
+        String[] userList = getUserDefinedHeaderfields();
 
         if (userList != null) {
             list.addAll(Arrays.asList(userList));
         }
 
-        String[] stringList = new String[list.size()];
-
-        for (int i = 0; i < list.size(); i++) {
-            stringList[i] = (String) list.get(i);
-        }
-
-        return stringList;
+        return (String[])list.toArray(new String[0]);
     }
 
     public static String[] getDefaultHeaderfields() {

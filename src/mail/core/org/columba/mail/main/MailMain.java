@@ -121,6 +121,5 @@ public class MailMain extends DefaultMain {
         plugin = new SavePOP3CachePlugin();
         MainInterface.backgroundTaskManager.register(plugin);
         ShutdownManager.getShutdownManager().register(plugin);
-        new CachedHeaderfields();
     }
 }
