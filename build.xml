@@ -141,6 +141,8 @@
         dest="${tomcat.build}/test/testlist.txt"/>
     <copyfile src="../jakarta-tools/moo.jar"
         dest="${tomcat.build}/test/lib/moo.jar"/>
+    <copyfile src="../jakarta-tools/ant.jar"
+        dest="${tomcat.build}/test/lib/ant.jar"/>
     <copyfile src="../jakarta-tools/moo.jar"
         dest="${tomcat.build}/test/webpages/WEB-INF/lib/moo.jar"/>
 

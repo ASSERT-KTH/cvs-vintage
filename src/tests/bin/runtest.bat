@@ -1,5 +1,5 @@
 @echo off
-rem $Id: runtest.bat,v 1.5 2000/01/02 04:11:05 rubys Exp $
+rem $Id: runtest.bat,v 1.6 2000/01/11 16:04:29 rubys Exp $
 rem Startup batch file for servlet runner.
 
 rem This batch file written and tested under Windows NT
@@ -15,7 +15,7 @@ set sysJars=%JAVA_HOME%\lib\tools.jar
 
 set cp=%CLASSPATH%
 
-set CLASSPATH=classes;lib\moo.jar;%miscJars%;%sysJars%
+set CLASSPATH=classes;lib\ant.jar;lib\moo.jar;%miscJars%;%sysJars%
 
 set TOMCAT_HOME=..
 set TOM_CLASSPATH=%TOMCAT_HOME%\webserver.jar;%TOM_CLASSPATH%
@@ -39,11 +39,7 @@ set CLASSPATH=%CLASSPATH%;%cp%
 :next
 echo Using classpath: %CLASSPATH%
 
-start java org.apache.tomcat.shell.Startup %1 %2 %3 %4 %5 %6 %7 %8 %9
-rem java org.apache.tomcat.shell.Startup %1 %2 %3 %4 %5 %6 %7 %8 %9
-sleep 5
-java -Dtest.hostName=%host% -Dtest.port=%port% org.apache.tools.moo.Main -testfile %test%
-java org.apache.tomcat.shell.Shutdown %1 %2 %3 %4 %5 %6 %7 %8 %9
+java org.apache.tools.ant.Main -f test.xml %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem clean up
 

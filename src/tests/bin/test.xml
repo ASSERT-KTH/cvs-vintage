@@ -1,6 +1,15 @@
-<project name="TestRun" default="main" basedir=".">
+<project name="TestRun" default="main" basedir="." init="init">
 
-   <target name="main">
+   <target name="init">
+     <property name="test.hostname" value="localhost" />
+	 <property name="test.port"     value="8080" />
+   </target>
+
+   <target name="startup">
+     <java class="org.apache.tomcat.shell.Startup" args="" />
+   </target>
+
+   <target name="client">
      <!-- Need to mark the time, compute the diff at end -->
      <java class="org.apache.tools.moo.RunTest" args="tests.file.FileLengthTest" />
      <java class="org.apache.tools.moo.RunTest" args="tests.file.ContentTypeTest" />
@@ -21,6 +30,12 @@
      <java class="org.apache.tools.moo.RunTest"  args="tests.request.RequestMap" />
      <java class="org.apache.tools.moo.RunTest"  args="tests.jsp.Jsp" />
    </target>
+
+   <target name="shutdown">
+     <java class="org.apache.tomcat.shell.Startup" args="" />
+   </target>
+
+   <target name="main" depends="startup,client,shutdown" />
 </project>
 
 <!-- 
