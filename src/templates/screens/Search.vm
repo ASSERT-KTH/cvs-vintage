@@ -1,4 +1,4 @@
-$page.setTitle("Custom Search")
+$page.setTitle("Custom query")
 
 #set ($module = $scarabR.CurrentModule)
 <div class="app" id="search">
@@ -106,8 +106,8 @@ $page.setTitle("Custom Search")
       </select>
         &#160;
       <select name="sortPolarity">
-        <option value="asc"> ascending </option>
-        <option value="desc"> descending </option>
+        <option value="asc">ascending</option>
+        <option value="desc">descending</option>
       </select>
     </td>
   </tr>
@@ -115,10 +115,10 @@ $page.setTitle("Custom Search")
    <th>Issues per page</th>
    <td>
    <input type="hidden" name="pageNum" value="1" />
-   <input type="radio" name="resultsPerPage" value="25" checked="checked" /> 25 
-   <input type="radio" name="resultsPerPage" value="50" /> 50 
-   <input type="radio" name="resultsPerPage" value="75" /> 75 
-   <input type="radio" name="resultsPerPage" value="100" /> 100
+   <input type="radio" name="resultsPerPage" value="25" checked="checked" />25 
+   <input type="radio" name="resultsPerPage" value="50" />50
+   <input type="radio" name="resultsPerPage" value="75" />75
+   <input type="radio" name="resultsPerPage" value="100" />100
    </td>
   </tr>
 </table>
