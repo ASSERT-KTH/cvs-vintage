@@ -1,73 +1,69 @@
-<?xml version='1.0' encoding='us-ascii'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!-- DTD for account". -->
 
 
 <!ELEMENT accountlist ( account* )>
 
-<!ELEMENT account ( name, uid, identity, (popserver | imapserver), smtpserver)>
+<!ELEMENT account ( identity, (popserver | imapserver), smtpserver, pgp, specialfolders)>
+   <!-- name of account -->
+ <!ATTLIST account name CDATA #REQUIRED>
+   <!-- UID of account -->
+ <!ATTLIST account uid CDATA #REQUIRED>
+ 
+<!ELEMENT identity >
+   <!-- name -->
+ <!ATTLIST identity name CDATA #REQUIRED>
+   <!-- email address -->
+ <!ATTLIST identity address CDATA #REQUIRED>
+   <!-- organisation -->
+ <!ATTLIST identity organisation CDATA #IMPLIED>
+   <!-- reply-to address -->
+ <!ATTLIST identity reply_address CDATA #IMPLIED>
+   <!-- do you want to attach a signature -->
+ <!ATTLIST identity attach_signature (true|false) "false">
+   <!-- filename of signature -->
+ <!ATTLIST identity signature_file CDATA "~/.signature">
+ 
+<!ELEMENT popserver >
+  <!-- username -->
+ <!ATTLIST popserver user CDATA #REQUIRED>
+  <!-- password -->
+ <!ATTLIST popserver password CDATA #REQUIRED>
+  <!-- username -->
+ <!ATTLIST popserver user CDATA #REQUIRED>
+  <!-- host (POP3 server) -->
+ <!ATTLIST popserver host CDATA #REQUIRED>
+  <!-- POP3 server port -->
+ <!ATTLIST popserver port CDATA "110">
+  <!-- leave messag on server or delete it -->
+ <!ATTLIST popserver leave_message_on_server (true|false) "true">
+  <!-- save password in config file -->
+ <!ATTLIST popserver save_password (true|false) "false">
+  <!-- exclude from "check all" mailcheck  -->
+ <!ATTLIST popserver exclude_from_checkall (true|false) "false">
+  <!-- UID of destination folder (INBOX)  -->
+ <!ATTLIST popserver destination_folder_uid CDATA #REQUIRED>
+  <!-- enable mailcheck  -->
+ <!ATTLIST popserver enable_mailcheck (true|false) "false">
+  <!-- mailcheck interval in minutes (default is every 10 minutes) -->
+ <!ATTLIST popserver mailcheck_interval CDATA "10">
+  <!-- permit message download of specific size -->
+ <!ATTLIST popserver enable_download_limit (true|false) "false">
+  <!-- message size to download (default is 100 KB)-->
+ <!ATTLIST popserver download_limit CDATA "100">
+  <!-- login-method  -->
+ <!ATTLIST popserver login-method (USER|APOP) "USER">
+  <!-- enable sound notification  -->
+ <!ATTLIST popserver enable_sound (true|false) "false">
+  <!-- soundfile to play -->
+ <!ATTLIST popserver sound_file CDATA "default">
+  <!-- when checking for new mail, automatically download new messages -->
+ <!ATTLIST popserver automatically_download_new_messages (true|false) "true">
+  <!-- use POP3 settings from default account instead  -->
+ <!ATTLIST popserver use_default_account (true|false) "false">
 
-<!ELEMENT identity ( name, organisation, address, replyaddress, signature, attachsignature)>
+<!ELEMENT imapserver>
 
-<!ELEMENT popserver (user, password, host, port, leave, uid, savepassword, exclude)>
-
-<!ELEMENT imapserver (user, password, host, port, savepassword )>
-
-<!ELEMENT smtpserver (user, host, port, esmtp, uid, bccyourself, bccanother, placecopy)>
-
-
-
-<!-- user name for login -->
-<!ELEMENT user (CDATA)>
-
-<!-- port for service -->
-<!ELEMENT port (#PCDATA)>
-
-<!-- name -->
-<!ELEMENT name (#PCDATA)>
-
-<!-- password  -->
-<!ELEMENT password (CDATA)>
-
-<!-- server e.x.: localhost.localdomain -->
-<!ELEMENT host (#PCDATA)>
-
-<!ELEMENT organisation (#PCDATA)>
-
-<!-- email address-->
-<!ELEMENT address (#PCDATA)>
-
-<!-- reply to address-->
-<!ELEMENT replyaddress (#PCDATA)>
-
-<!-- unique id-->
-<!ELEMENT uid (#PCDATA)>
-
-<!-- when sending mail place copy in folder -->
-<!ELEMENT placecopy (CDATA)>
-
-<!-- when sending mail bcc to yourself -->
-<!ELEMENT bccyourself ( true | false )>
-
-<!-- save password in configuration file -->
-<!ELEMENT savepassword ( true | false )>	
-
-<!-- exclude this popserver from the fetch all command -->
-<!ELEMENT exclude ( true | false )>	
-
-<!-- when sending mail bcc to another email address-->
-<!ELEMENT bccanother (#PCDATA)>
-
-<!-- enable ESMTP, for sending messages -->
-<!ELEMENT esmtp ( true | false )>
-
-<!-- leave mail on popserver while fetching -->
-<!ELEMENT leave ( true | false )>
-
-<!-- attach signature to end of message -->
-<!ELEMENT attachsignature ( true | false )>
-
-<!-- the signature -->
-<!ELEMENT signature (CDATA)>
-
+<!ELEMENT smtpserver >
 
 

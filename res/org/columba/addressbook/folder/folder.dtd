@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- DTD for configuration file". -->
+
+
+<!ELEMENT folderlist ( folder* ) >
+
+<!ELEMENT folder >
+ <!ATTLIST folder name CDATA #REQUIRED>
+ <!ATTLIST folder class CDATA #REQUIRED>
+ 
