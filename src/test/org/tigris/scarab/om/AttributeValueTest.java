@@ -48,13 +48,12 @@ package org.tigris.scarab.om;
 
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.test.BaseTestCase;
-import org.tigris.scarab.om.ActivitySetManager;
 
 /**
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: AttributeValueTest.java,v 1.9 2003/09/17 02:27:23 jmcnally Exp $
+ * @version $Id: AttributeValueTest.java,v 1.10 2003/12/12 15:28:56 mpoeschl Exp $
  */
 public class AttributeValueTest extends BaseTestCase
 {

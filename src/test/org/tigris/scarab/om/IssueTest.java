@@ -46,23 +46,21 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import org.tigris.scarab.test.BaseTestCase;
-import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.om.Module;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
+import org.tigris.scarab.test.BaseTestCase;
 
 
 /**
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.30 2003/10/17 13:59:14 dep4b Exp $
+ * @version $Id: IssueTest.java,v 1.31 2003/12/12 15:28:56 mpoeschl Exp $
  */
 public class IssueTest extends BaseTestCase
 {

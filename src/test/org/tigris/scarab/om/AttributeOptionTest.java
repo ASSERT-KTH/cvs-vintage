@@ -46,23 +46,17 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
-
 import org.tigris.scarab.test.BaseTestCase;
-import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributeOption;
-import org.tigris.scarab.om.AttributeOptionManager;
-import org.tigris.scarab.om.ROptionOption;
 
 /**
  * A Testing Suite for the om.Attribute class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: AttributeOptionTest.java,v 1.4 2002/03/14 01:13:14 jmcnally Exp $
+ * @version $Id: AttributeOptionTest.java,v 1.5 2003/12/12 15:28:56 mpoeschl Exp $
  */
 public class AttributeOptionTest extends BaseTestCase
 {

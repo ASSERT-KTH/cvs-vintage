@@ -46,23 +46,19 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
 
 import org.apache.torque.om.NumberKey;
-
-import org.tigris.scarab.om.ModuleManager;
-import org.tigris.scarab.om.Module;
-
-import org.tigris.scarab.test.BaseTestCase;
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.test.BaseTestCase;
 
 /**
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.17 2003/10/17 13:59:14 dep4b Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.18 2003/12/12 15:28:56 mpoeschl Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
