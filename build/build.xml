@@ -324,9 +324,9 @@
     <!-- Generate SQL from Torque                                           -->
     <!-- ================================================================== -->
     <target name="schema-check">
-        <echo message="checking: ${build.sql.scarab}/mysql-${project}.sql"/>
+        <echo message="checking: ${build.sql.scarab}/${scarab.database.type}-${project}.sql"/>
         <uptodate property="schema.uptodate"
-            targetfile="${build.sql.scarab}/mysql-${project}.sql">
+            targetfile="${build.sql.scarab}/${scarab.database.type}-${project}.sql">
             <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
             <srcfiles dir="${user.home}" includes="build.properties"/>
             <srcfiles dir="${basedir}" includes="build.properties"/>
@@ -343,7 +343,7 @@
         </ant>
 
         <move file="${src.sql.dir}/${project}-schema.sql"
-            tofile="${build.sql.scarab}/mysql-${project}.sql"/>
+            tofile="${build.sql.scarab}/${scarab.database.type}-${project}.sql"/>
     </target>
 
 
@@ -952,7 +952,7 @@
                 <exclude name="**/build/nightly.sh"/>
                 <exclude name="**/build/run-tests*"/>
                 <exclude name="**/build/velocity.log*"/>
-                <exclude name="**/src/sql/mysql-scarab.sql"/>
+                <exclude name="**/src/sql/${scarab.database.type}-scarab.sql"/>
                 <exclude name="**/src/sql/report.scarab.sql.generation"/>
                 <exclude name="**/src/sql/project-schema.sql"/>
                 <exclude name="**/src/sql/sqldb.map"/>
