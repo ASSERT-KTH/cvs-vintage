@@ -67,6 +67,7 @@
 
         <echo message="Build Dir: ${build.dir}"/>
         <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/webapps"/>
         <tstamp/>
     <echo>
  #####
@@ -78,12 +79,18 @@
  #####    ####   #    #  #    #  #    #  #####
            [${version}-${DSTAMP}${TSTAMP}]
     </echo>
+
+    <condition property="do-tomcat-build" value="true">
+        <equals arg1="${scarab.build.tomcat}" arg2="true"/>
+    </condition>
+
     </target>
 
     <!-- ================================================================== -->
     <!-- Prepares the Tomcat directory                                      -->
     <!-- ================================================================== -->
-    <target name="prepare-tomcat" depends="prepare-build-dir">
+    <target name="prepare-tomcat" depends="prepare-build-dir"
+            if="do-tomcat-build">
 
         <!-- copy over tomcat -->
         <mkdir dir="${build.dir}"/>
@@ -147,7 +154,6 @@
 
         <mkdir dir="${build.dir}/logs"/>
         <mkdir dir="${build.dir}/work"/>
-        <mkdir dir="${build.dir}/webapps"/>
     </target>
 
     <!-- ================================================================== -->
