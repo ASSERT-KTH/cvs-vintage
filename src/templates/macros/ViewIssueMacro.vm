@@ -36,7 +36,8 @@
   #if (!$attr.isUserAttribute())
   #if ($canEdit)
      <tr>
-      <th>$attVal.RModuleAttribute.DisplayValue</th>
+      <th> #if ($attVal.isRequired())*#end 
+      $attVal.RModuleAttribute.DisplayValue</th>
       <td>
     #if ($attr.isOptionAttribute())
         #attrValueLeafSelect ($attVal $field "" false)
