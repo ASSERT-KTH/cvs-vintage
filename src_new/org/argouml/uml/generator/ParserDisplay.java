@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.105 2004/04/17 10:57:50 mvw Exp $
+// $Id: ParserDisplay.java,v 1.106 2004/04/17 11:38:57 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.105 2004/04/17 10:57:50 mvw Exp $
+// $Id: ParserDisplay.java,v 1.106 2004/04/17 11:38:57 d00mst Exp $
 
 
 
@@ -2122,9 +2122,8 @@ public class ParserDisplay extends Parser {
     public Object parseTransition(Object trans, String s) {
 	// strip any trailing semi-colons
 	s = s.trim();
-        if (s.length() > 0) // otherwise an exception in next line
-	if (s.charAt(s.length() - 1) == ';')
-	    s = s.substring(0, s.length() - 2);
+	while (s.length() > 0 && s.charAt(s.length() - 1) == ';')
+	    s = s.substring(0, s.length() - 1).trim();
 
         // strip off the name, and the ":"
 	String name = "";
