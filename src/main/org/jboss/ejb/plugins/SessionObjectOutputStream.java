@@ -46,9 +46,9 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see org.jboss.ejb.plugins.SessionObjectInputStream
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *	@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
-class SessionObjectOutputStream
+public class SessionObjectOutputStream
 	extends ObjectOutputStream
 {
 	// Constructors -------------------------------------------------

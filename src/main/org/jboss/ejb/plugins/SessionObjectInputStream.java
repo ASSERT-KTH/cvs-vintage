@@ -49,9 +49,9 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *	@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *	@author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
-class SessionObjectInputStream
+public class SessionObjectInputStream
 	extends ObjectInputStream
 {
 	StatefulSessionEnterpriseContext ctx;
