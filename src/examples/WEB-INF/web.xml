@@ -55,4 +55,13 @@
             /servletToJsp
         </url-pattern>
     </servlet-mapping>
+
+    <taglib>
+        <taglib-uri>
+	   http://java.apache.org/tomcat/examples-taglib
+        </taglib-uri>
+        <taglib-location>
+           /WEB-INF/jsp/example-taglib.tld
+        </taglib-location>
+    </taglib>
 </web-app>

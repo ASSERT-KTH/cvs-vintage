@@ -61,6 +61,8 @@
     <rmic base="${tomcat.build}/classes"
      class="org.apache.tomcat.shell.AdminImpl"/>
 
+<!--
+
     <javac srcdir="${tomcat.build}/examples/WEB-INF/classes/jsp/tags"
             destdir="${tomcat.build}/examples/WEB-INF/classes/jsp/tags"
             classpath="${tomcat.build}/classes"/>
@@ -68,6 +70,7 @@
      <jar jarfile="${tomcat.build}/examples/jsp/libs/taglib.jar" 
           basedir="${tomcat.build}/examples/WEB-INF/classes/jsp/tags"
           items="examples,META-INF/taglib.tld"/>
+-->
 
   </target>
 

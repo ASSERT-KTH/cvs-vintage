@@ -1,17 +1,17 @@
-<%@ taglib uri="/jsp/libs/taglib.jar" prefix="akv" %>
+<%@ taglib uri="http://java.apache.org/tomcat/examples-taglib" prefix="eg" %>
 
 Radio stations that rock:
 
 <ul>
-<akv:foo att1="98.5" att2="92.3" att3="107.7">
+<eg:foo att1="98.5" att2="92.3" att3="107.7">
 <li><%= member %></li>
-</akv:foo>
+</eg:foo>
 </ul>
 
-<akv:log>
+<eg:log>
 Did you see me on the stderr window?
-</akv:log>
+</eg:log>
 
-<akv:log toBrowser="true">
+<eg:log toBrowser="true">
 Did you see me on the browser window as well?
-</akv:log>
+</eg:log>
