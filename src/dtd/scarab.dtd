@@ -47,7 +47,7 @@
         <!ELEMENT activity-set ( id, type, created-by, created-date, 
                                  activities, attachment? ) >
           <!ELEMENT activities ( activity+ ) >
-            <!ELEMENT activity ( id?, attribute?, old-numeric-value?, 
+            <!ELEMENT activity ( id?, attribute, old-numeric-value?, 
                                  new-numeric-value?, old-user?, new-user?, 
                                  old-option?, new-option?, old-value?, 
                                  new-value?, dependency?, description, 
