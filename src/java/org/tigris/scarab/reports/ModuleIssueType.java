@@ -1,3 +1,5 @@
+package org.tigris.scarab.reports;
+
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
@@ -37,16 +39,21 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  */
 
-package org.tigris.scarab.reports;
-
 import org.apache.fulcrum.intake.Retrievable;
 import org.apache.commons.lang.ObjectUtils;
 
+/**
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: ModuleIssueType.java,v 1.4 2003/03/13 22:52:19 jon Exp $
+ */
 public class ModuleIssueType
     implements java.io.Serializable,
                Retrievable
 {
-    Integer moduleId;
+    private Integer moduleId;
+    private Integer issueTypeId;
+    private String queryKey;
 
     /**
      * Get the ModuleId value.
@@ -65,8 +72,6 @@ public class ModuleIssueType
     {
         this.moduleId = newModuleId;
     }
-
-    Integer issueTypeId;
 
     /**
      * Get the IssueTypeId value.
@@ -108,16 +113,13 @@ public class ModuleIssueType
         return result;
     }
 
-
-    private String queryKey;
-
     /**
      * Get the QueryKey value.
      * @return the QueryKey value.
      */ 
     public String getQueryKey()
     {
-        return queryKey = null ? "" : queryKey;
+        return queryKey == null ? "" : queryKey;
     }
     
     /**
