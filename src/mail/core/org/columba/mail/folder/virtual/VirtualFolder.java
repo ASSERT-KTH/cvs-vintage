@@ -604,4 +604,21 @@ public class VirtualFolder extends Folder {
 		return super.tryToGetLock(locker);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.Folder#getUids(org.columba.core.command.WorkerStatusController)
+	 */
+	public Object[] getUids(WorkerStatusController worker) throws Exception {
+		
+		int count = headerList.count();
+		Object[] uids = new Object[count];
+		int i = 0;
+		for (Enumeration e = headerList.keys();
+			e.hasMoreElements();
+			) {
+			uids[i++] = e.nextElement();
+		}
+
+		return uids;
+	}
+
 }
