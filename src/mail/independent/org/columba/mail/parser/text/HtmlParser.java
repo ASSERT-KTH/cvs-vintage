@@ -35,28 +35,29 @@ import java.util.regex.Pattern;
  *
  */
 public class HtmlParser {
-    private static final Pattern breakToNLPattern = Pattern.compile("\\<[/]?br\\>",
+    private static final Pattern breakToNLPattern = Pattern.compile("</?br>",
             Pattern.CASE_INSENSITIVE);
-    private static final Pattern pToDoubleNLPattern = Pattern.compile("\\</p\\>",
+    private static final Pattern pToDoubleNLPattern = Pattern.compile("</p>",
             Pattern.CASE_INSENSITIVE);
-    private static final Pattern divToDoubleNLPattern = Pattern.compile("\\</div\\>",
+    private static final Pattern divToDoubleNLPattern = Pattern.compile("</div>",
             Pattern.CASE_INSENSITIVE);
-    private static final Pattern hToDoubleNLPattern = Pattern.compile("\\</h\\d\\>",
+    private static final Pattern hToDoubleNLPattern = Pattern.compile("</h\\d>",
             Pattern.CASE_INSENSITIVE);
     private static final Pattern whiteSpaceRemovalPattern = Pattern.compile("\\s+",
             Pattern.CASE_INSENSITIVE);
-    private static final Pattern trimSpacePattern = Pattern.compile("\n( )+",
+    private static final Pattern trimSpacePattern = Pattern.compile("\n\\s+",
             Pattern.CASE_INSENSITIVE);
-    private static final Pattern headerRemovalPattern = Pattern.compile("\\<html(.|\n|\r)*?\\<body(.|\n|\r)*?\\>",
+    private static final Pattern headerRemovalPattern = Pattern.compile("<html[^<]*<body[^>]*>",
             Pattern.CASE_INSENSITIVE);
-    private static final Pattern stripTagsPattern = Pattern.compile("\\<(.|\\n)*?\\>",
+    private static final Pattern stripTagsPattern = Pattern.compile("<[^>]*>",
             Pattern.CASE_INSENSITIVE);
-    private static final Pattern commentsRemovalPattern = Pattern.compile("\\<!--(.|\n|\r)*?--\\>",
+    private static final Pattern commentsRemovalPattern = Pattern.compile("<!--[^-]*-->",
     		Pattern.CASE_INSENSITIVE);
-    private static String emailStr = "([\\w.\\-]*\\@([\\w\\-]+\\.*)+\\.[a-zA-Z0-9]{2,})";
+    
+    private static String emailStr = "\\b([^\\s@]+@[^\\s]+)\\b";
     private static final Pattern emailPattern = Pattern.compile(emailStr);
     private static final Pattern emailPatternInclLink = Pattern.compile(
-            "<a( |\\n)*?href=(\\\")?(mailto:)" + emailStr + "(.|\\n)*?</a>",
+            "<a[\\s\\n]*href=(\\\")?(mailto:)" + emailStr + "[^<]*</a>",
             Pattern.CASE_INSENSITIVE);
     private static String prot = "(http|https|ftp)";
     private static String punc = ".,:;?!\\-";
