@@ -33,10 +33,21 @@ import javax.swing.text.Segment;
 /**
  * A set of parser rules.
  * @author mike dillon
- * @version $Id: ParserRuleSet.java,v 1.6 2002/05/19 05:18:52 spestov Exp $
+ * @version $Id: ParserRuleSet.java,v 1.7 2002/05/19 07:00:26 spestov Exp $
  */
 public class ParserRuleSet
 {
+	//{{{ getStandardRuleSet() method
+	/**
+	 * Returns a parser rule set that highlights everything with the
+	 * specified token type.
+	 * @param id The token type
+	 */
+	public static ParserRuleSet getStandardRuleSet(byte id)
+	{
+		return standard[id];
+	} //}}}
+
 	//{{{ ParserRuleSet constructor
 	public ParserRuleSet(String name, Mode mode)
 	{
@@ -200,6 +211,18 @@ public class ParserRuleSet
 	} //}}}
 
 	//{{{ Private members
+	private static ParserRuleSet[] standard;
+
+	static
+	{
+		standard = new ParserRuleSet[Token.ID_COUNT];
+		for(byte i = 0; i < standard.length; i++)
+		{
+			standard[i] = new ParserRuleSet(null,null);
+			standard[i].setDefault(i);
+		}
+	}
+
 	private static final int RULE_BUCKET_COUNT = 32;
 
 	private String name;
