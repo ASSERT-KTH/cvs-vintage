@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.48 2002/08/01 17:35:31 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.49 2002/08/02 00:07:02 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -868,11 +868,13 @@ public abstract class AbstractScarabUser
             crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID,
                          IssueTypePeer.ISSUE_TYPE_ID);
             crit.add(IssueTypePeer.PARENT_ID, 0);
+            crit.add(RModuleIssueTypePeer.MODULE_ID, 0, Criteria.NOT_EQUAL);
             crit.addAscendingOrderByColumn(RModuleIssueTypePeer.MODULE_ID);
 
             // do not include RMIT's related to current MITListItems.
             MITList mitList = getCurrentMITList(getGenThreadKey());            
-            if (mitList != null && mitList.getMITListItems() != null) 
+            if (mitList != null && mitList.getMITListItems() != null
+                && !mitList.getMITListItems().isEmpty()) 
             {
                 boolean addAnd = false;
                 StringBuffer sb = new StringBuffer();
