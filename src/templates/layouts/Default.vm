@@ -28,14 +28,14 @@ document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath
   <div align="right" id="login">
    #if ($data.User.hasLoggedIn())
    <div>
-    Logged in: <strong class="username">$!data.User.FirstName $!data.User.LastName</strong>
+    $l10n.LoggedIn <strong class="username">$!data.User.FirstName $!data.User.LastName</strong>
    </div>
    #end
    <div>
     #if ($data.User.hasLoggedIn())
-    $link.setPage("Login.vm").setAction("Logout").setLabel("Logout")
+    $link.setPage("Login.vm").setAction("Logout").setLabel("$l10n.Logout")
     #else
-    $link.setPage("Login.vm").setLabel("Login")
+    $link.setPage("Login.vm").setLabel("$l10n.Login")
     #end
    </div>
   </div>
@@ -47,10 +47,10 @@ document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath
 #if ($data.User.hasLoggedIn())
 <div id="breadcrumbs"><table border="0" cellspacing="0" cellpadding="4" width="100%"><tr><td> 
 #if ($scarabR.CurrentModule)
-<a href="$link.setPage("SelectModule.vm")">Modules</a> > 
+<a href="$link.setPage("SelectModule.vm")">$l10n.Modules</a> > 
  $scarabR.CurrentModule.Name
 #else
-<a href="$link.setPage("SelectModule.vm")">Modules</a>
+<a href="$link.setPage("SelectModule.vm")">$l10n.Modules</a>
 #end
 </td></tr></table></div>
 #end
@@ -61,7 +61,7 @@ document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath
   <div id="navcolumn">
 $renderer.render("navigations", $template, "Default.vm")
 <div id="helptext" class="toolgroup">
-<div class="label"><strong>How do I...?</strong></div>
+<div class="label"><strong>$l10n.HowDoI</strong></div>
 <div class="body">
   $renderer.render("navigations", "Help.vm")
 </div></div>
