@@ -27,6 +27,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.message.viewer.SecurityInformationController;
@@ -134,10 +135,17 @@ public class PGPMessageFilter extends AbstractFilter
     // - multipart/signed
     String contentType = (String) header.get("Content-Type");
 
-    PGPItem pgpItem = MailInterface.config.getAccountList().getDefaultAccount()
-        .getPGPItem();
-    LOG.fine("pgp activated: " + pgpItem.get("enabled"));
-    boolean pgpActive = new Boolean((pgpItem.get("enabled"))).booleanValue();
+    AccountItem defAccount = 
+      MailInterface.config.getAccountList().getDefaultAccount();
+
+    boolean pgpActive = false;
+    
+    if (defAccount != null)
+    {
+	    PGPItem pgpItem = defAccount.getPGPItem();
+	    LOG.fine("pgp activated: " + pgpItem.get("enabled"));
+	    pgpActive = new Boolean((pgpItem.get("enabled"))).booleanValue();
+    }
 
     FolderCommandReference[] result = null;
     LOG.fine("pgp is true");
