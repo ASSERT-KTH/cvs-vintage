@@ -38,7 +38,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 * The client-side proxy for an EJB Home object.
 *      
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 *
 * <p><b>2001/11/21: marcf</b>
 * <ol>
@@ -184,6 +184,7 @@ public class HomeProxy
          invocation.setType("remote");
          invocation.setMethod(REMOVE_OBJECT);
          invocation.setArguments(EMPTY_ARGS);
+         invocation.setTransaction(getTransaction());
          return invoke(invocation);
       }
 
