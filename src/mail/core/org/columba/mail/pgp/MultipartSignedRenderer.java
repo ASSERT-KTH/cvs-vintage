@@ -60,7 +60,8 @@ public class MultipartSignedRenderer extends MimePartRenderer {
 		byte[] endBoundary = ("\r\n--" + boundary + "--\r\n").getBytes();
 
 		// Add pgp-specific content-parameters
-		header.putContentParameter("micalg", "pgp-md5");
+		// we take as default hash-algo SHA1
+		header.putContentParameter("micalg", "pgp-sha1");
 		header.putContentParameter("protocol", "application/pgp-signature");
 
 		// Create the header and body of the multipart

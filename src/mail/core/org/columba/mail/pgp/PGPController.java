@@ -270,7 +270,7 @@ public class PGPController {
 		if (passphrase.length() == 0) {
 			//PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
 			
-			dialog.showDialog(item.get("id"), "", false);
+			dialog.showDialog( "PGP-"+item.get("id"), "", false);
 			
 			if (dialog.success()) {				
 				passphrase =
