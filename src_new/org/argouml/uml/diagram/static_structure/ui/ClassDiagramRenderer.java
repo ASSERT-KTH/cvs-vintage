@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.29 2005/01/05 23:10:01 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.30 2005/01/09 00:56:37 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -217,12 +217,22 @@ public class ClassDiagramRenderer
                     + edge.getClass().getName());
         } else {
             if (newEdge.getSourcePortFig() == null) {
-                setSourcePort(newEdge, (FigNode) lay.presentationFor(
-                        Model.getUmlHelper().getSource(edge)));
+                Object source;
+                if (edge instanceof CommentEdge) {
+                    source = ((CommentEdge)edge).getSource();
+                } else {
+                    source = Model.getUmlHelper().getSource(edge);
+                }
+                setSourcePort(newEdge, (FigNode) lay.presentationFor(source));
             }
             if (newEdge.getDestPortFig() == null) {
-                setDestPort(newEdge, (FigNode) lay.presentationFor(
-                        Model.getUmlHelper().getDestination(edge)));
+                Object dest;
+                if (edge instanceof CommentEdge) {
+                    dest = ((CommentEdge)edge).getDestination();
+                } else {
+                    dest = Model.getUmlHelper().getDestination(edge);
+                }
+                setDestPort(newEdge, (FigNode) lay.presentationFor(dest));
             }
             if (newEdge.getSourcePortFig() == null 
                     || newEdge.getDestPortFig() == null ) {

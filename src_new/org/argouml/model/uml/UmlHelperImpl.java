@@ -1,4 +1,4 @@
-// $Id: UmlHelperImpl.java,v 1.3 2005/01/07 09:11:01 linus Exp $
+// $Id: UmlHelperImpl.java,v 1.4 2005/01/09 00:56:37 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -270,14 +270,10 @@ class UmlHelperImpl implements UmlHelper {
         if (relationShip == null) {
             throw new IllegalArgumentException("Argument relationship is null");
         }
-        if (!(ModelFacade.isAModelElement(relationShip)
-                || relationShip instanceof CommentEdge)) {
+        if (!ModelFacade.isAModelElement(relationShip)) {
            throw new IllegalArgumentException("Argument relationship of class "
                    + relationShip.getClass().toString()
                    + " is not a valid relationship");
-        }
-        if (relationShip instanceof CommentEdge) {
-            return ((CommentEdge) relationShip).getSource();
         }
         if (ModelFacade.isARelationship(relationShip)) {
             // handles all children of relationship including extend and
@@ -303,14 +299,10 @@ class UmlHelperImpl implements UmlHelper {
         if (relationShip == null) {
             throw new IllegalArgumentException("Argument relationship is null");
         }
-        if (!(ModelFacade.isAModelElement(relationShip)
-                || relationShip instanceof CommentEdge)) {
+        if (!ModelFacade.isAModelElement(relationShip)) {
            throw new IllegalArgumentException("Argument relationship of class "
                    + relationShip.getClass().toString()
                    + " is not a valid relationship");
-        }
-        if (relationShip instanceof CommentEdge) {
-            return ((CommentEdge) relationShip).getDestination();
         }
         if (ModelFacade.isARelationship(relationShip)) {
             // handles all children of relationship including extend and

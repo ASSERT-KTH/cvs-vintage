@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.64 2005/01/07 11:05:05 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.65 2005/01/09 00:56:38 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -238,7 +238,11 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
      * Return one end of an edge.
      */
     public Object getSourcePort(Object edge) {
-        return Model.getUmlHelper().getSource(edge);
+        if (edge instanceof CommentEdge) {
+            return ((CommentEdge)edge).getSource();
+        } else {
+            return Model.getUmlHelper().getSource(edge);
+        }
     }
 
     /**
@@ -247,7 +251,11 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
      * Return the other end of an edge.
      */
     public Object getDestPort(Object edge) {
-        return Model.getUmlHelper().getDestination(edge);
+        if (edge instanceof CommentEdge) {
+            return ((CommentEdge)edge).getDestination();
+        } else {
+            return Model.getUmlHelper().getDestination(edge);
+        }
     }
 
 
