@@ -145,6 +145,7 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 	if( state==ServerSession.STATE_NEW ) {
 	    String jsIdent=req.getJvmRoute();
 	    String newId=createNewId( jsIdent );
+	    if(debug>0) log("Generate new session id " + newId );
 	    sess.getId().setString( newId );
 	}
 	return state;
