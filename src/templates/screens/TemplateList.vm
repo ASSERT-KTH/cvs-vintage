@@ -63,7 +63,7 @@ $page.setTitle("Template list")
 #foreach ($template in $module.getPrivateTemplates($user, $issueType))
    #indexedRows($velocityCount)
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
-  #set ($editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
+  #set ($editLink = $link.setPathInfo("templateId", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
   <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
   <td>
     #if($template.TemplateInfo.Description)
@@ -97,7 +97,7 @@ $page.setTitle("Template list")
 #end
   <td>
     #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
-      #set ($editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
+      #set ($editLink = $link.setPathInfo("templateId", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
       <a href="$editLink">$template.TemplateInfo.Name</a>
     #else
       $template.TemplateInfo.Name

@@ -7,7 +7,7 @@ $page.setTitle("Copy/move issue")
 #set ($user = $data.User)
 #set ($currentModule = $scarabR.CurrentModule)
 #set ($moduleId = $data.Parameters.getString("module_id"))
-#set ($issueId = $data.Parameters.getString("id", $data.Parameters.getString("issue_id","")))
+#set ($issueId = $data.Parameters.getString("id"))
 #set ($issue = $scarabR.getIssue($issueId))
 
 #if (!$issueId || $issueId.length() == 0 || !$issue)
@@ -24,7 +24,7 @@ $page.setTitle("Copy/move issue")
 <form method="post" action="$link.setPage("MoveIssue.vm").setAction("MoveIssue")">
 <input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issueId" />
 ## need to also pass id so that if we re-display this page, the right value is kept around
-<input type="hidden" name="issueId" value="$issueId" />
+<input type="hidden" name="id" value="$issueId" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="MoveIssue2.vm" />
 
 <h3>Issue to be copied/moved</h3>
