@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.43 2001/12/03 01:17:45 spestov Exp $
+ * @version $Id: Buffer.java,v 1.44 2001/12/11 00:05:54 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1585,8 +1585,8 @@ public class Buffer implements EBComponent
 					.getLeadingWhiteSpace(line);
 
 				// silly usability hack
-				if(lines.length != 1 && whiteSpace == 0)
-					continue;
+				//if(lines.length != 1 && whiteSpace == 0)
+				//	continue;
 
 				int whiteSpaceWidth = MiscUtilities
 					.getLeadingWhiteSpaceWidth(
