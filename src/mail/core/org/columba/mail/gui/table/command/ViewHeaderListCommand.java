@@ -16,7 +16,6 @@
 package org.columba.mail.gui.table.command;
 
 import org.columba.core.command.Command;
-import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.SelectiveGuiUpdateCommand;
 import org.columba.core.command.StatusObservableImpl;
@@ -27,9 +26,8 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.frame.TableOwner;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
@@ -88,7 +86,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 
 		// fetch the headerlist
 		headerList = (folder).getHeaderList();
-		
+
 		// this is a little hack !!
 
 		// check if this is an imap folder
@@ -103,32 +101,35 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 
 			// if "automatically apply filter" is selected 
 			if (applyFilter == true) {
+				
+				MainInterface.processor.addOp( new ApplyFilterCommand(r));
+				/*
 				FilterList list = folder.getFilterList();
-
+				
 				worker.setDisplayText(
 					"Applying filter to " + folder.getName() + "...");
 				worker.setProgressBarMaximum(list.count());
-
+				
 				// for every filter of this folder
 				for (int i = 0; i < list.count(); i++) {
 					worker.setProgressBarValue(i);
 					Filter filter = list.get(i);
-
+				
 					// get search results of this filter
 					Object[] result = folder.searchMessages(filter);
 					if (result.length != 0) {
-
+				
 						// fire commands
 						CompoundCommand command =
 							filter.getCommand(folder, result);
-
+				
 						MainInterface.processor.addOp(command);
 					}
-
-				}
+				
+				}*/
 			}
+
 		}
 
-		
 	}
 }

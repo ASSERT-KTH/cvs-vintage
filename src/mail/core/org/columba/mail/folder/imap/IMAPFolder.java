@@ -462,6 +462,12 @@ public class IMAPFolder extends RemoteFolder {
 		// -> this is necessary to reflect the changes visually
 		for (int i = 0; i < uids.length; i++) {
 			Flags flag = (Flags) getFlags(uids[i]);
+			
+			// skip non existing messages
+			// -> this can happen when we have multiple filteraction
+			// -> on the same set of messages
+			if ( flag == null ) continue;
+			
 			// increment recent count of messages if appropriate
 			if (flag.getRecent())
 				destFolder.getMessageFolderInfo().incRecent();
