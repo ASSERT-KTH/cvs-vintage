@@ -32,7 +32,7 @@ JAVAPTH=${JAVAPTH:-"/usr/local/jdk/bin"}
 JBOSSCP=${JBOSSCP:-"$JBOSS_HOME/bin/shutdown.jar:$JBOSS_HOME/lib/jnet.jar"}
 
 #define the script to use to start jboss
-JBOSSSH=${JBOSSSH:-"$JBOSS_HOME/bin/run.sh"}
+JBOSSSH=${JBOSSSH:-"$JBOSS_HOME/bin/run.sh -c all"}
 
 if [ -n "$JBOSS_CONSOLE" -a ! -d "$JBOSS_CONSOLE" ]; then
   # ensure the file exists
