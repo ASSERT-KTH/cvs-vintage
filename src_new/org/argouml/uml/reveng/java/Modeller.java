@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.5 2001/03/24 15:41:29 marcus Exp $
+// $Id: Modeller.java,v 1.6 2001/03/31 20:46:00 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -348,6 +348,8 @@ public class Modeller
 
 	if(returnType == null) {
 	    // Constructor
+	    mOperation.setStereotype(getStereotype("create"));
+	    setScope(mOperation, JavaRecognizer.ACC_STATIC);	    
 	}
 	else {
 	    mParameter = new MParameterImpl();
