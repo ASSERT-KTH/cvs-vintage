@@ -355,7 +355,6 @@
         <pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
       </classpath>
       <include name="org/apache/tomcat/startup/**"/>
-      <exclude name="**/EmbededTomcat.java" unless="jdk12.present"/>
     </javac>
 
     <jar jarfile="${tomcat.build}/lib/common/etomcat.jar"
@@ -596,6 +595,77 @@
   <target name="sample.add-ons.clean">
     <ant antfile="proposals/PasswordPrompter/build.xml" target="clean"/>
   </target>
+
+  <!-- ==================== Embeded tomcat ======== -->
+
+  <target name="etomcat" depends="init">
+    <javac destdir="${tomcat.build}/classes"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="off"
+           srcdir="src/share">
+      <classpath>
+        <pathelement location="${jsse.lib}/jsse.jar"/>
+        <pathelement location="${jsse.lib}/jnet.jar"/>
+        <pathelement location="${jsse.lib}/jcert.jar"/>
+        <pathelement location="${servlet.jar}"/>
+      </classpath>
+      <include name="org/apache/**"/>
+      <exclude name="**/util/net/SSLSocketFactory.java"
+               unless="jsse.present"/>
+      <exclude name="**/util/net/SSLSocketFactory.java"
+               unless="jdk12.present"/>
+      <exclude name="**/util/compat/JSSECertCompat.java"
+               unless="jsse.present"/>
+      <exclude name="**/util/compat/JSSECertCompat.java"
+               unless="jdk12.present"/>
+      <exclude name="**/util/compat/Jdk12Support.java"
+               unless="jdk12.present"/>
+      <exclude name="**/util/depend/DependClassLoader12.java"
+               unless="jdk12.present"/>
+      <exclude name="**/util/depend/DependClassLoader12.java" 
+	       unless="jdk12.present"/>
+      <exclude name="**/util/compat/Jdk12Support.java" 
+	       unless="jdk12.present"/>
+      <exclude name="**/util/compat/JSSECertCompat.java"
+               unless="jsse.present"/>
+      <exclude name="**/util/compat/JSSECertCompat.java"
+               unless="jdk12.present"/>
+    </javac>
+
+    <javac
+           destdir="${tomcat.build}/classes"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="off"
+           srcdir="src/facade22">
+      <classpath>
+        <pathelement location="${servlet22.jar}"/>
+        <pathelement location="${tomcat.build}/classes"/>
+      </classpath>
+      <include name="org/apache/tomcat/facade/**"/>
+    </javac>
+
+    <copy todir="${tomcat.build}/classes">
+      <fileset dir="src/share">
+        <include name="org/apache/tomcat/**/*.properties"/>
+        <include name="org/apache/tomcat/**/*.dtd"/>
+      </fileset>
+    </copy>
+
+    <property name="etomcat" value="${tomcat.build}/../etomcat" />
+
+    <mkdir dir="${etomcat}" />
+    <copy file="${jaxp.home}/crimson.jar" todir="${etomcat}" />
+    <copy file="${servlet.jar}" todir="${etomcat}" />
+
+    <jar jarfile="${etomcat}/webserver.jar"
+         basedir="${tomcat.build}/classes"
+         manifest="src/build/manifests/manifest.webserver">
+      <include name="org/apache/**"/>
+    </jar>
+  </target>
+
 
   <!-- ==================== Copy the files to distribution format ======== -->
   <target name="dist" depends="dist.prepare,javadoc,dist.war">
