@@ -35,7 +35,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.ToolbarToggleButton;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.table.util.TableModelFilteredView;
+import org.columba.mail.gui.table.model.TableModelFilter;
 import org.columba.mail.util.MailResourceLoader;
 
 public class FilterToolbar extends JPanel implements ActionListener {
@@ -221,8 +221,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 			public void focusGained(FocusEvent e) {}
 
 			public void focusLost(FocusEvent e) {
-				TableModelFilteredView model =
-					tableController.getView().getTableModelFilteredView();
+				TableModelFilter model =
+					tableController.getTableModelFilteredView();
 				try {
 					model.setPatternString(textField.getText());
 				} catch (Exception ex) {
@@ -305,10 +305,13 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		 
 		tableController.tableChanged(ev);
 		*/
+		
 		tableController
-			.getHeaderTableModel()
 			.getTableModelFilteredView()
 			.setDataFiltering(true);
+		
+		tableController.getTableModelFilteredView().update();
+		
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -317,8 +320,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		try {
 
 			//TableModelFilteredView model = MainInterface.tableController.getHeaderTable().getTableModelFilteredView();
-			TableModelFilteredView model =
-				tableController.getView().getTableModelFilteredView();
+			TableModelFilter model =
+				tableController.getTableModelFilteredView();
 
 			if (action.equals("ADVANCED")) {
 
@@ -383,7 +386,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 				attachmentButton.setSelected(false);
 
 				tableController
-					.getHeaderTableModel()
+					
 					.getTableModelFilteredView()
 					.setDataFiltering(true);
 

@@ -29,7 +29,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.message.HeaderInterface;
 
 public class SubjectTreeRenderer extends DefaultTreeCellRenderer {

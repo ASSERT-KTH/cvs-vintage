@@ -20,7 +20,7 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.JTree;
 
-import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.gui.table.model.MessageNode;
 
 public class HeaderTableCommonRenderer extends DefaultLabelRenderer {
 

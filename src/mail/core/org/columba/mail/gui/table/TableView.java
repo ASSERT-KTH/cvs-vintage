@@ -16,16 +16,11 @@
 
 package org.columba.mail.gui.table;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 
-import javax.swing.JTable;
 import javax.swing.event.MouseInputListener;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.config.HeaderItem;
@@ -33,10 +28,17 @@ import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.treetable.TreeTable;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.table.plugins.*;
-import org.columba.mail.gui.table.util.MessageNode;
-import org.columba.mail.gui.table.util.TableModelFilteredView;
-import org.columba.mail.gui.table.util.TableModelThreadedView;
+import org.columba.mail.gui.table.model.HeaderTableModel;
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
+import org.columba.mail.gui.table.plugins.BooleanRenderer;
+import org.columba.mail.gui.table.plugins.CommonHeaderRenderer;
+import org.columba.mail.gui.table.plugins.FlaggedRenderer;
+import org.columba.mail.gui.table.plugins.HeaderTableCommonRenderer;
+import org.columba.mail.gui.table.plugins.HeaderTableDateRenderer;
+import org.columba.mail.gui.table.plugins.HeaderTableSizeRenderer;
+import org.columba.mail.gui.table.plugins.PriorityRenderer;
+import org.columba.mail.gui.table.plugins.StatusRenderer;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -60,9 +62,7 @@ public class TableView extends TreeTable {
 
 	private List tableModelPlugins;
 
-	protected TableModelFilteredView tableModelFilteredView;
-	protected HeaderTableModelSorter tableModelSorter;
-	protected TableModelThreadedView tableModelThreadedView;
+	
 
 	protected HeaderList headerList;
 
@@ -73,22 +73,13 @@ public class TableView extends TreeTable {
 
 		setModel(headerTableModel);
 
-		addMouseListenerToHeaderInTable();
+		
 
 		//setSelectionModel(new HeaderTableSelectionModel());
-		tableModelFilteredView = new TableModelFilteredView(headerTableModel);
-
-		tableModelSorter = new HeaderTableModelSorter(headerTableModel);
-		tableModelSorter.setWindowItem(
-			MailConfig.getMainFrameOptionsConfig().getWindowItem());
-
-		tableModelThreadedView = new TableModelThreadedView(headerTableModel);
+		
 
 		//setUI(new ColumbaBasicTableUI());
 
-		headerTableModel.registerPlugin(tableModelFilteredView);
-		headerTableModel.registerPlugin(tableModelThreadedView);
-		headerTableModel.registerPlugin(tableModelSorter);
 
 		getTree().setCellRenderer(new SubjectTreeRenderer());
 
@@ -103,25 +94,7 @@ public class TableView extends TreeTable {
 		adjustColumn();
 	}
 
-	protected void addMouseListenerToHeaderInTable() {
-		setColumnSelectionAllowed(false);
-
-		MouseAdapter listMouseListener = new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				TableColumnModel columnModel = getColumnModel();
-				int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-				int column = convertColumnIndexToModel(viewColumn);
-
-				if (e.getClickCount() == 1 && column != -1) {
-					getTableModelSorter().setSortingColumn(column);
-					headerTableModel.update();
-				}
-			}
-		};
-
-		JTableHeader th = getTableHeader();
-		th.addMouseListener(listMouseListener);
-	}
+	
 
 	public void enableThreadedView(boolean b) {
 		if (b) {
@@ -231,10 +204,13 @@ public class TableView extends TreeTable {
 				registerRenderer(
 					"Size",
 					new HeaderTableSizeRenderer(getTree()),
+					/*
 					new CommonHeaderRenderer(
 						name,
 						MailResourceLoader.getString("header", "size"),
 						getTableModelSorter()),
+					*/
+					new CommonHeaderRenderer(),
 					size,
 					false,
 					position);
@@ -243,10 +219,12 @@ public class TableView extends TreeTable {
 				registerRenderer(
 					"Status",
 					new StatusRenderer(getTree()),
+					/*
 					new BooleanHeaderRenderer(
 						ImageLoader.getSmallImageIcon("mail-new.png"),
 						name,
-						getTableModelSorter()),
+						getTableModelSorter()),*/
+				new CommonHeaderRenderer(),
 					23,
 					true,
 					position);
@@ -256,9 +234,7 @@ public class TableView extends TreeTable {
 					new FlaggedRenderer(getTree()),
 					new BooleanHeaderRenderer(
 						ImageLoader.getSmallImageIcon(
-							"mark-as-important-16.png"),
-						name,
-						getTableModelSorter()),
+							"mark-as-important-16.png")),
 					23,
 					true,
 					position);
@@ -271,9 +247,8 @@ public class TableView extends TreeTable {
 						ImageLoader.getSmallImageIcon("attachment.png"),
 						"columba.attachment"),
 					new BooleanHeaderRenderer(
-						ImageLoader.getSmallImageIcon("attachment.png"),
-						name,
-						getTableModelSorter()),
+						ImageLoader.getSmallImageIcon("attachment.png")
+						),
 					23,
 					true,
 					position);
@@ -281,10 +256,13 @@ public class TableView extends TreeTable {
 				registerRenderer(
 					"Date",
 					new HeaderTableDateRenderer(getTree(), true),
+					/*
 					new DateHeaderRenderer(
 						name,
 						MailResourceLoader.getString("header", "date"),
 						getTableModelSorter()),
+						*/
+						new CommonHeaderRenderer(),
 					size,
 					false,
 					position);
@@ -294,9 +272,7 @@ public class TableView extends TreeTable {
 					"Priority",
 					new PriorityRenderer(getTree(), true),
 					new BooleanHeaderRenderer(
-						ImageLoader.getSmallImageIcon("priority-high.png"),
-						name,
-						getTableModelSorter()),
+						ImageLoader.getSmallImageIcon("priority-high.png")),
 					23,
 					true,
 					position);
@@ -306,42 +282,50 @@ public class TableView extends TreeTable {
 				registerRenderer(
 					"Subject",
 					new HeaderTableCommonRenderer(getTree(), "Subject"),
+					/*
 					new CommonHeaderRenderer(
 						name,
 						MailResourceLoader.getString("header", "subject"),
 						getTableModelSorter()),
+						*/
+				new CommonHeaderRenderer(),
 					size,
 					false,
 					position);
-
+					
 			} else {
-				String str = MailResourceLoader.getString(
-							"header",
-							name.toLowerCase());
+				String str =
+					MailResourceLoader.getString("header", name.toLowerCase());
 
 				if (str.equals("FIX ME!")) {
 					registerRenderer(
 						name,
 						new HeaderTableCommonRenderer(getTree(), name),
+						/*
 						new CommonHeaderRenderer(
 							name,
 							name,
 							getTableModelSorter()),
+							*/
+					new CommonHeaderRenderer(),
 						size,
 						false,
 						position);
-                                } else {
+				} else {
 					registerRenderer(
 						name,
 						new HeaderTableCommonRenderer(getTree(), name),
+						/*
 						new CommonHeaderRenderer(
 							name,
 							str,
 							getTableModelSorter()),
+							*/
+					new CommonHeaderRenderer(),
 						size,
 						false,
 						position);
-                                }
+				}
 			}
 		}
 	}
@@ -422,26 +406,7 @@ public class TableView extends TreeTable {
 
 	}
 
-	/**
-	 * return the table model sorter
-	 */
-	public HeaderTableModelSorter getTableModelSorter() {
-		return tableModelSorter;
-	}
-
-	/**
-	 * return the threaded view model
-	 */
-	public TableModelThreadedView getTableModelThreadedView() {
-		return tableModelThreadedView;
-	}
-
-	/**
-	 * return the filtered view model
-	 */
-	public TableModelFilteredView getTableModelFilteredView() {
-		return tableModelFilteredView;
-	}
+	
 
 	public MessageNode getSelectedNode() {
 

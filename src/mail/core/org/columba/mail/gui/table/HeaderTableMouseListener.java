@@ -27,7 +27,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
 import org.columba.mail.gui.table.action.ViewMessageAction;
-import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.gui.table.model.MessageNode;
 
 public class HeaderTableMouseListener extends MouseAdapter {
 	private TableController headerTableViewer;

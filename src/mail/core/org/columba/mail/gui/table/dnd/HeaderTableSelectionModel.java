@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.gui.table;
+package org.columba.mail.gui.table.dnd;
 
 import javax.swing.DefaultListSelectionModel;
 

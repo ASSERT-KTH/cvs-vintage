@@ -27,7 +27,7 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 
-import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.gui.table.model.MessageNode;
 
 public class HeaderTableDateRenderer extends DefaultLabelRenderer {
 

@@ -27,7 +27,7 @@ import javax.swing.table.TableCellRenderer;
 
 import org.columba.core.gui.util.AscendingIcon;
 import org.columba.core.gui.util.DescendingIcon;
-import org.columba.mail.gui.table.util.TableModelSorter;
+import org.columba.mail.gui.table.model.BasicTableModelSorter;
 /**
  * Title:
  * Description:
@@ -46,7 +46,7 @@ public class DateHeaderRenderer extends JButton implements TableCellRenderer
         //private String fontName;
         //private int fontSize;
 
-        private TableModelSorter tableModelSorter;
+        private BasicTableModelSorter tableModelSorter;
 
         public void updateUI()
         {
@@ -58,7 +58,7 @@ public class DateHeaderRenderer extends JButton implements TableCellRenderer
 
 
     public DateHeaderRenderer(String str, String name,
-                                     TableModelSorter tableModelSorter)
+                                     BasicTableModelSorter tableModelSorter)
     {
         super();
                 this.str = str;

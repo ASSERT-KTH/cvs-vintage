@@ -29,8 +29,8 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableOwnerInterface;
 import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
-import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

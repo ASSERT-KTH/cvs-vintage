@@ -18,7 +18,7 @@ package org.columba.mail.gui.table;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.columba.mail.gui.table.util.TableModelFilteredView;
+import org.columba.mail.gui.table.model.TableModelFilter;
 
 /**
  * Title:
@@ -42,8 +42,8 @@ public class FilterActionListener implements ActionListener {
 		try {
 
 			if (action.equals("ALL")) {
-				TableModelFilteredView model =
-					tableController.getView().getTableModelFilteredView();
+				TableModelFilter model =
+					tableController.getTableModelFilteredView();
 
 				model.setNewFlag(false);
 				//model.setOldFlag( true );
@@ -64,8 +64,8 @@ public class FilterActionListener implements ActionListener {
 				
 
 			} else if (action.equals("UNREAD")) {
-				TableModelFilteredView model =
-					tableController.getView().getTableModelFilteredView();
+				TableModelFilter model =
+					tableController.getTableModelFilteredView();
 
 				model.setNewFlag(true);
 				//model.setOldFlag( false );

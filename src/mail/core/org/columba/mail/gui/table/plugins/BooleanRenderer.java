@@ -22,7 +22,7 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 
-import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.gui.table.model.MessageNode;
 
 public class BooleanRenderer extends DefaultLabelRenderer {
 

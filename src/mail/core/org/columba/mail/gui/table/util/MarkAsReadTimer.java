@@ -20,6 +20,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
@@ -27,11 +29,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.TableController;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.message.Flags;
 
 /**
  * Title:

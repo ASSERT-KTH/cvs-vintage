@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table.util;
+package org.columba.mail.gui.table.model;
 
 import java.text.Collator;
 import java.util.Collections;
@@ -21,11 +21,27 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.columba.mail.gui.table.HeaderTableModel;
 import org.columba.mail.message.Flags;
 import org.columba.mail.message.HeaderInterface;
 
-public class TableModelSorter extends TableModelPlugin {
+/**
+ * @author fdietz
+ *
+ * Adds sorting capability to the TableModel.
+ * 
+ * We support the following sorting orders:
+ *  - In Order Received (no sorting applied)
+ *  - Ascending
+ *  - Descending
+ * 
+ * Sorting is applied on the selected column.
+ * 
+ * When inserting new headers we use insertion sort
+ * to insert them in the already sorted list of headers
+ * 
+ * 
+ */
+public class BasicTableModelSorter extends TreeTableModelDecorator {
 
 	protected boolean dataSorting = false;
 
@@ -34,7 +50,7 @@ public class TableModelSorter extends TableModelPlugin {
 
 	protected Collator collator;
 
-	public TableModelSorter(HeaderTableModel tableModel) {
+	public BasicTableModelSorter(TreeTableModelInterface tableModel) {
 		super(tableModel);
 
 		collator = Collator.getInstance();
@@ -91,7 +107,7 @@ public class TableModelSorter extends TableModelPlugin {
 
 	}
 
-	public synchronized void sortTable(String str) {
+	public void sortTable(String str) {
 		/*
 		    folder = getHeaderTableModel().getFolder();
 		    if ( folder == null ) return;
@@ -101,28 +117,27 @@ public class TableModelSorter extends TableModelPlugin {
 		setSortingColumn(str);
 
 		if (str.equals("In Order Received")) {
-			setDataSorting(true);
+			//setDataSorting(true);
 
-			MessageNode rootNode = getHeaderTableModel().getRootNode();
+			MessageNode rootNode = getRootNode();
 
 			System.out.println("in order received");
 
-			setDataSorting(false);
+			//setDataSorting(false);
 		} else {
-			for (int i = 0; i < getHeaderTableModel().getColumnCount(); i++) {
-				if (str.equals(getHeaderTableModel().getColumnName(i))) {
 
-					setDataSorting(true);
+			for (int i = 0; i < getColumnCount(); i++) {
+				if (str.equals(getColumnName(i))) {
 
-					MessageNode rootNode = getHeaderTableModel().getRootNode();
+					//setDataSorting(true);
+
+					MessageNode rootNode = getRootNode();
 					List v = rootNode.getVector();
 
-					
 					Collections.sort(
 						v,
 						new MessageHeaderComparator(
-							getHeaderTableModel().getColumnNumber(
-								getSortingColumn()),
+							getRealModel().getColumnNumber(getSortingColumn()),
 							getSortingOrder()));
 
 					//System.out.println("finished sorting");
@@ -131,7 +146,7 @@ public class TableModelSorter extends TableModelPlugin {
 					//getHeaderTableModel().fireTreeNodesChanged();
 					//getHeaderTableModel().update();
 
-					setDataSorting(false);
+					//setDataSorting(false);
 
 				}
 			}
@@ -140,7 +155,7 @@ public class TableModelSorter extends TableModelPlugin {
 	}
 
 	public void sort(int column) {
-		String c = getHeaderTableModel().getColumnName(column);
+		String c = getColumnName(column);
 
 		if (getSortingColumn().equals(c)) {
 			if (getSortingOrder())
@@ -154,7 +169,7 @@ public class TableModelSorter extends TableModelPlugin {
 	}
 
 	public void setSortingColumn(int column) {
-		String c = getHeaderTableModel().getColumnName(column);
+		String c = getColumnName(column);
 
 		if (getSortingColumn().equals(c)) {
 			if (getSortingOrder())
@@ -166,17 +181,19 @@ public class TableModelSorter extends TableModelPlugin {
 		setSortingColumn(c);
 	}
 
+	/*
 	public boolean manipulateModel(int mode) {
 		sortTable(getSortingColumn());
 		return true;
 	}
-
+	*/
 	public int getSortInt() {
-		return getHeaderTableModel().getColumnNumber(getSortingColumn());
+		return getRealModel().getColumnNumber(getSortingColumn());
 	}
 
+	/*
 	public int getInsertionSortIndex(MessageNode newChild) {
-		MessageNode rootNode = getHeaderTableModel().getRootNode();
+		MessageNode rootNode = getRootNode();
 		List v = rootNode.getVector();
 
 		if (getSortingColumn().equals("In Order Received")) {
@@ -188,7 +205,7 @@ public class TableModelSorter extends TableModelPlugin {
 
 		MessageHeaderComparator comparator =
 			new MessageHeaderComparator(
-				getHeaderTableModel().getColumnNumber(getSortingColumn()),
+				getRealModel().getColumnNumber(getSortingColumn()),
 				getSortingOrder());
 
 		MessageNode child;
@@ -198,7 +215,7 @@ public class TableModelSorter extends TableModelPlugin {
 		if (v == null)
 			return 0;
 		for (int i = 0; i < v.size(); i++) {
-		  child = (MessageNode) v.get(i);
+			child = (MessageNode) v.get(i);
 			compare = comparator.compare(child, newChild);
 
 			if (compare == -1) {
@@ -211,7 +228,7 @@ public class TableModelSorter extends TableModelPlugin {
 
 		return v.size();
 	}
-
+	*/
 	class MessageHeaderComparator implements Comparator {
 
 		protected int column;
@@ -245,7 +262,7 @@ public class TableModelSorter extends TableModelPlugin {
 
 			int result = 0;
 
-			String columnName = getHeaderTableModel().getColumnName(column);
+			String columnName = getRealModel().getColumnName(column);
 
 			if (columnName.equals("Status")) {
 				Flags flags1 = header1.getFlags();

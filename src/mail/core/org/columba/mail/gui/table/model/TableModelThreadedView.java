@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.gui.table.util;
+package org.columba.mail.gui.table.model;
 
 import java.text.Collator;
 import java.util.Collections;
@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.mail.gui.table.HeaderTableModel;
 import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.HeaderList;
 
 /**
  * Title:
@@ -37,7 +37,9 @@ import org.columba.mail.message.HeaderInterface;
  * @author
  * @version 1.0
  */
-public class TableModelThreadedView extends TableModelPlugin {
+public class TableModelThreadedView
+	
+	extends TreeTableModelDecorator {
 
 	private boolean enabled;
 
@@ -45,14 +47,21 @@ public class TableModelThreadedView extends TableModelPlugin {
 	private int idCount = 0;
 
 	private Collator collator;
+	
+	
 
-	public TableModelThreadedView(HeaderTableModel tableModel) {
+	public TableModelThreadedView(TreeTableModelInterface tableModel) {
 		super(tableModel);
 
+		
+		
 		enabled = false;
 
 		collator = Collator.getInstance();
 	}
+	
+
+	
 
 	public void toggleView(boolean b) {
 		setEnabled(b);
@@ -404,7 +413,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 				Collections.sort(
 					v,
 					new MessageHeaderComparator(
-						getHeaderTableModel().getColumnNumber("Date"),
+						getRealModel().getColumnNumber("Date"),
 						true));
 
 				// check if there are messages marked as recent
@@ -434,6 +443,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 		return false;
 	}
 
+	/*
 	public boolean manipulateModel(int mode) {
 		//System.out.println("threading enabled: "+ isEnabled() );
 
@@ -460,13 +470,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 			case TableModelPlugin.NODES_INSERTED :
 				{
 					// FIXME
-					/*
-					MessageNode node = getHeaderTableModel().getSelectedMessageNode();
 					
-					MessageNode parent = addItem(node);
-					
-					getHeaderTableModel().insertNodeInto(node, parent, parent.getChildCount());
-					*/
 					return true;
 				}
 
@@ -474,9 +478,10 @@ public class TableModelThreadedView extends TableModelPlugin {
 
 		return false;
 	}
-
+	*/
+	
 	public MessageNode addItem(MessageNode child) {
-		MessageNode rootNode = getHeaderTableModel().getRootNode();
+		MessageNode rootNode = getRealModel().getRootNode();
 		HeaderInterface childHeader = child.getHeader();
 
 		String id = (String) childHeader.get("Message-ID");
@@ -608,7 +613,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 
 			int result = 0;
 
-			String columnName = getHeaderTableModel().getColumnName(column);
+			String columnName = getRealModel().getColumnName(column);
 
 			if (columnName.equals("Date")) {
 				Date d1 = (Date) header1.get("columba.date");
@@ -654,4 +659,48 @@ public class TableModelThreadedView extends TableModelPlugin {
 		}
 
 	}
+
+	/******************************* implements TableModelModifier *******************/
+
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
+	 */
+	public void modify(Object[] uids) {
+		super.modify(uids);
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
+	 */
+	public void remove(Object[] uids) {
+		super.remove(uids);
+
+	}
+
+	/* (non-Javadoc)
+		 * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
+		 */
+	public void set(HeaderList headerList) {
+
+		super.set(headerList);
+		
+		update();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.table.model.TableModelModifier#update()
+	 */
+	public void update() {
+		super.update();
+		
+		if ( isEnabled() )
+		{
+			thread(getRootNode());
+		}
+	}
+	
+	
+
 }

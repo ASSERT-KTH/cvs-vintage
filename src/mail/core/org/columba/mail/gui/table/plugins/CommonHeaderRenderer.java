@@ -17,94 +17,68 @@ package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
 
-import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 
-import org.columba.core.gui.util.AscendingIcon;
-import org.columba.core.gui.util.DescendingIcon;
-import org.columba.mail.gui.table.util.TableModelSorter;
+public class CommonHeaderRenderer extends DefaultTableCellRenderer {
 
-public class CommonHeaderRenderer extends JButton implements TableCellRenderer
-    {
-        Border unselectedBorder = null;
-        Border selectedBorder = null;
-        boolean isBordered = true;
-        String str,name;
-        //private String fontName;
-        //private int fontSize;
+	public CommonHeaderRenderer() {
+		super();
 
-        private TableModelSorter tableModelSorter;
+		setHorizontalAlignment(SwingConstants.LEFT);
+		setHorizontalTextPosition(SwingConstants.LEFT);
+		/*
+		//setIconTextGap( 5 );
+		setOpaque(true); //MUST do this for background to show up.
+		
+		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+		
+		//setMargin( new Insets(0,0,0,0) );
+		*/
 
-        public void updateUI()
-        {
-            super.updateUI();
+	}
 
-            setBorder( UIManager.getBorder( "TableHeader.cellBorder" ) );
-        }
+	public Component getTableCellRendererComponent(
+		JTable table,
+		Object value,
+		boolean isSelected,
+		boolean hasFocus,
+		int row,
+		int column) {
 
+		//setBorder( new CTableBorder(true) );
+		//super.setFont( new Font("Helvetica", Font.PLAIN, 9) );
 
+		/*
+		setText(this.name);
+		
+		if (tableModelSorter.getSortingColumn().equals(this.str)) {
+		
+			if (tableModelSorter.getSortingOrder() == true)
+				setIcon(new AscendingIcon());
+			else
+				setIcon(new DescendingIcon());
+		
+		} else {
+		
+			setIcon(null);
+		}
+		*/
+		if (table != null) {
+			JTableHeader header = table.getTableHeader();
+			if (header != null) {
+				setForeground(header.getForeground());
+				setBackground(header.getBackground());
+				setFont(header.getFont());
+			}
+		}
+		setText((value == null) ? "" : value.toString());
+		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+		
 
-        public CommonHeaderRenderer( String str, String name,
-                                     TableModelSorter tableModelSorter)
-            {
-                super();
-                this.str = str;
-                this.name = name;
-
-
-                this.tableModelSorter = tableModelSorter;
-
-
-		setHorizontalAlignment( SwingConstants.LEFT );
-                setHorizontalTextPosition( SwingConstants.LEFT );
-                    //setIconTextGap( 5 );
-                setOpaque(true); //MUST do this for background to show up.
-
-                setBorder( UIManager.getBorder( "TableHeader.cellBorder" ) );
-
-                  //setMargin( new Insets(0,0,0,0) );
-
-            }
-
-
-
-
-        public Component getTableCellRendererComponent(
-                                JTable table, Object str,
-                                boolean isSelected, boolean hasFocus,
-                                int row, int column)
-        {
-
-
-
-              //setBorder( new CTableBorder(true) );
-                //super.setFont( new Font("Helvetica", Font.PLAIN, 9) );
-
-            setText( this.name );
-
-
-            if ( tableModelSorter.getSortingColumn().equals( this.str ) )
-            {
-
-
-                if ( tableModelSorter.getSortingOrder() == true )
-                    setIcon( new AscendingIcon() );
-                else
-                    setIcon( new DescendingIcon() );
-
-            } else
-            {
-
-                setIcon( null );
-            }
-
-
-            return this;
-        }
-    }
-
-
+		return this;
+	}
+}

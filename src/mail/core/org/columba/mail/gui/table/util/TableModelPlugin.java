@@ -24,7 +24,7 @@ package org.columba.mail.gui.table.util;
  * @version 1.0
  */
 
-import org.columba.mail.gui.table.HeaderTableModel;
+import org.columba.mail.gui.table.model.HeaderTableModel;
 
 public abstract class TableModelPlugin
 {

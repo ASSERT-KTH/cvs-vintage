@@ -18,49 +18,27 @@ package org.columba.mail.gui.table.plugins;
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 
-import org.columba.core.gui.util.AscendingIcon;
-import org.columba.core.gui.util.DescendingIcon;
-import org.columba.mail.gui.table.util.TableModelSorter;
+public class BooleanHeaderRenderer extends DefaultTableCellRenderer {
 
-public class BooleanHeaderRenderer
-	extends JButton
-	implements TableCellRenderer {
-	Border unselectedBorder = null;
-	Border selectedBorder = null;
-	boolean isBordered = true;
-	String str;
-
-	TableModelSorter tableModelSorter;
 	ImageIcon icon;
 
-	public void updateUI() {
-		super.updateUI();
+	public BooleanHeaderRenderer(ImageIcon icon) {
 
-		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-	}
-
-	public BooleanHeaderRenderer(
-		ImageIcon icon,
-		String str,
-		TableModelSorter tableModelSorter) {
-		super();
 		this.icon = icon;
-		this.str = str;
-
-		this.tableModelSorter = tableModelSorter;
 
 		setHorizontalAlignment(SwingConstants.LEFT);
 
+		/*
 		setOpaque(true); //MUST do this for background to show up.
-
+		
 		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+		*/
 
 	}
 
@@ -72,8 +50,9 @@ public class BooleanHeaderRenderer
 		int row,
 		int column) {
 
+		/*
 		if (icon == null) {
-
+		
 			if (tableModelSorter.getSortingColumn().equals(this.str)) {
 				if (tableModelSorter.getSortingOrder() == true)
 					setIcon(new AscendingIcon());
@@ -85,7 +64,21 @@ public class BooleanHeaderRenderer
 		} else {
 			setIcon(icon);
 		}
+		*/
+		
+		if (table != null) {
+			JTableHeader header = table.getTableHeader();
+			if (header != null) {
+				setForeground(header.getForeground());
+				setBackground(header.getBackground());
+				setFont(header.getFont());
+			}
+		}
+		//setText((value == null) ? "" : value.toString());
+		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
 
+		setIcon(icon);
+		
 		return this;
 	}
 }

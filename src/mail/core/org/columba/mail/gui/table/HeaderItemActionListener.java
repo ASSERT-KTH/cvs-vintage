@@ -44,17 +44,17 @@ public class HeaderItemActionListener implements ActionListener
 
         if ( action.equals("Ascending") )
         {
-            headerTableViewer.getView().getTableModelSorter().setSortingOrder( true );
+            headerTableViewer.getTableModelSorter().setSortingOrder( true );
             headerTableViewer.getHeaderTableModel().update();
         }
         else if ( action.equals("Descending") )
         {
-            headerTableViewer.getView().getTableModelSorter().setSortingOrder( false );
+            headerTableViewer.getTableModelSorter().setSortingOrder( false );
             headerTableViewer.getHeaderTableModel().update();
         }
         else if ( action.equals("In Order Received") )
         {
-            headerTableViewer.getView().getTableModelSorter().setSortingColumn( "In Order Received" );
+            headerTableViewer.getTableModelSorter().setSortingColumn( "In Order Received" );
             headerTableViewer.getHeaderTableModel().update();
         }
         else
@@ -69,7 +69,7 @@ public class HeaderItemActionListener implements ActionListener
             {
                 if ( action.equals(c) )
                 {
-                    headerTableViewer.getView().getTableModelSorter().setSortingColumn( c );
+                    headerTableViewer.getTableModelSorter().setSortingColumn( c );
 
                     headerTableViewer.getHeaderTableModel().update();
 

@@ -23,7 +23,7 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.gui.table.model.MessageNode;
 
 public class FlaggedRenderer extends DefaultLabelRenderer {
 

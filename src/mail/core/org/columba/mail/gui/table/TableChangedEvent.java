@@ -16,7 +16,7 @@
 package org.columba.mail.gui.table;
 
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.HeaderList;
 
 /**
  * @author freddy
@@ -27,52 +27,60 @@ import org.columba.mail.message.HeaderInterface;
  * Window>Preferences>Java>Code Generation.
  */
 public class TableChangedEvent {
-	
+
 	public final static int UPDATE = 0;
-	public final static int ADD = 1;
+	public final static int SET = 1;
 	public final static int REMOVE = 2;
 	public final static int MARK = 3;
-	
+
 	protected FolderTreeNode srcFolder;
-	protected HeaderInterface[] headerList;
+
 	protected Object[] uids;
 	protected int markVariant;
-	protected int eventType; 
-	
-	
+	protected int eventType;
+	protected HeaderList headerList;
+
 	/**
 	 * Constructor for TableChangedEvent.
 	 */
-	public TableChangedEvent( int eventType) {
+	public TableChangedEvent(int eventType) {
 		this.eventType = eventType;
 	}
-	
-	public TableChangedEvent( int eventType, FolderTreeNode srcFolder) {
+
+	public TableChangedEvent(int eventType, FolderTreeNode srcFolder) {
 		this.eventType = eventType;
 		this.srcFolder = srcFolder;
-	
+
 	}
-	
-	public TableChangedEvent( int eventType, FolderTreeNode srcFolder, Object[] uids) {
+
+	public TableChangedEvent(
+		int eventType,
+		FolderTreeNode srcFolder,
+		Object[] uids) {
 		this.eventType = eventType;
 		this.srcFolder = srcFolder;
 		this.uids = uids;
 	}
-	
-	public TableChangedEvent( int eventType, FolderTreeNode srcFolder, HeaderInterface[] headerList) {
+
+	public TableChangedEvent(
+		int eventType,
+		FolderTreeNode srcFolder,
+		HeaderList headerList) {
 		this.eventType = eventType;
 		this.srcFolder = srcFolder;
 		this.headerList = headerList;
 	}
-	
-	public TableChangedEvent( int eventType, FolderTreeNode srcFolder, Object[] uids, int markVariant) {
+
+	public TableChangedEvent(
+		int eventType,
+		FolderTreeNode srcFolder,
+		Object[] uids,
+		int markVariant) {
 		this.eventType = eventType;
 		this.srcFolder = srcFolder;
 		this.uids = uids;
 		this.markVariant = markVariant;
 	}
-	
-	
 
 	/**
 	 * Returns the markVariant.
@@ -110,7 +118,7 @@ public class TableChangedEvent {
 	 * Returns the headerList.
 	 * @return HeaderInterface[]
 	 */
-	public HeaderInterface[] getHeaderList() {
+	public HeaderList getHeaderList() {
 		return headerList;
 	}
 
