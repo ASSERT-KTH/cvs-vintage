@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.105 2004/03/19 19:16:36 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.106 2004/04/06 18:43:25 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -1015,7 +1015,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 	{
 		JPanel menuBar = new JPanel();
 		menuBar.setLayout(new BoxLayout(menuBar,BoxLayout.X_AXIS));
-		menuBar.setBorder(new EmptyBorder(0,3,1,0));
+		menuBar.setBorder(new EmptyBorder(0,1,0,3));
 
 		menuBar.add(new CommandsMenuButton());
 		menuBar.add(Box.createHorizontalStrut(3));
