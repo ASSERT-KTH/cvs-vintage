@@ -77,7 +77,8 @@
 	</module>
 
         <module name="LineLength">
-	  <property name="ignorePattern" value="^ *\* [^ ]+$"/>
+	  <property name="ignorePattern"
+	            value="^( *\* @see |import |// \$Id: checkstyle_argouml.xml,v 1.14 2004/02/29 12:57:18 linus Exp $)[^ ]*$"/>
 	</module>
 
         <module name="LocalFinalVariableName"/>
