@@ -2,9 +2,12 @@ package org.columba.core.gui.themes.thincolumba;
 
 import java.awt.Graphics;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicCheckBoxMenuItemUI;
+
+import org.columba.core.gui.util.ImageLoader;
 
 /**
  * @author freddy
@@ -22,7 +25,18 @@ public class ThinCheckBoxMenuItemUI extends BasicCheckBoxMenuItemUI {
 	}
 
 	public void paint(Graphics g, JComponent c) {
+		JCheckBoxMenuItem item = (JCheckBoxMenuItem) c ;
+		
 		ThinUtilities.enableAntiAliasing(g);
+		
+		if ( item.isSelected() )
+		{
+			item.setIcon( ImageLoader.getSmallImageIcon("checkedbox.png") );
+		}
+		else
+		{
+			item.setIcon( ImageLoader.getSmallImageIcon("checkbox.png") );
+		}
 		super.paint(g, c);
 	}
 }

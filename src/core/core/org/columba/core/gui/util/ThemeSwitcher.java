@@ -56,6 +56,9 @@ public class ThemeSwitcher {
 							);
 						UIManager.setLookAndFeel(MainInterface.lookAndFeel);
 						
+						
+
+
 						break;
 					}
 				/*

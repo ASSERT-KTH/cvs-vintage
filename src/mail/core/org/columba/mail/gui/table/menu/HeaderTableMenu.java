@@ -148,16 +148,16 @@ public class HeaderTableMenu
 
 	    popupMenu.addSeparator();
 
-	    subMenu = new JMenu( MailResourceLoader.getString("menu","mainframe", "menu_message_mark") );
+	    subMenu = new CMenu( MailResourceLoader.getString("menu","mainframe", "menu_message_mark") );
 	    subMenu.setMnemonic( KeyEvent.VK_K );
 
 	    menuItem = new org.columba.core.gui.util.CMenuItem(getActionListener().markAsReadAction);
 	    menuItem.addMouseListener( handler );
 	    subMenu.add( menuItem );
-	    menuItem = new JMenuItem( "menu_message_markthreadasread", KeyEvent.VK_T);
+	    menuItem = new CMenuItem( "menu_message_markthreadasread", KeyEvent.VK_T);
 	    menuItem.setEnabled(false);
 	    subMenu.add( menuItem );
-	    menuItem = new JMenuItem( "menu_message_markallasread", KeyEvent.VK_A);
+	    menuItem = new CMenuItem( "menu_message_markallasread", KeyEvent.VK_A);
 	    menuItem.setAccelerator( KeyStroke.getKeyStroke("A") );
 	    menuItem.setEnabled(false);
 	    subMenu.add( menuItem );

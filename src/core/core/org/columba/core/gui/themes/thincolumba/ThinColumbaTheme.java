@@ -201,6 +201,14 @@ public class ThinColumbaTheme extends DefaultCTheme {
 		table.put("ToolBar.border", new ThinDefaultBorder());
 		
 		/*
+		table.put("Menu.checkIcon", new ImageIcon("") );
+		table.put("MenuItem.checkIcon", new ImageIcon(""));
+		*/
+		
+		table.put("CheckBoxMenuItem.checkIcon", new ImageIcon(""));
+		table.put("RadioButtonMenuItem.checkIcon", new ImageIcon("") );
+		
+		/*
 		table.put(
 			"SplitPaneUI",
 			"org.columba.core.gui.themes.thincolumba.ThinColumbaSplitPaneUI");

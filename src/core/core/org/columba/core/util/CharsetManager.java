@@ -21,8 +21,9 @@ import java.lang.reflect.Array;
 import java.util.Vector;
 
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
+import org.columba.core.gui.util.CMenu;
+import org.columba.core.gui.util.CMenuItem;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -116,7 +117,7 @@ public class CharsetManager implements ActionListener{
 		int charsetSize = Array.getLength(charsets);
 
 		subMenu =
-			new JMenu(MailResourceLoader.getString("menu","mainframe", "menu_view_charset"));
+			new CMenu(MailResourceLoader.getString("menu","mainframe", "menu_view_charset"));
 
 
 		selectedMenuItem = new CharsetMenuItem( 
@@ -144,7 +145,7 @@ public class CharsetManager implements ActionListener{
 
 		for (int i = 0; i < groupSize; i++) {
 			subsubMenu =
-				new JMenu(
+				new CMenu(
 					MailResourceLoader.getString(
 						"menu","mainframe",
 						"menu_view_charset_" + groups[i]));
@@ -193,13 +194,15 @@ public class CharsetManager implements ActionListener{
 
 }
 
-class CharsetMenuItem extends JMenuItem{
+class CharsetMenuItem extends CMenuItem{
 		
 	int id;
 	String javaCodingName;
 	
 	public CharsetMenuItem( String name, int i, int id, String javaCodingName) {
-		super( name, i );
+		//super( name, i );
+		super(name);
+		
 		this.id = id;
 		this.javaCodingName = javaCodingName;
 	}

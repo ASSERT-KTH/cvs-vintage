@@ -34,22 +34,9 @@ public class CMenu extends JMenu{
 	{
 		super(str);
 
-		//setIcon( new Replacement() );		
+		setIcon( new EmptyIcon() );		
 	}
 	
-	class Replacement implements Icon {
-
-		public int getIconWidth() {
-			return 16;
-		}
-		public int getIconHeight() {
-			return 16;
-		}
-
-		public void paintIcon(Component c, Graphics g, int x, int y) {
-			//g.setColor(Color.black);
-			//g.fillRect(c.getX(), c.getY(), c.getWidth(), c.getHeight());
-		}
-	}
+	
 
 }

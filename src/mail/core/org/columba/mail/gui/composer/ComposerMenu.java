@@ -20,14 +20,13 @@ import java.awt.event.KeyEvent;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
+import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.main.MainInterface;
-import org.columba.mail.config.PGPItem;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.main.MainInterface;
 
 /**
  * @author frd
@@ -85,7 +84,7 @@ public class ComposerMenu extends JMenuBar{
 
 		fileMenu.addSeparator();
 
-		JMenuItem printMenuItem = new JMenuItem(MailResourceLoader.getString("menu","mainframe","menu_message_print")); //$NON-NLS-1$
+		CMenuItem printMenuItem = new CMenuItem(MailResourceLoader.getString("menu","mainframe","menu_message_print")); //$NON-NLS-1$
 		printMenuItem.setAccelerator(
 			KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 		printMenuItem.setMnemonic(KeyEvent.VK_P);
@@ -147,8 +146,8 @@ public class ComposerMenu extends JMenuBar{
 
 		editMenu.addSeparator();
 
-		JMenuItem menuItem =
-			new JMenuItem(
+		CMenuItem menuItem =
+			new CMenuItem(
 				MailResourceLoader.getString("menu","mainframe","menu_edit_find"), //$NON-NLS-1$ //$NON-NLS-2$
 				ImageLoader.getSmallImageIcon("stock_search-16.png_8") ); //$NON-NLS-1$
 		menuItem.setAccelerator(
@@ -159,7 +158,7 @@ public class ComposerMenu extends JMenuBar{
 		editMenu.add(menuItem);
 
 		menuItem =
-			new JMenuItem(
+			new CMenuItem(
 				MailResourceLoader.getString("menu","composer","menu_edit_findagain")); //$NON-NLS-1$ //$NON-NLS-2$
 
 		menuItem.setMnemonic(KeyEvent.VK_G);
@@ -174,7 +173,7 @@ public class ComposerMenu extends JMenuBar{
         // 09/16/02 ALP
         // Added as part of external editor support
 		menuItem =
-			new JMenuItem(
+			new CMenuItem(
                 MailResourceLoader.getString("menu","composer","menu_edit_extern_edit"));
 
 // 		menuItem.setMnemonic(KeyEvent.VK_G);
@@ -193,7 +192,7 @@ public class ComposerMenu extends JMenuBar{
         // End addition
 
 		menuItem =
-			new JMenuItem(
+			new CMenuItem(
 				MailResourceLoader.getString("menu","mainframe","menu_preferences_general")); //$NON-NLS-1$ //$NON-NLS-2$
 		//ImageLoader.getImageIcon("", "Preferences16" ) );
 
@@ -205,7 +204,7 @@ public class ComposerMenu extends JMenuBar{
 		JMenu viewMenu = new JMenu(MailResourceLoader.getString("menu","mainframe","menu_view")); //$NON-NLS-1$
 		viewMenu.setMnemonic(KeyEvent.VK_V);
 
-		JMenu subMenu = new JMenu(MailResourceLoader.getString("menu","mainframe","menu_view_show_hide")); //$NON-NLS-1$
+		CMenu subMenu = new CMenu(MailResourceLoader.getString("menu","mainframe","menu_view_show_hide")); //$NON-NLS-1$
 
 		JCheckBoxMenuItem cbMenuItem = new JCheckBoxMenuItem(MailResourceLoader.getString("menu","mainframe","menu_view_showtoolbar")); //$NON-NLS-1$
 		cbMenuItem.addActionListener(composerInterface.composerActionListener);
