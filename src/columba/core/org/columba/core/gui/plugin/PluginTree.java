@@ -103,8 +103,6 @@ public class PluginTree extends TreeTable {
 
         childNode.setEnabled(Boolean.valueOf(enabled).booleanValue());
 
-        System.out.println("adding plugin to table: " + enabled);
-
         PluginNode node = (PluginNode) map.get(category);
 
         if (node == null) {
