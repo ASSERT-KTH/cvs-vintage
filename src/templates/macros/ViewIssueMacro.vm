@@ -397,6 +397,7 @@
     <th>Date stamp</th>
     <th>Action</th>
     <th>Note</th>
+    <th>By</th>
   </tr>
   #foreach ($act in $activity)
     #indexedRows($velocityCount)
@@ -419,6 +420,10 @@
      #if ($act.Transaction.Attachment)
        $act.Transaction.Attachment.DataAsString
      #else &#160; #end
+     </td>
+     <td>
+     #set ($user = $scarabR.getUser($act.Transaction.CreatedBy))
+     <a href="mailto:$user.Email">$user.FirstName $user.LastName</a>
      </td>
     </tr>
   #end
