@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator; 
 import java.util.List; 
 import java.util.Set; 
+import java.util.HashSet; 
 import javax.ejb.EJBException; 
 import javax.ejb.EJBLocalObject; 
 import org.jboss.ejb.EntityEnterpriseContext; 
@@ -25,7 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */                            
 public class RelationSet implements Set {
    private JDBCCMRFieldBridge cmrField;
@@ -65,12 +66,6 @@ public class RelationSet implements Set {
       return idList.isEmpty();
    }
 
-/*
-   public int hashCode() {
-      List idList = getIdList();
-      return idList.hashCode();
-   }
-*/
    public boolean add(Object o) {
       List idList = getIdList();
       if(cmrField.isReadOnly()) {
@@ -103,9 +98,9 @@ public class RelationSet implements Set {
       
       boolean isModified = false;
       
-      Iterator iterator = c.iterator();
+      Iterator iterator = (new HashSet(c)).iterator();
       while(iterator.hasNext()) {
-         isModified = isModified || add(iterator.next());
+         isModified = add(iterator.next()) || isModified;
       }
       return isModified;
    }
@@ -142,9 +137,9 @@ public class RelationSet implements Set {
       
       boolean isModified = false;
       
-      Iterator iterator = c.iterator();
+      Iterator iterator = (new HashSet(c)).iterator();
       while(iterator.hasNext()) {
-         isModified = isModified || remove(iterator.next());
+         isModified = remove(iterator.next()) || isModified;
       }
       return isModified;
    }
@@ -193,24 +188,6 @@ public class RelationSet implements Set {
       return isModified;
    }
 
-/*
-   public boolean equals(Object o) {
-      List idList = getIdList();
-
-      if( !(o instanceof List)) {
-         return false;
-      }
-      
-      // get a set of the argument collection's ids
-      HashSet argIds = new HashSet();
-      Iterator iterator = ((Set)o).iterator();
-      while(iterator.hasNext()) {
-         argIds.add(((EJBLocalObject)iterator.next()).getPrimaryKey());
-      }
-
-      return idSet.equals(argIds);
-   }
-*/
    public boolean contains(Object o) {
       List idList = getIdList();
 
