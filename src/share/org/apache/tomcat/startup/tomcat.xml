@@ -1,7 +1,30 @@
-<contextManager >
+<!-- New tomcat configuration file -->
+<!-- Right now all "tags" must be associated with java classes
+     in Tomcat.java
+     Soon a <module tag="" type="" javaClass="" /> will be added,
+     that will allow you to add new modules without recompilation
+    ( like taskdef in ant )
+-->
+
+<!-- Note that XmlHelper will create a java object based on 
+     tag name + (optional) "type" attribute if present. 
+
+     That should make the config file easier to read ( IMHO )
+-->
+  
+
+<contextManager debug="1" >
+   <!-- ==================== ContextManager tuning ==================== -->
+   <requestInterceptor type="contextMapper" /> 
+   <requestInterceptor type="session" /> 
+   <requestInterceptor type="simpleMapper" debug="0" /> 
+
+   <!-- ==================== adapter modules ==================== -->
+   <adapter type="httpAdapter" port="8080" />
+   <adapter type="ajp12Adapter" port="8007" />
+
+   <!-- ==================== Contexts ==================== -->
    <context path="/" docBase="webpages" />
    <context path="/examples" docBase="examples" />
-
-   <httpAdapter port="8080" />
 
 </contextManager>
