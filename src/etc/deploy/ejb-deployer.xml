@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- The JBoss service configuration file for the EJB deployer service.
+$Id: ejb-deployer.xml,v 1.1 2004/09/05 15:50:06 starksm Exp $
+-->
+<server>
+   <!-- EJB deployer, remove to disable EJB behavior-->
+   <mbean code="org.jboss.ejb.EJBDeployer" name="jboss.ejb:service=EJBDeployer">
+      <!-- A flag indicating if the deployer should validate the
+      ejb-jar.xml/jboss.xml descriptors and components
+      -->
+      <attribute name="VerifyDeployments">true</attribute>
+      <!-- A flag indicating if the xml parser should validate the descriptor
+      DTDs
+      -->
+      <attribute name="ValidateDTDs">false</attribute>
+      <!-- A flag indicating if the verifier should be verbose about its
+      operation
+      -->
+      <attribute name="VerifierVerbose">true</attribute>
+      <!-- Setting this to 'true' will cause all deployments
+       to fail when the Verifier detected a problem with the contained
+       Beans. If false, warnings/errors will be logged but the deployment
+       will not fail.
+      -->
+      <attribute name="StrictVerifier">true</attribute>
+
+      <!-- The EJBDeployer needs the JTA transaction manager service -->
+      <depends optional-attribute-name="TransactionManagerServiceName">jboss:service=TransactionManager</depends>
+      <!-- The dynamic class loading simple web server -->
+      <depends optional-attribute-name="WebServiceName">jboss:service=WebService</depends>
+   </mbean>
+</server>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.114 2004/09/05 15:06:31 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.115 2004/09/05 15:50:37 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -362,36 +362,6 @@
       <attribute name="EnableTcpNoDelay">false</attribute>
 
       <depends optional-attribute-name="TransactionManagerService">jboss:service=TransactionManager</depends>
-   </mbean>
-
-   <!-- ==================================================================== -->
-   <!-- The deployers...                                                     -->
-   <!-- ==================================================================== -->
-
-   <!-- EJB deployer, remove to disable EJB behavior-->
-   <mbean code="org.jboss.ejb.EJBDeployer" name="jboss.ejb:service=EJBDeployer">
-      <attribute name="VerifyDeployments">true</attribute>
-      <attribute name="ValidateDTDs">false</attribute>
-      <attribute name="MetricsEnabled">false</attribute>
-      <attribute name="VerifierVerbose">true</attribute>
-
-      <!--
-          StrictVerifier: Setting this to 'true' will cause all deployments
-          to fail when the Verifier detected a problem with the contained
-          Beans.
-      -->
-      <attribute name="StrictVerifier">true</attribute>
-
-      <depends optional-attribute-name="TransactionManagerServiceName">jboss:service=TransactionManager</depends>
-      <depends optional-attribute-name="WebServiceName">jboss:service=WebService</depends>
-   </mbean>
-
-   <!-- EAR deployer, remove if you are not using Web layers -->
-   <mbean code="org.jboss.deployment.EARDeployer" name="jboss.j2ee:service=EARDeployer">
-   </mbean>
-
-   <mbean code="org.jboss.varia.deployment.BeanShellSubDeployer"
-      name="jboss.scripts:service=BSHDeployer">
    </mbean>
 
    <!-- ==================================================================== -->
