@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.65 2003/04/23 01:59:45 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.66 2003/05/01 22:43:28 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -122,19 +122,12 @@ public class PanelWindowContainer implements DockableWindowContainer
 		wm.revalidate();
 	} //}}}
 
-	//{{{ add() method
-	public void add(DockableWindowManager.Entry entry)
-	{
-		dockablePanel.add(entry.factory.name,entry.win);
-	} //}}}
-
-	//{{{ remove() method
-	public void remove(DockableWindowManager.Entry entry)
+	//{{{ unregister() method
+	public void unregister(DockableWindowManager.Entry entry)
 	{
 		if(entry.factory.name.equals(mostRecent))
 			mostRecent = null;
 
-		int index = dockables.indexOf(entry);
 		buttonPanel.remove(entry.btn);
 		buttons.remove(entry.btn);
 		entry.btn = null;
@@ -151,10 +144,6 @@ public class PanelWindowContainer implements DockableWindowContainer
 		else
 			wm.revalidate();
 	} //}}}
-
-	//{{{ save() method
-	public void save(DockableWindowManager.Entry entry) {}
-	//}}}
 
 	//{{{ showMostRecent() method
 	public void showMostRecent()
@@ -204,6 +193,9 @@ public class PanelWindowContainer implements DockableWindowContainer
 		{
 			mostRecent = entry.factory.name;
 			this.current = entry;
+
+			if(entry.win.getParent() != dockablePanel)
+				dockablePanel.add(entry.factory.name,entry.win);
 
 			dockablePanel.showDockable(entry.factory.name);
 

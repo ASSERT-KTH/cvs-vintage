@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.*;
 /**
  * A container for dockable windows. This class should never be used
  * directly.
- * @version $Id: FloatingWindowContainer.java,v 1.14 2003/04/25 06:09:48 spestov Exp $
+ * @version $Id: FloatingWindowContainer.java,v 1.15 2003/05/01 22:43:28 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FloatingWindowContainer extends JFrame implements DockableWindowContainer
@@ -71,43 +71,37 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 		show();
 	} //}}}
 
-	//{{{ add() method
-	public void add(DockableWindowManager.Entry entry)
+	//{{{ unregister() method
+	public void unregister(DockableWindowManager.Entry entry)
 	{
-	} //}}}
-
-	//{{{ save() method
-	public void save(DockableWindowManager.Entry entry)
-	{
-		GUIUtilities.saveGeometry(this,entry.factory.name);
-	} //}}}
-
-	//{{{ remove() method
-	public void remove(DockableWindowManager.Entry entry)
-	{
-		super.dispose();
+		dispose();
 	} //}}}
 
 	//{{{ show() method
 	public void show(final DockableWindowManager.Entry entry)
 	{
-		toFront();
-		requestFocus();
-		SwingUtilities.invokeLater(new Runnable()
+		if(entry == null)
+			dispose();
+		else
 		{
-			public void run()
+			toFront();
+			requestFocus();
+			SwingUtilities.invokeLater(new Runnable()
 			{
-				if(entry.win instanceof DefaultFocusComponent)
+				public void run()
 				{
-					((DefaultFocusComponent)entry.win)
-						.focusOnDefaultComponent();
+					if(entry.win instanceof DefaultFocusComponent)
+					{
+						((DefaultFocusComponent)entry.win)
+							.focusOnDefaultComponent();
+					}
+					else
+					{
+						entry.win.requestDefaultFocus();
+					}
 				}
-				else
-				{
-					entry.win.requestDefaultFocus();
-				}
-			}
-		});
+			});
+		}
 	} //}}}
 
 	//{{{ isVisible() method
@@ -119,7 +113,7 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 	//{{{ dispose() method
 	public void dispose()
 	{
-		save(entry);
+		GUIUtilities.saveGeometry(this,entry.factory.name);
 		entry.container = null;
 		entry.win = null;
 		super.dispose();
