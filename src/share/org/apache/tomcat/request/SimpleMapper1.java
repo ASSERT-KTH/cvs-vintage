@@ -125,7 +125,6 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	// set-up a per/container note for maps
 	ctExtMapNote = cm.getNoteId( ContextManager.CONTAINER_NOTE,
 				     "map.extension");
-	debug=0;
     }
 
     /** Called when a context is added.
