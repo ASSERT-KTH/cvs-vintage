@@ -13,6 +13,8 @@ import java.io.ObjectOutputStream;
 import java.rmi.Remote;
 import java.rmi.server.RemoteObject;
 import java.rmi.server.RemoteStub;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 
 /**
  * An ObjectOutputStream subclass used by the MarshalledValue class to
@@ -21,7 +23,7 @@ import java.rmi.server.RemoteStub;
  * proxy annotations are used.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class MarshalledValueOutputStream
    extends ObjectOutputStream
@@ -34,7 +36,7 @@ public class MarshalledValueOutputStream
    public MarshalledValueOutputStream(OutputStream os) throws IOException
    {
       super(os);
-      enableReplaceObject(true);
+      EnableReplaceObjectAction.enableReplaceObject(this);
    }
 
    /**
@@ -71,5 +73,24 @@ public class MarshalledValueOutputStream
          }
       }
       return obj;
+   }
+
+   private static class EnableReplaceObjectAction implements PrivilegedAction
+   {
+      MarshalledValueOutputStream os;
+      EnableReplaceObjectAction(MarshalledValueOutputStream os)
+      {
+         this.os = os;
+      }
+      public Object run()
+      {
+         os.enableReplaceObject(true);
+         return null;
+      }
+      static void enableReplaceObject(MarshalledValueOutputStream os)
+      {
+         EnableReplaceObjectAction action = new EnableReplaceObjectAction(os);
+         AccessController.doPrivileged(action);
+      }
    }
 }
