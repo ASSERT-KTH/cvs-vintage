@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata;
 
-// $Id: InitParamMetaData.java,v 1.1 2004/08/19 18:53:04 tdiesler Exp $
+// $Id: InitParamMetaData.java,v 1.2 2005/01/24 10:24:57 tdiesler Exp $
 
 import java.io.Serializable;
 
@@ -19,9 +19,9 @@ import java.io.Serializable;
  */
 public class InitParamMetaData implements Serializable
 {
-   // The required <handler-name> element
+   // The required <param-name> element
    private String paramName;
-   // The required <handler-class> element
+   // The required <param-value> element
    private String paramValue;
 
    public String getParamName()
