@@ -11,7 +11,7 @@
 <!-- files.  "tee" = Template with Embedded Expressions. -->
 
 <!-- Original Author: jrobbins@ics.uci.edu -->
-<!-- $Id: argo.tee,v 1.2 2004/12/28 21:47:07 bobtarling Exp $ -->
+<!-- $Id: argo.tee,v 1.3 2005/01/03 21:05:04 bobtarling Exp $ -->
 
 
 <!-- TO DO LIST: -->
@@ -45,7 +45,7 @@
 
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<template class="org.argouml.kernel.ProjectMember">
+<template class="org.argouml.kernel.AbstractProjectMember">
 <![CDATA[
 <member
   type="<ocl>self.type</ocl>"
