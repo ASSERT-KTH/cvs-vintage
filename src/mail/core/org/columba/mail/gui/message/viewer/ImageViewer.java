@@ -18,7 +18,6 @@
 package org.columba.mail.gui.message.viewer;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.io.InputStream;
 
@@ -70,8 +69,6 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 	public void view(IMailbox folder, Object uid, Integer[] address,
 			MailFrameMediator mediator) throws Exception {
 
-		System.out.print("image viewer=");
-		printAddress(address);
 
 		MimePart bodyPart = folder.getMimePartTree(uid).getFromAddress(address);
 
@@ -98,17 +95,9 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 		}
 
 		data = StreamUtils.readInByteArray(bodyStream);
-		System.out.println("---> retrieving image data");
 	}
 
-	private void printAddress(Integer[] address) {
 
-		for (int i = 0; i < address.length; i++) {
-			System.out.print(address[i].toString());
-		}
-
-		System.out.println();
-	}
 
 	/**
 	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
@@ -120,12 +109,7 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 		image = new ImageIcon(Toolkit.getDefaultToolkit().createImage(data));
 		//image = new ImageIcon(data);
 
-		JLabel label = new JLabel("test");
-		label.setIconTextGap(10);
-		label.setIcon(image);
-
-		System.out.println("image-size=" + image.getIconWidth());
-
+		JLabel label = new JLabel(image);
 		add(label, BorderLayout.CENTER);
 		
 		revalidate();

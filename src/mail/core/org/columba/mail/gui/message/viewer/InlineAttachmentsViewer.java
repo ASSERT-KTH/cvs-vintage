@@ -146,14 +146,6 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		}
 	}
 	
-	private void printAddress(Integer[] address) {
-		
-		for ( int i=0; i<address.length; i++) {
-			System.out.print(address[i].toString());
-		}
-		
-		System.out.println();
-	}
 
 	/**
 	 * @param parent
@@ -163,10 +155,6 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 	 */
 	private void createChild(MimePart child, MailFolderCommandReference ref)
 			throws PluginLoadingFailedException, Exception {
-
-		
-		printAddress(child.getAddress());
-		printAddress(ref.getAddress());
 
 		MimeHeader parentHeader = child.getHeader();
 
@@ -452,8 +440,6 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 	 * @return
 	 */
 	private JPanel createBasicPanel(String name, MailFolderCommandReference ref, boolean withHeader) {
-		System.out.print("buttons panel=");
-		printAddress(ref.getAddress());
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setBackground(UIManager.getColor("TextArea.background"));
