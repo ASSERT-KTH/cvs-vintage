@@ -45,6 +45,7 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
@@ -449,6 +450,7 @@ public class IncomingServerPanel
                         name.substring(name.lastIndexOf(".")),
                         JOptionPane.ERROR_MESSAGE);
                 } catch (POP3Exception e1) {
+                    ColumbaLogger.log.fine("Server does not support the CAPA command");
                     //TODO Server does not support CAPA
                 }
 

@@ -24,6 +24,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,10 +45,11 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.ListTools;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.config.SmtpItem;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.auth.AuthenticationFactory;
 import org.columba.ristretto.smtp.SMTPException;
@@ -443,7 +445,15 @@ public class OutgoingServerPanel
 
             try {
                 list = getAuthSMTP();
-                ListTools.intersect_astable(list, AuthenticationFactory.getInstance().getSupportedMechanisms());                
+                ColumbaLogger.log.info("Server supported AUTH types: " +list.toString());
+                
+                // If the server doesn't support an AUTH offer all
+                // types to the user
+                if( list.size() == 0) {
+                    list = AuthenticationFactory.getInstance().getSupportedMechanisms();
+                } else {
+                    ListTools.intersect_astable(list, AuthenticationFactory.getInstance().getSupportedMechanisms());                
+                }
             } catch (IOException e1) {
                 String name = e1.getClass().getName();
                 JOptionPane.showMessageDialog(
@@ -452,7 +462,9 @@ public class OutgoingServerPanel
                     name.substring(name.lastIndexOf(".")),
                     JOptionPane.ERROR_MESSAGE);
             } catch (SMTPException e1) {
-                //TODO sever does not support ehlo
+                ColumbaLogger.log.severe("Server does not support the CAPA command");                
+               // Let the user choose
+                list = AuthenticationFactory.getInstance().getSupportedMechanisms();
             }
 
             // Save the authentication modes
@@ -488,6 +500,9 @@ public class OutgoingServerPanel
 
              protocol.openPort();
              String[] capas = protocol.ehlo("localhost");
+             
+             ColumbaLogger.log.info("Server CAPAs: " +Arrays.asList(capas).toString());
+             
              for (int i = 0; i < capas.length; i++) {
                      if (capas[i].startsWith("AUTH")) {
                              result = parseAuthCapas(capas[i]);

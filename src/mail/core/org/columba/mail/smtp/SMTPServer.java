@@ -362,9 +362,11 @@ public class SMTPServer {
             }
         }
 
-        if (mechanism == null)
-            throw new SMTPException("Columba does not support a login mechanism of the server");
-
+        if (mechanism == null) {
+            //fallback to PLAIN
+            return "PLAIN";
+        }
+        
         return mechanism;
     }
 

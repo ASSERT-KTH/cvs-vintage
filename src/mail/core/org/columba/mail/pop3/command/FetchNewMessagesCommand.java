@@ -15,6 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
@@ -22,22 +29,12 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.io.IOException;
-
-import java.text.MessageFormat;
-
-import java.util.Iterator;
-import java.util.List;
-
-import javax.swing.JOptionPane;
 
 
 /**
@@ -87,6 +84,10 @@ public class FetchNewMessagesCommand extends Command {
             // synchronize local UID list with server UID list
             List newMessagesUidList = synchronize();
 
+            if( MainInterface.DEBUG) {
+                ColumbaLogger.log.fine( newMessagesUidList.toString());
+            }
+            
             // only download new messages
             downloadNewMessages(newMessagesUidList, worker);
 

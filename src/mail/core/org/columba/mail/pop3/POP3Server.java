@@ -28,7 +28,6 @@ import org.columba.core.command.StatusObservable;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Lock;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.Folder;
@@ -42,7 +41,7 @@ import org.columba.ristretto.pop3.protocol.POP3Protocol;
 public class POP3Server {
     private AccountItem accountItem;
     private File file;
-    public POP3Protocol pop3Connection;
+    private POP3Protocol pop3Connection;
     private boolean alreadyLoaded;
     private POP3Store store;
     protected POP3HeaderCache headerCache;
