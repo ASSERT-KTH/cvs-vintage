@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.20 2003/03/14 22:15:51 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.21 2003/04/17 23:40:01 dlr Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -122,11 +122,16 @@ heavy development.
 </p>
 
 <p>
-There is three types of documentation for Scarab. 1) This page. 2) There is <a
+There is three types of documentation for Scarab.
+<ol>
+<li>This page.</li>
+<li>There is <a
 href="http://scarab.tigris.org/project_docs.html">what is available on
 the website</a> (which tends towards administration and other
-questions). 3) There is user level documentation that is built into the
-application itself and is available in the left side navigation.
+questions).</li>
+<li>There is user level documentation that is built into the
+application itself and is available in the left side navigation.</li>
+</ol>
 </p>
 
 <hr noshade="noshade" size="1" />
@@ -590,12 +595,12 @@ invalidates a user and forces them to log in again?
 In your build.properties, define the following by removing the #:
 </p>
 
-<p>
+<blockquote><code><pre>
 # This is the timeout in seconds for sessions. If the value is 
 # left commented out, the servlet container's default timeout 
 # will be left as is.
 scarab.session.timeout = # session.timeout = 1800
-</p>
+</pre></code></blockquote>
 
 <p>
 If you want to disable logging people off, just set the value to 
