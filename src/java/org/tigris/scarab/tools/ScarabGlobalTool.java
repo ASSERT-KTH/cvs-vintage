@@ -46,9 +46,6 @@ package org.tigris.scarab.tools;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -99,7 +96,7 @@ import org.apache.turbine.Turbine;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.42 2002/10/11 01:48:50 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.43 2002/10/11 01:49:17 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
