@@ -66,7 +66,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -1161,11 +1161,19 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          return lastRead;
       }
       public void invalidate() {
+         // make a new set handle and copy the currentList to the new handle
+         // this will cause old references to the relationSet to throw an
+         // IllegalStateException if accesses, but will not cause a reload
+         // in Commit Option A
+         List currentList = null;
          if(setHandle != null && setHandle.length > 0)
          {
+            currentList = setHandle[0];
             setHandle[0] = null;
          }
          setHandle = new List[1];
+         setHandle[0] = currentList;
+
          relationSet = null;
       }
    }   
