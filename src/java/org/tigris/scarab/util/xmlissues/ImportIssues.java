@@ -89,7 +89,7 @@ import org.tigris.scarab.om.Module;
  * initialized, there is no need to call the init() method.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.16 2003/04/21 19:39:15 jackrepenning Exp $
+ * @version $Id: ImportIssues.java,v 1.17 2003/04/22 03:28:16 dlr Exp $
  */
 public class ImportIssues
 {
@@ -217,7 +217,8 @@ public class ImportIssues
         throws Exception
     {
         List importErrors = null;
-        LOG.debug("Importing: " + importFile.getAbsolutePath());
+        LOG.debug("Importing issues from XML file: "
+                  + importFile.getAbsolutePath());
 
         try
         {
@@ -235,15 +236,12 @@ public class ImportIssues
                     reader);
             }
         }
-
-        catch(Exception e)
+        catch (Exception e)
         {
-            LOG.debug("\nThe following error(s) were found: " 
-                + "\n------------------------------------------------------\n" 
-                + e.getMessage());
+            LOG.error("Error importing issues from XML file: "
+                      + importFile.getAbsolutePath(), e);
             throw e;
         }
-
         finally
         {
             // Renable workflow
@@ -297,7 +295,8 @@ public class ImportIssues
         throws Exception
     {
         List importErrors = null;
-        LOG.debug("Importing: " + importFile.getName());
+        LOG.debug("Importing issues from uploaded XML: "
+                  + importFile.getName());
 
         try
         {
@@ -313,15 +312,12 @@ public class ImportIssues
                     importFile.getInputStream(), reader);
             }
         }
-
-        catch(Exception e)
+        catch (Exception e)
         {
-            LOG.debug("\nThe following error(s) were found: " 
-                + "\n------------------------------------------------------\n" 
-                + e.getMessage());
+            LOG.error("Error importing issues from uploaded XML: "
+                      + importFile.getName(), e);
             throw e;
         }
-
         finally
         {
             // Renable workflow
