@@ -31,7 +31,7 @@ import java.util.*;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  *
- * @version $Revision: 1.55 $
+ * @version $Revision: 1.56 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -543,10 +543,6 @@ public abstract class BeanMetaData
       // If no permissions were assigned to the method, anybody can access it
       if (result.isEmpty())
       {
-         // [todo] the CTS expects the default to be unchecked, rather than excluded
-         // do we need a flag for backward compatibility?
-         // result = null
-
          result.add(AnybodyPrincipal.ANYBODY_PRINCIPAL);
       }
 
@@ -644,11 +640,8 @@ public abstract class BeanMetaData
       while (iterator.hasNext())
       {
          Element secRoleRef = (Element) iterator.next();
-
-         SecurityRoleRefMetaData securityRoleRefMetaData =
-                 new SecurityRoleRefMetaData();
+         SecurityRoleRefMetaData securityRoleRefMetaData = new SecurityRoleRefMetaData();
          securityRoleRefMetaData.importEjbJarXml(secRoleRef);
-
          securityRoleReferences.add(securityRoleRefMetaData);
       }
 
@@ -790,13 +783,26 @@ public abstract class BeanMetaData
       }
 
       // Get the security identity
-      iterator = getChildrenByTagName(element, "security-identity");
-      while (iterator.hasNext())
+      Element securityIdentityElement = getOptionalChild(element, "security-identity");
+      if (securityIdentityElement != null)
       {
-         Element securityIdentityElement = (Element) iterator.next();
          String runAsPrincipal = getElementContent(getOptionalChild(securityIdentityElement,
                  "run-as-principal"), securityIdentity.getRunAsPrincipalName());
-         securityIdentity.setRunAsPrincipalName(runAsPrincipal);
+         String runAsCredential = getElementContent(getOptionalChild(securityIdentityElement,
+                 "run-as-credential"), securityIdentity.getRunAsCredential());
+         boolean runAsAnomymous = getOptionalChild(securityIdentityElement, "run-as-anonymous") != null;
+         if (runAsPrincipal != null && runAsCredential != null)
+         {
+            securityIdentity.setRunAsPrincipalName(runAsPrincipal);
+            securityIdentity.setRunAsCredential(runAsCredential);
+            securityIdentity.setRunAsAnonymous(false);
+         }
+         else if (runAsAnomymous == true)
+         {
+            securityIdentity.setRunAsAnonymous(true);
+         }
+         else
+            throw new DeploymentException("The security-identity should define a principal/credential or a run-as-anonymous element");
       }
 
       // Method attributes of the bean

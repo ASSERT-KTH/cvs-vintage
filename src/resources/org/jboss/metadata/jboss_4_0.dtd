@@ -8,8 +8,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 4.0//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_4_0.dtd">
 
-$Id: jboss_4_0.dtd,v 1.6 2004/03/27 21:29:39 tdiesler Exp $
-$Revision: 1.6 $
+$Id: jboss_4_0.dtd,v 1.7 2004/03/29 12:52:34 tdiesler Exp $
+$Revision: 1.7 $
 
 Overview of the architecture of jboss.xml
 
@@ -34,6 +34,8 @@ Overview of the architecture of jboss.xml
       <ejb-local-ref>
       <security-identity>
         <run-as-principal>
+        <run-as-credential>
+        <run-as-anonymous>
       </security-identity>
       <resource-ref>
         <res-ref-name />
@@ -55,6 +57,8 @@ Overview of the architecture of jboss.xml
       <ejb-local-ref>
       <security-identity>
         <run-as-principal>
+        <run-as-credential>
+        <run-as-anonymous>
       </security-identity>
       <resource-ref>
         <res-ref-name />
@@ -77,6 +81,8 @@ Overview of the architecture of jboss.xml
       <ejb-ref>
       <security-identity>
         <run-as-principal>
+        <run-as-credential>
+        <run-as-anonymous>
       </security-identity>
       <resource-ref>
       <resource-env-ref>
@@ -513,7 +519,7 @@ container or ejb depends.
 
   Used in: entity, message-driven, session
 -->
-<!ELEMENT security-identity ((use-caller-identity|run-as-principal))>
+<!ELEMENT security-identity ((run-as-anonymous | (run-as-principal, run-as-credential)))>
 
 <!--
   The run-as-principal element is the name of the principal that is used
@@ -524,13 +530,23 @@ container or ejb depends.
 <!ELEMENT run-as-principal (#PCDATA)>
 
 <!--
-  The use-caller-identity element specifies that the caller's security
-  identity be used as the security identity for the execution of the
-  enterprise bean's methods.
+  The run-as-credential element is the credential of the principal that is used
+  when the enterprise bean calls out with a run-as role.
 
   Used in: security-identity
 -->
-<!ELEMENT use-caller-identity EMPTY>
+<!ELEMENT run-as-credential (#PCDATA)>
+
+<!--
+  The run-as-anonymous element specifies that the caller's security
+  identity is anonymous when calling out with a run-as role
+
+  The anonymous run-as principal does not get authenticated and only has
+  a single role, his run-as role
+
+  Used in: security-identity
+-->
+<!ELEMENT run-as-anonymous EMPTY>
 
 <!--
   The resource-env-ref element gives a mapping between the "code name"

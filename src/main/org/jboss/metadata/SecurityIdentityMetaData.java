@@ -22,79 +22,99 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class SecurityIdentityMetaData extends MetaData
 {
-    private String description;
-    /** The use-caller-identity element specifies that the caller’s security
-    identity be used as the security identity for the execution of the
-    enterprise bean’s methods.
-    */
-    private boolean useCallerIdentity;
-    /** The run-as/role-name element specifies the run-as security role name
-    to be used for the execution of the methods of an enterprise bean.
-    */
-	private String runAsRoleName;
-
-   /** The principal that corresponds to run-as role */
-   private String runAsPrincipalName;
-
-	public String getDescription()
-    {
-        return description;
-    }
-
-    /**
-     */
-    public boolean getUseCallerIdentity()
-    {
-        return useCallerIdentity;
-    }
-
-    /** Get the run-as security identity. This is the principal to be used for
-     the run-as identity of an enterprise bean in terms of its security role.
-     */
-    public String getRunAsRoleName()
-    {
-        return runAsRoleName;
-    }
-
+   private String description;
    /**
-    * Get the principal that corresponds to run-as role.
+    *  The use-caller-identity element specifies that the caller’s security
+    * identity be used as the security identity for the execution of the
+    * enterprise bean’s methods.
     */
+   private boolean useCallerIdentity;
+   /**
+    * The run-as/role-name element specifies the run-as security role name
+    * to be used for the execution of the methods of an enterprise bean.
+    */
+   private String runAsRoleName;
+   /**
+    * The principal that corresponds to run-as role
+    */
+   private String runAsPrincipalName;
+   /**
+    * The credential that corresponds to run-as role
+    */
+   private String runAsCredential;
+   /**
+    * The run-as role is not associated with a principal/credential
+    */
+   private boolean runAsAnonymous;
+
+   public String getDescription()
+   {
+      return description;
+   }
+
+   public boolean getUseCallerIdentity()
+   {
+      return useCallerIdentity;
+   }
+
+   public String getRunAsRoleName()
+   {
+      return runAsRoleName;
+   }
+
    public String getRunAsPrincipalName()
    {
       return runAsPrincipalName;
    }
 
-   /**
-    * Set the principal that corresponds to run-as role.
-    */
    public void setRunAsPrincipalName(String principalName)
    {
       this.runAsPrincipalName = principalName;
    }
 
-    /**
-     @param element the security-identity element from the ejb-jar
-     */
-    public void importEjbJarXml(Element element) throws DeploymentException
-    {
-		description = getElementContent(getOptionalChild(element, "description"));
-        Element callerIdent = getOptionalChild(element, "use-caller-identity");
-        Element runAs = getOptionalChild(element, "run-as");
-        if( callerIdent == null && runAs == null )
-            throw new DeploymentException("security-identity: either use-caller-identity or run-as must be specified");
-        if( callerIdent != null && runAs != null )
-            throw new DeploymentException("security-identity: only one of use-caller-identity or run-as can be specified");
-        if( callerIdent != null )
-        {
-            useCallerIdentity = true;
-        }
-        else
-        {
-            runAsRoleName = getElementContent(getUniqueChild(runAs, "role-name"));
-        }
-	}
+   public String getRunAsCredential()
+   {
+      return runAsCredential;
+   }
+
+   public void setRunAsCredential(String runAsCredential)
+   {
+      this.runAsCredential = runAsCredential;
+   }
+
+   public boolean isRunAsAnonymous()
+   {
+      return runAsAnonymous;
+   }
+
+   public void setRunAsAnonymous(boolean runAsAnonymous)
+   {
+      this.runAsAnonymous = runAsAnonymous;
+   }
+
+   /**
+    * @param element the security-identity element from the ejb-jar
+    */
+   public void importEjbJarXml(Element element) throws DeploymentException
+   {
+      description = getElementContent(getOptionalChild(element, "description"));
+      Element callerIdent = getOptionalChild(element, "use-caller-identity");
+      Element runAs = getOptionalChild(element, "run-as");
+      if (callerIdent == null && runAs == null)
+         throw new DeploymentException("security-identity: either use-caller-identity or run-as must be specified");
+      if (callerIdent != null && runAs != null)
+         throw new DeploymentException("security-identity: only one of use-caller-identity or run-as can be specified");
+      if (callerIdent != null)
+      {
+         useCallerIdentity = true;
+      }
+      else
+      {
+         runAsRoleName = getElementContent(getUniqueChild(runAs, "role-name"));
+      }
+   }
 }
