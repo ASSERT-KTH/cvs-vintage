@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.47 $
+*   @version $Revision: 1.48 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -440,15 +440,36 @@ public class ContainerFactory
                  // get the container configuration for this bean
                  // a default configuration is now always provided
                  ConfigurationMetaData conf = bean.getContainerConfiguration();
-                 
+
                  // Set transaction manager
                  container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
-                        
-                 // Set security manager (should be chosen based on container config)
-                 container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
 
-                     // Set realm mapping (should be chosen based on container config)
-                     container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
+                 // Set security manager & role mapping manager
+                 String securityManagerJNDIName = conf.getAuthenticationModule();
+                 String roleMappingManagerJNDIName = conf.getRoleMappingManager();
+
+                 if ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null))
+                 {
+                   try
+                   {
+                     EJBSecurityManager ejbS = (EJBSecurityManager)new InitialContext().lookup(securityManagerJNDIName);
+                     container.setSecurityManager( ejbS );
+                   }
+                   catch (NamingException ne)
+                   {
+                    throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
+                   }
+
+                   try
+                   {
+                     RealmMapping rM = (RealmMapping)new InitialContext().lookup("SimpleRealmMapping");
+                     container.setRealmMapping( rM );
+                   }
+                   catch (NamingException ne)
+                   {
+                    throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
+                   }
+                 }
 
                  // Set container invoker
                  ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
