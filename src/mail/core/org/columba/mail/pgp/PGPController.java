@@ -84,204 +84,38 @@ public class PGPController {
 		return exitVal;
 	}
 
-	/*
-	public String decrypt(String pgpMessage, PGPItem item) {
-		DefaultUtil util;
-		exitVal = -1;
-	
-		type = item.getType();
-		path = item.getPath();
-		id = item.getId();
-	
-		String passphrase = item.getPassphrase();
-		boolean save = false;
-	
-		if (passphrase.length() == 0) {
-			PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
-			//dialog.showDialog( id, false );
-	
-			if (dialog.success()) {
-				passphrase =
-					new String(
-						dialog.getPassword(),
-						0,
-						dialog.getPassword().length);
-	
-				save = dialog.getSave();
-	
-			} else {
-				return new String("");
-			}
-		}
-	
-		try {
-			util = utils[type];
-	
-			exitVal = util.decrypt(path, pgpMessage, passphrase);
-	
-			if (exitVal == 2) {
-				// unknown error
-	
-				JOptionPane.showMessageDialog(
-					MainInterface.mainFrame,
-					util.getErrorString());
-				if (save == false)
-					item.clearPassphrase();
-	
-				return null;
-			} else if (exitVal == 1) {
-				// this means: decrypted message successfully, but
-				// was not able to verify the signature
-	
-				JOptionPane.showMessageDialog(
-					MainInterface.mainFrame,
-					"Couldn't verify signature: " + util.getErrorString());
-	
-				if (save == false)
-					item.clearPassphrase();
-				return null;
-			}
-	
-		} catch (Exception ex) {
-			ex.printStackTrace();
-	
-			JOptionPane.showMessageDialog(
-				MainInterface.mainFrame,
-				util.getErrorString());
-	
-			if (save == false)
-				item.clearPassphrase();
-	
-			return null;
-		}
-	
-		if (save == false)
-			item.clearPassphrase();
-	
-		return util.getOutputString();
-	}
-	
-	*/
-	public int verifySignature(
-		String pgpMessage,
-		String signatureString,
-		PGPItem item) {
-		try {
-			exitVal = utils[GPG].verify(pgpMessage, signatureString, item);
-		} catch (Exception e) {
-			ColumbaLogger.log.error(e);
-			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
-			return -1;
-		}
-		return exitVal;
-	}
 
-	/*
-	
-	public String encrypt(
-		String pgpMessage,
-		boolean signValue,
-		Vector recipients,
-		PGPItem item) {
-		System.out.println("pgpcontroller->encrypt");
-		exitVal = -1;
-	
-		type = item.getType();
-		path = item.getPath();
-		id = item.getId();
-	
-	
-		String passphrase = item.getPassphrase();
-		boolean save = false;
-	
-		if (passphrase.length() == 0) {
-			PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
-			//dialog.showDialog( id, false );
-	
-			if (dialog.success()) {
-				passphrase =
-					new String(
-						dialog.getPassword(),
-						0,
-						dialog.getPassword().length);
-	
-				save = dialog.getSave();
-			} else {
-				return new String("");
-			}
-		}
-	
+	public InputStream decrypt(InputStream cryptMessage, PGPItem item) {
+		int exitVal = -1;
 		try {
-			util = load(type);
-	
-			exitVal =
-				util.encrypt(
-					path,
-					pgpMessage,
-					passphrase,
-					signValue,
-					recipients,
-					id);
-	
-			if (exitVal == 2) {
-				JOptionPane.showMessageDialog(
-					MainInterface.mainFrame,
-					util.getErrorString());
-				if (save == false)
-					item.clearPassphrase();
-	
-				return null;
-			} else if (exitVal == 1) {
-	
-				if (save == false)
-					item.clearPassphrase();
-				return null;
-			}
-	
-		} catch (Exception ex) {
-			ex.printStackTrace();
-	
-			JOptionPane.showMessageDialog(
-				MainInterface.mainFrame,
-				util.getErrorString());
-	
-			if (save == false)
-				item.clearPassphrase();
-	
-			return null;
+			exitVal = utils[GPG].decrypt(item, cryptMessage);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
 		}
-	
-		//        }
-	
-		if (save == false)
-			item.clearPassphrase();
-	
-		// now read encrypted message from File
-		StringBuffer strbuf = null;
-		try {
-			BufferedReader in =
-				new BufferedReader(new FileReader(util.outputFile));
-			String str;
-			strbuf = new StringBuffer();
-	
-			while ((str = in.readLine()) != null) {
-				strbuf.append(str + "\n");
-			}
-	
-			System.out.println(
-				"----------------------->encrpted message:\n" + strbuf);
-			in.close();
-	
-			// delete tmp file
-			util.outputFile.delete();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	
-		return strbuf.toString();
+		return utils[GPG].getStreamResult();
 	}
-	
-	*/
+	/**
+	 * Verify a given message with a given signature. Can the signature for the given message be verified the method
+	 * returns true, elso false. The given item should holding the path to the pgp-tool. While gpg dosn't yet supporting
+	 * a real stream based process to verify a given detached signature with a message the method creates a temporary
+	 * file which holds the signature. After the verify process the temporary file is deleted.
+	 * @param item PGPItem wich should holding the path to the pgp-tool
+	 * @param message The message for wich the given signature should be verify.
+	 * @param signature Signature wich should be verify for the given message.
+	 * @return true if the signature can be verify for the given message, else false.
+	 */
+	public boolean verifySignature(InputStream message, InputStream signature, PGPItem item) {
+		int exitVal = -1;
+		try {
+			exitVal = utils[GPG].verify(item, message, signature);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
+		}
+		if (exitVal == 0) {
+			return true;
+		} 
+		return false;
+	}
 	/** 
 	 * Encryptes a given message  and returnes the encrypted Stream. The given pgp-item should have a entry with
 	 * all recipients seperated via space. The entry is called recipients. If an error occurse the error result is
@@ -381,7 +215,6 @@ public class PGPController {
 			return null;
 		}
 
-		//        }
 
 		if (save == false)
 			item.clearPassphrase();

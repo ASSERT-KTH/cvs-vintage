@@ -15,13 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
-import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.columba.core.io.*;
-import org.columba.core.util.StreamThread;
+import org.columba.core.io.StreamUtils;
 import org.columba.mail.config.PGPItem;
 
 /**
@@ -32,10 +34,13 @@ import org.columba.mail.config.PGPItem;
  *
  */
 public abstract class DefaultUtil {
-	protected StreamThread outputStream = null;
-	protected StreamThread errorStream = null;
+	//protected StreamThread outputStream = null;
+	//protected StreamThread errorStream = null;
 
 	protected String outputString;
+	protected String errorString;
+	protected InputStream outputStream;
+	protected InputStream errorStream;
 
 	/** Executes the given command and the returnes the connected process.
 	 * @param cmd Command to be executed
@@ -49,21 +54,30 @@ public abstract class DefaultUtil {
 
 	protected abstract String parse(String str);
 
-	
 	/** Returnes the error string which is created from the execution of a extern process. Only if the extern execution
 	 * tool like gpg creates a error string on system.error the method is returning a error string. Else the error string
 	 * is empty. Before it should be checked, if the exitValue from the executeion process is not 0.
 	 * @return Returnes the error string which is created from the execution of a extern process. 
 	 */
 	public String getErrorString() {
-		String str = parse(errorStream.getBuffer());
-		return str;
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			StreamUtils.streamCopy(this.errorStream, out);
+		} catch (IOException e) {
+			return "";
+		}
+		return out.toString();
 	}
 
 	// TODO delete this after ritretto replacement
 	public String getOutputString() {
-		String str = outputStream.getBuffer();
-		return str;
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			StreamUtils.streamCopy(this.outputStream, out);
+		} catch (IOException e) {
+			return "";
+		}
+		return out.toString();
 	}
 	/**
 	 * Returns the result of a operation like singing, encrypting and so on.
@@ -83,7 +97,12 @@ public abstract class DefaultUtil {
 	 * read.
 	*/
 	public InputStream getStreamResult() {
-		return new ByteArrayInputStream(this.outputString.getBytes());
+		//return new ByteArrayInputStream(this.outputString.getBytes());
+		return this.outputStream;
+	}
+	
+	public InputStream getErrorStream() {
+		return this.errorStream;
 	}
 
 	/**
@@ -147,33 +166,44 @@ public abstract class DefaultUtil {
 		if (name.equals("recipients")) {
 			return item.get("recipients");
 		}
+		if (name.equals("sigfile")) {
+			return item.get("sigfile");
+		}
 
 		return null;
 	}
 
-	// TODO should be implemented. Yet it not works!
-	public int verify(String pgpMessage, String signatureString, PGPItem item)
+	/** 
+	 * Verify a given message with a given signature. The given item should holding the path to the pgp-tool. While gpg 
+	 * dosn't yet supporting a real stream based process to verify a given detached signature with a message the method
+	 * creates a temporary file which holds the signature. After the verify process the temporary file is deleted.
+	 * @param item PGPItem wich should holding the path to the pgp-tool
+	 * @param message The message for wich the given signature should be verify.
+	 * @param signature Signature wich should be verify for the given message
+	 * @return the exit status from the pgp-tool for the veify process.
+	 * @throws Exception If the temporary file cannot be created or the verify process cannot be run.
+	 */
+	public int verify(PGPItem item, InputStream message, InputStream signature)
 		throws Exception {
 		int exitVal = -1;
-
-		//inputFile = createTempFile(signatureString);
+		File tempFile = File.createTempFile("columbaSig", null);
+		FileOutputStream fout = new FileOutputStream(tempFile);
+		StreamUtils.streamCopy(signature, fout);
+		fout.flush();
+		item.set("sigfile", tempFile.getAbsolutePath());
 		Process p =
 			executeCommand(getCommandString(PGPController.VERIFY_ACTION, item));
-		errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-		outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
-
-		p.getOutputStream().write(pgpMessage.getBytes());
+		//write the pgpMessage out
+		StreamUtils.streamCopy(message, p.getOutputStream());
 		p.getOutputStream().close();
 
-		errorStream.start();
-		outputStream.start();
-
 		exitVal = p.waitFor();
+		this.errorStream = StreamUtils.streamClone(p.getErrorStream());
+		this.outputStream = StreamUtils.streamClone(p.getInputStream());
+		p.destroy();
+		fout.close();
+		tempFile.delete();
 
-		// wait for stream threads to die
-		outputStream.join();
-		errorStream.join();
-		System.out.println("ExitVal: " + exitVal);
 		return exitVal;
 	}
 
@@ -191,28 +221,20 @@ public abstract class DefaultUtil {
 		int exitVal = -1;
 		Process p =
 			executeCommand(getCommandString(PGPController.SIGN_ACTION, item));
-		errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-		outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
-		// output from gpg
 
 		p.getOutputStream().write(item.getPassphrase().getBytes());
 		p.getOutputStream().write(
-			System.getProperty("line.separator").getBytes());
-		// send return after passphrase
+			System.getProperty("line.separator").getBytes()); // send return after passphrase
 		//write the pgpMessage out
-		StreamUtils.streamCopy(pgpMessage, p.getOutputStream(), 8000);
+		StreamUtils.streamCopy(pgpMessage, p.getOutputStream());
 		p.getOutputStream().close();
 
-		errorStream.start();
-		outputStream.start();
-
 		exitVal = p.waitFor();
-		// wait for stream threads to die
-		outputStream.join();
-		errorStream.join();
 
-		this.outputString = outputStream.getBuffer();
-
+		this.errorStream = StreamUtils.streamClone(p.getErrorStream());
+		this.outputStream = StreamUtils.streamClone(p.getInputStream());
+		p.destroy();
+		
 		return exitVal;
 
 	}
@@ -232,34 +254,20 @@ public abstract class DefaultUtil {
 	public int sign(PGPItem item, String input) throws Exception {
 		int exitVal = -1;
 
-		System.out.println(input);
-
 		Process p =
 			executeCommand(getCommandString(PGPController.SIGN_ACTION, item));
-		errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-		outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
-		// output from gpg
-
 		p.getOutputStream().write(item.getPassphrase().getBytes());
 		p.getOutputStream().write(
 			System.getProperty("line.separator").getBytes());
-		// send return after passphrase
-
 		p.getOutputStream().write(input.getBytes());
-		//p.getOutputStream().write(convInput.getBytes());
 		p.getOutputStream().close();
-
-		errorStream.start();
-		outputStream.start();
 
 		exitVal = p.waitFor();
 
-		// wait for stream threads to die
-		outputStream.join();
-		errorStream.join();
-
-		this.outputString = outputStream.getBuffer();
-
+		this.errorStream = StreamUtils.streamClone(p.getErrorStream());
+		this.outputStream = StreamUtils.streamClone(p.getInputStream());
+		p.destroy();
+		
 		return exitVal;
 	}
 
@@ -280,26 +288,35 @@ public abstract class DefaultUtil {
 		Process p =
 			executeCommand(
 				getCommandString(PGPController.ENCRYPT_ACTION, item));
-		errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-		outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
-
-		StreamUtils.streamCopy(message, p.getOutputStream(), 8000);
-		p.getOutputStream().write(
-			System.getProperty("line.separator").getBytes());
+		StreamUtils.streamCopy(message, p.getOutputStream());
 		p.getOutputStream().close();
 
-		errorStream.start();
-		outputStream.start();
+		exitVal = p.waitFor();
+		
+		this.errorStream = StreamUtils.streamClone(p.getErrorStream());
+		this.outputStream = StreamUtils.streamClone(p.getInputStream());
+		p.destroy();
+		
+		return exitVal;
+	}
+	
+	public int decrypt(PGPItem item, InputStream cryptMessage) throws Exception {
+		int exitVal = -1;
+		Process p = executeCommand( getCommandString(PGPController.DECRYPT_ACTION, item));
+
+		p.getOutputStream().write(item.getPassphrase().getBytes());
+		p.getOutputStream().write(
+			System.getProperty("line.separator").getBytes()); // send return after passphrase
+		StreamUtils.streamCopy(cryptMessage, p.getOutputStream());
+		p.getOutputStream().close();
 
 		exitVal = p.waitFor();
 
-		// wait for stream threads to die
-		outputStream.join();
-		errorStream.join();
-
-		this.outputString = outputStream.getBuffer();
-
-		return exitVal;
-	}
+		this.errorStream = StreamUtils.streamClone(p.getErrorStream());
+		this.outputStream = StreamUtils.streamClone(p.getInputStream());
+		p.destroy();
+				
+		return  exitVal;
+	} 
 
 }

@@ -33,8 +33,7 @@ public class GnuPGUtil extends DefaultUtil {
 			"--batch --no-tty --passphrase-fd 0 -d",
 			"--no-secmem-warning --no-greeting --batch --no-tty --armor --output - --encrypt --group recipientgroup=%recipients%  -r recipientgroup",
 			"--no-secmem-warning --no-greeting --batch --yes --no-tty --armor --passphrase-fd 0 --output - --detach-sign -u %user% ",
-      //"--no-secmem-warning -a -b -o /tmp/columba.sig -s %input_file%",
-			"--no-secmem-warning --batch --no-tty --verify %input_file% -" };
+			"--no-secmem-warning --batch --no-tty --verify %sigfile% -" };
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.pgp.DefaultUtil#getRawCommandString(int)
