@@ -87,7 +87,7 @@
 
   <mbean code="org.jboss.jdbc.XADataSourceLoader" name="DefaultDomain:service=XADataSource,name=InstantDB">
     <attribute name="PoolName">InstantDB</attribute>
-    <attribute name="DataSourceClass">org.opentools.minerva.jdbc.xa.wrapper.XADataSourceImpl</attribute>
+    <attribute name="DataSourceClass">org.jboss.pool.jdbc.xa.wrapper.XADataSourceImpl</attribute>
     <attribute name="Properties"></attribute>
     <attribute name="URL">jdbc:idb:../conf/default/instantdb.properties</attribute>
     <attribute name="GCMinIdleTime">1200000</attribute>
@@ -108,7 +108,7 @@
 
   <mbean code="org.jboss.jdbc.XADataSourceLoader" name="DefaultDomain:service=XADataSource,name=DefaultDS">
     <attribute name="PoolName">DefaultDS</attribute>
-    <attribute name="DataSourceClass">org.opentools.minerva.jdbc.xa.wrapper.XADataSourceImpl</attribute>
+    <attribute name="DataSourceClass">org.jboss.pool.jdbc.xa.wrapper.XADataSourceImpl</attribute>
     <attribute name="Properties"></attribute>
     <attribute name="URL">jdbc:HypersonicSQL:hsql://localhost:1476</attribute>
     <attribute name="GCMinIdleTime">1200000</attribute>
@@ -182,7 +182,7 @@
          name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaNoTransCMFactory">
     <attribute name="FactoryName">MinervaNoTransCMFactory</attribute>
     <attribute name="FactoryClass">
-      org.opentools.minerva.connector.jboss.MinervaNoTransCMFactory
+      org.jboss.pool.connector.jboss.MinervaNoTransCMFactory
     </attribute>
     <attribute name="Properties"></attribute>
   </mbean>
@@ -195,7 +195,7 @@
          name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaSharedLocalCMFactory">
     <attribute name="FactoryName">MinervaSharedLocalCMFactory</attribute>
     <attribute name="FactoryClass">
-      org.opentools.minerva.connector.jboss.MinervaSharedLocalCMFactory
+      org.jboss.pool.connector.jboss.MinervaSharedLocalCMFactory
     </attribute>
     <attribute name="Properties"></attribute>
   </mbean>
@@ -208,7 +208,7 @@
          name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaXACMFactory">
     <attribute name="FactoryName">MinervaXACMFactory</attribute>
     <attribute name="FactoryClass">
-      org.opentools.minerva.connector.jboss.MinervaXACMFactory
+      org.jboss.pool.connector.jboss.MinervaXACMFactory
     </attribute>
     <attribute name="Properties"></attribute>
   </mbean>
@@ -236,7 +236,7 @@
       #PoolConfiguration=per-factory
 
       # Connection pooling properties - see
-      # org.opentools.minerva.pool.PoolParameters
+      # org.jboss.pool.PoolParameters
       MinSize=0
       MaxSize=10
       Blocking=true
@@ -295,7 +295,7 @@
       #PoolConfiguration=per-factory
 
       # Connection pooling properties - see
-      # org.opentools.minerva.pool.PoolParameters
+      # org.jboss.pool.PoolParameters
       MinSize=0
       MaxSize=10
       Blocking=true
@@ -333,7 +333,7 @@
       #PoolConfiguration=per-factory
 
       # Connection pooling properties - see
-      # org.opentools.minerva.pool.PoolParameters
+      # org.jboss.pool.PoolParameters
       MinSize=0
       MaxSize=10
       Blocking=true

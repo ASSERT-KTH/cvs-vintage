@@ -20,7 +20,7 @@ import javax.naming.Name;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.sql.XADataSource;
-import org.opentools.minerva.jdbc.xa.XAPoolDataSource;
+import org.jboss.pool.jdbc.xa.XAPoolDataSource;
 import org.jboss.logging.LogWriter;
 import org.jboss.util.ServiceMBeanSupport;
 import org.jboss.logging.Log;
@@ -30,7 +30,7 @@ import org.jboss.logging.Log;
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XADataSourceLoader
