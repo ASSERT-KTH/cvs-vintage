@@ -851,8 +851,11 @@ public class IMAPProtocol {
 			addressString.append(Integer.toString(address[i].intValue() + 1));
 		}
 
+		// changed BODY to BODY.PEEK
+		// this is an alternative approach that does not
+		// implicitly set the \Seen flag
 		IMAPResponse[] responses =
-			fetch("BODY[" + addressString + "]", messageSet, true, worker);
+			fetch("BODY.PEEK[" + addressString + "]", messageSet, true, worker);
 
 		notifyResponseHandler(responses);
 
@@ -875,7 +878,10 @@ public class IMAPProtocol {
 		WorkerStatusController worker)
 		throws Exception {
 
-		IMAPResponse[] responses = fetch("BODY[]", messageSet, true, worker);
+		// changed BODY to BODY.PEEK
+		// this is an alternative approach that does not
+		// implicitly set the \Seen flag
+		IMAPResponse[] responses = fetch("BODY.PEEK[]", messageSet, true, worker);
 
 		notifyResponseHandler(responses);
 
