@@ -55,7 +55,7 @@ public class ColumbaCmdLineParser
 
   private static CmdLineParser.Option bcc;
 
-  private static CmdLineParser.Option attachement;
+  private static CmdLineParser.Option attachment;
 
   static
   {
@@ -76,7 +76,7 @@ public class ColumbaCmdLineParser
     subject = parser.addStringOption('s', "subject");
     cc = parser.addStringOption('+', "cc");
     bcc = parser.addStringOption('+', "bcc");
-    attachement = parser.addStringOption('a', "attachement");
+    attachment = parser.addStringOption('a', "attachment");
   }
 
   protected String pathOption;
@@ -95,7 +95,7 @@ public class ColumbaCmdLineParser
 
   protected String bccOption;
 
-  protected String attachementOption = null;
+  protected String attachmentOption = null;
 
   public ColumbaCmdLineParser ()
   {
@@ -317,8 +317,8 @@ public class ColumbaCmdLineParser
   }
 
   /**
-   * Checks the option --attachement or -a, if this is true, the internal
-   * attachementValue is set, else the options is set to null. You can access
+   * Checks the option --attachment or -a, if this is true, the internal
+   * attachmentValue is set, else the options is set to null. You can access
    * this option via getAttachementOption.
    * 
    * @see ColumbaCmdLineParser#getAttachementOption()
@@ -326,8 +326,8 @@ public class ColumbaCmdLineParser
    */
   private void checkAttachement ()
   {
-    String attachementValue = (String) parser.getOptionValue(attachement);
-    setAttachementOption(attachementValue);
+    String attachmentValue = (String) parser.getOptionValue(attachment);
+    setAttachementOption(attachmentValue);
   }
 
   /**
@@ -361,7 +361,7 @@ public class ColumbaCmdLineParser
     System.out.println(GlobalResourceLoader.getString(RESOURCE_PATH, "global",
         "cmdline_bccopt"));
     System.out.println(GlobalResourceLoader.getString(RESOURCE_PATH, "global",
-        "cmdline_attachementopt"));
+        "cmdline_attachmentopt"));
     System.out.println(GlobalResourceLoader.getString(RESOURCE_PATH, "global",
         "cmdline_helpopt"));
     System.out.println(GlobalResourceLoader.getString(RESOURCE_PATH, "global",
@@ -487,7 +487,7 @@ public class ColumbaCmdLineParser
   }
 
   /**
-   * Gives the value for the attachement Option back. If the option is not set,
+   * Gives the value for the attachment Option back. If the option is not set,
    * null will be returned.
    * 
    * @return the value for the AttachementOption or null, if the option is not
@@ -495,7 +495,7 @@ public class ColumbaCmdLineParser
    */
   public String getAttachementOption ()
   {
-    return attachementOption;
+    return attachmentOption;
   }
 
   /**
@@ -560,6 +560,6 @@ public class ColumbaCmdLineParser
    */
   public void setAttachementOption (String string)
   {
-    attachementOption = string;
+    attachmentOption = string;
   }
 }

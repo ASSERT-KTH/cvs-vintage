@@ -303,7 +303,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 							String[] split =
 								createAttachmentListFromAttachmentConverted(body);
 							if ((split == null) || (split.length == 1)) {
-								// no attachements found - just convert it to
+								// no attachments found - just convert it to
 								// text/plain or text/html
 								header = guessBodyContentType(body);
 								LOG.fine(
@@ -338,7 +338,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 							createAttachmentListFromHeader(body, header);
 
 						if ((split == null) || (split.length == 1)) {
-							// no attachements found - just insert a
+							// no attachments found - just insert a
 							// Content-Type header
 							headerBuf.append("MIME-Version: 1.0\n"); // extra
 							// header

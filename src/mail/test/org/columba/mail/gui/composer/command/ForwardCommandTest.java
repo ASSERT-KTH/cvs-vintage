@@ -76,7 +76,7 @@ public class ForwardCommandTest extends AbstractComposerTestCase {
 	}
 
 	public void testForewardWithAttachement() throws Exception {
-		String input = FolderTstHelper.getString("0_attachement.eml");
+		String input = FolderTstHelper.getString("0_attachment.eml");
 		System.out.println("input=" + input);
 		// create stream from string
 		InputStream inputStream = FolderTstHelper
@@ -93,9 +93,9 @@ public class ForwardCommandTest extends AbstractComposerTestCase {
 		command.execute(NullWorkerStatusController.getInstance());
 		// model should contain the data
 		ComposerModel model = command.getModel();
-		List attachements = model.getAttachments();
-		assertEquals("There should be one attachement", 1, attachements.size());
-		Object mimePart = attachements.get(0);
+		List attachments = model.getAttachments();
+		assertEquals("There should be one attachment", 1, attachments.size());
+		Object mimePart = attachments.get(0);
 		assertEquals("Should be type of StreamableMimePart", true,
 				(mimePart instanceof InputStreamMimePart));
 
