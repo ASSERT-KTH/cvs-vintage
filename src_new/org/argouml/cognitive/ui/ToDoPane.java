@@ -89,7 +89,7 @@ import org.tigris.gef.util.VectorSet;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.18 2003/06/19 19:56:33 bobtarling Exp $
+ * $Id: ToDoPane.java,v 1.19 2003/06/22 17:07:34 bobtarling Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -210,6 +210,9 @@ public class ToDoPane extends JPanel
         
         _oldSize = 0;
         _dir = ' ';
+        Dimension preferredSize = getPreferredSize();
+        preferredSize.height = 30;
+        setPreferredSize(preferredSize);
     }
     
     ////////////////////////////////////////////////////////////////
