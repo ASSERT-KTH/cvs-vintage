@@ -1431,7 +1431,7 @@ try{
             }
             if (!searchSuccess)
             {
-                setAlertMessage("Please enter dates in the format dd/mm/yyyy.");
+                setAlertMessage("Please enter dates in the format mm/dd/yyyy.");
                 return matchingIssueIds;
              }
             searchGroup.setProperties(search);
@@ -1744,17 +1744,12 @@ try{
             {
                 reportGenerator = 
                     ReportManager.getInstance(new NumberKey(id), false);
-                //reportGenerator
-                //    .setQueryString(getReportQueryString(parameters));
-                System.out.println("Old key " + key); 
                 key = ((ScarabUser)data.getUser())
                     .setCurrentReport(reportGenerator);
                 data.getParameters()
                     .remove(ScarabConstants.CURRENT_REPORT);
                 data.getParameters()
                     .add(ScarabConstants.CURRENT_REPORT, key);
-                System.out.println("Set new report " + key + " = " + 
-                                   reportGenerator);
             }
         }
         
