@@ -461,6 +461,7 @@
     <jar jarfile="${tomcat.build}/lib/common/core_util.jar" >
       <fileset dir="${tomcat.build}/classes">
           <include name="org/apache/tomcat/util/hooks/**"/>
+          <include name="org/apache/tomcat/util/log/**"/>
         <!-- All resource must go to common, bug in StringManager/ResourceBundle -->
         <include name="org/apache/tomcat/util/**/*.properties"/>
       </fileset>
@@ -476,6 +477,8 @@
     <!-- Copy commons-logging-api.jar since tomcat-util depends on it -->
     <copy todir="${tomcat.build}/lib/common"
           file="${commons-logging.jar}"/>
+    <copy todir="${tomcat.build}/lib/container"
+          file="${regexp.jar}" />
 
     <!-- All tomcat3 specific utils -->
     <jar jarfile="${tomcat.build}/lib/container/container_util.jar" >
