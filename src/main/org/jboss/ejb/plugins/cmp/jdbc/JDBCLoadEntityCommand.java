@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JDBCLoadEntityCommand {
    private final JDBCStoreManager manager;
@@ -280,9 +280,13 @@ public class JDBCLoadEntityCommand {
       // or has not timed out or is already loaded
       for(Iterator fields = loadFields.iterator(); fields.hasNext();) {
          JDBCFieldBridge field = (JDBCFieldBridge)fields.next();
-         if(field.isPrimaryKeyMember() ||
-               !field.isReadTimedOut(ctx) ||
-               field.isLoaded(ctx)) {
+
+         // the field removed from loadFields if:
+         // - it is a primary key member (should already be loaded)
+         // - it is already loaded
+         // - it is a read-only _already_loaded_ field that isn't timed out yet
+         if( field.isPrimaryKeyMember()
+            || ( field.isLoaded( ctx ) && !field.isReadTimedOut( ctx ) )) {
             fields.remove();
          }
       }
