@@ -83,7 +83,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.2 2001/05/05 03:57:27 jmcnally Exp $
+    @version $Id: Search.java,v 1.3 2001/05/09 01:51:34 jmcnally Exp $
 */
 public class Search extends VelocityAction
 {
@@ -141,9 +141,6 @@ public class Search extends VelocityAction
     public void doSearch( RunData data, Context context )
         throws Exception
     {
-        //until we get the user and module set through normal application
-        BaseScarabObject.tempWorkAround(data,context);
-        
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
 

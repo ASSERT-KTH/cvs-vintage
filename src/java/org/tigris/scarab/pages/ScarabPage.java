@@ -62,15 +62,21 @@ import org.tigris.scarab.util.ScarabConstants;
     for the Default Page.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabPage.java,v 1.2 2001/03/22 09:23:18 jon Exp $
+    @version $Id: ScarabPage.java,v 1.3 2001/05/09 01:51:35 jmcnally Exp $
 */
 public class ScarabPage extends VelocityPage
 {
     /**
-        builds up the context for display of variables on the page.
-    */
+     * builds up the context for display of variables on the page.
+     */
     protected void doBuildBeforeAction( RunData data ) throws Exception 
     {
         super.doBuildBeforeAction(data);
+
+        //until we get the user and module set through normal application
+        Context context = TurbineVelocity.getContext(data);
+        org.tigris.scarab.om.BaseScarabObject.tempWorkAround(data,context);
     }
 }
+
+

@@ -72,7 +72,7 @@ public class ScarabRequestTool implements ScarabRequestScope,
     /**
      * A User object for use within the Scarab API.
      */
-    private User user = null;
+    private ScarabUser user = null;
 
     /**
      * A Issue object for use within the Scarab API.
@@ -167,7 +167,7 @@ try{
     /**
      * A User object for use within the Scarab API.
      */
-    public void setUser (User user)
+    public void setUser (ScarabUser user)
     {
         this.user = user;
     }
@@ -175,10 +175,10 @@ try{
     /**
      * A User object for use within the Scarab API.
      */
-    public User getUser()
+    public ScarabUser getUser()
     {
         if (user == null)
-            this.user = new ScarabUser();
+            this.user = (ScarabUser)data.getUser();
         return this.user;
     }
 
@@ -237,6 +237,45 @@ try{
         return module;
  
    }
+    /**
+     * Get an RModuleAttribute object. 
+     *
+     * @return a <code>Module</code> value
+     */
+    public RModuleAttribute getRModuleAttribute()
+        throws Exception
+    {
+        RModuleAttribute rma = null;
+      try{
+            ComboKey rModAttId = (ComboKey)getIntakeTool()
+                .get("RModuleAttribute", IntakeTool.DEFAULT_KEY)
+                .get("Id").getValue();
+            if ( rModAttId == null )
+            {
+                NumberKey attId = (NumberKey)getIntakeTool()
+                    .get("Attribute", IntakeTool.DEFAULT_KEY)
+                    .get("Id").getValue();
+                if ( attId != null && getUser().getCurrentModule() != null )
+                {
+                    NumberKey[] nka = {attId, 
+                        getUser().getCurrentModule().getModuleId()};
+                    rma = RModuleAttributePeer.retrieveByPK(new ComboKey(nka));
+                }
+                else 
+                {
+                    rma = new RModuleAttribute();
+                }
+            }
+            else 
+            {
+                rma = RModuleAttributePeer.retrieveByPK(rModAttId);
+            }
+      }catch(Exception e){e.printStackTrace();}
+        return rma;
+ 
+   }
+
+    
 
     /**
      * Get a specific module by key value.

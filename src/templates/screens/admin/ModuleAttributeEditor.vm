@@ -5,10 +5,10 @@ $page.setTitle("Attribute Editor")
 <p><b>Editing Module</b>: <i>$module.Name</i></p>
 <p>Modify Attributes<br>
 </p>
-<form action="$link.setPage("admin,ModuleAttributesEditor.vm")" method="GET">
-<!--    <input type="hidden" name="action" value="admin.ModifyModuleAttributes"> -->
+<form action="$link.setPage("admin,ModuleAttributeEditor.vm")" method="GET">
+    <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
     <input type="hidden" name="nextTemplate" 
-            value="admin,EditModuleAttributes.vm">
+            value="admin,ModuleAttributeEditor.vm">
 
   <table width="65%" border="1">
     <tr>

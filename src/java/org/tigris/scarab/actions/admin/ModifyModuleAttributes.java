@@ -74,16 +74,16 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
- * This class will store the form data for a project modification
+ * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.1 2001/05/05 03:57:27 jmcnally Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.2 2001/05/09 01:51:34 jmcnally Exp $
  */
 public class ModifyModuleAttributes extends VelocityAction
 {
     /**
-     * Used on AttributeEditOptions.vm to change the name of an existing
-     * AttributeOption or add a new one if the name doesn't already exist.
+     * Used on ModuleAttributeEditor.vm to change the properties
+     * of existing RModuleAttributes or to add a new one
      */
     public synchronized void 
         doModifyattributes( RunData data, Context context )
@@ -133,6 +133,110 @@ public class ModifyModuleAttributes extends VelocityAction
         }
     }
 
+    /**
+     * Used on ModuleOptionEditor.vm to change the name of an existing
+     * AttributeOption or add a new one.
+     */
+    public synchronized void 
+        doAddormodifymoduleoptions( RunData data, Context context )
+        throws Exception
+    {
+        IntakeTool intake = (IntakeTool)context
+           .get(ScarabConstants.INTAKE_TOOL);
+        ScarabRequestTool scarab = (ScarabRequestTool)context
+           .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+
+        if ( intake.isAllValid() ) 
+        {
+            RModuleAttribute attribute = 
+                scarab.getRModuleAttribute();
+            Module module = scarab.getUser().getCurrentModule();
+            RModuleOption option = null;
+            Vector attributeOptions = (Vector)((Vector)module
+                .getRModuleOptions(attribute.getAttribute(), false)).clone(); 
+            // go in reverse because we may be removing from the list
+            for (int i=attributeOptions.size()-1; i>=0; i--) 
+            {
+                option = (RModuleOption)attributeOptions.get(i);
+                Group group = intake.get("RModuleOption", 
+                                         option.getQueryKey());
+                // in case the template is not showing all the options at once
+                if ( group != null ) 
+                {
+                    group.setProperties(option);
+
+                    // check for a deleted flag.  AttributeOptions are removed
+                    // from the db when deleted.
+                    BooleanField deletedField = 
+                        (BooleanField)group.get("Active");
+                    if (deletedField != null && !deletedField.booleanValue()) 
+                    {
+                        // remove from the Attribute's list
+                        attributeOptions.remove(i);
+                    }
+                    option.save();
+
+                    // we need this because we are accepting duplicate
+                    // numeric values and resorting, so we do not want
+                    // to show the actual value entered by the user.
+                    intake.remove(group);
+                }                
+            }
+            //attribute.sortOptions(attributeOptions);
+
+            /*
+            // was a new option added?
+            option = new RModuleOption();
+            Group group = intake.get("RModuleOption", 
+                                     option.getQueryKey());
+            if ( group != null ) 
+            {
+                group.setProperties(option);
+                if ( option.getDisplayValue() != null 
+                     && option.getDisplayValue().length() != 0 ) 
+                {
+                    try
+                    {
+                        attribute.addRModuleOption(option);
+                    }
+                    catch (ScarabException se)
+                    {
+                        group.get("Name")
+                            .setMessage("Please select a unique name.");
+                    }
+                }
+
+                // we need this because we are accepting duplicate
+                // numeric values and resorting, so we do not want
+                // to show the actual value entered by the user.
+                intake.remove(group);
+
+                for (int i=attributeOptions.size()-1; i>=0; i--) 
+                {
+                    option = (RModuleOption)attributeOptions.get(i);
+                    group = intake.get("RModuleOption", 
+                                             option.getQueryKey());
+                    // in case the template is not showing all the options
+                    if ( group != null ) 
+                    {
+                        intake.remove(group);
+                    }
+                }
+            }
+            */
+        }
+    }
+
+    /**
+     * Manages clicking of the AllDone button
+     */
+    public void doAlldone( RunData data, Context context ) throws Exception
+    {
+        String nextTemplate = data.getParameters().getString(
+            ScarabConstants.NEXT_TEMPLATE );
+
+        setTemplate(data, nextTemplate);
+    }
 
     /**
         This manages clicking the cancel button

@@ -111,8 +111,8 @@ public class Attribute
     public List getAllAttributeOptions()
         throws Exception
     {
-        return getAttributeOptions(new Criteria());  
-        // return getAttributeOptions(allOptionsCriteria);  
+        // return getAttributeOptions(new Criteria());  
+        return getAttributeOptions(allOptionsCriteria);  
     }
 
     /**

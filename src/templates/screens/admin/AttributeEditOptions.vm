@@ -11,30 +11,35 @@ $page.setTitle("Attribute Editor")
     <input type="hidden" name="$intake.Attribute.Default.Id.Key" 
             value="$intake.Attribute.Default.Id">
 
-  <table width="35%" border="1">
+  <table width="55%" border="1">
     <tr>
-      <td width="25%">
-        <div align="center"><strong>Delete</strong>
+      <td width="10%">
+        <div align="center"><strong>Delete</strong></div>
+      </td>
+      <td width="10%">
+        <div align="center"><strong>ID</strong></div>
+      </td>
+      <td width="10%">
+        <div align="center"><strong>Parent ID</strong></div>
+      </td>
+      <td width="50%">
+        <div align="center"><strong>Option Name</strong>
       </div>
       </td>
-      <td width="25%">
-        <div align="center"><strong>Attribute Option</strong>
-      </div>
-      </td>
-      <td width="75%">
-        <div align="center"><strong>Attribute Option Order</strong>
+      <td width="20%">
+        <div align="center"><strong>Numeric Value</strong>
       </div>
       </td>
     </tr>
 
-
-#set ( $maxNum = $attribute.AttributeOptions.size() )
-#foreach ( $option in $attribute.AttributeOptions )
+#set ($options = $attribute.AllAttributeOptions)
+#set ( $maxNum = $options.size() )
+#foreach ( $option in $options )
     #set ( $intakeOption = $intake.AttributeOption.mapTo($option) )
 
     <tr>
 
-      <td width="25%">
+      <td width="10%">
         <div align="center">
 
           #booleanCheckbox ($intakeOption.Deleted)
@@ -42,17 +47,31 @@ $page.setTitle("Attribute Editor")
       </div>
       </td>
 
-      <td width="25%">          
+      <td width="10%">          
+        <div align="center">$option.PrimaryKey</div>
+      </td>
+
+      <td width="10%">          
         <div align="center">
 
-          #fieldErrorMsg($intakeOption "<br>")
+          #fieldErrorMsg($intakeOption.ParentIds "<br>")
+          <input type="text" name="$intakeOption.ParentIds.Key" 
+                  value="$intakeOption.ParentIds" size="5">
+    
+      </div>
+      </td>
+
+      <td width="50%">          
+        <div align="center">
+
+          #fieldErrorMsg($intakeOption.Name "<br>")
           <input type="text" name="$intakeOption.Name.Key" 
                   value="$intakeOption.Name">
     
       </div>
       </td>
 
-      <td width="75%">          
+      <td width="20%">          
         <div align="center">
 
     #numericSelect( $intakeOption.NumericValue.Key 1 $maxNum $intakeOption.NumericValue.Value 1 )
@@ -67,7 +86,7 @@ $page.setTitle("Attribute Editor")
 
     <tr>
 
-      <td width="25%">
+      <td width="10%">
         <div align="center">
 
             <b>New</b>
@@ -75,7 +94,23 @@ $page.setTitle("Attribute Editor")
       </div>
       </td>
 
-      <td width="25%">          
+
+      <td width="10%">          
+        <div align="center">&nbsp;</div>
+      </td>
+
+      <td width="10%">          
+        <div align="center">
+
+          #fieldErrorMsg($intakeOption.ParentIds "<br>")
+          <input type="text" name="$intakeOption.ParentIds.Key" 
+                  value="$intakeOption.ParentIds" size="5">
+    
+      </div>
+      </td>
+
+
+      <td width="50%">          
         <div align="center">
 
           <input type="text" name="$intakeOption.NewName.Key" 
@@ -84,7 +119,7 @@ $page.setTitle("Attribute Editor")
       </div>
       </td>
 
-      <td width="75%">          
+      <td width="20%">          
         <div align="center">
 
 #set ( $maxNum = $maxNum + 1 )
@@ -100,14 +135,19 @@ $page.setTitle("Attribute Editor")
     </tr>
 
     <tr>
-      <td width="25%">
-        
+      <td width="10%">
         <div align="center">&nbsp;</div>
       </td>
-      <td width="25%">
+      <td width="10%">
         <div align="center">&nbsp;</div>
       </td>
-      <td width="75%">          
+      <td width="10%">
+        <div align="center">&nbsp;</div>
+      </td>
+      <td width="50%">
+        <div align="center">&nbsp;</div>
+      </td>
+      <td width="20%">          
         <div align="center">
           <input type="submit" name="eventSubmit_doAddormodifyattributeoptions" 
                 value="Save">

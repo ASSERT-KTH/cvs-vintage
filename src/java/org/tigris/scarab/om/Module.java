@@ -198,7 +198,7 @@ public class Module
         Module prevModule = null;
         do
         {
-            rModOpts = module.getRModuleOptionsJoinAttributeOption(crit);
+            rModOpts = module.getRModuleOptions(crit);
             prevModule = module;
             module = prevModule.getModuleRelatedByParentId();
         }

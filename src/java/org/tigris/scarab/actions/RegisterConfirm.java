@@ -73,7 +73,7 @@ import org.tigris.scarab.util.*;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.10 2001/03/22 09:23:18 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.11 2001/05/09 01:51:34 jmcnally Exp $
 */
 public class RegisterConfirm extends VelocityAction
 {
@@ -148,7 +148,7 @@ public class RegisterConfirm extends VelocityAction
             ScarabConstants.SCARAB_REQUEST_TOOL);
         if (srt != null)
         {
-            ((ScarabRequestTool)srt).setUser((User)data.getUser()
+            ((ScarabRequestTool)srt).setUser((ScarabUser)data.getUser()
                 .getTemp(ScarabConstants.SESSION_REGISTER));
         }
         // set the template to the template that we should be going back to
