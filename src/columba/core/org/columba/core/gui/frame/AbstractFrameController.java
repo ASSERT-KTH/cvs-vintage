@@ -19,13 +19,12 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.gui.statusbar.StatusBar;
-import org.columba.core.gui.view.AbstractViewController;
+import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.gui.frame.TooltipMouseHandler;
 
-import java.awt.Container;
 import java.awt.event.MouseAdapter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,9 +41,37 @@ import java.util.logging.Logger;
  * @author Timo Stich (tstich@users.sourceforge.net)
  *
  */
-public abstract class AbstractFrameController extends AbstractViewController {
+public abstract class AbstractFrameController implements FrameMediator {
 
     private static final Logger LOG = Logger.getLogger("org.columba.core.gui.frame");
+
+    protected StatusBar statusBar;
+
+    /**
+     * Menuitems use this to display a string in the statusbar
+     */
+    protected MouseAdapter mouseTooltipHandler;
+
+    /**
+     * Saves view information like position, size and maximization state
+     */
+    protected ViewItem viewItem;
+
+    /**
+     *
+     * View this controller handles
+     */
+    protected AbstractView view;
+
+    /**
+     * Selection handler
+     */
+    protected SelectionManager selectionManager;
+
+    /**
+     * ID of controller
+     */
+    protected String id;
 
     /**
      * Constructor for FrameController.
@@ -59,8 +86,30 @@ public abstract class AbstractFrameController extends AbstractViewController {
      *
      */
     public AbstractFrameController(String id, ViewItem viewItem) {
-        
-        super(id, viewItem);
+        this.id = id;
+        this.viewItem = viewItem;
+
+        // If no view spec. is given, use default
+        if (viewItem == null) {
+            this.viewItem = new ViewItem(createDefaultConfiguration(id));
+        }
+
+        // register statusbar at global taskmanager
+        statusBar = new StatusBar(MainInterface.processor.getTaskManager());
+
+        // add tooltip handler
+        mouseTooltipHandler = new TooltipMouseHandler(statusBar);
+
+        // init selection handler
+        selectionManager = new SelectionManager();
+    }
+
+    /**
+     *
+     * @see ThreePaneMailFrameController for an example of its usage
+     *
+     */
+    protected void initActions() {
     }
 
     /**
@@ -102,6 +151,34 @@ public abstract class AbstractFrameController extends AbstractViewController {
         return defaultView;
     }
 
+    /**
+     * - create all additional controllers
+     * - register SelectionHandlers
+     */
+    protected abstract void init();
+
+    /**
+     *
+     * @return        statusbar
+     */
+    public StatusBar getStatusBar() {
+        return statusBar;
+    }
+
+    /**
+     * Returns the mouseTooltipHandler.
+     *
+     * @return MouseAdapter
+     */
+    public MouseAdapter getMouseTooltipHandler() {
+        return mouseTooltipHandler;
+    }
+
+    /* *20030831, karlpeder* Not used, close method is used instead
+    public void saveAndClose() {
+            view.saveWindowPosition();
+    }
+    */
 
     /**
      * Save window properties and close the window.
@@ -113,8 +190,10 @@ public abstract class AbstractFrameController extends AbstractViewController {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Closing FrameController: " + this.getClass().getName());
         }
-        ((AbstractFrameView)view).saveWindowPosition(); // ask view to store current pos and size
-        ((AbstractFrameView)view).setVisible(false);
+        view.savePositions(); // ask view to store current pos and size
+        if(view.getFrame() != null) {
+            view.getFrame().setVisible(false);
+        }
 
         /*
          * Tell frame model that frame is closing.
@@ -124,21 +203,44 @@ public abstract class AbstractFrameController extends AbstractViewController {
         MainInterface.frameModel.close(this);
     }
 
+    /**
+     * Create view
+     *
+     * @return        view object
+     */
+    protected abstract AbstractView createView();
 
     /**
      * Open new view.
      *
      */
     public void openView() {
-        AbstractFrameView view = getView();
+        AbstractView view = getView();
 
-        view.loadWindowPosition();
+        view.loadPositions();
 
-        view.setVisible(true);
+        if(view.getFrame() != null) {
+            view.getFrame().setVisible(true);
+        }
 
         // set the position afterwards
         // if not the maximization fails
-        view.loadWindowPosition();
+        view.loadPositions();
+    }
+
+    /**
+     * @return ViewItem
+     */
+    public ViewItem getViewItem() {
+        return viewItem;
+    }
+
+    /**
+     * Sets the item.
+     * @param item The item to set
+     */
+    public void setViewItem(ViewItem item) {
+        this.viewItem = item;
     }
 
     /**
@@ -162,18 +264,9 @@ public abstract class AbstractFrameController extends AbstractViewController {
     }
 
     /**
-     * Returns the container that holds the view
-     *
-     * @return Container that displays the view
+     * @return View (Create new view if there is none)
      */
-    public Container getFrame() {
-        return getView();
-    }
-    
-    /**
-     * @return FrameView
-     */
-    public AbstractFrameView getView() {
+    public AbstractView getView() {
         if (view == null) {
             // initialize the view here
             init();
@@ -185,14 +278,25 @@ public abstract class AbstractFrameController extends AbstractViewController {
             view = createView();
         }
 
-        return (AbstractFrameView)view;
+        return view;
+    }
+
+//    public Menu getMenu() {
+//        return getView().getMenu();
+//    }
+
+    /**
+     * @return SelectionManager
+     */
+    public SelectionManager getSelectionManager() {
+        return selectionManager;
     }
 
     /**
-     * @return menu
+     * Sets the selectionManager.
+     * @param selectionManager The selectionManager to set
      */
-    public Menu getMenu() {
-        return getView().getMenu();
+    public void setSelectionManager(SelectionManager selectionManager) {
+        this.selectionManager = selectionManager;
     }
-
 }

@@ -54,6 +54,7 @@ public abstract class AbstractFrameView extends JFrame
     protected FrameMediator frameController;
     protected Menu menu;
     protected ToolBar toolbar;
+    protected JFrame frame;
 
     /**
      * in order to support multiple toolbars we use a panel as
@@ -63,6 +64,7 @@ public abstract class AbstractFrameView extends JFrame
 
     public AbstractFrameView(FrameMediator frameController) {
         this.frameController = frameController;
+        setFrame(this);
 
         this.setIconImage(ImageLoader.getImageIcon("icon16.png").getImage());
 
@@ -111,7 +113,7 @@ public abstract class AbstractFrameView extends JFrame
      * Load the window position, size and maximization state
      *
      */
-    public void loadWindowPosition() {
+    public void loadPositions() {
         ViewItem viewItem = frameController.getViewItem();
 
         // *20030831, karlpeder* Also location is restored
@@ -141,15 +143,13 @@ public abstract class AbstractFrameView extends JFrame
      * Save current window position, size and maximization state
      *
      */
-    public void saveWindowPosition() {
+    public void savePositions() {
         java.awt.Dimension d = getSize();
         java.awt.Point loc = getLocation();
 
         WindowItem item = frameController.getViewItem().getWindowItem();
 
         // *20030831, karlpeder* Now also location is stored
-        //item.set("x", 0);
-        //item.set("y", 0);
         item.set("x", loc.x);
         item.set("y", loc.y);
         item.set("width", d.width);
@@ -277,5 +277,23 @@ public abstract class AbstractFrameView extends JFrame
      */
     public void setViewController(FrameMediator controller) {
         frameController = controller;
+    }
+    
+    /**
+     * Gets JFrame containing the View.
+     *
+     * @return view container JFrame.
+     */
+    public JFrame getFrame() {
+        return frame;
+    }
+
+     /**
+     * Sets continer of the view.
+     *
+     * @param JFrame       container of the view
+     */
+    public void setFrame(JFrame frame) {
+        this.frame = frame;
     }
 }
