@@ -36,7 +36,7 @@ import org.jboss.invocation.Invocation;
  *
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/6/4: yarrumretep</b>
@@ -66,7 +66,7 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	    log.trace("LOCK(" + id + "):" + message + " : " +  tx);
     }
 
-    public void schedule(Invocation mi)
+    public void schedule(Invocation mi) throws Exception
     {
 	boolean reading = container.getBeanMetaData().isMethodReadOnly(mi.getMethod().getName());
 	Transaction miTx = mi.getTransaction();
@@ -98,7 +98,7 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	}
     }
 
-    private void getReadLock(Transaction tx)
+    private void getReadLock(Transaction tx) throws InterruptedException
     {
 	boolean done = false;
 
@@ -142,7 +142,7 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	}
     }
 
-    private void getWriteLock(Transaction tx)
+    private void getWriteLock(Transaction tx) throws InterruptedException
     {
 	boolean done = false;
 	boolean isReader;
@@ -190,7 +190,7 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
      * Use readers as a semaphore object to avoid
      * creating another object
      */
-    private void waitAWhile(Transaction tx)
+    private void waitAWhile(Transaction tx) throws InterruptedException
     {
 	releaseSync();
 	try
@@ -260,7 +260,7 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	releaseWriteLock(transaction);
     }
 
-    private void getMethodLock(Invocation mi)
+    private void getMethodLock(Invocation mi) throws InterruptedException
     {
 	boolean gotMethodLock = false;
 	while(!gotMethodLock)
@@ -340,16 +340,20 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	
 	public void afterCompletion(int status)
 	{
-	    lock.sync();
-	    try
-	    {
-		lock.releaseReadLock(transaction);
-	    }
-	    finally
-	    {
-		lock.releaseSync();
-	    }
-	    recycle();
+           try
+           {
+              lock.sync();
+              try
+              {
+                 lock.releaseReadLock(transaction);
+              }
+              finally
+              {
+                 lock.releaseSync();
+              }
+              recycle();
+           }
+           catch (InterruptedException ignored) {}
 	}
     }
     

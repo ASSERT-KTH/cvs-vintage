@@ -37,7 +37,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -434,7 +434,14 @@ public class StatefulSessionInstanceInterceptor
          if( log.isTraceEnabled() )
             log.trace("afterCompletion called");
          
-         lock.sync();
+         try
+         {
+            lock.sync();
+         } catch (InterruptedException interrupted)
+         {
+            log.warn("lock.sync interrupted!", interrupted);
+         }
+         
          try
          {
             // finish the transaction association

@@ -34,7 +34,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>
@@ -84,53 +84,60 @@ public class EntityMultiInstanceSynchronizationInterceptor
          ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
          Thread.currentThread().setContextClassLoader(container.getClassLoader());
    
-         lock.sync();
          try
          {
+            lock.sync();
             try
             {
-               // If rolled back -> invalidate instance
-               if (status != Status.STATUS_ROLLEDBACK)
-               {
-                  switch (commitOption)
-                  {
-                     // Keep instance cached after tx commit
-                  case ConfigurationMetaData.A_COMMIT_OPTION:
-                     throw new IllegalStateException("Commit option A not allowed with this Interceptor");
-                     // Keep instance active, but invalidate state
-                  case ConfigurationMetaData.B_COMMIT_OPTION:
-                     break;
-                     // Invalidate everything AND Passivate instance
-                  case ConfigurationMetaData.C_COMMIT_OPTION:
-                     break;
-                  case ConfigurationMetaData.D_COMMIT_OPTION:
-                     throw new IllegalStateException("Commit option A not allowed with this Interceptor");
-                  }
-               }
                try
                {
-                  container.getPersistenceManager().passivateEntity(ctx);
+                  // If rolled back -> invalidate instance
+                  if (status != Status.STATUS_ROLLEDBACK)
+                  {
+                     switch (commitOption)
+                     {
+                        // Keep instance cached after tx commit
+                     case ConfigurationMetaData.A_COMMIT_OPTION:
+                        throw new IllegalStateException("Commit option A not allowed with this Interceptor");
+                        // Keep instance active, but invalidate state
+                     case ConfigurationMetaData.B_COMMIT_OPTION:
+                        break;
+                        // Invalidate everything AND Passivate instance
+                     case ConfigurationMetaData.C_COMMIT_OPTION:
+                        break;
+                     case ConfigurationMetaData.D_COMMIT_OPTION:
+                        throw new IllegalStateException("Commit option A not allowed with this Interceptor");
+                     }
+                  }
+                  try
+                  {
+                     container.getPersistenceManager().passivateEntity(ctx);
+                  }
+                  catch (Exception ignored) {}
+                  
+                  container.getInstancePool().free(ctx);
                }
-               catch (Exception ignored) {}
-
-               container.getInstancePool().free(ctx);
-            }
+               finally
+               {
+                  if( trace )
+                     log.trace("afterCompletion, clear tx for ctx="+ctx+", tx="+tx);
+                  
+                  lock.endTransaction(tx);
+                  
+                  if( trace )
+                     log.trace("afterCompletion, sent notify on TxLock for ctx="+ctx);
+               }
+            } // synchronized(lock)
             finally
             {
-               if( trace )
-                  log.trace("afterCompletion, clear tx for ctx="+ctx+", tx="+tx);
-
-               lock.endTransaction(tx);
-     
-               if( trace )
-                  log.trace("afterCompletion, sent notify on TxLock for ctx="+ctx);
+               lock.releaseSync();
+               container.getLockManager().removeLockRef(lock.getId());
+               Thread.currentThread().setContextClassLoader(oldCl);               
             }
-         } // synchronized(lock)
-         finally
+         } 
+         catch (InterruptedException ex)
          {
-            lock.releaseSync();
-            container.getLockManager().removeLockRef(lock.getId());
-            Thread.currentThread().setContextClassLoader(oldCl);               
+            log.error("Failed to lock.sync: " + ex);
          }
       }
  

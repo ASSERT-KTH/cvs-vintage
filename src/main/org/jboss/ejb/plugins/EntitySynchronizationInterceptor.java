@@ -44,7 +44,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.67 $
+ * @version $Revision: 1.68 $
  */
 public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
@@ -187,12 +187,18 @@ public class EntitySynchronizationInterceptor
    
          // This is really a mistake from the JTA spec, the fact that the tx is marked rollback should not be relevant
          // We should still hear about the demarcation
-         clearContextTx("RollbackException", ctx, tx, trace);         
+         try
+         {
+            clearContextTx("RollbackException", ctx, tx, trace);         
+         } catch (InterruptedException ignored) {}
       }
       catch (Exception e)
       {
          // If anything goes wrong with the association remove the ctx-tx association
-         clearContextTx("Exception", ctx, tx, trace);
+         try
+         {
+            clearContextTx("Exception", ctx, tx, trace);
+         } catch (InterruptedException ignored) {}
          throw new EJBException(e);
       }
    }
@@ -404,82 +410,90 @@ public class EntitySynchronizationInterceptor
          // thread is associated with the right context class loader
          ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
          Thread.currentThread().setContextClassLoader(container.getClassLoader());
-   
-         lock.sync();
+
          try
          {
+            lock.sync();
             try
             {
-               // If rolled back -> invalidate instance
-               if (status == Status.STATUS_ROLLEDBACK)
+               try
                {
-                  // remove from the cache
-                  container.getInstanceCache().remove(ctx.getCacheKey());
-               }
-               else
-               {
-                  switch (commitOption)
+                  // If rolled back -> invalidate instance
+                  if (status == Status.STATUS_ROLLEDBACK)
                   {
-                     // Keep instance cached after tx commit
-                  case ConfigurationMetaData.A_COMMIT_OPTION:
-                     // The state is still valid (only point of access is us)
-                     ctx.setValid(true);
-                     break;
-       
-                     // Keep instance active, but invalidate state
-                  case ConfigurationMetaData.B_COMMIT_OPTION:
-                     // Invalidate state (there might be other points of entry)
-                     ctx.setValid(false);
-                     break;
-                     // Invalidate everything AND Passivate instance
-                  case ConfigurationMetaData.C_COMMIT_OPTION:
-                     try
+                     // remove from the cache
+                     container.getInstanceCache().remove(ctx.getCacheKey());
+                  }
+                  else
+                  {
+                     switch (commitOption)
                      {
-                        // Do not call release if getId() is null.  This means that
-                        // the entity has been removed from cache.
-                        // release will schedule a passivation and this removed ctx
-                        // could be put back into the cache!
-                        if (ctx.getId() != null) container.getInstanceCache().release(ctx);
+                        // Keep instance cached after tx commit
+                     case ConfigurationMetaData.A_COMMIT_OPTION:
+                        // The state is still valid (only point of access is us)
+                        ctx.setValid(true);
+                        break;
+                        
+                        // Keep instance active, but invalidate state
+                     case ConfigurationMetaData.B_COMMIT_OPTION:
+                        // Invalidate state (there might be other points of entry)
+                        ctx.setValid(false);
+                        break;
+                        // Invalidate everything AND Passivate instance
+                     case ConfigurationMetaData.C_COMMIT_OPTION:
+                        try
+                        {
+                           // Do not call release if getId() is null.  This means that
+                           // the entity has been removed from cache.
+                           // release will schedule a passivation and this removed ctx
+                           // could be put back into the cache!
+                           if (ctx.getId() != null) container.getInstanceCache().release(ctx);
+                        }
+                        catch (Exception e)
+                        {
+                           if( log.isDebugEnabled() )
+                              log.debug("Exception releasing context", e);
+                        }
+                        break;
+                     case ConfigurationMetaData.D_COMMIT_OPTION:
+                        //if the local cache is emptied then valid is set to false(see invoke() )
+                        validContexts.add(ctx.getId());
+                        break;
                      }
-                     catch (Exception e)
-                     {
-                        if( log.isDebugEnabled() )
-                          log.debug("Exception releasing context", e);
-                     }
-                     break;
-                  case ConfigurationMetaData.D_COMMIT_OPTION:
-                     //if the local cache is emptied then valid is set to false(see invoke() )
-                     validContexts.add(ctx.getId());
-                     break;
                   }
                }
-            }
+               finally
+               {
+                  if( trace )
+                     log.trace("afterCompletion, clear tx for ctx="+ctx+", tx="+tx);
+                  // The context is no longer synchronized on the TX
+                  ctx.hasTxSynchronization(false);
+                  
+                  ctx.setTransaction(null);
+                  
+                  lock.endTransaction(tx);
+                  
+                  if( trace )
+                     log.trace("afterCompletion, sent notify on TxLock for ctx="+ctx);
+               }
+            } // synchronized(lock)
             finally
             {
-               if( trace )
-                  log.trace("afterCompletion, clear tx for ctx="+ctx+", tx="+tx);
-               // The context is no longer synchronized on the TX
-               ctx.hasTxSynchronization(false);
-     
-               ctx.setTransaction(null);
-     
-               lock.endTransaction(tx);
-     
-               if( trace )
-                  log.trace("afterCompletion, sent notify on TxLock for ctx="+ctx);
+               lock.releaseSync();
+               container.getLockManager().removeLockRef(lock.getId());
+               Thread.currentThread().setContextClassLoader(oldCl);               
             }
-         } // synchronized(lock)
-         finally
+         }
+         catch (InterruptedException ex)
          {
-            lock.releaseSync();
-            container.getLockManager().removeLockRef(lock.getId());
-            Thread.currentThread().setContextClassLoader(oldCl);               
+            log.error("Failed to acquire lock.sync: ", ex);
          }
       }
  
    }
  
    protected void clearContextTx(String msg, EntityEnterpriseContext ctx, Transaction tx, boolean trace)
+      throws InterruptedException
    {
       BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
       lock.sync();

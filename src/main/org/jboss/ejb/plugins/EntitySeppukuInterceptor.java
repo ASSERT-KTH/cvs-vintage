@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  * message through a JMS topic if the change successfully commits
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class EntitySeppukuInterceptor
    extends AbstractInterceptor
@@ -341,26 +341,31 @@ public class EntitySeppukuInterceptor
   
       public void afterCompletion(int status)
       {
-         boolean trace = log.isTraceEnabled();
-   
          // This is an independent point of entry. We need to make sure the
          // thread is associated with the right context class loader
          ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
          Thread.currentThread().setContextClassLoader(container.getClassLoader());
-         if (status != Status.STATUS_ROLLEDBACK)
+         try
          {
-            try
+            if (status != Status.STATUS_ROLLEDBACK)
             {
-               sendSeppukuSet(ids);
-            }
-            catch (Exception ex)
-            {
-               log.error("Failed send seppuku message", ex);
+               try
+               {
+                  sendSeppukuSet(ids);
+               }
+               catch (Exception ex)
+               {
+                  log.error("Failed send seppuku message", ex);
+               }
             }
             synchronized (seppukuSynchs)
             {
                seppukuSynchs.remove(tx);
             }
+         }
+         finally
+         {
+            Thread.currentThread().setContextClassLoader(oldCl);
          }
       }
    }
