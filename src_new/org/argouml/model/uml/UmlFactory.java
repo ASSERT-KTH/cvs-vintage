@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.53 2004/12/08 18:27:37 bobtarling Exp $
+// $Id: UmlFactory.java,v 1.54 2004/12/09 15:27:54 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -321,6 +321,10 @@ public class UmlFactory extends AbstractUmlModelFactory {
             new ObjectCreateInfo(MAssociation.class,
                 factory,
                 "createAssociation"));
+        elements.put(Uml.ASSOCIATION_CLASS,
+            new ObjectCreateInfo(MAssociationClass.class,
+                factory,
+                "createAssociationClass"));
         elements.put(Uml.ASSOCIATION_ROLE,
             new ObjectCreateInfo(MAssociationRole.class,
                 factory,
