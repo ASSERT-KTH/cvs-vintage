@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.3 2001/03/12 13:52:36 toby Exp $
+// $Id: Modeller.java,v 1.4 2001/03/23 19:33:55 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -280,7 +280,7 @@ public class Modeller
 	if((javadoc == null) || "".equals(javadoc)) {
 	    javadoc = "/** */";
 	}
-	getTaggedValue(mClassifier, "javadocs").setValue(javadoc);
+	getTaggedValue(mClassifier, "documentation").setValue(javadoc);
 
 	return mClassifier;
     }	
@@ -332,7 +332,7 @@ public class Modeller
 	if((javadoc == null) || "".equals(javadoc)) {
 	    javadoc = "/** */";
 	}
-	getTaggedValue(mOperation, "javadocs").setValue(javadoc);
+	getTaggedValue(mOperation, "documentation").setValue(javadoc);
 
 	mOperation.setAbstract((modifiers & JavaRecognizer.ACC_ABSTRACT) > 0);
 	mOperation.setLeaf((modifiers & JavaRecognizer.ACC_FINAL) > 0);
@@ -414,7 +414,7 @@ public class Modeller
 	if((javadoc==null) || "".equals(javadoc)) {
 	    javadoc = "/** */";
 	}
-	getTaggedValue(mAttribute, "javadocs").setValue(javadoc);
+	getTaggedValue(mAttribute, "documentation").setValue(javadoc);
 
 	setScope(mAttribute, modifiers);
 	setVisibility(mAttribute, modifiers);
