@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.invocation;
 
 import java.io.DataOutputStream;
@@ -12,33 +13,41 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+
 import java.util.Arrays;
 
-/** A simple replacement for the RMI MarshalledObject that uses the thread
- context class loader for resolving classes and proxies. This currently does
- not support class annotations and dynamic class loading.
-
-@author Scott.Stark@jboss.org
-@version $Revision: 1.1 $
-*/
-public class MarshalledValue implements java.io.Externalizable
+/**
+ * A simple replacement for the RMI MarshalledObject that uses the thread
+ * context class loader for resolving classes and proxies. This currently does
+ * not support class annotations and dynamic class loading.
+ *
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.2 $
+ */
+public class MarshalledValue
+   implements java.io.Externalizable
 {
-   // Constants -----------------------------------------------------
-   
    /** Serial Version Identifier. */
-   static final long serialVersionUID = -1527598981234110311L;
+   private static final long serialVersionUID = -1527598981234110311L;
 
-   /** The serialized form of the value. If <code>serializedForm</code> is
-   * <code>null</code> then the object marshalled was a <code>null</code>
-   * reference.
-   */
+   /**
+    * The serialized form of the value. If <code>serializedForm</code> is
+    * <code>null</code> then the object marshalled was a <code>null</code>
+    * reference.
+    */
    private byte[] serializedForm = null;
-   /** The RMI MarshalledObject hash of the serializedForm array
+   
+   /**
+    * The RMI MarshalledObject hash of the serializedForm array
     */
    private int hashCode;
 
+   /**
+    * Exposed for externalization.
+    */
    public MarshalledValue()
    {
+      super();
    }
 
    public MarshalledValue(Object obj) throws IOException
@@ -53,14 +62,15 @@ public class MarshalledValue implements java.io.Externalizable
       int hash = 0;
       for (int i = 0; i < serializedForm.length; i++)
       {
-          hash = 31 * hash + serializedForm[i];
+         hash = 31 * hash + serializedForm[i];
       }
+      
       hashCode = hash;
    }
 
    public Object get() throws IOException, ClassNotFoundException
    {
-      if( serializedForm == null )
+      if (serializedForm == null)
          return null;
 
       ByteArrayInputStream bais = new ByteArrayInputStream(serializedForm);
@@ -68,10 +78,11 @@ public class MarshalledValue implements java.io.Externalizable
       return mvis.readObject();
    }
 
-   /** Return a hash code for the serialized form of the value.
-   *
-   * @return the serialized form value hash.
-   */
+   /**
+    * Return a hash code for the serialized form of the value.
+    *
+    * @return the serialized form value hash.
+    */
    public int hashCode()
    {
       return hashCode;
@@ -106,9 +117,10 @@ public class MarshalledValue implements java.io.Externalizable
     * and with the same types as were written by writeExternal.
     *
     * @param in the stream to read data from in order to restore the object
-    * @exception IOException if I/O errors occur
-    * @exception ClassNotFoundException If the class for an object being
-    *             restored cannot be found.
+    * 
+    * @throws IOException              if I/O errors occur
+    * @throws ClassNotFoundException   If the class for an object being
+    *                                  restored cannot be found.
     */
    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
    {
@@ -134,8 +146,9 @@ public class MarshalledValue implements java.io.Externalizable
     *            relate the element to a public/protected field and/or
     *            method of this Externalizable class.
     *
-    * @param out the stream to write the object to
-    * @exception IOException Includes any I/O exceptions that may occur
+    * @param out    the stream to write the object to
+    * 
+    * @throws IOException   Includes any I/O exceptions that may occur
     */
    public void writeExternal(ObjectOutput out) throws IOException
    {
@@ -147,5 +160,4 @@ public class MarshalledValue implements java.io.Externalizable
       }
       out.writeInt(hashCode);
    }
-
 }
