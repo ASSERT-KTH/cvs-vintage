@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.2 1999/11/28 23:52:32 harishp Exp $
+# $Id: tomcat.sh,v 1.3 1999/12/03 17:01:24 harishp Exp $
 
 # Shell script to start and stop the server
 
@@ -13,6 +13,20 @@
 #java -cp runner.jar:servlet.jar:classes org.apache.tomcat.shell.Startup $*
 
 baseDir=`dirname $0`
+
+if [ -z "$JAVA_HOME" ]
+then
+JAVACMD=`which java`
+if [ -z "$JAVACMD" ]
+then
+echo "Cannot find JAVA. Please set your PATH."
+exit 1
+fi
+JAVA_BINDIR=`dirname $JAVACMD`
+JAVA_HOME=$JAVA_BINDIR/..
+fi
+
+JAVACMD=$JAVA_HOME/bin/java
 
 jsdkJars=${baseDir}/webserver.jar:${baseDir}/lib/servlet.jar
 jspJars=${baseDir}/lib/jasper.jar
@@ -48,12 +62,12 @@ if test "$1" = "start"
 then 
 shift 
 echo Using classpath: ${CLASSPATH}
-java org.apache.tomcat.shell.Startup "$@" &
+$JAVACMD org.apache.tomcat.shell.Startup "$@" &
 elif test "$1" = "stop"
 then 
 shift 
 echo Using classpath: ${CLASSPATH}
-java org.apache.tomcat.shell.Shutdown "$@"
+$JAVACMD org.apache.tomcat.shell.Shutdown "$@"
 else
 echo "Usage:"
 echo "tomcat [start|stop]"

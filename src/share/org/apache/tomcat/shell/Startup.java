@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.5 1999/10/30 00:29:31 costin Exp $
- * $Revision: 1.5 $
- * $Date: 1999/10/30 00:29:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.6 1999/12/03 17:01:21 harishp Exp $
+ * $Revision: 1.6 $
+ * $Date: 1999/12/03 17:01:21 $
  *
  * ====================================================================
  *
@@ -116,8 +116,8 @@ public class Startup {
 	checkClassDependencies();
 
 	ServerConfig serverConfig = config.getServerConfig();
-	Registry registry =  createRegistry(serverConfig.getAdminPort());
 
+        Registry registry= createRegistry(serverConfig.getAdminPort());
 	Enumeration contextManagers = serverConfig.getContextManagers();
 
 	while (contextManagers.hasMoreElements()) {
@@ -209,6 +209,7 @@ public class Startup {
 
 	        System.out.println(msg);
 		hse.printStackTrace();
+                throw new StartupException();
 		// "problem starting server" can't help
 		// the user detect that the port is taken.
 		// ( or another tcp-related problem )
@@ -219,15 +220,17 @@ public class Startup {
 
 	        System.out.println(msg);
 		re.printStackTrace();
+                throw new StartupException();
 		// The original message is useless,
-		// I had no ideea what to do - if we can't figure a better
+		// I had no idea what to do - if we can't figure a better
 		// message, please let the stack trace in
 
 		// in my case - I had no eth card, and it couldn't find the hostname
 	    } catch (AlreadyBoundException abe) {
 	        String msg = sm.getString("startup.server.abe");
-
 	        System.out.println(msg);
+		abe.printStackTrace();
+                throw new StartupException();
 	    }
 	}
     }
@@ -351,7 +354,8 @@ public class Startup {
 
 	    start.configure(args);
 	} catch (StartupException e) {
-	    System.out.println(e.getMessage());
+	    // System.out.println(e.getMessage());
+            System.exit(1);
 	}
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.3 1999/10/28 16:57:43 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/28 16:57:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.4 1999/12/03 17:01:19 harishp Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/12/03 17:01:19 $
  *
  * ====================================================================
  *
@@ -183,7 +183,7 @@ public class TcpEndpoint  { // implements Endpoint {
 
     // -------------------- Public methods --------------------
     
-    public void startEndpoint() {
+    public void startEndpoint() throws IOException, InstantiationException {
 	try {
 	    if(factory==null)
 		factory=ServerSocketFactory.getDefault();
@@ -196,13 +196,15 @@ public class TcpEndpoint  { // implements Endpoint {
 	    }
 	} catch( IOException ex ) {
 	    // throw?
-	    ex.printStackTrace();
+	    // ex.printStackTrace();
 	    running=false;
+            throw ex;
 	    //	    throw new HttpServerException(msg);
 	} catch( InstantiationException ex1 ) {
 	    // throw?
-	    ex1.printStackTrace();
+	    // ex1.printStackTrace();
 	    running=false;
+            throw ex1;
 	    //	    throw new HttpServerException(msg);
 	}
 	running=true;
