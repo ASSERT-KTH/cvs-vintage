@@ -53,7 +53,6 @@ import java.util.List;
 // Turbine & Apache Commons Stuff
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.TemplateContext;
 import org.apache.commons.fileupload.FileItem;
 
 // Scarab Stuff
@@ -70,7 +69,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * Loads XML into Scarab via import, returning XML-formatted results
  *
  * @author <a href="mailto:mmurphy@collab.net">Mark L. Murphy</a>
- * @version $Id: XMLImportIssuesResults.java,v 1.7 2003/04/01 02:50:43 jon Exp $
+ * @version $Id: XMLImportIssuesResults.java,v 1.8 2003/07/04 11:27:13 mpoeschl Exp $
  */
 public class XMLImportIssuesResults extends Default
 {
