@@ -13,10 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import org.columba.core.main.MainInterface;
+import org.columba.core.logging.ColumbaLogger;
 
 public class Compatibility
 {
@@ -39,8 +43,9 @@ public class Compatibility
 		// "InvocationTargetException" we might aswell put any problem down to an incompatibility.
 		catch (Exception e)
 		{
-			System.err.println(
-				"Incompatible " + methodName + " call on " + target.getClass().getName() + " failed");
+			if (MainInterface.DEBUG) {
+				ColumbaLogger.log.debug("Incompatible " + methodName + " call on " + target.getClass().getName() + " failed");
+			}
 		}
 	}
 
@@ -56,8 +61,9 @@ public class Compatibility
 		// "InvocationTargetException" we might aswell put any problem down to an incompatibility.
 		catch (Exception e)
 		{
-			System.err.println(
-				"Incompatible field " + fieldName + " call on " + target.getClass().getName() + " failed");
+			if (MainInterface.DEBUG) {
+				ColumbaLogger.log.debug("Incompatible field " + fieldName + " call on " + target.getClass().getName() + " failed");
+			}
 		}
 		return resultField;
 	}
