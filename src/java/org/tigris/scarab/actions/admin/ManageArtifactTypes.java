@@ -72,7 +72,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.3 2002/01/30 00:28:57 jon Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.4 2002/02/01 00:33:00 elicia Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -107,6 +107,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                 {
                    data.setMessage("You cannot select more than 5 to appear "
                                    +"in the left hand navigation.");
+                   return;
                 }
             }
             for (int i=0;i < rmits.size(); i++)
