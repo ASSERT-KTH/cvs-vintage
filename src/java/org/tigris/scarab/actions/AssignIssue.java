@@ -84,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.69 2002/11/05 19:45:40 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.70 2002/11/05 21:01:19 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -346,19 +346,12 @@ public class AssignIssue extends BaseModifyIssue
                 
         }
 
-        if (issues.size() == 1)
-        {
-            Issue issue = (Issue)issues.get(0);
-            data.getParameters().add("id", issue.getUniqueId());
-        }
         
         if (scarabR.getAlertMessage() == null || 
             scarabR.getAlertMessage().length() == 0)
         {
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
         }
-        // go back to the previous page...really a doDone, but...
-        doCancel(data, context);
     }
      
 
@@ -439,10 +432,9 @@ public class AssignIssue extends BaseModifyIssue
     public void doDone(RunData data, TemplateContext context) 
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        commitAssigneeChanges(data, context, scarabR);
-        ScarabCache.clear();
+        commitAssigneeChanges(data, context, getScarabRequestTool(context));
+        //ScarabCache.clear();
+        doCancel(data, context);
     }
 
     public void doPerform(RunData data, TemplateContext context) 
@@ -466,4 +458,18 @@ public class AssignIssue extends BaseModifyIssue
         }
     }
 
+    public void doCancel(RunData data, TemplateContext context)
+        throws Exception
+    {
+        String cancelPage = "IssueList.vm";
+        List issues = getScarabRequestTool(context).getIssues();
+        if (issues.size() == 1)
+        {
+            Issue issue = (Issue)issues.get(0);
+            data.getParameters().add("id", issue.getUniqueId());
+            cancelPage = "ViewIssue.vm";
+        }
+        setTarget(data, cancelPage);
+    }
+        
 }
