@@ -35,11 +35,10 @@ public class BodyTextViewer extends JTextPane {
 		htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
 
-		parser = new DocumentParser();
-		
-		
-
+		parser = new DocumentParser();	
 	}
+
+	
 
 	public void setBodyText(String bodyText, boolean html) {
 		if (html) {
@@ -99,5 +98,7 @@ public class BodyTextViewer extends JTextPane {
 		buf.append("</P></BODY></HTML>");
 
 	}
+
+
 
 }
