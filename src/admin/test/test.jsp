@@ -54,6 +54,8 @@ Debug: <input type="checkbox" name="debug" value="10"><br>
    // it's done ), use 'html' for "interactive" results
 %>
 
+<h1>Test <%= gtestTestRevision %></h1>
+
 <% // -------------------- Failures -------------------- %>
 <h1>FAILED Tests</h1>
 

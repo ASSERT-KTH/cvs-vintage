@@ -18,6 +18,7 @@ import org.apache.tomcat.util.test.*;
  */
 public class GTestTag extends TagSupport {
     PageContext pageContext;
+    String revision;
     
     public GTestTag() {}
 
@@ -37,6 +38,8 @@ public class GTestTag extends TagSupport {
 	    
 	    runTest( base );
 
+	    pageContext.setAttribute("gtestTestRevision",
+				     revision);
 	    pageContext.setAttribute("gtestTestResults",
 				     GTest.getTestResults());
 	    pageContext.setAttribute("gtestTestFailures",
@@ -145,6 +148,16 @@ public class GTestTag extends TagSupport {
 	    project.setUserProperty( "wgdir", base + "/Golden");
 	    
 	    ProjectHelper.configureProject( project, testFile );
+
+	    // try to get revision if present
+	    revision = project.getProperty( "revision" );
+	    if (revision  == null)
+		revision  = "Revision: Unknown";
+	    else {
+		// clean up a little in case CVS $Revision: 1.7 $ used
+		revision  = revision .replace('$',' ');
+		revision .trim();
+	    }
 	    
 	    Vector targets=new Vector();
 	    if( target==null ) target="client";
