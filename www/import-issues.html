@@ -7,7 +7,7 @@
 <body bgcolor="#ffffff">
 
 <h3>Importing issue data</h3>
-<h5>$Id: import-issues.html,v 1.1 2002/10/03 01:21:32 jon Exp $</h5>
+<h5>$Id: import-issues.html,v 1.2 2003/01/23 18:06:00 jon Exp $</h5>
 
 <p>
 Scarab has the ability to export XML issues and then import them back
@@ -60,9 +60,9 @@ correctly before doing the validation.
 
 <p>
 To perform the import, one needs to setup some properties and then
-execute the scarab/build/import2.xml file. The properties can be defined
+execute the scarab/build/import.xml file. The properties can be defined
 in a ~/build.properties file (or ~/scarab.build.properties,
-scarab/build.properties, etc. Look at the top of the import2.xml file
+scarab/build.properties, etc. Look at the top of the import.xml file
 for the various locations which can be used.)
 </p>
 
@@ -84,7 +84,7 @@ The important properties which can be defined are:
 <p>
 The best thing to do in the early stages of this development phase is
 to cd into the build directory and first make sure that Scarab is built (type: <strong>ant</strong>). 
-Then, type the following: <strong>ant -f import2.xml</strong>
+Then, type the following: <strong>ant -f import.xml</strong>
 </p>
 
 <p>
