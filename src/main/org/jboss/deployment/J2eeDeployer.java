@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for JBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.17 $
+*   @version $Revision: 1.18 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -390,7 +390,10 @@ implements J2eeDeployerMBean
       
       // set the context classloader for this application
       createContextClassLoader(_d);
-      
+
+      // save the application classloader for later
+      ClassLoader appCl = Thread.currentThread().getContextClassLoader();
+
       // redirect all modules to the responsible deployers
       Deployment.Module m = null;
       String message;
@@ -411,10 +414,10 @@ implements J2eeDeployerMBean
             // Call the TomcatDeployer that is loaded in the JMX server
             server.invoke(warDeployer, "deploy",
                new Object[] { m.webContext, m.localUrls.firstElement().toString ()}, new String[] { "java.lang.String", "java.lang.String" });
-         }
 
-		 // since tomcat changes the context classloader...
-         Thread.currentThread().setContextClassLoader (oldCl);
+            // since tomcat changes the context classloader...
+            Thread.currentThread().setContextClassLoader (appCl);
+         }
 
          // JBoss
          it = _d.ejbModules.iterator ();
