@@ -1,0 +1,3 @@
+<bean
+  class="org.jboss.ejb.deployment.CachePolicySupportConfiguration">
+</bean>
