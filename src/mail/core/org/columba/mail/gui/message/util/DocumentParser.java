@@ -164,32 +164,59 @@ public class DocumentParser {
 		BufferedReader br = new BufferedReader(sr);
 		String ss = null;
 
+		/*
+		 * *20030618, kpo* Changed the way multiple spaces are 
+		 * replaced with &nbsp; so &nbsp; and spaces alternates - 
+		 * allways ending with a space. This gives better wordwrap
+		 * in e.g. the BodyTextViewer 
+		 */
+
 		try {
 
 			while ((ss = br.readLine()) != null) {
-				for (int i = 0; i < ss.length(); i++) {
+				//for (int i = 0; i < ss.length(); i++) {
+				int i = 0;
+				while (i < ss.length()) {
 					switch (ss.charAt(i)) {
 						case '<' :
 							sb.append("&lt;");
+							i++;
 							break;
 						case '>' :
 							sb.append("&gt;");
+							i++;
 							break;
 						case '&' :
 							sb.append("&amp;");
+							i++;
 							break;
 						case ' ' :
-							sb.append("&nbsp;");
+							//sb.append("&nbsp;");
+							if        (ss.substring(i).startsWith("    ")) {
+								sb.append("&nbsp; ");
+								i = i + 2;
+							} else if (ss.substring(i).startsWith("   ")) {
+								sb.append("&nbsp;&nbsp; ");
+								i = i + 3;
+							} else if (ss.substring(i).startsWith("  ")) {
+								sb.append("&nbsp; ");
+								i = i + 2;
+							} else {
+								sb.append(' ');
+								i++;
+							}
 							break;
 						case '\t' :
 							sb.append("&nbsp;&nbsp;&nbsp;&nbsp;");
+							i++;
 							break;
 						case '\n' :
 							sb.append("<br>");
+							i++;
 							break;
-
 						default :
 							sb.append(ss.charAt(i));
+							i++;
 							break;
 					}
 				}
