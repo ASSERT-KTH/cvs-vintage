@@ -1,5 +1,5 @@
 <!ELEMENT activities ( activity+ ) >
-<!ELEMENT activity ( id?, (user-attribute | attribute)?, old-numeric-value?, new-numeric-value?, old-user?, new-user?, old-option?, new-option?, old-value?, new-value?, dependency?, description, end-date, attachment? ) >
+<!ELEMENT activity ( id?, attribute?, old-numeric-value?, new-numeric-value?, old-user?, new-user?, old-option?, new-option?, old-value?, new-value?, dependency?, description, end-date, attachment? ) >
 <!ELEMENT activity-set ( id, type, created-by, created-date, activities, attachment? ) >
 <!ELEMENT activity-sets ( activity-set+ ) >
 <!ELEMENT artifact-type ( #PCDATA ) >
@@ -41,4 +41,3 @@
 <!ELEMENT timestamp ( #PCDATA ) >
 <!ELEMENT type ( #PCDATA ) >
 <!ELEMENT url ( #PCDATA ) >
-<!ELEMENT user-attribute ( #PCDATA ) >
