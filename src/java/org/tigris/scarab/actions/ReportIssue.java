@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.86 2002/01/11 23:18:22 richard Exp $
+ * @version $Id: ReportIssue.java,v 1.87 2002/01/12 00:05:41 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -359,7 +359,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 issue.save();
                 
                 List files = issue.getAttachments();
-                for(int k = 0; k < files.size(); k++)
+                for (int k = 0; k < files.size(); k++)
                 {
                     Attachment attachment = (Attachment)files.get(k);
                     if (attachment.getData() != null 
@@ -462,12 +462,11 @@ public class ReportIssue extends RequireLoginFirstAction
                 data.getParameters().add("id",issue.getUniqueId().toString());
             }
         }
-        else{
-            System.out.println("error message is set");
+        else
+        {
             data.setMessage(ERROR_MESSAGE);
         }
-        doGotowizard3(data, context);
-        
+        doGotowizard3(data, context);        
     }
     
     /**
