@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.10 2000/01/10 22:35:31 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/01/10 22:35:31 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -130,16 +126,12 @@ public class Startup {
 	        ContextConfig contextConfig =
 		    (ContextConfig)contexts.nextElement();
 
-		Context context = new Context(contextManager,
-					      contextConfig.getPath(),
-					      contextConfig.getDocumentBase());
+		Context context = new Context();
+		context.setContextManager(contextManager);
+		context.setPath(contextConfig.getPath());
+		context.setDocumentBase(contextConfig.getDocumentBase());
 
                 contextManager.addContext(context);
-
-		String contextWorkDirPath =
-		    getContextWorkDirPath(serverConfig,
-			contextManagerConfig,
-		        contextConfig.getPath());
 
 		context.setSessionTimeOut(
 		    contextConfig.getDefaultSessionTimeOut());
@@ -154,8 +146,7 @@ public class Startup {
 
 		context.setIsWARExpanded(contextConfig.isWARExpanded());
 		context.setIsWARValidated(contextConfig.isWARValidated());
-		context.setWorkDir(contextWorkDirPath,
-		    contextConfig.isWorkDirPersistent());
+		context.setWorkDirPersistent(contextConfig.isWorkDirPersistent());
 		context.setIsWARValidated(contextConfig.isWARValidated());
 
 		// no need to check if it's the "default" context ( == root contex == "/"),
@@ -408,28 +399,28 @@ public class Startup {
 	return config;
     }
 
-    private String getContextWorkDirPath(ServerConfig serverConfig,
-	ContextManagerConfig contextManagerConfig, String path) {
-        String s = "";
-	String baseDir = serverConfig.getWorkDir();
-	String hostName = contextManagerConfig.getHostName();
-	String iNet = contextManagerConfig.getINet();
-	int port = contextManagerConfig.getPort();
+//     private String getContextWorkDirPath(ServerConfig serverConfig,
+// 	ContextManagerConfig contextManagerConfig, String path) {
+//         String s = "";
+// 	String baseDir = serverConfig.getWorkDir();
+// 	String hostName = contextManagerConfig.getHostName();
+// 	String iNet = contextManagerConfig.getINet();
+// 	int port = contextManagerConfig.getPort();
 
-	if (hostName.trim().length() > 0) {
-	    s += hostName;
-	} else if (iNet.trim().length() > 0) {
-	    s += iNet;
-	}
+// 	if (hostName.trim().length() > 0) {
+// 	    s += hostName;
+// 	} else if (iNet.trim().length() > 0) {
+// 	    s += iNet;
+// 	}
 
-	if (s.length() != 0) {
-	    s += ":";
-	}
+// 	if (s.length() != 0) {
+// 	    s += ":";
+// 	}
 
-	if (port > -1) {
-	    s += Integer.toString(port);
-	}
+// 	if (port > -1) {
+// 	    s += Integer.toString(port);
+// 	}
 
-	return baseDir + File.separator + URLEncoder.encode(s + path);
-    }
+// 	return baseDir + File.separator + URLEncoder.encode(s + path);
+//     }
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.7 2000/01/08 21:31:39 rubys Exp $
- * $Revision: 1.7 $
- * $Date: 2000/01/08 21:31:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.8 2000/01/11 02:06:54 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/01/11 02:06:54 $
  *
  * ====================================================================
  *
@@ -470,10 +470,16 @@ public class Response {
     }
 
     public void sendError(int sc) throws IOException {
+	//	System.out.println("Send error " + sc );
+	/*XXX*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	sendError(sc, "No detailed message");
     }
 
     public void sendError(int sc, String msg) throws IOException {
+	// 	System.out.println("Send error " + sc + " " + msg);
+	// 	System.out.println("Original request " + request.getRequestURI());
+	// 	System.out.println(request.getContext().getClassPath());
+	//	/*XXX*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	this.status = sc;
 
 	Context context = request.getContext();

@@ -87,8 +87,7 @@ public class WebXmlInterceptor {
 	    Class webApplicationDescriptor = Class.forName(
 	        "org.apache.tomcat.deployment.WebApplicationDescriptor");
 	    InputStream is =
-	        webApplicationDescriptor.getResourceAsStream(
-	            org.apache.tomcat.deployment.Constants.ConfigFile);
+	        webApplicationDescriptor.getResourceAsStream("web.xml");
 	    String msg = sm.getString("context.getConfig.msg", "default");
 
     	    System.out.println(msg);
@@ -100,7 +99,6 @@ public class WebXmlInterceptor {
 	}
 
 	// process webApp configuration
-
 	String s = ctx.getDocumentBase().toString();
 	if (ctx.getDocumentBase().getProtocol().equalsIgnoreCase("war")) {
 	    if (s.endsWith("/")) {
@@ -112,7 +110,7 @@ public class WebXmlInterceptor {
 
 	URL webURL = null;
 	try {
-	    webURL = new URL(s + Constants.Context.ConfigFile);
+	    webURL = new URL(s + "/" + Constants.Context.ConfigFile);
 
 	    InputStream is = webURL.openConnection().getInputStream();
 	    String msg = sm.getString("context.getConfig.msg",

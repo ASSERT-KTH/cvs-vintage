@@ -91,7 +91,7 @@ public class Context {
     // -------------------- internal properties
     // context "id"
     private String path = "";
-    private URL docBase;
+    private String docBase;
 
     // internal state / related objects
     private boolean initialized = false;
@@ -100,6 +100,8 @@ public class Context {
     private SessionManager sessionManager;
     private ServletWrapper defaultServlet = null;
 
+    private URL documentBase;
+    
     // 
     private Hashtable attributes = new Hashtable();
 
@@ -149,49 +151,18 @@ public class Context {
     // servlets loaded on startup( String->ServletWrapper )
     private Hashtable loadableServlets = new Hashtable();
 
-    // -------------------- Accessors --------------------
+
     public Context() {
     }
 	
-    public Context(ContextManager server, String path, URL docBase) {
-        this.server = server;
-	this.path = path;
-	setDocumentBase( docBase );
-        contextFacade = new ServletContextFacade(server, this);
-    }
-
-    public String getEngineHeader() {
-        if( engineHeader==null) {
-	    /*
-	     * Whoever modifies this needs to check this modification is
-	     * ok with the code in com.jsp.runtime.ServletEngine or talk
-	     * to akv before you check it in. 
-	     */
-	    // Default value for engine header
-	    // no longer use core.properties - the configuration comes from
-	    // server.xml or web.xml - no more properties.
-	    StringBuffer sb=new StringBuffer();
-	    sb.append(Constants.TOMCAT_NAME).append("/").append(Constants.TOMCAT_VERSION);
-	    sb.append(" (").append(Constants.JSP_NAME).append(" ").append(Constants.JSP_VERSION);
-	    sb.append("; ").append(Constants.SERVLET_NAME).append(" ");
-	    sb.append(Constants.SERVLET_MAJOR).append(".").append(Constants.SERVLET_MINOR);
-	    sb.append( "; Java " );
-	    sb.append(System.getProperty("java.version")).append("; ");
-	    sb.append(System.getProperty("os.name") + " ");
-	    sb.append(System.getProperty("os.version") + " ");
-	    sb.append(System.getProperty("os.arch") + "; java.vendor=");
-	    sb.append(System.getProperty("java.vendor")).append(")");
-	    engineHeader=sb.toString();
-	}
-	return engineHeader;
-    }
-
-    public void setEngineHeader(String s) {
-        engineHeader=s;
-    }
-
+    // -------------------- Settable context properties --------------------
+    // -------------------- Required properties
     public ContextManager getContextManager() {
 	return server;
+    }
+
+    public void setContextManager(ContextManager cm) {
+	server=cm;
     }
     
     public String getPath() {
@@ -202,6 +173,23 @@ public class Context {
 	this.path = path;
     }
 
+    public void setDocBase( String docB ) {
+	this.docBase=docB;
+    }
+
+    public String getDocBase() {
+	return docBase;
+    }
+
+    // -------------------- Tomcat specific properties
+    public String getEngineHeader() {
+	return engineHeader;
+    }
+
+    public void setEngineHeader(String s) {
+        engineHeader=s;
+    }
+
     public boolean isInvokerEnabled() {
         return isInvokerEnabled;
     }
@@ -210,47 +198,38 @@ public class Context {
         this.isInvokerEnabled = isInvokerEnabled;
     }
 
-    public void setRequestSecurityProvider(
-	RequestSecurityProvider rsProvider) {
-	this.rsProvider = rsProvider;
-    }
-
-    public RequestSecurityProvider getRequestSecurityProvider() {
-	if ( rsProvider==null)
-	    rsProvider=DefaultRequestSecurityProvider.getInstance();
-	
-	return this.rsProvider;
-    }
-
     public File getWorkDir() {
-	if( workDir==null)
-	    workDir=new File(System.getProperty("user.dir", ".") +
-			     System.getProperty("file.separator") + Constants.WORK_DIR);
 	return workDir;
     }
 
-    public void setWorkDir(String workDir, boolean isWorkDirPersistent) {
-        File f = null;
-
-        try {
-	    f = new File(workDir);
-	} catch (Throwable e) {
-	}
-
-	setWorkDir(f, isWorkDirPersistent);
+    public void setWorkDir(File workDir) {
+	this.workDir = workDir;
     }
 
-    public void setWorkDir(File workDir, boolean isWorkDirPersistent) {
-	this.workDir = workDir;
-        this.isWorkDirPersistent = isWorkDirPersistent;
-	// assert workDir!=null - or no reason to set it
-
-	// workDir will be cleaned at init() and shutdown()
+    /** Set work dir using a String property
+     */
+    public void setWorkDirPath(String workDir) {
+	this.workDir=new File(workDir);
     }
 
     public boolean isWorkDirPersistent() {
         return this.isWorkDirPersistent;
     }
+
+    public void setWorkDirPersistent( boolean b ) {
+	isWorkDirPersistent=b;
+    }
+    
+    // -------------------- Internal tomcat attributes 
+    public void setRequestSecurityProvider(RequestSecurityProvider rsProvider) {
+	this.rsProvider = rsProvider;
+    }
+
+    public RequestSecurityProvider getRequestSecurityProvider() {
+	return this.rsProvider;
+    }
+
+
 
     File getWARDir() {
         return this.warDir;
@@ -372,7 +351,7 @@ public class Context {
 	new WorkDirInterceptor().handleContextInit( this );
 
 	// XXX who uses servletBase ???
-	URL servletBase = this.docBase;
+	URL servletBase = this.documentBase;
         this.setServletBase(servletBase);
 
 	// expand WAR
@@ -468,22 +447,11 @@ public class Context {
     }
     
     public URL getDocumentBase() {
-        return docBase;
+        return documentBase;
     }
 
-    public void setDocumentBase(URL docBase) {
-	String file = docBase.getFile();
-
-	if (! file.endsWith("/")) {
-	    try {
-		docBase = new URL(docBase.getProtocol(),
-                    docBase.getHost(), docBase.getPort(), file + "/");
-	    } catch (MalformedURLException mue) {
-		System.out.println("SHOULD NEVER HAPPEN: " + mue);
-	    }
-	}
-
-	this.docBase = docBase;
+    public void setDocumentBase(URL s) {
+        this.documentBase=s;
     }
 
     public String getDescription() {
@@ -532,7 +500,9 @@ public class Context {
     }
 
     ServletContextFacade getFacade() {
-        return contextFacade;
+        if(contextFacade==null )
+	    contextFacade = new ServletContextFacade(server, this);
+	return contextFacade;
     }
 
 
@@ -689,6 +659,7 @@ public class Context {
 	    if (path.startsWith("/") &&
                 path.endsWith("/*")){
 	        prefixMappedServlets.put(path, sw);
+		//		System.out.println("Map " + path + " -> " + sw );
 	    } else if (path.startsWith("*.")) {
 	        extensionMappedServlets.put(path, sw);
 	    } else if (! path.equals("/")) {
@@ -875,9 +846,6 @@ public class Context {
 
         return wrappers;
     }
-
-    // XXX
-    // made package protected so that RequestMapper can have access
 
     public ServletWrapper[] getServletsByPath(String path) {
         Vector servletWrappers = new Vector();

@@ -79,7 +79,8 @@ public class DefaultContextSetter {
 
     public DefaultContextSetter() {
     }
-	
+
+    // sets: engineHeader, requestSecurityProvider, workDir, sessionManager, classPath, libPath
     public int handleContextInit(Context ctx) {
 	setEngineHeader( ctx );
 	if( ctx.getRequestSecurityProvider() == null ) 
@@ -87,14 +88,12 @@ public class DefaultContextSetter {
 					   getInstance());
 	
 	if( ctx.getWorkDir() == null)
-	    ctx.setWorkDir( new File(System.getProperty("user.dir", ".") +
-				     System.getProperty("file.separator") + Constants.WORK_DIR),
-			    ctx.isWorkDirPersistent() );
-
+	    setWorkDir(ctx);
 	
 	if( ctx.getSessionManager() == null ) 
 	    ctx.setSessionManager( org.apache.tomcat.session.ServerSessionManager.getManager());
 
+	
 
 	//Was:        for (int i = 0; i < Constants.Context.CLASS_PATHS.length; i++) {
 
@@ -107,6 +106,21 @@ public class DefaultContextSetter {
 
 	
     // -------------------- implementation
+    /** Encoded ContextManager.getWorkDir() + host + port + path
+     */
+    private void setWorkDir(Context ctx ) {
+	ContextManager cm=ctx.getContextManager();
+	
+	StringBuffer sb=new StringBuffer();
+	sb.append(cm.getWorkDir());
+	sb.append(File.separator);
+	sb.append(cm.getHostName() );
+	sb.append("_").append(cm.getPort());
+	sb.append(URLEncoder.encode( ctx.getPath() ));
+	
+	ctx.setWorkDir( new File(sb.toString()));
+    }
+    
     private void setEngineHeader(Context ctx) {
         String engineHeader=ctx.getEngineHeader();
 

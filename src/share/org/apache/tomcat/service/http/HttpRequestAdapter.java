@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.3 2000/01/08 21:31:41 rubys Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/08 21:31:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.4 2000/01/11 02:06:55 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/11 02:06:55 $
  *
  * ====================================================================
  *
@@ -218,15 +218,17 @@ public class HttpRequestAdapter extends RequestAdapterImpl {
 
 	// see if uri is well formed
 
-        if (requestErrorCode == 0 &&
+	String msg="";
+	if (requestErrorCode == 0 &&
 	    (requestString == null || requestString.indexOf(' ') > -1 ||
 	        requestString.indexOf('/') != 0)) {
 	    requestErrorCode = HttpServletResponse.SC_BAD_REQUEST;
+	    msg="Bad request: " + requestString + " " + requestErrorCode;
 	}
 
 	if (requestErrorCode != 0) {
             try {
-	        response.sendError(requestErrorCode);
+	        response.sendError(requestErrorCode, msg);
 	    } catch (IOException ioe) {
             }
 

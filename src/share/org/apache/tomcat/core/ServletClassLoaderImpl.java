@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletClassLoaderImpl.java,v 1.1 2000/01/08 15:52:21 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/08 15:52:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletClassLoaderImpl.java,v 1.2 2000/01/11 02:06:54 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/11 02:06:54 $
  *
  * ====================================================================
  *
@@ -105,7 +105,7 @@ class ServletClassLoaderImpl extends NetworkClassLoader implements ServletClassL
             String cpath = (String) e.nextElement();
             try {
                 URL classesURL = new URL(protocol,hostname,port,
-                                         basepath + cpath + "/");
+                                         basepath + "/" + cpath + "/");
                 addURL(classesURL);
             }catch(MalformedURLException mue) {
             }

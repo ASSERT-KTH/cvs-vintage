@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/IncludedResponse.java,v 1.1 1999/10/09 00:30:09 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:09 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/IncludedResponse.java,v 1.2 2000/01/11 02:06:53 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/11 02:06:53 $
  *
  * ====================================================================
  *
@@ -85,6 +85,7 @@ extends HttpServletResponseFacade {
     }
 
     public void sendError(int sc) throws IOException {
+	//	/*XXX*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
         sendError(sc, "No detailed message");
     }
     

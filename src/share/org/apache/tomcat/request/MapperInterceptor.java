@@ -166,11 +166,11 @@ public class MapperInterceptor  implements  RequestInterceptor {
 	
 	while (s.length() > 0) {
 	    String suffix = (s.endsWith("/")) ? "*" : "/*";
- 
+	    
 	    wrapper = (ServletWrapper)context.getPrefixMap().get(s + suffix);
 
 	    if (wrapper != null) {
-	        if (s.endsWith("/")) {
+		if (s.endsWith("/")) {
                     String t = s.substring(0, s.length() - 1);
 
 		    req.setServletPath( (t.trim().length() == 0) ? null : t );

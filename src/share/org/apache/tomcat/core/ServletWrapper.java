@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.8 2000/01/09 02:57:40 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/01/09 02:57:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.9 2000/01/11 02:06:54 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/01/11 02:06:54 $
  *
  * ====================================================================
  *
@@ -290,15 +290,6 @@ public class ServletWrapper {
     void handleRequest(final HttpServletRequestFacade request,
         final HttpServletResponseFacade response)
     throws IOException {
-	//  if (isReloadable) {
-//  	    long lm = servletClassFile.lastModified();
-//  	    if (lm > classFileLastMod) {
-//  		//context.recycle();
-//  	    }
-//  	}
-	// make sure that only one thread goes through
-	// this block at a time!
-
         synchronized (this) {
 	    // XXX
 	    // rather klunky - this method needs a once over
@@ -318,14 +309,16 @@ public class ServletWrapper {
 		    // we should have tried an include, so we do the include.
 		    // It's so ugly I have to giggle.
 		    // All this to support dispatching to named JSPs!
-		    try {
+		    if (! response.getRealResponse().isStarted())
 		        rd.forward(request, response);
-		    } catch (IllegalStateException e) {
+		    else
 			rd.include(request, response);
-		    }
+
 		} catch (ServletException se) {
+		    se.printStackTrace();
 		    response.sendError(404);
 		} catch (IOException ioe) {
+		    ioe.printStackTrace();
 		    response.sendError(404);
 		}
 		
@@ -335,7 +328,7 @@ public class ServletWrapper {
 		    try {
 		        loadServlet();
 		    } catch (ClassNotFoundException e) {
-		        response.sendError(404);
+		        response.sendError(404, "Class not found " + servletClassName);
 
 			return;
 		    } catch (Exception e) {

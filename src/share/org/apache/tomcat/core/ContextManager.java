@@ -98,7 +98,7 @@ public class ContextManager {
 
     public static final String DEFAULT_HOSTNAME="localhost";
     public static final int DEFAULT_PORT=8080;
-    public static final int DEFAULT_WORK_DIR="work";
+    public static final String DEFAULT_WORK_DIR="work";
     
     /**
      * The virtual host name for the Server this ContextManager
@@ -216,7 +216,7 @@ public class ContextManager {
 	this.workDir=wd;
     }
 
-    public void getWorkDir() {
+    public String getWorkDir() {
 	if( workDir==null)
 	    workDir=DEFAULT_WORK_DIR;
 	return workDir;

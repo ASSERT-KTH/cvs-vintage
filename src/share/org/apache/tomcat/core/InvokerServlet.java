@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/InvokerServlet.java,v 1.4 2000/01/08 15:09:26 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/01/08 15:09:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/InvokerServlet.java,v 1.5 2000/01/11 02:06:53 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/01/11 02:06:53 $
  *
  * ====================================================================
  *
@@ -170,9 +170,9 @@ public class InvokerServlet extends HttpServlet {
             } catch (Exception e) {
                 newPathInfo = null;
             }
-        } else {
+	} else {
             // theres not enough information here to invoke a servlet
-            doError(response);
+            doError(response,"Not enough information " + request.getRequestURI() + " " + pathInfo);
 
             return;
         }
@@ -190,7 +190,7 @@ public class InvokerServlet extends HttpServlet {
         if (wrapper == null) {
             // we are out of luck
 
-            doError(response);
+            doError(response, "Wrapper is null - " + servletName);
 
             return;
         }
@@ -255,8 +255,8 @@ public class InvokerServlet extends HttpServlet {
 	}
     }
 
-    public void doError(HttpServletResponse response)
+    public void doError(HttpServletResponse response, String msg)
     throws ServletException, IOException {
-        response.sendError(404);
+        response.sendError(404, msg);
     }    
 }
