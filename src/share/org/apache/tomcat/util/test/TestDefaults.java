@@ -62,7 +62,7 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
-
+import org.apache.tools.ant.*;
 
 /** Set default values for HttpClient and GTest.
  */
@@ -90,6 +90,9 @@ public class TestDefaults {
 
     public void setOutputType(String t  ) {
 	Report.setDefaultOutput(t);
+    }
+
+    public void setProject(Project p ) {
     }
 
     public void execute() {

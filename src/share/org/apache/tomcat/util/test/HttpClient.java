@@ -59,6 +59,7 @@
 package org.apache.tomcat.util.test;
 
 import org.apache.tomcat.util.test.matchers.*;
+import org.apache.tools.ant.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -80,6 +81,7 @@ import java.net.*;
 public class HttpClient {
     static Report defaultReport=new Report();
 
+    Project project=null;
     HttpRequest firstRequest=null;
     Vector actions=new Vector();
     String id;
@@ -91,6 +93,14 @@ public class HttpClient {
     String outType=null;
     
     public HttpClient() {
+    }
+
+    public void setProject(Project p ) {
+        project=p;
+    }
+
+    public Project getProject() {
+        return project;
     }
 
     /** Set an unique id to this request. This allows it to be

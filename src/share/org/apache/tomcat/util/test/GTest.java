@@ -63,6 +63,7 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 import org.apache.tomcat.util.test.matchers.*;
+import org.apache.tools.ant.*;
 
 /** Original tester for a web application. Will send a http request and
     verify the response code, compare the response with a golden
@@ -82,6 +83,8 @@ public class GTest  {
     static Hashtable testProperties=new Hashtable();
 
     // Instance variables
+
+    Project project=null;
 
     // The "real" thing.
     // GTest is here to support the old ( and simpler ) syntax .
@@ -160,6 +163,12 @@ public class GTest  {
 	HttpClient.getHttpClients().clear();
     }
     
+    // ----------------- Ant Properie -----------------
+
+    public void setProject(Project p ) {
+        project=p;
+    }
+
     // -------------------- GTest behavior --------------------
     public void setWriter( PrintWriter pw ) {
 	out=pw;
@@ -312,6 +321,7 @@ public class GTest  {
 	    //	 System.out.println("XXX " + outType + " " + defaultOutType);
 	    if( debug==-1) debug=defaultDebug;
 
+            httpClient.setProject(project);
 	    initMatchers();
             httpClient.setWriter(out);
             httpClient.setOutput(outType);
