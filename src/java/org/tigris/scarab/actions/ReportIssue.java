@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.95 2002/01/18 22:26:03 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.96 2002/01/22 01:58:09 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -411,9 +411,8 @@ public class ReportIssue extends RequireLoginFirstAction
                     .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue.vm");
                 if (template != null && template.equals("AssignIssue.vm"))
                 {
-                    List issueIdList = new ArrayList();
-                    issueIdList.add(issue.getIssueId());
-                    context.put("issueIdList", issueIdList);
+                    data.getParameters().add("issue_ids", 
+                                             issue.getIssueId().toString());
                 }
                 setTarget(data, template);
                 
@@ -436,12 +435,11 @@ public class ReportIssue extends RequireLoginFirstAction
                                       subj.toString(),
                                       "email/NewIssueNotification.vm"))
                 {
-                    data.setMessage("Your issue was saved, but could not send notification email "
-                                     + "due to a sendmail error.");
+                    data.setMessage("Your issue was saved, but could not send "
+                                    + "notification email due to a sendmail error.");
                 }
                 cleanup(data, context);
-                data.getParameters().add("id", 
-                                         issue.getUniqueId().toString());
+                data.getParameters().add("id", issue.getUniqueId().toString());
                 data.setMessage("Issue " + issue.getUniqueId() +
                                 " added to module " +
                                 getScarabRequestTool(context)

@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.65 2002/01/18 22:26:03 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.66 2002/01/22 01:58:09 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -779,8 +779,9 @@ public class ModifyIssue extends RequireLoginFirstAction
             issue.save();
             if (!transaction.sendEmail(new ContextAdapter(context), issue))
             {
-                    data.setMessage("Your changes were saved, but could not send notification email "
-                                     + "due to a sendmail error.");
+                    data.setMessage("Your changes were saved, but could "
+                                    + "not send notification email "
+                                    + "due to a sendmail error.");
             }
         }
         else
@@ -801,10 +802,9 @@ public class ModifyIssue extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         intake.removeAll();
-        List issueIdList = new ArrayList();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        issueIdList.add(scarabR.getIssue().getIssueId());
-        context.put("issueIdList", issueIdList);
+        data.getParameters().add("issue_ids", 
+              scarabR.getIssue().getIssueId().toString());
         setTarget(data, "AssignIssue.vm");            
     }
 

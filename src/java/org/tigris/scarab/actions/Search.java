@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 // Turbine Stuff 
+import org.apache.turbine.ParameterParser; 
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
@@ -85,7 +86,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.53 2002/01/18 22:26:03 jon Exp $
+    @version $Id: Search.java,v 1.54 2002/01/22 01:58:09 elicia Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -309,9 +310,11 @@ public class Search extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         List issueList = scarabR.getIssueList();
         List issueIdList = new ArrayList();
+        ParameterParser pp = data.getParameters();
         for (int j=0;j<issueList.size();j++)
         {
-           issueIdList.add(((Issue)issueList.get(j)).getIssueId());
+           pp.add("issue_ids", 
+              ((Issue)issueList.get(j)).getIssueId().toString());
         }
         context.put("issueIdList", issueIdList);
         setTarget(data, "AssignIssue.vm");            
@@ -366,18 +369,15 @@ public class Search extends RequireLoginFirstAction
     {
         List newIssueIdList = new ArrayList();
         String key;
+        ParameterParser pp = data.getParameters();
         Object[] keys =  data.getParameters().getKeys();
         for (int i =0; i<keys.length; i++)
         {
             key = keys[i].toString();
             if (key.startsWith("selected_"))
             {
-               newIssueIdList.add(key.substring(9));
+                pp.add("issue_ids", key.substring(9).toString());
             }
-        }
-        if (!newIssueIdList.isEmpty())
-        {
-            context.put("issueIdList",  newIssueIdList);
         }
     }
     
