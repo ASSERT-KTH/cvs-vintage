@@ -45,11 +45,14 @@ public class Module
     }
 
 
+    /**
+     * gets a list of all of the Attributes in a Module based on the Criteria.
+     */
     public Attribute[] getAttributes(Criteria criteria)
         throws Exception
     {
         List moduleAttributes = 
-            getRModuleAttributesJoinAttribute(criteria);
+            getRModuleAttributes(criteria);
 
         Attribute[] attributes = new Attribute[moduleAttributes.size()];
         for ( int i=0; i<moduleAttributes.size(); i++ ) 
@@ -57,8 +60,16 @@ public class Module
             attributes[i] = 
                ((RModuleAttribute) moduleAttributes.get(i)).getAttribute();
         }
-
         return attributes;
+    }
+
+    /**
+     * gets a list of all of the Attributes.
+     */
+    public Attribute[] getAllAttributes()
+        throws Exception
+    {
+        return getAttributes(new Criteria());
     }
 
     public void save() throws Exception
