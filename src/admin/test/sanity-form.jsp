@@ -14,7 +14,7 @@
       "file","params","dispatch","get","requestMap","post",
       "wrong_request","restricted","jsp","unavailable",
       "headers","enc","security_chk_url","security_chk",
-      "aaa","special","client"};
+      "dos_devices","aaa","special","client"};
   String [] protocols = new String [] {
       "HTTP/1.0","HTTP/1.1"};
   String [] webservers = new String [] {
