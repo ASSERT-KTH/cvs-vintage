@@ -55,7 +55,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.65 $
+ * @version $Revision: 1.66 $
  */
 public final class JDBCStoreManager implements JDBCEntityPersistenceStore
 {
@@ -254,7 +254,7 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
     * @param pk  instance primary key.
     * @return  true if the instance was scheduled for cascade deleted.
     */
-   public boolean uncheduledCascadeDelete(Object pk)
+   public boolean unscheduledCascadeDelete(Object pk)
    {
       Set registered = (Set)cascadeDeleteSet.get();
       return registered.remove(pk);

@@ -30,13 +30,10 @@ import java.lang.reflect.Method;
 /**
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public abstract class CascadeDeleteStrategy
 {
-   private Method removeMethod;
-   private InvocationType invocationType;
-
    /**
     * No cascade-delete strategy.
     */
@@ -59,7 +56,7 @@ public abstract class CascadeDeleteStrategy
          for(int i = 0; i < oldValues.size(); ++i)
          {
             Object oldValue = oldValues.get(i);
-            if(relatedManager.uncheduledCascadeDelete(oldValue))
+            if(relatedManager.unscheduledCascadeDelete(oldValue))
             {
                if(trace)
                {
@@ -100,7 +97,7 @@ public abstract class CascadeDeleteStrategy
          for(int i = 0; i < oldValues.size(); ++i)
          {
             Object oldValue = oldValues.get(i);
-            if(relatedManager.uncheduledCascadeDelete(oldValue))
+            if(relatedManager.unscheduledCascadeDelete(oldValue))
             {
                if(trace)
                {
@@ -166,7 +163,7 @@ public abstract class CascadeDeleteStrategy
          for(int i = 0; i < oldValues.size(); ++i)
          {
             Object oldValue = oldValues.get(i);
-            if(relatedManager.uncheduledCascadeDelete(oldValue))
+            if(relatedManager.unscheduledCascadeDelete(oldValue))
             {
                if(trace)
                {
@@ -212,6 +209,9 @@ public abstract class CascadeDeleteStrategy
    protected final JDBCEntityBridge entity;
    protected final JDBCStoreManager relatedManager;
    protected final Logger log;
+
+   private Method removeMethod;
+   private InvocationType invocationType;
 
    public CascadeDeleteStrategy(JDBCCMRFieldBridge cmrField) throws DeploymentException
    {
