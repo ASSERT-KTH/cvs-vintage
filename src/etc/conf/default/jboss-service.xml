@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.38 2002/03/23 03:06:01 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.39 2002/03/24 21:44:32 d_jencks Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -119,6 +119,12 @@
   <mbean code="org.jboss.tm.usertx.server.ClientUserTransactionService"
 	 name="jboss:service=ClientUserTransaction">
   </mbean>
+
+  <!-- The CachedConnectionManager is used partly to relay started UserTransactions to 
+    open connections so they may be enrolled in the new tx-->
+  <mbean code="org.jboss.resource.connectionmanager.CachedConnectionManager" name="jboss.jca:service=CachedConnectionManager">
+  </mbean>
+
 
   <!-- ==================================================================== -->
   <!-- RMI/IIOP                                                             -->

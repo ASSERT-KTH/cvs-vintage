@@ -49,7 +49,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 class TxCapsule
 implements TimeoutTarget
@@ -68,7 +68,7 @@ implements TimeoutTarget
    private Logger log = Logger.getLogger(this.getClass());
    
    /** True if trace messages should be logged. */
-   private boolean trace = log.isDebugEnabled();
+   private boolean trace = log.isTraceEnabled();
    
    // Static --------------------------------------------------------
    
@@ -177,7 +177,10 @@ implements TimeoutTarget
       
       start = System.currentTimeMillis();
       this.timeout = TimeoutFactory.createTimeout(start+timeout, this);
-      
+
+      //check to see if log settings have changed
+      trace = log.isTraceEnabled();
+
       if (trace)
       {
          log.trace("Reused instance for tx=" + toString());
@@ -342,7 +345,9 @@ implements TimeoutTarget
                   log.trace("Zero phase commit: No resources.");
                }
                status = Status.STATUS_COMMITTED;
-            } else if (resourceCount == 1)
+               //} else if (resourceCount == 1)
+            }
+            else if (isOneResource())
             {
                // One phase commit
                if (trace)
@@ -823,6 +828,8 @@ implements TimeoutTarget
    
    /**
     *  Count of resources that have participated in this transaction.
+    * This contains a count of all XAResources, not a count of distinct resource managers.
+    * It is the length of resources and other such arrays.
     */
    private int resourceCount = 0;
    
@@ -1170,7 +1177,7 @@ implements TimeoutTarget
          {
             if (trace)
             {
-               log.trace("unhandled throwable", t);
+               log.trace("unhandled throwable error in startResource", t);
             }
             status = Status.STATUS_MARKED_ROLLBACK;
             return;
@@ -1224,7 +1231,7 @@ implements TimeoutTarget
          {
             if (trace)
             {
-               log.trace("unhandled throwable", t);
+               log.trace("unhandled throwable error in endResource", t);
             }
             status = Status.STATUS_MARKED_ROLLBACK;
             // Resource may or may not be ended after illegal exception.
@@ -1240,7 +1247,10 @@ implements TimeoutTarget
          else
          {
             if (flag == XAResource.TMFAIL)
+            {
+
                status = Status.STATUS_MARKED_ROLLBACK;
+            }
             resourceState[idx] = RS_ENDED;
          }
       } finally
@@ -1314,6 +1324,10 @@ implements TimeoutTarget
          {
             try
             {
+               if (trace) 
+               {
+                  log.trace("calling sync " + i + ", " + sync[i]);
+               } // end of if ()
                sync[i].beforeCompletion();
             } catch (Throwable t)
             {
@@ -1478,31 +1492,35 @@ implements TimeoutTarget
          // Set done flag so we get no more frontends waiting for
          // the lock.
          done = true;
+         // Clear content of collections.
+         for (int i = 0; i < syncCount; ++i)
+         {
+            sync[i] = null; // release for GC
+         }
+         syncCount = 0;
+      
+         //for (int i = 0; i < transactionCount; ++i)
+         //   transactions[i] = null; // release for GC
+         //transactionCount = 0;
+         transaction = null; // release for GC
+      
+         for (int i = 0; i < resourceCount; ++i)
+         {
+            resources[i] = null; // release for GC
+            resourceXids[i] = null; // release for GC
+         }
+         resourceCount = 0;
          
+         // If using a special class, second constructor argument is now useless.
+         if (xidConstructor != null)
+         {
+            xidConstructorArgs[1] = null; // This now needs initializing
+         }
          // Wake up anybody waiting for the lock.
          notifyAll();
       }
       
-      // Clear content of collections.
-      for (int i = 0; i < syncCount; ++i)
-         sync[i] = null; // release for GC
-      syncCount = 0;
       
-      //for (int i = 0; i < transactionCount; ++i)
-      //   transactions[i] = null; // release for GC
-      //transactionCount = 0;
-      transaction = null; // release for GC
-      
-      for (int i = 0; i < resourceCount; ++i)
-      {
-         resources[i] = null; // release for GC
-         resourceXids[i] = null; // release for GC
-      }
-      resourceCount = 0;
-      
-      // If using a special class, second constructor argument is now useless.
-      if (xidConstructor != null)
-         xidConstructorArgs[1] = null; // This now needs initializing
    }
    
    /**
@@ -1555,6 +1573,10 @@ implements TimeoutTarget
             else
             {
                // Illegal vote: rollback.
+               if (trace) 
+               {
+                  log.trace("illegal vote in prepare resources", new Exception());
+               } // end of if ()
                status = Status.STATUS_MARKED_ROLLBACK;
                return false;
             }
@@ -1587,7 +1609,7 @@ implements TimeoutTarget
          {
             if (trace)
             {
-               log.trace("unhandled throwable", t);
+               log.trace("unhandled throwable in prepareResources", t);
             }
             if (status == Status.STATUS_PREPARING)
                status = Status.STATUS_MARKED_ROLLBACK;
@@ -1664,7 +1686,7 @@ implements TimeoutTarget
          {
             if (trace)
             {
-               log.trace("unhandled throwable", t);
+               log.trace("unhandled throwable in commitResources", t);
             }
          }
       }
@@ -1727,7 +1749,7 @@ implements TimeoutTarget
          {
             if (trace)
             {
-               log.trace("unhandled throwable", t);
+               log.trace("unhandled throwable in rollbackResources", t);
             }
          }
       }
@@ -1772,6 +1794,27 @@ implements TimeoutTarget
          }
       }
    }
+
+   private boolean isOneResource()
+   {
+      if (resourceCount == 1) 
+      {
+         return true;
+      } // end of if ()
+      //first XAResource surely has -1, it's the first!
+      for (int i = 1; i < resourceCount; i++)
+      {
+         if (resourceSameRM[i] == -1) 
+         {
+            //this one is not the same rm as previous ones, there must be at least 2
+            return false;
+         } // end of if ()
+         
+      } // end of for ()
+      //all rms are the same one, one phase commit is ok.
+      return true;
+   }
    
    // Inner classes -------------------------------------------------
 }
+

@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.80 2002/03/23 21:11:02 ejort Exp $ -->
+<!-- $Id: build.xml,v 1.81 2002/03/24 21:44:32 d_jencks Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -479,7 +479,35 @@
     <filter token="version.revision" value="${version.revision}"/>
     <filter token="version.tag" value="${version.tag}"/>
     <filter token="version.name" value="${version.name}"/>
-    <copy todir="${build.etc}" filtering="yes">
+
+    <!-- default.type.mapping is used in standardjaws.xml and standardjbosscmp-jdbc.xml-->
+    <property name="default.type.mapping" value="Hypersonic SQL"/>
+
+    <!-- cmp1 persistence manager for standardjboss.xml -->
+    <!--JAWS-->
+    <property name="cmp1.persistencemanager" value="org.jboss.ejb.plugins.jaws.JAWSPersistenceManager"/>
+    <!--cmp2 manager used for cmp1 as well -->
+    <!--property name="cmp1.persistencemanager" value="org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager"/-->
+
+    <!--Choice of with or without new connection caching scheme -->
+    <!--without-->
+    <!--property name="jca.connection.interceptor" value=""/-->
+    <!--with-->
+    <property name="jca.connection.interceptor" value="&lt;interceptor&gt;org.jboss.resource.connectionmanager.CachedConnectionInterceptor&lt;/interceptor&gt;"/>
+
+    
+
+    <!-- Replace these tokens for flexibility in testing and using different dbs -->
+    <!-- default.type.mapping is used in standardjaws.xml and standardjbosscmp-jdbc.xml-->
+    <filter token="default.type.mapping" value="${default.type.mapping}"/>
+    <!-- cmp1 persistence manager for standardjboss.xml -->
+    <filter token="cmp1.persistencemanager" value="${cmp1.persistencemanager}"/>
+
+    <!--Choice of with or without new connection caching scheme -->
+    <filter token="jca.connection.interceptor" value="${jca.connection.interceptor}"/>
+    
+   
+    <copy todir="${build.etc}" filtering="yes" overwrite="yes">
       <fileset dir="${source.etc}">
          <include name="**/*"/>
       </fileset>

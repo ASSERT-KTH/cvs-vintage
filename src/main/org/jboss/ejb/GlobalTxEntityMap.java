@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.transaction.Transaction;
 import javax.transaction.RollbackException;
+import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.Synchronization;
 import java.util.Iterator;
@@ -28,7 +29,7 @@ import javax.transaction.TransactionRolledbackException;
  * Entities are stored in an ArrayList to ensure specific ordering. 
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class GlobalTxEntityMap
 {
@@ -82,6 +83,15 @@ public class GlobalTxEntityMap
 	    {
 	       for (Iterator i = entities.iterator(); i.hasNext(); )
 	       {
+                  //I don't know how this could happen without an exception in the loop,
+                  //but this method can get to here after e.g. NoSuchEntity...
+                  //new ConnectionManager won't enlist in rolled back tx.
+                  //(old one did not use enlist of XAResource for local tx)
+                  if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK) 
+                  {
+                     break;
+                  } // end of if ()
+                  
 		  //read-only will never get into this list.
 		  ctx = (EntityEnterpriseContext)i.next();
 		  EntityContainer container = (EntityContainer)ctx.getContainer();

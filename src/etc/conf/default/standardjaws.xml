@@ -10,11 +10,11 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjaws.xml,v 1.26 2001/12/05 05:02:48 patriot1burke Exp $ -->
+<!-- $Id: standardjaws.xml,v 1.27 2002/03/24 21:44:32 d_jencks Exp $ -->
 
 <jaws>
    <datasource>java:/DefaultDS</datasource>
-   <type-mapping>Hypersonic SQL</type-mapping>
+   <type-mapping>@default.type.mapping@</type-mapping>
    <debug>false</debug>
 
    <default-entity>
@@ -73,7 +73,7 @@
 	 <mapping>
 	    <java-type>java.lang.String</java-type>
 	    <jdbc-type>VARCHAR</jdbc-type>
-	    <sql-type>VARCHAR(255)</sql-type>
+	    <sql-type>VARCHAR(64)</sql-type>
 	 </mapping>
 	 <mapping>
 	    <java-type>java.sql.Date</java-type>
