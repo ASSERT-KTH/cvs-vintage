@@ -16,21 +16,20 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Logger;
+
 import org.columba.core.externaltools.ExternalToolsNotFoundException;
 import org.columba.core.main.MainInterface;
 import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.main.MailInterface;
-
 import org.waffel.jscf.JSCFConnection;
 import org.waffel.jscf.JSCFDriverManager;
 import org.waffel.jscf.JSCFException;
 import org.waffel.jscf.gpg.GPGDriver;
-
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Logger;
 
 /**
  * The <code>JSCFController</code> controls JSCFDrivers and Connections. It
@@ -114,18 +113,18 @@ public class JSCFController {
                 LOG.fine("setting path: "+path);
             } catch (Exception e) {
                 LOG.fine("path problem:"+e);
-                if (e instanceof ExternalToolsNotFoundException) {
-                    throw new ProgramNotFoundException(e.getMessage());
-                }
+                
 
                 if (MainInterface.DEBUG) {
                     e.printStackTrace();
                 }
             }
             
+            /*
             if (path == null) {
                 throw new ProgramNotFoundException("invalid path");
             }
+            */
             Properties props = con.getProperties();
             props.put("PATH", path);
             LOG.fine("gpg userId: "+handler.getAttribute("gpg", "id"));

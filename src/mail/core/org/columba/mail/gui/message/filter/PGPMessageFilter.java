@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.StreamUtils;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.message.viewer.SecurityInformationController;
@@ -291,10 +292,13 @@ public class PGPMessageFilter extends AbstractFilter {
 
         } catch (JSCFException e) {
 
-            e.printStackTrace();
+        	if ( MainInterface.DEBUG)
+        		e.printStackTrace();
 
+        	pgpMode = SecurityInformationController.VERIFICATION_FAILURE;
+            pgpMessage = e.getMessage();
             // something really got wrong here -> show error dialog
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            //JOptionPane.showMessageDialog(null, e.getMessage());
 
             pgpMode = SecurityInformationController.VERIFICATION_FAILURE;
         }
