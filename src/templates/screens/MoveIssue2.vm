@@ -20,9 +20,9 @@
 #set ($issue = $scarabR.getIssue($data.Parameters.getString("issue_ids")))
 #set ($module = $issue.Module)
 #set ($issueType = $issue.IssueType)
-#set ($isMultiple =$scarabG.sizeOfArray($issueList) > 1)
+#set ($isSingleIssueOp = $scarabG.sizeOfArray($issueList) == 1)
 
-#if (!$isMultiple)
+#if ($isSingleIssueOp)
   ## For single issue move, display attribute values for this issue
   #set ($matchingAttributes = $issue.getMatchingAttributeValuesList($newModule, $newIssueType))
   #set ($orphanAttributes = $issue.getOrphanAttributeValuesList($newModule, $newIssueType))
@@ -78,12 +78,12 @@
 <tr>
 <th>$l10n.Attribute</th>
 <th>$l10n.InputType</th>
-#if (!$isMultiple)
+#if ($isSingleIssueOp)
 <th>$l10n.Value</th>
 #end
 </tr>
 #foreach ($attr in $matchingAttributes)
-  #if (!$isMultiple)
+  #if ($isSingleIssueOp)
      #set ($attVal=$attr)
      #set ($attr = $attVal.Attribute)
   #end
@@ -97,7 +97,7 @@
      #end
   </td>
 <td>$attr.AttributeType.Name</td>
-#if (!$isMultiple)
+#if ($isSingleIssueOp)
 <td>$attVal.Value</td>
 #end
 </tr>
@@ -113,12 +113,12 @@
 <th>$l10n.Select</th>
 <th>$l10n.Attribute</th>
 <th>$l10n.InputType</th>
-#if (!$isMultiple)
+#if ($isSingleIssueOp)
 <th>$l10n.Value</th>
 #end
 </tr>
 #foreach($attr in $orphanAttributes)
-  #if (!$isMultiple)
+  #if ($isSingleIssueOp)
      #set ($attVal=$attr)
      #set ($attr = $attVal.Attribute)
   #end
@@ -132,7 +132,7 @@
      #end
     </td>
 <td>$attr.AttributeType.Name</td>
-#if (!$isMultiple)
+#if ($isSingleIssueOp)
 <td>$attVal.Value</td>
 #end
 </tr>
