@@ -1,4 +1,4 @@
-// $Id: DesignMaterial.java,v 1.4 2003/06/29 23:53:42 linus Exp $
+// $Id: DesignMaterial.java,v 1.5 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,22 +22,26 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
-
 // File: DesignMaterial.java
 // Classes: DesignMaterial
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DesignMaterial.java,v 1.4 2003/06/29 23:53:42 linus Exp $
+// $Id: DesignMaterial.java,v 1.5 2003/08/30 20:09:52 alexb Exp $
 
 package org.argouml.cognitive;
 
-import java.util.*;
-import java.beans.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Vector;
 
-import org.tigris.gef.ui.*;
-import org.tigris.gef.util.*;
+import org.tigris.gef.ui.Highlightable;
+import org.tigris.gef.util.EnumerationEmpty;
 
-import org.argouml.cognitive.critics.*;
+import org.argouml.cognitive.critics.Agency;
 
 /** Abstract class to represent the materials being used in
  *  design. The nature of these materials is domain-dependent.  For
@@ -66,8 +70,7 @@ import org.argouml.cognitive.critics.*;
  */
 
 
-public abstract class DesignMaterial extends Observable
-    implements Highlightable, java.io.Serializable 
+public abstract class DesignMaterial extends Observable implements Highlightable, Serializable 
 {
     /*
      * @see jargo.softarch.C2BrickDM

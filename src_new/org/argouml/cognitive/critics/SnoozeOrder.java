@@ -1,4 +1,4 @@
-// $Id: SnoozeOrder.java,v 1.5 2003/06/29 23:53:43 linus Exp $
+// $Id: SnoozeOrder.java,v 1.6 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,12 @@
 // File: SnoozeOrder.java
 // Classes: SnoozeOrder
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SnoozeOrder.java,v 1.5 2003/06/29 23:53:43 linus Exp $
+// $Id: SnoozeOrder.java,v 1.6 2003/08/30 20:09:52 alexb Exp $
 
 package org.argouml.cognitive.critics;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /** A Critic can be disabled for a certain amount of time by giving it
  *  the snooze command.  Whereas most ControlMech's activate or deactivate
@@ -40,7 +41,7 @@ import java.util.*;
  *  Designer's have a lot of tacit knowledge about their own state of
  *  mind that is not worth making explicit. */
 
-public class SnoozeOrder implements java.io.Serializable {
+public class SnoozeOrder implements Serializable {
     ////////////////////////////////////////////////////////////////
     // constants
     /** The initial sleeping time. */

@@ -1,4 +1,4 @@
-// $Id: GoListToPriorityToItem.java,v 1.6 2003/06/30 18:00:18 linus Exp $
+// $Id: GoListToPriorityToItem.java,v 1.7 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,13 +24,13 @@
 
 package org.argouml.cognitive.ui;
 
-import java.util.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.ToDoList;
 
-import org.argouml.ui.*;
-import org.argouml.cognitive.*;
 
 public class GoListToPriorityToItem implements TreeModel {
   

@@ -1,4 +1,4 @@
-// $Id: CheckItem.java,v 1.2 2003/06/29 23:53:43 linus Exp $
+// $Id: CheckItem.java,v 1.3 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +27,14 @@
 // File: CheckItem.java
 // Classes: CheckItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CheckItem.java,v 1.2 2003/06/29 23:53:43 linus Exp $
+// $Id: CheckItem.java,v 1.3 2003/08/30 20:09:52 alexb Exp $
 
 package org.argouml.cognitive.checklist;
 
-import java.util.*;
+import java.io.Serializable;
+import org.tigris.gef.util.Predicate;
+import org.tigris.gef.util.PredicateTrue;
 
-import org.tigris.gef.util.*;
 
 /** This class defines an item that can be placed on a Checklist.
  *  This is a short piece of text to prompt the designer to think of a
@@ -56,7 +57,7 @@ import org.tigris.gef.util.*;
  * @see CheckManager
  */
 
-public class CheckItem implements java.io.Serializable {
+public class CheckItem implements Serializable {
     ////////////////////////////////////////////////////////////////
     // instance variables
 

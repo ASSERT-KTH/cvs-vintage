@@ -1,4 +1,4 @@
-// $Id: ToDoByGoal.java,v 1.5 2003/06/29 23:53:43 linus Exp $
+// $Id: ToDoByGoal.java,v 1.6 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,16 @@
 
 package org.argouml.cognitive.ui;
 
-import java.util.*;
-
+import java.util.Enumeration;
+import java.util.Vector;
 import org.apache.log4j.Category;
-import org.argouml.cognitive.*;
+
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.Goal;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.ToDoList;
+import org.argouml.cognitive.ToDoListEvent;
+import org.argouml.cognitive.ToDoListListener;
 
 public class ToDoByGoal extends ToDoPerspective
     implements ToDoListListener
@@ -52,7 +58,7 @@ public class ToDoByGoal extends ToDoPerspective
 	path[0] = Designer.TheDesigner.getToDoList();
 
 	Vector goals = Designer.TheDesigner.getGoals();
-	java.util.Enumeration enum = goals.elements();
+	Enumeration enum = goals.elements();
 	while (enum.hasMoreElements()) {
 	    Goal g = (Goal) enum.nextElement();
 	    path[1] = g;
@@ -85,7 +91,7 @@ public class ToDoByGoal extends ToDoPerspective
 	path[0] = Designer.TheDesigner.getToDoList();
 
 	Vector goals = Designer.TheDesigner.getGoals();
-	java.util.Enumeration enum = goals.elements();
+	Enumeration enum = goals.elements();
 	while (enum.hasMoreElements()) {
 	    Goal g = (Goal) enum.nextElement();
 	    path[1] = g;
@@ -119,7 +125,7 @@ public class ToDoByGoal extends ToDoPerspective
 	path[0] = Designer.TheDesigner.getToDoList();
 
 	Vector goals = Designer.TheDesigner.getGoals();
-	java.util.Enumeration enum = goals.elements();
+	Enumeration enum = goals.elements();
 	while (enum.hasMoreElements()) {
 	    Goal g = (Goal) enum.nextElement();
 	    cat.debug("toDoItemRemoved updating decision node!");

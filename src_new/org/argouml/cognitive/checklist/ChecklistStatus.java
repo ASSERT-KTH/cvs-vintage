@@ -1,4 +1,4 @@
-// $Id: ChecklistStatus.java,v 1.3 2003/06/30 19:23:17 linus Exp $
+// $Id: ChecklistStatus.java,v 1.4 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,11 +27,13 @@
 // File: ChecklistStatus.java
 // Class: ChecklistStatus
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ChecklistStatus.java,v 1.3 2003/06/30 19:23:17 linus Exp $
+// $Id: ChecklistStatus.java,v 1.4 2003/08/30 20:09:52 alexb Exp $
 
 package org.argouml.cognitive.checklist;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /** A list of CheckItems that the designer has marked off as already
  *  considered.  In the Argo/UML system, this determines which items
@@ -40,7 +42,7 @@ import java.util.*;
  * @see org.argouml.cognitive.checklist.ui.TabChecklist
  */
 
-public class ChecklistStatus implements java.io.Serializable {
+public class ChecklistStatus implements Serializable {
     public static int _numChecks = 0;
     ////////////////////////////////////////////////////////////////
     // instance variables

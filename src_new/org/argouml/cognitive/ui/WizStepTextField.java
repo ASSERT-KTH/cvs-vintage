@@ -1,4 +1,4 @@
-// $Id: WizStepTextField.java,v 1.4 2003/06/29 23:53:43 linus Exp $
+// $Id: WizStepTextField.java,v 1.5 2003/08/30 20:09:53 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,15 +24,15 @@
 
 package org.argouml.cognitive.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
+import org.argouml.kernel.Wizard;
+import org.argouml.ui.SpacerPanel;
 
-import org.argouml.kernel.*;
-import org.argouml.ui.*;
 
 /** A simple non-modal wizard step that shows instructions and prompts
  *  the user to enter a string. 

@@ -1,4 +1,4 @@
-// $Id: StandardCM.java,v 1.2 2003/06/29 23:53:43 linus Exp $
+// $Id: StandardCM.java,v 1.3 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,9 +24,10 @@
 
 package org.argouml.cognitive.critics;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Vector;
+import org.argouml.cognitive.Designer;
 
-import org.argouml.cognitive.*;
 
 public class StandardCM extends AndCM {
     public StandardCM() {

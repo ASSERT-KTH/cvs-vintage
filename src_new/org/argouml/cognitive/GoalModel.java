@@ -1,4 +1,4 @@
-// $Id: GoalModel.java,v 1.4 2003/06/29 23:53:42 linus Exp $
+// $Id: GoalModel.java,v 1.5 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,12 +27,15 @@
 // File: GoalModel.java
 // Classes: GoalModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GoalModel.java,v 1.4 2003/06/29 23:53:42 linus Exp $
+// $Id: GoalModel.java,v 1.5 2003/08/30 20:09:52 alexb Exp $
 
 
 package org.argouml.cognitive;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.Observable;
+import java.util.Vector;
 
 /** Models the designers goals in making this design.  Provides useful
  *  control information to the Agency so that only critics relevant to
@@ -42,8 +45,7 @@ import java.util.*;
  *  and not the kernel.  I have not developed this part of Argo very
  *  much. */
 
-public class GoalModel extends Observable
-    implements java.io.Serializable 
+public class GoalModel extends Observable implements Serializable 
 {
     ////////////////////////////////////////////////////////////////
     // instance variables

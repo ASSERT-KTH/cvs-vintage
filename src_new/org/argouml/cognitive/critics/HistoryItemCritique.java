@@ -1,4 +1,4 @@
-// $Id: HistoryItemCritique.java,v 1.4 2003/06/29 23:53:43 linus Exp $
+// $Id: HistoryItemCritique.java,v 1.5 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,8 @@
 
 package org.argouml.cognitive.critics;
 
-import org.argouml.kernel.*;
-import org.argouml.cognitive.*;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.kernel.HistoryItem;
 
 // TODO: how can this possibly be persistent?
 // TODO: provide accessors

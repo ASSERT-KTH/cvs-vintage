@@ -1,4 +1,4 @@
-// $Id: CompoundCritic.java,v 1.7 2003/06/30 18:00:17 linus Exp $
+// $Id: CompoundCritic.java,v 1.8 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,16 +27,19 @@
 // File: CompoundCritic.java
 // Classes: CompoundCritic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CompoundCritic.java,v 1.7 2003/06/30 18:00:17 linus Exp $
+// $Id: CompoundCritic.java,v 1.8 2003/08/30 20:09:52 alexb Exp $
 
 package org.argouml.cognitive.critics;
 
-import java.util.*;
-import javax.swing.*;
+import java.util.Vector;
+import javax.swing.Icon;
+import org.argouml.cognitive.Decision;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.Goal;
+import org.argouml.cognitive.ToDoItem;
+import org.tigris.gef.util.VectorSet;
 
-import org.tigris.gef.util.*;
 
-import org.argouml.cognitive.*;
 
 /** A CompoundCritic acts like a regular critic in that it checks the
  *  design and produces design feedback.  However, a CompoundCritic is

@@ -1,4 +1,4 @@
-// $Id: ToDoList.java,v 1.15 2003/06/30 18:00:16 linus Exp $
+// $Id: ToDoList.java,v 1.16 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,18 +25,21 @@
 // File: ToDoList.java
 // Class: ToDoList
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoList.java,v 1.15 2003/06/30 18:00:16 linus Exp $
+// $Id: ToDoList.java,v 1.16 2003/08/30 20:09:52 alexb Exp $
 
 package org.argouml.cognitive;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.Observable;
+import java.util.Vector;
 import javax.swing.event.EventListenerList;
-
-import org.tigris.gef.util.*;
-
 import org.apache.log4j.Category;
-import org.argouml.kernel.*;
 import org.argouml.cognitive.critics.Critic;
+
+
+import org.argouml.kernel.History;
+import org.tigris.gef.util.VectorSet;
 
 /** Implements a list of ToDoItem's.
  *
@@ -72,10 +75,7 @@ import org.argouml.cognitive.critics.Critic;
  *
  * @see Designer#nondisruptivelyWarn
  */
-public class ToDoList
-    extends Observable
-    implements Runnable, // TODO refactor per issue 1024
-               java.io.Serializable {
+public class ToDoList extends Observable implements Runnable, Serializable {
     
     protected static Category cat = Category.getInstance(ToDoList.class);
     

@@ -1,4 +1,4 @@
-// $Id: CheckManager.java,v 1.3 2003/06/30 19:23:17 linus Exp $
+// $Id: CheckManager.java,v 1.4 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,18 +27,19 @@
 // File: CheckManager.java
 // Class: CheckManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CheckManager.java,v 1.3 2003/06/30 19:23:17 linus Exp $
+// $Id: CheckManager.java,v 1.4 2003/08/30 20:09:52 alexb Exp $
 
 package org.argouml.cognitive.checklist;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.Hashtable;
 
 /** The CheckManager keeps track of whcih Checklists should be
  *  presented for a given design material.  CheckManager also keeps
  *  track of which CheckItem's are checked off for a given design
  *  element.  */
 
-public class CheckManager implements java.io.Serializable {
+public class CheckManager implements Serializable {
 
     ////////////////////////////////////////////////////////////////
     // static variables

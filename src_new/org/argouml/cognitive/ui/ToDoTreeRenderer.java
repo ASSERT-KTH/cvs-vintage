@@ -1,6 +1,4 @@
-
-
-// $Id: ToDoTreeRenderer.java,v 1.8 2003/08/25 23:57:42 bobtarling Exp $
+// $Id: ToDoTreeRenderer.java,v 1.9 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written

@@ -1,4 +1,4 @@
-// $Id: ControlMech.java,v 1.3 2003/06/29 23:53:43 linus Exp $
+// $Id: ControlMech.java,v 1.4 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +27,14 @@
 // File: ControlMech.java
 // Classes: ControlMech EnabledCM NotHushedCM CompositeCM
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ControlMech.java,v 1.3 2003/06/29 23:53:43 linus Exp $
+// $Id: ControlMech.java,v 1.4 2003/08/30 20:09:52 alexb Exp $
 
 // TO DO: Do all these classes need to be in their own files? public?
 
 package org.argouml.cognitive.critics;
 
-import org.argouml.cognitive.*;
+import java.io.Serializable;
+import org.argouml.cognitive.Designer;
 
 /** A ControlMech determines when a Critic should be active.  New
  *  ControlMech's can be added to add value to existing Critic's.  Each
@@ -41,7 +42,7 @@ import org.argouml.cognitive.*;
  *  given critic is relevant to a given Designer at the current
  *  time. */
 
-public abstract class ControlMech implements java.io.Serializable {
+public abstract class ControlMech implements Serializable {
 
     public ControlMech() { }
     public boolean isRelevant(Critic c, Designer d) {

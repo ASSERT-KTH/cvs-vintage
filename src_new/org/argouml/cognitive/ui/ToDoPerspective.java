@@ -1,4 +1,4 @@
-// $Id: ToDoPerspective.java,v 1.6 2003/06/29 23:53:43 linus Exp $
+// $Id: ToDoPerspective.java,v 1.7 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,16 +24,13 @@
 
 package org.argouml.cognitive.ui;
 
-import java.util.*;
-import java.awt.*;
 import java.io.Serializable;
-import javax.swing.tree.*;
-import javax.swing.event.*;
-
-import org.argouml.ui.*;
-import org.argouml.cognitive.*;
-
+import java.util.Vector;
 import org.apache.log4j.Category;
+
+
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.ui.TreeModelComposite;
 
 /**
  *
@@ -42,7 +39,7 @@ import org.apache.log4j.Category;
  *   - a todo tree model / perspective (which is a collection of GoRules)
  *</pre>
  *
- * $Id: ToDoPerspective.java,v 1.6 2003/06/29 23:53:43 linus Exp $
+ * $Id: ToDoPerspective.java,v 1.7 2003/08/30 20:09:52 alexb Exp $
  */
 public abstract class ToDoPerspective extends TreeModelComposite
     implements Serializable 

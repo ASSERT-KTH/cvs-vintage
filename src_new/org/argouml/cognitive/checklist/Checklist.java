@@ -1,4 +1,4 @@
-// $Id: Checklist.java,v 1.4 2003/06/29 23:53:43 linus Exp $
+// $Id: Checklist.java,v 1.5 2003/08/30 20:09:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,9 @@
 
 package org.argouml.cognitive.checklist;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /** A Checklist is basically a list of CheckItems.  It also provides
  *  some convience functions for adding trivial CheckItems (ones that
@@ -42,7 +44,7 @@ import java.util.*;
  *  @see org.argouml.cognitive.checklist.ui.TabChecklist
  */
 
-public class Checklist implements java.io.Serializable {
+public class Checklist implements Serializable {
 
     ////////////////////////////////////////////////////////////////
     // instance variables
