@@ -81,13 +81,10 @@ public class InvocationMarshaller extends SerializableMarshaller
                throw new IOException("Can not process data object due to the InvocationRequest's parameter being null.");
             }
 
-            super.write(dataObject, output);
          }
-         else
-         {
-            log.error("Attempting to marshall Invocation but InvocationRequest parameter was not of type Invocation.  Can not proceed.");
-            throw new IOException("Can not process data object due to the InvocationRequest's parameter was not of type Invocation.");
-         }
+
+         super.write(dataObject, output);
+
       }
       else  // assume this is going to be the response
       {
