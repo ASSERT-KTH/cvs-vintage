@@ -1,0 +1,161 @@
+# -------------------------------------------------------------------
+# 
+# T O R Q U E  C O N F I G U R A T I O N  F I L E
+# 
+# -------------------------------------------------------------------
+
+# -------------------------------------------------------------------
+# 
+#  T U R B I N E  P R O J E C T
+#
+# -------------------------------------------------------------------
+# This is the name of your Turbine project. Your generated sources
+# will be named using the project name selected below. If your
+# project=killerapp then you will have a generated:
+#
+# killerapp-schema.sql
+#
+# IMPORTANT!
+# This means that your project schema MUST be named
+# killerapp-schema.xml and it MUST be placed in the
+# schema directory for Torque to work property.
+#
+# The object model sources generated are independent of
+# the project name selected.
+# -------------------------------------------------------------------
+
+project=scarab
+
+# -------------------------------------------------------------------
+# 
+#  T A R G E T  D A T A B A S E
+#
+# -------------------------------------------------------------------
+# This is the target database, only considered when generating
+# the SQL for your Turbine project. Your possible choices are
+#
+# db2
+# hypersonic
+# mysql
+# oracle,
+# postgresql
+#
+# Default: none
+# -------------------------------------------------------------------
+
+database=mysql
+
+# -------------------------------------------------------------------
+# 
+#  O B J E C T  M O D E L  I N F O R M A T I O N
+#
+# -------------------------------------------------------------------
+# These settings will allow you to customize the way your
+# Peer-based object model is created.
+# -------------------------------------------------------------------
+# addSaveMethod=true, adds tracking code to determine how to save an
+# object
+# set objectModelType=complex to generate an om with collection
+# support, (not tested - please help to debug)
+# -------------------------------------------------------------------
+
+extend=TurbineMapBuilder
+mapname=TurbineMap
+suffix=MapBuilder
+targetPackage=org.tigris.scarab.om
+addSaveMethod=true
+addGetByNameMethod=true
+complexObjectModel=true
+basePrefix=Base
+
+# -------------------------------------------------------------------
+# 
+#  I N T A K E  I N P U T  O B J E C T  M O D E L
+#
+# -------------------------------------------------------------------
+# These settings will allow you to customize the way your
+# input object model is created.
+# -------------------------------------------------------------------
+
+intakeExtends=
+intakeSuffix=Input
+
+# there is now one target package and there
+# will be package under the main target package
+# for generated files like the OM, and intake.
+#targetPackage=org.tigris.scarab.intake
+
+# This property is currently only used by intake, but
+# we will probably keep all XML schema/config info
+# in this directory.
+
+xmlDirectory = ./xml
+
+# -------------------------------------------------------------------
+# 
+#  D A T A B A S E  S E T T I N G S
+#
+# -------------------------------------------------------------------
+# JDBC connection settings. This is used by the JDBCToXML task that
+# will create an XML database schema from JDBC metadata. These
+# settings are also used by the SQL Ant task to initialize your
+# Turbine system with the generated SQL.
+# -------------------------------------------------------------------
+
+databaseUrl = jdbc:mysql://localhost/turbine
+databaseDriver = org.gjt.mm.mysql.Driver
+databaseUser = user
+databasePassword = password
+
+# -------------------------------------------------------------------
+# You should NOT have to edit anything below here.
+# -------------------------------------------------------------------
+
+# -------------------------------------------------------------------
+# 
+#  C O N F I G U R A T I O N  D I R E C T O R Y
+#
+# -------------------------------------------------------------------
+# This is the directory that Torque looks in the find
+# its torque.props file.
+#
+# Default: none
+# -------------------------------------------------------------------
+
+configDir=./config
+
+# -------------------------------------------------------------------
+# 
+#  T E M P L A T E  P A T H
+#
+# -------------------------------------------------------------------
+
+templatePath = templates
+
+# -------------------------------------------------------------------
+# 
+#  C O N T R O L  T E M P L A T E S
+#
+# -------------------------------------------------------------------
+
+SQLControlTemplate = sql/base/Control.vm
+OMControlTemplate = om/Control.vm
+IntakeControlTemplate = intake/Control.vm
+ServiceControlTemplate = service/Control.vm
+idTableControlTemplate = sql/id-table/Control.vm
+
+# -------------------------------------------------------------------
+# 
+#  O U T P U T  D I R E C T O R Y
+#
+# -------------------------------------------------------------------
+
+outputDirectory=../../../../../../src/java/
+
+# -------------------------------------------------------------------
+# 
+#  S C H E M A  D I R E C T O R Y
+#
+# -------------------------------------------------------------------
+
+schemaDirectory=schema
