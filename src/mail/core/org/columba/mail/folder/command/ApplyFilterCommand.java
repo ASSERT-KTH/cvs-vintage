@@ -48,7 +48,7 @@ public class ApplyFilterCommand extends Command{
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
 		Folder srcFolder = (Folder) r[0].getFolder();
-		Object[] uids = MessageNode.toUidArray( (MessageNode[]) r[0].getUids());
+		Object[] uids = r[0].getUids();
 
 		FilterList list = srcFolder.getFilterList();
 		
@@ -59,7 +59,7 @@ public class ApplyFilterCommand extends Command{
 			worker.setProgressBarValue(i);
 			Filter filter = list.get(i);
 
-			Object[] result = srcFolder.searchMessages(filter, uids, worker);
+			Object[] result = srcFolder.searchMessages(filter, worker);
 			if (result.length != 0) {
 				CompoundCommand command =
 					filter.getCommand(frameController, srcFolder, result);
