@@ -31,7 +31,7 @@ import org.jboss.logging.log4j.JBossCategory;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * <p><b>Revisions:</b><br>
  *  <p><b>2001/07/29: billb</b>
@@ -61,8 +61,22 @@ import org.jboss.logging.log4j.JBossCategory;
 public class SimplePessimisticEJBLock
    extends BeanLockSupport  
 {
+   /** The actual lock object **/
+   public Object lock = new Object();
+ 
+   public Object getLock() {return lock;}
+	
+   public void schedule(MethodInvocation mi) throws Exception
+   {
+      boolean threadScheduled = false;
+      while (!threadScheduled)
+      {
+         /* loop on lock wakeup and restart trying to schedule */
+         threadScheduled = doSchedule(mi);
+      }
+   }
    /**
-    * Schedule implements a particular policy for scheduling the threads
+    * doSchedule implements a particular policy for scheduling the threads
     * coming in. There is always the spec required "serialization" but we can
     * add custom scheduling in here
     *
@@ -74,7 +88,7 @@ public class SimplePessimisticEJBLock
     *            rest of the interceptors.  Returns false if the interceptor
     *            must try the scheduling again. 
     */
-   public boolean schedule(MethodInvocation mi) 
+   protected boolean doSchedule(MethodInvocation mi) 
       throws Exception
    {
       this.sync();
@@ -254,4 +268,5 @@ public class SimplePessimisticEJBLock
       // transaction
       if (numMethodLocks ==0) synchronized(lock) {lock.notifyAll();}
    }
+
 }

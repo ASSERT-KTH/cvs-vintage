@@ -29,7 +29,7 @@ import org.jboss.logging.log4j.JBossCategory;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b><br>
  *  <p><b>2001/07/29: marcf</b>
@@ -40,9 +40,6 @@ import org.jboss.logging.log4j.JBossCategory;
 public abstract class BeanLockSupport
    implements BeanLock
 {
-   /** The actual lock object **/
-   public Object lock = new Object();
- 
    /**
     * Number of threads invoking methods on this bean
     * (1 normally >1 if reentrant)
@@ -77,8 +74,6 @@ public abstract class BeanLockSupport
    public void setReentrant(boolean reentrant) {this.reentrant = reentrant;}
    public void setTimeout(int timeout) {txTimeout = timeout;}
 	
-   public Object getLock() {return lock;}
-	
    public void sync()
    {
       synchronized(this)
@@ -104,7 +99,7 @@ public abstract class BeanLockSupport
       }
    }
  
-   public abstract boolean schedule(MethodInvocation mi) throws Exception;
+   public abstract void schedule(MethodInvocation mi) throws Exception;
 	
    /**
     * The setTransaction associates a transaction with the lock.
@@ -116,25 +111,6 @@ public abstract class BeanLockSupport
    public abstract void endTransaction(Transaction tx);
    public abstract void wontSynchronize(Transaction tx);
 	
-   /**
-    * Notify one.
-    * 
-    * <p>You can overwrite these in the extensions
-    */
-   public void notifyOne() {
-      synchronized(lock) {
-	
-         lock.notify();
-      }
-   }
-	
-   public void notifyEveryone() {
-      synchronized(lock) {
-			
-         lock.notifyAll();
-      }
-   }
-   
    public boolean isMethodLocked() { return numMethodLocks > 0;}
    public int getNumMethodLocks() { return numMethodLocks;}
    public void addMethodLock() { numMethodLocks++; }

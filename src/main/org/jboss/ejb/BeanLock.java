@@ -28,7 +28,7 @@ import org.jboss.logging.log4j.JBossCategory;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
  * <p><b>Revisions:</b><br>
 *  <p><b>2001/07/29: marcf</b>
@@ -45,44 +45,36 @@ import org.jboss.logging.log4j.JBossCategory;
 public interface BeanLock
 {
    public Object getId();
-	public void setId(Object id);
-	public void setReentrant(boolean reentrant);
-	public void setTimeout(int timeout);
+   public void setId(Object id);
+   public void setReentrant(boolean reentrant);
+   public void setTimeout(int timeout);
 	 
    public void sync();
    public void releaseSync();
 	
-	/*
-	* schedule(MethodInvocation)
-	* 
-	* implements the actual logic of the lock.  In the case of an EJB lock must at least implement
-	* the serialization of calls 
-	*/
-   public boolean schedule(MethodInvocation mi) 
+   /*
+    * schedule(MethodInvocation)
+    * 
+    * implements the actual logic of the lock.  In the case of an EJB lock must at least implement
+    * the serialization of calls 
+    */
+   public void schedule(MethodInvocation mi) 
       throws Exception;
 		
    /**
     * setTransaction(Transaction tx)
     * 
     * The setTransaction associates a transaction with the lock.  
-	 */
+    */
    public void setTransaction(Transaction tx);
    public Transaction getTransaction();
 	
-	// Signifies to the lock of the transaction boundary (Tx demarcation seen)
-	public void endTransaction(Transaction tx);
+   // Signifies to the lock of the transaction boundary (Tx demarcation seen)
+   public void endTransaction(Transaction tx);
 	
-	//Signifies to the lock that the transaction will not Synchronize (Tx demarcation not seen) 
-	public void wontSynchronize(Transaction tx);
+   //Signifies to the lock that the transaction will not Synchronize (Tx demarcation not seen) 
+   public void wontSynchronize(Transaction tx);
 	
-	/*encapsulates notify()*/
-	public void notifyOne();
-	/*encapsulates notifyAll()*/
-	public void notifyEveryone();
-	
-	public Object getLock();
-   
-   
    public boolean isMethodLocked(); 
    public int getNumMethodLocks(); 
    public void addMethodLock(); 
