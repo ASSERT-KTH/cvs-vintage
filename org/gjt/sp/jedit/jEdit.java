@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.174 2003/06/05 00:01:48 spestov Exp $
+ * @version $Id: jEdit.java,v 1.175 2003/06/05 21:54:16 spestov Exp $
  */
 public class jEdit
 {
@@ -2588,9 +2588,17 @@ public class jEdit
 		{
 			if(pluginErrors == null)
 				pluginErrors = new Vector();
-			pluginErrors.addElement(
+
+			ErrorListDialog.ErrorEntry newEntry =
 				new ErrorListDialog.ErrorEntry(
-				path,messageProp,args));
+				path,messageProp,args);
+
+			for(int i = 0; i < pluginErrors.size(); i++)
+			{
+				if(pluginErrors.get(i).equals(newEntry))
+					return;
+			}
+			pluginErrors.addElement(newEntry);
 
 			if(startupDone)
 			{
