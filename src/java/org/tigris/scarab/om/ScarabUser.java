@@ -65,7 +65,7 @@ import org.tigris.scarab.om.peer.ScarabUserPeer;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.2 2000/12/20 03:35:14 jon Exp $
+    @version $Id: ScarabUser.java,v 1.3 2000/12/28 22:27:34 jon Exp $
 */
 public class ScarabUser extends TurbineUser
 {    
@@ -83,79 +83,39 @@ public class ScarabUser extends TurbineUser
         data that needs to be checked/present, throw an exception.
 
         <pre>
+        firstname
+        lastname
         email
         password
         password_confirm
-        firstname
-        lastname
-        companyname
-        address1
-        address2
-        city
-        state
-        country
-        postalcode
-        phone
-        altphone
-        fax
-        cell
-        pager
         </pre>
     */
     public void doPopulate(RunData data)
         throws Exception
     {
         // form validation routines
-        String LOGINID = data.getParameters().getString("email", null);
-        String FIRST_NAME = data.getParameters().getString("firstname", null);
-        String LAST_NAME = data.getParameters().getString("lastname", null);
-        String PASSWORD = data.getParameters().getString("password", null);
-        String PASSWORD_CONFIRM = data.getParameters().getString("password_confirm", null);
-        
+        data.getParameters().setProperties(this);
+
+        String password_confirm = data.getParameters().getString("password_confirm", null);
+        setUserName(data.getParameters().getString("Email"));
+
         // FIXME: add better email address checking to catch stupid mistakes up front
         // FIXME: add better form validation all around, make sure we don't have
         //        bad data as well as the right length.
-        if (LOGINID == null)
+        if (getUserName() == null)
             throw new Exception ("The email address you entered is empty!");
-        if (FIRST_NAME == null)
+        if (getFirstName() == null)
             throw new Exception ("The first name you entered is empty!");
-        if (LAST_NAME == null)
+        if (getLastName() == null)
             throw new Exception ("The last name you entered is empty!");
-        if (PASSWORD == null)
+        if (getPassword() == null)
             throw new Exception ("The password you entered is empty!");
-        if (PASSWORD_CONFIRM == null)
+        if (password_confirm == null)
             throw new Exception ("The password confirm you entered is empty!");
-    
-        if (!PASSWORD.equals(PASSWORD_CONFIRM))
+        if (!getPassword().equals(password_confirm))
             throw new Exception ("The password's you entered do not match!");
-        
-        // in TurbineUser, data for the user is stored within a hashtable
-        // this hashtable can be easily serialized to disk by simply providing
-        // a visitor_id and calling the TurbineUser.saveToStorage() method.
-        // for now, we are just interested in populating ourself.
-        
-        // these are defined by an Interface so that they can be easily re-used
-        setPerm(User.USERNAME, LOGINID);
-        setPerm(User.PASSWORD, PASSWORD);
-        setPerm(User.FIRST_NAME, FIRST_NAME);
-        setPerm(User.LAST_NAME, LAST_NAME);
-        
-        // these don't have accessor methods in the User interface, so it is ok
-        // to define them myself
-        setPerm(ScarabUserPeer.getColumnName("ADDRESS1"), data.getParameters().getString("ADDRESS1",""));
-        setPerm(ScarabUserPeer.getColumnName("ADDRESS2"), data.getParameters().getString("ADDRESS2",""));
-        setPerm(ScarabUserPeer.getColumnName("CITY"), data.getParameters().getString("CITY",""));
-        setPerm(ScarabUserPeer.getColumnName("STATE"), data.getParameters().getString("STATE",""));
-        setPerm(ScarabUserPeer.getColumnName("POSTALCODE"), data.getParameters().getString("POSTALCODE",""));
-        setPerm(ScarabUserPeer.getColumnName("COUNTRY"), data.getParameters().getString("COUNTRY",""));
-        setPerm(ScarabUserPeer.getColumnName("CITIZENSHIP"), ""); // empty for now.
-        setPerm(ScarabUserPeer.getColumnName("PHONE"), data.getParameters().getString("PHONE",""));
-        setPerm(ScarabUserPeer.getColumnName("ALTPHONE"), data.getParameters().getString("ALTPHONE",""));
-        setPerm(ScarabUserPeer.getColumnName("FAX"), data.getParameters().getString("FAX",""));
-        setPerm(ScarabUserPeer.getColumnName("CELL"), data.getParameters().getString("CELL",""));
-        setPerm(ScarabUserPeer.getColumnName("PAGER"), data.getParameters().getString("PAGER",""));
-        setPerm(ScarabUserPeer.getColumnName("EMAIL"), LOGINID); // in Scarab, LOGINID == Email
     }
+    
     /**
         This method is responsible for creating a new user. It will throw an 
         exception if there is any sort of error (such as a duplicate login id) 
@@ -297,19 +257,7 @@ public class ScarabUser extends TurbineUser
         criteria.add (ScarabUserPeer.getColumnName(User.PASSWORD), getPerm(User.PASSWORD));
         criteria.add (ScarabUserPeer.getColumnName(User.FIRST_NAME), getPerm(User.FIRST_NAME));
         criteria.add (ScarabUserPeer.getColumnName(User.LAST_NAME), getPerm(User.LAST_NAME));
-        criteria.add (ScarabUserPeer.getColumnName("ADDRESS1"), getPerm(ScarabUserPeer.getColumnName("ADDRESS1")));
-        criteria.add (ScarabUserPeer.getColumnName("ADDRESS2"), getPerm(ScarabUserPeer.getColumnName("ADDRESS2")));
-        criteria.add (ScarabUserPeer.getColumnName("CITY"), getPerm(ScarabUserPeer.getColumnName("CITY")));
-        criteria.add (ScarabUserPeer.getColumnName("STATE"), getPerm(ScarabUserPeer.getColumnName("STATE")));
-        criteria.add (ScarabUserPeer.getColumnName("POSTALCODE"), getPerm(ScarabUserPeer.getColumnName("POSTALCODE")));
-        criteria.add (ScarabUserPeer.getColumnName("COUNTRY"), getPerm(ScarabUserPeer.getColumnName("COUNTRY")));
-        criteria.add (ScarabUserPeer.getColumnName("CITIZENSHIP"), getPerm(ScarabUserPeer.getColumnName("CITIZENSHIP")));
-        criteria.add (ScarabUserPeer.getColumnName("PHONE"), getPerm(ScarabUserPeer.getColumnName("PHONE")));
-        criteria.add (ScarabUserPeer.getColumnName("ALTPHONE"), getPerm(ScarabUserPeer.getColumnName("ALTPHONE")));
-        criteria.add (ScarabUserPeer.getColumnName("FAX"), getPerm(ScarabUserPeer.getColumnName("FAX")));
-        criteria.add (ScarabUserPeer.getColumnName("CELL"), getPerm(ScarabUserPeer.getColumnName("CELL")));
-        criteria.add (ScarabUserPeer.getColumnName("PAGER"), getPerm(ScarabUserPeer.getColumnName("PAGER")));
-        criteria.add (ScarabUserPeer.getColumnName("EMAIL"), this.getUserName());
+        criteria.add (ScarabUserPeer.getColumnName(User.EMAIL), this.getUserName());
         return criteria;
     }
 }    
