@@ -971,7 +971,7 @@ Prints out a date entry form.
 
 #if ($moduleAttributeGroups.isEmpty())
 <h3>$title</h3>
-<p><em>$l10n.NoAttributesDefinedForIssueType</em></p>
+<p><em>$l10n.format('NoAttributesDefinedForIssueType',$issueType.getName())</em></p>
 #else
 
 #if ($showTemplates)
