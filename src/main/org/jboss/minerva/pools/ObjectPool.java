@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -543,6 +543,8 @@ public class ObjectPool implements PoolEventListener {
             synchronized(objects) {  // Don't let 2 threads add at the same time
                 if(maxSize == 0 || objects.size() < maxSize) {
                     Object ob = factory.createObject();
+                    if (ob == null) // failure: factory cannot create object
+                        return null;
                     ObjectRecord rec = new ObjectRecord(ob);
                     objects.put(ob, rec);
                     result = factory.prepareObject(ob);
