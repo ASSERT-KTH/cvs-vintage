@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.42 2004/08/07 12:41:42 mvw Exp $
+// $Id: FigUseCase.java,v 1.43 2004/08/08 20:42:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -281,8 +281,9 @@ public class FigUseCase extends FigNodeModelElement {
 			     epSize.width,
 			     epSize.height);
 
+        setBigPort(bigPort);
+        
         // add Figs to the FigNode in back-to-front order
-
         addFig(bigPort);
         addFig(cover);
         addFig(getNameFig());
