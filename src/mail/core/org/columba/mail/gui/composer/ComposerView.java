@@ -87,7 +87,7 @@ public class ComposerView extends AbstractFrameView {
 		rightSplitPane.setDividerLocation(400);
 		
 		JPanel topPanel = new JPanel();
-		topPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+		topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
 
 		JLabel subjectLabel = new JLabel(MailResourceLoader.getString("dialog", "composer", "subject")); //$NON-NLS-1$
 		subjectLabel.setDisplayedMnemonic(
