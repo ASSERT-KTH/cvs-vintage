@@ -10,7 +10,6 @@ import javax.servlet.jsp.tagext.*;
 import org.apache.tomcat.core.Request;
 import org.apache.tomcat.core.Context;
 import org.apache.tomcat.core.ContextManager;
-import org.apache.tomcat.helper.RequestUtil;
 
 /**
  *

@@ -8,7 +8,6 @@ import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.helper.RequestUtil;
 
 /**
  * A context administration class. Contexts can be
