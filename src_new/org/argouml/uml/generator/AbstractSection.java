@@ -1,4 +1,4 @@
-// $Id: AbstractSection.java,v 1.10 2004/10/13 18:18:31 thn Exp $
+// $Id: AbstractSection.java,v 1.11 2005/01/19 21:33:40 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: AbstractSection.java
 // Classes: AbstractSection
 // Original Author: Marian Heddesheimer
 
