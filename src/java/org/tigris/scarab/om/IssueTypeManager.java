@@ -46,15 +46,20 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
+import java.util.LinkedList;
 import org.apache.torque.TorqueException;
+import org.apache.torque.manager.CacheListener;
+import org.apache.torque.om.Persistent;
 
 /** 
  * This class manages IssueType objects.  
  *
- * @version $Id: IssueTypeManager.java,v 1.4 2003/01/22 23:23:07 jmcnally Exp $
+ * @version $Id: IssueTypeManager.java,v 1.5 2003/02/11 00:08:18 elicia Exp $
  */
 public class IssueTypeManager
     extends BaseIssueTypeManager
+    implements CacheListener
 {
     /**
      * Creates a new <code>IssueTypeManager</code> instance.
@@ -67,4 +72,34 @@ public class IssueTypeManager
         super();
         setRegion(getClassName().replace('.', '_'));
     }
+
+    /**
+     * Notify other managers with relevant CacheEvents.
+     */
+    protected void registerAsListener()
+    {
+        AttributeGroupManager.addCacheListener(this);
+    }
+
+    public void addedObject(Persistent om)
+    {
+        if (om instanceof AttributeGroup) 
+        {
+            getMethodResult().clear();
+        }
+    }
+
+    public void refreshedObject(Persistent om)
+    {
+        addedObject(om);
+    }
+
+    /** fields which interest us with respect to cache events */
+    public List getInterestedFields()
+    {
+        List interestedCacheFields = new LinkedList();
+        interestedCacheFields.add(AttributeGroupPeer.MODULE_ID);
+        return interestedCacheFields;
+    }
+
 }

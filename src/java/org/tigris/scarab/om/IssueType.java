@@ -49,11 +49,14 @@ package org.tigris.scarab.om;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
+
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.TorqueException;
 import org.apache.torque.manager.MethodResultCache;
+import org.apache.fulcrum.localization.Localization;
 
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.om.Module;
@@ -65,7 +68,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.41 2003/02/07 01:16:13 elicia Exp $
+ * @version $Id: IssueType.java,v 1.42 2003/02/11 00:08:18 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -77,6 +80,8 @@ public  class IssueType
         "getTemplateIssueType";
     private static final String GET_INSTANCE = 
         "getInstance";
+    protected static final String GET_ATTRIBUTE_GROUPS = 
+        "getAttributeGroups";
     protected static final String GET_R_ISSUETYPE_ATTRIBUTES = 
         "getRIssueTypeAttributes";
     protected static final String GET_R_ISSUETYPE_OPTIONS = 
@@ -308,39 +313,84 @@ public  class IssueType
         ag2.save();
     }
 
-    /**
-     * List of attribute groups associated with this issue type.
-     */
+    public List getAttributeGroups(Module module)
+        throws Exception
+    {
+        return getAttributeGroups(module, false);
+    }
+
     public List getAttributeGroups(boolean activeOnly)
+        throws Exception
+    {
+        return getAttributeGroups(null, activeOnly);
+    }
+
+    /**
+     * List of attribute groups associated with this module).
+     */
+    public List getAttributeGroups(Module module, boolean activeOnly)
         throws Exception
     {
         List groups = null;
         Boolean activeBool = activeOnly ? Boolean.TRUE : Boolean.FALSE;
-        Criteria crit = new Criteria()
-            .add(AttributeGroupPeer.ISSUE_TYPE_ID, getIssueTypeId())
-            .add(AttributeGroupPeer.MODULE_ID, null)
-            .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
-        if (activeOnly)
+        Object obj = getMethodResult().get(this, GET_ATTRIBUTE_GROUPS,
+                                           module, activeBool);
+        if (obj == null)
         {
-            crit.add(AttributeGroupPeer.ACTIVE, true);
+            Criteria crit = new Criteria()
+                .add(AttributeGroupPeer.ISSUE_TYPE_ID, getIssueTypeId())
+                .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
+            if (activeOnly)
+            {
+                crit.add(AttributeGroupPeer.ACTIVE, true);
+            }
+            if (module != null)
+            {
+                crit.add(AttributeGroupPeer.MODULE_ID, module.getModuleId());
+            }
+            else
+            {
+                crit.add(AttributeGroupPeer.MODULE_ID, null);
+            }
+            groups = AttributeGroupPeer.doSelect(crit);
+            getMethodResult().put(groups, this, GET_ATTRIBUTE_GROUPS,
+                                  module, activeBool);
         }
-        groups = AttributeGroupPeer.doSelect(crit);
+        else 
+        {
+            groups = (List)obj;
+        }
         return groups;
+    }
+
+
+    public AttributeGroup createNewGroup()
+        throws Exception
+    {
+        return createNewGroup(null);
     }
 
     /**
      * Creates new attribute group.
      */
-    public AttributeGroup createNewGroup ()
+    public AttributeGroup createNewGroup(Module module)
         throws Exception
     {
-        List groups = getAttributeGroups(false);
+        List groups = getAttributeGroups(module, false);
         AttributeGroup ag = new AttributeGroup();
 
         // Make default group name 'new attribute group' 
-        ag.setName("Attribute group");
+        Locale defaultLocale = new Locale(
+            Localization.getDefaultLanguage(), 
+            Localization.getDefaultCountry());
+        ag.setName(Localization.getString("ScarabBundle",
+                defaultLocale, "NewAttributeGroup"));
         ag.setActive(true);
         ag.setIssueTypeId(getIssueTypeId());
+        if (module != null)
+        {
+            ag.setModuleId(module.getModuleId());
+        }
         if (groups.size() == 0)
         {
             ag.setDedupe(true);
@@ -775,6 +825,6 @@ public  class IssueType
 
     private MethodResultCache getMethodResult()
     {
-        return ModuleManager.getMethodResult();
+        return IssueTypeManager.getMethodResult();
     }
 }
