@@ -25,7 +25,7 @@ import javax.xml.rpc.handler.MessageContext;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -208,7 +208,7 @@ public class StatefulSessionEnterpriseContext
       public boolean getRollbackOnly()
       {
          assertAllowedIn("getRollbackOnly",
-                 IN_BUSINESS_METHOD | IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
+                 IN_BUSINESS_METHOD | IN_AFTER_BEGIN | IN_BEFORE_COMPLETION);
 
          return super.getRollbackOnly();
       }
