@@ -22,7 +22,7 @@ import javax.transaction.Transaction;
 *	@see EnterpriseContext
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.14 $
+*	@version $Revision: 1.15 $
 */
 public class EntityEnterpriseContext
 extends EnterpriseContext
@@ -40,11 +40,8 @@ extends EnterpriseContext
     // but "valid" as long as the transaction runs
     boolean valid = false;
 
-    // The instance cache may attach any metadata it wishes to this context here
-//    Object cacheCtx;
-
     // The persistence manager may attach any metadata it wishes to this context here
-    Object persistenceCtx;
+    private Object persistenceCtx;
 
 	//The cacheKey for this context
 	CacheKey key;
