@@ -4,7 +4,8 @@
 
 <div class="app" id="div2-1-4-0">
 
-<h2>$page.Title</h2>
+#set ($pageTitle = "Edit issue type '$issueType.Name'")
+<h2>$pageTitle</h2>
 
 #if (!$issueTypeId && $issueTypeId.length() == 0)
 <p class="alert">Issue type not found. Please click 
@@ -92,7 +93,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap">Select</th>
-<th>Attribute group name</th>
+<th>Name</th>
 <th>Active</th>
 <th>Sequence #</th>
 </tr>
