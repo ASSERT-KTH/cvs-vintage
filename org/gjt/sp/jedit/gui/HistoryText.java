@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Text area with a history.
  * @author Slava Pestov
- * @version $Id: HistoryText.java,v 1.3 2004/10/24 01:36:46 spestov Exp $
+ * @version $Id: HistoryText.java,v 1.4 2004/11/16 03:47:37 spestov Exp $
  */
 public class HistoryText
 {
@@ -131,7 +131,7 @@ public class HistoryText
 		}
 
 		int start = getInputStart();
-		String t = getText().substring(start,
+		String t = getText().substring(0,
 			text.getSelectionStart() - start);
 		if(t == null)
 		{
@@ -167,7 +167,7 @@ public class HistoryText
 		}
 
 		int start = getInputStart();
-		String t = getText().substring(start,
+		String t = getText().substring(0,
 			text.getSelectionStart() - start);
 		if(t == null)
 		{
