@@ -18,10 +18,10 @@
             <config-property-type>java.lang.String</config-property-type>
             <config-property-value>java:DefaultJMSProvider</config-property-value>
         </config-property>
-        <auth-mechanism>
-            <auth-mech-type>basic-password</auth-mech-type>
+        <authentication-mechanism>
+            <authentication-mechanism-type>BasicPassword</authentication-mechanism-type>
             <credential-interface>javax.resource.security.PasswordCredential</credential-interface>
-        </auth-mechanism>
+        </authentication-mechanism>
         <reauthentication-support>false</reauthentication-support>
     </resourceadapter>
 </connector>

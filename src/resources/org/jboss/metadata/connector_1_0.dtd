@@ -101,7 +101,7 @@ configurable properties for ManagedConnectionFactory instances,
 one or more authentication mechanisms supported and additional 
 required security permissions.
 
-If there is no auth-mechanism specified as part of resource adapter
+If there is no authentication-mechanism specified as part of resource adapter
 element then the resource adapter does not support any standard
 security authentication mechanisms as part of security contract.
 The application server ignores the security part of the system 
@@ -112,22 +112,22 @@ contracts in this case.
 managedconnectionfactory-class, connectionfactory-interface,         
 connectionfactory-impl-class, connection-interface, 
 connection-impl-class, transaction-support, config-property*, 
-auth-mechanism*, reauthentication-support, security-permission* 
+authentication-mechanism*, reauthentication-support, security-permission* 
 )>
 
 <!--
-The element auth-mechanism specifies an authentication mechanism
+The element authentication-mechanism specifies an authentication mechanism
 supported by the resource adapter. Note that this support is for
 the resource adapter and not for the underlying EIS instance. The
 optional description specifies any resource adapter specific requirement
 for the support of security contract and authentication mechanism.
 
-Note that basic-password mech-type should support the 
-javax.resource.spi.security.PasswordCredential interface. The kerbv5
+Note that BasicPassword mech-type should support the 
+javax.resource.spi.security.PasswordCredential interface. The Kerbv5
 mech-type should support the javax.resource.spi.security.Generic-
 Credential interface.
 -->
-<!ELEMENT auth-mechanism (description?, auth-mech-type, credential-interface)>
+<!ELEMENT authentication-mechanism (description?, authentication-mechanism-type, credential-interface)>
 
 <!--
 The element credential-interface specifies the interface that the
@@ -145,17 +145,17 @@ The possible values are:
 <!ELEMENT credential-interface (#PCDATA)>
 
 <!--
-The element auth-mech-type specifies type of an authentication
+The element authentication-mechanism-type specifies type of an authentication
 mechanism.
 
 The example values are:
-   <auth-mech-type>basic-password</auth-mech-type>
-   <auth-mech-type>kerbv5</auth-mech-type>
+   <authentication-mechanism-type>BasicPassword</authentication-mechanism-type>
+   <authentication-mechanism-type>Kerbv5</authentication-mechanism-type>
 
 Any additional security mechanisms are outside the scope of the 
 Connector architecture specification.
 -->
-<!ELEMENT auth-mech-type (#PCDATA)>
+<!ELEMENT authentication-mechanism-type (#PCDATA)>
 
 <!-- 
 The element connectionfactory-interface specifies the fully-qualified
@@ -250,7 +250,7 @@ Factory instance.
 The following are the legal values of config-property-type:
    java.lang.Boolean, java.lang.String, java.lang.Integer,
    java.lang.Double, java.lang.Byte, java.lang.Short,
-   java.lang.Long, java.lang.Float
+   java.lang.Long, java.lang.Float, java.lang.Character
 
 Example: <config-property-type>java.lang.String</config-property-type>
 -->
@@ -437,8 +437,8 @@ The connector specification does not allow the tools to add the non-
 standard information into the standard deployment descriptor.
 -->
 
-<!ATTLIST auth-mechanism id ID #IMPLIED>
-<!ATTLIST auth-mech-type id ID #IMPLIED>
+<!ATTLIST authentication-mechanism id ID #IMPLIED>
+<!ATTLIST authentication-mechanism-type id ID #IMPLIED>
 <!ATTLIST config-property id ID #IMPLIED>
 <!ATTLIST config-property-name id ID #IMPLIED>
 <!ATTLIST config-property-value id ID #IMPLIED>
