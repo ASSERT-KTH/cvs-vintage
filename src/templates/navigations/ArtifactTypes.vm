@@ -3,8 +3,9 @@
 
 <div><strong><a href="$link.setPage("SelectArtifactType.vm")">Artifact types</a></strong>
 #foreach($issueType in $issueTypes)
+  #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
   #if ($issueType.equals($scarabR.CurrentIssueType))
-    <div><small><strong>$issueType.Name</strong></small>
+    <div><small><strong>$rmit.DisplayText</strong></small>
     <div><small>#if ($scarabR.CurrentModule.Dedupe)<a href="$link.setPage("entry,Wizard1.vm")">#else<a href="$link.setPage("entry,Wizard3.vm")">#end Enter new</a></small></div>
     <div><small><a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a></small></div>
     <div><small><a href="$link.setPage("Search.vm")">Custom Query</a></small></div>
@@ -13,7 +14,7 @@
     <div><small><a href="$link.setPage("reports,Step1.vm")">New report</a></small></div>
     <div><small>Saved reports</small></div></div>
   #else
-    <div><small><a href="$link.setPage("$scarabR.convertPath($data.Target)").setAction("SelectIssueType").addPathInfo("nextTemplate", $scarabR.convertPath($data.Target)).addPathInfo("newissuetype", "$issueType.IssueTypeId")">$issueType.Name</a></small></div>
+    <div><small><a href="$link.setPage("$scarabR.convertPath($data.Target)").setAction("SelectIssueType").addPathInfo("nextTemplate", $scarabR.convertPath($data.Target)).addPathInfo("newissuetype", "$issueType.IssueTypeId")">$rmit.DisplayText</a></small></div>
   #end
 #end
 </div>
