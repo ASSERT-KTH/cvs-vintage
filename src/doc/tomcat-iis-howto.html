@@ -1,6 +1,6 @@
 <html>
 <head>
-  <!-- $Id: tomcat-iis-howto.html,v 1.5 2001/10/21 15:43:06 larryi Exp $ -->
+  <!-- $Id: tomcat-iis-howto.html,v 1.6 2001/11/07 13:42:39 larryi Exp $ -->
   <!-- Copyright 1999-2001, Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <link rel="stylesheet" href="style.css">
@@ -128,7 +128,7 @@ configuration file, which by default will be
     the filter should reflect its task (for example,
     &quot;Jakarta Redirector&quot;). Its executable must be our
 	<code>isapi_redirect.dll</code>.  On WinNT and Win2k, you can use the
-    IIS Management console to add the filter.  For PWS, you'll need 
+    IIS Management console to add the filter.  For PWS on Win98, you'll need 
 	to use regedit and add/edit the &quot;Filter DLLs&quot; key under 
 	<code>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\W3SVC\Parameters.</code>
     This key contains a comma separated list of dlls ( full paths ). You need to
@@ -345,7 +345,7 @@ context works correctly if you access Tomcat directly.</p>
     If the above are set correctly, the ISAPI redirector should be able to create 
     the log file.</li>
   <li>Invoke the URL &quot;http://localhost/examples/jsp/index.html&quot; in your 
-    browser, case is important. The characters following &quot;localhost&quot; 
+    browser. Case is important. The characters following &quot;localhost&quot; 
     in the URL must be lower case. If the page fails to appear, stop the PWS service 
     (required to view the PWS log file). Then examine the last line in the PWS 
     log file in found in SYSTEM/LogFiles/W3SVC1. 
@@ -428,7 +428,7 @@ context works correctly if you access Tomcat directly.</p>
     If the above are set correctly, the green upward-pointing arrow should appear,
     even if the other settings are wrong.</li>
   <li>Invoke the URL &quot;http://localhost/examples/jsp/index.html&quot; in your
-    browser. Case is important in Tomcat 3.2.  The characters following
+    browser. Case is important.  The characters following
     &quot;localhost&quot; in the URL must be lower case. If the page fails to
     appear, examine the last line in the IIS server log file in found in
     SYSTEM32/LogFiles/W3SVC1.
@@ -455,7 +455,9 @@ context works correctly if you access Tomcat directly.</p>
             </li>
           <li>If the number following <tt>GET &quot;/...&quot;</tt> is 200 or 403,
             make sure you have checked Execute Access for the jakarta virtual
-            directory in the Advanced Options of the Personal Web Manager.</li>
+            directory in the Advanced Options of the Personal Web Manager. If
+            you created the &quot;Filter DLLs&quot; key in the registry, delete
+            it.  That registry key is only used on Win98.</li>
         </ol>
     </ol>
     If the above settings are correct, the index.html page should appear in your
