@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.attachment;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
@@ -38,7 +39,6 @@ public class AttachmentView extends IconPanel {
 
 	public AttachmentView(AttachmentModel model) {
 		super();
-
 		this.model = model;
 	}
 
@@ -60,7 +60,7 @@ public class AttachmentView extends IconPanel {
 
 		model.setCollection(collection);
 
-		LinkedList displayedMimeParts = model.getDisplayedMimeParts();
+		List displayedMimeParts = model.getDisplayedMimeParts();
 
 		// Display resulting MimeParts
 
@@ -92,8 +92,6 @@ public class AttachmentView extends IconPanel {
 			add(icon, text);
 			output = true;
 		}
-
 		return output;
 	}
-
 }

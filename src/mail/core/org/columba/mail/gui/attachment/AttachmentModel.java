@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.attachment;
 
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.mail.folder.Folder;
@@ -35,12 +36,11 @@ public class AttachmentModel {
 	private Folder folder;
 	private Object uid;
 
-	private LinkedList displayedMimeParts;
+	private List displayedMimeParts;
 
 	private MimePartTree collection;
 
-	public AttachmentModel() {
-	}
+	public AttachmentModel() {}
 
 	public synchronized void setFolder(Folder folder) {
 		this.folder = folder;
@@ -96,9 +96,9 @@ public class AttachmentModel {
 
 	/**
 	 * Returns the displayedMimeParts.
-	 * @return LinkedList
+	 * @return List
 	 */
-	public LinkedList getDisplayedMimeParts() {
+	public List getDisplayedMimeParts() {
 		return displayedMimeParts;
 	}
 
@@ -106,7 +106,7 @@ public class AttachmentModel {
 	 * Sets the displayedMimeParts.
 	 * @param displayedMimeParts The displayedMimeParts to set
 	 */
-	public void setDisplayedMimeParts(LinkedList displayedMimeParts) {
+	public void setDisplayedMimeParts(List displayedMimeParts) {
 		this.displayedMimeParts = displayedMimeParts;
 	}
 
