@@ -390,6 +390,41 @@ public class ScarabIssues implements java.io.Serializable
             }
 
 /////////////////////////////////////////////////////////////////////////////////  
+// Deal with changing user attributes. this code needs to be in this *strange*
+// location because we look at the entire activityset in order to determine
+// that this is a change user activity set. of course in the future, it would
+// be really nice to create an activityset/activiy type that more accurately 
+// reflects what type of change this is. so that it is easier to case for. for
+// now, we just look at some fingerprints to determine this information. -JSS
+
+            if (activitySet.isChangeUserAttribute())
+            {
+                List activities = activitySet.getActivities();
+                Activity activityA = (Activity)activities.get(0);
+                Activity activityB = (Activity)activities.get(1);
+                
+                @OM@.ScarabUser assigneeOM = @OM@.ScarabUserManager
+                    .getInstance(activityA.getOldUser(), module.getDomain());
+                @OM@.ScarabUser assignerOM = @OM@.ScarabUserManager
+                    .getInstance(activityB.getNewUser(), module.getDomain());
+
+                @OM@.Attribute oldAttributeOM = @OM@.Attribute.getInstance(activityA.getAttribute());
+
+                @OM@.AttributeValue oldAttValOM = issueOM.getUserAttributeValue(assigneeOM, oldAttributeOM);
+
+                // Get the Attribute associated with the new Activity
+                @OM@.Attribute newAttributeOM = @OM@.Attribute.getInstance(activityB.getAttribute());
+
+                issueOM.changeUserAttributeValue(activitySetOM,
+                            assigneeOM, 
+                            assignerOM, 
+                            oldAttValOM,
+                            newAttributeOM, null);
+                log.debug("-------------Updated User AttributeValue------------");
+                continue;
+            }
+
+/////////////////////////////////////////////////////////////////////////////////  
 
             // Deal with the activities in the activitySet
             List activities = activitySet.getActivities();
@@ -539,9 +574,6 @@ public class ScarabIssues implements java.io.Serializable
                                     log.debug("-------------Saved User Remove-------------");
                                     break;
                                 }
-                                // FIXME: add update user activity handling below...this would be
-                                // if someone changes their attribute id.
-                                // issueOM.changeUserAttributeValue()
                             }
                         }
                         else if (avalAttributeOM.isTextAttribute())
