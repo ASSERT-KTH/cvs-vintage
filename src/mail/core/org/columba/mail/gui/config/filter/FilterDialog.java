@@ -197,12 +197,12 @@ public class FilterDialog implements ActionListener {
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-		ButtonWithMnemonic closeButton =
+		ButtonWithMnemonic okButton =
 			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "close"));
-		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
-		closeButton.addActionListener(this);
-		buttonPanel.add(closeButton);
+				MailResourceLoader.getString("global", "ok"));
+		okButton.setActionCommand("CLOSE"); //$NON-NLS-1$
+		okButton.addActionListener(this);
+		buttonPanel.add(okButton);
 		ButtonWithMnemonic cancelButton =
 			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "cancel"));
@@ -219,7 +219,7 @@ public class FilterDialog implements ActionListener {
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-		dialog.getRootPane().setDefaultButton(closeButton);
+		dialog.getRootPane().setDefaultButton(okButton);
 		dialog.getRootPane().registerKeyboardAction(
 			this,
 			"CANCEL",
