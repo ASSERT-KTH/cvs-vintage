@@ -7,7 +7,7 @@
 #macro (AttributeSelectBar $val)
 <div class="functnbar$val">
 #if ($attributes.size() > 0)
-   <input type="submit" value="$l10n.AddSelectedToModule" name="eventSubmit_doSelectuserattribute" />
+   <input type="submit" value="$l10n.AddSelectedToIssueType" name="eventSubmit_doSelectuserattribute" />
 #end
 #if ($canEditDomain)
     <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doCreatenewuserattribute"/>&#160;
