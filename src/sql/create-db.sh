@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.2 2002/02/28 20:47:57 jon Exp $
+# $Id: create-db.sh,v 1.3 2002/03/13 19:20:45 dlr Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -111,7 +111,7 @@ echo ""
 fi
 
 # If user wants password, then...
-if [ ! -z "$password" -a "$dbname" = "mysql" ] ; then
+if [ ! -z "$password" -a "${name}" = 'mysql' ] ; then
     # Don't want to leave the user blind if he breaks
     # during password entry.
     trap 'stty echo >/dev/null 2>&1' 1 2 3 15
