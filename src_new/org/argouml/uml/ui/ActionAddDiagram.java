@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.13 2003/05/04 15:13:59 kataka Exp $
+// $Id: ActionAddDiagram.java,v 1.14 2003/05/05 11:02:08 kataka Exp $
 
 package org.argouml.uml.ui;
 
@@ -81,8 +81,7 @@ public abstract class ActionAddDiagram extends UMLChangeAction {
         if (ns!= null && isValidNamespace(ns)) {
             UMLDiagram diagram = createDiagram(ns);
             p.addMember(diagram);
-            ProjectBrowser.getInstance().setTarget(diagram);
-            ProjectBrowser.getInstance().getNavigatorPane().forceUpdate();
+            TargetManager.getInstance().setTarget(diagram);       
             super.actionPerformed(e);
         } else {
             log.error("No valid namespace found");
