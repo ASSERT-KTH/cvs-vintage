@@ -82,6 +82,7 @@
 			<pathelement path="${dest}"/>
 		</path>			
 		
+		
 	</target>
 
 	<target name="init-test" depends="init" description="Initialises the build system for Unit testing">
@@ -99,7 +100,15 @@
 		</path>			
 	</target>
 	
-
+	<target name="init-rpm" description="Initialises the RPM directories">
+		<mkdir dir="${dist.rpm}/BUILD" />
+		<mkdir dir="${dist.rpm}/SRPMS" />
+		<mkdir dir="${dist.rpm}/RPMS" />
+		<mkdir dir="${dist.rpm}/SOURCES" />
+		<mkdir dir="${dist.rpm}/SPECS" />
+	</target>
+	
+	
 	<target name="init-webstart" depends="init" description="Initialises the build system for Webstart">
 		<!-- signing jar-files for Java WebStart -->
 		<!-- all libs and columba.jar need to be signed -->
@@ -275,11 +284,6 @@
 				<include name="run.sh"/>
 				<include name="columba.jar"/>
 				<include name="**/*.jar"/>
-				<!--
-				<include name="plugins/**/*.py"/>
-				<include name="plugins/**/*.jar"/>
-				<include name="plugins/**/plugin.xml"/>
-				-->
 				<exclude name="lib/checkstyle-all-2.1.jar"/>
 				<exclude name="lib/jcoverage.jar"/>
 				<exclude name="lib/jniwrap-2.4.jar"/>
@@ -304,18 +308,18 @@
 				<include name="CHANGES"/>
 				<include name="run.bat"/>
 				<include name="columba.jar"/>
-				<include name="${lib.basedir}/*.jar"/>
+				<include name="**/*.jar"/>
 				<include name="**/*.dll"/>
 				<!--
 				<include name="plugins/**/*.py"/>
 				<include name="plugins/**/*.jar"/>
 				<include name="plugins/**/plugin.xml"/>
 				-->
-				<exclude name="${lib.checkstyle}"/>
-				<exclude name="${lib.jreleaseinfo}"/>
-				<exclude name="${lib.junit}"/>
+				<exclude name="lib/checkstyle-all-2.1.jar"/>
+				<exclude name="lib/jcoverage.jar"/>
+				<exclude name="lib/junit.jar"/>
 				<exclude name="plugins/**" />
-				<exclude name="${dest}/**"/>
+				<exclude name="classes/**"/>
 			</zipfileset>
 			<zipfileset dir="." includes="native/win32/launcher/Columba.exe" fullpath="columba-win32-${version}-bin/Columba.exe"/>
 			<zipfileset dir="." includes="native/win32/launcher/Columba.lap" fullpath="columba-win32-${version}-bin/Columba.lap"/>
@@ -427,6 +431,11 @@
 		<delete dir="${test.dest}"/>
 		<delete dir="${report.base}"/>
 		<delete dir="${doc.base}" />
+		<delete dir="${dist.rpm}/BUILD" />
+		<delete dir="${dist.rpm}/SRPMS" />
+		<delete dir="${dist.rpm}/RPMS" />
+		<delete dir="${dist.rpm}/SOURCES" />
+		<delete dir="${dist.rpm}/SPECS" />
 		<delete file="columba.jar"/>		
 	</target>
 
@@ -435,5 +444,46 @@
 		<zip zipfile="default_i18n.zip" basedir="${res.base}" update="true">
 			<include name="**/*.properties"/>
 		</zip>
+	</target>
+	
+	<target name="rpm" depends="init-rpm, jar" description="Creates the RPM package">
+		<copy toDir="${dist.rpm}/SPECS/" file="${dist.rpm}/columba.spec"/>
+		<replace file="${dist.rpm}/SPECS/columba.spec" token="@version@" value="${version}"/>
+		
+		<mkdir dir="${dist.rpm}/SOURCES/columba-${version}" />
+		<copy todir="${dist.rpm}/SOURCES/columba-${version}" >
+			<fileset dir="${basedir}" >
+				<include name="README"/>
+				<include name="AUTHORS"/>
+				<include name="LICENSE"/>
+				<include name="CHANGES"/>
+				<include name="columba.jar"/>
+				<include name="${lib.forms}"/>
+				<include name="${lib.jscf}"/>
+				<include name="${lib.jargs}"/>
+				<include name="${lib.jwizz}"/>
+				<include name="${lib.jhall}"/>
+				<include name="${lib.ristretto}"/>
+				<include name="${lib.macchiato}"/>
+				<include name="${lib.frappucino}"/>
+				<include name="${lib.lucene}"/>			
+				<include name="${lib.plastic}"/>			
+				<include name="${lib.jdom}"/>			
+				<include name="${lib.jpim}"/>			
+				<include name="${lib.je}"/>									
+			</fileset>
+		</copy>
+
+		<copy toDir="${dist.rpm}/SOURCES/columba-${version}/" file="${dist.rpm}/run.sh"/>
+		<replace file="${dist.rpm}/SOURCES/columba-${version}/run.sh" token="@version@" value="${version}"/>
+		<chmod file="${dist.rpm}/SOURCES/columba-${version}/run.sh" perm="a+x" />
+		
+		<tar destfile="${dist.rpm}/SOURCES/columba-${version}.tar" >
+			<tarfileset dir="${dist.rpm}/SOURCES/columba-${version}" prefix="columba-${version}">
+				<include name="**" />
+			</tarfileset>
+		</tar>
+		
+		<rpm specFile="columba.spec" command="-bb --target noarch" topDir="${dist.rpm}" error="${dist.rpm}/error.txt" output="${dist.rpm}/output.txt" />
 	</target>
 </project>
