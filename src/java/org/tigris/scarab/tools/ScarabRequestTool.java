@@ -126,6 +126,7 @@ import org.tigris.scarab.util.SnippetRenderer;
 import org.tigris.scarab.util.SimpleSkipFiltering;  
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.word.SearchIndex;
+import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 /**
@@ -1876,7 +1877,7 @@ try{
             List idList = getCurrentSearchResults();
             if (issuePos < idList.size())
             {
-                nextIssueId = idList.get(issuePos).toString();
+                nextIssueId = ((QueryResult)idList.get(issuePos)).getUniqueId().toString();
             }
             resetIssueIdList(idList, issuePos);
         }
@@ -1928,7 +1929,7 @@ try{
         pp.add("issueList", idList.size());        
         while (prevNextList.hasNext()) 
         {
-            pp.add("issueList", prevNextList.next().toString());
+            pp.add("issueList", ((QueryResult)prevNextList.next()).getUniqueId().toString());
         }
     }
 
