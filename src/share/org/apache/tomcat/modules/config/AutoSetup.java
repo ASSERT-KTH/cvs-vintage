@@ -110,6 +110,7 @@ public class AutoSetup extends BaseInterceptor {
 	}
 	for (int i = 0; i < list.length; i++) {
 	    String name = list[i];
+            boolean expanded = false;
 	    if( name.endsWith(".war") ) {
 		String fname=name.substring(0, name.length()-4);
 		File appDir=new File( home + "/webapps/" + fname);
@@ -121,6 +122,7 @@ public class AutoSetup extends BaseInterceptor {
 		    try {
 			FileUtil.expand(home + "/webapps/" + name,
 			       home + "/webapps/" + fname);
+                        expanded=true;
 		    } catch( IOException ex) {
 			log("expanding webapp " + name, ex);
 			// do what ?
@@ -145,26 +147,34 @@ public class AutoSetup extends BaseInterceptor {
 	    if( path.equals("/ROOT") )
 		    path="";
 
-	    if(  definedContexts.get(path) == null ) {
-		    // if no explicit set up and is a directory
-            File f=new File( webappD, name);
-            if (f.isDirectory()) {
-                Context ctx=new Context();
-                ctx.setContextManager( cm );
-                ctx.setPath(path);
-                definedContexts.put( path, ctx );
-                // use absolute filename based on CM home instead of relative
-                // don't assume HOME==TOMCAT_HOME
-                ctx.setDocBase( f.getAbsolutePath() );
-                if( debug > 0 )
-                    log("automatic add " + ctx.toString() + " " + path);
-                cm.addContext(ctx);
-		ctx.init();
-            } else {
-                if( debug>0)
-                log("Already set up: " + path + " "
-                        + definedContexts.get(path));
-            }
+	    Context ctx = (Context)definedContexts.get(path);
+            // if context not defined or was expanded
+	    if( ctx  == null || expanded ) {
+		// if no explicit set up and is a directory
+		File f=new File( webappD, name);
+		if (f.isDirectory()) {
+		    // If the context is already defined and was expanded,
+		    // we need to remove it since it was initialized before
+		    // its directories existed. At minimum, its classloader
+		    // needs updating.
+		    if ( ctx != null )
+			cm.removeContext(ctx);
+		    ctx=new Context();
+		    ctx.setContextManager( cm );
+		    ctx.setPath(path);
+		    definedContexts.put( path, ctx );
+		    // use absolute filename based on CM home instead of relative
+		    // don't assume HOME==TOMCAT_HOME
+		    ctx.setDocBase( f.getAbsolutePath() );
+		    if( debug > 0 )
+			log("automatic add " + ctx.toString() + " " + path);
+		    cm.addContext(ctx);
+		    ctx.init();
+		} else {
+		    if( debug>0)
+			log("Already set up: " + path + " "
+				+ definedContexts.get(path));
+		}
             }
 	}
     }
