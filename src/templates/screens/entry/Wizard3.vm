@@ -16,7 +16,7 @@ $page.setTitle("Enter issue")
 
 <h2>$page.Title</h2>
 
-<form method="post" action="$link.setPage("entry,Wizard3.vm")">
+<form method="post" action="$link.setPage("entry,Wizard3.vm")" enctype="multipart/form-data">
 <input type="hidden" name="action" value="ReportIssue" />
 
 ## Only show templates if user has not come through the wizard.
