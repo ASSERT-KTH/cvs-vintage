@@ -18,6 +18,7 @@ package org.columba.addressbook.shutdown;
 
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+import org.columba.addressbook.main.AddressbookInterface;
 
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.MainInterface;
@@ -42,7 +43,7 @@ public class SaveAllAddressbooksPlugin implements TaskInterface {
      * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
      */
     public void run() {
-        saveFolders((AddressbookTreeNode) MainInterface.addressbookTreeModel.getRoot());
+        saveFolders((AddressbookTreeNode) AddressbookInterface.addressbookTreeModel.getRoot());
     }
 
     public void saveFolders(AddressbookTreeNode folder) {
