@@ -12,14 +12,14 @@ import org.columba.core.gui.frame.FrameMediator;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.ImportFolderCommandReference;
-import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
+import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 
 
 /**
  * Import messages to folder.
  * <p>
  * This command is used by the mail import wizard to import messages.
- * All the interesting work happens in {@link DefaultMailboxImporter}.
+ * All the interesting work happens in {@link AbstractMailboxImporter}.
  * <p>
  * Note, that the import wizard needs a command to make sure that the folder
  * is locked.
@@ -50,7 +50,7 @@ public class ImportMessageCommand extends FolderCommand {
         throws Exception {
         ImportFolderCommandReference[] r = (ImportFolderCommandReference[]) getReferences();
 
-        DefaultMailboxImporter importer = r[0].getImporter();
+        AbstractMailboxImporter importer = r[0].getImporter();
 
         importer.run(worker);
     }

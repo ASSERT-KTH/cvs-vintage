@@ -26,7 +26,7 @@ import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 
-import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
+import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 import org.columba.mail.plugin.ImportPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -134,7 +134,7 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
     public void valueChanged(ListSelectionEvent event) {
         try {
             //adjust description field
-            DefaultMailboxImporter importer = (DefaultMailboxImporter) pluginHandler.getPlugin((String) data.getData(
+            AbstractMailboxImporter importer = (AbstractMailboxImporter) pluginHandler.getPlugin((String) data.getData(
                         "Plugin.ID"), null);
             String description = importer.getDescription();
             descriptionLabel.setText(description);

@@ -49,7 +49,7 @@ public class MHImporter extends AbstractMailboxImporter {
     }
 
     /* (non-Javadoc)
- * @see org.columba.mail.folder.mailboximport.DefaultMailboxImporter#importMailbox(java.io.File, org.columba.core.command.WorkerStatusController)
+ * @see org.columba.mail.folder.mailboximport.AbstractMailboxImporter#importMailbox(java.io.File, org.columba.core.command.WorkerStatusController)
  */
     public void importMailboxFile(File directory,
         WorkerStatusController worker, MessageFolder destFolder)
