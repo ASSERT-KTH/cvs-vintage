@@ -48,6 +48,7 @@ package org.tigris.scarab.actions;
 
 import java.util.Iterator;
 import java.util.Date;
+import java.util.Vector;
 import java.util.HashMap;
 
 // Turbine Stuff 
@@ -78,6 +79,7 @@ import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.Depend;
+import org.tigris.scarab.om.DependPeer;
 import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.DependTypePeer;
 import org.tigris.scarab.om.ScarabUser;
@@ -90,7 +92,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.17 2001/08/02 22:14:13 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.18 2001/08/07 20:19:32 elicia Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -514,6 +516,7 @@ public class ModifyIssue extends TemplateAction
             .get(ScarabConstants.INTAKE_TOOL);
         Group group = intake.get("Depend", "dependKey", false);
         boolean isValid = true;
+        Issue parentIssue = null;
 
         // The depend type is required.
         Field dependTypeId = group.get("TypeId");
@@ -533,8 +536,14 @@ public class ModifyIssue extends TemplateAction
         {
             try
             {
-                Issue parentIssue = (Issue) IssuePeer.retrieveByPK(
+                parentIssue = (Issue) IssuePeer.retrieveByPK(
                                     new NumberKey(observedId.toString()));
+                if (parentIssue.getDependency(issue) != null)
+                {
+                    observedId.setMessage("This issue already has a dependency on " +
+                                          "the issue id you entered.");
+                    isValid = false;
+                }
             }
             catch (Exception e)
             {
