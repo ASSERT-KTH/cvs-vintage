@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource J2EE webOS
+ * JBoss, the OpenSource J2EE webOS 
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -29,7 +29,7 @@ import javax.transaction.Transaction;
  *
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  *   <p><b>20020911 Bill Burke:</b>
  *   <ul>
  *   <li> Optimize access to certain variables.  Avoid hash lookups
