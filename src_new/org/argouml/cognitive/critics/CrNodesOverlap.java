@@ -1,4 +1,4 @@
-// $Id: CrNodesOverlap.java,v 1.6 2003/06/29 23:53:43 linus Exp $
+// $Id: CrNodesOverlap.java,v 1.7 2003/06/30 06:48:18 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNodesOverlap.java
 // Classes: CrNodesOverlap
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNodesOverlap.java,v 1.6 2003/06/29 23:53:43 linus Exp $
+// $Id: CrNodesOverlap.java,v 1.7 2003/06/30 06:48:18 linus Exp $
 
 package org.argouml.cognitive.critics;
 
