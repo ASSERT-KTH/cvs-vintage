@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.59 2003/07/25 16:47:48 thierrylach Exp $
+$Id: README.txt,v 1.60 2003/07/29 15:04:06 thierrylach Exp $
 
 Welcome to Scarab!
 
@@ -456,10 +456,15 @@ repository by a Scarab developer).
 
 The extensions directory structure allows this to be done fairly simply.
 
-It contains two directories, lib and templates.  Any files in either
-of those directories will be copied into the appropriate target
+It contains three directories, lib, conf, and templates.  Any files in
+the lib directory will be copied into the appropriate target
 directory _after_ any such files in the standard distribution,
-and will replace the standard distribution files.
+and will replace the standard distribution files.  Any files in the
+template directory will be copied to the target template directory
+_ONLY_IF_ the property "scarab.copy.templates" is set, again after
+the files from the standard distribution.  Currently only web.xml
+and server-config.wsdd are copied from the conf directory into the
+target directory, again after those from the standard distribution.
 
 NOTE: It is the responsibility of the builder to ensure that any
       subsequent changes to modified Velocity macros are transferred
