@@ -31,7 +31,7 @@ import org.jboss.mx.util.ObjectNameFactory;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class WebMetaData implements XmlLoadable
 {
@@ -66,6 +66,13 @@ public class WebMetaData implements XmlLoadable
    /** The web context class loader used to create the java:comp context */
    private ClassLoader encLoader;
    private ArrayList depends = new ArrayList();
+
+   /** Should the context use session cookies or use default */
+   private int sessionCookies=SESSION_COOKIES_DEFAULT;
+
+   public static final int SESSION_COOKIES_DEFAULT=0;
+   public static final int SESSION_COOKIES_ENABLED=1;
+   public static final int SESSION_COOKIES_DISABLED=2;
 
    public WebMetaData()
    {
@@ -176,6 +183,11 @@ public class WebMetaData implements XmlLoadable
    public void setENCLoader(ClassLoader encLoader)
    {
       this.encLoader = encLoader;
+   }
+
+   public int getSessionCookies()
+   {
+      return this.sessionCookies;
    }
 
    public void importXml(Element element) throws Exception
@@ -340,6 +352,24 @@ public class WebMetaData implements XmlLoadable
          String dependsName = MetaData.getElementContent(dependsElement);
          depends.add(ObjectNameFactory.create(dependsName));
       } // end of for ()
+
+      // Parse the jboss-web/use-session-cookies element
+      iterator = MetaData.getChildrenByTagName(jbossWeb, "use-session-cookies");
+      if ( iterator.hasNext() )
+      {
+         Element useCookiesElement = (Element) iterator.next();
+         String useCookiesElementContent = MetaData.getElementContent(useCookiesElement);
+         Boolean useCookies=Boolean.valueOf(useCookiesElementContent);
+         
+         if (useCookies.booleanValue())
+         {
+            sessionCookies=SESSION_COOKIES_ENABLED;
+         }
+         else
+         {
+            sessionCookies=SESSION_COOKIES_DISABLED;
+         }
+      }
 
       /* The jboss-web/class-loading.java2ClassLoadingCompliance attribute is
       parsed by the AbstractWebContainer since it can be overriden at that

@@ -12,8 +12,8 @@ DOCTYPE jboss-web
 <!-- The jboss-web element is the root element.
 -->
 <!ELEMENT jboss-web (class-loading?, security-domain?, context-root?,
-   virtual-host?, resource-env-ref*, resource-ref* , ejb-ref* , ejb-local-ref*,
-   depends*)>
+   virtual-host?, use-session-cookies?, resource-env-ref*, resource-ref* ,
+   ejb-ref* , ejb-local-ref*, depends*)>
 
 <!-- The class-loading element allows one to override the default class
 loading behavior of the web container. You can specify the
@@ -182,3 +182,11 @@ Used in: resource-ref, resource-env-ref, ejb-ref
 container or ejb depends.
 -->
 <!ELEMENT depends (#PCDATA)>
+
+<!-- The use-session-cookies element controls wether this context uses session cookies
+     or not.
+
+Example:
+     <use-session-cookies>true</use-session-cookies>
+-->
+<!ELEMENT use-session-cookies (#PCDATA)>
