@@ -11,12 +11,18 @@
         </tr>
 
 #foreach ($issueType in $scarabR.CurrentModule.IssueTypes)
-      #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
+   #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
+   #if ($scarabR.CurrentModule.allowsNewIssues()) 
       #if ($rmit.Dedupe)
         #set ($nextTemplate = "entry,Wizard1.vm")
       #else
         #set ($nextTemplate = "entry,Wizard3.vm")
       #end 
+   #else
+      ## might want a more general location, but this works ok, for
+      ## global module, which is the only one that does not have issues
+      #set ($nextTemplate = "admin,AdminIndex.vm")
+   #end   
         #indexedRows($velocityCount)
         <td>$link.setPage("SelectArtifactType.vm").setAction("SelectIssueType").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "$nextTemplate").addPathInfo("newissuetype", "$issueType.IssueTypeId").setLabel("$issueType.Name")</td>
         <td>$!issueType.Description</td>

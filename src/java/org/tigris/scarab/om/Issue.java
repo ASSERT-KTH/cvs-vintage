@@ -1377,6 +1377,13 @@ public class Issue
     public void save(DBConnection dbCon)
         throws TorqueException
     {
+        Module module = getModule();
+        if (!module.allowsIssues() || (isNew() && !module.allowsNewIssues())) 
+        {
+            throw new UnsupportedOperationException(module.getName() + 
+                " does not allow issues.");
+        }
+        
         // remove unset AttributeValues before saving
         List attValues = getAttributeValues();
         // reverse order since removing from list
@@ -1392,7 +1399,6 @@ public class Issue
         if ( isNew() ) 
         {
             // set the issue id
-            Module module = getModule();
             setIdDomain(module.getDomain());
             setIdPrefix(module.getCode());
             try

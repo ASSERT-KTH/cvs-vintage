@@ -70,7 +70,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.39 2002/04/03 00:35:17 elicia Exp $
+ * @version $Id: Module.java,v 1.40 2002/04/12 22:59:42 jmcnally Exp $
  */
 public interface Module
     extends Serializable
@@ -415,5 +415,16 @@ public interface Module
      */
     public String getArchiveEmail();
 
+    /**
+     * Determines whether this module is accepting new issues.
+     */
+    public boolean allowsNewIssues();
+
+    /**
+     * Determines whether this module accepts issues.
+     */
+    public boolean allowsIssues();
+
     public String toString();
 }
+

@@ -11,7 +11,9 @@
   #end 
   #if ($issueType.equals($scarabR.CurrentIssueType))
     <div><small><strong>$rmit.DisplayText</strong></small>
+    #if ($scarabR.CurrentModule.allowsNewIssues())
     <div><small>$link.setPage("$wizardScreen").setLabel("Enter new")</small></div>
+    #end
 ##    <div><small>$link.setPage("AdvancedQuery.vm").setLabel("Advanced Query")</small></div>
 ##    <div><small>$link.setPage("Search.vm").setLabel("Custom Query")</small></div>
     <div><small>$link.setPage("QueryList.vm").setLabel("Saved queries")</small></div>

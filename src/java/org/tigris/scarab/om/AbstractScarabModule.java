@@ -131,7 +131,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.17 2002/04/09 23:30:40 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.18 2002/04/12 22:59:42 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1855,6 +1855,24 @@ try{
                 }
             }
         }
+    }
+
+    /**
+     * Determines whether this module is accepting new issues.  This default
+     * implementation allows new issues if the module has not been deleted.
+     */
+    public boolean allowsNewIssues()
+    {
+        return !getDeleted();
+    }
+
+    /**
+     * Determines whether this module accepts issues.  This default
+     * implementation does allow issues.
+     */
+    public boolean allowsIssues()
+    {
+        return true;
     }
 
     /**
