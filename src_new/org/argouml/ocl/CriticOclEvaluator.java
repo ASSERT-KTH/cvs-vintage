@@ -1,4 +1,4 @@
-// $Id: CriticOclEvaluator.java,v 1.4 2005/01/11 13:03:41 bobtarling Exp $
+// $Id: CriticOclEvaluator.java,v 1.5 2005/01/15 03:59:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,11 +72,11 @@ public class CriticOclEvaluator extends org.tigris.gef.ocl.OCLEvaluator {
             if (res == null || "".equals(res)) res = "(anon)";
         }
         if (GET_NAME_EXPR_1.equals(expr) && self instanceof Diagram) {
-            res = ModelFacade.getName(self);
+            res = ((Diagram) self).getName();
             if (res == null || "".equals(res)) res = "(anon)";
         }
         if (GET_NAME_EXPR_2.equals(expr) && self instanceof Diagram) {
-            res = ModelFacade.getName(self);
+            res = ((Diagram) self).getName();
             if (res == null || "".equals(res)) res = "(anon)";
         }
     /*
