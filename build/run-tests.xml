@@ -291,4 +291,17 @@
     </java>
   </target>
 
+  <target name="test-emaillink" depends="compile">
+    <echo>Running EmailLink tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.util.EmailLinkTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
 </project>
