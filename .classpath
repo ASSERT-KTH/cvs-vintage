@@ -7,10 +7,10 @@
     <classpathentry kind="src" path="src/mail/independent"/>
     <classpathentry kind="src" path="src/mail/test"/>
     <classpathentry kind="src" path="src/addressbook/independent"/>
-    <classpathentry kind="lib" path="ext/log4j.jar"/>
-    <classpathentry kind="lib" path="ext/jython.jar"/>
     <classpathentry kind="var" path="JRE_SRC"/>
     <classpathentry kind="var" path="JRE_LIB"/>
-    <classpathentry kind="lib" path="ext/junit.jar"/>
+    <classpathentry kind="lib" path="lib/junit.jar"/>
+    <classpathentry kind="lib" path="lib/log4j.jar"/>
+    <classpathentry kind="lib" path="lib/jython.jar"/>
     <classpathentry kind="output" path="classes"/>
 </classpath>
