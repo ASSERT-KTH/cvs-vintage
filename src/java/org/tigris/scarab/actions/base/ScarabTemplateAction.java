@@ -58,6 +58,13 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.pages.ScarabPage;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
+/**
+ *  This is a helper class that extends TemplateAction to add
+ *  a couple methods useful for Scarab.
+ *   
+ *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ *  @version $Id: ScarabTemplateAction.java,v 1.2 2001/09/30 18:35:17 jon Exp $
+ */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
     /**
