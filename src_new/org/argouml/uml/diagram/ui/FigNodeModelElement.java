@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.79 2003/09/29 17:40:04 jjones Exp $
+// $Id: FigNodeModelElement.java,v 1.80 2003/10/03 23:16:08 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -333,15 +333,21 @@ public abstract class FigNodeModelElement
 		&& getOwner() != null
 		&& (!ModelManagementHelper.getHelper()
 		    .isCyclicOwnership(owningModelelement, getOwner()))
-		&& (ModelFacade.isANamespace(owningModelelement)
-		    && (CoreHelper.getHelper()
+		&& (!ModelFacade.isANamespace(owningModelelement)
+		    || CoreHelper.getHelper()
 			.isValidNamespace(getOwner(),
-					  owningModelelement)))) {
+					  owningModelelement))) {
                 ModelFacade.setModelElementContainer(getOwner(), 
 						     owningModelelement);
                 // TODO: move the associations to the correct owner (namespace)
             }
         }
+	if (encloser != _encloser) {
+	    if (_encloser instanceof FigGroup)
+		((FigGroup) _encloser).removeFig(this);
+	    if (encloser instanceof FigGroup)
+		((FigGroup) encloser).addFig(this);
+	}
         _encloser = encloser;
     }
 
@@ -1042,3 +1048,4 @@ public abstract class FigNodeModelElement
     }
 
 } /* end class FigNodeModelElement */
+
