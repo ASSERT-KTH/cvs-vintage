@@ -1,4 +1,4 @@
-// $Id: GoSummaryToAssociation.java,v 1.14 2005/01/02 16:43:41 linus Exp $
+// $Id: GoSummaryToAssociation.java,v 1.15 2005/01/29 16:28:46 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class GoSummaryToAssociation extends AbstractPerspectiveRule {
      */
     public Collection getChildren(Object parent) {
 	if (parent instanceof AssociationsNode) {
-	    return Model.getUmlHelper().getCore()
+	    return Model.getCoreHelper()
                 .getAssociations(((AssociationsNode) parent).getParent());
 	}
 	return null;

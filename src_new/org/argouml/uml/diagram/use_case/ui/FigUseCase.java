@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.57 2005/01/23 21:08:58 mvw Exp $
+// $Id: FigUseCase.java,v 1.58 2005/01/29 16:28:47 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -956,8 +956,9 @@ public class FigUseCase extends FigNodeModelElement {
     public void mouseClicked(MouseEvent me) {
 	super.mouseClicked(me);
 
-	if (me.isConsumed())
-	    return;
+	if (me.isConsumed()) {
+	   return;
+	}
 
 	if (!isExtensionPointVisible() || me.getY() < epSep.getY1()) {
 	    getNameFig().mouseClicked(me);
@@ -1282,7 +1283,7 @@ public class FigUseCase extends FigNodeModelElement {
     }
 
     /**
-     * Updates the extensionpoints in the fig
+     * Updates the extensionpoints in the fig.
      */
     protected void updateExtensionPoint() {
         // Give up if we have no owner
@@ -1301,7 +1302,7 @@ public class FigUseCase extends FigNodeModelElement {
         // fig's index as we go through the extension points.
 
         Collection eps =
-	    Model.getUmlHelper().getUseCases().getExtensionPoints(useCase);
+	    Model.getUseCasesHelper().getExtensionPoints(useCase);
         int epCount = 1;
 
         if (eps != null) {
@@ -1372,8 +1373,9 @@ public class FigUseCase extends FigNodeModelElement {
      */
     protected void updateNameText() {
         Object useCase = /*(MUseCase)*/ getOwner();
-        if (useCase == null)
+        if (useCase == null) {
             return;
+        }
         Rectangle oldBounds = getBounds();
         super.updateNameText();
 

@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactoryImpl.java,v 1.6 2005/01/26 22:11:50 linus Exp $
+// $Id: CommonBehaviorFactoryImpl.java,v 1.7 2005/01/29 16:28:42 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -460,12 +460,12 @@ public class CommonBehaviorFactoryImpl
      */
     public Object buildStimulus(Object link) {
         if (link instanceof MLink
-            && nsmodel.getUmlHelper().getCore().getSource(link) != null
-            && nsmodel.getUmlHelper().getCore().getDestination(link) != null) {
+            && nsmodel.getCoreHelper().getSource(link) != null
+            && nsmodel.getCoreHelper().getDestination(link) != null) {
+
             Object stimulus = createStimulus();
-            Object sender = nsmodel.getUmlHelper().getCore().getSource(link);
-            Object receiver =
-                nsmodel.getUmlHelper().getCore().getDestination(link);
+            Object sender = nsmodel.getCoreHelper().getSource(link);
+            Object receiver = nsmodel.getCoreHelper().getDestination(link);
             nsmodel.getCommonBehaviorHelper().setReceiver(stimulus, receiver);
             nsmodel.getCollaborationsHelper().setSender(stimulus, sender);
             nsmodel.getCommonBehaviorHelper()

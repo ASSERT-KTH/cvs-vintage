@@ -1,4 +1,4 @@
-// $Id: CrMultipleRealization.java,v 1.10 2005/01/02 10:08:33 linus Exp $
+// $Id: CrMultipleRealization.java,v 1.11 2005/01/29 16:28:45 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public class CrMultipleRealization extends CrUML {
 	Object inter = /*(MInterface)*/ dm;
 
 	Collection realize =
-	    Model.getUmlHelper().getCore().getSpecifications(inter);
+	    Model.getCoreHelper().getSpecifications(inter);
 
 	if (realize != null && realize.size() > 0) {
 	    return PROBLEM_FOUND;

@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.110 2005/01/27 21:42:35 linus Exp $
+// $Id: Modeller.java,v 1.111 2005/01/29 16:28:47 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -304,7 +304,7 @@ public class Modeller {
 
             // try find an existing permission
             Iterator dependenciesIt =
-                Model.getUmlHelper().getCore()
+                Model.getCoreHelper()
 		    .getDependencies(mPackage, parseState.getComponent())
 		        .iterator();
             while (dependenciesIt.hasNext()) {
@@ -340,7 +340,7 @@ public class Modeller {
 
                 // try find an existing permission
                 Iterator dependenciesIt =
-		    Model.getUmlHelper().getCore()
+		    Model.getCoreHelper()
                         .getDependencies(mClassifier,
 					 parseState.getComponent())
                             .iterator();
@@ -597,7 +597,7 @@ public class Modeller {
 
             // try find an existing residency
             Iterator dependenciesIt =
-		Model.getUmlHelper().getCore()
+		Model.getCoreHelper()
                     .getDependencies(mClassifier, parseState.getComponent())
 		        .iterator();
             while (dependenciesIt.hasNext()) {
@@ -1293,7 +1293,7 @@ public class Modeller {
         Collection models =
             ProjectManager.getManager().getCurrentProject().getModels();
         Collection stereos =
-            Model.getUmlHelper().getExtensionMechanisms()
+            Model.getExtensionMechanismsHelper()
 	        .getAllPossibleStereotypes(models, me);
         if (stereos != null && stereos.size() > 0) {
             Iterator iter = stereos.iterator();

@@ -1,4 +1,4 @@
-// $Id: GUITestParserDisplay.java,v 1.24 2005/01/20 23:20:42 linus Exp $
+// $Id: GUITestParserDisplay.java,v 1.25 2005/01/29 16:28:45 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -766,7 +766,7 @@ public class GUITestParserDisplay extends TestCase {
         } else if (ModelFacade.isAOperation(feature)) {
             ParserDisplay.SINGLETON.parseOperation(text, feature);
             Collection ret =
-                Model.getUmlHelper().getCore().getReturnParameters(feature);
+                Model.getCoreHelper().getReturnParameters(feature);
             Iterator it = ret.iterator();
             assertTrue(
                    text + " gave extra return value",

@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.25 2005/01/16 11:10:09 mvw Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.26 2005/01/29 16:28:47 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,7 +144,7 @@ public final class ResourceLoaderWrapper {
 	ResourceLoader.addResourceLocation(lookAndFeelArgoUmlImagePath);
 	ResourceLoader.addResourceLocation("/org/argouml/Images");
 	ResourceLoader.addResourceLocation("/org/tigris/gef/Images");
-    
+
 	actionStateIcon = ResourceLoader.lookupIconResource("ActionState");
         stateIcon = ResourceLoader.lookupIconResource("State");
         initialStateIcon = ResourceLoader.lookupIconResource("Initial");
@@ -159,9 +159,9 @@ public final class ResourceLoaderWrapper {
         signalIcon = ResourceLoader.lookupIconResource("SignalSending");
         commentIcon = ResourceLoader.lookupIconResource("Note");
         callStateIcon = ResourceLoader.lookupIconResource("CallState");
-        objectFlowStateIcon = 
+        objectFlowStateIcon =
             ResourceLoader.lookupIconResource("ObjectFlowState");
-        subactivityStateIcon = 
+        subactivityStateIcon =
             ResourceLoader.lookupIconResource("SubactivityState");
     }
 
@@ -268,7 +268,7 @@ public final class ResourceLoaderWrapper {
         if (ModelFacade.isAPseudostate(value)) {
 
             Object kind = ModelFacade.getKind(value);
-            DataTypesHelper helper = Model.getUmlHelper().getDataTypes();
+            DataTypesHelper helper = Model.getDataTypesHelper();
             if (helper.equalsINITIALKind(kind)) {
                 icon = initialStateIcon;
             }
