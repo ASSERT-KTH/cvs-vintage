@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.57 2003/05/02 15:51:16 dlr Exp $
+$Id: README.txt,v 1.58 2003/07/18 18:37:54 dlr Exp $
 
 Welcome to Scarab!
 
@@ -50,8 +50,14 @@ NOTE: If you want to use the faster/newer JDBC driver with MySQL, you can
       
       <http://www.mysql.com/downloads/api-jdbc-dev.html>
 
-NOTE: Scarab requires Jikes 1.18 or higher to compile. Please do not try
-      with Jikes 1.17 as it is buggy.
+      Scarab will eventually require the transactional support present
+      only in MySQL version 4 and higher, and will drop support for
+      the transaction-less versions 3.23.x and lower.  If getting
+      started using MySQL, it's recommended that you install version 4
+      or higher.
+
+NOTE: When compiling Scarab with Jikes, version 1.18 or higher is
+      required.  Please do not try with Jikes 1.17, as it is buggy.
 
 NOTE: If you are using an existing Tomcat 4.1.x installation, you MUST
       *move* the common/endorsed/xercesImpl.jar to the server/lib
