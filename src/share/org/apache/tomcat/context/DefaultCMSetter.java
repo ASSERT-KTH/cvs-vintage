@@ -87,8 +87,8 @@ public class DefaultCMSetter extends BaseInterceptor {
 	    cm.addServerConnector(  new org.apache.tomcat.service.http.HttpAdapter() );
 	}
 	
- 	Enumeration riE=cm.getRequestInterceptors();
-	if( ! riE.hasMoreElements() ) {
+ 	RequestInterceptor rI[]=cm.getRequestInterceptors();
+	if( rI.length ==0  ) {
 	    // nothing set up by starter, add default ones
 	    if(cm.getDebug()>0) cm.log("Setting default interceptors ");
 

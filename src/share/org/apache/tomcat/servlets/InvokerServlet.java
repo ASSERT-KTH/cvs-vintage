@@ -181,8 +181,12 @@ public class InvokerServlet extends HttpServlet {
 	    wrapper.setContext(context);
 	    wrapper.setServletClass(servletName);
 	    wrapper.setServletName(servletName); // XXX it can create a conflict !
-	    
-            context.addServlet( wrapper );
+
+	    try {
+		context.addServlet( wrapper );
+	    } catch(TomcatException ex ) {
+		ex.printStackTrace();
+	    }
 
 	    // XXX add mapping - if the engine supports dynamic changes in mappings,
 	    // we'll avoid the extra parsing in Invoker !!!

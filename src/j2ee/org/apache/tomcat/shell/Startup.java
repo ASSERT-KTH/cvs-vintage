@@ -143,13 +143,19 @@ public class Startup {
 		context.setSessionTimeOut(
 		    contextConfig.getDefaultSessionTimeOut());
 
-		// this is the semantic of disable invoker.
-		if( ! contextConfig.isInvokerEnabled() ) {
-		    context.addServlet(org.apache.tomcat.core.Constants.INVOKER_SERVLET_NAME,
-				       "org.apache.tomcat.core.NoInvokerServlet", null);
-		    context.addMapping(org.apache.tomcat.core.Constants.INVOKER_SERVLET_NAME,
-				       "/servlet");
-		}
+		// You can disable the invoker in web.xml
+		// XXX is anyone using this ? J2EE has it's own disable
+		// 		// this is the semantic of disable invoker.
+		// 		if( ! contextConfig.isInvokerEnabled() ) {
+		// 		    try {
+		// 			context.addServlet(org.apache.tomcat.core.Constants.INVOKER_SERVLET_NAME,
+		// 					   "org.apache.tomcat.core.NoInvokerServlet", null);
+		// 			context.addMapping(org.apache.tomcat.core.Constants.INVOKER_SERVLET_NAME,
+		// 					   "/servlet");
+		// 		    } catch( TomcatException ex ) {
+		// 			ex.printStackTrace();
+		// 		    }
+		// 		}
 
 		context.setIsWARExpanded(contextConfig.isWARExpanded());
 		context.setIsWARValidated(contextConfig.isWARValidated());

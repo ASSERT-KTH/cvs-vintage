@@ -96,7 +96,21 @@
          basedir="${tomcat.home}/classes"
          items="org/apache/jasper"/>
 
+    <!-- Add Tomcat internal javadoc -->
+    <mkdir dir="${tomcat.home}/webapps/ROOT/javadoc" />
+    <javadoc packagenames="org.apache.tomcat.core"
+             sourcepath="src/share"
+             destdir="${tomcat.home}/webapps/ROOT/javadoc"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="Tomcat internal API"
+             doctitle="Tomcat internal"
+             bottom="Copyright &#169; 2000 Apache Software Foundation. All Rights Reserved."
+    />
+
     <deltree dir="${tomcat.home}/classes"/>
+
 
     <!-- create webapp WARS -->
     <jar   jarfile="${tomcat.home}/webapps/examples.war"
@@ -113,7 +127,6 @@
            basedir="${tomcat.home}/webapps/test"
            items="." /> 
     <deltree dir="${tomcat.home}/webapps/test"/>
-
 
     <!-- Change permissions for unix -->
     <chmod perm="+x" src="${tomcat.home}/bin/tomcat.sh"/>

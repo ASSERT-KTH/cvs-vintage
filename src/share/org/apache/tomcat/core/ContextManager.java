@@ -90,6 +90,11 @@ public class ContextManager {
     int debug=0;
     
     private Vector requestInterceptors = new Vector();
+    private Vector contextInterceptors = new Vector();
+    
+    // cache - faster access
+    ContextInterceptor cInterceptors[];
+    RequestInterceptor rInterceptors[];
     
     /**
      * The set of Contexts associated with this ContextManager,
@@ -135,6 +140,9 @@ public class ContextManager {
         return contexts.keys();
     }
 
+    /** Init() is called after the context manager is set up
+     *  and configured
+     */
     public void init()  throws TomcatException {
 	long time=System.currentTimeMillis();
 
@@ -157,6 +165,23 @@ public class ContextManager {
 	// After all context are configured, we can generate Apache configs
 	org.apache.tomcat.task.ApacheConfig apacheConfig=new  org.apache.tomcat.task.ApacheConfig();
 	apacheConfig.execute( this );     
+    }
+
+    /** Initialize a context. This method is will call all "global"
+     * interceptors ( set on CM level ) and then context specific
+     * interceptors.
+     */
+    public void initContext( Context ctx ) throws TomcatException {
+	//
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].contextInit( ctx );
+	}
+	
+	cI=ctx.getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].contextInit( ctx );
+	}
     }
     
     /** Will start the connectors and begin serving requests
@@ -182,7 +207,7 @@ public class ContextManager {
     }
 
     public void destroy() throws Exception {//TomcatException {
-
+	
 	Enumeration enum = getContextNames();
 	while (enum.hasMoreElements()) {
 	    Context context =
@@ -223,6 +248,12 @@ public class ContextManager {
 
 	// Set defaults for the context
 	new DefaultCMSetter().addContext( this, ctx );
+
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].addContext( this, ctx );
+	}
+
 	
 	if(debug>0) log(" adding " + ctx + " " + ctx.getPath() + " " +  ctx.getDocBase());
 
@@ -241,9 +272,51 @@ public class ContextManager {
 
 	Context context = (Context)contexts.get(name);
 
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].removeContext( this, context );
+	}
+
 	if(context != null) {
 	    context.shutdown();
 	    contexts.remove(name);
+	}
+    }
+
+    public void removeServlet( Context ctx, ServletWrapper sw )
+	throws TomcatException
+    {
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].removeServlet( ctx, sw );
+	}
+
+    }
+
+    public void addServlet( Context ctx, ServletWrapper sw )
+	throws TomcatException
+    {
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].addServlet( ctx, sw );
+	}
+    }
+
+    public void addMapping( Context ctx ,String path, ServletWrapper sw )
+    	throws TomcatException
+    {
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].addMapping( ctx, path, sw );
+	}
+    }
+
+    public void removeMapping( Context ctx, String path )
+    	throws TomcatException
+    {
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].removeMapping( ctx, path );
 	}
     }
 
@@ -268,15 +341,50 @@ public class ContextManager {
     public void addRequestInterceptor( RequestInterceptor ri ) {
 	if(debug>0) log(" adding request intereptor " + ri.getClass().getName());
 	requestInterceptors.addElement( ri );
+	if( ri instanceof ContextInterceptor )
+	    contextInterceptors.addElement( ri );
 	// XXX XXX use getMethods() to find what notifications are needed by interceptor
 	// ( instead of calling all interceptors )
 	// No API change - can be done later.
     }
 
-    public Enumeration getRequestInterceptors() {
-	return requestInterceptors.elements();
+    /** Return the context interceptors as an array.
+	For performance reasons we use an array instead of
+	returning the vector - the interceptors will not change at
+	runtime and array access is faster and easier than vector
+	access
+    */
+    public RequestInterceptor[] getRequestInterceptors() {
+	if( rInterceptors == null || rInterceptors.length != requestInterceptors.size()) {
+	    rInterceptors=new RequestInterceptor[requestInterceptors.size()];
+	    for( int i=0; i<rInterceptors.length; i++ ) {
+		rInterceptors[i]=(RequestInterceptor)requestInterceptors.elementAt(i);
+	    }
+	}
+	return rInterceptors;
     }
-    
+
+    public void addContextInterceptor( ContextInterceptor ci) {
+	contextInterceptors.addElement( ci );
+    }
+
+
+    /** Return the context interceptors as an array.
+	For performance reasons we use an array instead of
+	returning the vector - the interceptors will not change at
+	runtime and array access is faster and easier than vector
+	access
+    */
+    public ContextInterceptor[] getContextInterceptors() {
+	if( cInterceptors == null || cInterceptors.length != contextInterceptors.size()) {
+	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
+	    for( int i=0; i<cInterceptors.length; i++ ) {
+		cInterceptors[i]=(ContextInterceptor)contextInterceptors.elementAt(i);
+	    }
+	}
+	return cInterceptors;
+    }
+
     // -------------------- Defaults for all contexts --------------------
     /** The root directory of tomcat
      */

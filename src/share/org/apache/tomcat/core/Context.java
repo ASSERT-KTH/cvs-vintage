@@ -68,11 +68,6 @@ import java.util.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
 
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-
 /**
  * Context represent a Web Application as specified by Servlet Specs.
  * The implementation is a repository for all the properties
@@ -158,12 +153,6 @@ public class Context {
     // Maps specified in web.xml ( String url -> ServletWrapper  )
     private Hashtable mappings = new Hashtable();
     
-    // XXX deprecated, will be removed.
-    //Maps specified in web.xml ( String->ServletWrapper )
-    private Hashtable prefixMappedServlets = new Hashtable();
-    private Hashtable extensionMappedServlets = new Hashtable();
-    private Hashtable pathMappedServlets = new Hashtable();
-
     // Authentication properties
     String authMethod;
     String realmName;
@@ -282,34 +271,6 @@ public class Context {
 	return this.rsProvider;
     }
 
-    /** Will return an URL that can be used to read the resource pointed by
-     * req, using the context base and the mapped path
-     */
-    public URL getResourceURL(Request req)
-	throws MalformedURLException
-    {
-	String mappedPath = req.getMappedPath();
-	if( debug>0 ) log( "getResourceURL: " + mappedPath + " " + req.getPathInfo());
-	if( mappedPath == null ) {
-	    mappedPath=req.getPathInfo();
-	}
-	if(mappedPath == null )
-	    mappedPath=req.getLookupPath();
-	
-        URL docBase = getDocumentBase();
-
-	// again, the special case of serving from wars
-	// XXX Need an architecture to deal with other cases, like database-stored files,
-	// etc.
-	if (docBase.getProtocol().equalsIgnoreCase("war")) {
-	    return WARUtil.createURL( this, mappedPath );
-	}
-	URL url=new URL(docBase.getProtocol(), docBase.getHost(),
-		       docBase.getPort(), docBase.getFile() + mappedPath);
-	if( debug>0) log( "getResourceURL=" + url + " request=" + req );
-	return url;
-    }
-
     public RequestDispatcher getRequestDispatcher(String path) {
 	if ( path == null  || ! path.startsWith("/")) {
 	    return null; // spec say "return null if we can't return a dispather
@@ -337,23 +298,17 @@ public class Context {
 
     /** Implements getResource() - use a sub-request to let interceptors do the job.
      */
-    public URL getResource(String rpath)	throws MalformedURLException {
+    public URL getResource(String rpath) throws MalformedURLException {
         URL url = null;
 
 	if ("".equals(rpath)) 
 	    return getDocumentBase();
 	
-	// deal with exceptional cases
-        if (rpath == null) 
-            throw new MalformedURLException(sm.getString("scfacade.getresource.npe"));
-        else if ( ! rpath.startsWith("/")) {
-	    // XXX fix - it shouldn't be a special case, MapperInterceptor
-	    // should deal with this ( workaround for bug in MapperInterceptor)
-	    //	    System.out.println("rpath=" + rpath + " " + path);
-	    if( "/".equals(path) ) // default context
-		rpath="/" + rpath;
-	    else
-		throw new MalformedURLException(sm.getString("scfacade.getresource.iae", rpath));
+        if (rpath == null)
+	    return null;
+
+	if ( ! rpath.startsWith("/")) {
+	    rpath="/" + rpath;
 	}
 
 	// Create a Sub-Request, do the request processing stage
@@ -361,7 +316,21 @@ public class Context {
 	Request lr=contextM.createRequest( this, rpath );
 	getContextManager().processRequest(lr);
 
-	return getResourceURL( lr );
+	String mappedPath = lr.getMappedPath();
+
+	// XXX workaround for mapper bugs
+	if( mappedPath == null ) {
+	    mappedPath=lr.getPathInfo();
+	}
+	if(mappedPath == null )
+	    mappedPath=lr.getLookupPath();
+	
+        URL docBase = getDocumentBase();
+
+	url=new URL(docBase.getProtocol(), docBase.getHost(),
+		       docBase.getPort(), docBase.getFile() + mappedPath);
+	if( debug>0) log( "getResourceURL=" + url + " request=" + lr );
+	return url;
     }
 
     
@@ -437,18 +406,20 @@ public class Context {
      * from the webapp directory in the docbase.
      *
      * <p>This method may only be called once and must be called
-     * before any requests are handled by this context.
+     * before any requests are handled by this context and after setContextManager()
+     * is called.
      */
     public synchronized void init() throws TomcatException {
+	// XXX Context is a mostly a "data" object, it contain all
+	// context properties. We should use ContextManager.initContext() instead.
 	if (this.initialized) {
 	    String msg = sm.getString("context.init.alreadyinit");
 	    throw new IllegalStateException(msg);
 	}
 	this.initialized = true;
-
-	for( int i=0; i< contextInterceptors.size(); i++ ) {
-	    ((ContextInterceptor)contextInterceptors.elementAt(i)).contextInit( this );
-	}
+	
+	// All interceptor logic is in ContextManager.
+	contextM.initContext( this );
     }
 
     public void addContextInterceptor( ContextInterceptor ci) {
@@ -776,22 +747,28 @@ public class Context {
     // XXX use external iterator 
     /** Remove all servlets with a specific class name
      */
-    void removeServletByClassName(String className) {
+    void removeServletByClassName(String className)
+	throws TomcatException
+    {
 	Enumeration enum = servlets.keys();
 	while (enum.hasMoreElements()) {
 	    String key = (String)enum.nextElement();
 	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
             if (className.equals(sw.getServletClass()))
-		removeServlet( sw );
+		servlets.remove(sw.getServletName());
+		contextM.removeServlet( this, sw );
 	}
     }
 
     /** Remove the servlet with a specific name
      */
-    public void removeServletByName(String servletName) {
+    public void removeServletByName(String servletName)
+	throws TomcatException
+    {
 	ServletWrapper wrapper=(ServletWrapper)servlets.get(servletName);
 	if( wrapper != null ) {
-	    removeServlet( wrapper );
+	    servlets.remove( servletName );
+	    contextM.removeServlet( this, wrapper );
 	}
     }
 
@@ -817,14 +794,18 @@ public class Context {
      *  XXX Find out if we really need that - it can be avoided!
      * @deprecated Use removeServlet and findServletByPath or ByName
      */
-    public void removeJSP(String path) {
+    public void removeJSP(String path)
+	throws TomcatException
+    {
 	Enumeration enum = servlets.keys();
 	while (enum.hasMoreElements()) {
 	    String key = (String)enum.nextElement();
 	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
 	    //	    if( (sw instanceof JspWrapper ) &&
-	    if(path.equals( (sw).getPath()))
-	        removeServlet( sw );
+	    if(path.equals( (sw).getPath())) {
+		servlets.remove( sw.getServletName() );
+		contextM.removeServlet( this, sw );
+	    }
 	}
     }
 
@@ -851,15 +832,34 @@ public class Context {
      *    default servlet
      *
      */
-    public void addServletMapping(String servletName, String path) {
+    public void addServletMapping(String path, String servletName)
+	throws TomcatException
+    {
         ServletWrapper sw = (ServletWrapper)servlets.get(servletName);
 
 	if (sw == null) {
-	    log("Servlet not registered " + servletName );
-	    return;
+	    //	    System.out.println("Servlet not registered " + servletName );
+	    // Workaround for frequent "bug" in web.xmls
+	    // Declare a mapping for a JSP or servlet that is not
+	    // declared as servlet. 
+	    
+	    sw = new ServletWrapper(this);
+
+	    sw.setServletName(servletName);
+	    if ( servletName.startsWith("/")) {
+	        sw.setPath(servletName);
+	    } else {
+		sw.setServletClass(servletName);
+	    }
+	    addServlet( sw );
+
 	    // or throw an exception !
 	}
+	if( "/".equals(path) )
+	    defaultServlet = sw;
+
 	mappings.put( path, sw );
+	contextM.addMapping( this, path, sw );
     }
 
     public Enumeration getServletMappings() {
@@ -870,7 +870,7 @@ public class Context {
 	return (ServletWrapper)mappings.get(path);
     }
 
-    public void removeMappingNew( String path ) {
+    public void removeMapping( String path ) {
 	log( "Removing " + path + " -> " + mappings.get(path) );
 	mappings.remove( path );
     }
@@ -890,55 +890,6 @@ public class Context {
     
     // -------------------- deprecated code
     
-    // XXX only one mapping, the mapper should do it's own optimizations
-    /**
-     * Maps a named servlet to a particular path or extension.
-     * If the named servlet is unregistered, it will be added
-     * and subsequently mapped.
-     *
-     * Note that the order of resolution to handle a request is:
-     *
-     *    exact mapped servlet (eg /catalog)
-     *    prefix mapped servlets (eg /foo/bar/*)
-     *    extension mapped servlets (eg *jsp)
-     *    default servlet
-     *
-     */
-    public void addMapping(String servletName, String path) {
-        ServletWrapper sw = (ServletWrapper)servlets.get(servletName);
-
-	if (sw == null) {
-	    System.out.println("Servlet not registered " + servletName );
-	    // XXX
-	    // this might be a bit aggressive
-
-	    if ( servletName.startsWith("/")) {
-	        addJSP(servletName, servletName, null);
-	    } else {
-	        addServlet(servletName, null, servletName);
-	    }
-
-	    sw = (ServletWrapper)servlets.get(servletName);
-	}
-
-	path = path.trim();
-
-	if (sw != null &&
-	    (path.length() > 0)) {
-	    if (path.startsWith("/") &&
-                path.endsWith("/*")){
-	        prefixMappedServlets.put(path, sw);
-		//		System.out.println("Map " + path + " -> " + sw );
-	    } else if (path.startsWith("*.")) {
-	        extensionMappedServlets.put(path, sw);
-	    } else if (! path.equals("/")) {
-	        pathMappedServlets.put(path, sw);
-	    } else {
-	        defaultServlet = sw;
-	    }
-	}
-    }
-
     public ServletWrapper getDefaultServlet() {
 	if( defaultServlet==null)
 	    defaultServlet=getServletByName(Constants.DEFAULT_SERVLET_NAME );
@@ -948,35 +899,11 @@ public class Context {
 	return defaultServlet;
     }
     
-    public Hashtable getPathMap() {
-	return pathMappedServlets;
-    }
-
-    public Hashtable getPrefixMap() {
-	return prefixMappedServlets;
-    }
-
-    public Hashtable getExtensionMap() {
-	return extensionMappedServlets;
-    }
-    
     public boolean containsMapping(String mapping) {
         mapping = mapping.trim();
-
-        return (prefixMappedServlets.containsKey(mapping) ||
-	    extensionMappedServlets.containsKey(mapping) ||
-	    pathMappedServlets.containsKey(mapping));
+	return mappings.containsKey( mapping );
     }
 
-    public void removeMapping(String mapping) {
-        mapping = mapping.trim();
-
-	prefixMappedServlets.remove(mapping);
-	extensionMappedServlets.remove(mapping);
-	pathMappedServlets.remove(mapping);
-    }
-
-    // XXX replace with getServlet()
     public ServletWrapper getServletByName(String servletName) {
 	return (ServletWrapper)servlets.get(servletName);
     }
@@ -987,77 +914,21 @@ public class Context {
      * and instantiated using the given class name.
      *
      * Called to add a new servlet from web.xml
-     * @deprecated use addServlet(ServletWrapper)
      */
-    public void addServlet(String name, String className,
-			   String description) {
-	// assert className!=null
-
-        // check for duplicates
-        if (servlets.get(name) != null) {
-            removeServletByClassName(name); // XXX XXX why?
-            removeServletByName(name);
-        }
-
-        ServletWrapper wrapper = new ServletWrapper(this);
-	wrapper.setServletName(name);
-	wrapper.setServletDescription(description);
-	wrapper.setServletClass(className);
-
-	servlets.put(name, wrapper);
-    }
-
-    public void addServlet(ServletWrapper wrapper) {
+    public void addServlet(ServletWrapper wrapper)
+    	throws TomcatException
+    {
 	String name=wrapper.getServletName();
 	//	System.out.println("Adding servlet " + name  + " " + wrapper);
+
         // check for duplicates
         if (servlets.get(name) != null) {
-            removeServletByClassName(name); // XXX XXX why?
+	    log("Removing duplicate servlet " + name  + " " + wrapper);
             removeServletByName(name);
         }
 	servlets.put(name, wrapper);
     }
 
-    private void removeServlet(ServletWrapper sw) {
-	if (prefixMappedServlets.contains(sw)) {
-	    Enumeration enum = prefixMappedServlets.keys();
-	    
-	    while (enum.hasMoreElements()) {
-		String key = (String)enum.nextElement();
-		
-		if (prefixMappedServlets.get(key).equals(sw)) {
-		    prefixMappedServlets.remove(key);
-		}
-	    }
-	}
-	
-	if (extensionMappedServlets.contains(sw)) {
-	    Enumeration enum = extensionMappedServlets.keys();
-	    
-	    while (enum.hasMoreElements()) {
-		String key = (String)enum.nextElement();
-
-		if (extensionMappedServlets.get(key).equals(sw)) {
-		    extensionMappedServlets.remove(key);
-		}
-	    }
-	}
-	
-	if (pathMappedServlets.contains(sw)) {
-	    Enumeration enum = pathMappedServlets.keys();
-	    
-	    while (enum.hasMoreElements()) {
-		String key = (String)enum.nextElement();
-
-		if (pathMappedServlets.get(key).equals(sw)) {
-		    pathMappedServlets.remove(key);
-		}
-	    }
-	}
-	
-	servlets.remove(sw.getServletName());
-    }
-    
     public Enumeration getServletNames() {
 	return servlets.keys();
     }

@@ -55,9 +55,9 @@ public class WebXmlReader extends BaseInterceptor {
 	    xh.addRule("web-app/icon/small-icon", xh.methodSetter("setIcon", 0) ); 
 	    xh.addRule("web-app/distributable", xh.methodSetter("setDistributable", 0) );
 
-	    xh.addRule("web-app/servlet-mapping", xh.methodSetter("addMapping", 2) ); 
-	    xh.addRule("web-app/servlet-mapping/servlet-name", xh.methodParam(0) ); 
-	    xh.addRule("web-app/servlet-mapping/url-pattern", xh.methodParam(1) );
+	    xh.addRule("web-app/servlet-mapping", xh.methodSetter("addServletMapping", 2) ); 
+	    xh.addRule("web-app/servlet-mapping/servlet-name", xh.methodParam(1) ); 
+	    xh.addRule("web-app/servlet-mapping/url-pattern", xh.methodParam(0) );
 	    
 	    xh.addRule("web-app/taglib", xh.methodSetter("addTaglib", 2) ); 
 	    xh.addRule("web-app/taglib/taglib-uri", xh.methodParam(0) ); 

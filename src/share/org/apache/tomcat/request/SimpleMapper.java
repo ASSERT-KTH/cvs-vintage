@@ -63,7 +63,7 @@ package org.apache.tomcat.request;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
-import java.util.Hashtable;
+import java.util.*;
 
 /** Parse request URI and find ContextPath, ServletPath, PathInfo and QueryString
  *  Use a simple alghoritm - no optimizations or tricks.
@@ -72,7 +72,7 @@ import java.util.Hashtable;
  *  For "production" environment you should use either an optimized version
  *  or a real web server parser.
  */
-public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor {
+public class SimpleMapper extends  BaseInterceptor  {
     int debug=0;
     ContextManager cm;
     
@@ -83,14 +83,33 @@ public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor
 
     public void setContextManager( ContextManager cm ) {
 	this.cm=cm;
+	// Add all context that are set in CM
+	Enumeration enum=cm.getContextNames();
+	while( enum.hasMoreElements() ) {
+	    String name=(String) enum.nextElement();
+	    try {
+		Context ctx=cm.getContext( name );
+		if(debug>0) ctx.log("Adding existing context " + name );
+		addContext( cm, ctx );
+	    } catch (TomcatException ex ) {
+		ex.printStackTrace();
+	    }
+	}
     }
 
     public void setDebug( int level ) {
 	debug=level;
     }
 
+    public void setDebug( String level ) {
+	debug=new Integer( level ).intValue();
+    }
+
     void log( String msg ) {
-	System.out.println("SimpleMapper: " + msg );
+	if( cm==null) 
+	    System.out.println("SimpleMapper: " + msg );
+	else
+	    cm.getContext("").log( msg );
     }
 
     /** First step of request porcessing is finding the Context.
@@ -139,19 +158,22 @@ public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor
 	String path=req.getLookupPath();
         ServletWrapper wrapper = null;
 
-	if(debug>0) log( "Mapping: " + req );
+	String ctxP=context.getPath();
+	Mappings m=(Mappings)contextPaths.get(ctxP);
+
+	if(debug>0) context.log( "Mapping: " + req );
 	//	/*XXX*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 
 	// try an exact match
-        wrapper = getPathMatch(context, path, req);
+        wrapper = getPathMatch(m, context, path, req);
 
 	// try a prefix match
 	if( wrapper == null ) 
-	    wrapper = getPrefixMatch(context, path, req);
+	    wrapper = getPrefixMatch(m, context, path, req);
 
 	// try an extension match
 	if (wrapper == null) 
-	    wrapper = getExtensionMatch(context, path, req);
+	    wrapper = getExtensionMatch(m, context, path, req);
 
 	// set default wrapper, return
 	if (wrapper == null) {
@@ -159,31 +181,186 @@ public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor
 	    req.setWrapper( wrapper );
 	    req.setServletPath( "" );
 	    req.setPathInfo( path);
-	    if(debug>0) log("Default mapper " + "\n    " + req);
+	    if(debug>0) context.log("Default mapper " + "\n    " + req);
 	    return OK;
 	} 
 
 	req.setWrapper( wrapper );
 
-	if(debug>0) log("Found wrapper using getMapPath " + "\n    " + req);
+	if(debug>0) context.log("Found wrapper using getMapPath " + "\n    " + req);
 
 	return OK;
     }
 
-    public int beforeBody( Request request, Response response) {
-	return 0;
+
+    // -------------------- Internal representation of mappings --------------------
+    /* Implementation:
+       We will create an internal representation of mappings ( context path and internal mappings
+       and security mappings). Advanced ( optimized ) mappers will sort the list and will do
+       efficient char[] matching ( instead of creating a lot of String garbage ).
+
+    */
+
+    // String prefix -> Mappings context maps
+    Hashtable contextPaths=new Hashtable();
+    
+    class Mappings {
+	Context ctx;
+	Hashtable prefixMappedServlets;
+	Hashtable extensionMappedServlets;
+	Hashtable pathMappedServlets;
     }
 
+
+    /** Called when a context is added to a CM
+     */
+    public void addContext( ContextManager cm, Context ctx )
+	throws TomcatException
+    {
+	Mappings m=new Mappings();
+	m.ctx=ctx;
+	m.prefixMappedServlets=new Hashtable();
+	m.extensionMappedServlets=new Hashtable();
+	m.pathMappedServlets=new Hashtable();
+	contextPaths.put( ctx.getPath(), m );
+
+	if(debug>0) ctx.log("New context added to maps. ");
+	// add all existing mappings
+	Enumeration enum=ctx.getServletMappings();
+	while( enum.hasMoreElements() ) {
+	    String path=(String) enum.nextElement();
+	    ServletWrapper sw=ctx.getServletMapping( path );
+	    if(debug>0) ctx.log("Adding existing " + path );
+	    addMapping( ctx, path, sw );
+	}
+
+    }
+
+    /** Called when a context is removed from a CM
+     */
+    public void removeContext( ContextManager cm, Context ctx ) throws TomcatException
+    {
+	String ctxP=ctx.getPath();
+	Mappings m=(Mappings)contextPaths.get(ctxP);
+
+	if(debug>0) ctx.log( "Removed from maps ");
+	contextPaths.remove( ctxP );
+	// m will be GC ( we may want to set all to null and clean the
+	// Hashtable to help a bit)
+    }
+
+
+    /**
+     * Maps a named servlet to a particular path or extension.
+     * If the named servlet is unregistered, it will be added
+     * and subsequently mapped.
+     *
+     * Note that the order of resolution to handle a request is:
+     *
+     *    exact mapped servlet (eg /catalog)
+     *    prefix mapped servlets (eg /foo/bar/*)
+     *    extension mapped servlets (eg *jsp)
+     *    default servlet
+     *
+     */
+    public void addMapping( Context ctx, String path, ServletWrapper sw)
+	throws TomcatException
+    {
+	String ctxP=ctx.getPath();
+	Mappings m=(Mappings)contextPaths.get(ctxP);
+	if(debug>0) ctx.log( "Add mapping " + path + " " + sw + " " + m );
+	
+	path = path.trim();
+
+	if ((path.length() == 0))
+	    return;
+	if (path.startsWith("/") &&
+	    path.endsWith("/*")){
+	    m.prefixMappedServlets.put(path, sw);
+	    //	    System.out.println("Map " + path + " -> " + sw );
+	} else if (path.startsWith("*.")) {
+	    m.extensionMappedServlets.put(path, sw);
+	} else if (! path.equals("/")) {
+	    m.pathMappedServlets.put(path, sw);
+	} 
+    }
+
+    /** Notify when a mapping is deleted  from  a context
+     */
+    public void removeMapping( Context ctx, String mapping )
+	throws TomcatException
+    {
+	String ctxP=ctx.getPath();
+	Mappings m=(Mappings)contextPaths.get(ctxP);
+	
+	if(debug>0) ctx.log( "Remove mapping " + mapping );
+	
+        mapping = mapping.trim();
+	
+	m.prefixMappedServlets.remove(mapping);
+	m.extensionMappedServlets.remove(mapping);
+	m.pathMappedServlets.remove(mapping);
+    }
+
+    
+    public void removeServlet(Context ctx, ServletWrapper sw) {
+
+	// find the mappings for ctx
+	if( debug > 0 ) ctx.log( "Remove servlet " + sw );
+	String path=ctx.getPath();
+	Mappings m=(Mappings)contextPaths.get(path);
+	
+	if (m.prefixMappedServlets.contains(sw)) {
+	    Enumeration enum = m.prefixMappedServlets.keys();
+	    
+	    while (enum.hasMoreElements()) {
+		String key = (String)enum.nextElement();
+		
+		if (m.prefixMappedServlets.get(key).equals(sw)) {
+		    m.prefixMappedServlets.remove(key);
+		}
+	    }
+	}
+	
+	if (m.extensionMappedServlets.contains(sw)) {
+	    Enumeration enum = m.extensionMappedServlets.keys();
+	    
+	    while (enum.hasMoreElements()) {
+		String key = (String)enum.nextElement();
+
+		if (m.extensionMappedServlets.get(key).equals(sw)) {
+		    m.extensionMappedServlets.remove(key);
+		}
+	    }
+	}
+	
+	if (m.pathMappedServlets.contains(sw)) {
+	    Enumeration enum = m.pathMappedServlets.keys();
+	    
+	    while (enum.hasMoreElements()) {
+		String key = (String)enum.nextElement();
+
+		if (m.pathMappedServlets.get(key).equals(sw)) {
+		    m.pathMappedServlets.remove(key);
+		}
+	    }
+	}
+	
+    }
+    
+
+
+    // -------------------- Implementation --------------------
     /** Get an exact match ( /catalog ) - rule 1 in 10.1
      */
-    private ServletWrapper getPathMatch(Context context, String path, Request req) {
+    private ServletWrapper getPathMatch(Mappings m, Context context, String path, Request req) {
         ServletWrapper wrapper = null;
-	wrapper = (ServletWrapper)context.getPathMap().get(path);
+	wrapper = (ServletWrapper)m.pathMappedServlets.get(path);
 
 	if (wrapper != null) {
 	    req.setServletPath( path );
 	    // No path info - it's an exact match
-	    if(debug>1) log("path match " + path );
+	    if(debug>1) context.log("path match " + path );
 	}
         return wrapper;
     }
@@ -191,7 +368,7 @@ public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor
 
     /** Match a prefix rule - /foo/bar/index.html/abc
      */
-    private ServletWrapper getPrefixMatch(Context context, String path, Request req) {
+    private ServletWrapper getPrefixMatch(Mappings m, Context context, String path, Request req) {
 	ServletWrapper wrapper = null;
         String s = path;
 
@@ -202,7 +379,12 @@ public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor
 	while (s.length() > 0) {
 	    // XXX we can remove /* in prefix map when we add it, so no need
 	    // for another string creation
-	    wrapper = (ServletWrapper)context.getPrefixMap().get(s + "/*" );
+	    if(debug>2) context.log( "Prefix: " + s  );
+	    wrapper = (ServletWrapper)m.prefixMappedServlets.get(s + "/*" );
+	    // 	    Enumeration en=m.prefixMappedServlets.keys();
+	    // 	    while( en.hasMoreElements() ) {
+	    // 		System.out.println("XXX: " + en.nextElement());
+	    // 	    }
 	    
 	    if (wrapper == null)
 		s=removeLast( s );
@@ -217,7 +399,7 @@ public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor
 	    String pathI = path.substring(s.length(), path.length());
 	    if( ! "".equals(pathI) ) 
 		req.setPathInfo(pathI);
-	    if(debug>0) log("prefix match " + path );
+	    if(debug>0) context.log("prefix match " + path );
 	}
 	return wrapper;
     }
@@ -225,14 +407,13 @@ public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor
     // It looks like it's broken: try /foo/bar.jsp/test/a.baz -> will not match it
     // as baz, but neither as .jsp, which is wrong.
     // XXX Fix this code - I don't think evolution will work in this class.
-    private ServletWrapper getExtensionMatch(Context context, String path, Request req) {
+    private ServletWrapper getExtensionMatch(Mappings m, Context context, String path, Request req) {
 	String extension=getExtension( path );
 	if( extension == null ) return null;
 
 	// XXX need to store the extensions without *, to avoid extra
 	// string creation
-	ServletWrapper wrapper= (ServletWrapper)context.getExtensionMap().get("*" + extension);
-
+	ServletWrapper wrapper= (ServletWrapper)m.extensionMappedServlets.get("*" + extension);
 	if (wrapper == null)
 	    return null;
 
@@ -251,7 +432,7 @@ public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor
 	    req.setServletPath( path );
 	}
 		
-	if(debug>0) log("extension match " + path );
+	if(debug>0) context.log("extension match " + path );
 	return wrapper; 
     }
 

@@ -761,7 +761,7 @@ public class WebApplicationReader {
 	processErrorPages(ctx, webDescriptor.getErrorPageDescriptors());
     }
 
-    private void processServlets(Context ctx, Enumeration servlets) {
+    private void processServlets(Context ctx, Enumeration servlets) throws Exception {
         // XXX
         // oh my ... this has suddenly turned rather ugly
         // perhaps the reader should do this normalization work
@@ -788,7 +788,11 @@ public class WebApplicationReader {
 		    ctx.removeServletByName(name);
 		}
 
-		ctx.addServlet(name, resourceName, description);
+		ServletWrapper sw=new ServletWrapper();
+		sw.setContext( ctx );
+		sw.setServletName( name );
+		sw.setServletClass( resourceName );
+		ctx.addServlet(sw);
 	    } else if (webComponentDescriptor instanceof JspDescriptor) {
 		resourceName =
 		    ((JspDescriptor)webComponentDescriptor).getJspFileName();
@@ -858,7 +862,7 @@ public class WebApplicationReader {
 			ctx.removeMapping(mapping);
 		    }
 
-                    ctx.addMapping(name, mapping);
+                    ctx.addServletMapping( mapping, name);
 		} else {
 // 		    String msg = sm.getString("context.dd.ignoreMapping",
 // 		        mapping);
