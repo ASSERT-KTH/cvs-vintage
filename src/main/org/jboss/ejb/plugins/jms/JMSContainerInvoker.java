@@ -60,7 +60,7 @@ import org.jboss.jms.asf.StdServerSessionPool;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class JMSContainerInvoker
    implements ContainerInvoker, XmlLoadable
@@ -208,7 +208,7 @@ public class JMSContainerInvoker
     * @param username    The username to use or null for no user.
     * @param password    The password for the given username or null if no
     * @return            A new connection from the given factory.
-    *
+    * 
     * @throws JMSException    Failed to create connection.
     */
    protected Connection createConnection(final Object factory,
@@ -216,7 +216,6 @@ public class JMSContainerInvoker
                                          final String password)
       throws JMSException
    {
-      log.debug("attempting to create connection from factory: " + factory);
       connection = ConnectionFactoryHelper.createConnection
          (factory, username, password);
       log.debug("created connection: " + connection);
