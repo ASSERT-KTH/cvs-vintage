@@ -41,7 +41,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -271,8 +271,6 @@ public class MessageDrivenContainer
 
    protected void stopService() throws Exception
    {
-      log.info("Stopping");
-
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
