@@ -1,15 +1,13 @@
 #set ($action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "MoveIssue2.vm"))
 #set ($user = $data.User)
-#set ($currentModule = $user.CurrentModule)
+#set ($currentModule = $scarabR.CurrentModule)
 #set ($issueId = $data.Parameters.getString("id"))
 #set ($issue = $scarabR.getIssue($issueId))
 
 
-
 <div class="app" id="div2-6-1">
-<h2>copy / move issue (2.7.0) step 2</h2>
+<h2>copy / move issue </h2>
 
-<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
                         
 <form method="post" action="$action" >
 <input type="hidden" name="id" value="$issueId">
@@ -43,7 +41,7 @@
 
           
           <h3>destination project</h3>
-          <p>
+          <p> 
           <select name="module_id">
              <option>select project</option>
           #foreach( $module in $security.getModules($user, "Issue | Enter") )
