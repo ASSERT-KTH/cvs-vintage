@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.12 2001/12/08 04:57:28 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.13 2001/12/13 04:26:09 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -112,6 +112,8 @@ Bug No.  Description
 4826     Fixed AutoWebApp so the dir attribute can be an absolute path on
          Windows systems.
 
+5390	 Fixed the behavior of LoadOnStartup servlets when the servlet is
+	 actually a JSP page.
 
 Documentation:
 
