@@ -6,23 +6,20 @@
  */
 package org.jboss.metadata;
 
-import java.net.URL;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-
-import org.w3c.dom.Document;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.InputSource;
-
 import org.jboss.deployment.DeploymentException;
-import org.jboss.util.xml.JBossEntityResolver;
 import org.jboss.logging.Logger;
 import org.jboss.util.xml.JBossEntityResolver;
+import org.w3c.dom.Document;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /** XmlFileLoader class is used to read ejb-jar.xml, standardjboss.xml, jboss.xml
  * files, process them using DTDs and create ApplicationMetaData object for
@@ -35,7 +32,7 @@ import org.jboss.util.xml.JBossEntityResolver;
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  */
 public class XmlFileLoader
 {
@@ -144,7 +141,6 @@ public class XmlFileLoader
 
       // create the metadata
       metaData = new ApplicationMetaData();
-      metaData.setClassLoader(classLoader);
 
       Document ejbjarDocument = getDocumentFromURL(ejbjarUrl);
       

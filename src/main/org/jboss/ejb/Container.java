@@ -10,13 +10,10 @@ package org.jboss.ejb;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
-import org.jboss.deployment.WebserviceClientDeployer;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
-import org.jboss.ejb.timer.ContainerTimer;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationStatistics;
 import org.jboss.invocation.InvocationType;
-import org.jboss.invocation.LocalEJBInvocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
@@ -38,8 +35,6 @@ import org.jboss.util.NestedError;
 import org.omg.CORBA.ORB;
 
 import javax.ejb.EJBException;
-import javax.ejb.TimedObject;
-import javax.ejb.Timer;
 import javax.ejb.TimerService;
 import javax.management.MBeanException;
 import javax.management.MalformedObjectNameException;
@@ -50,7 +45,6 @@ import javax.naming.LinkRef;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
-import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -80,7 +74,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.145 $
+ * @version $Revision: 1.146 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -1159,13 +1153,6 @@ public abstract class Container
                  envCtx,
                  "security/subject",
                  new LinkRef(securityDomain + "/subject"));
-      }
-
-      // Bind the webservice service-refs to the ENC.
-      if (beanMetaData.getWebservicesClient() != null)
-      {
-         WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
-         wscDeployer.setupEnvironment(envCtx, di, beanMetaData.getWebservicesClient());
       }
 
       if (debug)

@@ -6,29 +6,26 @@
  */
 package org.jboss.web;
 
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.HashSet;
-import java.util.Set;
-import java.lang.reflect.Method;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import javax.naming.Context;
-
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.SubDeployerSupport;
-import org.jboss.deployment.WebserviceClientDeployer;
+import org.jboss.metadata.MetaData;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.metadata.XmlFileLoader;
-import org.jboss.metadata.MetaData;
 import org.jboss.mx.loading.LoaderRepositoryFactory;
 import org.jboss.util.file.JarUtils;
-
 import org.w3c.dom.Element;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /** A template pattern class for web container integration into JBoss. This class
  should be subclasses by web container providers wishing to integrate their
@@ -36,12 +33,12 @@ import org.w3c.dom.Element;
 
  @see org.jboss.web.AbstractWebDeployer
 
- @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
+ @jmx.mbean extends="org.jboss.deployment.SubDeployerMBean"
 
  @author  Scott.Stark@jboss.org
  @author  Christoph.Jung@infor.de
  @author  Thomas.Diesler@arcor.de
- @version $Revision: 1.81 $
+ @version $Revision: 1.82 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -68,8 +65,8 @@ public abstract class AbstractWebContainer
        seen by the server/jsp pages during init/destroy/service/etc. method
        invocations if these methods interace with the JNDI ENC context.
 
-       @param loader, the ClassLoader for the web application. May not be null.
-       @param metaData, the WebMetaData from the WebApplication object passed to
+       @param loader the ClassLoader for the web application. May not be null.
+       @param metaData the WebMetaData from the WebApplication object passed to
        the performDeploy method.
        */
       public void parseWebAppDescriptors(ClassLoader loader, WebMetaData metaData) throws Exception;
@@ -100,7 +97,7 @@ public abstract class AbstractWebContainer
    /** Get the flag indicating if the normal Java2 parent first class loading
     * model should be used over the servlet 2.3 web container first model.
     * @return true for parent first, false for the servlet 2.3 model
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public boolean getJava2ClassLoadingCompliance()
    {
@@ -110,7 +107,7 @@ public abstract class AbstractWebContainer
    /** Set the flag indicating if the normal Java2 parent first class loading
     * model should be used over the servlet 2.3 web container first model.
     * @param flag true for parent first, false for the servlet 2.3 model
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public void setJava2ClassLoadingCompliance(boolean flag)
    {
@@ -121,7 +118,7 @@ public abstract class AbstractWebContainer
     * need to be set to false as long extraction paths under deploy can
     * show up as deployment failures on some platforms.
     * 
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     * @return true is war archives should be unpacked
     */
    public boolean getUnpackWars()
@@ -133,7 +130,7 @@ public abstract class AbstractWebContainer
     * need to be set to false as long extraction paths under deploy can
     * show up as deployment failures on some platforms.
     * 
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     * @param flag , true is war archives should be unpacked
     */
    public void setUnpackWars(boolean flag)
@@ -147,7 +144,7 @@ public abstract class AbstractWebContainer
     * in favour of trying the jndi-name in jboss-web.xml
     * @return the LenientEjbLink flag 
     *    
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public boolean getLenientEjbLink()
    {
@@ -158,7 +155,7 @@ public abstract class AbstractWebContainer
     * Set the flag indicating if ejb-link errors should be ignored
     * in favour of trying the jndi-name in jboss-web.xml
     *    
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public void setLenientEjbLink(boolean flag)
    {
@@ -304,7 +301,7 @@ public abstract class AbstractWebContainer
     Expose this information via MinServiceTime, MaxServiceTime and TotalServiceTime
     attributes to integrate seemlessly with the JSR77 factory layer.
 
-    @param di, The deployment info that contains the context-root element value
+    @param di The deployment info that contains the context-root element value
     from the J2EE application/module/web application.xml descriptor. This may
     be null if war was is not being deployed as part of an enterprise application.
     It also contains the URL of the web application war.
@@ -357,7 +354,7 @@ public abstract class AbstractWebContainer
    }
 
    /** See if a war is deployed.
-    @jmx:managed-operation
+    @jmx.managed-operation
     */
    public boolean isDeployed(String warUrl)
    {
@@ -365,7 +362,7 @@ public abstract class AbstractWebContainer
    }
 
    /** Get the WebApplication object for a deployed war.
-    @param warUrl, the war url string as originally passed to deploy().
+    @param warUrl the war url string as originally passed to deploy().
     @return The WebApplication created during the deploy step if the
     warUrl is valid, null if no such deployment exists.
     */
@@ -376,7 +373,7 @@ public abstract class AbstractWebContainer
    }
 
    /** Returns the applications deployed by the web container subclasses.
-    @jmx:managed-attribute
+    @jmx.managed-attribute
     @return An Iterator of WebApplication objects for the deployed wars.
     */
    public Iterator getDeployedApplications()
@@ -387,7 +384,7 @@ public abstract class AbstractWebContainer
    /** An accessor for any configuration element set via setConfig. This
     method always returns null and must be overriden by subclasses to
     return a valid value.
-    @jmx:managed-attribute
+    @jmx.managed-attribute
     */
    public Element getConfig()
    {
@@ -397,7 +394,7 @@ public abstract class AbstractWebContainer
    /** This method is invoked to import an arbitrary XML configuration tree.
     Subclasses should override this method if they support such a configuration
     capability. This implementation does nothing.
-    @jmx:managed-attribute
+    @jmx.managed-attribute
     */
    public void setConfig(Element config)
    {
