@@ -1,4 +1,4 @@
-// $Id: ActionSetGeneralizableElementAbstract.java,v 1.6 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetGeneralizableElementAbstract.java,v 1.7 2004/07/18 08:08:49 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import org.argouml.uml.ui.UMLCheckBox2;
 
 /**
  * 
- * @author jaap.branderhorst@xs4all.nl	
+ * @author jaap.branderhorst@xs4all.nl
  * @since Jan 27, 2003
  */
 public class ActionSetGeneralizableElementAbstract extends UMLChangeAction {
@@ -46,7 +46,7 @@ public class ActionSetGeneralizableElementAbstract extends UMLChangeAction {
     protected ActionSetGeneralizableElementAbstract() {
         super(Translator.localize("Set"), true, NO_ICON);
     }
-    
+
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
@@ -55,9 +55,9 @@ public class ActionSetGeneralizableElementAbstract extends UMLChangeAction {
         if (e.getSource() instanceof UMLCheckBox2) {
             UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
             Object target = source.getTarget();
-            if (org.argouml.model.ModelFacade.isAGeneralizableElement(target)) {
-                Object m = /*(MGeneralizableElement)*/ target;
-                ModelFacade.setAbstract(m, source.isSelected());                
+            if (ModelFacade.isAGeneralizableElement(target)
+                    || ModelFacade.isAOperation(target)) {
+                ModelFacade.setAbstract(target, source.isSelected());
             }
         }
     }

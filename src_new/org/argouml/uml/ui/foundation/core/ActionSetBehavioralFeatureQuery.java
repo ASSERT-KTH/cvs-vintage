@@ -1,4 +1,4 @@
-// $Id: ActionSetGeneralizableElementRoot.java,v 1.7 2004/07/18 08:08:49 mkl Exp $
+// $Id: ActionSetBehavioralFeatureQuery.java,v 1.1 2004/07/18 08:08:49 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,18 +32,17 @@ import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLCheckBox2;
 
 /**
- * 
- * @author jaap.branderhorst@xs4all.nl	
- * @since Jan 27, 2003
+ * @stereotype singleton
+ * @author mkl	
  */
-public class ActionSetGeneralizableElementRoot extends UMLChangeAction {
+public class ActionSetBehavioralFeatureQuery extends UMLChangeAction {
 
-    public static final ActionSetGeneralizableElementRoot SINGLETON = new ActionSetGeneralizableElementRoot();
+    public static final ActionSetBehavioralFeatureQuery SINGLETON = new ActionSetBehavioralFeatureQuery();
 
     /**
-     * Constructor for ActionSetElementOwnershipSpecification.
+     * Constructor.
      */
-    protected ActionSetGeneralizableElementRoot() {
+    protected ActionSetBehavioralFeatureQuery() {
         super(Translator.localize("Set"), true, NO_ICON);
     }
     
@@ -55,9 +54,9 @@ public class ActionSetGeneralizableElementRoot extends UMLChangeAction {
         if (e.getSource() instanceof UMLCheckBox2) {
             UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
             Object target = source.getTarget();
-            if (org.argouml.model.ModelFacade.isAGeneralizableElement(target) ||
-                    ModelFacade.isAOperation(target)) {
-                ModelFacade.setRoot(target, source.isSelected());                
+            if (org.argouml.model.ModelFacade.isABehavioralFeature(target)) {
+                Object m = /*(MGeneralizableElement)*/ target;
+                ModelFacade.setQuery(m, source.isSelected());                
             }
         }
     }
