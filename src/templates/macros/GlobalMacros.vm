@@ -477,25 +477,33 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
  </p>
 #end
 
-#macro (processQueryResults $action)
+#macro (processQueryResults $action $listSize)
 <select name="next"
         onchange="javascript:submitFormTo(this.form, '$action');">
 <option value="" selected="selected">$l10n.ProcessResults:</option>
 #set ($module = $scarabR.CurrentModule)
 #if ($user.hasPermission($scarabG.Permission.ISSUE__VIEW, $module))
+  #if ($listSize <= $scarabG.Constant.ISSUE_MAX_VIEW)
     <option value="viewAll">$l10n.ViewAll</option>
+  #end
     <option value="viewSelected">$l10n.ViewSelected</option>
 #end
 #if ($user.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
+  #if ($listSize <= $scarabG.Constant.ISSUE_MAX_ASSIGN)
     <option value="assignAll">$l10n.AssignAll</option>
+  #end
     <option value="assignSelected">$l10n.AssignSelected</option>
 #end
 #if ($user.hasPermission($scarabG.Permission.ISSUE__ENTER, $module))
+  #if ($listSize <= $scarabG.Constant.ISSUE_MAX_COPY)
     <option value="copyAll">$l10n.CopyAll</option>
+  #end
     <option value="copySelected">$l10n.CopySelected</option>
 #end
 #if ($user.hasPermission($scarabG.Permission.ISSUE__MOVE, $module))
+  #if ($listSize <= $scarabG.Constant.ISSUE_MAX_MOVE)
     <option value="moveAll">$l10n.MoveAll</option>
+  #end
     <option value="moveSelected">$l10n.MoveSelected</option>
 #end
 </select>

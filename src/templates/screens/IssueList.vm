@@ -27,8 +27,9 @@
 <input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
 #end
 #exportFormats('')
-#if ($issueListSize <= 10 && $mitlist.isSingleModuleIssueType())
-  #processQueryResults('')
+
+#if (!$mitlist || $mitlist.isSingleModuleIssueType())
+  #processQueryResults('' $issueListSize)
 #end
 </div>
 #end

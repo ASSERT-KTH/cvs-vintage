@@ -53,7 +53,7 @@ import org.apache.fulcrum.localization.Localization;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.58 2003/05/03 05:15:46 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.59 2003/09/03 22:15:01 dlr Exp $
  */
 public interface ScarabConstants
 {
@@ -247,4 +247,27 @@ public interface ScarabConstants
 
     Integer INTEGER_0 = new Integer(0);
 
+    /**
+     * The maximum number of issues for batch view of detail.
+     */
+    int ISSUE_MAX_VIEW =
+        Turbine.getConfiguration().getInt("scarab.issue.max.view", 25);
+
+    /**
+     * The maximum number of issues for batch assign.
+     */
+    int ISSUE_MAX_ASSIGN =
+        Turbine.getConfiguration().getInt("scarab.issue.max.assign", 25);
+
+    /**
+     * The maximum number of issues for batch copy.
+     */
+    int ISSUE_MAX_COPY =
+        Turbine.getConfiguration().getInt("scarab.issue.max.copy", 250);
+
+    /**
+     * The maximum number of issues for batch move.
+     */
+    int ISSUE_MAX_MOVE =
+        Turbine.getConfiguration().getInt("scarab.issue.max.move", 250);
 }    

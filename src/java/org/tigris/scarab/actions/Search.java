@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.138 2003/08/19 23:56:36 jmcnally Exp $
+ * @version $Id: Search.java,v 1.139 2003/09/03 22:15:00 dlr Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -148,8 +148,17 @@ public class Search extends RequireLoginFirstAction
                 {
                     if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, modules)) 
                     {
+                        if (issueIds.size() <= ScarabConstants.ISSUE_MAX_ASSIGN)
+                        {
                         scarabR.resetAssociatedUsers();
                         setTarget(data, "AssignIssue.vm");
+                    }
+                    else 
+                    {
+                            scarabR.setAlertMessage(l10n.format("IssueLimitExceeded",
+                                 String.valueOf(ScarabConstants.ISSUE_MAX_ASSIGN)));
+                            return;
+                        }
                     }
                     else 
                     {
@@ -161,7 +170,16 @@ public class Search extends RequireLoginFirstAction
                 {
                     if (user.hasPermission(ScarabSecurity.ISSUE__VIEW, modules)) 
                     {
+                        if (issueIds.size() <= ScarabConstants.ISSUE_MAX_VIEW)
+                        {
                         setTarget(data, "ViewIssueLong.vm");            
+                    }
+                    else
+                    {
+                            scarabR.setAlertMessage(l10n.format("IssueLimitExceeded",
+                                 String.valueOf(ScarabConstants.ISSUE_MAX_VIEW)));
+                            return;
+                        }
                     }
                     else
                     {
@@ -173,8 +191,17 @@ public class Search extends RequireLoginFirstAction
                 {
                     if (user.hasPermission(ScarabSecurity.ISSUE__ENTER, modules))
                     {
+                        if (issueIds.size() <= ScarabConstants.ISSUE_MAX_COPY)
+                        {
                         data.getParameters().add("mv_0rb", "copy");
                         setTarget(data, "MoveIssue.vm");                    
+                    }
+                    else 
+                    {
+                            scarabR.setAlertMessage(l10n.format("IssueLimitExceeded",
+                                 String.valueOf(ScarabConstants.ISSUE_MAX_COPY)));
+                            return;
+                        }
                     }
                     else 
                     {
@@ -185,8 +212,17 @@ public class Search extends RequireLoginFirstAction
                 {
                     if (user.hasPermission(ScarabSecurity.ISSUE__MOVE, modules)) 
                     {
+                        if (issueIds.size() <= ScarabConstants.ISSUE_MAX_MOVE)
+                        {
                         data.getParameters().add("mv_0rb", "move");
                         setTarget(data, "MoveIssue.vm");                    
+                    }
+                    else 
+                    {
+                            scarabR.setAlertMessage(l10n.format("IssueLimitExceeded",
+                                 String.valueOf(ScarabConstants.ISSUE_MAX_MOVE)));
+                            return;
+                        }
                     }
                     else 
                     {
