@@ -366,13 +366,17 @@ class HttpResponse extends  Response {
     }
 
     // return server name (or the reported one)
-    if (reportedname == null)
-        getMimeHeaders().setValue(  "Server" ).setString(request.getContext().getEngineHeader());
-    else
+    if (reportedname == null) {
+        Context ctx = request.getContext();
+        String server = ctx != null ? ctx.getEngineHeader() : 
+                ContextManager.TOMCAT_NAME + "/" + ContextManager.TOMCAT_VERSION;    
+        getMimeHeaders().setValue(  "Server" ).setString(server);
+    } else {
         if (reportedname.length() != 0)
             getMimeHeaders().setValue(  "Server" ).setString(reportedname);
+    }
 
-	http.sendHeaders( getMimeHeaders() );
+    http.sendHeaders( getMimeHeaders() );
     }
 
     public void doWrite( byte buffer[], int pos, int count)
