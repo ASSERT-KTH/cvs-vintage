@@ -1,4 +1,4 @@
-// $Id: TabStyle.java,v 1.22 2004/05/18 10:06:17 mkl Exp $
+// $Id: TabStyle.java,v 1.23 2004/07/31 13:42:00 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.22 2004/05/18 10:06:17 mkl Exp $
+// $Id: TabStyle.java,v 1.23 2004/07/31 13:42:00 mkl Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -151,7 +151,7 @@ public class TabStyle extends TabSpawnable implements TabFigTarget,
      * and <code>SP</code>, resulting in the lookup order described above.
      */
     public TabStyle() {
-        this("tab.style", new String[] { "StylePanel", "SP"});
+        this("tab.style", new String[] { "StylePanel", "SP" });
     }
 
     /**
@@ -325,33 +325,21 @@ public class TabStyle extends TabSpawnable implements TabFigTarget,
                         + getStylePanelNames()[i] + targetClassElement);
                 return cls;
             } catch (ClassNotFoundException ignore) {
-                _cat.debug(ignore);
+                _cat.debug("ClassNotFoundException. Could not find class:"
+                        + classNs.toString() + "." + getStylePanelNames()[i]
+                        + targetClassElement);
             }
             try {
                 cls = Class.forName(baseNs.toString() + "."
                         + getStylePanelNames()[i] + targetClassElement);
                 return cls;
             } catch (ClassNotFoundException ignore) {
-                _cat.debug(ignore);
+                _cat.debug("ClassNotFoundException. Could not find class:"
+                        + classNs.toString() + "." + getStylePanelNames()[i]
+                        + targetClassElement);
             }
         }
         return null;
-    }
-
-    /**
-     * @deprecated remove in 0.16.0
-     * @return 1st basename
-     */
-    protected String getClassBaseName() {
-        return _stylePanelNames[0];
-    }
-
-    /**
-     * @deprecated remove in 0.16.0
-     * @return 2nd basename
-     */
-    protected String getAlternativeClassBaseName() {
-        return _alternativeBase;
     }
 
     protected String[] getStylePanelNames() {

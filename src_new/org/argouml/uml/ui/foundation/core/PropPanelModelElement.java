@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.77 2004/07/31 08:31:58 mkl Exp $
+// $Id: PropPanelModelElement.java,v 1.78 2004/07/31 13:42:00 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.ArgoModule;
@@ -107,6 +106,8 @@ public abstract class PropPanelModelElement extends PropPanel {
     protected static ImageIcon _packageIcon = lookupIcon("Package");
 
     protected static ImageIcon _modelIcon = lookupIcon("Model");
+    
+    protected static ImageIcon _subsystemIcon = lookupIcon("Subsystem");
 
     protected static ImageIcon _innerClassIcon = lookupIcon("InnerClass");
 
@@ -374,10 +375,11 @@ public abstract class PropPanelModelElement extends PropPanel {
             // stereoTypeButton.setContentAreaFilled(false);
             stereoTypeButton.setSize(stereoTypeButton.getWidth() - 10,
                     stereoTypeButton.getHeight());
-            JToolBar toolbar = new JToolBar();
-            toolbar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
-            toolbar.add(stereoTypeButton);
-            _stereotypeBox.add(toolbar);
+            //JToolBar toolbar = new JToolBar();
+            //toolbar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
+            //toolbar.add(stereoTypeButton);
+            //_stereotypeBox.add(toolbar);
+            _stereotypeBox.add(stereoTypeButton);
         }
         return _stereotypeBox;
     }

@@ -1,4 +1,4 @@
-// $Id: PropPanelModel.java,v 1.14 2004/07/31 08:31:58 mkl Exp $
+// $Id: PropPanelModel.java,v 1.15 2004/07/31 13:42:01 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,44 +24,15 @@
 
 package org.argouml.uml.ui.model_management;
 
-import org.argouml.application.ArgoVersion;
-import org.argouml.application.api.PluggablePropertyPanel;
-import org.argouml.model.ModelFacade;
 import org.argouml.util.ConfigLoader;
 
 /**
  * A Propertypanel for a model.
  */
-public class PropPanelModel extends PropPanelPackage implements
-        PluggablePropertyPanel {
+public class PropPanelModel extends PropPanelPackage  {
 
     public PropPanelModel() {
-        super("Model", ConfigLoader.getTabPropsOrientation());
-    }
-
-    public Class getClassForPanel() {
-        // TODO Shouldn't refer to NSUML implementation class
-        return (Class) ModelFacade.MODEL;//MModelImpl.class;
-    }
-
-    public String getModuleName() {
-        return "PropPanelModel";
-    }
-
-    public String getModuleDescription() {
-        return "Property Panel for Model";
-    }
-
-    public String getModuleAuthor() {
-        return "ArgoUML Core";
-    }
-
-    public String getModuleVersion() {
-        return ArgoVersion.getVersion();
-    }
-
-    public String getModuleKey() {
-        return "module.propertypanel.model";
+        super("Model", _modelIcon, ConfigLoader.getTabPropsOrientation());
     }
 
 } /* end class PropPanelModel */
