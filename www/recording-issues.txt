@@ -1,4 +1,4 @@
-$Id: recording-issues.txt,v 1.8 2002/12/09 05:59:31 jon Exp $
+$Id: recording-issues.txt,v 1.9 2002/12/13 01:30:04 jmcnally Exp $
 
 This document details all of the database modifications for each
 'action'. In other words, if you want to create a dependency (the
@@ -72,6 +72,7 @@ Attributes:
             NEW_NUMERIC_VALUE = value (if integer attribute)
             DESCRIPTION = 'Summary set to 'alskdjf''
             AttachmentId = null
+            END_DATE = null
 
     Update (NEED TO FINISH):
     
@@ -99,6 +100,12 @@ Attributes:
             NEW_VALUE = 'SCB2' (issue id)
             DESCRIPTION = 'Added 'blocking' child dependency on issue SCB2'
             AttachmentId = null (see above requirement)
+
+            Previous Activity record with same issue_id and attribute_id has
+            END_DATE set to the CREATE_DATE of this ActivitySet.  This makes
+            reporting on past state of db reasonably performant.  This works
+            for non-user attributes as they are all currently single valued.
+            See user attributes for noted problems in multivalued attributes.
 
     Delete (NEED TO FINISH):
 
@@ -485,6 +492,8 @@ User assignment:
             DESCRIPTION = 'Assigned to set to 'derekewla''
             AttachmentId = NULL 
             END_DATE = (LOGIC: if multiple user attributes, the last end date is null)
+            FIXME:  END_DATE should be null for all currently assigned users.
+
 
     Update (change of attribute for user...ie: Assigned to: -> Assigned cc:):
 
@@ -520,6 +529,11 @@ User assignment:
             DESCRIPTION = 'Assigned cc set to 'derekewla''
             AttachmentId = NULL 
             END_DATE = (LOGIC: if multiple user attributes, the last end date is null)
+            FIXME:  END_DATE should be null for all currently assigned users. In
+            the case of switching a user from one attribute to another, it would
+            be a deletion of the user from one attribute and adding to the
+            other.  Since deletion is an activity as well, two activities need
+            to be recorded.
 
     Delete:
 
@@ -556,6 +570,15 @@ User assignment:
             DESCRIPTION = 'User turbine@tigris.org deleted user ddd from Assigned to'
             AttachmentId = NULL 
             END_DATE = (LOGIC: if multiple user attributes, the last end date is null)
+
+            FIXME: A deletion does not need to maintain a time range, so 
+            END_DATE could remain null for such activities, though that usually
+            indicates something that is still active, so setting the END_DATE to
+            the CREATED_DATE for the ActivitySet is better.  This should be for
+            all users deleted.
+            Previous activities with same issue_id, attribute_id, and 
+            new_user_id=userid should also have  END_DATE to
+            the CREATED_DATE for the ActivitySet.
 
 File attachments:
 
