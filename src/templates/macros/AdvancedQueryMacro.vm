@@ -3,6 +3,7 @@
 #set ($intake = $scarabR.getConditionalIntake($scarabG.Constant.CURRENT_QUERY))
 #set ($query = $intake.SearchIssue.mapTo($search))
 #set ($attrValues = $search.getModuleAttributeValuesMap($scarabR.CurrentIssueType))
+$attrValues
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
@@ -45,7 +46,7 @@ from:&#160;<input type="text" size="20"
   ## showing user attributes in separate section
   #if (!$attVal.Attribute.isUserAttribute())
         <tr>
-         <th width="120">$attVal.RModuleAttribute.DisplayValue</th>
+         <th width="120">$attVal.getRModuleAttribute($scarabR.CurrentIssueType).DisplayValue</th>
             <td>
                 #attrValueErrorMsg ( $attVal $field )
     #if ($attVal.Attribute.isOptionAttribute() )
