@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/CookieTools.java,v 1.4 2000/04/25 17:54:32 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/04/25 17:54:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/CookieTools.java,v 1.5 2000/05/02 19:19:22 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/05/02 19:19:22 $
  *
  * ====================================================================
  *
@@ -68,15 +68,27 @@ import java.util.*;
 
 import javax.servlet.http.Cookie;
 
+// XXX use only one Date instance/request, reuse it.
+
 /**
- *
+ * Cookie utils - generate cookie header, etc
  *
  * @author Original Author Unknown
  * @author duncan@eng.sun.com
  */
-
 public class CookieTools {
+    static String pattern = "EEE, dd-MMM-yyyy HH:mm:ss z";
+    static Locale loc = Locale.US;
+    static TimeZone zone = TimeZone.getTimeZone("GMT");
+    static SimpleDateFormat df = new SimpleDateFormat(pattern, loc);
+    static FieldPosition FieldPosition0=new FieldPosition(0);
+    static {
+	df.setTimeZone(zone);
+    }
 
+    /** Return the header name to set the cookie, based on cookie
+     *  version
+     */
     public static String getCookieHeaderName(Cookie cookie) {
         int version = cookie.getVersion();
 	
@@ -86,12 +98,18 @@ public class CookieTools {
             return "Set-Cookie";
         }
     }
+
+    /** Return the header value used to set this cookie
+     *  @deprecated Use StringBuffer version
+     */
     public static String getCookieHeaderValue(Cookie cookie) {
         StringBuffer buf = new StringBuffer();
 	getCookieHeaderValue( cookie, buf );
 	return buf.toString();
     }
     
+    /** Return the header value used to set this cookie
+     */
     public static void getCookieHeaderValue(Cookie cookie, StringBuffer buf) {
         int version = cookie.getVersion();
 
@@ -124,9 +142,9 @@ public class CookieTools {
 	if (cookie.getMaxAge() >= 0) {
 	    if (version == 0) {
 		buf.append (";Expires=");
-		new OldCookieExpiry (cookie.getMaxAge()).append (buf);
+		df.format(new Date( System.currentTimeMillis() + cookie.getMaxAge() *1000) ,buf, FieldPosition0 );
 	    } else {
-		buf.append (";MaxAge=");
+		buf.append (";Max-Age=");
 		buf.append (cookie.getMaxAge());
 	    }
 	} else if (version == 1)
@@ -177,27 +195,4 @@ public class CookieTools {
     }    
 
 
-    
-        /*
-     * The original Netscape cookie spec had a funky string format
-     * for dates ... RFC 1123 GMT format, but dashes in two places
-     * where spaces would normally live.  RFC 2109 simplified that,
-     * deleting date parsing entirely.
-     */
-    static class OldCookieExpiry extends HttpDate {
-	OldCookieExpiry (long maxAge)  {
-	    super();
-	    setTime(getCurrentTime() + maxAge * 1000);
-	}
-	// Wdy, DD-Mon-YYYY HH:MM:SS GMT
-	void append (StringBuffer buf) {
-	    String pattern = "EEE, dd-MMM-yyyy HH:mm:ss z";
-	    Locale loc = Locale.US;
-	    SimpleDateFormat df = new SimpleDateFormat(pattern, loc);
-	    TimeZone zone = TimeZone.getTimeZone("GMT");
-	    df.setTimeZone(zone);
-	    String str = df.format(calendar.getTime());
-	    buf.append(str);
-	}
-    }
 }
