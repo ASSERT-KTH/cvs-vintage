@@ -176,7 +176,7 @@
      <copydir src="${src.deploy.dir}" dest="${dist.dir}/deploy"/>
 
      <chmod src="${dist.dir}/bin/run.sh" perm="u+x" />
-
+     <chmod src="${dist.dir}/bin/TestBeanClient.sh" perm="u+x" />
   </target>
 
   <!-- =================================================================== -->
