@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Hashtable;
+import java.lang.reflect.InvocationTargetException;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
@@ -21,7 +22,6 @@ import javax.naming.spi.InitialContextFactory;
 import javax.naming.spi.ObjectFactory;
 
 import org.jboss.invocation.MarshalledValue;
-import org.jboss.invocation.http.interfaces.AnyhostVerifier;
 import org.jboss.invocation.http.interfaces.Util;
 import org.jboss.logging.Logger;
 import org.jnp.interfaces.Naming;
@@ -33,7 +33,7 @@ import org.jnp.interfaces.NamingContext;
  @see javax.naming.spi.InitialContextFactory
 
  @author Scott.Stark@jboss.org
- @version $Revision: 1.4 $
+ @version $Revision: 1.5 $
  */
 public class HttpNamingContextFactory
    implements InitialContextFactory, ObjectFactory
@@ -87,31 +87,21 @@ public class HttpNamingContextFactory
       return ctx.lookup(path);
    }
 
-   private Naming getNamingServer(URL providerURL) throws ClassNotFoundException, IOException
+   private Naming getNamingServer(URL providerURL)
+      throws ClassNotFoundException, IOException, InvocationTargetException,
+         IllegalAccessException
    {
       // Initialize the proxy Util class to integrate JAAS authentication
       Util.init();
-      log.debug("Retrieving content from : "+providerURL);
+      if( log.isTraceEnabled() )
+         log.trace("Retrieving content from : "+providerURL);
+
       HttpURLConnection conn = (HttpURLConnection) providerURL.openConnection();
-      if( conn instanceof com.sun.net.ssl.HttpsURLConnection )
-      {
-         // See if the org.jboss.security.ignoreHttpsHost property is set
-         if( Boolean.getBoolean("org.jboss.security.ignoreHttpsHost") == true )
-         {
-            com.sun.net.ssl.HttpsURLConnection sconn = (com.sun.net.ssl.HttpsURLConnection) conn;
-            try
-            {
-               AnyhostVerifier.setHostnameVerifier(sconn);
-            }
-            catch (Exception ex)
-            {
-               throw new IOException("failed to create Verifier for HttpsURLConnection");
-            }
-         }
-      }
+      Util.configureHttpsHostVerifier(conn);
       int length = conn.getContentLength();
       String type = conn.getContentType();
-      log.debug("ContentLength: "+length+"\nContentType: "+type);
+      if( log.isTraceEnabled() )
+         log.trace("ContentLength: "+length+"\nContentType: "+type);
 
       InputStream is = conn.getInputStream();
       ObjectInputStream ois = new ObjectInputStream(is);
