@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.10 $
+ *	@version $Revision: 1.11 $
  */
 public final class JRMPContainerInvoker
    implements ContainerInvoker
@@ -85,7 +85,7 @@ public final class JRMPContainerInvoker
             new StatelessSessionProxy(ci.getJndiName(), ci, ci.isOptimized()));
       }
       
-      System.out.println("JRMP 1.2.2 CI initialized");
+      Logger.debug("JRMP 1.2.2 CI initialized");
    }
 
    public void start()
