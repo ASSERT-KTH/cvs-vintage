@@ -23,7 +23,7 @@ The outline of the application-policy is:
   </authentication>
 </application-policy>
 
-$Revision: 1.5 $
+$Revision: 1.6 $
 -->
 
 <policy>
@@ -57,7 +57,7 @@ $Revision: 1.5 $
              <module-option name = "principal">sa</module-option>
              <module-option name = "userName">sa</module-option>
              <module-option name = "password"></module-option>
-             <module-option name = "managedConnectionFactoryName">jboss.jca:service=LocalTxCM,name=hsqldbDS</module-option>
+             <module-option name = "managedConnectionFactoryName">jboss.jca:service=LocalTxCM,name=DefaultDS</module-option>
           </login-module>
        </authentication>
     </application-policy>
