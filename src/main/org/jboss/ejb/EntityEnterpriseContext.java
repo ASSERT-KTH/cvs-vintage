@@ -10,6 +10,8 @@ import java.rmi.RemoteException;
 
 import javax.ejb.EJBContext;
 import javax.ejb.EJBHome;
+import javax.ejb.EJBObject;
+import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.EntityBean;
@@ -22,14 +24,16 @@ import javax.transaction.Transaction;
 *
 *	@see EnterpriseContext
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
-*   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.16 $
+*       @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+*       @author Daniel OConnor (docodan@mvcsoft.com)
+*	@version $Revision: 1.17 $
 */
 public class EntityEnterpriseContext
 extends EnterpriseContext
 {
     // Attributes ----------------------------------------------------
     EJBObject ejbObject;
+    EJBLocalObject ejbLocalObject;
     EntityContext ctx;
 
     // True if this instance has been invoked since it was synchronized with DB
@@ -89,6 +93,16 @@ extends EnterpriseContext
        // Context can have no EJBObject (created by finds) in which case we need to wire it at call time
 
        return ejbObject;
+    }
+    
+    public void setEJBLocalObject( EJBLocalObject eo )
+    {
+       ejbLocalObject = eo;
+    }
+    
+    public EJBLocalObject getEJBLocalObject()
+    {
+       return ejbLocalObject;
     }
 
 	public void setCacheKey(Object key) {
@@ -153,10 +167,10 @@ extends EnterpriseContext
 
           try {
 
-			  // Create a new CacheKey
-			  Object cacheKey = ((EntityCache) ((EntityContainer) con).getInstanceCache()).createCacheKey( id );
+              // Create a new CacheKey
+              Object cacheKey = ((EntityCache) ((EntityContainer) con).getInstanceCache()).createCacheKey( id );
 
-			  ejbObject = ((EntityContainer)con).getContainerInvoker().getEntityEJBObject(cacheKey);
+              ejbObject = ((EntityContainer)con).getContainerInvoker().getEntityEJBObject(cacheKey);
           }
               catch (RemoteException re) {
               // ...
@@ -169,7 +183,15 @@ extends EnterpriseContext
 
       public EJBLocalObject getEJBLocalObject()
       {
-        throw new IllegalStateException();
+         if (ejbLocalObject == null)
+         {
+            Object cacheKey = ((EntityCache) ((EntityContainer) con).getInstanceCache())
+               .createCacheKey( id );
+            ejbLocalObject = ((EntityContainer)con).getLocalContainerInvoker()
+               .getEntityEJBLocalObject(cacheKey);
+         }
+         
+         return ejbLocalObject;
       }
 
        public Object getPrimaryKey()

@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 import javax.ejb.EJBObject;
+import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBMetaData;
 import javax.ejb.EJBException;
 import javax.ejb.CreateException;
@@ -37,7 +39,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Daniel OConnor (docodan@mvcsoft.com)
-*   @version $Revision: 1.39 $
+*   @version $Revision: 1.40 $
 */
 public class EntityContainer
 extends Container
@@ -386,7 +388,76 @@ implements ContainerInvokerContainer, InstancePoolContainer
     * MF FIXME these are implemented on the client
     */
 
+    public EJBLocalHome getEJBLocalHome(MethodInvocation mi)
+    {
+      return localContainerInvoker.getEJBLocalHome();
+    }
+ 
+   public void removeLocalHome(MethodInvocation mi)
+    throws java.rmi.RemoteException, RemoveException
+   {
+       throw new Error("Not Yet Implemented");
+   }
+    
+    // Local home interface implementation
+   
+   public EJBLocalObject createLocalHome(MethodInvocation mi)
+   throws Exception
+   {
 
+      // The persistence manager takes care of the wiring and creating the EJBLocalObject
+      getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(),
+         (EntityEnterpriseContext) mi.getEnterpriseContext());
+
+      // The context implicitely carries the EJBObject
+      return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBLocalObject();
+   }
+   
+   
+   public Object findLocal(MethodInvocation mi)
+   throws Exception
+   {
+
+      // Multi-finder?
+      if (!mi.getMethod().getReturnType().equals(getLocalClass()))
+      {
+         // Iterator finder
+         Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
+
+         // Get the EJBObjects with that
+         Collection ec = localContainerInvoker.getEntityLocalCollection(c);
+
+         // BMP entity finder methods are allowed to return java.util.Enumeration.
+         try {
+            if (mi.getMethod().getReturnType().equals(Class.forName("java.util.Enumeration")))
+            {
+               return java.util.Collections.enumeration(ec);
+            }
+            else
+            {
+               return ec;
+            }
+         } catch (ClassNotFoundException e)
+         {
+            // shouldn't happen
+            return ec;
+         }
+
+      }
+      else
+      {
+
+         // Single entity finder
+         Object id = getPersistenceManager().findEntity(mi.getMethod(),
+            mi.getArguments(),
+            (EntityEnterpriseContext)mi.getEnterpriseContext());
+
+         //create the EJBObject
+         return (EJBLocalObject)localContainerInvoker.getEntityEJBLocalObject(id);
+      }
+   }
+   
+   
    // Home interface implementation ---------------------------------
 
    /*
@@ -498,12 +569,10 @@ implements ContainerInvokerContainer, InstancePoolContainer
 
 
    // Private -------------------------------------------------------
-   protected void setupHomeMapping()
-   throws DeploymentException
+   
+   private void setupHomeMappingImpl( Map map, Method[] m, String finderName, String append )
+     throws DeploymentException
    {
-      Map map = new HashMap();
-
-         Method[] m = homeInterface.getMethods();
       for (int i = 0; i < m.length; i++)
       {
          try
@@ -522,15 +591,32 @@ implements ContainerInvokerContainer, InstancePoolContainer
             // Implemented by container (in both cases)
             if (m[i].getName().startsWith("find"))
             {
-               map.put(m[i], this.getClass().getMethod("find", new Class[] { MethodInvocation.class }));
+               map.put(m[i], this.getClass().getMethod(finderName, new Class[] { MethodInvocation.class }));
             }else
             {
-               map.put(m[i], this.getClass().getMethod(m[i].getName()+"Home", new Class[] { MethodInvocation.class }));
+               map.put(m[i], this.getClass().getMethod(m[i].getName()+append, new Class[] { MethodInvocation.class }));
             }
          } catch (NoSuchMethodException e)
          {
             throw new DeploymentException("Could not find matching method for "+m[i]);
          }
+      }
+   }
+   
+   protected void setupHomeMapping()
+   throws DeploymentException
+   {
+      Map map = new HashMap();
+
+      if (homeInterface != null)
+      {
+         Method[] m = homeInterface.getMethods();
+         setupHomeMappingImpl( map, m, "find", "Home" );
+      }
+      if (localHomeInterface != null)
+      {
+         Method[] m = localHomeInterface.getMethods();
+         setupHomeMappingImpl( map, m, "findLocal", "LocalHome" );
       }
 
       // Special methods
@@ -574,18 +660,15 @@ implements ContainerInvokerContainer, InstancePoolContainer
       // We are done keep the home map
       homeMapping = map;
    }
-
-   protected void setupBeanMapping()
-   throws DeploymentException
+   
+   private void setupBeanMappingImpl( Map map, Method[] m, String intfName )
+      throws DeploymentException
    {
-      Map map = new HashMap();
-
-         Method[] m = remoteInterface.getMethods();
       for (int i = 0; i < m.length; i++)
       {
          try
          {
-            if (!m[i].getDeclaringClass().getName().equals("javax.ejb.EJBObject"))
+            if (!m[i].getDeclaringClass().getName().equals(intfName))
             {
                // Implemented by bean
                map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
@@ -601,6 +684,23 @@ implements ContainerInvokerContainer, InstancePoolContainer
             {
             throw new DeploymentException("Could not find matching method for "+m[i], e);
          }
+      }
+   }
+
+   protected void setupBeanMapping()
+   throws DeploymentException
+   {
+      Map map = new HashMap();
+
+      if (remoteInterface != null)
+      {
+         Method[] m = remoteInterface.getMethods();
+         setupBeanMappingImpl( map, m, "javax.ejb.EJBObject" );
+      }
+      if (localInterface != null)
+      {
+         Method[] m = localInterface.getMethods();
+         setupBeanMappingImpl( map, m, "javax.ejb.EJBLocalObject" );
       }
 
       beanMapping = map;
