@@ -48,8 +48,11 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 		headerList = new HeaderList();
 
 		ObjectInputStream p = openInputStream();
-
-		int capacity = p.readInt();
+		int capacity = 0 ;
+		
+		if (p.available() > 0)
+			capacity = p.readInt();
+		
 		ColumbaLogger.log.info("capacity=" + capacity);
 
 		if (getObservable() != null) {
