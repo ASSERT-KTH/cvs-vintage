@@ -8,6 +8,7 @@ package org.jboss.logging;
 
 import java.io.*;
 import java.text.*;
+import java.util.Date;
 import java.util.SortedSet;
 import java.util.Comparator;
 import java.util.TreeSet;
@@ -18,7 +19,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class FileLogging
    implements FileLoggingMBean, MBeanRegistration, NotificationListener
@@ -90,7 +91,8 @@ public class FileLogging
       {
          if (filter.indexOf(n.getType()) != -1)
          {
-            Object[] args = new Object[] { dateFmt.format(n.getTimeStamp()), new Long(n.getSequenceNumber()), n.getUserData(), n.getType(), n.getMessage() };
+            //AS FIXME this change is just a hack (dateFmt.format(...))
+            Object[] args = new Object[] { dateFmt.format(new Date(n.getTimeStamp())), new Long(n.getSequenceNumber()), n.getUserData(), n.getType(), n.getMessage() };
             out.println(msgFmt.format(args));
          }
       }

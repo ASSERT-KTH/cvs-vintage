@@ -8,6 +8,7 @@ package org.jboss.logging;
 
 import java.io.*;
 import java.text.*;
+import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.SortedSet;
 import java.util.Comparator;
@@ -18,7 +19,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class ConsoleLogging
    implements ConsoleLoggingMBean, MBeanRegistration, NotificationListener
@@ -63,7 +64,8 @@ public class ConsoleLogging
    public synchronized void handleNotification(Notification n,
                                   java.lang.Object handback)
    {
-      Object[] args = new Object[] { dateFmt.format(n.getTimeStamp()), new Long(n.getSequenceNumber()), n.getUserData(), n.getType(), n.getMessage() };
+      //AS FIXME this change is just a hack (dateFmt.format(...))
+      Object[] args = new Object[] { dateFmt.format(new Date(n.getTimeStamp())), new Long(n.getSequenceNumber()), n.getUserData(), n.getType(), n.getMessage() };
       if (n.getType().equals("Error") || n.getType().equals("Warning"))
          err.println(msgFmt.format(args));
       else         
@@ -104,3 +106,4 @@ public class ConsoleLogging
    
    public void postDeregister() {}
 }
+

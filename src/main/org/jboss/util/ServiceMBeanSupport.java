@@ -20,7 +20,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
@@ -81,7 +81,8 @@ public abstract class ServiceMBeanSupport
       	return;
 			
       state = STARTING;
-      sendNotification(new AttributeChangeNotification(AttributeChangeNotification.ATTRIBUTE_CHANGE, this, id++, new Date(), getName()+" starting", "State", "java.lang.Integer", new Integer(STOPPED), new Integer(STARTING)));
+	  //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
+      sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" starting", "State", "java.lang.Integer", new Integer(STOPPED), new Integer(STARTING)));
       log.log("Starting");
       log.setLog(log);
       try
@@ -90,7 +91,8 @@ public abstract class ServiceMBeanSupport
       } catch (Exception e)
       {
          state = STOPPED;
-         sendNotification(new AttributeChangeNotification(AttributeChangeNotification.ATTRIBUTE_CHANGE, this, id++, new Date(), getName()+" stopped", "State", "java.lang.Integer", new Integer(STARTING), new Integer(STOPPED)));
+	     //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
+         sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" stopped", "State", "java.lang.Integer", new Integer(STARTING), new Integer(STOPPED)));
          log.error("Stopped");
          log.exception(e);
          throw e;
@@ -99,7 +101,8 @@ public abstract class ServiceMBeanSupport
          log.unsetLog();
       }
       state = STARTED;
-      sendNotification(new AttributeChangeNotification(AttributeChangeNotification.ATTRIBUTE_CHANGE, this, id++, new Date(), getName()+" started", "State", "java.lang.Integer", new Integer(STARTING), new Integer(STARTED)));
+      //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
+      sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" started", "State", "java.lang.Integer", new Integer(STARTING), new Integer(STARTED)));
       log.log("Started");
    }
    
@@ -109,7 +112,8 @@ public abstract class ServiceMBeanSupport
 			return;
 	
       state = STOPPING;
-      sendNotification(new AttributeChangeNotification(AttributeChangeNotification.ATTRIBUTE_CHANGE, this, id++, new Date(), getName()+" stopping", "State", "java.lang.Integer", new Integer(STARTED), new Integer(STOPPING)));
+      //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
+      sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" stopping", "State", "java.lang.Integer", new Integer(STARTED), new Integer(STOPPING)));
       log.log("Stopping");
       log.setLog(log);
       
@@ -122,7 +126,8 @@ public abstract class ServiceMBeanSupport
       }
       
       state = STOPPED;
-      sendNotification(new AttributeChangeNotification(AttributeChangeNotification.ATTRIBUTE_CHANGE, this, id++, new Date(), getName()+" stopped", "State", "java.lang.Integer", new Integer(STOPPING), new Integer(STOPPED)));
+      //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
+      sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" stopped", "State", "java.lang.Integer", new Integer(STOPPING), new Integer(STOPPED)));
       log.log("Stopped");
       log.unsetLog();
    }

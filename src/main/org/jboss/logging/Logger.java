@@ -17,7 +17,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class Logger
    extends NotificationBroadcasterSupport
@@ -87,7 +87,8 @@ public class Logger
    // Public --------------------------------------------------------
    public synchronized void fireNotification(String type, Object source, String message)
    {
-      Notification n = new Notification(type, this, sequence++, now, message);
+       //AS FIXME Just a hack (now.getTime())
+	   Notification n = new Notification(type, this, sequence++, now.getTime(), message);
       n.setUserData(source);
     
       sendNotification(n);

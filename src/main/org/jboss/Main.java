@@ -21,6 +21,7 @@ import java.util.*;
 
 import javax.management.*;
 import javax.management.loading.*;
+import com.sun.management.jmx.MBeanServerImpl;
 
 import org.jboss.system.SecurityAssociation;
 
@@ -29,7 +30,7 @@ import org.jboss.system.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class Main
 {
@@ -99,12 +100,12 @@ public class Main
       {
          final PrintStream err = System.err;
          
-         com.sun.management.Trace.parseTraceProperties();
+         com.sun.management.jmx.Trace.parseTraceProperties();
          
          // Load all configurations - one MBeanServer for each configuration
          for (int i = 0; i < configurations.length; i++)
          {
-             final MBeanServer server = new MBeanServer();
+             final MBeanServer server = new MBeanServerImpl();
       
              // Create MLet
              MLet mlet = new MLet();

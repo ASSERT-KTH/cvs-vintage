@@ -22,7 +22,7 @@ import org.jboss.proxy.InvocationHandler;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class MBeanProxy
    implements InvocationHandler
@@ -59,7 +59,7 @@ public class MBeanProxy
    MBeanProxy(ObjectName name)
    {
       this.name = name;
-      server = (MBeanServer)MBeanServer.findJMXAgent(null).iterator().next();
+      server = (MBeanServer) MBeanServerFactory.findMBeanServer(null).iterator().next();
    }
    
    // Public --------------------------------------------------------
