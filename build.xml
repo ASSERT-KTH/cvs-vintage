@@ -9,6 +9,7 @@
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
 	<property name="version" value="0.9.11-cvs"/>
 	<property name="dest" value="../columba-${version}"/>
+  <property name="ownclasspath" value="${classpath}:${src}/ext/log4j.jar"/>
 
 	<!-- definition of the task to check the style of the java-code -->
 	<taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
@@ -70,7 +71,7 @@
 	<!-- compile the classes -->
 	<target name="compile" depends="init,copy-required">
 		<echo message="the classes are going to ${dest} "/> 
-		<javac srcdir="${src}" destdir="${dest}"	classpath="${classpath}" encoding="ISO-8859-1" debug="yes"/>
+		<javac srcdir="${src}" destdir="${dest}"	classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes"/>
 	</target>
 
 	<!-- pack the files into one jar file with automatic manifest file -->
