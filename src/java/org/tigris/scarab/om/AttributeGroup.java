@@ -149,6 +149,17 @@ public  class AttributeGroup
         return AttributeGroupManager.getMethodResult();
     }
 
+    public boolean hasAnyOptionAttributes()
+        throws Exception
+    {
+        boolean result = false;
+        for (Iterator i = getAttributes().iterator(); i.hasNext() && !result;) 
+        {
+            result = ((Attribute)i.next()).isOptionAttribute();
+        }
+        return result;
+    }
+
     /**
      * List of Attributes in this group.
      */

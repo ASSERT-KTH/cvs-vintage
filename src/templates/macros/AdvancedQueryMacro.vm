@@ -309,7 +309,7 @@ from:&#160;<input type="text" size="20"
  #set ( $issueType = $search.getIssueType() )
  #set ($firstTextWidget = true)
  #foreach ($group in $module.getAttributeGroups($issueType))
-  #if (!$group.Attributes.isEmpty())
+  #if (($optionsOnly && $group.hasAnyOptionAttributes()) || (!$optionsOnly && !$group.Attributes.isEmpty()))
     <h$headerLevel>$group.Name</h$headerLevel>
     <table cellpadding="3" cellspacing="2" border="0">
    #foreach ($att in $group.Attributes)
