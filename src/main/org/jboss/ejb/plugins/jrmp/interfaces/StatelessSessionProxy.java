@@ -21,10 +21,10 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 *      @see <related>
 *      @author Rickard Öberg (rickard.oberg@telkel.com)
 * 	   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*      @version $Revision: 1.8 $
+*      @version $Revision: 1.9 $
 */
 public class StatelessSessionProxy
-extends GenericProxy
+   extends GenericProxy
 {
 	// Constants -----------------------------------------------------
 	
@@ -60,6 +60,11 @@ extends GenericProxy
 	
 	
 	// Constructors --------------------------------------------------
+   public StatelessSessionProxy()
+   {
+      // For externalization to work
+   }
+   
 	public StatelessSessionProxy(String name, ContainerRemote container, boolean optimize)
 	{
 		super(name, container, optimize);

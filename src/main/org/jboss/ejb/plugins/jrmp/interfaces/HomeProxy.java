@@ -6,9 +6,11 @@
  */
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
-import javax.naming.Name;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.rmi.MarshalledObject;
+
+import javax.naming.Name;
 
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
@@ -24,7 +26,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.13 $
+ *      @version $Revision: 1.14 $
  */
 public class HomeProxy
    extends GenericProxy
@@ -68,6 +70,11 @@ public class HomeProxy
 
 
    // Constructors --------------------------------------------------
+   public HomeProxy()
+   {
+      // For externalization to work
+   }
+   
    public HomeProxy(String name, EJBMetaData ejbMetaData, ContainerRemote container, boolean optimize)
    {
        super(name, container, optimize);
@@ -218,11 +225,26 @@ public class HomeProxy
              rmi.setCredential( getCredential() );
           
           // Invoke on the remote server, enforce marshalling
-             return container.invokeHome(new MarshalledObject(rmi));
+             return container.invokeHome(new MarshalledObject(rmi)).get();
           }
       }
    }
 
+   public void writeExternal(java.io.ObjectOutput out)
+      throws IOException
+   {
+      super.writeExternal(out);
+        
+      out.writeObject(ejbMetaData);
+   }
+   
+   public void readExternal(java.io.ObjectInput in)
+      throws IOException, ClassNotFoundException
+   {
+      super.readExternal(in);
+      
+   	ejbMetaData = (EJBMetaData)in.readObject();
+   }
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------

@@ -71,7 +71,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.14 $
+ *      @version $Revision: 1.15 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -91,7 +91,7 @@ public abstract class JRMPContainerInvoker
     
     protected HashMap beanMethodInvokerMap;
     protected HashMap homeMethodInvokerMap;
-   
+    
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
@@ -123,7 +123,7 @@ public abstract class JRMPContainerInvoker
    public abstract Collection getEntityCollection(Collection ids);
    
    // ContainerRemote implementation --------------------------------
-   public Object invokeHome(MarshalledObject mimo)
+   public MarshalledObject invokeHome(MarshalledObject mimo)
       throws Exception
    {
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -141,8 +141,8 @@ public abstract class JRMPContainerInvoker
          if (tx == null)
           tx = container.getTransactionManager().getTransaction();
        
-         return invokeHome(rmi.getMethod(), rmi.getArguments(), tx,
-        rmi.getPrincipal(), rmi.getCredential() );
+         return new MarshalledObject(invokeHome(rmi.getMethod(), rmi.getArguments(), tx,
+        rmi.getPrincipal(), rmi.getCredential() ));
       } catch (Exception e)
       {
         e.printStackTrace();
@@ -153,24 +153,27 @@ public abstract class JRMPContainerInvoker
       }
    }
       
-   public Object invoke(MarshalledObject mimo)
+   public MarshalledObject invoke(MarshalledObject mimo)
       throws Exception
    {
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(container.getClassLoader());
-       
+      
       try
       {
          RemoteMethodInvocation rmi = (RemoteMethodInvocation)mimo.get();
          rmi.setMethodMap(beanMethodInvokerMap);
-         
          Transaction tx = rmi.getTransaction();
         // MF FIXME: there should be no implicit thread passing of the transaction
          if (tx == null)
             tx = container.getTransactionManager().getTransaction();
-          
-         return invoke(rmi.getId(), rmi.getMethod(), rmi.getArguments(), tx,
-          rmi.getPrincipal(), rmi.getCredential() );
+         
+         Object id = rmi.getId();
+         Method m = rmi.getMethod();
+         Object[] args = rmi.getArguments();
+            
+         return new MarshalledObject(invoke(id, m, args, tx,
+          rmi.getPrincipal(), rmi.getCredential()));
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);

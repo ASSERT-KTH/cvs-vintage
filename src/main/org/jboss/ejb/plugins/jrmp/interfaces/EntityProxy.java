@@ -20,7 +20,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.12 $
+ *      @version $Revision: 1.13 $
  */
 public class EntityProxy
    extends GenericProxy
@@ -59,6 +59,11 @@ public class EntityProxy
    }
 
    // Constructors --------------------------------------------------
+   public EntityProxy()
+   {
+      // For externalization to work
+   }
+   
    public EntityProxy(String name, ContainerRemote container, Object id, boolean optimize)
    {
 		super(name, container, optimize);
@@ -148,17 +153,17 @@ public class EntityProxy
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
-   protected void writeObject(java.io.ObjectOutputStream out)
+   public void writeExternal(java.io.ObjectOutput out)
       throws IOException
    {
-		super.writeObject(out);
+		super.writeExternal(out);
    	out.writeObject(id);
    }
    
-   protected void readObject(java.io.ObjectInputStream in)
+   public void readExternal(java.io.ObjectInput in)
       throws IOException, ClassNotFoundException
    {
-   	super.readObject(in);
+   	super.readExternal(in);
    	id = in.readObject();
    }
     

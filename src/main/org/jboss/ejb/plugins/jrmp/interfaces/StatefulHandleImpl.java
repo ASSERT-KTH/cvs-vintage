@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  * 	@author <a href="mailto:marc.fleury@telkel.com>Marc Fleury</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class StatefulHandleImpl
    implements Handle
@@ -83,7 +83,7 @@ public class StatefulHandleImpl
           // rmi.setCredential( getCredential() );
           
           // Invoke on the remote server, enforce marshalling
-          return (EJBObject) container.invokeHome(new MarshalledObject(rmi));
+          return (EJBObject) container.invokeHome(new MarshalledObject(rmi)).get();
          
       
       } catch (Exception e) {

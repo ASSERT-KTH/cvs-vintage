@@ -24,10 +24,10 @@ import org.jboss.system.SecurityAssociation;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.6 $
+ *      @version $Revision: 1.7 $
  */
-public class GenericProxy
-   implements java.io.Serializable
+public abstract class GenericProxy
+   implements java.io.Externalizable
 {
    // Constants -----------------------------------------------------
     
@@ -63,6 +63,11 @@ public class GenericProxy
   }
 
    // Constructors --------------------------------------------------
+   public GenericProxy()
+   {
+      // For externalization to work
+   }
+   
    protected GenericProxy(String name, ContainerRemote container, boolean optimize)
    {
       this.name = name;
@@ -80,16 +85,16 @@ public class GenericProxy
       return containerStartup == ContainerRemote.startup;
    }
     
-   protected void writeObject(java.io.ObjectOutputStream out)
+   public void writeExternal(java.io.ObjectOutput out)
       throws IOException
    {
    	  out.writeUTF(name);
    	  out.writeObject(isLocal() ? container : null);
-      out.writeLong(containerStartup);
-      out.writeBoolean(optimize);
+        out.writeLong(containerStartup);
+        out.writeBoolean(optimize);
    }
    
-   protected void readObject(java.io.ObjectInputStream in)
+   public void readExternal(java.io.ObjectInput in)
       throws IOException, ClassNotFoundException
    {
    	name = in.readUTF();
@@ -103,6 +108,7 @@ public class GenericProxy
          container = getLocal(name);
       }
    }
+   
    // Private -------------------------------------------------------
    
    // Inner classes -------------------------------------------------
