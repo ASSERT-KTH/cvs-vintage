@@ -1,4 +1,4 @@
-// $Id: Critic.java,v 1.46 2005/03/10 09:34:55 mkl Exp $
+// $Id: Critic.java,v 1.47 2005/03/10 19:29:05 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -731,14 +731,11 @@ public class Critic implements Poster, Serializable {
      * @return true if relevant
      */
     public boolean isRelevantToDecisions(Designer dsgr) {
-//	cat.debug(this);
-//        boolean isDebugEnabled = cat.isDebugEnabled();
 	Enumeration elems = getSupportedDecisions().elements();
 	while (elems.hasMoreElements()) {
 	    Decision d = (Decision) elems.nextElement();
+        /* TODO: Make use of the constants defined in the ToDoItem class! */
 	    if (d.getPriority() > 0 && d.getPriority() <= getPriority()) {
-
-//                if(isDebugEnabled) cat.debug(d + " " + d.getPriority());
 		return true;
             }
 	}
