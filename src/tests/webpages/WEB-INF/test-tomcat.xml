@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.13 $" />  
+     <property name="revision" value="$Revision: 1.14 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -89,6 +89,82 @@
            returnCode="${http.protocol} 301" />
     
   </target>
+
+  <!-- ==================== Parameters tests ==================== -->
+
+  <target name="params" depends="init">
+      <gtest>
+          <comment>Simple GET with parmeters</comment>
+          <httpClient path="/test/servlet/params.Params?a=k&amp;c=l&amp;a=m" />
+          <defaultMatcher returnCode="200" />
+          <defaultMatcher responseMatch="a = [ k , m ]" />
+          <defaultMatcher responseMatch="c = [ l ]"/>
+      </gtest>
+
+      <gtest>
+          <comment>Simple POST parmeters</comment>
+          <httpClient path="/test/servlet/params.Params" 
+		      method="POST">
+             <header name="Content-Type" 
+		     value="application/x-www-form-urlencoded" />
+             <body>a=b&amp;c=d</body>
+          </httpClient>
+          <defaultMatcher returnCode="200" />
+          <defaultMatcher  responseMatch="a = [ b ]"/>
+          <defaultMatcher responseMatch="c = [ d ]"/>
+      </gtest>
+
+      <gtest>
+          <comment>POST and GET parameters</comment>
+          <httpClient path="/test/servlet/params.Params?a=x&amp;m=n" 
+		      method="POST">
+             <header name="Content-Type" 
+		     value="application/x-www-form-urlencoded" />
+             <body>a=b&amp;c=d</body>
+          </httpClient>
+          <defaultMatcher returnCode="200" />
+          <defaultMatcher  responseMatch="a = [ x , b ]"/>
+          <defaultMatcher responseMatch="m = [ n ]"/>
+          <defaultMatcher responseMatch="c = [ d ]"/>
+      </gtest>
+    
+      <gtest>
+          <comment>The POST data can't be read before getParameter</comment>
+          <httpClient 
+              path="/test/servlet/params.InputStreamParams?a=x&amp;m=n" 
+              method="POST">
+             <header name="Content-Type" 
+		     value="application/x-www-form-urlencoded" />
+             <body>a=b&amp;c=d</body>
+          </httpClient>
+          <defaultMatcher returnCode="200" />
+          <defaultMatcher  responseMatch="a = [ x ]" />
+          <defaultMatcher responseMatch="m = [ n ]"/>
+          <defaultMatcher responseMatch="c = [ d ]"/>
+      </gtest>
+    
+
+  </target>
+
+  <!-- ==================== Init params tests ==================== -->
+
+  <target name="init-params" depends="init">
+    <gtest  request="GET /test/servlet/servletParam1 HTTP/1.0"
+           returnCode="${http.protocol} 200"
+           goldenFile="${gdir}/servletParam1.txt"
+    />
+
+    <gtest  request="GET /test/servlet/servletParam2 HTTP/1.0"
+           returnCode="${http.protocol} 200"
+           goldenFile="${gdir}/servletParam2.txt"
+    />
+
+    <gtest  request="GET /test/servlet/ServletParam HTTP/1.0"
+           returnCode="${http.protocol} 200"
+           goldenFile="${gdir}/ServletParam.txt"
+    />
+  </target>
+
 
   <!-- ==================== Dispatch tests ==================== -->
     <target name="dispatch" depends="init">
@@ -455,21 +531,6 @@
            returnCode="${http.protocol} 200"
     />
 
-    <gtest  request="GET /test/servlet/servletParam1 HTTP/1.0"
-           returnCode="${http.protocol} 200"
-           goldenFile="${gdir}/servletParam1.txt"
-    />
-
-    <gtest  request="GET /test/servlet/servletParam2 HTTP/1.0"
-           returnCode="${http.protocol} 200"
-           goldenFile="${gdir}/servletParam2.txt"
-    />
-
-    <gtest  request="GET /test/servlet/ServletParam HTTP/1.0"
-           returnCode="${http.protocol} 200"
-           goldenFile="${gdir}/ServletParam.txt"
-    />
-
     <gtest  request="GET /test/jsp/bigDeclaration.jsp HTTP/1.0"
            returnCode="${http.protocol} 200"
     />
@@ -537,7 +598,7 @@
 
    <!-- ==================== Get tests ==================== -->
   
-   <target name="get" depends="init">
+   <target name="get" depends="init,init-params">
 
       <gtest description="First call to unavailable will fail, wait 10 sec"
 	     request="GET /test/servlet/Unavailable HTTP/1.0"
