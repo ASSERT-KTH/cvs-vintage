@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.59 2003/07/17 20:07:36 jmcnally Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.60 2003/07/17 21:35:39 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -407,8 +407,8 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                             }
                             catch (Exception e)
                             {
-                                log().error("", e);
-                                scarabR.setAlertMessage(e.getMessage());
+                                log().error("Error adding attribute option:", e);
+                                scarabR.setAlertMessage("Error adding attribute option:" + e.getMessage());
                             }
                         }
                     }
@@ -440,7 +440,6 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         boolean success = doSaveattributedata(data, context);
         if (getScarabRequestTool(context).getAttribute().isOptionAttribute())
         {
-            log().debug("calling doSaveoptions");
             success = doSaveoptions(data, context);
         }
         if (success)
