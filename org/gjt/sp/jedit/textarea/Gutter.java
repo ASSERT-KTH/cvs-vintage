@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.17 2002/01/17 10:47:27 spestov Exp $
+ * @version $Id: Gutter.java,v 1.18 2002/01/21 10:54:33 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -148,7 +148,7 @@ public class Gutter extends JComponent implements SwingConstants
 				return;
 
 			//{{{ Paint fold triangles
-			if(info.subregion == 0
+			if(info.firstSubregion
 				&& physicalLine != buffer.getLineCount() - 1
 				&& buffer.isFoldStart(physicalLine))
 			{
@@ -226,7 +226,7 @@ public class Gutter extends JComponent implements SwingConstants
 			} //}}}
 
 			//{{{ Paint line numbers
-			if(info.subregion == 0 && expanded)
+			if(info.firstSubregion && expanded)
 			{
 				String number = Integer.toString(physicalLine + 1);
 

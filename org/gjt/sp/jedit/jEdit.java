@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.39 2002/01/20 09:10:40 spestov Exp $
+ * @version $Id: jEdit.java,v 1.40 2002/01/21 10:54:33 spestov Exp $
  */
 public class jEdit
 {
@@ -2098,6 +2098,17 @@ public class jEdit
 	//}}}
 
 	//{{{ Miscellaneous methods
+
+	//{{{ isBackgroundMode() method
+	/**
+	 * Returns true if jEdit was started with the <code>-background</code>
+	 * command-line switch.
+	 * @since jEdit 4.0pre4
+	 */
+	public static boolean isBackgroundModeEnabled()
+	{
+		return background;
+	} //}}}
 
 	//{{{ showMemoryStatusDialog() method
 	/**

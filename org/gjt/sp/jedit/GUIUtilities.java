@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.21 2002/01/09 07:21:53 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.22 2002/01/21 10:54:33 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -65,7 +65,7 @@ public class GUIUtilities
 	public static final Icon DIRTY_BUFFER_ICON = loadIcon("dirty.gif");
 	public static final Icon READ_ONLY_BUFFER_ICON = loadIcon("readonly.gif");
 	public static final Icon NORMAL_BUFFER_ICON = loadIcon("normal.gif");
-	public static final Icon WINDOW_ICON = loadIcon("jedit_icon.jpg");
+	public static final Icon WINDOW_ICON = loadIcon("jedit-icon.png");
 	//}}}
 
 	//{{{ Icon methods
