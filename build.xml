@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.90 2002/05/14 00:06:46 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.91 2002/05/14 03:01:32 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -316,6 +316,23 @@
     </path>
     <property name="xdoclet.task.classpath" 
 	      refid="xdoclet.task.classpath"/>
+
+    <!-- default.type.mapping is used in standardjaws.xml and standardjbosscmp-jdbc.xml-->
+    <property name="default.type.mapping" value="Hypersonic SQL"/>
+    <!-- override the default in build/local.properties -->
+
+    <!-- cmp1 persistence manager for standardjboss.xml -->
+    <!--JAWS-->
+    <property name="cmp1.persistencemanager" value="org.jboss.ejb.plugins.jaws.JAWSPersistenceManager"/>
+    <!--cmp2 manager used for cmp1 as well -->
+    <!--property name="cmp1.persistencemanager" value="org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager"/-->
+
+    <!--Choice of with or without new connection caching scheme -->
+    <!--without-->
+    <!--property name="jca.connection.interceptor" value=""/-->
+    <!--with-->
+    <property name="jca.connection.interceptor" value="&lt;interceptor&gt;org.jboss.resource.connectionmanager.CachedConnectionInterceptor&lt;/interceptor&gt;"/>
+
   </target>
 
 
@@ -384,6 +401,7 @@
       <fileset dir="${source.java}">
         <include name="org/jboss/invocation/**/*.java"/>
         <include name="org/jboss/naming/**/*.java"/>
+        <include name="org/jboss/jmx/**/*.java"/>
         <include name="org/jboss/ejb/EjbModule.java"/>
       </fileset>
       <mbeaninterface mergedir="${project.tools}/etc/xdoclet/templates"/>
@@ -475,46 +493,6 @@
   <!-- Compile etc files (manifests and such) -->
   <target name="compile-etc" depends="init">
     <mkdir dir="${build.etc}"/>
-    <!-- Copy with filtering to replace the following tokens that are
-         used to make up the jar manifest version information.
-     -->
-    <filter token="version.major" value="${version.major}"/>
-    <filter token="version.minor" value="${version.minor}"/>
-    <filter token="version.revision" value="${version.revision}"/>
-    <filter token="version.tag" value="${version.tag}"/>
-    <filter token="version.name" value="${version.name}"/>
-
-    <!-- default.type.mapping is used in standardjaws.xml and standardjbosscmp-jdbc.xml-->
-    <property name="default.type.mapping" value="Hypersonic SQL"/>
-    <!--property name="default.type.mapping" value="InterBase"/-->
-    <!--property name="default.type.mapping" value="mySQL"/-->
-    <!--property name="default.type.mapping" value="Oracle"/-->
-    <!--property name="default.type.mapping" value="Postgres"/-->
-
-    <!-- cmp1 persistence manager for standardjboss.xml -->
-    <!--JAWS-->
-    <property name="cmp1.persistencemanager" value="org.jboss.ejb.plugins.jaws.JAWSPersistenceManager"/>
-    <!--cmp2 manager used for cmp1 as well -->
-    <!--property name="cmp1.persistencemanager" value="org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager"/-->
-
-    <!--Choice of with or without new connection caching scheme -->
-    <!--without-->
-    <!--property name="jca.connection.interceptor" value=""/-->
-    <!--with-->
-    <property name="jca.connection.interceptor" value="&lt;interceptor&gt;org.jboss.resource.connectionmanager.CachedConnectionInterceptor&lt;/interceptor&gt;"/>
-
-    
-
-    <!-- Replace these tokens for flexibility in testing and using different dbs -->
-    <!-- default.type.mapping is used in standardjaws.xml and standardjbosscmp-jdbc.xml-->
-    <filter token="default.type.mapping" value="${default.type.mapping}"/>
-    <!-- cmp1 persistence manager for standardjboss.xml -->
-    <filter token="cmp1.persistencemanager" value="${cmp1.persistencemanager}"/>
-
-    <!--Choice of with or without new connection caching scheme -->
-    <filter token="jca.connection.interceptor" value="${jca.connection.interceptor}"/>
-    
-   
     <copy todir="${build.etc}" filtering="yes" overwrite="yes">
       <fileset dir="${source.etc}">
          <include name="**/*"/>
@@ -633,8 +611,8 @@
         <include name="org/jboss/jmx/connector/notification/**"/>
         <include name="org/jboss/jmx/connector/rmi/**"/>
       </fileset>
-      <fileset dir="${source.java}/org/jboss/jmx/adaptor/rmi">
-        <include name="META-INF/**"/>
+      <fileset dir="${build.resources}/jmx-rmi-adapter">
+        <include name="**/*"/>
       </fileset>
     </jar>
 
@@ -672,8 +650,8 @@
         <include name="org/jboss/jmx/connector/notification/**"/>
         <include name="org/jboss/jmx/connector/ejb/**Stub.class"/>
       </fileset>
-      <fileset dir="${source.java}/org/jboss/jmx/connector/ejb">
-        <include name="META-INF/**"/>
+      <fileset dir="${build.resources}/jmx-ejb-connector-server">
+        <include name="**/*"/>
       </fileset>
     </jar>
 
@@ -687,8 +665,8 @@
         <include name="org/jboss/jmx/server/**"/>
         <include name="org/jboss/jmx/client**"/>
       </fileset>
-      <fileset dir="${source.java}/org/jboss/jmx">
-        <include name="META-INF/**"/>
+      <fileset dir="${build.resources}/jmx-html-adaptor">
+        <include name="**/*"/>
       </fileset>
     </jar>
 
