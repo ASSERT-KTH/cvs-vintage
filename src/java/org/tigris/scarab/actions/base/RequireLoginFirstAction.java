@@ -72,16 +72,19 @@ import org.tigris.scarab.om.ScarabUser;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.27 2002/02/20 20:45:32 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.28 2002/02/20 23:50:41 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
-    private static final Category log = 
+    protected static final Category log = 
         Category.getInstance("org.tigris.scarab");
 
     protected static final String ERROR_MESSAGE = 
         "More information was required to submit your request. Please " +
         "scroll down to see error messages."; 
+
+    ScarabTemplateAction sta = new ScarabTemplateAction();
+
 
     /**
      * sets the template to template.login if the user hasn't logged in yet
@@ -96,7 +99,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public IntakeTool getIntakeTool(TemplateContext context)
     {
-        return (IntakeTool)context.get(ScarabConstants.INTAKE_TOOL);
+        return sta.getIntakeTool(context);
     }
 
     /**
@@ -104,8 +107,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public ScarabRequestTool getScarabRequestTool(TemplateContext context)
     {
-        return (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        return sta.getScarabRequestTool(context);
     }
 
     /**
@@ -114,8 +116,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public String getCurrentTemplate(RunData data)
     {
-        return data.getParameters()
-                   .getString(ScarabConstants.TEMPLATE, null);
+         return sta.getCurrentTemplate(data);
     }
 
     /**
@@ -124,8 +125,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public String getCurrentTemplate(RunData data, String defaultValue)
     {
-        return data.getParameters()
-                   .getString(ScarabConstants.TEMPLATE, defaultValue);
+        return sta.getCurrentTemplate(data, defaultValue);
     }
 
     /**
@@ -133,8 +133,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public String getNextTemplate(RunData data)
     {
-        return data.getParameters()
-                   .getString(ScarabConstants.NEXT_TEMPLATE, null);
+        return sta.getNextTemplate(data);
     }
 
     /**
@@ -142,8 +141,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public String getNextTemplate(RunData data, String defaultValue)
     {
-        return data.getParameters()
-                   .getString(ScarabConstants.NEXT_TEMPLATE, defaultValue);
+        return sta.getNextTemplate(data,defaultValue);
     }
 
     /**
@@ -151,8 +149,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public String getLastTemplate(RunData data)
     {
-        return data.getParameters()
-                   .getString(ScarabConstants.LAST_TEMPLATE, null);
+        return sta.getLastTemplate(data);
     }
 
     /**
@@ -160,8 +157,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public String getCancelTemplate(RunData data)
     {
-        return data.getParameters()
-                   .getString(ScarabConstants.CANCEL_TEMPLATE, null);
+        return sta.getCancelTemplate(data);
     }
 
     /**
@@ -170,9 +166,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public String getCancelTemplate(RunData data, String defaultValue)
     {
-        return data.getParameters()
-                   .getString(ScarabConstants.CANCEL_TEMPLATE, 
-                              defaultValue);
+       return sta.getCancelTemplate(data, defaultValue);
     }
 
     /**
@@ -180,8 +174,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public String getBackTemplate(RunData data)
     {
-        return data.getParameters()
-                   .getString(ScarabConstants.BACK_TEMPLATE, null);
+       return sta.getBackTemplate(data);
     }
 
     /**
@@ -190,8 +183,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public String getBackTemplate(RunData data, String defaultValue)
     {
-        return data.getParameters()
-                   .getString(ScarabConstants.BACK_TEMPLATE, defaultValue);
+        return sta.getBackTemplate(data, defaultValue);
     }
 
     /**
@@ -200,97 +192,50 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public String getOtherTemplate(RunData data)
     {
-        return data.getParameters()
-                   .getString(ScarabConstants.OTHER_TEMPLATE);
+        return sta.getOtherTemplate(data);
     }
 
     public void doSave( RunData data, TemplateContext context )
         throws Exception
     {
+        sta.doSave(data, context);
     }
 
     public void doDone( RunData data, TemplateContext context )
         throws Exception
     {
-        doSave(data, context);
-        doCancel(data, context);
+        sta.doDone(data, context);
     }
 
     public void doGonext( RunData data, TemplateContext context )
         throws Exception
     {
-        setTarget(data, getNextTemplate(data));            
+        sta.doGonext(data, context);
     }
 
     public void doGotoothertemplate( RunData data, 
                                      TemplateContext context )
         throws Exception
     {
-        data.getParameters().remove(ScarabConstants.CANCEL_TEMPLATE);
-        data.getParameters().add(ScarabConstants.CANCEL_TEMPLATE, 
-                                 data.getTarget());
-        setTarget(data, getOtherTemplate(data));            
+        sta.doGotoothertemplate(data, context);
     }
 
     public void doRefresh( RunData data, TemplateContext context )
         throws Exception
     {
-        setTarget(data, getCurrentTemplate(data));            
+        sta.doRefresh(data, context);
     }
 
     public void doReset( RunData data, TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
-        intake.removeAll();
-        setTarget(data, getCurrentTemplate(data));            
+        sta.doReset(data, context);
     }
         
     public void doCancel( RunData data, TemplateContext context )
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
-        if (cancelTargets.size() < 2)
-        {
-            if (cancelTargets.size() == 1)
-            {
-                cancelTargets.pop();
-            }
-            data.setTarget("ArtifactTypeSelect.vm");
-            return;
-        }
-
-        // Remove current and next page from cancel stack.
-        String currentPage = (String)cancelTargets.pop();
-        String cancelPage = (String)cancelTargets.pop();
- 
-        // if this is not the first time they hit this page,
-        // Cancel back to first time.
-        if (cancelTargets.contains(cancelPage))
-        {
-            int cancelPageIndex = cancelTargets.indexOf(cancelPage);
-            for (int i = cancelTargets.size(); i > (cancelPageIndex + 1); i--)
-            {
-               cancelTargets.pop();
-            }
-            cancelPage = (String)cancelTargets.pop();
-        }
-
-        // Remove current page mapping from context map
-        HashMap contextMap = (HashMap)user.getTemp("contextMap");
-        if (contextMap.containsKey(currentPage))
-        {
-            contextMap.remove(currentPage);
-        }
-
-        if (contextMap.containsKey(cancelPage))
-        {
-            restoreContext(data, contextMap, cancelPage);
-        }
-        user.setTemp("cancelTargets", cancelTargets);
-        user.setTemp("contextMap", contextMap);
-        data.setTarget(cancelPage);
+        sta.doCancel(data, context);
     }
 
     /*
@@ -300,59 +245,22 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
                               String cancelPage )
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
-        if (cancelTargets.contains(cancelPage))
-        {
-            int cancelPageIndex = cancelTargets.indexOf(cancelPage);
-            for (int i = cancelTargets.size(); i > (cancelPageIndex + 1); i--)
-            {
-               cancelTargets.pop();
-            }
-            cancelPage = (String)cancelTargets.pop();
-        }
-
-        // Remove current page mapping from context map
-        HashMap contextMap = (HashMap)user.getTemp("contextMap");
-        if (contextMap.containsKey(cancelPage))
-        {
-            contextMap.remove(cancelPage);
-        }
-
-        if (contextMap.containsKey(cancelPage))
-        {
-            restoreContext(data, contextMap, cancelPage);
-        }
-        user.setTemp("cancelTargets", cancelTargets);
-        user.setTemp("contextMap", contextMap);
-        data.setTarget(cancelPage);
+        sta.cancelBackTo(data, context, cancelPage);
     }
 
     /**
      * Puts parameters into the context
      * That the cancel-to page needs.
      */
-    private void restoreContext( RunData data, HashMap contextMap,
+    protected void restoreContext( RunData data, HashMap contextMap,
                                  String cancelPage)
         throws Exception
     {
-        HashMap params = (HashMap)contextMap.get(cancelPage);
-        ParameterParser pp = data.getParameters();
-        Iterator iter = params.keySet().iterator();
-        while (iter.hasNext())
-        { 
-            String key = (String)iter.next();
-            pp.remove(key);
-            String[] ids = (String[])params.get(key);
-            for (int i = 0; i< ids.length; i++)
-            {
-                pp.add(key, ids[i]);
-            }
-        }
+        sta.restoreContext(data, contextMap, cancelPage);
     }
 
     protected Category log()
     {
-        return log;
+        return sta.log();
     }
 }

@@ -52,6 +52,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
  // Turbine Stuff
+import org.apache.turbine.Log;   
+import org.apache.log4j.Category;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
@@ -68,10 +70,17 @@ import org.tigris.scarab.om.ScarabUser;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.16 2002/02/20 20:45:32 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.17 2002/02/20 23:50:41 elicia Exp $
  */
-public abstract class ScarabTemplateAction extends TemplateAction
+public class ScarabTemplateAction extends TemplateAction
 {
+    protected static final Category log = 
+        Category.getInstance("org.tigris.scarab");
+
+    protected static final String ERROR_MESSAGE = 
+        "More information was required to submit your request. Please " +
+        "scroll down to see error messages."; 
+
     /**
      * Helper method to retrieve the IntakeTool from the Context
      */
@@ -129,15 +138,6 @@ public abstract class ScarabTemplateAction extends TemplateAction
     }
 
     /**
-     * Returns the last template to be cancelled back to.
-     */
-    public String getLastTemplate(RunData data)
-    {
-        return data.getParameters()
-                   .getString(ScarabConstants.LAST_TEMPLATE, null);
-    }
-
-    /**
      * Returns the cancelTemplate to be executed. Otherwise returns null.
      */
     public String getCancelTemplate(RunData data)
@@ -153,6 +153,15 @@ public abstract class ScarabTemplateAction extends TemplateAction
     {
         return data.getParameters()
                             .getString(ScarabConstants.CANCEL_TEMPLATE, defaultValue);
+    }
+
+    /**
+     * Returns the last template to be cancelled back to.
+     */
+    public String getLastTemplate(RunData data)
+    {
+        return data.getParameters()
+                   .getString(ScarabConstants.LAST_TEMPLATE, null);
     }
 
     /**
@@ -270,11 +279,46 @@ public abstract class ScarabTemplateAction extends TemplateAction
         data.setTarget(cancelPage);
     }
 
+    /*
+     * Cancels back to given page.
+     */
+    public void cancelBackTo( RunData data, TemplateContext context,
+                              String cancelPage )
+        throws Exception
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
+        if (cancelTargets.contains(cancelPage))
+        {
+            int cancelPageIndex = cancelTargets.indexOf(cancelPage);
+            for (int i = cancelTargets.size(); i > (cancelPageIndex + 1); i--)
+            {
+               cancelTargets.pop();
+            }
+            cancelPage = (String)cancelTargets.pop();
+        }
+
+        // Remove current page mapping from context map
+        HashMap contextMap = (HashMap)user.getTemp("contextMap");
+        if (contextMap.containsKey(cancelPage))
+        {
+            contextMap.remove(cancelPage);
+        }
+
+        if (contextMap.containsKey(cancelPage))
+        {
+            restoreContext(data, contextMap, cancelPage);
+        }
+        user.setTemp("cancelTargets", cancelTargets);
+        user.setTemp("contextMap", contextMap);
+        data.setTarget(cancelPage);
+    }
+
     /**
      * Puts parameters into the context
      * That the cancel-to page needs.
      */
-    private void restoreContext( RunData data, HashMap contextMap,
+    protected void restoreContext( RunData data, HashMap contextMap,
                                  String cancelPage)
         throws Exception
     {
@@ -293,4 +337,8 @@ public abstract class ScarabTemplateAction extends TemplateAction
         }
     }
         
+    protected Category log()
+    {
+        return log;
+    }
 }
