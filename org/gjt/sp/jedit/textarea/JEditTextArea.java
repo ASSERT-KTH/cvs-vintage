@@ -47,7 +47,7 @@ import org.gjt.sp.jedit.syntax.*;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.176 2003/01/19 21:03:34 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.177 2003/01/28 03:07:20 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -257,10 +257,10 @@ public class JEditTextArea extends JComponent
 			}
 			this.buffer = buffer;
 
+			foldVisibilityManager = buffer._getFoldVisibilityManager(this);
+
 			buffer.addBufferChangeListener(bufferHandler);
 			bufferHandlerInstalled = true;
-
-			foldVisibilityManager = buffer._getFoldVisibilityManager(this);
 
 			firstLine = 0;
 			maxHorizontalScrollWidth = 0;

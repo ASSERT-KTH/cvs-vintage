@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.47 2003/01/20 02:02:27 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.48 2003/01/28 03:07:20 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -388,6 +388,18 @@ public class PanelWindowContainer implements DockableWindowContainer
 
 			popup.addSeparator();
 			popup.add(floatMenu);
+
+			popup.addSeparator();
+			JMenuItem config = new JMenuItem(jEdit.getProperty("view.docking.menu-config"));
+			config.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent evt)
+				{
+					new org.gjt.sp.jedit.options.GlobalOptions(
+						wm.getView(),"docking");
+				}
+			});
+			popup.add(config);
 
 			return popup;
 		}

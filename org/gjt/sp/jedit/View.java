@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.textarea.*;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.45 2003/01/25 03:08:36 spestov Exp $
+ * @version $Id: View.java,v 1.46 2003/01/28 03:07:19 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -467,14 +467,17 @@ public class View extends JFrame implements EBComponent
 
 		JComponent oldParent = (JComponent)oldEditPane.getParent();
 
+		final JSplitPane newSplitPane = new JSplitPane(orientation,
+			oldEditPane,editPane);
+		newSplitPane.setOneTouchExpandable(true);
+			newSplitPane.setBorder(null);
+
 		if(oldParent instanceof JSplitPane)
 		{
 			JSplitPane oldSplitPane = (JSplitPane)oldParent;
 			int dividerPos = oldSplitPane.getDividerLocation();
 
 			Component left = oldSplitPane.getLeftComponent();
-			final JSplitPane newSplitPane = new JSplitPane(orientation,
-				oldEditPane,editPane);
 
 			if(left == oldEditPane)
 				oldSplitPane.setLeftComponent(newSplitPane);
@@ -494,9 +497,6 @@ public class View extends JFrame implements EBComponent
 		}
 		else
 		{
-			JSplitPane newSplitPane = splitPane = new JSplitPane(orientation,
-				oldEditPane,editPane);
-			newSplitPane.setBorder(null);
 			oldParent.add(splitPane);
 			oldParent.revalidate();
 
