@@ -27,6 +27,9 @@
  */
 package org.objectweb.carol.util.perfs;
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.rmi.server.RMIClassLoaderSpi;
 
 import sun.rmi.server.MarshalOutputStream;
 /**
@@ -39,6 +42,19 @@ import sun.rmi.server.MarshalOutputStream;
  */
 public class CarolJRMPPerformanceHelper
 {
+	
+	private static RMIClassLoaderSpi defRMISpi;
+
+	static {
+		try {
+			Class cl = Class.forName("java.rmi.server.RMIClassLoader");
+			Method meth = cl.getMethod("getDefaultProviderInstance",  new Class [0]);
+			defRMISpi = (RMIClassLoaderSpi) meth.invoke(cl, new Object[0]);
+		} catch (Exception e) {
+			//TraceCarol.error("RemoteClassLoaderSpi error", e);
+		}
+	}
+
 	/**
 	 * See a marshalled object 
 	 * 
@@ -49,7 +65,7 @@ public class CarolJRMPPerformanceHelper
 	{
 		try
 		{
-			String result = "";
+			String result = getClassString(obj.getClass()) +"<serialization>\n";
 			// Print the Context value and size
 			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
 			MarshalOutputStream p = new MarshalOutputStream(ostream);
@@ -64,6 +80,7 @@ public class CarolJRMPPerformanceHelper
 				} else
 					result += (char) b[i];
 			}
+			result+="</serialization>\n";
 			return result;
 		} catch (Exception e)
 		{
@@ -71,6 +88,7 @@ public class CarolJRMPPerformanceHelper
 			return null;
 		}
 	}
+	
 	/**
 	 * See the size of a Marchalled object
 	 * 
@@ -92,5 +110,19 @@ public class CarolJRMPPerformanceHelper
 			e.printStackTrace();
 			return 0;
 		}
+	}
+	
+	public static String getClassString(Class cl) {
+			ClassLoader loader = cl.getClassLoader();
+			String result="<class>\n";
+				           result= result +"<classloader>"+loader.getClass().getName()+"</classloader>\n";
+				   		   result= result +"<annotations>"+defRMISpi.getClassAnnotation(cl)+"</annotaions>\n";
+						   result+="</class>";
+			return result;
+	}
+	  
+	public static String getClassAnnotation(Class cl) {
+		    ClassLoader loader = cl.getClassLoader();
+			return defRMISpi.getClassAnnotation(cl);
 	}
 }
