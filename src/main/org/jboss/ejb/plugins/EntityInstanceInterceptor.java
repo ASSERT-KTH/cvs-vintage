@@ -45,7 +45,7 @@ import java.rmi.RemoteException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.72 $
+* @version $Revision: 1.73 $
 */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -104,7 +104,7 @@ public class EntityInstanceInterceptor
       // Set the current security information
       ctx.setPrincipal(mi.getPrincipal());
 
-      AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_HOME);
+      AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_HOME);
 
       Object rtn = null;
       try
@@ -198,9 +198,9 @@ public class EntityInstanceInterceptor
       mi.setEnterpriseContext(ctx);
 
       if (ejbTimeout.equals(mi.getMethod()))
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_TIMEOUT);
       else
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_BUSINESS_METHOD);
 
       Throwable exceptionThrown = null;
       try

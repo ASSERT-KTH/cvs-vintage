@@ -80,13 +80,13 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.144 $
+ * @version $Revision: 1.145 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 public abstract class Container
         extends ServiceMBeanSupport
-        implements ContainerMBean
+        implements ContainerMBean, AllowedOperationsFlags
 {
    public final static String BASE_EJB_CONTAINER_NAME =
            "jboss.j2ee:service=EJB";

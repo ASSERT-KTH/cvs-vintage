@@ -40,7 +40,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  */
 public class CMPPersistenceManager
    implements EntityPersistenceManager
@@ -179,7 +179,7 @@ public class CMPPersistenceManager
       // Call ejbCreate on the target bean
       try
       {
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_CREATE);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_CREATE);
          Method createMethod = (Method) createMethods.get(m);
          createMethod.invoke(ctx.getInstance(), args);
       }
@@ -221,7 +221,7 @@ public class CMPPersistenceManager
       Object id;
       try
       {
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_CREATE);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_CREATE);
          id = store.createEntity(m, args, ctx);
       }
       finally
@@ -258,7 +258,7 @@ public class CMPPersistenceManager
 
       try
       {
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_POST_CREATE);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_POST_CREATE);
 
          Method postCreateMethod = (Method) postCreateMethods.get(m);
          postCreateMethod.invoke(ctx.getInstance(), args);
@@ -306,7 +306,7 @@ public class CMPPersistenceManager
    {
       try
       {
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_FIND);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_FIND);
 
          // For now only optimize fBPK
          if(finderMethod.getName().equals("findByPrimaryKey"))
@@ -353,7 +353,7 @@ public class CMPPersistenceManager
       {
          // return the finderResults so that the invoker layer can extend this back
          // giving the client an OO 'cursor'
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_FIND);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_FIND);
          return store.findEntities(finderMethod, args, ctx);
       }
       finally
@@ -395,7 +395,7 @@ public class CMPPersistenceManager
 
       try
       {
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_ACTIVATE);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_ACTIVATE);
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbActivate();
       }
@@ -493,7 +493,7 @@ public class CMPPersistenceManager
    {
       try
       {
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_PASSIVATE);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_PASSIVATE);
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbPassivate();
       }
@@ -516,7 +516,7 @@ public class CMPPersistenceManager
    {
       try
       {
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_REMOVE);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_REMOVE);
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbRemove();
       }
@@ -544,7 +544,7 @@ public class CMPPersistenceManager
    {
       try
       {
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_LOAD);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_LOAD);
 
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbLoad();
@@ -566,7 +566,7 @@ public class CMPPersistenceManager
    {
       try
       {
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_STORE);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_STORE);
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbStore();
       }

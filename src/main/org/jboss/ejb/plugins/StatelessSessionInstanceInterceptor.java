@@ -25,7 +25,7 @@ import javax.ejb.Timer;
  * JNDI environment to be set
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -83,9 +83,9 @@ public class StatelessSessionInstanceInterceptor
       mi.setEnterpriseContext(ctx);
 
       if (ejbTimeout.equals(mi.getMethod()))
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_TIMEOUT);
       else
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_BUSINESS_METHOD);
 
       // There is no need for synchronization since the instance is always fresh also there should
       // never be a tx associated with the instance.

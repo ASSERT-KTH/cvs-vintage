@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
  * the target object from the cache.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class EntityMultiInstanceInterceptor
    extends AbstractInterceptor
@@ -70,7 +70,7 @@ public class EntityMultiInstanceInterceptor
       // Set the current security information
       ctx.setPrincipal(mi.getPrincipal());
 
-      AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_HOME);
+      AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_HOME);
 
       Object result;
       try
@@ -131,9 +131,9 @@ public class EntityMultiInstanceInterceptor
       mi.setEnterpriseContext(ctx);
 
       if (ejbTimeout.equals(mi.getMethod()))
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_TIMEOUT);
       else
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_BUSINESS_METHOD);
 
       try
       {

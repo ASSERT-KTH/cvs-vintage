@@ -30,7 +30,7 @@ import org.jboss.invocation.Invocation;
  *  A common superclass for the BMT transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 abstract class AbstractTxInterceptorBMT
    extends AbstractTxInterceptor
@@ -128,7 +128,7 @@ abstract class AbstractTxInterceptorBMT
          // Set the threadlocal to the userTransaction of the instance
          try
          {
-            AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_INTERCEPTOR_METHOD);
+            AllowedOperationsAssociation.pushInMethodFlag(IN_INTERCEPTOR_METHOD);
             userTransaction.set(ctx.getEJBContext().getUserTransaction());
          }
          finally

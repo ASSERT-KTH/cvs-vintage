@@ -35,7 +35,7 @@ import org.jboss.ejb.txtimer.TimedObjectInvoker;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version <tt>$Revision: 1.71 $</tt>
+ * @version <tt>$Revision: 1.72 $</tt>
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -160,7 +160,7 @@ public class StatefulSessionContainer
       // Remove from storage
       try
       {
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_REMOVE);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_REMOVE);
          getPersistenceManager().removeSession(ctx);
       }
       finally
@@ -192,7 +192,7 @@ public class StatefulSessionContainer
       // Invoke ejbCreate<METHOD>()
       try
       {
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_CREATE);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_CREATE);
 
          // Build the ejbCreate<METHOD> from the home create<METHOD> sig
          String createName = m.getName();

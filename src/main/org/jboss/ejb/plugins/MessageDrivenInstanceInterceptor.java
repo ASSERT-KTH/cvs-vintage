@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class MessageDrivenInstanceInterceptor
       extends AbstractInterceptor
@@ -73,9 +73,9 @@ public class MessageDrivenInstanceInterceptor
       mi.setEnterpriseContext(ctx);
 
       if (ejbTimeout.equals(mi.getMethod()))
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_TIMEOUT);
       else
-         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_BUSINESS_METHOD);
 
       // There is no need for synchronization since the instance is always
       // fresh also there should never be a tx associated with the instance.

@@ -15,10 +15,10 @@ import org.jboss.system.Service;
  *      
  * @see Service
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public interface ContainerPlugin
-   extends Service
+   extends Service, AllowedOperationsFlags
 {
    /**
     * This callback is set by the container so that the plugin may access it
