@@ -1,35 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
- - The contents of this file are subject to the LGPL Licence 
- - 
- - Author:               <a href="sebastien.chassande@inriaples.fr">Sebastien Chassande</a>
- - Carol Modifications :<a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ - Copyright (C) 1999,2005 - INRIA (www.inria.fr)
  -
- - Compilation directive for Common Architecture for RMI ObjectWeb Layer (CAROL)  
- - 
+ - CAROL: Common Architecture for RMI ObjectWeb Layer
+ -
+ - This library is developed inside the ObjectWeb Consortium,
+ - http://www.objectweb.org
+ -
+ - This library is free software; you can redistribute it and/or
+ - modify it under the terms of the GNU Lesser General Public
+ - License as published by the Free Software Foundation; either
+ - version 2.1 of the License, or any later version.
+ -
+ - This library is distributed in the hope that it will be useful,
+ - but WITHOUT ANY WARRANTY; without even the implied warranty of
+ - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ - Lesser General Public License for more details.
+ -
+ - You should have received a copy of the GNU Lesser General Public
+ - License along with this library; if not, write to the Free Software
+ - Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+ - USA
+ -
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ - $Id: build.xml,v 1.35 2005/02/16 14:43:28 benoitf Exp $
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
 <project name="carol" default="dist">
 
 
   <!-- directories source definition -->
-  <property name="src" 		  value="${basedir}/src"/>
-  <property name="doc" 		  value="${basedir}/doc"/>
-  <property name="jdoc" 	  value="${basedir}/jdoc"/>
-  <property name="config" 	  value="${basedir}/config"/>
-  <property name="archive" 	  value="${basedir}/archive"/>
-  <property name="test" 	  value="${basedir}/test"/>
-  <property name="externals" 	  value="${basedir}/externals"/>
-  <property name="ext" 	          value="${basedir}/ext"/>
-  <property name="build"	value="${basedir}/output"/>
+  <property name="src" value="${basedir}/src" />
+  <property name="doc" value="${basedir}/doc" />
+  <property name="jdoc" value="${basedir}/jdoc" />
+  <property name="config" value="${basedir}/config" />
+  <property name="archive" value="${basedir}/archive" />
+  <property name="test" value="${basedir}/test" />
+  <property name="externals" value="${basedir}/externals" />
+  <property name="ext" value="${basedir}/ext" />
+  <property name="build" value="${basedir}/output" />
   <!--======================================================
   load the following user properties from a file:
   - build.compiler: Which compiler do you want use ? (optional)
   - build: Where do you want to generate compiled objects?
   - dist: Where do you want to put the distribution ?
   =======================================================-->
-  <property file="${config}/configure.properties"/>
+  <property file="${config}/configure.properties" />
 
   <!-- carol meta information -->
   <property name="carol.version" value="1.8.9" />
@@ -37,174 +55,185 @@
   <property name="carol.package" value="org.objectweb.carol" />
 
   <!-- directories target definition -->
-  <property name="dist.lib"        value="${dist}/lib"/>
-  <property name="dist.jdoc"  	   value="${dist}/jdoc"/>
-  <property name="dist.config"     value="${dist}/config"/>
-  <property name="dist.doc"  	   value="${dist}/doc"/> 
-  <property name="tmp"  	   value="${dist}/tmp"/> 
+  <property name="dist.lib" value="${dist}/lib" />
+  <property name="dist.jdoc" value="${dist}/jdoc" />
+  <property name="dist.config" value="${dist}/config" />
+  <property name="dist.doc" value="${dist}/doc" />
+  <property name="tmp" value="${dist}/tmp" />
 
 
   <!-- jonathan jar properties -->
-  <property name="jeremie.jar"   value="${externals}/jeremie.jar"/> 
-  <property name="compiler.jeremie" value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
+  <property name="jeremie.jar" value="${externals}/jeremie.jar" />
+  <property name="compiler.jeremie"
+            value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
 
   <!-- Building of carol compilation classpath (no externals needed) -->
   <path id="carol.classpath">
     <fileset dir="${externals}">
-      <include name="**/*.jar"/>
-    </fileset>   
-    <pathelement location="${build}/classes"/>
+      <include name="**/*.jar" />
+    </fileset>
+    <pathelement location="${build}/classes" />
   </path>
 
   <taskdef name="multipleAnt"
-    classname="org.objectweb.util.ant.MultipleAnt"
-    classpath="${config}/ow_util_ant_tasks.jar"/>
-  
+           classname="org.objectweb.util.ant.MultipleAnt"
+           classpath="${config}/ow_util_ant_tasks.jar" />
+
   <!-- **********************************-->
   <!-- *********    COMPILE    **********-->
   <!-- **********************************-->
   <!-- compile all -->
   <target name="compile" description="Compiles carol">
     <condition property="jeremie.jar.present">
-      <available file="${jeremie.jar}"/>
+      <available file="${jeremie.jar}" />
     </condition>
-  <condition property="stub.already.compiled">
-    <and>
-      <uptodate property="JNDIResourceWrapper.done"
-                targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper_OWStub.class"
-                srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.java" />
-      <uptodate property="JNDIReferenceWrapper.done"
-                targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIReferenceWrapper_OWStub.class"
-                srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIReferenceWrapper.java" />
-    </and>
-  </condition>
-    <antcall target="compile.base"/>
-    <antcall target="compile.stub"/>
-    <antcall target="compile.stub.jeremie"/> 
-    <antcall target="compile.jonathan"/>
-    <antcall target="compile.jvm.daemon"/>
-    <antcall target="compile.cmi"/>
+    <condition property="stub.already.compiled">
+      <and>
+        <uptodate property="JNDIResourceWrapper.done"
+                  targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper_OWStub.class"
+                  srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.java" />
+        <uptodate property="JNDIReferenceWrapper.done"
+                  targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIReferenceWrapper_OWStub.class"
+                  srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIReferenceWrapper.java" />
+      </and>
+    </condition>
+    <antcall target="compile.base" />
+    <antcall target="compile.stub" />
+    <antcall target="compile.stub.jeremie" />
+    <antcall target="compile.jonathan" />
+    <antcall target="compile.jvm.daemon" />
+    <antcall target="compile.cmi" />
   </target>
 
   <!-- Compile base file -->
   <target name="compile.base" description="Compiles the CAROL base classes">
-    <mkdir dir="${build}/classes"/>
-    <javac 
-      srcdir="${src}"
-      destdir="${build}/classes"
-      deprecation="${deprecation}"
-      debug="${compile.debug}"
-      nowarn="${compile.nowarn}"
-      optimize="${compile.optimize}">
-      <classpath refid="carol.classpath"/>
-      <include name="**/*.java"/>
+    <mkdir dir="${build}/classes" />
+    <javac srcdir="${src}"
+           destdir="${build}/classes"
+           deprecation="${deprecation}"
+           debug="${compile.debug}"
+           nowarn="${compile.nowarn}"
+           optimize="${compile.optimize}">
+      <classpath refid="carol.classpath" />
+      <include name="**/*.java" />
       <!-- exclude specific jonathan interception features -->
-      <exclude name="**/org/objectweb/carol/rmi/jonathan/**/*.java"/>
-      <!-- we didn'nt exclude the iiop and jrmp features because existed in all java 2 jdk (> 1.3)--> 
-    </javac>     
+      <exclude name="**/org/objectweb/carol/rmi/jonathan/**/*.java" />
+      <!-- we didn'nt exclude the iiop and jrmp features because existed in all java 2 jdk (> 1.3)-->
+    </javac>
   </target>
 
   <target name="compile.jvm.daemon">
-    <rmic base="${build}/classes" compiler="sun"
-      classname="org.objectweb.carol.util.bootstrap.ProcessesManager">
-    <classpath refid="carol.classpath"/>
-    </rmic>     
+    <rmic base="${build}/classes"
+          compiler="sun"
+          classname="org.objectweb.carol.util.bootstrap.ProcessesManager">
+      <classpath refid="carol.classpath" />
+    </rmic>
   </target>
 
-  <target name="compile.stub"> 
-    
+  <target name="compile.stub">
+
     <!-- for sun jrmp  -->
-    <rmic base="${build}/classes" compiler="sun"
-      classname="org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper">
-      <classpath refid="carol.classpath"/>
-    </rmic> 
-    <rmic base="${build}/classes" compiler="sun"
-      classname="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper">
-      <classpath refid="carol.classpath"/>
+    <rmic base="${build}/classes"
+          compiler="sun"
+          classname="org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper">
+      <classpath refid="carol.classpath" />
+    </rmic>
+    <rmic base="${build}/classes"
+          compiler="sun"
+          classname="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper">
+      <classpath refid="carol.classpath" />
     </rmic>
     <!-- The registry -->
-    <rmic base="${build}/classes" compiler="sun"
-      classname="org.objectweb.carol.jndi.registry.RegistryManagerImpl">
-      <classpath refid="carol.classpath"/>
+    <rmic base="${build}/classes"
+          compiler="sun"
+          classname="org.objectweb.carol.jndi.registry.RegistryManagerImpl">
+      <classpath refid="carol.classpath" />
     </rmic>
-     <!-- for sun iiop  -->
-    <rmic base="${build}/classes" iiop="true" compiler="sun"
-      classname="org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper">
-      <compilerarg value="-poa"/> 
-      <classpath refid="carol.classpath"/>
-    </rmic> 
-    <rmic base="${build}/classes" iiop="true" compiler="sun"
-      classname="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper">
-      <compilerarg value="-poa"/> 
-      <classpath refid="carol.classpath"/>
+    <!-- for sun iiop  -->
+    <rmic base="${build}/classes"
+          iiop="true"
+          compiler="sun"
+          classname="org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper">
+      <compilerarg value="-poa" />
+      <classpath refid="carol.classpath" />
     </rmic>
-    <javac 
-      srcdir="${src}"
-      destdir="${build}/classes"
-      deprecation="${deprecation}"
-      debug="${compile.debug}"
-      nowarn="${compile.nowarn}"
-      optimize="${compile.optimize}">
-      <classpath refid="carol.classpath"/>
-      <include name="**/org/objectweb/carol/jndi/iiop/_*.java"/>
-    </javac> 
+    <rmic base="${build}/classes"
+          iiop="true"
+          compiler="sun"
+          classname="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper">
+      <compilerarg value="-poa" />
+      <classpath refid="carol.classpath" />
+    </rmic>
+    <javac srcdir="${src}"
+           destdir="${build}/classes"
+           deprecation="${deprecation}"
+           debug="${compile.debug}"
+           nowarn="${compile.nowarn}"
+           optimize="${compile.optimize}">
+      <classpath refid="carol.classpath" />
+      <include name="**/org/objectweb/carol/jndi/iiop/_*.java" />
+    </javac>
   </target>
 
 
   <target name="compile.stub.jeremie"
-      description="build stub and skeleton "
-      unless="stub.already.compiled">
+          description="build stub and skeleton "
+          unless="stub.already.compiled">
     <!-- for jeremie -->
-      <echo message="Compiling stub for jeremie"/>
-      <java classname="${compiler.jeremie}" fork="true" failonerror="true">
-      <arg value="-opt"/>
-      <arg value="-owext"/>
-      <arg value="-d"/>
-      <arg path="${build}/classes"/>
-      <arg value="org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper"/>
-      <arg value="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper"/>
-      <classpath refid="carol.classpath"/>
+    <echo message="Compiling stub for jeremie" />
+    <java classname="${compiler.jeremie}" fork="true" failonerror="true">
+      <arg value="-opt" />
+      <arg value="-owext" />
+      <arg value="-d" />
+      <arg path="${build}/classes" />
+      <arg value="org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper" />
+      <arg value="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper" />
+      <classpath refid="carol.classpath" />
     </java>
-   
-    
+
+
   </target>
 
   <target name="compile.jonathan" if="jeremie.jar.present">
-    <javac 
-      srcdir="${src}"
-      destdir="${build}/classes"
-      deprecation="${deprecation}"
-      debug="${compile.debug}"
-      nowarn="${compile.nowarn}"
-      optimize="${compile.optimize}">
-      <classpath refid="carol.classpath"/>
+    <javac srcdir="${src}"
+           destdir="${build}/classes"
+           deprecation="${deprecation}"
+           debug="${compile.debug}"
+           nowarn="${compile.nowarn}"
+           optimize="${compile.optimize}">
+      <classpath refid="carol.classpath" />
       <!-- include specific rmi iiop interception features -->
-      <include name="**/org/objectweb/carol/rmi/jonathan/**/*.java"/>
-    </javac> 
+      <include name="**/org/objectweb/carol/rmi/jonathan/**/*.java" />
+    </javac>
   </target>
 
   <target name="compile.cmi">
-    <rmic base="${build}/classes" classname="org.objectweb.carol.cmi.ClusterRegistryImpl">
-    <classpath refid="carol.classpath"/>
+    <rmic base="${build}/classes"
+          classname="org.objectweb.carol.cmi.ClusterRegistryImpl">
+      <classpath refid="carol.classpath" />
     </rmic>
-    <rmic base="${build}/classes" classname="org.objectweb.carol.cmi.jndi.ReferenceImpl">
-    <classpath refid="carol.classpath"/>
+    <rmic base="${build}/classes"
+          classname="org.objectweb.carol.cmi.jndi.ReferenceImpl">
+      <classpath refid="carol.classpath" />
     </rmic>
   </target>
 
   <!-- **************************************-->
   <!-- *********        DIST       **********-->
   <!-- **************************************-->
-  <target name="dist" description="Make a carol distribution in ${dist} directory (default)">
-    <antcall target="jar"/>
+  <target name="dist"
+          description="Make a carol distribution in ${dist} directory (default)">
+    <antcall target="jar" />
     <!--<antcall target="jdoc"/>-->
-    <antcall target="doc"/>
-    <antcall target="config"/>
+    <antcall target="doc" />
+    <antcall target="config" />
   </target>
 
-  <target name="run.tests" depends="jar,config" description="Run Test the carol distribution">
-    <ant antfile="${test}/build.xml" dir="${test}" target="run.tests"/>
-  </target> 
+  <target name="run.tests"
+          depends="jar,config"
+          description="Run Test the carol distribution">
+    <ant antfile="${test}/build.xml" dir="${test}" target="run.tests" />
+  </target>
 
   <!-- *************************************-->
   <!-- *********        JAR       **********-->
@@ -212,11 +241,13 @@
   <!-- This target call every default target of each xml file
        present in ${archive} directory -->
   <target name="jar" depends="compile" description="Build carol jar">
-    <mkdir dir="${dist.lib}"/>
+    <mkdir dir="${dist.lib}" />
     <!-- copy default file in the compile base -->
-    <copy file="${ext}/carol-defaults.properties" tofile="${build}/classes/carol-defaults.properties"/>
+    <copy file="${ext}/carol-defaults.properties"
+          tofile="${build}/classes/carol-defaults.properties" />
     <multipleAnt dir="${archive}" />
-    <copy file="${externals}/commons-cli.jar" tofile="${dist.lib}/commons-cli.jar"/>  
+    <copy file="${externals}/commons-cli.jar"
+          tofile="${dist.lib}/commons-cli.jar" />
   </target>
 
 
@@ -225,25 +256,26 @@
   <!-- *************************************-->
   <!-- This target call every default target of each xml file
   present in ${jdoc} directory -->
-  <target name="jdoc" description="Build carol java documentation (javadoc)"> 
-    <mkdir dir="${dist.jdoc}"/>
+  <target name="jdoc" description="Build carol java documentation (javadoc)">
+    <mkdir dir="${dist.jdoc}" />
     <condition property="interceptor.classes.presents">
       <available classname="org.omg.PortableInterceptor.ORBInitInfo">
-	<classpath refid="carol.classpath"/>
+        <classpath refid="carol.classpath" />
       </available>
     </condition>
-    <javadoc
-      packagenames="org.objectweb.*"
-      defaultexcludes="yes"
-      destdir="${dist.jdoc}"
-      windowtitle="Objectweb Common Architecture for RMI ObjectWeb Layer API"
-      doctitle="Objectweb Common Architecture for RMI ObjectWeb Layer "
-      author="true" version="true" use="true">
+    <javadoc packagenames="org.objectweb.*"
+             defaultexcludes="yes"
+             destdir="${dist.jdoc}"
+             windowtitle="Objectweb Common Architecture for RMI ObjectWeb Layer API"
+             doctitle="Objectweb Common Architecture for RMI ObjectWeb Layer "
+             author="true"
+             version="true"
+             use="true">
       <sourcepath>
-	<pathelement path="${src}"/>
-	<pathelement path="${build}/classes"/>
+        <pathelement path="${src}" />
+        <pathelement path="${build}/classes" />
       </sourcepath>
-      <classpath refid="carol.classpath"/>
+      <classpath refid="carol.classpath" />
     </javadoc>
   </target>
 
@@ -252,9 +284,9 @@
   <!-- *************************************-->
   <!-- This target simply copy the present in ${doc} directory  -->
   <target name="doc" description="Build carol documentation">
-    <mkdir dir="${dist.doc}/usermanual"/>  
+    <mkdir dir="${dist.doc}/usermanual" />
     <copy todir="${dist.doc}/usermanual">
-      <fileset dir="${doc}/usermanual"/>
+      <fileset dir="${doc}/usermanual" />
     </copy>
   </target>
 
@@ -265,8 +297,9 @@
   in ${dist.config} directory and copy the ext/README 
   in the ${dist} directory -->
   <target name="config" description="Build carol configuration directory">
-    <mkdir dir="${dist.config}"/>
-    <copy file="${ext}/carol.properties" tofile="${dist.config}/carol.properties"/>
+    <mkdir dir="${dist.config}" />
+    <copy file="${ext}/carol.properties"
+          tofile="${dist.config}/carol.properties" />
   </target>
 
 
@@ -274,43 +307,44 @@
   <!-- *********     CLEAN       **********-->
   <!-- ************************************-->
   <target name="clean" description="Make a clean (carol and carol tests)">
-    <delete dir="${build}"/>
-    <delete dir="${dist}"/>
+    <delete dir="${build}" />
+    <delete dir="${dist}" />
   </target>
 
   <!-- ***********************************************-->
   <!-- *********     PACKAGE (thanks Jeff!)      *******-->
   <!-- ***********************************************-->
-  <target name="packages" depends="clean,package.src,package.jar"
-    description="--> create two packages (source and binaries)
-    (version is specified by -Dversion=x.y.z)"/>
-  
+  <target name="packages"
+          depends="clean,package.src,package.jar"
+          description="--> create two packages (source and binaries)
+    (version is specified by -Dversion=x.y.z)" />
+
   <target name="package.jar" depends="dist">
     <mkdir dir="${tmp}" />
     <copy todir="${tmp}/carol-${carol.version}" includeEmptyDirs="no">
       <fileset dir="${dist}" />
     </copy>
     <tar tarfile="${tmp}/carol-${carol.version}.tar"
-      longfile="gnu"
-      basedir="${tmp}/"
-      includes="carol-${carol.version}/**" />
+         longfile="gnu"
+         basedir="${tmp}/"
+         includes="carol-${carol.version}/**" />
     <gzip zipfile="${dist}/../carol-${carol.version}.tgz"
-      src="${tmp}/carol-${carol.version}.tar" />
-    <delete dir="${tmp}"/>
+          src="${tmp}/carol-${carol.version}.tar" />
+    <delete dir="${tmp}" />
   </target>
-  
+
   <target name="package.src" depends="clean" if="version">
     <mkdir dir="${tmp}" />
     <copy todir="${tmp}/carol-${carol.version}-src" includeEmptyDirs="no">
       <fileset dir="${basedir}" />
     </copy>
     <tar tarfile="${tmp}/carol-${carol.version}-src.tar"
-      longfile="gnu"
-      basedir="${tmp}/"
-      includes="carol-${carol.version}-src/**" />
+         longfile="gnu"
+         basedir="${tmp}/"
+         includes="carol-${carol.version}-src/**" />
     <gzip zipfile="${dist}/../carol-${carol.version}-src.tgz"
-      src="${tmp}/carol-${carol.version}-src.tar" />
-    <delete dir="${tmp}"/>
+          src="${tmp}/carol-${carol.version}-src.tar" />
+    <delete dir="${tmp}" />
   </target>
 
 
@@ -319,14 +353,14 @@
   <!-- **********************************-->
   <!-- print the usage of this ant file -->
   <target name="help">
-    <echo message="The available target is the following:"/>
-    <echo message="  compile: compiles the product into ${build}"/>
-    <echo message="  dist: creates all distributions of the product into ${dist}"/>
-    <echo message="  clean: removes all produced files (carol and test)"/>
-    <echo message="  jar: creates all jars ${dist.lib}"/>
-    <echo message="The available test building target is the following:"/>
-    <echo message="  build.test: creates all distributions of the product into ${dist.test}"/>
-    <echo message="  dist.test:  launch all tests distributions of the product into ${dist.test}"/>
+    <echo message="The available target is the following:" />
+    <echo message="  compile: compiles the product into ${build}" />
+    <echo message="  dist: creates all distributions of the product into ${dist}" />
+    <echo message="  clean: removes all produced files (carol and test)" />
+    <echo message="  jar: creates all jars ${dist.lib}" />
+    <echo message="The available test building target is the following:" />
+    <echo message="  build.test: creates all distributions of the product into ${dist.test}" />
+    <echo message="  dist.test:  launch all tests distributions of the product into ${dist.test}" />
   </target>
 
 </project>

@@ -1,53 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
- - The contents of this file are subject to the LGPL Licence 
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ - Copyright (C) 1999,2005 - INRIA (www.inria.fr)
  -
- - <a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
+ - CAROL: Common Architecture for RMI ObjectWeb Layer
  -
+ - This library is developed inside the ObjectWeb Consortium,
+ - http://www.objectweb.org
+ -
+ - This library is free software; you can redistribute it and/or
+ - modify it under the terms of the GNU Lesser General Public
+ - License as published by the Free Software Foundation; either
+ - version 2.1 of the License, or any later version.
+ -
+ - This library is distributed in the hope that it will be useful,
+ - but WITHOUT ANY WARRANTY; without even the implied warranty of
+ - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ - Lesser General Public License for more details.
+ -
+ - You should have received a copy of the GNU Lesser General Public
+ - License along with this library; if not, write to the Free Software
+ - Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+ - USA
+ -
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ - $Id: rmic_jonathan.xml,v 1.8 2005/02/16 14:43:28 benoitf Exp $
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ -->
+
+<!--   
  - Compilation directive for jeremie rmic 
  - this task did not use the rmic ant task because this 
  - task is not supporded with the jeremie rmic 
  - and so we use a java task ...
  -
  -->
-
 <project name="rmic_jonathan" default="compile.all" basedir=".">
 
   <!-- Building of a path which contains carol jars for tests compilation-->
   <path id="jonathan.classpath">
     <fileset dir="${carol.dist}/lib">
-      <include name="**/*.jar"/>
-    </fileset>  
-    <fileset dir="${externals}">
-      <include name="**/*.jar"/>
-    </fileset>    
-    <fileset dir="${test.ext}">
-      <include name="jonathan.xml"/>
+      <include name="**/*.jar" />
     </fileset>
-    <pathelement location="${test.build}/classes"/>
-    
+    <fileset dir="${externals}">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${test.ext}">
+      <include name="jonathan.xml" />
+    </fileset>
+    <pathelement location="${test.build}/classes" />
+
   </path>
 
-  <property name="compiler.jeremie" value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
+  <property name="compiler.jeremie"
+            value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
 
-  <target name="compile.all"> 
-    <antcall target="compile.jeremie"/>
+  <target name="compile.all">
+    <antcall target="compile.jeremie" />
   </target>
 
 
   <!-- Compile Remote Interface Stub/Skel target for Jeremie-->
   <target name="compile.jeremie">
-    <mkdir dir="${test.build.stub}/jeremie"/>
+    <mkdir dir="${test.build.stub}/jeremie" />
     <java classname="${compiler.jeremie}" fork="true" failonerror="true">
-      <arg value="-opt"/>
-      <arg value="-owext"/>
-      <arg value="-d"/>
-      <arg path="${test.build.stub}/jeremie"/>
-      <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicObject"/>
-      <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"/>
-      <classpath refid="jonathan.classpath"/>
+      <arg value="-opt" />
+      <arg value="-owext" />
+      <arg value="-d" />
+      <arg path="${test.build.stub}/jeremie" />
+      <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicObject" />
+      <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject" />
+      <classpath refid="jonathan.classpath" />
     </java>
-    <jar destfile="${test.dist.lib}/jeremie_stub.jar" basedir="${test.build.stub}/jeremie" />
-  </target>   
+    <jar destfile="${test.dist.lib}/jeremie_stub.jar"
+         basedir="${test.build.stub}/jeremie" />
+  </target>
 </project>

@@ -1,12 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ - Copyright (C) 1999,2005 - INRIA (www.inria.fr)
+ -
+ - CAROL: Common Architecture for RMI ObjectWeb Layer
+ -
+ - This library is developed inside the ObjectWeb Consortium,
+ - http://www.objectweb.org
+ -
+ - This library is free software; you can redistribute it and/or
+ - modify it under the terms of the GNU Lesser General Public
+ - License as published by the Free Software Foundation; either
+ - version 2.1 of the License, or any later version.
+ -
+ - This library is distributed in the hope that it will be useful,
+ - but WITHOUT ANY WARRANTY; without even the implied warranty of
+ - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ - Lesser General Public License for more details.
+ -
+ - You should have received a copy of the GNU Lesser General Public
+ - License along with this library; if not, write to the Free Software
+ - Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+ - USA
+ -
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ - $Id: ow_carol_core.xml,v 1.2 2005/02/16 14:43:28 benoitf Exp $
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ -->
 <project name="ow_carol_core.archive" default="dist.jar">
   <target name="dist.jar">
     <!-- CAROL CORE JAR -->
     <jar destfile="${dist.lib}/ow_carol_core.jar">
       <fileset dir="${build}/classes">
-        <include name="**/*.class"/>
-        <include name="carol-defaults.properties"/>
-        <exclude name="**/jtests/**/*.class"/>
-        <exclude name="org/objectweb/carol/cmi/compiler/*.class"/>
+        <include name="**/*.class" />
+        <include name="carol-defaults.properties" />
+        <exclude name="**/jtests/**/*.class" />
+        <exclude name="org/objectweb/carol/cmi/compiler/*.class" />
       </fileset>
       <manifest>
         <attribute name="Specification-Title" value="${carol.name}" />

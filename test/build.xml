@@ -1,35 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
- - The contents of this file are subject to the LGPL Licence 
- - 
- - Autor:               <a href="sebastien.chassande@inriaples.fr">Sebastien Chassande</a>
- - Carol Modifications :<a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ - Copyright (C) 1999,2005 - INRIA (www.inria.fr)
  -
- - Compilation directive for Common Architecture for RMI ObjectWeb Layer (CAROL) tests 
- - This library need the carol.jar
- - 
- - For the moment the rmic jonathan task is not intgrate in ant, so use ant 1.5.0 with the externals ant.jar and optional.jar
- - Int externals/ant you can find the ant modification summary   
- - 
+ - CAROL: Common Architecture for RMI ObjectWeb Layer
+ -
+ - This library is developed inside the ObjectWeb Consortium,
+ - http://www.objectweb.org
+ -
+ - This library is free software; you can redistribute it and/or
+ - modify it under the terms of the GNU Lesser General Public
+ - License as published by the Free Software Foundation; either
+ - version 2.1 of the License, or any later version.
+ -
+ - This library is distributed in the hope that it will be useful,
+ - but WITHOUT ANY WARRANTY; without even the implied warranty of
+ - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ - Lesser General Public License for more details.
+ -
+ - You should have received a copy of the GNU Lesser General Public
+ - License along with this library; if not, write to the Free Software
+ - Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+ - USA
+ -
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ - $Id: build.xml,v 1.19 2005/02/16 14:43:28 benoitf Exp $
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
-
-
-
 <project name="carol.test" default="compile">
-  
+
 
   <!-- directories source definition -->
-  <property name="test.src" 		 value="${basedir}/src"/>
-  <property name="test.doc" 		 value="${basedir}/doc"/>
-  <property name="test.jdoc" 	         value="${basedir}/jdoc"/>
-  <property name="test.config" 	         value="${basedir}/config"/>
-  <property name="test.archive" 	 value="${basedir}/archive"/>
-  <property name="test.ext"              value="${basedir}/ext"/>  
-  <property name="test.genstub"          value="${basedir}/genstub"/>
-  <dirname property="test.absolute.dir"     file="${basedir}/X" />
-  <property name="test.etc.dir"          value="${test.absolute.dir}/etc"/>
-  
+  <property name="test.src" value="${basedir}/src" />
+  <property name="test.doc" value="${basedir}/doc" />
+  <property name="test.jdoc" value="${basedir}/jdoc" />
+  <property name="test.config" value="${basedir}/config" />
+  <property name="test.archive" value="${basedir}/archive" />
+  <property name="test.ext" value="${basedir}/ext" />
+  <property name="test.genstub" value="${basedir}/genstub" />
+  <dirname property="test.absolute.dir" file="${basedir}/X" />
+  <property name="test.etc.dir" value="${test.absolute.dir}/etc" />
+
   <!--======================================================
   load the following user properties from a file:
   - build.compiler: Wich compiler do you want use ? (optional)
@@ -37,84 +48,83 @@
   - dist: Where do you want put the distribution ?
   - testResult: Where do you want put the test results ?
   =======================================================-->
-  <property file="${test.config}/configure.properties"/> 
+  <property file="${test.config}/configure.properties" />
 
   <!-- directories target definition -->
-  <property name="test.dist.lib"           value="${test.dist}/lib"/>
-  <property name="test.dist.jdoc"  	   value="${test.dist}/jdoc"/>
-  <property name="test.dist.results"  	   value="${test.dist}/results"/>
-  <property name="test.dist.report"  	   value="${test.dist}/report"/>
-  <property name="test.conform"            value="conform"/>
-  <property name="test.conform.src"        value="${test.src}/org/objectweb/carol"/>
+  <property name="test.dist.lib" value="${test.dist}/lib" />
+  <property name="test.dist.jdoc" value="${test.dist}/jdoc" />
+  <property name="test.dist.results" value="${test.dist}/results" />
+  <property name="test.dist.report" value="${test.dist}/report" />
+  <property name="test.conform" value="conform" />
+  <property name="test.conform.src" value="${test.src}/org/objectweb/carol" />
 
-  
+
   <!-- tmp directories for tests launching -->
-  <property name="test.tmp"                value="${test.dist}/tmp"/> 
-    
-  <property name="test.build.stub"          value="${test.build}/test/stub"/>
+  <property name="test.tmp" value="${test.dist}/tmp" />
+
+  <property name="test.build.stub" value="${test.build}/test/stub" />
 
   <!-- Date -->
   <tstamp>
-        <format property="dateofday"
-                pattern="yyyy-MM-dd"
-                locale="en" />
-      </tstamp>
-  
+    <format property="dateofday" pattern="yyyy-MM-dd" locale="en" />
+  </tstamp>
+
   <!-- Building of a path which contains carol jars for tests compilation-->
   <path id="test.classpath">
     <fileset dir="${carol.dist}/lib">
-      <include name="**/*.jar"/>
-    </fileset>  
+      <include name="**/*.jar" />
+    </fileset>
     <fileset dir="${externals}">
-      <include name="**/*.jar"/>
+      <include name="**/*.jar" />
     </fileset>
     <fileset dir="${test.ext}">
-      <include name="**/jonathan.xml"/>
+      <include name="**/jonathan.xml" />
     </fileset>
-    <pathelement location="${test.build}/classes"/>
+    <pathelement location="${test.build}/classes" />
   </path>
 
   <!-- Multiple xml file task def -->
   <taskdef name="multipleAnt"
-    classname="org.objectweb.util.ant.MultipleAnt"
-    classpath="${config}/ow_util_ant_tasks.jar"/>
+           classname="org.objectweb.util.ant.MultipleAnt"
+           classpath="${config}/ow_util_ant_tasks.jar" />
 
   <!-- **********************************-->
   <!-- *********    COMPILE    **********-->
   <!-- **********************************-->
   <!-- compile all -->
-  <target name="compile" depends="compile.base,compile.stub" description="Compiles carol test" />  
+  <target name="compile"
+          depends="compile.base,compile.stub"
+          description="Compiles carol test" />
 
   <!-- **************************************-->
   <!-- *********    COMPILE TEST   **********-->
   <!-- **************************************-->
   <target name="compile.base" description="Compiles tests base classes">
-    <mkdir dir="${test.build}/classes"/>
-    <javac 
-      srcdir="${test.src}"
-      destdir="${test.build}/classes"
-      deprecation="${deprecation}"
-      debug="${compile.debug}"
-      nowarn="${compile.nowarn}"
-      optimize="${compile.optimize}">
-      <classpath refid="test.classpath"/>
-      <include name="**/*.java"/>  
-    </javac> 
+    <mkdir dir="${test.build}/classes" />
+    <javac srcdir="${test.src}"
+           destdir="${test.build}/classes"
+           deprecation="${deprecation}"
+           debug="${compile.debug}"
+           nowarn="${compile.nowarn}"
+           optimize="${compile.optimize}">
+      <classpath refid="test.classpath" />
+      <include name="**/*.java" />
+    </javac>
 
-  </target>  
+  </target>
 
-  <target name="compile.stub">      
-    <mkdir dir="${test.dist.lib}"/>
-    <mkdir dir="${test.build.stub}"/>
+  <target name="compile.stub">
+    <mkdir dir="${test.dist.lib}" />
+    <mkdir dir="${test.build.stub}" />
     <multipleAnt dir="${test.genstub}" />
   </target>
 
   <!-- **************************************-->
   <!-- *********        DIST       **********-->
   <!-- **************************************-->
-  <target name="dist">  
-    <antcall target="jar"/>
-    <antcall target="jdoc"/>
+  <target name="dist">
+    <antcall target="jar" />
+    <antcall target="jdoc" />
   </target>
 
   <!-- *************************************-->
@@ -123,7 +133,7 @@
   <!-- This target call every default target of each xml file
        present in ${archive} directory. -->
   <target name="jar" depends="compile">
-    <mkdir dir="${test.dist.lib}"/>
+    <mkdir dir="${test.dist.lib}" />
     <multipleAnt dir="${test.archive}" />
   </target>
 
@@ -131,59 +141,60 @@
   <!-- *********        JDOC      **********-->
   <!-- *************************************-->
   <target name="jdoc">
-    <mkdir dir="${test.dist.jdoc}"/>
-    <javadoc
-      packagenames="org.objectweb.carol.jtests.*"
-      defaultexcludes="yes"
-      destdir="${test.dist.jdoc}"
-      windowtitle="Objectweb Common Architecture for RMI ObjectWeb Layer Tests API"
-      doctitle="Objectweb Common Architecture for RMI ObjectWeb Layer  Tests API"
-      author="true" version="true" use="true">
+    <mkdir dir="${test.dist.jdoc}" />
+    <javadoc packagenames="org.objectweb.carol.jtests.*"
+             defaultexcludes="yes"
+             destdir="${test.dist.jdoc}"
+             windowtitle="Objectweb Common Architecture for RMI ObjectWeb Layer Tests API"
+             doctitle="Objectweb Common Architecture for RMI ObjectWeb Layer  Tests API"
+             author="true"
+             version="true"
+             use="true">
       <sourcepath>
-	<pathelement path="${test.src}"/>
-	<pathelement path="${test.build}/classes"/>
+        <pathelement path="${test.src}" />
+        <pathelement path="${test.build}/classes" />
       </sourcepath>
-      <classpath refid="test.classpath"/>
-    </javadoc> 
+      <classpath refid="test.classpath" />
+    </javadoc>
   </target>
 
   <!-- ************************************-->
   <!-- *********     CLEAN       **********-->
   <!-- ************************************-->
   <target name="clean">
-    <delete dir="${test.dist}"/>
-    <delete dir="${test.dist.result}"/>
+    <delete dir="${test.dist}" />
+    <delete dir="${test.dist.result}" />
   </target>
 
   <!-- ************************************-->
   <!-- *********     TEST ALL    **********-->
   <!-- ************************************-->
   <target name="run.tests" depends="jar" description="Launch all the tests">
-    <ant antfile="conform/carol_all_tests.xml" target="test.all"/>
-  </target> 
+    <ant antfile="conform/carol_all_tests.xml" target="test.all" />
+  </target>
 
   <!-- **********************************-->
   <!-- *********     HELP       **********-->
   <!-- **********************************-->
   <!-- print the usage of this ant file -->
   <target name="help">
-    <echo message="The available target is the following:"/>
-    <echo message="  compile: compiles the product into ${build}"/>
-    <echo message="  dist: creates all distributions of the product into ${dist}"/>
-    <echo message="  zip: creates all zip files of the product distributions into ${zip}"/>
-    <echo message="  clean: removes all produced files."/>
-    <echo message="  jar: creates all jars ${dist.lib}"/>
-    <echo message="  run.tests: run all test"/>
-    <echo message=""/>
-    <echo message="There are some options to run tests:"/>
-    <echo message="  -Dtest.group=&lt;group name&gt;  Only a group of test: The default target of"/>
-    <echo message="    the xml file is called the test.group contains the xml file name with"/>
-    <echo message="    directory ex: ant -Dtest.group=conform/toto test =&gt; calls the default"/>
-    <echo message="    target of the file ${test}/conform/toto.xml"/>
-    <echo message="  -Dtest.type=&lt;type name&gt;  Only a type of test: conform, deviance, stress,"/>
-    <echo message="    thread or perf. The test.type properties contains the directory name of"/>
-    <echo message="    the test type ex: ant -Dtest.type=conform test"/>
-    <echo message="  -Dtest.name=&lt;test name&gt;  Only a single test. The target &lt;test name&gt; is called"/>
+    <echo message="The available target is the following:" />
+    <echo message="  compile: compiles the product into ${build}" />
+    <echo message="  dist: creates all distributions of the product into ${dist}" />
+    <echo message="  zip: creates all zip files of the product distributions into ${zip}" />
+    <echo message="  clean: removes all produced files." />
+    <echo message="  jar: creates all jars ${dist.lib}" />
+    <echo message="  run.tests: run all test" />
+    <echo message="" />
+    <echo message="There are some options to run tests:" />
+    <echo message="  -Dtest.group=&lt;group name&gt;  Only a group of test: The default target of" />
+    <echo message="    the xml file is called the test.group contains the xml file name with" />
+    <echo message="    directory ex: ant -Dtest.group=conform/toto test =&gt; calls the default" />
+    <echo message="    target of the file ${test}/conform/toto.xml" />
+    <echo message="  -Dtest.type=&lt;type name&gt;  Only a type of test: conform, deviance, stress," />
+    <echo message="    thread or perf. The test.type properties contains the directory name of" />
+    <echo message="    the test type ex: ant -Dtest.type=conform test" />
+    <echo message="  -Dtest.name=&lt;test name&gt;  Only a single test. The target &lt;test name&gt; is called" />
   </target>
 
 </project>

@@ -1,4 +1,33 @@
-<project name="carol.all.test" default="test.all" >
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ - Copyright (C) 2002,2005 - INRIA (www.inria.fr)
+ -
+ - CAROL: Common Architecture for RMI ObjectWeb Layer
+ -
+ - This library is developed inside the ObjectWeb Consortium,
+ - http://www.objectweb.org
+ -
+ - This library is free software; you can redistribute it and/or
+ - modify it under the terms of the GNU Lesser General Public
+ - License as published by the Free Software Foundation; either
+ - version 2.1 of the License, or any later version.
+ -
+ - This library is distributed in the hope that it will be useful,
+ - but WITHOUT ANY WARRANTY; without even the implied warranty of
+ - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ - Lesser General Public License for more details.
+ -
+ - You should have received a copy of the GNU Lesser General Public
+ - License along with this library; if not, write to the Free Software
+ - Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+ - USA
+ -
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ - $Id: carol_all_tests.xml,v 1.22 2005/02/16 14:43:28 benoitf Exp $
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ -->
+<project name="carol.all.test" default="test.all">
 
   <!--
     Figure out what to do with the Ant property "orb.initializer.class".
@@ -29,41 +58,41 @@
   -->
 
   <property name="orb.initializer.class"
-    value="-D.org.omg.PortableInterceptor.ORBInitializerClass.org.objectweb.owis.common.jtests.interceptor.iiop.IIOPInitilizer"/>
+            value="-D.org.omg.PortableInterceptor.ORBInitializerClass.org.objectweb.owis.common.jtests.interceptor.iiop.IIOPInitilizer" />
 
-  <property name="test.build.properties" value="${test.build}/test/properties"/>
+  <property name="test.build.properties"
+            value="${test.build}/test/properties" />
 
   <taskdef name="carolTest"
-    classname="org.objectweb.carol.ant.CarolTestTask"
-    classpath="${test.build}/classes"/>
+           classname="org.objectweb.carol.ant.CarolTestTask"
+           classpath="${test.build}/classes" />
 
   <!-- ************************************-->
   <!-- *********     TEST ALL    **********-->
   <!-- ************************************-->
   <target name="test.all">
-    <mkdir dir="${test.build.properties}"/>
+    <mkdir dir="${test.build.properties}" />
 
-    <carolTest
-      antfile="conform/generic/carol_double.xml"
-      propDestination="${test.build.properties}"
-      propSource="${test.ext}">
+    <carolTest antfile="conform/generic/carol_double.xml"
+               propDestination="${test.build.properties}"
+               propSource="${test.ext}">
     </carolTest>
     <antcall target="report" />
   </target>
-  
-    <target name="report">
-     <mkdir dir="${test.dist.report}" />
-     <junitreport todir="${test.dist.report}">
-       <fileset dir="${test.dist.results}">
-         <include name="**/**/TEST-*.xml"/>
-       </fileset>
-       <report format="noframes"
-                     todir="${test.dist.report}"
-                     styledir="${test.etc.dir}" />
-     </junitreport>
-      <move file="${test.dist.report}/junit-noframes.html"
-               tofile="${test.dist.report}/report-${dateofday}.html" />
-   </target>
 
-  
+  <target name="report">
+    <mkdir dir="${test.dist.report}" />
+    <junitreport todir="${test.dist.report}">
+      <fileset dir="${test.dist.results}">
+        <include name="**/**/TEST-*.xml" />
+      </fileset>
+      <report format="noframes"
+              todir="${test.dist.report}"
+              styledir="${test.etc.dir}" />
+    </junitreport>
+    <move file="${test.dist.report}/junit-noframes.html"
+          tofile="${test.dist.report}/report-${dateofday}.html" />
+  </target>
+
+
 </project>

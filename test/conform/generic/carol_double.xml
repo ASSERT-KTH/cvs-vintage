@@ -1,24 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
- - The contents of this file are subject to the LGPL Licence 
- - 
- - Author:              <a href="sebastien.chassande@inriaples.fr">Sebastien Chassande</a>
- - Carol Modifications :<a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ - Copyright (C) 1999,2005 - INRIA (www.inria.fr)
  -
- - Compilation directive for testing a basic server with carol over sun jrmp
- - this test create 5 jvm (name server 1, name sever 2,  server 1, server 1, junit-client 1, junit client 2) 
- - for carol multi rmi unit testing 
+ - CAROL: Common Architecture for RMI ObjectWeb Layer
  -
- - to call this projecrt set the properties : 
- -                      stub.jar.name1, stub.jar.name2,
- -                      client.properties.file.name1,  client.properties.file.name2,
- -                      server.properties.file.name,
- -                      name.server.class.name1, name.server.option1
- -                      name.server.class.name2, name.server.option2
- -                      test.client.jvm.xtra1,    test.client.jvm.xtra2
+ - This library is developed inside the ObjectWeb Consortium,
+ - http://www.objectweb.org
+ -
+ - This library is free software; you can redistribute it and/or
+ - modify it under the terms of the GNU Lesser General Public
+ - License as published by the Free Software Foundation; either
+ - version 2.1 of the License, or any later version.
+ -
+ - This library is distributed in the hope that it will be useful,
+ - but WITHOUT ANY WARRANTY; without even the implied warranty of
+ - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ - Lesser General Public License for more details.
+ -
+ - You should have received a copy of the GNU Lesser General Public
+ - License along with this library; if not, write to the Free Software
+ - Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+ - USA
+ -
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ - $Id: carol_double.xml,v 1.21 2005/02/16 14:43:28 benoitf Exp $
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
+
 <project name="carol.tests" default="all" >
+  <!--
+   - Compilation directive for testing a basic server with carol over sun jrmp
+   - this test create 5 jvm (name server 1, name sever 2,  server 1, server 1, junit-client 1, junit client 2) 
+   - for carol multi rmi unit testing 
+   -
+   - to call this projecrt set the properties : 
+   -                      stub.jar.name1, stub.jar.name2,
+   -                      client.properties.file.name1,  client.properties.file.name2,
+   -                      server.properties.file.name,
+   -                      name.server.class.name1, name.server.option1
+   -                      name.server.class.name2, name.server.option2
+   -                      test.client.jvm.xtra1,    test.client.jvm.xtra2
+   -->
+
   <!-- test result location -->
   <property name="report.dir"  value="${test.dist.results}/${test.name}"/>
   <property name="parallel.report.dir1"  value="${report.dir}/parallel1"/>
