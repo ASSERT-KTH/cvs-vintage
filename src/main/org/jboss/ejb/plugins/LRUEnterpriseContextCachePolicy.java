@@ -18,13 +18,15 @@ import org.w3c.dom.Element;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.ArrayList;
 
 /**
  * Least Recently Used cache policy for EnterpriseContexts.
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.20 $
+ * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
+ * @version $Revision: 1.21 $
  */
 public class LRUEnterpriseContextCachePolicy
         extends LRUCachePolicy
@@ -421,7 +423,7 @@ public class LRUEnterpriseContextCachePolicy
 
             LRUList list = getList();
             long now = System.currentTimeMillis();
-
+            ArrayList removedEntries = null;
             synchronized (m_cache.getCacheLock())
             {
                for (LRUCacheEntry entry = list.m_tail; entry != null; entry = list.m_tail)
@@ -434,7 +436,9 @@ public class LRUEnterpriseContextCachePolicy
                      log(entry.m_key, initialSize);
 
                      // Kick out of the cache this entry
-                     kickOut(entry);
+                     m_cache.remove(entry.m_object);
+                     if (removedEntries == null) removedEntries = new ArrayList();
+                     removedEntries.add(entry.m_object);
 
                      int finalSize = list.m_count;
 
@@ -448,6 +452,27 @@ public class LRUEnterpriseContextCachePolicy
                   else
                   {
                      break;
+                  }
+               }
+            }
+            // We need to do this outside of cache lock because of deadlock possibilities
+            // with EntityInstanceInterceptor and Stateful.  THis is because tryToPassivate
+            // calls lock.synch and other interceptor call lock.synch and after call a cache method that locks
+            if (removedEntries != null)
+            {
+               for (int i = 0; i < removedEntries.size(); i++)
+               {
+                  EnterpriseContext ctx = (EnterpriseContext)removedEntries.get(i);
+                  try
+                  {
+                     m_cache.tryToPassivate(ctx);
+                  }
+                  catch (Exception ignored)
+                  {
+                     if (log.isTraceEnabled())
+                     {
+                        log.warn("Unable to passivate ctx", ignored);
+                     }
                   }
                }
             }
