@@ -22,7 +22,8 @@ import com.dreambean.ejx.xml.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *   @version $Revision: 1.3 $
  */
 public class JawsCMPField
    extends com.dreambean.ejx.ejb.CMPField
@@ -42,25 +43,99 @@ public class JawsCMPField
    // Constructors --------------------------------------------------
    public JawsCMPField()
    {
-      addPropertyChangeListener(this);
+	   
+     addPropertyChangeListener(this);
    }
     
    // Public --------------------------------------------------------
    public void setColumnName(String n) { columnName = n; }
    public String getColumnName() { return columnName; }
    
-   // UNREADABLE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   public void setSqlType(String s) { String old = sqlType; sqlType = s; pcSupport.firePropertyChange("SqlType", old, sqlType);}
-    // UNREADABLE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   	public void setSqlType(String s) { 
+   
+    	String old = sqlType; 
+	   
+	   	sqlType = s; 
+	   
+	   	pcSupport.firePropertyChange("SqlType", old, sqlType);
+   	}
   
-   public String getSqlType() { return sqlType; }
+    public String getSqlType() { 
+	      
+	    if (!sqlType.equals("")) { 
+       
+	        return sqlType;
+	    }
+		
+		else try {
+		
+			// If the sqlType was not specified directly get the sqlType from the default
+			// Path is Field->Entity->Beans->Jar(down)->TypeMappings->TMapping->Mapping
+		
+		    // Get the type from the Entity stored above
+		 	ClassLoader cl = ((JawsFileManager)getBeanContext().getBeanContext().getBeanContext().getBeanContext()).getClassLoader();
+            
+			Class clazz = cl.loadClass(((JawsEntity)getBeanContext()).getEjbClass());
+            
+			java.lang.reflect.Field type = clazz.getField(getFieldName());
+			
+			// Retrieve the sql type from Mapping defaults
+			sqlType = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getSqlTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
+        
+			return sqlType;
+		}
+		
+		catch (Exception e) {
+			
+			// not much we can do at this point
+			e.printStackTrace(System.err);
+			
+			return null;
+		}
+	}
   
-   // UNREADABLE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   public void setJdbcType(String s) { String old = jdbcType; jdbcType = s; pcSupport.firePropertyChange("JdbcType", old, jdbcType);}
-    // UNREADABLE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public void setJdbcType(String s) { 
+	   
+       String old = jdbcType; 
+	   
+	   jdbcType = s; 
+	   
+	   pcSupport.firePropertyChange("JdbcType", old, jdbcType);
+   	}
   
-   public String getJdbcType() { return jdbcType; }
-  
+   	public String getJdbcType() { 
+       
+		if (!jdbcType.equals("")) {
+	   
+	    	return jdbcType;
+	   	}
+       
+	   	else try {
+		    
+			// If the sqlType was not specified directly get the sqlType from the default
+			// Path is Field->Entity->Beans->Jar(down)->TypeMappings->TMapping->Mapping
+		
+			// Get the type
+		 	ClassLoader cl = ((JawsFileManager)getBeanContext().getBeanContext().getBeanContext().getBeanContext()).getClassLoader();
+            
+			Class clazz = cl.loadClass(((JawsEntity)getBeanContext()).getEjbClass());
+            
+			java.lang.reflect.Field type = clazz.getField(getFieldName());
+		
+		    // Go get the default from jawsDefault
+			// If there is no database in JawsEnterpriseBeans we use default Mappings
+	   		jdbcType = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getJdbcTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
+           
+	   		return jdbcType;
+   		}
+		catch (Exception e) {
+			
+			// not much we can do at this point
+			e.printStackTrace(System.err);
+			
+			return null;
+		}
+	}
    
    // PropertyChange ------------------------------------------------
    public void addPropertyChangeListener(PropertyChangeListener listener)
@@ -126,6 +201,7 @@ public class JawsCMPField
    {
       if (evt.getPropertyName().equals("TypeMapping"))
       {
+		
          // Try to find out SQL
          try
          {
@@ -133,16 +209,11 @@ public class JawsCMPField
             Class clazz = cl.loadClass(((JawsEntity)getBeanContext()).getEjbClass());
             java.lang.reflect.Field type = clazz.getField(getFieldName());
             
-			 // UNREADABLE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            String sql = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getSqlTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
+			String sql = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getSqlTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
             if (sql != null)
                setSqlType(sql);
-           
-		     // UNREADABLE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
               
             String jdbc = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getJdbcTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
-           
-		     // UNREADABLE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
            
 			if (jdbc != null)
                setJdbcType(jdbc);
