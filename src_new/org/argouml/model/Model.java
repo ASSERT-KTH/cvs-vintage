@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.5 2005/01/02 18:15:26 linus Exp $
+// $Id: Model.java,v 1.6 2005/01/02 22:19:36 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -231,7 +231,7 @@ public final class Model {
      * @return the helper
      */
     public static UmlHelper getUmlHelper() {
-        return impl.getUmlHelper();;
+        return impl.getUmlHelper();
     }
 
     /**
