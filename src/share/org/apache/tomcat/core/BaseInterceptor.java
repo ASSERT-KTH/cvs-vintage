@@ -443,6 +443,10 @@ public class BaseInterceptor
     protected void log( String s, Throwable t, int level ) {
 	loghelper.log(s, t, level);
     }
+
+    public int getDebug() {
+        return debug;
+    }
     
 
 }
