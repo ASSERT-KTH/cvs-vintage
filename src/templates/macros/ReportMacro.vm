@@ -196,7 +196,7 @@
 #end
 
 #if ($template == "reports,Step2.vm" || $template == "reports,Step2b.vm")
-   <th>2: $l10n.ConfineReportDataSet=Confine report data-set</th>
+   <th>2: $l10n.ConfineReportDataSet</th>
 #else
     #set ($wizardLink = $link.setPage("reports,Step2.vm"))
     #if ($reportParameters)
