@@ -9,7 +9,7 @@
 
 <body bgcolor="white">
 
-<adm:admin ctxPath='<%= request.getParameter("ctx") %>' />
+<adm:admin ctxPathParam="ctx" />
 
 <%
   if( ctx==null ) {
@@ -17,6 +17,7 @@
   <h1>Error, no context for <%= request.getParameter( "ctx" ) %> </h1>
 <% } else { %>
 
+  <a href="sessionState.jsp?ctx=<%= request.getParameter( "ctx" ) %>">Session info</a>
   <table border="0" cellpad="2" >
   <tr bgcolor="#e1e1e1">
 

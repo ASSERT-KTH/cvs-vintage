@@ -9,14 +9,13 @@ import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.log.*;
-//import org.apache.tomcat.util.qlog.*;
 
 /**
  * A context administration class. Contexts can be
  * viewed, added, and removed from the context manager.
  *
  */
-public class TomcatAdmin extends TagSupport {
+public class ContextAdmin extends TagSupport {
     private ContextManager cm;
     String ctxPath;
     String docBase;
@@ -27,37 +26,40 @@ public class TomcatAdmin extends TagSupport {
     String value;
     //    PageContext pageContext;
     
-    public TomcatAdmin() {}
+    public ContextAdmin() {}
 
     public int doStartTag() throws JspException {
 	try {
 	    HttpServletRequest req=(HttpServletRequest)pageContext.
 		getRequest();
-	    init(req);
-	    if( cm==null ) {
-		return SKIP_BODY;
-	    }
-	    pageContext.setAttribute("cm", cm);
+
+	    cm=(ContextManager)pageContext.getAttribute("cm");
+	    if( cm==null )
+		throw new JspException( "Can't find context manager" );
+
 	    Context ctx=null;
 	    if( ctxPath==null && ctxPathParam!=null ) {
 		ctxPath=req.getParameter( ctxPathParam );
 	    }
+
 	    if( docBase==null &&  docBaseParam!=null) {
 		docBase=req.getParameter( docBaseParam );
 	    }
 	    
 	    if( ctxPath != null ) {
-		System.out.println("Finding " + ctxPath );
+		if( debug>0 ) log("Finding " + ctxPath );
 		Enumeration en=cm.getContexts();
 		while( en.hasMoreElements() ) {
 		    ctx=(Context)en.nextElement();
 		    // XXX virtual host
 		    if( ctxPath.equals( ctx.getPath())) {
 			pageContext.setAttribute("ctx", ctx);
-			System.out.println("Found " + ctx );
 			break;
 		    }
 		}
+	    }
+	    if( ctx==null ) {
+		throw new JspException("Can't find context " + ctxPath );
 	    }
 	    if("removeContext".equals( action ) )
 		removeContext( cm , ctx);
@@ -79,23 +81,8 @@ public class TomcatAdmin extends TagSupport {
 	super.setParent( parent);
     }
 
-    public void release() {
-    }
-
-    private void init(HttpServletRequest request) {
-	Request realRequest = (Request)
-	    request.getAttribute( Request.ATTRIB_REAL_REQUEST);
-	if( realRequest==null )
-	    pageContext.getServletContext().log("Untrusted Application");
-	else
-	    cm = realRequest.getContext().getContextManager();
-    }
-
-    public ContextManager getContextManager(HttpServletRequest request ) {
-	if( cm==null ) init( request );
-        return cm;
-    }
-
+    // -------------------- Properties --------------------
+    
     public void setCtxPath( String ctx ) {
 	ctxPath=ctx;
     }
@@ -123,11 +110,12 @@ public class TomcatAdmin extends TagSupport {
     public void setValue( String s ) {
 	this.value=s;
     }
+
     
     private void removeContext( ContextManager cm, Context ctx)
 	throws TomcatException
     {
-	System.out.println("Removing " + ctx );
+	if( debug > 0 ) log("Removing " + ctx );
 	cm.removeContext( ctx );
     }
 
@@ -136,7 +124,7 @@ public class TomcatAdmin extends TagSupport {
     {
 // 	try {
 // 	    QueueLogger logger=new QueueLogger();
-// 	    System.out.println("Setting logger " + dest );
+// 	    if( debug > 0 ) log ("Setting logger " + dest );
 // 	    logger.setPath( dest );
 // 	    logger.open();
 // 	    LogManager logManager=(LogManager)ctx.getContextManager().
@@ -158,7 +146,8 @@ public class TomcatAdmin extends TagSupport {
 	if( ! docBase.startsWith("/") ) {
 	    docBase=cm.getHome() + "/" + docBase;
 	}
-	System.out.println("Adding " + path + " " + docBase);
+	if( debug > 0 )
+	    log("Adding " + path + " " + docBase);
 	Context context = new Context();
 	context.setContextManager(cm);
 	context.setPath(path);
@@ -166,5 +155,12 @@ public class TomcatAdmin extends TagSupport {
 
 	cm.addContext(context);
 	context.init();
+    }
+
+    // --------------------
+    private static int debug=0;
+    
+    private void log(String s ) {
+	System.out.println(s );
     }
 }

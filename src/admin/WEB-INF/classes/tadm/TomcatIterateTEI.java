@@ -24,9 +24,6 @@ public class TomcatIterateTEI extends TagExtraInfo {
 			     data.getAttributeString( "type" ),
 			     true,
 			     VariableInfo.NESTED ), 
-			     
-	    new VariableInfo("ctx2", "org.apache.tomcat.core.Context",
-			     true,  VariableInfo.NESTED)
 	});
 
     }
