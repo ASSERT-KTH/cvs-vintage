@@ -4,6 +4,8 @@
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($userAttrs = $module.getUserAttributes($issueType)) 
 #set ($issueList = $data.Parameters.getStrings("issue_ids"))
+#set ($searchString = $data.Parameters.getString("searchString" , ""))
+#set ($searchField = $data.Parameters.getString("searchField" , ""))
 
 #pagetitle()
 
@@ -119,6 +121,77 @@ $intake.declareGroups()
 </form>
 
 
+## SORTING
+#set ($sortColumn = $data.Parameters.getString("sortColumn",""))
+#set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
+#if (!$sortColumn || $sortColumn.length() == 0)
+   #set ($sortColumn = "name")
+#end
+#if (!$sortPolarity || $sortPolarity.length() == 0)
+   #set ($sortPolarity = "asc")
+#end
+#set ($allAttributes = $scarabG.getAllAttributes($sortColumn, $sortPolarity))
+
+#macro (sort $shortName $longName)
+   ##set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()))
+     #if ($sortColumn.equals($shortName))
+        #if ($sortPolarity.equals("desc"))
+           #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("sortPolarity", "asc").setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
+          #foreach ($issueId in $issueList)
+              #set ($arrowLink = $arrowLink.addPathInfo("issue_ids", $issueId))
+          #end
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
+        #else
+           #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
+          #foreach ($issueId in $issueList)
+              #set ($arrowLink = $arrowLink.addPathInfo("issue_ids", $issueId))
+          #end
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
+        #end $longName
+     #else
+        #set ($sortLink = $link.setPage("AssignIssue.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("sortPolarity", "$sortPolarity").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
+        #foreach ($issueId in $issueList)
+            #set ($sortLink = $sortLink.addPathInfo("issue_ids", $issueId))
+        #end
+        <a href="$sortLink">$longName</a>
+     #end
+#end
+
+
+## PAGINATION
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
+#set ($pageNum = $data.Parameters.getInt("pageNum",0))
+#if ($resultsPerPage == 0)
+  #set ($resultsPerPage = 25)
+#end
+#if ($pageNum == 0)
+  #set ($pageNum = 1)
+#end
+
+#macro (paginate $resultsPerPage $pageNum $sortColumn $sortPolarity)
+ <p class="paginate">
+  #set ($pagLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
+
+ #if($scarabR.PrevPage != 0)
+  #set ($prevLink = $pagLink.setPathInfo("pageNum", "$scarabR.PrevPage"))
+      #foreach ($issueId in $issueList)
+          #set ($prevLink = $prevLink.addPathInfo("issue_ids", $issueId))
+      #end
+  <a href="$prevLink">&laquo;</a> previous |
+ #end
+  #set ($pagLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
+ $pageNum of $scarabR.NbrPages
+ #if ($scarabR.NextPage != 0)
+      #set ($nextLink = $pagLink.setPathInfo("pageNum", "$scarabR.NextPage"))
+      #foreach ($issueId in $issueList)
+          #set ($nextLink = $nextLink.addPathInfo("issue_ids", $issueId))
+      #end
+  | <a href="$nextLink">&raquo;</a> next
+ #end
+ </p> 
+#end
+
 
 ## USER SEARCH
 <form action="$actionLink" method="post">
@@ -143,61 +216,72 @@ $intake.declareGroups()
 </table>
 </div>
 
-#set ($searchString = $data.Parameters.getString("searchString" , ""))
 #if ($searchString && $searchString.length() > 0)
    #set ($searchResults = $scarabR.UserSearchResults) 
    #if ( $searchResults.isEmpty())
       <p class="alert">No users match your criteria. Displaying full user list.</p>
-      #set ($searchResults = $module.getUsers($module.getUserPermissions($issueType)))
+      #set ($searchResults = $scarabR.Users)
    #end
 #else
-      #set ($searchResults = $module.getUsers($module.getUserPermissions($issueType)))
+      #set ($searchResults = $scarabR.Users)
 #end
-   
+
+#if ($searchResults.size() > $resultsPerPage)
+  #set ($pagList = $scarabR.getPaginatedList($searchResults, $pageNum.toString(), $resultsPerPage.toString()))
+  #set ($paginated = "true")
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+#end
+
+#if ($paginated)
+ #if ($pagList)
+   #set ($searchResults = $pagList)
+ #end
+#end
 
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
 	<th nowrap="nowrap">Select</th>
-	<th>Name</th>
-	<th><a href="#" title="sort">Email</a></th>
+    <th>#sort ("name" "Name")</th>
+	<th>#sort ("email" "Email")</a></th>
 	<th>Association</th>
 	</tr>
-        ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
-		
-       #foreach ($user in $searchResults)
-		<tr class="a">
-		<td><input type="checkbox" name="add_user_$user.UserId" value="$user.UserId" /></td>
-		<td><strong>$!user.FirstName $!user.LastName</strong></td>
-		<td><a href="mailTo:$user.Email">$user.UserName</a></td>
-        <td><select name="user_attr_$user.UserId">
-         #foreach ($userAttr in $userAttrs)
-          #if ($user.hasPermission($userAttr.Permission, $module))
-            <option value="$userAttr.AttributeId">$userAttr.Name</option>
-          #end
-         #end
-           </select></td>
-    		    
-		</tr>
-       #end
+   #foreach ($user in $searchResults)
+    <tr class="a">
+    <td><input type="checkbox" name="add_user_$user.UserId" value="$user.UserId" /></td>
+    <td><strong>$user.FirstName $user.LastName</strong></td>
+    <td><a href="mailTo:$user.Email">$user.UserName</a></td>
+    <td><select name="user_attr_$user.UserId">
+     #foreach ($userAttr in $userAttrs)
+      #if ($user.hasPermission($userAttr.Permission, $module))
+        <option value="$userAttr.AttributeId">$userAttr.Name</option>
+      #end
+     #end
+    </select></td>
+    </tr>
+   #end
    </table>  
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAdd" value="Add selected to assignee list" />
 </div>
 
+#if ($paginated)
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+#end
 		
-#*
-##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
 
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
              <tr>
        <th>Max items per page</td>
-       <td><input type="radio" name="foo" checked="checked" /> 25 <input type="radio" name="foo" /> 50 <input type="radio" name="foo" /> 75 <input type="radio" name="foo" /> 100&#160;<input type="submit" value="refresh" /></p>
+       <td> <input type="radio" value=2 name="resultsPerPage" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
+         <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
+         <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
+         <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.toString().equals("100")) checked="checked" #end /> 100
+        &#160;<input type="submit" value="Refresh" /></p>
 </td>
      </tr>
       </table>
 </div>
-*#
 
 
 $intake.declareGroups()
