@@ -5,10 +5,10 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: ServiceRefEnvBuilder.java,v 1.2 2004/04/28 14:34:52 tdiesler Exp $
+// $Id: ServiceRefEnvBuilder.java,v 1.3 2004/04/30 16:24:46 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: ServiceRefEnvBuilder.java,v 1.2 2004/04/28 14:34:52 tdiesler Exp $
+// $Id: ServiceRefEnvBuilder.java,v 1.3 2004/04/30 16:24:46 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
@@ -35,6 +35,14 @@ public final class ServiceRefEnvBuilder
    // provide logging
    private static final Logger log = Logger.getLogger(ServiceRefEnvBuilder.class);
 
+   /**
+    * This scans the WSDL for the one and only service element
+    *
+    * @param envCtx ENC to bind the javax.rpc.xml.Service object to
+    * @param serviceRefs An iterator of the service-ref elements in the client deployment descriptor
+    * @param di The client's deployment info
+    * @throws DeploymentException if it goes wrong
+    */
    public static void setupEnvironment(Context envCtx, Iterator serviceRefs, DeploymentInfo di) throws DeploymentException
    {
       try

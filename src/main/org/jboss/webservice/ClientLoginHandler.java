@@ -5,10 +5,10 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: ClientLoginHandler.java,v 1.2 2004/04/30 07:41:26 tdiesler Exp $
+// $Id: ClientLoginHandler.java,v 1.3 2004/04/30 16:24:46 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: ClientLoginHandler.java,v 1.2 2004/04/30 07:41:26 tdiesler Exp $
+// $Id: ClientLoginHandler.java,v 1.3 2004/04/30 16:24:46 tdiesler Exp $
 
 import org.apache.axis.AxisFault;
 import org.apache.axis.MessageContext;
@@ -23,6 +23,7 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 import java.security.Principal;
+import java.util.Arrays;
 
 /**
  * Add username/password from the SecurityAssociation as
@@ -52,6 +53,10 @@ public class ClientLoginHandler extends BasicHandler
    {
       Principal principal = SecurityAssociation.getPrincipal();
       Object credential = SecurityAssociation.getCredential();
+
+      // if the credential is a char[] convert it to String
+      if (credential instanceof char[])
+         credential = new String((char[])credential);
 
       try
       {

@@ -5,10 +5,10 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: Constants.java,v 1.1 2004/04/28 14:34:52 tdiesler Exp $
+// $Id: Constants.java,v 1.2 2004/04/30 16:24:46 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: Constants.java,v 1.1 2004/04/28 14:34:52 tdiesler Exp $
+// $Id: Constants.java,v 1.2 2004/04/30 16:24:46 tdiesler Exp $
 
 /**
  * Static constants for JBoss webservices.
@@ -20,8 +20,8 @@ public interface Constants
 {
    /** The default WS4EE namespace uri */
    public static final String WS4EE_NAMESPACE_URI = "http://webservice.jboss.com/ws4ee";
-   /** The Axis client engine config */
-   public static final String AXIS_CLIENT_CONFIG = "META-INF/axis-client-config.xml";
-   /** The Axis server engine config */
-   public static final String AXIS_SERVER_CONFIG = "META-INF/axis-server-config.xml";
+   /** The Axis client engine config system property: org.jboss.webservice.client.config */
+   public static final String WS4EE_CLIENT_CONFIG = "org.jboss.webservice.client.config";
+   /** The Axis server engine config system property: org.jboss.webservice.client.server */
+   public static final String WS4EE_SERVER_CONFIG = "org.jboss.webservice.client.server";
 }

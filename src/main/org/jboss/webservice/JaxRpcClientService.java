@@ -5,11 +5,12 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: JaxRpcClientService.java,v 1.3 2004/04/28 14:34:52 tdiesler Exp $
+// $Id: JaxRpcClientService.java,v 1.4 2004/04/30 16:24:46 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: JaxRpcClientService.java,v 1.3 2004/04/28 14:34:52 tdiesler Exp $
+// $Id: JaxRpcClientService.java,v 1.4 2004/04/30 16:24:46 tdiesler Exp $
 
+import org.apache.axis.EngineConfiguration;
 import org.apache.axis.client.AxisClient;
 import org.apache.axis.client.Service;
 import org.apache.axis.configuration.FileProvider;
@@ -17,7 +18,10 @@ import org.jboss.logging.Logger;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ServiceException;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -60,19 +64,17 @@ public class JaxRpcClientService extends Service
    }
 
    /**
-    * Get the AxisClient from JMX
-    * @return
+    * Get the AxisClient engine.
+    *
+    * Use the {@link EngineConfigurationFinder#getClientEngineConfiguration()} to discover the client
+    * engine configuration. If it cannot be found, fall back to the Axis default engine.
     */
    protected AxisClient getAxisClient()
    {
-      // load axis client config from resource
-      ClassLoader cl = getClass().getClassLoader();
-      InputStream configStream = cl.getResourceAsStream(Constants.AXIS_CLIENT_CONFIG);
-      if (configStream != null)
-         return new AxisClient(new FileProvider(configStream));
-
-      // fall back to Axis discovery of the client config
-      log.warn("Cannot load '" + Constants.AXIS_CLIENT_CONFIG + "', using default");
-      return super.getAxisClient();
+      EngineConfiguration config = EngineConfigurationFinder.getClientEngineConfiguration();
+      if (config != null)
+         return new AxisClient(config);
+      else
+         return super.getAxisClient();
    }
 }
