@@ -162,6 +162,7 @@ public class Http10Interceptor extends PoolTcpConnector
 	    // any other exception or error is odd. Here we log it
 	    // with "ERROR" level, so it will show up even on
 	    // less-than-verbose logs.
+	    e.printStackTrace();
 	    log( "Error reading request, ignored", e, Logger.ERROR);
 	} 
 	finally {

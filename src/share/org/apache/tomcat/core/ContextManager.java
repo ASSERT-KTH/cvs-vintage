@@ -425,21 +425,13 @@ public final class ContextManager implements LogAware{
 		    cI[i].addContext( this, ctx );
 		}
 		ctx.setState( Context.STATE_ADDED );
+		log("Adding " +  ctx.toString());
 	    } catch( TomcatException ex ) {
 		log( "Context not added " + ctx , ex );
 		continue;
 	    }
 	}
-    }
 
-    /** Will start the connectors and begin serving requests.
-     *  It must be called after init.
-     */
-    public final void start() throws TomcatException {
-	if( state!=STATE_INIT )
-	    throw new TomcatException( "Invalid state in start(), " +
-				       " you need to call init() "+ state);
-	
 	Enumeration enum = getContexts();
 	while (enum.hasMoreElements()) {
 	    Context ctx = (Context)enum.nextElement();
@@ -453,6 +445,24 @@ public final class ContextManager implements LogAware{
 	    }
 	}
 
+
+    }
+
+    /** Will start the connectors and begin serving requests.
+     *  It must be called after init.
+     */
+    public final void start() throws TomcatException {
+	if( state!=STATE_INIT )
+	    throw new TomcatException( "Invalid state in start(), " +
+				       " you need to call init() "+ state);
+	
+	//XXX before or after state=START ?
+	
+	BaseInterceptor cI[]=defaultContainer.getInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].engineStart( this );
+	}
+
 	// requests can be processed now
 	state=STATE_START;
     }
@@ -460,6 +470,14 @@ public final class ContextManager implements LogAware{
     /** Will stop all connectors
      */
     public final void stop() throws Exception {
+	state=STATE_INIT; // initialized, but not accepting connections
+	
+	BaseInterceptor cI[]=defaultContainer.getInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].engineStop( this );
+	}
+
+	// XXX we shouldn't call shutdown is stop !
 	shutdown();
     }
 
@@ -631,7 +649,18 @@ public final class ContextManager implements LogAware{
      *  call this method to get it processed.
      */
     public final void service( Request req, Response res ) {
-	internalService( req, res );
+	if( state!=STATE_START ) {
+	    // A request was received before all components are
+	    // in started state. Than can happen if the adapter was
+	    // started too soon or of the server is temporarily
+	    // disabled.
+	    req.setAttribute("javax.servlet.error.message",
+			     "Server is starting");
+	    handleStatus( req, res, 503 ); // service unavailable
+	} else {
+	    internalService( req, res );
+	}
+	
 	// clean up
 	try {
 	    res.finish();

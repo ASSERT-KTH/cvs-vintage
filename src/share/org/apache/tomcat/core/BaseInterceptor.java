@@ -326,6 +326,21 @@ public class BaseInterceptor
     {
     }
 
+    /** This notifies that tomcat is started. Adapters shouldn't
+	accept connections before everything is set up internally.
+    */
+    public void engineStart(ContextManager cm )
+	throws TomcatException
+    {
+    }
+
+    /** This notifies that tomcat is stoped. No more requests will
+	be processed.
+    */
+    public void engineStop(ContextManager cm )
+	throws TomcatException
+    {
+    }
 
     /**
      *  Called when a context is added to a CM. The context is probably not
