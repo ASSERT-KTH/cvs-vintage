@@ -2,9 +2,6 @@
  *  Attributes
  */
 
-/* Null Attribute */
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
-        values(0, 'Null Attribute', 1, 'Null Attribute', '2002-01-01 00:30:00');
 /* Description */
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
         values(1, 'Description', 12, 'Description', '2002-01-01 00:30:00');
@@ -56,9 +53,6 @@ update SCARAB_ATTRIBUTE set CREATED_BY='0';
  * Attribute Options
  */
 
-/* null option */
-insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(0, 0, 'Root');
 /* Unconfirmed */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(1, 3, 'unconfirmed');
@@ -405,8 +399,6 @@ insert into SCARAB_R_OPTION_OPTION values (87,83,1,29,29);
 /*
  * Types of issues (artifact/issue types).
  */
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
-        values(0, 'Parent', 'Top level issue type. Do not modify.', 0);
 insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
         values(1, 'Defect', 'An issue in existing feature/functionality.', 0);
 insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
