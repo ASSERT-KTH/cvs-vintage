@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.14 2001/07/03 23:55:27 costin Exp $
+/* $Id: ApacheConfig.java,v 1.15 2001/07/04 05:09:56 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -105,14 +105,14 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Mel Martinez
-	@version $Revision: 1.14 $ $Date: 2001/07/03 23:55:27 $
+	@version $Revision: 1.15 $ $Date: 2001/07/04 05:09:56 $
  */
 public class ApacheConfig  extends BaseInterceptor { 
     
     /** default path to mod_jk .conf location */
-    public static final String MOD_JK_CONFIG = "conf/jk/mod_jk.conf";
+    public static final String MOD_JK_CONFIG = "conf/auto/mod_jk.conf";
     /** default path to workers.properties file */
-    public static final String WORKERS_CONFIG = "conf/jk/workers.properties";
+    public static final String WORKERS_CONFIG = "conf/auto/workers.properties";
     /** default mod_jk log file location */
     public static final String JK_LOG_LOCATION = "logs/mod_jk.log";
     /** default location of mod_jk Apache plug-in. */
@@ -142,7 +142,8 @@ public class ApacheConfig  extends BaseInterceptor {
     private String jkProto = null;
     private int portInt=0;
     String tomcatHome;
-
+    private boolean useJkMount=true;
+    
     private String jkDebug=null;
     
     // default is true until we can map all web.xml directives
@@ -188,6 +189,13 @@ public class ApacheConfig  extends BaseInterceptor {
      */
     public void setForwardAll( boolean b ) {
 	forwardAll=b;
+    }
+
+    /** Use JkMount directives ( default ) or <Location>
+	and SetHandler ( if false )
+    */
+    public void setUseJkMount( boolean b ) {
+	useJkMount=b;
     }
     
     /**
@@ -274,8 +282,14 @@ public class ApacheConfig  extends BaseInterceptor {
     /** Initialize defaults for properties that are not set
 	explicitely
     */
-    public void initProperties() {
-	jkConfig=getConfigFile( jkConfig, configHome, MOD_JK_CONFIG+"-auto");
+    public void initProperties(ContextManager cm) {
+	tomcatHome = cm.getHome();
+	File tomcatDir = new File(tomcatHome);
+	if(configHome==null){
+	    configHome=tomcatDir;
+	}
+	
+	jkConfig=getConfigFile( jkConfig, configHome, MOD_JK_CONFIG);
 	workersConfig=getConfigFile( workersConfig, configHome,
 				     WORKERS_CONFIG);
 	modJk=getConfigFile( modJk, configHome, MOD_JK );
@@ -325,15 +339,9 @@ public class ApacheConfig  extends BaseInterceptor {
     */
     public void execute(ContextManager cm) throws TomcatException {
     	try {
-	    initProperties();
+	    initProperties(cm);
 	    initProtocol(cm);
 	    
-	    tomcatHome = cm.getHome();
-    	    File tomcatDir = new File(tomcatHome);
-    	    
-    	    if(configHome==null){
-    	        configHome=tomcatDir;
-    	    }
     	    
     	    PrintWriter mod_jk = new PrintWriter(new FileWriter(jkConfig));
     	    log("Generating apache mod_jk config = "+jkConfig );
@@ -375,6 +383,7 @@ public class ApacheConfig  extends BaseInterceptor {
     /** Generate the loadModule and general options
      */
     private void generateJkHead(PrintWriter mod_jk) {
+
 	mod_jk.println("###################################################################");
 	mod_jk.println("# Auto generated configuration. Dated: " +  new Date());
 	mod_jk.println("###################################################################");
@@ -416,6 +425,8 @@ public class ApacheConfig  extends BaseInterceptor {
     }
 
     private void generateSSLConfig(PrintWriter mod_jk) {
+	// XXX mod_jk should try few and detect automatically - it's not difficult 
+
 	mod_jk.println("###################################################################");
 	mod_jk.println("#                     SSL configuration                           #");
 	mod_jk.println("# ");                
@@ -460,10 +471,13 @@ public class ApacheConfig  extends BaseInterceptor {
 	    return;
 	}
 	if( path.length() > 1) {
-	    
-	    mod_jk.println("<Location \"" + path + "\">");
-	    mod_jk.println("    SetHandler jakarta-servlet");
-	    mod_jk.println("</Location>");
+	    if( useJkMount ) {
+		mod_jk.println("JkMount " +  path + " " + jkProto );
+	    } else {
+		mod_jk.println("<Location \"" + path + "\">");
+		mod_jk.println("    SetHandler jakarta-servlet");
+		mod_jk.println("</Location>");
+	    }
 	} else {
 	    // the root context
 	    // XXX If tomcat has a root context it should get all requests
@@ -477,7 +491,8 @@ public class ApacheConfig  extends BaseInterceptor {
     }    
 
     
-    private void generateContextMappings(Context context, PrintWriter mod_jk ) {
+    private void generateContextMappings(Context context, PrintWriter mod_jk )
+    {
 	String path  = context.getPath();
 	String vhost = context.getHost();
 	
@@ -492,16 +507,14 @@ public class ApacheConfig  extends BaseInterceptor {
 	    
 	    generateStaticMappings( context, mod_jk );
 	    
-	    mod_jk.println("#");		    
-	    mod_jk.println("# The following line mounts all JSP files and the /servlet/ uri to tomcat");
-	    mod_jk.println("#");                        
-	    mod_jk.println("JkMount " + path +"/servlet/* " + jkProto);
-	    mod_jk.println("JkMount " + path +"/*.jsp " + jkProto);
-	    mod_jk.println("# The following line mounts the " +
-			   "form-based authenticator for the "+
-			   path+" context");
-	    mod_jk.println("#");
-	    mod_jk.println("JkMount " + path + "/*j_security_check " + jkProto);
+	    Enumeration servletMaps=context.getContainers();
+	    while( servletMaps.hasMoreElements() ) {
+		Container ct=(Container)servletMaps.nextElement();
+		addMapping( context, ct , mod_jk );
+	    }
+
+	    mod_jk.println("JkMount " + path + "/*j_security_check " +
+			   jkProto);
 	    mod_jk.println();
 
 	    // XXX ErrorDocument
@@ -513,6 +526,32 @@ public class ApacheConfig  extends BaseInterceptor {
 	}
     }
 
+    private void addMapping( Context ctx, Container ct, PrintWriter mod_jk ) {
+	int type=ct.getMapType();
+	String ctPath=ct.getPath();
+	String ctxPath=ctx.getPath();
+	String fullPath=null;
+	if( ctxPath.equals("/") )
+	    fullPath=ctPath;
+	else if( ctPath.startsWith("/" ))
+	    fullPath=ctxPath+ ctPath;
+	else
+	    fullPath=ctxPath + "/" + ctPath;
+	log( "Adding map for " + fullPath );
+
+	if( useJkMount ) {
+	    mod_jk.println("JkMount " + fullPath + "  " + jkProto );
+	} else {
+	    mod_jk.println("<Location " + fullPath + " >");
+	    mod_jk.println("    SetHandler jakarta-servlet ");
+	    // XXX Other nice things like setting servlet and other attributes
+	    mod_jk.println("</Location>");
+	    mod_jk.println();
+	}
+
+	// XXX deal with security mappings
+	// XXX better deal with extension mappings. 
+    }
 
     /** Mappings for static content. XXX need to add welcome files,
      *  mime mappings ( all will be handled by Mime and Static modules of apache ).
@@ -535,6 +574,8 @@ public class ApacheConfig  extends BaseInterceptor {
 	mod_jk.println("Alias " + path + " \"" + docBase + "\"");
 	mod_jk.println("<Directory \"" + docBase + "\">");
 	mod_jk.println("    Options Indexes FollowSymLinks");
+
+	// XXX XXX Here goes the Mime types and welcome files !!!!!!!!
 	mod_jk.println("</Directory>");
 	mod_jk.println();            
 	
@@ -574,6 +615,7 @@ public class ApacheConfig  extends BaseInterceptor {
 
     private File getConfigFile( File base, File configDir, String defaultF )
     {
+	//log( "getConfigFile " + base + " " + configDir + " " +defaultF );
 	if( base==null )
 	    base=new File( defaultF );
 	if( ! base.isAbsolute() ) {
@@ -586,10 +628,11 @@ public class ApacheConfig  extends BaseInterceptor {
         if(!parent.exists()){
             if(!parent.mkdirs()){
                 throw new RuntimeException(
-                    "Unable to create path to config file :"+jkConfig.getAbsolutePath());
+                    "Unable to create path to config file :"+
+		    jkConfig.getAbsolutePath());
             }
         }
 	return base;
     }
 
-}//end class ApacheConfig
+}
