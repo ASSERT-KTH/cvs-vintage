@@ -73,6 +73,8 @@ public class Config {
 
     protected File toolsFile;
     
+    private static Config instance;
+    
     /**
      * Creates a new configuration from the default directory.
      */
@@ -111,8 +113,18 @@ public class Config {
                 }
             }
         });
+        
+        instance = this;
     }
 
+    public static Config getInstance() {
+    	if( instance == null) {
+    		throw new RuntimeException("Must call Constructor first!");
+    	}
+    	
+    	return instance;
+    }
+    
     /**
      * Returns the directory the configuration is located in.
      */
