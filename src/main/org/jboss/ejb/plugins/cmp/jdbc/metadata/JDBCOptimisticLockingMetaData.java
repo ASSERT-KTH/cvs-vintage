@@ -6,28 +6,20 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
-import org.w3c.dom.Element;
+import org.jboss.logging.Logger;
 import org.jboss.deployment.DeploymentException;
-import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Collections;
+import org.w3c.dom.Element;
 
 /**
  * Optimistick locking metadata
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class JDBCOptimisticLockingMetaData
 {
-   // Constants -------------------------------------
+   // Constants ---------------------------------------
    public static final Integer FIELD_GROUP_STRATEGY = new Integer(1);
    public static final Integer MODIFIED_STRATEGY = new Integer(2);
    public static final Integer READ_STRATEGY = new Integer(4);
@@ -35,7 +27,7 @@ public final class JDBCOptimisticLockingMetaData
    public static final Integer TIMESTAMP_COLUMN_STRATEGY = new Integer(16);
    public static final Integer KEYGENERATOR_COLUMN_STRATEGY = new Integer(32);
 
-   // Attributes ------------------------------------
+   // Attributes --------------------------------------
    /** locking strategy */
    final private Integer lockingStrategy;
 
@@ -48,7 +40,10 @@ public final class JDBCOptimisticLockingMetaData
    /** key generator factory */
    final private String keyGeneratorFactory;
 
-   // Constructors ----------------------------------
+   /** logger */
+   final private Logger log;
+
+   // Constructors ------------------------------------
    /**
     * Constructs optimistic locking metadata reading
     * optimistic-locking XML element
@@ -57,44 +52,37 @@ public final class JDBCOptimisticLockingMetaData
                                         Element element)
       throws DeploymentException
    {
-      Element strategyEl = MetaData.getOptionalChild(element, "group-name");
-      if(strategyEl != null)
+      log = Logger.getLogger(entityMetaData.getName());
+
+      Element strategyEl = null;
+      if((strategyEl = MetaData.getOptionalChild(element, "group-name")) != null)
       {
          lockingStrategy = FIELD_GROUP_STRATEGY;
          groupName = MetaData.getElementContent(strategyEl);
          lockingField = null;
          keyGeneratorFactory = null;
 
-         System.out.println("JDBCOptimisticLockingMetaData> groupName=" + groupName);
-         return;
+         log.debug("optimistic locking: group=" + groupName);
       }
-      else
-         groupName = null;
-
-      strategyEl = MetaData.getOptionalChild(element, "modified-strategy");
-      if(strategyEl != null)
+      else if((strategyEl = MetaData.getOptionalChild(element, "modified-strategy")) != null)
       {
          lockingStrategy = MODIFIED_STRATEGY;
+         groupName = null;
          lockingField = null;
          keyGeneratorFactory = null;
 
-         System.out.println("JDBCOptimisticLockingMetaData> modified-strategy");
-         return;
+         log.debug("optimistic locking: modified strategy");
       }
-
-      strategyEl = MetaData.getOptionalChild(element, "read-strategy");
-      if(strategyEl != null)
+      else if((strategyEl = MetaData.getOptionalChild(element, "read-strategy")) != null)
       {
          lockingStrategy = READ_STRATEGY;
+         groupName = null;
          lockingField = null;
          keyGeneratorFactory = null;
 
-         System.out.println("JDBCOptimisticLockingMetaData> read-strategy");
-         return;
+         log.debug("optimistic locking: read strategy");
       }
-
-      strategyEl = MetaData.getOptionalChild(element, "version-column");
-      if(strategyEl != null)
+      else if((strategyEl = MetaData.getOptionalChild(element, "version-column")) != null)
       {
          String fieldType = MetaData.getOptionalChildContent(element, "field-type");
          if(fieldType != null)
@@ -104,45 +92,44 @@ public final class JDBCOptimisticLockingMetaData
 
          lockingStrategy = VERSION_COLUMN_STRATEGY;
          lockingField = constructLockingField(entityMetaData, element);
+         groupName = null;
          keyGeneratorFactory = null;
 
-         System.out.println("JDBCOptimisticLockingMetaData> version-column");
-         return;
+         log.debug("optimistic locking: version-column=" + lockingField.getFieldName());
       }
-
-      strategyEl = MetaData.getOptionalChild(element, "timestamp-column");
-      if(strategyEl != null)
+      else if((strategyEl = MetaData.getOptionalChild(element, "timestamp-column")) != null)
       {
          String fieldType = MetaData.getOptionalChildContent(element, "field-type");
          if(fieldType != null)
             throw new DeploymentException(
                "field-type is not allowed for timestamp column. It is implicitly set to java.util.Date."
             );
+
          lockingStrategy = TIMESTAMP_COLUMN_STRATEGY;
          lockingField = constructLockingField(entityMetaData, element);
+         groupName = null;
          keyGeneratorFactory = null;
 
-         System.out.println("JDBCOptimisticLockingMetaData> timestamp-column");
-         return;
+         log.debug("optimistic locking: timestamp-column=" + lockingField.getFieldName());
       }
-
-      keyGeneratorFactory = MetaData.getOptionalChildContent(element, "key-generator-factory");
-      if(keyGeneratorFactory != null)
+      else if((keyGeneratorFactory =
+         MetaData.getOptionalChildContent(element, "key-generator-factory")) != null)
       {
          lockingStrategy = KEYGENERATOR_COLUMN_STRATEGY;
          lockingField = constructLockingField(entityMetaData, element);
+         groupName = null;
 
-         System.out.println("JDBCOptimisticLocking> key-generator-factory: "
-            + keyGeneratorFactory);
-         return;
+         log.debug("optimistic locking: key-generator-factory=" + keyGeneratorFactory);
       }
-
-      throw new DeploymentException("Unexpected error: entity "
-         + entityMetaData.getName()
-         + " has incorrect optimistic locking configuration");
+      else
+      {
+         throw new DeploymentException("Unexpected error: entity "
+            + entityMetaData.getName()
+            + " has unkown/incorrect optimistic locking configuration.");
+      }
    }
 
-   // Public ----------------------------------------
+   // Public ------------------------------------------
    public Integer getLockingStrategy()
    {
       return lockingStrategy;
@@ -163,7 +150,7 @@ public final class JDBCOptimisticLockingMetaData
       return keyGeneratorFactory;
    }
 
-   // Private ---------------------------------------
+   // Private -----------------------------------------
    /**
     * Constructs a locking field metadata from
     * XML element
@@ -176,14 +163,14 @@ public final class JDBCOptimisticLockingMetaData
       // field name
       String fieldName = MetaData.getOptionalChildContent(element, "field-name");
       if(fieldName == null || fieldName.trim().length() < 1)
-         fieldName = (lockingStrategy == VERSION_COLUMN_STRATEGY ?
-            "version_lock" : "timestamp_lock");
+         fieldName = (lockingStrategy == VERSION_COLUMN_STRATEGY ?  "version_lock" :
+            (lockingStrategy == TIMESTAMP_COLUMN_STRATEGY ? "timestamp_lock" : "generated_lock"));
 
       // column name
       String columnName = MetaData.getOptionalChildContent(element, "column-name");
       if(columnName == null || columnName.trim().length() < 1)
-         columnName = (lockingStrategy == VERSION_COLUMN_STRATEGY ?
-            "version_lock" : "timestamp_lock");
+         columnName = (lockingStrategy == VERSION_COLUMN_STRATEGY ?  "version_lock" :
+            (lockingStrategy == TIMESTAMP_COLUMN_STRATEGY ? "timestamp_lock" : "generated_lock"));
 
       // field type
       Class fieldType = null;
