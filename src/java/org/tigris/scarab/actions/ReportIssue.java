@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.49 2001/10/03 19:52:10 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.50 2001/10/04 23:21:13 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -235,7 +235,9 @@ public class ReportIssue extends RequireLoginFirstAction
         return search.getMatchingIssues(maxResults);
     }
 
-
+    /**
+     * handles entering an issue
+     */
     public void doEnterissue( RunData data, TemplateContext context )
         throws Exception
     {
@@ -369,6 +371,9 @@ public class ReportIssue extends RequireLoginFirstAction
         }
     }
 
+    /**
+     * Handles adding a note to an issue
+     */
     public void doAddnote(RunData data, TemplateContext context) 
         throws Exception
     {
@@ -386,11 +391,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 {
                     ScarabRequestTool scarabR = getScarabRequestTool(context);
                     Issue issue = scarabR.getIssue();
-                    attachment.setIssue(issue);
-                    attachment.setTypeId(Attachment.COMMENT__PK);
-                    attachment.setName("");
-                    attachment.setMimeType("text/plain");
-                    attachment.save();
+                    issue.addComment(attachment);
 
                     data.setMessage("Your comment for issue #" + 
                                     issue.getUniqueId() + 

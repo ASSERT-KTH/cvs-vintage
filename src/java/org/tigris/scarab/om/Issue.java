@@ -92,6 +92,18 @@ public class Issue
 {
 
     /**
+     * Gets an issue associated to a ModuleEntity
+     */
+    public static Issue getInstance(ModuleEntity me)
+        throws Exception
+    {
+        Issue issue = new Issue();
+        issue.setModuleCast( me );
+        issue.setDeleted(false);
+        return issue;
+    }
+
+    /**
      * Gets the UinqueId for this Issue.
      */
     public String getUniqueId()
@@ -225,6 +237,19 @@ public class Issue
         {
             this.count = count;
         }
+    }
+
+    /**
+     * Adds a comment to this issue.
+     */
+    public void addComment(Attachment attachment)
+        throws Exception
+    {
+        attachment.setIssue(this);
+        attachment.setTypeId(Attachment.COMMENT__PK);
+        attachment.setName("");
+        attachment.setMimeType("text/plain");
+        attachment.save();
     }
 
     /**

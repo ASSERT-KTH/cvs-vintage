@@ -88,11 +88,11 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabLink;
 
 /**
-    This class is responsible for report issue forms.
-    ScarabIssueAttributeValue
-    @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: AssignIssue.java,v 1.13 2001/09/30 18:31:38 jon Exp $
-*/
+ * This class is responsible for report issue forms.
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
+ * @version $Id: AssignIssue.java,v 1.14 2001/10/04 23:21:13 jon Exp $
+ */
 public class AssignIssue extends RequireLoginFirstAction
 {
     public static final String NEW_ASSIGNEES = "newaddusers";
@@ -292,7 +292,6 @@ public class AssignIssue extends RequireLoginFirstAction
             context.put("actionLink", 
                         getActionLink(data, eligibleUsers, assignees) );
         }
-
     }
 
     /**
@@ -304,6 +303,7 @@ public class AssignIssue extends RequireLoginFirstAction
             .getString("template.homepage", "Start.vm");
         setTarget(data, template);
     }
+
     /**
         calls doCancel()
     */
@@ -312,7 +312,3 @@ public class AssignIssue extends RequireLoginFirstAction
         doCancel(data, context);
     }
 }
-
-
-
-
