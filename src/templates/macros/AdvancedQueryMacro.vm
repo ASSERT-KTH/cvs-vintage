@@ -1,6 +1,6 @@
 #macro( advancedQuery $module )
 #set ($search = $scarabR.Search)
-#set ($intake = $scarabR.getConditionalIntake($scarabG.Constant.CURRENT_QUERY))
+##set ($intake = $scarabR.getConditionalIntake($scarabG.Constant.CURRENT_QUERY))
 #set ($query = $intake.SearchIssue.mapTo($search))
 #set ($attrValues = $search.ModuleAttributeValuesMap)
 <div class="axial">
@@ -124,8 +124,7 @@ from:&#160;<input type="text" size="20"
     #end
 #end
      </select>
-     <input name="eventSubmit_doUpdatestatechangeattribute"
-        value="Update Options" type="submit" />
+     <input name="eventSubmit_doRefresh" value="Update Options" type="submit" />
  </td>
 </tr>
 <tr>
@@ -137,7 +136,7 @@ from:&#160;<input type="text" size="20"
   #set ( $selected = ' selected="selected"' )
  #end
     <option$selected value="">any value</option>
-#foreach ($option in $module.getLeafRModuleOptions($selectedAttribute))
+#foreach ($option in $module.getLeafRModuleOptions($selectedAttribute, $scarabR.CurrentIssueType))
     #set ( $selected = "" )
     #if ( $query.StateChangeFromOptionId.Value && $option.OptionId == $query.StateChangeFromOptionId.Value )
   #set ( $selected = ' selected="selected"' )
@@ -153,7 +152,7 @@ from:&#160;<input type="text" size="20"
   #set ( $selected = ' selected="selected"' )
  #end
     <option$selected value="">any value</option>
-#foreach ($option in $module.getLeafRModuleOptions($selectedAttribute))
+#foreach ($option in $module.getLeafRModuleOptions($selectedAttribute, $scarabR.CurrentIssueType))
     #set ( $selected = "" )
     #if ( $query.StateChangeToOptionId.Value && $option.OptionId == $query.StateChangeToOptionId.Value )
   #set ( $selected = ' selected="selected"' )
@@ -182,6 +181,36 @@ from:&#160;<input type="text" size="20"
  </tr>
 </table>
 </div>
+
+<h3>Results display options</h3>
+		
+<div class="axial">
+<table  cellpadding="3" cellspacing="2" border="1">
+  <tr>
+    <th width="120">sort by</th>
+	<td><select name="sortAttrId">
+           <option value="">Choose..</option>
+           #foreach ($attKey in $attrValues.sequence())
+              #set ($attVal = $attrValues.get($attKey))
+       	      <option value="$attVal.AttributeId">$attVal</option>
+           #end
+	</select>
+        &nbsp;
+        <select name="sortPolarity">
+          <option value="asc"> ascending </option>
+          <option value="desc"> descending </option>
+        </select>
+         </td>
+	</tr>
+     <tr>
+       <th>Issues per page</th>
+<input type="hidden" name="pageNum" value="1" />
+       <td><input type="radio" name="resultsPerPage"   value="25" checked="checked" /> 25 <input type="radio" name="resultsPerPage"   value="50" /> 50 <input type="radio" name="resultsPerPage"   value="75" /> 75 <input type="radio" name="resultsPerPage" value="100" /> 100</td>
+     </tr>
+      </table>
+</div>
+
+#* FIXME: use intake 
 <h3>Search results view prefs</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
@@ -218,4 +247,6 @@ from:&#160;<input type="text" size="20"
 </tr>
 </table>
 </div>
+*#
+
 #end
