@@ -6,15 +6,9 @@
  */
 package org.jboss.metadata;
 
-// $Id: InitParamMetaData.java,v 1.1 2004/05/06 16:14:11 tdiesler Exp $
+// $Id: InitParamMetaData.java,v 1.2 2004/05/07 14:58:49 tdiesler Exp $
 
-import org.jboss.deployment.DeploymentException;
-import org.jboss.metadata.MetaData;
-import org.jboss.metadata.QNameBuilder;
-import org.w3c.dom.Element;
-
-import javax.xml.namespace.QName;
-import java.util.ArrayList;
+import java.io.Serializable;
 
 /**
  * XML Binding and ws4ee meta-data element for
@@ -23,7 +17,7 @@ import java.util.ArrayList;
  * @author Thomas.Diesler@jboss.org
  * @since 06-May-2004
  */
-public class InitParamMetaData
+public class InitParamMetaData implements Serializable
 {
    // The required <handler-name> element
    private String paramName;

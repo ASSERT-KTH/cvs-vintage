@@ -6,31 +6,19 @@
  */
 package org.jboss.metadata;
 
-// $Id: PortComponentRefMetaData.java,v 1.1 2004/05/06 16:14:11 tdiesler Exp $
+// $Id: PortComponentRefMetaData.java,v 1.2 2004/05/07 14:58:49 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.wsdl.Definition;
-import javax.wsdl.WSDLException;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLReader;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.io.Serializable;
 
 /** The metdata data from service-ref/port-component-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class PortComponentRefMetaData
+public class PortComponentRefMetaData implements Serializable
 {
    // The required <service-endpoint-interface> element
    private String serviceEndpointInterface;

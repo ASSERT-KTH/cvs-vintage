@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.76 2004/04/25 09:56:31 loubyansky Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.77 2004/05/07 14:58:46 tdiesler Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -548,12 +548,14 @@
         <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor transaction="Container">org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+        <interceptor transaction="Container">org.jboss.ejb.plugins.ServiceEndpointInterceptor</interceptor>
         <interceptor transaction="Container">org.jboss.ejb.plugins.StatelessSessionInstanceInterceptor</interceptor>
         <!-- BMT -->
         <interceptor transaction="Bean">org.jboss.ejb.plugins.StatelessSessionInstanceInterceptor</interceptor>
         <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
         <interceptor transaction="Bean">org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+        <interceptor transaction="Bean">org.jboss.ejb.plugins.ServiceEndpointInterceptor</interceptor>
         <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
@@ -579,12 +581,14 @@
         <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor transaction="Container">org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+        <interceptor transaction="Container">org.jboss.ejb.plugins.ServiceEndpointInterceptor</interceptor>
         <interceptor transaction="Container">org.jboss.ejb.plugins.StatelessSessionInstanceInterceptor</interceptor>
         <!-- BMT -->
         <interceptor transaction="Bean">org.jboss.ejb.plugins.StatelessSessionInstanceInterceptor</interceptor>
         <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
         <interceptor transaction="Bean">org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+        <interceptor transaction="Bean">org.jboss.ejb.plugins.ServiceEndpointInterceptor</interceptor>
         <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>

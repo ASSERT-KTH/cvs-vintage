@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: QNameBuilder.java,v 1.2 2004/05/06 15:53:43 tdiesler Exp $
+// $Id: QNameBuilder.java,v 1.3 2004/05/07 14:58:49 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.w3c.dom.Element;
@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
  * but then common would have to depend on j2ee
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class QNameBuilder
 {
@@ -77,11 +77,14 @@ public final class QNameBuilder
    {
       String namespaceURI = null;
       NamedNodeMap attrs = node.getAttributes();
-      for (int i=0; namespaceURI == null && i < attrs.getLength(); i++)
+      if (attrs != null)
       {
-         Node attr = attrs.item(i);
-         if (prefix.equals(attr.getLocalName()))
-            namespaceURI = attr.getNodeValue();
+         for (int i=0; namespaceURI == null && i < attrs.getLength(); i++)
+         {
+            Node attr = attrs.item(i);
+            if (prefix.equals(attr.getLocalName()))
+               namespaceURI = attr.getNodeValue();
+         }
       }
       return namespaceURI;
    }

@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.7 2004/05/06 16:14:11 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.8 2004/05/07 14:58:49 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Document;
@@ -20,22 +20,19 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /** The metdata data from service-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
-public class ServiceRefMetaData
+public class ServiceRefMetaData implements Serializable
 {
-   /** The ClassLoader to load additional resources */
-   private ClassLoader localCl;
-
    // The required <service-ref-name> element
    private String serviceRefName;
    // The required <service-interface> element
@@ -54,20 +51,34 @@ public class ServiceRefMetaData
    // The URL of the actual WSDL to use
    private URL wsdlOverride;
 
-   // derived properties
-   private Document wsdlDocument;
-   private Definition wsdlDefinition;
+   /** The ClassLoader to load additional resources */
+   private transient ClassLoader resourceCl;
+   // The wsdl document, if we have one
+   private transient Document wsdlDocument;
+   // The wsdl definition, if we have one
+   private transient Definition wsdlDefinition;
 
-   /**
-    * Construct the service-ref meta
-    * @param localCl A ClassLoader to load additional resources
+   /** Default constructor, used when unmarshalling on the client side
     */
-   public ServiceRefMetaData(ClassLoader localCl)
+   public ServiceRefMetaData()
    {
-      if (localCl == null)
+   }
+
+   /** Constructor with a given resource classloader, used on the server side
+    */
+   public ServiceRefMetaData(ClassLoader resourceCl)
+   {
+      setResourceCl(resourceCl);
+   }
+
+   /** Set the resource classloader that can load the wsdl file
+    */
+   public void setResourceCl(ClassLoader resourceCl)
+   {
+      if (resourceCl == null)
          throw new IllegalArgumentException("ResourceClassLoader cannot be null");
 
-      this.localCl = localCl;
+      this.resourceCl = resourceCl;
    }
 
    public String getJaxrpcMappingFile()
@@ -96,7 +107,9 @@ public class ServiceRefMetaData
 
    public Class getServiceInterfaceClass() throws ClassNotFoundException
    {
-      return localCl.loadClass(serviceInterface);
+      if (resourceCl == null)
+         throw new IllegalStateException("Resource class loader not set");
+      return resourceCl.loadClass(serviceInterface);
    }
 
    public QName getServiceQName()
@@ -119,7 +132,7 @@ public class ServiceRefMetaData
       return wsdlOverride;
    }
 
-   public Document getWsdlDocument() throws DeploymentException
+   public Document getWsdlDocument()
    {
       if (wsdlDocument != null)
          return wsdlDocument;
@@ -137,27 +150,25 @@ public class ServiceRefMetaData
             if (wsdlInputStream == null)
                throw new DeploymentException("Cannot open WSDL at: " + wsdlOverride);
          }
-         else
+         else if (wsdlFile != null)
          {
-            wsdlInputStream = localCl.getResourceAsStream(wsdlFile);
+            wsdlInputStream = resourceCl.getResourceAsStream(wsdlFile);
             if (wsdlInputStream == null)
                throw new DeploymentException("Cannot open WSDL at: " + wsdlFile);
          }
-         wsdlDocument = builder.parse(wsdlInputStream);
-      }
-      catch (DeploymentException e)
-      {
-         throw e;
+
+         if (wsdlInputStream != null)
+            wsdlDocument = builder.parse(wsdlInputStream);
       }
       catch (Exception e)
       {
-         throw new DeploymentException(e);
+         throw new IllegalStateException("Cannot get wsdl document, cause: " + e.toString());
       }
 
       return wsdlDocument;
    }
 
-   public Definition getWsdlDefinition() throws DeploymentException
+   public Definition getWsdlDefinition()
    {
       if (wsdlDefinition != null)
          return wsdlDefinition;
@@ -166,11 +177,13 @@ public class ServiceRefMetaData
       {
          WSDLFactory wsdlFactory = WSDLFactory.newInstance();
          WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
-         wsdlDefinition = wsdlReader.readWSDL(null, getWsdlDocument());
+         Document wsdlDocument = getWsdlDocument();
+         if (wsdlDocument != null)
+            wsdlDefinition = wsdlReader.readWSDL(null, wsdlDocument);
       }
       catch (WSDLException e)
       {
-         throw new DeploymentException(e);
+         throw new IllegalStateException("Cannot unmarshall wsdl, cause: " + e.toString());
       }
 
       return wsdlDefinition;

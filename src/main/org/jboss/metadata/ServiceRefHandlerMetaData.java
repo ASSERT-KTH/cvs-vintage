@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefHandlerMetaData.java,v 1.1 2004/05/06 16:14:11 tdiesler Exp $
+// $Id: ServiceRefHandlerMetaData.java,v 1.2 2004/05/07 14:58:49 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Element;
@@ -14,13 +14,14 @@ import org.w3c.dom.Element;
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.io.Serializable;
 
 /** The metdata data from a service-ref/handler element
  * 
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class ServiceRefHandlerMetaData
+public class ServiceRefHandlerMetaData implements Serializable
 {
    // The required <handler-name> element
    private String handlerName;
