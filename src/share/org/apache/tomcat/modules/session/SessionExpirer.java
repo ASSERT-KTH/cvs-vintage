@@ -113,14 +113,14 @@ public final class SessionExpirer  extends BaseInterceptor {
 
     // XXX use contextInit/shutdown for local modules
     
-    public void engineInit( ContextManager cm ) throws TomcatException {
+    public void engineStart( ContextManager cm ) throws TomcatException {
 	expirer=new Expirer();
 	expirer.setCheckInterval( checkInterval );
 	expirer.setExpireCallback( new SessionExpireCallback(this, debug) );
 	expirer.start();
     }
 
-    public void engineShutdown( ContextManager cm ) throws TomcatException {
+    public void engineStop( ContextManager cm ) throws TomcatException {
 	expirer.stop();
     }
 
@@ -128,6 +128,7 @@ public final class SessionExpirer  extends BaseInterceptor {
 	TimeStamp ts=session.getTimeStamp();
 
 	if( state==ServerSession.STATE_NEW ) {
+	    if( debug > 0 ) log("Registering new session for expiry checks");
 	    ts.setNew(true);
 	    ts.setValid(true);
 	    
@@ -139,6 +140,7 @@ public final class SessionExpirer  extends BaseInterceptor {
 
 	    expirer.addManagedObject( ts );
 	}  else if( state==ServerSession.STATE_EXPIRED ) {
+	    if( debug > 0 ) log("Removing expired session from expiry checks"); 
 	    expirer.removeManagedObject( ts );
 	}
 	return state;
@@ -162,6 +164,9 @@ public final class SessionExpirer  extends BaseInterceptor {
 		se.log( "Session expired " + sses);
 	    }
 	    sses.setState( ServerSession.STATE_EXPIRED );
+	    // After expiring it, we clean up.
+	    if( debug > 0 ) se.log( "Recycling " + sses);
+	    sses.recycle();
 	}
     }
 }
