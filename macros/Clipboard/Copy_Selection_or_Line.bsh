@@ -3,9 +3,9 @@
 * which copies either the selected text, or the current line 
 * if no text is selected, to the clipboard.
 *
-* Copyright (C) 2003 Ollie Rutherfurd <oliver@rutherfurd.net>
+* Copyright (C) 2003 Ollie Rutherfurd <oliver@jedit.org>
 *
-* $Id: Copy_Selection_or_Line.bsh,v 1.1 2004/03/19 15:57:59 spestov Exp $
+* $Id: Copy_Selection_or_Line.bsh,v 1.1 2004/08/03 21:31:47 orutherfurd Exp $
 */
 
 copySelectionOrLine(){

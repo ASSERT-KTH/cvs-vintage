@@ -2,9 +2,9 @@
  * Copy_Visible_Lines.bsh - Copies visible (non-folded) lines from
  * the current buffer to the clipboard.
  *
- * Copyright (C) 2002-2004 Ollie Rutherfurd <oliver@rutherfurd.net>
+ * Copyright (C) 2002-2004 Ollie Rutherfurd <oliver@jedit.org>
  *
- * $Id: Copy_Visible_Lines.bsh,v 1.1 2004/03/20 06:08:48 spestov Exp $
+ * $Id: Copy_Visible_Lines.bsh,v 1.1 2004/08/03 21:31:47 orutherfurd Exp $
  */
 
 void copyVisibleLines(View view){
