@@ -257,22 +257,9 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	throws ServletException, IOException
     {
 	if( System.getSecurityManager() != null ) {
-// 	    final ServletRequest req = request;
-// 	    final ServletResponse res = response;
 	    try {
 		includeAction.prepare( request, response );
 		jdk11Compat.doPrivileged( includeAction );
-
-// 		java.security.AccessController.doPrivileged(
-// 		    new java.security.PrivilegedExceptionAction()
-// 		    {
-// 			public Object run() throws ServletException, IOException {
-// 			    doInclude(req,res);
-// 			    return null;     
-// 			}               
-// 		    }    
-// 		);   
-// 	    } catch( PrivilegedActionException pe) {
 	    } catch( Exception e) {
 		if( e instanceof ServletException )
 		    throw (ServletException)e;
@@ -281,11 +268,6 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 		// can only be IOException
 		throw (IOException)e;
 	    }
-// 		Exception e = pe.getException();       
-// 		if( e instanceof ServletException )
-// 		    throw (ServletException)e;
-// 		throw (IOException)e;
-// 	    }
 	} else {
 	    doInclude(request,response);
 	}
@@ -637,7 +619,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	    this.req=req;
 	    this.res=res;
 	}
-	public Object action() throws Exception {
+	public Object run() throws Exception {
 	    if( include )
 		rdi.doInclude( req, res );
 	    else
