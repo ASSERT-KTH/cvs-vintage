@@ -24,7 +24,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.39 2002/12/30 12:43:25 kataka Exp $
+// $Id: GeneratorDisplay.java,v 1.40 2003/01/01 18:13:37 kataka Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -869,7 +869,7 @@ public class GeneratorDisplay extends Generator implements PluggableNotation {
                 if (s.length() > 0)
                 	s.append("\n");
                 MTransition trans = (MTransition)iter.next();
-                s.append(trans.getName()).append(" /").append(generateTransition((MTransition) iter.next()));
+                s.append(trans.getName()).append(" /").append(generateTransition(trans));
             }
         }
         return s.toString();
