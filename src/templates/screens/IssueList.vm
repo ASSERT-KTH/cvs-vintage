@@ -18,7 +18,7 @@
 <p>
 
 <form name="IssueListForm" action="$action" method="post">
-<input type="hidden" name="queryString" value="$queryString">
+<input type="hidden" name="$scarabG.Constant.CURRENT_QUERY" value="$queryString">
 <input type="hidden" name="pageNum" value="$pageNum" /> 
 
 ## PAGINATION
@@ -37,7 +37,6 @@
 #end
 
 
-
 <p class="functnbar">
     <input type="submit" value="view selected (verbose)" 
         name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&#160;
@@ -53,6 +52,8 @@
     &#160;<sup>|</sup>&#160;
     <input type="submit" value="save query" 
         name="eventSubmit_doRedirecttosavequery" />
+    &#160;<sup>|</sup>&#160;
+    <input type="submit" value="refine query" name="eventSubmit_doRefinequery" />
 #end
 </p>
 	
@@ -122,6 +123,8 @@
 #if ($searchType.equals("advanced"))
     &#160;<sup>|</sup>&#160;
     <input type="submit" value="save query" name="eventSubmit_doRedirecttosavequery" />
+    &#160;<sup>|</sup>&#160;
+    <input type="submit" value="refine query" name="eventSubmit_doRefinequery" />
 #end
 </p>
 	
