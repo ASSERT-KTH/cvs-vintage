@@ -72,7 +72,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.33 2004/12/09 22:05:38 dabbous Exp $
+ * @version $Id: FreshenUserValve.java,v 1.34 2005/01/01 22:43:17 dabbous Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -124,7 +124,7 @@ public class FreshenUserValve
                 return;
             }
             setCurrentModule(user, data);
-            setCurrentIssueType(user, data);
+            adjustCurrentIssueType(user, data);
         }
         catch(Exception e)
         {
@@ -223,7 +223,16 @@ public class FreshenUserValve
         user.setCurrentModule(module);
     }
 
-    private void setCurrentIssueType(ScarabUser user, RunData data)
+    /**
+     * Sets the current issue type if its value changed in the RunData instance.
+     * If the RunData instance does not contain an issueType, this method
+     * returns without doing anything.
+     * 
+     * @param user
+     * @param data
+     * @throws TurbineException
+     */
+    private void adjustCurrentIssueType(ScarabUser user, RunData data)
         throws TurbineException
     {
         IssueType issueType = null;
@@ -274,7 +283,12 @@ public class FreshenUserValve
                 }
             }
         }
-        user.setCurrentIssueType(issueType);
+        
+        if(issueType != null)
+        {
+            user.setCurrentIssueType(issueType);
+        }
+
     }
         
 }
