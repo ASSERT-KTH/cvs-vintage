@@ -66,11 +66,11 @@ To unbind the object, use the following code snippet:
 @see #rebind(Context, String, Object)
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public class NonSerializableFactory implements ObjectFactory
 {
-	private static Map wrapperMap = Collections.synchronizedMap(new HashMap());
+    private static Map wrapperMap = Collections.synchronizedMap(new HashMap());
 
     /** Place an object into the NonSerializableFactory namespace for subsequent
     access by getObject. There cannot be an already existing binding for key.
@@ -82,12 +82,12 @@ public class NonSerializableFactory implements ObjectFactory
     @throws NameAlreadyBoundException, thrown if key already exists in the
      NonSerializableFactory map
     */
-	public static synchronized void bind(String key, Object target) throws NameAlreadyBoundException
-	{
+    public static synchronized void bind(String key, Object target) throws NameAlreadyBoundException
+    {
         if( wrapperMap.containsKey(key) == true )
             throw new NameAlreadyBoundException(key+" already exists in the NonSerializableFactory map");
-		wrapperMap.put(key, target);
-	}
+        wrapperMap.put(key, target);
+    }
     /** Place or replace an object in the NonSerializableFactory namespce
      for subsequent access by getObject. Any existing binding for key will be
      replaced by target.
@@ -97,10 +97,10 @@ public class NonSerializableFactory implements ObjectFactory
     not have to be.
     @param target, the non-Serializable object to bind.
     */
-	public static void rebind(String key, Object target)
-	{
-		wrapperMap.put(key, target);
-	}
+    public static void rebind(String key, Object target)
+    {
+        wrapperMap.put(key, target);
+    }
 
     /** Remove a binding from the NonSerializableFactory map.
 
@@ -113,6 +113,15 @@ public class NonSerializableFactory implements ObjectFactory
     {
         if( wrapperMap.remove(key) == null )
             throw new NameNotFoundException(key+" was not found in the NonSerializableFactory map");
+    }
+
+    /** Lookup a value from the NonSerializableFactory map.
+    @return the object bound to key is one exists, null otherwise.
+    */
+    public static Object lookup(String key)
+    {
+        Object value = wrapperMap.get(key);
+        return value;
     }
 
     /** A convience method that simplifies the process of rebinding a

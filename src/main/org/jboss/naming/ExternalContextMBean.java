@@ -9,25 +9,29 @@ package org.jboss.naming;
 import java.io.IOException;
 import javax.naming.NamingException;
 
-/**
- *   
- *      
+/** The ExternalContext mbean interface.
+
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.2 $
+@version $Revision: 1.3 $
 */
 public interface ExternalContextMBean extends org.jboss.util.ServiceMBean
 {
-    // Constants -----------------------------------------------------
-    public static final String OBJECT_NAME = ":service=ExternalContext";
-    
-    // Public --------------------------------------------------------
-
     /** Get the jndi name under which the external context is bound.
     */
     public String getJndiName();
     /** Set the jndi name under which the external context is bound.
     */
-    public void setJndiName(String jndiName);
+    public void setJndiName(String jndiName) throws NamingException;
+    /** Get the remote access flag. If true, the external context is bound using
+        Serializable object that allows the InitialContext to be recreated
+        remotely.
+    */
+    public boolean getRemoteAccess();
+    /** Set the remote access flag. If true, the external context is bound using
+        Serializable object that allows the InitialContext to be recreated
+        remotely.
+    */
+    public void setRemoteAccess(boolean remoteAccess);
 
     /** Get the class name of the InitialContext implementation to
 	use. Should be one of:
