@@ -39,7 +39,7 @@ import java.io.Serializable;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.66 $
+ * @version $Revision: 1.67 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -566,6 +566,7 @@ public abstract class EnterpriseContext
             
             userTransaction = new UserTransactionImpl(); 
          }
+
          return userTransaction;
       }
    }
@@ -573,16 +574,22 @@ public abstract class EnterpriseContext
    // Inner classes -------------------------------------------------
  
    protected class UserTransactionImpl
-      implements UserTransaction
+           implements UserTransaction
    {
       /**
-       *  Timeout value in seconds for new transactions started
-       *  by this bean instance.
+       * Timeout value in seconds for new transactions started
+       * by this bean instance.
        */
       private int timeout = 0;
 
+      public UserTransactionImpl()
+      {
+         if (log.isDebugEnabled())
+            log.debug("new UserTx: " + this);
+      }
+
       public void begin()
-         throws NotSupportedException, SystemException
+              throws NotSupportedException, SystemException
       {
          TransactionManager tm = con.getTransactionManager();
 
@@ -593,70 +600,96 @@ public abstract class EnterpriseContext
          tm.begin();
 
          //notify checked out connections
-         if (tsl != null) 
+         if (tsl != null)
          {
             tsl.userTransactionStarted();
          } // end of if ()
          
+         Transaction tx = tm.getTransaction();
+         if (log.isDebugEnabled())
+            log.debug("UserTx begin: " + tx);
 
          // keep track of the transaction in enterprise context for BMT
-         setTransaction(tm.getTransaction());        
+         setTransaction(tx);
       }
-      
+
       public void commit()
-         throws RollbackException,
-         HeuristicMixedException,
-         HeuristicRollbackException,
-         java.lang.SecurityException,
-         java.lang.IllegalStateException,
-         SystemException
+              throws RollbackException, HeuristicMixedException, HeuristicRollbackException,
+              SecurityException, IllegalStateException, SystemException
       {
-         try {
-           con.getTransactionManager().commit();
-         } finally {
-           // According to the spec, after commit and rollback was called on
-           // UserTransaction, the thread is associated with no transaction.
-           // Since the BMT Tx interceptor will associate and resume the tx 
-           // from the context with the thread that comes in
-           // on a subsequent invocation, we must set the context transaction to null
-           setTransaction(null);
-         }  
+         try
+         {
+            TransactionManager tm = con.getTransactionManager();
+            Transaction tx = tm.getTransaction();
+            if (log.isDebugEnabled())
+               log.debug("UserTx commit: " + tx);
+
+            int status = tm.getStatus();
+            tm.commit();
+         }
+         finally
+         {
+            // According to the spec, after commit and rollback was called on
+            // UserTransaction, the thread is associated with no transaction.
+            // Since the BMT Tx interceptor will associate and resume the tx
+            // from the context with the thread that comes in
+            // on a subsequent invocation, we must set the context transaction to null
+            setTransaction(null);
+         }
       }
-       
+
       public void rollback()
-         throws IllegalStateException, SecurityException, SystemException
+              throws IllegalStateException, SecurityException, SystemException
       {
-         try {
-           con.getTransactionManager().rollback();
-         } finally {
-           // According to the spec, after commit and rollback was called on
-           // UserTransaction, the thread is associated with no transaction.
-           // Since the BMT Tx interceptor will associate and resume the tx 
-           // from the context with the thread that comes in
-           // on a subsequent invocation, we must set the context transaction to null
-           setTransaction(null);
-         }  
+         try
+         {
+            TransactionManager tm = con.getTransactionManager();
+            Transaction tx = tm.getTransaction();
+            if (log.isDebugEnabled())
+               log.debug("UserTx rollback: " + tx);
+            tm.rollback();
+         }
+         finally
+         {
+            // According to the spec, after commit and rollback was called on
+            // UserTransaction, the thread is associated with no transaction.
+            // Since the BMT Tx interceptor will associate and resume the tx
+            // from the context with the thread that comes in
+            // on a subsequent invocation, we must set the context transaction to null
+            setTransaction(null);
+         }
       }
-      
+
       public void setRollbackOnly()
-         throws IllegalStateException, SystemException   
+              throws IllegalStateException, SystemException
       {
-         con.getTransactionManager().setRollbackOnly();
+         TransactionManager tm = con.getTransactionManager();
+         Transaction tx = tm.getTransaction();
+         if (log.isDebugEnabled())
+            log.debug("UserTx setRollbackOnly: " + tx);
+
+         tm.setRollbackOnly();
       }
-      
+
       public int getStatus()
-         throws SystemException
+              throws SystemException
       {
-         return con.getTransactionManager().getStatus();
+         TransactionManager tm = con.getTransactionManager();
+         return tm.getStatus();
       }
- 
+
       /**
-       *  Set the transaction timeout value for new transactions
-       *  started by this instance.
+       * Set the transaction timeout value for new transactions
+       * started by this instance.
        */
       public void setTransactionTimeout(int seconds)
-         throws SystemException
+              throws SystemException
       {
+         TransactionManager tm = con.getTransactionManager();
+         Transaction tx = tm.getTransaction();
+         if (log.isDebugEnabled())
+            log.debug("UserTx setTransactionTimeout(" + seconds + "): " + tx);
+
          timeout = seconds;
       }
    }
