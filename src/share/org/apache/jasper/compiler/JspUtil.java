@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.2 1999/10/20 21:20:33 mandar Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 21:20:33 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.3 1999/12/08 23:42:51 bergsten Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/12/08 23:42:51 $
  *
  * ====================================================================
  * 
@@ -169,6 +169,29 @@ public class JspUtil {
         tld = builder.getDocument();
 	return tld;
     }
+    
+    public static String escapeQueryString(String unescString) {
+	if ( unescString == null )
+	    return null;
+	
+	String escString    = "";
+	String shellSpChars = "&;`'\"|*?~<>^()[]{}$\\\n";
+	
+	for(int index=0; index<unescString.length(); index++) {
+	    char nextChar = unescString.charAt(index);
+	    
+	    if( shellSpChars.indexOf(nextChar) != -1 )
+		escString += "\\";
+	    
+	    escString += nextChar;
+	}
+	return escString;
+    }
+    
 }
+
+
+
+
 
 

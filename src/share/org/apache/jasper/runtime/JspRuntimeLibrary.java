@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspRuntimeLibrary.java,v 1.1 1999/10/09 00:20:40 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspRuntimeLibrary.java,v 1.2 1999/12/08 23:43:34 bergsten Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/12/08 23:43:34 $
  *
  * ====================================================================
  * 
@@ -109,7 +109,7 @@ public class JspRuntimeLibrary {
             }
     
             if ( t.equals(Boolean.class) || t.equals(Boolean.TYPE) ) {
-                if (s.equalsIgnoreCase("on"))
+                if (s.equalsIgnoreCase("on") || s.equalsIgnoreCase("true"))
                     s = "true";
                 else
                     s = "false";
@@ -148,16 +148,17 @@ public class JspRuntimeLibrary {
 	while ( e.hasMoreElements() ) {
 	    String name  = (String) e.nextElement();
 	    String value = request.getParameter(name);
-	    if ( value == null || value.equals(""))
+	    if (value == null || value.equals(""))
 		continue;
-	    introspecthelper(bean, name, value, request);
+	    introspecthelper(bean, name, value, request, name, true);
 	}
     }
     // __end introspectMethod
     
     // __begin introspecthelperMethod
-    public static void introspecthelper(Object bean, String name,
-					String value, ServletRequest request) 
+    public static void introspecthelper(Object bean, String prop,
+					String value, ServletRequest request,
+					String param, boolean ignoreMethodNF) 
 					throws JasperException
     {
 	try {
@@ -169,7 +170,7 @@ public class JspRuntimeLibrary {
 		java.beans.PropertyDescriptor pd[]
 		    = info.getPropertyDescriptors();
 		for (int i = 0 ; i < pd.length ; i++) {
-		    if ( pd[i].getName().equals(name) ) {
+		    if ( pd[i].getName().equals(prop) ) {
 			method = pd[i].getWriteMethod();
 			type   = pd[i].getPropertyType();
 			break;
@@ -178,8 +179,12 @@ public class JspRuntimeLibrary {
 	    }
 	    if ( method != null ) {
 		if (type.isArray()) {
+		    if (request == null)
+			throw new JasperException("Can't set indexed property");
 		    Class t = type.getComponentType();
-		    String[] values = request.getParameterValues(name);
+		    String[] values = request.getParameterValues(param);
+		    //XXX Please check.
+		    if(values == null) return;
 		    if(t.equals(String.class)) {
 			method.invoke(bean, new Object[] { values });
 		    } else {
@@ -187,10 +192,16 @@ public class JspRuntimeLibrary {
 			createTypedArray (bean, method, values, t); 
 		    }
 		} else {
+		    //XXX please check.
+		    if(value == null || value.equals("")) return;
 		    Object oval = convert(value, type);
 		    if ( oval != null )
 			method.invoke(bean, new Object[] { oval });
 		}
+	    } else {
+		if (!ignoreMethodNF)
+		    throw new JasperException("Can't find method for " + prop);
+		
 	    }
 	} catch (Exception ex) {
 	    throw new JasperException (ex);
@@ -398,5 +409,168 @@ public class JspRuntimeLibrary {
     return new String(holdbuffer,0,bufcount);
     }
 
+    // __begin lookupReadMethodMethod
+    public static Object handleGetProperty(Object o, String prop)
+    throws JasperException {
+        java.lang.reflect.Method method = null;
+	Object value = null;
+        try {
+            java.beans.BeanInfo info 
+                = java.beans.Introspector.getBeanInfo(o.getClass());
+            if ( info != null ) {
+                java.beans.PropertyDescriptor pd[]
+                    = info.getPropertyDescriptors();
+                for (int i = 0 ; i < pd.length ; i++) {
+                    if ( pd[i].getName().equalsIgnoreCase(prop) ) {
+                        method = pd[i].getReadMethod();
+                        break;
+                    }
+                }
+            }
+	    if (method == null)
+		throw new JasperException("CAn't find method for " + prop);
+	    value = method.invoke(o, null);
+        } catch (Exception ex) {
+	    throw new JasperException (ex);
+        }
+        return value;
+    }
+    // __end lookupReadMethodMethod
 
+    public static void handleSetProperty(Object bean, String prop,
+					 Object value)
+	throws JasperException
+    {
+	try {
+	    Method method = getMethod(bean, prop);
+	    method.invoke(bean, new Object[] { value });
+	} catch (Exception ex) {
+	    throw new JasperException(ex);
+	}
+    }
+    
+    public static void handleSetProperty(Object bean, String prop,
+					 int value)
+	throws JasperException
+    {
+	try {
+	    Method method = getMethod(bean, prop);
+	    method.invoke(bean, new Object[] { new Integer(value) });
+	} catch (Exception ex) {
+	    throw new JasperException(ex);
+	}	
+    }
+    
+    public static void handleSetProperty(Object bean, String prop,
+					 short value)
+	throws JasperException
+    {
+	try {
+	    Method method = getMethod(bean, prop);
+	    method.invoke(bean, new Object[] { new Short(value) });
+	} catch (Exception ex) {
+	    throw new JasperException(ex);
+	}	
+    }
+    
+    public static void handleSetProperty(Object bean, String prop,
+					 long value)
+	throws JasperException
+    {
+	try {
+	    Method method = getMethod(bean, prop);
+	    method.invoke(bean, new Object[] { new Long(value) });
+	} catch (Exception ex) {
+	    throw new JasperException(ex);
+	}	
+    } 
+    
+    public static void handleSetProperty(Object bean, String prop,
+					 double value)
+	throws JasperException
+    {
+	try {
+	    Method method = getMethod(bean, prop);
+	    method.invoke(bean, new Object[] { new Double(value) });
+	} catch (Exception ex) {
+	    throw new JasperException(ex);
+	}	
+    }
+    
+    public static void handleSetProperty(Object bean, String prop,
+					 float value)
+	throws JasperException
+    {
+	try {
+	    Method method = getMethod(bean, prop);
+	    method.invoke(bean, new Object[] { new Float(value) });
+	} catch (Exception ex) {
+	    throw new JasperException(ex);
+	}	
+    }
+    
+    public static void handleSetProperty(Object bean, String prop,
+					 char value)
+	throws JasperException
+    {
+	try {
+	    Method method = getMethod(bean, prop);
+	    method.invoke(bean, new Object[] { new Character(value) });
+	} catch (Exception ex) {
+	    throw new JasperException(ex);
+	}	
+    }
+
+    public static void handleSetProperty(Object bean, String prop,
+					 byte value)
+	throws JasperException
+    {
+	try {
+	    Method method = getMethod(bean, prop);
+	    method.invoke(bean, new Object[] { new Byte(value) });
+	} catch (Exception ex) {
+	    throw new JasperException(ex);
+	}	
+    }
+    
+    public static void handleSetProperty(Object bean, String prop,
+					 boolean value)
+	throws JasperException
+    {
+	try {
+	    Method method = getMethod(bean, prop);
+	    method.invoke(bean, new Object[] { new Boolean(value) });
+	} catch (Exception ex) {
+	    throw new JasperException(ex);
+	}	
+    }
+    
+    public static java.lang.reflect.Method getMethod(Object bean, String prop)
+    throws JasperException {
+	java.lang.reflect.Method method = null;	
+	try {
+	    Class                    type   = null;
+	    java.beans.BeanInfo info
+		= java.beans.Introspector.getBeanInfo(bean.getClass());
+	    if ( info != null ) {
+		java.beans.PropertyDescriptor pd[]
+		    = info.getPropertyDescriptors();
+		for (int i = 0 ; i < pd.length ; i++) {
+		    if ( pd[i].getName().equals(prop) ) {
+			method = pd[i].getWriteMethod();
+			type   = pd[i].getPropertyType();
+			break;
+		    }
+		}
+	    }
+	} catch (Exception ex) {
+	    throw new JasperException (ex);
+	}
+	return method;
+    }
+    
 }
+
+
+
+

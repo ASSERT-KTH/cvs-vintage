@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/GetPropertyGenerator.java,v 1.1 1999/10/09 00:20:36 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/GetPropertyGenerator.java,v 1.2 1999/12/08 23:42:50 bergsten Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/12/08 23:42:50 $
  *
  * ====================================================================
  * 
@@ -88,51 +88,26 @@ public class GetPropertyGenerator
 	throws JasperException	{
 	    String name     = getAttribute ("name");
 	    String property = getAttribute ("property");
-	    Method method = null;
-	    //Class tp = null;
+
+	    // Should ideally throw exception here if the bean
+	    // is not present in the pageContext.
 	    
-	    if (name.equals("request")) {
-		// REVISIT
-		// hack 
-		String methodName = "request"+".get"+ property.substring(0,1).toUpperCase() +
-		    property.substring(1);
-		writer.println ("out.print (JspRuntimeLibrary.toString(" + methodName + "()));");
-	    } else {
-		// explicit bean.
-		if (beanInfo.checkVariable(name) == false) {
-		    String m = Constants.getString ("jsp.error.getproperty.beanNotFound", new Object[] {name});
-		    throw new JasperException(m);
-		}
+	    if (beanInfo.checkVariable(name)) {
+		// Bean is defined using useBean.
 		Class cls = beanInfo.getBeanType (name);
-		// System.out.println("Bean Class = " + cls);
-		try {
-		    java.beans.BeanInfo info
-			= java.beans.Introspector.getBeanInfo(cls);
-		    if ( info != null ) {
-			java.beans.PropertyDescriptor pd[]
-			    = info.getPropertyDescriptors();
-			for (int i = 0 ; i < pd.length ; i++) {
-			    if ( pd[i].getName().equalsIgnoreCase(property) ) {
-				method = pd[i].getReadMethod();
-				//tp   = pd[i].getPropertyType();
-				break;
-			    }
-			}
-		    }
-		} catch (java.beans.IntrospectionException ex) {
-		    throw new JasperException (Constants.getString(
-								"jsp.error.beans.introspection", 
-								new Object [] {name, property}),ex);
-		}
-		if (method == null)
-		    throw new JasperException (Constants.getString (
-								 "jsp.error.beans.noMethod",
-								 new Object [] {name, property}));
-		
-		writer.println ("out.print(JspRuntimeLibrary.toString(" + name + "." +
-				method.getName() + "()));");
+		String clsName = cls.getName();
+		String modProperty = property.substring(0,1).toUpperCase() +
+		    property.substring(1);
+		String methodName = "get" + modProperty;
+		writer.println("out.print(JspRuntimeLibrary.toString(" +
+			       "(((" + clsName + ")pageContext.findAttribute(" +
+			       "\"" + name + "\")).get" + modProperty + "())));");
+	    } else {
+		// Get the class name and then introspect.
+		writer.println("out.print(JspRuntimeLibrary.toString(JspRuntimeLibrary." +
+			       "handleGetProperty(pageContext.findAttribute(" +
+			       "\"" + name + "\"), \"" + property + "\")));");
 	    }
-	    
     }
     
     public String getAttribute(String name) {
