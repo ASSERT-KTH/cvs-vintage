@@ -211,12 +211,13 @@ non-thread-safe DateFormat and related classes.
 
 Must Resolve Bugs:
 
-1253  Frequent Connection reset by peer errors  
+1253  Frequent Connection reset by peer errors
+      RESOLUTION: Later
 
 
 Tomcat 3.3 Release Candidate 2:
 
-	Code Freeze/Tag Date:	Sept 21, 2001
+	Code Freeze/Tag Date:	Oct 6, 2001
 	Release Manager:	Larry Isaacs
 
      Will be the build put to a vote as a release. This release should 
@@ -229,8 +230,12 @@ To Be Addressed by RC2:
 Ajp13Interceptor.  This allows configuring a password protected
 Ajp12Interceptor shutdown to be the only shutdown available.
 
+    RESOLUTION: Implemented
+
 9. Some files under src/native have embedded CR's, i.e. Unix files would have
 CRLF and Windows files would have CRCRLF's.  These need to be fixed.
+
+    RESOLUTION: Current file set is okay. Check again before building RC2.
 
 10. The jk_nt_service, and I assume jniconnect, redirect stdout and stderr to
 files.  With the default server.xml with no path for tc_log, Tomcat's
@@ -243,28 +248,33 @@ in Tomcat 3.3's mod_jk.  I'm fine with not supporting it, but I want
 to include some justification in the documentation to avoid some of
 the "why don't you" questions.
 
-    IN PROGRESS: Making user configurable
+    IN PROGRESS: Current implementation under review
 
 12. To simplify upgrade development, I would like to see the classpath
 for the "container", "common", and "apps" classloaders include the
 directory so classes placed under them will be picked up.
 
+    RESOLUTION: Implemented. Includes "dir/classes" directory if exists.
+
 13. Determine cause of pauses running Tomcat's internal test with
 Tomcat + IIS.
 
+    RESOLUTION: Removed "bad" request test. IIS hangs on POST using HTTP/0.9
+
 14. StaticInterceptor is missing a localization enhancement added to
 Tomcat 3.2.x.  Should this enhancement be ported to Tomcat 3.3?
+
 
 Must Resolve Bugs:
 
 1798  Tomcat 3.2.2b5 with Apache and ajp13 stops responding after  
 2333  HTTP Reason will be destroyed in header using AJP12  
-2550  Ajp13 Connection hanging on static content.  
-3581  Ctx() : Error creating validation mark  - java.io.FileNotFoundException
+3760/3727 When forwaring from one servlet to another, path info may get lost
+
 
 Tomcat 3.3 Final Release
 
-	Code Freeze Date:	Sept 28, 2001
+	Code Freeze Date:	Oct 15, 2001
 	Release Manager:	Larry Isaacs
 
      The final build. The pre-requisite for the release is having no
@@ -274,11 +284,7 @@ Tomcat 3.3 Final Release
 
 Open in 3.2.x But Fixed in 3.3
 
-274   request.getUserPrincipal() doesn't work when user is authent
 384   AJP13 returns no Status Message (Reason-Phrase RFC 2616) Bug  
-620   StopTomcat defaults to localhost  
-1482  Ignored session ids in encoded URLs  
-2057  URL contains encoded special chars  
 
 
 Bugs That Won't Be Fixed In Tomcat 3.3
