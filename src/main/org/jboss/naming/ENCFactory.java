@@ -21,7 +21,7 @@ import org.jnp.interfaces.NamingContext;
  *     
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Oberg</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class ENCFactory
    implements ObjectFactory
@@ -30,7 +30,6 @@ public class ENCFactory
     
    // Attributes ----------------------------------------------------
    private static WeakHashMap encs = new WeakHashMap();
-   private static WeakHashMap encToLoaderMap = new WeakHashMap();
    private static ClassLoader topLoader;
 
    // Static --------------------------------------------------------
@@ -43,13 +42,6 @@ public class ENCFactory
       return ENCFactory.topLoader;
    }
 
-   /** Get the ClassLoader that was used to create the given ENC context.
-   */
-   public static ClassLoader getClassLoader(Context compCtx)
-   {
-      ClassLoader loader = (ClassLoader) encToLoaderMap.get(compCtx);
-      return loader;
-   }
 
    // Constructors --------------------------------------------------
 
@@ -81,9 +73,8 @@ public class ENCFactory
             if( compCtx == null )
             {
                NamingServer srv = new NamingServer();
-               compCtx = new TraceContext(environment, null, srv);
+               compCtx = new NamingContext(environment, null, srv);
                encs.put(ctxClassLoader, compCtx);
-               encToLoaderMap.put(compCtx, ctxClassLoader);
             }
          }
          return compCtx;
