@@ -621,12 +621,14 @@ as shipped with Tomcat, contains a simple example which is commented-out by defa
 <br><tt><font size=-1>&nbsp; secure="true"</font></tt>
 <br><tt><font size=-1>&nbsp; keystore="/var/tomcat/conf/keystore"</font></tt>
 <br><tt><font size=-1>&nbsp; keypass="mynewpass"</font></tt>
-<br><tt><font size=-1>&nbsp; clientAuth="false" /></font></tt><font size=-1></font>
+<br><tt><font size=-1>&nbsp; clientauth="false" /></font></tt><font size=-1></font>
 </BLOCKQUOTE>
 In the above examples, we indicate that the keystore is file located at
 <code>/var/tomcat/conf/keystore</code>, and the password if "mynewpass". Again,
 these attributes can be skipped if the Tomcat defaults were used. Also, we
-specified that we don't want to enforce client authentication.
+specified that we don't want to enforce client authentication. Also, note the
+case difference between Tomcat 3.2 and Tomcat 3.3 (i.e. &quot;clientAuth&quot;
+versus &quot;clientauth&quot;).
 <P>
 By default, Tomcat chooses whatever SSL implementation is available,
 with preference given to PureTLS over JSSE if both are available. You
@@ -637,7 +639,7 @@ parameter, like so:
 <br><tt><font size=-1>&nbsp; secure="true"</font></tt>
 <br><tt><font size=-1>&nbsp; keystore="/var/tomcat/conf/keystore"</font></tt>
 <br><tt><font size=-1>&nbsp; keypass="mynewpass"</font></tt>
-<br><tt><font size=-1>&nbsp; clientAuth="false" </font></tt>
+<br><tt><font size=-1>&nbsp; clientauth="false" </font></tt>
 <br><tt><font size=-1>&nbsp; SSLImplementation="org.apache.tomcat.util.net.PureTLSImplementation" </font></tt> /></font></tt>
 <P>
 <code>SSLImplementation</code> can be the name of any class that implements
