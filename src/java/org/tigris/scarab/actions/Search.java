@@ -89,7 +89,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.76 2002/05/31 01:41:18 elicia Exp $
+    @version $Id: Search.java,v 1.77 2002/05/31 18:31:00 elicia Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -282,7 +282,7 @@ public class Search extends RequireLoginFirstAction
         }
         else
         {
-            data.setMessage("Please select issues to view.");
+            getScarabRequestTool(context).setAlertMessage("Please select issues to view.");
         }
     }
 
@@ -299,7 +299,7 @@ public class Search extends RequireLoginFirstAction
         }
         else
         {
-            data.setMessage("Please select issues to view.");
+            getScarabRequestTool(context).setAlertMessage("Please select issues to view.");
         }
     }
 
