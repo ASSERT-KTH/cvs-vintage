@@ -21,8 +21,7 @@
 <form method="post" action="$link.setPage("admin,GlobalArtifactTypeEdit.vm")">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalUserAttributeSelect.vm" />
-#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalArtifactTypeShow.vm"))
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
 #if (!$createNew)
   <input type="hidden" name="issueTypeId" value="$issueType.IssueTypeId" />
 #end
