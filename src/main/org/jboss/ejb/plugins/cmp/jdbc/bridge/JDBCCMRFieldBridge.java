@@ -44,7 +44,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------
@@ -211,7 +211,11 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
          Set keys = new HashSet();
          for(Iterator i=foreignKeys.iterator(); i.hasNext(); ) {
             JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData)i.next();
-            keys.add(new JDBCCMP2xFieldBridge(manager, cmpFieldMetaData, manager.getJDBCTypeFactory().getFieldJDBCType(cmpFieldMetaData)));
+            keys.add(new JDBCCMP2xFieldBridge(
+                     manager,
+                     cmpFieldMetaData,
+                     manager.getJDBCTypeFactory().getJDBCType(
+                        cmpFieldMetaData)));
          }
          foreignKeyFields = new JDBCCMPFieldBridge[foreignKeys.size()];
          foreignKeyFields = (JDBCCMPFieldBridge[])keys.toArray(foreignKeyFields);

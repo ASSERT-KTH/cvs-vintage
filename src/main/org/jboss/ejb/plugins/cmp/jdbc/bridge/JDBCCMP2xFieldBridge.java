@@ -22,7 +22,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 /**
  * JDBCCMP2xFieldBridge is a concrete implementation of JDBCCMPFieldBridge for 
  * CMP version 2.x. Instance data is stored in the entity persistence context.
- * When every a field is changed it is compared to the current value and sets
+ * Whenever a field is changed it is compared to the current value and sets
  * a dirty flag if the value has changed.
  *
  * Life-cycle:
@@ -32,14 +32,21 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */                            
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
-   public JDBCCMP2xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata) throws DeploymentException {
+   public JDBCCMP2xFieldBridge(
+         JDBCStoreManager manager,
+         JDBCCMPFieldMetaData metadata) throws DeploymentException {
+
       super(manager, metadata);
    }
 
-   public JDBCCMP2xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata, JDBCType jdbcType) throws DeploymentException {
+   public JDBCCMP2xFieldBridge(
+         JDBCStoreManager manager,
+         JDBCCMPFieldMetaData metadata,
+         JDBCType jdbcType) throws DeploymentException {
+
       super(manager, metadata, jdbcType);
    }
 
@@ -48,7 +55,8 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
       if(!fieldState.isLoaded) {
          manager.loadField(this, ctx);
          if(!fieldState.isLoaded) {
-            throw new EJBException("Could not load field value: " + getFieldName());
+            throw new EJBException("Could not load field value: " + 
+                  getFieldName());
          }
       }
       return fieldState.value;
@@ -58,8 +66,10 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
       FieldState fieldState = getFieldState(ctx);
 
       // short-circuit to avoid repetive comparisons
-      // if it is not currently loaded or it is already dirty or if it has changed
-      fieldState.isDirty = !fieldState.isLoaded || fieldState.isDirty || changed(fieldState.value, value);
+      // if it is not currently loaded or it is already dirty or 
+      // if it has changed
+      fieldState.isDirty = !fieldState.isLoaded || fieldState.isDirty || 
+            changed(fieldState.value, value);
       
       // we are loading the field right now so it isLoaded 
       fieldState.isLoaded = true;
@@ -81,8 +91,8 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
    }
    
    /**
-   * Mark this field as clean.
-   * Saves the current state in context, so it can be compared when isDirty is called.
+   * Mark this field as clean. Saves the current state in context, so it 
+   * can be compared when isDirty is called.
    */
    public void setClean(EntityEnterpriseContext ctx) {
       FieldState fieldState = getFieldState(ctx);
@@ -103,7 +113,8 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
    
    public boolean isReadTimedOut(EntityEnterpriseContext ctx) {
       if(isReadOnly()) {
-         long readInterval = System.currentTimeMillis() - getFieldState(ctx).lastRead; 
+         long readInterval = System.currentTimeMillis() - 
+               getFieldState(ctx).lastRead; 
          return readInterval > metadata.getReadTimeOut();
       }
       
@@ -111,7 +122,8 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
       return true;
    }
 
-   private CMPStoreManager.PersistenceContext getPersistenceContext(EntityEnterpriseContext ctx) {
+   private CMPStoreManager.PersistenceContext getPersistenceContext(
+         EntityEnterpriseContext ctx) {
       return (CMPStoreManager.PersistenceContext)ctx.getPersistenceContext();
    }
       

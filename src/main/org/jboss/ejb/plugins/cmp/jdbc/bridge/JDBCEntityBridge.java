@@ -52,7 +52,7 @@ import org.jboss.proxy.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
@@ -73,7 +73,11 @@ public class JDBCEntityBridge implements EntityBridge {
    
    protected Logger log;
 
-   public JDBCEntityBridge(JDBCEntityMetaData metadata, Logger log, JDBCStoreManager manager) throws DeploymentException {
+   public JDBCEntityBridge(
+         JDBCEntityMetaData metadata, 
+         Logger log,
+         JDBCStoreManager manager) throws DeploymentException {
+
       this.metadata = metadata;                  
       this.log = log;
       this.manager = manager;
@@ -86,7 +90,9 @@ public class JDBCEntityBridge implements EntityBridge {
       loadSelectors(metadata);
    }
 
-   protected void loadCMPFields(JDBCEntityMetaData metadata) throws DeploymentException {
+   protected void loadCMPFields(JDBCEntityMetaData metadata)
+         throws DeploymentException {
+
       // map between field names and field objects
       cmpFieldsByName = new HashMap(metadata.getCMPFields().size());
       // non primary key cmp fields
@@ -97,8 +103,10 @@ public class JDBCEntityBridge implements EntityBridge {
       // create each field    
       Iterator iter = metadata.getCMPFields().iterator();
       while(iter.hasNext()) {
-         JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData)iter.next();
-         JDBCCMPFieldBridge cmpField = createCMPField(metadata, cmpFieldMetaData);
+         JDBCCMPFieldMetaData cmpFieldMetaData = 
+               (JDBCCMPFieldMetaData)iter.next();
+         JDBCCMPFieldBridge cmpField = 
+               createCMPField(metadata, cmpFieldMetaData);
          cmpFieldsByName.put(cmpField.getFieldName(), cmpField);
          
          if(cmpField.isPrimaryKeyMember()) {
@@ -111,7 +119,8 @@ public class JDBCEntityBridge implements EntityBridge {
       
       // save the pk fields in the pk field array
       primaryKeyFields = new JDBCCMPFieldBridge[pkFieldList.size()];
-      primaryKeyFields = (JDBCCMPFieldBridge[])pkFieldList.toArray(primaryKeyFields);      
+      primaryKeyFields =
+            (JDBCCMPFieldBridge[])pkFieldList.toArray(primaryKeyFields);      
       
       // add the pk fields to the front of the cmp list, per guarantee above
       cmpFieldList.addAll(0, pkFieldList);
@@ -121,7 +130,9 @@ public class JDBCEntityBridge implements EntityBridge {
       cmpFields = (JDBCCMPFieldBridge[])cmpFieldList.toArray(cmpFields);
    }
 
-   protected void loadEagerLoadFields(JDBCEntityMetaData metadata) throws DeploymentException {
+   protected void loadEagerLoadFields(JDBCEntityMetaData metadata)
+         throws DeploymentException {
+
       ArrayList fields = new ArrayList(metadata.getCMPFields().size());
       Iterator iter = metadata.getEagerLoadFields().iterator();
       while(iter.hasNext()) {
@@ -132,7 +143,9 @@ public class JDBCEntityBridge implements EntityBridge {
       eagerLoadFields = (JDBCCMPFieldBridge[])fields.toArray(eagerLoadFields);
    }
 
-   protected void loadLazyLoadGroups(JDBCEntityMetaData metadata) throws DeploymentException {
+   protected void loadLazyLoadGroups(JDBCEntityMetaData metadata)
+         throws DeploymentException {
+
       lazyLoadGroups = new ArrayList();
       
       Iterator groups = metadata.getLazyLoadGroups().iterator();
@@ -148,8 +161,10 @@ public class JDBCEntityBridge implements EntityBridge {
       }
    }
 
-   protected JDBCCMPFieldBridge createCMPField(JDBCEntityMetaData metadata, JDBCCMPFieldMetaData cmpFieldMetaData) 
-         throws DeploymentException {
+   protected JDBCCMPFieldBridge createCMPField(
+         JDBCEntityMetaData metadata,
+         JDBCCMPFieldMetaData cmpFieldMetaData) throws DeploymentException {
+
       if(metadata.isCMP1x()) {
          return new JDBCCMP1xFieldBridge(manager, cmpFieldMetaData);
       } else {
@@ -157,15 +172,20 @@ public class JDBCEntityBridge implements EntityBridge {
       }
    }
    
-   protected void loadCMRFields(JDBCEntityMetaData metadata) throws DeploymentException {
+   protected void loadCMRFields(JDBCEntityMetaData metadata)
+         throws DeploymentException {
+
       cmrFieldsByName = new HashMap(metadata.getRelationshipRoles().size());
-      ArrayList cmrFieldList = new ArrayList(metadata.getRelationshipRoles().size());
+      ArrayList cmrFieldList =
+            new ArrayList(metadata.getRelationshipRoles().size());
 
       // create each field    
       Iterator iter = metadata.getRelationshipRoles().iterator();
       while(iter.hasNext()) {
-         JDBCRelationshipRoleMetaData relationshipRole = (JDBCRelationshipRoleMetaData)iter.next();
-         JDBCCMRFieldBridge cmrField = new JDBCCMRFieldBridge(this, manager, relationshipRole); 
+         JDBCRelationshipRoleMetaData relationshipRole =
+               (JDBCRelationshipRoleMetaData)iter.next();
+         JDBCCMRFieldBridge cmrField =
+               new JDBCCMRFieldBridge(this, manager, relationshipRole); 
          cmrFieldList.add(cmrField);
          cmrFieldsByName.put(cmrField.getFieldName(), cmrField);
       }
@@ -179,22 +199,26 @@ public class JDBCEntityBridge implements EntityBridge {
       }
    }
 
-   protected void loadSelectors(JDBCEntityMetaData metadata) throws DeploymentException {
-      // Don't know if this is the best way to do this.  Another way would be to 
-      // deligate seletors to the JDBCFindEntitiesCommand, but this is easier now.
-      
+   protected void loadSelectors(JDBCEntityMetaData metadata)
+         throws DeploymentException {
+            
+      // Don't know if this is the best way to do this.  Another way would be 
+      // to deligate seletors to the JDBCFindEntitiesCommand, but this is
+      // easier now.
       selectorsByMethod = new HashMap(metadata.getQueries().size());
       Iterator definedFinders = manager.getMetaData().getQueries().iterator();
       while(definedFinders.hasNext()) {
          JDBCQueryMetaData q = (JDBCQueryMetaData)definedFinders.next();
 
-         if(q instanceof JDBCQlQueryMetaData) {
-            selectorsByMethod.put(q.getMethod(), new JDBCSelectorBridge(manager, (JDBCQlQueryMetaData)q));
+         if(q.getMethod().getName().startsWith("ejbSelect")) {
+            selectorsByMethod.put(q.getMethod(), 
+                  new JDBCSelectorBridge(manager, q));
          }
       }
 
       selectors = new JDBCSelectorBridge[selectorsByMethod.values().size()];
-      selectors = (JDBCSelectorBridge[])selectorsByMethod.values().toArray(selectors);
+      selectors = 
+            (JDBCSelectorBridge[])selectorsByMethod.values().toArray(selectors);
    }
    
    public String getEntityName() {
@@ -248,7 +272,9 @@ public class JDBCEntityBridge implements EntityBridge {
       return (JDBCCMPFieldBridge)cmpFieldsByName.get(name);
    }
    
-   protected JDBCCMPFieldBridge getExistingCMPFieldByName(String name) throws DeploymentException {
+   protected JDBCCMPFieldBridge getExistingCMPFieldByName(String name)
+         throws DeploymentException {
+
       JDBCCMPFieldBridge cmpField = getCMPFieldByName(name);
       if(cmpField == null) {
          throw new DeploymentException("cmpField not found: " + name);
@@ -304,7 +330,8 @@ public class JDBCEntityBridge implements EntityBridge {
       // get dirty cmr foreign key fields
       for(int i=0; i<cmrFields.length; i++) {
          if(cmrFields[i].hasForeignKey()) {
-            JDBCCMPFieldBridge[] foreignKeyFields = cmrFields[i].getForeignKeyFields();
+            JDBCCMPFieldBridge[] foreignKeyFields =
+                  cmrFields[i].getForeignKeyFields();
             for(int j=0; j<foreignKeyFields.length; j++) {
                if(foreignKeyFields[j].isDirty(ctx)) {
                   dirtyFields.add(foreignKeyFields[j]);
@@ -313,7 +340,8 @@ public class JDBCEntityBridge implements EntityBridge {
          }
       }
       
-      JDBCCMPFieldBridge[] dirtyFieldArray = new JDBCCMPFieldBridge[dirtyFields.size()];
+      JDBCCMPFieldBridge[] dirtyFieldArray =
+            new JDBCCMPFieldBridge[dirtyFields.size()];
       return (JDBCCMPFieldBridge[])dirtyFields.toArray(dirtyFieldArray);
    }
    
@@ -322,7 +350,8 @@ public class JDBCEntityBridge implements EntityBridge {
       // notify the handler of the assigned context.
       Object instance = ctx.getInstance();
       if(instance instanceof Proxies.ProxyTarget) {
-         InvocationHandler handler = ((Proxies.ProxyTarget)instance).getInvocationHandler();
+         InvocationHandler handler = 
+               ((Proxies.ProxyTarget)instance).getInvocationHandler();
          if(handler instanceof EntityBridgeInvocationHandler) {
             ((EntityBridgeInvocationHandler)handler).setContext(ctx);
          }
@@ -350,7 +379,8 @@ public class JDBCEntityBridge implements EntityBridge {
       // notify the handler of the assigned context.
       Object instance = ctx.getInstance();
       if(instance instanceof Proxies.ProxyTarget) {
-         InvocationHandler handler = ((Proxies.ProxyTarget)instance).getInvocationHandler();
+         InvocationHandler handler =
+               ((Proxies.ProxyTarget)instance).getInvocationHandler();
          if(handler instanceof EntityBridgeInvocationHandler) {
             ((EntityBridgeInvocationHandler)handler).setContext(null);
          }
@@ -359,48 +389,82 @@ public class JDBCEntityBridge implements EntityBridge {
       ctx.setPersistenceContext(null);
    }
 
-   public CMPStoreManager.PersistenceContext getPersistenceContext(EntityEnterpriseContext ctx) {
+   public CMPStoreManager.PersistenceContext getPersistenceContext(
+         EntityEnterpriseContext ctx) {
+
       return (CMPStoreManager.PersistenceContext)ctx.getPersistenceContext();
    }
 
    // JDBC Specific Information
    
-   public int setInstanceParameters(PreparedStatement ps, int parameterIndex, EntityEnterpriseContext ctx)  {
+   public int setInstanceParameters(
+         PreparedStatement ps,
+         int parameterIndex,
+         EntityEnterpriseContext ctx)  {
+
       return setInstanceParameters(ps, parameterIndex, ctx, cmpFields);
    }
 
-   public int setInstanceParameters(PreparedStatement ps, int parameterIndex, EntityEnterpriseContext ctx, JDBCCMPFieldBridge[] fields) {
+   public int setInstanceParameters(
+         PreparedStatement ps,
+         int parameterIndex,
+         EntityEnterpriseContext ctx, 
+         JDBCCMPFieldBridge[] fields) {
+
       for(int i=0; i<fields.length; i++) {
-         parameterIndex = fields[i].setInstanceParameters(ps, parameterIndex, ctx);
+         parameterIndex =
+               fields[i].setInstanceParameters(ps, parameterIndex, ctx);
       }
       return parameterIndex;
    }
 
-   public int setPrimaryKeyParameters(PreparedStatement ps, int parameterIndex, Object primaryKey) {      
+   public int setPrimaryKeyParameters(
+         PreparedStatement ps,
+         int parameterIndex,
+         Object primaryKey) {      
+
       for(int i=0; i<primaryKeyFields.length; i++) {
-         parameterIndex = primaryKeyFields[i].setPrimaryKeyParameters(ps, parameterIndex, primaryKey);
+         parameterIndex = primaryKeyFields[i].setPrimaryKeyParameters(
+               ps,
+               parameterIndex,
+               primaryKey);
       }
       return parameterIndex;
    }
 
-   public int loadInstanceResults(ResultSet rs, int parameterIndex, EntityEnterpriseContext ctx) {
+   public int loadInstanceResults(
+         ResultSet rs,
+         int parameterIndex,
+         EntityEnterpriseContext ctx) {
+
       for(int i=0; i<cmpFields.length; i++) {
-         parameterIndex = cmpFields[i].loadInstanceResults(rs, parameterIndex, ctx);
+         parameterIndex =
+               cmpFields[i].loadInstanceResults(rs, parameterIndex, ctx);
       }
       return parameterIndex;
    }
          
-   public int loadNonPrimaryKeyResults(ResultSet rs, int parameterIndex, EntityEnterpriseContext ctx) {
+   public int loadNonPrimaryKeyResults(
+         ResultSet rs,
+         int parameterIndex,
+         EntityEnterpriseContext ctx) {
+
       for(int i=primaryKeyFields.length; i<cmpFields.length; i++) {
-         parameterIndex = cmpFields[i].loadInstanceResults(rs, parameterIndex, ctx);
+         parameterIndex = 
+               cmpFields[i].loadInstanceResults(rs, parameterIndex, ctx);
       }
       return parameterIndex;
    }
          
-   public int loadPrimaryKeyResults(ResultSet rs, int parameterIndex, Object[] pkRef) {
+   public int loadPrimaryKeyResults(
+         ResultSet rs, 
+         int parameterIndex, 
+         Object[] pkRef) {
+
       pkRef[0] = createPrimaryKeyInstance();
       for(int i=0; i<primaryKeyFields.length; i++) {
-         parameterIndex = primaryKeyFields[i].loadPrimaryKeyResults(rs, parameterIndex, pkRef);
+         parameterIndex = primaryKeyFields[i].loadPrimaryKeyResults(
+               rs, parameterIndex, pkRef);
       }
       return parameterIndex;
    }
@@ -412,7 +476,8 @@ public class JDBCEntityBridge implements EntityBridge {
             Object fieldValue = primaryKeyFields[i].getInstanceValue(ctx);
             
             // updated pk object with return form set primary key value to
-            // handle single valued non-composit pks and more complicated behivors.
+            // handle single valued non-composit pks and more complicated
+            // behivors.
             pk = primaryKeyFields[i].setPrimaryKeyValue(pk, fieldValue);
          }
          return pk;
@@ -421,11 +486,15 @@ public class JDBCEntityBridge implements EntityBridge {
          throw e;
       } catch(Exception e) {
          // Non recoverable internal exception
-         throw new EJBException("Internal error extracting primary key from instance: " + e);
+         throw new EJBException("Internal error extracting primary key from " +
+               "instance: " + e);
       }
    }
 
-   public void injectPrimaryKeyIntoInstance(EntityEnterpriseContext ctx, Object pk) {
+   public void injectPrimaryKeyIntoInstance(
+         EntityEnterpriseContext ctx,
+         Object pk) {
+
       for(int i=0; i<primaryKeyFields.length; i++) {
          Object fieldValue = primaryKeyFields[i].getPrimaryKeyValue(pk);
          primaryKeyFields[i].setInstanceValue(ctx, fieldValue);
