@@ -91,7 +91,7 @@
   <property name="jtc.http11.home" location="${jakarta-tomcat-connectors}/http11"/>
   <property name="jtc.http11.lib" location="${jtc.http11.home}/build/lib"/>
 
-  <property name="jmx.jar" location="../jakarta-tomcat-connectors/lib/mx4j.jar"/>
+  <property name="jmx.jar" location="${jakarta-tomcat-connectors}/lib/mx4j.jar"/>
 
   <!-- Binaries checked in ( servlet.jar is not likely to change,
       the 2.2 spec is final -->
@@ -147,6 +147,10 @@
     <echo message="Detected JSSE"/>
   </target>
 
+  <target name="msg.jmx" if="jmx-present" >
+    <echo message="Detected JMX"/>
+  </target>
+
   <target name="msg.puretls" if="puretls.present">
     <echo message="Detected PureTLS"/>
   </target>
@@ -164,7 +168,7 @@
   </target>
 
   <target name="init"
-          depends="detect,uptodate,msg.jdk12,msg.jsse,msg.puretls,msg.commons-dbcp,msg.jtc,msg.jtc.util" >
+          depends="detect,uptodate,msg.jdk12,msg.jsse,msg.jmx,msg.puretls,msg.commons-dbcp,msg.jtc,msg.jtc.util" >
   </target>
 
   <target name="prepare.jaxp101"  depends="detect" if="jaxp10-present" >
