@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
 * Represents the single JBoss server management domain
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -46,7 +46,7 @@ public class SingleJBossServerManagement
    public SingleJBossServerManagement()
       throws MalformedObjectNameException, InvalidParentException
    {
-      super( "SingleJBoss" );
+      super( "jboss.management.single" );
    }
    
    // -------------------------------------------------------------------------

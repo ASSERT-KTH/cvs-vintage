@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBCDataSource JDBCDataSource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -185,22 +185,22 @@ public class JDBCDataSource
    public int getState() {
       return mState;
    }
-
-   public void startService() {
+   
+   /**
+    * This method is only overwriten because to catch the exception
+    * which is not specified in {@link javax.management.j2ee.StateManageable
+    * StateManageable} interface.
+    **/
+   public void start()
+   {
       try {
-         getServer().invoke(
-            mService,
-            "start",
-            new Object[] {},
-            new String[] {}
-         );
+         super.start();
       }
-      catch( JMException jme ) {
-         //AS ToDo: later on we have to define what happens when service could not be started
-         jme.printStackTrace();
+      catch( Exception e ) {
+         getLog().error( "start failed", e );
       }
    }
-
+   
    public void startRecursive() {
       // No recursive start here
       try {
@@ -211,21 +211,6 @@ public class JDBCDataSource
       }
    }
 
-   public void stopService() {
-      try {
-         getServer().invoke(
-            mService,
-            "stop",
-            new Object[] {},
-            new String[] {}
-         );
-      }
-      catch( JMException jme ) {
-         //AS ToDo: later on we have to define what happens when service could not be started
-         jme.printStackTrace();
-      }
-   }
-   
    // javax.management.j2ee.JDBCDataSource implementation -----------------
    
    public ObjectName getJdbcDriver()
@@ -272,21 +257,36 @@ public class JDBCDataSource
    
    // ServiceMBeanSupport overrides ---------------------------------
    
-   /**
-    * This method is only overwriten because to catch the exception
-    * which is not specified in {@link javax.management.j2ee.StateManageable
-    * StateManageable} interface.
-    **/
-   public void start()
-   {
+   public void startService() {
       try {
-         super.start();
+         getServer().invoke(
+            mService,
+            "start",
+            new Object[] {},
+            new String[] {}
+         );
       }
-      catch( Exception e ) {
-         getLog().error( "start failed", e );
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service could not be started
+         jme.printStackTrace();
       }
    }
-
+   
+   public void stopService() {
+      try {
+         getServer().invoke(
+            mService,
+            "stop",
+            new Object[] {},
+            new String[] {}
+         );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service could not be started
+         jme.printStackTrace();
+      }
+   }
+   
    // java.lang.Object overrides ------------------------------------
    
    public String toString() {

@@ -135,21 +135,36 @@ public interface SchedulerMBean
    public void setSchedulePeriod( long pPeriod );
    
    /**
-   * @return Date (and time) of the first scheduled call. Value is in milliseconds since 1/1/1970.
-   *         If date is in the past when the schedule is added to the Timer then the schedule will
-   *         started immediately
+   * @return Date (and time) of the first scheduled. For value see {@link #setInitialStartDate
+   *         setInitialStartDate()} method.
    **/
-   public long getInitialStartDate();
+   public String getInitialStartDate();
    
    /**
-   * Sets the first scheduled call. If in the past when the scheduler gets setup it will start
-   * immediately.
+   * Sets the first scheduled call. If the date is in the past the scheduler tries to find the
+   * next available start date.
    *
-   * @param pStartDate Date in milliseconds since 1/1/1970 for the first initial call. Anything
-   *                   less than zero means 1/1/1970. Any date less than now means the schedule
-   *                   will be started immediately.
+   * @param pStartDate Date when the initial call is scheduled. It can be either:
+   *                   <ul>
+   *                      <li>
+   *                         NOW: date will be the current date (new Date()) plus 1 seconds
+   *                      </li><li>
+   *                         Date as String able to be parsed by SimpleDateFormat with default format
+   *                      </li><li>
+   *                         Milliseconds since 1/1/1970
+   *                      </li>
+   *                   </ul>
+   *                   If the date is in the past the Scheduler
+   *                   will search a start date in the future with respect to the initial repe-
+   *                   titions and the period between calls. This means that when you restart
+   *                   the MBean (restarting JBoss etc.) it will start at the next scheduled
+   *                   time. When no start date is available in the future the Scheduler will
+   *                   not start.<br>
+   *                   Example: if you start your Schedulable everyday at Noon and you restart
+   *                   your JBoss server then it will start at the next Noon (the same if started
+   *                   before Noon or the next day if start after Noon).
    **/
-   public void setInitialStartDate( long pStartDate );
+   public void setInitialStartDate( String pStartDate );
    
    /**
     * @return Number of scheduled calls initially. If -1 then there is not limit.

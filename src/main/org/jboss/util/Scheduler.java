@@ -7,6 +7,8 @@
 package org.jboss.util;
 
 import java.lang.reflect.Constructor;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +33,7 @@ import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
-
+import org.jboss.logging.Logger;
 import org.jboss.naming.NonSerializableFactory;
 import org.jboss.system.ServiceMBeanSupport;
 
@@ -64,6 +66,20 @@ import org.jboss.system.ServiceMBeanSupport;
 * <li>MBean is not bind/unbind to JNDI server anymore</li>
 * </ul>
 * </p>
+* <p><b>20020117 Andy:</b>
+* <ul>
+* <li>Change the behaviour when the Start Date is in the past. Now the
+*     Scheduler will behave as the Schedule is never stopped and find
+*     the next available time to start with respect to the settings.
+*     Therefore you can restart JBoss without adjust your Schedule
+*     every time. BUT you will still loose the calls during the Schedule
+*     was donw.</li>
+* <li>Added parsing capabilities to setInitialStartDate. Now NOW: current time,
+*     and a string in a format the SimpleDataFormat understand in your environment
+*     (US: m/d/yy h:m a) but of course the time in ms since 1/1/1970.</li>
+* <li>Some fixes like the stopping a Schedule even if it already stopped etc.</li>
+* </ul>
+* </p>
 **/
 public class Scheduler
    extends ServiceMBeanSupport
@@ -81,7 +97,8 @@ public class Scheduler
    // Members
    // -------------------------------------------------------------------------
 
-   private String mName;
+   /** Class logger. */
+   private static final Logger log = Logger.getLogger( Scheduler.class );
 
    private long mActualSchedulePeriod;
    private long mRemainingRepetitions = 0;
@@ -100,47 +117,36 @@ public class Scheduler
    private String[] mSchedulableArgumentList = new String[ 0 ];
    private String mSchedulableArgumentTypes;
    private Class[] mSchedulableArgumentTypeList = new Class[ 0 ];
+   private DateFormat mDateFormatter;
    private Date mStartDate;
+   private String mStartDateString;
    private long mSchedulePeriod;
    private long mInitialRepetitions;
 
    // -------------------------------------------------------------------------
    // Constructors
    // -------------------------------------------------------------------------
-
+   
    /**
     * Default (no-args) Constructor
     **/
    public Scheduler()
    {
-      mName = null;
    }
-
-   /**
-    * Constructor with the necessary attributes to be set
-    *
-    * @param pName Name of the MBean
-    **/
-   public Scheduler( String pName )
-   {
-      mName = pName;
-   }
-
+   
    /**
     * Constructor with the necessary attributes to be set
     *
     * @param pName Name of the MBean
     **/
    public Scheduler(
-      String pName,
       String pSchedulableClass,
       String pInitArguments,
       String pInitTypes,
-      long pInitialStartDate,
+      String pInitialStartDate,
       long pSchedulePeriod,
       long pNumberOfRepetitions
    ) {
-      mName = pName;
       setStartAtStartup( true );
       setSchedulableClass( pSchedulableClass );
       setSchedulableArguments( pInitArguments );
@@ -160,16 +166,19 @@ public class Scheduler
          try {
             // Check the given attributes if correct
             if( mSchedulableClass == null ) {
+               log.debug( "Schedulable Class is not set" );
                throw new InvalidParameterException(
                   "Schedulable Class must be set"
                );
             }
             if( mSchedulableArgumentList.length != mSchedulableArgumentTypeList.length ) {
+               log.debug( "Schedulable Class Arguments and Types do not match in length" );
                throw new InvalidParameterException(
                   "Schedulable Class Arguments and Types do not match in length"
                );
             }
             if( mSchedulePeriod <= 0 ) {
+               log.debug( "Schedule Period is less than 0 (ms)" );
                throw new InvalidParameterException(
                   "Schedule Period must be set and greater than 0 (ms)"
                );
@@ -209,6 +218,7 @@ public class Scheduler
                }
             }
             catch( Exception e ) {
+               log.error( "Could not load or create constructor argument", e );
                throw new InvalidParameterException( "Could not load or create a constructor argument" );
             }
             try {
@@ -218,81 +228,58 @@ public class Scheduler
                mSchedulable = (Schedulable) lSchedulableConstructor.newInstance( lArgumentList );
             }
             catch( Exception e ) {
+               log.error( "Could not find the constructor or create Schedulable instance", e );
                throw new InvalidParameterException( "Could not find the constructor or create the Schedulable Instance" );
             }
 
             mRemainingRepetitions = mInitialRepetitions;
             mActualSchedulePeriod = mSchedulePeriod;
             // Register the Schedule at the Timer
-            if( mStartDate == null || mStartDate.getTime() < new Date().getTime() ) {
-               mStartDate = new Date( new Date().getTime() + 1000 );
-               // Start Schedule now
-               System.out.println( "Start regular Schedule with period: " + mActualSchedulePeriod );
+            // Check if initial start date is in the past
+            if( mStartDate.getTime() < new Date().getTime() ) {
+               // If then first check if a repetition is in the future
+               long lNow = new Date().getTime() + 100;
+               long lSkipRepeats = ( ( lNow - mStartDate.getTime() ) / mActualSchedulePeriod ) + 1;
                if( mRemainingRepetitions > 0 ) {
-                  System.out.println( "Start Schedule wtih " + mRemainingRepetitions + " reps." );
-                  mActualSchedule = ( (Integer) getServer().invoke(
-                     mTimer,
-                     "addNotification",
-                     new Object[] {
-                        "Schedule",
-                        "Scheduler Notification",
-                        null,    // User Object
-                        new Date( new Date().getTime() + 1000 ),
-                        new Long( mActualSchedulePeriod ),
-                        new Long( mRemainingRepetitions )
-                     },
-                     new String[] {
-                        String.class.getName(),
-                        String.class.getName(),
-                        Object.class.getName(),
-                        Date.class.getName(),
-                        Long.TYPE.getName(),
-                        Long.TYPE.getName()
-                     }
-                  ) ).intValue();
-               }
-               else {
-                  System.out.println( "Start Schedule with unlimited reps." );
-                  mActualSchedule = ( (Integer) getServer().invoke(
-                     mTimer,
-                     "addNotification",
-                     new Object[] {
-                        "Schedule",
-                        "Scheduler Notification",
-                        null,    // User Object
-                        new Date( new Date().getTime() + 1000 ),
-                        new Long( mActualSchedulePeriod )
-                     },
-                     new String[] {
-                        String.class.getName(),
-                        String.class.getName(),
-                        Object.class.getName(),
-                        Date.class.getName(),
-                        Long.TYPE.getName()
-                     }
-                  ) ).intValue();
-               }
-            }
-            else {
-               // Add an initial call
-               mActualSchedule = ( (Integer) getServer().invoke(
-                  mTimer,
-                  "addNotification",
-                  new Object[] {
-                     "Schedule",
-                     "Scheduler Notification",
-                     null,       // User Object
-                     mStartDate
-                  },
-                  new String[] {
-                     String.class.getName(),
-                     String.class.getName(),
-                     Object.class.getName(),
-                     Date.class.getName(),
+                  // If not infinit loop
+                  if( lSkipRepeats >= mRemainingRepetitions ) {
+                     // No repetition left -> exit
+                     log.info( "No repetitions left because start date is in the past and could " +
+                        "not be reached by Initial Repetitions * Schedule Period" );
+                     return;
+                  } else {
+                     // Reduce the missed hits
+                     mRemainingRepetitions -= lSkipRepeats;
                   }
-               ) ).intValue();
+               }
+               mStartDate = new Date( mStartDate.getTime() + ( lSkipRepeats * mActualSchedulePeriod ) );
+               log.debug( "New Start Date is: " + mStartDate );
             }
-            // Register the notificaiton listener at the MBeanServer
+            log.debug( "Schedule initial call to: " + mStartDate + ", remaining repetitions: " + mRemainingRepetitions );
+            // Add an initial call
+            mActualSchedule = ( (Integer) getServer().invoke(
+               mTimer,
+               "addNotification",
+               new Object[] {
+                  "Schedule",
+                  "Scheduler Notification",
+                  null,       // User Object
+                  mStartDate,
+                  new Long( mActualSchedulePeriod ),
+                  mRemainingRepetitions < 0 ?
+                     new Long( 0 ) :
+                     new Long( mRemainingRepetitions )
+               },
+               new String[] {
+                  String.class.getName(),
+                  String.class.getName(),
+                  Object.class.getName(),
+                  Date.class.getName(),
+                  Long.TYPE.getName(),
+                  Long.TYPE.getName()
+               }
+            ) ).intValue();
+            // Register the notification listener at the MBeanServer
             getServer().addNotificationListener(
                mTimer,
                new Listener( mSchedulable ),
@@ -313,9 +300,15 @@ public class Scheduler
       boolean pDoItNow
    ) {
       try {
+         if( mActualSchedule < 0 ) {
+            mScheduleIsStarted = false;
+            mWaitForNextCallToStop = false;
+            return;
+         }
          if( pDoItNow ) {
             // Remove notification listener now
             mWaitForNextCallToStop = false;
+            log.debug( "stopSchedule(), schedule id: " + mActualSchedule );
             getServer().invoke(
                mTimer,
                "removeNotification",
@@ -326,6 +319,7 @@ public class Scheduler
                   "java.lang.Integer" ,
                }
             );
+            log.debug( "stopSchedule(), removed schedule id: " + mActualSchedule );
             mActualSchedule = -1;
             mScheduleIsStarted = false;
          }
@@ -480,12 +474,36 @@ public class Scheduler
       mIsRestartPending = true;
    }
    
-   public long getInitialStartDate() {
-      return mStartDate.getTime();
+   public String getInitialStartDate() {
+      return mStartDateString;
    }
    
-   public void setInitialStartDate( long pStartDate ) {
-      mStartDate = new Date( ( pStartDate > 0 ? pStartDate : 0 ) );
+   public void setInitialStartDate( String pStartDate ) {
+      mStartDateString = pStartDate == null ? "" : pStartDate.trim();
+      if( mStartDateString.equals( "" ) ) {
+         mStartDate = new Date( 0 );
+      } else
+      if( mStartDateString.equals( "NOW" ) ) {
+         mStartDate = new Date( new Date().getTime() + 1000 );
+      } else {
+         try {
+            long lDate = new Long( pStartDate ).longValue();
+            mStartDate = new Date( lDate );
+         }
+         catch( Exception e ) {
+            try {
+               if( mDateFormatter == null ) {
+                  mDateFormatter = new SimpleDateFormat();
+               }
+               mStartDate = mDateFormatter.parse( mStartDateString );
+            }
+            catch( Exception e2 ) {
+               log.error( "Could not parse given date string: " + mStartDateString, e2 );
+               throw new InvalidParameterException( "Schedulable Date is not of correct format" );
+            }
+         }
+      }
+      log.debug( "Initial Start Date is set to: " + mStartDate );
    }
 
    public long getInitialRepetitions() {
@@ -556,10 +574,11 @@ public class Scheduler
          }
       }
       catch( Exception e ) {
-         e.printStackTrace();
+         log.error( "Could not start Timer Service", e );
       }
 
       if( mStartOnStart ) {
+         log.debug( "Start Scheduler on start up time" );
          startSchedule();
       }
    }
@@ -587,58 +606,24 @@ public class Scheduler
          Notification pNotification,
          Object pHandback
       ) {
-         System.out.println( "Listener.handleNotification(), notification: " + pNotification );
+         log.debug( "Listener.handleNotification(), notification: " + pNotification );
          try {
             // If schedule is started invoke the schedule method on the Schedulable instance
+            log.debug( "Scheduler is started: " + isStarted() );
+            Date lTimeStamp = new Date( pNotification.getTimeStamp() );
             if( isStarted() ) {
                if( getRemainingRepetitions() > 0 || getRemainingRepetitions() < 0 ) {
-                  mDelegate.perform(
-                     new Date(),
-                     getRemainingRepetitions()
-                  );
                   if( mRemainingRepetitions > 0 ) {
                      mRemainingRepetitions--;
                   }
+                  mDelegate.perform(
+                     lTimeStamp,
+                     getRemainingRepetitions()
+                  );
+                  log.debug( "Remaining Repititions: " + getRemainingRepetitions() +
+                     ", wait for next call to stop: " + mWaitForNextCallToStop );
                   if( getRemainingRepetitions() == 0 || mWaitForNextCallToStop ) {
                      stopSchedule( true );
-                  }
-                  else {
-                     if( "InitialCall".equals( pNotification.getType() ) ) {
-                        // When Initial Call then setup the regular schedule
-                        // By first removing the initial one and then adding the
-                        // regular one.
-                        getServer().invoke(
-                           mTimer,
-                           "removeNotification",
-                           new Object[] {
-                              new Integer( mActualSchedule )
-                           },
-                           new String[] {
-                              "java.lang.Integer",
-                           }
-                        );
-                        // Add regular schedule
-                        mActualSchedule = ( (Integer) getServer().invoke(
-                           mTimer,
-                           "addNotification",
-                           new Object[] {
-                              "Schedule",
-                              "Scheduler Notification",
-                              null,    // User Object
-                              new Date( new Date().getTime() + 1000 ),
-                              new Long( mActualSchedulePeriod ),
-                              new Long( getRemainingRepetitions() )
-                           },
-                           new String[] {
-                              String.class.getName(),
-                              String.class.getName(),
-                              Object.class.getName(),
-                              Date.class.getName(),
-                              Long.TYPE.getName(),
-                              Long.TYPE.getName()
-                           }
-                        ) ).intValue();
-                     }
                   }
                }
             }
@@ -697,7 +682,10 @@ public class Scheduler
       implements Schedulable
    {
 
-      private String mName;
+      /** Class logger. */
+      private static final Logger log = Logger.getLogger( Scheduler.SchedulableExample.class );
+      
+     private String mName;
       private int mValue;
 
       public SchedulableExample(
@@ -715,7 +703,7 @@ public class Scheduler
          Date pTimeOfCall,
          long pRemainingRepetitions
       ) {
-         System.out.println( "Schedulable Examples is called at: " + pTimeOfCall +
+         log.info( "Schedulable Examples is called at: " + pTimeOfCall +
             ", remaining repetitions: " + pRemainingRepetitions +
             ", test, name: " + mName + ", value: " + mValue );
       }
