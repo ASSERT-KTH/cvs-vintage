@@ -832,10 +832,13 @@ try{
         if (attachment != null)
         {
              String data = attachment.getData();
+             // If this is a comment entered, reason == comment
+             // If comment is long, it will be truncated
              if (attachment.getTypeId().equals(AttachmentTypePeer.COMMENT_PK))
              {
                  reason = activity.getNewValue();
              }
+             // Otherwise, reason is the attachment entered for this transaction
              else if (data != null && data.length() > 0)
              {
                 reason = data;
@@ -845,6 +848,7 @@ try{
                 reason = l10n.get("NotProvided");
              }
          } 
+         // No reasons given for initial issue entry
          else if (activitySet.getTypeId().equals(ActivitySetTypePeer.CREATE_ISSUE__PK))
          {
              reason = l10n.get("InitialEntry");
