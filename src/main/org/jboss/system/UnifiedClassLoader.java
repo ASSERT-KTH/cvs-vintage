@@ -20,7 +20,7 @@ import java.io.InputStream;
 *
 * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 * 
 * <p><b>20010830 marc fleury:</b>
 * <ul>
@@ -98,7 +98,7 @@ implements UnifiedClassLoaderMBean
    public Class loadClass(String name, boolean resolve)
    throws ClassNotFoundException
    {
-      return libraries.loadClass(name, resolve, this);	
+      return libraries.loadClass(name, resolve, this);  
    }
    
    
@@ -158,6 +158,11 @@ implements UnifiedClassLoaderMBean
       return url.hashCode();
    }
    
+   public URL[] getURLs()
+   {
+        return null;
+   }
+
    public boolean equals(Object other) 
    {
       if (other instanceof UnifiedClassLoader) 
