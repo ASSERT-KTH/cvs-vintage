@@ -17,7 +17,6 @@ package org.columba.core.gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.MouseAdapter;
 import java.util.ListIterator;
 import java.util.ResourceBundle;
 
@@ -27,8 +26,10 @@ import javax.swing.JToolBar;
 import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.action.BasicAction;
 import org.columba.core.gui.util.ToolbarButton;
+import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+import org.columba.core.xml.XmlIO;
 
 public class ToolBar extends JToolBar {
 
@@ -36,15 +37,24 @@ public class ToolBar extends JToolBar {
 	GridBagConstraints gridbagConstraints;
 	GridBagLayout gridbagLayout;
 	int i;
+	XmlElement rootElement;
+	XmlIO xmlFile;
 
 	FrameController frameController;
 
-	public ToolBar( FrameController controller) {
+	public ToolBar( String config, FrameController controller) {
 		super();
 		this.frameController = controller;
 
+
+		xmlFile = new XmlIO(DiskIO.getResourceURL(config));
+		xmlFile.load();
+
+		//rootElement = frameController.getItem().getElement("toolbar");
+		rootElement = xmlFile.getRoot().getElement("toolbar");
 		//addCButtons();
-		createButtons(frameController.getItem().getElement("toolbar"));
+
+		createButtons();
 		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 		
 		//setMargin( new Insets(0,0,0,0) );
@@ -52,8 +62,13 @@ public class ToolBar extends JToolBar {
 		setFloatable(false);		
 	}
 
-	private void createButtons(XmlElement toolbar) {		
-		ListIterator iterator = toolbar.getElements().listIterator();
+	public boolean getVisible() {
+		return new Boolean( rootElement.getAttribute("visible") ).booleanValue();
+	}
+
+	private void createButtons() {
+		removeAll();	
+		ListIterator iterator = rootElement.getElements().listIterator();
 		XmlElement buttonElement;
 		
 		while( iterator.hasNext()) {
@@ -79,6 +94,7 @@ public class ToolBar extends JToolBar {
 
 	}
 
+/*
 	public void addCButtons() {
 
 		MouseAdapter handler = frame.getMouseTooltipHandler();
@@ -130,14 +146,12 @@ public class ToolBar extends JToolBar {
 
 		add(Box.createHorizontalGlue());
 
-		/*
 		Dimension d = new Dimension( 16,16 );
 		System.out.println("dim="+d);
 				
 		frame.getStatusBar().getImageSequenceTimer().setScaling(d);
-		*/
 		add(frame.getStatusBar().getImageSequenceTimer());
 
 	}
-
+*/
 }

@@ -8,8 +8,8 @@ package org.columba.mail.gui.composer.action;
 
 import java.awt.event.ActionEvent;
 
+import org.columba.core.action.FrameAction;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.action.ComposerAction;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -19,7 +19,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class AttachFileAction extends ComposerAction {
+public class AttachFileAction extends FrameAction {
 
 	/**
 	 * @param composerController
@@ -65,7 +65,9 @@ public class AttachFileAction extends ComposerAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		composerInterface.attachmentController.addFileAttachment();
+		ComposerController composerController = ((ComposerController)getFrameController());
+
+		composerController.getAttachmentController().addFileAttachment();
 		
 	}
 

@@ -26,7 +26,7 @@ import javax.swing.JPanel;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.config.WindowItem;
-import org.columba.core.gui.menu.*;
+import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.WindowMaximizer;
 
@@ -38,7 +38,7 @@ import org.columba.core.util.WindowMaximizer;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class FrameView extends JFrame implements WindowListener {
+public abstract class FrameView extends JFrame implements WindowListener {
 	protected FrameController frameController;
 	protected Menu menu;
 
@@ -64,22 +64,22 @@ public class FrameView extends JFrame implements WindowListener {
 		addWindowListener(this);
 		
 		ToolbarPane = new JPanel();
-		ToolbarPane.setLayout(new BoxLayout(ToolbarPane, BoxLayout.Y_AXIS));		
+		ToolbarPane.setLayout(new BoxLayout(ToolbarPane, BoxLayout.Y_AXIS));
+		panel.add(ToolbarPane, BorderLayout.NORTH);		
 	}
 
 	public void init() {
-		menu = new Menu(frameController);
-		setJMenuBar(menu);
+		menu = createMenu(frameController);
+		if( menu != null) setJMenuBar(menu);
 		
-		toolbar = new ToolBar(frameController);
-
-		if (isToolbarVisible() ) {
+		toolbar = createToolbar(frameController);
+		if( ( toolbar != null ) && (isToolbarVisible()) ) {
 			ToolbarPane.add(toolbar);
-		}		
+		}
 	}
 	
 	public boolean isToolbarVisible() {
-		return frameController.getItem().getBoolean("toolbar", "visible");
+		return toolbar.getVisible();//frameController.getItem().getBoolean("toolbar", "visible");
 	}
 
 	public void loadWindowPosition() {
@@ -129,6 +129,7 @@ public class FrameView extends JFrame implements WindowListener {
 	}
 
 	public void showToolbar(boolean b) {
+		if( toolbar == null) return;
 		if (b) {
 			ToolbarPane.add(toolbar);
 			frameController.getItem().set("toolbar", "visible", "true");
@@ -190,4 +191,7 @@ public class FrameView extends JFrame implements WindowListener {
 		return menu;
 	}
 
+	protected abstract Menu createMenu(FrameController controller);	
+	
+	protected abstract ToolBar createToolbar(FrameController controller);
 }

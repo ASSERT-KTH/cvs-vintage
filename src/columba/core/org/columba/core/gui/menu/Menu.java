@@ -52,7 +52,7 @@ public class Menu extends JMenuBar {
 
 	protected MenuBarGenerator menuGenerator;
 
-	public Menu(FrameController frameController) {
+	public Menu(String xmlRoot, FrameController frameController) {
 		super();
 
 		this.frameController = frameController;
@@ -60,7 +60,7 @@ public class Menu extends JMenuBar {
 		menuGenerator =
 			new MenuBarGenerator(
 				frameController,
-				"org/columba/core/action/menu.xml");
+				xmlRoot);
 		menuGenerator.createMenuBar(this);
 
 		/*

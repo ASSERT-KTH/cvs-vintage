@@ -9,9 +9,9 @@ package org.columba.mail.gui.composer.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.addressbook.gui.SelectAddressDialog;
+import org.columba.core.action.FrameAction;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-import org.columba.mail.action.ComposerAction;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -21,7 +21,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class AddressbookAction extends ComposerAction {
+public class AddressbookAction extends FrameAction {
 
 	/**
 	 * @param composerController
@@ -66,13 +66,15 @@ public class AddressbookAction extends ComposerAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		composerInterface.headerController.cleanupHeaderItemList();
+		ComposerController composerController = ((ComposerController)getFrameController());
+		
+		composerController.getHeaderController().cleanupHeaderItemList();
 
 		SelectAddressDialog dialog =
 			new SelectAddressDialog(
 				MainInterface.addressbookInterface,
-				composerInterface.composerFrame,
-				composerInterface.headerController.getHeaderItemLists());
+				composerController.getView(),
+		composerController.getHeaderController().getHeaderItemLists());
 
 		org.columba.addressbook.folder.Folder folder =
 			(org.columba.addressbook.folder.Folder) MainInterface
@@ -83,7 +85,7 @@ public class AddressbookAction extends ComposerAction {
 
 		dialog.setVisible(true);
 
-		composerInterface.headerController.setHeaderItemLists(
+		composerController.getHeaderController().setHeaderItemLists(
 			dialog.getHeaderItemLists());
 	}
 
