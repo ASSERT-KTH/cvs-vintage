@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.78 2003/12/30 04:47:03 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.79 2004/02/06 19:17:28 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1439,6 +1439,9 @@ public class GUIUtilities
 	{
 		for(;;)
 		{
+			if(comp == null)
+				break;
+
 			if(comp instanceof JComponent)
 			{
 				Component real = (Component)((JComponent)comp)
@@ -1456,10 +1459,8 @@ public class GUIUtilities
 				comp = ((FloatingWindowContainer)comp)
 					.getDockableWindowManager();
 			}
-			else if(comp != null)
-				comp = comp.getParent();
 			else
-				break;
+				comp = comp.getParent();
 		}
 		return null;
 	} //}}}
