@@ -12,10 +12,7 @@ import java.util.Map;
 
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
-import javax.transaction.Transaction;
 
-import org.jboss.deployment.DeploymentException;
-import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.proxy.compiler.InvocationHandler;
 
@@ -32,11 +29,11 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.21 $
+ * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
+ * @version $Revision: 1.22 $
  */
 public class EntityBridgeInvocationHandler implements InvocationHandler
 {
-   private final EntityContainer container;
    private final Class beanClass;
    private final Map fieldMap;
    private final Map selectorMap;
@@ -45,16 +42,9 @@ public class EntityBridgeInvocationHandler implements InvocationHandler
    /**
     * Creates an invocation handler for the specified entity.
     */
-   public EntityBridgeInvocationHandler(
-      EntityContainer container,
-      Map fieldMap,
-      Map selectorMap,
-      Class beanClass) throws DeploymentException
+   public EntityBridgeInvocationHandler(Map fieldMap, Map selectorMap, Class beanClass)
    {
-
-      this.container = container;
       this.beanClass = beanClass;
-
       this.fieldMap = fieldMap;
       this.selectorMap = selectorMap;
    }
@@ -71,29 +61,24 @@ public class EntityBridgeInvocationHandler implements InvocationHandler
    public Object invoke(Object proxy, Method method, Object[] args)
       throws FinderException
    {
-
       String methodName = method.getName();
+
+      BridgeInvoker invoker = (BridgeInvoker) fieldMap.get(methodName);
+      if(invoker == null)
+      {
+         invoker = (BridgeInvoker) selectorMap.get(methodName);
+
+         if(invoker == null)
+         {
+            throw new EJBException("Method is not a known CMP field " +
+               "accessor, CMR field accessor, or ejbSelect method: " +
+               "methodName=" + methodName);
+         }
+      }
 
       try
       {
-         SelectorBridge selector = (SelectorBridge) selectorMap.get(method);
-         if(selector != null)
-         {
-            Transaction tx;
-            if(ctx != null)
-            {
-               // it is probably safer to get the tx from the context if we have
-               // one (ejbHome methods don't have a context)
-               tx = ctx.getTransaction();
-            }
-            else
-            {
-               tx = container.getTransactionManager().getTransaction();
-            }
-            if(!container.getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
-               EntityContainer.synchronizeEntitiesWithinTransaction(tx);
-            return selector.execute(args);
-         }
+         return invoker.invoke(ctx, method, args);
       }
       catch(RuntimeException e)
       {
@@ -107,49 +92,59 @@ public class EntityBridgeInvocationHandler implements InvocationHandler
       {
          throw new EJBException("Internal error", e);
       }
+   }
 
-      try
+   // Inner
+
+   public interface BridgeInvoker
+   {
+      Object invoke(EntityEnterpriseContext ctx, Method method, Object[] args) throws FinderException, Exception;
+   }
+
+   public static class FieldGetInvoker implements BridgeInvoker
+   {
+      private final FieldBridge field;
+
+      public FieldGetInvoker(FieldBridge field)
       {
-         // get the field object
-         FieldBridge field = (FieldBridge) fieldMap.get(method);
+         this.field = field;
+      }
 
-         if(field == null)
-         {
-            throw new EJBException("Method is not a known CMP field " +
-               "accessor, CMR field accessor, or ejbSelect method: " +
-               "methodName=" + methodName);
-         }
-
+      public Object invoke(EntityEnterpriseContext ctx, Method method, Object[] args)
+      {
          // In the case of ejbHome methods there is no context, but ejb home
          // methods are only allowed to call selectors.
          if(ctx == null)
          {
             throw new EJBException("EJB home methods are not allowed to " +
-               "access CMP or CMR fields: methodName=" + methodName);
+               "access CMP or CMR fields: methodName=" + method.getName());
          }
 
-         if(methodName.startsWith("get"))
-         {
-            return field.getValue(ctx);
-         }
-         else if(methodName.startsWith("set"))
-         {
-            field.setValue(ctx, args[0]);
-            return null;
-         }
+         return field.getValue(ctx);
       }
-      catch(RuntimeException e)
-      {
-         throw e;
-      }
-      catch(Exception e)
-      {
-         throw new EJBException("Internal error", e);
-      }
-
-      // Should never get here, but it's better to be safe then sorry.
-      throw new EJBException("Unknown field accessor method: " +
-         "methodName=" + methodName);
    }
 
+   public static class FieldSetInvoker implements BridgeInvoker
+   {
+      private final FieldBridge field;
+
+      public FieldSetInvoker(FieldBridge field)
+      {
+         this.field = field;
+      }
+
+      public Object invoke(EntityEnterpriseContext ctx, Method method, Object[] args)
+      {
+         // In the case of ejbHome methods there is no context, but ejb home
+         // methods are only allowed to call selectors.
+         if(ctx == null)
+         {
+            throw new EJBException("EJB home methods are not allowed to " +
+               "access CMP or CMR fields: methodName=" + method.getName());
+         }
+
+         field.setValue(ctx, args[0]);
+         return null;
+      }
+   }
 }

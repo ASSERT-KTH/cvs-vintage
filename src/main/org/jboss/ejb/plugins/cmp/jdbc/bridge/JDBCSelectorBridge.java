@@ -7,6 +7,25 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import javax.ejb.EJBException;
+import javax.ejb.FinderException;
+import javax.ejb.ObjectNotFoundException;
+import javax.transaction.TransactionManager;
+import javax.transaction.Transaction;
+
+import org.jboss.ejb.plugins.cmp.bridge.SelectorBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryCommand;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
+import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.EntityEnterpriseContext;
+
 /**
  * JDBCSelectorBridge represents one ejbSelect method.
  *
@@ -17,36 +36,41 @@ package org.jboss.ejb.plugins.cmp.jdbc.bridge;
  *      One for each entity bean ejbSelect method.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import javax.ejb.EJBException;
-import javax.ejb.FinderException;
-import javax.ejb.ObjectNotFoundException;
-
-import org.jboss.ejb.plugins.cmp.bridge.SelectorBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryCommand;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
-
 public class JDBCSelectorBridge implements SelectorBridge
 {
    private final JDBCQueryMetaData queryMetaData;
    private final JDBCStoreManager manager;
+   private TransactionManager tm;
+   private boolean syncBeforeSelect;
 
-   public JDBCSelectorBridge(
-      JDBCStoreManager manager,
-      JDBCQueryMetaData queryMetaData)
+   public JDBCSelectorBridge(JDBCStoreManager manager, JDBCQueryMetaData queryMetaData)
    {
-
       this.queryMetaData = queryMetaData;
       this.manager = manager;
+
+      EntityContainer container = manager.getContainer();
+      tm = container.getTransactionManager();
+      syncBeforeSelect = !container.getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly();
    }
+
+   // BridgeInvoker implementation
+
+   public Object invoke(EntityEnterpriseContext ctx, Method method, Object[] args)
+      throws Exception
+   {
+      Transaction tx = (ctx != null ? ctx.getTransaction() : tm.getTransaction());
+
+      if(syncBeforeSelect)
+      {
+         EntityContainer.synchronizeEntitiesWithinTransaction(tx);
+      }
+
+      return execute(args);
+   }
+
+   // SelectorBridge implementation
 
    public String getSelectorName()
    {
@@ -68,8 +92,7 @@ public class JDBCSelectorBridge implements SelectorBridge
       Collection retVal;
       try
       {
-         JDBCQueryCommand query =
-            manager.getQueryManager().getQueryCommand(getMethod());
+         JDBCQueryCommand query = manager.getQueryManager().getQueryCommand(getMethod());
          retVal = query.execute(getMethod(), args, null);
       }
       catch(FinderException e)

@@ -7,7 +7,6 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -30,12 +29,11 @@ import org.jboss.deployment.DeploymentException;
  * <FIX-ME>should not generat a subclass for ejb 1.1</FIX-ME>
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 
 public final class JDBCCreateBeanClassInstanceCommand
 {
-   private final WeakReference container;
    private final JDBCEntityBridge entityBridge;
    private final Class beanClass;
    private final Constructor beanProxyConstructor;
@@ -46,25 +44,19 @@ public final class JDBCCreateBeanClassInstanceCommand
       throws Exception
    {
       EntityContainer theContainer = manager.getContainer();
-      container = new WeakReference(theContainer);
       entityBridge = manager.getEntityBridge();
       beanClass = theContainer.getBeanClass();
       fieldMap = createFieldMap();
       selectorMap = createSelectorMap();
       // use proxy generator to create one implementation
-      EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(
-         theContainer,
-         fieldMap,
-         selectorMap,
-         beanClass);
+      EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(fieldMap, selectorMap, beanClass);
       Class[] classes = new Class[]{beanClass};
       ClassLoader classLoader = beanClass.getClassLoader();
 
       Object o = Proxy.newProxyInstance(classLoader, classes, handler);
 
       // steal the constructor from the object
-      beanProxyConstructor =
-         o.getClass().getConstructor(new Class[]{InvocationHandler.class});
+      beanProxyConstructor = o.getClass().getConstructor(new Class[]{InvocationHandler.class});
 
       // now create one to make sure everything is cool
       execute();
@@ -77,13 +69,7 @@ public final class JDBCCreateBeanClassInstanceCommand
 
    public Object execute() throws Exception
    {
-      EntityContainer theContainer = (EntityContainer) container.get();
-      EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(
-         theContainer,
-         fieldMap,
-         selectorMap,
-         beanClass);
-
+      EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(fieldMap, selectorMap, beanClass);
       return beanProxyConstructor.newInstance(new Object[]{handler});
    }
 
@@ -108,7 +94,6 @@ public final class JDBCCreateBeanClassInstanceCommand
 
    private Map createFieldMap() throws DeploymentException
    {
-
       Map abstractAccessors = getAbstractAccessors();
 
       List fields = entityBridge.getFields();
@@ -131,19 +116,17 @@ public final class JDBCCreateBeanClassInstanceCommand
          // getters and setters must come in pairs
          if(getterMethod != null && setterMethod == null)
          {
-            throw new DeploymentException("Getter was found but, no setter " +
-               "was found for field: " + fieldName);
+            throw new DeploymentException("Getter was found but, no setter was found for field: " + fieldName);
          }
          else if(getterMethod == null && setterMethod != null)
          {
-            throw new DeploymentException("Setter was found but, no getter " +
-               "was found for field: " + fieldName);
+            throw new DeploymentException("Setter was found but, no getter was found for field: " + fieldName);
          }
          else if(getterMethod != null && setterMethod != null)
          {
             // add methods
-            map.put(getterMethod, field);
-            map.put(setterMethod, field);
+            map.put(getterMethod.getName(), new EntityBridgeInvocationHandler.FieldGetInvoker(field));
+            map.put(setterMethod.getName(), new EntityBridgeInvocationHandler.FieldSetInvoker(field));
 
             // remove the accessors (they have been used)
             abstractAccessors.remove(getterName);
@@ -160,7 +143,7 @@ public final class JDBCCreateBeanClassInstanceCommand
       for(Iterator iter = selectors.iterator(); iter.hasNext();)
       {
          SelectorBridge selector = (SelectorBridge) iter.next();
-         map.put(selector.getMethod(), selector);
+         map.put(selector.getMethod().getName(), selector);
       }
       return Collections.unmodifiableMap(map);
    }

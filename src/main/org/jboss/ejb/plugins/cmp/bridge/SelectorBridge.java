@@ -20,9 +20,10 @@ import javax.ejb.FinderException;
  *      One for each entity bean ejbSelect method.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public interface SelectorBridge
+   extends EntityBridgeInvocationHandler.BridgeInvoker
 {
    public String getSelectorName();
 
