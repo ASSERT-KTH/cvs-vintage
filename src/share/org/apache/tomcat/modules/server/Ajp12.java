@@ -79,6 +79,7 @@ class Ajp12 {
     boolean shutdown=false;
     boolean isPing=false;
     boolean doLog;
+    String secret=null;
 
     public Ajp12() {
     }
@@ -101,6 +102,10 @@ class Ajp12 {
 	this.socket = s;
 	sin = s.getInputStream();
 	ajpin = new BufferedInputStream(sin);
+    }
+
+    public void setSecret( String s ) {
+	secret=s;
     }
     
     public void readNextRequest(Request req) throws IOException {
@@ -241,11 +246,15 @@ class Ajp12 {
 			    // not corrupted
 			    InetAddress serverAddr = socket.getLocalAddress();
 			    InetAddress clientAddr = socket.getInetAddress();
-			    sin.close();
 			    if ( (signal== 15) &&
 				 isSameAddress(serverAddr, clientAddr) ) {
-				// Shutdown - probably apache was stoped with
-				// apachectl stop
+				if( secret!=null ) {
+				    String stopMsg=readString(ajpin, "");
+				    if( ! secret.equals( stopMsg ) ) {
+					req.getContextManager().log("Attempt to stop with the wrong secret");
+					return;
+				    }
+				}
 				req.getContextManager().stop();
 				// same behavior as in past, because it seems
 				// that stopping everything doesn't work -
@@ -256,6 +265,7 @@ class Ajp12 {
 				shutdown=true;
 				return;
 			    }
+			    sin.close();
 			} catch (Exception ignored) {
 			    req.getContextManager().log("Ignored exception " +
 						      "processing signal " +

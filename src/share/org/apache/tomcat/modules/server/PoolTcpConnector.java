@@ -106,6 +106,15 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 
 	try {
 	    localInit();
+	} catch( Exception ex ) {
+	    throw new TomcatException( ex );
+	}
+    }
+
+    /** Called when the ContextManger is started
+     */
+    public void engineStart(ContextManager cm) throws TomcatException {
+	try {
 	    if( socketFactory!=null ) {
 		Enumeration attE=attributes.keys();
 		while( attE.hasMoreElements() ) {

@@ -77,6 +77,8 @@ import org.apache.tomcat.util.*;
 public class Ajp12Interceptor extends PoolTcpConnector
     implements  TcpConnectionHandler{
     private boolean tomcatAuthentication=true;
+    String secret;
+    
     public Ajp12Interceptor() {
 	super();
     }
@@ -86,30 +88,41 @@ public class Ajp12Interceptor extends PoolTcpConnector
 	ep.setConnectionHandler( this );
     }
 
+    /** Enable the use of a stop secret. The secret will be
+     *  randomly generated.
+     */
+    public void setUseSecret(boolean b ) {
+	secret=Double.toString(Math.random());
+    }
+
+    /** Explicitely set the stop secret
+     */
+    public void setSecret( String s ) {
+	secret=s;
+    }
+    
     public void engineInit(ContextManager cm )
 	throws TomcatException
     {
-	super.engineInit( cm );
-	BaseInterceptor ci[]=cm.getContainer().getInterceptors();
-	for( int i=0; i<ci.length; i++ ) {
-	    Object con=ci[i];
-	    if( con instanceof  Ajp12Interceptor ) {
-		Ajp12Interceptor tcpCon=(Ajp12Interceptor) con;
-		int portInt=tcpCon.getPort();
-		InetAddress address=tcpCon.getAddress();
-		try {
-		    PrintWriter stopF=new PrintWriter
-			(new FileWriter(cm.getHome() + "/conf/ajp12.id"));
-		    stopF.println( portInt );
-		    if( address==null )
-			stopF.println( "" );
-		    else
-			stopF.println( address.toString() );
-		    stopF.close();
-		} catch( IOException ex ) {
-		    log( "Can't create ajp12.id " + ex );
-		}
-	    }
+	super.engineInit(cm);
+	Ajp12Interceptor tcpCon=this;
+	int portInt=tcpCon.getPort();
+	InetAddress address=tcpCon.getAddress();
+	try {
+	    PrintWriter stopF=new PrintWriter
+		(new FileWriter(cm.getHome() + "/conf/ajp12.id"));
+	    stopF.println( portInt );
+	    if( address==null )
+		stopF.println( "" );
+	    else
+		stopF.println( address.toString() );
+	    if( secret !=null )
+		stopF.println( secret );
+	    else
+		stopF.println();
+	    stopF.close();
+	} catch( IOException ex ) {
+	    log( "Can't create ajp12.id " + ex );
 	}
     }
 
@@ -118,6 +131,7 @@ public class Ajp12Interceptor extends PoolTcpConnector
     public Object[] init() {
 	Object thData[]=new Object[2];
 	AJP12Request reqA=new AJP12Request();
+	reqA.setSecret( secret );
 	AJP12Response resA=new AJP12Response();
 	cm.initRequest( reqA, resA );
 	thData[0]=reqA;
@@ -159,6 +173,7 @@ public class Ajp12Interceptor extends PoolTcpConnector
 
 	    if( reqA==null || resA==null ) {
 		reqA = new AJP12Request();
+		reqA.setSecret( secret );
                 ((AJP12Request)reqA).setTomcatAuthentication(
                                         isTomcatAuthentication());
 		resA=new AJP12Response();
@@ -195,6 +210,10 @@ class AJP12Request extends Request {
     public AJP12Request() {
     }
 
+    void setSecret( String s ) {
+	ajp12.setSecret( s );
+    }
+    
     public boolean internalAjp() {
 	return ajp12.isPing ||
 	    ajp12.shutdown;

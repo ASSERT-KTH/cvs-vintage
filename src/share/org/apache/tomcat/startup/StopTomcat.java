@@ -58,19 +58,13 @@
  */
 package org.apache.tomcat.startup;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.helper.*;
-import org.apache.tomcat.util.xml.*;
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.StringManager;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
-// Used to stop tomcat
-//import org.apache.tomcat.service.PoolTcpConnector;
-//import org.apache.tomcat.service.connector.Ajp12ConnectionHandler;
-import org.apache.tomcat.modules.server.Ajp12Interceptor;
+// Depends: StringManager, resources
+
 
 /**
  * This task will stop tomcat
@@ -84,7 +78,6 @@ public class StopTomcat {
 
     String configFile;
     String tomcatHome;
-    Log loghelper = new Log("tc_log", "StopTomcat");
     
     public StopTomcat() 
     {
@@ -113,15 +106,15 @@ public class StopTomcat {
     }
 
     // -------------------- Ant execute --------------------
+
     public void execute() throws Exception {
 	System.out.println(sm.getString("tomcat.stop"));
 	try {
 	    stopTomcat(); // stop serving
 	}
-	catch (TomcatException te) {
-	    if (te.getRootCause() instanceof java.net.ConnectException)
-		System.out.println(sm.getString("tomcat.connectexception"));
-	    else
+	catch (java.net.ConnectException ex) {
+	    System.out.println(sm.getString("tomcat.connectexception"));
+	} catch (Exception te ) {
 		throw te;
 	}
 	return;
@@ -129,75 +122,130 @@ public class StopTomcat {
 
     // -------------------- Implementation --------------------
     
-    /** Stop tomcat using the configured cm
-     *  The manager is set up using the same configuration file, so
-     *  it will have the same port as the original instance ( no need
-     *  for a "log" file).
-     *  It uses the Ajp12 connector, which has a built-in "stop" method,
-     *  that will change when we add real callbacks ( it's equivalent
-     *  with the previous RMI method from almost all points of view )
-     */
-    void stopTomcat() throws TomcatException {
-	XmlMapper xh=new XmlMapper();
-	xh.setDebug( 0 );
-	ContextManager cm=new ContextManager();
+    void stopTomcat() throws Exception {
+	String tchome=getTomcatInstall();
+	int port=8007;
+	InetAddress address=null;
 	
-	ServerXmlHelper sxml=new ServerXmlHelper();
-
-	sxml.setConnectorHelper( xh );
-	String tchome=sxml.getTomcatInstall();
-	// load server.xml
-	File f = null;
-	if (configFile != null)
-	    f=new File(configFile);
-	else
-	    f=new File(tchome, DEFAULT_CONFIG);
-	cm.setInstallDir( tchome);
-
 	try {
-	    xh.readXml(f,cm);
-	} catch( Exception ex ) {
-	    throw new TomcatException("Fatal exception reading " + f, ex);
+	    BufferedReader rd=new BufferedReader
+		( new FileReader( tchome + "/conf/ajp12.id"));
+	    String portLine=rd.readLine();
+	    
+	    try {
+		port=Integer.parseInt( portLine );
+	    } catch(NumberFormatException ex ) {
+		ex.printStackTrace();
+	    }
+	    String addLine=rd.readLine();
+	    if( addLine!=null && !"".equals( addLine )) {
+		try {
+		    address=InetAddress.getByName( addLine );
+		} catch( UnknownHostException ex ) {
+		    ex.printStackTrace();
+		}
+	    }
+	    String secret=rd.readLine();
+	    if( "".equals( secret ) )
+		secret=null;
+
+	    System.out.println("Stoping tomcat on " + address + ":" +port +" "
+			       + secret);
+	    stopTomcat( address,port, secret );
+	    
+	} catch( IOException ex ) {
+	    ex.printStackTrace();
 	}
-	
-	execute( cm );     
+
     }
     
-    
-    /** This particular implementation will search for an AJP12
-	connector ( that have a special stop command ).
-    */
-    public void execute(ContextManager cm)
-	throws TomcatException 
-    {
-	// Find Ajp12 connector
-	int portInt=8007;
-	InetAddress address=null;
-	BaseInterceptor ci[]=cm.getContainer().getInterceptors();
-	for( int i=0; i<ci.length; i++ ) {
-	    Object con=ci[i];
-	    if( con instanceof  Ajp12Interceptor ) {
-		Ajp12Interceptor tcpCon=(Ajp12Interceptor) con;
-		portInt=tcpCon.getPort();
-		address=tcpCon.getAddress();
-	    }
+    public String getTomcatInstall() {
+	// Use the "tomcat.home" property to resolve the default filename
+	String tchome = System.getProperty("tomcat.home");
+	if (tchome == null) {
+	    System.out.println(sm.getString("tomcat.nohome"));
+	    tchome = ".";
+	    // Assume current working directory
 	}
-
+	return tchome;
+    }
+    
+    /**
+     *  This particular implementation will search for an AJP12
+     * 	connector ( that have a special stop command ).
+     */
+    public void stopTomcat(InetAddress address, int portInt, String secret )
+	throws IOException 
+    {
 	// use Ajp12 to stop the server...
 	try {
 	    if (address == null)
 		address = InetAddress.getLocalHost();
 	    Socket socket = new Socket(address, portInt);
 	    OutputStream os=socket.getOutputStream();
-	    byte stopMessage[]=new byte[2];
-	    stopMessage[0]=(byte)254;
-	    stopMessage[1]=(byte)15;
-	    os.write( stopMessage );
-	    socket.close();
-	} catch(Exception ex ) {
-	    throw new TomcatException("Error stopping Tomcat with Ajp12 on " +
-				      address + ":" + portInt, ex);
+	    sendAjp12Stop( os, secret );
+	    os.flush();
+	    os.close();
+	    //	    socket.close();
+	} catch(IOException ex ) {
+	    System.out.println("Error stopping Tomcat with Ajp12 on " +
+				      address + ":" + portInt + " " + ex);
+	    throw ex;
 	}
     }
+
+    /** Small AJP12 client util
+     */
+    public void sendAjp12Stop( OutputStream os, String secret )
+	throws IOException
+    {
+	byte stopMessage[]=new byte[2];
+	stopMessage[0]=(byte)254;
+	stopMessage[1]=(byte)15;
+	os.write( stopMessage );
+	if(secret!=null ) 
+	    sendAjp12String( os, secret );
+    }
+
+    /** Small AJP12 client util
+     */
+    public void sendAjp12String( OutputStream os, String s )
+	throws IOException
+    {
+	int len=s.length();
+	os.write( len/256 );
+	os.write( len%256 );
+	os.write( s.getBytes() );// works only for ascii
+    }
     
+    /** Process arguments - set object properties from the list of args.
+     */
+    public  boolean processArgs(String[] args) {
+	for (int i = 0; i < args.length; i++) {
+	    String arg = args[i];
+            
+	    if (arg.equals("-h") || arg.equals("-home")) {
+		i++;
+		if (i < args.length)
+		    System.getProperties().put("tomcat.home", args[i]);
+		else
+		    return false;
+	    }
+	}
+	return true;
+    }
+
+    public static void main(String args[] ) {
+	try {
+	    StopTomcat tomcat=new StopTomcat();
+	    tomcat.processArgs( args );
+	    tomcat.execute();
+	} catch(Exception ex ) {
+	    System.out.println(sm.getString("tomcat.fatal"));
+	    ex.printStackTrace();
+	    System.exit(1);
+	}
+    }
+
+
 }
