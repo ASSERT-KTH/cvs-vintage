@@ -8,12 +8,13 @@
  #if ($data.getMessage()) 
  <p>$data.getMessage()</p>
  #end 
- <form action="$link.setPage("Login.vm")" method="post" name="login">
+ <form action="$link.setPage("Login.vm").addPathInfo($data.Parameters)" method="post" name="login">
   <input type="hidden" name="action" value="Login" /> 
 #if ($nextTemplate && $nextTemplate.length() > 0)
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" /> 
 #else 
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" /> 
+<input type="hidden" name="id" value="1" /> 
 #end 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="1">
