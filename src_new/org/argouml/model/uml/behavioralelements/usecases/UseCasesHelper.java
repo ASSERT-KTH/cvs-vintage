@@ -1,4 +1,4 @@
-// $Id: UseCasesHelper.java,v 1.19 2004/08/08 18:39:25 mvw Exp $
+// $Id: UseCasesHelper.java,v 1.20 2004/10/31 22:12:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,6 +93,10 @@ public class UseCasesHelper {
     /**
      * Returns all usecases in the current project model.
      * @return Collection
+     * 
+     * @deprecated by MVW in V0.17.2. Use #getAllUseCases(MNamespace ns) 
+     * instead.
+     * Reason: See issue 1814 - and it is never used.
      */
     public Collection getAllUseCases() {
     	MNamespace model =
@@ -126,6 +130,9 @@ public class UseCasesHelper {
     /**
      * Returns all actors in the current project model.
      * @return Collection
+     * 
+     * @deprecated by MVW in V0.17.2. Use #getAllActors(MNamespace ns) instead.
+     * Reason: See issue 1814 - and it is never used.
      */
     public Collection getAllActors() {
     	MNamespace model =
