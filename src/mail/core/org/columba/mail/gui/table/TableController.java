@@ -43,6 +43,7 @@ import org.columba.mail.gui.table.selection.TableSelectionManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
 
 /**
  * This class shows the messageheaderlist
@@ -440,7 +441,7 @@ public class TableController {
 		 */
 	public void showHeaderList(Folder folder, HeaderList headerList)
 		throws Exception {
-
+		
 		getHeaderTableModel().setHeaderList(headerList);
 
 		boolean enableThreadedView =
@@ -462,8 +463,45 @@ public class TableController {
 		int row = getView().getTree().getRowCount();
 
 		getView().clearSelection();
-
-		getView().scrollRectToVisible(new Rectangle(0, 0, 0, 0));
+		// if the last selection for the current folder is null, then we show the
+		// first message in the table and scroll to it.
+		if (folder.getLastSelection() == null) {
+			// if there are entries in the table
+			if (getView().getRowCount() > 0) {
+				// changing the selection to the first row
+				getView().changeSelection(0,0, true, false);
+				// ColumbaLogger.log.info("getView().ValueAt "+ getView().getValueAt(0,0));
+				// ColumbaLogger.log.info("valueAt name: "+getView().getValueAt(0,0).getClass().getName());
+				// getting the node
+				MessageNode selectedNode = (MessageNode) getView().getValueAt(0,0);
+				// and getting the uid for this node
+				Object[] lastSelUids = new Object[1];
+				lastSelUids[0] = selectedNode.getUid();
+				// scrolling to the first row
+				getView().scrollRectToVisible(getView().getCellRect(0,0,false));
+				FolderCommandReference[] refNew = new FolderCommandReference[1]; 
+				refNew[0] = new FolderCommandReference( folder, lastSelUids); 
+				// view the message under the new node
+				MainInterface.processor.addOp(new ViewMessageCommand(mailFrameController, refNew));
+			}
+		} else {
+			// if a lastSelection for this folder is set
+			// ColumbaLogger.log.info("lastSelection: "+folder.getLastSelection());
+			// getting the last selected uid
+			Object[] lastSelUids = new Object[1];
+			lastSelUids[0] = folder.getLastSelection();
+			// selecting the message
+			setSelected(lastSelUids);
+			int selRow = getView().getSelectedRow();
+			// ColumbaLogger.log.info("selRow: "+selRow);
+			// scroll to the position of the selection
+			getView().scrollRectToVisible(getView().getCellRect(selRow, 0, false));
+			FolderCommandReference[] refNew = new FolderCommandReference[1]; 
+			refNew[0] = new FolderCommandReference( folder, lastSelUids); 
+			// view the message under the new node
+			MainInterface.processor.addOp(new ViewMessageCommand(mailFrameController, refNew));
+		}
+		
 		
 		/*
 		JViewport viewport =

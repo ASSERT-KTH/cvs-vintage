@@ -77,6 +77,14 @@ public abstract class Folder extends FolderTreeNode {
 	 *
 	 */
 	protected File directoryFile; // directory
+	
+	/**
+	* The last selected uid for the current folder. This information is used to show the
+	* last selected message, if you switch to the current folder and the lastSelection field
+	* is set. If the lastSelection field is null, the first message in the table for this
+	* folder is shown. Have a look to org.columba.mail.gui.table.TableController#showHeaderList
+	*/
+	protected Object lastSelection;
 
 	/**
 	 *
@@ -775,6 +783,20 @@ public abstract class Folder extends FolderTreeNode {
 		saveMessageFolderInfo();
 	}
 	
+	/**
+	* Returns the last selected Message for the current folder. If no message was selected, it
+	* returns null. The return-value is the uid of the last selected message.
+	**/
+	public Object getLastSelection() {
+		return this.lastSelection;
+	}
 	
+	/**
+	* Sets the last selection for the current folder. This should be the uid of the last selected Message
+	* for the current folder.
+	*/
+	public void setLastSelection(Object lastSel) {
+		this.lastSelection = lastSel;
+	}
 
 }

@@ -19,6 +19,7 @@ import org.columba.mail.gui.frame.TableOwnerInterface;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.folder.Folder;
 
 /**
  * @author waffel
@@ -85,7 +86,8 @@ public class DownAction extends JAbstractAction {
 		if (node_ok) {
 			// select it
 			tableController.setSelected(nextUids);
-			
+			// saving the last selection for the current folder
+			((Folder)ref.getFolder()).setLastSelection(nextUids[0]);
 			int row = tableController.getView().getSelectedRow();
 			tableController.getView().scrollRectToVisible(tableController.getView().getCellRect(row,0,false));
 			
