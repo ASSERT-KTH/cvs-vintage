@@ -1,4 +1,4 @@
-// $Id: OutgoingDependencyNode.java,v 1.3 2004/06/24 06:25:41 linus Exp $
+// $Id: OutgoingDependencyNode.java,v 1.4 2004/07/17 22:29:05 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,25 +34,27 @@ import org.argouml.ui.explorer.WeakExplorerNode;
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class OutgoingDependencyNode implements WeakExplorerNode {
-
-    /**
-     * @deprecated by Linus Tolke as of 0.16. Will be private.
-     */
-    Object parent;
+    private Object parent;
 
     /** Creates a new instance of AssociationsNode */
-    public OutgoingDependencyNode(Object parent) {
-        this.parent = parent;
+    public OutgoingDependencyNode(Object p) {
+        parent = p;
     }
 
     public Object getParent() {
 	return parent;
     }
 
+    /**
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
 	return "Outgoing Dependencies";
     }
 
+    /**
+     * @see org.argouml.ui.explorer.WeakExplorerNode#subsumes(java.lang.Object)
+     */
     public boolean subsumes(Object obj) {
 	return obj instanceof OutgoingDependencyNode;
     }

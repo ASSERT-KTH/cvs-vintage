@@ -1,4 +1,4 @@
-// $Id: ActionSaveConfiguration.java,v 1.12 2004/07/17 16:52:03 linus Exp $
+// $Id: ActionSaveConfiguration.java,v 1.13 2004/07/17 22:29:05 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,15 +36,6 @@ import org.argouml.uml.ui.UMLAction;
  * @since 0.9.4
  */
 public class ActionSaveConfiguration extends UMLAction {
-    /**
-     * One and only instance.
-     *
-     * @deprecated by Linus Tolke as of 0.17.1. 
-     *             Create your own instance of this object instead.
-     */
-    public static final ActionSaveConfiguration SINGLETON =
-	new ActionSaveConfiguration();
-
     /**
      * Constructor.
      */
