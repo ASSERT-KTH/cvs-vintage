@@ -247,17 +247,17 @@ public class POP3Store {
     PasswordDialog dialog;
     boolean login = false;
 
-    String password = new String("");
+    String password;
     String user = new String("");
     String method = new String("");
     boolean save = false;
 
-    while (login == false) {
+    while (!login) {
       boolean b = protocol.openPort(popItem.get("host"), popItem.getInteger("port"));
       ColumbaLogger.log.debug("open port: " + b);
       
       ColumbaLogger.log.debug("login==false");
-      if (popItem.get("password").length() == 0) {
+      if ((password = popItem.get("password")).length() == 0) {
         dialog = new PasswordDialog();
 
         dialog.showDialog(
@@ -265,12 +265,9 @@ public class POP3Store {
           popItem.get("password"),
           popItem.getBoolean("save_password"));
 
-        char[] name;
-
-        if (dialog.success() == true) {
+        if (dialog.success()) {
           // ok pressed
-          name = dialog.getPassword();
-          password = new String(name);
+          password = new String(dialog.getPassword());
           //user = dialog.getUser();
           save = dialog.getSave();
           //method = dialog.getLoginMethod();
@@ -283,7 +280,6 @@ public class POP3Store {
           throw new CommandCancelledException();
         }
       } else {
-        password = popItem.get("password");
         //user = popItem.getUser();
         save = popItem.getBoolean("save_password");
         //method = popItem.getLoginMethod();
@@ -306,7 +302,7 @@ public class POP3Store {
       login = protocol.login(popItem.get("user"), password);
       //stopTimer();
 
-      if (login == false) {
+      if (!login) {
         //JOptionPane.showMessageDialog(popServer.getFrame(), "Authorization failed!");
 
         popItem.set("password", "");
@@ -320,20 +316,17 @@ public class POP3Store {
       */
     }
 
-    if (login) {
-      //popItem.setUser(user);
-      popItem.set("save_password", save);
-      //popItem.setLoginMethod( method );
-      state = STATE_AUTHENTICATE;
+    //popItem.setUser(user);
+    popItem.set("save_password", save);
+    //popItem.setLoginMethod( method );
+    state = STATE_AUTHENTICATE;
 
-      if (save) {
+    if (save) {
 
         // save plain text password in config file
         // this is a security risk !!!
         popItem.set("password", password);
-      }
     }
-
   }
 
   public boolean isLogin(WorkerStatusController worker) throws Exception {
@@ -345,5 +338,4 @@ public class POP3Store {
       return false;
     }
   }
-
 }
