@@ -34,6 +34,7 @@ import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogStore;
@@ -85,8 +86,14 @@ public class SelectFolderDialog implements ActionListener,
         tree.putClientProperty("JTree.lineStyle", "Angled");
         tree.setShowsRootHandles(true);
         tree.setRootVisible(false);
+        
+        // default selection is local Inbox
+        selectedFolder = MailInterface.treeModel.getFolder(101);
+        tree.setSelectionPath( new TreePath(selectedFolder.getPath()));
+        
+        // add selection listener
         tree.addTreeSelectionListener(this);
-
+        
         FolderTreeCellRenderer renderer = new FolderTreeCellRenderer();
         tree.setCellRenderer(renderer);
 
