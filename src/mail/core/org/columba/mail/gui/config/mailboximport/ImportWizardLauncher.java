@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.mailboximport;
 
 import javax.help.CSH;
@@ -34,9 +35,11 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.mail.plugin.ImportPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 
-
+/**
+ * Responsible for starting the mailbox import wizard.
+ */
 public class ImportWizardLauncher {
-	private FrameMediator mediator;
+    private FrameMediator mediator;
 	
     public ImportWizardLauncher(FrameMediator mediator) {
     	this.mediator = mediator;
@@ -53,7 +56,6 @@ public class ImportWizardLauncher {
 
             //show neat error message here
             d.showDialog(ex);
-
             return;
         }
 
@@ -66,8 +68,8 @@ public class ImportWizardLauncher {
             });
 
         WizardModel model = new DefaultWizardModel(new Step[] {
-                    new PluginStep(data), new LocationStep(mediator, data)
-                });
+                new PluginStep(data), new LocationStep(mediator, data)
+        });
         model.addWizardModelListener(new MailboxImporter(data));
 
         Wizard wizard = new Wizard(model,
