@@ -160,4 +160,8 @@ public class DependClassLoader12 extends DependClassLoader {
       return value;
      }
 
+    protected Enumeration findResources(String name) 
+	throws IOException {
+	return parent.getResources(name);
+    }
 }
