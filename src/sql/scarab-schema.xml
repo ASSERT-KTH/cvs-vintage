@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.49 2001/09/28 01:33:44 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.50 2001/09/28 21:58:07 jon Exp $ -->
 
 <app-data>
 <database>
@@ -541,9 +541,11 @@
     -->
     <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
-        Name.
+        Name. It is RealName because Module implements the Turbine Group interface
+        and having it as Name would clash with that interface. Please note that
+        the result of group.getName() needs to be unique for each SCARAB_MODULE.
     -->
-    <column name="MODULE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+    <column name="MODULE_NAME" javaName="RealName" required="true" type="VARCHAR" size="255"></column>
     <!--
         The instance name of scarab the module is located within.
     -->
@@ -742,40 +744,6 @@
     <foreign-key foreignTable="SCARAB_OPTION_RELATIONSHIP">
         <reference local="RELATIONSHIP_ID" foreign="RELATIONSHIP_ID"/>
     </foreign-key>
-</table>
-
-
-<!--
-    Person associated with the module.
--->
-<table name="SCARAB_R_MODULE_USER_ROLE" idMethod="none" 
-        javaName="RModuleUserRole">
-    <!--
-
-        Module.
-    -->
-    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"></column>
-    <!--
-        Person.
-    -->
-    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
-    <!--
-        Type of association.
-    -->
-    <column name="ROLE_ID" primaryKey="true" required="true" type="INTEGER"></column>
-    <!--
-        Flag, which marks that association has been deleted.
-    -->
-    <column name="DELETED" required="false" type="BOOLEANINT" 
-        default="0" size="1"></column>
-
-    <foreign-key foreignTable="SCARAB_MODULE">
-        <reference local="MODULE_ID" foreign="MODULE_ID"/>
-    </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
-        <reference local="USER_ID" foreign="USER_ID"/>
-    </foreign-key>
-
 </table>
 
 <!--

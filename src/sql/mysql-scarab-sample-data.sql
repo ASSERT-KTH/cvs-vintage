@@ -19,6 +19,8 @@ insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_CODE, MODULE_DESCRIPTIO
     values(4, 'Docs', 'TBND', 'Documentation', '/Turbine/docs/', 3, 2, 2);
 insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_CODE, MODULE_DESCRIPTION, MODULE_URL, PARENT_ID, OWNER_ID, QA_CONTACT_ID) 
     values(6, 'Source', 'TBNS', 'Source', '/Turbine/source/', 3, 2, 2);
+insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_CODE, MODULE_DESCRIPTION, MODULE_URL, PARENT_ID, OWNER_ID, QA_CONTACT_ID) 
+    values(7, 'Java', 'TBNJ', 'Java', '/Turbine/source/java', 6, 2, 2);
 
 /*
  * id_table entries for the module_codes
