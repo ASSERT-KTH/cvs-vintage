@@ -58,7 +58,7 @@ import org.apache.fulcrum.TurbineServices;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.20 2003/02/04 11:26:03 jon Exp $
+ * @version $Id: ScarabSecurity.java,v 1.21 2004/01/31 16:09:54 dep4b Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -240,7 +240,7 @@ public class ScarabSecurity
     protected String getScreenPermissionImpl(String screen)
     {
         String t = screen.replace(',','.');
-        return getPermissionImpl(props.getString(SCREEN_PREFIX + t));
+        return getPermissionImpl(props.getString(SCREEN_PREFIX + t,null));
     }
 
     protected String getActionPermissionImpl(String action)
@@ -260,7 +260,7 @@ public class ScarabSecurity
 
     protected String getPermissionImpl(String permConstant)
     {
-        return props.getString(MAP_PREFIX + permConstant);
+        return props.getString(MAP_PREFIX + permConstant,null);
     }
 
 

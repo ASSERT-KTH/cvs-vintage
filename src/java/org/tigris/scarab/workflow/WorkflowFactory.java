@@ -58,7 +58,7 @@ import org.tigris.scarab.util.ScarabException;
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: WorkflowFactory.java,v 1.11 2003/03/20 00:57:32 jon Exp $
+ * @version $Id: WorkflowFactory.java,v 1.12 2004/01/31 16:09:54 dep4b Exp $
  */
 public class WorkflowFactory 
 {
@@ -113,7 +113,7 @@ public class WorkflowFactory
             else
             {
                 List classNames = Turbine.getConfiguration()
-                    .getVector("scarab.workflow.classname");
+                    .getList("scarab.workflow.classname");
                 // Satisfy a strange case where one needs to append their
                 // own configuration to the properties file and cannot 
                 // easily remove the existing one. so, take the second

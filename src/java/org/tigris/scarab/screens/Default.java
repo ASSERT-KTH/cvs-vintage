@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.77 2003/10/17 10:02:07 dep4b Exp $
+ * @version $Id: Default.java,v 1.78 2004/01/31 16:09:54 dep4b Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -165,7 +165,7 @@ public class Default extends TemplateSecureScreen
     {
         String property = "template." +
             data.getTarget().replace(',', '/') + ".noIssueTypesForwardsTo";
-        return Turbine.getConfiguration().getString(property);
+        return Turbine.getConfiguration().getString(property,null);
     }
 
     /**
