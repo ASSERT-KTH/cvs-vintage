@@ -13,33 +13,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+package org.columba.mail.message;
 
-package org.columba.mail.imap.protocol;
-
-import org.columba.mail.imap.IMAPResponse;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:
- * @author
- * @version 1.0
+ * @author timo
  */
+public class AllTests {
 
-public class IMAPException extends Exception {
-
-    public IMAPException() {
-        super();
-    }
-
-    public IMAPException( String s )
-    {
-        super( "IMAP Server communication problem:\n"+s );
-    }
-    
-    public IMAPException( IMAPResponse response )
-    {
-    	super("IMAP Server communication problem:"+response.getSource());
-    }
+	public static Test suite() {
+		TestSuite suite = new TestSuite("Test for org.columba.mail.message");
+		//$JUnit-BEGIN$
+		suite.addTest(new TestSuite(MimeHeaderTest.class));
+		suite.addTest(new TestSuite(MimePartTest.class));
+		//$JUnit-END$
+		return suite;
+	}
 }

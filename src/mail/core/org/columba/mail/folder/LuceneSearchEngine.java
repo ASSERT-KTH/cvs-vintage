@@ -386,6 +386,8 @@ public class LuceneSearchEngine
 		IndexReader ramReader = getRAMReader();
 		IndexReader fileReader = getFileReader();
 
+		ColumbaLogger.log.debug("Lucene: Merging RAMIndex to FileIndex");
+
 		Document doc;
 
 		/*
@@ -422,8 +424,9 @@ public class LuceneSearchEngine
 
 	private void initRAMDir() throws IOException {
 		ramIndexDir = new RAMDirectory();
-		IndexWriter writer = new IndexWriter(ramIndexDir, analyzer, true);
+		IndexWriter writer = new IndexWriter(ramIndexDir, analyzer, true);		
 		writer.close();
+		ramLastModified = -1;
 	}
 
 	private void incOperationCounter() throws IOException {
