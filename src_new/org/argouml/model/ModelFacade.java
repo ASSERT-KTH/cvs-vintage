@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.237 2005/01/03 18:21:22 linus Exp $
+// $Id: ModelFacade.java,v 1.238 2005/01/03 20:23:28 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -7076,13 +7076,13 @@ public class ModelFacade {
      * Sets the represented classifier of some collaboration.
      *
      * @param handle the collaboration
-     * @param classifier is the classifier
+     * @param classifier is the classifier or null
      */
     public static void setRepresentedClassifier(
         Object handle,
         Object classifier) {
         if (handle instanceof MCollaboration
-            && classifier instanceof MClassifier) {
+            && ((classifier == null) || classifier instanceof MClassifier)) {
             ((MCollaboration) handle).setRepresentedClassifier(
                 (MClassifier) classifier);
             return;
@@ -7094,13 +7094,13 @@ public class ModelFacade {
      * Sets the represented operation of some collaboration.
      *
      * @param handle the collaboration
-     * @param operation is the operation
+     * @param operation is the operation or null
      */
     public static void setRepresentedOperation(
         Object handle,
         Object operation) {
         if (handle instanceof MCollaboration
-            && operation instanceof MOperation) {
+            && ((operation == null) || operation instanceof MOperation)) {
             ((MCollaboration) handle).setRepresentedOperation(
                 (MOperation) operation);
             return;

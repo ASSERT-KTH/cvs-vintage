@@ -1,4 +1,4 @@
-// $Id: PerspectiveManager.java,v 1.19 2004/11/21 19:06:35 mvw Exp $
+// $Id: PerspectiveManager.java,v 1.20 2005/01/03 20:23:27 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -269,7 +269,8 @@ public class PerspectiveManager {
         packagePerspective.addRule(new GoStimulusToAction());
         packagePerspective.addRule(new GoClassifierToCollaboration());
         packagePerspective.addRule(new GoOperationToCollaboration());
-        packagePerspective.addRule(new GoOperationToCollaborationDiagram());
+        /* Removed the next one due to issue 2165.
+        packagePerspective.addRule(new GoOperationToCollaborationDiagram());*/
         packagePerspective.addRule(new GoBehavioralFeatureToStateMachine());
         packagePerspective.addRule(new GoBehavioralFeatureToStateDiagram());
         // works for both statediagram as activitygraph

@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactoryImpl.java,v 1.2 2005/01/03 18:21:23 linus Exp $
+// $Id: CollaborationsFactoryImpl.java,v 1.3 2005/01/03 20:23:26 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,6 @@ import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
 import ru.novosoft.uml.behavior.collaborations.MInteraction;
 import ru.novosoft.uml.behavior.collaborations.MMessage;
-import ru.novosoft.uml.foundation.core.MAssociationEnd;
-import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.data_types.MAggregationKind;
 
@@ -150,6 +148,7 @@ public class CollaborationsFactoryImpl
 
     /**
      * Builds a default collaboration not attached to a classifier.
+     * I.e. the represented element is NOT filled in.
      *
      * @param handle the namespace for the collaboration
      * @return the created collaboration
@@ -161,9 +160,6 @@ public class CollaborationsFactoryImpl
             modelelement.setNamespace(namespace);
             modelelement.setName("newCollaboration");
             modelelement.setAbstract(false);
-            if (namespace instanceof MClassifier) {
-                modelelement.setRepresentedClassifier((MClassifier) namespace);
-            }
             return modelelement;
 
         }
@@ -183,7 +179,7 @@ public class CollaborationsFactoryImpl
         Object representedElement) {
         if (ModelFacade.isANamespace(namespace)
             && (ModelFacade.isAClassifier(representedElement)
-                || ModelFacade.isAObject(representedElement))) {
+                || ModelFacade.isAOperation(representedElement))) {
             Object collaboration = buildCollaboration(namespace);
             if (ModelFacade.isAClassifier(representedElement)) {
                 ModelFacade.setRepresentedClassifier(
