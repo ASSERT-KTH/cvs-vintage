@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.16 2001/07/13 06:13:56 costin Exp $
+/* $Id: ApacheConfig.java,v 1.17 2001/07/16 00:00:41 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -125,7 +125,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Mel Martinez
-	@version $Revision: 1.16 $ $Date: 2001/07/13 06:13:56 $
+	@version $Revision: 1.17 $ $Date: 2001/07/16 00:00:41 $
  */
 public class ApacheConfig  extends BaseInterceptor { 
     
@@ -718,7 +718,7 @@ public class ApacheConfig  extends BaseInterceptor {
 	String npath=("".equals(ctxPath)) ? "/" : ctxPath;
 	// Static files will be served by Apache
 	mod_jk.println(indent + "# Static files ");		    
-	mod_jk.println(indent + "Alias " + npath + " \"" + docBase + "\"/");
+	mod_jk.println(indent + "Alias " + npath + " \"" + docBase + "\"");
 	mod_jk.println();
 	mod_jk.println(indent + "<Directory \"" + docBase + "\">");
 	mod_jk.println(indent + "    Options Indexes FollowSymLinks");
