@@ -3,7 +3,7 @@
 rem Author: Kunle Odutola
 rem         May 2001
 rem
-rem $Id: build.bat,v 1.3 2001/12/04 07:12:36 linus Exp $
+rem $Id: build.bat,v 1.4 2001/12/29 16:07:02 linus Exp $
 rem
 
 rem +-------------------------------------------------------------------------+
@@ -74,7 +74,7 @@ echo Starting Ant...
 echo.
 
 
-%JAVA_HOME%\bin\%JAVACMD% -Xmx256M -classpath %LOCAL_CLASSPATH% -Dant.home=%ANT_HOME% -Dant.opts=%ANT_OPTS% org.apache.tools.ant.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
+%JAVA_HOME%\bin\%JAVACMD% -Xmx512M -classpath %LOCAL_CLASSPATH% -Dant.home=%ANT_HOME% -Dant.opts=%ANT_OPTS% org.apache.tools.ant.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 
 goto END
