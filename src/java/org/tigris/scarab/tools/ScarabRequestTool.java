@@ -1305,17 +1305,25 @@ try{
      */
     public List getPaginatedList( List fullList, String pgNbrStr, 
                                   String nbrItmsPerPageStr)
+        throws NumberFormatException
     {
-        int pgNbr = Integer.parseInt(pgNbrStr);
-        int nbrItmsPerPage = Integer.parseInt(nbrItmsPerPageStr);
-
+        int pgNbr =0 ;
+        int nbrItmsPerPage =0 ;
+        try
+        {
+           pgNbr = Integer.parseInt(pgNbrStr);
+           nbrItmsPerPage = Integer.parseInt(nbrItmsPerPageStr);
+        }
+        catch (NumberFormatException e)
+        {
+           e.printStackTrace();
+        }
         this.nbrPages =  (int)Math.ceil((float)fullList.size() 
                                                / nbrItmsPerPage);
         this.nextPage = pgNbr + 1;
         this.prevPage = pgNbr - 1;
-        return fullList.subList
-           ((pgNbr - 1) * nbrItmsPerPage,
-            Math.min(pgNbr * nbrItmsPerPage, fullList.size()));
+        return fullList.subList ((pgNbr - 1) * nbrItmsPerPage, 
+               Math.min(pgNbr * nbrItmsPerPage, fullList.size()));
     }
 
     /**
