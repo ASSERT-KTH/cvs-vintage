@@ -40,7 +40,8 @@ import org.jboss.logging.Logger;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
+ * @version $Revision: 1.14 $
  */                            
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    private final JDBCStoreManager manager;
@@ -53,6 +54,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    private final boolean primaryKeyMember;
    private final Class primaryKeyClass;
    private final Field primaryKeyField;
+   private final boolean isKeyDbGenerated;
    
    public JDBCAbstractCMPFieldBridge(
          JDBCStoreManager manager, 
@@ -77,7 +79,8 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
             metadata.getReadTimeOut(),
             metadata.isPrimaryKeyMember(),
             metadata.getEntity().getPrimaryKeyClass(),
-            metadata.getPrimaryKeyField());
+            metadata.getPrimaryKeyField(),
+            metadata.isKeyDbGenerated());
    }
 
    public JDBCAbstractCMPFieldBridge(
@@ -89,7 +92,8 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
          long readTimeOut,
          boolean primaryKeyMember,
          Class primaryKeyClass,
-         Field primaryKeyField) {
+         Field primaryKeyField,
+         boolean isKeyDbGenerated) {
 
       this.manager = manager;
 
@@ -104,6 +108,8 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
       this.primaryKeyClass = primaryKeyClass;
       this.primaryKeyField = primaryKeyField;
       
+      this.isKeyDbGenerated = isKeyDbGenerated;
+
       this.log = Logger.getLogger(
             this.getClass().getName() + 
             "." + 
@@ -147,6 +153,10 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
 
    public long getReadTimeOut() {
       return readTimeOut;
+   }
+
+   public boolean isKeyDbGenerated() {
+      return isKeyDbGenerated;
    }
 
    public abstract boolean isReadTimedOut(EntityEnterpriseContext ctx);
