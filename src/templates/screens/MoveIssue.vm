@@ -10,23 +10,22 @@ $page.setTitle("Copy/move issue")
 #set ($issueId = $data.Parameters.getString("id", $data.Parameters.getString("issue_id","")))
 #set ($issue = $scarabR.getIssue($issueId))
 
-#if (!$issueId || !$issue)
+#if (!$issueId || $issueId.length() == 0 || !$issue)
 
 <p><strong class="alert">Sorry, the requested issue could not be found.</strong></p>
 
 #else
 
 #set ($moveIssueGroup = $intake.MoveIssue.Default)
+#set ($attrValues = $issue.AllAttributeValuesMap)
+#set ($attVal = $attrValues.get("SUMMARY"))
+#set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 
 <form method="post" action="$link.setPage("MoveIssue.vm").setAction("MoveIssue")">
 <input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issueId" />
 ## need to also pass id so that if we re-display this page, the right value is kept around
 <input type="hidden" name="id" value="$issueId" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="MoveIssue2.vm" />
-
-#set ($attrValues = $issue.AllAttributeValuesMap)
-#set ($attVal = $attrValues.get("SUMMARY"))
-#set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 
 <h3>Issue to be copied/moved</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">

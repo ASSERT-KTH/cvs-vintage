@@ -1,28 +1,25 @@
 $page.setTitle("Copy/move issue")
 
-#macro (moveOrCopyFunctionbar)
-#if ($selectAction.equals("move") )
- #set ($tmp = "Move")
-#else
- #set ($tmp = "Copy")
-#end
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" value="Back" name="eventSubmit_doBacktoone" />&#160; 
-  <input type="submit" value="$tmp Issue" name="eventSubmit_doSaveissue" />
-  </td>
- </tr>
-</table>
-</div>
-#end
-
 <div class="app" id="moveissue2">
+
 <h2>$page.Title</h2>
 
 #set ($moveIssueGroup = $intake.MoveIssue.Default)
 #set ($issueId = $moveIssueGroup.IssueId)
+
+#if (!$issueId || $issueId.length() == 0 || !$issue)
+
+<h3>Error</h3>
+<p><strong class="alert">Sorry, the requested issue could not be found.</strong></p>
+
+#else
+
+#if ($selectAction.equals("move") )
+ #set ($actionText = "Move")
+#else
+ #set ($actionText = "Copy")
+#end
+
 #set ($issue = $scarabR.getIssue("$issueId"))
 #set ($selectAction = $moveIssueGroup.Action)
 #set ($moduleId = $moveIssueGroup.ModuleId)
@@ -38,7 +35,16 @@ $page.setTitle("Copy/move issue")
 <input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issueId" />
 <input type="hidden" name="$moveIssueGroup.ModuleId.key" value="$moduleId" />
 
-#moveOrCopyFunctionbar()
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+  <input type="submit" value="Back" name="eventSubmit_doBacktoone" />&#160; 
+  <input type="submit" value="$actionText Issue" name="eventSubmit_doSaveissue" />
+  </td>
+ </tr>
+</table>
+</div>
 
 #set ($attrValues = $issue.AllAttributeValuesMap)
 #set ($attVal = $attrValues.get("SUMMARY"))
@@ -160,8 +166,19 @@ $issue.ScarabModule.Name
  </table>
 #end
 
-#moveOrCopyFunctionbar()
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+  <input type="submit" value="Back" name="eventSubmit_doBacktoone" />&#160; 
+  <input type="submit" value="$actionText Issue" name="eventSubmit_doSaveissue" />
+  </td>
+ </tr>
+</table>
+</div>
 
 $intake.declareGroups()
 </form>
+
+#end
 </div>
