@@ -1,4 +1,4 @@
-// $Id: ActionCompartmentDisplay.java,v 1.2 2004/08/14 15:26:11 mvw Exp $
+// $Id: ActionCompartmentDisplay.java,v 1.3 2004/08/15 22:39:23 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionCompartmentDisplay.java
 // Classes: ActionCompartmentDisplay
 // Original Author: your email address here
-// $Id: ActionCompartmentDisplay.java,v 1.2 2004/08/14 15:26:11 mvw Exp $
+// $Id: ActionCompartmentDisplay.java,v 1.3 2004/08/15 22:39:23 bobtarling Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // compartments for extension points on use cases.
@@ -212,17 +212,17 @@ public class ActionCompartmentDisplay extends UMLAction {
             // Perform the action
 
 	    if (compartment.equals("action.show-attribute-compartment")) {
-		((FigClass) f).setAttributeVisible(display);
+		((FigClass) f).setAttributesVisible(display);
             }
 	    else if (compartment.equals("action.hide-attribute-compartment")) {
-		((FigClass) f).setAttributeVisible(display);
+		((FigClass) f).setAttributesVisible(display);
             }
 	    else if (compartment.equals("action.show-operation-compartment")
 		  || compartment.equals("action.hide-operation-compartment")) {
 		if (f instanceof FigClass)
-			((FigClass) f).setOperationVisible(display);
+			((FigClass) f).setOperationsVisible(display);
 		if (f instanceof FigInterface)
-			((FigInterface) f).setOperationVisible(display);
+			((FigInterface) f).setOperationsVisible(display);
             }
 	    else if (compartment.equals(
                 "action.show-extension-point-compartment")) {
@@ -233,12 +233,12 @@ public class ActionCompartmentDisplay extends UMLAction {
 		((FigUseCase) f).setExtensionPointVisible(display);
             }
 	    else if (compartment.equals("action.show-all-compartments")) {
-		((FigClass) f).setAttributeVisible(display);
-		((FigClass) f).setOperationVisible(display);
+		((FigClass) f).setAttributesVisible(display);
+		((FigClass) f).setOperationsVisible(display);
 	    }
 	    else {
-		((FigClass) f).setAttributeVisible(display);
-		((FigClass) f).setOperationVisible(display);
+		((FigClass) f).setAttributesVisible(display);
+		((FigClass) f).setOperationsVisible(display);
 	    }
 	}
     }

@@ -1,4 +1,4 @@
-// $Id: ClOperationCompartment.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: ClOperationCompartment.java,v 1.7 2004/08/15 22:39:24 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ public class ClOperationCompartment implements Clarifier {
 	    // added by Eric Lefevre 13 Mar 1999: we must check if the
 	    // FigText for operations is drawn before drawing things
 	    // over it
-	    if ( !fc.isOperationVisible() ) {
+	    if ( !fc.isOperationsVisible() ) {
 		_fig = null;
 		return;
 	    }

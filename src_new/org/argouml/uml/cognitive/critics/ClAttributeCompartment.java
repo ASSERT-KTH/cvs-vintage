@@ -1,4 +1,4 @@
-// $Id: ClAttributeCompartment.java,v 1.7 2003/09/04 20:11:42 thierrylach Exp $
+// $Id: ClAttributeCompartment.java,v 1.8 2004/08/15 22:39:24 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class ClAttributeCompartment implements Clarifier {
 	    // added by Eric Lefevre 13 Mar 1999: we must check if the
 	    // FigText for attributes is drawn before drawing things
 	    // over it
-	    if ( !fc.isAttributeVisible() ) {
+	    if ( !fc.isAttributesVisible() ) {
 		_fig = null;
 		return;
 	    }

@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.27 2004/07/22 20:55:09 linus Exp $
+// $Id: DiagramInterface.java,v 1.28 2004/08/15 22:39:24 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -245,8 +245,8 @@ public class DiagramInterface {
             currentGM.addNode(newClass);
             currentLayer.putInPosition(newClassFig);
             
-            newClassFig.setAttributeVisible(!minimise);
-            newClassFig.setOperationVisible(!minimise);
+            newClassFig.setAttributesVisible(!minimise);
+            newClassFig.setOperationsVisible(!minimise);
             
             newClassFig.setSize(newClassFig.getMinimumSize());
         }
@@ -288,7 +288,7 @@ public class DiagramInterface {
             currentGM.addNode(newInterface);
             currentLayer.putInPosition(newInterfaceFig);
             
-            newInterfaceFig.setOperationVisible(!minimise);
+            newInterfaceFig.setOperationsVisible(!minimise);
             newInterfaceFig.setSize(newInterfaceFig.getMinimumSize());
         }
         // the class is in the diagram

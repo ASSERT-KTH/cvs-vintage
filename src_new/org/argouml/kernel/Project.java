@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.107 2004/08/15 11:44:00 bobtarling Exp $
+// $Id: Project.java,v 1.108 2004/08/15 22:39:23 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -123,6 +123,12 @@ public class Project implements java.io.Serializable, TargetListener {
     private Vector searchpath;
     private Vector members;
     private String historyFile;
+
+    /**
+     * The version number of the persistence format that last
+     * saved this project.
+     */
+    private int persistenceVersion;
 
     /**
      * Instances of the uml model.
@@ -1462,5 +1468,19 @@ public class Project implements java.io.Serializable, TargetListener {
         defaultModelCache = null;
         
         TargetManager.getInstance().removeTargetListener(this);
+    }
+    
+    /**
+     * @return Returns the persistenceVersion.
+     */
+    public int getPersistenceVersion() {
+        return persistenceVersion;
+    }
+    
+    /**
+     * @param persistenceVersion The persistenceVersion to set.
+     */
+    public void setPersistenceVersion(int persistenceVersion) {
+        this.persistenceVersion = persistenceVersion;
     }
 } /* end class Project */
