@@ -1,10 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/deployment/Attic/WebApplicationReader.java,v 1.1 1999/10/09 00:20:46 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:46 $
- *
- * ====================================================================
- *
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -145,12 +139,17 @@ public class WebApplicationReader {
 		processSecurityRoles();
 		processEnvironmentEntries();    
 		processEjbReferences();
+                processTagLibConfigs();
 	    } else {
 	        String msg = "parsing error";
 
 		throw new IllegalStateException(msg);
 	    }
 
+            // FIXME: Anil, remove this when you are done - akv
+            // System.err.println("Printing the web application descriptor: ");
+            // System.err.println(webApplicationDescriptor.toString());
+            
 	    return webApplicationDescriptor;
 	} catch (Throwable t) {
 	    String msg = "parsing error: " + t.getMessage();
@@ -220,6 +219,19 @@ public class WebApplicationReader {
 	    param.setValue(next.getFirstElement(Constants.ParameterValue).getValue());
 	    this.webApplicationDescriptor.addContextParameter(param);
 	 }
+    }
+
+
+    private void processTagLibConfigs() {
+        Enumeration enum = this.config.elements(Constants.TAGLIB);
+        while (enum.hasMoreElements()) {
+            XMLTree next = (XMLTree) enum.nextElement();
+            TagLibConfig config 
+                = (TagLibConfig) this.factory.createDescriptor(TagLibConfig.class);
+            config.setTagLibURI(next.getFirstElement(Constants.TAGLIB_URI).getValue());
+            config.setTagLibLocation(next.getFirstElement(Constants.TAGLIB_LOCATION).getValue());
+            this.webApplicationDescriptor.addTagLibConfig(config);
+        }
     }
     
      private void processErrorPages() {
@@ -561,9 +573,9 @@ public class WebApplicationReader {
 	}
 	throw new RuntimeException("There is no web component by the name of " + name + " here.");
     }
-    
-    
 
+    
+    
     private Vector parseServlets(Enumeration servlets,
         Enumeration servletMaps) {
         Vector webComponentDescriptors = new Vector();
@@ -718,4 +730,5 @@ public class WebApplicationReader {
 	
 	return sessionTimeOut.intValue();
     }
+
 }

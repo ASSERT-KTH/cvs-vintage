@@ -51,25 +51,22 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- * [Additional notices, if required by prior licensing conditions]
- *
  */ 
-
-
 package org.apache.tomcat.deployment;
 
-import java.util.Enumeration;
-
-    /**
-    * @author Danny Coward
-    */
-
-public interface AuthorizationConstraint extends WebDescriptor {
-    public static String BASIC_METHOD = "basic";
-    public static String FORM_METHOD = "form";
-    public static String MUTUAL_METHOD = "mutual";
-
-    /** Return the security roles involved in this constraint. */
-    public Enumeration getSecurityRoles();
-    public void addSecurityRole(SecurityRole securityRole);
+/**
+ * Support for TLDs in the object model. 
+ *
+ * @author Anil K. Vijendran
+ */
+public class TagLibConfigImpl implements TagLibConfig {
+    String uri, location;
+    
+    public void setTagLibURI(String uri) {
+        this.uri = uri;
+    }
+    
+    public void setTagLibLocation(String location) {
+        this.location = location;
+    }
 }

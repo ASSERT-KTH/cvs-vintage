@@ -121,12 +121,12 @@ and a mime type. -->
 <!ELEMENT mime-mapping (extension, mime-type)>
 
 <!-- The extension element contains a string describing an
-extension. example: “txt” -->
+extension. example: txt -->
 
 <!ELEMENT extension (#PCDATA)>
 
 <!-- The mime-type element contains a defined mime type. example:
-“text/plain” -->
+text/plain -->
 
 <!ELEMENT mime-type (#PCDATA)>
 
@@ -296,17 +296,6 @@ application. -->
 <!-- The role-name element contains the name of a role. This element
 must contain a non-empty string. -->
 
-<!-- XXX
-     this causes validation errors
-<!ELEMENT role-name (#PCDATA)>
--->
-
-<!-- The security-role-ref element contains the declaration of a
-security role reference in the servlet's code. The contents of the
-role-name element is that of the String used in the servlet code to
-specify a role. The role-link element specifies that this coded role
-should be linked to a role described by the security-role element -->
-
 <!ELEMENT security-role-ref (description?, role-name, role-link)> 
 
 <!-- The role-link element is used to link a security role reference
@@ -446,3 +435,5 @@ deployment descriptor. -->
 <!ATTLIST home id ID #IMPLIED>
 <!ATTLIST remote id ID #IMPLIED>
 <!ATTLIST ejb-link id ID #IMPLIED>
+
+

@@ -1,10 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/deployment/Attic/WebDescriptorFactoryImpl.java,v 1.1 1999/10/09 00:20:46 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:46 $
- *
- * ====================================================================
- *
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -116,6 +110,9 @@ implements WebDescriptorFactory {
             WebResourceCollection.class, WebResourceCollectionImpl.class);
 	this.interfaceToImplementationMap.put(ResourceReference.class,
             ResourceReferenceImpl.class);
+
+        this.interfaceToImplementationMap.put(TagLibConfig.class, 
+                                              TagLibConfigImpl.class);
     }
 
     public Object createDescriptor(Class interfaceType) {

@@ -1,10 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/deployment/Attic/Constants.java,v 1.1 1999/10/09 00:20:41 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:41 $
- *
- * ====================================================================
- * 
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -149,6 +143,10 @@ public class Constants {
     public static String FORM_LOGIN_CONFIG = "form-login-config";
     public static String FORM_LOGIN_PAGE = "form-login-page";
     public static String FORM_ERROR_PAGE = "form-error-page";
+
+    public static final String TAGLIB = "taglib";
+    public static final String TAGLIB_URI = "taglib-uri";
+    public static final String TAGLIB_LOCATION = "taglib-location";
 
 
     public static final String JakartaWebApplication =

@@ -1,10 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/deployment/Attic/WebApplicationDescriptorImpl.java,v 1.1 1999/10/09 00:20:46 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:46 $
- *
- * ====================================================================
- *
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -70,6 +64,7 @@ import java.util.Vector;
 /**
  *
  * @author James Todd [gonzo@eng.sun.com]
+ * @author Anil K. Vijendran [akv@eng.sun.com] -- added support for taglib in web.xml
  */
 
 public class WebApplicationDescriptorImpl
@@ -86,7 +81,13 @@ implements WebApplicationDescriptor {
     private Vector resourceReferences = new Vector();
     private Vector securityRoles = new Vector();
     private Vector securityConstraints = new Vector();
+    private Vector tldConfigs = new Vector();
+    
+    // XXX
+    // commented out in anticipation they'll eventually be supported 
+/*
     private Vector localizedContentDescriptors = new Vector();
+*/
     private LoginConfiguration loginConfiguration;
     private Vector environmentEntries;
     
@@ -180,6 +181,9 @@ implements WebApplicationDescriptor {
         securityConstraints.addElement(securityConstraint);
     }
     
+    // XXX
+    // commented out in anticipation they'll eventually be supported 
+/*
     public Enumeration getLocalizedContentDescriptors() {
 	return localizedContentDescriptors.elements();
     }
@@ -189,6 +193,7 @@ implements WebApplicationDescriptor {
 	this.localizedContentDescriptors.addElement(
 	    localizedContentDescriptor);
     }
+*/
     
     public LoginConfiguration getLoginConfiguration() {
 	return this.loginConfiguration;
@@ -211,6 +216,14 @@ implements WebApplicationDescriptor {
     public void addEnvironmentEntry(EnvironmentEntry environmentEntry) {
 	this.getEnvironmentEntryVector().addElement(environmentEntry);
     }
+
+    public Enumeration getTagLibConfigs() {
+        return tldConfigs.elements();
+    }
+    
+    public void addTagLibConfig(TagLibConfig tldConfig) {
+        tldConfigs.addElement(tldConfig);
+    }
     
     public String toString() {
 	String s = "Web App Descriptor ";
@@ -226,9 +239,15 @@ implements WebApplicationDescriptor {
 	s = s + " \n resourceReferences" + resourceReferences;
 	s = s + " \n securityRoles" + securityRoles;
 	s = s + " \n securityConstraints" + securityConstraints;
+
+      // XXX
+      // commented out in anticipation they'll eventually be supported 
+/*
 	s = s + " \n localizedContentDescriptors" + localizedContentDescriptors;
+*/
 	s = s + " \n loginConfiguration " + loginConfiguration;
 	s = s + " \n environmentEntries " + environmentEntries;
+        s = s + " \n tldConfigs " + tldConfigs;
 
 	return s;
     }
