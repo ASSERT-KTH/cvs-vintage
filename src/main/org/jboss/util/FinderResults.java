@@ -24,8 +24,6 @@ public class FinderResults implements Collection {
 
    private Object[] queryArgs;
 
-   private boolean isReadAheadOnLoadUsed;
-
    /**
     * List id is used only in the case of read ahead on load.
     */
@@ -38,14 +36,6 @@ public class FinderResults implements Collection {
       this.queryData = queryData;
       this.finder = finder;
       this.queryArgs = args;
-   }
-   public FinderResults(Collection keys, Object queryData, Object finder, Object[] args, boolean isReadAheadOnLoadUsed) {
-      this(keys, queryData, finder, args);
-      this.isReadAheadOnLoadUsed = isReadAheadOnLoadUsed;
-      if (isReadAheadOnLoadUsed) {
-         listId = nextListId;
-         nextListId++;
-      }     
    }
    public Collection getAllKeys() {
       return keys;
@@ -63,7 +53,7 @@ public class FinderResults implements Collection {
       return queryArgs;
    }
    public boolean isReadAheadOnLoadUsed() {
-      return isReadAheadOnLoadUsed;
+      return false;
    }
    public long getListId() {
       return listId;
