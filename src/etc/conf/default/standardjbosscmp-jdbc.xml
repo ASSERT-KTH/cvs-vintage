@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.85 2004/09/22 09:04:52 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.86 2004/11/03 13:32:16 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -658,6 +658,129 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
             <java-type>java.lang.Object</java-type>
             <jdbc-type>VARBINARY</jdbc-type>
             <sql-type>BLOB(2000)</sql-type>
+         </mapping>
+      </type-mapping>
+
+      <type-mapping>
+         <name>Derby</name>
+         <row-locking-template/>
+         <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+         <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
+         <alias-header-prefix>t</alias-header-prefix>
+         <alias-header-suffix>_</alias-header-suffix>
+         <alias-max-length>18</alias-max-length>
+         <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
+         <function-mapping>
+            <function-name>concat</function-name>
+            <function-sql>(?1 || ?2)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>substr</function-name>
+            <function-sql>substr(?1, ?2, ?3)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>lcase</function-name>
+            <function-sql>lower(?1)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>length</function-name>
+            <function-sql>length(?1)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>locate</function-name>
+            <function-sql>locate(?2, ?1, ?3)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>abs</function-name>
+            <function-sql>abs(?1)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>sqrt</function-name>
+            <function-sql>sqrt(?1)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>ucase</function-name>
+            <function-sql>upper(?1)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>count</function-name>
+            <function-sql>count(?1)</function-sql>
+         </function-mapping>
+
+         <mapping>
+            <java-type>java.math.BigDecimal</java-type>
+            <jdbc-type>NUMERIC</jdbc-type>
+            <sql-type>DECIMAL</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Boolean</java-type>
+            <jdbc-type>BIT</jdbc-type>
+            <sql-type>BOOLEAN</sql-type>
+         </mapping>
+<!-- if someone knows the mapping for byte, please, let us know!
+         <mapping>
+            <java-type>java.lang.Byte</java-type>
+            <jdbc-type>SMALLINT</jdbc-type>
+            <sql-type>SMALLINT</sql-type>
+         </mapping>
+-->
+         <mapping>
+            <java-type>java.lang.Short</java-type>
+            <jdbc-type>SMALLINT</jdbc-type>
+            <sql-type>SMALLINT</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Integer</java-type>
+            <jdbc-type>INTEGER</jdbc-type>
+            <sql-type>INTEGER</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Long</java-type>
+            <jdbc-type>BIGINT</jdbc-type>
+            <sql-type>BIGINT</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Float</java-type>
+            <jdbc-type>REAL</jdbc-type>
+            <sql-type>REAL</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Double</java-type>
+            <jdbc-type>DOUBLE</jdbc-type>
+            <sql-type>DOUBLE PRECISION</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Character</java-type>
+            <jdbc-type>CHAR</jdbc-type>
+            <sql-type>CHAR</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.String</java-type>
+            <jdbc-type>VARCHAR</jdbc-type>
+            <sql-type>VARCHAR(256)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.sql.Date</java-type>
+            <jdbc-type>DATE</jdbc-type>
+            <sql-type>DATE</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.sql.Time</java-type>
+            <jdbc-type>TIME</jdbc-type>
+            <sql-type>TIME</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.sql.Timestamp</java-type>
+            <jdbc-type>TIMESTAMP</jdbc-type>
+            <sql-type>TIMESTAMP</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Object</java-type>
+            <jdbc-type>BLOB</jdbc-type>
+            <sql-type>BLOB</sql-type>
          </mapping>
       </type-mapping>
 
