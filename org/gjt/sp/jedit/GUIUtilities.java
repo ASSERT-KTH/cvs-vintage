@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.38 2002/08/27 21:10:13 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.39 2002/09/04 20:44:06 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1163,6 +1163,28 @@ public class GUIUtilities
 		else
 			popup.show(comp,x + extraOffset,y + extraOffset);
 
+	} //}}}
+
+	//{{{ isAncestorOf() method
+	/**
+	 * Returns if the first component is an ancestor of the
+	 * second by traversing up the component hierarchy.
+	 *
+	 * @param comp1 The ancestor
+	 * @param comp2 The component to check
+	 * @since jEdit 4.1pre5
+	 */
+	public static boolean isAncestorOf(Component comp1, Component comp2)
+	{
+		while(comp2 != null)
+		{
+			if(comp1 == comp2)
+				return true;
+			else
+				comp2 = comp2.getParent();
+		}
+
+		return false;
 	} //}}}
 
 	//{{{ getView() method

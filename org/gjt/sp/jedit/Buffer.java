@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.102 2002/08/20 19:11:45 spestov Exp $
+ * @version $Id: Buffer.java,v 1.103 2002/09/04 20:44:06 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -3161,6 +3161,9 @@ loop:		for(int i = 0; i < seg.count; i++)
 	public FoldVisibilityManager _getFoldVisibilityManager(
 		JEditTextArea textArea)
 	{
+		//System.err.println("_getFoldVisibilityManager() called for "
+		//	+ this);
+
 		FoldVisibilityManager mgr = new FoldVisibilityManager(this,
 			offsetMgr,textArea);
 

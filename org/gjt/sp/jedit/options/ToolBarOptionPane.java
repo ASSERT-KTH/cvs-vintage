@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * Tool bar editor.
  * @author Slava Pestov
- * @version $Id: ToolBarOptionPane.java,v 1.7 2002/09/02 23:07:43 spestov Exp $
+ * @version $Id: ToolBarOptionPane.java,v 1.8 2002/09/04 20:44:06 spestov Exp $
  */
 public class ToolBarOptionPane extends AbstractOptionPane
 {
@@ -141,7 +141,7 @@ public class ToolBarOptionPane extends AbstractOptionPane
 		moveDown.addActionListener(actionHandler);
 		buttons.add(moveDown);
 		buttons.add(Box.createHorizontalStrut(6));
-		edit = new RolloverButton(GUIUtilities.loadIcon("Save.png"));
+		edit = new RolloverButton(GUIUtilities.loadIcon("ButtonProperties.png"));
 		edit.setToolTipText(jEdit.getProperty("options.toolbar.edit"));
 		edit.addActionListener(actionHandler);
 		buttons.add(edit);
