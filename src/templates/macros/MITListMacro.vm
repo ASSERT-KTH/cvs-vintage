@@ -25,7 +25,8 @@
 #end
 #end
 
-#macro (createMITList $event $buttonName $user $screenTemplate)
+
+#macro (createMITList $event $buttonName $user $screenTemplate $displayText)
 
 <h3>$l10n.BuildListOfIssueTypes</h3>
 
@@ -41,7 +42,7 @@
     $l10n.UsePreviouslySavedList
   </p>
   <select name="list_id">
-    <option value="">$l10n.SelectSaveXModuleQuery</option>
+    <option value="">$displayText</option>
   #foreach ($list in $user.MITLists)
     <option value="$list.QueryKey"#if($list.QueryKey == $data.Parameters.getString("list_id", "")) selected="selected"#end>$list.Name</option>
   #end

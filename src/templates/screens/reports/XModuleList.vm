@@ -21,7 +21,7 @@
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" 
      value="reports,Info.vm" />
 
-#createMITList("Finishedreportlist" $l10n.Done $user "reports,XModuleList.vm")
+#createMITList("Finishedreportlist" $l10n.Done $user "reports,XModuleList.vm" $l10n.SelectSaveXModuleReport)
 
 $intake.declareGroups()
 </form>
