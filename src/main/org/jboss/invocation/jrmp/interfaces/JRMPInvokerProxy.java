@@ -15,6 +15,8 @@ import java.rmi.MarshalledObject;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
+import java.rmi.server.RemoteObject;
+import java.rmi.server.RemoteStub;
 import javax.transaction.TransactionRolledbackException;
 import javax.transaction.SystemException;
 import org.jboss.invocation.Invocation;
@@ -30,7 +32,7 @@ import org.jboss.tm.TransactionPropagationContextFactory;
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JRMPInvokerProxy
    implements Invoker, Externalizable
