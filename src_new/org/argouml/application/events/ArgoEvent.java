@@ -1,4 +1,4 @@
-// $Id: ArgoEvent.java,v 1.6 2003/09/17 00:49:53 thierrylach Exp $
+// $Id: ArgoEvent.java,v 1.7 2003/09/17 00:58:02 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,8 +43,14 @@ public abstract class ArgoEvent extends EventObject
 
     public int getEventType() { return _eventType; }
 
+    /** Indicates the start of the range for any events.
+     * @return the first id reserved for events. 
+     */
     public int getEventStartRange() { return ANY_EVENT; }
 
+    /** Indicates the end of the range for notation events.
+     * @return the last id reserved for events. 
+     */
     public int getEventEndRange() {
         return (getEventStartRange() == 0
 	       ? ARGO_EVENT_END

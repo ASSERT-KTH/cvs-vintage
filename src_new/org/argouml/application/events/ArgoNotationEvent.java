@@ -1,4 +1,4 @@
-// $Id: ArgoNotationEvent.java,v 1.3 2003/06/29 23:53:42 linus Exp $
+// $Id: ArgoNotationEvent.java,v 1.4 2003/09/17 00:58:02 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,17 @@ package org.argouml.application.events;
 
 public class ArgoNotationEvent extends ArgoEvent {
 
+    /**
+     * @param eventType reported by this event.
+     * @param src object that caused the event.
+     */
     public ArgoNotationEvent(int eventType, Object src) {
         super(eventType, src);
     }
 
+    /** Indicates the start of the 100-digit range for notation events.
+     * @return the first id reserved for events. 
+     */
     public int getEventStartRange() { return ANY_NOTATION_EVENT; }
 }
 

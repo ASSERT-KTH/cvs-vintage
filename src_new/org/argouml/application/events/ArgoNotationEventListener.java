@@ -1,4 +1,4 @@
-// $Id: ArgoNotationEventListener.java,v 1.4 2003/09/16 20:10:45 thierrylach Exp $
+// $Id: ArgoNotationEventListener.java,v 1.5 2003/09/17 00:53:42 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,26 +36,33 @@ public interface ArgoNotationEventListener extends ArgoEventListener {
 
     /**
      * Invoked when any aspect of the notation has been changed.
+     * @param e <code>ArgoNotationEvent</code> describing the change.
      */
     public void notationChanged(ArgoNotationEvent e);
 
     /**
      * Invoked when a notation has been added.
+     * @param e <code>ArgoNotationEvent</code> describing the added notation.
      */
     public void notationAdded(ArgoNotationEvent e);
 
     /**
      * Invoked when a notation has been removed.
+     * @param e <code>ArgoNotationEvent</code> describing the removed notation.
      */
     public void notationRemoved(ArgoNotationEvent e);
 
     /**
      * Invoked when a notation provider has been added.
+     * @param e <code>ArgoNotationEvent</code> describing
+     * the added notation provider.
      */
     public void notationProviderAdded(ArgoNotationEvent e);
 
     /**
      * Invoked when a notation provider has been removed.
+     * @param e <code>ArgoNotationEvent</code> describing
+     * the removed notation provider.
      */
     public void notationProviderRemoved(ArgoNotationEvent e);
 
