@@ -60,7 +60,7 @@
 package org.apache.tomcat.modules.aaa;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.buf.*;
 import org.apache.tomcat.util.io.FileUtil;
 import org.apache.tomcat.util.http.*;
 import java.util.*;
@@ -93,6 +93,17 @@ public class AccessInterceptor extends  BaseInterceptor  {
     int reqTransportNote;
 
     public AccessInterceptor() {
+	ignoreCase= (File.separatorChar  == '\\');
+    }
+
+    // -------------------- Ingore case --------------------
+    boolean ignoreCase=false;
+
+    /** Use case insensitive match, for windows and
+	similar platforms
+    */
+    public void setIgnoreCase( boolean b ) {
+	ignoreCase=b;
     }
 
     /* -------------------- Initialization -------------------- */
@@ -258,6 +269,12 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	if( ctxSec==null || ctxSec.patterns==0 ) return 0; // fast exit
 
 	String reqURI = req.requestURI().toString();
+
+	/* We don't need this if we normalize the path
+	   if( reqURI.indexOf( "//" ) >= 0 )
+	   return 403;
+	*/
+	
 	String path=reqURI.substring( ctxPathLen);
 	String method=req.method().toString();
 	
@@ -337,7 +354,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	if( ctMethods != null && ctMethods.length > 0 ) {
 	    boolean ok=false;
 	    for( int i=0; i< ctMethods.length; i++ ) {
-		if( method.equals( ctMethods[i] ) ) {
+		if( method.equalsIgnoreCase( ctMethods[i] ) ) {
 		    ok=true;
 		    break;
 		}
@@ -361,15 +378,31 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    // if more can be matched in the path, include matching the '/'
 	    if( path.length() > matchLen )
 		matchLen++;
-	    for( int i=0; i< matchLen ; i++ ) {
-		if( path.charAt( i ) != ctPath.charAt( i ))
-		    return false;
+	    if( ignoreCase ) {
+		for( int i=0; i< matchLen ; i++ ) {
+		    if( Ascii.toLower(path.charAt( i )) !=
+			Ascii.toLower(ctPath.charAt( i )))
+			return false;
+		}
+	    } else {
+		for( int i=0; i< matchLen ; i++ ) {
+		    if( path.charAt( i ) != ctPath.charAt( i ))
+			return false;
+		}
 	    }
 	    return true;
 	case Container.EXTENSION_MAP:
-	    return ctPath.substring( 1 ).equals(FileUtil.getExtension( path ));
+	    if( ignoreCase )
+		return ctPath.substring( 1 ).
+		    equalsIgnoreCase(FileUtil.getExtension( path ));
+	    else
+		return ctPath.substring( 1 ).
+		    equals(FileUtil.getExtension( path ));
 	case Container.PATH_MAP:
-	    return path.equals( ctPath );
+	    if( ignoreCase )
+		return path.equalsIgnoreCase( ctPath );
+	    else
+		return path.equals( ctPath );
 	}
 	return false;
     }
