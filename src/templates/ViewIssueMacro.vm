@@ -260,7 +260,7 @@
               <option value="none">remove dependency </option>
         </select>
    #else
-         $parent.getDependency(currentIssue).DependencyType.Name
+         $parent.getDependency($currentIssue).DependType.Name
    #end
           </td>
          </tr>
