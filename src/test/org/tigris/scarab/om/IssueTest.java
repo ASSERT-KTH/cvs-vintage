@@ -60,7 +60,7 @@ import org.apache.torque.om.NumberKey;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.17 2002/11/04 23:41:56 elicia Exp $
+ * @version $Id: IssueTest.java,v 1.18 2002/11/08 21:34:53 elicia Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -160,7 +160,7 @@ public class IssueTest extends BaseTestCase
         ScarabUser assigner = getUser1();
         ActivitySet activitySet = new ActivitySet();
         getIssue0().assignUser(activitySet, getUser1(), getUser2(), 
-                               assignAttr, "assign reason");
+                               assignAttr, getAttachment(assigner));
     }
                
     private void testGetAssociatedUsers() throws Exception
@@ -181,7 +181,7 @@ public class IssueTest extends BaseTestCase
         ActivitySet activitySet = new ActivitySet();
         AttributeValue attVal = getIssue0().getAttributeValue(assignAttr);
         getIssue0().changeUserAttributeValue(activitySet, getUser1(), getUser2(), 
-                               attVal, ccAttr, "change reason");
+                               attVal, ccAttr, getAttachment(assigner));
         List pair = (List)getIssue0().getAssociatedUsers().get(0);
         assertEquals(((Attribute)pair.get(0)),ccAttr);
     }
@@ -195,7 +195,7 @@ public class IssueTest extends BaseTestCase
         ActivitySet activitySet = new ActivitySet();
         AttributeValue attVal = getIssue0().getAttributeValue(assignAttr);
         getIssue0().deleteUser(activitySet, getUser1(), getUser2(), 
-                               attVal, "delete reason");
+                               attVal, getAttachment(assigner));
         assertEquals(getIssue0().getAssociatedUsers().size(), 0);
     }
 
@@ -219,5 +219,16 @@ public class IssueTest extends BaseTestCase
         System.out.println ("testGetUsersToEmail()");
         List users = getIssue0().getUsersToEmail(AttributePeer.EMAIL_TO);
         assertEquals(users.size(), 2);
+    }
+
+    private Attachment getAttachment(ScarabUser assigner) throws Exception
+    {
+        Attachment attachment = new Attachment();
+        attachment.setData("test reason");
+        attachment.setName("comment");
+        attachment.setTextFields(assigner, getIssue0(),
+                                 Attachment.MODIFICATION__PK);
+        attachment.save();
+        return attachment;
     }
 }
