@@ -21,6 +21,8 @@ import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanServerLocator;
 import org.jboss.mx.util.MBeanProxyExt;
 import org.jboss.system.ServiceControllerMBean;
+import org.jboss.metadata.ConfigurationMetaData;
+import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 
 import javax.naming.InitialContext;
@@ -44,7 +46,7 @@ import java.util.HashMap;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.6 $</tt>
+ * @version <tt>$Revision: 1.7 $</tt>
  */
 public class EntityTable
    implements Table
@@ -70,9 +72,9 @@ public class EntityTable
    private String selectSql;
    private String duplicatePkSql;
 
-   private UpdateStrategy insertStrategy;
-   private UpdateStrategy deleteStrategy;
-   private UpdateStrategy updateStrategy;
+   private final CommitStrategy insertStrategy;
+   private final CommitStrategy deleteStrategy;
+   private final CommitStrategy updateStrategy;
 
    private Logger log;
 
@@ -100,25 +102,35 @@ public class EntityTable
       this.schema = schema;
       this.tableId = tableId;
 
-      dontFlushCreated
-         = entity.getContainer().getBeanMetaData().getContainerConfiguration().isInsertAfterEjbPostCreate();
-
-      insertStrategy = NON_BATCH_UPDATE;
-      deleteStrategy = NON_BATCH_UPDATE;
-      updateStrategy = NON_BATCH_UPDATE;
+      final ConfigurationMetaData containerConf = entity.getContainer().getBeanMetaData().getContainerConfiguration();
+      dontFlushCreated = containerConf.isInsertAfterEjbPostCreate();
 
       // create cache
-      final Element cacheConf = entity.getContainer()
-         .getBeanMetaData()
-         .getContainerConfiguration()
-         .getContainerCacheConf();
+      final Element cacheConf = containerConf.getContainerCacheConf();
+      final Element batchCommitStrategy;
       if(cacheConf == null)
       {
          cache = new PartitionedTableCache(500, 1000, 10);
+         batchCommitStrategy = null;
       }
       else
       {
          cache = new PartitionedTableCache(cacheConf);
+         batchCommitStrategy = MetaData.getOptionalChild(cacheConf, "batch-commit-strategy");
+      }
+
+      if(batchCommitStrategy == null)
+      {
+         insertStrategy = NON_BATCH_UPDATE;
+         deleteStrategy = NON_BATCH_UPDATE;
+         updateStrategy = NON_BATCH_UPDATE;
+      }
+      else
+      {
+         log.debug("batch-commit-strategy");
+         insertStrategy = BATCH_UPDATE;
+         deleteStrategy = BATCH_UPDATE;
+         updateStrategy = BATCH_UPDATE;
       }
 
       final MBeanServer server = MBeanServerLocator.locateJBoss();
@@ -1301,14 +1313,14 @@ public class EntityTable
       }
    }
 
-   public static interface UpdateStrategy
+   public static interface CommitStrategy
    {
       void executeUpdate(PreparedStatement ps) throws SQLException;
 
       void executeBatch(PreparedStatement ps) throws SQLException;
    }
 
-   private static final UpdateStrategy BATCH_UPDATE = new UpdateStrategy()
+   private static final CommitStrategy BATCH_UPDATE = new CommitStrategy()
    {
       public void executeUpdate(PreparedStatement ps) throws SQLException
       {
@@ -1333,7 +1345,7 @@ public class EntityTable
       }
    };
 
-   private static final UpdateStrategy NON_BATCH_UPDATE = new UpdateStrategy()
+   private static final CommitStrategy NON_BATCH_UPDATE = new CommitStrategy()
    {
       public void executeUpdate(PreparedStatement ps) throws SQLException
       {
