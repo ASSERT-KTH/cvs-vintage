@@ -58,7 +58,7 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -85,34 +85,34 @@ public class StatefulSessionFilePersistenceManager
       con = (StatefulSessionContainer)c;
    }
    
-	public void init()
-    	throws Exception {
-			
-    	// Find methods
-      	ejbActivate = SessionBean.class.getMethod("ejbActivate", new Class[0]);
-      	
-		ejbPassivate = SessionBean.class.getMethod("ejbPassivate", new Class[0]);
-      	
-		ejbRemove = SessionBean.class.getMethod("ejbRemove", new Class[0]);
+    public void init()
+        throws Exception {
+         
+        // Find methods
+        ejbActivate = SessionBean.class.getMethod("ejbActivate", new Class[0]);
+        
+       ejbPassivate = SessionBean.class.getMethod("ejbPassivate", new Class[0]);
+        
+       ejbRemove = SessionBean.class.getMethod("ejbRemove", new Class[0]);
       
         // Initialize the dataStore
-	  	String ejbName = con.getBeanMetaData().getEjbName();
-	  
-	  	File database = new File("database");
-	  
-	  	dir = new File(database, ejbName);
-			
-		dir.mkdirs();
-		
-	  	System.out.println("Storing sessions for "+ejbName+" in:"+dir);
+       String ejbName = con.getBeanMetaData().getEjbName();
       
-		// Clear dir of old files
-		File[] sessions = dir.listFiles();
-		for (int i = 0; i < sessions.length; i++)
-		{
-			sessions[i].delete();
-		}
-		System.out.println(sessions.length + " old sessions removed");
+       File database = new File("database");
+      
+       dir = new File(database, ejbName);
+         
+       dir.mkdirs();
+       
+       System.out.println("Storing sessions for "+ejbName+" in:"+dir);
+      
+       // Clear dir of old files
+       File[] sessions = dir.listFiles();
+       for (int i = 0; i < sessions.length; i++)
+       {
+         sessions[i].delete();
+       }
+       System.out.println(sessions.length + " old sessions removed");
    }
    
    public void start()
@@ -163,18 +163,21 @@ public class StatefulSessionFilePersistenceManager
    public void activateSession(StatefulSessionEnterpriseContext ctx)
       throws RemoteException
    {
-		try
-		{
-			// Load state
-			ObjectInputStream in = new SessionObjectInputStream(ctx, new FileInputStream(new File(dir, ctx.getId()+".ser")));
-			
-			Field[] fields = ctx.getInstance().getClass().getFields();
-			
-			for (int i = 0; i < fields.length; i++)
-				if (!Modifier.isTransient(fields[i].getModifiers()))
-					fields[i].set(ctx.getInstance(), in.readObject());
-			
-	      // Call bean
+       try
+       {
+         
+            ObjectInputStream in;
+            
+            
+            // Load state
+            in = new SessionObjectInputStream(ctx, new FileInputStream(new File(dir, ctx.getId()+".ser")));
+         Field[] fields = ctx.getInstance().getClass().getFields();
+         
+         for (int i = 0; i < fields.length; i++)
+          if (!Modifier.isTransient(fields[i].getModifiers()))
+              fields[i].set(ctx.getInstance(), in.readObject());
+         
+          // Call bean
          ejbActivate.invoke(ctx.getInstance(), new Object[0]);
       } catch (Exception e)
       {
@@ -187,23 +190,23 @@ public class StatefulSessionFilePersistenceManager
    {
       try
       {
-	      // Call bean
+          // Call bean
          ejbPassivate.invoke(ctx.getInstance(), new Object[0]);
-		
-		   // Store state
-		   ObjectOutputStream out = new SessionObjectOutputStream(new FileOutputStream(new File(dir, ctx.getId()+".ser")));
-			
-			Field[] fields = ctx.getInstance().getClass().getFields();
-			
-			for (int i = 0; i < fields.length; i++)
-				if (!Modifier.isTransient(fields[i].getModifiers()))
-					out.writeObject(fields[i].get(ctx.getInstance()));
-			
-			out.close();	
-	   } catch (Exception e)
-	   {
-	      throw new ServerException("Passivation failed", e);
-	   }
+       
+          // Store state
+          ObjectOutputStream out = new SessionObjectOutputStream(new FileOutputStream(new File(dir, ctx.getId()+".ser")));
+         
+         Field[] fields = ctx.getInstance().getClass().getFields();
+         
+         for (int i = 0; i < fields.length; i++)
+          if (!Modifier.isTransient(fields[i].getModifiers()))
+              out.writeObject(fields[i].get(ctx.getInstance()));
+         
+         out.close();	
+       } catch (Exception e)
+       {
+          throw new ServerException("Passivation failed", e);
+       }
    }
       
    public void removeSession(StatefulSessionEnterpriseContext ctx)
