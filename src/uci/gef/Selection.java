@@ -28,7 +28,7 @@
 // File: Selection.java
 // Classes: Selection
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Selection.java,v 1.10 1998/07/17 22:54:08 jrobbins Exp $
+// $Id: Selection.java,v 1.11 1998/10/13 18:09:35 jrobbins Exp $
 
 package uci.gef;
 
@@ -136,13 +136,13 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
   /** Tell the selected Fig to move to front or back, etc. */
   public void reorder(int func, Layer lay) { lay.reorder(_content, func); }
 
-  /** Do nothing because alignment only makes sense for multiple
-   * selections */
-  public void align(int direction) { /* do nothing */ }
+//   /** Do nothing because alignment only makes sense for multiple
+//    * selections */
+//   public void align(int direction) { /* do nothing */ }
 
-  public void align(Rectangle r, int direction, Editor ed) {
-    _content.align(r, direction, ed);
-  }
+//   public void align(Rectangle r, int direction, Editor ed) {
+//     _content.align(r, direction, ed);
+//   }
 
   /** When the selection is told to move, move the selected
    * Fig */

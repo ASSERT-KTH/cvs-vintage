@@ -27,7 +27,7 @@
 // File: ModeSelect.java
 // Classes: ModeSelect
 // Original Author: ics125 spring 1996
-// $Id: ModeSelect.java,v 1.13 1998/10/08 00:05:55 jrobbins Exp $
+// $Id: ModeSelect.java,v 1.14 1998/10/13 18:09:34 jrobbins Exp $
 
 package uci.gef;
 
@@ -95,6 +95,7 @@ public class ModeSelect extends Mode {
    *  the shift key is not down, then go to ModeModify. If the mouse
    *  down event happens on a port, to to ModeCreateEdge.   */
   public void mousePressed(MouseEvent me) {
+    if (me.isControlDown()) { gotoBroomMode(me); return; }
     int x = me.getX(), y = me.getY();
 
     _selectAnchor = new Point(x, y);
@@ -194,6 +195,12 @@ public class ModeSelect extends Mode {
    *  but it is too tighly integrated with ModeSelect. */
   protected void gotoModifyMode(MouseEvent me) {
     Mode nextMode = new ModeModify(_editor);
+    _editor.mode(nextMode);
+    nextMode.mousePressed(me);
+  }
+
+  protected void gotoBroomMode(MouseEvent me) {
+    Mode nextMode = new ModeBroom(_editor);
     _editor.mode(nextMode);
     nextMode.mousePressed(me);
   }

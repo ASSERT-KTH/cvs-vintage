@@ -28,7 +28,7 @@
 // File: FigEdge.java
 // Classes: FigEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdge.java,v 1.18 1998/10/08 00:05:47 jrobbins Exp $
+// $Id: FigEdge.java,v 1.19 1998/10/13 18:09:31 jrobbins Exp $
 
 package uci.gef;
 
@@ -308,6 +308,11 @@ implements PropertyChangeListener {
   public int[] getYs() { return _fig.getYs(); }
   public void setYs(int[] ys) { _fig.setYs(ys); calcBounds(); }
 
+  public void translateEdge(int dx, int dy) {
+    _fig.translate(dx, dy);
+    calcBounds();
+  }
+
   public void setLineColor(Color c) { _fig.setLineColor(c); }
   public Color getLineColor() { return _fig.getLineColor(); }
 
@@ -415,4 +420,4 @@ implements PropertyChangeListener {
     Fig getFig() { return _fig; }
   }
 
-} /* end class ArcFigNode */
+} /* end class FigEdge */

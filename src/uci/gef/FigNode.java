@@ -27,7 +27,7 @@
 // File: FigNode.java
 // Classes: FigNode
 // Original Author: ics125 spring 1996
-// $Id: FigNode.java,v 1.16 1998/09/17 18:48:15 jrobbins Exp $
+// $Id: FigNode.java,v 1.17 1998/10/13 18:09:32 jrobbins Exp $
 
 package uci.gef;
 
@@ -108,6 +108,8 @@ implements MouseListener, PropertyChangeListener, Serializable {
   /** removes a FigEdge from the list of them that need to be rerouted when
    *  this FigNode moves. */
   public void removeFigEdge(FigEdge fe) { _figEdges.removeElement(fe); }
+
+  public Vector getFigEdges() { return _figEdges; }
 
   /** Sets the owner (an node in some underlying model). If the given
    *  node implements GraphNodeHooks, then the FigNode will register
@@ -444,11 +446,11 @@ implements MouseListener, PropertyChangeListener, Serializable {
 
   public void translate(int dx, int dy) {
     super.translate(dx, dy);
-    Enumeration arcPers = _figEdges.elements();
-    while (arcPers.hasMoreElements()) {
-      FigEdge fe = (FigEdge) arcPers.nextElement();
-      fe.computeRoute();
-    }
+    updateEdges();
+  }
+
+  public void superTranslate(int dx, int dy) {
+    super.translate(dx, dy);
   }
 
   public void setBounds(int x, int y, int w, int h) {
@@ -469,4 +471,3 @@ implements MouseListener, PropertyChangeListener, Serializable {
   public void postLoad() { setOwner(getOwner()); }
 
 } /* end class FigNode */
-
