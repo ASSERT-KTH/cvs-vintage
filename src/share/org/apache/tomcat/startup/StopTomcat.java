@@ -81,6 +81,8 @@ public class StopTomcat {
     String host=null;
     int port=-1;
     String secret;
+    // explicit command line params ( for port, host or secret )
+    boolean commandLineParams=false;
     
     public StopTomcat() 
     {
@@ -135,35 +137,36 @@ public class StopTomcat {
     void stopTomcat() throws Exception {
 	String tchome=getTomcatHome();
 
-	if( secret==null ) {
-	    try {
-		BufferedReader rd=new BufferedReader
-		    ( new FileReader( tchome + "/conf/ajp12.id"));
-		String line=rd.readLine();
-
-		if( port < 0 ) {
-		    try {
-			port=Integer.parseInt( line );
-		    } catch(NumberFormatException ex ) {
-			ex.printStackTrace();
-		    }
+	// read TOMCAT_HOME/conf/ajp12.id unless command line params
+	// specify a port/host/secret
+	try {
+	    BufferedReader rd=new BufferedReader
+		( new FileReader( tchome + "/conf/ajp12.id"));
+	    String line=rd.readLine();
+	    
+	    if( port < 0 ) {
+		try {
+		    port=Integer.parseInt( line );
+		} catch(NumberFormatException ex ) {
+		    ex.printStackTrace();
 		}
-		
-		line=rd.readLine();
-		if( host==null ) host=line;
-		line=rd.readLine();
-		if( secret==null ) secret=line;
-		if( "".equals( secret ) )
-		    secret=null;
-		
-	    } catch( IOException ex ) {
-		//ex.printStackTrace();
-		System.out.println("Can't read " + tchome + "/conf/ajp12.id");
-		System.out.println(ex.toString());
-		return;
 	    }
+	    
+	    line=rd.readLine();
+	    if( host==null ) host=line;
+	    line=rd.readLine();
+	    if( secret==null ) secret=line;
+	} catch( IOException ex ) {
+	    //ex.printStackTrace();
+	    System.out.println("Can't read " + tchome + "/conf/ajp12.id");
+	    //	    System.out.println(ex.toString());
+	    if( ! commandLineParams )
+		return;
 	}
-	
+
+	if( "".equals( secret ) )
+	    secret=null;
+		
 	System.out.println("Stoping tomcat on " + host + ":" +port +" "
 			   + secret);
 	InetAddress address=null;
@@ -257,6 +260,7 @@ public class StopTomcat {
 	    }
 	    if (arg.equals("-host") ) {
 		i++;
+		commandLineParams=true;
 		if (i < args.length)
 		    host=args[i];
 		else
@@ -264,6 +268,7 @@ public class StopTomcat {
 	    }
 	    if (arg.equals("-port") ) {
 		i++;
+		commandLineParams=true;
 		if (i < args.length)
 		    port=Integer.parseInt( args[i] );
 		else
@@ -271,7 +276,8 @@ public class StopTomcat {
 	    }
 	    if (arg.equals("-pass") ) {
 		i++;
-		if (i < args.length)
+		commandLineParams=true;
+		if (i < args.length) 
 		    secret=args[i];
 		else
 		    return false;
