@@ -27,9 +27,9 @@ import java.util.Vector;
 import java.util.jar.JarFile;
 import java.util.zip.ZipInputStream;
 
-import javax.management.MBeanException;
 import javax.management.ObjectName;
 import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
 
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.system.ServiceMBeanSupport;
@@ -46,29 +46,15 @@ import org.jboss.management.j2ee.J2EEApplication;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class EARDeployer
    extends SubDeployerSupport
    implements EARDeployerMBean
 {
-   /** The name of this deployer? */
-   protected String name;
-   
    public EARDeployer()
    {
       super();
-   }
-   
-   public void setDeployerName(final String name)
-   {
-      log.info("Using deployer name: " + name);
-      this.name = name.trim();
-   }
-   
-   public String getDeployerName()
-   {
-      return name;
    }
    
    public boolean accepts(DeploymentInfo di) 
@@ -179,8 +165,9 @@ public class EARDeployer
    /** 
     * @todo make this.name an attribute rather than appending 
     */
-   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws javax.management.MalformedObjectNameException
+   protected ObjectName getObjectName(final MBeanServer server,
+                                      final ObjectName name)
+      throws MalformedObjectNameException
    {
       return name == null ? OBJECT_NAME: name;
    }

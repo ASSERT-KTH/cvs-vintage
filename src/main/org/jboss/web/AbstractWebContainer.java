@@ -7,10 +7,6 @@
 
 package org.jboss.web;
 
-
-
-
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -159,7 +155,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.46 $
+@version $Revision: 1.47 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -235,12 +231,7 @@ public abstract class AbstractWebContainer
          }
 
          // resolve the watch
-         if (di.url.getProtocol().startsWith("http"))
-         {
-            // We watch the top only, no directory support
-            di.watch = di.url;
-         }         
-         else if(di.url.getProtocol().startsWith("file"))
+         if (di.url.getProtocol().equals("file"))
          {
             File file = new File (di.url.getFile());
             
@@ -250,13 +241,18 @@ public abstract class AbstractWebContainer
             // If directory we watch the xml files
             else di.watch = new URL(di.url, "WEB-INF/web.xml"); 
          }   
+         else
+         {
+            // We watch the top only, no directory support
+            di.watch = di.url;
+         }         
 
          // No, we do not want to look into the war
          // parseWEBINFClasses(di);
       }
       catch (Exception e)
       {
-         log.error("Problem in init ", e); throw new DeploymentException(e);
+         throw new DeploymentException("Init failed", e);
       }
       
       log.debug("End init");
