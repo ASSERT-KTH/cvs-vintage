@@ -36,7 +36,7 @@ import org.jboss.monitor.StatisticsProvider;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.util.collection.SerializableEnumeration;
 import org.jboss.ejb.txtimer.TimedObjectInvoker;
-import org.jboss.ejb.txtimer.TimedObjectEJBInvoker;
+import org.jboss.ejb.txtimer.TimedObjectInvokerImpl;
 
 /**
  * This is a Container for EntityBeans (both BMP and CMP).
@@ -51,7 +51,7 @@ import org.jboss.ejb.txtimer.TimedObjectEJBInvoker;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.112 $
+ * @version $Revision: 1.113 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -507,6 +507,9 @@ public class EntityContainer
       // Get the persistence manager to do the dirty work
       EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
       getPersistenceManager().removeEntity(ctx);
+
+      Object pk = ctx.getId();
+      removeTimerService(pk);
 
       // We signify "removed" with a null id
       // There is no need to synchronize on the context since all the threads reaching here have
