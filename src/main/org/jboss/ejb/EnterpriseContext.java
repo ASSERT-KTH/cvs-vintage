@@ -42,7 +42,7 @@ import org.jboss.security.SimplePrincipal;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
- *  @version $Revision: 1.32 $
+ *  @version $Revision: 1.33 $
  */
 public abstract class EnterpriseContext
 {
@@ -331,9 +331,13 @@ public abstract class EnterpriseContext
    
       // TODO - how to handle this best?
       public UserTransaction getUserTransaction() 
-       { 
-         return new UserTransactionImpl(); 
-       }
+      { 
+         // If not BMT, throw exception.
+         // We default to the exception here, and override this method for
+         // contexts of bean types that may be able to handle their own
+         // transaction demarcation.
+         throw new IllegalStateException("Not a BMT bean.");
+      }
    }
    
     // Inner classes -------------------------------------------------

@@ -17,13 +17,18 @@ import javax.ejb.EJBLocalObject;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
 
+import javax.transaction.UserTransaction;
+
+import org.jboss.metadata.SessionMetaData;
+
+
 /**
  *	<description> 
  *      
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- *	@version $Revision: 1.11 $
+ *	@version $Revision: 1.12 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -101,32 +106,30 @@ public class StatefulSessionEnterpriseContext
    }
 
    // Inner classes -------------------------------------------------
+
    protected class StatefulSessionContextImpl
       extends EJBContextImpl
       implements SessionContext
    {
-		public EJBObject getEJBObject()
-		{
-                            if (((StatefulSessionContainer)con).getContainerInvoker()==null)
-                              throw new IllegalStateException( "No remote interface defined." );
+      public EJBObject getEJBObject()
+      {
+         if (((StatefulSessionContainer)con).getContainerInvoker()==null)
+            throw new IllegalStateException( "No remote interface defined." );
 
-			if (ejbObject == null) {
-				
-				try {
-					
-					ejbObject = ((StatefulSessionContainer)con).getContainerInvoker().getStatefulSessionEJBObject(id); 
-				}
-				catch (RemoteException re) {
-					// ...
-					throw new IllegalStateException();
-				}
-			} 	
-			
-			return ejbObject;
-      	}
+         if (ejbObject == null) {
+            try {
+               ejbObject = ((StatefulSessionContainer)con).getContainerInvoker().getStatefulSessionEJBObject(id); 
+            } catch (RemoteException re) {
+               // ...
+               throw new IllegalStateException();
+            }
+         } 	
+
+         return ejbObject;
+      }
       
-        public EJBLocalObject getEJBLocalObject()
-        {
+      public EJBLocalObject getEJBLocalObject()
+      {
          if (con.getLocalHomeClass()==null)
             throw new IllegalStateException( "No local interface for bean." );
          if (ejbLocalObject == null)
@@ -134,12 +137,19 @@ public class StatefulSessionEnterpriseContext
             ejbLocalObject = ((StatefulSessionContainer)con).getLocalContainerInvoker().getStatefulSessionEJBLocalObject(id); 
          }
          return ejbLocalObject;
-        }
+      }
 
-      	public Object getPrimaryKey()
-      	{
+      public Object getPrimaryKey()
+      {
          return id;
-      	}
-   	}
+      }
+
+      public UserTransaction getUserTransaction()
+      {
+         if (((SessionMetaData)con.getBeanMetaData()).isContainerManagedTx())
+            throw new IllegalStateException("Not a BMT bean.");
+         return new UserTransactionImpl();
+      }
+   }
 }
 
