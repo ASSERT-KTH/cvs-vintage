@@ -50,6 +50,12 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	protected List workerStatusChangeListeners;
 
 	private int timeStamp;
+
+	/** 
+	 * Constant definining the delay used when using
+	 * clearDisplayTextWithDelay(). Defined to be 500 millisec.
+	 */
+	private static final int CLEAR_DELAY = 500;
 	
 	public Worker(DefaultProcessor parent) {
 		super();
@@ -227,10 +233,20 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
 	/**
 	 * Clears the text displayed in the status bar - with a given delay.
+	 * The delay used is 500 ms.
+	 * <br>
+	 * If a new text is set within this delay, the text is not cleared.
+	 */
+	public void clearDisplayTextWithDelay() {
+		clearDisplayText(CLEAR_DELAY);
+	}
+
+	/**
+	 * Clears the text displayed in the status bar - with a given delay.
 	 * If a new text is set within this delay, the text is not cleared.
 	 * @param delay		Delay in milliseconds before clearing the text
 	 */
-	public void clearDisplayText(int delay) {
+	private void clearDisplayText(int delay) {
 		// init event
 		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
 		e.setType(WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED);

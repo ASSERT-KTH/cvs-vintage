@@ -81,7 +81,7 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 
 		// we are done
 		if (getObservable() != null) {
-			getObservable().clearMessage(500);	// 500 ms delay
+			getObservable().clearMessageWithDelay();
 			getObservable().resetCurrent();
 		}
 		

@@ -142,8 +142,8 @@ public class MoveMessageCommand extends CopyMessageCommand {
 			// expunge folder
 			srcFolder.expungeFolder();
 
-			// We are done - clear the status message after 500 ms delay
-			worker.clearDisplayText(500);
+			// We are done - clear the status message after a delay
+			worker.clearDisplayTextWithDelay();
 			
 		}
 

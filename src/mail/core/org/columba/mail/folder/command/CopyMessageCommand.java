@@ -183,8 +183,8 @@ public class CopyMessageCommand extends FolderCommand {
                                 "message",
                                 "copy_messages_cancelled"));
                 } else {
-                        // We are done - clear the status message (with a delay of 500 ms)
-                        worker.clearDisplayText(500);
+                        // We are done - clear the status message with a delay
+                        worker.clearDisplayTextWithDelay();
                 }
 	}
 }

@@ -32,10 +32,11 @@ public interface WorkerStatusController {
 	public void clearDisplayText();
 	/**
 	 * Clears the text displayed in the status bar - with a given delay.
+	 * The delay used is 500 ms.
+	 * <br>
 	 * If a new text is set within this delay, the text is not cleared.
-	 * @param delay		Delay in milliseconds before clearing the text
 	 */
-	public void clearDisplayText(int delay);
+	public void clearDisplayTextWithDelay();
 	
 	/**
 	 * Sets the maximum value for the progress bar.

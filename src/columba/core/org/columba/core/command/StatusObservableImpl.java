@@ -100,13 +100,13 @@ public class StatusObservableImpl implements StatusObservable, ProgressObserver 
 	}
 	
 	/**
-	 * Clears the text displayed in the status bar after a given delay.
-	 * If a new text is set within this delay, the text is not cleared 
-	 * 
-	 * @param delay		Delay before clearing in milliseconds
+	 * Clears the text displayed in the status bar - with a given delay.
+	 * The delay used is 500 ms.
+	 * <br>
+	 * If a new text is set within this delay, the text is not cleared.
 	 */
-	public void clearMessage(int delay) {
-		if ( worker != null) worker.clearDisplayText(delay);
+	public void clearMessageWithDelay() {
+		if ( worker != null) worker.clearDisplayTextWithDelay();
 	}
 
 

@@ -54,9 +54,9 @@ public class NullWorkerStatusController implements WorkerStatusController {
 	}
 
 	/**
-	 * @see org.columba.core.command.WorkerStatusController#clearDisplayText(int)
+	 * @see org.columba.core.command.WorkerStatusController#clearDisplayTextWithDelay()
 	 */
-	public void clearDisplayText(int delay) {
+	public void clearDisplayTextWithDelay() {
 	}
 
 	/**
