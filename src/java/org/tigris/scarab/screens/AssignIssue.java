@@ -64,7 +64,7 @@ import org.tigris.scarab.om.IssueType;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AssignIssue.java,v 1.1 2002/05/24 03:26:09 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.2 2002/05/30 01:11:23 jmcnally Exp $
  */
 public class AssignIssue extends Default
 {
@@ -74,7 +74,15 @@ public class AssignIssue extends Default
         throws Exception 
    {
         String[] issueIdList = data.getParameters().getStrings("issue_ids");
-        Integer size = new Integer(issueIdList.length);
+        Integer size = null;
+        if (issueIdList == null) 
+        {
+            size = new Integer(0);
+        }
+        else 
+        {
+            size = new Integer(issueIdList.length);
+        }
         return l10n.format("AssignUsersWithThisIssue", size);
     }
 }

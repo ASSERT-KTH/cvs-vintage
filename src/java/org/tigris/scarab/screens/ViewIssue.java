@@ -55,6 +55,7 @@ import org.apache.turbine.Turbine;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
@@ -64,7 +65,7 @@ import org.tigris.scarab.om.IssueType;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ViewIssue.java,v 1.2 2002/05/24 04:17:42 jmcnally Exp $
+ * @version $Id: ViewIssue.java,v 1.3 2002/05/30 01:11:23 jmcnally Exp $
  */
 public class ViewIssue extends Default
 {
@@ -75,14 +76,32 @@ public class ViewIssue extends Default
                               RunData data, TemplateContext context)
         throws Exception
     {
-        String currentIssueId = data.getParameters().getString("id");
-        Issue issue = scarabR.getIssue(currentIssueId);
-        String name = issue.getIssueType().getName();
-        String id = l10n.get("ID");
-        String unique = issue.getUniqueId();
-        StringBuffer sb = new StringBuffer(name.length() + id.length() + 
-                                           unique.length() + 3);
-        sb.append(name).append(' ').append(id).append(": ").append(unique);
-        return sb.toString();
+        String title = null;
+        try
+        {
+            String currentIssueId = data.getParameters().getString("id");
+            Issue issue = scarabR.getIssue(currentIssueId);
+            if (issue == null) 
+            {
+                title = "View Issue";                
+            }
+            else 
+            {
+                String name = issue.getIssueType().getName();
+                String id = l10n.get("ID");
+                String unique = issue.getUniqueId();
+                StringBuffer sb = new StringBuffer(name.length() + id.length()
+                                                   + unique.length() + 3);
+                sb.append(name).append(' ').append(id)
+                    .append(": ").append(unique);
+                title = sb.toString();    
+            }            
+        }
+        catch (Exception e)
+        {
+            title = "View Issue";
+            Log.get().debug("", e);
+        }
+        return title;
     }
 }
