@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactory.java,v 1.28 2004/02/29 12:35:40 linus Exp $
+// $Id: StateMachinesFactory.java,v 1.29 2004/04/03 00:22:01 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ import ru.novosoft.uml.behavior.state_machines.MSubmachineState;
 import ru.novosoft.uml.behavior.state_machines.MSynchState;
 import ru.novosoft.uml.behavior.state_machines.MTimeEvent;
 import ru.novosoft.uml.behavior.state_machines.MTransition;
-import ru.novosoft.uml.foundation.core.MBehavioralFeature;
+import ru.novosoft.uml.foundation.core.MFeature;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
@@ -253,6 +253,7 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
      *
      * @param statemachine
      * @return MCompositeState
+     * @see #buildCompositeState(Object)
      */
     public MCompositeState buildCompositeState(MStateMachine statemachine) {
     	if (statemachine != null ) {
@@ -280,10 +281,10 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
 	    graph.setContext(context);
 	    if (context instanceof MNamespace) {
 		graph.setNamespace((MNamespace) context);
-	    } else
-    		if (context instanceof MBehavioralFeature) {
-		    graph.setNamespace(context.getNamespace());
-    		}
+	    } else if (context instanceof MFeature) {
+		MFeature feature = (MFeature) context;
+		graph.setNamespace(feature.getOwner());
+    	    }
 	    StateMachinesFactory.getFactory().buildCompositeState(graph);
 	    return graph;
 
@@ -391,6 +392,7 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
      *
      * @param compositeState
      * @return MSynchState
+     * @see #buildCompositeState(MStateMachine)
      */
     public MCompositeState buildCompositeState(Object compositeState) {
         if (compositeState instanceof MCompositeState) {
