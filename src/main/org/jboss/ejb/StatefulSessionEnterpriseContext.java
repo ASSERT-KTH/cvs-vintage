@@ -17,6 +17,7 @@ import java.security.Principal;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.*;
 import javax.transaction.UserTransaction;
+import javax.xml.rpc.handler.MessageContext;
 
 
 /**
@@ -24,7 +25,7 @@ import javax.transaction.UserTransaction;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -231,6 +232,11 @@ public class StatefulSessionEnterpriseContext
       public TimerService getTimerService() throws IllegalStateException
       {
          throw new IllegalStateException("getTimerService should not be access from a stateful session bean");
+      }
+
+      public MessageContext getMessageContext() throws IllegalStateException
+      {
+         return null;
       }
 
       public Object getPrimaryKey()

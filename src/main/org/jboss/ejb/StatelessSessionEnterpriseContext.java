@@ -6,24 +6,32 @@
  */
 package org.jboss.ejb;
 
-import java.lang.reflect.Method;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.security.Principal;
-import java.security.Identity;
-import java.util.Properties;
-import java.util.Date;
 import java.util.Collection;
-import java.io.Serializable;
-import javax.ejb.*;
+import java.util.Date;
+import javax.ejb.EJBContext;
+import javax.ejb.EJBException;
+import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalHome;
+import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBObject;
+import javax.ejb.SessionBean;
+import javax.ejb.SessionContext;
+import javax.ejb.Timer;
+import javax.ejb.TimerService;
 import javax.transaction.UserTransaction;
+import javax.xml.rpc.handler.MessageContext;
 
 /**
  * The enterprise context for stateless session beans.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -202,6 +210,11 @@ public class StatelessSessionEnterpriseContext
       {
          assertAllowedIn("getUserTransaction", IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
          return super.getUserTransaction();
+      }
+
+      public MessageContext getMessageContext() throws IllegalStateException
+      {
+         return null;
       }
    }
 
