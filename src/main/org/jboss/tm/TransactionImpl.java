@@ -33,7 +33,7 @@ import javax.transaction.xa.XAException;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  */
 public class TransactionImpl
    implements Transaction, Serializable
@@ -80,6 +80,7 @@ public class TransactionImpl
                    java.lang.IllegalStateException,
                    SystemException
    {
+       
       tm.commit(this);
    }
 
@@ -117,6 +118,7 @@ public class TransactionImpl
                      java.lang.SecurityException,
                      SystemException
    {
+      
        tm.rollback(this);
    }
 
