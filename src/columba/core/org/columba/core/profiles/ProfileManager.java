@@ -22,11 +22,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.columba.core.gui.profiles.ProfileChooserDialog;
 import org.columba.core.io.DiskIO;
 import org.columba.core.util.OSInfo;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
-import org.columba.core.gui.profiles.ProfileChooserDialog;
 
 /**
  * Manages profiles consisting of configuration folders.
@@ -81,6 +81,9 @@ public class ProfileManager {
 		} else {
 			location = new File(System.getProperty("user.home"), ".columba");
 		}
+		
+		// create directory, if it doesn't already exist
+		DiskIO.ensureDirectory(location);
 
 		profilesConfig = new File(location, "profiles.xml");
 
