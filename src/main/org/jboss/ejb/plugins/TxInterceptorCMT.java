@@ -30,7 +30,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  */
 public class TxInterceptorCMT
     extends AbstractTxInterceptor
@@ -118,16 +118,17 @@ public class TxInterceptorCMT
         // New transaction is the new transaction this might start
         Transaction newTransaction = null;
 
-        //DEBUG       Logger.debug("Current transaction in MI is "+mi.getTransaction());
-        //DEBUG Logger.debug("Current method "+mi.getMethod());
+        //DEBUG log.debug("Current transaction in MI is " + oldTransaction);
+
         byte transType = getTransactionMethod(mi.getMethod(), remoteInvocation);
-        // printMethod(mi.getMethod(), transType);
+	//DEBUG printMethod(mi.getMethod(), transType);
 
         // Thread arriving must be clean (jboss doesn't set the thread
         // previously). However optimized calls come with associated
         // thread for example. We suspend the thread association here, and
         // resume in the finally block of the following try.
         Transaction threadTx = tm.suspend();
+	//DEBUG log.debug("Thread came in with tx " + threadTx);
         try { // OSH FIXME: Indentation
 
         switch (transType) {
@@ -142,6 +143,7 @@ public class TxInterceptorCMT
 
                     // get the tx
                     newTransaction = tm.getTransaction();
+	            //DEBUG log.debug("Starting new tx " + newTransaction);
 
                     // Let the method invocation know
                     mi.setTransaction(newTransaction);
@@ -154,7 +156,7 @@ public class TxInterceptorCMT
                 try {
                     return invokeNext(remoteInvocation, mi, newTransaction != null);
                 } finally {
-//DEBUG                Logger.debug("TxInterceptorCMT: In finally");
+                    //DEBUG                log.debug("TxInterceptorCMT: In finally");
 
                     // Only do something if we started the transaction
                     if (newTransaction != null) {
@@ -166,23 +168,32 @@ public class TxInterceptorCMT
                             // This will happen if
                             // a) everything goes well
                             // b) app. exception was thrown
-//DEBUG                        Logger.debug("TxInterceptorCMT:before commit");
+                            //DEBUG log.debug("TxInterceptorCMT:before commit of " + newTransaction);
                             newTransaction.commit();
-//DEBUG                        Logger.debug("TxInterceptorCMT:after commit");
+                            //DEBUG log.debug("TxInterceptorCMT:after commit of " + newTransaction);
                         }
 
                         // reassociate the oldTransaction with the methodInvocation (even null)
                         mi.setTransaction(oldTransaction);
-                    } else {
-                        // Drop thread association
-                        tm.suspend();
                     }
+                    // Always drop thread association even if committing or
+                    // rolling back the newTransaction because not all TMs
+                    // will drop thread associations when commit() or rollback()
+                    // are called through tx itself (see JTA spec that seems to
+                    // indicate that thread assoc is required to be dropped only
+                    // when commit() and rollback() are called through TransactionManager
+                    // interface)
+                    tm.suspend();
+                    
                 }
 
             case MetaData.TX_SUPPORTS:
                 {
-                    // Associate old transaction (may be null) with the thread
-                    tm.resume(oldTransaction);
+                    // Associate old transaction with the thread
+                    // Some TMs cannot resume a null transaction and will throw
+                    // an exception (e.g. Tyrex), so make sure it is not null
+                    if (oldTransaction != null)
+                        tm.resume(oldTransaction);
 
                     try {
                         return invokeNext(remoteInvocation, mi, false);
@@ -221,6 +232,7 @@ public class TxInterceptorCMT
 
                         // set the old transaction back on the method invocation
                         mi.setTransaction(oldTransaction);
+                        tm.suspend();
                     }
                 }
             case MetaData.TX_MANDATORY:
@@ -259,7 +271,7 @@ public class TxInterceptorCMT
 
         BeanMetaData bmd = container.getBeanMetaData();
 
-//DEBUG        Logger.debug("Found metadata for bean '"+bmd.getEjbName()+"'"+" method is "+m.getName());
+//DEBUG        log.debug("Found metadata for bean '"+bmd.getEjbName()+"'"+" method is "+m.getName());
 
         byte result = bmd.getMethodTransactionType(m.getName(), m.getParameterTypes(), remoteInvocation);
 
