@@ -1,7 +1,7 @@
 #set ($issue = $scarabR.ReportingIssue)
 
 <div id="wizard1" class="app">
-<form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
+<form method="post" name="form" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 
 #set ($moduleAttributeGroups = $issue.Module.getDedupeGroupsWithAttributes($issue.IssueType))

@@ -45,12 +45,7 @@
                   #attrValueErrorMsg ($attVal $field)
                 #else
                   #attrValueErrorMsg($attVal "Value")
-                  #if ($att.AttributeType.Name == "long-string")
-                     #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
-                  #else
-                    <input class="fullWidth" name= "$attrInput.Value.Key"
-                      value="$!attrInput.Value" type="text" />
-                  #end
+		  #attrValueText($attrInput.Value 70)
                 #end
                   </td>
                  </tr>

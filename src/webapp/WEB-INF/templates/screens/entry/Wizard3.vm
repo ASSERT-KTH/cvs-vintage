@@ -3,7 +3,7 @@
 #set ($issueType = $issue.IssueType)
 
 <div class="app" id="div2-1-0">
-<form method="post" action="$link.setPage("entry,Wizard3.vm")" enctype="multipart/form-data">
+<form method="post" name="form" action="$link.setPage("entry,Wizard3.vm")" enctype="multipart/form-data">
 <input type="hidden" name="action" value="ReportIssue" />
 
 <input type="hidden" name="issueType" value="$issueType.IssueTypeId" />

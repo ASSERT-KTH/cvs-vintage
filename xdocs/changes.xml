@@ -8,6 +8,11 @@
   <body>
     <release version="b20" date="in dev">
       <action dev="jorgeuriarte" type="add">
+        SCB1025 (Originally provided by Peter McTaggart): Added Date attribute
+        type, with a popup calendar to enter the values. The Date fields will 
+        be manually editable only if scarab.datefield.editable=true 
+      </action>         
+      <action dev="jorgeuriarte" type="add">
         The property scarab.dataexport.encoding will now be used for the XML
         generated when exporting setting or issues. If not defined, UTF-8 will
         be explicitly used. 

@@ -21,7 +21,7 @@
 
  #set ($prevNextList = $data.Parameters.getStrings("issueList"))
  #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
- <form method="post" enctype="multipart/form-data" action="$link.setPage("ViewIssue.vm")">
+ <form method="post" name="form" enctype="multipart/form-data" action="$link.setPage("ViewIssue.vm")">
    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
 

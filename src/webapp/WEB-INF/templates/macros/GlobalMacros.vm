@@ -116,7 +116,17 @@
         #if ($attVal.Attribute.AttributeType.Name == "long-string")
            #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
         #else
-           <input class="fullWidth" type="text" name="$attrInput.Value.Key" value="$!attrInput.Value" />
+            #if ($attVal.Attribute.AttributeType.Name == "date")
+                #if ($scarabG.getTurbineConfiguration().getString("scarab.datefields.editable") == "true")
+                    #set ($readonly = "")
+                #else
+                    #set ($readonly = "readonly")
+                #end
+                <input type="text" name="$attrInput.Value.Key" $readonly value="$!attrInput.Value" size="20" />                 
+                <a href="javascript:addCalendar('$attrInput.Value.Key','Select Date','$attrInput.Value.Key','form');javascript:showCal('$attrInput.Value.Key')"><img src="$staticLink.setPath('/images/date.gif')" border='0' /></a>
+            #else
+               <input type="text" name="$attrInput.Value.Key" value="$!attrInput.Value"#if($size.length()) size="$size"#end />
+            #end
         #end
 #end
 

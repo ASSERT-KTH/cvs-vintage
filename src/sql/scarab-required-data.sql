@@ -21,6 +21,8 @@ insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBU
         values(11, 1, 'email', 'org.tigris.scarab.attribute.StringAttribute');
 insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBUTE_TYPE_NAME, JAVA_CLASS_NAME)
         values(12, 1, 'long-string', 'org.tigris.scarab.attribute.StringAttribute');
+insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBUTE_TYPE_NAME, JAVA_CLASS_NAME)
+        values(13, 1, 'date', 'org.tigris.scarab.attribute.DateAttribute');
 
 --  Attributes
 
