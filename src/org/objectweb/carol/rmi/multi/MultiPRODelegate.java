@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiPRODelegate.java,v 1.11 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: MultiPRODelegate.java,v 1.12 2005/03/10 10:09:38 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -213,10 +213,13 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
                 initProtocols();
                 return cccf.getCurrentPortableRemoteObject().toStub(obj);
             }
+        } catch (NoSuchObjectException nsoe) {
+            throw nsoe;
         } catch (Exception e) {
             String msg = "MultiPRODelegate.toStub(Remote obj) fail";
             TraceCarol.error(msg, e);
-            throw new NoSuchObjectException(msg);
+            NoSuchObjectException nsoe = new NoSuchObjectException(msg);
+            throw nsoe;
         }
     }
 
