@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class ConfigurationMetaData extends MetaData {
     
@@ -45,9 +45,9 @@ public class ConfigurationMetaData extends MetaData {
     private byte commitOption;
 	private boolean callLogging;
 	
-	// TODO security manager
-	// TODO realm mapping
-	
+  private String authenticationModule;
+  private String roleMappingManager;
+
 	private Element containerInvokerConf;
 	private Element containerPoolConf;
 	private Element containerCacheConf;
@@ -70,7 +70,11 @@ public class ConfigurationMetaData extends MetaData {
 	public String getInstanceCache() { return instanceCache; }
 	
 	public String getPersistenceManager() { return persistenceManager; }
-	
+
+	public String getAuthenticationModule() { return authenticationModule; }
+
+	public String getRoleMappingManager() { return roleMappingManager; }
+
 	public String getTransactionManager() { return transactionManager; }
 	
     public Element getContainerInvokerConf() { return containerInvokerConf; }
@@ -105,8 +109,15 @@ public class ConfigurationMetaData extends MetaData {
 		// set the transaction manager
 		transactionManager = getElementContent(getOptionalChild(element, "transaction-manager"));
 
-        // set the commit option
+		// set the authentication module
+		authenticationModule = getElementContent(getOptionalChild(element, "authentication-module"));
+
+		// set the role mapping manager
+		roleMappingManager = getElementContent(getOptionalChild(element, "role-mapping-manager"));
+
+    // set the commit option
 		String commit = getElementContent(getOptionalChild(element, "commit-option"));
+    
 		if (commit != null) {
 			if (commit.equals("A")) {
 				commitOption = A_COMMIT_OPTION;
