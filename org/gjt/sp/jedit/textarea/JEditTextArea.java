@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.210 2003/03/23 19:56:56 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.211 2003/03/24 00:00:49 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -460,7 +460,7 @@ public class JEditTextArea extends JComponent
 	 */
 	public void setHorizontalOffset(int horizontalOffset)
 	{
-		if(horizontalOffset < 0)
+		if(horizontalOffset > 0)
 			horizontalOffset = 0;
 
 		if(horizontalOffset == this.horizontalOffset)
