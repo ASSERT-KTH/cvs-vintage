@@ -1,4 +1,4 @@
-// $Id: ChildGenRelated.java,v 1.17 2005/01/30 20:48:32 linus Exp $
+// $Id: ChildGenRelated.java,v 1.18 2005/03/18 09:37:40 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import org.tigris.gef.util.ChildGenerator;
 /**
  * @stereotype singleton
  * @author jrobbins
+ * @deprecated move this class to org.argouml.uml
  */
 public class ChildGenRelated implements ChildGenerator {
     private static final ChildGenRelated SINGLETON = new ChildGenRelated();
