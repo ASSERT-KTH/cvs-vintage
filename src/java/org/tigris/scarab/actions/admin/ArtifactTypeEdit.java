@@ -84,7 +84,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.24 2002/06/06 00:27:52 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.25 2002/07/25 23:23:16 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -399,18 +399,25 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         IssueType issueType = scarabR.getIssueType();
         IssueType templateType = 
             scarabR.getIssueType(issueType.getTemplateId().toString());
-        Attribute attribute = scarabR.getAttribute();
+        String[] attributeIds = data.getParameters()
+                                    .getStrings("attribute_ids");
  
-        if (attribute.getAttributeId() == null)
+        if (attributeIds == null || attributeIds.length <= 0)
         { 
             scarabR.setAlertMessage("Please select an attribute.");
+            return;
         }
         else
         {        
-            // add module-attribute groupings
-            RModuleAttribute rma = module.addRModuleAttribute(issueType, 
-                                                              attribute);
-            doCancel(data, context);
+            for (int i=0; i < attributeIds.length; i++)
+            {
+                Attribute attribute = 
+                    scarabR.getAttribute(new NumberKey(attributeIds[i]));
+                // add module-attribute groupings
+                RModuleAttribute rma = module.addRModuleAttribute(issueType, 
+                                                                  attribute);
+                doCancel(data, context);
+           }      
        }      
 
     }
