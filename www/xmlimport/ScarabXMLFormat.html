@@ -1,0 +1,427 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Scarab XML Format</title>
+</head>
+<body>
+<h1>Scarab XML Format</h1>
+<small>
+<b>Author:</b> <a href="mailto:mmurphy@collab.net">Mark Murphy</a></br>
+<b>Last Modified:</b>$Date: 2003/04/14 19:48:05 $
+</small>
+
+<p>Scarab has the ability to support multiple
+issue types, each with its own set of attributes, representing data
+and user associations with issues. Because each issue type can be
+different in structure, the Scarab team elected to use a
+&ldquo;reflective&rdquo; XML structure, using the Apache Jakarta
+Commons Betwixt engine. Betwixt is a &ldquo;bean serializer&rdquo;,
+which can turn Java objects into XML and vice-versa based on
+property accessor naming conventions. While making the XML somewhat
+more verbose, the XML is consistent in general layout between issue
+types.</p>
+
+<h2>Overall Model</h2>
+
+<p>In the XML, you have the following tree:</p>
+
+<ul>
+<li>There is an &lt;issues&gt; element containing a series of
+&lt;issue&gt; elements. On export, there is on &lt;issue&gt;
+element per exported issue. On import, there should be one
+&lt;issue&gt; element per issue you wish to insert or update.</li>
+
+<li>Each issue contains &lt;activity-sets&gt;, containing one or
+more &lt;activity-set&gt; elements. An activity set represents a
+set of actions applied at one time. You can think of an
+&lt;activity-set&gt; as representing one operation using the
+Scarab Web forms for editing an issue.</li>
+
+<li>Each activity set contains &lt;activities&gt;, containing one
+or more &lt;activity&gt; elements. Each activity represents a
+change to a single attribute of the issue, whether that attribute
+be a regular data attribute, a user attribute, an attached file,
+etc.</li>
+</ul>
+
+<hr>
+
+<p>From the Scarab issue import FAQ (<span courier=""><a href="http://scarab.tigris.org/xmlimport/faq.html">http://scarab.tigris.org/xmlimport/faq.html</a></span>):</p>
+
+<p><b>When would I start a new activity set?</b></p>
+
+<p>You'd start a new activity-set when:</p>
+
+<ol>
+<li>Importing an issue and its initial state.</li>
+
+<li>Adding physical attachments to an issue.</li>
+
+<li>Adding comments to an issue (Scarab treats attachments and
+comments as roughly equivalent). </li>
+
+<li>Adding an activity entry: e.g., one or more state
+changes such as 'Changed from NEW to STARTED', or issue
+dependencies.</li>
+</li>
+</ol>
+
+<hr>
+
+<h2>Annotated XPath Roster</h2>
+
+<p>The safest way to deal with issues in your site is to do an XML
+export (perhaps manually first, before you get into automation),
+and use it as the basis for developing the XML blobs for imports,
+etc.</p>
+
+<p>The following table documents each of the discrete bits of
+information stored in the XML. Use this table to support the
+analysis of your own issue types&rsquo; XML, so you can understand
+how the XML is assembled.</p>
+
+<p>Where an ellipsis (...) is shown in the XPath, that is shorthand
+for /scarab-issues/issues/issue/activity-sets/activity-set. Where a
+double ellipsis (.../...) is shown, that is shorthand for
+/scarab-issues/issues/issue/activity-sets/activity-set/activities/activity.</p>
+
+<table border="1" cellspacing="0" cellpadding="0">
+<tr>
+<th width="199" valign="top">XPath</th>
+<th width="328" valign="top">Description</th>
+<th valign="top">Sample Value</th>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>/scarab-issues/import-type</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Should be create-different-db for an insert and
+create-same-db for an update</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>create-different-db</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>/scarab-issues/module/name</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Name of Scarab module into which this issue should
+go</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>training</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>/scarab-issues/module/domain</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Domain name of Scarab site into which this issue
+should go</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>scdemo.net</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>/scarab-issues/module/code</span></p>
+</td>
+<td width="328" valign="top">
+<p class="MsoFooter"><span>Issue prefix used by the Scarab module for this issue</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>TRN</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>/scarab-issues/issues/issue/id</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Numeric portion of ID for this issue (i.e., without the
+code prefix). Found on exported issues and issue update import XML.
+</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>1</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>/scarab-issues/issues/issue/artifact-type</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Name of artifact type this issue is formatted
+in</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>Issue Tracker artifact</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../type</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Should be Create Issue for the first activity-set for an
+issue insert. All others should be Edit Issue.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>Create Issue</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../created-by</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>User ID of person who did these activities</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>mmurphy</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../created-date/format</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Format used for the created-date/timestamp element.
+&ldquo;yyyy-MM-dd HH:mm:ss z&rdquo; is known to work.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>yyyy-MM-dd HH:mm:ss z</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../created-date/timestamp</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Timestamp of when this activity-set occurred. This
+timestamp will be used in issue imports, not the actual time the
+import occurred.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>2003-03-22 10:01:46 PST</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../attribute</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Name of the attribute being set or modified.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>Component</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../new-option</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Sets the value for a drop-down data attribute. Also set
+the value using new-value.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>Component 1</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../new-value</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Sets the value for any data attribute.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>Component 1</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../new-user</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Sets the new user ID for a user attribute. Also set the
+value using new-value.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>mmurphy</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../description</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Explains the nature of the change to this attribute. With
+system-generated descriptions being boilerplate, you might consider
+a different structure to highlight changes made in an import
+operation (e.g., &ldquo;Imported new value&rdquo;)</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>Component set to 'Component 1'</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../attachment/name</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>For comments, should be &ldquo;comment&rdquo;. For
+attached files/URLs, should be the natural language label for the
+attachment.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>Yahoo! home page</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../attachment/type</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>One of: COMMENT, URL, ATTACHMENT (latter for attached
+files)</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>ATTACHMENT</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../attachment/data</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>For comments, the text of the comment. For attached URLs,
+the URL itself. For attached files, the name of the attached
+file.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>http://www.yahoo.com</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../attachment/mimetype</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>MIME type to use for the attached data. Use text/plain for
+comments and URLs</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>text/plain</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../attachment/created-date/format</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Format used for the created-date/timestamp element.
+&ldquo;yyyy-MM-dd HH:mm:ss z&rdquo; is known to work.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>yyyy-MM-dd HH:mm:ss z</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../attachment/created-date/timestamp</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Timestamp of when this attachment was attached. This
+timestamp will be used in issue imports, not the actual time the
+import occurred.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>2003-03-22 10:01:46 PST</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../attachment/modified-date/format</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Format used for the modified-date/timestamp element.
+&ldquo;yyyy-MM-dd HH:mm:ss z&rdquo; is known to work.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>yyyy-MM-dd HH:mm:ss z</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../attachment/modified-date/timestamp</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>Timestamp of when this attachment was last modified. This
+timestamp will be used in issue imports, not the actual time the
+import occurred.</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>2003-03-22 10:01:46 PST</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../attachment/created-by</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>User ID of person who attached the attachment</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>mmurphy</span></p>
+</td>
+</tr>
+
+<tr>
+<td width="199" valign="top">
+<p><span>.../.../attachment/deleted</span></p>
+</td>
+<td width="328" valign="top">
+<p><span>false, indicating that this has not been
+deleted</span></p>
+</td>
+<td valign="top">
+<p align="center"><span>false</span></p>
+</td>
+</tr>
+</table>
+<hr>
+<small>$Id</small>
+</body>
+</html>
+
