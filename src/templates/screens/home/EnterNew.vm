@@ -3,9 +3,9 @@
 <div class="tabs">
  <table cellpadding="3" cellspacing="0" border="0">
   <tr>
-    <td><a href="$link.setPage("home,ModuleQuery.vm")">Project query</a></td>
+    <td><a href="$link.setPage("home,ModuleQuery.vm")">Module query</a></td>
     <th>Enter new...</th>
-	<td><a href="$link.setPage("home,XModuleList.vm")">Build cross project query</a></td>
+	<td><a href="$link.setPage("home,XModuleList.vm")">Build cross module query</a></td>
   </tr>
  </table>
 </div>
