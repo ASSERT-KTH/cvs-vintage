@@ -73,7 +73,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.55 $
+ * @version $Revision: 1.56 $
  *
  * <p><b>Revisions:</b>
  *
@@ -403,8 +403,9 @@ public abstract class Container implements DynamicMBean
       throws Exception
    {
       localContainerInvoker.start();
-      
-      ObjectName jmxName = new ObjectName(":service=Container,jndiName="+this.getBeanMetaData().getJndiName());
+      String domain = mbeanServer.getDefaultDomain();
+      String jndiName = this.getBeanMetaData().getJndiName();
+      ObjectName jmxName = new ObjectName(domain+":service=Container,jndiName="+jndiName);
       mbeanServer.registerMBean(this, jmxName);
    }
 
@@ -418,7 +419,9 @@ public abstract class Container implements DynamicMBean
       localContainerInvoker.stop();
       try
       {
-         ObjectName jmxName = new ObjectName(":service=Container,jndiName="+this.getBeanMetaData().getJndiName());
+         String domain = mbeanServer.getDefaultDomain();
+         String jndiName = this.getBeanMetaData().getJndiName();
+         ObjectName jmxName = new ObjectName(domain+":service=Container,jndiName="+jndiName);
          mbeanServer.unregisterMBean(jmxName);
       }
       catch(Exception e)
