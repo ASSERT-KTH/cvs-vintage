@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fileset-config file-format-version="1.0.0">
+    <fileset name="Carol" enabled="true" check-config-name="JOnAS">
+        <file-match-pattern match-pattern=".java$" include-pattern="true"/>
+        <file-match-pattern match-pattern="Foo.java$" include-pattern="false"/>
+        <file-match-pattern match-pattern="FooExplicit.java$" include-pattern="false"/>
+        <file-match-pattern match-pattern="doc/.*?.java$" include-pattern="false"/>
+    </fileset>
+</fileset-config>
