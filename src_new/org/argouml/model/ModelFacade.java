@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.174 2004/02/06 16:18:16 sz9 Exp $
+// $Id: ModelFacade.java,v 1.175 2004/02/21 06:42:04 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -6492,12 +6492,8 @@ public class ModelFacade {
     /**
      * The empty set.
      *
-     * @return an empty iterator.
+     * @return an empty collection.
      */
-    private static Iterator emptyIterator() {
-        return Collections.EMPTY_SET.iterator();
-    }
-
     private static Collection emptyCollection() {
         return Collections.EMPTY_LIST;
     }
