@@ -605,7 +605,7 @@ public class Issue
     public List getAssociatedUsers() throws Exception
     {
         ArrayList assignees = new ArrayList();
-        List attributeList = getModule().getUserAttributes(getIssueType());
+        List attributeList = getModule().getUserAttributes(getIssueType(), true);
         List attributeIdList = new ArrayList();
 
         for ( int i=0; i<attributeList.size(); i++ ) 
@@ -648,7 +648,7 @@ public class Issue
      */
     public List getUserAttributeValues() throws Exception
     {
-        List attributeList = getModule().getUserAttributes(getIssueType());
+        List attributeList = getModule().getUserAttributes(getIssueType(), true);
         List attributeIdList = new ArrayList();
 
         for ( int i=0; i<attributeList.size(); i++ ) 
