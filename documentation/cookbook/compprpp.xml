@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: compprpp.xml,v 1.2 2003/08/26 22:05:48 linus Exp $ -->
+<!-- $Id: compprpp.xml,v 1.3 2003/08/26 22:08:50 linus Exp $ -->
 
     <sect1 id="propertypanels">
       <title>Property panels</title>
@@ -20,7 +20,6 @@ Currently the PropPanels for the diagrams are in
 and the property panels for the other object are in
 <classname>org.argouml.uml.ui.<replaceable>NS-UML path</replaceable></classname>.
 </para>
-
 
       <sect2 id="addingapropertypanel">
 	<title>Adding the property panel</title>
