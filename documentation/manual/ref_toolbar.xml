@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: ref_toolbar.xml,v 1.2 2003/10/12 20:36:34 mvw Exp $ -->
+
+<!--
+
+A description of all the toolbar entries
+
+-->
+
+<chapter id="ch.ref.toolbar">
+  <title>The Toolbar</title>
+
+
+  <sect1>
+    <title>Introduction</title>
+    <para>
+      This chapter will in the near future describe the toolbar.
+    </para>
+  </sect1>
+</chapter>
