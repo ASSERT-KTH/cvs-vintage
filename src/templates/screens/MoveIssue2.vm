@@ -88,8 +88,9 @@
   #indexedRows($velocityCount)
   <td>
      $attr.Name
+     #set ($displayValue = "")
      #set ($displayValue = $module.getRModuleAttribute($attr, $issueType).getDisplayValue())
-    #if (!$attr.Name.equals($displayValue))
+    #if ($displayValue.length() > 0 && !$attr.Name.equals($displayValue))
       ($displayValue)
      #end
   </td>
@@ -122,8 +123,9 @@
 #indexedRows($velocityCount)
 <td><input type="checkbox" name="comment_attr_ids_$attr.AttributeId" checked="checked" /></td>
     <td>$attr.Name 
+     #set ($displayValue = "")
      #set ($displayValue = $module.getRModuleAttribute($attr, $issueType).getDisplayValue())
-     #if (!$attr.Name.equals($displayValue))
+     #if ($displayValue.length() > 0 && !$attr.Name.equals($displayValue))
       ($displayValue)
      #end
     </td>

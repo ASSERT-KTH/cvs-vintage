@@ -1,11 +1,11 @@
-#if ($action.equals("$l10n.copy"))
-  #set ($actionWord = "$l10n.copied")
+#if ($action.equals("copy"))
+  #set ($actionChoice = 1)
 #else
-  #set ($actionWord = "$l10n.moved")
+  #set ($actionChoice = 2)
 #end
 
-#set ($msgArgs = [$oldModule.Name, $issue.Module.Name, $issue.IssueType.Name, $issue.ModifiedBy.UserName])
-$l10n.format("IssueMoved", $issue.UniqueId, $actionWord) $l10n.format("IssueMoved2", $msgArgs) 
+#set ($msgArgs = [$issue.UniqueId, $actionChoice, $oldModule.Name, $issue.Module.Name, $issue.IssueType.Name, $issue.ModifiedBy.UserName])
+$l10n.format("IssueMoved", $msgArgs) 
 
 $l10n.YouCanViewIssue:
 
