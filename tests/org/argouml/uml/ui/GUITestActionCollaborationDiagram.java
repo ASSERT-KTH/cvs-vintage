@@ -1,4 +1,4 @@
-// $Id: GUITestActionCollaborationDiagram.java,v 1.4 2005/01/09 21:10:39 linus Exp $
+// $Id: GUITestActionCollaborationDiagram.java,v 1.5 2005/02/13 00:21:21 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,9 @@ package org.argouml.uml.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.diagram.ui.UMLDiagram;
 
 import ru.novosoft.uml.foundation.core.MClassImpl;
 import ru.novosoft.uml.foundation.core.MClassifierImpl;
@@ -39,8 +41,7 @@ import ru.novosoft.uml.foundation.core.MNamespace;
  * @since Jan 9, 2003
  */
 public class GUITestActionCollaborationDiagram
-    extends AbstractTestActionAddDiagram
-{
+    extends AbstractTestActionAddDiagram {
 
     /**
      * Constructor for TestActionCollaborationDiagram.
@@ -76,4 +77,14 @@ public class GUITestActionCollaborationDiagram
         return rl;
     }
 
+    /**
+     * Test if the namespace is correct for the diagram.<p>
+     *
+     * @param diagram The diagram to check the namespace for.
+     */
+    protected void checkNamespace(UMLDiagram diagram) {
+        assertTrue(
+        	   "The Collaboration diagram has a non-valid namespace",
+        	   Model.getFacade().isACollaboration(diagram.getNamespace()));
+    }
 }
