@@ -886,6 +886,48 @@ public class IMAPStore {
 	}
 
 	/**
+	 * Receive list of headers.
+	 * 
+	 * @param headerList		headerlist
+	 * @param sublist			list of UIDs to be fetched
+	 * @param headerFields		interesting headerfields as whitespace separated String
+	 * @throws Exception
+	 */
+	protected void fetchPartialHeaderlist(
+		HeaderList headerList,
+		List sublist,
+		String headerFields)
+		throws Exception {
+		//		create messageset from UID list subset
+		MessageSet set = new MessageSet(sublist.toArray());
+
+		// fetch headers from server
+		IMAPResponse[] r =
+			getProtocol().fetchHeaderList(
+				set.getString().trim(),
+				headerFields.trim());
+
+		// parse headers
+		List input = new ArrayList(Arrays.asList(r));
+		List result = IMAPHeaderlistParser.parse(input);
+
+		Iterator it = result.iterator();
+
+		// add all parsed headers to the headerlist
+		while (it.hasNext()) {
+			IMAPHeader imapHeader = (IMAPHeader) it.next();
+
+			ColumbaHeader header = new ColumbaHeader(imapHeader.getHeader());
+			Object uid = imapHeader.getUid();
+			header.set("columba.uid", uid);
+
+			if (header != null) {
+				headerList.add(header, uid);
+			}
+		}
+	}
+
+	/**
 	 * Fetch list of headers and parse them.
 	 * 
 	 * @param headerList		headerlist to add new headers
@@ -917,65 +959,64 @@ public class IMAPStore {
 		// calculate number of requests
 		int requestCount = list.size() / 100;
 
-		// initialize progressbar
-		getObservable().setMax(requestCount);
-		getObservable().setCurrent(0);
+		ColumbaLogger.log.debug("list.size()=" + list.size());
+		ColumbaLogger.log.debug("requestCount=" + requestCount);
 
-		for (int i = 0; i <= requestCount; i++) {
-			String messageset = null;
-			// always use 100 as step size
-			int startIndex = i * 100;
-			int endIndex = startIndex + 100;
-
-			// check for boundary
-			if (endIndex > list.size())
-				endIndex = list.size() - 1;
-
-			ColumbaLogger.log.debug("fetching from "+startIndex+" to "+endIndex);
+		if (list.size() < 100) {
+			int startIndex = 0;
+			int endIndex = list.size();
 			
+			if ( list.size() == 1) endIndex = 1;
+			
+			ColumbaLogger.log.debug(
+				"fetching from " + startIndex + " to " + endIndex);
+
 			// create sublist
 			List sublist = list.subList(startIndex, endIndex);
 
-			// create messageset from UID list subset
-			MessageSet set = new MessageSet(sublist.toArray());
+			// fetch partial headerlist
+			fetchPartialHeaderlist(
+				headerList,
+				sublist,
+				headerFields.toString());
 
-			// fetch headers from server
-			IMAPResponse[] r =
-				getProtocol().fetchHeaderList(
-					set.getString().trim(),
-					headerFields.toString().trim());
+		} else {
+			// initialize progressbar
+			getObservable().setMax(requestCount);
+			getObservable().setCurrent(0);
 
-			// parse headers
-			List input = new ArrayList(Arrays.asList(r));
-			List result = IMAPHeaderlistParser.parse(input);
+			for (int i = 0; i <= requestCount; i++) {
+				String messageset = null;
+				// always use 100 as step size
+				int startIndex = i * 100;
+				int endIndex = startIndex + 100;
 
-			Iterator it = result.iterator();
+				// check for boundary
+				if (endIndex > list.size())
+					endIndex = list.size()-1;
 
-			// add all parsed headers to the headerlist
-			while (it.hasNext()) {
-				IMAPHeader imapHeader = (IMAPHeader) it.next();
+				ColumbaLogger.log.debug(
+					"fetching from " + startIndex + " to " + endIndex);
 
-				ColumbaHeader header =
-					new ColumbaHeader(imapHeader.getHeader());
-				Object uid = imapHeader.getUid();
-				header.set("columba.uid", uid);
+				// create sublist
+				List sublist = list.subList(startIndex, endIndex);
 
-				if (header != null) {
-					headerList.add(header, uid);
-				}
+				// fetch partial headerlist
+				fetchPartialHeaderlist(
+					headerList,
+					sublist,
+					headerFields.toString());
+
+				if (getObservable() != null)
+					getObservable().setCurrent(i);
+
+				printStatusMessage(
+					MailResourceLoader.getString(
+						"statusbar",
+						"message",
+						"fetch_headers"));
 			}
-
-			if (getObservable() != null)
-				getObservable().setCurrent(i);
-
-			printStatusMessage(
-				MailResourceLoader.getString(
-					"statusbar",
-					"message",
-					"fetch_headers"));
 		}
-
-		
 	}
 
 	/**
