@@ -68,7 +68,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.41 2001/11/18 19:01:39 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.42 2001/11/19 03:19:13 jmcnally Exp $
  */
 public interface ModuleEntity
 {
@@ -86,7 +86,7 @@ public interface ModuleEntity
      * @param permission a <code>String</code> value
      * @return ScarabUser[]
      */
-    public ScarabUser[] getUsers(String permission);
+    public ScarabUser[] getUsers(String permission) throws Exception;
 
     /**
      * This method is only used by the Turbine Group interface.
@@ -124,6 +124,7 @@ public interface ModuleEntity
     public String getUrl();
     public void setUrl(String url);
 
+    public ObjectKey getPrimaryKey();
     public void setPrimaryKey(ObjectKey key) throws Exception;
     public NumberKey getModuleId();
     public void setModuleId(NumberKey v) throws Exception;
@@ -172,13 +173,8 @@ public interface ModuleEntity
     public NumberKey getParentId();
     public void setParentId(NumberKey v) throws Exception;
 
-    public void setModuleRelatedByParentId(ModuleEntity module) 
+    public void setParent(ModuleEntity module) 
         throws Exception;
-
-    /**
-     * Get this modules direct parent
-     */
-    public ModuleEntity getModuleRelatedByParentIdCast() throws Exception;
 
     /**
      * Same as the getModuleRelatedByParentIdCast(), just a better name.
@@ -204,6 +200,9 @@ public interface ModuleEntity
                                   boolean activeOnly)
         throws Exception;
 
+    public Vector getRModuleOptions(Criteria crit)
+        throws Exception;
+
     public List getLeafRModuleOptions(Attribute attribute, IssueType issueType)
         throws Exception;
 
@@ -218,7 +217,8 @@ public interface ModuleEntity
     public ScarabUser[] getEligibleUsers(Attribute attribute)
         throws Exception;
 
-    public ScarabUser[] getEligibleIssueReporters();
+    public ScarabUser[] getEligibleIssueReporters()
+        throws Exception;
 
     /**
      * List of saved reports associated with this module and
