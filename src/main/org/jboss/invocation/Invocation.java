@@ -28,7 +28,7 @@ import javax.transaction.Transaction;
  *    pointers.  But really it is just  a repository of objects. 
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *   <p><b>20020911 Bill Burke:</b>
  *   <ul>
  *   <li> Optimize access to certain variables.  Avoid hash lookups
@@ -73,10 +73,13 @@ public class Invocation
    /**
     * No-args constructor exposed for externalization only.
     */
-   public Invocation() 
+   public Invocation()
    {
+      payload = new HashMap();
+      as_is_payload = new HashMap();
+      transient_payload = new HashMap();
    }
-   
+
    /**
     * Copy constructor.
     */
