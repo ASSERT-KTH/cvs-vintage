@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<plugin id="org.columba.mail.SpamAssassin" name="SpamAssassin Plugin" description="Simple Example" version="1.0" >
+
+<!-- POP3 preprocessing filter -->
+
+ <extension name="org.columba.mail.pop3preprocessingfilter">
+  <pop3preprocessingfilter name="SpamAssassin" class="SpamAssassinPOP3PreProcessingFilterPlugin"/>
+ </extension>
+ 
+<!-- actions -->
+ <extension name="org.columba.core.action">
+  <action name="LearnSpam" class="LearnSpamAction" />
+  <action name="LearnHam" class="LearnHamAction" />
+  <action name="AddAddressToWhitelist" class="AddAddressToWhiteListAction" />
+  <action name="AddAddressToBlacklist" class="AddAddressToBlackListAction" />
+  <action name="RemoveAddressFromWhitelist" class="RemoveAddressFromWhiteListAction" />
+ </extension>
+ 
+<!-- menu entries -->
+ <extension name="org.columba.mail.menu">
+  <menu name="menu_utilities" extensionpoint="top">
+    <menu name="SpamAssassin">
+     <menu name="Bayesian Spam Analysis">
+  	  <menuitem action="org.columba.mail.SpamAssassin$LearnSpam"/>
+  	  <menuitem action="org.columba.mail.SpamAssassin$LearnHam"/>
+  	 </menu>
+  	 <separator/>
+  	 <menuitem action="org.columba.mail.SpamAssassin$AddAddressToWhitelist"/>
+  	 <menuitem action="org.columba.mail.SpamAssassin$AddAddressToBlacklist"/>
+  	 <menuitem action="org.columba.mail.SpamAssassin$RemoveAddressFromWhitelist"/>
+  	</menu>
+  </menu>
+ </extension>
+ 
+ 
+ <runtime type="java" jar="SpamAssassinPOP3preProcessingFilter.jar"/>
+</plugin>
