@@ -51,6 +51,10 @@
       <p>$l10n.AssociatingUsersP6</p>
     
     <h3><a name="move" id="move">$l10n.MovingIssues</a></h3>
-    <p>$l10n.MovingIssuesP1 $l10n.ToAnotherModule $l10n.MovingIssuesP1S2 $l10n.InOriginalModule $l10n.MovingIssuesP1S3 $l10n.MovingIssuesP1S4
+    <p>$l10n.MovingIssuesP1 $l10n.ToAnotherModule $l10n.MovingIssuesP1S2 $l10n.InOriginalModule $l10n.MovingIssuesP1S3 $l10n.MovingIssuesP1S4</p>
+    <p>$l10n.MovingIssuesP2 <a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a> $l10n.MovingIssuesP2S2 <strong>$l10n.MoveAll/$l10n.CopyAll</strong> $l10n.MovingIssuesP2S3 <strong>$l10n.ProcessResults</strong> $l10n.MovingIssuesP2S4 <strong>$l10n.MoveSelected/$l10n.CopySelected</strong> $l10n.MovingIssuesP2S3 <strong>$l10n.ProcessResults</strong> $l10n.MovingIssuesP2S5</p>
+    <p>$l10n.MovingIssuesP3 <strong>$l10n.ChooseCopyMoveDestination</strong> $l10n.MovingIssuesP3S2 <strong>$l10n.MapIssueAttributes</strong> $l10n.IssueEntryP26S2</p>
+    <p>$l10n.MovingIssuesP1S4</p>
+    
 <div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
   </div>
