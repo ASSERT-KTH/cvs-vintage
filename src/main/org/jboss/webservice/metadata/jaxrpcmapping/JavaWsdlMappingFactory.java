@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMappingFactory.java,v 1.13 2004/12/26 15:02:04 loubyansky Exp $
+// $Id: JavaWsdlMappingFactory.java,v 1.14 2004/12/26 15:51:24 loubyansky Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.xml.binding.UnmarshallingContext;
@@ -77,6 +77,11 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
                          Attributes attrs)
    {
       return new JavaWsdlMapping();
+   }
+
+   public Object comleteRoot(Object root, UnmarshallingContext ctx, String uri, String name)
+   {
+      return root;
    }
 
    /**
