@@ -66,11 +66,12 @@
 ##        #frequencySelectBox ($rqu.SubscriptionFrequency)
 ##    </select>
 ##  </td>
-  <td><a href="$query.getEditLink($link.setPage("EditQuery.vm").toString())">$query.Name</a></td>
+               
+  <td><a href="$scarabR.getEditLink($link.setPage("EditQuery.vm").toString(),$query)">$query.Name</a></td>
   <td>#if($query.Description)  $query.Description #else &#160; #end</td>
   <td><input type="radio" name="default" value="$query.QueryId" 
           #if ($rqu.Isdefault) checked="checked" #end /></td>
-  <td><a href="$query.getExecuteLink($link.setPage("IssueList.vm").toString())">$query.Scope.Name</a>
+  <td><a href="$scarabR.getExecuteLink($link.setPage("IssueList.vm").toString(), $query)">$query.Scope.Name</a>
   #if (!$query.Approved)
    ($l10n.UntilApproved)
   #end
