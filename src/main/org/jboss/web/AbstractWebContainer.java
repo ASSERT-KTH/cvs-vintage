@@ -148,7 +148,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.35 $
+@version $Revision: 1.36 $
 */
 public abstract class AbstractWebContainer 
    extends ServiceMBeanSupport 
@@ -206,22 +206,21 @@ public abstract class AbstractWebContainer
          if (di.parent != null && di.parent.metaData instanceof J2eeApplicationMetaData) 
          {
             J2eeApplicationMetaData app = (J2eeApplicationMetaData) di.parent.metaData;
-            
+            log.debug("found parent metadata: " + di.parent.url);
             J2eeModuleMetaData mod;
-            Iterator it = app.getModules();
-            while (it.hasNext())
+            for (Iterator it = app.getModules(); it.hasNext(); )
             {
                // iterate the war modules
                mod = (J2eeModuleMetaData) it.next();
                if( mod.isWeb() )
                {
-                  /* Only pick up the context for our war, the di.shortName is
-                   <int>.myweb.war so we add a '.' to the module file name and
-                   then test shortName ends with the matching name.
+                  /* Careful, if the place/file the war gets copied to changes, 
+                     this will need changing too maybe.
                    */
-                  String matchName = '.' + mod.getFileName();
-                  if( di.shortName.endsWith(matchName) == true )
+                  if (di.shortName.equals(mod.getFileName()))
+                  {
                      di.webContext = mod.getWebContext();
+                  }
                }
             }
          }
