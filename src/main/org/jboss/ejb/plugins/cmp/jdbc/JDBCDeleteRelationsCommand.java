@@ -15,7 +15,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * Deletes relations from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCDeleteRelationsCommand
    extends JDBCUpdateCommand
@@ -51,10 +51,10 @@ public class JDBCDeleteRelationsCommand
 			RelationPair pair = (RelationPair)pairs.next();
 		   sql.append("(");
 				// left keys
-				sql.append(SQLUtil.getWhereClause(relationData.getLeftCMRField().getKeyFields()));
+				sql.append(SQLUtil.getWhereClause(relationData.getLeftCMRField().getTableKeyFields()));
 				sql.append(" AND ");
 				// right keys
-				sql.append(SQLUtil.getWhereClause(relationData.getRightCMRField().getKeyFields()));
+				sql.append(SQLUtil.getWhereClause(relationData.getRightCMRField().getTableKeyFields()));
 		   sql.append(")");
 		
 			if(pairs.hasNext()) {
@@ -75,14 +75,14 @@ public class JDBCDeleteRelationsCommand
 			
 			// left keys
 			Object leftId = pair.getLeftId();
-			JDBCCMPFieldBridge[] leftKeyFields = relationData.getLeftCMRField().getKeyFields();
+			JDBCCMPFieldBridge[] leftKeyFields = relationData.getLeftCMRField().getTableKeyFields();
 			for(int i=0; i<leftKeyFields.length; i++) {
 				parameterIndex = leftKeyFields[i].setPrimaryKeyParameters(ps, parameterIndex, leftId);
 			}
 					
 			// right keys
 			Object rightId = pair.getRightId();
-			JDBCCMPFieldBridge[] rightKeyFields = relationData.getRightCMRField().getKeyFields();
+			JDBCCMPFieldBridge[] rightKeyFields = relationData.getRightCMRField().getTableKeyFields();
 			for(int i=0; i<rightKeyFields.length; i++) {
 				parameterIndex = rightKeyFields[i].setPrimaryKeyParameters(ps, parameterIndex, rightId);
 			}
