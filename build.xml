@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.110 2002/09/01 23:32:19 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.111 2002/09/10 17:36:59 loubyansky Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -444,9 +444,46 @@
 
   </target>
 
+  <!-- Generate sources for jdbc2 -->
+  <target name="gen-src-jdbc2" depends="init" unless="HAVE_JDK_1.4">
+    <echo message="generating sources for JDBC2"/>
+    <mkdir dir="${build.gen-src}"/>
+    <copy todir="${build.gen-src}" filtering="yes">
+      <fileset dir="${source.java}">
+         <include name="org/jboss/ejb/plugins/cmp/jdbc/**/*.jpp"/>
+      </fileset>
+      <mapper type="glob" from="*.jpp" to="*.java"/>
+      <filterset>
+        <filter token="JDK1.4START" value="/*"/>
+        <filter token="JDK1.4END" value="*/"/>
+        <filter token="JDK1.3START" value=""/>
+        <filter token="JDK1.3END" value=""/>
+      </filterset>
+    </copy>
+  </target>
+
+  <!-- Generate sources for jdbc3 -->
+  <target name="gen-src-jdbc3" depends="init" if="HAVE_JDK_1.4">
+    <echo message="generating sources for JDBC3"/>
+    <mkdir dir="${build.gen-src}"/>
+    <copy todir="${build.gen-src}" filtering="yes">
+      <fileset dir="${source.java}">
+         <include name="org/jboss/ejb/plugins/cmp/jdbc/**/*.jpp"/>
+      </fileset>
+      <mapper type="glob" from="*.jpp" to="*.java"/>
+      <filterset>
+        <filter token="JDK1.4START" value=""/>
+        <filter token="JDK1.4END" value=""/>
+        <filter token="JDK1.3START" value="/*"/>
+        <filter token="JDK1.3END" value="*/"/>
+      </filterset>
+    </copy>
+  </target>
+
   <!-- Compile all class files -->
-  <target name="compile-classes" depends="init">
+  <target name="compile-classes" depends="init,gen-src-jdbc2,gen-src-jdbc3">
     <mkdir dir="${build.classes}"/>
+    
     <javac destdir="${build.classes}"
            optimize="${javac.optimize}"
 	   target="${javac.target}"
