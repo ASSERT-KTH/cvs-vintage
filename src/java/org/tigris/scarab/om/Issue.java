@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.272 2003/02/13 21:49:45 jon Exp $
+ * @version $Id: Issue.java,v 1.273 2003/02/20 23:06:04 dlr Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1000,11 +1000,10 @@ public class Issue
                 .add(AttributeValuePeer.DELETED, false);        
             List siaValues = getAttributeValues(crit);
             result = new HashMap((int)(1.25*siaValues.size() + 1));
-            for (int i=0; i<siaValues.size(); i++) 
+            for (Iterator i = siaValues.iterator(); i.hasNext(); )
             {
-                AttributeValue att = (AttributeValue) siaValues.get(i);
-                String name = att.getAttribute().getName();
-                result.put(name.toUpperCase(), att);
+                AttributeValue att = (AttributeValue) i.next();
+                result.put(att.getAttribute().getName().toUpperCase(), att);
             }
 
             ScarabCache.put(result, this, GET_ATTRIBUTE_VALUES_MAP);
