@@ -1,4 +1,4 @@
-/* $Id: HelloWorldExample.java,v 1.1 1999/10/09 00:19:59 duncan Exp $
+/* $Id: HelloWorldExample.java,v 1.2 2000/04/02 00:09:38 costin Exp $
  *
  */
 
@@ -26,13 +26,13 @@ public class HelloWorldExample extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         out.println("<html>");
-        out.println("<body bgcolor=\"white\">");
         out.println("<head>");
 
 	String title = rb.getString("helloworld.title");
 
 	out.println("<title>" + title + "</title>");
         out.println("</head>");
+        out.println("<body bgcolor=\"white\">");
         out.println("<body>");
 
 	// note that all links are created to be relative. this
