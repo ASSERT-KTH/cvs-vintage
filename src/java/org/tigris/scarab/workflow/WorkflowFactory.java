@@ -48,27 +48,26 @@ package org.tigris.scarab.workflow;
 
 import java.util.Vector;
 
-import org.apache.torque.TorqueException;
 import org.apache.turbine.Turbine;
+import org.tigris.scarab.util.ScarabException;
 
 /**
  * This class retrieves the appropriate workflow tool.
  *
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
- * @version $Id: WorkflowFactory.java,v 1.4 2002/08/15 19:45:50 jon Exp $
+ * @version $Id: WorkflowFactory.java,v 1.5 2002/08/15 20:17:18 jon Exp $
  */
 public class WorkflowFactory 
 {
 
-    public static Workflow getInstance() throws TorqueException
+    public static Workflow getInstance() throws ScarabException
     {
         Workflow wf = null;
         String className = null;
         try
         {
             Vector classNames = Turbine.getConfiguration()
-                .getVector("scarab.workflow.classname", 
-                    "org.tigris.scarab.workflow.DefaultWorkflow");
+                .getVector("scarab.workflow.classname");
             // Satisfy a strange case where one needs to append their
             // own configuration to the properties file and cannot 
             // easily remove the existing one. so, take the second
@@ -81,13 +80,16 @@ public class WorkflowFactory
             {
                 className = (String)classNames.get(0); 
             }
+            if (className == null)
+            {
+               className = "org.tigris.scarab.workflow.DefaultWorkflow";
+            }
             wf = (Workflow)Class.forName(className).newInstance();
         }
         catch (Exception e)
         {
-            throw new TorqueException(e);
+            throw new ScarabException(e);
         }
         return wf;
     }
 }
-
