@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <configuration>
+  <!-- These are searched in order, first property found is first in list -->
   <jndi className="org.apache.commons.configuration.JNDIConfiguration" prefix="java:comp/env"/>
-  <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="WEB-INF/conf/ant-generated.properties"/>
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="WEB-INF/conf/CustomSettings.properties"/>
+  <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="WEB-INF/conf/ant-generated.properties"/>
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="WEB-INF/conf/Scarab.properties"/>
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="WEB-INF/conf/PermissionMapping.properties"/>
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="WEB-INF/conf/TurbineResources.properties"/>
