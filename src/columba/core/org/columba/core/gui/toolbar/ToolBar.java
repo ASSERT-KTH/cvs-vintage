@@ -43,56 +43,59 @@ public class ToolBar extends JToolBar {
 
 	AbstractFrameController frameController;
 
-	public ToolBar(XmlElement rootElement, AbstractFrameController controller) {
+	public ToolBar(
+		XmlElement rootElement,
+		AbstractFrameController controller) {
 		super();
 		this.frameController = controller;
 
 		this.rootElement = rootElement;
-		/*
-		xmlFile = new XmlIO(DiskIO.getResourceURL(config));
-		xmlFile.load();
-		*/
-		
-		//rootElement = frameController.getItem().getElement("toolbar");
-		//rootElement = xmlFile.getRoot().getElement("toolbar");
-		
-		//addCButtons();
 
 		createButtons();
-		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
-		
-		//setMargin( new Insets(0,0,0,0) );
-		
-		setFloatable(false);
-			
+
+		setRollover(true);
+
+		//setFloatable(false);
+
 	}
 
 	public boolean getVisible() {
-		return new Boolean( rootElement.getAttribute("visible") ).booleanValue();
+		return new Boolean(rootElement.getAttribute("visible")).booleanValue();
 	}
 
 	private void createButtons() {
-		removeAll();	
+		removeAll();
 		ListIterator iterator = rootElement.getElements().listIterator();
-		XmlElement buttonElement=null;
-		
-		while( iterator.hasNext()) {
+		XmlElement buttonElement = null;
+
+		while (iterator.hasNext()) {
 			try {
 				buttonElement = (XmlElement) iterator.next();
-				if( buttonElement.getName().equals("button"))
-					addButton( ((ActionPluginHandler) MainInterface.pluginManager.getHandler("org.columba.core.action")).getAction(buttonElement.getAttribute("action"),frameController));
-				else if( buttonElement.getName().equals("separator"))
+				if (buttonElement.getName().equals("button"))
+					addButton(
+						(
+							(
+								ActionPluginHandler) MainInterface
+									.pluginManager
+									.getHandler(
+								"org.columba.core.action")).getAction(
+							buttonElement.getAttribute("action"),
+							frameController));
+				else if (buttonElement.getName().equals("separator"))
 					addSeparator();
 			} catch (Exception e) {
-				ColumbaLogger.log.debug("toolbar-button="+ ((String)buttonElement.getAttribute("action")));
-				
+				ColumbaLogger.log.debug(
+					"toolbar-button="
+						+ ((String) buttonElement.getAttribute("action")));
+
 				e.printStackTrace();
 			}
 		}
 		add(Box.createHorizontalGlue());
-		
-		ImageSequenceTimer image = frameController.getStatusBar().getImageSequenceTimer();
-		add( image );
+
+		ImageSequenceTimer image =
+			frameController.getStatusBar().getImageSequenceTimer();
+		add(image);
 	}
 
 	public void addButton(BasicAction action) {
@@ -104,64 +107,4 @@ public class ToolBar extends JToolBar {
 
 	}
 
-/*
-	public void addCButtons() {
-
-		MouseAdapter handler = frame.getMouseTooltipHandler();
-		ToolbarButton button;
-
-		i = 0;
-
-		button = new ToolbarButton(frame.globalActionCollection.newMessageAction);
-
-		addButton(button);
-
-		button = new ToolbarButton(frame.globalActionCollection.receiveSendAction);
-
-		addButton(button);
-
-		addSeparator();
-
-		button =
-			new ToolbarButton(frame.tableController.getActionListener().replyAction);
-		addButton(button);
-
-		button =
-			new ToolbarButton(
-				frame.tableController.getActionListener().forwardAction);
-		addButton(button);
-
-		addSeparator();
-
-		button =
-			new ToolbarButton(
-				frame.tableController.getActionListener().copyMessageAction);
-		addButton(button);
-
-		button =
-			new ToolbarButton(
-				frame.tableController.getActionListener().moveMessageAction);
-		addButton(button);
-
-		button =
-			new ToolbarButton(
-				frame.tableController.getActionListener().deleteMessageAction);
-		addButton(button);
-
-		addSeparator();
-
-		button = new ToolbarButton(frame.getStatusBar().getCancelAction());
-
-		addButton(button);
-
-		add(Box.createHorizontalGlue());
-
-		Dimension d = new Dimension( 16,16 );
-		System.out.println("dim="+d);
-				
-		frame.getStatusBar().getImageSequenceTimer().setScaling(d);
-		add(frame.getStatusBar().getImageSequenceTimer());
-
-	}
-*/
 }
