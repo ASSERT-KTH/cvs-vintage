@@ -1,4 +1,4 @@
-// $Id: SourcePathDialog.java,v 1.6 2003/06/29 23:50:02 linus Exp $
+// $Id: SourcePathDialog.java,v 1.7 2003/10/15 20:11:46 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
@@ -70,7 +70,7 @@ public class SourcePathDialog extends JDialog implements ActionListener {
     public SourcePathDialog() {
         super(
 	      ProjectBrowser.getInstance(),
-	      Argo.localize("CoreMenu", "action.generate-code-for-project"));
+	      Translator.localize("action.generate-code-for-project"));
 
         GridBagConstraints gridBagConstraints;
 

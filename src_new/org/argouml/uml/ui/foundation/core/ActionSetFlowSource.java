@@ -1,4 +1,4 @@
-// $Id: ActionSetFlowSource.java,v 1.6 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: ActionSetFlowSource.java,v 1.7 2003/10/15 20:11:47 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.Vector;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -47,7 +47,7 @@ public class ActionSetFlowSource extends UMLChangeAction {
      * @param s
      */
     protected ActionSetFlowSource() {
-        super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
+        super(Translator.localize("Set"), true, NO_ICON);
     }   
 
     /**

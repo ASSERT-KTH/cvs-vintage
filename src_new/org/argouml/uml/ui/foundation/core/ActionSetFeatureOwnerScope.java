@@ -1,4 +1,4 @@
-// $Id: ActionSetFeatureOwnerScope.java,v 1.4 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: ActionSetFeatureOwnerScope.java,v 1.5 2003/10/15 20:11:47 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLCheckBox2;
@@ -46,7 +46,7 @@ public class ActionSetFeatureOwnerScope extends UMLChangeAction {
      * @param s
      */
     protected ActionSetFeatureOwnerScope() {
-        super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
+        super(Translator.localize("Set"), true, NO_ICON);
     }
     
     /**
