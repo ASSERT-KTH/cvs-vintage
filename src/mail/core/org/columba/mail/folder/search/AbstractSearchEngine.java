@@ -394,6 +394,8 @@ public abstract class AbstractSearchEngine {
 		WorkerStatusController worker)
 		throws Exception {
 
+		worker.setDisplayText("Searching...");
+		
 		return searchMessages(filter, null, worker);
 	}
 
