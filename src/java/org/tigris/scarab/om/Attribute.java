@@ -83,7 +83,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.45 2002/04/30 06:58:19 jon Exp $
+  * @version $Id: Attribute.java,v 1.46 2002/05/15 00:39:47 jon Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -389,7 +389,7 @@ public class Attribute
         List result = null;
         Object obj = ScarabCache.get(this, GET_ALL_ATTRIBUTE_OPTIONS); 
         if ( obj == null ) 
-        {        
+        {
             Criteria crit = new Criteria();
             crit.addJoin(AttributeOptionPeer.OPTION_ID, 
                          ROptionOptionPeer.OPTION2_ID);
