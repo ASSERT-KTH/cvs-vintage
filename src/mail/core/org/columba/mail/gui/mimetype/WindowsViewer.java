@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import org.columba.core.util.OSInfo;
+
 import org.columba.mail.message.MimeHeader;
 
 public class WindowsViewer extends AbstractViewer {
@@ -38,8 +40,7 @@ public class WindowsViewer extends AbstractViewer {
 	}
 
 	public Process openURL(URL url) {
-		String osName = System.getProperty("os.name");
-		if ((osName.equals("Windows 2000")) || (osName.equals("Windows XP")) ){
+		if (OSInfo.isWin2K() || OSInfo.isWinXP()) {
 			Process proc = null;
 			try {
 				String[] cmd =
@@ -70,7 +71,6 @@ public class WindowsViewer extends AbstractViewer {
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
-
 		} else {
 			openDocument(url.getPath());
 		}
@@ -84,22 +84,19 @@ public class WindowsViewer extends AbstractViewer {
 
 	protected void openDocument(String filename) {
 		try {
-			String osName = System.getProperty("os.name");
 			Process proc = null;
-			if (osName.equals("Windows NT")) {
+			if (OSInfo.isWinNT()) {
 				String[] cmd = new String[] { "cmd.exe", "/C", filename };
 				Runtime rt = Runtime.getRuntime();
 				System.out.println(
 					"Executing " + cmd[0] + " " + cmd[1] + " " + cmd[2]);
 				proc = rt.exec(cmd);
-			} else if (
-				(osName.equals("Windows 95"))
-					|| (osName.equals("Windows 98"))) {
+			} else if (OSInfo.isWin95() || OSInfo.isWin98()) {
 				String[] cmd = new String[] { "start", filename };
 				Runtime rt = Runtime.getRuntime();
 				System.out.println("Executing " + cmd[0] + " " + cmd[1]);
 				proc = rt.exec(cmd);
-			} else if ((osName.equals("Windows 2000")) || (osName.equals("Windows XP")) ){
+			} else if (OSInfo.isWin2K() || OSInfo.isWinXP()){
 				// this includes Windows XP
 				String[] cmd = new String[3];
 				cmd[0] = "cmd.exe";
