@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.filter;
 
 import java.awt.BorderLayout;
@@ -23,21 +24,8 @@ import java.awt.event.KeyEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
-import org.columba.core.gui.button.CloseButton;
-import org.columba.core.gui.button.HelpButton;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.wizard.WizardTopBorder;
@@ -56,8 +44,7 @@ public class FilterDialog implements ActionListener {
 	private JButton addActionButton;
 	private JButton removeActionButton;
 
-	private CloseButton closeButton;
-	private HelpButton helpButton;
+	private JButton closeButton, helpButton;
 
 	private Filter filter;
 	private JFrame frame;
@@ -212,14 +199,14 @@ public class FilterDialog implements ActionListener {
 				new WizardTopBorder(),
 				BorderFactory.createEmptyBorder(17, 12, 11, 11)));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		closeButton = new CloseButton();
+		closeButton = new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
 		
-		helpButton = new HelpButton();
+		helpButton = new JButton(MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
-				helpButton.addActionListener(this);
+		helpButton.addActionListener(this);
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);

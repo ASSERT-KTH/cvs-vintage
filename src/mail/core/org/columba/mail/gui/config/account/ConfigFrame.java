@@ -13,17 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.account;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -32,26 +25,12 @@ import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.config.Config;
-import org.columba.core.gui.button.CloseButton;
-import org.columba.core.gui.button.HelpButton;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
@@ -103,13 +82,10 @@ public class ConfigFrame
 	JTextField nameTextField = new JTextField();
 	JLabel nameLabel = new JLabel();
 
-	JButton addButton = new JButton();
-	HelpButton helpButton;
-	CloseButton closeButton;
+	JButton addButton, helpButton, closeButton;
 	//JButton enableButton = new JButton();
 	//JButton disableButton = new JButton();
-	JButton removeButton = new JButton();
-	JButton editButton = new JButton();
+	JButton removeButton, editButton;
 
 	//JButton moveupButton = new JButton();
 	//JButton movedownButton = new JButton();
@@ -169,14 +145,14 @@ public class ConfigFrame
 		mainPanel.setBorder(border2);
 		*/
 
-		addButton.setText(MailResourceLoader.getString("dialog", "account", "addaccount")); //$NON-NLS-1$
+		addButton = new JButton(MailResourceLoader.getString("dialog", "account", "addaccount")); //$NON-NLS-1$
 		addButton.setMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "account", "addacount"));
 		//addButton.setIcon( ImageLoader.getImageIcon("stock_add_16.png") );
 		addButton.setActionCommand("ADD"); //$NON-NLS-1$
 		addButton.addActionListener(this);
 
-		removeButton.setText(MailResourceLoader.getString("dialog", "account", "removeaccount")); //$NON-NLS-1$
+		removeButton = new JButton(MailResourceLoader.getString("dialog", "account", "removeaccount")); //$NON-NLS-1$
 		removeButton.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
@@ -187,7 +163,7 @@ public class ConfigFrame
 		removeButton.setEnabled(false);
 		removeButton.addActionListener(this);
 
-		editButton.setText(MailResourceLoader.getString("dialog", "account", "editsettings")); //$NON-NLS-1$
+		editButton = new JButton(MailResourceLoader.getString("dialog", "account", "editsettings")); //$NON-NLS-1$
 		editButton.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
@@ -312,11 +288,11 @@ public class ConfigFrame
 	protected JPanel createButtonPanel() {
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 11, 11));
-		closeButton = new CloseButton();
+		closeButton = new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		helpButton = new HelpButton();
+		helpButton = new JButton(MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
 		buttonPanel.add(helpButton);

@@ -13,42 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.search;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
-import org.columba.core.gui.button.CloseButton;
-import org.columba.core.gui.button.HelpButton;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.Folder;
@@ -70,9 +47,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 	//private JButton removeButton;
 	private JButton selectButton;
 
-	private JButton searchButton;
-	private CloseButton closeButton;
-	private HelpButton helpButton;
+	private JButton searchButton, closeButton, helpButton;
 
 	private JCheckBox includeSubfolderButton;
 
@@ -112,11 +87,11 @@ public class SearchFrame extends JDialog implements ActionListener {
 		searchButton.addActionListener(this);
 		searchButton.setActionCommand("SEARCH");
 		buttonPanel.add(searchButton);
-		closeButton = new CloseButton();
+		closeButton = new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.addActionListener(this);
 		closeButton.setActionCommand("CLOSE");
 		buttonPanel.add(closeButton);
-		helpButton = new HelpButton();
+		helpButton = new JButton(MailResourceLoader.getString("global", "help"));
 		helpButton.addActionListener(this);
 		helpButton.setActionCommand("HELP");
 		helpButton.setEnabled(false);

@@ -13,17 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.filter;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -32,27 +25,13 @@ import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.config.Config;
-import org.columba.core.gui.button.CloseButton;
-import org.columba.core.gui.button.HelpButton;
+import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
@@ -60,8 +39,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
-public class ConfigFrame
-	extends JDialog
+public class ConfigFrame extends JDialog
 	implements ListSelectionListener, ActionListener {
 
 	/*
@@ -75,7 +53,6 @@ public class ConfigFrame
 	private JButton downButton;
 	*/
 
-	//private JButton closeButton;
 	private JFrame frame;
 
 	public FilterListTable listView;
@@ -99,16 +76,7 @@ public class ConfigFrame
 	JTextField nameTextField = new JTextField();
 	JLabel nameLabel = new JLabel();
 
-	CloseButton closeButton = new CloseButton();
-	HelpButton helpButton = new HelpButton();
-
-	JButton addButton = new JButton();
-	JButton removeButton = new JButton();
-	JButton editButton = new JButton();
-	JButton enableButton = new JButton();
-	JButton disableButton = new JButton();
-	JButton moveupButton = new JButton();
-	JButton movedownButton = new JButton();
+	JButton closeButton, addButton, removeButton, editButton, enableButton, disableButton, moveupButton, movedownButton;
 
 	BorderLayout borderLayout3 = new BorderLayout();
 	GridLayout gridLayout1 = new GridLayout();
@@ -135,7 +103,6 @@ public class ConfigFrame
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
-
 	}
 
 	public Filter getSelected() {
@@ -152,16 +119,13 @@ public class ConfigFrame
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 		getContentPane().add(mainPanel);
 
-		addButton.setText(
-			MailResourceLoader.getString("dialog", "filter", "add_filter"));
+                addButton = new JButton(MailResourceLoader.getString("dialog", "filter", "add_filter"));
 		addButton.setMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "filter", "add_filter"));
 		addButton.setActionCommand("ADD");
-		addButton.setEnabled(true);
 		addButton.addActionListener(this);
 
-		removeButton.setText(
-			MailResourceLoader.getString("dialog", "filter", "remove_filter"));
+		removeButton = new JButton(MailResourceLoader.getString("dialog", "filter", "remove_filter"));
 		removeButton.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
@@ -171,8 +135,7 @@ public class ConfigFrame
 		removeButton.setEnabled(false);
 		removeButton.addActionListener(this);
 
-		editButton.setText(
-			MailResourceLoader.getString("dialog", "filter", "edit_filter"));
+		editButton = new JButton(MailResourceLoader.getString("dialog", "filter", "edit_filter"));
 		editButton.setMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "filter", "edit_filter"));
 		editButton.setActionCommand("EDIT");
@@ -189,16 +152,14 @@ public class ConfigFrame
 		disableButton.addActionListener( this );
 		*/
 
-		moveupButton.setText(
-			MailResourceLoader.getString("dialog", "filter", "moveup"));
+		moveupButton = new JButton(MailResourceLoader.getString("dialog", "filter", "moveup"));
 		moveupButton.setMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "filter", "moveup"));
 		moveupButton.setActionCommand("MOVEUP");
 		moveupButton.setEnabled(false);
 		moveupButton.addActionListener(this);
 
-		movedownButton.setText(
-			MailResourceLoader.getString("dialog", "filter", "movedown"));
+		movedownButton = new JButton(MailResourceLoader.getString("dialog", "filter", "movedown"));
 		movedownButton.setMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "filter", "movedown"));
 		movedownButton.setActionCommand("MOVEDOWN");
@@ -325,11 +286,11 @@ public class ConfigFrame
 				new WizardTopBorder(),
 				BorderFactory.createEmptyBorder(17, 12, 11, 11)));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		closeButton = new CloseButton();
+		JButton closeButton = new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		helpButton = new HelpButton();
+		JButton helpButton = new JButton(MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
 		buttonPanel.add(helpButton);
@@ -436,24 +397,4 @@ public class ConfigFrame
 			}
 		}
 	}
-
-	public class WizardTopBorder extends AbstractBorder {
-		protected Insets borderInsets = new Insets(2, 0, 0, 0);
-		public void paintBorder(
-			Component c,
-			Graphics g,
-			int x,
-			int y,
-			int w,
-			int h) {
-			g.setColor(UIManager.getColor("Button.darkShadow"));
-			g.drawLine(x, y, x + w - 1, y);
-			g.setColor(Color.white);
-			g.drawLine(x, y + 1, x + w - 1, y + 1);
-		}
-		public Insets getBorderInsets(Component c) {
-			return borderInsets;
-		}
-	}
-
 }
