@@ -73,11 +73,11 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  *          <p/>
  *          TODO: collecting join paths needs rewrite
  */
-public final class JDBCEJBQLCompiler extends BasicVisitor
+public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
 {
    // input objects
    private final Catalog catalog;

@@ -14,7 +14,7 @@ import org.jboss.deployment.DeploymentException;
  * Immutable class which contains information about an DynamicQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
 {
@@ -30,19 +30,19 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
 
    private final JDBCReadAheadMetaData readAhead;
 
+   private final Class compiler;
+
    /**
     * Constructs a JDBCDynamicQLQueryMetaData with DynamicQL declared in the
     * jboss-ql elemnt and is invoked by the specified method.
     * @param defaults the metadata about this query
     */
-   public JDBCDynamicQLQueryMetaData(
-      JDBCDynamicQLQueryMetaData defaults,
-      JDBCReadAheadMetaData readAhead) throws DeploymentException
+   public JDBCDynamicQLQueryMetaData(JDBCDynamicQLQueryMetaData defaults, JDBCReadAheadMetaData readAhead)
    {
-
       this.method = defaults.getMethod();
       this.readAhead = readAhead;
       this.resultTypeMappingLocal = defaults.isResultTypeMappingLocal();
+      compiler = defaults.compiler;
    }
 
 
@@ -69,6 +69,8 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
          throw new DeploymentException("Dynamic-ql method must have two " +
             "parameters of type String and Object[].");
       }
+
+      this.compiler = jdbcQueryMetaData.getQLCompilerClass();
    }
 
    // javadoc in parent class
@@ -90,6 +92,11 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
    public JDBCReadAheadMetaData getReadAhead()
    {
       return readAhead;
+   }
+
+   public Class getQLCompilerClass()
+   {
+      return compiler;
    }
 
    /**

@@ -18,7 +18,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class JDBCJBossQLQuery extends JDBCAbstractQueryCommand
 {
@@ -35,7 +35,7 @@ public final class JDBCJBossQLQuery extends JDBCAbstractQueryCommand
          getLog().debug("JBossQL: " + metadata.getJBossQL());
       }
 
-      JDBCEJBQLCompiler compiler = new JDBCEJBQLCompiler(manager.getCatalog());
+      QLCompiler compiler = JDBCQueryManager.getInstance(metadata.getQLCompilerClass(), manager.getCatalog());
 
       try
       {

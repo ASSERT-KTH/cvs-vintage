@@ -9,12 +9,13 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 import java.lang.reflect.Method;
 
 import org.jboss.metadata.QueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
 
 /**
  * Immutable class which contains information about an EJB QL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
 {
@@ -38,6 +39,8 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
     */
    private final JDBCReadAheadMetaData readAhead;
 
+   private final Class compiler;
+
    /**
     * Constructs a JDBCQlQueryMetaData which is defined by the queryMetaData
     * and is invoked by the specified method.
@@ -52,6 +55,7 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
       ejbQl = queryMetaData.getEjbQl();
       resultTypeMappingLocal =
          (queryMetaData.getResultTypeMapping() == QueryMetaData.LOCAL);
+      compiler = JDBCQueryManager.getDefaultQLCompilerClass();
    }
 
    /**
@@ -59,33 +63,27 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
     * and additional data from the xml element
     * @param defaults the metadata about this query
     */
-   public JDBCQlQueryMetaData(
-      JDBCQlQueryMetaData defaults,
-      JDBCReadAheadMetaData readAhead)
+   public JDBCQlQueryMetaData(JDBCQlQueryMetaData defaults, JDBCReadAheadMetaData readAhead)
    {
-
       this.method = defaults.getMethod();
       this.readAhead = readAhead;
       this.ejbQl = defaults.getEjbQl();
       this.resultTypeMappingLocal = defaults.resultTypeMappingLocal;
+      this.compiler = defaults.compiler;
    }
-
 
    /**
     * Constructs a JDBCQlQueryMetaData with data from the jdbcQueryMetaData
     * and additional data from the xml element
     * @param jdbcQueryMetaData the metadata about this query
     */
-   public JDBCQlQueryMetaData(
-      JDBCQlQueryMetaData jdbcQueryMetaData,
-      Method method,
-      JDBCReadAheadMetaData readAhead)
+   public JDBCQlQueryMetaData(JDBCQlQueryMetaData jdbcQueryMetaData, Method method, JDBCReadAheadMetaData readAhead)
    {
-
       this.method = method;
       this.readAhead = readAhead;
       ejbQl = jdbcQueryMetaData.getEjbQl();
       resultTypeMappingLocal = jdbcQueryMetaData.resultTypeMappingLocal;
+      compiler = jdbcQueryMetaData.compiler;
    }
 
    // javadoc in parent class
@@ -118,6 +116,11 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
       return readAhead;
    }
 
+   public Class getQLCompilerClass()
+   {
+      return compiler;
+   }
+   
    /**
     * Compares this JDBCQlQueryMetaData against the specified object. Returns
     * true if the objects are the same. Two JDBCQlQueryMetaData are the same

@@ -6,6 +6,9 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCEJBQLCompiler;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
+
 import java.lang.reflect.Method;
 
 /**
@@ -16,7 +19,7 @@ import java.lang.reflect.Method;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData
 {
@@ -30,19 +33,19 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData
     */
    private final JDBCReadAheadMetaData readAhead;
 
+   private final Class compiler;
+
    /**
     * Constructs a JDBCAutomaticQueryMetaData which is invoked by the specified
     * method.
     * @param method the method which invokes this query
     * @readAhead Read ahead meta data.
     */
-   public JDBCAutomaticQueryMetaData(
-      Method method,
-      JDBCReadAheadMetaData readAhead)
+   public JDBCAutomaticQueryMetaData(Method method, JDBCReadAheadMetaData readAhead)
    {
-
       this.method = method;
       this.readAhead = readAhead;
+      this.compiler = JDBCQueryManager.getDefaultQLCompilerClass();
    }
 
    public Method getMethod()
@@ -62,6 +65,11 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData
    public JDBCReadAheadMetaData getReadAhead()
    {
       return readAhead;
+   }
+
+   public Class getQLCompilerClass()
+   {
+      return compiler;
    }
 
    /**

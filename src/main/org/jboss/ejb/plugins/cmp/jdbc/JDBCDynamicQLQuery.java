@@ -28,7 +28,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
 {
@@ -52,7 +52,15 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
          getLog().debug("DYNAMIC-QL: " + dynamicQL);
       }
 
-      JDBCEJBQLCompiler compiler = new JDBCEJBQLCompiler(catalog);
+      QLCompiler compiler = null;
+      try
+      {
+         compiler = JDBCQueryManager.getInstance(metadata.getQLCompilerClass(), catalog);
+      }
+      catch(DeploymentException e)
+      {
+         throw new FinderException(e.getMessage());
+      }
 
       // get the parameters
       Object[] parameters = (Object[])args[1];

@@ -11,12 +11,13 @@ import java.lang.reflect.Method;
 import org.w3c.dom.Element;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
 
 /**
  * Immutable class which contains information about an JBossQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
 {
@@ -40,20 +41,20 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
     */
    private final JDBCReadAheadMetaData readAhead;
 
+   private final Class compiler;
+
    /**
     * Constructs a JDBCJBossQLQueryMetaData with JBossQL declared in the
     * jboss-ql elemnt and is invoked by the specified method.
     * @param defaults the metadata about this query
     */
-   public JDBCJBossQLQueryMetaData(
-      JDBCJBossQLQueryMetaData defaults,
-      JDBCReadAheadMetaData readAhead) throws DeploymentException
+   public JDBCJBossQLQueryMetaData(JDBCJBossQLQueryMetaData defaults, JDBCReadAheadMetaData readAhead)
    {
-
       this.method = defaults.getMethod();
       this.readAhead = readAhead;
       this.jbossQL = defaults.getJBossQL();
       this.resultTypeMappingLocal = defaults.isResultTypeMappingLocal();
+      this.compiler = defaults.compiler;
    }
 
    /**
@@ -61,13 +62,12 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
     * jboss-ql elemnt and is invoked by the specified method.
     * @param jdbcQueryMetaData the metadata about this query
     */
-   public JDBCJBossQLQueryMetaData(
-      JDBCQueryMetaData jdbcQueryMetaData,
-      Element element,
-      Method method,
-      JDBCReadAheadMetaData readAhead) throws DeploymentException
+   public JDBCJBossQLQueryMetaData(JDBCQueryMetaData jdbcQueryMetaData,
+                                   Element element,
+                                   Method method,
+                                   JDBCReadAheadMetaData readAhead)
+      throws DeploymentException
    {
-
       this.method = method;
       this.readAhead = readAhead;
       jbossQL = MetaData.getElementContent(element);
@@ -76,6 +76,8 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
          throw new DeploymentException("jboss-ql element is empty");
       }
       resultTypeMappingLocal = jdbcQueryMetaData.isResultTypeMappingLocal();
+
+      compiler = JDBCQueryManager.getQLCompiler(element);
    }
 
    // javadoc in parent class
@@ -106,6 +108,11 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
    public JDBCReadAheadMetaData getReadAhead()
    {
       return readAhead;
+   }
+
+   public Class getQLCompilerClass()
+   {
+      return compiler;
    }
 
    /**

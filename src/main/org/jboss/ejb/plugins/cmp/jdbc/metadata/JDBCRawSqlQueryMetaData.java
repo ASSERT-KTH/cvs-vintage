@@ -6,6 +6,8 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
+
 import java.lang.reflect.Method;
 
 /**
@@ -13,11 +15,13 @@ import java.lang.reflect.Method;
  * A raw sql query allows you to do anything sql allows you to do.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData
 {
    private final Method method;
+
+   private final Class compiler;
 
    /**
     * Constructs a JDBCRawSqlQueryMetaData which is invoked by the specified
@@ -27,6 +31,7 @@ public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData
    public JDBCRawSqlQueryMetaData(Method method)
    {
       this.method = method;
+      this.compiler = JDBCQueryManager.getDefaultQLCompilerClass();
    }
 
    public Method getMethod()
@@ -48,7 +53,11 @@ public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData
       return JDBCReadAheadMetaData.DEFAULT;
    }
 
-
+   public Class getQLCompilerClass()
+   {
+      return compiler;
+   }
+   
    /**
     * Compares this JDBCRawSqlQueryMetaData against the specified object. Returns
     * true if the objects are the same. Two JDBCRawSqlQueryMetaData are the same

@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="danch@nvisia.com">danch</a>
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public interface JDBCQueryMetaData
 {
@@ -39,4 +39,6 @@ public interface JDBCQueryMetaData
     * @return the read ahead metadata for the query.
     */
    public JDBCReadAheadMetaData getReadAhead();
+
+   public Class getQLCompilerClass();
 }
