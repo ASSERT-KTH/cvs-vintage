@@ -81,7 +81,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.153 $
+ * @version $Revision: 1.154 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -827,7 +827,7 @@ public abstract class Container
          // Set the JACC context id
          mi.setValue(InvocationKey.JACC_CONTEXT_ID, contextID);
          contextID = SecurityActions.setContextID(contextID);
-         // Set the JACC policy context handler data is not a SEI msg
+         // Set the standard JACC policy context handler data is not a SEI msg
          if( mi.getType() != InvocationType.SERVICE_ENDPOINT )
          {
             EJBArgsPolicyContextHandler.setArgs(mi.getArguments());
@@ -837,6 +837,8 @@ public abstract class Container
             SOAPMessage msg = (SOAPMessage) mi.getValue(InvocationKey.SOAP_MESSAGE);
             SOAPMsgPolicyContextHandler.setMessage(msg);
          }
+         // Set custom JACC policy handlers
+         BeanMetaDataPolicyContextHandler.setMetaData(this.getBeanMetaData());
 
          // Check against home, remote, localHome, local, getHome,
          // getRemote, getLocalHome, getLocal
