@@ -180,11 +180,14 @@ public class Ajp13
 
     OutputStream out;
     InputStream in;
-	
-    Ajp13Packet outBuf = new Ajp13Packet( MAX_PACKET_SIZE );
-    Ajp13Packet inBuf  = new Ajp13Packet( MAX_PACKET_SIZE );
+
+    // Buffer used of output body and headers
     OutputBuffer headersWriter=new OutputBuffer(MAX_PACKET_SIZE);
-    Ajp13Packet hBuf=new Ajp13Packet(headersWriter);
+    Ajp13Packet outBuf = new Ajp13Packet( headersWriter );
+    // Buffer used for input body
+    Ajp13Packet inBuf  = new Ajp13Packet( MAX_PACKET_SIZE );
+    // Boffer used for request head ( and headers )
+    Ajp13Packet hBuf=new Ajp13Packet( MAX_PACKET_SIZE );
     
     // Holds incoming reads of request body data (*not* header data)
     byte []bodyBuff = new byte[MAX_READ_SIZE];
@@ -230,16 +233,16 @@ public class Ajp13
     {
 	// XXX The return values are awful.
 
-	int err = receive(inBuf);
+	int err = receive(hBuf);
 	if(err < 0) {
 	    return 500;
 	}
 	
-	int type = (int)inBuf.getByte();
+	int type = (int)hBuf.getByte();
 	switch(type) {
 	    
 	case JK_AJP13_FORWARD_REQUEST:
-	    return decodeRequest(req, inBuf);
+	    return decodeRequest(req, hBuf);
 	    
 	case JK_AJP13_SHUTDOWN:
 	    return -2;
@@ -495,28 +498,28 @@ public class Ajp13
     {
 	// XXX if more headers that MAX_SIZE, send 2 packets!
 
-	hBuf.reset();
-        hBuf.appendByte(JK_AJP13_SEND_HEADERS);
-        hBuf.appendInt(status);
+	outBuf.reset();
+        outBuf.appendByte(JK_AJP13_SEND_HEADERS);
+        outBuf.appendInt(status);
 	
-	hBuf.appendString(HttpMessages.getMessage( status ));
+	outBuf.appendString(HttpMessages.getMessage( status ));
         
 	int numHeaders = headers.size();
-        hBuf.appendInt(numHeaders);
+        outBuf.appendInt(numHeaders);
         
 	for( int i=0 ; i < numHeaders ; i++ ) {
 	    String headerName = headers.getName(i).toString();
 	    int sc = headerNameToSc(headerName);
             if(-1 != sc) {
-                hBuf.appendInt(sc);
+                outBuf.appendInt(sc);
             } else {
-                hBuf.appendString(headerName);
+                outBuf.appendString(headerName);
             }
-            hBuf.appendString(headers.getValue(i).toString() );
+            outBuf.appendString(headers.getValue(i).toString() );
         }
 
-        hBuf.end();
-        send(hBuf);
+        outBuf.end();
+        send(outBuf);
     } 
 
     /**
