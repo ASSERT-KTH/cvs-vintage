@@ -1,4 +1,4 @@
-<!-- $Id: project_status.html,v 1.2 2000/12/19 01:22:58 artem Exp $ -->
+<!-- $Id: project_status.html,v 1.3 2001/04/27 23:09:10 jon Exp $ -->
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
@@ -7,37 +7,61 @@
 <title>Scarab: Status and TODO</title>
 </head>
 <body bgcolor="#F0F0F0">
-&nbsp; 
+
 <table border=0 cellpadding=2 width="98%" bgcolor="#FFFFFF" >
     <tr> 
         <td width="100%" bgcolor="#CCCC99"><b><font face="Arial, Helvetica, sans-serif" color="#000033">Status 
-            of the Scarab Bug Tracking System (SBTS)</font></b></td>
+            of the Scarab Issue Tracking System (SBTS)</font></b></td>
     </tr>
 </table>
-<br>
-Last Updated: $Date: 2000/12/19 01:22:58 $<br>
-<br>
-Currently this project is at the end of the requirements gathering phase.<br>
-<br>
-Design is in progress and main efforts are concentraited on infrastructure development.<br>
-<br>
+<p>
+Last Updated: $Date: 2001/04/27 23:09:10 $
+</p>
+
+<p>
+The Scarab project is currently under development. It has been under
+development for quite some time now, however the development hasn't been
+100% on Scarab, it has been on the underlying framework technologies
+that we are using to develop Scarab. The reason is that we have wanted
+to solve some of the MVC design issues before trying to create the
+application. This development has gone on in the Turbine and Velocity
+projects on <a href="http://Jakarta.apache.org/">Jakarta.apache.org</a>
+</p>
+
+<p>
+Development work on Scarab that can be considered nearly complete is the
+overall design of the database as well as the sandbox that has been
+created to allow people to easily check Scarab out of CVS, build it and
+run the included Tomcat servlet engine. We have also completed the
+login/registration screens as well as started work on the attribute
+editor and the first few issue related screens (entering a bug and
+viewing a bug). Part of this development work is the validation of the
+underlying framework code that we have developed.
+</p>
+
+<p>
+We are now in the process of focusing our attention IA/UI issues as well
+as continuing some initial application development. Because things
+change quickly and we may not have time to always update this document,
+it is best to consider the mailing list archives the most up to date
+reflection of the current project status.
+</p>
+
 <table border=0 cellpadding=2 width="98%" bgcolor="#FFFFFF" >
     <tr> 
         <td width="100%" bgcolor="#CCCC99"><b><font face="Arial, Helvetica, sans-serif" color="#000033">TODO...</font></b></td>
     </tr>
 </table>
+
+<p>
+We are always looking for volunteers to help with the development of
+Scarab. Below are some of the things on our TODO list which we feel that 
+people may want to contribute to.
+</p>
+
 <ul>
-    <li>Review <a href="/source/browse/scarab/conf/schema.xml">database schema</a></li>
-    <li> Reorganize <a href="project_docs.html">documentation</a> in more orderly 
-        way</li>
-    <li> Transfer knowledge from <a href="project_mail.html">mailing lists</a> into 
-        <a href="project_docs.html">documentation</a> </li>
-    <li> Add missing screens to UI <a href="mockup">mockup</a></li>
-    <li> Review UI <a href="mockup">mockup</a></li>
-    <li> Discuss structure of CVS <a href="/source/browse/scarab/">repository</a></li>
-    <li> Reorganize CVS <a href="/source/browse/scarab/">repository</a></li>
-    <li> Reorganize build process</li>
-    <li> Make <a href="/source/browse/scarab/www/">web site</a> updates more regular</li>
+    <li>Create a Bugzilla -> Scarab database migration tool (volunteers
+    needed!).</li>
 </ul>
 </body>
 </html>
