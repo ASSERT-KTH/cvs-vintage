@@ -274,7 +274,7 @@
   in the ${dist} directory -->
   <target name="config" description="Build carol configuration directory">
     <mkdir dir="${dist.config}"/>
-    <copy file="${ext}/carol.properties" tofile="${dist.config}/carol.properties"/>  
+    <copy file="${ext}/carol.properties" tofile="${dist.config}/carol.properties"/>
   </target>
 
 
