@@ -49,7 +49,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -424,11 +424,11 @@ public abstract class AbstractInstanceCache
    /**
     * Passivates the given EnterpriseContext
     */
-   protected abstract void passivate(EnterpriseContext ctx) throws RemoteException;
+   protected abstract void passivate(EnterpriseContext ctx) throws Exception;
    /**
     * Activates the given EnterpriseContext
     */
-   protected abstract void activate(EnterpriseContext ctx) throws RemoteException;
+   protected abstract void activate(EnterpriseContext ctx) throws Exception;
    /**
     * Acquires an EnterpriseContext from the pool
     */
