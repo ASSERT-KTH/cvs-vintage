@@ -25,7 +25,7 @@
 // File: SequenceDiagramGraphModel.java
 // Classes: SequenceDiagramGraphModel
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SequenceDiagramGraphModel.java,v 1.4 2002/08/10 14:57:46 linus Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.5 2002/08/19 20:43:50 kataka Exp $
 
 package org.argouml.uml.diagram.sequence;
 
@@ -222,7 +222,7 @@ implements MutableGraphModel, MElementListener, VetoableChangeListener {
   public Object connect(Object fromPort, Object toPort,
 			java.lang.Class edgeClass) {
   
-    if (edgeClass == MLinkImpl.class &&
+    if (edgeClass == MLink.class &&
       (fromPort instanceof MObject && toPort instanceof MObject)) {
       MLink ml = UmlFactory.getFactory().getCommonBehavior().createLink();
       MLinkEnd le0 = UmlFactory.getFactory().getCommonBehavior().createLinkEnd();

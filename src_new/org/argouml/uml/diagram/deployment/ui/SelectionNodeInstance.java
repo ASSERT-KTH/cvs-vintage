@@ -24,7 +24,7 @@
 // File: SelectionNodeInstance.java
 // Classes: SelectionNodeInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionNodeInstance.java,v 1.3 2002/08/04 17:44:19 thierrylach Exp $
+// $Id: SelectionNodeInstance.java,v 1.4 2002/08/19 20:43:49 kataka Exp $
 
 
 package org.argouml.uml.diagram.deployment.ui;
@@ -234,21 +234,21 @@ public class SelectionNodeInstance extends SelectionWButtons {
 
   public Object addCompClassAbove(MutableGraphModel mgm, MNodeInstance cls,
 			    MNodeInstance newCls) {
-    return mgm.connect(cls, newCls, MLinkImpl.class);
+    return mgm.connect(cls, newCls, MLink.class);
   }
 
   public Object addCompClassBelow(MutableGraphModel mgm, MNodeInstance cls,
 			    MNodeInstance newCls) {
-    return mgm.connect(newCls, cls, MLinkImpl.class);
+    return mgm.connect(newCls, cls, MLink.class);
   }
   public Object addCompClassRight(MutableGraphModel mgm, MNodeInstance cls,
 			    MNodeInstance newCls) {
-    return mgm.connect(cls, newCls, MLinkImpl.class);
+    return mgm.connect(cls, newCls, MLink.class);
   }
 
   public Object addCompClassLeft(MutableGraphModel mgm, MNodeInstance cls,
 			    MNodeInstance newCls) {
-    return mgm.connect(newCls, cls, MLinkImpl.class);
+    return mgm.connect(newCls, cls, MLink.class);
   }
 
 

@@ -24,17 +24,19 @@
 // File: ActionCreatePseudostate.java
 // Classes: ActionCreatePseudostate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ActionCreatePseudostate.java,v 1.1 2000/09/04 12:50:20 1sturm Exp $
+// $Id: ActionCreatePseudostate.java,v 1.2 2002/08/19 20:43:49 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
 import java.util.*;
 import java.beans.*;
 
+import org.argouml.ui.CmdCreateNode;
+
 import ru.novosoft.uml.behavior.state_machines.*;
 import ru.novosoft.uml.foundation.data_types.*;
 
-import org.tigris.gef.base.*;
+
 
 /**  */
 
@@ -47,7 +49,7 @@ public class ActionCreatePseudostate extends CmdCreateNode {
    *  and its FigNode. */
   public ActionCreatePseudostate(MPseudostateKind kind, String name) {
     super(new Hashtable(), name);
-    setArg("className", MPseudostateImpl.class);
+    setArg("className", MPseudostate.class);
 	//??? don't know, Toby, nsuml
     setArg("kind", kind);
   }

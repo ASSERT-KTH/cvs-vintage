@@ -24,7 +24,7 @@
 // File: SelectionComponent.java
 // Classes: SelectionComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionComponent.java,v 1.3 2002/08/04 17:44:19 thierrylach Exp $
+// $Id: SelectionComponent.java,v 1.4 2002/08/19 20:43:49 kataka Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -232,21 +232,21 @@ public class SelectionComponent extends SelectionWButtons {
 
   public Object addCompClassAbove(MutableGraphModel mgm, MComponent cls,
 			    MComponent newCls) {
-    return mgm.connect(cls, newCls, MDependencyImpl.class);
+    return mgm.connect(cls, newCls, MDependency.class);
   }
 
   public Object addCompClassBelow(MutableGraphModel mgm, MComponent cls,
 			    MComponent newCls) {
-    return mgm.connect(newCls, cls, MDependencyImpl.class);
+    return mgm.connect(newCls, cls, MDependency.class);
   }
   public Object addCompClassRight(MutableGraphModel mgm, MComponent cls,
 			    MComponent newCls) {
-    return mgm.connect(cls, newCls, MDependencyImpl.class);
+    return mgm.connect(cls, newCls, MDependency.class);
   }
 
   public Object addCompClassLeft(MutableGraphModel mgm, MComponent cls,
 			    MComponent newCls) {
-    return mgm.connect(newCls, cls, MDependencyImpl.class);
+    return mgm.connect(newCls, cls, MDependency.class);
   }
 
 

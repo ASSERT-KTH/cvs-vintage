@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.12 2002/08/19 16:41:22 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.13 2002/08/19 20:43:49 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -87,7 +87,7 @@ public class UMLStateDiagram extends UMLDiagram {
 
   protected static Action _actionTransition =
   new CmdSetMode(ModeCreatePolyEdge.class,
-		 "edgeClass", MTransitionImpl.class,
+		 "edgeClass", MTransition.class,
 		 "Transition");
 
 

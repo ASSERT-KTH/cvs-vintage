@@ -24,7 +24,7 @@
 // File: SelectionInterface.java
 // Classes: SelectionInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionInterface.java,v 1.4 2002/08/04 17:44:20 thierrylach Exp $
+// $Id: SelectionInterface.java,v 1.5 2002/08/19 20:43:50 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -191,7 +191,7 @@ public class SelectionInterface extends SelectionWButtons {
 	
   public Object addRealization(MutableGraphModel mgm, MInterface cls,
 			    MClass newCls) {
-    return mgm.connect(newCls, cls, MAbstractionImpl.class);
+    return mgm.connect(newCls, cls, MAbstraction.class);
   }
 	
 } /* end class SelectionInterface */

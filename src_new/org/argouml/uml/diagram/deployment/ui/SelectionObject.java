@@ -24,7 +24,7 @@
 // File: SelectionObject.java
 // Classes: SelectionObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionObject.java,v 1.4 2002/08/04 17:44:19 thierrylach Exp $
+// $Id: SelectionObject.java,v 1.5 2002/08/19 20:43:49 kataka Exp $
 
 
 package org.argouml.uml.diagram.deployment.ui;
@@ -234,22 +234,22 @@ public class SelectionObject extends SelectionWButtons {
 
   public Object addObjectClassAbove(MutableGraphModel mgm, MObject cls,
 			    MObject newCls) {
-    return mgm.connect(cls, newCls, MLinkImpl.class);
+    return mgm.connect(cls, newCls, MLink.class);
   }
 
   public Object addObjectClassBelow(MutableGraphModel mgm, MObject cls,
 			    MObject newCls) {
-    return mgm.connect(newCls, cls, MLinkImpl.class);
+    return mgm.connect(newCls, cls, MLink.class);
   }
 
   public Object addObjectClassRight(MutableGraphModel mgm, MObject cls,
 			    MObject newCls) {
-    return mgm.connect(cls, newCls, MLinkImpl.class);
+    return mgm.connect(cls, newCls, MLink.class);
   }
 
   public Object addObjectClassLeft(MutableGraphModel mgm, MObject cls,
 			    MObject newCls) {
-    return mgm.connect(newCls, cls, MLinkImpl.class);
+    return mgm.connect(newCls, cls, MLink.class);
   }
 
 

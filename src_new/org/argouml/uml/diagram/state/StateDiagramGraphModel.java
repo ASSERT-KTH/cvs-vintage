@@ -24,7 +24,7 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.6 2002/08/15 16:57:08 kataka Exp $
+// $Id: StateDiagramGraphModel.java,v 1.7 2002/08/19 20:43:50 kataka Exp $
 
 package org.argouml.uml.diagram.state;
 import org.argouml.model.uml.UmlFactory;
@@ -284,7 +284,7 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
       if (MPseudostateKind.INITIAL.equals(((MPseudostate)toSV).getKind()))
 	return null;
 
-    if (edgeClass == MTransitionImpl.class) {
+    if (edgeClass == MTransition.class) {
       MTransition tr = UmlFactory.getFactory().getStateMachines().buildTransition(_machine, fromSV, toSV);
       addEdge(tr);
       return tr;

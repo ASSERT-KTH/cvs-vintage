@@ -24,7 +24,7 @@
 // File: SelectionState.java
 // Classes: SelectionState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionState.java,v 1.4 2002/08/04 17:44:19 thierrylach Exp $
+// $Id: SelectionState.java,v 1.5 2002/08/19 20:43:49 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -224,12 +224,12 @@ public class SelectionState extends SelectionWButtons {
 
   public Object addOutgoingTrans(MutableGraphModel mgm, MStateVertex cls,
 			    MStateVertex newCls) {
-    return mgm.connect(cls, newCls, MTransitionImpl.class);
+    return mgm.connect(cls, newCls, MTransition.class);
   }
 
   public Object addIncomingTrans(MutableGraphModel mgm, MStateVertex cls,
 			    MStateVertex newCls) {
-    return mgm.connect(newCls, cls, MTransitionImpl.class);
+    return mgm.connect(newCls, cls, MTransition.class);
   }
 
   ////////////////////////////////////////////////////////////////

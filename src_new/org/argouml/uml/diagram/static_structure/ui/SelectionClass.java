@@ -24,7 +24,7 @@
 // File: SelectionClass.java
 // Classes: SelectionClass
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionClass.java,v 1.4 2002/08/04 17:44:20 thierrylach Exp $
+// $Id: SelectionClass.java,v 1.5 2002/08/19 20:43:50 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -263,22 +263,22 @@ public class SelectionClass extends SelectionWButtons {
 
   public Object addSuperClass(MutableGraphModel mgm, MClass cls,
 			    MClass newCls) {
-    return mgm.connect(cls, newCls, MGeneralizationImpl.class);
+    return mgm.connect(cls, newCls, MGeneralization.class);
   }
 
   public Object addSubClass(MutableGraphModel mgm, MClass cls,
 			    MClass newCls) {
-    return mgm.connect(newCls, cls, MGeneralizationImpl.class);
+    return mgm.connect(newCls, cls, MGeneralization.class);
   }
 
   public Object addAssocClassRight(MutableGraphModel mgm, MClass cls,
 			    MClass newCls) {
-    return mgm.connect(cls, newCls, MAssociationImpl.class);
+    return mgm.connect(cls, newCls, MAssociation.class);
   }
 
   public Object addAssocClassLeft(MutableGraphModel mgm, MClass cls,
 			    MClass newCls) {
-    return mgm.connect(newCls, cls, MAssociationImpl.class);
+    return mgm.connect(newCls, cls, MAssociation.class);
   }
 
   ////////////////////////////////////////////////////////////////

@@ -24,7 +24,7 @@
 // File: SelectionNode.java
 // Classes: SelectionNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionNode.java,v 1.3 2002/08/04 17:44:19 thierrylach Exp $
+// $Id: SelectionNode.java,v 1.4 2002/08/19 20:43:49 kataka Exp $
 
 
 package org.argouml.uml.diagram.deployment.ui;
@@ -233,21 +233,21 @@ public class SelectionNode extends SelectionWButtons {
 
   public Object addNodeClassAbove(MutableGraphModel mgm, MNode cls,
 			    MNode newCls) {
-    return mgm.connect(cls, newCls, MAssociationImpl.class);
+    return mgm.connect(cls, newCls, MAssociation.class);
   }
 
   public Object addNodeClassBelow(MutableGraphModel mgm, MNode cls,
 			    MNode newCls) {
-    return mgm.connect(newCls, cls, MAssociationImpl.class);
+    return mgm.connect(newCls, cls, MAssociation.class);
   }
   public Object addNodeClassRight(MutableGraphModel mgm, MNode cls,
 			    MNode newCls) {
-    return mgm.connect(cls, newCls, MAssociationImpl.class);
+    return mgm.connect(cls, newCls, MAssociation.class);
   }
 
   public Object addNodeClassLeft(MutableGraphModel mgm, MNode cls,
 			    MNode newCls) {
-    return mgm.connect(newCls, cls, MAssociationImpl.class);
+    return mgm.connect(newCls, cls, MAssociation.class);
   }
 
 

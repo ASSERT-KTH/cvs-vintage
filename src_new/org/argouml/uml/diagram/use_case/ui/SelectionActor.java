@@ -24,7 +24,7 @@
 // File: SelectionActor.java
 // Classes: SelectionActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionActor.java,v 1.4 2002/08/04 17:44:20 thierrylach Exp $
+// $Id: SelectionActor.java,v 1.5 2002/08/19 20:43:49 kataka Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -199,12 +199,12 @@ public class SelectionActor extends SelectionWButtons {
 
   public Object addAssocClassRight(MutableGraphModel mgm, MActor cls,
 			    MUseCase newCls) {
-    return mgm.connect(cls, newCls, MAssociationImpl.class);
+    return mgm.connect(cls, newCls, MAssociation.class);
   }
 
   public Object addAssocClassLeft(MutableGraphModel mgm, MActor cls,
 			    MUseCase newCls) {
-    return mgm.connect(newCls, cls, MAssociationImpl.class);
+    return mgm.connect(newCls, cls, MAssociation.class);
   }
 
 

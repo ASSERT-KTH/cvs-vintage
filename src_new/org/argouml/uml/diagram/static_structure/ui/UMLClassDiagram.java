@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.7 2002/08/19 16:41:22 kataka Exp $
+// $Id: UMLClassDiagram.java,v 1.8 2002/08/19 20:43:50 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -67,28 +67,28 @@ public class UMLClassDiagram extends UMLDiagram {
 
 	protected static Action _actionDepend =
 		new CmdSetMode(ModeCreatePolyEdge.class,
-					   "edgeClass", MDependencyImpl.class,
+					   "edgeClass", MDependency.class,
 					   "Dependency");
 
 	protected static Action _actionAssoc =
 		new CmdSetMode(ModeCreatePolyEdge.class,
-					   "edgeClass", MAssociationImpl.class,
+					   "edgeClass", MAssociation.class,
 					   "Association");
 
 	protected static Action _actionLink =
 		new CmdSetMode(ModeCreatePolyEdge.class,
-					   "edgeClass", MLinkImpl.class,
+					   "edgeClass", MLink.class,
 					   "Link");
 
 	protected static Action _actionGeneralize =
 		new CmdSetMode(ModeCreatePolyEdge.class,
-					   "edgeClass", MGeneralizationImpl.class,
+					   "edgeClass", MGeneralization.class,
 					   "Generalization");
 
   
 	protected static Action _actionRealize =
 		new CmdSetMode(ModeCreatePolyEdge.class,
-					   "edgeClass", MAbstractionImpl.class,
+					   "edgeClass", MAbstraction.class,
 					   "Realization");
    
 	protected static Action _actionPackage =

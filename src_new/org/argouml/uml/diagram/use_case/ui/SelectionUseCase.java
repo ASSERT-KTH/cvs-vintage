@@ -24,7 +24,7 @@
 // File: SelectionUseCase.java
 // Classes: SelectionUseCase
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionUseCase.java,v 1.3 2002/08/04 17:44:20 thierrylach Exp $
+// $Id: SelectionUseCase.java,v 1.4 2002/08/19 20:43:49 kataka Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -255,22 +255,22 @@ public class SelectionUseCase extends SelectionWButtons {
 
   public Object addSuperClass(MutableGraphModel mgm, MUseCase cls,
 			    MClassifier newCls) {
-    return mgm.connect(cls, newCls, MGeneralizationImpl.class);
+    return mgm.connect(cls, newCls, MGeneralization.class);
   }
 
   public Object addSubClass(MutableGraphModel mgm, MUseCase cls,
 			    MClassifier newCls) {
-    return mgm.connect(newCls, cls, MGeneralizationImpl.class);
+    return mgm.connect(newCls, cls, MGeneralization.class);
   }
 
   public Object addAssocClassLeft(MutableGraphModel mgm, MUseCase cls,
 			    MClassifier newCls) {
-    return mgm.connect(cls, newCls, MAssociationImpl.class);
+    return mgm.connect(cls, newCls, MAssociation.class);
   }
 
   public Object addAssocClassRight(MutableGraphModel mgm, MUseCase cls,
 			    MClassifier newCls) {
-    return mgm.connect(cls, newCls, MAssociationImpl.class);
+    return mgm.connect(cls, newCls, MAssociation.class);
   }
 
 

@@ -25,7 +25,7 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.4 2002/08/10 14:57:45 linus Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.5 2002/08/19 20:43:49 kataka Exp $
 
 package org.argouml.uml.diagram.collaboration;
 import org.argouml.model.uml.UmlFactory;
@@ -241,7 +241,7 @@ implements MutableGraphModel, MElementListener, VetoableChangeListener {
   public Object connect(Object fromPort, Object toPort,
 			java.lang.Class edgeClass) {
     //try {
-      if (edgeClass == MAssociationRoleImpl.class &&
+      if (edgeClass == MAssociationRole.class &&
 		(fromPort instanceof MClassifierRole && toPort instanceof MClassifierRole)) {
 	    MAssociationRole asr = UmlFactory.getFactory().getCollaborations().createAssociationRole();
 		MAssociationEndRole aer0 = UmlFactory.getFactory().getCollaborations().createAssociationEndRole();
