@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.12 2002/02/27 05:05:32 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.13 2002/02/27 07:48:05 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -288,7 +288,7 @@ public class JARClassLoader extends ClassLoader
 		 */
 		if(name.equals("WheelMousePlugin")
 			&& jEdit.getProperty("plugin.WheelMousePlugin.version").equals("0.5")
-			&& OperatingSystem.isJava14())
+			&& OperatingSystem.hasJava14())
 		{
 			jar.addPlugin(new EditPlugin.Broken(name));
 			jEdit.pluginError(jar.getPath(),"plugin-error.update",null);
