@@ -40,34 +40,27 @@
     <copyfile src="src/etc/SimpleStartup.java"
      dest="${dest}/etc/SimpleStartup.java"/>
 
-    <!-- XXX have to put in macro / stamp task so that core.properties
-         can be properly stamped -->
-
     <javac srcdir="src/share" destdir="${dest}/classes"
      classpath="${dest}/lib/xml.jar" debug="on"/>
-    <javac srcdir="src/webpages/WEB-INF/classes"
-     destdir="${dest}/webpages/WEB-INF/classes"
-     classpath="${dest}/classes"/>
     <javac srcdir="src/examples/WEB-INF/classes"
      destdir="${dest}/examples/WEB-INF/classes"
      classpath="${dest}/classes"/>
 
-<!-- XXX
-
-     shouldn't this have been picked up by the
-     previous javac
-
-    <javac srcdir="src/examples/WEB-INF/classes/jsp/beans"
-        destdir="${dest}/examples/WEB-INF/classes/jsp/beans"
-        classpath="${dest}/classes"/>
-
--->
     <javac srcdir="src/examples/jsp/plugin/applet"
      destdir="${dest}/examples/jsp/plugin/applet"/>
 
     <rmic base="${dest}/classes"
      class="org.apache.tomcat.shell.AdminImpl"/>
-          
+
+     <javac srcdir="${dest}/examples/WEB-INF/classes/jsp/tags"
+            destdir="${dest}/examples/WEB-INF/classes/jsp/tags"
+            classpath="${dest}/classes"/>
+     <mkdir dir="${dest}/examples/jsp/libs"/>
+     <jar jarfile="${dest}/examples/jsp/libs/taglib.jar" 
+          basedir="${dest}/examples/WEB-INF/classes/jsp/tags"
+          items="examples,META-INF/taglib.tld"/>
+
+	  
   </target>
 
   <target name="dist" depends="main">
