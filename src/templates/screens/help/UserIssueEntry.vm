@@ -81,6 +81,6 @@
   <p>$l10n.IssueEntryP27 <strong>$l10n.IssueEntryP27S2</strong> $l10n.IssueEntryP27S3</p>
   <p>$l10n.IssueEntryP28</p>
   <p><strong><a name="commenting" id="commenting">$l10n.IssueEntryP29Head</a></strong></p>
-  <p>$l10n.IssueEntryP29 <em>$l10n.Notes</em> $l10n.IssueEntryP29S2 <em>$l10n.Comments</em> $l10n.IssueEntryP29S3 <em>$l10n.Notes</em> $l10n.IssueEntryP29S4 <em>$l10n.Submit</em> $l10n.IssueEntryP29S5</p>
+  <p>$l10n.IssueEntryP29 <em>$l10n.Notes</em> $l10n.IssueEntryP29S2 <em>$l10n.Notes</em> $l10n.IssueEntryP29S3 <em>$l10n.Notes</em> $l10n.IssueEntryP29S4 <em>$l10n.Submit</em> $l10n.IssueEntryP29S5</p>
 <div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div>
 </div>
