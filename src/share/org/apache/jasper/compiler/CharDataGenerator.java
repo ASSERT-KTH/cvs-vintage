@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CharDataGenerator.java,v 1.2 2000/04/05 02:55:12 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 2000/04/05 02:55:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CharDataGenerator.java,v 1.3 2000/07/25 02:21:08 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/07/25 02:21:08 $
  *
  * ====================================================================
  * 
@@ -90,6 +90,7 @@ public class CharDataGenerator
 	    int to = Math.min(current + MAXSIZE, limit);
 	    generateChunk(writer, from, to);
 	    current = to;
+	    writer.println();
 	}
     }
 
