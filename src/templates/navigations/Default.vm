@@ -7,16 +7,7 @@
 </strong></div>
 
 ## ARTIFACT TYPES
-#if ($scarabR.CurrentModule.NavIssueTypes)
-  #set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
-#end
-#if ($issueTypes && $issueTypes.size() > 0)
-<div><strong>
-$link.setPage("SelectArtifactType.vm").setLabel("Issue types")
-</strong>
 $renderer.render("navigations", "ArtifactTypes.vm")
-</div>
-#end
 
 ## AMINISTRATION
 $renderer.render("navigations", "Administration.vm")
