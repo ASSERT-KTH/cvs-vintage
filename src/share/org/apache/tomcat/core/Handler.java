@@ -60,7 +60,6 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.Counters;
 import org.apache.tomcat.util.log.*;
-import org.apache.tomcat.util.collections.EmptyEnumeration;
 
 /**
  * The class that will generate the actual response or response fragment.

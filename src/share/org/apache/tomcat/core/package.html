@@ -5,6 +5,23 @@
   </head>
   
   <body bgcolor="#FFFFFF">
+    <h2>Architecture</h2>
+    
+    <p>Tomcat core defines a number of base abstractions ( Request, Response,
+    Context, etc ) and a simple interface for modules.</p>
+
+    <p>All server functionality is implemented in modules, using callbacks in
+      a model similar with Apache and other servers. </p>
+
+    <p>The ServletAPI and all specific contracts are implemented in 
+      special module(s) - that allows to keep the core simple and 
+      permits more flexibility. </p>
+    
+    <p>The callbacks are defined in BaseInterceptor. A module will 
+      extend that class and possibly Handler if it wants to generate
+      content. The module will use the information and API provided in Request,
+      Response, Context, Container.
+
     <h2>Components</h2>
 
     <dl>
@@ -12,104 +29,82 @@
       <dt>ContextManager</dt>
       <dd>
     	<ul>
-      	  <li>maintains a list of adapters</li>
-      	  <li>is the entry point for adapters and any component that can generate 
-	    a Request/Response and wants to use servlets.</li>
-      	  <li>is the control point that handles callback calls and notifications.</li>
-      	  <li>maintains a list of webapps that are configured in the system.</li>
+      	  <li>control point for callback calls and notifications.</li>
+      	  <li>manages server startup/shudown</li>
+      	  <li>manages request execution (entry point,coordinates modules)</li>
+      	  <li>maintains a list of global modules</li>
+      	  <li>maintains a list of webapps</li>
     	</ul>
       </dd>
       
       <dt>Request,Response</dt>
-      <dd>Internal representations, containing various attributes associated with
-    	the request during processing.
+      <dd>Internal representations for HTTP request/response, including 
+	common attributes. Tuned for memory use ( recycling ) and performance,
+	with minimal contracts.
       </dd>
 
-      <dt>Interceptors</dt>
+      <dt>Module base ( BaseInterceptor )</dt>
       <dd> 
-	Request processing involves several stages - parsing, matching using url
-	patterns, authentication and authorization, calling the handler and various
- 	callbacks before, after and during the handler. 
-	An interceptor defines callbacks ( or hooks ) for one or several actions
-	and is able to alter that function.
-	In fact, most of the processing logic is implemented as interceptor 
-	callbacks, in an event-based system.
+	An interceptor defines callbacks ( or hooks ) that implement one or
+	several server functions. Almost all of the processing logic is
+	implemented as interceptor callbacks. 
       </dd>
 
-      <dt>Context, Container</dt>
+      <dt>Handler</dt>
       <dd>
-    	Container represents a group of URLs sharing common properties like handler,
-    	security, normal properties. Context is a particular case that is associated
-    	with a web application and keeps all the properties defined in the spec. 
-    	We are slowly moving toward use of Container, it can also represent group
-    	of contexts, virtual hosts, etc. 
-    	It is not a good idea to introduce sub-classes for every type of group, 
-    	the isA property is not allways clearly cut. 
+    	Content generator part of modules. Simple generators ( like 
+	error handlers), wrappers for Servlets or JSPs or complex 
+	chains/pipelines can be implemented. The handlers are defined
+	as part of modules.
       </dd>
       
-      <dt>ServletWrapper</dt>
+      <dt>Context</dt>
+      <dd>Attributes shared by a web application, included local modules. 
+      </dd>
+
+      <dt>Container</dt>
       <dd>
-    	A normal servlet or JSP, plus all the surounding logic.
+    	Attributes shared by a group of URLs ( mappings, modules, 
+	authentication ). This is also the repository for modules used by
+	ContextManager and Context ( which delegate to the "default"
+	container ). The default container for the ContextManager stores
+	attributes common to all URLs ( global modules, etc ), same 
+	for Context.
       </dd>
       
-      
-      <dt>Facades</dt>
-      <dd>For every object exposed in the servlet specification tomcat use a 
-    	Facade. It have few important advantages:
-    	<ul>
-	  <li>Security - the user should have no way to access the real implementation
-	    objects, except one controled way ( HttpRequestFacade.getRealRequest() ).
-	    When policy-based security will be added that will allow the user to declare a 
-	    "trusted" servlet, and no other servlet will be able to access internal objects.</li>
-	  <li>Future evolution of Servlet API - the API changed and will probably change, 
-	    by adding new methods and new semantics. Facades makes very simple to make sure
-	    we respect the spec, without having to change the core too much.
-	    That may allow supporting multiple servlet API versions ( but it's not a goal -
-	    each context has it's own classloader and it may be possible to load a different
-	    JDK and set of facades ).</li>
-	  <li>Decouple the API and the web server. Tomcat.core allows integration with
-	    web servers, and it's  modeled after APIs like Apache's, ISAPI and NSAPI.</li>
-    	</ul>
-    	
+      <dt>ServerSession</dt>
+      <dd>Server view of a session - independent of the actual implementation
+	of the session manager. Modules implementing the session management
+	callbacks may use a subclass and manage the sessions/
       </dd>
+
+      <dt>OutputBuffer</dt>
+      <dd>All content is stored in the OutputBuffer, which implement
+	storage and conversion functions ( with a lot of tunning for
+	performance and memory usage )
+      </dd>
+
     </dl>
 
-    <h2>Authentication and Authorization</h2>    
-    
-    <p>Required steps:
-    <ol>
-      <li>Find if the request needs authorization. </li>
-      <li>Check if the request have the right credentials - if not generate 401  unauthorized.
-      </li>
-      <li>The normal error processing takes place: we can register special 401 error handler 
-	that will implement the desired auth method
-      </li>
-    </ol>
+    <h2>Dependencies</h2>
 
-    <p>The model we used is JAAS - the authenticator is a separate module that will 
-      find if enough credentials are available. We use a "normal" tomcat module to "glue"
-      between an auth API ( like JAAS or memoryRealm or catalina Realm if needed ) and 
-      tomcat's internal representation of request. ( no "callbacks" yet - just static util
-      functions to extract credentials from request. )
-    </p>
-      
-    <p>We provide a simple implementation for standalone tomcat.: 
-      <ul>
-	<li>AccessInterceptor will match the security contraints and set a note "required.roles"
-	  containing the list of valid groups.</li>
-	<li>SimpleRealm will authorize the request against in-memory users. </li>
-	<li>BasicLoginServlet, FormLoginServlet - implement the authentication protocol.
-      </ul>
-    </p>
-    
+    <ul>
+       <li>org.apache.tomcat.util.log.*</li>
+       <li>org.apache.tomcat.util.hooks.*</li>
+       <li>org.apache.tomcat.util.http.*</li>
+       <li>org.apache.tomcat.util.StringManager; -> res</li>
 
-    <p>In "production" mode we expect tomcat to be integrated with various systems. 
-      Most web servers are using a similar mechanism - as long as the server is handling
-      the static files we need to let him deal with authorization/authentication. 
-      The only special case is Form based login, where the connector should forward
-      the request to tomcat. ( no complete implementation yet ).
-      
-    </p>
+       <li>org.apache.tomcat.util.depend.*: Context/rm </li> 
+       <li>org.apache.tomcat.util.threads.TimeStamp: ServerSession/rm </li>
 
+       <li>org.apache.tomcat.util.MessageBytes;</li>
+
+       <li>org.apache.tomcat.util.MimeMap -> http </li>
+       <li>org.apache.tomcat.util.MimeHeaders -> http </li>
+
+       <li>org.apache.tomcat.util.Counters - Handler/rm</li>
+       <li>org.apache.tomcat.util.SimplePrincipal - Request/->facade</li>
+
+    </ul>
   </body>
 </html>
