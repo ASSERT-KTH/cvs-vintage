@@ -71,10 +71,15 @@ public class ScarabIssues implements java.io.Serializable
     private int importTypeCode = -1;
     
     private List allDependencies = new ArrayList();
-    /* maps the issue id in the xml file to the issue id of issue
+    /** maps the issue id in the xml file to the issue id of issue
        that was created from the xml file. */
-    private Map issueCreatedMap = new HashMap();
     private Map issueXMLMap = new HashMap();
+
+    /** left side is the id in the XML file. right side is the created id in the db */
+    private Map activitySetIdMap = new HashMap();
+
+    /** left side is the id in the XML file. right side is the created id in the db */
+    private List dependActivitySetId = new ArrayList();
 
     private static final int CREATE_SAME_DB = 1;
     private static final int CREATE_DIFFERENT_DB = 2;
@@ -144,8 +149,9 @@ public class ScarabIssues implements java.io.Serializable
         {
             Object[] data = (Object[])itr.next();
             @OM@.ActivitySet activitySetOM = (@OM@.ActivitySet) data[0];
-            @OM@.Activity activityOM = (@OM@.Activity) data[1];
-            Activity activity = (Activity) data[2];
+            Activity activity = (Activity) data[1];
+            @OM@.Attachment activityAttachmentOM = (@OM@.Attachment) data[2];
+
             Dependency dependency = activity.getDependency();
             String child = (String)issueXMLMap.get(dependency.getChild());
             String parent = (String)issueXMLMap.get(dependency.getParent());
@@ -154,25 +160,54 @@ public class ScarabIssues implements java.io.Serializable
                 log.debug("Could not find issues: parent: " + parent + " child: " + child);
                 continue;
             }
-            String type = dependency.getType();
 
             if (getImportTypeCode() == UPDATE_SAME_DB)
             {
+                System.out.println("Not implemented yet.");
             }
             else
             {
                 try
                 {
-                    @OM@.Depend dependOM = @OM@.DependManager.getInstance();
+                    String type = dependency.getType();
+                    @OM@.Depend newDependOM = @OM@.DependManager.getInstance();
                     @OM@.Issue parentIssueOM = @OM@.Issue.getIssueById(parent);
                     @OM@.Issue childIssueOM = @OM@.Issue.getIssueById(child);
-                    dependOM.setDefaultModule(parentIssueOM.getModule());
-                    dependOM.setObservedId(parentIssueOM.getIssueId());
-                    dependOM.setObserverId(childIssueOM.getIssueId());
-                    dependOM.setDependType(type);
-                    parentIssueOM
-                        .doAddDependency(activitySetOM, dependOM, childIssueOM, null);
-                    log.debug("Added Dep Type: " + type + " Parent: " + parent + " Child: " + child);
+                    newDependOM.setDefaultModule(parentIssueOM.getModule());
+                    newDependOM.setObservedId(parentIssueOM.getIssueId());
+                    newDependOM.setObserverId(childIssueOM.getIssueId());
+                    newDependOM.setDependType(type);
+                    log.debug("Dep: " + dependency.getId() + " Type: " + type + " Parent: " + parent + " Child: " + child);
+                    log.debug("XML Activity id: " + activity.getId());
+                    if (activity.isAddDependency())
+                    {
+                        parentIssueOM
+                          .doAddDependency(activitySetOM, newDependOM, childIssueOM, null);
+                        log.debug("Added Dep Type: " + type + " Parent: " + parent + " Child: " + child);
+                        log.debug("----------------------------------------------------");
+                    }
+                    else if (activity.isDeleteDependency())
+                    {
+                        parentIssueOM
+                          .doDeleteDependency(activitySetOM, newDependOM, null);
+                        log.debug("Deleted Dep Type: " + type + " Parent: " + parent + " Child: " + child);
+                        log.debug("----------------------------------------------------");
+                    }
+                    else if (activity.isUpdateDependency())
+                    {
+                        @OM@.Depend oldDependOM = parentIssueOM.getDependency(childIssueOM);
+                        if (oldDependOM == null)
+                        {
+                            throw new Exception ("Whoops! Could not find the original dependency!");
+                        }
+                        // we definitely know we are doing an update here.
+                        newDependOM.setDeleted(false);
+                        parentIssueOM
+                          .doChangeDependencyType(activitySetOM, oldDependOM, newDependOM, null);
+                        log.debug("Updated Dep Type: " + type + " Parent: " + parent + " Child: " + child);
+                        log.debug("Old Type: " + oldDependOM.getDependType().getName() + " New type: " + newDependOM.getDependType().getName());
+                        log.debug("----------------------------------------------------");
+                    }
                 }
                 catch (Exception e)
                 {
@@ -181,21 +216,6 @@ public class ScarabIssues implements java.io.Serializable
                 }
             }
         }
-/*
-            Dependency dependency = (Dependency) depitr.next();
-            if (dependency.getChild() != null)
-            {
-                @OM@.Issue dependIssueOM = @OM@.Issue.getIssueById(dependency.getChild());
-            }
-            else
-            {
-                @OM@.Issue dependIssueOM = @OM@.Issue.getIssueById(dependency.getParent());
-            }
-
-            @OM@.Depend dependencyOM = @OM@.DependManager
-                .getInstance(dependency.getChild(), dependency.getParent(), 
-                             dependency.getType());
-*/
     }
 
     public List getIssues()
@@ -237,9 +257,8 @@ public class ScarabIssues implements java.io.Serializable
         // create the issue in the database
         issueOM.save();
         // add the mapping between the issue id and the id that was created
-        issueCreatedMap.put(issueOM.getUniqueId(), module.getCode() + issue.getId());
         issueXMLMap.put(module.getCode() + issue.getId(), issueOM.getUniqueId());
-        log.debug("Created new issue: " + issueOM.getUniqueId());
+        log.debug("Created new Issue: " + issueOM.getUniqueId());
         return issueOM;
     }    
 
@@ -262,17 +281,18 @@ public class ScarabIssues implements java.io.Serializable
             }
             else
             {
-                log.debug("Found issue in db: " + issueOM.getUniqueId());
+                log.debug("Found Issue in db: " + issueOM.getUniqueId());
             }
         }
 
-        issueCreatedMap.put(module.getCode() + issue.getId(), issueOM.getUniqueId());
+//        issueCreatedMap.put(module.getCode() + issue.getId(), issueOM.getUniqueId());
 
 /////////////////////////////////////////////////////////////////////////////////  
 
         // Loop over the XML activitySets
         List activitySets = issue.getActivitySets();
-        log.debug("Number of activitySets in issue: " + activitySets.size());
+        log.debug("-----------------------------------");
+        log.debug("Number of ActivitySets in Issue: " + activitySets.size());
         for (Iterator itr = activitySets.iterator(); itr.hasNext();)
         {
             ActivitySet activitySet = (ActivitySet) itr.next();
@@ -290,7 +310,7 @@ public class ScarabIssues implements java.io.Serializable
                     {
                         activitySetAttachmentOM = @OM@.AttachmentManager
                             .getInstance(activitySetAttachment.getId());
-                        log.debug("Found existing ActivitySet attachment");
+                        log.debug("Found existing ActivitySet Attachment");
                     }
                     catch (Exception e)
                     {
@@ -300,23 +320,24 @@ public class ScarabIssues implements java.io.Serializable
                 else
                 {
                     activitySetAttachmentOM = createAttachment(issueOM, module, activitySetAttachment);
-                    log.debug("Created ActivitySet attachment object");
+                    log.debug("Created ActivitySet Attachment object");
                 }
             }
             else
             {
-                log.debug("OK- No attachment in this ActivitySet");
+                log.debug("OK- No Attachment in this ActivitySet");
             }
 
 /////////////////////////////////////////////////////////////////////////////////  
             // Attempt to get the activitySet OM
+            boolean alreadyCreated = false;
             @OM@.ActivitySet activitySetOM = null;
             if (getImportTypeCode() == UPDATE_SAME_DB)
             {
                 try
                 {
                     activitySetOM = @OM@.ActivitySetManager.getInstance(activitySet.getId());
-                    log.debug("Found activitySet in db: " + activitySetOM.getActivitySetId());
+                    log.debug("Found ActivitySet in db: " + activitySetOM.getActivitySetId());
                 }
                 catch (Exception e)
                 {
@@ -325,34 +346,57 @@ public class ScarabIssues implements java.io.Serializable
             }
             else
             {
-                activitySetOM = @OM@.ActivitySetManager.getInstance();
-                log.debug("Created new ActivitySet");
+                try
+                {
+                    // first try to get the ActivitySet from the internal map
+                    if (activitySetIdMap.containsKey(activitySet.getId()))
+                    {
+                        activitySetOM = (@OM@.ActivitySet) activitySetIdMap.get(activitySet.getId());
+                        alreadyCreated = true;
+                        log.debug("Found ActivitySet in map: " + activitySetOM.getActivitySetId());
+                    }
+                    else // if it doesn't exist, then try to get it from the DB
+                    {
+                        activitySetOM = @OM@.ActivitySetManager.getInstance(activitySet.getId());
+                        alreadyCreated = true;
+                        log.debug("Found ActivitySet in db: " + activitySetOM.getActivitySetId());
+                    }
+                }
+                catch (Exception e)
+                {
+                    // if all else fails, then get a new object
+                    activitySetOM = @OM@.ActivitySetManager.getInstance();
+                    log.debug("Created new ActivitySet");
+                }
             }
 
-/////////////////////////////////////////////////////////////////////////////////  
-
-            // Get the ActivitySet type/createdby values (we know these are valid)
-            @OM@.ActivitySetType ttOM = @OM@.ActivitySetTypeManager.getInstance(activitySet.getType());
-            activitySetOM.setActivitySetType(ttOM);
             @OM@.ScarabUser activitySetCreatedByOM = @OM@.ScarabUserManager.getInstance(activitySet.getCreatedBy(), 
                  module.getDomain());
-            activitySetOM.setCreatedBy(activitySetCreatedByOM.getUserId());
-            activitySetOM.setCreatedDate(activitySet.getCreatedDate().getDate());
-            if (activitySetAttachmentOM != null)
+            if (!alreadyCreated)
             {
-                activitySetAttachmentOM.save();
-                activitySetOM.setAttachment(activitySetAttachmentOM);
+                // Populate the ActivitySet
+                // Get the ActivitySet type/createdby values (we know these are valid)
+                @OM@.ActivitySetType ttOM = @OM@.ActivitySetTypeManager.getInstance(activitySet.getType());
+                activitySetOM.setActivitySetType(ttOM);
+                activitySetOM.setCreatedBy(activitySetCreatedByOM.getUserId());
+                activitySetOM.setCreatedDate(activitySet.getCreatedDate().getDate());
+                if (activitySetAttachmentOM != null)
+                {
+                    activitySetAttachmentOM.save();
+                    activitySetOM.setAttachment(activitySetAttachmentOM);
+                }
+                activitySetOM.save();
+                activitySetIdMap.put(activitySet.getId(), activitySetOM);
             }
-            activitySetOM.save();
 
 /////////////////////////////////////////////////////////////////////////////////  
 
             // Deal with the activities in the activitySet
             List activities = activitySet.getActivities();
-            log.debug("Number of activities in activitySetid '" + activitySetOM.getActivitySetId() + 
-                "': " + activities.size());
+            log.debug("Number of Activities in ActivitySet: " + activities.size());
 
             SequencedHashMap avMap = issueOM.getModuleAttributeValuesMap();
+            
             for (Iterator itrb = activities.iterator(); itrb.hasNext();)
             {
                 Activity activity = (Activity) itrb.next();
@@ -362,37 +406,61 @@ public class ScarabIssues implements java.io.Serializable
 
                 @OM@.Activity activityOM = null;
 
+                // deal with the activity attachment (if there is one)
+                Attachment activityAttachment = activity.getAttachment();
+                @OM@.Attachment activityAttachmentOM = null;
+                if (activityAttachment != null)
+                {
+                    // look for an existing attachment in the activity
+                    // the case is when we have a URL and we create it
+                    // and then delete it, the attachment id is still the
+                    // same so there is no reason to re-create the attachment
+                    // again.
+                    try
+                    {
+                        activityAttachmentOM = @OM@.AttachmentManager
+                            .getInstance(activityAttachment.getId());
+                        log.debug("Found existing Activity Attachment");
+                    }
+                    catch (Exception e)
+                    {
+                        activityAttachmentOM = createAttachment(issueOM, module, activityAttachment);
+                        activityAttachmentOM.save();
+                        log.debug("Created Activity Attachment object");
+                    }
+                }
+                else
+                {
+                    log.debug("OK- No Attachment in this Activity");
+                }
+
                 // deal with null attributes (need to do this before we create the 
                 // activity right below because this will create its own activity).
                 if (attributeOM.equals(NULL_ATTRIBUTE))
                 {
-                    // deal with the activity attachment (if there is one)
-                    Attachment activityAttachment = activity.getAttachment();
-                    @OM@.Attachment activityAttachmentOM = null;
-                    if (activityAttachment != null)
-                    {
-                        activityAttachmentOM = 
-                            createAttachment(issueOM, module, activityAttachment);
-                        activityAttachmentOM.save();
-                    }
-
-                    // create the activity record.
-                    activityOM = @OM@.ActivityManager
-                        .createTextActivity(issueOM, NULL_ATTRIBUTE, activitySetOM, 
-                                activity.getDescription(), activityAttachmentOM, 
-                                activity.getOldValue(), activity.getNewValue());
-
                     // add any dependency activities to a list for later processing
-                    // FIXME: check for duplicates
                     if (isDependencyActivity(activity))
                     {
-                        Object[] obj = {activitySetOM, activityOM, activity};
-                        allDependencies.add(obj);
+                        if (!isDuplicateDependency(activitySet))
+                        {
+                            Object[] obj = {activitySetOM, activity, activityAttachmentOM};
+                            allDependencies.add(obj);
+                            dependActivitySetId.add(activitySet.getId());
+                            log.debug("-------------Stored Dependency # " + allDependencies.size() + "-------------");
+                        }
                         continue;
                     }
-    
-                    log.debug("-------------Saved Null Attribute-------------");
-                    continue;
+                    else
+                    {
+                        // create the activity record.
+                        activityOM = @OM@.ActivityManager
+                            .createTextActivity(issueOM, NULL_ATTRIBUTE, activitySetOM, 
+                                    activity.getDescription(), activityAttachmentOM, 
+                                    activity.getOldValue(), activity.getNewValue());
+        
+                        log.debug("-------------Saved Null Attribute-------------");
+                        continue;
+                    }
                 }
 
                 // create the activityOM
@@ -415,8 +483,8 @@ public class ScarabIssues implements java.io.Serializable
                                                           avalOM.getIssue());
                         avalOM2.setProperties(avalOM);
                     }
-                    
-                    log.debug("Checking attribute match: " + avalAttributeOM.getName() + 
+
+                    log.debug("Checking Attribute match: " + avalAttributeOM.getName() + 
                               " against: " + attributeOM.getName());
                     if (avalAttributeOM.equals(attributeOM))
                     {
@@ -424,7 +492,7 @@ public class ScarabIssues implements java.io.Serializable
 
                         if (avalAttributeOM.isOptionAttribute())
                         {
-                            log.debug("We have an option attribute: " + avalAttributeOM.getName());
+                            log.debug("We have an Option Attribute: " + avalAttributeOM.getName());
                             @OM@.AttributeOption newAttributeOptionOM = @OM@.AttributeOption
                                 .getInstance(attributeOM, activity.getNewOption());
                             if (activity.isNewActivity())
@@ -433,40 +501,52 @@ public class ScarabIssues implements java.io.Serializable
                             }
                             else
                             {
-                                if (!newAttributeOptionOM.getOptionId()
-                                    .equals(avalOM.getOptionId()))
-                                {
-                                    avalOM2.setOptionId(newAttributeOptionOM.getOptionId());
-                                }
+                                HashMap map = new HashMap();
+                                map.put(avalOM.getAttributeId(), avalOM2);
+                                issueOM.setAttributeValues(activitySetOM, map, null, activitySetCreatedByOM);
+                                log.debug("-------------Saved Option Attribute Change-------------");
+                                break;
                             }
                         }
                         else if (avalAttributeOM.isUserAttribute())
                         {
-                            log.debug("We have a user attribute: " + avalAttributeOM.getName());
-                            @OM@.ScarabUser newUserOM = @OM@.ScarabUserManager
-                                .getInstance(activity.getNewUser(), module.getDomain());
+                            log.debug("We have a User Attribute: " + avalAttributeOM.getName());
                             if (activity.isNewActivity())
                             {
+                                // don't need to pass in the attachment because it is already
+                                // in the activitySetOM
                                 issueOM.assignUser(activitySetOM, activity.getDescription(),
                                                    activitySetCreatedByOM, null,
                                                    avalAttributeOM, null);
-                                log.debug("-------------Saved user-------------");
+                                log.debug("-------------Saved User Assign-------------");
                                 break;
                             }
                             else
                             {
-                                // FIXME: test/deal with updated user information
-                                // THIS IS NOT COMPLETE
-                                if (!newUserOM.getUserId()
-                                    .equals(avalOM.getUserId()))
+                                // remove a user activity
+                                if (activity.isRemoveUserActivity())
                                 {
-                                    avalOM2.setUserId(newUserOM.getUserId());
+                                    @OM@.ScarabUser oldUserOM = @OM@.ScarabUserManager
+                                        .getInstance(activity.getOldUser(), module.getDomain());
+                                    // need to reset the aval because the current one is
+                                    // marked as new for some reason which causes an insert
+                                    // and that isn't the right behavior here (we want an update)
+                                    avalOM = issueOM.getAttributeValue(avalAttributeOM);
+                                    // don't need to pass in the attachment because it is already
+                                    // in the activitySetOM
+                                    issueOM.deleteUser(activitySetOM, oldUserOM, activitySetCreatedByOM, 
+                                                       avalOM, null);
+                                    log.debug("-------------Saved User Remove-------------");
+                                    break;
                                 }
+                                // FIXME: add update user activity handling below...this would be
+                                // if someone changes their attribute id.
+                                // issueOM.changeUserAttributeValue()
                             }
                         }
                         else if (avalAttributeOM.isTextAttribute())
                         {
-                            log.debug("We have a text attribute: " + avalAttributeOM.getName());
+                            log.debug("We have a Text Attribute: " + avalAttributeOM.getName());
                             if (activity.isNewActivity())
                             {
                                 avalOM.setValue(activity.getNewValue());
@@ -488,12 +568,12 @@ public class ScarabIssues implements java.io.Serializable
                             avalOM.setProperties(avalOM2);
                         }
                         avalOM.save();
-                        log.debug("-------------Saved attribute value-------------");
+                        log.debug("-------------Saved Attribute Value-------------");
                         break;
                     }
                 }
                 issueOM.save();
-                log.debug("-------------Saved issue-------------");
+                log.debug("-------------Saved Issue-------------");
             }
         }
     }
@@ -503,36 +583,12 @@ public class ScarabIssues implements java.io.Serializable
      */
     private boolean isDependencyActivity(Activity activity)
     {
-        if (activity.getDependency() != null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return (activity.getDependency() != null);
     }
 
-    private boolean isDuplicateDependency(Dependency dependency)
+    private boolean isDuplicateDependency(ActivitySet activitySet)
     {
-        for (Iterator itr = allDependencies.iterator(); itr.hasNext();)
-        {
-            List dependencies = (List)itr.next();
-            for (Iterator itr2 = dependencies.iterator(); itr2.hasNext();)
-            {
-                Dependency dep = (Dependency)itr2.next();
-                String child = (String)issueCreatedMap.get(dep.getChild());
-                String parent = (String)issueCreatedMap.get(dep.getParent());
-                String type = dep.getType();
-                if (child.equals(dependency.getChild()) &&
-                    parent.equals(dependency.getParent()) &&
-                    type.equals(dependency.getType()))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return (dependActivitySetId.contains(activitySet.getId()));
     }
 
     private @OM@.Activity createActivity(Activity activity, ActivitySet activitySet, Module module,
@@ -575,7 +631,7 @@ public class ScarabIssues implements java.io.Serializable
             activityOM.setAttachment(newAttachmentOM);
         }
 
-        log.debug("Created new activity");
+        log.debug("Created New Activity");
         return activityOM;
     }
 
@@ -604,102 +660,7 @@ public class ScarabIssues implements java.io.Serializable
         {
             attachmentOM.setModifiedBy(modUserOM.getUserId());
         }
+        attachmentOM.setDeleted(attachment.getDeleted());
         return attachmentOM;
     }
 }
-
-/*   old stuff to be removed eventually.
-
-/////////////////////////////////////////////////////////////////////////////////  
-        // deal with dependencies
-        List dependencies = issue.getDependencies();
-        log.debug("Number of dependencies found: " + dependencies.size());
-
-        List finalDependencies = new ArrayList();
-        for (Iterator depitr = dependencies.iterator(); depitr.hasNext();)
-        {
-            Dependency dependency = (Dependency) depitr.next();
-            String mapId = issueOM.getUniqueId();
-            if (dependency.getChild() != null)
-            {
-                dependency.setParent(mapId);
-            }
-            else
-            {
-                dependency.setChild(mapId);
-            }
-            
-            if (isDuplicateDependency(dependency))
-            {
-                log.debug("Found duplicate dependency.");
-                continue;
-            }
-            finalDependencies.add(dependency);
-            log.debug("Dep add: " + dependency);
-        }
-        allDependencies.add(finalDependencies);
-
-
-                // Get the Attribute associated with the Activity
-                @OM@.Attribute attributeOM = @OM@.Attribute.getInstance(activity.getAttribute());
-                @OM@.Activity activityOM = null;
-                if (getImportTypeCode() == UPDATE_SAME_DB)
-                {
-                    try
-                    {
-                        activityOM = @OM@.ActivityManager.getInstance(activity.getId());
-                    }
-                    catch (Exception e)
-                    {
-                        activityOM = @OM@.ActivityManager.getInstance();
-                    }
-                }
-                else
-                {
-                    activityOM = @OM@.ActivityManager.getInstance();
-                }
-
-                activityOM.setIssue(issueOM);
-                activityOM.setAttribute(attributeOM);
-                activityOM.setActivitySet(activitySetOM);
-                activityOM.setEndDate(activitySet.getCreatedDate().getDate());
-                log.debug("Created new activity");
-
-                @OM@.AttributeValue attributeValueOM = 
-                    @OM@.AttributeValue.getNewInstance(attributeOM, issueOM);
-
-                if (attributeOM.isOptionAttribute())
-                {
-                    @OM@.AttributeOption newAttributeOptionOM = null;
-                    @OM@.AttributeOption oldAttributeOptionOM = null;
-                    
-                    if (activity.getNewValue() != null)
-                    {
-                        newAttributeOptionOM = @OM@.AttributeOption
-                            .getInstance(attributeOM, activity.getNewOption());
-                    }
-                    attributeValueOM.setOptionId(newAttributeOptionOM.getOptionId());
-                }
-                else if (attributeOM.isUserAttribute())
-                {
-                    @OM@.ScarabUser newUserOM = @OM@.ScarabUserManager.getInstance(activity.getNewUser(), 
-                        module.getDomain());
-                    attributeValueOM.setUserId(newUserOM.getUserId());
-                }
-                else if (attributeOM.isTextAttribute())
-                {
-                    attributeValueOM.setValue(activity.getNewValue());
-                }
-
-                @OM@.Attachment newAttachmentOM = null;
-                if (activity.getAttachment() != null)
-                {
-                    newAttachmentOM = createAttachment(issueOM, module, activity.getAttachment());
-                    newAttachmentOM.save();
-                    activityOM.setAttachment(newAttachmentOM);
-                }
-                attributeValueOM.setActivityDescription(activity.getDescription());
-                attributeValueOM.startActivitySet(activitySetOM);
-                attributeValueOM.save();
-*/
-
