@@ -8,6 +8,7 @@
 #if ($canEditDomain)
     <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doCreatenewuserattribute"/>&#160;
 #end
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel"/>
 </div>
 #end
 
