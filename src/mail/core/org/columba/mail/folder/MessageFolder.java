@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -71,7 +72,8 @@ import org.columba.ristretto.message.MimeHeader;
  * 
  * @author freddy @created 19. Juni 2001
  */
-public abstract class MessageFolder extends AbstractFolder implements MailboxInterface {
+public abstract class MessageFolder extends AbstractFolder implements
+        MailboxInterface {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger
@@ -99,10 +101,10 @@ public abstract class MessageFolder extends AbstractFolder implements MailboxInt
     protected File directoryFile;
 
     /**
-     * The last selected uid for the current folder. This information is used
-     * to show the last selected message, if you switch to the current folder
-     * and the lastSelection field is set. If the lastSelection field is null,
-     * the first message in the table for this folder is shown. Have a look to
+     * The last selected uid for the current folder. This information is used to
+     * show the last selected message, if you switch to the current folder and
+     * the lastSelection field is set. If the lastSelection field is null, the
+     * first message in the table for this folder is shown. Have a look to
      * org.columba.mail.gui.table.TableController#showHeaderList
      */
     protected Object lastSelection;
@@ -296,8 +298,7 @@ public abstract class MessageFolder extends AbstractFolder implements MailboxInt
     }
 
     /**
-     * @see javax.swing.tree.DefaultMutableTreeNode#getPathToRoot(TreeNode,
-     *      int)
+     * @see javax.swing.tree.DefaultMutableTreeNode#getPathToRoot(TreeNode, int)
      */
     protected TreeNode[] getPathToRoot(TreeNode aNode, int depth) {
         TreeNode[] retNodes;
@@ -412,8 +413,8 @@ public abstract class MessageFolder extends AbstractFolder implements MailboxInt
     }
 
     /**
-     * Sets the last selection for the current folder. This should be the uid
-     * of the last selected Message for the current folder.
+     * Sets the last selection for the current folder. This should be the uid of
+     * the last selected Message for the current folder.
      */
     public void setLastSelection(Object lastSel) {
         lastSelection = lastSel;
@@ -530,6 +531,12 @@ public abstract class MessageFolder extends AbstractFolder implements MailboxInt
 
                 break;
             }
+        case MarkMessageCommand.MARK_AS_UNANSWERED:
+            {
+                flags.setAnswered(false);
+
+                break;
+            }
 
         case MarkMessageCommand.MARK_AS_SPAM:
             {
@@ -600,11 +607,11 @@ public abstract class MessageFolder extends AbstractFolder implements MailboxInt
     protected void removeMessage(Object uid) throws Exception {
         // notify listeners
         fireMessageRemoved(uid, getFlags(uid));
-        
+
         // remove from header-list
         getHeaderListStorage().removeMessage(uid);
     }
-       
+
     /** ****************************** AttributeStorage *********************** */
 
     /**

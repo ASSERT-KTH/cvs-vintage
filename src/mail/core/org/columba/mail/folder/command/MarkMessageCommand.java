@@ -48,25 +48,28 @@ import org.columba.mail.spam.command.LearnMessageAsSpamCommand;
  */
 public class MarkMessageCommand extends FolderCommand {
 
-    public final static int MARK_AS_READ = 0;
-
-    public final static int MARK_AS_FLAGGED = 1;
-
-    public final static int MARK_AS_EXPUNGED = 2;
-
-    public final static int MARK_AS_ANSWERED = 3;
-
-    public final static int MARK_AS_SPAM = 4;
+    public final static int MARK_AS_READ = 1;
 
     public final static int MARK_AS_UNREAD = -1;
 
+    public final static int MARK_AS_FLAGGED = 2;
+
     public final static int MARK_AS_UNFLAGGED = -2;
+
+    public final static int MARK_AS_EXPUNGED = 3;
 
     public final static int MARK_AS_UNEXPUNGED = -3;
 
-    public final static int MARK_AS_NOTSPAM = -4;
+    public final static int MARK_AS_ANSWERED = 4;
+
+    public final static int MARK_AS_UNANSWERED = -4;
+
+    public final static int MARK_AS_SPAM = 5;
+
+    public final static int MARK_AS_NOTSPAM = -5;
 
     protected FolderCommandAdapter adapter;
+
     private WorkerStatusController worker;
 
     /**
@@ -115,7 +118,7 @@ public class MarkMessageCommand extends FolderCommand {
      */
     public void execute(WorkerStatusController worker) throws Exception {
         this.worker = worker;
-        
+
         // use wrapper class for easier handling of references array
         adapter = new FolderCommandAdapter(
                 (FolderCommandReference[]) getReferences());
@@ -158,7 +161,6 @@ public class MarkMessageCommand extends FolderCommand {
      * Move message to specified folder or delete message immediately based on
      * account configuration.
      * 
-
      * @param uids
      *            message uid
      * @param srcFolder
@@ -167,27 +169,27 @@ public class MarkMessageCommand extends FolderCommand {
      *            mark variant (spam/not spam)
      * @throws Exception
      */
-    private void processSpamFilter(
-            Object[] uids, MessageFolder srcFolder, int markVariant) throws Exception {
-        
+    private void processSpamFilter(Object[] uids, MessageFolder srcFolder,
+            int markVariant) throws Exception {
+
         // update status message
         worker.setDisplayText("Training messages...");
         worker.setProgressBarMaximum(uids.length);
-        
+
         // mark as/as not spam
         // for each message
         for (int j = 0; j < uids.length; j++) {
-            
+
             worker.setDisplayText("Training messages...");
             worker.setProgressBarMaximum(uids.length);
             // increase progressbar value
             worker.setProgressBarValue(j);
 
-            // cancel here if user requests 
+            // cancel here if user requests
             if (worker.cancelled()) {
                 break;
             }
-            
+
             // message belongs to which account?
             AccountItem item = CommandHelper.retrieveAccountItem(srcFolder,
                     uids[j]);
@@ -216,7 +218,7 @@ public class MarkMessageCommand extends FolderCommand {
 
             // skip if message is *not* marked as spam
             if (markVariant == MARK_AS_NOTSPAM) continue;
-            
+
             // skip if user didn't enable this option
             if (item.getSpamItem().isMoveMessageWhenMarkingEnabled() == false)
                     continue;
@@ -224,8 +226,8 @@ public class MarkMessageCommand extends FolderCommand {
             if (item.getSpamItem().isMoveTrashSelected() == false) {
                 // move message to user-configured folder (generally "Junk"
                 // folder)
-                AbstractFolder destFolder = MailInterface.treeModel.getFolder(item
-                        .getSpamItem().getMoveCustomFolder());
+                AbstractFolder destFolder = MailInterface.treeModel
+                        .getFolder(item.getSpamItem().getMoveCustomFolder());
 
                 // create reference
                 FolderCommandReference[] ref2 = new FolderCommandReference[2];
@@ -236,8 +238,8 @@ public class MarkMessageCommand extends FolderCommand {
 
             } else {
                 // move message to trash
-                MessageFolder trash = (MessageFolder) ((RootFolder) srcFolder.getRootFolder())
-                        .getTrashFolder();
+                MessageFolder trash = (MessageFolder) ((RootFolder) srcFolder
+                        .getRootFolder()).getTrashFolder();
 
                 // create reference
                 FolderCommandReference[] ref2 = new FolderCommandReference[2];
@@ -248,8 +250,6 @@ public class MarkMessageCommand extends FolderCommand {
                 MainInterface.processor.addOp(new MoveMessageCommand(ref2));
 
             }
-            
-            
 
         }
     }

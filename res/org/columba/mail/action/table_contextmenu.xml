@@ -23,18 +23,14 @@
 	<menuitem action="AddSenderToAddressbook"/>
 	<menuitem action="AddAllSendersToAddressbook"/>
 	<separator/>
-	<menu name="menu_message_mark">
-		<menuitem action="MarkAsRead"/>
-		<menuitem action="MarkAsFlagged"/>
-		<menuitem action="MarkAsExpunged"/>
-		<menuitem action="MarkAsSpam" />
-		<separator/>
-		 <menuitem action="MarkAsUnread"/>
-		 <menuitem action="MarkAsUnflagged"/>
-		 <menuitem action="MarkAsUnexpunged"/>
-		 <menuitem action="MarkAsNotSpam"/>
-	</menu>	
-	<separator/>
 	<menuitem imenu="ColorMessageMenu"/>
+		<separator/>
+		<menu name="menu_message_mark">
+		 <menuitem action="ToggleReadFlag"/>
+		 <menuitem action="ToggleAnsweredFlag"/>
+		 <menuitem action="ToggleFlaggedFlag"/>
+		 <menuitem action="ToggleExpungedFlag"/>
+		 <menuitem action="ToggleSpamFlag"/>
+		</menu>	
 </menu>
 
