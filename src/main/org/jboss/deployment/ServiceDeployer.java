@@ -56,10 +56,10 @@ import org.xml.sax.SAXException;
 /**
  * This is the main Service Deployer API.
  *
- * @see org.jboss.system.Service
- * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @author <a href="mailtod_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.3 $ <p>
+ * @see       org.jboss.system.Service
+ * @author    <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author    <a href="mailtod_jencks@users.sourceforge.net">David Jencks</a>
+ * @version   $Revision: 1.4 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -69,8 +69,8 @@ import org.xml.sax.SAXException;
  *      <ol>
  *        <li> fixed tabs to spaces and log4j logging. Made the urlToServiceSet
  *        map actually use the url supplied to deploy. Made postRegister use
- *        deploy.  Made undeploy work, and implemented sar dependency 
- *        management and recursive deploy/undeploy.
+ *        deploy. Made undeploy work, and implemented sar dependency management
+ *        and recursive deploy/undeploy.
  *      </ol>
  *
  */
@@ -110,7 +110,7 @@ public class ServiceDeployer
    /**
     * Gets the Name of the ServiceDeployer object
     *
-    * @return returns "ServiceDeployer"
+    * @return   returns "ServiceDeployer"
     */
    public String getName()
    {
@@ -122,7 +122,7 @@ public class ServiceDeployer
     * will be deployed by the ServiceDeployer. Currently .jsr, .sar, and files
     * ending in service.xml are accepted.
     *
-    * @return The FileNameFilter for use by the AutoDeployer.
+    * @return   The FileNameFilter for use by the AutoDeployer.
     */
    public FilenameFilter getDeployableFilter()
    {
@@ -132,10 +132,10 @@ public class ServiceDeployer
             /**
              * Determines which files are accepted by the Deployer.
              *
-             * @param dir Directory of candidate file.
-             * @param filename Filename of candidate file.
-             * @return Whether candidate file should be deployed by this
-             *      deployer.
+             * @param dir       Directory of candidate file.
+             * @param filename  Filename of candidate file.
+             * @return          Whether candidate file should be deployed by
+             *      this deployer.
              */
             public boolean accept(File dir, String filename)
             {
@@ -150,9 +150,10 @@ public class ServiceDeployer
    /**
     * Determines if the urlString references a currently deployed package
     *
-    * @param urlString url string for package
-    * @return Whether the package is currently deployed.
-    * @exception MalformedURLException Thrown if a malformed url string is
+    * @param urlString                  url string for package
+    * @return                           Whether the package is currently
+    *      deployed.
+    * @exception MalformedURLException  Thrown if a malformed url string is
     *      supplied.
     */
    public boolean isDeployed(String urlString)
@@ -169,11 +170,11 @@ public class ServiceDeployer
     * them (if not suspended by an undeploy, adds this package to the
     * ServiceLibraries classpath, and loads the mbeans specified.
     *
-    * @param urlString The location of the package to deploy
-    * @exception MalformedURLException Thrown if a malformed url string is
+    * @param urlString                  The location of the package to deploy
+    * @exception MalformedURLException  Thrown if a malformed url string is
     *      supplied.
-    * @exception IOException Thrown if some read operation failed.
-    * @exception DeploymentException Thrown if the package could not be
+    * @exception IOException            Thrown if some read operation failed.
+    * @exception DeploymentException    Thrown if the package could not be
     *      deployed.
     */
    public void deploy(String urlString)
@@ -208,10 +209,10 @@ public class ServiceDeployer
       // Support for the new packaged format
       try
       {
-         if (urlString.endsWith(".jsr") 
-               || urlString.endsWith(".sar")
-               ||urlString.endsWith(".jar") 
-               || urlString.endsWith(".zip")) 
+         if (urlString.endsWith(".jsr")
+                || urlString.endsWith(".sar")
+                || urlString.endsWith(".jar")
+                || urlString.endsWith(".zip"))
          {
 
             URLClassLoader cl = new URLClassLoader(new URL[]{url});
@@ -220,8 +221,8 @@ public class ServiceDeployer
             log.debug("added classloader to urlToPrimaryClassLoaderMap");
             classLoaders.add(cl);
             log.debug("added classloader to set of cl to register on success");
-            if (!urlString.endsWith(".jar") 
-                && !urlString.endsWith(".zip"))
+            if (!urlString.endsWith(".jar")
+                   && !urlString.endsWith(".zip"))
             {
                document = getDocument("META-INF/jboss-service.xml", cl);
                log.debug("got document jboss-service.xml from cl");
@@ -240,7 +241,6 @@ public class ServiceDeployer
             throw new Exception("not a deployable file type");
          }
 
-
       }
       catch (Exception ignored)
       {
@@ -250,270 +250,275 @@ public class ServiceDeployer
 
       if (document != null)
       {
-      log.debug("found *service.xml file for url " + url);
-      // The service.xml file can define jar the classes it contains depend on
-      // We should only have one codebase (or none at all)
-      Element classpath = (Element)document.getElementsByTagName("classpath").item(0);
-      log.debug("found classpath " + classpath);
-      String codebase = "";
-      String archives = "";
+         log.debug("found *service.xml file for url " + url);
+         // The service.xml file can define jar the classes it contains depend on
+         // We should only have one codebase (or none at all)
+         Element classpath = (Element)document.getElementsByTagName("classpath").item(0);
+         log.debug("found classpath " + classpath);
+         String codebase = "";
+         String archives = "";
 
-      //Does it specify a codebase?
-      if (classpath != null)
-      {
-         log.debug("setting up classpath " + classpath);
-         // Load the codebase
-         codebase = classpath.getAttribute("codebase").trim();
-
-         //if codebase is ".", construct codebase from current url.
-         if (".".equals(codebase))
+         //Does it specify a codebase?
+         if (classpath != null)
          {
-            //does this work with http???
-            codebase = new File(urlString).getParent();
+            log.debug("setting up classpath " + classpath);
+            // Load the codebase
+            codebase = classpath.getAttribute("codebase").trim();
+
+            //if codebase is ".", construct codebase from current url.
+            if (".".equals(codebase))
+            {
+               //does this work with http???
+               codebase = new File(urlString).getParent();
+            }
+
+            // Let's make sure the formatting of the codebase ends with the /
+            if (codebase.startsWith("file:") && !codebase.endsWith(File.separator))
+            {
+               codebase += File.separator;
+            }
+            else if (codebase.startsWith("http:") && !codebase.endsWith("/"))
+            {
+               codebase += "/";
+            }
+            log.debug("codebase is " + codebase);
+            //Load the archives
+            archives = classpath.getAttribute("archives").trim();
+            log.debug("archives are " + archives);
          }
 
-         // Let's make sure the formatting of the codebase ends with the /
-         if (codebase.startsWith("file:") && !codebase.endsWith(File.separator))
+         if (codebase.startsWith("file:") && archives.equals(""))
          {
-            codebase += File.separator;
-         }
-         else if (codebase.startsWith("http:") && !codebase.endsWith("/"))
-         {
-            codebase += "/";
-         }
-         log.debug("codebase is " + codebase);
-         //Load the archives
-         archives = classpath.getAttribute("archives").trim();
-         log.debug("archives are " + archives);
-      }
-
-      if (codebase.startsWith("file:") && archives.equals(""))
-      {
-         try
-         {
-            File dir = new File(codebase.substring(5));
-            // The patchDir can only be a File one, local
-            File[] jars = dir.listFiles(
-               new java.io.FileFilter()
-               {
-                  /**
-                   * filters for jar and zip files in the local directory.
-                   *
-                   * @param pathname Path to the candidate file.
-                   * @return True if the file is a jar or zip file.
-                   */
-                  public boolean accept(File pathname)
+            try
+            {
+               File dir = new File(codebase.substring(5));
+               // The patchDir can only be a File one, local
+               File[] jars = dir.listFiles(
+                  new java.io.FileFilter()
                   {
-                     String name2 = pathname.getName();
-                     return name2.endsWith(".jar") || name2.endsWith(".zip");
+                     /**
+                      * filters for jar and zip files in the local directory.
+                      *
+                      * @param pathname  Path to the candidate file.
+                      * @return          True if the file is a jar or zip file.
+                      */
+                     public boolean accept(File pathname)
+                     {
+                        String name2 = pathname.getName();
+                        return name2.endsWith(".jar") || name2.endsWith(".zip");
+                     }
                   }
-               }
-                  );
-            for (int j = 0; jars != null && j < jars.length; j++)
-            {
-               File jar = jars[j];
-               URL u = jar.getCanonicalFile().toURL();
-               log.debug("addding URLClassLoader for url " + u);
-               URLClassLoader cl0 = new URLClassLoader(new URL[]{u});
-               classLoaders.add(cl0);
-            }
-         }
-         catch (Exception e)
-         {
-            e.printStackTrace();
-            throw new DeploymentException(e.getMessage());
-         }
-      }
-
-      // Still no codebase? get the system default
-      else if (codebase.equals(""))
-      {
-         codebase = System.getProperty("jboss.system.libraryDirectory");
-      }
-
-      // We have an archive whatever the codebase go ahead and load the libraries
-      if (!archives.equals(""))
-      {
-
-         StringTokenizer st = new StringTokenizer(archives, ",");
-         //iterate through the packages in archives
-         while (st.hasMoreTokens())
-         {
-            String jar = st.nextToken().trim();
-            String dependencyString = codebase + jar;
-            URL dependency = new URL(dependencyString);
-            //look to see if this package was undeployed by hand--
-            //if so we should not try to redeploy it automatically,
-            //we should wait till it is redeployed by hand.
-            log.debug("Looking for suspension dependencies for url : " + dependency);
-            Set dependents = (Set)suspendedUrlDependencyMap.get(dependency);
-            log.debug("Looking for suspension dependencies for url : " + dependency + ", returned " + dependents);
-            if ((dependents != null) && (dependents.size() > 0))
-            {
-               //We have to wait till it's redeployed
-               //Put in a request to be deployed ourselves.
-               if (!dependents.contains(url))
+                     );
+               for (int j = 0; jars != null && j < jars.length; j++)
                {
-                  dependents.add(url);
+                  File jar = jars[j];
+                  URL u = jar.getCanonicalFile().toURL();
+                  log.debug("addding URLClassLoader for url " + u);
+                  URLClassLoader cl0 = new URLClassLoader(new URL[]{u});
+                  classLoaders.add(cl0);
                }
-               //may need more cleanup...
-               urlToPrimaryClassLoaderMap.remove(url);
-               //we'll try again later...
-               return;
             }
-
-            //log.debug("adding URLClassLoader for url archive " + dependency);
-            //URLClassLoader cl1 = new URLClassLoader(new URL[]{dependency});
-            if (!isDeployed(dependencyString))
+            catch (Exception e)
             {
-               log.debug("recursively deploying " + dependency);
-               deploy(dependencyString);
+               e.printStackTrace();
+               throw new DeploymentException(e.getMessage());
             }
-            //This won't work if we only put into primary if deployed by hand,
-            //not recursively
-            Object cl1 = urlToPrimaryClassLoaderMap.get(dependency);
-            classLoaders.add(cl1);
+         }
+
+         // Still no codebase? get the system default
+         else if (codebase.equals(""))
+         {
+            codebase = System.getProperty("jboss.system.libraryDirectory");
+         }
+
+         // We have an archive whatever the codebase go ahead and load the libraries
+         if (!archives.equals(""))
+         {
+
+            StringTokenizer st = new StringTokenizer(archives, ",");
+            //iterate through the packages in archives
+            while (st.hasMoreTokens())
+            {
+               String jar = st.nextToken().trim();
+               String dependencyString = codebase + jar;
+               URL dependency = new URL(dependencyString);
+               //look to see if this package was undeployed by hand--
+               //if so we should not try to redeploy it automatically,
+               //we should wait till it is redeployed by hand.
+               log.debug("Looking for suspension dependencies for url : " + dependency);
+               Set dependents = (Set)suspendedUrlDependencyMap.get(dependency);
+               log.debug("Looking for suspension dependencies for url : " + dependency + ", returned " + dependents);
+               if ((dependents != null) && (dependents.size() > 0))
+               {
+                  //We have to wait till it's redeployed
+                  //Put in a request to be deployed ourselves.
+                  if (!dependents.contains(url))
+                  {
+                     dependents.add(url);
+                  }
+                  //may need more cleanup...
+                  urlToPrimaryClassLoaderMap.remove(url);
+                  //we'll try again later...
+                  return;
+               }
+
+               //log.debug("adding URLClassLoader for url archive " + dependency);
+               //URLClassLoader cl1 = new URLClassLoader(new URL[]{dependency});
+               if (!isDeployed(dependencyString))
+               {
+                  log.debug("recursively deploying " + dependency);
+                  deploy(dependencyString);
+               }
+               //This won't work if we only put into primary if deployed by hand,
+               //not recursively
+               //It also doesn't work if we put service.xml files in the classpath
+               Object cl1 = urlToPrimaryClassLoaderMap.get(dependency);
+               if (cl1 != null)
+               {
+                  classLoaders.add(cl1);
+               }
+            }
+         }
+
+         else if (codebase.startsWith("http:"))
+         {
+            throw new DeploymentException("Loading from a http:// codebase with no jars specified. Please fix jboss-service.xml in your configuration");
+         }
+
+         // The libraries are loaded we can now load the mbeans
+         List services = (List)urlToServicesListMap.get(url);
+         if (services == null)
+         {
+            services = Collections.synchronizedList(new ArrayList());
+            urlToServicesListMap.put(url, services);
+         }
+         NodeList nl = document.getElementsByTagName("mbean");
+         for (int i = 0; i < nl.getLength(); i++)
+         {
+
+            Element mbean = (Element)nl.item(i);
+
+            try
+            {
+               log.debug("deploying with ServiceController mbean " + mbean);
+               ObjectName service = (ObjectName)server.invoke(
+                     new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+                     "deploy",
+                     new Object[]{mbean},
+                     new String[]{"org.w3c.dom.Element"});
+
+               // marcf: I don't think we should keep track and undeploy...
+               //david jencks what do you mean by this???
+               services.add(service);
+            }
+            catch (MBeanException mbe)
+            {
+               log.error("Mbean exception while creating mbean", mbe.getTargetException());
+            }
+            catch (RuntimeMBeanException rbe)
+            {
+               log.error("Runtime Mbean exception while creating mbean", rbe.getTargetException());
+            }
+            catch (MalformedObjectNameException mone)
+            {
+               log.error("MalformedObjectNameException  while creating mbean", mone);
+            }
+            catch (ReflectionException re)
+            {
+               log.error("ReflectionException while creating mbean", re);
+            }
+            catch (InstanceNotFoundException re)
+            {
+               log.error("InstanceNotFoundException while creating mbean", re);
+            }
+            catch (Exception e)
+            {
+               log.error("Exception while creating mbean", e);
+            }
+         }
+
+         //init the mbeans in our package
+         for (Iterator it = services.iterator(); it.hasNext(); )
+         {
+            ObjectName service = (ObjectName)it.next();
+
+            try
+            {
+               server.invoke(
+                     new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+                     "init",
+                     new Object[]{service},
+                     new String[]{"javax.management.ObjectName"});
+            }
+            catch (MBeanException mbe)
+            {
+               log.error("Mbean exception while creating mbean", mbe.getTargetException());
+            }
+            catch (RuntimeMBeanException rbe)
+            {
+               log.error("Runtime Mbean exception while creating mbean", rbe.getTargetException());
+            }
+            catch (MalformedObjectNameException mone)
+            {
+               log.error("MalformedObjectNameException  while creating mbean", mone);
+            }
+            catch (ReflectionException re)
+            {
+               log.error("ReflectionException while creating mbean", re);
+            }
+            catch (InstanceNotFoundException re)
+            {
+               log.error("InstanceNotFoundException while creating mbean", re);
+            }
+            catch (Exception e)
+            {
+               log.error("Exception while creating mbean", e);
+            }
+         }
+
+         //iterate through services and start.
+         for (Iterator it = services.iterator(); it.hasNext(); )
+         {
+            ObjectName service = (ObjectName)it.next();
+
+            try
+            {
+               server.invoke(
+                     new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+                     "start",
+                     new Object[]{service},
+                     new String[]{"javax.management.ObjectName"});
+            }
+            catch (MBeanException mbe)
+            {
+               log.error("Mbean exception while creating mbean", mbe.getTargetException());
+            }
+            catch (RuntimeMBeanException rbe)
+            {
+               log.error("Runtime Mbean exception while creating mbean", rbe.getTargetException());
+            }
+            catch (MalformedObjectNameException mone)
+            {
+               log.error("MalformedObjectNameException  while creating mbean", mone);
+            }
+            catch (ReflectionException re)
+            {
+               log.error("ReflectionException while creating mbean", re);
+            }
+            catch (InstanceNotFoundException re)
+            {
+               log.error("InstanceNotFoundException while creating mbean", re);
+            }
+            catch (Exception e)
+            {
+               log.error("Exception while creating mbean", e);
+            }
          }
       }
-
-      else if (codebase.startsWith("http:"))
-      {
-         throw new DeploymentException("Loading from a http:// codebase with no jars specified. Please fix jboss-service.xml in your configuration");
-      }
-
-      // The libraries are loaded we can now load the mbeans
-      List services = (List)urlToServicesListMap.get(url);
-      if (services == null)
-      {
-         services = Collections.synchronizedList(new ArrayList());
-         urlToServicesListMap.put(url, services);
-      }
-      NodeList nl = document.getElementsByTagName("mbean");
-      for (int i = 0; i < nl.getLength(); i++)
-      {
-
-         Element mbean = (Element)nl.item(i);
-
-         try
-         {
-            log.debug("deploying with ServiceController mbean " + mbean);
-            ObjectName service = (ObjectName)server.invoke(
-                  new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
-                  "deploy",
-                  new Object[]{mbean},
-                  new String[]{"org.w3c.dom.Element"});
-
-            // marcf: I don't think we should keep track and undeploy...
-            //david jencks what do you mean by this???
-            services.add(service);
-         }
-         catch (MBeanException mbe)
-         {
-            log.error("Mbean exception while creating mbean", mbe.getTargetException());
-         }
-         catch (RuntimeMBeanException rbe)
-         {
-            log.error("Runtime Mbean exception while creating mbean", rbe.getTargetException());
-         }
-         catch (MalformedObjectNameException mone)
-         {
-            log.error("MalformedObjectNameException  while creating mbean", mone);
-         }
-         catch (ReflectionException re)
-         {
-            log.error("ReflectionException while creating mbean", re);
-         }
-         catch (InstanceNotFoundException re)
-         {
-            log.error("InstanceNotFoundException while creating mbean", re);
-         }
-         catch (Exception e)
-         {
-            log.error("Exception while creating mbean", e);
-         }
-      }
+      //document != null
 
       //We loaded Ok, register all our classloaders
       registerClassLoaders(url, classLoaders);
-
-      //init the mbeans in our package
-      for (Iterator it = services.iterator(); it.hasNext(); )
-      {
-         ObjectName service = (ObjectName)it.next();
-
-         try
-         {
-            server.invoke(
-                  new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
-                  "init",
-                  new Object[]{service},
-                  new String[]{"javax.management.ObjectName"});
-         }
-         catch (MBeanException mbe)
-         {
-            log.error("Mbean exception while creating mbean", mbe.getTargetException());
-         }
-         catch (RuntimeMBeanException rbe)
-         {
-            log.error("Runtime Mbean exception while creating mbean", rbe.getTargetException());
-         }
-         catch (MalformedObjectNameException mone)
-         {
-            log.error("MalformedObjectNameException  while creating mbean", mone);
-         }
-         catch (ReflectionException re)
-         {
-            log.error("ReflectionException while creating mbean", re);
-         }
-         catch (InstanceNotFoundException re)
-         {
-            log.error("InstanceNotFoundException while creating mbean", re);
-         }
-         catch (Exception e)
-         {
-            log.error("Exception while creating mbean", e);
-         }
-      }
-
-      //iterate through services and start.
-      for (Iterator it = services.iterator(); it.hasNext(); )
-      {
-         ObjectName service = (ObjectName)it.next();
-
-         try
-         {
-            server.invoke(
-                  new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
-                  "start",
-                  new Object[]{service},
-                  new String[]{"javax.management.ObjectName"});
-         }
-         catch (MBeanException mbe)
-         {
-            log.error("Mbean exception while creating mbean", mbe.getTargetException());
-         }
-         catch (RuntimeMBeanException rbe)
-         {
-            log.error("Runtime Mbean exception while creating mbean", rbe.getTargetException());
-         }
-         catch (MalformedObjectNameException mone)
-         {
-            log.error("MalformedObjectNameException  while creating mbean", mone);
-         }
-         catch (ReflectionException re)
-         {
-            log.error("ReflectionException while creating mbean", re);
-         }
-         catch (InstanceNotFoundException re)
-         {
-            log.error("InstanceNotFoundException while creating mbean", re);
-         }
-         catch (Exception e)
-         {
-            log.error("Exception while creating mbean", e);
-         }
-      }
-      }//document != null
 
       //Ok, now we've loaded this jsr.  Are other packages waiting for us?
       Set dependSet = (Set)suspendedUrlDependencyMap.remove(url);
@@ -538,11 +543,12 @@ public class ServiceDeployer
     * we undeployed so that they can be redeployed should this one be
     * redeployed.
     *
-    * @param urlString The location of the package to be undeployed (used to
-    *      index the packages, not to read service.xml on undeploy!
-    * @exception MalformedURLException Thrown if the url string is not valid.
-    * @exception IOException Thrown if something could not be read.
-    * @exception DeploymentException Thrown if the package could not be
+    * @param urlString                  The location of the package to be
+    *      undeployed (used to index the packages, not to read service.xml on
+    *      undeploy!
+    * @exception MalformedURLException  Thrown if the url string is not valid.
+    * @exception IOException            Thrown if something could not be read.
+    * @exception DeploymentException    Thrown if the package could not be
     *      undeployed
     */
    public void undeploy(String urlString)
@@ -674,10 +680,10 @@ public class ServiceDeployer
    /**
     * MBeanRegistration interface. Get the mbean server.
     *
-    * @param server Our mbean server.
-    * @param name our proposed object name.
-    * @return our actual object name
-    * @exception java.lang.Exception Thrown if we are supplied an invalid name.
+    * @param server                   Our mbean server.
+    * @param name                     our proposed object name.
+    * @return                         our actual object name
+    * @exception java.lang.Exception  Thrown if we are supplied an invalid name.
     */
    public ObjectName preRegister(MBeanServer server, ObjectName name)
           throws java.lang.Exception
@@ -696,7 +702,7 @@ public class ServiceDeployer
     * should be jboss-service.xml or (deprecated) jboss.jcml. Soon we should
     * have an actual sar with the code as well as configuration info.
     *
-    * @param registrationDone Description of Parameter
+    * @param registrationDone  Description of Parameter
     */
    public void postRegister(java.lang.Boolean registrationDone)
    {
@@ -778,7 +784,6 @@ public class ServiceDeployer
          br.close();
       }
 
-
       try
       {
          // Parse XML
@@ -804,14 +809,16 @@ public class ServiceDeployer
 
       try
       {
-         log.debug("=====================");
-         log.debug("registering classloaders for url: " + url);
-         Iterator cls0 = classLoaders.iterator();
-         while (cls0.hasNext())
-         {
-            log.debug("classloader for url: " + ((URLClassLoader)cls0.next()).getURL());
-         }
-         log.debug("=====================");
+         /*
+          * log.debug("=====================");
+          * log.debug("registering classloaders for url: " + url);
+          * Iterator cls0 = classLoaders.iterator();
+          * while (cls0.hasNext())
+          * {
+          * log.debug("classloader for url: " + ((URLClassLoader)cls0.next()).getURL());
+          * }
+          * log.debug("=====================");
+          */
          urlToClassLoadersSetMap.put(url, classLoaders);
          //need a classloader to url set map too, to keep track of
          //when we can unload a classloader.
