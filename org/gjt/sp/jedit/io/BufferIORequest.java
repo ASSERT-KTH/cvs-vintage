@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.21 2002/04/01 23:45:24 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.22 2002/04/04 05:53:05 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -612,7 +612,10 @@ public class BufferIORequest extends WorkRequest
 				out = vfs._createOutputStream(session,savePath,view);
 				if(out != null)
 				{
-					if(buffer.getName().endsWith(".gz"))
+					// Can't use buffer.getName() here because
+					// it is not changed until the save is
+					// complete
+					if(savePath.endsWith(".gz"))
 						buffer.setBooleanProperty(Buffer.GZIPPED,true);
 
 					if(buffer.getBooleanProperty(Buffer.GZIPPED))
