@@ -90,9 +90,14 @@ public class StopTomcat {
     }
 
     // -------------------- Parameters --------------------
-
     public void setSecretFile( String s ) {
 	secretFile=s;
+	commandLineParams=true;
+    }
+
+    public void setAjpid( String s ) {
+	secretFile=s;
+	commandLineParams=true;
     }
     
     public void setH( String s ) {
@@ -107,10 +112,12 @@ public class StopTomcat {
 
     public void setHost( String h ) {
 	host=h;
+	commandLineParams=true;
     }
 
     public void setPort( int port ) {
 	this.port=port;
+	commandLineParams=true;
     }
 
     /** When tomcat is started, a secret ( random ) key will be generated
@@ -118,8 +125,14 @@ public class StopTomcat {
 	read the key and use it. If you run from a different host, you'll
 	have to specify it manually
     */
+    public void setPass( String s ) {
+	secret=s;
+	commandLineParams=true;
+    }
+    
     public void setSecret( String s ) {
 	secret=s;
+	commandLineParams=true;
     }
     
     // -------------------- Ant execute --------------------
@@ -251,64 +264,47 @@ public class StopTomcat {
     /** Process arguments - set object properties from the list of args.
      */
     public  boolean processArgs(String[] args) {
-	for (int i = 0; i < args.length; i++) {
-	    String arg = args[i];
-	    
-	    if (arg.equals("-?")) {
-		return false;
-	    }
-	    if (arg.equals("-h") || arg.equals("-home")) {
-		i++;
-		if (i < args.length)
-		    System.getProperties().put("tomcat.home",
-						args[i]);
-		else
-		    return false;
-	    }
-	    if (arg.equals("-host") ) {
-		i++;
-		commandLineParams=true;
-		if (i < args.length)
-		    host=args[i];
-		else
-		    return false;
-	    }
-	    if (arg.equals("-port") ) {
-		i++;
-		commandLineParams=true;
-		if (i < args.length)
-		    port=Integer.parseInt( args[i] );
-		else
-		    return false;
-	    }
-	    if (arg.equals("-pass") ) {
-		i++;
-		commandLineParams=true;
-		if (i < args.length) 
-		    secret=args[i];
-		else
-		    return false;
-	    }
-	    if (arg.equalsIgnoreCase("-ajpid") ) {
-		i++;
-		commandLineParams=true;
-		if (i < args.length) 
-		    secretFile=args[i];
-		else
-		    return false;
-	    }
+	try {
+	    return IntrospectionUtils.processArgs( this, args, getOptions1(),
+					    null, getOptionAliases());
+	} catch( Exception ex ) {
+	    ex.printStackTrace();
+	    return false;
 	}
-	return true;
+
     }
 
+    static String options1[]= { "help", "stop" };
+    static Hashtable optionAliases=new Hashtable();
+    static Hashtable optionDescription=new Hashtable();
+    static {
+	optionAliases.put("h", "home");
+	optionAliases.put("?", "help");
+    }
+
+    public String[] getOptions1() {
+	return options1;
+    }
+
+    public Hashtable getOptionAliases() {
+	return optionAliases;
+    }
+
+    public static void printUsage() {
+	System.out.println("Usage: java org.apache.tomcat.startup.StopTomcat {options}");
+	System.out.println("  Options are:");
+        System.out.println("    -ajpid file                Use this file instead of conf/ajp12.id");
+	System.out.println("    -pass                      Password to use");
+        System.out.println("    -host                      Host to send the shutdown command");
+	System.out.println("    -port                      Port to send the shutdown command");
+	System.out.println("    -home dir                  Use this directory as tomcat.home,to find ajp12.id");
+        System.out.println();
+    }
+    
     public static void main(String args[] ) {
 	try {
 	    StopTomcat tomcat=new StopTomcat();
-	    if( ! tomcat.processArgs( args ) ) {
-		// XXX use sm, i18n
-		System.out.println("Usage: java org.apache.tomcat.startup.StopTomcat [ -home TOMCAT_HOME ] ");
-		return;
-	    }
+	    tomcat.processArgs( args );
 	    tomcat.execute();
 	} catch(Exception ex ) {
 	    System.out.println(sm.getString("tomcat.fatal"));

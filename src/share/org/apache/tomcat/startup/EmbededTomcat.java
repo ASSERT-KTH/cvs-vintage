@@ -219,7 +219,7 @@ public class EmbededTomcat {
 	}
 
 	try {
-	    Context ctx=new Context();
+	    Context ctx=contextM.createContext();
 	    ctx.setDebug( debug );
 	    ctx.setContextManager( contextM );
 	    ctx.setPath( ctxPath );

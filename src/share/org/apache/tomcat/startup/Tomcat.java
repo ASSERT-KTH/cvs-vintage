@@ -14,6 +14,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.log.*;
 import org.xml.sax.*;
 import org.apache.tomcat.util.collections.*;
+import org.apache.tomcat.util.IntrospectionUtils;
 
 /**
  * Main entry point to several Tomcat functions. Uses EmbededTomcat to
@@ -33,21 +34,12 @@ public class Tomcat {
     private static StringManager sm =
 	StringManager.getManager("org.apache.tomcat.resources");
 
-    private String action="start";
-
     EmbededTomcat tomcat=new EmbededTomcat();
 
-    String home=null;
-    
-    String args[];
-
-    // null means user didn't set one
-    String configFile=null;
-    boolean fastStart=false;
-    
     // relative to TOMCAT_HOME
     static final String DEFAULT_CONFIG="conf/server.xml";
-    SimpleHashtable attributes=new SimpleHashtable();
+
+    Hashtable attributes=new Hashtable();
     static Log log=Log.getLog( "tc_log", "Tomcat" );
     
     public Tomcat() {
@@ -55,114 +47,109 @@ public class Tomcat {
     //-------------------- Properties --------------------
     
     public void setHome(String home) {
-	this.home=home;
-	tomcat.setHome( home );
+	if( dL > 0 ) debug( "setHome " + home );
+	attributes.put( "home", home );
+    }
+    public void setH(String home) {
+	setHome( home );
+    }
+
+    public void setInstall(String install) {
+	attributes.put( "install", install );
     }
     
-    public void setInstall(String install) {
-	tomcat.setInstall(install);
+    public void setI(String install) {
+	setInstall( install );
     }
     
     public void setArgs(String args[]) {
-	this.args=args;
+	attributes.put("args", args);
     }
-    
+
+    public void setConfig( String s ) {
+	attributes.put( "config" , s );
+    }
+
+    public void setF( String s ) {
+	setConfig( s );
+    }
 
     public void setAction(String s ) {
-	action=s;
+	attributes.put("action",s);
+	attributes.put(s, "true" );
     }
 
     public void setSandbox( boolean b ) {
-	tomcat.setSandbox( b );
+	if( b ) attributes.put( "sandbox", "true" );
+    }
+    
+    public void setStop( boolean b ) {
+	if( b ) attributes.put( "stop", "true" );
+    }
+    
+    public void setEnableAdmin( boolean b ) {
+	if( b ) attributes.put( "enableAdmin", "true" );
     }
     
     public void setParentClassLoader( ClassLoader cl ) {
-	tomcat.setParentClassLoader(cl);
+	attributes.put( "parentClassLoader", cl );
     }
 
     public void setCommonClassLoader( ClassLoader cl ) {
-	tomcat.setCommonClassLoader( cl );
+	attributes.put( "commonClassLoader", cl );
     }
 
     public void setAppsClassLoader( ClassLoader cl ) {
-	tomcat.setAppsClassLoader( cl );
+	attributes.put( "appsClassLoader", cl );
     }
 
     public void setContainerClassLoader( ClassLoader cl ) {
-	tomcat.setContainerClassLoader( cl );
+    	attributes.put( "containerClassLoader", cl );
     }
     
-    // -------------------- main/execute --------------------
+    // -------------------- execute --------------------
     
-    public static void main(String args[] ) {
-	try {
-	    Tomcat tomcat=new Tomcat();
-	    tomcat.setArgs( args );
-            tomcat.execute();
-	} catch(Exception ex ) {
-	    log.log(sm.getString("tomcat.fatal"), ex);
-	    System.exit(1);
-	}
-    }
-
     public void execute() throws Exception {
-	//	String[] args=(String[])attributes.get("args");
-        if ( args == null || ! processArgs( args )) {
-	    setAction("help");
-	}
-	if( "stop".equals( action )){
+	if( attributes.get("stop") != null ) {
 	    stopTomcat();
-	} else if( "enableAdmin".equals( action )){
+	} else if( attributes.get("enableAdmin") != null ){
 	    enableAdmin();
-	} else if( "help".equals( action )) {
+	} else if( attributes.get("help") != null ) {
 	    printUsage();
-	} else if( "start".equals( action )) {
+	} else {
 	    startTomcat();
 	}
     }
 
     // -------------------- Actions --------------------
 
-    public void enableAdmin() throws IOException
+    public void enableAdmin() throws TomcatException
     {
-	System.out.println("Overriding apps-admin settings ");
-	FileWriter fw=new FileWriter( home + File.separator +
-				      "conf" + File.separator +
-				      "apps-admin.xml" );
-	PrintWriter pw=new PrintWriter( fw );
-        pw.println( "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>");
-	pw.println( "<webapps>" );
-        pw.println( "    <!-- Special rules for the admin webapplication -->");
-	pw.println( "    <Context path=\"/admin\"");
-	pw.println( "             docBase=\"webapps/admin\"");
-	pw.println( "             trusted=\"true\">");
-	pw.println( "            <SimpleRealm filename=\"conf/users/admin-users.xml\" />");
-	pw.println( "    </Context>");
-	pw.println( "</webapps>" );
-	pw.close();
+	try {
+	    EnableAdmin task= new EnableAdmin();
+	    task.setHome( (String)attributes.get("home") );
+	    task.processArgs( (String[])attributes.get("args"));
+	    task.execute();     
+	} catch (Exception te) {
+	    te.printStackTrace();
+	    throw new TomcatException( te );
+	}
     }
 	
     public void stopTomcat() throws TomcatException {
 	try {
-	    StopTomcat task=
-		new  StopTomcat();
-
+	    StopTomcat task= new  StopTomcat();
+	    task.setHome( (String)attributes.get("home") );
+	    task.processArgs( (String[])attributes.get("args"));
 	    task.execute();     
+	} catch (Exception te) {
+	    throw new TomcatException( te );
 	}
-	catch (Exception te) {
-	    if( te instanceof TomcatException ) {
-		if (((TomcatException)te).getRootCause() instanceof java.net.ConnectException)
-		    System.out.println(sm.getString("tomcat.connectexception"));
-		else
-		    throw (TomcatException)te;
-	    } else
-		throw new TomcatException( te );
-	}
-	return;
     }
 
     public void startTomcat() throws TomcatException {
 	if( tomcat==null ) tomcat=new EmbededTomcat();
+	setTomcatProperties();
 	
 	if( ! tomcat.isInitialized() ) {
 	    long time1=System.currentTimeMillis();
@@ -170,7 +157,8 @@ public class Tomcat {
 	    tomcat.addInterceptor( pS );
 
 	    ServerXmlReader sxmlConf=new ServerXmlReader();
-	    sxmlConf.setConfig( configFile );
+	    if( null!=attributes.get( "config" ) )
+		sxmlConf.setConfig( (String)attributes.get("config") );
 	    tomcat.addInterceptor( sxmlConf );
 
 	    tomcat.initContextManager();
@@ -185,9 +173,25 @@ public class Tomcat {
 	tomcat.log("Startup " + ( time4-time3 ));
     }
 
+    private void setTomcatProperties() {
+	if( attributes.get("home") != null )
+	    tomcat.setHome( (String)attributes.get("home"));
+	if( attributes.get("install") != null )
+	    tomcat.setInstall( (String)attributes.get("install"));
+	if( attributes.get("parentClassLoader") != null )
+	    tomcat.setParentClassLoader((ClassLoader)attributes.get("parentClassLoader"));
+	if( attributes.get("commonClassLoader") != null )
+	    tomcat.setCommonClassLoader((ClassLoader)attributes.get("commonClassLoader"));
+	if( attributes.get("appsClassLoader") != null )
+	    tomcat.setAppsClassLoader( (ClassLoader)attributes.get("appsClassLoader"));
+	if( attributes.get("containerClassLoader") != null )
+	    tomcat.setContainerClassLoader( (ClassLoader)attributes.get("containerClassLoader"));
+	if( null!= attributes.get("sandbox"))
+	    tomcat.setSandbox( true );
+    }
+    
     
     // -------------------- Command-line args processing --------------------
-
 
     public static void printUsage() {
 	//System.out.println(sm.getString("tomcat.usage"));
@@ -198,7 +202,7 @@ public class Tomcat {
 	System.out.println("    -config file (or -f file)  Use this file instead of server.xml");
         System.out.println("    -enableAdmin               Updates admin webapp config to \"trusted\"");
 	System.out.println("    -help (or help)            Show this usage report");
-	System.out.println("    -home dir (or -h dir)      Use this directory as tomcat.home");
+	System.out.println("    -home dir                  Use this directory as tomcat.home");
 	System.out.println("    -install dir (or -i dir)   Use this directory as tomcat.install");
         System.out.println("    -sandbox                   Enable security manager (includes java.policy)");
 	System.out.println("    -stop                      Shut down currently running Tomcat");
@@ -206,72 +210,80 @@ public class Tomcat {
         System.out.println("In the absence of \"-enableAdmin\" and \"-stop\", Tomcat will be started");
     }
 
+
+    static String options1[]= { "help", "stop", "sandbox", "security",  "enableAdmin" };
+    static Hashtable optionAliases=new Hashtable();
+    static Hashtable optionDescription=new Hashtable();
+    static {
+	optionAliases.put("h", "home");
+	optionAliases.put("i", "install");
+	optionAliases.put("f", "config");
+	optionAliases.put("security", "sandbox");
+	optionAliases.put("?", "help");
+    }
+
+//     public String[] getOptions1() {
+// 	return options1;
+//     }
+//     public Hashtable getOptionAliases() {
+// 	return optionAliases;
+//     }
+	
+    
     /** Process arguments - set object properties from the list of args.
      */
     public  boolean processArgs(String[] args) {
-	for (int i = 0; i < args.length; i++) {
-	    String arg = args[i];
-
-	    if (arg.equals("-help") || arg.equals("help")) {
-		action="help";
-		return false;
-	    } else if (arg.equals("-stop")) {
-		action="stop";
-	    } else if (arg.equals("-sandbox")) {
-		setSandbox(true);
-	    } else if (arg.equals("-security")) {
-		setSandbox(true);
-	    } else if (arg.equals("-fastStart")) {
-		fastStart=true;
-	    } else if (arg.equals("-enableAdmin")) {
-		action="enableAdmin";
-	    } else if (arg.equals("-f") || arg.equals("-config")) {
-		i++;
-		if( i < args.length )
-		    configFile = args[i];
-		else
-		    return false;
-	    } else if (arg.equals("-h") || arg.equals("-home")) {
-		i++;
-		if (i < args.length)
-		    setHome( args[i] );
-		else
-		    return false;
-	    } else if (arg.equals("-i") || arg.equals("-install")) {
-		i++;
-		if (i < args.length)
-		    setInstall( args[i] );
-		else
-		    return false;
-	    } else if (arg.equalsIgnoreCase("-ajpid") ) {
-                // accept this argument so it can pass through to StopTomcat
-		i++;
-		if (i >= args.length) 
-		    return false;
-            }
+	setArgs(args);
+	try {
+	    return IntrospectionUtils.processArgs( this, args );
+	    //, args,getOptions1(),
+	    //			    null, getOptionAliases());
+	} catch( Exception ex ) {
+	    ex.printStackTrace();
+	    return false;
 	}
-	return true;
     }
 
-    // Hack for Main.java, will be replaced with calling the setters directly
+    /** Callback from argument processing
+     */
+    public void setProperty(String s,Object v) {
+	if ( dL > 0 ) debug( "Generic property " + s );
+	attributes.put(s,v);
+    }
+
+    /** Called by Main to set non-string properties
+     */
     public void setAttribute(String s,Object o) {
-	if( "home".equals( s ) )
-	    setHome( (String)o);
-	if( "install".equals( s ) )
-	    setInstall( (String)o);
-	else if("args".equals( s ) ) 
-	    setArgs((String[])o);
-	else if( "parentClassLoader".equals( s ) ) 
-	    setParentClassLoader((ClassLoader)o);
-	else if( "appsClassLoader".equals( s ) ) 
-	    setAppsClassLoader((ClassLoader)o);
-	else if( "commonClassLoader".equals( s ) ) 
-	    setCommonClassLoader((ClassLoader)o);
-	else if( "containerClassLoader".equals( s ) ) 
-	    setContainerClassLoader((ClassLoader)o);
-	else {
-	    System.out.println("Tomcat: setAttribute " + s + "=" + o);
-	    attributes.put(s,o);
+	if( optionAliases.get( s ) !=null )
+	    s=(String)optionAliases.get( s );
+
+	if ( "args".equals(s) ) {
+	    String args[]=(String[])o;
+	    boolean ok=processArgs( args );
+	    if ( ! ok ) {
+		printUsage();
+		return;
+	    }
 	}
+
+	attributes.put(s,o);
+    }
+
+    // -------------------- Main --------------------
+
+    public static void main(String args[] ) {
+	try {
+	    Tomcat tomcat=new Tomcat();
+	    tomcat.processArgs( args );
+            tomcat.execute();
+	} catch(Exception ex ) {
+	    log.log(sm.getString("tomcat.fatal"), ex);
+	    System.exit(1);
+	}
+    }
+
+    private static int dL=0;
+    private void debug( String s ) {
+	System.out.println("Tomcat: " + s );
     }
 }
