@@ -180,6 +180,9 @@ public final class ServletHandler extends Handler {
 	    errorException = null;
 	    return;// already destroyed or not init.
 	}
+	// XXX if we are being destroyed due to permanent UnavailableException
+	// thrown in service(), we probably don't want to go to ADDED state.
+	// may need a STATE_DISABLE_PERM?
 	setState( STATE_ADDED );
 
 	// XXX post will not be called if any error happens in destroy.
@@ -277,7 +280,7 @@ public final class ServletHandler extends Handler {
 	    // if no error happened and if doInit didn't put us in
 	    // a special state, we are ready
 	    if( state!=STATE_DISABLED &&
-		getErrorException() != null ) {
+		getErrorException() == null ) {
 		state=STATE_READY;
 	    }
 	}
@@ -370,10 +373,12 @@ public final class ServletHandler extends Handler {
 
 	// Deal with Unavailable errors
 	if( ! checkAvailable() ) {
-	    // init can't proceed
-	    setState( STATE_DELAYED_INIT );
+	    // remain in STATE_DELAYED_INIT state
 	    return;
 	}
+
+	// clear STATE_DELAYED_INIT if set
+	setState( STATE_ADDED );
 	
 	// For JSPs we rely on JspInterceptor to set the servlet class name.
 	// We make no distinction between servlets and jsps.
@@ -397,9 +402,7 @@ public final class ServletHandler extends Handler {
 		setServletUnavailable( ex );
 	    }
 	    servlet=null;
-	    throw ex;
-	    // it's a normal exception, servlet will
-	    // not be initialized.
+	    // we have set the exception and state, okay to just return
 	}
 
 	// other exceptions are just thrown -
@@ -489,14 +492,17 @@ public final class ServletHandler extends Handler {
 	} catch ( UnavailableException ex ) {
 	    if ( ex.isPermanent() ) {
 		setState( STATE_DISABLED );
-	    } else {
-		setServletUnavailable((UnavailableException)ex );
+		// XXX spec says we must destroy the servlet
 	    }
 	    if ( null != getErrorException() ) {
 		synchronized(this) {
 		    if ( null!= getErrorException() ) {
-			// servlet exception state
-			setErrorException( ex );
+			if ( state == STATE_DISABLED )
+			    // servlet exception state
+			    setErrorException( ex );
+			else
+			    // set expiration
+			    setServletUnavailable((UnavailableException)ex );
 		    }
 		}
 	    }
