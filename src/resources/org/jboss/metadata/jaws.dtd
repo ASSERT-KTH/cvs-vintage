@@ -1,5 +1,8 @@
 <!--
 This is the XML DTD for the JAWS deployment descriptor.
+  <!DOCTYPE jaws PUBLIC
+      "-//JBoss//DTD JAWS//EN"
+      "http://www.jboss.org/j2ee/dtd/jaws.dtd">
 -->
 
 <!ELEMENT jaws (datasource,type-mapping,enterprise-beans)>
