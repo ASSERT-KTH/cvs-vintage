@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CopyHelper.java,v 1.1 2003/02/04 20:04:42 d00mst Exp $
+// $Id: CopyHelper.java,v 1.2 2003/02/05 15:02:03 d00mst Exp $
 
 package org.argouml.model.uml;
 
@@ -170,7 +170,6 @@ public final class CopyHelper {
 			return (MModelElement) f.method.invoke(f.object, args);
 		} catch (Exception e) {
 			cat.error("CopyHelper copy method exception", e);
-			System.out.println("except");
 			return null;
 		}
 	}
