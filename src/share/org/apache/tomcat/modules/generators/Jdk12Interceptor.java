@@ -85,7 +85,7 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
     public int preInitCheck( Request req, Handler sw )
 	throws TomcatException
     {
-	fixJDKContextClassLoader(ctx);
+        fixJDKContextClassLoader(req.getContext());
 	return 0;
     }
 
