@@ -430,11 +430,8 @@ public final class ErrorHandler extends BaseInterceptor {
 	if( ! path.startsWith( "/" ) ) {
 	    return ctx.getServletByName( path );
 	}
-	Request req1=cm.createRequest();
-	Response res1=cm.createResponse(req1);
-	cm.initRequest( req1, res1 );
+	Request req1=cm.createRequest(ctx, path);
 
-	req1.requestURI().setString( ctx.getPath() + path );
 	cm.processRequest( req1 );
 	return req1.getHandler();
     }
