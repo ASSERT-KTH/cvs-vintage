@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+import java.rmi.ServerError;
 import java.rmi.ServerException;
 import java.util.*;
 
@@ -50,7 +51,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Peter Antman (peter.antman@tim.se)
-*   @version $Revision: 1.14 $
+*   @version $Revision: 1.15 $
 */
 public class TxInterceptorBMT
 extends AbstractInterceptor
@@ -297,7 +298,7 @@ extends AbstractInterceptor
                 }
             }
         
-            throw new ServerException("Transaction rolled back:"+e.getMessage());   
+            throw new ServerError("Transaction rolled back", e);   
         } finally {
             
             // Reset user Tx
