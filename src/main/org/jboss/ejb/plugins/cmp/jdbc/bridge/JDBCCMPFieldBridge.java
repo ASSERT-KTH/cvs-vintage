@@ -11,12 +11,8 @@ package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-
 import org.jboss.ejb.EntityEnterpriseContext;
-
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
-
-import org.jboss.ejb.plugins.cmp.bridge.CMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
 
 
@@ -33,9 +29,16 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
  *      One for each entity bean cmp field.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
-public interface JDBCCMPFieldBridge extends CMPFieldBridge {
+public interface JDBCCMPFieldBridge 
+      extends JDBCFieldBridge {
+
+   /**
+    * Gets the java class type of the field.
+    * @return the java class type of this field
+    */
+   public Class getFieldType();
 
    /**
     * Get metadata for the field.
@@ -43,26 +46,26 @@ public interface JDBCCMPFieldBridge extends CMPFieldBridge {
    public JDBCCMPFieldMetaData getMetaData();
 
    /**
-    * Has current data read timed out?
+    * Gets the value of this field in the specified primaryKey object.
+    * @param primaryKey the primary key object from which this fields value 
+    *    will be extracted
+    * @return the value of this field in the primaryKey object
     */
-   public boolean isReadTimedOut(EntityEnterpriseContext ctx);
-   
-   /**
-    * Resets any persistence data maintained in the context.
-    */
-   public void resetPersistenceContext(EntityEnterpriseContext ctx);
-   
-   /**
-    * Gets the JDBC type of this field.
-    */
-   public JDBCType getJDBCType();
+   public Object getPrimaryKeyValue(Object primaryKey)
+         throws IllegalArgumentException;
 
    /**
-    * Sets the prepared statement parameters with the data from the 
-    * instance associated with the context.
+    * Sets the value of this field to the specified value in the 
+    * specified primaryKey object.
+    * @param primaryKey the primary key object which the value 
+    *    will be inserted
+    * @param value the value for field that will be set in the pk
+    * @return the updated primary key object; the actual object may 
+    *    change not just the value
     */
-   public int setInstanceParameters(PreparedStatement ps, int parameterIndex, EntityEnterpriseContext ctx);
-
+    public Object setPrimaryKeyValue(Object primaryKey, Object value)
+         throws IllegalArgumentException;
+   
    /**
     * Sets the prepared statement parameters with the data from the 
     * primary key.
@@ -76,17 +79,8 @@ public interface JDBCCMPFieldBridge extends CMPFieldBridge {
    public int setArgumentParameters(PreparedStatement ps, int parameterIndex, Object arg);
 
    /**
-    * Loads the data from result set into the instance associated with the context.
-    */
-   public int loadInstanceResults(ResultSet rs, int parameterIndex, EntityEnterpriseContext ctx);
-   
-   /**
     * Loads the data from result set into the primary key object.
     */
    public int loadPrimaryKeyResults(ResultSet rs, int parameterIndex, Object[] pkRef) throws IllegalArgumentException;
 
-   /**
-    * Loads the value of this cmp field from result set into argument referance.
-    */
-   public int loadArgumentResults(ResultSet rs, int parameterIndex, Object[] argumentRef) throws IllegalArgumentException;
 }                                         
