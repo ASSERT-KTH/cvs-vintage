@@ -643,5 +643,10 @@ public final class ServletHandler extends Handler {
 	return false;
     }
 
+    /** The handler may return a set of classes it depends on
+     */
+    public String [] _getDepends() {
+	return null;
+    }
 
 }
