@@ -83,7 +83,6 @@ public class BasicLoginServlet extends HttpServlet {
 
 	response.setHeader( "WWW-Authenticate",
 			    "Basic realm=\"" + realm + "\"");
-	response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
 }
