@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.121 2004/11/01 19:55:55 mvw Exp $
+// $Id: Project.java,v 1.122 2004/11/29 16:09:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,14 +120,13 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     private Vector diagrams;
     private Object defaultModel;
-    private boolean needsSave;
     private Object currentNamespace;
     private HashMap uuidRefs;
     private GenerationPreferences cgPrefs;
     private transient VetoableChangeSupport vetoSupport;
 
     /**
-     * The root of the modeltree the user is working on. (The untitled_model in
+     * The root of the modeltree the user is working on. (The untitledModel in
      * the navpane).
      */
     private Object treeRoot;
@@ -1075,14 +1074,6 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     public GenerationPreferences getCgPrefs() {
         return cgPrefs;
-    }
-
-    /**
-     * Returns the needsSave.
-     * @return boolean
-     */
-    public boolean isNeedsSave() {
-        return needsSave;
     }
 
     /**
