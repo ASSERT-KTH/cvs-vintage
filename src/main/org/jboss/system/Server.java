@@ -32,10 +32,10 @@ import org.jboss.Version;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class Server
-implements ServerMBean
+   implements ServerMBean
 {
    /** Class logger */
    private static final BootstrapLogger log =
@@ -69,10 +69,10 @@ implements ServerMBean
          throw new IllegalArgumentException("config is null");
       
       Package mainPkg = Package.getPackage("org.jboss");
+      log.info("JBoss Release: " + mainPkg.getImplementationTitle());
       
       this.config = config;
-      log.info("Using config: " + config);
-      log.info("JBoss Release: "+mainPkg.getImplementationTitle());
+      log.debug("Using config: " + config);
       
       // remeber when we we started
       started = new Date();
@@ -94,7 +94,7 @@ implements ServerMBean
       
       // Create MBeanClassLoader for the base system
       ObjectName loaderName =
-      new ObjectName("jboss.system", "service", "ServiceClassLoader");
+         new ObjectName("jboss.system", "service", "ServiceClassLoader");
       
       MBeanClassLoader mcl = new MBeanClassLoader(loaderName);
       server.registerMBean(mcl, loaderName);
@@ -106,7 +106,6 @@ implements ServerMBean
       
       // Setup logging
       server.createMBean("org.jboss.logging.Log4jService", null, loaderName);
-      
       log.debug("Logging has been initialized");
       
       // Log the basic configuration elements
@@ -122,7 +121,7 @@ implements ServerMBean
       
       // Service Controller
       ObjectName controllerName =
-      server.createMBean("org.jboss.system.ServiceController", null, loaderName).getObjectName();
+         server.createMBean("org.jboss.system.ServiceController", null, loaderName).getObjectName();
       log.debug("Registered service controller: " + controllerName);
       
       // Install the shutdown hook
@@ -149,9 +148,9 @@ implements ServerMBean
       
       // Ok, now do a first deploy of JBoss' jboss-service.xml
       server.invoke(mainDeployer,
-      "deploy",
-         new Object[] { config.getConfigURL() + "jboss-service.xml" },
-         new String[] { "java.lang.String" });
+                    "deploy",
+                    new Object[] { config.getConfigURL() + "jboss-service.xml" },
+                    new String[] { "java.lang.String" });
 
       // Start the main deployer thread
       server.invoke(mainDeployer, "start", new Object[0], new String[0]);
@@ -163,10 +162,8 @@ implements ServerMBean
       long milliseconds = (lapsedTime - 60000 * minutes - 1000 * seconds);
       
       // Tell the world how fast it was =)
-      log.info("JBoss (MX MicroKernel) " +
-         " [" + mainPkg.getImplementationVersion() + "]" +
-         " Started in " + minutes  + "m:" +
-         seconds  + "s:" + milliseconds +"ms");
+      log.info("JBoss (MX MicroKernel) [" + mainPkg.getImplementationVersion() +               
+               "] Started in " + minutes  + "m:" + seconds  + "s:" + milliseconds +"ms");
    }
    
    /**
@@ -435,7 +432,7 @@ implements ServerMBean
    ///////////////////////////////////////////////////////////////////////////
    
    private class ShutdownHook
-   extends Thread
+      extends Thread
    {
       /** The ServiceController which we will ask to shut things down with. */
       private ObjectName contollerName;
