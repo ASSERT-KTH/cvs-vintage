@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * have set methods.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;
@@ -307,6 +307,24 @@ public final class JDBCRelationMetaData {
 
          left.init(right, leftElement);
          right.init(left, rightElement);
+      }
+
+      // atleast one side of a fk relation must have keys
+      if(isForeignKeyMappingStyle() && 
+            left.getKeyFields().isEmpty() &&
+            right.getKeyFields().isEmpty()) {
+         throw new DeploymentException("Atleast one role of a foreign-key " +
+               "mapped relationship must have key fields: " +
+               "ejb-relation-name=" + relationName);
+      }
+
+      // both sides of a table relation must have keys
+      if(isTableMappingStyle() && 
+            (left.getKeyFields().isEmpty() ||
+            right.getKeyFields().isEmpty())) {
+         throw new DeploymentException("Both roles of a relation-table " +
+               "mapped relationship must have key fields: " +
+               "ejb-relation-name=" + relationName);
       }
    }
 
