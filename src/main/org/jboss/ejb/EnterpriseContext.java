@@ -43,18 +43,18 @@ import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
 /**
  * The EnterpriseContext is used to associate EJB instances with
  * metadata about it.
- *  
+ *
  * @see StatefulSessionEnterpriseContext
  * @see StatelessSessionEnterpriseContext
  * @see EntityEnterpriseContext
- * 
+ *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.77 $
+ * @version $Revision: 1.78 $
  */
 public abstract class EnterpriseContext
         implements AllowedOperationsFlags
@@ -68,31 +68,31 @@ public abstract class EnterpriseContext
 
    /** The EJB instance */
    Object instance;
-    
+
    /** The container using this context */
    Container con;
-    
+
    /**
     * Set to the synchronization currently associated with this context.
     * May be null
     */
    Synchronization synch;
-   
+
    /** The transaction associated with the instance */
    Transaction transaction;
-   
+
    /** The principal associated with the call */
    private Principal principal;
 
    /** The principal for the bean associated with the call */
    private Principal beanPrincipal;
-    
+
    /** Only StatelessSession beans have no Id, stateful and entity do */
-   Object id; 
-   
+   Object id;
+
    /** The instance is being used.  This locks it's state */
    int locked = 0;
-	
+
    /** The instance is used in a transaction, synchronized methods on the tx */
    Object txLock = new Object();
 
@@ -109,8 +109,8 @@ public abstract class EnterpriseContext
    private static ServerVMClientUserTransaction.UserTransactionStartedListener tsl;
 
    /**
-    * The <code>setUserTransactionStartedListener</code> method is called by 
-    * CachedConnectionManager on start and stop.  The tsl is notified on 
+    * The <code>setUserTransactionStartedListener</code> method is called by
+    * CachedConnectionManager on start and stop.  The tsl is notified on
     * UserTransaction.begin so it (the CachedConnectionManager) can enroll
     * connections that are already checked out.
     *
@@ -122,27 +122,27 @@ public abstract class EnterpriseContext
    }
 
    // Constructors --------------------------------------------------
-   
+
    public EnterpriseContext(Object instance, Container con)
    {
       this.instance = instance;
       this.con = con;
    }
-   
+
    // Public --------------------------------------------------------
 
-   public Object getInstance() 
-   { 
-      return instance; 
+   public Object getInstance()
+   {
+      return instance;
    }
-    
+
    /**
     * Gets the container that manages the wrapped bean.
     */
    public Container getContainer() {
       return con;
    }
-   
+
    public abstract void discard()
       throws RemoteException;
 
@@ -151,65 +151,65 @@ public abstract class EnterpriseContext
     */
    public abstract EJBContext getEJBContext();
 
-   public void setId(Object id) { 
-      this.id = id; 
+   public void setId(Object id) {
+      this.id = id;
    }
-    
-   public Object getId() { 
-      return id; 
+
+   public Object getId() {
+      return id;
    }
 
    public Object getTxLock() {
       return txLock;
    }
-	
+
    public void setTransaction(Transaction transaction) {
-      // DEBUG log.debug("EnterpriseContext.setTransaction "+((transaction == null) ? "null" : Integer.toString(transaction.hashCode()))); 
-      this.transaction = transaction; 
+      // DEBUG log.debug("EnterpriseContext.setTransaction "+((transaction == null) ? "null" : Integer.toString(transaction.hashCode())));
+      this.transaction = transaction;
    }
-    
-   public Transaction getTransaction() { 
-      return transaction; 
+
+   public Transaction getTransaction() {
+      return transaction;
    }
-    
+
    public void setPrincipal(Principal principal) {
       this.principal = principal;
       this.beanPrincipal = null;
    }
-   
-   public void lock() 
+
+   public void lock()
    {
       locked ++;
       //new Exception().printStackTrace();
       //DEBUG log.debug("EnterpriseContext.lock() "+hashCode()+" "+locked);
    }
-    
+
    public void unlock() {
-        
+
       // release a lock
       locked --;
-       
+
       //new Exception().printStackTrace();
       if (locked <0) {
          // new Exception().printStackTrace();
          log.error("locked < 0", new Throwable());
       }
-       
+
       //DEBUG log.debug("EnterpriseContext.unlock() "+hashCode()+" "+locked);
    }
-    
+
    public boolean isLocked() {
-            
+
       //DEBUG log.debug("EnterpriseContext.isLocked() "+hashCode()+" at "+locked);
       return locked != 0;
    }
-   
+
    public Principal getCallerPrincipal()
    {
       EJBContextImpl ctxImpl = (EJBContextImpl) getEJBContext();
       return ctxImpl.getCallerPrincipalInternal();
    }
-   
+
    /**
     * before reusing this context we clear it of previous state called
     * by pool.free()
@@ -225,7 +225,7 @@ public abstract class EnterpriseContext
    }
 
    // Package protected ---------------------------------------------
-    
+
    // Protected -----------------------------------------------------
 
    protected boolean isContainerManagedTx()
@@ -256,9 +256,9 @@ public abstract class EnterpriseContext
       /**
        * @deprecated
        */
-      public Identity getCallerIdentity() 
-      { 
-         throw new EJBException("Deprecated"); 
+      public Identity getCallerIdentity()
+      {
+         throw new EJBException("Deprecated");
       }
 
       public TimerService getTimerService() throws IllegalStateException
@@ -269,11 +269,11 @@ public abstract class EnterpriseContext
       /** Get the Principal for the current caller. This method
           cannot return null according to the ejb-spec.
       */
-      public Principal getCallerPrincipal() 
-      { 
+      public Principal getCallerPrincipal()
+      {
          return getCallerPrincipalInternal();
       }
-      
+
       /**
        * The implementation of getCallerPrincipal()
        */
@@ -281,13 +281,13 @@ public abstract class EnterpriseContext
       {
          if( beanPrincipal == null )
          {
-            RealmMapping rm = con.getRealmMapping();           
+            RealmMapping rm = con.getRealmMapping();
             if( principal != null )
             {
                if( rm != null )
                   beanPrincipal = rm.getPrincipal(principal);
                else
-                  beanPrincipal = principal;      
+                  beanPrincipal = principal;
             }
             else if( rm != null )
             {  // Let the RealmMapping map the null principal
@@ -305,7 +305,7 @@ public abstract class EnterpriseContext
             throw new IllegalStateException("No security context set");
          return beanPrincipal;
       }
-      
+
       public EJBHome getEJBHome()
       {
          EJBProxyFactory proxyFactory = con.getProxyFactory();
@@ -330,17 +330,17 @@ public abstract class EnterpriseContext
          // Should never get here
          throw new EJBException("No EJBLocalHome available (BUG!)");
       }
-      
+
       /**
        * @deprecated
        */
-      public Properties getEnvironment() 
-      { 
-         throw new EJBException("Deprecated"); 
+      public Properties getEnvironment()
+      {
+         throw new EJBException("Deprecated");
       }
-      
-      public boolean getRollbackOnly() 
-      { 
+
+      public boolean getRollbackOnly()
+      {
          // EJB1.1 11.6.1: Must throw IllegalStateException if BMT
          if (con.getBeanMetaData().isBeanManagedTx())
             throw new IllegalStateException("getRollbackOnly() not allowed for BMT beans.");
@@ -359,9 +359,9 @@ public abstract class EnterpriseContext
             return true;
          }
       }
-       
-      public void setRollbackOnly() 
-      { 
+
+      public void setRollbackOnly()
+      {
          // EJB1.1 11.6.1: Must throw IllegalStateException if BMT
          if (con.getBeanMetaData().isBeanManagedTx())
             throw new IllegalStateException("setRollbackOnly() not allowed for BMT beans.");
@@ -379,20 +379,20 @@ public abstract class EnterpriseContext
             log.warn("failed to set rollback only; ignoring", e);
          }
       }
-   
+
       /**
        * @deprecated
        */
-      public boolean isCallerInRole(Identity id) 
-      { 
-         throw new EJBException("Deprecated"); 
+      public boolean isCallerInRole(Identity id)
+      {
+         throw new EJBException("Deprecated");
       }
 
       /**
        * Checks if the current caller has a given role.
        * The current caller is either the principal associated with the method invocation
        * or the current run-as principal.
-       */ 
+       */
       public boolean isCallerInRole(String roleName)
       {
          // Check the caller of this beans run-as identity
@@ -415,7 +415,7 @@ public abstract class EnterpriseContext
          //
          // TODO (2.3): add a conditional check using jboss.xml <enforce-ejb-restrictions> element
          //             which will throw an exception in case no matching
-         //             security ref is found.           
+         //             security ref is found.
          Iterator it = getContainer().getBeanMetaData().getSecurityRoleReferences();
          boolean matchFound = false;
 
@@ -432,7 +432,7 @@ public abstract class EnterpriseContext
 
          if (!matchFound)
             log.warn("no match found for security role " + roleName +
-                    " in the deployment descriptor.");
+                    " in the deployment descriptor for ejb " +  getContainer().getBeanMetaData().getEjbName());
 
          HashSet set = new HashSet();
          set.add(new SimplePrincipal(roleName));
@@ -442,9 +442,9 @@ public abstract class EnterpriseContext
          else
             return runAsIdentity.doesUserHaveRole(set);
       }
-   
-      public UserTransaction getUserTransaction() 
-      { 
+
+      public UserTransaction getUserTransaction()
+      {
          if (userTransaction == null)
          {
             if (isContainerManagedTx())
@@ -452,16 +452,16 @@ public abstract class EnterpriseContext
                throw new IllegalStateException
                   ("CMT beans are not allowed to get a UserTransaction");
             }
-            
-            userTransaction = new UserTransactionImpl(); 
+
+            userTransaction = new UserTransactionImpl();
          }
 
          return userTransaction;
       }
    }
-   
+
    // Inner classes -------------------------------------------------
- 
+
    protected class UserTransactionImpl
            implements UserTransaction
    {
@@ -483,7 +483,7 @@ public abstract class EnterpriseContext
       {
          TransactionManager tm = con.getTransactionManager();
 
-         int oldTimeout = -1;   
+         int oldTimeout = -1;
          if (tm instanceof TransactionTimeoutConfiguration)
             oldTimeout = ((TransactionTimeoutConfiguration) tm).getTransactionTimeout();
 
@@ -498,7 +498,7 @@ public abstract class EnterpriseContext
             //notify checked out connections
             if (tsl != null)
                tsl.userTransactionStarted();
-         
+
             Transaction tx = tm.getTransaction();
             if (trace)
                log.trace("UserTx begin: " + tx);
