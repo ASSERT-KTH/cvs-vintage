@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.55 2005/01/30 20:47:48 linus Exp $
+// $Id: ActionRemoveFromModel.java,v 1.56 2005/03/09 20:53:09 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -118,7 +118,7 @@ public class ActionRemoveFromModel extends UMLAction {
     public void actionPerformed(ActionEvent ae) {
         Project p = ProjectManager.getManager().getCurrentProject();
         Object[] targets = null;
-        if (ae.getSource() instanceof PropPanel) {
+        if (ae.getSource() instanceof PropPanelButton2) {
             targets =
                 new Object[] {
 		    TargetManager.getInstance().getModelTarget(),
