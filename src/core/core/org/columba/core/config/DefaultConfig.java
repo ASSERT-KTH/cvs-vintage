@@ -47,7 +47,8 @@ public class DefaultConfig {
 		} else {
 			file = new File(ConfigPath.getConfigDirectory(), moduleName);
 
-			copy("modules/" + moduleName, id, file);
+			//copy("modules/" + moduleName, id, file);
+			copy(moduleName, id, file);
 		}
 
 		Config.registerPlugin(moduleName, id, plugin);
