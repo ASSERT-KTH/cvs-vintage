@@ -1300,20 +1300,22 @@ try{
         return ScarabUserImplPeer.doSelect(crit);
     }
 
-
     /**
      * Return a subset of the passed-in list.
      */
-    public List getPaginatedList( List fullList, int pgNbr, 
-                                  int nbrItemsPerPage)
+    public List getPaginatedList( List fullList, String pgNbrStr, 
+                                  String nbrItmsPerPageStr)
     {
+        int pgNbr = Integer.parseInt(pgNbrStr);
+        int nbrItmsPerPage = Integer.parseInt(nbrItmsPerPageStr);
+
         this.nbrPages =  (int)Math.ceil((float)fullList.size() 
-                                               / nbrItemsPerPage);
+                                               / nbrItmsPerPage);
         this.nextPage = pgNbr + 1;
         this.prevPage = pgNbr - 1;
         return fullList.subList
-           ((pgNbr - 1) * nbrItemsPerPage,
-            Math.min(pgNbr * nbrItemsPerPage, fullList.size()));
+           ((pgNbr - 1) * nbrItmsPerPage,
+            Math.min(pgNbr * nbrItmsPerPage, fullList.size()));
     }
 
     /**
