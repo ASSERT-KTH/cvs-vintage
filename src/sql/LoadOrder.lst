@@ -5,4 +5,6 @@ id-table.sql
 turbine-id-table-init.sql
 scarab-id-table-init.sql
 scarab-required-data.sql
+scarab-default-data.sql
 scarab-security.sql
+scarab-sample-data.sql
