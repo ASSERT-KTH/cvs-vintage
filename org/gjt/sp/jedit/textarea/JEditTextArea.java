@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.166 2003/01/05 20:42:30 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.167 2003/01/10 19:48:25 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3246,8 +3246,8 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 			{
 				Selection sel = (Selection)selection.elementAt(0);
 				if(sel.startLine == sel.endLine
-					&& sel.start != buffer.getLineStartOffset(sel.startLine)
-					&& sel.end != buffer.getLineEndOffset(sel.startLine) - 1)
+					&& (sel.start != buffer.getLineStartOffset(sel.startLine)
+					|| sel.end != buffer.getLineEndOffset(sel.startLine) - 1))
 				{
 					insertTab();
 				}
