@@ -15,12 +15,13 @@ $page.setTitle("Edit Artifact Type '$issueType.Name'")
 #set ($groups = $issueType.getAttributeGroups($module))
 #set ($rmit= $module.getRModuleIssueType($issueType))
 #set ($rmitGroup = $intake.RModuleIssueType.mapTo($rmit))
+#set ($modGroup = $intake.Module.mapTo($module))
 
 
 <form method="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
 <input type="hidden" name="action" value="admin.ArtifactTypeEdit" />
-<input type="hidden" name=$scarabG.Constant.CANCEL_TEMPLATE value="$data.Parameters.getString($scarabG.Constant.CANCEL_TEMPLATE)">
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeSelect.vm" />
 
 <div class="functnbar"><input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;</div>        
 
@@ -43,7 +44,6 @@ $page.setTitle("Edit Artifact Type '$issueType.Name'")
     </tr>
     </table>
 </div>
-
 <h3>Issue view display options</h3>
 
 <div class="axial">
@@ -93,7 +93,7 @@ $page.setTitle("Edit Artifact Type '$issueType.Name'")
  <tr>
    <td>&#160;</td>
    <td>Duplicate check</td>
-   <td>#booleanCheckbox ($module.Dedupe)</td>
+   <td>#booleanCheckbox ($modGroup.Dedupe)</td>
    <td>#numericSelect("dupe_order" 1 $maxNum $issueDedupeSequence 1)</td>
  </tr>
  #end
@@ -113,7 +113,60 @@ $page.setTitle("Edit Artifact Type '$issueType.Name'")
 
 #end
 
-<div class="functnbar3"><input type="submit" value="save"  name="eventSubmit_doSave" />&#160;<input type="submit" value="add new"  name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" name="eventSubmit_doSave" />&#160;<small>attribute group</small>&#160;
+<div class="functnbar3">
+<input type="submit" value="Save"  name="eventSubmit_doSave" />&#160;
+<input type="submit" value="Add new"  name="eventSubmit_doCreatenewgroup" />&#160;
+<input type="submit" value="Copy" />&#160;
+<input type="submit" value="Delete selected" name="eventSubmit_doDeletegroup" />&#160;
+<input type="submit" value="Resort" name="eventSubmit_doSave" />&#160;
+<small>attribute group</small>&#160;
+</div>
+
+<h3>User attributes</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th nowrap="nowrap">select</th>
+<th>User Attribute name</th>
+<th>Per project name</th>
+<th>active/inactive</th>
+<th>sequence #</th>
+</tr>
+
+#set ($userAttrs = $module.getUserAttributes($issueType, false))
+#if (!$userAttrs.isEmpty())
+#foreach ($userAttr in $userAttrs)
+   #set ($rma = $module.getRModuleAttribute($userAttr, $issueType, "user"))
+   #set ($rmaGroup = $intake.RModuleAttribute.mapTo($rma))
+   #set ($maxNum = $userAttrs.size())
+ #indexedRows($velocityCount)
+ <td><input type="checkbox" name="att_delete_$userAttr.AttributeId" /></td>
+ #if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
+ <td>$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$userAttr.AttributeId").addPathInfo("issueTypeId", $issueTypeId).setLabel("$userAttr.Name")</td>
+ #else
+ <td>$userAttr.Name</td>
+ #end
+ <td><input type="text" size="15" name="$rmaGroup.DisplayValue.Key"
+    #if ($rmaGroup.DisplayValue.toString().length() > 0)
+          value="$rmaGroup.DisplayValue" 
+    #else
+          value="$userAttr.Name"
+    #end
+ /></td>
+<td>#booleanCheckbox ($rmaGroup.Active)</td>
+<td>#numericSelect( "$rmaGroup.Order.Key" 1 $maxNum $rmaGroup.Order.Value 1 )</td>
+</tr>
+#end
+#end
+
+</table>
+<div class="functnbar3">
+
+<input type="submit" value="Save"  name="eventSubmit_doSaveuserattributes" />&#160;
+<input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="Copy" />&#160;
+<input type="submit" value="Delete selected" name="eventSubmit_doDeleteuserattribute" />&#160;
+<input type="submit" value="Resort" name="eventSubmit_doSaveuserattributes" />&#160;
+<small>attribute group</small>&#160;
 </div>
 
 <div class="functnbar2"><input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;</div>        

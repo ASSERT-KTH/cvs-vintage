@@ -102,12 +102,13 @@
 #end
 
 <div class="functnbar3">
-<input type="submit" value="save" name="eventSubmit_doSave" />&#160;
-<input type="submit" value="add new" name="eventSubmit_doGotoothertemplate" />&#160;
-<input type="submit" value="copy" />&#160;
-<input type="submit" value="delete selected" name="eventSubmit_doDeleteattributes" />&#160;
-<input type="submit" value="resort" name="eventSubmit_doSave" />
+<input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
+<input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="Copy" />&#160;
+<input type="submit" value="Delete selected" name="eventSubmit_doDeleteattributes" />&#160;
+<input type="submit" value="Resort" name="eventSubmit_doSave" />
 </div>
+
 
 <div class="functnbar2">
 <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;

@@ -1,13 +1,13 @@
-$page.setTitle("Select global attribute")
+$page.setTitle("Select user attribute")
 #set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
 
 #macro (AttributeSelectBar $val)
 <div class="functnbar$val">
 #if ($attributes.size() > 0)
-   <input type="submit" value="Add selected to attribute group" name="eventSubmit_doSelectattribute" />
+   <input type="submit" value="Add selected to module" name="eventSubmit_doSelectuserattribute" />
 #end
 #if ($canEditDomain)
-    <input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>&#160;
+    <input type="submit" value="Create new" name="eventSubmit_doCreatenewuserattribute"/>&#160;
 #end
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
@@ -16,25 +16,22 @@ $page.setTitle("Select global attribute")
 <div class="app" id="globalAttributeSelect">
 <h2>$page.Title</h2>
 
-#set ($rmaGroup = $intake.RModuleAttribute.Default)
-#set ($agGroup = $intake.AttributeGroup.Default)
-#set ($attGroup = $intake.Attribute.Default)
 #set ($issueType = $scarabR.IssueType)
-#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "non-user"))
+#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "user"))
+#set ($attGroup = $intake.Attribute.Default)
 
-<form action="$link.setPage("admin,AttributeSelect.vm")" method="get">
-<input type="hidden" name="action" value="admin.AttributeGroupEdit" />
-<input type="hidden" name="$agGroup.AttributeGroupId.Key" value="$data.Parameters.getString("groupId","").trim()" />
+<form action="$link.setPage("admin,UserAttributeSelect.vm")" method="get">
+<input type="hidden" name="action" value="admin.ArtifactTypeEdit" />
+<input type="hidden" name="groupId" value="$data.Parameters.getString("groupId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
-<input type="hidden" name="groupid" value="$data.Parameters.getString("groupid")" />
-<input type="hidden" name=$scarabG.Constant.OTHER_TEMPLATE value="admin,GlobalAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeEdit.vm" />
 
 
 #AttributeSelectBar("")
 
 #if ($attributes.size() == 0)
 
-<p><strong class="alert">There are no more global attributes that are not already associated with an attribute group in this module.</strong></p>
+<p><strong class="alert">There are no user attributes that are not already associated with this module.</strong></p>
 
 #else
 
@@ -56,7 +53,8 @@ $page.setTitle("Select global attribute")
   <td>$attribute.Name</td>
   <td>$attribute.Description</td>
   <td>$attribute.AttributeType.Name</td>
-  <td>#attributeCreatedBy($attribute)</td>
+  #set ($createdUser = $scarabR.getUser($attribute.CreatedBy))
+  <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
   <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
  </tr>
 #end

@@ -9,7 +9,7 @@
 #else
    #set ($attgroup = $intake.Attribute.Default )
    #set ($createNew = "true")
-   $page.setTitle("Create New Global Attribute")
+   $page.setTitle("Create New Global User Attribute")
 #end
 
 <h2>$page.Title</h2>
@@ -36,14 +36,14 @@
 <table width="100%" cellpadding="3" cellspacing="2" border="1"> <tr>
   <th width="120">User attribute name</th> 
   <td class="b">
-    <input type="text" name="$attgroup.Name.Key" value="$!attribute.Name" />
+    <input type="text" name="$attgroup.Name.Key" value="$!attgroup.Name.Value" />
     #fieldErrorMsg($attgroup.Name "")
   </td>
 </tr>
 <tr>
   <th width="120">User attribute description</th> 
   <td class="b">
-    <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attribute.Description</textarea>
+    <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attgroup.Description.Value</textarea>
     #fieldErrorMsg($attgroup.Description "")
   </td>
 </tr>
@@ -75,6 +75,7 @@
   <td class="b">
    #fieldErrorMsg($attgroup.Permission "")
         <select name="$attgroup.Permission.Key">
+   		 <option value="">Select...</option>
   #foreach ($permission in $securityAdmin.Permissions)
          <option value="$permission.Name"
           #if ($permission.Name.equals($attgroup.Permission.Value))
