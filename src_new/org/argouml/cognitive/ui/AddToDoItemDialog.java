@@ -1,4 +1,4 @@
-// $Id: AddToDoItemDialog.java,v 1.26 2004/09/21 19:03:30 mvw Exp $
+// $Id: AddToDoItemDialog.java,v 1.27 2004/10/18 20:38:22 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,9 +24,17 @@
 
 package org.argouml.cognitive.ui;
 
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import javax.swing.*;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
@@ -54,6 +62,8 @@ public class AddToDoItemDialog extends ArgoDialog {
     };
     private static final int TEXT_ROWS = 8;
     private static final int TEXT_COLUMNS = 30;
+    /** Insets in pixels  */
+    private static final int INSET_PX = 3;
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -97,7 +107,7 @@ public class AddToDoItemDialog extends ArgoDialog {
         JLabel moreInfoLabel = 
             new JLabel(Translator.localize("label.more-info-url"));
         JLabel offenderLabel = 
-            new JLabel("Offenders:"/*Translator.localize("label.offenders")*/);
+            new JLabel(Translator.localize("label.offenders"));
         priorityComboBox.setSelectedItem(PRIORITIES[0]);
 
         JPanel panel = new JPanel(new LabelledLayout(getLabelGap(), 
@@ -123,6 +133,8 @@ public class AddToDoItemDialog extends ArgoDialog {
         descriptionTextArea.setWrapStyleWord(true);   //MVW - Issue 2422
         descriptionTextArea.setText(Translator.localize("label.enter-todo-item")
                 	    + "\n");
+        descriptionTextArea.setMargin(new Insets(INSET_PX, INSET_PX, 
+                INSET_PX, INSET_PX));
         JScrollPane descriptionScroller = new JScrollPane(descriptionTextArea);
         descriptionScroller.setPreferredSize(
                 descriptionTextArea.getPreferredSize());
