@@ -78,7 +78,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.73 $
+* @version $Revision: 1.74 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -704,8 +704,8 @@ public abstract class Container implements DynamicMBean
       }
       catch (Exception e)
       {
-         log.error("invoke returned an exception", e);
-         throw new MBeanException(e, "invoke returned an exception");
+         log.error("invoke failed", e);
+         throw new MBeanException(e, "invoke failed");
       }
       finally
       {
