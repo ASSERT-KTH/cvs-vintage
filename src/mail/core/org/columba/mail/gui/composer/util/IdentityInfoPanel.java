@@ -58,7 +58,6 @@ public class IdentityInfoPanel extends CInfoPanel {
 		label.setFont(font);
 		label.setIconTextGap(10);
 		label.setIcon(image1);
-		label.setText("Identity");
 
 		gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridbagConstraints.gridx = 1;
