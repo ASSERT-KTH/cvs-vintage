@@ -1,4 +1,4 @@
-// $Id: FigInclude.java,v 1.10 2004/07/17 13:10:30 kataka Exp $
+// $Id: FigInclude.java,v 1.11 2004/08/12 19:50:11 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigInclude.java
 // Classes: FigInclude
 // Original Author: mail@jeremybennett.com
-// $Id: FigInclude.java,v 1.10 2004/07/17 13:10:30 kataka Exp $
+// $Id: FigInclude.java,v 1.11 2004/08/12 19:50:11 mvw Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Include relationships.
@@ -41,8 +41,6 @@ import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.ArrowHeadGreater;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigText;
-
-import ru.novosoft.uml.MElementEvent;
 
 
 /**
@@ -74,7 +72,7 @@ public class FigInclude extends FigEdgeModelElement {
 
         label = new FigText(10, 30, 90, 20);
 
-        label.setFont(LABEL_FONT);
+        label.setFont(getLabelFont());
         label.setTextColor(Color.black);
         label.setTextFilled(false);
         label.setFilled(false);
@@ -156,6 +154,9 @@ public class FigInclude extends FigEdgeModelElement {
     //
     ///////////////////////////////////////////////////////////////////////////
 
+    /**
+     * @see org.tigris.gef.presentation.Fig#paint(java.awt.Graphics)
+     */
     public void paint(Graphics g) {
         endArrow.setLineColor(getLineColor());
         super.paint(g);
