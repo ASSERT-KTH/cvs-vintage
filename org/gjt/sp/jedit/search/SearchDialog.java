@@ -21,7 +21,6 @@ package org.gjt.sp.jedit.search;
 
 import javax.swing.border.*;
 import javax.swing.event.*;
-import javax.swing.text.BadLocationException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -34,7 +33,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.5 2001/10/10 10:07:05 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.6 2001/10/21 11:13:34 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog
 {

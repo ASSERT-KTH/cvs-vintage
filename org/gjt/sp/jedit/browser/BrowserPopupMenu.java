@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.search.*;
 import org.gjt.sp.jedit.*;
 
 /**
- * @version $Id: BrowserPopupMenu.java,v 1.1 2001/09/02 05:38:20 spestov Exp $
+ * @version $Id: BrowserPopupMenu.java,v 1.2 2001/10/21 11:13:34 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserPopupMenu extends JPopupMenu
@@ -225,7 +225,7 @@ public class BrowserPopupMenu extends JPopupMenu
 			else if(actionCommand.equals("open"))
 				jEdit.openFile(view,file.path);
 			else if(actionCommand.equals("insert"))
-				view.getBuffer().insert(view,file.path);
+				view.getBuffer().insertFile(view,file.path);
 			else if(actionCommand.equals("choose"))
 				browser.filesActivated();
 			else if(actionCommand.equals("close"))

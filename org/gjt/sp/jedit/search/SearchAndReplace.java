@@ -23,7 +23,6 @@
 package org.gjt.sp.jedit.search;
 
 //{{{ Imports
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Segment;
 import javax.swing.JOptionPane;
 import java.awt.Component;
@@ -38,7 +37,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.6 2001/10/13 13:32:19 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.7 2001/10/21 11:13:34 spestov Exp $
  */
 public class SearchAndReplace
 {

@@ -19,7 +19,6 @@
 
 package org.gjt.sp.jedit.io;
 
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.Segment;
 import java.io.*;
@@ -31,7 +30,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.2 2001/09/16 09:06:55 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.3 2001/10/21 11:13:34 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -561,10 +560,6 @@ public class BufferIORequest extends WorkRequest
 						vfs._delete(session,markersPath,view);
 				}
 			}
-			catch(BadLocationException bl)
-			{
-				Log.log(Log.ERROR,this,bl);
-			}
 			catch(IOException io)
 			{
 				Log.log(Log.ERROR,this,io);
@@ -637,10 +632,6 @@ public class BufferIORequest extends WorkRequest
 
 				write(buffer,out);
 			}
-			catch(BadLocationException bl)
-			{
-				Log.log(Log.ERROR,this,bl);
-			}
 			catch(IOException io)
 			{
 				/* Log.log(Log.ERROR,this,io);
@@ -668,7 +659,7 @@ public class BufferIORequest extends WorkRequest
 	}
 
 	private void write(Buffer buffer, OutputStream _out)
-		throws IOException, BadLocationException
+		throws IOException
 	{
 		BufferedWriter out = new BufferedWriter(
 			new OutputStreamWriter(_out,

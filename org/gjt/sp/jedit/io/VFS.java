@@ -32,7 +32,7 @@ import org.gjt.sp.util.Log;
  * A virtual filesystem implementation. Note tha methods whose names are
  * prefixed with "_" are called from the I/O thread.
  * @param author Slava Pestov
- * @author $Id: VFS.java,v 1.5 2001/10/07 10:42:45 spestov Exp $
+ * @author $Id: VFS.java,v 1.6 2001/10/21 11:13:34 spestov Exp $
  */
 public abstract class VFS
 {
@@ -229,7 +229,7 @@ public abstract class VFS
 		 * a backup of the new path, even if the old path was
 		 * backed up as well (BACKED_UP property set) */
 		if(!path.equals(buffer.getPath()))
-			buffer.getDocumentProperties().remove(Buffer.BACKED_UP);
+			buffer.unsetProperty(Buffer.BACKED_UP);
 
 		VFSManager.runInWorkThread(new BufferIORequest(
 			BufferIORequest.SAVE,view,buffer,session,this,path));

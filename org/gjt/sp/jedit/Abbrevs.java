@@ -23,7 +23,6 @@
 package org.gjt.sp.jedit;
 
 //{{{ Imports
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.*;
 import java.io.*;
@@ -36,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Abbreviation manager.
  * @author Slava Pestov
- * @version $Id: Abbrevs.java,v 1.2 2001/10/16 07:04:21 spestov Exp $
+ * @version $Id: Abbrevs.java,v 1.3 2001/10/21 11:13:34 spestov Exp $
  */
 public class Abbrevs
 {
@@ -191,11 +190,10 @@ public class Abbrevs
 						whiteSpace,null);
 				}
 			}
-			catch(BadLocationException bl)
+			finally
 			{
-				Log.log(Log.ERROR,Abbrevs.class,bl);
+				buffer.endCompoundEdit();
 			}
-			buffer.endCompoundEdit();
 
 			return true;
 		} //}}}

@@ -19,7 +19,6 @@
 
 package org.gjt.sp.jedit;
 
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
 import org.gjt.sp.util.Log;
 
@@ -27,7 +26,7 @@ import org.gjt.sp.util.Log;
  * A named location in a buffer.
  *
  * @author Slava Pestov
- * @version $Id: Marker.java,v 1.1 2001/09/02 05:37:19 spestov Exp $
+ * @version $Id: Marker.java,v 1.2 2001/10/21 11:13:34 spestov Exp $
  */
 public class Marker
 {
@@ -69,14 +68,7 @@ public class Marker
 
 	void createPosition()
 	{
-		try
-		{
-			position = buffer.createPosition(pos);
-		}
-		catch(BadLocationException bl)
-		{
-			Log.log(Log.ERROR,this,bl);
-		}
+		position = buffer.createPosition(pos);
 	}
 
 	void removePosition()
