@@ -55,8 +55,8 @@ public class MimePartParserTest extends TestCase {
 				+ "pending requests, if any, will be sent out daily.";
 		String messageSource = MimePartParser.parse(r);
 
-		ColumbaLogger.log.debug("source=<" + messageSource+">");
-		ColumbaLogger.log.debug("shouldbe=<" + shouldbe+">");
+		ColumbaLogger.log.debug("source=<" + messageSource + ">");
+		ColumbaLogger.log.debug("shouldbe=<" + shouldbe + ">");
 
 		Assert.assertEquals(shouldbe, messageSource);
 	}
@@ -65,7 +65,7 @@ public class MimePartParserTest extends TestCase {
 	// but note that "UID 17" is at the end, instead
 	//
 	// Communigate Pro Server
-	
+
 	public void testParse2() {
 		String testData =
 			"* 3 FETCH (BODY[1] {454} \n"
@@ -88,11 +88,25 @@ public class MimePartParserTest extends TestCase {
 				+ "\n";
 
 		String messageSource = MimePartParser.parse(r);
-		ColumbaLogger.log.debug("source=<" + messageSource+">");
-		ColumbaLogger.log.debug("shouldbe=<" + shouldbe+">");
-		
+		ColumbaLogger.log.debug("source=<" + messageSource + ">");
+		ColumbaLogger.log.debug("shouldbe=<" + shouldbe + ">");
+
 		Assert.assertEquals(shouldbe, messageSource);
 	}
-	
+
+	// this is for one-liner mimeparts, which caused 
+	// problems recently
+	public void testParse3() {
+		String testData = "* 133 FETCH (UID 133 BODY[1] \"da!\")";
+
+		IMAPResponse[] r = { new IMAPResponse(testData)};
+		String shouldbe = "da!";
+
+		String messageSource = MimePartParser.parse(r);
+		ColumbaLogger.log.debug("source=<" + messageSource + ">");
+		ColumbaLogger.log.debug("shouldbe=<" + shouldbe + ">");
+
+		Assert.assertEquals(shouldbe, messageSource);
+	}
 
 }

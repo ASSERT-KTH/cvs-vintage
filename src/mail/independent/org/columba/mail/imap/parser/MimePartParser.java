@@ -28,6 +28,21 @@ public class MimePartParser {
 	public static String parse(IMAPResponse[] responses) {
 		String source = responses[0].getSource();
 
+		int newLine = source.indexOf("\n");
+		
+		if  ( newLine == -1 )
+		{
+			// there's not newline
+			// -> one line message
+			// example:
+			// * 133 FETCH (UID 133 BODY[1] \"da!\")
+			// note: message is enclosed with " characters
+			int leftIndex = source.indexOf("\"");
+			int rightIndex = source.lastIndexOf("\"");
+			
+			return source.substring(leftIndex+1, rightIndex);
+		}
+		
 		boolean uidAtBeginning = false;
 		int uidIndex = source.indexOf("(UID");
 		if (uidIndex != -1)
