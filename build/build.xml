@@ -42,6 +42,7 @@
     <property name="src.lib.dir" value="${basedir}/../lib"/>
     <property name="src.sql.dir" value="${src.dir}/sql"/>
     <property name="src.templates.dir" value="${src.dir}/templates"/>
+    <property name="src.resources.dir" value="${src.dir}/resources"/>
     <property name="src.usecases.dir" value="${src.dir}/usecases"/>
 
     <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
@@ -128,6 +129,9 @@
         </copy>
         <copy todir="${build.project}/templates" filtering="no">
             <fileset dir="${src.templates.dir}" defaultexcludes="no"/>
+        </copy>
+        <copy todir="${build.project}/resources" filtering="no">
+            <fileset dir="${src.resources.dir}" defaultexcludes="no"/>
         </copy>
         <copy todir="${build.project.webinf}" filtering="no">
             <fileset dir="${src.conf.dir}/">

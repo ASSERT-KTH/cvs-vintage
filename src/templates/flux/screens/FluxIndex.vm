@@ -1,0 +1,23 @@
+#**
+
+@author <a href="mailto:jvanzyl@periapt.com">Jason van Zyl</a>
+@version $Id: FluxIndex.vm,v 1.1 2001/05/24 02:33:31 jmcnally Exp $
+
+*#
+
+$page.setBgColor($ui.bgcolor)
+$page.setTitle("Home Page")
+
+<font face="$ui.sansSerifFonts">
+
+This is the administration application.<br>
+
+  <a href="$link.setPage("user,FluxUserList.vm")">Users</a><br>
+  
+  <a href="$link.setPage("group,FluxGroupList.vm")">Groups</a><br>
+  
+  <a href="$link.setPage("role,FluxRoleList.vm")">Roles</a><br>
+  
+  <a href="$link.setPage("permission,FluxPermissionList.vm")">Permissions</a>
+
+</font>

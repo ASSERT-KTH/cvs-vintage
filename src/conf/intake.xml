@@ -122,9 +122,13 @@
         </field>
         <field name="Name" key="name" type="String">
             <rule name="maxLength" value="255"/>
+            <rule name="required" value="true">Name may not be blank</rule>
         </field>
         <field name="Description" key="desc" type="String">
             <rule name="maxLength" value="1024"/>
+        </field>
+        <field name="Code" key="code" type="String">
+            <rule name="maxLength" value="4"/>
         </field>
         <field name="Url" key="url" type="String">
             <rule name="maxLength" value="255"/>
