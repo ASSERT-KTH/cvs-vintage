@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.15 2002/02/01 01:26:58 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.16 2002/02/12 15:12:11 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -531,6 +531,11 @@
 	    <java-type>java.lang.String</java-type>
 	    <jdbc-type>VARCHAR</jdbc-type>
 	    <sql-type>TEXT</sql-type>
+	 </mapping>
+	 <mapping>
+	    <java-type>java.util.Date</java-type>
+	    <jdbc-type>TIMESTAMP</jdbc-type>
+	    <sql-type>TIMESTAMP</sql-type>
 	 </mapping>
 	 <mapping>
 	    <java-type>java.sql.Date</java-type>
