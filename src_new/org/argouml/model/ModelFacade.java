@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.34 2003/03/21 08:54:38 lepekhine Exp $
+// $Id: ModelFacade.java,v 1.35 2003/03/22 14:04:55 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -117,6 +117,15 @@ public class ModelFacade {
     ////////////////////////////////////////////////////////////////
     // Recognizer methods for the UML model (in alphabetic order)
 
+    /** Recognizer for Abstraction.
+     *
+     * @param handle candidate
+     * @returns true if handle is an Abstraction
+     */
+    public static boolean isAAbstraction(Object handle) {
+        return handle instanceof MAbstraction;
+    }
+    
     /** Recognizer for Association.
      *
      * @param handle candidate
