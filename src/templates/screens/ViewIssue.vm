@@ -8,15 +8,12 @@
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 
- $security.hasPermission("Issue | Edit", $module) 
 #if ( $security.hasPermission("Issue | Edit", $module) )
   #set ( $canEdit = true )
 #else
-  #set ( $canEdit = true)
+  #set ( $canEdit = false)
 #end
 
-$user
-$user.UserId
 
 <form name="IssueForm" method="post" action="$action" >
 <input type="hidden" name="id" value="$currentIssue.IssueId">
