@@ -60,7 +60,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.4 2001/11/21 21:59:45 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.5 2001/11/29 16:19:31 jmcnally Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -88,12 +88,11 @@ public class ScarabSecurity
     public static final String ISSUE__ENTER = 
         getService().getPermissionImpl("Issue__Enter");
 
-    /* * 
+    /** 
      * Specifies that a User is allowed to view an issue.
-     * /
+     */
     public static final String ISSUE__VIEW = 
         getService().getPermissionImpl("Issue__View");
-    */
 
     /** 
      * Specifies that a User is allowed to search for issues.
@@ -176,7 +175,7 @@ public class ScarabSecurity
             List tmpPerms = new ArrayList();
             tmpPerms.add(ISSUE__EDIT);
             tmpPerms.add(ISSUE__ENTER);
-            //tmpPerms.add(ISSUE__VIEW);
+            tmpPerms.add(ISSUE__VIEW);
             tmpPerms.add(ISSUE__SEARCH);
             tmpPerms.add(ISSUE__ASSIGN);
             tmpPerms.add(ISSUE__ATTACH);

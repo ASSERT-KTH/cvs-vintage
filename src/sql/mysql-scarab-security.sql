@@ -34,6 +34,8 @@ INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME)
     VALUES (11, 'User | Edit Preferences');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
     VALUES (12, 'Issue | Search');
+INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
+    VALUES (13, 'Issue | View');
 
 /*
  * Create an account 'turbine@collab.net' for system administartor
