@@ -59,7 +59,7 @@ import org.apache.torque.om.Persistent;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.10 2002/12/08 21:21:53 jon Exp $
+ * @version $Id: ActivityManager.java,v 1.11 2002/12/10 06:00:34 jon Exp $
  */
 public class ActivityManager
     extends BaseActivityManager
@@ -192,6 +192,19 @@ public class ActivityManager
                       null, newTextValue);
     }
 
+    public static Activity createTextActivity(Issue issue,
+                                                 ActivitySet activitySet, 
+                                                 String description,
+                                                 Attachment attachment)
+        throws TorqueException
+    {
+        return create(issue,null,activitySet,description,attachment,
+                      0, 0,
+                      null, null,
+                      null, null,
+                      null, null);
+    }
+
     public static Activity createTextActivity(Issue issue, Attribute attribute,
                                                  ActivitySet activitySet, 
                                                  String description,
@@ -200,6 +213,21 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,attribute,activitySet,description,null,
+                      0, 0,
+                      null, null,
+                      null, null,
+                      oldTextValue, newTextValue);
+    }
+
+    public static Activity createTextActivity(Issue issue,
+                                                 ActivitySet activitySet, 
+                                                 String description,
+                                                 Attachment attachment, 
+                                                 String oldTextValue,
+                                                 String newTextValue)
+        throws TorqueException
+    {
+        return create(issue,null,activitySet,description,attachment,
                       0, 0,
                       null, null,
                       null, null,
