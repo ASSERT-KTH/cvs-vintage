@@ -69,7 +69,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.48 2002/06/27 22:17:14 elicia Exp $
+ * @version $Id: Module.java,v 1.49 2002/07/03 00:41:28 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -398,6 +398,16 @@ public interface Module
      * UserVote for the answer when implemented properly.
      */
     public int getUnusedVoteCount(ScarabUser user);
+
+    /**
+     * Returns list of queries needing approval.
+     */
+    public List getUnapprovedQueries() throws Exception;
+
+    /**
+     * Returns list of enter issue templates needing approval.
+     */
+    public List getUnapprovedTemplates() throws Exception;
 
     /**
      * Gets a list of active RModuleOptions which have had their level
