@@ -80,8 +80,9 @@ import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.RQueryUser;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUserImplPeer;
-import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
 
@@ -89,7 +90,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.67 2002/03/30 01:39:07 jon Exp $
+    @version $Id: Search.java,v 1.68 2002/03/30 01:41:29 jon Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -149,7 +150,8 @@ public class Search extends RequireLoginFirstAction
         data.getParameters().add("queryString", getQueryString(data));
 
         Module module = scarabR.getCurrentModule();
-        if (module.getUsers(ScarabSecurity.MODULE__EDIT).size() == 0)
+        ScarabUser[] userList = module.getUsers(ScarabSecurity.MODULE__EDIT);
+        if (userList == null || userList.length == 0)
         {
             data.setMessage("Sorry, no users have the module edit permission " +
             "in this module (" + module.getName() + "). Please contact your " + 
