@@ -26,7 +26,7 @@
 // File: Editor.java
 // Classes: Editor
 // Original Author: ics125 spring 1996
-// $Id: Editor.java,v 1.23 1999/02/19 22:18:18 jrobbins Exp $
+// $Id: Editor.java,v 1.24 1999/03/15 21:49:49 jrobbins Exp $
 
 package uci.gef;
 
@@ -164,6 +164,7 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
 
     mode(new ModeSelect(this));
     mode(new ModePopup(this));
+    mode(new ModeDragScroll(this));
     Globals.curEditor(this);
   }
 

@@ -26,12 +26,12 @@
 // File: ModeCreateEdge.java
 // Classes: ModeCreateEdge
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateEdge.java,v 1.14 1999/02/19 22:18:57 jrobbins Exp $
+// $Id: ModeCreateEdge.java,v 1.15 1999/03/15 21:49:54 jrobbins Exp $
 
 package uci.gef;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import uci.util.*;
 import uci.graph.*;
 
@@ -92,12 +92,15 @@ public class ModeCreateEdge extends ModeCreate {
   /** On mousePressed determine what port the user is dragging from.
    *  The mousePressed event is sent via ModeSelect. */
   public void mousePressed(MouseEvent me) {
+    if ((me.getModifiers() | InputEvent.BUTTON1_MASK) == 0) return;
+    //if (me.getModifiers() != InputEvent.BUTTON1_MASK) return;
+    if (me.isConsumed()) return;
     int x = me.getX(), y = me.getY();
     Editor ce = Globals.curEditor();
     Fig underMouse = ce.hit(x, y);
-    if (underMouse == null) { 
+    if (underMouse == null) {
       //System.out.println("bighit");
-        underMouse = ce.hit(x-16, y-16, 32, 32); 
+        underMouse = ce.hit(x-16, y-16, 32, 32);
     }
     if (underMouse == null) { done(); me.consume(); return; }
     if (!(underMouse instanceof FigNode)) { done(); me.consume(); return; }
@@ -113,6 +116,7 @@ public class ModeCreateEdge extends ModeCreate {
    *  construct a new FigEdge and add it to the Layer and send it to
    *  the back. */
   public void mouseReleased(MouseEvent me) {
+    if (me.isConsumed()) return;
     if (_sourceFigNode == null) { done(); me.consume(); return; }
 
     int x = me.getX(), y = me.getY();

@@ -26,7 +26,7 @@
 // File: ModeCreateFigSpline.java
 // Classes: ModeCreateFigSpline
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreateFigSpline.java,v 1.2 1999/02/19 22:19:06 jrobbins Exp $
+// $Id: ModeCreateFigSpline.java,v 1.3 1999/03/15 21:49:57 jrobbins Exp $
 
 package uci.gef;
 
@@ -66,6 +66,7 @@ public class ModeCreateFigSpline extends ModeCreateFigPoly {
 
 
   public void mouseReleased(MouseEvent me) {
+    if (me.isConsumed()) return;
     int x = me.getX(), y = me.getY();
     if (_npoints > 2 && nearLast(x, y)) {
       FigSpline p = (FigSpline) _newItem;

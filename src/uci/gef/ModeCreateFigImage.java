@@ -27,12 +27,12 @@
 // File: ModeCreateFigImage.java
 // Classes: ModeCreateFigImage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreateFigImage.java,v 1.8 1999/02/19 22:19:00 jrobbins Exp $
+// $Id: ModeCreateFigImage.java,v 1.9 1999/03/15 21:49:55 jrobbins Exp $
 
 package uci.gef;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 /** A Mode to interpert user input while creating a FigImage. All of
  *  the actual event handling is inherited from ModeCreate. This class
@@ -101,6 +101,8 @@ public class ModeCreateFigImage extends ModeCreate {
 
   /** On mouse down, do nothing. */
   public void mousePressed(MouseEvent me) {
+    if ((me.getModifiers() | InputEvent.BUTTON1_MASK) == 0) return;
+    //if (me.getModifiers() != InputEvent.BUTTON1_MASK) return;
     me.consume();
   }
 
