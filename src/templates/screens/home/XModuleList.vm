@@ -33,7 +33,7 @@
 #set ($mitList = $user.CurrentMITList)
 #if (!$mitList || $mitList.isEmpty())
  <h3>$l10n.PredefinedLists</h3>
-
+hi
  #set($manager = $scarabG.MITListManager)
  #set($key = "pd_list_id")
  #set($checked2 = "oneitallmods" == $data.Parameters.getString($key, ""))
@@ -44,11 +44,7 @@
      #if($checked) checked="checked"#end />$l10n.AllModulesAndIssueTypes</p>
    #if ($scarabR.CurrentIssueType)
    <p><input type="radio" name="$key" value="oneitallmods"
-     #set ($issueTypeName = $scarabR.CurrentIssueType.Name)
-     #set ($displayName = $module.getRModuleIssueType($scarabR.CurrentIssueType).DisplayName)
-     #if (!$displayName.equals($issueTypeName))
-         #set ($issueTypeName = "$displayName ($issueTypeName)")
-     #end
+         #set ($issueTypeName = $scarabR.CurrentIssueType.getDisplayName($module))
      #if($checked2) checked="checked"#end />$l10n.format("CurrentIssueTypeAllModules", "$issueTypeName")</p>
    #end
  </div>

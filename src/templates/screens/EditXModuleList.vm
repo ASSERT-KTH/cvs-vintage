@@ -22,7 +22,7 @@
     #set ($itemModule = $item.Module)
     #set ($itemIT = $item.IssueType)
     <td>$itemModule.RealName</td>
-    <td>$itemModule.getRModuleIssueType($itemIT).DisplayName ($itemIT.Name)</td>
+    <td>$itemModule.getRModuleIssueType($itemIT).DisplayName</td>
     <td>$itemIT.Description</td>
   </tr>        
  #end

@@ -69,7 +69,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.50 2003/06/03 19:02:07 elicia Exp $
+ * @version $Id: IssueType.java,v 1.51 2003/06/26 19:29:48 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -138,6 +138,22 @@ public  class IssueType
     {
         return hasIssues((Module) null);
     }        
+
+    /**
+     *  If module name is not the same as global name,
+     *  Return global name in parentheses.
+     */
+    public String getDisplayName(Module module)
+        throws Exception
+    {
+        String moduleName = module.getRModuleIssueType(this).getDisplayName();
+        String displayName = getName();
+        if (!moduleName.equals(displayName))
+        {
+            displayName = moduleName +" (" + displayName + ")";
+        }
+        return displayName;
+    }
 
     /**
      *  Returns true if the issue type/module has issues associated with it.
