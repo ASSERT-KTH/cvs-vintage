@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.110 2002/07/30 21:27:10 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.111 2002/07/30 21:55:55 elicia Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -897,7 +897,7 @@ public class ModifyIssue extends BaseModifyIssue
             depend.save();
 
             // Save transaction record
-            Transaction transaction = issue.getTransaction(user, attachment,
+            Transaction transaction = issue.getTransaction(user, null,
                                       TransactionTypePeer.EDIT_ISSUE__PK);
             transaction.save();
 
