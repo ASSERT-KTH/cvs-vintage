@@ -123,11 +123,7 @@
         <tstamp/>
         <filter token="BUILD_DATE" value="${DSTAMP}${TSTAMP}"/>
        
-        <filter token="ADMIN_USERNAME" value="${scarab.user.username}"/>
-        <filter token="ADMIN_PASSWORD" value="${scarab.user.password}"/>
-        <filter token="ADMIN_FIRSTNAME" value="${scarab.user.firstname}"/>
-        <filter token="ADMIN_LASTNAME" value="${scarab.user.lastname}"/>
-        <filter token="ADMIN_EMAIL" value="${scarab.user.email}"/>
+
         <filter token="DATABASE_TYPE" value="${scarab.database.type}"/>
         <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
         <filter token="DATABASE_URL" value="${scarab.database.url}"/>
@@ -136,16 +132,11 @@
         <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
 
-        <filter token="DATABASE_VALIDATION_QUERY" value="${scarab.database.validationQuery}"/>
-
 
         <copy todir="${build.project.webinf}/lib" filtering="no" flatten="true">
             <fileset dir="${lib.dir}/">
                 <exclude name="**/servlet*.jar"/>
-                <exclude name="**/xalan*.jar"/>
-                <exclude name="**/*mysql*.jar"/>
-                <exclude name="**/*postgresql*.jar"/>
-                <exclude name="**/*oracle*.jar"/>
+                <exclude name="**/xalan*.jar"/>  
                 <include name="**/*.jar"/>
             </fileset>
             <fileset dir="${basedir}/../www/repository">
@@ -190,7 +181,11 @@
         </chmod>
 
         <!-- express the type of database we are generating -->
-        <touch file="${build.sql.scarab}/${scarab.database.type}" />
+        <touch>
+          	<fileset dir="${build.sql.scarab}/${scarab.database.type}">
+                <include name="**/*.*"/>
+            </fileset>  
+        </touch>
 
     </target>
 
@@ -275,16 +270,15 @@
     <!-- ================================================================== -->
     <!-- Generate SQL from Torque                                           -->
     <!-- ================================================================== -->
-    <target name="sql" depends="prepare-build-dir,schema-check,torque-copy-all-schema" 
+    <!-- Temporarily replaced by sql-specific-db -->
+    <target name="sql-OFF" depends="prepare-build-dir,schema-check,torque-copy-all-schema" 
             unless="schema.uptodate">
 
-        <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
         <filter token="DATABASE_TYPE" value="${scarab.database.type}"/>
         <filter token="DATABASE_URL" value="${scarab.database.url}"/>
         <filter token="DATABASE_ADMIN_URL" 
                 value="${scarab.database.admin.url}"/>
         <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
-        <filter token="DATABASE_USER" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
         <!-- copy the scarab specific build.properties over -->
         <copy file="${src.conf.dir}/torque.props" 
@@ -326,7 +320,7 @@
         </uptodate>
     </target>
 
-    <target name="om-peer-generate" depends="generated-check,sql" 
+    <target name="om-peer-generate" depends="generated-check,sql-all" 
             unless="gen.uptodate">
 
         <!-- we don't want to generate the OM objects for Turbine 
@@ -352,7 +346,7 @@
     <!-- Check for databases that could require alternate or more complex   -->
     <!-- methods for schema creation                                        -->
     <!-- ================================================================== -->
-    <target name="db-type-check" depends="sql">
+    <target name="db-type-check">
         <condition property="auto.create.db">
         <not>
             <or>
@@ -368,7 +362,7 @@
     <!-- ================================================================== -->
     <!-- Test to make sure the database connection works                    -->
     <!-- ================================================================== -->
-    <target name="test-db-connection" depends="sql">
+    <target name="test-db-connection" depends="sql-all">
         <echo message="Connecting to ${scarab.database.type} at ${scarab.database.url}"/>
         <sql
             driver="${scarab.database.jdbc.driver}"
@@ -386,7 +380,7 @@
     <!-- ================================================================== -->
     <!-- Create database if not bypassed in "db-type-check"                 -->
     <!-- ================================================================== -->
-    <target name="create-db-schema" depends="db-type-check,sql,prepare" 
+    <target name="create-db-schema" depends="db-type-check,sql-all,prepare" 
             if="auto.create.db">
 
         <copy file="${src.sql.dir}/create-${scarab.database.type}-db.sql" 
@@ -441,10 +435,10 @@
             <classpath refid="classpath"/>
             <transaction src="${file.prefix}standard-${scarab.database.type}-init.sql"/>
 
-            <transaction src="${file.prefix}turbine.sql"/>
-            <transaction src="${file.prefix}${project}.sql"/>
-            <transaction src="${file.prefix}scheduler.sql"/>
-            <transaction src="${file.prefix}id-table.sql"/>
+            <transaction src="${file.prefix}${scarab.database.type}/turbine.sql"/>
+            <transaction src="${file.prefix}${scarab.database.type}/${project}.sql"/>
+            <transaction src="${file.prefix}${scarab.database.type}/scheduler.sql"/>
+            <transaction src="${file.prefix}${scarab.database.type}/id-table.sql"/>
             <transaction src="${file.prefix}turbine-id-table-init.sql"/>
             <transaction src="${file.prefix}${project}-id-table-init.sql"/>
             <transaction src="${file.prefix}${project}-required-data.sql"/>
@@ -682,7 +676,7 @@
     <!-- ================================================================== -->
     <!-- Creates the Torque documentation                                   -->
     <!-- ================================================================== -->
-    <target name="datadoc" depends="torque-copy-all-schema,sql">
+    <target name="datadoc" depends="torque-copy-all-schema,sql-all">
         <mkdir dir="${torquedoc.destdir}"/>
         <ant antfile="build-torque.xml"
            target="doc">
@@ -699,7 +693,7 @@
     <!-- ================================================================== -->
     <!-- Dump data from DB into xml                                         -->
     <!-- ================================================================== -->
-    <target name="datadump" depends="sql,compile">
+    <target name="datadump" depends="sql-all,compile">
         <ant antfile="build-torque.xml"
             target="datadump">
             <property name="torque.home" value="${torque.dir.scarab}"/>
@@ -804,6 +798,62 @@
         </b15b16-1>
 
     </target>
+    
+    <!-- ================================================================== -->
+    <!-- Generate SQL from Torque for all databases                         -->
+    <!-- ================================================================== -->
+    <target name="sql-all" description="Generate SQL DDL for all databases">
+    	<antcall target="sql-specific-db">
+    		<param name="generatesql.database.type" value="mysql"/>    			    		
+    	</antcall>
+    	<antcall target="sql-specific-db">
+    		<param name="generatesql.database.type" value="mssql"/>    			    		
+    	</antcall>   
+    	<antcall target="sql-specific-db">
+    		<param name="generatesql.database.type" value="oracle"/>    			    		
+    	</antcall>     	 	
+    	<antcall target="sql-specific-db">
+    		<param name="generatesql.database.type" value="db2"/>    			    		
+    	</antcall>     	
+    	<antcall target="sql-specific-db">
+    		<param name="generatesql.database.type" value="hypersonic"/>    			    		
+    	</antcall>     	
+    	<antcall target="sql-specific-db">
+    		<param name="generatesql.database.type" value="postgresql"/>    			    		
+    	</antcall>       	
+    </target>
+    <target name="sql-specific-db" depends="prepare-build-dir,torque-copy-all-schema">
 
+        <filter token="DATABASE_TYPE" value="${generatesql.database.type}"/>
+        <!-- copy the scarab specific build.properties over -->
+        <copy file="${src.conf.dir}/torque.props" 
+              tofile="${torque.dir.scarab}/build.properties"
+              filtering="true" overwrite="true"/>
+
+        <!-- move the generated .sql files into the target directory -->
+        <ant antfile="build-torque.xml"
+             target="sql"
+             inheritAll="false">
+            <!-- See the Torque tasks' build.properties for options -->
+            <property name="torque.home" value="${torque.dir.scarab}"/>
+            <property name="lib.dir" value="${lib.dir}"/>
+            <property name="torque.output.dir" value="${src.dir}"/>
+            <property name="build.properties"
+                      value="${torque.dir.scarab}/build.properties"/>
+            <property name="idTableXMLFile" value=""/>
+        </ant>
+		
+		<mkdir dir="${build.sql.scarab}/${generatesql.database.type}/"/>
+		
+        <move file="${src.sql.dir}/${project}-schema.sql"
+            tofile="${build.sql.scarab}/${generatesql.database.type}/${project}.sql"/>
+        <move file="${src.sql.dir}/turbine-schema.sql"
+            tofile="${build.sql.scarab}/${generatesql.database.type}/turbine.sql"/>
+        <move file="${src.sql.dir}/scheduler-schema.sql"
+            tofile="${build.sql.scarab}/${generatesql.database.type}/scheduler.sql"/>
+        <move file="${src.sql.dir}/id-table-schema.sql"
+            tofile="${build.sql.scarab}/${generatesql.database.type}/id-table.sql"/>
+    </target>    
+    
 </project>
 

@@ -8,6 +8,10 @@
   <body>
     <release version="b19" date="in cvs">
 	  <action dev="epugh" type="add">
+        Generate into the WEB-INF/sql/ directory all the SQL DDL scripts for all the databases 
+        supported by Scarab.
+      </action>      
+	  <action dev="epugh" type="add">
         ConfigurationFactory is now used!  Provides ability to define at runtime which sources of
         Configuration data to check.  You can now override ANY property set in TR.props.
       </action>         
