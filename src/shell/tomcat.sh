@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.37 2003/03/06 16:30:45 hgomez Exp $
+# $Id: tomcat.sh,v 1.38 2003/10/13 09:45:41 hgomez Exp $
 
 # Environment Variable Prequisites
 #
@@ -46,6 +46,9 @@ if $cygwin; then
   [ -n "$TOMCAT_HOME" ] && TOMCAT_HOME=`cygpath --unix "$TOMCAT_HOME"`
   [ -n "$CLASSPATH" ] && CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
+
+# Set the default -Djava.endorsed.dirs argument
+JAVA_ENDORSED_DIRS="$TOMCAT_HOME"/lib/endorsed
 
 # Read local properties 
 if [ -f $HOME/.tomcatrc ] ; then 
@@ -209,7 +212,7 @@ elif [ "$1" = "start" ] ; then
     
   if [ "$1" = "-noout" ] ; then
     shift
-    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN start $@ >${TOMCAT_HOME}/logs/stdout.log 2>&1 &
+    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -Dtomcat.home=${TOMCAT_HOME}  $MAIN start $@ >${TOMCAT_HOME}/logs/stdout.log 2>&1 &
 
     if [ ! -z "$TOMCAT_PID" ]; then
       echo $! > $TOMCAT_PID
@@ -219,7 +222,7 @@ elif [ "$1" = "start" ] ; then
     echo Using classpath: ${CLASSPATH}
     echo Using JAVA_HOME: ${JAVA_HOME}
     echo Using TOMCAT_HOME: ${TOMCAT_HOME}
-    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN start $@ &
+    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -Dtomcat.home=${TOMCAT_HOME}  $MAIN start $@ &
     
     if [ ! -z "$TOMCAT_PID" ]; then
       echo $! > $TOMCAT_PID
@@ -248,7 +251,7 @@ elif [ "$1" = "stop" ] ; then
   echo Using classpath: ${CLASSPATH}
   echo Using JAVA_HOME: ${JAVA_HOME}
   echo Using TOMCAT_HOME: ${TOMCAT_HOME}
-  $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN stop $@
+  $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -Dtomcat.home=${TOMCAT_HOME} $MAIN stop $@
 
   if [ "$1" = "-force" ] ; then
     shift
@@ -260,26 +263,26 @@ elif [ "$1" = "run" ] ; then
   shift 
   # Backward compat
   if [ "$1" = "enableAdmin" ] ; then
-    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin $@ 
+    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin $@ 
   elif  [ "$1" = "-enableAdmin" ] ; then  
-    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin $@ 
+    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin $@ 
   else
     echo Using classpath: ${CLASSPATH}
     echo Using JAVA_HOME: ${JAVA_HOME}
     echo Using TOMCAT_HOME: ${TOMCAT_HOME}
-    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN start $@ 
+    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -Dtomcat.home=${TOMCAT_HOME} $MAIN start $@ 
   fi
 elif [ "$1" = "enableAdmin" ] ; then 
 
-  $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin $@
+  $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin $@
 
 elif [ "$1" = "estart" ] ; then 
 
-  $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN estart $@
+  $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -Dtomcat.home=${TOMCAT_HOME} $MAIN estart $@
 
 elif [ "$1" = "jspc" ] ; then 
     shift 
-    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN jspc $@
+    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -Dtomcat.home=${TOMCAT_HOME} $MAIN jspc $@
 
 elif [ "$1" = "jspcOrig" ] ; then 
     shift 
@@ -297,7 +300,7 @@ elif [ "$1" = "jspcOrig" ] ; then
     if [ "$oldCP" != "" ]; then
         CLASSPATH=${CLASSPATH}:${oldCP}
     fi
-    (cd $TOMCAT_HOME; $JAVACMD $JSPC_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.jasper.JspC $@ )
+    (cd $TOMCAT_HOME; $JAVACMD $JSPC_OPTS -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -Dtomcat.home=${TOMCAT_HOME} org.apache.jasper.JspC $@ )
 
 elif [ "$1" = "env" ] ; then 
   ## Call it with source tomcat to set the env for tomcat
