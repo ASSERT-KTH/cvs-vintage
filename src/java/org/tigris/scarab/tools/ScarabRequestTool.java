@@ -114,6 +114,7 @@ import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.om.Report;
 import org.tigris.scarab.om.ReportManager;
 import org.tigris.scarab.tools.SecurityAdminTool;
+import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;  
@@ -210,6 +211,11 @@ public class ScarabRequestTool
      * A ParentChildAttributeOption
      */
     private ParentChildAttributeOption pcao = null;
+
+    /**
+     * IssueSearch object for performing queries
+     */
+    private IssueSearch issueSearch = null;
     
     /**
      * A list of Issues
@@ -273,6 +279,7 @@ public class ScarabRequestTool
         attributeOption = null;
         roo = null;
         pcao = null;
+        issueSearch = null;
         issueList = null;
         reportGenerator = null;
         nbrPages = 0;
@@ -1454,19 +1461,22 @@ try{
     public IssueSearch getSearch()
         throws Exception
     {
-        IssueSearch is = null;
-        MITList mitList = ((ScarabUser)data.getUser()).getCurrentMITList();
-        if (mitList == null)
+        if (issueSearch == null) 
         {
-            IssueType it = getCurrentIssueType();
-            Module cum = getCurrentModule();
-            is = new IssueSearch(cum, it);
+            MITList mitList = ((ScarabUser)data.getUser()).getCurrentMITList();
+            if (mitList == null)
+            {
+                IssueType it = getCurrentIssueType();
+                Module cum = getCurrentModule();
+                issueSearch = new IssueSearch(cum, it);
+            }
+            else 
+            {
+                issueSearch = new IssueSearch(mitList);
+            }
+            
         }
-        else 
-        {
-            is = new IssueSearch(mitList);
-        }
-        return is; 
+        return issueSearch; 
     }
 
     /**
@@ -1570,9 +1580,37 @@ try{
     }
 
     /**
-     * Performs search on current query (which is stored in user session).
-    */
+     * Caches the result of getUncachedCurrentSearchResults for the remainder
+     * of the request.
+     */
     private List getUnprotectedCurrentSearchResults()
+        throws Exception
+    {
+        // normally we would use "this" as the first arg to ScarabCache.get,
+        // but SRT is not serializable.  Might want to change the interface,
+        // but getSearchResults wraps an IssueSearch so we can get around it
+        // that way
+        IssueSearch search = getSearch();
+        List results = null;
+        Object obj = 
+            ScarabCache.get(search, "getUnprotectedCurrentSearchResults"); 
+        if ( obj == null ) 
+        {       
+            results = getUncachedCurrentSearchResults();
+            ScarabCache
+                .put(results, search, "getUnprotectedCurrentSearchResults");
+        }
+        else 
+        {
+            results = (List)obj;
+        }
+        return results;
+    }
+
+    /**
+     * Performs search on current query (which is stored in user session).
+     */
+    private List getUncachedCurrentSearchResults()
         throws Exception
     {
         ScarabLocalizationTool l10n = getLocalizationTool();

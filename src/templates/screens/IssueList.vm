@@ -7,7 +7,26 @@
    #set ($issueIdList = $scarabR.CurrentSearchResults)
 #end
 #set ($issueListSize = $issueIdList.size())
-#set ($modules = $scarabG.getModulesFromIssueList($scarabR.getIssues($issueIdList)))
+#set ($totalCount = $issueListSize)
+
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",25))
+#set ($pageNum = $data.Parameters.getInt("pageNum",1))
+#if ($resultsPerPage > 0 && $issueListSize > $resultsPerPage)
+ #set ($paginated = "true")
+ #set ($issueIdList = $scarabR.getPaginatedList($issueIdList, $pageNum, $resultsPerPage))
+ #set ($issueListSize = $issueIdList.size())
+#end
+
+## note it is expensive to determine the following and it is even
+## more resource intensive to show a large list on the assign issue page, so
+## limit showing the assign buttons to lists of less than 500 issues
+#set ($showAssignButtons = $issueListSize <= 500)
+#if ($showAssignButtons)
+    #set ($modules = $scarabG.getModulesFromIssueList($scarabR.getIssues($issueIdList)))
+    #set ($showAssignButtons = $user.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $modules))
+#end
+
 #set ($mitlist = $user.CurrentMITList)
 #if ($issueListSize == 0)
 <h3>
@@ -19,25 +38,9 @@
 </h3>
   <p class="alert">There are no matching issues.</p>
 #else
-
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
 <input type="hidden" name="pageNum" value="$pageNum" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="IssueList.vm" />
-
-#foreach ($issueId in $issueIdList)
-   <input type="hidden" name="all_issue_ids" value="$issueId" />
-#end
-
-## if results exceed limit, get subset list
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",25))
-#set ($pageNum = $data.Parameters.getInt("pageNum",1))
-#if ($resultsPerPage > 0 && $issueListSize > $resultsPerPage)
- #set ($paginated = "true")
- #set ($pagList = $scarabR.getPaginatedList($issueIdList, $pageNum, $resultsPerPage))
- #if ($pagList)
-   #set ($issueIdList = $pagList)
- #end
-#end
 
 #set ($queryString = $data.Parameters.getString("queryString",""))
 #if (!$queryString.equals(""))
@@ -57,7 +60,7 @@
 #else
   $page.Title for $scarabR.CurrentRModuleIssueType.DisplayName
 #end
-(No. of issues: $issueListSize)</h3>
+$l10n.format("IssueListCount", $totalCount)</h3>
 
 #if ($mitlist)
   <div class="colbar">
@@ -156,7 +159,10 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
  #set ($issue = $scarabR.getIssue($issueId))
  #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.UniqueId.toString()).setPathInfo("issueList", "true"))
  #indexedRows($velocityCount)
-  <td><input type="checkbox" name="issue_ids" value="$issue.UniqueId" /></td>
+  <td>
+   <input type="hidden" name="all_issue_ids" value="$issueId" />
+   <input type="checkbox" name="issue_ids" value="$issue.UniqueId" />
+  </td>
  #if ($mitlist && !$mitlist.isSingleModule())
   <td>$issue.Module.RealName</td> 
  #end
@@ -203,12 +209,12 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 </div>
 
 <div class="functnbar3">
-#if ($user.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $modules))
+#if ($showAssignButtons)
    <input type="submit" value="$l10n.Assign" name="eventSubmit_doReassignselected" />&#160;
 #end
 <input type="submit" value="$l10n.ViewVerbose"  name="eventSubmit_doViewselected" />&#160;
 <small>selected</small>&#160;&#160;<img src="$staticLink.setPath("/images/seperator.gif")" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;
-#if ($user.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $modules))
+#if ($showAssignButtons)
   <input type="submit" value="$l10n.Assign" name="eventSubmit_doReassignall" />&#160;
 #end
 <input type="submit" value="$l10n.ViewVerbose" name="eventSubmit_doViewall" />&#160;
