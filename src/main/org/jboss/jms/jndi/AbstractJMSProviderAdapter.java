@@ -17,9 +17,10 @@
  */
 package org.jboss.jms.jndi;
 
+import java.util.Properties;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
-
 /**
  * An abstract implementaion of {@link JMSProviderAdapter}.  Sub-classes must
  * provide connection names via instance initialzation and provide an 
@@ -27,116 +28,114 @@ import javax.naming.NamingException;
  *
  * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
- * @version <pre>$Revision: 1.7 $</pre>
+ * @version <pre>$Revision: 1.8 $</pre>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  */
-public abstract class AbstractJMSProviderAdapter
-    implements JMSProviderAdapter, java.io.Serializable
+public abstract class AbstractJMSProviderAdapter implements JMSProviderAdapter, java.io.Serializable
 {
-    /** The name of the provider. */
-    protected String name;
+   /** The name of the provider. */
+   protected String name;
 
-    /** The provider url. */
-    protected String providerURL;
+   /** The properties. */
+   protected Properties properties;
 
-    /** The factory name to use. */
-    protected String factoryRef;
+   /** The factory name to use. */
+   protected String factoryRef;
 
-    /** The queue factory name to use. */
-    protected String queueFactoryRef;
+   /** The queue factory name to use. */
+   protected String queueFactoryRef;
 
-    /** The topic factory name to use. */
-    protected String topicFactoryRef;
+   /** The topic factory name to use. */
+   protected String topicFactoryRef;
 
-    /**
-     * Set the name of the provider.
-     *
-     * @param name    The provider name.
-     */
-    public void setName(final String name) {
-        this.name = name;
-    }   
+   /**
+    * Set the name of the provider.
+    *
+    * @param name    The provider name.
+    */
+   public void setName(final String name)
+   {
+      this.name = name;
+   }
 
-    /**
-     * Get the name of the provider.
-     *
-     * @return  The provider name.
-     */
-    public final String getName() {
-        return name;
-    }   
+   /**
+    * Get the name of the provider.
+    *
+    * @return  The provider name.
+    */
+   public final String getName()
+   {
+      return name;
+   }
 
-    /**
-     * Set the URL that will be used to connect to the JNDI provider.
-     *
-     * @param url  The URL that will be used to connect.
-     */
-    public void setProviderUrl(final String url) {
-        this.providerURL = url;
-    }   
+   public void setProperties(final Properties properties)
+   {
+      this.properties = properties;
+   }
 
-    /**
-     * Get the URL that is currently being used to connect to the JNDI 
-     * provider.
-     *
-     * @return     The URL that is currently being used.
-     */
-    public final String getProviderUrl() {
-        return providerURL;
-    }   
+   public final Properties getProperties()
+   {
+      return properties;
+   }
 
-    /**
-     * ???
-     * 
-     * @return  ???
-     */
-    public String getFactoryRef() {
-        return factoryRef;
-    }
+   /**
+    * ???
+    * 
+    * @return  ???
+    */
+   public String getFactoryRef()
+   {
+      return factoryRef;
+   }
 
-    /**
-     * ???
-     * 
-     * @return  ???
-     */
-    public String getQueueFactoryRef() {
-        return queueFactoryRef;
-    }
+   /**
+    * ???
+    * 
+    * @return  ???
+    */
+   public String getQueueFactoryRef()
+   {
+      return queueFactoryRef;
+   }
 
-    /**
-     * ???
-     * 
-     * @return  ???
-     */
-    public String getTopicFactoryRef() {
-        return topicFactoryRef;
-    }
+   /**
+    * ???
+    * 
+    * @return  ???
+    */
+   public String getTopicFactoryRef()
+   {
+      return topicFactoryRef;
+   }
 
-    /**
-     * ???
-     * 
-     * @return  ???
-     */
-    public void setFactoryRef(String newFactoryRef) {
-        factoryRef = newFactoryRef;
-    }
+   /**
+    * ???
+    * 
+    * @return  ???
+    */
+   public void setFactoryRef(String newFactoryRef)
+   {
+      factoryRef = newFactoryRef;
+   }
 
-    /**
-     * ???
-     * 
-     * @return  ???
-     */
-    public void setQueueFactoryRef(String newQueueFactoryRef) {
-        queueFactoryRef = newQueueFactoryRef;
-    }
+   /**
+    * ???
+    * 
+    * @return  ???
+    */
+   public void setQueueFactoryRef(String newQueueFactoryRef)
+   {
+      queueFactoryRef = newQueueFactoryRef;
+   }
 
-    /**
-     * ???
-     * 
-     * @return  ???
-     */
-    public void setTopicFactoryRef(String newTopicFactoryRef) {
-        topicFactoryRef = newTopicFactoryRef;
-    }
+   /**
+    * ???
+    * 
+    * @return  ???
+    */
+   public void setTopicFactoryRef(String newTopicFactoryRef)
+   {
+      topicFactoryRef = newTopicFactoryRef;
+   }
 }

@@ -12,6 +12,7 @@ package org.jboss.jms.jndi;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import java.io.Serializable;
+import java.util.Properties;
 
 /**
  * JMSProviderAdapter.java
@@ -22,7 +23,7 @@ import java.io.Serializable;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public interface JMSProviderAdapter
    extends Serializable
@@ -38,8 +39,8 @@ public interface JMSProviderAdapter
    Context getInitialContext() throws NamingException;
    void setName(String name);
    String getName();
-   void setProviderUrl(String url);
-   String getProviderUrl();
+   void setProperties(Properties properties);
+   Properties getProperties();
    String getFactoryRef();
    String getQueueFactoryRef();
    String getTopicFactoryRef();

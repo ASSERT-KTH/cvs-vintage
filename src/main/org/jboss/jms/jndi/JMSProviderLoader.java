@@ -9,6 +9,8 @@
 
 package org.jboss.jms.jndi;
 
+import java.util.Properties;
+
 import javax.management.ObjectName;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
@@ -33,7 +35,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JMSProviderLoader
    extends ServiceMBeanSupport
@@ -42,8 +44,8 @@ public class JMSProviderLoader
    /** The provider adapter which we are loading. */
    protected JMSProviderAdapter providerAdapter;
 
-   /** The provider url. */
-   protected String url;
+   /** The properties */
+   protected Properties properties;
 
    /** The provider name. */
    protected String providerName;
@@ -98,17 +100,17 @@ public class JMSProviderLoader
    /**
     * @jmx:managed-attribute
     */
-   public void setProviderUrl(final String url)
+   public void setProperties(final Properties properties)
    {
-      this.url = url;
+      this.properties = properties;
    }      
 
    /**
     * @jmx:managed-attribute
     */
-   public String getProviderUrl()
+   public Properties getProperties()
    {
-      return url;
+      return properties;
    }
 
    /**
@@ -193,7 +195,7 @@ public class JMSProviderLoader
       Class cls = Thread.currentThread().getContextClassLoader().loadClass(providerAdapterClass);
       providerAdapter = (JMSProviderAdapter)cls.newInstance();
       providerAdapter.setName(providerName);
-      providerAdapter.setProviderUrl(url);
+      providerAdapter.setProperties(properties);
       providerAdapter.setFactoryRef(factoryRef);
       providerAdapter.setQueueFactoryRef(queueFactoryRef);
       providerAdapter.setTopicFactoryRef(topicFactoryRef);
