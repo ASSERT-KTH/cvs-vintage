@@ -1,4 +1,4 @@
-$page.setTitle("Artifact List")
+$page.setTitle("Query Results")
 
 <div class="app" id="issuelist">
 
@@ -37,7 +37,10 @@ $page.setTitle("Artifact List")
 
 #if ($issueList.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum.toString(), $resultsPerPage.toString()))
+ #set ($pagList = $scarabR.getPaginatedList($issueList, $pageNum.toString(), $resultsPerPage.toString()))
+ #if ($pagList)
+   #set ($issueList = $pagList)
+ #end
 #end
 
 <form action="$action" method="post">
@@ -108,7 +111,7 @@ $page.setTitle("Artifact List")
              <tr>
        <th>Max items per page</td>
        <td>
- <input type="radio" value="25" name="resultsPerPage" #if( $resultsPerPage == 25 ) checked="checked" #end /> 25
+ <input type="radio" value="2" name="resultsPerPage" #if( $resultsPerPage == 25 ) checked="checked" #end /> 25
  <input type="radio" name="resultsPerPage" value="50" #if( $resultsPerPage == 50 ) checked="checked" #end /> 50
  <input type="radio" name="resultsPerPage" value="75" #if( $resultsPerPage == 75 ) checked="checked" #end /> 75
  <input type="radio" name="resultsPerPage" value="100" #if( $resultsPerPage == 100 ) checked="checked" #end /> 100

@@ -20,7 +20,7 @@ $page.setTitle("Custom Search")
 </table>
 </div>
 		
-<p class="functnbar"><input type="submit" value="search" name="eventSubmit_doSearch" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+<p class="functnbar"><input type="submit" value="Search" name="eventSubmit_doSearch" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></p>
 		
 
 #set ($search = $scarabR.Search)
@@ -99,9 +99,7 @@ $page.setTitle("Custom Search")
 <h3>Results display options</h3>
 		
 <div class="axial">
-  <table cellpadding="3" cellspacing="2" border="0">
-<div class="axial">
-<table width="100%" cellpadding="3" cellspacing="2" border="1">
+<table  cellpadding="3" cellspacing="2" border="1">
 #* 
  FIXME - implement sort
 	<tr>
@@ -120,7 +118,7 @@ $page.setTitle("Custom Search")
 	</select></td>
 	</tr>
 *#
-       <tr>
+     <tr>
        <th>Max items per page</th>
 <input type="hidden" name="pageNum" value="1" />
        <td><input type="radio" name="resultsPerPage" checked="checked" /> 25 <input type="radio" name="resultsPerPage" /> 50 <input type="radio" name="resultsPerPage" /> 75 <input type="radio" name="resultsPerPage" /></td>
@@ -131,7 +129,7 @@ $page.setTitle("Custom Search")
 
 <p><a href="#">edit custom search - not implemented</a></p>
 
-<p class="functnbar2"><input type="submit" value="search" name="eventSubmit_doSearch" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+<p class="functnbar2"><input type="submit" value="Search" name="eventSubmit_doSearch" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></p>
 
 		
  $intake.declareGroups()

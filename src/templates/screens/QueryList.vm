@@ -7,22 +7,12 @@ $page.setTitle("Stored query list")
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
 
-<div class="tabs">
-<table cellpadding="3" cellspacing="0" border="0">
-<tr>
-<td><a href="#" title="view advanced query information">Advanced query</a></td>
-<td><a href="#" title="view custom query information">Custom</a></td>
-<th>Saved queries</th>
-</tr>
-</table>
-</div>
-
 <div class="functnbar">		
 <input type="submit" value="Done"  name="eventSubmit_doSave" />&nbsp;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&nbsp;
 </div>
 
 #if ($module.getAllUserQueries($user, $issueType).isEmpty())
-<h3>Saved Queries</h3>
+<h3>Saved queries</h3>
  <p><strong class="alert">There are no stored queries.
  Please go to <a href="$link.setPage("AdvancedQuery.vm")">Advanced query</a>
  to create a new stored query.</strong></p>

@@ -11,9 +11,6 @@ $page.setTitle("Template list")
 
 #macro (TemplateListBar $val)
 <div class="functnbar$val">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
   #if ($user.UserId)
   <input type="submit" value="Create new" name="eventSubmit_doCreatenew" />&#160;
   #if ($someTemplates.equals("true"))
@@ -23,9 +20,6 @@ $page.setTitle("Template list")
   #if ($someTemplates.equals("true"))
   &#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
   #end
-  </td>
- </tr>
-</table>
 </div>
 #end
 
@@ -38,7 +32,7 @@ $page.setTitle("Template list")
 
 #TemplateListBar("")
 
-<h3>Stored Templates</h3>
+<h3>Stored templates</h3>
 
 #if ($noTemplates.equals("true"))
     <p><strong class="alert">

@@ -9,17 +9,9 @@ $page.setTitle("Issue template")
 
 #macro (SaveTemplateBar $var)
 <div class="functnbar$var">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
 <input type="submit" value="Save" name="eventSubmit_doSubmit" />&#160;
 <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />&#160;
-  </td>
-  <td>
-<input type="submit" value="Back" name="eventSubmit_doBack"  />&#160;
-  </td>
- </tr>
-</table>
+<input type="submit" value="Back" name="eventSubmit_doBack"  />
 </div>
 #end
 

@@ -1,4 +1,6 @@
-$page.setTitle("Save Query")
+$page.setTitle("Save query")
+
+<h2>$page.Title</h2>
 
 #set ($action = $link.setPage("SaveQuery.vm").setAction("Search").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "QueryList.vm").toString())
 #set ($query = $scarabR.Query)
@@ -22,24 +24,24 @@ $page.setTitle("Save Query")
 Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
 </p>
 
-<h3>Save Your Query</h3>
+<h3>Saved query information</h3>
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
-   <th width="120">query name</th>
+   <th width="120">Query name</th>
    <td>#fieldErrorMsg($queryGroup.Name "")<input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
   </tr>
   <tr>
-   <th width="120">query description</th>
+   <th width="120">Query description</th>
    <td><textarea name="$queryGroup.Description.Key" rows="4" cols="40">$!queryGroup.Description</textarea></td>
   </tr>
   <tr>
-   <th width="120">availability</th>
+   <th width="120">Availability</th>
    <td>#queryTypeSelectBox ($query)
    </td>
   </tr>
   <tr>
-   <th width="120">module</th>
+   <th width="120">Location</th>
    <td>$module.Name</td>
    <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
   </tr>
