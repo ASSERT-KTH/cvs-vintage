@@ -72,7 +72,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.76 $
+ * @version $Revision: 1.77 $
  */
 public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 {
@@ -1657,7 +1657,7 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
    {
       if(relationManager == null)
       {
-         if(metadata.isMultiplicityMany() && metadata.getRelatedRole().isMultiplicityMany())
+         if(metadata.getRelationMetaData().isTableMappingStyle())
          {
             relationManager = new M2MRelationManager(this, relatedField);
          }
