@@ -19,7 +19,7 @@
 // File: CrClassMustBeAbstract.java.java
 // Classes: CrClassMustBeAbstract.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrClassMustBeAbstract.java,v 1.4 1998/04/23 23:51:36 jrobbins Exp $
+// $Id: CrClassMustBeAbstract.java,v 1.5 1998/05/21 00:59:49 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -52,7 +52,7 @@ public class CrClassMustBeAbstract extends CrUML {
   public boolean predicate(Object dm, Designer dsgr) {
     if (!(dm instanceof MMClass)) return NO_PROBLEM;
     MMClass cls = (MMClass) dm;
-    if (!cls.getIsAbstract().booleanValue()) return NO_PROBLEM;
+    if (!cls.getIsAbstract()) return NO_PROBLEM;
     // needs-more-work: check inheritied methods and interfaces
     Vector beh = cls.getBehavioralFeature();
     if (beh == null) return NO_PROBLEM;

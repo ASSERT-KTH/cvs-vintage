@@ -28,7 +28,7 @@
 // File: TabPropFrame.java
 // Interfaces: TabPropFrame
 // Original Author: jrobbins@ics.uci.edu
-// $Id: TabPropFrame.java,v 1.5 1998/04/18 01:27:17 jrobbins Exp $
+// $Id: TabPropFrame.java,v 1.6 1998/05/21 00:59:19 jrobbins Exp $
 
 
 
@@ -99,7 +99,7 @@ implements ChangeListener, ActionListener {
     //{{INIT_CONTROLS
     getContentPane().setLayout(new BorderLayout(0,0));
     addNotify();
-    resize(insets().left + insets().right + 250,insets().top + insets().bottom + 406);
+    resize(insets().left + insets().right + 300,insets().top + insets().bottom + 406);
     getContentPane().setFont(new Font("Dialog", Font.PLAIN, 10));
     getContentPane().setBackground(new Color(12632256));
     tabPanel = new JTabbedPane();

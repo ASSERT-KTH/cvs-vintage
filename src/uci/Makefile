@@ -19,7 +19,7 @@
 # File: uci/Makefile
 # makefile for the uci shared code directory
 # original author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.5 1998/04/24 01:10:12 jrobbins Exp $
+# $Id: Makefile,v 1.6 1998/05/21 00:58:56 jrobbins Exp $
 
 include Makefile.config
 
@@ -62,7 +62,7 @@ umlClasses:
 argoumlClasses:
 	@if [ -d uml/ui ] ; \
 	then echo "\n\nCOMPILING ARGO/UML ================" ; \
-	cd uml ; \
+	cd uml; make classes; \
 	cd ui; make classes; cd .. ; \
 	cd visual; make classes; cd .. ; \
 	cd .. ; \

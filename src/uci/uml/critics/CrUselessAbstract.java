@@ -19,7 +19,7 @@
 // File: CrUselessAbstract.java
 // Classes: CrUselessAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessAbstract.java,v 1.5 1998/04/23 23:51:53 jrobbins Exp $
+// $Id: CrUselessAbstract.java,v 1.6 1998/05/21 00:59:51 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -52,12 +52,12 @@ public class CrUselessAbstract extends CrUML {
     MMClass cls, c;
     if (!(dm instanceof MMClass)) return false;
     cls = (MMClass) dm;
-    if (!cls.isAbstract()) return false;  // original class was not abstract
+    if (!cls.getIsAbstract()) return false;  // original class was not abstract
     Set derived = (new Set(cls)).reachable(new ChildGenDerivedClasses());
     Enumeration enum = derived.elements();
     while (enum.hasMoreElements()) {
       c = (MMClass) enum.nextElement();
-      if (!c.isAbstract()) return false;  // found a concrete subclass
+      if (!c.getIsAbstract()) return false;  // found a concrete subclass
     }
     return true; // no concrete subclasses defined, this class is "useless"
   }

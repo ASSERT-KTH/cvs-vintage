@@ -19,7 +19,7 @@
 // File: Agency.java
 // Classes: Agency, Trigger
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Agency.java,v 1.5 1998/04/18 01:25:37 jrobbins Exp $
+// $Id: Agency.java,v 1.6 1998/05/21 00:59:02 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -129,7 +129,7 @@ public class Agency extends Observable { //implements java.io.Serialization
    * the design material class. But additional (after-market) critics
    * could added thorugh a menu command in some control panel...*/
   public static void register(Critic c, Class clazz) {
-    System.out.println("registering critic " + c.toString());
+    //System.out.println("registering critic " + c.toString());
     Vector critics = (Vector) getCriticRegistry().get(clazz);
     if (critics == null) {
        critics = new Vector();

@@ -19,7 +19,7 @@
 // File: CrFinalSubclassed.java.java
 // Classes: CrFinalSubclassed.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrFinalSubclassed.java,v 1.4 1998/04/23 23:51:39 jrobbins Exp $
+// $Id: CrFinalSubclassed.java,v 1.5 1998/05/21 00:59:50 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -58,7 +58,7 @@ public class CrFinalSubclassed extends CrUML {
     while (enum.hasMoreElements()) {
       Generalization g = (Generalization) enum.nextElement();
       GeneralizableElement base = g.getSupertype();
-      if (base.getIsLeaf().booleanValue()) return PROBLEM_FOUND;
+      if (base.getIsLeaf()) return PROBLEM_FOUND;
     }
     return NO_PROBLEM;
   }

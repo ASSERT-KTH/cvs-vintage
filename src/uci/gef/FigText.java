@@ -27,7 +27,7 @@
 // File: FigText.java
 // Classes: FigText
 // Original Author: ics125 spring 1996
-// $Id: FigText.java,v 1.6 1998/04/18 01:26:20 jrobbins Exp $
+// $Id: FigText.java,v 1.7 1998/05/21 00:59:09 jrobbins Exp $
 
 package uci.gef;
 
@@ -262,14 +262,14 @@ public class FigText extends Fig implements KeyListener {
   public boolean getItalic() { return _font.isItalic(); }
   public void setItalic(boolean b) {
     int style = (getBold() ? Font.BOLD : 0) + (b ? Font.ITALIC : 0);
-    Font f = new Font(_font.getFamily(), _font.getSize(), style); 
+    Font f = new Font(_font.getFamily(), style, _font.getSize()); 
     setFont(f);
   }
 
   public boolean getBold() { return _font.isBold(); }
   public void setBold(boolean b) {
     int style = (b ? Font.BOLD : 0) + (getItalic() ? Font.ITALIC : 0);
-    setFont(new Font(_font.getFamily(), _font.getSize(), style));
+    setFont(new Font(_font.getFamily(), style, _font.getSize()));
   }
 
   /** Remove the last char from the current string line and return the

@@ -19,7 +19,7 @@
 // File: ToDoList.java
 // Class: ToDoList
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoList.java,v 1.5 1998/04/18 01:25:44 jrobbins Exp $
+// $Id: ToDoList.java,v 1.6 1998/05/21 00:59:05 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -64,7 +64,7 @@ implements Runnable, java.io.Serializable {
   /** Start a Thread to delete old items from the ToDoList. */
   public void spawnValidityChecker(Designer d) {
     _designer = d;
-    _validityChecker = new Thread(this);
+    _validityChecker = new Thread(this, "ValidityCheckingThread");
     _validityChecker.setDaemon(true);
     _validityChecker.start();
   }
