@@ -1,12 +1,13 @@
-Version CVS
+Version CVS (upcoming 0.9.10)
 
  - mail-component:
-    * added addressbook-pane to composer
+    * added attachable addressbook-frame to composer
     * added printing support
     * imap mailfolderinfo fixes
     * imap synchronize fixes
     * imap lsub fixes
     * local folder locking fixes
+    * new composer-ui
     
  - addressbook-component:
     * address parser fixes
