@@ -92,7 +92,7 @@ public class SizeFilter extends AbstractFilter {
      * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
      */
     public void setUp(FilterCriteria f) {
-        //      is/is not
+        //      bigger/smaller
         criteria = f.get("criteria");
 
         // string to search
