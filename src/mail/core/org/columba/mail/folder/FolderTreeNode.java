@@ -15,11 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import java.util.Hashtable;
-
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.gui.util.ImageLoader;
@@ -37,8 +34,7 @@ import org.columba.mail.config.FolderItem;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public abstract class FolderTreeNode
-	extends DefaultMutableTreeNode {
+public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 
 	protected final static ImageIcon collapsedIcon =
 		ImageLoader.getSmallImageIcon("folder-closed.png");
@@ -56,13 +52,13 @@ public abstract class FolderTreeNode
 
 	public FolderTreeNode(String name, String type) {
 		super();
-		
+
 		XmlElement defaultElement = new XmlElement("folder");
 		defaultElement.addAttribute("type", type);
 		defaultElement.addAttribute("uid", Integer.toString(nextUid++));
 		defaultElement.addElement(new XmlElement("property"));
-		
-		setNode( new FolderItem(defaultElement));
+
+		setNode(new FolderItem(defaultElement));
 		setName(name);
 
 		myLock = new Lock();
@@ -188,10 +184,10 @@ public abstract class FolderTreeNode
 		// remove DefaultMutableTreeNode
 		removeFromParent();
 	}
-	
+
 	public void addSubfolder(FolderTreeNode child) throws Exception {
 		add(child);
-		getNode().addElement(child.getNode());		
+		getNode().addElement(child.getNode());
 	}
 
 	/*
@@ -208,13 +204,36 @@ public abstract class FolderTreeNode
 	}
 	*/
 
-	public TreeNode getChild(String str) {
+	public FolderTreeNode findChildWithName(String str, boolean recurse) {
 		for (int i = 0; i < getChildCount(); i++) {
-			Folder child = (Folder) getChildAt(i);
+			FolderTreeNode child = (FolderTreeNode) getChildAt(i);
 			String name = child.getName();
 
-			if (name.equalsIgnoreCase(str))
+			if (name.equalsIgnoreCase(str)) {
 				return child;
+			} else if( recurse ){
+				FolderTreeNode subchild = child.findChildWithName(str,true);
+				if( subchild != null ) {
+					return subchild;
+				}
+			}
+		}
+		return null;
+	}
+
+	public FolderTreeNode findChildWithUID(int uid, boolean recurse ) {
+		for (int i = 0; i < getChildCount(); i++) {
+			FolderTreeNode child = (Folder) getChildAt(i);
+			int childUid = child.getUid();
+
+			if (uid == childUid) {
+				return child;
+			} else if (recurse) {
+				FolderTreeNode subchild = child.findChildWithUID(uid,true);
+				if( subchild != null ) {
+					return subchild;
+				}				
+			}
 		}
 		return null;
 	}
@@ -312,10 +331,10 @@ public abstract class FolderTreeNode
 	 */
 	public String getName() {
 		String name = null;
-	
+
 		FolderItem item = getFolderItem();
 		name = item.get("property", "name");
-	
+
 		return name;
 	}
 
@@ -323,10 +342,10 @@ public abstract class FolderTreeNode
 	 * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
 	 */
 	public void setName(String newName) {
-	
+
 		FolderItem item = getFolderItem();
 		item.set("property", "name", newName);
-	
+
 	}
 
 	/**

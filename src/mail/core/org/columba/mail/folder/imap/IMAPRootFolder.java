@@ -35,15 +35,17 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.imap.IMAPStore;
+import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.ListInfo;
 import org.columba.ristretto.imap.protocol.IMAPProtocol;
 
 public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
-	
+
 	protected final static ImageIcon imapRootIcon =
 		//ImageLoader.getSmallImageIcon("imap-16.png");
 	ImageLoader.getSmallImageIcon("stock_internet-16.png");
@@ -64,7 +66,10 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
 	private AccountItem accountItem;
 
 	private IMAPStore store;
-	
+
+	private static final String[] specialFolderNames =
+		{ "trash", "drafts", "templates", "sent" };
+
 	/**
 	 * Status information updates are handled in using StatusObservable.
 	 * <p>
@@ -72,7 +77,6 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
 	 * accessing the folder. 
 	 */
 	protected StatusObservable observable;
-	
 
 	public IMAPRootFolder(FolderItem folderItem) {
 		//super(node, folderItem);
@@ -190,7 +194,8 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
 
 		ColumbaLogger.log.debug("creating folder=" + name);
 
-		if (name.indexOf(store.getDelimiter()) != -1 && name.indexOf(store.getDelimiter()) != name.length()-1) {
+		if (name.indexOf(store.getDelimiter()) != -1
+			&& name.indexOf(store.getDelimiter()) != name.length() - 1) {
 
 			// delimiter found
 			//  -> recursively create all necessary folders to create
@@ -198,12 +203,12 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
 			String subchild =
 				name.substring(0, name.indexOf(store.getDelimiter()));
 			FolderTreeNode subFolder =
-				(FolderTreeNode) parent.getChild(subchild);
+				(FolderTreeNode) parent.findChildWithName(subchild, false);
 
 			// if folder doesn't exist already
 			if (subFolder == null) {
 				subFolder = new IMAPFolder(subchild, "IMAPFolder");
-				parent.add( subFolder );
+				parent.add(subFolder);
 				parent.getNode().addElement(subFolder.getNode());
 
 				((IMAPFolder) subFolder).existsOnServer = true;
@@ -212,13 +217,12 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
 				// this is the final folder
 				//subFolder = addIMAPChildFolder(parent, info, subchild);
 			} else {
-				if( !((IMAPFolder) subFolder).existsOnServer) {
-				((IMAPFolder) subFolder).existsOnServer = true;
-				subFolder.getFolderItem().set("selectable", "false");
+				if (!((IMAPFolder) subFolder).existsOnServer) {
+					((IMAPFolder) subFolder).existsOnServer = true;
+					subFolder.getFolderItem().set("selectable", "false");
 				}
 			}
-			
-			
+
 			// recursively go on
 			syncFolder(
 				subFolder,
@@ -231,22 +235,23 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
 			//  -> this is already the final folder
 
 			// if folder doesn't exist already
-			FolderTreeNode subFolder = (FolderTreeNode) parent.getChild(name);
+			FolderTreeNode subFolder =
+				(FolderTreeNode) parent.findChildWithName(name, false);
 			if (subFolder == null) {
 
 				subFolder = new IMAPFolder(name, "IMAPFolder");
-				parent.add( subFolder );
+				parent.add(subFolder);
 				parent.getNode().addElement(subFolder.getNode());
 
 				((IMAPFolder) subFolder).existsOnServer = true;
 			} else {
 				((IMAPFolder) subFolder).existsOnServer = true;
 			}
-			
-			if( info.getParameter(ListInfo.NOSELECT) ) {
+
+			if (info.getParameter(ListInfo.NOSELECT)) {
 				subFolder.getFolderItem().set("selectable", "false");
 			} else {
-				subFolder.getFolderItem().set("selectable", "true");				
+				subFolder.getFolderItem().set("selectable", "true");
 			}
 		}
 	}
@@ -284,11 +289,40 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
 		}
 	}
 
+	public void findSpecialFolders() {
+		SpecialFoldersItem folders = accountItem.getSpecialFoldersItem();
+
+		for (int i = 0; i < specialFolderNames.length; i++) {
+			// Find special
+			int specialUid = folders.getInteger(specialFolderNames[i]);
+
+			// if have already a suitable folder skip the search
+			if (this.findChildWithUID(specialUid, true) == null) {
+				// search for a folder thats on the IMAP account
+
+				// first try to find the local translation of special
+				FolderTreeNode specialFolder =
+					this.findChildWithName(
+						MailResourceLoader.getString("tree", specialFolderNames[i]),
+						true);
+				if (specialFolder == null) {
+					// fall back to the english version
+					specialFolder = this.findChildWithName(specialFolderNames[i], true);
+				}
+
+				if (specialFolder != null) {
+					// we found a suitable folder -> set it
+					folders.set(specialFolderNames[i], specialFolder.getUid());
+				}
+			}
+		}
+	}
+
 	public void syncSubscribedFolders() {
 		// first clear all flags
 		markAllSubfoldersAsExistOnServer(this, false);
-		
-		IMAPFolder inbox = (IMAPFolder) this.getChild("INBOX");
+
+		IMAPFolder inbox = (IMAPFolder) this.findChildWithName("INBOX", false);
 		inbox.existsOnServer = true;
 
 		try {
@@ -311,8 +345,6 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
 			// remove all subfolders that are not marked as existonserver
 			removeNotMarkedSubfolders(this);
 
-
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -320,6 +352,8 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
 		// This fixes the strange behaviour of the courier imapserver
 		// which sets the \Noselect flag on INBOX
 		inbox.getFolderItem().set("selectable", "true");
+		
+		findSpecialFolders();
 	}
 
 	public IMAPStore getStore() {
@@ -771,20 +805,21 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
 	public void addSubfolder(FolderTreeNode child) throws Exception {
 		String path = child.getName();
 		boolean result = getStore().createFolder(path);
-		
-		if (result) super.addSubfolder(child);
+
+		if (result)
+			super.addSubfolder(child);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.Folder#save()
 	 */
 	public void save() throws Exception {
-		
-		ColumbaLogger.log.debug("Logout from IMAPServer "+ getName());
-		if( ShutdownManager.getMode() == ShutdownManager.SHUTDOWN ) {
+
+		ColumbaLogger.log.debug("Logout from IMAPServer " + getName());
+		if (ShutdownManager.getMode() == ShutdownManager.SHUTDOWN) {
 			getStore().logout();
 		}
-		
+
 	}
 
 }
