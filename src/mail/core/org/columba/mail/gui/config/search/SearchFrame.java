@@ -55,6 +55,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.util.MailResourceLoader;
@@ -259,9 +260,10 @@ public class SearchFrame extends JDialog implements ActionListener {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBackground(Color.white);
 		panel.setPreferredSize(new Dimension(300, 60));
-		panel.setBorder(new CompoundBorder(
-                        new SingleSideEtchedBorder(SwingConstants.BOTTOM),
-                        BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+		panel.setBorder(
+			new CompoundBorder(
+				new SingleSideEtchedBorder(SwingConstants.BOTTOM),
+				BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
 		JPanel leftPanel = new JPanel();
 		leftPanel.setBackground(Color.white);
@@ -408,6 +410,8 @@ public class SearchFrame extends JDialog implements ActionListener {
 			r[0] = new FolderCommandReference(destFolder);
 
 			((AbstractMailFrameController) frameController).setTreeSelection(r);
+
+			MainInterface.processor.addOp(new ViewHeaderListCommand(frameController, r));
 			//frameController.treeController.setSelected(destFolder);
 
 		}
