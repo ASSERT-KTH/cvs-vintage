@@ -348,14 +348,11 @@ public class PGPController {
    * The value null is then returned. If the value is equal to 1 null is
    * returned. If an exception occurring, the exception-message is shown to the
    * user in dialog and null is returned
-   * @param String the message that is to signed
-   * @param PGPItem the item wich holds the passphrase (the userid for the pgp
-   * key)
+   * @param pgpMessage the message that is to signed
+   * @param item the item wich holds the passphrase (the userid for the pgp key)
    * @return String the signed message with the sign string inside. Null, when
    * an error or an exit-value not equal 0 from the whole gpg-util is returned
-   * @todo the id for gpg can unequal to the userid and must be changable
    */
-  
 	public String sign(String pgpMessage, PGPItem item) {
 		exitVal = -1;
 
@@ -372,7 +369,7 @@ public class PGPController {
 
 			if (dialog.success()) {
 				passphrase = new String(dialog.getPassword(), 0, dialog.getPassword().length);
-
+        item.setPassphrase(passphrase);
 				save = dialog.getSave();
 			} else {
 				return new String("");
