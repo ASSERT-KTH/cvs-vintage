@@ -106,7 +106,7 @@ $page.setTitle("Query Results")
 #foreach ($issue in $issueList)
  #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.UniqueId.toString()))
  #indexedRows($velocityCount)
-  <td><input type="checkbox" name="selected_$issue.IssueId" /></td>
+  <td><input type="checkbox" name="selected_$issue.UniqueId" /></td>
   <td><a href="$issueLink">$issue.UniqueId</a></td>
 #foreach ($rmua in $rmuas)
  #set ($userAttribute = $rmua.Attribute)

@@ -66,6 +66,8 @@ import org.apache.fulcrum.intake.model.Field;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
@@ -82,7 +84,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.46 2001/12/21 23:14:58 elicia Exp $
+    @version $Id: Search.java,v 1.47 2002/01/07 17:07:28 jon Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -268,7 +270,11 @@ public class Search extends RequireLoginFirstAction
     */
     public void doReassignselected( RunData data, TemplateContext context )
          throws Exception
-    {        
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Attribute attribute = Attribute.getInstance(AttributePeer.ASSIGNED_TO__PK);
+        scarabR.setAttribute(attribute);
+        
         getSelected(data, context);
         setTarget(data, "AssignIssue.vm");            
     }
