@@ -5,7 +5,7 @@
  <extension name="org.columba.core.action">
   <action name="HelloWorld" class="com.mycom.HelloWorldAction" />
  </extension>
- <extension name="org.columba.mail.core">
+ <extension name="org.columba.core.menu">
   <menu name="menu_utilities" extensionpoint="bottom">
    <menu name="Hello World SubMenu">
    
