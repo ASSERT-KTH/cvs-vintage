@@ -1,6 +1,7 @@
 #set ($action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "MoveIssue2.vm"))
 #set ($user = $data.User)
 #set ($currentModule = $scarabR.CurrentModule)
+#set ($moduleId = $data.Parameters.getString("module_id"))
 #set ($issueId = $data.Parameters.getString("id"))
 #set ($issue = $scarabR.getIssue($issueId))
 
@@ -45,19 +46,27 @@
           <select name="module_id">
              <option>select project</option>
           #foreach( $module in $security.getModules($user, "Issue | Enter") )
-              #if ($module.ModuleId != $currentModule.ModuleId )
-                  <option value="$module.ModuleId">$module.Name</option>
-              #end
-
+                  <option value="$module.ModuleId"
+                  #if ($module.ModuleId.equals($moduleId) )
+                   selected="selected"
+                  #end
+                    >$module.Name</option>
           #end
-                 </select>
+         </select>
           </p>
           
           <h3>Action</h3>
-          <p><input type="radio" name="select_action" value="copy" />&nbsp;copy
+          <p><input type="radio" name="select_action" value="copy" 
+             #if ($select_action.equals("copy") )
+                checked
+             #end />&nbsp;copy
           </p>
-          <p><input type="radio" name="select_action" value="move" />&nbsp;move
+          <p><input type="radio" name="select_action" value="move" 
+             #if ($select_action.equals("move") )
+                checked
+             #end />&nbsp;move
           </p>  
+          
           
                         
 <p class="functnbar"><input type="submit" value="map issue attributes" name="eventSubmit_doMapattributes" /></p>
