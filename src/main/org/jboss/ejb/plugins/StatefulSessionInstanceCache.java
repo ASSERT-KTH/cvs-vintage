@@ -27,7 +27,7 @@ import org.jboss.ejb.StatefulSessionPersistenceManager;
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class StatefulSessionInstanceCache
     extends AbstractInstanceCache
@@ -102,6 +102,10 @@ public class StatefulSessionInstanceCache
         {
             // The context is in the interceptor chain
             return false;
+        }
+        else if (m_container.getLockManager().canPassivate(ctx.getId())) 
+        {
+           return false;
         }
         else
         {
