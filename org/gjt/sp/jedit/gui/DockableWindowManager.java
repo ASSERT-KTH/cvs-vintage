@@ -102,7 +102,7 @@ package org.gjt.sp.jedit.gui;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.97 2004/05/29 01:55:25 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.98 2004/06/09 16:48:40 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -356,7 +356,7 @@ public class DockableWindowManager extends JPanel implements EBComponent
 						dockableName,code,actions);
 					cachedDockableNames.add(dockableName);
 					cachedDockableActionFlags.add(
-						Boolean.valueOf(actions));
+						new Boolean(actions));
 					// make default be true for the next
 					// action
 					actions = true;

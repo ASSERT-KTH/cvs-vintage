@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.107 2004/05/29 01:55:24 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.108 2004/06/09 16:48:40 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -820,7 +820,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 					Hashtable props = new Hashtable();
 					props.put(Buffer.ENCODING,currentEncoding);
 					props.put(Buffer.ENCODING_AUTODETECT,
-						Boolean.valueOf(autoDetectEncoding));
+						new Boolean(autoDetectEncoding));
 					_buffer = jEdit.openFile(null,null,
 						file.path,false,props);
 				}

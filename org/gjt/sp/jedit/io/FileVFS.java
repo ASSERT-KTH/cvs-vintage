@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.46 2004/03/06 22:56:08 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.47 2004/06/09 16:48:40 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -468,9 +468,12 @@ public class FileVFS extends VFS
 					process.getInputStream().close();
 					process.getOutputStream().close();
 					process.getErrorStream().close();
-					int exitCode = process.waitFor();
+					// Jun 9 2004 12:40 PM
+					// waitFor() hangs on some Java
+					// implementations.
+					/* int exitCode = process.waitFor();
 					if(exitCode != 0)
-						Log.log(Log.NOTICE,FileVFS.class,"chmod exited with code " + exitCode);
+						Log.log(Log.NOTICE,FileVFS.class,"chmod exited with code " + exitCode); */
 				}
 
 				// Feb 4 2000 5:30 PM
