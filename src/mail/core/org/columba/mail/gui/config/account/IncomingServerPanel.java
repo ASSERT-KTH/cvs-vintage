@@ -23,6 +23,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -622,7 +623,37 @@ public class IncomingServerPanel extends DefaultPanel implements
 			//$NON-NLS-1$
 			return false;
 		}
+		else if (defaultAccountCheckBox.isSelected())
+		{
+		  AccountItem defaultAccount = 
+		    MailInterface.config.getAccountList().getDefaultAccount();
+		  
+			if (defaultAccount.getAccountType() !=
+					accountItem.getAccountType())
+			{
 
+			  String errorMessage = 
+			    MailResourceLoader.getString(	"dialog", 
+			                                	"account", 
+			                                  "cannot_use_default_account");
+
+			  Object[] accountType = new Object[]
+				                     			{defaultAccount.getAccountTypeDescription()};
+			  
+				errorMessage = MessageFormat.format(errorMessage,accountType);
+				
+				JOptionPane.showMessageDialog(null, errorMessage);
+				
+				return false;
+			}
+		}
+		else if (!AccountItem.validHostname(host))
+		{
+			JOptionPane.showMessageDialog(null, MailResourceLoader.getString(
+					"dialog", "account", "invalid_inhostname"));
+			return false;		  
+		}
+	
 		return true;
 	}
 }
