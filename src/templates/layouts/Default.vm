@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN"
-    "http://style.tigris.org/nonav/tigris_transitional.dtd">
+    "$staticLink.setPath("/style/tigris_transitional.dtd")">
 <html>
  <head>
   <title>Scarab: $title</title>

@@ -1,5 +1,6 @@
 <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
-    "http://www.collabnet.com/dtds/collabnet_transitional_10.dtd">
+    "$staticLink.setPath("/style/tigris_transitional.dtd")">
+
 #set ($page.Title = $l10n.Title)
 <html>
  <head>
