@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.2 $
+*   @version $Revision: 1.3 $
 *    extends StatelessSessionContainer
 */
 public class MessageDrivenContainer
@@ -131,11 +131,7 @@ extends Container
         super.init();
         
         // Map the bean methods
-        setupBeanMapping();
-        
-        // Map the home methods
-	// Are these vallid, probalye not!!
-        //setupHomeMapping();
+        setupBeanMapping();        
         
         // Initialize pool 
         instancePool.init();
@@ -155,7 +151,7 @@ extends Container
         // Reset classloader  
         Thread.currentThread().setContextClassLoader(oldCl);
 	}catch(Throwable ex) {
-	    Logger.error("Serius error in init: " + ex);
+	    Logger.error("Serious error in init: " + ex);
 	    //DEBUG ex.printStackTrace();
 	    throw new Exception(ex.toString());
 	}
@@ -274,8 +270,6 @@ extends Container
         throws java.rmi.RemoteException, CreateException
     {
 	throw new Error("Not valid for MessageDriven beans");
-        //Object obj = containerInvoker.getStatelessSessionEJBObject();
-        //return (EJBObject)obj;
     }
     
 
@@ -328,9 +322,9 @@ extends Container
 	    msgInterfaceClass = Class.forName(msgInterface);
 	    argumentClass = Class.forName(msgArgument);
 	} catch(ClassNotFoundException ex) {
-	    Logger.error("Could not the classes for message interface" + msgInterface);
+	    Logger.error("Could not get the classes for message interface" + msgInterface);
 	    // Hackish
-	    throw new NoSuchMethodException("Could not the classes for message interface" + msgInterface + ": " + ex);
+	    throw new NoSuchMethodException("Could not get the classes for message interface" + msgInterface + ": " + ex);
 	}
 	Method m = msgInterfaceClass.getMethod(msgMethod, new Class[] {argumentClass});
 	// Implemented by bean
@@ -380,65 +374,30 @@ extends Container
             // Get method and instance to invoke upon
             Method m = (Method)beanMapping.get(mi.getMethod());
             
-            //If we have a method that needs to be done by the container (EJBObject methods)
-	    // Here we may have a problem! MessageDriven beans does not 
-	    // have a remote inteface, is the methods here only the
-	    // ones in the EJBObject remote interface, or are there
-	    // others????
-
-
-	    /*
-            if (m.getDeclaringClass().equals(StatelessSessionContainer.class)) 
-            {
-                try 
-                {
-                    return m.invoke(StatelessSessionContainer.this, new Object[] { mi });
-                } catch (IllegalAccessException e)
-				{
-	    */
-	    // Throw this as a bean exception...(?)
-	    /*
-					throw new EJBException(e);
-				} catch (InvocationTargetException e) 
-	            {
-	                Throwable ex = e.getTargetException();
-	                if (ex instanceof EJBException)
-	                   throw (EJBException)ex;
-	                else if (ex instanceof RuntimeException)
-	                   throw new EJBException((Exception)ex);
-	    */
-	    // Transform runtime exception into what a bean *should* have thrown
-	    /*
-	                else if (ex instanceof Exception)
-	                   throw (Exception)ex;
-	                else
-	                   throw (Error)ex;
-	            }
-            } else 
-	    */
+           
 	    // we have a method that needs to be done by a bean instance
             {    
-				// Invoke and handle exceptions
-      		    try 
+		// Invoke and handle exceptions
+		try 
                 {
             	    return m.invoke(mi.getEnterpriseContext().getInstance(), mi.getArguments());
                 } catch (IllegalAccessException e)
-				{
-					// Throw this as a bean exception...(?)
-					throw new EJBException(e);
-				} catch (InvocationTargetException e) 
-                {
-                    Throwable ex = e.getTargetException();
-                    if (ex instanceof EJBException)
-                       throw (EJBException)ex;
-                    else if (ex instanceof RuntimeException)
-                       throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
-                    else if (ex instanceof Exception)
-                       throw (Exception)ex;
-                    else
-                       throw (Error)ex;
-	            }
-  	         }
+		    {
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		    } catch (InvocationTargetException e) 
+			{
+			    Throwable ex = e.getTargetException();
+			    if (ex instanceof EJBException)
+				throw (EJBException)ex;
+			    else if (ex instanceof RuntimeException)
+				throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
+			    else if (ex instanceof Exception)
+				throw (Exception)ex;
+			    else
+				throw (Error)ex;
+			}
+	    }
         }
     }
 }

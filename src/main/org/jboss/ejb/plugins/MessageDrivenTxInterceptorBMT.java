@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Peter Antman (peter.antman@tim.se)
-*   @version $Revision: 1.3 $
+*   @version $Revision: 1.4 $
 */
 public class MessageDrivenTxInterceptorBMT
 extends TxInterceptorBMT
@@ -50,33 +50,33 @@ extends TxInterceptorBMT
         // Store old UserTX
         Object oldUserTx = userTransaction.get();
         
-    
-    
-    // retrieve the real userTransaction
-    userTransaction.set(((MessageDrivenEnterpriseContext)mi.getEnterpriseContext()).getMessageDrivenContext().getUserTransaction());
-            
+	
+	
+	// retrieve the real userTransaction
+	userTransaction.set(((MessageDrivenEnterpriseContext)mi.getEnterpriseContext()).getMessageDrivenContext().getUserTransaction());
+	
         
         
         // t1 refers to the client transaction (spec ejb1.1, 11.6.1, p174)
         // this is necessary for optimized (inVM) calls: threads come associated with the client transaction
         Transaction t1 = tm.disassociateThread();
         
-//DEBUG     Logger.debug("TxInterceptorBMT disassociate" + ((t1==null) ? "null": Integer.toString(t1.hashCode())));
-    
+	//DEBUG     Logger.debug("TxInterceptorBMT disassociate" + ((t1==null) ? "null": Integer.toString(t1.hashCode())));
+	
         // t2 refers to the instance transaction (spec ejb1.1, 11.6.1, p174) 
         Transaction t2 = mi.getEnterpriseContext().getTransaction();
-    
-    // This is BMT so the transaction is dictated by the Bean, the MethodInvocation follows
-    mi.setTransaction(t2);
+	
+	// This is BMT so the transaction is dictated by the Bean, the MethodInvocation follows
+	mi.setTransaction(t2);
         
-    //DEBUG Logger.debug("TxInterceptorBMT t2 in context" + ((t2==null) ? "null": Integer.toString(t2.hashCode())));
+	//DEBUG Logger.debug("TxInterceptorBMT t2 in context" + ((t2==null) ? "null": Integer.toString(t2.hashCode())));
         
         try {
         
         if (t2 != null) {
         
                 // associate the transaction to the thread
-        tm.associateThread(t2);
+	    tm.associateThread(t2);
         
         }
         
@@ -164,4 +164,7 @@ extends TxInterceptorBMT
             }
     }
 }
+
+
+
 

@@ -40,5 +40,9 @@ public interface JMSProviderLoaderMBean
     public void setProviderAdapterClass(String clazz);
     
     public String getProviderAdapterClass();
+
+    public void setProviderUrl(String url);
+
+    public String getProviderUrl();
     
 }

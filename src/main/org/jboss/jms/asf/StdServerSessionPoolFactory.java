@@ -44,23 +44,8 @@ public class StdServerSessionPoolFactory implements ServerSessionPoolFactory, ja
     public String getName(){return name;}
     
     public ServerSessionPool getServerSessionPool(Connection con, int maxSession, boolean isTransacted, int ack, MessageListener listener) throws JMSException {
-	/* 
-	   This is probably basically fucked up. The ServerSessionPool in
-	   OpenJMS is a Singleton. Every one that uses it will end up in
-	   the same Connection and against the same messagelistener.
-	*/
-
-	// We need a pool, but what should we key on, a guess the adress
-	// of the listener is the only really uniqe here
-	String key = listener.toString();// Or hash?
-	
-	if (pools.containsKey(key)) {
-	    return (ServerSessionPool)pools.get(key);
-	} else {
-
 	    ServerSessionPool pool =  (ServerSessionPool)new StdServerSessionPool(con,  isTransacted, ack, listener,maxSession);
-	    pools.put(key, pool);
 	    return pool;
-	}
+	    //}
     }
 } // StdServerSessionPoolFactory

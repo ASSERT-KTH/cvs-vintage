@@ -17,6 +17,8 @@
  */
 package org.jboss.jms.jndi;
 
+import java.util.Hashtable;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -33,20 +35,39 @@ import javax.naming.NamingException;
 public class JBossMQProvider implements JMSProviderAdapter, java.io.Serializable{
     public static final String TOPIC_CONNECTION_FACTORY="XATopicConnectionFactory";
     public static final String QUEUE_CONNECTION_FACTORY="XAQueueConnectionFactory";
-    
+    public static final String INITIAL_CONTEXT_FACTORY = "org.jnp.interfaces.NamingContextFactory";
+    public static final String URL_PKG_PREFIXES = "org.jboss.naming";
+    private static final String SECURITY_MANAGER="java.naming.rmi.security.manager";
+
+    private String hasJndiSecurityManager = "yes";
     private String name;
     private String url;
     public JBossMQProvider() {
 	
     }
     
-    public void setProviderUrl(String url) {this.url = url;}
+    public void setProviderUrl(String url) {
+	this.url = url;
+
+    }
     public String getProviderUrl() { return url;    }
     public void setName(String name) {this.name = name;}
     public String getName() {return name;}
     public Context getInitialContext() throws NamingException {
-	return new InitialContext();//Only for Jboss embedded now
-
+	Context ctx = null;
+	if (url == null) {
+	    // Use default
+	    ctx = new InitialContext();//Only for Jboss embedded now
+	} else {
+	    //Try another location
+	    Hashtable props = new Hashtable();
+	    props.put(Context.INITIAL_CONTEXT_FACTORY, INITIAL_CONTEXT_FACTORY);
+	    props.put(Context.PROVIDER_URL, url);
+	    props.put(SECURITY_MANAGER, hasJndiSecurityManager);
+	    props.put(Context.URL_PKG_PREFIXES, URL_PKG_PREFIXES);
+	    ctx = new InitialContext(props);
+	}
+	return ctx;
     }
     public  String getTopicFactoryName(){return TOPIC_CONNECTION_FACTORY;}
     public String getQueueFactoryName(){return QUEUE_CONNECTION_FACTORY;}

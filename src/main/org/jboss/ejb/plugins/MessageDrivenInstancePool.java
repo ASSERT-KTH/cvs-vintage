@@ -18,7 +18,7 @@ import org.jboss.ejb.MessageDrivenEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *      @author Peter Antman (peter.antman@tim.se)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class MessageDrivenInstancePool
    extends AbstractInstancePool
@@ -53,3 +53,9 @@ public class MessageDrivenInstancePool
    // Inner classes -------------------------------------------------
 
 }
+
+
+
+
+
+

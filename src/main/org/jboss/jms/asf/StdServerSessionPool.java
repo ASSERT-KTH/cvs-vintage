@@ -55,34 +55,26 @@ public class StdServerSessionPool implements ServerSessionPool {
     private ThreadPool threadPool = new ThreadPool();
     private Vector sessionPool = new Vector();
     
-	boolean isTransacted() {
-		return transacted;
-	}
-
-
+    boolean isTransacted() {
+	return transacted;
+    }
+    
+    
     /**
      * Minimal constructor, could also have stuff for pool size
      */
     public StdServerSessionPool(Connection con, boolean transacted, int ack, MessageListener listener) throws JMSException{
 	this(con,transacted,ack,listener,DEFAULT_POOL_SIZE);
-	/*
-	    this.ack = ack;
-	    this.listener = listener;
-	    this.transacted = transacted;
-	    threadPool.setMaximumSize(poolSize);
-	
-	    init();
-	*/
     }
-     public StdServerSessionPool(Connection con, boolean transacted, int ack, MessageListener listener, int maxSession) throws JMSException{
-	 this.con = con;
-	 this.ack = ack;
-	 this.listener = listener;
-	 this.transacted = transacted;
-	 this.poolSize = maxSession;
-	 threadPool.setMaximumSize(poolSize);
-	 init();
-	 Logger.debug("Server Session pool set up");
+    public StdServerSessionPool(Connection con, boolean transacted, int ack, MessageListener listener, int maxSession) throws JMSException{
+	this.con = con;
+	this.ack = ack;
+	this.listener = listener;
+	this.transacted = transacted;
+	this.poolSize = maxSession;
+	threadPool.setMaximumSize(poolSize);
+	init();
+	Logger.debug("Server Session pool set up");
      }
     // --- JMS API for ServerSessionPool
 

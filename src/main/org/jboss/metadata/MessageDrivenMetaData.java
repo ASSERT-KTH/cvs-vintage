@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
 ' *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
 
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class MessageDrivenMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -80,12 +80,12 @@ public class MessageDrivenMetaData extends BeanMetaData {
 	public void importEjbJarXml(Element element) throws DeploymentException {
 		super.importEjbJarXml(element);
 		
-		messageSelector = getElementContent(getUniqueChild(element, "jms-message-selector"));
+		messageSelector = getElementContent(getUniqueChild(element, "message-selector"));
 
 		// set 
 		Element destination = getUniqueChild(element, "message-driven-destination");
 		destinationType = getElementContent(getUniqueChild(destination
-, "jms-destination-type"));
+, "destination-type"));
 		 
 		if (destinationType.equals("javax.jms.Topic")) {
 			String subscr = getElementContent(getUniqueChild(destination, "subscription-durability"));
@@ -126,6 +126,12 @@ public class MessageDrivenMetaData extends BeanMetaData {
 
 			   But for NOT_SUPPORTED this is not true here we 
 			   should have AUTO_ACKNOWLEDGE_MODE
+
+			   This is not true for now. For JBossMQ we relly 
+			   completely on transaction handling. For JBossMQ, the
+			   ackmode is actually not relevant. We keep it here
+			   anyway, if we find that this is needed for other
+			   JMS provider, or is not good.
 			   
 			*/
 

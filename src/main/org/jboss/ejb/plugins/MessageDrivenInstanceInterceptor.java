@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  *   @see <related>
  *   @author Peter Antman (peter.antman@tim.se)
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class MessageDrivenInstanceInterceptor
    extends StatelessSessionInstanceInterceptor
@@ -76,3 +76,4 @@ public class MessageDrivenInstanceInterceptor
       }
    }
 }
+
