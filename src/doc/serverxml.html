@@ -3,11 +3,11 @@
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <!-- $Id: serverxml.html,v 1.6 2001/10/08 05:30:02 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.7 2001/10/09 17:46:27 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="style.css">
-  <title>Server.xml configuration in tomcat 3.3</title>
+  <title>Server.xml Configuration in Tomcat 3.3</title>
 </head>
 
 <body>
@@ -23,9 +23,11 @@
       </tr>
 </table>
 
+<h1>Server.xml Configuration in Tomcat 3.3</h1>
+
 <h2>General configuration</h2>
 
-<p>Tomcat is implemented using a set of modules. Each module has a
+<p>Tomcat 3.3 is implemented using a set of modules. Each module has a
 number of settable properties and implements one or more 'hooks', providing a
 piece of functionality.</p>
 
@@ -121,7 +123,7 @@ some of the childen it supports:</p>
 	  in ant.</dd>
 </dl>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -159,13 +161,13 @@ some of the childen it supports:</p>
 <h2>Module Configuration Elements</h2>
 
 <p>It is the set of modules and their configuration that control the behavior
-of the Tomcat web server.  By specifying which modules and their parameters you
+of the Tomcat web server.  By specifying which modules and their attributes, you
 have a lot of flexibility in controlling the features of your instance of
 Tomcat.</p>
 
 <p>Note that &quot;interceptor&quot; is a name that used in the past, prior to
 the adoption of the name &quot;module&quot;.  It should be considered synonomous
-with &quot;modele&quot;.  &quot;Interceptor&quot; will appear various in places,
+with &quot;module&quot;.  &quot;Interceptor&quot; will appear various in places,
 especially in module names and their classes.</p>
 
 <p>The list of modules below is in alphabetical order. Functionally, they may
@@ -242,49 +244,6 @@ be grouped as follows:</p>
 
 <!-- ======================================== -->
 
-<h3>ELEMENT</h3>
-
-<p><b>Type:</b> </p>
-
-<h4>Description</h4>
-
-<p></p>
-
-<h4>Parameters</h4>
-
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr valign="top">
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr valign="top">
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr valign="top">
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr valign="top">
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
-
-<h4>Example(s)</h4>
-
-<pre>
-
-</pre>
-
-<hr size="5">
-
-<!-- ======================================== -->
-
 <h3><a name="AccessInterceptor">AccessInterceptor</a></h3>
 
 <p><b>Type:</b> Access, Authentication, and Authorization</p>
@@ -295,7 +254,7 @@ be grouped as follows:</p>
 a request and provides the handling for BASIC and FORM authentication if
 necessary.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -324,11 +283,65 @@ necessary.</p>
 
 <h3><a name="AccessLogInterceptor">AccessLogInterceptor</a></h3>
 
+<p><b>Type:</b> </p>
+
+<h4>Description</h4>
+
+<p></p>
+
+<h4>Attributes</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+
+</pre>
+
 <hr size="5">
 
 <!-- ======================================== -->
 
 <h3><a name="AccountingInterceptor">AccountingInterceptor</a></h3>
+
+<p><b>Type:</b> </p>
+
+<h4>Description</h4>
+
+<p></p>
+
+<h4>Attributes</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+
+</pre>
 
 <hr size="5">
 
@@ -343,7 +356,7 @@ necessary.</p>
 <p>Handle incoming Ajp12 requests.  Ajp12 is a protocol used by the mod_jk
 based web server connectors and the mod_jserv connector.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -440,7 +453,7 @@ based web server connectors and the mod_jserv connector.</p>
 <p>Handle incoming Ajp13 requests.  Ajp13 is a protocol used by the mod_jk
 based web server connectors.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -543,7 +556,7 @@ To generate the configuration files during normal startup, add:
 to the <code>&lt;ContextManager ... &gt;</code> element in the
 <code>server.xml</code> file.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -636,7 +649,7 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
 
 <p>Automatically expand WAR files on startup.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -680,7 +693,7 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
 
 <p>Automatically adds web application contexts from a directory.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -757,7 +770,7 @@ the default context settings.</p>
 <p>For details on the syntax of the context configuration file, refer to the
 <a href="tomcat-ug.html#customizing_contexts">Customizing Contexts</a> section
 of the <a href="tomcat-ug.html">Tomcat 3.3 Users Guide</a>.</p>
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -797,9 +810,9 @@ authetication.</p>
 <p>This module must appear prior to the &quot;realm&quot; module that performs
 the authentication.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
-<p>This module has no user settable parameters.</p>
+<p>This module has no user settable attributes.</p>
 
 <h4>Example(s)</h4>
 
@@ -821,7 +834,7 @@ the authentication.</p>
 optionally normalizing the request and optionally checking the request for
 unsafe escape sequences.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -898,7 +911,7 @@ unsafe escape sequences.</p>
 appropriate error handler if specified, or generates the default
 error response if not specified.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -934,7 +947,7 @@ error response if not specified.</p>
 
 <p>Handles incomming HTTP, or optionally HTTPS, requests.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -1068,7 +1081,7 @@ the configuration files during normal startup, add:
 to the <code>&lt;ContextManager ... &gt;</code> element in the
 <code>server.xml</code> file.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -1153,9 +1166,9 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
 <p>Provides support for the &quot;/servlet/<i>class name</i>&quot; legacy
 method of invoking servlets.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
-<p>This module has no user settable parameters.</p>
+<p>This module has no user settable attributes.</p>
 
 <h4>Example(s)</h4>
 
@@ -1177,7 +1190,7 @@ method of invoking servlets.</p>
 occurs using data from &quot;user&quot; and &quot;user roles&quot; tables
 accessed using a JDBC connection.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -1265,9 +1278,9 @@ accessed using a JDBC connection.</p>
 <p>Insures that the proper context classloader is in effect during servlet
 execution.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
-<p>This module has no user settable parameters.</p>
+<p>This module has no user settable attributes.</p>
 
 <h4>Example(s)</h4>
 
@@ -1280,6 +1293,33 @@ execution.</p>
 <!-- ======================================== -->
 
 <h3><a name="JniConnector">JniConnector</a></h3>
+
+<p><b>Type:</b> </p>
+
+<h4>Description</h4>
+
+<p></p>
+
+<h4>Attributes</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+
+</pre>
 
 <hr size="5">
 
@@ -1309,7 +1349,7 @@ To generate the configuration files during normal startup, add:
 to the <code>&lt;ContextManager ... &gt;</code> element in the
 <code>server.xml</code> file.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -1390,7 +1430,7 @@ file directly rather than using Jasper for the class compilation.</p>
 <p>There is support for using Sun's <code>javac</code> Java compiler as well
 as IBM's <code>Jikes</code> Java compiler.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -1539,13 +1579,31 @@ parent and &quot;untrusted&quot; contexts get the
 <a href="tomcat-ug.html#configuring_classes">Apps Classloader</a> as their
 parent.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
     <th>Attribute</th>
     <th>Description</th>
     <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>jaxp</td>
+    <td>Enables providing a default XML parser to web applications that don't
+      already have one.  If the <code>javax.xml.parsers.SAXParserFactory</code>
+      class is found in a web application, it is assumed to already contain
+      an XML parser and not action is taken for that web application.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>jaxpDir</td>
+    <td>Directory where Jaxp jars are located.</td>
+    <td>lib/container</td>
+  </tr>
+  <tr valign="top">
+    <td>jaxpJars</td>
+    <td>List of jars to be added, separated by colons.</td>
+    <td>jaxp.jar:crimson.jar:xalan.jar:xerces.jar</td>
   </tr>
   <tr valign="top">
     <td>useNoParent</td>
@@ -1572,7 +1630,7 @@ parent.</p>
 <h4>Example(s)</h4>
 
 <pre>
-&lt;LoaderInterceptor11 /&gt;
+&lt;LoaderInterceptor11 jaxp=&quot;true&quot; /&gt;
 </pre>
 
 <hr size="5">
@@ -1588,15 +1646,17 @@ parent.</p>
 <p>Handles pre-loading of servlets specified as &lt;load-on-startup&gt; in a
 Context's web.xml file. </p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
-<p>This module has no user settable parameters.</p>
+<p>This module has no user settable attributes.</p>
 
 <h4>Example(s)</h4>
 
 <pre>
 &lt;LoadOnStartupInterceptor /&gt;
 </pre>
+
+<hr size="5">
 
 <!-- ======================================== -->
 
@@ -1611,7 +1671,7 @@ output goes to the ContextManager's log channel. Event logging is
 automatically enabled if the ContextManager's debug level is set greater
 than 5.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -1644,7 +1704,7 @@ than 5.</p>
 
 <p>Configures a log channel.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -1722,7 +1782,7 @@ the configuration files during normal startup, add:
 to the <code>&lt;ContextManager ... &gt;</code> element in the
 <code>server.xml</code> file.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -1817,7 +1877,7 @@ specify a &quot;-Djava.security.policy=...&quot; in the startup command
 for the Java VM. Setting the policy on the command line is the
 preferred method.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -1863,7 +1923,7 @@ preferred method.</p>
 
 <p>Handles reloading of servlets and contexts.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -1898,7 +1958,7 @@ preferred method.</p>
 
 <p>Handles actual descruction of expired sessions.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -1931,7 +1991,7 @@ preferred method.</p>
 
 <p>Handles associating sessions with requests and responses..</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -1977,7 +2037,7 @@ preferred method.</p>
 
 <p>Creates new session id's when needed for a request.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -2028,7 +2088,7 @@ as the <a href="#JDBCRealm">JDBCRealm</a>.</p>
 <p>This module must follow the
 <a href="#CredentialsInterceptor">CredentialsInterceptor</a>.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -2072,7 +2132,7 @@ as the <a href="#JDBCRealm">JDBCRealm</a>.</p>
 <p><b>Note:</b> This module must follow the <a href="#SessionId">SessionId</a>
 module.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -2108,9 +2168,9 @@ module.</p>
 <p>Handles some miscellaneous tasks the help implement behavior related to the
 Servlet 2.2 specification.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
-<p>This module has no user settable parameters.</p>
+<p>This module has no user settable attributes.</p>
 
 <h4>Example(s)</h4>
 
@@ -2130,7 +2190,7 @@ Servlet 2.2 specification.</p>
 
 <p>Handles the mapping of requests to the appropriate context.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -2173,7 +2233,7 @@ Servlet 2.2 specification.</p>
 <p>Generates the response for requests that map to static files or 
 directories.  The display of directory listings may be disabled.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -2212,9 +2272,9 @@ objects are retrieved from the pool rather than recreated.</p>
 <p>If this module is not present, tag objects can't be retrieved from the pool
 and tag objects are created for each use.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
-<p>This module has no user settable parameters.</p>
+<p>This module has no user settable attributes.</p>
 
 <h4>Example(s)</h4>
 
@@ -2237,9 +2297,9 @@ and tag objects are created for each use.</p>
 This file can specify modules to be added to the server as if they were
 specified in the <code>server.xml</code> file.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
-<p>This module has no user settable parameters.</p>
+<p>This module has no user settable attributes.</p>
 
 <h4>Example(s)</h4>
 
@@ -2259,7 +2319,7 @@ specified in the <code>server.xml</code> file.</p>
 
 <p>Reads the <code>WEB-INF/web.xml</code> file for each context.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -2297,7 +2357,7 @@ specified in the <code>server.xml</code> file.</p>
 <p>Set the &quot;work&quot; directory for contexts which don't have the
 &quot;work&quot; directory specified explicitly.</p>
 
-<h4>Parameters</h4>
+<h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
