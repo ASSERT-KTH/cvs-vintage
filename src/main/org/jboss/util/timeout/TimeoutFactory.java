@@ -22,9 +22,13 @@ import org.jboss.logging.Logger;
  *  allocating anything on the heap.
  *   
  *  @author <a href="osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 public class TimeoutFactory {
+
+  //  Code commented out with the mark "INV:" are runtime checks
+  //  of invariants that are not needed for a production system.
+  //  For problem solving, you can remove these comments.
 
   //  Multithreading notes:
   //
@@ -293,14 +297,14 @@ public class TimeoutFactory {
    *  Swap two nodes in the tree.
    */
   private void swap(int a, int b) {
-      assert(a > 0);
-      assert(a <= size);
-      assert(b > 0);
-      assert(b <= size);
-      assert(q[a] != null);
-      assert(q[b] != null);
-      assert(q[a].index == a);
-      assert(q[b].index == b);
+      // INV: assert(a > 0);
+      // INV: assert(a <= size);
+      // INV: assert(b > 0);
+      // INV: assert(b <= size);
+      // INV: assert(q[a] != null);
+      // INV: assert(q[b] != null);
+      // INV: assert(q[a].index == a);
+      // INV: assert(q[b].index == b);
       TimeoutImpl temp = q[a];
       q[a] = q[b];
       q[a].index = a;
@@ -315,9 +319,9 @@ public class TimeoutFactory {
    *  @return True iff the tree was modified.
    */
   private boolean normalizeUp(int index) {
-    assert(index > 0);
-    assert(index <= size);
-    assert(q[index] != null);
+    // INV: assert(index > 0);
+    // INV: assert(index <= size);
+    // INV: assert(q[index] != null);
 
     if (index == 1)
       return false; // at root
@@ -327,7 +331,7 @@ public class TimeoutFactory {
     int p = index >> 1;
 
     while (q[p].time > t) {
-      assert(q[index].time == t);
+      // INV: assert(q[index].time == t);
       swap(p, index);
       ret = true;
 
@@ -346,11 +350,11 @@ public class TimeoutFactory {
    *  @return The removed node.
    */
   private TimeoutImpl removeNode(int index) {
-    assert(index > 0);
-    assert(index <= size);
+    // INV: assert(index > 0);
+    // INV: assert(index <= size);
     TimeoutImpl res = q[index];
-    assert(res != null);
-    assert(res.index == index);
+    // INV: assert(res != null);
+    // INV: assert(res.index == index);
 
     if (index == size)  {
       --size;
@@ -361,7 +365,7 @@ public class TimeoutFactory {
     swap(index, size); // Exchange removed node with last leaf node
     --size;
 
-    assert(res.index == size + 1);
+    // INV: assert(res.index == size + 1);
     q[res.index] = null;
 
     if (normalizeUp(index))
@@ -371,17 +375,17 @@ public class TimeoutFactory {
     int c = index << 1;
 
     while (c <= size) {
-      assert(q[index].time == t);
+      // INV: assert(q[index].time == t);
 
       TimeoutImpl l = q[c];
-      assert(l != null);
-      assert(l.index == c);
+      // INV: assert(l != null);
+      // INV: assert(l.index == c);
 
       if (c+1 <= size) {
         // two children, swap with smallest
         TimeoutImpl r = q[c+1];
-        assert(r != null);
-        assert(r.index == c+1);
+        // INV: assert(r != null);
+        // INV: assert(r.index == c+1);
 
         if (l.time <= r.time) {
           if (t <= l.time)
@@ -411,24 +415,24 @@ public class TimeoutFactory {
    *  Create a new timeout.
    */
   private synchronized Timeout newTimeout(long time, TimeoutTarget target) {
-    checkTree();
+    // INV: checkTree();
 
-    assert(size < q.length);
+    // INV: assert(size < q.length);
     if (++size == q.length) {
       TimeoutImpl[] newQ = new TimeoutImpl[2*q.length];
       System.arraycopy(q, 0, newQ, 0, q.length);
       q = newQ;
     }
-    assert(size < q.length);
-    assert(q[size] == null);
+    // INV: assert(size < q.length);
+    // INV: assert(q[size] == null);
 
     TimeoutImpl timeout;
 
     if (freeList != null) {
       timeout = q[size] = freeList;
       freeList = timeout.nextFree;
-      checkFreeList();
-      assert(timeout.index == TimeoutImpl.DONE);
+      // INV: checkFreeList();
+      // INV: assert(timeout.index == TimeoutImpl.DONE);
     } else
       timeout = q[size] = new TimeoutImpl();
 
@@ -441,7 +445,7 @@ public class TimeoutFactory {
     if (timeout.index == 1)
       notify();
 
-    checkTree();
+    // INV: checkTree();
 
     return timeout;
   }
@@ -453,14 +457,14 @@ public class TimeoutFactory {
     synchronized (this) {
       if (timeout.index > 0) {
         // Active timeout, remove it.
-        assert(q[timeout.index] == timeout);
-        checkTree();
+        // INV: assert(q[timeout.index] == timeout);
+        // INV: checkTree();
         removeNode(timeout.index);
-        checkTree();
+        // INV: checkTree();
         timeout.index = TimeoutImpl.DONE;
         timeout.nextFree = freeList;
         freeList = timeout;
-        checkFreeList();
+        // INV: checkFreeList();
         return;
       }
     }
