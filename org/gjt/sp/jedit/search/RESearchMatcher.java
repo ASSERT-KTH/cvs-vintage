@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 /**
  * A regular expression string matcher.
  * @author Slava Pestov
- * @version $Id: RESearchMatcher.java,v 1.15 2002/06/02 06:07:31 spestov Exp $
+ * @version $Id: RESearchMatcher.java,v 1.16 2002/12/10 22:32:36 spestov Exp $
  */
 public class RESearchMatcher implements SearchMatcher
 {
@@ -85,13 +85,15 @@ public class RESearchMatcher implements SearchMatcher
 	 * @param end True if the end of the segment is the end of the buffer
 	 * @param firstTime If false and the search string matched at the start
 	 * offset with length zero, automatically find next match
+	 * @param reverse If true, searching will be performed in a backward
+	 * direction.
 	 * @return an array where the first element is the start offset
 	 * of the match, and the second element is the end offset of
 	 * the match
-	 * @since jEdit 4.0pre7
+	 * @since jEdit 4.1pre7
 	 */
 	public int[] nextMatch(CharIndexed text, boolean start, boolean end,
-		boolean firstTime)
+		boolean firstTime, boolean reverse)
 	{
 		int flags = 0;
 
