@@ -1144,6 +1144,7 @@ public class IssueSearch
         Criteria crit = new Criteria();
         crit.add(IssuePeer.MODULE_ID, getModule().getModuleId());
         crit.add(IssuePeer.TYPE_ID, getIssueType().getIssueTypeId());
+        crit.add(IssuePeer.DELETED, false);
 
         // add option values
         Criteria tempCrit = new Criteria(2)
