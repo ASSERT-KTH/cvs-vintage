@@ -1,4 +1,4 @@
-// $Id: GUITestProjectBrowser.java,v 1.5 2004/11/01 19:55:22 mvw Exp $
+// $Id: GUITestProjectBrowser.java,v 1.6 2004/12/18 18:51:49 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,15 +130,15 @@ public class GUITestProjectBrowser extends TestCase {
         ProjectBrowser pb = ProjectBrowser.getInstance();
 
 	pb.setTarget(diagram1);
-	assertEquals(diagram1, pb.getTarget());
+	assertEquals("Diagram1 should be the target", diagram1, pb.getTarget());
 
 	pb.setTarget(diagram2);
-	assertEquals(diagram2, pb.getTarget());
+	assertEquals("Diagram2 should be the target", diagram2, pb.getTarget());
 
-	UmlFactory.getFactory().delete(package2);
+	ProjectManager.getManager().getCurrentProject().moveToTrash(package2);
 	ProjectManager pm = ProjectManager.getManager();
-	assertEquals(pm.getCurrentProject().getDiagrams().get(0), 
-		     pb.getTarget());
+	assertEquals("The target is not reset to the first diagram", 
+            pm.getCurrentProject().getDiagrams().get(0), pb.getTarget());
     }
 
     /**
