@@ -1,4 +1,4 @@
-// $Id: AnonymousClassCodePiece.java,v 1.7 2003/06/30 18:00:18 linus Exp $
+// $Id: AnonymousClassCodePiece.java,v 1.8 2003/08/30 14:40:24 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,12 +30,11 @@
 
 package org.argouml.language.java.generator;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.util.Stack;
 
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.foundation.core.MClass;
 
 /**
    This code piece represents an anonymous class.

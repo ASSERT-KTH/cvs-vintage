@@ -1,5 +1,5 @@
 
-// $Id: ClassifierEndCodePiece.java,v 1.8 2003/08/25 19:15:58 bobtarling Exp $
+// $Id: ClassifierEndCodePiece.java,v 1.9 2003/08/30 14:40:24 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,9 +31,19 @@
 
 package org.argouml.language.java.generator;
 
-import java.io.*;
-import ru.novosoft.uml.foundation.core.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.util.Iterator;
+import java.util.Stack;
+import java.util.Vector;
+import org.argouml.model.ModelFacade;
+import ru.novosoft.uml.foundation.core.MAttribute;
+import ru.novosoft.uml.foundation.core.MClass;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MFeature;
+import ru.novosoft.uml.foundation.core.MInterface;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.core.MOperation;
 
 /**
    This code piece represents the end of a class or an interface.
@@ -110,11 +120,11 @@ public class ClassifierEndCodePiece extends NamedCodePiece
         // Insert new features
         for (Iterator i = newFeatures.iterator(); i.hasNext(); ) {
             MFeature mFeature = (MFeature) i.next();
-            if (org.argouml.model.ModelFacade.isAOperation(mFeature)) {
+            if (ModelFacade.isAOperation(mFeature)) {
                 CodeGenerator.generateOperation((MOperation) mFeature,
 						mClassifier, reader, writer);
             }
-            else if (org.argouml.model.ModelFacade.isAAttribute(mFeature)) {
+            else if (ModelFacade.isAAttribute(mFeature)) {
                 CodeGenerator.generateAttribute((MAttribute) mFeature,
 						mClassifier, reader, writer);
             }
@@ -123,10 +133,10 @@ public class ClassifierEndCodePiece extends NamedCodePiece
         // Insert new inner classes
         for (Iterator i = newInnerClasses.iterator(); i.hasNext(); ) {
             MModelElement element = (MModelElement) i.next();
-            if (org.argouml.model.ModelFacade.isAClass(element)) {
+            if (ModelFacade.isAClass(element)) {
                 CodeGenerator.generateClass((MClass) element, reader, writer);
             }
-            else if (org.argouml.model.ModelFacade.isAInterface(element)) {
+            else if (ModelFacade.isAInterface(element)) {
 		CodeGenerator.generateInterface((MInterface) element,
 						reader, writer);
             }

@@ -1,5 +1,5 @@
 
-// $Id: OperationCodePiece.java,v 1.9 2003/08/25 19:15:58 bobtarling Exp $
+// $Id: OperationCodePiece.java,v 1.10 2003/08/30 14:40:24 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,14 @@
 
 package org.argouml.language.java.generator;
 
-import java.io.*;
-import java.util.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.util.Stack;
+import java.util.Vector;
+import java.util.Iterator;
+
+import ru.novosoft.uml.foundation.core.MFeature;
+import ru.novosoft.uml.foundation.core.MOperation;
 
 /**
    This code piece represents an operation declaration.

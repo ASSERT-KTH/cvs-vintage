@@ -1,5 +1,5 @@
 
-// $Id: CodeGenerator.java,v 1.11 2003/08/25 19:15:58 bobtarling Exp $
+// $Id: CodeGenerator.java,v 1.12 2003/08/30 14:40:24 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,12 +30,21 @@
 
 package org.argouml.language.java.generator;
 
-import java.io.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-import ru.novosoft.uml.model_management.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.util.Stack;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Vector;
+
+
+import ru.novosoft.uml.foundation.core.MAttribute;
+import ru.novosoft.uml.foundation.core.MClass;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MInterface;
+import ru.novosoft.uml.foundation.core.MOperation;
+import ru.novosoft.uml.foundation.core.MFeature;
+import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * This helper class generates CodePiece based code.
