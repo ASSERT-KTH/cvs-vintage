@@ -101,13 +101,11 @@ public class EditPropertiesAction extends AbstractColumbaAction {
             EditGroupDialog dialog = new EditGroupDialog(addressbookFrameController.getView(),
                     addressbookFrameController, null);
 
-            dialog.setHeaderList(folder.getHeaderItemList());
 
             Object[] uids = card.getUids();
             HeaderItemList members = folder.getHeaderItemList(uids);
             dialog.updateComponents(card, members, true);
-
-            dialog.setVisible(true);
+			dialog.setVisible(true);
 
             if (dialog.getResult()) {
                 dialog.updateComponents(card, null, false);

@@ -21,10 +21,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -36,260 +35,307 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
+import javax.swing.text.JTextComponent;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.addressbook.config.AdapterNode;
-import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.GroupListCard;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.gui.util.AddressbookDNDListView;
 import org.columba.addressbook.gui.util.AddressbookListModel;
 import org.columba.addressbook.gui.util.AddressbookListRenderer;
-import org.columba.addressbook.gui.util.LabelTextFieldPanel;
+import org.columba.addressbook.gui.util.DefaultAddressComboBox;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.main.MainInterface;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.mail.util.AddressCollector;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
-public class EditGroupDialog extends JDialog implements ActionListener {
-    //private AddressbookXmlConfig config;
-    //private AddressbookTable addressbook;
-    private AddressbookDNDListView addressbook;
+public class EditGroupDialog
+	extends JDialog
+	implements ActionListener, KeyListener {
 
-    //private DefaultListModel addressbookModel;
-    private AddressbookDNDListView list;
-    private JButton addButton;
-    private JButton removeButton;
-    private JLabel nameLabel;
-    private JLabel descriptionLabel;
-    private JTextField nameTextField;
-    private JTextField descriptionTextField;
+	private AddressbookDNDListView list;
+	private JButton addButton;
+	private JButton removeButton;
+	private JLabel nameLabel;
+	private JLabel descriptionLabel;
+	private JTextField nameTextField;
+	private JTextField descriptionTextField;
 
-    //private AdapterNode groupNode;
-    //private AddressbookInterface addressbookInterface;
-    private AddressbookListModel members;
-    private AddressbookListRenderer renderer;
-    boolean result;
-    protected AddressbookFrameController frameController;
+	private DefaultAddressComboBox addComboBox;
 
-    public EditGroupDialog(JFrame frame,
-        AddressbookFrameController frameController, AdapterNode groupNode) {
-        super(frame, true);
+	private AddressbookListModel members;
+	private AddressbookListRenderer renderer;
+	private boolean result;
+	private AddressbookFrameController frameController;
 
-        this.frameController = frameController;
+	private ButtonWithMnemonic okButton;
+	private ButtonWithMnemonic cancelButton;
 
-        //this.addressbookInterface = i;
-        //this.groupNode = groupNode;
-        result = false;
+	public EditGroupDialog(
+		JFrame frame,
+		AddressbookFrameController frameController,
+		AdapterNode groupNode) {
+		super(frame, true);
 
-        renderer = new AddressbookListRenderer();
+		this.frameController= frameController;
 
-        //set title
-        init();
-    }
+		result= false;
 
-    protected void init() {
-        getContentPane().setLayout(new BorderLayout());
+		renderer= new AddressbookListRenderer();
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 10, 11));
+		setTitle(AddressbookResourceLoader.getString("dialog", "editgroupdialog", "contact_list_editor")); //$NON-NLS-1$
+		//set title
+		initComponents();
 
-        JPanel panel = new JPanel(new BorderLayout());
+		layoutComponents();
 
-        JPanel leftPanel = new JPanel(new BorderLayout());
+		pack();
 
-        LabelTextFieldPanel infoPanel = new LabelTextFieldPanel();
-        Border border = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                AddressbookResourceLoader.getString("dialog", "editgroupdialog", "description")); //$NON-NLS-1$
-        Border margin = BorderFactory.createEmptyBorder(5, 10, 10, 10);
-        infoPanel.setBorder(new CompoundBorder(border, margin));
+		setLocationRelativeTo(null);
 
-        nameLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "editgroupdialog", "name")); //$NON-NLS-1$
-        nameTextField = new JTextField();
-        infoPanel.addLabel(nameLabel);
-        infoPanel.addTextField(nameTextField);
+		
+	}
 
-        descriptionLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "editgroupdialog", "description_2")); //$NON-NLS-1$
-        descriptionTextField = new JTextField();
-        infoPanel.addLabel(descriptionLabel);
-        infoPanel.addTextField(descriptionTextField);
+	private JPanel createGroupNamePanel() {
+		JPanel panel= new JPanel();
+		FormLayout layout=
+			new FormLayout("6dlu, right:default, 3dlu, default:grow", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
-        leftPanel.add(infoPanel, BorderLayout.NORTH);
+		DefaultFormBuilder b= new DefaultFormBuilder(panel, layout);
+		b.setRowGroupingEnabled(true);
+		b.setLeadingColumnOffset(1);
 
-        JPanel listPanel = new JPanel();
-        listPanel.setLayout(new BorderLayout());
-        border = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                AddressbookResourceLoader.getString("dialog", "editgroupdialog", "members")); //$NON-NLS-1$
-        margin = BorderFactory.createEmptyBorder(5, 10, 10, 10);
-        listPanel.setBorder(new CompoundBorder(border, margin));
+		b.appendSeparator(AddressbookResourceLoader.getString("dialog", "editgroupdialog", "description_3")); //$NON-NLS-1$
 
-        members = new AddressbookListModel();
+		b.append(nameLabel);
+		b.append(nameTextField);
 
-        list = new AddressbookDNDListView(members);
+		b.append(descriptionLabel);
+		b.append(descriptionTextField);
 
-        //list = new JList(members);
-        //list.setCellRenderer(renderer);
-        JScrollPane toPane = new JScrollPane(list);
-        toPane.setPreferredSize(new Dimension(250, 200));
-        listPanel.add(toPane, BorderLayout.CENTER);
+		return panel;
+	}
 
-        leftPanel.add(listPanel, BorderLayout.CENTER);
+	private JPanel createGroupPanel() {
+		JPanel panel= new JPanel();
+		FormLayout layout=
+			new FormLayout(
+				"6dlu, fill:default:grow, 3dlu, default", //$NON-NLS-1$
+				"default, 6dlu, default, 3dlu, default, fill:default:grow"); //$NON-NLS-1$
 
-        panel.add(leftPanel, BorderLayout.CENTER);
+		PanelBuilder builder= new PanelBuilder(panel, layout);
+		CellConstraints cc= new CellConstraints();
 
-        JPanel middlePanel = new JPanel();
-        middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
-        middlePanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+		builder.addSeparator(AddressbookResourceLoader.getString("dialog", "editgroupdialog", "group_members"), cc.xywh(1, 1, 4, 1)); //$NON-NLS-1$
 
-        middlePanel.add(Box.createVerticalGlue());
+		builder.add(addComboBox, cc.xy(2, 3));
+		builder.add(addButton, cc.xy(4, 3));
+		builder.add(new JScrollPane(list), cc.xywh(2, 5, 1, 2));
+		builder.add(removeButton, cc.xy(4, 5));
 
-        addButton = new JButton("<-"); //$NON-NLS-1$
-        addButton.addActionListener(this);
-        addButton.setActionCommand("ADD"); //$NON-NLS-1$
-        middlePanel.add(addButton);
-        middlePanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        removeButton = new JButton("->"); //$NON-NLS-1$
-        removeButton.addActionListener(this);
-        removeButton.setActionCommand("REMOVE"); //$NON-NLS-1$
-        middlePanel.add(removeButton);
+		return panel;
 
-        middlePanel.add(Box.createVerticalGlue());
+	}
 
-        panel.add(middlePanel, BorderLayout.EAST);
+	private void layoutComponents() {
+		getContentPane().setLayout(new BorderLayout());
+		JPanel mainPanel= new JPanel(new BorderLayout());
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		FormLayout layout=
+			new FormLayout(
+				"fill:default:grow", //$NON-NLS-1$
+				"default, 6dlu, fill:default:grow"); //$NON-NLS-1$
 
-        mainPanel.add(panel, BorderLayout.WEST);
+		CellConstraints cc= new CellConstraints();
+		mainPanel.setLayout(layout);
 
-        JPanel rightPanel = new JPanel(new BorderLayout());
-        border = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                AddressbookResourceLoader.getString("dialog", "editgroupdialog", "addressbook")); //$NON-NLS-1$
-        margin = BorderFactory.createEmptyBorder(5, 10, 10, 10);
-        rightPanel.setBorder(new CompoundBorder(border, margin));
+		mainPanel.add(createGroupNamePanel(), cc.xy(1, 1));
+		mainPanel.add(createGroupPanel(), cc.xy(1, 3));
 
-        addressbook = new AddressbookDNDListView();
-        addressbook.setAcceptDrop(false);
+		getContentPane().add(mainPanel, BorderLayout.CENTER);
 
-        JScrollPane scrollPane = new JScrollPane(addressbook);
-        rightPanel.add(scrollPane);
+		JPanel bottomPanel= new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-        mainPanel.add(rightPanel);
+		JPanel buttonPanel= new JPanel(new GridLayout(1, 2, 10, 10));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 
-        getContentPane().add(mainPanel);
+		buttonPanel.add(okButton);
+		buttonPanel.add(cancelButton);
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+	}
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+	private void initComponents() {
 
-        ButtonWithMnemonic okButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
-                    "global", "ok")); //$NON-NLS-1$ //$NON-NLS-2$
-        okButton.setActionCommand("OK"); //$NON-NLS-1$
-        okButton.addActionListener(this);
-        buttonPanel.add(okButton);
+		nameLabel= new JLabel(AddressbookResourceLoader.getString("dialog", "editgroupdialog", "name")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		nameTextField= new JTextField();
 
-        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
-                    "global", "cancel")); //$NON-NLS-1$ //$NON-NLS-2$
-        cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
-        cancelButton.addActionListener(this);
-        buttonPanel.add(cancelButton);
-        bottomPanel.add(buttonPanel, BorderLayout.EAST);
-        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-        getRootPane().setDefaultButton(okButton);
-        getRootPane().registerKeyboardAction(this, "CANCEL", //$NON-NLS-1$
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
-        pack();
-        setLocationRelativeTo(null);
-    }
+		descriptionLabel= new JLabel(AddressbookResourceLoader.getString("dialog", "editgroupdialog", "description_2")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		descriptionTextField= new JTextField();
 
-    public boolean getResult() {
-        return result;
-    }
+		addComboBox= new DefaultAddressComboBox();
+		(
+			(JTextComponent) addComboBox
+				.getEditor()
+				.getEditorComponent())
+				.addKeyListener(
+			this);
 
-    public void setHeaderList(HeaderItemList list) {
-        //addressbook.setHeaderItemList(list);
-        //Vector v = list.getVector();
-        addressbook.setHeaderList(list);
-    }
+		members= new AddressbookListModel();
+		list= new AddressbookDNDListView(members);
+		list.setMinimumSize(new Dimension(200, 300));
 
-    public void updateComponents(GroupListCard card, HeaderItemList list,
-        boolean b) {
-        if (b) {
-            // gettext
-            nameTextField.setText(card.get("displayname")); //$NON-NLS-1$
-            descriptionTextField.setText(card.get("description")); //$NON-NLS-1$
+		addButton= new JButton("Add"); //$NON-NLS-1$
+		addButton.addActionListener(this);
+		addButton.setActionCommand("ADD"); //$NON-NLS-1$
 
-            members = new AddressbookListModel();
+		removeButton= new JButton("Remove"); //$NON-NLS-1$
+		removeButton.addActionListener(this);
+		removeButton.setActionCommand("REMOVE"); //$NON-NLS-1$
 
-            for (int i = 0; i < list.count(); i++) {
-                HeaderItem item = list.get(i);
-                members.addElement(item);
-            }
+		okButton= new ButtonWithMnemonic(AddressbookResourceLoader.getString("global", "ok")); //$NON-NLS-1$ //$NON-NLS-2$
+		okButton.setActionCommand("OK"); //$NON-NLS-1$
+		okButton.addActionListener(this);
 
-            this.list.setModel(members);
-        } else {
-            // settext
-            card.set("displayname", nameTextField.getText()); //$NON-NLS-1$
-            card.set("description", descriptionTextField.getText()); //$NON-NLS-1$
+		cancelButton= new ButtonWithMnemonic(AddressbookResourceLoader.getString("global", "cancel")); //$NON-NLS-1$ //$NON-NLS-2$
+		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
+		cancelButton.addActionListener(this);
 
-            // remove all children
-            card.removeMembers();
+		getRootPane().setDefaultButton(okButton);
+		getRootPane().registerKeyboardAction(this, "CANCEL", //$NON-NLS-1$
+		KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-            // add children
-            for (int i = 0; i < members.getSize(); i++) {
-                HeaderItem item = (HeaderItem) members.get(i);
-                Object uid = item.getUid();
-                card.addMember(((Integer) uid).toString());
-            }
-        }
-    }
+	}
 
-    public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
+	public boolean getResult() {
+		return result;
+	}
 
-        if (command.equals("CANCEL")) { //$NON-NLS-1$
-            result = false;
-            setVisible(false);
-        } else if (command.equals("CHOOSE")) { //$NON-NLS-1$
-            SelectAddressbookFolderDialog dialog = MainInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
+	public void updateComponents(
+		GroupListCard card,
+		HeaderItemList list,
+		boolean b) {
+		if (b) {
+			// gettext
+			nameTextField.setText(card.get("displayname")); //$NON-NLS-1$
+			descriptionTextField.setText(card.get("description")); //$NON-NLS-1$
 
-            Folder selectedFolder = dialog.getSelectedFolder();
+			members= new AddressbookListModel();
 
-            if (selectedFolder != null) {
-                HeaderItemList list = selectedFolder.getHeaderItemList();
-                setHeaderList(list);
-            }
-        } else if (command.equals("OK")) { //$NON-NLS-1$
-            if (nameTextField.getText().length() == 0) {
-                JOptionPane.showMessageDialog(this,
-                    AddressbookResourceLoader.getString("dialog", "editgroupdialog", "you_must_enter_a_name_for_the_group")); //$NON-NLS-1$
+			for (int i= 0; i < list.count(); i++) {
+				HeaderItem item= list.get(i);
+				members.addElement(item);
+			}
 
-                return;
-            }
+			this.list.setModel(members);
+		} else {
+			// settext
+			card.set("displayname", nameTextField.getText()); //$NON-NLS-1$
+			card.set("description", descriptionTextField.getText()); //$NON-NLS-1$
 
-            result = true;
-            setVisible(false);
-        } else if (command.equals("ADD")) { //$NON-NLS-1$
-            int[] array = addressbook.getSelectedIndices();
-            HeaderItem item;
+			// remove all children
+			card.removeMembers();
 
-            for (int j = 0; j < array.length; j++) {
-                item = (HeaderItem) addressbook.get(array[j]);
+			// add children
+			for (int i= 0; i < members.getSize(); i++) {
+				HeaderItem item= (HeaderItem) members.get(i);
+				Object uid= item.getUid();
+				card.addMember(((Integer) uid).toString());
+			}
+		}
+	}
 
-                members.addElement(item);
-            }
-        } else if (command.equals("REMOVE")) { //$NON-NLS-1$
-            int[] array = list.getSelectedIndices();
+	/**
+	 * Add headeritem from ComboBox to List
+	 *
+	 */
+	private void addHeaderItem() {
+		String s= addComboBox.getText();
+		Object o= AddressCollector.getHeaderItem(s);
 
-            for (int j = 0; j < array.length; j++) {
-                members.remove(array[j]);
-            }
-        }
-    }
+		if (o != null) {
+			// this is a headeritem from autocompletion
+			members.addElement((HeaderItem) o);
+			addComboBox.setText(""); //$NON-NLS-1$
+		} else {
+			JOptionPane.showMessageDialog(
+				null,
+				AddressbookResourceLoader.getString("dialog", "editgroupdialog", "You_can_only_add")); //$NON-NLS-1$
+		}
+
+		// in the future, it will be possible to also add new addresses
+		/*else {
+					// this is a string
+					// -> check for validity
+					if (AddressParser.isValid(s)) {
+						HeaderItem item= new HeaderItem(HeaderItem.CONTACT);
+						item.add("displayname", AddressParser.getDisplayname(s));
+						item.add("email;internet", AddressParser.getAddress(s));
+		
+						members.addElement(item);
+						addComboBox.setText("");
+		
+					} else {
+						JOptionPane.showMessageDialog(
+							null,
+							s + " is no valid email address!");
+		
+					}
+				}
+				*/
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		String command= e.getActionCommand();
+
+		if (command.equals("CANCEL")) { //$NON-NLS-1$
+			result= false;
+			setVisible(false);
+		} else if (command.equals("OK")) { //$NON-NLS-1$
+			if (nameTextField.getText().length() == 0) {
+				JOptionPane.showMessageDialog(this, AddressbookResourceLoader.getString("dialog", "editgroupdialog", "you_must_enter_a_name_for_the_group")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+				return;
+			}
+
+			result= true;
+			setVisible(false);
+		} else if (command.equals("ADD")) { //$NON-NLS-1$
+			addHeaderItem();
+
+		} else if (command.equals("REMOVE")) { //$NON-NLS-1$
+			int[] array= list.getSelectedIndices();
+
+			for (int j= 0; j < array.length; j++) {
+				members.remove(array[j]);
+			}
+		}
+	}
+
+	/*************************** KeyListener *****************************/
+
+	public void keyTyped(KeyEvent e) {
+	}
+
+	public void keyPressed(KeyEvent e) {
+	}
+
+	public void keyReleased(KeyEvent e) {
+		char ch= e.getKeyChar();
+
+		if (ch == KeyEvent.VK_ENTER) {
+			addHeaderItem();
+		}
+	}
 }

@@ -70,16 +70,14 @@ public class AddGroupCardAction extends AbstractColumbaAction {
         EditGroupDialog dialog = new EditGroupDialog(addressbookFrameController.getView(),
                 addressbookFrameController, null);
 
-        dialog.setHeaderList(folder.getHeaderItemList());
-
-        dialog.setVisible(true);
-
+      
         if (dialog.getResult()) {
             // Ok
             GroupListCard card = new GroupListCard();
 
             dialog.updateComponents(card, null, false);
-
+			dialog.setVisible(true);
+			
             folder.add(card);
             addressbookFrameController.getTable().getView().setFolder(folder);
         }
