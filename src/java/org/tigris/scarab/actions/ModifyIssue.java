@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.137 2002/12/11 00:54:40 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.138 2002/12/12 22:23:27 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -131,7 +131,14 @@ public class ModifyIssue extends BaseModifyIssue
         Field commentField = null;
         commentField = commentGroup.get("Data");
         commentField.setRequired(true);
-        if (commentGroup == null || !commentField.isValid())
+        // make sure to trim the whitespace
+        String commentFieldString = commentField.toString();
+        if (commentFieldString != null)
+        {
+            commentFieldString = commentFieldString.trim();
+        }
+        if (commentGroup == null || !commentField.isValid() ||
+            commentFieldString.length() == 0)
         {
             commentField.setMessage(
                 "ExplanatoryCommentRequiredToModifyAttributes");
