@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.29 2003/08/22 17:37:30 bobtarling Exp $
+// $Id: UMLDiagram.java,v 1.30 2003/08/22 23:35:54 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -237,8 +237,8 @@ public abstract class UMLDiagram
 
     private Object[] getManipulateActions() {
         Object actions[] = {
-            _actionSelect,
-            _actionBroom,
+            new RadioAction(_actionSelect),
+            new RadioAction(_actionBroom),
             null
         };
         return actions;
