@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  * @see org.jboss.ejb.plugins.cmp.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="mailto:john-jboss@freeborg.com">John Freeborg</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class JDBCCustomFinderQuery implements JDBCQueryCommand
 {
@@ -134,10 +134,17 @@ public final class JDBCCustomFinderQuery implements JDBCQueryCommand
       }
       catch(InvocationTargetException e)
       {
-         log.error("Error invoking custom finder " + finderMethod.getName(),
-            e.getTargetException());
-         throw new FinderException("Errror invoking cutom finder " +
-            finderMethod.getName() + ": " + e.getTargetException());
+         // Throw the exception if its a FinderException
+         Throwable ex = e.getTargetException();
+         if( ex instanceof FinderException )
+         {
+            throw (FinderException) ex;
+         }
+         else
+         {
+            throw new FinderException("Errror invoking cutom finder " +
+               finderMethod.getName() + ": " + ex);
+         }
       }
    }
 
