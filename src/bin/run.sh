@@ -32,5 +32,5 @@ JAXP=-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.crimson.jaxp.Document
 JAXP="$JAXP -Djavax.xml.parsers.SAXParserFactory=org.apache.crimson.jaxp.SAXParserFactoryImpl"
 
 echo JBOSS_CLASSPATH=$JBOSS_CLASSPATH
-java $HOTSPOT $JAXP -classpath $JBOSS_CLASSPATH org.jboss.Main $@
+java $HOTSPOT $JAVA_OPTS $JAXP -classpath $JBOSS_CLASSPATH org.jboss.Main $@
 
