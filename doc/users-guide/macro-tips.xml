@@ -5,7 +5,7 @@
 <!-- :indentSize=1:noTabs=yes:maxLineLen=72:tabSize=2:        -->
 <!--                                                          -->
 <!-- This file covers the chapter "Macro tips and techniques" -->
-<!-- $Id: macro-tips.xml,v 1.9 2002/04/02 02:32:17 spestov Exp $
+<!-- $Id: macro-tips.xml,v 1.10 2002/08/16 18:02:17 spestov Exp $
  -->
 
 <chapter id="macro-tips"><title>Macro Tips and Techniques</title>
@@ -516,8 +516,8 @@ view.getInputHandler().readNextChar("Enter a character",
     library of methods and objects that can be accessed at any time during
     the editing session in another macro, the BeanShell shell of the Console
     plugin, or menu items such as
-    <guimenu>Utilities</guimenu>&gt;<guimenuitem>Evaluate BeanShell
-    Expression</guimenuitem>.
+    <guimenu>Utilities</guimenu>&gt;<guisubmenu>BeanShell</guisubmenu>&gt;<guimenuitem>Evaluate
+    BeanShell Expression</guimenuitem>.
   </para>
 
   <para>

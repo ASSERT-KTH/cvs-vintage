@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Buffer-specific options dialog.
  * @author Slava Pestov
- * @version $Id: BufferOptions.java,v 1.21 2002/06/18 09:21:24 spestov Exp $
+ * @version $Id: BufferOptions.java,v 1.22 2002/08/16 18:02:18 spestov Exp $
  */
 public class BufferOptions extends EnhancedDialog
 {
@@ -53,23 +53,10 @@ public class BufferOptions extends EnhancedDialog
 		setContentPane(content);
 
 		ActionHandler actionListener = new ActionHandler();
-		AbstractOptionPane panel = new AbstractOptionPane(null)
-		{
-			public void addComponent(Component comp)
-			{
-				super.addComponent(comp);
-			}
+		AbstractOptionPane panel = new AbstractOptionPane(null);
 
-			public void addComponent(String label, Component comp)
-			{
-				super.addComponent(label,comp);
-			}
-
-			public void addSeparator(String separator)
-			{
-				super.addSeparator(separator);
-			}
-		};
+		panel.addComponent(GUIUtilities.createMultilineLabel(
+			jEdit.getProperty("buffer-options.caption")));
 
 		panel.addSeparator("buffer-options.loading-saving");
 

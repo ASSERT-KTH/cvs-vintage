@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.48 2002/08/14 20:11:09 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.49 2002/08/16 18:02:18 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -498,7 +498,7 @@ class BrowserView extends JPanel
 				isSelected,cellHasFocus);
 
 			ParentDirectoryRenderer.this.setBorder(new EmptyBorder(
-				1,index * 10 + 1,1,1));
+				1,index * 5 + 1,1,1));
 
 			if(value instanceof LoadingPlaceholder)
 			{
