@@ -160,8 +160,13 @@
 
         <!-- things to go into the web-inf directory -->
         <filter token="TEMPLATE_PATH" value="${template.path}"/>
+        <filter token="PIPELINE_DEFAULT" value="${scarab.default.pipeline}"/>
         <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
         <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
+        <filter token="DATABASE_HOST" value="${scarab.database.host}"/>
+        <filter token="DATABASE_PORT" value="${scarab.database.port}"/>
+        <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
+        <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
         <filter token="SESSION_VALIDATOR" value="${scarab.sessionvalidator}"/>
         <filter token="USER_SERVICE" value="${scarab.user.service}"/>
         <filter token="MODULE_SERVICE" value="${scarab.module.service}"/>
@@ -304,6 +309,8 @@
     <!-- Create DB from Torque                                              -->
     <!-- ================================================================== -->
     <target name="create-db" depends="sql">
+        <!-- torque requires the db handle and actual name to be the same, which creates
+             some problems with dependencies (fulcrum)
         <ant antfile="build.xml"
                 dir="${torque.dir.scarab}" target="project-create-db" 
                 inheritAll="false">
@@ -312,12 +319,29 @@
             <property name="build.properties" 
                 value="${torque.dir.scarab}/build.properties"/>
         </ant>
+        -->
 
+        <!-- use instead of the above -->
+        <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
+        <copy file="${src.sql.dir}/create-mysql-db.sql" 
+              todir="${build.src.scarab}"
+              filtering="true" overwrite="true"/>
+        <echo message="Connecting to mysql at ${scarab.database.host}:${scarab.database.port}/mysql"/>
         <sql
             driver="org.gjt.mm.mysql.Driver"
-            url="jdbc:mysql://localhost/${scarab.database.name}"
-            userid=""
-            password="">
+            url="jdbc:mysql://${scarab.database.host}:${scarab.database.port}/mysql"
+            userid="${scarab.database.admin.username}"
+            password="${scarab.database.admin.password}">
+            <classpath refid="classpath"/>
+            <transaction src="${build.src.scarab}/create-mysql-db.sql"/>
+        </sql>
+        <!-- populate with default and sample data -->
+        <echo message="Connecting to mysql at ${scarab.database.host}:${scarab.database.port}/${scarab.database.name}"/>
+        <sql
+            driver="org.gjt.mm.mysql.Driver"
+            url="jdbc:mysql://${scarab.database.host}:${scarab.database.port}/${scarab.database.name}"
+            userid="${scarab.database.admin.username}"
+            password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
             <transaction src="${src.sql.dir}/mysql-scarab.sql"/>
             <transaction src="${src.sql.dir}/mysql-turbine.sql"/>
