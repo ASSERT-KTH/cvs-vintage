@@ -59,7 +59,7 @@ import org.jboss.ejb.plugins.*;
 *   @see Container
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.15 $
+*   @version $Revision: 1.16 $
 */
 public class ContainerFactory
 implements ContainerFactoryMBean, MBeanRegistration
@@ -367,7 +367,8 @@ implements ContainerFactoryMBean, MBeanRegistration
 			{
 				Container con = (Container)containers.get(i);
 				System.out.println("Binding container "+con.getMetaData().getJndiName());
-				if (!(con instanceof StatefulSessionContainer))
+
+                // Use rebind to make sure you overwrite the name
 				rebind(ctx, con.getMetaData().getJndiName(), con.getContainerInvoker().getEJBHome());
 					
 				// Done
