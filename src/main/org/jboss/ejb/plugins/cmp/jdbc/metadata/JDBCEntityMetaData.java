@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -186,6 +186,11 @@ public final class JDBCEntityMetaData {
    private final int fetchSize;
 
    /**
+    * The create-entity-command class
+    */
+   private final Class createEntityCommand;
+
+   /**
     * Constructs jdbc entity meta data defined in the jdbcApplication and 
     * with the data from the entity meta data which is loaded from the
     * ejb-jar.xml file.
@@ -329,6 +334,7 @@ public final class JDBCEntityMetaData {
       readOnly = false;
       readTimeOut = -1;
       readAhead = JDBCReadAheadMetaData.DEFAULT;
+      createEntityCommand = null;
    }
 
    /**
@@ -610,6 +616,75 @@ public final class JDBCEntityMetaData {
 
          // overrides defaults added above
          queries.putAll(newQueries);
+      }
+
+      // create entity command
+      String createEntityCommandStr = MetaData.
+         getOptionalChildContent(element, "create-entity-command");
+      if(createEntityCommandStr != null) {
+
+         // look at datasource mapping first
+         JDBCEntityCommandMetaData entityCommandMetaData = null;
+         if(datasourceMapping != null) {
+            entityCommandMetaData = datasourceMapping.
+               getEntityCommand( createEntityCommandStr );
+         }
+
+         if(entityCommandMetaData != null) {
+            createEntityCommand = entityCommandMetaData.getCommandClass();
+         } else {
+            Element entityCommands = MetaData.
+               getOptionalChild(element, "entity-commands");
+            // it's possible it's null in case of entity element
+            if( entityCommands != null ) {
+
+               // iterate through the commands
+               Element entityCommand = null;
+               for(Iterator iter = MetaData.getChildrenByTagName(
+                  entityCommands, "entity-command"); iter.hasNext();) {
+          
+                  Element command = (Element) iter.next();
+                  String commandName = MetaData.getUniqueChildContent(
+                     command, "command-name");
+                  if(createEntityCommandStr.equals(commandName)) {
+                     entityCommand = command;
+                     break;
+                  }
+               }
+
+               // check whether the command found
+               if( entityCommand == null ) {
+                  // set to default in case the element passed in is entity
+                  createEntityCommand = defaultValues.getCreateEntityCommand();
+                  // the command specified in defaults or entity doesn't
+                  // exist in defaults
+                  if(createEntityCommand == null) {
+                     throw new DeploymentException("entity command not found: "
+                        + createEntityCommandStr);
+                  }
+               } else {
+                  String commandClass = MetaData.getUniqueChildContent(
+                     entityCommand, "command-class");
+                  if(commandClass == null) {
+                     throw new DeploymentException(
+                        "command-class isn't specified for command: "
+                        + createEntityCommandStr);
+                  }
+                
+                  try {
+                     createEntityCommand = getClassLoader().
+                        loadClass( commandClass );
+                  } catch (ClassNotFoundException e) {
+                     throw new DeploymentException(
+                     "command-class not found: " + commandClass);
+                  }
+               }
+            } else {
+               createEntityCommand = defaultValues.getCreateEntityCommand();
+            }
+         }
+      } else {
+         createEntityCommand = defaultValues.getCreateEntityCommand();
       }
    }
 
@@ -1022,6 +1097,14 @@ public final class JDBCEntityMetaData {
     */
    public JDBCReadAheadMetaData getReadAhead() {
       return readAhead;
+   }
+
+   /**
+    * Gets the create entity command class
+    * @return create entity command class
+    */
+   public Class getCreateEntityCommand() {
+      return createEntityCommand;
    }
 
    /**
