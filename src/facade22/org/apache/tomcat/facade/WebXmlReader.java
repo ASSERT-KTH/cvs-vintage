@@ -15,6 +15,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import org.w3c.dom.*;
+import org.apache.tomcat.util.compat.*;
 
 // XXX XXX Specific to servlet 2.2 
 
@@ -30,6 +31,8 @@ public class WebXmlReader extends BaseInterceptor {
 
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.resources");
     boolean validate=true;
+    static Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
+    
 
     public WebXmlReader() {
     }
@@ -235,7 +238,27 @@ public class WebXmlReader extends BaseInterceptor {
 
 	    addSecurity( xh );
 
-	    Object ctx1=xh.readXml(f, ctx);
+            Object ctx1=null;
+
+            xh.useLocalLoader( false ); // we'll use our own parser for web.xml
+            
+            // Perform the reading with the context privs
+            Object pd=ctx.getAttribute( Context.ATTRIB_PROTECTION_DOMAIN);
+            //            System.out.println("Protection domain " + pd);
+
+            if( pd!=null ) {
+                // Do the action in a sandbox, with context privs
+                PriviledgedAction di = new PriviledgedAction(xh, f, ctx);
+                try {
+                    ctx1=jdk11Compat.doPrivileged(di, pd);
+                } catch( TomcatException ex1 ) {
+                    throw ex1;
+                } catch( Exception ex ) {
+                    throw new TomcatException( ex );
+                }
+            } else {
+                ctx1=xh.readXml(f, ctx);
+            }
 
 	    if( validate && xeh != null && xeh.isOk() ) {
 		// don't create the validation mark if an error was detected
@@ -258,6 +281,26 @@ public class WebXmlReader extends BaseInterceptor {
 	}
     }
 
+
+    // Sandbox support
+    static class PriviledgedAction extends Action {
+        XmlMapper xh;
+        File f;
+        Context ctx;
+        
+	public PriviledgedAction(XmlMapper xh, File f, Context ctx ) {
+	    this.xh=xh;
+	    this.ctx=ctx;
+            this.f=f;
+	}           
+	public Object run() throws Exception {
+            return xh.readXml(f, ctx);
+	}           
+    }    
+
+
+
+    
     // Add security rules - complex code
     void addSecurity( XmlMapper xh ) {
 	xh.addRule("web-app/security-constraint",
