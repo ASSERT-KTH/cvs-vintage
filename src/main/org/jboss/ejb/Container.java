@@ -110,7 +110,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.116 $
+ * @version $Revision: 1.117 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an
  * aspect/interceptor.  Make this whole stack into a model mbean.
@@ -691,8 +691,7 @@ public abstract class Container extends ServiceMBeanSupport
    public ObjectName getJmxName()
    {
       BeanMetaData beanMetaData = getBeanMetaData();
-      String jndiName = beanMetaData.getHome() != null ?
-         beanMetaData.getJndiName() : beanMetaData.getLocalJndiName();
+      String jndiName = beanMetaData.getContainerObjectNameJndiName();
 
       if (jndiName == null)
       {

@@ -37,7 +37,7 @@ import org.jboss.ejb.plugins.TxSupport;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  *
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  */
 public abstract class BeanMetaData
    extends MetaData
@@ -360,6 +360,14 @@ public abstract class BeanMetaData
       }
 
       return localJndiName;
+   }
+
+   /**
+    * Gets the container jndi name used in the object name
+    */
+   public String getContainerObjectNameJndiName()
+   {
+      return getHome() != null ? getJndiName() : getLocalJndiName();
    }
 
    public String getConfigurationName()
