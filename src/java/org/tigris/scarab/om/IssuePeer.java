@@ -73,7 +73,7 @@ public class IssuePeer
     /** 
      * Retrieve a single object by pk
      *
-     * @param ObjectKey pk
+     * @param pk
      */
     public static Issue retrieveByPK( ObjectKey pk )
         throws TorqueException

@@ -68,7 +68,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.11 2002/10/24 22:26:53 jon Exp $
+ * @version $Id: Email.java,v 1.12 2002/10/24 22:59:30 jon Exp $
  */
 public class Email
 {
@@ -104,7 +104,7 @@ public class Email
 
             boolean success = true;
 
-            TemplateEmail te = getTemplateEmail(context,  module, fromUser, 
+            TemplateEmail te = getTemplateEmail(context, fromUser, 
                 replyToUser, subject, template);
 
             Iterator iter = toUsers.iterator();
@@ -166,100 +166,97 @@ public class Email
                           null, subject, template );
     }
 
-    // FIXME unused Module?
     private static TemplateEmail getTemplateEmail(
-                                     TemplateContext context, Module module, 
+                                     TemplateContext context,
                                      Object fromUser, Object replyToUser,
-                                     String subject, String template )
+                                     String subject, String template)
         throws Exception
     {
         TemplateEmail te = new TemplateEmail();
-            if ( context == null ) 
+        if ( context == null ) 
+        {
+            context = new DefaultTemplateContext();
+        }        
+        te.setContext(context);
+        
+        if (fromUser instanceof ScarabUser)
+        {
+            ScarabUser u = (ScarabUser)fromUser;
+            te.setFrom(u.getName(), u.getEmail());
+        }
+        else if (fromUser instanceof String[])
+        {
+            String[] s = (String[])fromUser;
+            te.addReplyTo(s[0], s[1]);
+        }
+        else
+        {
+            // assume string
+            String key = (String)fromUser;      
+            if (fromUser == null)
             {
-                context = new DefaultTemplateContext();
-            }        
-            te.setContext(context);
+                key = "scarab.email.default";
+            } 
             
-            if (fromUser instanceof ScarabUser)
-            {
-                ScarabUser u = (ScarabUser)fromUser;
-                te.setFrom(u.getName(), u.getEmail());
-            }
-            else if (fromUser instanceof String[])
-            {
-                String[] s = (String[])fromUser;
-                te.addReplyTo(s[0], s[1]);
-            }
-            else
-            {
-                // assume string
-                String key = (String)fromUser;	    
-                if (fromUser == null)
-                {
-                    key = "scarab.email.default";
-                } 
-                
-                te.setFrom(Turbine.getConfiguration().getString
-                           (key + ".fromName", "Scarab System"), 
-                           Turbine.getConfiguration().getString
-                           (key + ".fromAddress",
-                            "help@localhost"));
-            }
+            te.setFrom(Turbine.getConfiguration().getString
+                       (key + ".fromName", "Scarab System"), 
+                       Turbine.getConfiguration().getString
+                       (key + ".fromAddress",
+                        "help@localhost"));
+        }
 
-            if (replyToUser instanceof ScarabUser)
+        if (replyToUser instanceof ScarabUser)
+        {
+            ScarabUser u = (ScarabUser)replyToUser;
+            te.addReplyTo(u.getName(), u.getEmail());
+        }
+        else if (replyToUser instanceof String[])
+        {
+            String[] s = (String[])replyToUser;
+            te.addReplyTo(s[0], s[1]);
+        }
+        else
+        {
+            // assume string
+            String key = (String)replyToUser;       
+            if (fromUser == null)
             {
-                ScarabUser u = (ScarabUser)replyToUser;
-                te.addReplyTo(u.getName(), u.getEmail());
-            }
-            else if (replyToUser instanceof String[])
-            {
-                String[] s = (String[])replyToUser;
-                te.addReplyTo(s[0], s[1]);
-            }
-            else
-            {
-                // assume string
-                String key = (String)replyToUser;	    
-                if (fromUser == null)
-                {
-                    key = "scarab.email.default";
-                } 
-                
-                te.addReplyTo(Turbine.getConfiguration()
-                              .getString(key + ".fromName", "Scarab System"), 
-                              Turbine.getConfiguration()
-                              .getString(key + ".fromAddress",
-                                         "help@localhost"));
-            }
+                key = "scarab.email.default";
+            } 
             
-            if (subject == null)
-            {
-                te.setSubject((Turbine.getConfiguration().
-                               getString("scarab.email.default.subject")));
-            }
-            else
-            {
-                te.setSubject(subject);
-            }
-            
-            if (template == null)
-            {
-                te.setTemplate(Turbine.getConfiguration().
-                               getString("scarab.email.default.template"));
-            }
-            else
-            {
-                te.setTemplate(template);
-            }
-            
-
-            String charset = Turbine.getConfiguration()
-                .getString(ScarabConstants.DEFAULT_EMAIL_ENCODING_KEY); 
-            if (charset != null && charset.trim().length() > 0) 
-            {
-                te.setCharset(charset);                
-            }
-
-            return te;
+            te.addReplyTo(Turbine.getConfiguration()
+                          .getString(key + ".fromName", "Scarab System"), 
+                          Turbine.getConfiguration()
+                          .getString(key + ".fromAddress",
+                                     "help@localhost"));
+        }
+        
+        if (subject == null)
+        {
+            te.setSubject((Turbine.getConfiguration().
+                           getString("scarab.email.default.subject")));
+        }
+        else
+        {
+            te.setSubject(subject);
+        }
+        
+        if (template == null)
+        {
+            te.setTemplate(Turbine.getConfiguration().
+                           getString("scarab.email.default.template"));
+        }
+        else
+        {
+            te.setTemplate(template);
+        }
+        
+        String charset = Turbine.getConfiguration()
+            .getString(ScarabConstants.DEFAULT_EMAIL_ENCODING_KEY); 
+        if (charset != null && charset.trim().length() > 0) 
+        {
+            te.setCharset(charset);                
+        }
+        return te;
     }
 }

@@ -54,13 +54,12 @@ import org.tigris.scarab.om.AttributeValue;
  *  etc...
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.8 $ $Date: 2002/01/18 22:26:06 $
+ * @version $Revision: 1.9 $ $Date: 2002/10/24 22:59:26 $
  */
 public abstract class FreeFormAttribute extends AttributeValue
 {
-    private boolean loaded;
     protected String value;
-    
+
     public void init() throws Exception
     {
         
@@ -68,7 +67,6 @@ public abstract class FreeFormAttribute extends AttributeValue
         {
             setDeleted(false);                
         }
-        loaded = true;
     }
 
     public void setResources(Object resources) 

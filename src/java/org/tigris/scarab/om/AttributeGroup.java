@@ -79,8 +79,6 @@ public  class AttributeGroup
         "getAttributes";
     private static final String GET_R_ATTRIBUTE_ATTRGROUP = 
         "getRAttributeAttributeGroup";
-    private static final String GET_ATTRIBUTE_GROUPS = 
-        "getAttributeGroups";
 
     public boolean isGlobal()
         throws TorqueException

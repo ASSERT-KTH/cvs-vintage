@@ -47,7 +47,6 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
@@ -68,7 +67,6 @@ import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
-import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.Email;

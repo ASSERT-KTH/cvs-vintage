@@ -62,27 +62,18 @@ import org.apache.regexp.RESyntaxException;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.ComboKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.SimpleKey;
 import org.apache.torque.om.BaseObject;
-import org.apache.torque.om.Persistent;
 import org.apache.torque.manager.MethodResultCache;
 import org.apache.torque.util.Criteria;
-import org.apache.fulcrum.security.TurbineSecurity;
-import org.apache.fulcrum.security.util.RoleSet;
-import org.apache.fulcrum.security.util.TurbineSecurityException;
-import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Group;
-import org.apache.fulcrum.security.entity.Role;
-import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRole;
 import org.apache.fulcrum.localization.Localization;
 import org.apache.turbine.Turbine;
 
 // Scarab classes
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.ReportPeer;
@@ -93,7 +84,6 @@ import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.om.IssueTemplateInfoPeer;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributePeer;
-import org.tigris.scarab.om.RModuleUserAttributePeer;
 import org.tigris.scarab.om.RModuleIssueTypePeer;
 import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.om.IssueTypePeer;
@@ -105,8 +95,6 @@ import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.AttributeTypePeer;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleUserAttribute;
-import org.tigris.scarab.om.ActivitySetPeer;
-import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.AttributeGroup;
 import org.tigris.scarab.om.AttributeGroupPeer;
 import org.tigris.scarab.om.RAttributeAttributeGroup;
@@ -134,7 +122,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.59 2002/10/24 17:59:52 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.60 2002/10/24 22:59:26 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -901,7 +889,6 @@ public abstract class AbstractScarabModule
         Object obj = ScarabCache.get(this, GET_DEFAULT_TEXT_ATTRIBUTE); 
         if ( obj == null ) 
         {        
-            ObjectKey attributeId = null;
             // get related RMAs
             Criteria crit = new Criteria()
                 .add(RModuleAttributePeer.ISSUE_TYPE_ID, 
@@ -1180,7 +1167,7 @@ public abstract class AbstractScarabModule
             List requiredAttributes  = new ArrayList();
             for (int i=0; i <temp.length; i++)
             {
-                Attribute att = (Attribute)temp[i];
+                Attribute att = temp[i];
                 AttributeGroup group = getAttributeGroup(issueType, att);
                 if (group != null && group.getActive())
                 {
@@ -1631,8 +1618,6 @@ try{
         for ( int i=0; i<size; i++ )
         {
             RModuleOption moduleOption = (RModuleOption)moduleOptions.get(i);
-            AttributeOption attributeOption =
-                moduleOption.getAttributeOption();
 
             int level = 1;
             if ( ancestors[i] != null )

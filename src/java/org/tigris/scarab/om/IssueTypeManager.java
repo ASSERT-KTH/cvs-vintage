@@ -46,14 +46,12 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
-import org.apache.torque.om.Persistent;
 
 /** 
  * This class manages IssueType objects.  
  *
- * @version $Id: IssueTypeManager.java,v 1.2 2002/07/08 19:44:47 jon Exp $
+ * @version $Id: IssueTypeManager.java,v 1.3 2002/10/24 22:59:26 jon Exp $
  */
 public class IssueTypeManager
     extends BaseIssueTypeManager

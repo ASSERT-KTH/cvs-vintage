@@ -47,9 +47,7 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
-import org.apache.torque.om.Persistent;
 
 /** 
  * This class manages RIssueTypeOption objects.  

@@ -54,14 +54,12 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.Date;
 import java.util.Locale;
 import java.sql.Connection;
 
 import org.apache.commons.lang.ObjectUtils;
 // Turbine classes
-import org.apache.turbine.TemplateContext;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
@@ -85,7 +83,6 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.TotalVotesAttribute;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.workflow.WorkflowFactory;
 
 import org.apache.commons.lang.StringUtils;
@@ -96,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.201 2002/10/15 20:54:39 jon Exp $
+ * @version $Id: Issue.java,v 1.202 2002/10/24 22:59:26 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -312,8 +309,7 @@ public class Issue
         }
         
         /**
-         * Set the IdInstance
-         * @return String
+         * Set the domainId
          */
         public void setDomain(String domainId)
         {
@@ -321,7 +317,7 @@ public class Issue
         }
         /**
          * Set the Prefix
-         * @param String
+         * @param prefix
          */
         public void setPrefix(String prefix)
         {
@@ -330,7 +326,7 @@ public class Issue
         
         /**
          * Set the Count
-         * @param int
+         * @param count
          */
         public void setCount(int count)
         {
@@ -556,7 +552,6 @@ public class Issue
                 crit.add(IssuePeer.ID_DOMAIN, fid.getDomain());    
             }
             
-            Issue issue = null;
             try
             {
                 result = (Issue)IssuePeer.doSelect(crit).get(0);
@@ -1686,12 +1681,12 @@ public class Issue
             Criteria crit = new Criteria(2)
                 .add(DependPeer.OBSERVED_ID, getIssueId() )        
                 .add(DependPeer.OBSERVER_ID, childIssue.getIssueId() );
-            List depends = (List) DependPeer.doSelect(crit);
+            List depends = DependPeer.doSelect(crit);
             
             Criteria crit2 = new Criteria(2)
                 .add(DependPeer.OBSERVER_ID, getIssueId() )        
                 .add(DependPeer.OBSERVED_ID, childIssue.getIssueId() );
-            List depends2 = (List) DependPeer.doSelect(crit2);
+            List depends2 = DependPeer.doSelect(crit2);
             
             if (depends.size() > 0 )
             {
@@ -1890,7 +1885,6 @@ public class Issue
     public Issue move(Module newModule, String action, ScarabUser user)
           throws Exception
     {
-        NumberKey newIssueId;
         Issue newIssue;
         StringBuffer descBuf = null;
         StringBuffer descBuf2 = null;

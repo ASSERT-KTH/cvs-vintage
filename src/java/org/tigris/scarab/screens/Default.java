@@ -47,9 +47,6 @@ package org.tigris.scarab.screens;
  */ 
 
 // Java Stuff 
-import java.util.Stack;
-import java.util.HashMap;
-import java.util.Enumeration;
 import org.apache.log4j.Category;
 
 // Turbine Stuff 
@@ -65,8 +62,6 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueType;
 
 /**
  * This class is responsible for building the Context up
@@ -76,7 +71,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.64 2002/10/17 00:26:51 jmcnally Exp $
+ * @version $Id: Default.java,v 1.65 2002/10/24 22:59:28 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -106,10 +101,9 @@ public class Default extends TemplateSecureScreen
         // This may not be the best location for this, we might need to create
         // a valve.  
         // check that the module exists, it may not have been created yet.
-        Module module = null;
         try
         {
-            module = scarabR.getCurrentModule();
+            scarabR.getCurrentModule();
         }
         catch (Exception ignore)
         {
@@ -159,7 +153,6 @@ public class Default extends TemplateSecureScreen
             ScarabRequestTool scarabR = getScarabRequestTool(context);
             ScarabLocalizationTool l10n = getLocalizationTool(context);
             Module currentModule = scarabR.getCurrentModule();
-            IssueType currentIssueType = scarabR.getCurrentIssueType();
             ScarabUser user = (ScarabUser)data.getUser();
             if (perm != null)
             {

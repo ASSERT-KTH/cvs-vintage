@@ -49,28 +49,21 @@ package org.tigris.scarab.screens;
 // Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.Turbine;
 
 // Scarab Stuff
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueType;
 
 /**
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ViewIssue.java,v 1.3 2002/05/30 01:11:23 jmcnally Exp $
+ * @version $Id: ViewIssue.java,v 1.4 2002/10/24 22:59:28 jon Exp $
  */
 public class ViewIssue extends Default
 {
-    private static final String ID = " ID: ";
-
     protected String getTitle(ScarabRequestTool scarabR,
                               ScarabLocalizationTool l10n,
                               RunData data, TemplateContext context)

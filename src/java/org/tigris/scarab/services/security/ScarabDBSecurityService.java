@@ -47,8 +47,8 @@ package org.tigris.scarab.services.security;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.fulcrum.security.impl.db.DBSecurityService;
 
@@ -72,29 +72,32 @@ import org.tigris.scarab.util.Log;
  * being the Group implementation.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabDBSecurityService.java,v 1.5 2002/08/14 21:43:34 jon Exp $
+ * @version $Id: ScarabDBSecurityService.java,v 1.6 2002/10/24 22:59:30 jon Exp $
  */
 public class ScarabDBSecurityService extends DBSecurityService
 {
     /**
      * Retrieve a set of Groups that meet the specified Criteria.
      *
-     * @param a Criteria of Group selection.
+     * @param a <code>Criteria</code> of Group selection.
      * @return a set of Groups that meet the specified Criteria.
      */
     public GroupSet getGroups( Criteria criteria )
         throws DataBackendException
     {
-        List groups = (List) new ArrayList(0);
+        List groups = null;
         try
         {
-            groups = (List) ScarabModulePeer.doSelect(criteria);
+            groups = ScarabModulePeer.doSelect(criteria);
         }
         catch(Exception e)
         {
             throw new DataBackendException("getGroups(Criteria) failed", e);
         }
-
+        if (groups == null)
+        {
+            groups = new ArrayList(0);
+        }
         return new GroupSet(groups);
     }
 
@@ -108,7 +111,6 @@ public class ScarabDBSecurityService extends DBSecurityService
     public void saveGroup( Group group )
         throws DataBackendException, UnknownEntityException
     {
-        boolean groupExists = false;
         try
         {
             if ( !((Persistent)group).isNew() ) 
@@ -143,7 +145,6 @@ public class ScarabDBSecurityService extends DBSecurityService
                 group.save();
                 // add the group to system-wide cache
                 getAllGroups().add(group);
-                unlockExclusive();
                 return group;
             }
         }
@@ -164,7 +165,7 @@ public class ScarabDBSecurityService extends DBSecurityService
     /**
      * Removes a Group from the system.
      *
-     * @param the object describing group to be removed.
+     * @param group the object describing group to be removed.
      * @throws DataBackendException if there was an error accessing the 
      * data backend.
      * @throws UnknownEntityException if the group does not exist.
@@ -198,7 +199,7 @@ public class ScarabDBSecurityService extends DBSecurityService
     /**
      * Renames an existing Group.
      *
-     * @param the object describing the group to be renamed.
+     * @param group the object describing the group to be renamed.
      * @param name the new name for the group.
      * @throws DataBackendException if there was an error accessing the 
      * data backend.
@@ -242,7 +243,7 @@ public class ScarabDBSecurityService extends DBSecurityService
      * @return true if the group exists in the system, false otherwise
      * @throws DataBackendException when more than one Group with 
      *         the same name exists.
-     * @throws Exception, a generic exception.
+     * @throws Exception a generic exception.
      */
     protected boolean checkExists(Group group)
         throws DataBackendException, Exception

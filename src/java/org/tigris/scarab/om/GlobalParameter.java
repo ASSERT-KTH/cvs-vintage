@@ -1,7 +1,6 @@
 
 package org.tigris.scarab.om;
 
-
 import org.apache.torque.om.Persistent;
 
 /** 

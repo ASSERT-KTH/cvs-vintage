@@ -47,20 +47,18 @@ package org.tigris.scarab.attribute;
  */ 
 
 // JDK Stuff
-import java.util.List;
 
 import org.apache.torque.TorqueException;
 
 // Scarab Stuff
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.18 $ $Date: 2002/04/26 20:24:46 $
+ * @version $Revision: 1.19 $ $Date: 2002/10/24 22:59:26 $
  */
 public class UserAttribute extends AttributeValue
 {
@@ -142,13 +140,9 @@ public class UserAttribute extends AttributeValue
     public void setResources(Object resources)
     {
     }
-    
-    /** displays the attribute.
-     * @return Object to display the property. May be a String containing HTML
-     * @param data app data. may be needed to render control
-     * differently in different circumstances.
-     * Not sure about this though. It may be a better
-     * idea to handle this on the UI level.
+
+    /**
+     * Returns null
      */
     public Object loadResources() throws Exception
     {

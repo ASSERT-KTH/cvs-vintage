@@ -57,7 +57,6 @@ import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.entity.Permission;
 import org.apache.fulcrum.security.util.RoleSet;
 import org.apache.fulcrum.security.entity.Role;
-import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.util.AccessControlList;
 import org.apache.fulcrum.security.util.DataBackendException;
 import org.apache.fulcrum.security.util.UnknownEntityException;
@@ -66,25 +65,10 @@ import org.apache.torque.util.Criteria;
 import org.apache.torque.TorqueException;
 
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.PendingGroupUserRolePeer;
 import org.tigris.scarab.om.PendingGroupUserRole;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.services.cache.ScarabCache;
-
-/*
- import java.util.List;
- import java.util.ArrayList;
-
-
- import org.apache.velocity.app.FieldMethodizer;
-
- import org.tigris.scarab.om.AttributePeer;
- import org.tigris.scarab.om.IssueTypePeer;
-
-
- import org.apache.torque.util.Criteria;
- */
 
 /**
  * This scope is an object that is made available as a global
@@ -99,11 +83,12 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: SecurityAdminTool.java,v 1.9 2002/07/13 00:14:53 jmcnally Exp $
+ * @version $Id: SecurityAdminTool.java,v 1.10 2002/10/24 22:59:30 jon Exp $
  */
 public class SecurityAdminTool 
     implements SecurityAdminScope, Serializable
 {
+
     public void init(Object data)
     {
     }
@@ -117,8 +102,7 @@ public class SecurityAdminTool
     /** Returns a User object retrieved by specifying the username.
      *
      * @param username the username of the user to retrieve
-     * @returns the specified user, if found, or null otherwise
-     * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+     * @return the specified user, if found, or null otherwise
      */
     public ScarabUser getUserByUsername(String username) throws Exception
     {
@@ -129,41 +113,41 @@ public class SecurityAdminTool
             user = (ScarabUser)TurbineSecurity.getUser(username);
         }
         catch (UnknownEntityException uee)
-        {        
+        {
+            // FIXME are we sure we want to do nothing with these excetpions?
+            //if so, state it explicitly
         }
         catch (DataBackendException dbe)
         {          
         }
         
-        return (user);
+        return user;
     }
     
     /** Returns a Permission object retrieved by specifying the name of the permission.
      *
      * @param name the name of the permission to retrieve
-     * @returns the specified Permission, if found, or null otherwise
-     * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+     * @return the specified Permission, if found, or null otherwise
      */
     public Permission getPermissionByName(String name) throws Exception
     {
         Permission permission = null;
-        permission = (Permission)TurbineSecurity.getPermission(name);   
+        permission = TurbineSecurity.getPermission(name);
         
-        return (permission);
+        return permission;
     }
     
     /** Returns a Role object retrieved by specifying the name of the role.
      *
      * @param name the name of the role to retrieve
-     * @returns the specified Role, if found, or null otherwise
-     * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+     * @return the specified Role, if found, or null otherwise
      */
     public Role getRoleByName(String name) throws Exception
     {
         Role role = null;
-        role = (Role)TurbineSecurity.getRole(name);   
+        role = TurbineSecurity.getRole(name);
         
-        return (role);
+        return role;
     }
     
     /** 

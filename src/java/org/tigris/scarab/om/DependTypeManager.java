@@ -48,7 +48,6 @@ package org.tigris.scarab.om;
 
 import java.util.List;
 
-import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
@@ -61,7 +60,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: DependTypeManager.java,v 1.6 2002/10/15 20:54:39 jon Exp $
+ * @version $Id: DependTypeManager.java,v 1.7 2002/10/24 22:59:26 jon Exp $
  */
 public class DependTypeManager
     extends BaseDependTypeManager

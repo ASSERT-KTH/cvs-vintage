@@ -48,12 +48,8 @@ package org.tigris.scarab.om;
 
 // JDK classes
 import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.List;
-import java.util.Vector;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.Date;
 
 // Turbine classes
@@ -62,16 +58,10 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
-import org.apache.fulcrum.cache.TurbineGlobalCacheService;
-import org.apache.fulcrum.cache.ObjectExpiredException;
-import org.apache.fulcrum.cache.CachedObject;
-import org.apache.fulcrum.cache.GlobalCacheService;
-import org.apache.fulcrum.TurbineServices;
 
 // Scarab classes
 import org.tigris.scarab.om.ScarabUserManager;
 
-import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.cache.ScarabCache;
 
 /** 
@@ -83,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.52 2002/08/20 20:46:26 jmcnally Exp $
+  * @version $Id: Attribute.java,v 1.53 2002/10/24 22:59:26 jon Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -146,7 +136,7 @@ public class Attribute
     public static Attribute getInstance(int id)
         throws TorqueException
     {
-        return AttributeManager.getInstance((ObjectKey)new NumberKey(id));
+        return AttributeManager.getInstance(new NumberKey(id));
     }
 
 
@@ -168,7 +158,7 @@ public class Attribute
         {        
             Criteria crit = new Criteria();
             crit.add (AttributePeer.ATTRIBUTE_NAME, attributeName);
-            List attributes = (List) AttributePeer.doSelect(crit);
+            List attributes = AttributePeer.doSelect(crit);
             if (attributes.size() > 0)
             {
                 result = (Attribute) attributes.get(0);

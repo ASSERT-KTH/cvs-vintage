@@ -47,10 +47,8 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.List;
-import java.util.Map;
 import java.util.HashMap;
 
-import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
@@ -61,7 +59,7 @@ import org.apache.torque.om.ComboKey;
 /** 
  * This class manages RModuleIssueType objects.  
  *
- * @version $Id: RModuleIssueTypeManager.java,v 1.6 2002/07/08 19:46:07 jon Exp $
+ * @version $Id: RModuleIssueTypeManager.java,v 1.7 2002/10/24 22:59:26 jon Exp $
  */
 public class RModuleIssueTypeManager
     extends BaseRModuleIssueTypeManager

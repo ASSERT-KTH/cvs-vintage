@@ -238,7 +238,7 @@ public  class MITList
     /**
      * Declares an association between this object and a ScarabUser object
      *
-     * @param ScarabUser v
+     * @param v
      */
     public void setScarabUser(ScarabUser v) 
         throws TorqueException
@@ -628,7 +628,7 @@ public  class MITList
      * Checks all items after the first to see if they contain the attribute.
      * It is assumed the attribute is included in the first item.
      *
-     * @param attribute an <code>Attribute</code> value
+     * @param option an <code>Attribute</code> value
      * @return a <code>boolean</code> value
      */
     private boolean isCommon(AttributeOption option)
@@ -703,7 +703,6 @@ public  class MITList
         if (size() > 0) 
         {
             List items = getExpandedMITListItems();
-            ArrayList ids = new ArrayList(items.size());
             Iterator i = items.iterator();
             Criteria.Criterion c = null;
             while (i.hasNext()) 

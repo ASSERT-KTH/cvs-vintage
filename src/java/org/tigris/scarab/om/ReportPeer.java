@@ -1,7 +1,6 @@
 package org.tigris.scarab.om;
 
-import java.util.*;
-import com.workingdogs.village.*;
+import java.util.List;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
@@ -11,6 +10,7 @@ import org.apache.torque.util.Criteria;
 // Scarab classes
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.ScarabException;
+
 
 /** 
  *  You should add additional methods to this class to meet the
@@ -69,7 +69,7 @@ public class ReportPeer
     /** 
      * Retrieve a single object by pk
      *
-     * @param ObjectKey pk
+     * @param pk
      */
     public static Report retrieveByPK( ObjectKey pk )
         throws TorqueException

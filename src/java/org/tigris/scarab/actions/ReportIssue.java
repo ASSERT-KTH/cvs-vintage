@@ -87,7 +87,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.144 2002/10/23 21:32:06 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.145 2002/10/24 22:59:25 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -602,7 +602,6 @@ public class ReportIssue extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         if (intake.isAllValid()) 
         {
-            Group group = intake.get("Issue", IntakeTool.DEFAULT_KEY);        
             ScarabRequestTool scarabR = getScarabRequestTool(context);
             Issue issue = scarabR.getIssue();
             

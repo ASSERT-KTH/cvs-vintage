@@ -49,22 +49,15 @@ package org.tigris.scarab.om;
 // JDK classes
 import java.io.Serializable;
 import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Collections;
 
-import org.apache.log4j.Category;
 
 // Turbine classes
-import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
-import org.apache.torque.util.BasePeer;
-import org.apache.torque.oid.IDBroker;
 import java.sql.Connection;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.util.RoleSet;
@@ -72,14 +65,12 @@ import org.apache.fulcrum.security.util.TurbineSecurityException;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.entity.Role;
-import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRole;
 
 // Scarab classes
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
 
 // FIXME! do not like referencing servlet inside of business objects
@@ -91,8 +82,6 @@ import org.apache.fulcrum.security.impl.db.entity
     .TurbineUserGroupRolePeer;
 import org.apache.fulcrum.security.impl.db.entity
     .TurbineRolePermissionPeer;
-import org.apache.fulcrum.security.impl.db.entity
-    .TurbineRolePeer;
 
 /**
  * The ScarabModule class is the focal point for dealing with
@@ -105,7 +94,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.120 2002/07/30 22:48:15 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.121 2002/10/24 22:59:26 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -113,8 +102,6 @@ public class ScarabModule
 {
     private static final String GET_USERS = 
         "getUsers";
-    private static final String GET_R_MODULE_ISSUE_TYPES = 
-        "getRModuleIssueTypes";
 
     protected static final NumberKey ROOT_ID = new NumberKey("0");
 
@@ -156,7 +143,7 @@ public class ScarabModule
                 crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
                              TurbineUserGroupRolePeer.ROLE_ID);
                 crit.add(TurbineUserGroupRolePeer.GROUP_ID, 
-                         ((Persistent)this).getPrimaryKey());
+                         getPrimaryKey());
                 crit.addJoin(ScarabUserImplPeer.USER_ID, 
                              TurbineUserGroupRolePeer.USER_ID);
                 try
@@ -399,7 +386,7 @@ public class ScarabModule
             // that takes the two criteria values as a argument so that other 
             // implementations can benefit from being able to get the 
             // list of modules. -- do not agree - jdm
-            List result = (List) ScarabModulePeer.doSelect(crit);
+            List result = ScarabModulePeer.doSelect(crit);
             if (result.size() > 0)
             {
                 throw new TorqueException(
@@ -447,7 +434,7 @@ public class ScarabModule
             // grant the ower of the module the Project Owner role
             try
             {
-                User user = (User) ScarabUserManager.getInstance(getOwnerId());
+                User user = ScarabUserManager.getInstance(getOwnerId());
                 Role role = TurbineSecurity.getRole("Project Owner");
                 grant (user, role);
                 setInitialAttributesAndIssueTypes();
@@ -505,7 +492,7 @@ public class ScarabModule
     public void grant(User user, Role role)
         throws TurbineSecurityException
     {
-        TurbineSecurity.grant(user,(Group)this,role);
+        TurbineSecurity.grant(user,this,role);
     }
 
     /**

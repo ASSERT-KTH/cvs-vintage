@@ -5,7 +5,6 @@ package org.tigris.scarab.om;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
-import org.apache.torque.util.Criteria;
 import org.tigris.scarab.util.word.IssueSearch;
 
 /** 

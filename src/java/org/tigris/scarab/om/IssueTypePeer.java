@@ -1,16 +1,16 @@
 package org.tigris.scarab.om;
 
-import java.util.*;
+import java.util.List;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 
 // Local classes
-import org.tigris.scarab.om.map.*;
 import org.tigris.scarab.services.cache.ScarabCache;
 
-/** 
+
+/**
  *  You should add additional methods to this class to meet the
  *  application requirements.  This class will only be generated as
  *  long as it does not already exist in the output directory.
@@ -31,7 +31,7 @@ public class IssueTypePeer
     /** 
      * Retrieve a single object by pk
      *
-     * @param ObjectKey pk
+     * @param pk
      */
     public static IssueType retrieveByPK( ObjectKey pk )
         throws TorqueException
@@ -54,7 +54,7 @@ public class IssueTypePeer
      *  Gets a List of all of the Issue types in the database,
      *  That are not template types.
      */
-    public static List getAllIssueTypes(boolean includeDeleted, 
+    public static List getAllIssueTypes(boolean includeDeleted,
                        String sortColumn, String sortPolarity)
         throws Exception
     {

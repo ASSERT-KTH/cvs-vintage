@@ -3,11 +3,8 @@
 package org.tigris.scarab.om;
 
 import java.util.List;
-import java.util.Map;
 import java.util.HashMap;
 
-import org.apache.torque.om.ObjectKey;
-import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 

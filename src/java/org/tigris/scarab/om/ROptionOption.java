@@ -46,15 +46,10 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.Comparator;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 
@@ -70,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
   * This class represents the SCARAB_R_OPTION_OPTION table.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ROptionOption.java,v 1.10 2002/03/14 01:13:11 jmcnally Exp $
+  * @version $Id: ROptionOption.java,v 1.11 2002/10/24 22:59:26 jon Exp $
   */
 public class ROptionOption 
     extends org.tigris.scarab.om.BaseROptionOption
@@ -131,7 +126,7 @@ public class ROptionOption
                 Criteria crit = new Criteria();
                 crit.add (ROptionOptionPeer.OPTION1_ID, parent);
                 crit.add (ROptionOptionPeer.OPTION2_ID, child);
-                option = (ROptionOption) ((List)ROptionOptionPeer.doSelect(crit)).get(0);
+                option = (ROptionOption) (ROptionOptionPeer.doSelect(crit)).get(0);
             }
             catch (Exception e)
             {

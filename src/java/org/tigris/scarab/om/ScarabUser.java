@@ -46,11 +46,9 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */
 import java.util.List;
-import java.util.HashMap;
 import java.util.Calendar;
 
 import org.apache.fulcrum.security.entity.User;
-import org.apache.fulcrum.security.entity.Role;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.TorqueException;
@@ -63,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.76 2002/08/08 01:36:53 elicia Exp $
+ * @version $Id: ScarabUser.java,v 1.77 2002/10/24 22:59:26 jon Exp $
  */
 public interface ScarabUser extends User
 {
@@ -234,13 +232,13 @@ public interface ScarabUser extends User
      * @return true if the permission exists for the user within the
      * given module, false otherwise
      */
-    public boolean hasPermission(String perm, Module module);
+    public boolean hasPermission(String permission, Module module);
 
     /**
      * Returns true if this user has the given permission within all the given
      * modules, false otherwise.  If the list is null or empty
      */
-    public boolean hasPermission(String perm, List modules);
+    public boolean hasPermission(String permission, List modules);
 
     /**
      * Gets all modules which are currently associated with this user 
@@ -256,9 +254,9 @@ public interface ScarabUser extends User
 
     /**
      * Get a list of <code>Module</code>'s that where a user has
-     * the permissions given. Does not show deleted modules.
+     * the specified permission. Does not show deleted modules.
      * (showDeleted = false)
-     * @param permissions a <code>String</code> value
+     * @param permission a <code>String</code> value
      * @return a <code>Module[]</code> value
      */
     public Module[] getModules(String permission) 

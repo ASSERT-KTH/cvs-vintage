@@ -50,11 +50,8 @@ package org.tigris.scarab.screens.home;
 // Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.tool.TemplateLink;
 
 // Scarab Stuff
-import org.tigris.scarab.util.ScarabLink;
-import org.tigris.scarab.util.Log;
 import org.tigris.scarab.screens.Default;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.ScarabUser;
@@ -65,7 +62,7 @@ import org.tigris.scarab.om.ScarabUser;
  * list as selected for editing.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: XModuleList.java,v 1.1 2002/08/01 17:35:31 jmcnally Exp $
+ * @version $Id: XModuleList.java,v 1.2 2002/10/24 22:59:30 jon Exp $
  */
 public class XModuleList extends Default
 {

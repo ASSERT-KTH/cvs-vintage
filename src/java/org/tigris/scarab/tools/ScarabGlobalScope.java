@@ -49,12 +49,7 @@ package org.tigris.scarab.tools;
 import java.util.List;
 
 import org.apache.turbine.services.pull.ApplicationTool;
-import org.tigris.scarab.om.ScarabUser;
 import org.apache.velocity.app.FieldMethodizer;
-import org.apache.fulcrum.security.entity.Group;
-import org.apache.fulcrum.security.entity.Permission;
-import org.apache.fulcrum.security.entity.Role;
-import org.apache.fulcrum.security.util.AccessControlList;
 
 
 /**
@@ -69,7 +64,7 @@ import org.apache.fulcrum.security.util.AccessControlList;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalScope.java,v 1.15 2002/10/22 04:07:38 jmcnally Exp $
+ * @version $Id: ScarabGlobalScope.java,v 1.16 2002/10/24 22:59:30 jon Exp $
  */
 public interface ScarabGlobalScope extends ApplicationTool
 {
@@ -127,7 +122,7 @@ public interface ScarabGlobalScope extends ApplicationTool
     /**
      * Creates a new array with elements reversed from the given array.
      *
-     * @param the orginal <code>Object[]</code> 
+     * @param a the orginal <code>Object[]</code>
      * @return a new <code>Object[]</code> with values reversed from the 
      * original
      */
@@ -136,7 +131,7 @@ public interface ScarabGlobalScope extends ApplicationTool
     /**
      * Creates a new List with elements reversed from the given List.
      *
-     * @param the orginal <code>List</code> 
+     * @param a the orginal <code>List</code>
      * @return a new <code>List</code> with values reversed from the 
      * original
      */
@@ -148,7 +143,9 @@ public interface ScarabGlobalScope extends ApplicationTool
      * The list returned by this method is backed by the original, so changes
      * to either affect the other.
      *
-     * @param the orginal <code>List</code> 
+     * @param a the orginal <code>List</code>
+     * @param fromIndex the start index of the returned subset
+     * @param toIndex the end index of the returned subset
      * @return a derived <code>List</code> with a view of the original
      */
     public List subset(List a, Integer fromIndex, Integer toIndex);
@@ -157,17 +154,19 @@ public interface ScarabGlobalScope extends ApplicationTool
      * Creates a new array with a view of the portion of the given array
      * between the specified fromIndex, inclusive, and toIndex, exclusive
      *
-     * @param the orginal <code>Object[]</code> 
+     * @param a the orginal <code>Object[]</code>
+     * @param fromIndex the start index of the returned subset
+     * @param toIndex the end index of the returned subset
      * @return a new <code>Object[]</code> with a view of the original
      */
     public Object[] subset(Object[] a, Integer fromIndex, Integer toIndex);
 
     /**
-     * Velocity has no way of getting the size of an Object[]
+     * Velocity has no way of getting the size of an <code>Object[]</code>
      * easily. Usually this would be done by calling obj.length
      * but this doesn't work in Velocity.
-     * @param the <code>Object[]</code>
-     * @param the number of objects in the <code>Object[]</code>
+     * @param obj the <code>Object[]</code>
+     * @return the number of objects in the <code>Object[]</code>  or -1 if obj is null
      */
     public int sizeOfArray(Object[] obj);
 
@@ -204,9 +203,12 @@ public interface ScarabGlobalScope extends ApplicationTool
     public String getSiteName();
 
     /**
-     * Returns an int representation of the given Object whose toString
-     * method should be a valid integer.  if the string cannot be parsed
-     * zero is returned.  
+     * Returns an <code>int</code> representation of the given
+     * <code>Object</code> whose toString method should be a valid integer.
+     * If the <code>String</code> cannot be parsed <code>0</code> is returned.
+     * @param obj the object
+     * @return the <code>int</code> representation of the <code>Object</code>
+     *  if possible or <code>0</code>.
      */
     public int getInt(Object obj);
 }

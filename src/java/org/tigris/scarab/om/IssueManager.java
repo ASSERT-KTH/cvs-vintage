@@ -6,12 +6,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.LinkedList;
 
-import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.manager.CacheListener;
-import org.apache.torque.manager.MethodResultCache;
 
 /** 
  * This class manages Issue objects.  

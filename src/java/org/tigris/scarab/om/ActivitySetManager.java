@@ -50,17 +50,15 @@ import java.util.Date;
 
 import org.tigris.scarab.util.ScarabException;
 
-import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.NumberKey;
-import org.apache.torque.om.Persistent;
 
 /** 
  * This class manages ActivitySet objects.
  *
  * @author <a href="mailto:jmcnally@collab.net">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivitySetManager.java,v 1.2 2002/10/15 20:54:39 jon Exp $
+ * @version $Id: ActivitySetManager.java,v 1.3 2002/10/24 22:59:26 jon Exp $
  */
 public class ActivitySetManager
     extends BaseActivitySetManager

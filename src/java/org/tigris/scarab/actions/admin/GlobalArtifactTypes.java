@@ -61,13 +61,12 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.26 2002/10/24 21:26:24 elicia Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.27 2002/10/24 22:59:26 jon Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {

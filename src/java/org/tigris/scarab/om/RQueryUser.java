@@ -49,18 +49,13 @@ package org.tigris.scarab.om;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria; 
 
-import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.services.security.ScarabSecurity;
-import org.tigris.scarab.om.Module;
-
 /** 
  * You should add additional methods to this class to meet the
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RQueryUser.java,v 1.9 2002/03/26 23:02:14 elicia Exp $
+ * @version $Id: RQueryUser.java,v 1.10 2002/10/24 22:59:26 jon Exp $
  */
 public  class RQueryUser 
     extends org.tigris.scarab.om.BaseRQueryUser

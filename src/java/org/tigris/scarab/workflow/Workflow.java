@@ -52,7 +52,6 @@ import java.util.List;
 
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
-import org.apache.torque.util.Criteria;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.AttributeOption;
@@ -68,7 +67,7 @@ import org.tigris.scarab.util.ScarabException;
  * from the Scarab.properties file.
  *   
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
- * @version $Id: Workflow.java,v 1.8 2002/09/29 18:56:07 elicia Exp $
+ * @version $Id: Workflow.java,v 1.9 2002/10/24 22:59:31 jon Exp $
  */
 public interface Workflow
 {

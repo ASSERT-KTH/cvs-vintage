@@ -46,13 +46,10 @@ package org.tigris.scarab.services;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.log4j.Category;
 import org.apache.turbine.Turbine;
 import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.InitializationException;
-import org.apache.fulcrum.TurbineServices;
 import org.apache.torque.Torque;
-import org.apache.torque.TorqueException;
 
 /**
  * Turbine does not yet have a way to initialize components directly, and
@@ -63,7 +60,7 @@ import org.apache.torque.TorqueException;
  * initializing components is available.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: TorqueService.java,v 1.1 2002/05/01 00:56:16 jmcnally Exp $
+ * @version $Id: TorqueService.java,v 1.2 2002/10/24 22:59:30 jon Exp $
  */
 public class TorqueService
     extends BaseService

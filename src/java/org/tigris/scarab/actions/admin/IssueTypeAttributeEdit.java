@@ -46,7 +46,6 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.ArrayList;
 import java.util.List;
 
 // Turbine Stuff 
@@ -56,28 +55,22 @@ import org.apache.turbine.ParameterParser;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.intake.model.Field;
-import org.apache.fulcrum.intake.model.BooleanField;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.RIssueTypeOption;
 import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionManager;
-import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.workflow.WorkflowFactory;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.services.cache.ScarabCache;  
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: IssueTypeAttributeEdit.java,v 1.4 2002/10/23 21:40:53 jon Exp $
+ * @version $Id: IssueTypeAttributeEdit.java,v 1.5 2002/10/24 22:59:26 jon Exp $
  */
 public class IssueTypeAttributeEdit extends RequireLoginFirstAction
 {

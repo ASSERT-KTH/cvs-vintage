@@ -48,7 +48,6 @@ package org.tigris.scarab.tools;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
-import java.text.ParseException;
 
 /**
  * Takes a date in any format and converts it to the desired format
@@ -62,7 +61,6 @@ public class Format
      * $format.getDate($scarabR.DateFormat, $issue.CreatedDate)
      */
     public static String getDate(SimpleDateFormat format, Date date)
-         throws ParseException
     {
         return format.format(date);
     }
@@ -72,7 +70,6 @@ public class Format
      * Uses SimpleDateFormat to do its magic.
      */
     public static String getDate(String format, Date date)
-         throws ParseException
     {
         SimpleDateFormat newFormat = new SimpleDateFormat(format);
         return newFormat.format(date);
@@ -83,7 +80,6 @@ public class Format
      * Uses SimpleDateFormat to do its magic.
      */
     public static String getNow(SimpleDateFormat format)
-         throws ParseException
     {
         return getDate(format, new Date());
     }
@@ -93,7 +89,6 @@ public class Format
      * Uses SimpleDateFormat to do its magic.
      */
     public static String getNow(String format)
-         throws ParseException
     {
         return getDate(format, new Date());
     }

@@ -46,25 +46,12 @@ package org.tigris.scarab.screens.entry;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Turbine Stuff 
-import org.apache.turbine.RunData;
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.Turbine;
-
-// Scarab Stuff
-import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueType;
 
 /**
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Wizard3.java,v 1.1 2002/05/24 03:26:10 jmcnally Exp $
+ * @version $Id: Wizard3.java,v 1.2 2002/10/24 22:59:29 jon Exp $
  */
 public class Wizard3 extends Wizard1
 {

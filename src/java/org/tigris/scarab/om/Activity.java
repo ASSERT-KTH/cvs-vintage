@@ -47,7 +47,6 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.List;
-import java.util.Date;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
@@ -56,7 +55,6 @@ import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import java.sql.Connection;
 
-import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -66,7 +64,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.37 2002/10/15 21:59:41 jmcnally Exp $
+ * @version $Id: Activity.java,v 1.38 2002/10/24 22:59:26 jon Exp $
  */
 public class Activity 
     extends BaseActivity

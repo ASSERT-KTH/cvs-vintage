@@ -80,7 +80,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.65 2002/10/23 21:15:35 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.66 2002/10/24 22:59:25 jon Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -275,8 +275,8 @@ public class AssignIssue extends BaseModifyIssue
                 if (!userStillAssigned)
                 {
                     ScarabUser assignee = scarabR.getUser(oldAttVal.getUserId());
-                    String[] results = issue.deleteUser(assignee, assigner, 
-                                                        oldAttVal, reason);
+                    // delete the user
+                    issue.deleteUser(assignee, assigner, oldAttVal, reason);
                     String attrDisplayName = issue.getModule()
                        .getRModuleAttribute(oldAttVal.getAttribute(), issue.getIssueType())
                        .getDisplayValue();

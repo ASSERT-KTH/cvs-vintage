@@ -96,7 +96,8 @@ import org.apache.turbine.Turbine;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.46 2002/10/22 04:07:38 jmcnally Exp $
+ * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+ * @version $Id: ScarabGlobalTool.java,v 1.47 2002/10/24 22:59:30 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -253,8 +254,8 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      *
      * @param searchField the name of the database attribute to search on
      * @param searchCriteria the search criteria to use within the LIKE command
-     * @returns a List of users matching the specifed criteria
-     * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+     * @return a List of users matching the specifed criteria
+     *
      */
     public List getSearchUsers(String searchField, String searchCriteria)
         throws Exception
@@ -273,8 +274,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      * @param searchCriteria the search criteria to use within the LIKE command
      * @param orderByField the name of the database attribute to order the list by
      * @param ascOrDesc either "ASC" of "DESC" specifying the order to sort in
-     * @returns a List of users matching the specifed criteria
-     * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+     * @return a List of users matching the specifed criteria
      */
     /**
      * Describe <code>getSearchUsers</code> method here.
@@ -394,7 +394,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     /**
      * Creates a new array with elements reversed from the given array.
      *
-     * @param the orginal <code>Object[]</code> 
+     * @param a the orginal <code>Object[]</code>
      * @return a new <code>Object[]</code> with values reversed from the 
      * original
      */
@@ -409,9 +409,10 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     }
 
     /**
-     * Creates a new List with elements reversed from the given List.
+     * Creates a new <code>List</code> with elements reversed from the
+     * given <code>List</code>.
      *
-     * @param the orginal <code>List</code> 
+     * @param a the orginal <code>List</code>
      * @return a new <code>List</code> with values reversed from the 
      * original
      */
@@ -427,12 +428,15 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     }
 
     /**
-     * Creates  a view of the portion of the given
-     * List between the specified fromIndex, inclusive, and toIndex, exclusive
+     * Creates a view of the portion of the given
+     * <code>List</code> between the specified <code>fromIndex</code>, inclusive, and
+     * <code>toIndex</code>, exclusive.
      * The list returned by this method is backed by the original, so changes
      * to either affect the other.
      *
-     * @param the orginal <code>List</code> 
+     * @param a the orginal <code>List</code>
+     * @param fromIndex the start index of the returned subset
+     * @param toIndex the end index of the returned subset
      * @return a derived <code>List</code> with a view of the original
      */
     public List subset(List a, Integer fromIndex, Integer toIndex)
@@ -448,7 +452,9 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      * Creates a new array with a view of the portion of the given array
      * between the specified fromIndex, inclusive, and toIndex, exclusive
      *
-     * @param the orginal <code>Object[]</code> 
+     * @param a the orginal <code>Object[]</code>
+     * @param fromIndex the start index of the returned subset
+     * @param toIndex the end index of the returned subset
      * @return a new <code>Object[]</code> with a view of the original
      */
     public Object[] subset(Object[] a, Integer fromIndex, Integer toIndex)
@@ -466,10 +472,10 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     }
 
     /**
-     * Velocity has no way of getting the size of an Object[]
+     * Velocity has no way of getting the size of an <code>Object[]</code>
      * easily. Usually this would be done by calling obj.length
      * but this doesn't work in Velocity.
-     * @param the <code>Object[]</code>
+     * @param obj the <code>Object[]</code>
      * @return the number of objects in the <code>Object[]</code> or -1 if obj is null
      */
     public int sizeOfArray(Object[] obj)
@@ -573,9 +579,12 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     }
 
     /**
-     * Returns an int representation of the given Object whose toString
-     * method should be a valid integer.  if the string cannot be parsed
-     * zero is returned.  
+     * Returns an <code>int</code> representation of the given
+     * <code>Object</code> whose toString method should be a valid integer.
+     * If the <code>String</code> cannot be parsed <code>0</code> is returned.
+     * @param obj the object
+     * @return the <code>int</code> representation of the <code>Object</code>
+     *  if possible or <code>0</code>.
      */
     public int getInt(Object obj)
     {

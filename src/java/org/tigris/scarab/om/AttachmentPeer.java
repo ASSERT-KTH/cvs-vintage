@@ -73,7 +73,7 @@ public class AttachmentPeer
     /** 
      * Retrieve a single object by pk
      *
-     * @param ObjectKey pk
+     * @param pk
      */
     public static Attachment retrieveByPK( ObjectKey pk )
         throws TorqueException

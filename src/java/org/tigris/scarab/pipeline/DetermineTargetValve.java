@@ -46,8 +46,6 @@ package org.tigris.scarab.pipeline;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Map;
-import java.util.HashMap;
 import java.io.IOException;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.RunData;

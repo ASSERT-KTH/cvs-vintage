@@ -71,7 +71,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.55 2002/10/09 22:28:10 jmcnally Exp $
+ * @version $Id: Module.java,v 1.56 2002/10/24 22:59:26 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -319,22 +319,25 @@ public interface Module
     /**
      * List of saved reports associated with this module and
      * created by the given user.
+     * @param user the user
+     * @return a <code>List</code> value
      */
     public List getSavedReports(ScarabUser user)
         throws Exception;
 
     /**
-     * Array of Attributes used for quick search.
+     * Array of Attributes used for quick search given the specified <code>issueType</code>
      *
+     * @param issueType
      * @return an <code>Attribute[]</code> value
      */
     public Attribute[] getQuickSearchAttributes(IssueType issueType)
         throws Exception;
 
     /**
-     * Array of Attributes which are active and required by this module.
+     * Array of Attributes which are active and required for an Issue Type.
      *
-     * @param inOrder flag determines whether the attribute order is important
+     * @param issueType
      * @return an <code>Attribute[]</code> value
      */
     public List getRequiredAttributes(IssueType issueType)

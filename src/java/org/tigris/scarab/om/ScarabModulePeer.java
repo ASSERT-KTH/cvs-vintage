@@ -56,7 +56,6 @@ import org.apache.torque.util.Criteria;
 import org.apache.fulcrum.security.util.DataBackendException;
 
 // Local classes
-import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Module;
 
 /**
@@ -86,18 +85,18 @@ public class ScarabModulePeer
     public static List getAllModules()
         throws Exception
     {
-        return (List) doSelect(new Criteria());
+        return doSelect(new Criteria());
     }
 
     /**
      * Checks if a Group is defined in the system. The name
      * is used as query criteria.
      *
-     * @param permission The Group to be checked.
+     * @param group The Group to be checked.
      * @return <code>true</code> if given Group exists in the system.
      * @throws DataBackendException when more than one Group with
      *         the same name exists.
-     * @throws Exception, a generic exception.
+     * @throws Exception a generic exception.
      */
     public static boolean checkExists( Group group )
         throws DataBackendException, Exception
@@ -107,7 +106,7 @@ public class ScarabModulePeer
         String name = ((Module)group).getRealName();
         criteria.add(MODULE_NAME, name);
         criteria.add(PARENT_ID, ((Module)group).getParentId());
-        List results = (List) BasePeer.doSelect(criteria);
+        List results = BasePeer.doSelect(criteria);
         if(results.size() > 1)
         {
             throw new DataBackendException("Multiple groups named '" +

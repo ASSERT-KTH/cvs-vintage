@@ -52,21 +52,18 @@ import java.util.WeakHashMap;
 import java.util.Iterator;
 import java.io.Serializable;
 import org.apache.log4j.Category;
-import org.apache.commons.configuration.Configuration;
 import org.apache.fulcrum.Service;
 import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.InitializationException;
 import org.apache.fulcrum.pool.TurbinePool;
-import org.apache.torque.om.ObjectKey;
-import org.tigris.scarab.om.ScarabUser;
 
 /**
  * This class provides a simple Map cache that is available to the
  * current thread.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabCache.java,v 1.4 2002/04/26 20:24:47 jmcnally Exp $
+ * @version $Id: ScarabCache.java,v 1.5 2002/10/24 22:59:30 jon Exp $
  */
 public class ScarabCache 
     extends BaseService

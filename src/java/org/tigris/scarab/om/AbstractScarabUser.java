@@ -54,19 +54,11 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Comparator;
 
-import org.apache.fulcrum.security.entity.User;
-import org.apache.fulcrum.security.entity.Role;
-import org.apache.fulcrum.security.entity.Group;
-import org.apache.fulcrum.security.util.GroupSet;
-import org.apache.fulcrum.security.TurbineSecurity;
-import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRolePeer;
 import java.sql.Connection;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.BaseObject;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
-import org.apache.commons.util.GenerateUniqueId;
 
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Issue;
@@ -81,7 +73,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.54 2002/08/26 23:05:39 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.55 2002/10/24 22:59:26 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -318,7 +310,7 @@ public abstract class AbstractScarabUser
         Module[] userModules = getModules(ScarabSecurity.ISSUE__ENTER);
         for (int i=0; i<userModules.length; i++)
         {
-             Module module = (Module)userModules[i];
+             Module module = userModules[i];
              if (!module.isGlobalModule())
              {
                  copyToModules.add(module);
@@ -334,7 +326,7 @@ public abstract class AbstractScarabUser
         Module[] userModules = getModules(ScarabSecurity.ISSUE__ENTER);
         for (int i=0; i<userModules.length; i++)
         {
-             Module module = (Module)userModules[i];
+             Module module = userModules[i];
              if (!module.getModuleId().equals(currentModule.getModuleId())
                  && !module.isGlobalModule())
              {
@@ -694,7 +686,7 @@ public abstract class AbstractScarabUser
         RQueryUser rqu = getDefaultQueryUser(me, issueType);
         if (rqu != null)
         { 
-            query = (Query)rqu.getQuery();
+            query = rqu.getQuery();
         }
         return query;
     }
@@ -713,15 +705,16 @@ public abstract class AbstractScarabUser
         }
     }
 
+    // commented out as not yet used.
     /**
      * If user has no default query set, gets a default default query.
-     */
     private String getDefaultDefaultQuery() throws Exception
     {
         StringBuffer buf = new StringBuffer("&searchcb=");
         buf.append(getEmail());
         return buf.toString();
     }
+    */
 
     /**
      * @see org.apache.torque.om.Persistent#save()

@@ -48,13 +48,10 @@ package org.tigris.scarab.om;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Calendar;
 
 import org.apache.fulcrum.security.entity.User;
-import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.impl.db.entity.TurbinePermissionPeer;
@@ -62,13 +59,8 @@ import org.apache.fulcrum.security.impl.db.entity.TurbineRolePermissionPeer;
 import org.apache.fulcrum.security.impl.db.entity.TurbineRolePeer;
 import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRolePeer;
 import org.apache.fulcrum.security.util.AccessControlList;
-import org.apache.fulcrum.security.util.GroupSet;
-import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
-import org.apache.torque.om.BaseObject;
-import org.apache.torque.om.Persistent;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.commons.util.GenerateUniqueId;
 
@@ -90,7 +82,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.84 2002/08/26 17:12:41 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.85 2002/10/24 22:59:26 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -99,11 +91,8 @@ public class ScarabUserImpl
     private static final Category torqueLog = 
         Category.getInstance("org.apache.torque");
 
-    private static final String REPORTING_ISSUE = "REPORTING_ISSUE";
-    
     public static final String PASSWORD_EXPIRE = "PASSWORD_EXPIRE";
     
-    private int issueCount = 0;
     private AbstractScarabUser internalUser;
     
     /**
@@ -269,7 +258,7 @@ public class ScarabUserImpl
             criteria.add (ScarabUserImplPeer.getColumnName(User.CONFIRM_VALUE),
                           confirm);
             criteria.setSingleRecord(true);
-            List result = (List) ScarabUserImplPeer.doSelect(criteria);
+            List result = ScarabUserImplPeer.doSelect(criteria);
             if (result.size() > 0)
             {
                 return true;

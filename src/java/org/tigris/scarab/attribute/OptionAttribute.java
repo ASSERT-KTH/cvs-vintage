@@ -47,14 +47,13 @@ package org.tigris.scarab.attribute;
  */ 
 
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.RModuleOption;
 
 /**
  * this is a superclass for attributes which use option lists (SelectOne & Voted)
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.17 $ $Date: 2002/01/18 22:26:06 $
+ * @version $Revision: 1.18 $ $Date: 2002/10/24 22:59:26 $
  */
 public abstract class OptionAttribute extends AttributeValue
 {

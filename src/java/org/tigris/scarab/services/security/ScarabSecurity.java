@@ -50,18 +50,15 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.collections.ExtendedProperties;
 import org.apache.fulcrum.Service;
 import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.TurbineServices;
-import org.apache.torque.om.ObjectKey;
-import org.tigris.scarab.om.ScarabUser;
 
 /**
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.18 2002/10/22 21:16:53 elicia Exp $
+ * @version $Id: ScarabSecurity.java,v 1.19 2002/10/24 22:59:30 jon Exp $
  */
 public class ScarabSecurity 
     extends BaseService

@@ -46,7 +46,6 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Date;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
@@ -54,11 +53,9 @@ import java.util.Locale;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria; 
-import org.apache.torque.om.NumberKey;
 
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.fulcrum.template.DefaultTemplateContext;
-import org.apache.fulcrum.template.TemplateEmail;
 import org.apache.fulcrum.localization.Localization;
 
 import org.apache.turbine.Turbine;
@@ -74,7 +71,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.3 2002/10/09 22:28:10 jmcnally Exp $
+ * @version $Id: ActivitySet.java,v 1.4 2002/10/24 22:59:26 jon Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet

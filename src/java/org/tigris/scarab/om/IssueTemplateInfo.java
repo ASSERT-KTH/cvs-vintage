@@ -54,7 +54,6 @@ import org.apache.fulcrum.localization.Localization;
 import org.apache.turbine.Turbine;
 
 import org.apache.torque.om.Persistent;
-import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -85,7 +84,7 @@ public  class IssueTemplateInfo
                                   TemplateContext context )
         throws Exception
     {
-        Issue issue = (Issue) IssuePeer.retrieveByPK(getIssueId());
+        Issue issue = IssuePeer.retrieveByPK(getIssueId());
 
         // If it's a module template, user must have Item | Approve 
         //   permission, or its Approved field gets set to false

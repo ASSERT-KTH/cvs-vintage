@@ -46,9 +46,7 @@ package org.tigris.scarab.tools;
  * individuals on behalf of CollabNet.
  */
 
-import java.util.Map;
 import java.util.List;
-import java.util.Properties;
 import java.util.MissingResourceException;
 
 import org.apache.commons.configuration.Configuration;
@@ -369,7 +367,7 @@ public class ScarabLocalizationTool
                 templateName = DEFAULT_SCOPE;
             }
             String propName = "template." + templateName + '.' + property;
-            String l10nKey = (String) properties.getString(propName);
+            String l10nKey = properties.getString(propName);
             Log.get().debug("ScarabLocalizationTool: Property name '" + propName +
                         "' -> localization key '" + l10nKey + '\'');
 

@@ -174,7 +174,7 @@ public class ScarabCacheKey
     /**
      * Initialize key for method with more than two arguments.
      *
-     * @param Serializable[] where 
+     * @param keys <code>Serializable[]</code> where
      * [0]=>the Object on which the method is invoked
      * if the method is static, a String representing the class name is used.
      * [1]=>the method name

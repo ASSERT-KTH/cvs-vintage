@@ -226,7 +226,7 @@ public class RModuleOption
     /**
      * Gets a list of this option's descendants
      * That are associated with this module/Issue Type
-     * @returns List of RModuleOptions
+     * @return <code>List</code> of <code>RModuleOptions</code>
      */
     public List getDescendants(IssueType issueType)
         throws Exception

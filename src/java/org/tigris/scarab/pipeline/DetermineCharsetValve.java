@@ -56,9 +56,6 @@ import org.apache.turbine.ValveContext;
 import org.apache.fulcrum.mimetype.TurbineMimeTypes;
 import org.apache.log4j.Category;
 
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * 

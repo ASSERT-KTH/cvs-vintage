@@ -48,11 +48,13 @@ package org.tigris.scarab.screens;
 
 
 // Turbine Stuff 
-import java.io.*;
+import java.io.File;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import javax.servlet.ServletOutputStream;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.tool.TemplateLink;
 import org.apache.torque.om.NumberKey;
 
 // Scarab Stuff
@@ -65,7 +67,7 @@ import org.tigris.scarab.om.AttachmentManager;
  * Sends file contents directly to the output stream.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ViewAttachment.java,v 1.7 2002/04/26 23:34:52 jmcnally Exp $
+ * @version $Id: ViewAttachment.java,v 1.8 2002/10/24 22:59:28 jon Exp $
  */
 public class ViewAttachment extends Default
 {
@@ -85,9 +87,9 @@ public class ViewAttachment extends Default
         File f = new File(attachment.getFullPath());
         data.getResponse().setContentLength((int)f.length());
 
-        BufferedInputStream bis = 
+        BufferedInputStream bis =
              new BufferedInputStream(new FileInputStream(f));
-        OutputStream os = data.getResponse().getOutputStream();        
+        OutputStream os = data.getResponse().getOutputStream();
         try
         {
             byte[] bytes = new byte[2048];

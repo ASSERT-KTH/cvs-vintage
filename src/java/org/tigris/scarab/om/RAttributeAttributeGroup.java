@@ -1,13 +1,8 @@
 package org.tigris.scarab.om;
 
 import org.apache.torque.om.Persistent;
-//import org.apache.fulcrum.template.TemplateContext;
 import org.apache.torque.util.Criteria;
 
-import org.tigris.scarab.services.security.ScarabSecurity;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.ScarabException;
 
 /** 
  * You should add additional methods to this class to meet the

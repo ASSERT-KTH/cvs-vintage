@@ -55,7 +55,6 @@ import org.apache.turbine.TurbineException;
 import org.apache.turbine.Valve;
 import org.apache.turbine.pipeline.AbstractValve;
 import org.apache.turbine.ValveContext;
-import org.apache.log4j.Category;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.TorqueException;
 
@@ -78,9 +77,6 @@ import org.tigris.scarab.om.MITListManager;
 public class FreshenUserValve 
     extends AbstractValve
 {
-    private static final Category log = 
-        Category.getInstance( FreshenUserValve.class );
-        
     private static final Map xmitScreens = new HashMap();
 
     static

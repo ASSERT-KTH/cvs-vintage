@@ -62,7 +62,6 @@ import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.IssueTypePeer;
-import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.workflow.WorkflowFactory;

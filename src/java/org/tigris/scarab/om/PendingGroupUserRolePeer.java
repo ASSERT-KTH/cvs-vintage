@@ -1,11 +1,5 @@
 package org.tigris.scarab.om;
 
-import java.util.*;
-import com.workingdogs.village.*;
-import org.apache.torque.map.*;
-
-// Local classes
-import org.tigris.scarab.om.map.*;
 
 /** 
  *  You should add additional methods to this class to meet the

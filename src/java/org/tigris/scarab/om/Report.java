@@ -61,17 +61,10 @@ import com.workingdogs.village.Record;
 // Turbine classes
 import org.apache.fulcrum.intake.Retrievable;
 import org.apache.torque.om.Persistent;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.TorqueException;
 
-import org.apache.fulcrum.cache.TurbineGlobalCacheService;
-import org.apache.fulcrum.cache.GlobalCacheService;
-import org.apache.fulcrum.cache.ObjectExpiredException;
-import org.apache.fulcrum.cache.CachedObject;
-
-import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.util.parser.StringValueParser;
 import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.fulcrum.intake.Intake;
@@ -142,7 +135,7 @@ public  class Report
     private String[] axis2Keys;
     private List optionGroups;
 
-    /** used to store query key as part of Retrievable interface */ 
+    /** used to store query key as part of Retrievable interface */
     private String queryKey;
 
     public String getQueryKey() 
@@ -178,8 +171,8 @@ public  class Report
         {
             isEditable = isNew()
                 ||
-                ( Scope.PERSONAL__PK.equals(getScopeId()) 
-                  && user.getUserId().equals(getUserId()) )
+                (Scope.PERSONAL__PK.equals(getScopeId()) 
+                  && user.getUserId().equals(getUserId()))
                 ||
                 (Scope.MODULE__PK.equals(getScopeId()) &&
                  user.hasPermission(ScarabSecurity.MODULE__EDIT, getModule()));
@@ -205,10 +198,10 @@ public  class Report
     public List getReportTypes()
     {
         List reportTypes = new ArrayList();
-        for ( int i=0; i<REPORT_TYPES.length; i++ ) 
+        for (int i=0; i<REPORT_TYPES.length; i++) 
         {
-            reportTypes.add( 
-                new OptionModel(i, REPORT_TYPES[i], i==getType()) );
+            reportTypes.add(
+                new OptionModel(i, REPORT_TYPES[i], i==getType()));
         }
         return reportTypes;
     }
@@ -216,7 +209,7 @@ public  class Report
     public List getAxis1Categories()
     {
         List axisCategories = new ArrayList();
-        for ( int i=0; i<AXIS_CATEGORIES.length; i++ ) 
+        for (int i=0; i<AXIS_CATEGORIES.length; i++) 
         {
             axisCategories.add(
                new OptionModel(i, AXIS_CATEGORIES[i], i==getAxis1Category()));
@@ -227,7 +220,7 @@ public  class Report
     public List getAxis2Categories()
     {
         List axisCategories = new ArrayList();
-        for ( int i=0; i<AXIS_CATEGORIES.length; i++ ) 
+        for (int i=0; i<AXIS_CATEGORIES.length; i++) 
         {
             axisCategories.add(
                new OptionModel(i, AXIS_CATEGORIES[i], i==getAxis2Category()));
@@ -281,9 +274,9 @@ public  class Report
     public ScarabUser getGeneratedBy() 
         throws Exception
     {
-        if ( generatedBy == null ) 
+        if (generatedBy == null) 
         {
-            if ( getUserId() != null ) 
+            if (getUserId() != null) 
             {
                 generatedBy = ScarabUserManager.getInstance(getUserId());
             }
@@ -312,11 +305,11 @@ public  class Report
      */
     public Date getGeneratedDate() 
     {
-        if ( generatedDate == null ) 
+        if (generatedDate == null) 
         {
             // if we have multiple dates or if no date was set just set this 
             // date to the current time
-            if ( getType() == 1 || getNewDate() == null ) 
+            if (getType() == 1 || getNewDate() == null) 
             {
                 generatedDate = new Date();
             }
@@ -341,7 +334,7 @@ public  class Report
      */
     public void setAttributesAndOptionsForGrouping(String[] v) 
     {
-        if ( v != null && (v.length == 0 || v[0].length() == 0) ) 
+        if (v != null && (v.length == 0 || v[0].length() == 0)) 
         {
             this.toBeGrouped = null;
         }
@@ -369,10 +362,10 @@ public  class Report
     public String[] getGroupNames()
     {
         String[] names = null;
-        if ( optionGroups != null ) 
+        if (optionGroups != null) 
         {
             names = new String[optionGroups.size()];
-            for ( int i=0; i<names.length; i++ ) 
+            for (int i=0; i<names.length; i++) 
             {
                 names[i] = ((OptionGroup)optionGroups.get(i)).getDisplayValue();
             }
@@ -382,14 +375,14 @@ public  class Report
 
     public void setGroupNames(String[] names)
     {
-        if ( names == null ) 
+        if (names == null) 
         {
             optionGroups = null;
         }
         else 
         {
             optionGroups = new ArrayList(names.length);
-            for ( int i=0; i<names.length; i++ ) 
+            for (int i=0; i<names.length; i++) 
             {
                 optionGroups.add(new OptionGroup(names[i]));
             }
@@ -401,7 +394,7 @@ public  class Report
     {
         List options = null;
         String[] toBeGrouped = getAttributesAndOptionsForGrouping();
-        if ( toBeGrouped == null ) 
+        if (toBeGrouped == null) 
         {
             options = Collections.EMPTY_LIST;
         }
@@ -412,29 +405,32 @@ public  class Report
         return options;
     }
 
+    // FIXME unused. could have been made static if used.
+    /*
     private String[] remove(String[] array, int index)
     {
         String[] newArray = new String[array.length-1];
-        for ( int i=0; i<array.length; i++ ) 
+        for (int i=0; i<array.length; i++)
         {
-            if ( i != index ) 
+            if (i != index)
             {
                 newArray[i] = array[i];
             }
         }
         return newArray;
     }
+    */
 
     private void moveTo(String[] array, int currentPosition, int endPosition)
         throws ScarabException
     {
-        if ( endPosition > currentPosition ) 
+        if (endPosition > currentPosition)
         {
             throw new ScarabException(
                 "Cannot move towards a higher indexed position");
         }
         String tmp = array[currentPosition];
-        for ( int i=currentPosition-1; i>=endPosition; i-- ) 
+        for (int i=currentPosition-1; i>=endPosition; i--)
         {
             array[i+1] = array[i];
         }
@@ -452,16 +448,16 @@ public  class Report
         List rmas = module.getRModuleAttributes(getIssueType(), true);
         List options = new ArrayList(7*rmas.size());
         int start = 0;
-        for ( int i=0; i<rmas.size() && keys.length != start; i++ ) 
+        for (int i=0; i<rmas.size() && keys.length != start; i++) 
         {
             RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
-            if ( rma.getAttribute().isOptionAttribute()) 
+            if (rma.getAttribute().isOptionAttribute()) 
             {            
                 String rmaId = getKey(rma);
                 boolean isRMASelected = false;
-                for ( int j=start; j<keys.length; j++ ) 
+                for (int j=start; j<keys.length; j++) 
                 {
-                    if ( rmaId.equals(keys[j]) ) 
+                    if (rmaId.equals(keys[j])) 
                     {
                         isRMASelected = true;
                         //removing the key, as it is already matched
@@ -474,22 +470,22 @@ public  class Report
                 // to check for a partial list
                 List rmos = module
                     .getLeafRModuleOptions(rma.getAttribute(), getIssueType());
-                if ( isRMASelected ) 
+                if (isRMASelected) 
                 {
-                    for ( int j=0; j<rmos.size(); j++ ) 
+                    for (int j=0; j<rmos.size(); j++) 
                     {
-                        options.add( rmos.get(j) );
+                        options.add(rmos.get(j));
                     }               
                 }
                 else 
                 {
-                    for ( int j=0; j<rmos.size(); j++ ) 
+                    for (int j=0; j<rmos.size(); j++) 
                     {
                         String rmoId = getKey((RModuleOption)rmos.get(j));
                         boolean isRMOSelected = false;
-                        for ( int k=start; k<keys.length; k++ ) 
+                        for (int k=start; k<keys.length; k++) 
                         {
-                            if ( rmoId.equals(keys[k]) ) 
+                            if (rmoId.equals(keys[k])) 
                             {
                                 isRMOSelected = true;
                                 //removing the key, as it is already matched
@@ -498,9 +494,9 @@ public  class Report
                                 break;
                             }                    
                         }
-                        if ( isRMOSelected ) 
+                        if (isRMOSelected) 
                         {
-                            options.add( rmos.get(j) );
+                            options.add(rmos.get(j));
                         }                                   
                     }
                 }
@@ -520,17 +516,17 @@ public  class Report
         List rmas = module.getRModuleAttributes(getIssueType(), true);
         List ausers = new ArrayList(7*rmas.size());
         int start = 0;
-        for ( int i=0; i<rmas.size() && keys.length != start; i++ ) 
+        for (int i=0; i<rmas.size() && keys.length != start; i++) 
         {
             RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
             Attribute attribute = rma.getAttribute(); 
-            if ( attribute.isUserAttribute()) 
+            if (attribute.isUserAttribute()) 
             {            
                 String rmaId = getKey(rma);
                 boolean isRMASelected = false;
-                for ( int j=start; j<keys.length; j++ ) 
+                for (int j=start; j<keys.length; j++) 
                 {
-                    if ( rmaId.equals(keys[j]) ) 
+                    if (rmaId.equals(keys[j])) 
                     {
                         isRMASelected = true;
                         //removing the key, as it is already matched
@@ -542,24 +538,24 @@ public  class Report
                 // if selected add all the attributes otherwise we still need
                 // to check for a partial list
                 List users = Arrays.asList(module.getEligibleUsers(attribute));
-                if ( isRMASelected ) 
+                if (isRMASelected) 
                 {
-                    for ( int j=0; j<users.size(); j++ ) 
+                    for (int j=0; j<users.size(); j++) 
                     {
-                        ausers.add( new AttributeAndUser( 
-                            rma, (ScarabUser)users.get(j) ));
+                        ausers.add(new AttributeAndUser(
+                            rma, (ScarabUser)users.get(j)));
                     }               
                 }
                 else 
                 {
-                    for ( int j=0; j<users.size(); j++ ) 
+                    for (int j=0; j<users.size(); j++) 
                     {
                         String userId = 
                             getKey(attribute, (ScarabUser)users.get(j));
                         boolean isRMOSelected = false;
-                        for ( int k=start; k<keys.length; k++ ) 
+                        for (int k=start; k<keys.length; k++) 
                         {
-                            if ( userId.equals(keys[k]) ) 
+                            if (userId.equals(keys[k])) 
                             {
                                 isRMOSelected = true;
                                 //removing the key, as it is already matched
@@ -568,10 +564,10 @@ public  class Report
                                 break;
                             }                    
                         }
-                        if ( isRMOSelected ) 
+                        if (isRMOSelected) 
                         {
-                            ausers.add( new AttributeAndUser(
-                                rma, (ScarabUser)users.get(j)) );
+                            ausers.add(new AttributeAndUser(
+                                rma, (ScarabUser)users.get(j)));
                         }                                   
                     }
                 }
@@ -590,14 +586,14 @@ public  class Report
         List users = Arrays.asList(module.getEligibleIssueReporters());
         List committers = new ArrayList(users.size());
         int start = 0;
-        for ( int j=0; j<users.size(); j++ ) 
+        for (int j=0; j<users.size(); j++) 
         {
             ScarabUser user = (ScarabUser)users.get(j);
 
             String userId = getKey(user);
-            for ( int k=start; k<keys.length; k++ ) 
+            for (int k=start; k<keys.length; k++) 
             {
-                if ( userId.equals(keys[k]) ) 
+                if (userId.equals(keys[k])) 
                 {
                     //removing the key, as it is already matched
                     moveTo(keys, k, start);
@@ -616,7 +612,7 @@ public  class Report
     {
         List list = null;
         String[] keys = getAxis1Keys();
-        if ( keys == null ) 
+        if (keys == null) 
         {
             list = Collections.EMPTY_LIST;
         }
@@ -632,7 +628,7 @@ public  class Report
     {
         List list = null;
         String[] keys = getAxis2Keys();
-        if ( keys == null ) 
+        if (keys == null) 
         {
             list = Collections.EMPTY_LIST;
         }
@@ -647,7 +643,7 @@ public  class Report
         throws Exception
     {
         List list = null;
-        switch ( category ) 
+        switch (category) 
         {
         case 0: // option attributes
             list = getSelectedOptions(keys);
@@ -668,19 +664,19 @@ public  class Report
         Module module = getModule();
         List rmas = module.getRModuleAttributes(getIssueType(), true);
         List allOptions = new ArrayList(7*rmas.size());
-        for ( int i=0; i<rmas.size(); i++ ) 
+        for (int i=0; i<rmas.size(); i++) 
         {
             RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
-            if ( rma.getAttribute().isOptionAttribute()) 
+            if (rma.getAttribute().isOptionAttribute()) 
             {            
-                allOptions.add( new ReportOptionModel(rma) );
+                allOptions.add(new ReportOptionModel(rma));
                 List rmos = module.getLeafRModuleOptions(rma.getAttribute(), 
                                                          getIssueType());
 
-                for ( int j=0; j<rmos.size(); j++ ) 
+                for (int j=0; j<rmos.size(); j++) 
                 {
-                    allOptions.add( new ReportOptionModel(
-                        (RModuleOption)rmos.get(j) ));
+                    allOptions.add(new ReportOptionModel(
+                        (RModuleOption)rmos.get(j)));
                 }               
             }
         }
@@ -690,13 +686,13 @@ public  class Report
     public Date[] getDates()
     {
         Date[] d = null;
-        if ( dates != null ) 
+        if (dates != null) 
         {
             int max = dates.size();
             d = new Date[max];
-            for ( int i=0; i<max; i++ ) 
+            for (int i=0; i<max; i++) 
             {
-                d[i] = (Date)((ReportDate)dates.get(i)).getDate();
+                d[i] = ((ReportDate)dates.get(i)).getDate();
             }
         }
         
@@ -706,7 +702,7 @@ public  class Report
 
     public void setDates(Date[] v)
     {
-        if ( v == null ) 
+        if (v == null) 
         {
             dates = null;
         }
@@ -714,7 +710,7 @@ public  class Report
         {
             int max = v.length;
             dates = new ArrayList(max);
-            for ( int i=0; i<max; i++ ) 
+            for (int i=0; i<max; i++) 
             {
                 dates.add(new ReportDate(v[i]));
             }
@@ -728,9 +724,9 @@ public  class Report
     public Date getNewDate() 
     {
         Date date = null;
-        if ( dates != null && dates.size() != 0 ) 
+        if (dates != null && dates.size() != 0) 
         {
-            date = (Date)((ReportDate)dates.get(dates.size()-1)).getDate();
+            date = ((ReportDate)dates.get(dates.size()-1)).getDate();
         }
         return date;
     }
@@ -738,13 +734,13 @@ public  class Report
 
     /**
      * Set the value of newDate.
-     * @param v  Value to assign to newDate.
+     * @param date the new <code>Date</code> to assign.
      */
-    public void setNewDate(Date  date) 
+    public void setNewDate(Date date)
     {
-        if ( date != null ) 
+        if (date != null)
         {
-            if ( dates == null ) 
+            if (dates == null)
             {
                 dates = new ArrayList();
             }
@@ -786,7 +782,7 @@ public  class Report
         throws Exception
     {
         List options = null;
-        switch ( category ) 
+        switch (category) 
         {
         case 0: // option attributes
             options = getOptionsMinusGroupedOptions();
@@ -807,23 +803,23 @@ public  class Report
         Module module = getModule();
         List rmas = module.getRModuleAttributes(getIssueType(), true);
         List options = new ArrayList(7*rmas.size());
-        for ( int i=0; i<rmas.size(); i++ ) 
+        for (int i=0; i<rmas.size(); i++) 
         {
             RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
 
-            if ( !isGroupedAttribute(rma) && 
+            if (!isGroupedAttribute(rma) && 
                  rma.getAttribute().isOptionAttribute()) 
             {            
-                options.add( new ReportOptionModel(rma) );
+                options.add(new ReportOptionModel(rma));
                 List rmos = module.getLeafRModuleOptions(rma.getAttribute(),
                                                          getIssueType());
 
-                for ( int j=0; j<rmos.size(); j++ ) 
+                for (int j=0; j<rmos.size(); j++) 
                 {
                     RModuleOption rmo = (RModuleOption)rmos.get(j);
-                    if ( !isGroupedOption(rmo)) 
+                    if (!isGroupedOption(rmo)) 
                     {
-                        options.add( new ReportOptionModel(rmo));
+                        options.add(new ReportOptionModel(rmo));
                     }   
                 }               
             }
@@ -837,20 +833,20 @@ public  class Report
         Module module = getModule();
         List rmas = module.getRModuleAttributes(getIssueType(), true);
         List options = new ArrayList(7*rmas.size());
-        for ( int i=0; i<rmas.size(); i++ ) 
+        for (int i=0; i<rmas.size(); i++) 
         {
             RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
             Attribute attribute = rma.getAttribute();
-            if ( attribute.isUserAttribute()) 
+            if (attribute.isUserAttribute()) 
             {            
-                options.add( new ReportOptionModel(rma) );
+                options.add(new ReportOptionModel(rma));
                 List users = Arrays.asList(module.getEligibleUsers(attribute));
 
-                for ( int j=0; j<users.size(); j++ ) 
+                for (int j=0; j<users.size(); j++) 
                 {
                     ScarabUser user = (ScarabUser)users.get(j);
-                    options.add( 
-                        new ReportOptionModel(attribute, user) );
+                    options.add(
+                        new ReportOptionModel(attribute, user));
                 }               
             }
         }
@@ -866,10 +862,10 @@ public  class Report
         {
             List users = Arrays.asList(userArray);
             options = new ArrayList(users.size());
-            for ( int j=0; j<users.size(); j++ ) 
+            for (int j=0; j<users.size(); j++) 
             {
                 ScarabUser user = (ScarabUser)users.get(j);
-                options.add( new ReportOptionModel(user) );
+                options.add(new ReportOptionModel(user));
             }               
         }
         else 
@@ -892,7 +888,7 @@ public  class Report
     {
         String test = getKey(rmo);
         boolean isGroupedOption = isGroupedAttributeOrOption(test);
-        if ( !isGroupedOption ) 
+        if (!isGroupedOption) 
         {
             // check that the whole attribute is not picked
             test = getKey(rmo.getAttributeOption().getAttribute());
@@ -906,11 +902,11 @@ public  class Report
     {
         boolean isGrouped = false;
         String[] attributeAndOptions = getAttributesAndOptionsForGrouping();
-        if ( attributeAndOptions != null ) 
+        if (attributeAndOptions != null) 
         {
             for (int i=0; i<attributeAndOptions.length; i++)
             {
-                if ( test.equals(attributeAndOptions[i]) )
+                if (test.equals(attributeAndOptions[i]))
                 {
                     isGrouped = true;
                     break;
@@ -968,7 +964,7 @@ public  class Report
      */
     public void setAxis1Keys(String[] v) 
     {
-        if ( v != null && (v.length == 0 || v[0].length() == 0) ) 
+        if (v != null && (v.length == 0 || v[0].length() == 0)) 
         {
             this.axis1Keys = null;
         }
@@ -989,7 +985,7 @@ public  class Report
      */
     public void setAxis2Keys(String[] v) 
     {
-        if ( v != null && (v.length == 0 || v[0].length() == 0) ) 
+        if (v != null && (v.length == 0 || v[0].length() == 0)) 
         {
             this.axis2Keys = null;
         }
@@ -1026,16 +1022,16 @@ public  class Report
 
     private void registerAlias(int alias, Criteria crit)
     {
-        for ( int i=0; i<aliases.length; i++) 
+        for (int i=0; i<aliases.length; i++) 
         {
-            if ( aliases[i] == alias ) 
+            if (aliases[i] == alias) 
             {
                 break;
             }
-            else if ( aliases[i] <= 0 ) 
+            else if (aliases[i] <= 0) 
             {
                 aliases[i] = alias;
-                if ( i != 0 ) 
+                if (i != 0) 
                 {
                     crit.addJoin("a"+aliases[0]+'.'+ACT_ISSUE_ID, 
                                  "a"+alias+'.'+ACT_ISSUE_ID);
@@ -1052,7 +1048,7 @@ public  class Report
     {
         String a = "a"+alias;
         String t = "t"+alias;
-        if ( optionOrGroup != null ) 
+        if (optionOrGroup != null) 
         {
             registerAlias(alias, crit);
             crit.addJoin(a+"."+ACT_TRANSACTION_ID, t+'.'+TRAN_TRANSACTION_ID);
@@ -1064,13 +1060,13 @@ public  class Report
             crit.add(c1);
         }
 
-        if ( optionOrGroup instanceof OptionGroup ) 
+        if (optionOrGroup instanceof OptionGroup) 
         {
             List options = ((OptionGroup)optionOrGroup).getOptions();
-            if ( options != null && options.size() > 0 ) 
+            if (options != null && options.size() > 0) 
             {            
                 NumberKey[] nks = new NumberKey[options.size()];
-                for ( int i=0; i<nks.length; i++) 
+                for (int i=0; i<nks.length; i++) 
                 {
                     nks[i] = ((RModuleOption)options.get(i)).getOptionId();
                 }
@@ -1118,7 +1114,7 @@ public  class Report
         crit.add(IssuePeer.TYPE_ID, getIssueTypeId());
         List records = ActivityPeer.doSelectVillageRecords(crit);
         // clean up
-        for ( int i=0; i<aliases.length; i++ ) 
+        for (int i=0; i<aliases.length; i++) 
         {
             aliases[i] = 0;
         }
@@ -1151,11 +1147,11 @@ public  class Report
         intake.init(parameters);
 
         Group intakeReport = intake.get("Report", this.getQueryKey(), false);
-        if ( intakeReport == null ) 
+        if (intakeReport == null) 
         {   
             intakeReport = intake.get("Report", "", false);
         }  
-        if ( intakeReport != null ) 
+        if (intakeReport != null) 
         {   
             intakeReport.setValidProperties(this);
 
@@ -1168,10 +1164,10 @@ public  class Report
         group.setQueryKey(String.valueOf(i++));
         Group intakeGroup = intake.get("OptionGroup", 
                                        group.getQueryKey(), false);
-        if ( intakeGroup != null ) 
+        if (intakeGroup != null) 
         {
             List groups = new ArrayList();            
-            while ( intakeGroup != null ) 
+            while (intakeGroup != null) 
             {
                 intakeGroup.setValidProperties(group);
                 groups.add(group);  
@@ -1183,12 +1179,12 @@ public  class Report
             this.setOptionGroups(groups);
 
             List options = this.getSelectedOptionsForGrouping();
-            for ( i=0; i<options.size(); i++ ) 
+            for (i=0; i<options.size(); i++) 
             {
                 RModuleOption rmo = (RModuleOption)options.get(i);
                 String key = "ofg" + rmo.getQueryKey();
                 int groupIndex = parameters.getInt(key);
-                if ( groupIndex >= 0 && groupIndex < groups.size() ) 
+                if (groupIndex >= 0 && groupIndex < groups.size()) 
                 {
                     ((Report.OptionGroup)groups.get(groupIndex))
                         .addOption(rmo);
@@ -1213,9 +1209,9 @@ public  class Report
                 dates.add(date);                
             }                
         }
-        while ( intakeDate != null );
+        while (intakeDate != null);
         
-        if ( dates.size() > 0 ) 
+        if (dates.size() > 0) 
         {
             this.setReportDates(dates);            
         }
@@ -1421,7 +1417,7 @@ public  class Report
                 throws Exception
             {
                 rowData = getSelectedAxis1();
-                if ( getType() == 0 ) 
+                if (getType() == 0) 
                 {
                     columnData = getSelectedAxis2();                    
                     secondCriteria = getOptionGroups();
@@ -1441,7 +1437,7 @@ public  class Report
             public int getColumnCount()
             {
                 int size = columnData.size();
-                if ( secondCriteria != null && secondCriteria.size() > 1 ) 
+                if (secondCriteria != null && secondCriteria.size() > 1) 
                 {
                     size *= secondCriteria.size();
                 }
@@ -1462,35 +1458,35 @@ public  class Report
             int r = row - 1;
             int c = column - 1;
             
-            if ( c >= 0 ) 
+            if (c >= 0) 
             {
                 Object secCrit = null;
                 int size = 1;
-                if ( secondCriteria != null && secondCriteria.size() > 0 ) 
+                if (secondCriteria != null && secondCriteria.size() > 0) 
                 {
                     size = secondCriteria.size();
                     secCrit = secondCriteria.get(c%size);
                 }
 
                 Object cData = columnData.get(c/size);
-                if ( r >= 0) 
+                if (r >= 0) 
                 {
                     Object rData = rowData.get(r);
-                    if ( cData instanceof Date ) 
+                    if (cData instanceof Date) 
                     {
-                        contents = new Integer( 
-                            getIssueCount(rData, (Date)cData) ); 
+                        contents = new Integer(
+                            getIssueCount(rData, (Date)cData)); 
                     }
                     else 
                     {
-                        contents = new Integer( getIssueCount(
+                        contents = new Integer(getIssueCount(
                             rData, cData, secCrit, getGeneratedDate())); 
                     }
                 }
                 else   
                 {                      
                     ColumnHeading heading = new ColumnHeading();
-                    if ( cData instanceof Date ) 
+                    if (cData instanceof Date) 
                     {
                         heading.setLabel(cData);
                     }
@@ -1501,7 +1497,7 @@ public  class Report
                     contents = heading;
                 }                    
             }
-            else if ( r >= 0 && c == -1 )
+            else if (r >= 0 && c == -1)
             {                     
                 Object rData = rowData.get(r);
                 RowHeading heading = new RowHeading();
@@ -1528,7 +1524,7 @@ public  class Report
 
             public Label(Object obj1, Object obj2)
             {
-                if ( obj2 == null ) 
+                if (obj2 == null) 
                 {
                     objs = new ArrayList(1);
                     objs.add(obj1);
@@ -1584,7 +1580,7 @@ public  class Report
      * Set the value of queryKey.
      * @param v  Value to assign to queryKey.
      */
-    public void setQueryKey(String  v) 
+    public void setQueryKey(String  v)
     {
         this.queryKey = v;
     }
@@ -1623,11 +1619,10 @@ public  class Report
          * Set the value of displayValue.
          * @param v  Value to assign to displayValue.
          */
-        public void setDisplayValue(String  v) 
+        public void setDisplayValue(String v) 
         {
             this.displayValue = v;
         }
-        
         
         /**
          * Get the value of selected.
@@ -1650,7 +1645,7 @@ public  class Report
 
         public void addOption(RModuleOption rmo)
         {
-            if ( options == null ) 
+            if (options == null) 
             {
                 options = new ArrayList();
             }
@@ -1659,7 +1654,7 @@ public  class Report
 
         public List getOptions()
         {
-            if ( options == null ) 
+            if (options == null) 
             {
                 options = new ArrayList();
             }
@@ -1676,7 +1671,7 @@ public  class Report
          */
         public String getQueryKey()
         {
-            if ( queryKey == null )
+            if (queryKey == null)
             {
                queryKey = "";
             }
@@ -1761,7 +1756,7 @@ public  class Report
          */    
         public String getQueryKey() 
         {
-            if ( queryKey == null ) 
+            if (queryKey == null) 
             {
                 return "";
             }
@@ -1794,7 +1789,7 @@ public  class Report
         {
             setIsAttribute(true);
             super.setName(rma.getDisplayValue());
-            setValue( getKey(rma) );
+            setValue(getKey(rma));
         }
 
         ReportOptionModel(RModuleOption rmo)
@@ -1802,7 +1797,7 @@ public  class Report
         {
             setIsAttribute(false);
             super.setName(rmo.getDisplayValue());
-            setValue( getKey(rmo) );
+            setValue(getKey(rmo));
         }
 
         ReportOptionModel(Attribute a, ScarabUser user)
@@ -1810,7 +1805,7 @@ public  class Report
         {
             setIsAttribute(false);
             super.setName(user.getUserName());
-            setValue( getKey(a, user) );
+            setValue(getKey(a, user));
         }
 
         ReportOptionModel(ScarabUser user)
@@ -1818,7 +1813,7 @@ public  class Report
         {
             setIsAttribute(false);
             super.setName(user.getUserName());
-            setValue( getKey(user) );
+            setValue(getKey(user));
         }
 
         /**
@@ -1850,7 +1845,7 @@ public  class Report
         throws Exception
     {
         String key = null;
-        if ( a.isUserAttribute() ) 
+        if (a.isUserAttribute()) 
         {
             key = "ua" + a.getQueryKey();
         }
@@ -1929,7 +1924,5 @@ public  class Report
         {
             this.user = v;
         }
-        
     }
-
 }

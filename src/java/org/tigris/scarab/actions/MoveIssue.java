@@ -78,7 +78,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.36 2002/10/23 21:30:08 jon Exp $
+ * @version $Id: MoveIssue.java,v 1.37 2002/10/24 22:59:25 jon Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -101,7 +101,6 @@ public class MoveIssue extends RequireLoginFirstAction
         Module oldModule = issue.getModule();
         Group moveIssue = intake.get("MoveIssue",
                           IntakeTool.DEFAULT_KEY, false);
-        String selectAction = moveIssue.get("Action").toString();
         NumberKey newModuleId = ((NumberKey) moveIssue.get("ModuleId").
                                                        getValue());
         Module newModule = ModuleManager
