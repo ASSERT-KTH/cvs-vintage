@@ -6,34 +6,9 @@
  */
 package org.jboss.ejb.entity;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.ejb.EntityBean;
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
-import javax.ejb.RemoveException;
-import javax.ejb.EJBException;
-import javax.ejb.EJBObject;
-
-import org.jboss.ejb.Container;
-import org.jboss.ejb.EntityCache;
-import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.EJBProxyFactory;
-import org.jboss.ejb.LocalProxyFactory;
-
 import org.jboss.ejb.plugins.AbstractInterceptor;
-
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
-
-import org.jboss.metadata.ConfigurationMetaData;
 
 /**
  * A base interceptor that breaks out the invocation into several methods 
@@ -44,60 +19,51 @@ import org.jboss.metadata.ConfigurationMetaData;
  * invocation object.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
 {
    public final InvocationResponse invoke(Invocation invocation) throws Exception
    {
-      EntityInvocationType type = (EntityInvocationType)
-            invocation.getValue(EntityInvocationKey.TYPE);
+      LifeCycleEvent event = LifeCycleEvent.get(invocation);
 
-      if(type == EntityInvocationType.GET_VALUE)
-      {
-         return getValue(invocation);
-      }
-      else if(type == EntityInvocationType.SET_VALUE)
-      {
-         return setValue(invocation);
-      }
-      else if(type == EntityInvocationType.CREATE_INSTANCE)
+      if(event == LifeCycleEvent.CREATE_INSTANCE)
       {
          return createInstance(invocation);
       }
-      else if(type == EntityInvocationType.CREATE)
+      else if(event == LifeCycleEvent.CREATE)
       {
          return createEntity(invocation);
       }
-      else if(type == EntityInvocationType.POST_CREATE)
+      else if(event == LifeCycleEvent.POST_CREATE)
       {
          return postCreateEntity(invocation);
       }
-      else if(type == EntityInvocationType.REMOVE)
+      else if(event == LifeCycleEvent.REMOVE)
       {
          return removeEntity(invocation);
       }
-      else if(type == EntityInvocationType.QUERY)
+      else if(event == LifeCycleEvent.QUERY)
       {
          return query(invocation);
       }
-      else if(type == EntityInvocationType.IS_MODIFIED)
+      else if(event == LifeCycleEvent.IS_MODIFIED)
       {
          return isModified(invocation);
       }
-      else if(type == EntityInvocationType.LOAD)
+      else if(event == LifeCycleEvent.LOAD)
       {
          return loadEntity(invocation);
       }
-      else if(type == EntityInvocationType.STORE)
+      else if(event == LifeCycleEvent.STORE)
       {
          return storeEntity(invocation);
       }
-      else if(type == EntityInvocationType.ACTIVATE)
+      else if(event == LifeCycleEvent.ACTIVATE)
       {
          return activateEntity(invocation);
       }
-      else if(type == EntityInvocationType.PASSIVATE)
+      else if(event == LifeCycleEvent.PASSIVATE)
       {
          return passivateEntity(invocation);
       }
@@ -107,30 +73,6 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
       }
    }
    
-   /**
-    * Gets the value of a field.
-    *
-    * @param invocation the invocation information
-    * @return the field value
-    * @throws Exception if some problem occures
-    */
-   protected InvocationResponse getValue(Invocation invocation) throws Exception
-   {
-      return getNext().invoke(invocation);
-   }
-
-   /**
-    * Sets the value of a field.
-    *
-    * @param invocation the invocation information
-    * @return not used and should be null, but could be anything
-    * @throws Exception if some problem occures
-    */
-   protected InvocationResponse setValue(Invocation invocation) throws Exception
-   {
-      return getNext().invoke(invocation);
-   }
-  
    /**
     * Returns a new instance of the bean class or a subclass of the bean class.
     *
@@ -259,7 +201,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
 
    /**
     * This method is called when the invocation is not an reconized 
-    * EntityInvocationType.
+    * LifeCycleEvent.
     * 
     * @param invocation the invocation context
     * @return the results of this invocation

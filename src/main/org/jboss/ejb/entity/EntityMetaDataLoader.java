@@ -33,10 +33,15 @@ import org.jboss.invocation.PayloadKey;
 /**
  * This interceptor sets up the invocation in an entity bean context.
  *
+ * @todo remove this when the metadata is changed to AOP style.
+ * My guess is this will become part of the method meta data, but
+ * we need to key off of method name, declaring class and arguments
+ * so I don't think the current method meta data will cut it for us.
+ *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.1 $
  */
-public final class EntityInterceptor extends AbstractInterceptor
+public final class EntityMetaDataLoader extends AbstractInterceptor
 {
    /**
     * These are the mappings between the interface methods and the bean 
@@ -46,21 +51,12 @@ public final class EntityInterceptor extends AbstractInterceptor
    
    /**
     * These are the mappings between the interface methods and the entity
-    * invocation type if applicable.
+    * life cycle event if applicable.
     */
-   private Map entityInvocationTypeMapping = new HashMap();
-
-   /**
-    * These are the mappings between the home interface create methods and the 
-    * bean implementation post create method invocation.
-    */
-   private Map postCreateMapping = new HashMap();
+   private Map lifeCycleMapping = new HashMap();
 
    public void create() throws Exception
    {
-      // get the commit option
-      //((EntityContainer)getContainer()).setRootEntityInterceptor(this);
-
       try
       {
          // Map the bean methods
@@ -73,8 +69,7 @@ public final class EntityInterceptor extends AbstractInterceptor
       {
          // ditch the half built mappings
          callbackMapping.clear();
-         entityInvocationTypeMapping.clear();
-         postCreateMapping.clear();
+         lifeCycleMapping.clear();
 
          throw e;
       }
@@ -83,8 +78,37 @@ public final class EntityInterceptor extends AbstractInterceptor
    public void destroy()
    {
       callbackMapping.clear();
-      entityInvocationTypeMapping.clear();
-      postCreateMapping.clear();
+      lifeCycleMapping.clear();
+   }
+
+   public InvocationResponse invoke(Invocation invocation) throws Exception
+   {
+      Method interfaceMethod = invocation.getMethod();
+
+      // set the callback method
+      Method callbackMethod = (Method)callbackMapping.get(interfaceMethod);
+      if(callbackMethod != null)
+      {
+         invocation.setValue(
+               InvocationKey.CALLBACK_METHOD, 
+               callbackMethod,
+               PayloadKey.TRANSIENT);
+
+         invocation.setValue(
+               InvocationKey.CALLBACK_ARGUMENTS, 
+               invocation.getArguments(),
+               PayloadKey.TRANSIENT);
+      }
+
+      // set the entity invocation type
+      LifeCycleEvent lifeCycleEvent = (LifeCycleEvent)
+            lifeCycleMapping.get(interfaceMethod);
+      if(lifeCycleEvent != null)
+      {
+         LifeCycleEvent.set(invocation, lifeCycleEvent);
+      }
+
+      return getNext().invoke(invocation);
    }
 
    private void setupHomeMapping() throws Exception
@@ -110,42 +134,21 @@ public final class EntityInterceptor extends AbstractInterceptor
 
          if(methodName.startsWith("find"))
          {
-            entityInvocationTypeMapping.put(
-                  method, 
-                  EntityInvocationType.QUERY);
-            Method finderMethod = getBeanImplMethod(
-                  "ejbF" + methodName.substring(1),
-                  method,
-                  false);
-      
-            if(finderMethod != null) 
-            {
-               callbackMapping.put(method, finderMethod);
-            }
+               lifeCycleMapping.put(
+                     method, 
+                     LifeCycleEvent.QUERY);
          }
          else if(methodName.startsWith("create"))
          {
-            entityInvocationTypeMapping.put(
-                  method, 
-                  EntityInvocationType.CREATE);
-            callbackMapping.put(
-                  method, 
-                  getBeanImplMethod(
-                        "ejbCreate" + methodName.substring(6),
-                        method,
-                        true));
-            postCreateMapping.put(
-                  method, 
-                  getBeanImplMethod(
-                        "ejbPostCreate" + methodName.substring(6),
-                        method,
-                        true));
+               lifeCycleMapping.put(
+                     method, 
+                     LifeCycleEvent.CREATE);
          }
          else if(methodName.equals("remove"))
          {
-            entityInvocationTypeMapping.put(
-                  method, 
-                  EntityInvocationType.REMOVE);
+               lifeCycleMapping.put(
+                     method, 
+                     LifeCycleEvent.REMOVE);
          }
          else if(methodName.equals("getHomeHandle"))
          {
@@ -164,7 +167,7 @@ public final class EntityInterceptor extends AbstractInterceptor
 
             callbackMapping.put(
                   method, 
-                  getBeanImplMethod(ejbHomeMethodName, method, true));
+                  getBeanImplMethod(ejbHomeMethodName, method));
          }
       }
    }
@@ -195,9 +198,9 @@ public final class EntityInterceptor extends AbstractInterceptor
          {
             if(methodName.equals("remove"))
             {
-               entityInvocationTypeMapping.put(
+               lifeCycleMapping.put(
                      method, 
-                     EntityInvocationType.REMOVE);
+                     LifeCycleEvent.REMOVE);
             }
          }
          else
@@ -205,15 +208,14 @@ public final class EntityInterceptor extends AbstractInterceptor
             // Implemented by bean
             callbackMapping.put(
                   method, 
-                  getBeanImplMethod( method.getName(), method, true));
+                  getBeanImplMethod( method.getName(), method));
          }
       }
    }
 
    private Method getBeanImplMethod(
          String name, 
-         Method method, 
-         boolean required) throws NoSuchMethodException
+         Method method) throws NoSuchMethodException
    {
       try
       {
@@ -223,74 +225,10 @@ public final class EntityInterceptor extends AbstractInterceptor
       }
       catch (NoSuchMethodException e)
       {
-         if(required)
-         {
-            throw new NoSuchMethodException("Method " + method + 
-                  " not implemented in bean class " + 
-                  getContainer().getBeanClass().getName() + 
-                  " looking for method named: " + name);
-         }
-         return null;
+         throw new NoSuchMethodException("Method " + method + 
+               " not implemented in bean class " + 
+               getContainer().getBeanClass().getName() + 
+               " looking for method named: " + name);
       }
-   }
-
-   public InvocationResponse invoke(Invocation invocation) throws Exception
-   {
-      Method interfaceMethod = invocation.getMethod();
-
-      // set the callback method
-      Method callbackMethod = (Method)callbackMapping.get(interfaceMethod);
-      if(callbackMethod != null)
-      {
-         invocation.setValue(
-               InvocationKey.CALLBACK_METHOD, 
-               callbackMethod,
-               PayloadKey.TRANSIENT);
-
-         invocation.setValue(
-               InvocationKey.CALLBACK_ARGUMENTS, 
-               invocation.getArguments(),
-               PayloadKey.TRANSIENT);
-      }
-
-      // set the entity invocation type
-      EntityInvocationType entityInvocationType = (EntityInvocationType)
-            entityInvocationTypeMapping.get(interfaceMethod);
-      if(entityInvocationType != null)
-      {
-         invocation.setValue(
-               EntityInvocationKey.TYPE, 
-               entityInvocationType,
-               PayloadKey.TRANSIENT);
-      }
-
-      // invoke the next
-      InvocationResponse returnValue = getNext().invoke(invocation);
- 
-      // if this is a CREATE invocation, we now need to invoke post create
-      if(entityInvocationType == EntityInvocationType.CREATE)
-      {
-         Invocation postCreateInvocation = new Invocation(invocation);
-         postCreateInvocation.setValue(
-               InvocationKey.CALLBACK_METHOD, 
-               postCreateMapping.get(interfaceMethod),
-               PayloadKey.TRANSIENT);
-         postCreateInvocation.setValue(
-               EntityInvocationKey.TYPE, 
-               EntityInvocationType.POST_CREATE,
-               PayloadKey.TRANSIENT);
-         if(invocation.getType().isLocal())
-         {
-            postCreateInvocation.setType(InvocationType.LOCAL);
-         }
-         else
-         {
-            postCreateInvocation.setType(InvocationType.REMOTE);
-         }
-
-         getNext().invoke(postCreateInvocation);
-      }
-
-      return returnValue;
    }
 }

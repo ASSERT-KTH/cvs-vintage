@@ -46,7 +46,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class EntitySynchronizationInterceptor extends AbstractInterceptor
 {
@@ -68,14 +68,8 @@ public class EntitySynchronizationInterceptor extends AbstractInterceptor
       {
          try
          {
-            // If not tell the persistence manager to load the state
-            //container.loadEntity(ctx);
-            Invocation loadInvocation = new Invocation(invocation);
-            loadInvocation.setValue(
-                  EntityInvocationKey.TYPE, 
-                  EntityInvocationType.LOAD,
-                  PayloadKey.TRANSIENT);
-            getNext().invoke(loadInvocation);
+            // Not valid... tell the persistence manager to load the state
+            container.getPersistenceManager().loadEntity(ctx);
          }
          catch(Exception ex)
          {

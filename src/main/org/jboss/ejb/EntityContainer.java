@@ -45,9 +45,9 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionRolledbackException;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.timer.ContainerTimer;
-import org.jboss.ejb.entity.EntityInvocationKey;
-import org.jboss.ejb.entity.EntityInvocationType;
 import org.jboss.ejb.entity.EntityInvocationRegistry;
+import org.jboss.ejb.entity.EntityPersistenceManager;
+import org.jboss.ejb.entity.EntityPersistenceManagerXMLFactory;
 import org.jboss.ejb.plugins.lock.Entrancy;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
@@ -77,16 +77,26 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.93 $
+ * @version $Revision: 1.94 $
  */
 public class EntityContainer
    extends Container implements EJBProxyFactoryContainer,
    InstancePoolContainer, StatisticsProvider
 {
-   private Interceptor rootEntityInterceptor;
-
+   /**
+    * The persistence manager for this entity.
+    * @todo replace this with a link to an MBean service.
+    */
+   private EntityPersistenceManager entityPersistenceManager;
+   
+   /**
+    * The primary key class of this entity.
+    */
    private Class primaryKeyClass;
 
+   /**
+    * Commit Option D cache invalidation thread. 
+    */
    private OptionDInvalidator optionDInvalidator;
 
    // These members contains statistics variable
@@ -149,14 +159,28 @@ public class EntityContainer
       this.multiInstance = multiInstance;
    }
 
-   public Interceptor getRootEntityInterceptor()
+   /**
+    * Gets the persistence manager for this entity.
+    */
+   public EntityPersistenceManager getPersistenceManager()
    {
-      return rootEntityInterceptor;
+      return entityPersistenceManager;
    }
 
-   public void setRootEntityInterceptor(Interceptor rootEntityInterceptor)
+   /**
+    * Sets the persistence manager for this entity.
+    * @param entityPersistenceManager the new persistence manager for this
+    * entity; must not be null
+    * @throws IlllegalArgumentException if entityPersistenceManager is null
+    */
+   public void setPersistenceManager(
+         EntityPersistenceManager entityPersistenceManager)
    {
-      this.rootEntityInterceptor = rootEntityInterceptor;
+      if(entityPersistenceManager == null)
+      {
+         throw new IllegalArgumentException("entityPersistenceManager is null");
+      }
+      this.entityPersistenceManager = entityPersistenceManager;
    }
 
    protected void createService() throws Exception
@@ -188,6 +212,18 @@ public class EntityContainer
 
          // Map the interfaces to Long
          setupMarshalledInvocationMapping();
+
+         ConfigurationMetaData conf = 
+            getBeanMetaData().getContainerConfiguration();
+
+         // Persistence Manager
+         EntityPersistenceManagerXMLFactory factory = 
+            new EntityPersistenceManagerXMLFactory();
+         entityPersistenceManager = factory.create(
+               this, 
+               conf.getPersistenceManagerElement());
+         entityPersistenceManager.setContainer(this);
+         entityPersistenceManager.create();
 
          // Initialize the interceptor by calling the chain
          Interceptor in = interceptor;
@@ -236,10 +272,13 @@ public class EntityContainer
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
-            EJBProxyFactory ci =
+            EJBProxyFactory proxyFactory =
                   (EJBProxyFactory)proxyFactories.get(invokerBinding);
-            ci.start();
+            proxyFactory.start();
          }
+
+         // Start the persistence manager
+         getPersistenceManager().start();
 
          // Start instance cache
          getInstanceCache().start();
@@ -299,10 +338,13 @@ public class EntityContainer
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
-            EJBProxyFactory ci =
+            EJBProxyFactory proxyFactory =
                   (EJBProxyFactory)proxyFactories.get(invokerBinding);
-            ci.stop();
+            proxyFactory.stop();
          }
+
+         // Start the persistence manager
+         getPersistenceManager().stop();
 
          // Call default stop
          super.stopService();
@@ -326,9 +368,9 @@ public class EntityContainer
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
-            EJBProxyFactory ci =
+            EJBProxyFactory proxyFactory =
                   (EJBProxyFactory)proxyFactories.get(invokerBinding);
-            ci.destroy();
+            proxyFactory.destroy();
          }
 
          // Destroy instance cache
@@ -347,6 +389,10 @@ public class EntityContainer
             in.setContainer(null);
             in = in.getNext();
          }
+
+         // Start the persistence manager
+         getPersistenceManager().destroy();
+         getPersistenceManager().setContainer(null);
 
          // Call default destroy
          super.destroyService();
@@ -370,101 +416,59 @@ public class EntityContainer
     */
    public Object createBeanClassInstance() throws Exception
    {
-      Invocation invocation = new Invocation();
-      invocation.setValue(
-            EntityInvocationKey.TYPE,
-            EntityInvocationType.CREATE_INSTANCE,
-            PayloadKey.TRANSIENT);
-      invocation.setValue(Entrancy.ENTRANCY_KEY,
-            Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
-      invocation.setType(InvocationType.LOCALHOME);
-      InvocationResponse response = invokeEntityInterceptor(invocation);
-      return response.getResponse();
-      //return invokeHome(invocation);
+      return entityPersistenceManager.createEntityInstance();
    }
-
+ 
+   /**
+    * Stores the entity in the persistence manager. 
+    *
+    * @todo This call sould be completely eliminated.  Only the persistence
+    * manager should determine when a store is called.  This means that the 
+    * persistence manager will be listening for transaction demarcation events
+    * and invocation demarcation events. The concept of an invocation 
+    * demarcation event does not currently exist in JBoss, but it will provide
+    * simmilar events to the transaction events and will be used in place of 
+    * the transaction events when you are not running in a transaction.
+    */
    public void storeEntity(EntityEnterpriseContext ctx) throws Exception
    {
-      if(ctx.getId() == null)
-      {
-         return;
-      }
-
-      if(!isModified(ctx))
-      {
-         return;
-      }
-
-      Invocation invocation = new Invocation();
-      invocation.setValue(
-            EntityInvocationKey.TYPE,
-            EntityInvocationType.STORE,
-            PayloadKey.TRANSIENT);
-      invocation.setValue(Entrancy.ENTRANCY_KEY,
-            Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
-      invocation.setType(InvocationType.LOCAL);
-      invocation.setEnterpriseContext(ctx);
-      invocation.setId(ctx.getId());
-      invocation.setTransaction(ctx.getTransaction());
-      invocation.setPrincipal(SecurityAssociation.getPrincipal());
-      invocation.setCredential(SecurityAssociation.getCredential());
-      invokeEntityInterceptor(invocation);
+      entityPersistenceManager.storeEntity(ctx);
    }
 
+   /**
+    * Has this been been modifed during the current transaction or invocation
+    * in the event you are running without a transaction.
+    *
+    * @todo replace this method with calls directly to the persistence manager
+    * service when we make the persistence manager a service.
+    */
    public boolean isModified(EntityEnterpriseContext ctx) throws Exception
    {
-      Invocation invocation = new Invocation();
-      invocation.setValue(
-            EntityInvocationKey.TYPE,
-            EntityInvocationType.IS_MODIFIED,
-            PayloadKey.TRANSIENT);
-      invocation.setValue(Entrancy.ENTRANCY_KEY,
-            Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
-      invocation.setType(InvocationType.LOCAL);
-      invocation.setEnterpriseContext(ctx);
-      invocation.setId(ctx.getId());
-      invocation.setTransaction(ctx.getTransaction());
-      invocation.setPrincipal(SecurityAssociation.getPrincipal());
-      invocation.setCredential(SecurityAssociation.getCredential());
-      InvocationResponse response = invokeEntityInterceptor(invocation);
-
-      return ((Boolean)response.getResponse()).booleanValue();
+      return entityPersistenceManager.isEntityModified(ctx);
    }
 
+   /**
+    * Callback notification from the instance pool/ cache that this entity is
+    * about to be activated.
+    *
+    * @todo replace this method with calls directly to the persistence manager
+    * service when we make the persistence manager a service.
+    */
    public void activateEntity(EntityEnterpriseContext ctx) throws Exception
    {
-      Invocation invocation = new Invocation();
-      invocation.setValue(
-            EntityInvocationKey.TYPE,
-            EntityInvocationType.ACTIVATE,
-            PayloadKey.TRANSIENT);
-      invocation.setValue(Entrancy.ENTRANCY_KEY,
-            Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
-      invocation.setType(InvocationType.LOCAL);
-      invocation.setEnterpriseContext(ctx);
-      invocation.setId(ctx.getId());
-      invocation.setTransaction(ctx.getTransaction());
-      //invocation.setPrincipal(SecurityAssociation.getPrincipal());
-      //invocation.setCredential(SecurityAssociation.getCredential());
-      invokeEntityInterceptor(invocation);
+      entityPersistenceManager.activateEntity(ctx);
    }
 
+   /**
+    * Callback notification from the instance pool/ cache that this entity is
+    * about to be passivated.
+    *
+    * @todo replace this method with calls directly to the persistence manager
+    * service when we make the persistence manager a service.
+    */
    public void passivateEntity(EntityEnterpriseContext ctx) throws Exception
    {
-      Invocation invocation = new Invocation();
-      invocation.setValue(
-            EntityInvocationKey.TYPE,
-            EntityInvocationType.PASSIVATE,
-            PayloadKey.TRANSIENT);
-      invocation.setValue(Entrancy.ENTRANCY_KEY,
-            Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
-      invocation.setType(InvocationType.LOCAL);
-      invocation.setEnterpriseContext(ctx);
-      invocation.setId(ctx.getId());
-      invocation.setTransaction(ctx.getTransaction());
-      //invocation.setPrincipal(SecurityAssociation.getPrincipal());
-      //invocation.setCredential(SecurityAssociation.getCredential());
-      invokeEntityInterceptor(invocation);
+      entityPersistenceManager.passivateEntity(ctx);
    }
 
    public void handleEjbTimeout( Timer pTimer ) {
@@ -532,23 +536,6 @@ public class EntityContainer
       }
    }
 
-   private InvocationResponse invokeEntityInterceptor(Invocation invocation)
-         throws Exception
-   {
-      // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
-      try
-      {
-         return rootEntityInterceptor.invoke(invocation);
-      }
-      finally
-      {
-         // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
-      }
-   }
-
    public void retrieveStatistics( List container, boolean reset ) {
       // Loop through all Interceptors and add statistics
       getInterceptor().retrieveStatistics( container, reset );
@@ -588,14 +575,11 @@ public class EntityContainer
     * operations, and notifications. Currently there are no attributes, no
     * constructors, no notifications, and the following ops:
     * <ul>
-    * <li>'home' -> invokeHome(Invocation);</li>
-    * <li>'remote' -> invoke(Invocation);</li>
-    * <li>'localHome' -> not implemented;</li>
-    * <li>'local' -> not implemented;</li>
-    * <li>'getHome' -> return EBJHome interface;</li>
-    * <li>'getRemote' -> return EJBObject interface</li>
-    * <li>'getCacheSize' -> return the entity's cache size</li>
-    * <li>'flushCache' -> flush the entity's cache</li>
+    * <li>'invoke' -&gt; invoke(Invocation);</li>
+    * <li>'getHome' -&gt; return EBJHome interface;</li>
+    * <li>'getRemote' -&gt; return EJBObject interface</li>
+    * <li>'getCacheSize' -&gt; return the entity's cache size</li>
+    * <li>'flushCache' -&gt; flush the entity's cache</li>
     * </ul>
     */
    public MBeanInfo getMBeanInfo()
@@ -632,13 +616,12 @@ public class EntityContainer
    public Object invoke(String actionName, Object[] params, String[] signature)
       throws MBeanException, ReflectionException
    {
-      if( params != null && params.length == 1 && (params[0] instanceof Invocation) == false )
-         throw new MBeanException(new IllegalArgumentException("Expected zero or single Invocation argument"));
-
-      Object value = null;
-      Invocation invocation = null;
-      if( params != null && params.length == 1 )
-         invocation = (Invocation) params[0];
+      if(params != null && params.length == 1 && 
+            !(params[0] instanceof Invocation))
+      {
+         throw new MBeanException(new IllegalArgumentException(
+                  "Expected zero or single Invocation argument"));
+      }
 
       // marcf: FIXME: these should be exposed on the cache
 
@@ -646,12 +629,11 @@ public class EntityContainer
       if (actionName.equals("getCacheSize")) {
          return new Integer(((EntityCache)getInstanceCache()).getCacheSize());
       }
-      else if (actionName.equals("flushCache"))
+      else if(actionName.equals("flushCache"))
       {
          log.info("flushing cache");
          ((EntityCache)getInstanceCache()).flush();
          return null;
-
       }
       else
       {
