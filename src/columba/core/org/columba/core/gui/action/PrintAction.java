@@ -61,7 +61,10 @@ public class PrintAction extends FrameAction {
 				.getSelectionManager()
 				.getSelection("mail.table");
 
-		PrintMessageCommand c = new PrintMessageCommand(r);
+		// GetCharset() added
+		String charset = getFrameController().getCharsetManager().getSelectedCharset();
+
+		PrintMessageCommand c = new PrintMessageCommand(r, charset);
 
 		MainInterface.processor.addOp(c);
 	}

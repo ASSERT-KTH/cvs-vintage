@@ -112,6 +112,7 @@ public class CharsetManager implements ActionListener {
 	private XmlElement config;
 
 	private int defaultId;
+	private int selectedId;
 
 	public CharsetManager(XmlElement config) {
 		listeners = new Vector();
@@ -119,7 +120,7 @@ public class CharsetManager implements ActionListener {
 
 		defaultId = getCharsetId(System.getProperty("file.encoding"));
 		int charsetId;
-		int selectedId = 0;
+		selectedId = 0;
 
 		if (config != null) {
 			selectedId = getCharsetId(config.getAttribute("name"));
@@ -255,6 +256,7 @@ public class CharsetManager implements ActionListener {
 	private void changeCharset(int charsetId) {
 		CharsetEvent event;
 		event = new CharsetEvent(this, charsetId, charsets[charsetId]);
+		selectedId = charsetId;
 
 		if (config != null) {
 			config.addAttribute("name",charsets[charsetId]);
@@ -276,6 +278,10 @@ public class CharsetManager implements ActionListener {
 
 		for (int i = 0; i < listeners.size(); i++)
 			 ((CharsetListener) listeners.get(i)).charsetChanged(event);
+	}
+	
+	public String getSelectedCharset() {
+		return charsets[selectedId];
 	}
 
 }

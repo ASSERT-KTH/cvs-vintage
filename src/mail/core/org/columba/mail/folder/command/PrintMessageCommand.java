@@ -34,8 +34,8 @@ import org.columba.core.print.cPrintObject;
 import org.columba.core.print.cPrintVariable;
 import org.columba.core.print.cVGroup;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.coder.Decoder;
 import org.columba.mail.coder.CoderRouter;
+import org.columba.mail.coder.Decoder;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -60,14 +60,16 @@ public class PrintMessageCommand extends FolderCommand {
 	private cPrintObject mailFooter;
 	private DateFormat mailDateFormat;
 	private String[] headerKeys = { "From", "To", "Date", "Subject" };
+	private String charset;
 
 	/**
 	 * Constructor for PrintMessageCommdn.
 	 * @param frameController
 	 * @param references
 	 */
-	public PrintMessageCommand(DefaultCommandReference[] references) {
+	public PrintMessageCommand(DefaultCommandReference[] references, String charset) {
 		super(references);
+		this.charset = charset;
 
 		// Header
 
@@ -161,6 +163,7 @@ public class PrintMessageCommand extends FolderCommand {
 		Object[] uids = r[0].getUids(); // uid for messages to print
 
 		Folder srcFolder = (Folder) r[0].getFolder();
+		
 
 		// Print each message
 		for (int j = 0; j < uids.length; j++) {

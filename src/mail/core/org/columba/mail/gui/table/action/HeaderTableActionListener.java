@@ -37,7 +37,6 @@ import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
-import org.columba.mail.folder.command.PrintMessageCommand;
 import org.columba.mail.gui.composer.command.ForwardCommand;
 import org.columba.mail.gui.composer.command.ForwardInlineCommand;
 import org.columba.mail.gui.composer.command.OpenMessageWithComposerCommand;
@@ -1242,7 +1241,7 @@ public class HeaderTableActionListener
 
 			MainInterface.processor.addOp(c);
 
-		} else if (command.equals(printAction.getActionCommand())) {
+		} /*else if (command.equals(printAction.getActionCommand())) {
 			FolderCommandReference[] r =
 				(FolderCommandReference[]) tableController
 					.getTableSelectionManager()
@@ -1252,7 +1251,6 @@ public class HeaderTableActionListener
 			MainInterface.processor.addOp(c);
 
 		}
-		/*
 		  else if (command.equals(filterSubjectAction.getActionCommand())) {
 		
 			try {
