@@ -1,5 +1,10 @@
 #!/bin/sh
 
+echo "This script is not for the faint of heart!"
+echo "You have 10 seconds to hit ctrl-c now"
+echo "if you don't know what you are doing"
+sleep 10
+
 echo "Runbox update started: "
 date
 
