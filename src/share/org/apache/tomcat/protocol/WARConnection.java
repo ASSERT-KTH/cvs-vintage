@@ -67,6 +67,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.FileNameMap;
 
 /**
  *
@@ -148,7 +149,32 @@ extends URLConnection {
         // XXX
         // hmmm .. what about the mimeTypes associated with
         // this context
-        return URLConnection.getFileNameMap().getContentTypeFor(path);
+        FileNameMap map = URLConnection.getFileNameMap();
+	String type = null;
+
+	// the following try/catch will guard against a
+	// bug in some versions of URLConnection.java
+	try {
+
+	    // if there is a nameMapper, use it
+            type=map.getContentTypeFor(path);
+
+	} catch (NullPointerException e) {
+
+	    // otherwise use a poor approximation which does the job
+	    if (path!=null && path.length()>=1) {
+		String name=path.toLowerCase();
+		if (name.endsWith(".xml"))
+		    type="application/xml";
+		else if (name.endsWith(".dtd"))
+		    type="text/dtd";
+		else
+		    type="application/unknown";
+	    }
+
+	}
+
+	return type;
     }
 
     public int getContentLength() {
