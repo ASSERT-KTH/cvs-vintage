@@ -2,7 +2,7 @@
 
 <!-- Build file for Scarab -->
 
-<project name="Scarab" default="compile" basedir=".">
+<project name="Scarab" default="deploy" basedir=".">
 
     <!-- Allow the user to have multiple configuration files and
          specify them using -Dconfiguration.file=filename 
@@ -35,10 +35,10 @@
     <property name="src.templates.dir" value="${src.webinf.dir}/templates"/>    
     <property name="src.test.dir" value="${src.dir}/test"/>
     
-    <property name="torque.dir.scarab" value="${basedir}/../target/torque"/>
+    <property name="torque.dir.scarab" value="${build.dir}/torque"/>
     <property name="torque.java.dir" value="${build.src.scarab}/torque"/>
     
-    <property name="torquedoc.destdir" value="${basedir}/target/torquedoc"/>
+    <property name="torquedoc.destdir" value="${build.dir}/torquedoc"/>
     <property name="scarab.war.file.dir" value="${build.dir}"/>
     <property name="scarab.war.file.name" value="scarab.war"/>
     <property name="scarab.war.file" value="${scarab.war.file.dir}/${scarab.war.file.name}"/>
@@ -746,12 +746,23 @@
         </javac>
     </target>
 
+    <!-- ================================================================== -->
+    <!-- Deploys Scarab into the bundled Tomcat                             -->
+    <!-- ================================================================== -->
+    <target name="deploy" depends="compile">
+        <copy todir="${tomcat.dir}/webapps" filtering="no">
+            <fileset dir="${build.dir}">
+                <include name="scarab/**"/>
+            </fileset>
+        </copy>
+    </target>
     
     <!-- ================================================================== -->
     <!-- Cleans up the build directory                                      -->
     <!-- ================================================================== -->
     <target name="clean" depends="prepare-build-dir, remove-generation">
         <delete dir="${build.dir}" quiet="true"/>
+        <delete dir="${tomcat.dir}/webapps/scarab"/>
     </target>
 
     <target name="clean-all" depends="prepare-build-dir, remove-generation,clean">
