@@ -158,13 +158,13 @@ public class Email
     /**
      * Single user recipient.
      */ 
-    public static void sendEmail( TemplateContext context, ModuleEntity module,
-                                  ScarabUser fromUser, ScarabUser toUser, 
+    public static boolean sendEmail( TemplateContext context, ModuleEntity module,
+                                  Object fromUser, ScarabUser toUser, 
                                   String subject, String template )
         throws Exception
     {
         List toUsers = new LinkedList();
         toUsers.add(toUser);
-        sendEmail( context, module, fromUser, toUsers, null, subject, template);
+        return sendEmail( context, module, fromUser, toUsers, null, subject, template);
     }
 }
