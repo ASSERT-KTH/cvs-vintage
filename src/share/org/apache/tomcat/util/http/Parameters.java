@@ -82,7 +82,7 @@ public final class Parameters extends MultiMap {
     MimeHeaders  headers;
 
     UDecoder urlDec;
-    MessageBytes decodedQuery=new MessageBytes();
+    MessageBytes decodedQuery=MessageBytes.newInstance();
     
     public static final int INITIAL_SIZE=4;
 

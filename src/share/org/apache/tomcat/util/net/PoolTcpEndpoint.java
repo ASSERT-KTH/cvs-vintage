@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.14 2001/08/22 16:58:29 mmanders Exp $
- * $Revision: 1.14 $
- * $Date: 2001/08/22 16:58:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.15 2001/08/31 04:13:12 costin Exp $
+ * $Revision: 1.15 $
+ * $Date: 2001/08/31 04:13:12 $
  *
  * ====================================================================
  *
@@ -249,7 +249,6 @@ public class PoolTcpEndpoint { // implements Endpoint {
 
     public void startEndpoint() throws IOException, InstantiationException {
 	try {
-	    //	    System.out.println("Creating socket " + port );
 	    if(factory==null)
 		factory=ServerSocketFactory.getDefault();
 	    if(serverSocket==null) {
