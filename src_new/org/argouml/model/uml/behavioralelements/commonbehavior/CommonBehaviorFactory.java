@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactory.java,v 1.23 2003/09/14 18:10:45 bobtarling Exp $
+// $Id: CommonBehaviorFactory.java,v 1.24 2003/10/27 20:24:14 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -351,8 +351,8 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
     /** 
      * Builds a Link between two Instances
      */
-    public MLink buildLink(MInstance fromInstance, MInstance toInstance) {
-        MLink link = UmlFactory.getFactory().getCommonBehavior().createLink();
+    public Object buildLink(Object fromInstance, Object toInstance) {    
+        Object link = UmlFactory.getFactory().getCommonBehavior().createLink();
         Object/*MLinkEnd*/ le0 =
             UmlFactory.getFactory().getCommonBehavior().createLinkEnd();
         ModelFacade.setInstance(le0, fromInstance);
@@ -393,7 +393,7 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
         MSignal signal = createSignal();
         signal.addContext(feature);
         return signal;
-    }
+    }        
 
     /**
      * Builds a reception belonging to some signal

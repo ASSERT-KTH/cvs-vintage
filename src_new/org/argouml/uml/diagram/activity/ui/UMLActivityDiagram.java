@@ -1,6 +1,4 @@
-
-
-// $Id: UMLActivityDiagram.java,v 1.32 2003/09/04 20:11:50 thierrylach Exp $
+// $Id: UMLActivityDiagram.java,v 1.33 2003/10/27 20:24:14 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +25,8 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.32 2003/09/04 20:11:50 thierrylach Exp $
+// $Id: UMLActivityDiagram.java,v 1.33 2003/10/27 20:24:14 kataka Exp $
+
 
 package org.argouml.uml.diagram.activity.ui;
 
