@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+
+
+  <title>Modifying issues</title>
+ </head>
+<div class="docs" id="userissuemodify"> 
+  <h2>Modifying issues</h2>
+  <div id="toc"> 
+    <ul>
+      <li>Scarab Help 
+        <ul>
+          <li><a href="/Introduction.vm">Introduction to Scarab</a> </li>
+          <li>Managing Issues 
+            <ul>
+              <li><a href="UserIssues.vm">Overview</a> 
+              <li><a href="UserIssueEnter.vm">Entering Issues </a> </li>
+              <li><a href="UserIssueTemplates.vm">Using templates</a></li>
+              <li><strong>Modifying issues</strong> 
+                <ul>
+                  <li><a href="#info">Managing information</a></li>
+                  <li><a href="#users">Associating users</a></li>
+                  <li><a href="#move">Moving issues</a></li>
+                </ul>
+              </li>
+            </ul>
+          
+          <li><a href="UserQuery.vm">Searching the database </a></li>
+          <li><a href="UserReports.vm">Reports</a> </li>
+          <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
+          <li><a href="ScarabFaq.vm">FAQ</a></li>
+          <li><a href="ScarabGlossary.vm">Glossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <h3><a id="top" name="top">Modifying issues</a></h3>
+  <p>Once an issue has been created it is ready for assignment or manipulation. 
+    You can perform the following functions on issues in the database:</p>
+</div>
+<ul>
+  <li>review, add or edit information about the issue</li>
+  <li>associate users </li>
+  <li>move issue</li>
+</ul>
+<div class="docs" id="userissuemodify"> 
+  <h3><b><a name="info"></a>Managing issue information</b></h3>
+  <p>All attributes are copied and the full history is added.</p>
+  <p><b>Dependencies</b></p>
+  <p>You can alter or add dependencies as necessary. As when creating an issue, 
+    you must define the dependency type. Dependencies can be blocking, non-blocking 
+    or duplicating. For more information on dependencies see <a href="UserIssueEnter.vm#depend">Dependencies</a>.</p>
+  <h3><a name="users"></a>Associate users</h3>
+  <div class="courtesylinks"> 
+    <div class="docs" id="userissueassign">
+      <p>can assign from:</p>
+    </div>
+    <ul>
+      <li> 
+        <div class="docs" id="userissueassign">query results</div>
+      </li>
+      <li>view issue</li>
+      <li></li>
+    </ul>
+    <div class="docs" id="userissueassign"> 
+      <p>Access issues. can use query to find and then identify multiple issues 
+        to assign if you'd like. you can also assign from issue view screen.</p>
+      <p>In order to assign users, users need to be added to the assign attribute. 
+        Contact your administrator to make sure that all users have been added 
+        to this attributeselect users to associate with issues</p>
+      <p>users</p>
+      <p>list of users; filter to limit search criteria</p>
+    </div>
+    <h3><a name="move"></a>Moving issues</h3>
+    <p>You may need to track a similar issue in multiple areas. Rather than entering 
+      the same issue twice, in different areas, you can copy an issue to another 
+      module. Use the Copy/move functionality. Select copy. You will be presented 
+      with an attribute mapping functionality. You will be able to track where 
+      each attribute in the original 
+    <p><a href="#Top">Top</a> 
+  </div>
+</div>
+ </body>
+</html>
