@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.action;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -28,7 +29,7 @@ import org.columba.core.gui.frame.FrameMediator;
  *
  * @author fdietz
  */
-public class CheckBoxAction extends FrameAction {
+public abstract class CheckBoxAction extends FrameAction {
 
 	private JCheckBoxMenuItem checkBoxMenuItem;
 	SelectionStateObservable observable;
@@ -93,5 +94,4 @@ public class CheckBoxAction extends FrameAction {
 	public SelectionStateObservable getObservable() {
 		return observable;
 	}
-
 }

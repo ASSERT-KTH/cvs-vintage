@@ -13,13 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.columba.core.action.JAbstractAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -38,16 +39,15 @@ import org.columba.mail.gui.table.model.MessageNode;
  * message-view. If no more message up your key, then nothing changed.
  */
 
-public class UpAction extends JAbstractAction {
+public class UpAction extends FrameAction {
 	
 	TableController tableController;
 	AbstractMailFrameController frameController;
 
 	public UpAction(AbstractMailFrameController frameController) {
-		super();
+		super(frameController, "UpAction");
 		this.tableController = ( (TableViewOwner) frameController).getTableController();
 		this.frameController = frameController;
-		
 	}
 	
 	/* (non-Javadoc)
@@ -99,7 +99,5 @@ public class UpAction extends JAbstractAction {
 			// view the message under the new node
 			MainInterface.processor.addOp(new ViewMessageCommand(frameController, refNew));
 		}
-		
 	}
-
 }

@@ -16,6 +16,9 @@
 
 package org.columba.core.gui.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.help.CSH;
 
 import org.columba.core.action.FrameAction;
@@ -32,6 +35,8 @@ import org.columba.core.util.GlobalResourceLoader;
  */
 public class ShowContextSpecificHelpAction extends FrameAction {
 
+        protected ActionListener target;
+    
 	/**
 	 * @param frameMediator
 	 * @param name
@@ -54,7 +59,10 @@ public class ShowContextSpecificHelpAction extends FrameAction {
 		
 		enableToolBarText(false);
 		
-		addActionListener(new CSH.DisplayHelpAfterTracking(HelpManager.getHelpBroker()));
+		target = new CSH.DisplayHelpAfterTracking(HelpManager.getHelpBroker());
 	}
-
+        
+        public void actionPerformed(ActionEvent e) {
+                target.actionPerformed(e);
+        }
 }

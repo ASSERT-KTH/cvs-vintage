@@ -13,12 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.message.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 import org.columba.mail.gui.message.MessageController;
 
 /**
@@ -34,20 +35,27 @@ public class MessageActionListener implements ActionListener
 {
 	private MessageController messageController;
 
-	public BasicAction dictAction;
+	public FrameAction dictAction;
 
 	public MessageActionListener( MessageController messageController )
 	{
 		this.messageController = messageController;
 
-		dictAction = new BasicAction(
-				"Dict.org lookup selection...");
+		dictAction = new FrameAction(null,
+				"Dict.org lookup selection...") {
+                        public void actionPerformed(ActionEvent e) {
+                                // FIXME
+                                /*
+                                String text = messageController.getView().getSelectedText();
+
+                                DictLookup dict = DictLookup.getInstance();
+                                dict.lookup( text );
+                                */
+                        }
+                };
 		
 		dictAction.setTooltipText(
 				"Look up definition of selection with online dictionary...");
-		dictAction.setActionCommand("DICT");
-
-		dictAction.addActionListener(this);
 	}
 
 	public void actionPerformed(ActionEvent e)
@@ -67,19 +75,6 @@ public class MessageActionListener implements ActionListener
 			selectAll();
 		}
 		*/
-		
-		if ( action.equals( dictAction.getActionCommand() ) )
-		{
-			// FIXME
-			/*
-			String text = messageController.getView().getSelectedText();
-
-
-			DictLookup dict = DictLookup.getInstance();
-			dict.lookup( text );
-			*/
-		}
-
 	}
 
 	public void copy()

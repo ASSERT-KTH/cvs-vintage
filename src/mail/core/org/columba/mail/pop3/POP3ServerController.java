@@ -21,7 +21,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.POP3CommandReference;
@@ -46,8 +46,8 @@ public class POP3ServerController implements ActionListener {
 
 	private boolean hide;
 
-	public BasicAction checkAction;
-	private BasicAction manageAction;
+	public FrameAction checkAction;
+	private FrameAction manageAction;
 
 	private Timer timer;
 
@@ -62,50 +62,26 @@ public class POP3ServerController implements ActionListener {
 
 		uid = accountItem.getUid();
 		checkAction =
-			new BasicAction(
+			new FrameAction(null,
 					accountItem.getName()
 						+ " ("
 						+ accountItem.getIdentityItem().get("address")
-						+ ")");
-		checkAction.setActionCommand("CHECK");
-			/*
-			new BasicAction(
-				accountItem.getName()
-					+ " ("
-					+ accountItem.getIdentityItem().get("address")
-					+ ")",
-				"",
-				"",
-				"CHECK",
-				null,
-				null,
-				0,
-				null);
-			*/
-		checkAction.addActionListener(this);
+						+ ")") {
+                        public void actionPerformed(ActionEvent e) {
+                                fetch();
+                        }
+                };
 
 		manageAction =
-			new BasicAction(
+			new FrameAction(null,
 					accountItem.getName()
 						+ " ("
 						+ accountItem.getIdentityItem().get("address")
-						+ ")");
-		manageAction.setActionCommand("MANAGE");
-			/*
-			new BasicAction(
-				accountItem.getName()
-					+ " ("
-					+ accountItem.getIdentityItem().get("address")
-					+ ")",
-				"",
-				"",
-				"MANAGE",
-				null,
-				null,
-				0,
-				null);
-			*/
-		manageAction.addActionListener(this);
+						+ ")") {
+                        public void actionPerformed(ActionEvent e) {
+                                ColumbaLogger.log.info("not yet implemented");
+                        }
+                };
 		manageAction.setEnabled(false);
 		
 		restartTimer();
@@ -153,11 +129,11 @@ public class POP3ServerController implements ActionListener {
 		uid = getAccountItem().getUid();
 	}
 
-	public BasicAction getCheckAction() {
+	public FrameAction getCheckAction() {
 		return checkAction;
 	}
 
-	public BasicAction getManageAction() {
+	public FrameAction getManageAction() {
 		return manageAction;
 	}
 
@@ -214,23 +190,6 @@ public class POP3ServerController implements ActionListener {
 		}
 
 		String action = e.getActionCommand();
-		if (action == null)
-			return;
-		//System.out.println("action: " +e.getActionCommand() );
-
-		if (action.equals(checkAction.getActionCommand())) {
-			//System.out.println("check");
-			//boolean result = fetchAll(false);
-			//System.out.println("result collection: "+result );
-
-			fetch();
-
-		} else if (action.equals(manageAction.getActionCommand())) {
-			//System.out.println("manage");
-			ColumbaLogger.log.info("not yet implemented");
-			//showWindow(true);
-		}
-
 	}
         
 	public int getUid() {

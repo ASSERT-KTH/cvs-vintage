@@ -56,7 +56,6 @@ public class DeleteAction extends FrameAction {
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_D, ActionEvent.CTRL_MASK));
-		
 	}
 
 	/* (non-Javadoc)
@@ -64,7 +63,5 @@ public class DeleteAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		// TODO implement action
-		super.actionPerformed(evt);
 	}
-
 }

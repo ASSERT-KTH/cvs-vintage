@@ -37,7 +37,7 @@ import org.columba.core.plugin.PluginInterface;
  *
  * @author fdietz
  */
-public class FrameAction extends BasicAction implements PluginInterface {
+public abstract class FrameAction extends BasicAction implements PluginInterface {
 
 	protected FrameMediator frameMediator;
 

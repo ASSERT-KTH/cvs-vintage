@@ -13,11 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.core.action.JAbstractAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -31,17 +32,16 @@ import org.columba.mail.gui.table.TableController;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class CutAction extends JAbstractAction {
+public class CutAction extends FrameAction {
 
 	TableController tableController;
 	AbstractMailFrameController frameController;
 
 	public CutAction(AbstractMailFrameController frameController) {
-		super();
+		super(frameController, "CutAction");
 		this.tableController =
 			((TableViewOwner) frameController).getTableController();
 		this.frameController = frameController;
-
 	}
 
 	/* (non-Javadoc)
@@ -57,7 +57,5 @@ public class CutAction extends JAbstractAction {
 
 		MainInterface.clipboardManager.setMessageSelection(
 			(FolderCommandReference[]) frameController.getTableSelection());
-
 	}
-
 }

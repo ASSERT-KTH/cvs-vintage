@@ -16,6 +16,8 @@
 
 package org.columba.core.gui.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
@@ -38,4 +40,8 @@ public class FindAgainAction extends FrameAction {
 		
 		setEnabled(false);
 	}
+        
+        public void actionPerformed(ActionEvent e) {
+                //TODO: implement
+        }
 }

@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.message.action;
 
 import java.awt.event.ActionEvent;
@@ -41,7 +42,5 @@ public class CopyTextAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		// TODO Auto-generated method stub
-		super.actionPerformed(evt);
 	}
-
 }

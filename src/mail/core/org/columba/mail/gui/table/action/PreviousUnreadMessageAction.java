@@ -65,14 +65,11 @@ public class PreviousUnreadMessageAction
 		*/
 	}
 
-	
-
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		// TODO implement action
-		super.actionPerformed(evt);
 	}
 	/* (non-Javadoc)
 			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)

@@ -17,24 +17,23 @@
 package org.columba.core.command;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
-public class UndoManager implements ActionListener, WorkerListChangeListener {
+public class UndoManager implements WorkerListChangeListener {
 	protected List undoQueue;
 	protected List redoQueue;
-	public BasicAction undoAction;
-	public BasicAction redoAction;
+	public FrameAction undoAction;
+	public FrameAction redoAction;
 
 	protected DefaultProcessor processor;
 
@@ -53,9 +52,12 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 
 	public void initActions() {
 		// Initialize undo
-		undoAction =new BasicAction(
-				MailResourceLoader.getString("action", "menu_edit_undo"));
-		undoAction.setActionCommand("UNDO");
+		undoAction = new FrameAction(null,
+				MailResourceLoader.getString("action", "menu_edit_undo")) {
+                        public void actionPerformed(ActionEvent e) {
+                                undoLast();
+                        }
+                };
 		undoAction.setSmallIcon(
 				ImageLoader.getSmallImageIcon("stock_undo-16.png"));
 		undoAction.setLargeIcon(
@@ -64,12 +66,14 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 				KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
 		undoAction.setMnemonic('T');
 		undoAction.setEnabled(false);
-		undoAction.addActionListener(this);
 
 		// Initialize redo
-		redoAction = new BasicAction(
-		 		MailResourceLoader.getString("action", "menu_edit_redo"));
-		redoAction.setActionCommand("REDO");
+		redoAction = new FrameAction(null,
+		 		MailResourceLoader.getString("action", "menu_edit_redo")) {
+                         public void actionPerformed(ActionEvent e) {
+                                redoLast();
+                         }
+                };
 		redoAction.setSmallIcon(
 		 		ImageLoader.getSmallImageIcon("stock_redo-16.png"));
 		redoAction.setLargeIcon(
@@ -78,7 +82,6 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 				KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
 		redoAction.setMnemonic('T');
 		redoAction.setEnabled(false);
-		redoAction.addActionListener(this);
 	}
 
 	public void addToUndo(Command op) {
@@ -163,18 +166,6 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 		addCommand( undoQueue, lastRedoOp);
 
 		updateActions();
-	}
-
-	/**
-	 * @see java.awt.event.ActionListener#actionPerformed(ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent e) {
-		String command = e.getActionCommand();
-		if (command.equals("UNDO")) {
-			undoLast();
-		} else if (command.equals("REDO")) {
-			redoLast();
-		}
 	}
 
 	/**

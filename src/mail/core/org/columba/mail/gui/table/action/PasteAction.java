@@ -13,11 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.core.action.JAbstractAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
@@ -34,24 +35,22 @@ import org.columba.mail.gui.table.TableController;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class PasteAction extends JAbstractAction {
+public class PasteAction extends FrameAction {
 
 	TableController tableController;
 	AbstractMailFrameController frameController;
 
 	public PasteAction(AbstractMailFrameController frameController) {
-		super();
+		super(frameController, "PasteAction");
 		this.tableController =
 			((TableViewOwner) frameController).getTableController();
 		this.frameController = frameController;
-
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent arg0) {	
-
 		FolderCommandReference[] ref = new FolderCommandReference[2];
 
 		FolderCommandReference[] source =
@@ -79,7 +78,5 @@ public class PasteAction extends JAbstractAction {
 			MainInterface.clipboardManager.clearMessageSelection();
 
 		MainInterface.processor.addOp(c);
-
 	}
-
 }

@@ -13,11 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.core.action.JAbstractAction;
+import org.columba.core.action.FrameAction;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
@@ -28,17 +29,16 @@ import org.columba.mail.gui.table.TableController;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class DeleteAction extends JAbstractAction {
+public class DeleteAction extends FrameAction {
 
 	TableController tableController;
 	AbstractMailFrameController frameController;
 
 	public DeleteAction(AbstractMailFrameController frameController) {
-		super();
+		super(frameController, "DeleteAction");
 		this.tableController =
 			((TableViewOwner) frameController).getTableController();
 		this.frameController = frameController;
-
 	}
 
 	/* (non-Javadoc)
@@ -46,7 +46,5 @@ public class DeleteAction extends JAbstractAction {
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		new DeleteMessageAction(frameController).actionPerformed(arg0);
-
 	}
-
 }

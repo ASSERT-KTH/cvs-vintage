@@ -55,4 +55,8 @@ public class FindAction extends FrameAction {
 		
 		setEnabled(false);
 	}
+        
+        public void actionPerformed(ActionEvent e) {
+                //TODO: implement
+        }
 }

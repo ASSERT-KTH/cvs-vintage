@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.action;
 
-import javax.swing.Action;
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
@@ -65,7 +66,7 @@ import javax.swing.KeyStroke;
  *
  * @author fdietz
  */
-public class BasicAction extends JAbstractAction {
+public abstract class BasicAction extends AbstractAction {
 
 	/**
 	 * special label for toolbar buttons which is smaller
@@ -110,9 +111,49 @@ public class BasicAction extends JAbstractAction {
 		super(name);
 		
 		// in case their's no action command specified
-		// we just pre-fill the name 
-		setActionCommand(name);
+		// we just pre-fill the name
+                setActionCommand(name);
 	}
+        
+        /**
+         * NOTE: This method is a temporary means to enable compilation -
+         * it will soon be removed. BasicAction subclasses should directly
+         * communicate with the underlying Hashtable instead of using there
+         * accessor methods.
+         */
+        public String getName() {
+                return (String)getValue(NAME);
+        }
+        
+        /**
+         * NOTE: This method is a temporary means to enable compilation -
+         * it will soon be removed. BasicAction subclasses should directly
+         * communicate with the underlying Hashtable instead of using there
+         * accessor methods.
+         */
+        public void setName(String name) {
+                putValue(NAME, name);
+        }
+        
+        /**
+         * NOTE: This method is a temporary means to enable compilation -
+         * it will soon be removed. BasicAction subclasses should directly
+         * communicate with the underlying Hashtable instead of using there
+         * accessor methods.
+         */
+        public String getActionCommand() {
+                return (String)getValue(ACTION_COMMAND_KEY);
+        }
+        
+        /**
+         * NOTE: This method is a temporary means to enable compilation -
+         * it will soon be removed. BasicAction subclasses should directly
+         * communicate with the underlying Hashtable instead of using there
+         * accessor methods.
+         */
+        public void setActionCommand(String actionCommand) {
+                putValue(ACTION_COMMAND_KEY, actionCommand);
+        }
 
 	/**
 	 * Return true if toolbar text should be visible
@@ -139,7 +180,7 @@ public class BasicAction extends JAbstractAction {
 	 * @return		accelerator key of action
 	 */
 	public KeyStroke getAcceleratorKey() {
-		return (KeyStroke) getValue(Action.ACCELERATOR_KEY);
+		return (KeyStroke) getValue(ACCELERATOR_KEY);
 	}
 	
 	/**
@@ -149,7 +190,7 @@ public class BasicAction extends JAbstractAction {
 	 */
 	public void setAcceleratorKey( KeyStroke k)
 	{
-		putValue(Action.ACCELERATOR_KEY, k);
+		putValue(ACCELERATOR_KEY, k);
 	}
 
 	/**
@@ -158,7 +199,7 @@ public class BasicAction extends JAbstractAction {
 	 * @return		long description
 	 */
 	public String getTooltipText() {
-		return (String) getValue(Action.SHORT_DESCRIPTION);
+		return (String) getValue(SHORT_DESCRIPTION);
 	}
 	
 	/**
@@ -174,7 +215,7 @@ public class BasicAction extends JAbstractAction {
 		if ( tooltip != null ) {
 			tooltip = tooltip.replaceAll("&", "");
 		}
-		putValue( Action.SHORT_DESCRIPTION, tooltip );
+		putValue(SHORT_DESCRIPTION, tooltip);
 	}
 
 	/**
@@ -223,7 +264,7 @@ public class BasicAction extends JAbstractAction {
 	 * @return		small icon
 	 */
 	public ImageIcon getSmallIcon() {
-		return (ImageIcon) getValue(Action.SMALL_ICON);
+		return (ImageIcon) getValue(SMALL_ICON);
 	}
 	
 	/**
@@ -233,7 +274,7 @@ public class BasicAction extends JAbstractAction {
 	 */
 	public void setSmallIcon( ImageIcon i)
 	{
-		putValue(Action.SMALL_ICON, i);
+		putValue(SMALL_ICON, i);
 	}
 	
 	/**
@@ -243,7 +284,7 @@ public class BasicAction extends JAbstractAction {
 	 */
 	public void setMnemonic( int mnemonic)
 	{
-		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
+		putValue(MNEMONIC_KEY, new Integer(mnemonic));
 	}
 	
 	/**
@@ -254,7 +295,7 @@ public class BasicAction extends JAbstractAction {
 	 */
 	public int getMnemonic()
 	{
-		return ((Integer)getValue(Action.MNEMONIC_KEY)).intValue();
+		return ((Integer)getValue(MNEMONIC_KEY)).intValue();
 	}
 
 	/******************** deprecated constructors ********************/
@@ -281,19 +322,18 @@ public class BasicAction extends JAbstractAction {
 		int mnemonic,
 		KeyStroke keyStroke) {
 		super();
-		putValue(Action.NAME, name);
-		putValue(Action.LONG_DESCRIPTION, longDescription);
-		putValue(Action.SMALL_ICON, small_icon);
+		putValue(NAME, name);
+		putValue(LONG_DESCRIPTION, longDescription);
+		putValue(SMALL_ICON, small_icon);
 		LARGE_ICON = big_icon;
 
 		//putValue(Action.SHORT_DESCRIPTION, longDescription);
 		setTooltipText(tooltip);
-		putValue(Action.ACTION_COMMAND_KEY, actionCommand);
-		putValue(Action.ACCELERATOR_KEY, keyStroke);
-		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
+		putValue(ACTION_COMMAND_KEY, actionCommand);
+		putValue(ACCELERATOR_KEY, keyStroke);
+		putValue(MNEMONIC_KEY, new Integer(mnemonic));
 
 		TOOLBAR_NAME = name;
-
 	}
 
 	/**
@@ -356,5 +396,4 @@ public class BasicAction extends JAbstractAction {
 	public void setShowToolBarText(boolean showToolbarText) {
 		this.showToolbarText = showToolbarText;
 	}
-
 }

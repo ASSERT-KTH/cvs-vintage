@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.action;
 
 import javax.swing.JRadioButtonMenuItem;
@@ -28,11 +29,10 @@ import org.columba.core.gui.frame.FrameMediator;
  *
  * @author fdietz
  */
-public class RadioButtonAction extends FrameAction {
+public abstract class RadioButtonAction extends FrameAction {
 
 	JRadioButtonMenuItem menuItem;
 	SelectionStateObservable observable;
-	
 	
 	public RadioButtonAction(
 		FrameMediator frameController,
@@ -40,7 +40,6 @@ public class RadioButtonAction extends FrameAction {
 		super(frameController, name);
 		
 		observable = new SelectionStateObservable();
-		
 	}
 
 	/**
@@ -67,5 +66,4 @@ public class RadioButtonAction extends FrameAction {
 	public SelectionStateObservable getObservable() {
 		return observable;
 	}
-
 }

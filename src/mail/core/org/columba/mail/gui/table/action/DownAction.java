@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.columba.core.action.JAbstractAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -38,12 +38,12 @@ import org.columba.mail.gui.table.model.MessageNode;
  * If you do so, the nextMessage down your key is selected and shown in the
  * message-view. If no more message down your key, then nothing changed.
  */
-public class DownAction extends JAbstractAction {
+public class DownAction extends FrameAction {
 	TableController tableController;
 	AbstractMailFrameController frameController;
 
 	public DownAction(AbstractMailFrameController frameController) {
-		super();
+		super(frameController, "DownAction");
 		this.tableController =
 			((TableViewOwner) frameController).getTableController();
 		this.frameController = frameController;
