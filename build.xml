@@ -1,36 +1,22 @@
 <?xml version="1.0"?>
-
-<!-- created by waffel (alias Thomas Wabner -->
-<!-- version 0.2 -->
-<!-- date 13.05.2002 -->
-
-<!-- CHANGES: -->
-<!-- the destination folder has name with the verion prefix -->
-<!-- the copy-required task has bee update, includes now README_JDK1.3 and AUTHORS -->
-<!-- an task run-script has bee added to create an run.sh script via ant -->
-<!-- the task for building zip file are splitted into three task, one for the binary -->
-<!--    and one for the source-version, the third is for the zip-task to creat both -->
-<!-- en task release are includes, this is the same as zip, but with an better name -->
-<!-- the zip files are includes an prefix to unzip the file in an directory and not plain ;-) -->
-<!-- a lot of little things -->
-
+<!DOCTYPE project SYSTEM "./ant.dtd">
 
 <project name="columba" default="build" basedir=".">
 
 	<property name="src" value="."/>
 	<property name="build" value="build"/>
 	<property name="dist" value="dist"/>
-	<property name="classpath" value="${src}/ext/csWillySpell.jar"/>
 
 	<property name="user.name" value="The columba Team"/>
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
-	<property name="version" value="0.9.9-pre"/>
+	<property name="version" value="0.9.9"/>
 	<property name="dest" value="../columba-${version}"/>
 	<!-- i'am not sure that we need this -->
 	<property name="TODAY" value="heute"/>
 
 	<!-- creating the destination directory -->
 	<target name="init">
+		<echo message="you run java with version ${ant.java.version}"/>
 		<mkdir dir="${dest}"/>
 	</target>
 
@@ -45,13 +31,18 @@
 				<include name="**/*.png"/>
 				<include name="**/*.wav"/>
 				<include name="**/*.properties"/>
-				<include name="ext/csWillySpell.jar"/>
+				<include name="**/*.jar"/>
 				<include name="README"/>
-				<include name="README_JDK1.3"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
 				<include name="AUTHORS"/>
-                                <include name="AUTHORS"/>
+				<include name="RUN"/>
+				<include name="run.bat"/>
+				<include name="run.sh"/>
+	                        <include name="run_source.bat"/>
+				<include name="run_source.sh"/>
+				<include name="run_source_jdk13.bat"/>
+				<include name="run_source_jdk13.sh"/>
 				<exclude name="build.xml"/>
 				<exclude name="ant.dtd"/>
 			</fileset>
@@ -69,26 +60,32 @@
 			<include name="**"/>
 			<exclude name="columba.jar"/>
 			<exclude name="README"/>
-			<exclude name="README_JDK1.3"/>
 			<exclude name="CHANGES"/>
 			<exclude name="LICENSE"/>
 			<exclude name="AUTHORS"/>
-                        <exclude name="AUTHORS"/> 
+			<exclude name="RUN"/>
+			<exclude name="run.bat"/>
+			<exclude name="run.sh"/>
+                        <exclude name="run_source.bat"/>
+                        <exclude name="run_source.sh"/>
+	                <exclude name="run_source_jdk13.bat"/>
+	                <exclude name="run_source_jdk13.sh"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.main.Main"/>
-				<attribute name="Class-Path" value="ext/csWillySpell.jar"/>
+				<attribute name="Class-Path" value="ext/xalan.jar ext/jaxp.jar ext/crimson.jar"/>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
 		</jar>
 	</target>
 
 	<target name="run-script" depends="init">
-		<echo file="${dest}/run.sh">#!/bin/sh
+		<!-- echo file="${dest}/run.sh" >#!/bin/sh
 echo "starting columba ..."
 echo "from path: `pwd`"
 if test -f "`pwd`/columba.jar" ; then java -jar `pwd`/columba.jar ; 
 else echo "cannot find columba.jar in `pwd`"; fi
-		</echo>
+		</echo -->
+		<echo message="at the moment there are no dynamic runscripts required"/>
 	</target>
 
 
@@ -98,14 +95,15 @@ else echo "cannot find columba.jar in `pwd`"; fi
 		<zip zipfile="${dest}/columba-${version}-bin.zip" update="true">
 			<zipfileset dir="${dest}" prefix="columba-${version}-bin">
 				<include name="README"/>
-                                <include name="README_JDK1.3"/> 
 				<include name="AUTHORS"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
-                                <include name="AUTHORS"/>                                
-				<include name="columba.jar"/>
-				<include name="ext/csWillySpell.jar"/>
+				<include name="RUN"/>
+				<include name="run.bat"/>
 				<include name="run.sh"/>
+				<include name="columba.jar"/>
+				<include name="**/*.jar"/>
+				<!-- include name="ext/csWillySpell.jar" -->
 			</zipfileset>
 		</zip>
 	</target>
@@ -124,14 +122,17 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="**/*.wav"/>
 				<include name="**/*.properties"/>
 				<include name="README"/>
-				<include name="README_JDK1.3"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
 				<include name="AUTHORS"/>
+				<include name="run_source.bat"/>
+				<include name="run_source.sh"/>
+				<include name="run_source_jdk13.bat"/>
+				<include name="run_source_jdk13.sh"/>
 			</zipfileset>
-			<zipfileset dir="${dest}" prefix="columba-${version}-src">
-				<include name="run.sh"/>
-			</zipfileset>
+			<!--zipfileset dir="${dest}" prefix="columba-${version}-src" -->
+				<!-- include name="run.sh"/-->
+			<!-- /zipfileset-->
 		</zip>
 	</target>
 
