@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Parser.java,v 1.3 1999/10/21 02:47:50 mandar Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/21 02:47:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Parser.java,v 1.4 1999/10/21 07:56:40 akv Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/21 07:56:40 $
  *
  * ====================================================================
  * 
@@ -739,8 +739,6 @@ public class Parser {
             Mark bodyStop = null;
 
 	    
-	    System.out.println("Tag: "+tag);
-	    System.out.println("BC: "+bc);
 	    
 	    if (reader.matches(CLOSE_1)
 		|| bc.equalsIgnoreCase(TagInfo.BODY_CONTENT_EMPTY)) {
@@ -757,7 +755,6 @@ public class Parser {
 		// Body can be either
 		//     - JSP tags
 		//     - tag dependent stuff
-		System.out.println("nextChar before croaking: "+(char) reader.peekChar());
 		if (reader.matches(CLOSE)) {
 		    reader.advance(CLOSE.length());
 		    bodyStart = reader.mark();
@@ -947,8 +944,10 @@ public class Parser {
     }
 
     void flushCharData() throws JasperException {
-	listener.handleCharData(caw.toCharArray());
-	caw = new CharArrayWriter();
+        char[] array = caw.toCharArray();
+        if (array.length != 0) // Avoid unnecessary out.write("") statements...
+            listener.handleCharData(caw.toCharArray());
+        caw = new CharArrayWriter();
     }
 
     public void parse() throws JasperException {
