@@ -131,6 +131,11 @@ public class ScarabRequestTool
     private Issue issue = null;
 
     /**
+     * The <code>Alert!</code> message for this request.
+     */
+    private String alert = null;
+
+    /**
      * A Attribute object for use within the Scarab API.
      */
     private Attribute attribute = null;
@@ -257,6 +262,26 @@ public class ScarabRequestTool
         nbrPages = 0;
         prevPage = 0;
         nextPage = 0;
+    }
+
+    /**
+     * Sets the <code>Alert!</code> message for this request.
+     *
+     * @param message The alert message to set.
+     */
+    public void setAlert(String message)
+    {
+        this.alert = message;
+    }
+
+    /**
+     * Retrieves any <code>Alert!</code> message which has been set.
+     *
+     * @return The alert message.
+     */
+    public String getAlert()
+    {
+        return alert;
     }
 
     /**
