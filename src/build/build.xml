@@ -210,6 +210,7 @@
      <mkdir dir="${dist.dir}/conf"/>
      <mkdir dir="${dist.dir}/client"/>
      <mkdir dir="${dist.dir}/tmp"/>
+     <mkdir dir="${dist.dir}/spyderMQ"/>
 
      <copy file="${etc.dir}/deploy.txt" tofile="${dist.dir}/deploy/deploy.txt"/>
      <copy file="${etc.dir}/hypersonic.txt" tofile="${dist.dir}/db/hypersonic/hypersonic.txt"/>

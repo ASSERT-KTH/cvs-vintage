@@ -113,8 +113,18 @@
     <attribute name="Configuration">file URL to jetty.xml e.g. file:/usr/local/jboss/dist/conf/default/jetty.xml</attribute>
   </mbean>
    -->
-   
+  
+  <!-- For Message Driven Beans -->
   <mbean code="org.jboss.spydermq.SpyderMQService" name="DefaultDomain:service=SpyderMQ" />
+  <mbean code="org.jboss.jms.jndi.JMSProviderLoader" name=":service=JMSProviderLoader,name=SpyderMQProvider">
+    <attribute name="ProviderName">SpyderMQProvider</attribute>
+    <attribute name="ProviderAdapterClass">org.jboss.jms.jndi.SpyderMQProvider</attribute>
+  </mbean>
+  <mbean code="org.jboss.jms.asf.ServerSessionPoolLoader" name=":service=ServerSessionPoolMBean,name=StdJMSPool">
+    <attribute name="PoolName">StdJMSPool</attribute>
+    <attribute name="PoolFactoryClass">org.jboss.jms.asf.StdServerSessionPoolFactory</attribute>
+  </mbean>
+
 
   <!-- Make sure you change EmbeddedTomcat to Jetty if you are using Jetty  -->
   <mbean code="org.jboss.deployment.J2eeDeployer" name="J2EE:service=J2eeDeployer">

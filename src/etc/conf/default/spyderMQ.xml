@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF8"?>
+
+<Server>
+
+	<!-- Setup the persistence settings -->
+	<PersistenceManager>
+		<DataDirectory>../../spyderMQ/</DataDirectory>
+	</PersistenceManager>
+
+	<!-- The physical topics known by the server -->
+	<Topic><Name>testTopic</Name></Topic>
+	<Topic><Name>example</Name></Topic>
+	<Topic><Name>bob</Name></Topic>
+
+	<!-- The physical queues known by the server -->
+	<Queue><Name>testQueue</Name></Queue>
+	<Queue><Name>controlQueue</Name></Queue>
+	<Queue><Name>A</Name></Queue>
+	<Queue><Name>B</Name></Queue>
+	<Queue><Name>C</Name></Queue>
+	<Queue><Name>D</Name></Queue>
+	<Queue><Name>E</Name></Queue>
+	<Queue><Name>ex</Name></Queue>
+
+	<!-- The users known by the server -->
+	<UserManager>
+		<User>
+			<Name>john</Name>
+			<Password>needle</Password>
+			<Id>DurableSubscriberExample</Id>
+		</User>
+		<User>
+			<Name>sahra</Name>
+			<Password>spot</Password>
+		</User>
+	</UserManager>
+
+	<!-- The invokation layers the server will expose -->
+	<InvocationLayer>
+		<Name>OIL</Name>
+		<TopicConnectionFactoryJNDI>TopicConnectionFactory</TopicConnectionFactoryJNDI>
+		<QueueConnectionFactoryJNDI>QueueConnectionFactory</QueueConnectionFactoryJNDI>
+		<XATopicConnectionFactoryJNDI>XATopicConnectionFactory</XATopicConnectionFactoryJNDI>
+		<XAQueueConnectionFactoryJNDI>XAQueueConnectionFactory</XAQueueConnectionFactoryJNDI>
+		<ReceiverClass>org.spydermq.distributed.server.ConnectionReceiverOIL</ReceiverClass>
+		<ServerClass>org.spydermq.distributed.server.DistributedJMSServerOIL</ServerClass>
+	</InvocationLayer>
+	<InvocationLayer>
+		<Name>UIL</Name>
+		<TopicConnectionFactoryJNDI>UILTopicConnectionFactory</TopicConnectionFactoryJNDI>
+		<QueueConnectionFactoryJNDI>UILQueueConnectionFactory</QueueConnectionFactoryJNDI>
+		<XATopicConnectionFactoryJNDI>UILXATopicConnectionFactory</XATopicConnectionFactoryJNDI>
+		<XAQueueConnectionFactoryJNDI>UILXAQueueConnectionFactory</XAQueueConnectionFactoryJNDI>
+		<ReceiverClass>org.spydermq.distributed.server.ConnectionReceiverUIL</ReceiverClass>
+		<ServerClass>org.spydermq.distributed.server.DistributedJMSServerUIL</ServerClass>
+	</InvocationLayer>
+	<InvocationLayer>
+		<Name>RMI</Name>
+		<TopicConnectionFactoryJNDI>RMITopicConnectionFactory</TopicConnectionFactoryJNDI>
+		<QueueConnectionFactoryJNDI>RMIQueueConnectionFactory</QueueConnectionFactoryJNDI>
+		<XATopicConnectionFactoryJNDI>RMIXATopicConnectionFactory</XATopicConnectionFactoryJNDI>
+		<XAQueueConnectionFactoryJNDI>RMIXAQueueConnectionFactory</XAQueueConnectionFactoryJNDI>
+		<ReceiverClass>org.spydermq.distributed.server.ConnectionReceiverRMIImpl</ReceiverClass>
+		<ServerClass>org.spydermq.distributed.server.DistributedJMSServerRMIImpl</ServerClass>
+	</InvocationLayer>
+	
+</Server>
+
