@@ -23,6 +23,7 @@ import org.columba.core.gui.action.OpenNewAddressbookWindowAction;
 import org.columba.core.gui.action.OpenNewMailWindowAction;
 import org.columba.core.gui.action.ShowHelpAction;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.menu.CMenuItem;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.shutdown.ShutdownManager;
@@ -109,13 +110,13 @@ public class NativeWrapperHandler implements NativeWrapper {
 	public JPopupMenu getPopupMenu() {
 		if (menu == null) {
 			menu = new JPopupMenu();
-			menu.add(new OpenNewMailWindowAction(mediator));
-			menu.add(new OpenNewAddressbookWindowAction(mediator));
+			menu.add(new CMenuItem(new OpenNewMailWindowAction(mediator)));
+			menu.add(new CMenuItem(new OpenNewAddressbookWindowAction(mediator)));
 			menu.addSeparator();
-			menu.add(new AboutDialogAction(mediator));
-			menu.add(new ShowHelpAction(mediator));
+			menu.add(new CMenuItem(new AboutDialogAction(mediator)));
+			menu.add(new CMenuItem(new ShowHelpAction(mediator)));
 			menu.addSeparator();
-			menu.add(new ExitAction(mediator));
+			menu.add(new CMenuItem(new ExitAction(mediator)));
 		}
 		return menu;
 	}
