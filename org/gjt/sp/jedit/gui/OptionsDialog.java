@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1998, 2002 Slava Pestov
+ * Copyright (C) 1998, 2003 Slava Pestov
  * Portions copyright (C) 1999 mike dillon
  *
  * This program is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.26 2003/01/12 03:08:24 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.27 2003/01/14 01:38:33 spestov Exp $
  */
 public abstract class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -98,6 +98,13 @@ public abstract class OptionsDialog extends EnhancedDialog
 		// get rid of this dialog if necessary
 		if(dispose)
 			dispose();
+	} //}}}
+
+	//{{{ dispose() method
+	public void dispose()
+	{
+		GUIUtilities.saveGeometry(this,name);
+		super.dispose();
 	} //}}}
 
 	//{{{ actionPerformed() method
@@ -186,10 +193,10 @@ public abstract class OptionsDialog extends EnhancedDialog
 			Math.max(currentSize.width,requestedSize.width),
 			Math.max(currentSize.height,requestedSize.height)
 		);
-		if(newSize.width < 400)
-			newSize.width = 400;
-		if(newSize.height < 300)
-			newSize.height = 300;
+		if(newSize.width < 300)
+			newSize.width = 300;
+		if(newSize.height < 200)
+			newSize.height = 200;
 		setSize(newSize);
 		validate();
 
@@ -321,10 +328,13 @@ public abstract class OptionsDialog extends EnhancedDialog
 			new Object[] { rootNode, rootNode.getMember(i) }));
 		}
 
+		// load geometry before selectPane() since we might need to
+		// enlarge the dialog if the saved geometry is too small.
+		GUIUtilities.loadGeometry(this,name);
+
 		if(pane == null || !selectPane(rootNode,pane))
 			selectPane(rootNode,firstPane);
 
-		setLocationRelativeTo(getParent());
 		show();
 	} //}}}
 
