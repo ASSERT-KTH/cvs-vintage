@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: app_docstand.xml,v 1.10 2003/10/15 19:07:40 mvw Exp $ -->
+<!-- $Id: app_docstand.xml,v 1.11 2003/12/16 08:55:38 mvw Exp $ -->
 
 <!--
 
@@ -124,6 +124,13 @@ or perhaps even emphasized using
 <sgmltag>warning</sgmltag>
 include the issue number in a sgml-comment in the source 
 so that it is easy to know if this problem has been fixed.
+The issue should be mentioned in the format <quote>issue xxx</quote>, i.e.
+there should only be a space between 
+the word <quote>issue</quote> 
+and the issue number. 
+This allows the tigris web site to 
+generate links when viewing
+the manual source.
 </para>
       </listitem>
 
