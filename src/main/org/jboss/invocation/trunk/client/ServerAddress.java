@@ -50,6 +50,11 @@ public class ServerAddress implements Serializable
       this.hashCode = address.hashCode() + port;
    }
 
+   public String toObjectNameClause()
+   {
+      return "address="+ address + ",port=" + port;
+   }
+
    public String toString()
    {
       return "[address:" + address + ",port:" + port + ",enableTcpNoDelay:" + enableTcpNoDelay + "]";

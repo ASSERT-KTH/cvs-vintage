@@ -7,31 +7,33 @@
 
 package org.jboss.tm.usertx.client;
 
+
+
+
+
+
+
 import java.io.Serializable;
-
+import java.net.InetAddress;
 import java.rmi.RemoteException;
-
 import java.util.LinkedList;
-
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.Referenceable;
-import javax.naming.NamingException;
-
-import javax.transaction.UserTransaction;
-import javax.transaction.Transaction;
-import javax.transaction.Status;
-import javax.transaction.NotSupportedException;
-import javax.transaction.SystemException;
-import javax.transaction.RollbackException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
-
-import org.jboss.tm.TransactionPropagationContextFactory;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.Status;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.UserTransaction;
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
-
+import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.usertx.interfaces.UserTransactionSession;
 import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
+import java.net.UnknownHostException;
 
 /**
  *  The client-side UserTransaction implementation.
@@ -45,7 +47,7 @@ import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
  *  propagation contexts of the transactions started here.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 public class ClientUserTransaction
    implements UserTransaction,
@@ -241,9 +243,23 @@ public class ClientUserTransaction
    public Reference getReference()
       throws NamingException
    {
+      //Essentially we construct a ServerAddress so the ut can
+      //identify where it came from.
+
+      String clientConnectAddress = null;
+      try
+      {
+         clientConnectAddress  = InetAddress.getLocalHost().getHostName();
+      }
+      catch (UnknownHostException uhe)
+      {
+         throw new NamingException("Could not determine local host name:" + uhe);
+      }
+      int port = 4445;//almost guessing here...  probably should use jndi data.
+      String toObjectNameClause = "address="+ clientConnectAddress + ",port=" + port;
       Reference ref = new Reference("org.jboss.tm.usertx.client.ClientUserTransaction",
                                     "org.jboss.tm.usertx.client.ClientUserTransactionObjectFactory", 
-                                    null);
+                                    toObjectNameClause);
 
       return ref;
    }

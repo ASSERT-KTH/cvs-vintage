@@ -110,6 +110,8 @@ public final class InvocationKey implements Serializable {
    public final static InvocationKey EJB_METADATA = 
          new InvocationKey("EJB_METADATA");
    
+   public final static InvocationKey XID = new InvocationKey("XID");
+   public final static InvocationKey TX_TIMEOUT = new InvocationKey("TX_TIMEOUT");
 
    private final transient String name;
 

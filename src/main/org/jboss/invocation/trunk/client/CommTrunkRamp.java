@@ -19,10 +19,12 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import javax.resource.NotSupportedException;
+import javax.resource.spi.work.ExecutionContext;
 import javax.resource.spi.work.Work;
+import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkManager;
 import org.jboss.logging.Logger;
-import javax.resource.spi.work.WorkException;
 
 /**
  * The CommTrunkRamp acts like the on and off ramps on a highway.  It merges the Invocation traffic from 
@@ -205,11 +207,15 @@ public final class CommTrunkRamp implements java.lang.Cloneable
     * The Trunk should deliver requests to the Ramp via this 
     * method.
     */
-   public void deliverTrunkRequest(TrunkRequest request) throws InterruptedException, WorkException
+   public void deliverTrunkRequest(TrunkRequest request) throws InterruptedException, WorkException, NotSupportedException
    {
-      //Could use explicit ExecutionContext for tx etc.
-      workManager.scheduleWork(new RequestRunner(request));
-      //pool.execute(new RequestRunner(request));
+      ExecutionContext ec = new ExecutionContext();
+      ec.setXid(request.xid);
+      ec.setTransactionTimeout(request.transactionTimeout);
+      workManager.scheduleWork(new RequestRunner(request), 
+                               request.transactionTimeout, 
+                               ec,
+                               null);
    }
    
 

@@ -21,22 +21,31 @@ import org.jboss.invocation.trunk.client.bio.BlockingClient;
 import org.jboss.logging.Logger;
 import java.lang.reflect.Method;
 
+import org.jboss.system.ServiceMBean;
+import org.jboss.system.ServiceMBeanSupport;
+import javax.management.ObjectName;
+
 /**
- * This is a singleton class on that lives on a client which is used find existing 
- * connections that have been established to a sever.
+ * This is an mbeanthat lives on a client which is used to find existing 
+ * connections that have been established to a server.
  * 
  * This class also powers a clean-up thread which shuts down clients that have been
  * been inactive for 1 min.
  * 
- * This class is the one that makes the decicion if the client used will be Blocking or Non Blocking.
- * (currently based on jre version)
+ * This class is the one that makes the decision if the client used
+ * will be Blocking or Non Blocking.  (currently based on jre version)
  * 
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version
+ *
+ * @jmx.mbean extends="ServiceMBean"
  */
 public class ConnectionManager
+   extends ServiceMBeanSupport
+   implements ConnectionManagerMBean
 {
    private final static Logger log = Logger.getLogger(ConnectionManager.class);
-   private static ConnectionManager instance = new ConnectionManager();
 
    /** 
     * A map of all the connections that we have established due to 
@@ -73,6 +82,9 @@ public class ConnectionManager
     */
    public ThreadGroup threadGroup = new ThreadGroup("Client Sockets");
 
+
+   private ObjectName workManagerName;
+
    private WorkManager workManager;
 
    /**
@@ -96,23 +108,15 @@ public class ConnectionManager
     */
    public static ThreadGroup oiThreadGroup = new ThreadGroup("Optimized Invoker");
 
-   protected ConnectionManager()
+   public ConnectionManager()
    {
-      //This sucks.  Should be an mbean, this should be running with jmx
-      //on the client.
-      try
-      {
-      ClassLoader cl = Thread.currentThread().getContextClassLoader(); 
-      Class wmClass = cl.loadClass("org.jboss.resource.work.BaseWorkManager");
-      workManager = (WorkManager)wmClass.newInstance();
-      Method m = wmClass.getMethod("setMaxThreads", new Class[] {Integer.TYPE});
-      m.invoke(workManager, new Object[] {new Integer(50)});
-      }
-      catch (Exception e)
-      {
-         throw new RuntimeException("unexpected problem setting up trunk client" + e);
-      } // end of catch
-      
+   }
+
+   protected void startService() throws Exception
+   {
+
+      workManager = (WorkManager)getServer().getAttribute(workManagerName, "WorkManager");
+     
       clientClass = BlockingClient.class;
       
       // Try to use the NonBlockingClient if possible
@@ -142,6 +146,45 @@ public class ConnectionManager
 
    }
 
+   protected void stopService() throws Exception
+   {
+      workManager = null;
+   }
+
+
+   /**
+    * Get the WorkManagerName value.
+    * @return the WorkManagerName value.
+    *
+    * @jmx.managed-attribute
+    */
+   public ObjectName getWorkManagerName() {
+      return workManagerName;
+   }
+
+   /**
+    * Set the WorkManagerName value.
+    * @param newWorkManagerName The new WorkManagerName value.
+    *
+    * @jmx.managed-attribute
+    */
+   public void setWorkManagerName(ObjectName workManagerName) {
+      this.workManagerName = workManagerName;
+   }
+
+     
+   /**
+    * Describe <code>getInstance</code> method here.
+    *
+    * @return a <code>ConnectionManager</code> value
+    *
+    * @jmx.managed-attribute
+    */
+   public ConnectionManager getConnectionManager()
+   {
+      return this;
+   }
+
    private void startCheckThread()
    {
       log.trace("Starting the Check Thread..");
@@ -155,10 +198,12 @@ public class ConnectionManager
       clockDaemon.shutDown();
    }
 
+   /*
    public static ConnectionManager getInstance()
    {
       return instance;
    }
+   */
 
    AbstractClient connect(ServerAddress serverAddress) throws IOException
    {
