@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.6 2002/01/21 20:55:36 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.7 2002/01/23 06:11:55 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -98,10 +98,10 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         AttributeGroup ag = (AttributeGroup) AttributeGroupPeer
                             .retrieveByPK(new NumberKey(groupId));
         List attributes = ag.getAttributes();
+        ModuleEntity module = scarabR.getCurrentModule();
 
         if ( intake.isAllValid() )
         {
-            ModuleEntity module = scarabR.getCurrentModule();
             for (int i=attributes.size()-1; i>=0; i--) 
             {
                 // Set properties for module-attribute mapping
@@ -136,6 +136,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             agGroup.setProperties(ag);
             ag.save();
         } 
+
     }
 
 
@@ -148,6 +149,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         ModuleEntity module = scarabR.getCurrentModule();
+        IssueType issueType = scarabR.getIssueType();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         String key;
@@ -166,7 +168,6 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                                      .retrieveByPK(new NumberKey(attributeId));
 
                // Remove attribute - module mapping
-               IssueType issueType = ag.getIssueType();
                RModuleAttribute rma = module
                    .getRModuleAttribute(attribute, issueType);
                try
@@ -229,6 +230,26 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 }
             }
         }        
+        // If there are no attributes in any of the dedupe
+        // Attribute groups, turn off deduping in the module
+        boolean areThereDedupeAttrs = false;
+        List attributeGroups = issueType.getAttributeGroups(module);
+        if (attributeGroups.size() > 0)
+        {
+            for (int j=0; j<attributeGroups.size(); j++) 
+            {
+                AttributeGroup agTemp = (AttributeGroup)attributeGroups.get(j);
+                if (agTemp.getDedupe() && !agTemp.getAttributes().isEmpty())
+                {
+                   areThereDedupeAttrs = true;
+                }
+            }
+            if (!areThereDedupeAttrs)
+            {
+                module.setDedupe(false);
+                module.save();
+            }
+       }
     }
 
     /**
