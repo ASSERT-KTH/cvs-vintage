@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.108 2002/03/13 08:06:49 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.109 2002/03/16 05:23:53 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6290,20 +6290,21 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			int dot = xyToOffset(evt.getX(),
 				Math.max(0,Math.min(painter.getHeight(),evt.getY())),
 				!painter.isBlockCaretEnabled());
-			if(dot == caret)
-				return;
 
 			dragged = true;
 
-			resizeSelection(dragStart,dot,rect);
-
-			if(!quickCopyDrag)
-				moveCaretPosition(dot,false);
-			else
+			if(quickCopyDrag)
 			{
+				resizeSelection(dragStart,dot,rect);
 				// just scroll to the dragged location
 				int line = buffer.getLineOfOffset(dot);
 				scrollTo(line,dot - buffer.getLineStartOffset(line),false);
+			}
+			else
+			{
+				if(dot == caret)
+					return;
+				moveCaretPosition(dot,false);
 			}
 		} //}}}
 
