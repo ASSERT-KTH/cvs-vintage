@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: hsqldb-default-service.xml,v 1.4 2001/11/15 06:27:28 d_jencks Exp $ -->
+<!-- $Id: hsqldb-default-service.xml,v 1.5 2001/11/20 22:15:23 d_jencks Exp $ -->
 
 
 <server>
@@ -31,6 +31,10 @@
     <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
 
     <!--Anonymous mbean-ref to database being started -->
+    <!--WARNING: DO NOT COPY BLINDLY! This is useful only if the database is
+        started by an mbean in the jboss jmx framework! The only example of this 
+        we have right now is hsqldb! Do not use a line like this for external 
+        databases. -->
     <mbean-ref>JBOSS-SYSTEM:service=Hypersonic</mbean-ref>
 
     <mbean-ref name="ResourceAdapterName">JCA:service=RARDeployment,name=Minerva JDBC LocalTransaction ResourceAdapter</mbean-ref>
