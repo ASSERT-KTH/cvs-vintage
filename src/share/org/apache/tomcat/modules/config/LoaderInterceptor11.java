@@ -84,8 +84,13 @@ public class LoaderInterceptor11 extends BaseInterceptor {
     boolean useContainerL=false;
     boolean useNoParent=false;
 
+    boolean addJaxp=true;
+    
     private int attributeInfo;
     String loader=null;
+    Vector jaxpJars=new Vector();
+    String jaxpJarsS="jaxp.jar:crimson.jar:xalan.jar:xerces.jar";
+    String jaxpDir=null;
     
     public LoaderInterceptor11() {
     }
@@ -103,6 +108,34 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	useNoParent=b;
     }
 
+
+    /** Directory where jaxp jars are installed. Defaults to
+	tomcat_install/lib/container, where the parser used by
+	tomcat internally is located.
+    */
+    public void setJaxpDir(String dir ) {
+	jaxpDir=dir;
+    }
+
+    /** Name of the jars that compose jaxp.
+	Defaults to jaxp.jar:crimson.jar:xalan.jar:xerces.jar,
+	it'll match either crimson or xerces.
+     */
+    public void setJaxpJars(String dir ) {
+	jaxpDir=dir;
+    }
+
+    /** Check if the webapp contains jaxp , and add one if not.
+	This allow apps to include their own parser if they want,
+	while using the normal delegation model.
+
+	A future module will extend this and implement a more 
+	advanced and generic mechanism
+    */
+    public void setJaxp( boolean b ) {
+	addJaxp=b;
+    }
+
     public void setLoader( String name ) {
 	loader=name;
     }
@@ -112,7 +145,9 @@ public class LoaderInterceptor11 extends BaseInterceptor {
     {
 	attributeInfo=cm.getNoteId(ContextManager.REQUEST_NOTE,
 				   "req.attribute");
+	initJaxpJars();
     }
+
     
     /** Add all WEB-INF/classes and WEB-INF/lib to the context
      *  path
@@ -187,6 +222,17 @@ public class LoaderInterceptor11 extends BaseInterceptor {
      */
     public void prepareClassLoader(Context context) throws TomcatException {
 	ClassLoader loader=constructLoader( context );
+	if( addJaxp ) {
+	    boolean hasJaxp=checkJaxp( loader, context );
+	    if( ! hasJaxp ) {
+		Enumeration en=jaxpJars.elements();
+		while( en.hasMoreElements() ) {
+		    context.addClassPath( (URL)en.nextElement());
+		}
+		loader=constructLoader( context );
+	    }
+	}
+	
 	context.setClassLoader( loader );
 
 	// support for jasper and other applications
@@ -227,6 +273,34 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	return loader;
     }
     
+    private void initJaxpJars() {
+	if( jaxpDir==null ) jaxpDir=cm.getInstallDir() + "/lib/container";
+	File base=new File( jaxpDir );
+	StringTokenizer st=new StringTokenizer( jaxpJarsS, ":" );
+	while( st.hasMoreElements() ) {
+	    String s=(String)st.nextElement();
+	    File f=new File( base,s);
+	    if( ! f.exists()) continue;
+	    try {
+		URL url=new URL( "file", null,
+				 f.getAbsolutePath().replace('\\','/') + "/" );
+		jaxpJars.addElement( url );
+		if( debug > 0 ) log( "Adding " + url );
+	    } catch( MalformedURLException ex ) {
+	    }
+	}
+    }
+    private boolean checkJaxp(  ClassLoader loader, Context context ) {
+	try {
+	    loader.loadClass("javax.xml.parsers.SAXParserFactory");
+	    return true;
+	} catch( Exception ex) {
+	    // Add jaxp to classP.
+	    if( debug > 0 ) context.log( "Jaxp not detected, adding jaxp ");
+	    return false;
+	}
+    }
+	
     // --------------------
     private static final String separator =
 	System.getProperty("path.separator", ":");
