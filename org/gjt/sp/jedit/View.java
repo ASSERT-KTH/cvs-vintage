@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.33 2002/08/10 21:13:49 spestov Exp $
+ * @version $Id: View.java,v 1.34 2002/09/02 23:07:42 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1169,7 +1169,8 @@ public class View extends JFrame implements EBComponent
 		{
 			getContentPane().add(BorderLayout.NORTH,topToolBars);
 			getContentPane().add(BorderLayout.SOUTH,bottomToolBars);
-			addToolBar(BOTTOM_GROUP,STATUS_BAR_LAYER,status);
+			if(!plainView)
+				addToolBar(BOTTOM_GROUP,STATUS_BAR_LAYER,status);
 		}
 		else
 		{
@@ -1177,8 +1178,11 @@ public class View extends JFrame implements EBComponent
 				.TOP_TOOLBARS,topToolBars);
 			dockableWindowManager.add(DockableWindowManager.DockableLayout
 				.BOTTOM_TOOLBARS,bottomToolBars);
-			removeToolBar(status);
-			getContentPane().add(BorderLayout.SOUTH,status);
+			if(!plainView)
+			{
+				removeToolBar(status);
+				getContentPane().add(BorderLayout.SOUTH,status);
+			}
 		}
 
 		getRootPane().revalidate();

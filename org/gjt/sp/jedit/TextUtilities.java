@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.34 2002/06/18 02:56:20 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.35 2002/09/02 23:07:42 spestov Exp $
  */
 public class TextUtilities
 {
@@ -587,13 +587,15 @@ loop:		for(int i = pos; i < line.length(); i++)
 					break;
 				}
 				else
+				{
 					newline = true;
+					/* fall through -- handle like a space */
+				}
 			case ' ':
 				if(lineLength + word.length() >= maxLineLength)
 				{
 					buf.append('\n');
 					lineLength = 0;
-					newline = true;
 				}
 				else if(space && lineLength != 0 && word.length() != 0)
 				{
