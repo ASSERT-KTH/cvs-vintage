@@ -73,7 +73,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.73 2003/04/17 23:49:33 jon Exp $
+ * @version $Id: Module.java,v 1.74 2003/04/29 23:01:00 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -175,6 +175,10 @@ public interface Module
     /** the scheme (http|https) used */
     String getScheme() throws Exception;
     void setScheme(String scheme) throws Exception;
+
+    /** the scriptName used: /scarab/issues */
+    String getScriptName() throws Exception;
+    void setScriptName(String scriptName) throws Exception;
 
     String getDescription();
     void setDescription(String description);

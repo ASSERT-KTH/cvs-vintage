@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.135 2003/04/22 01:34:22 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.136 2003/04/29 23:01:00 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -113,7 +113,8 @@ public class ScarabModule
     private String domain = null;
     private String port = null;
     private String scheme = null;
-    
+    private String scriptName = null;
+
     /**
      * Get the value of domain.
      * @return value of domain.
@@ -200,6 +201,34 @@ public class ScarabModule
         if (v != null)
         {
             this.scheme = v;
+        }
+    }
+
+    /**
+     * Get the value of scriptName.
+     * @return value of scriptName.
+     */
+    public String getScriptName() 
+        throws Exception
+    {
+        if (scriptName == null)
+        {
+            scriptName = GlobalParameterManager
+                     .getString(GlobalParameter.MODULE_SCRIPT_NAME, this);
+        }
+        return scriptName;
+    }
+    
+    /**
+     * Set the value of scriptName.
+     * @param v  Value to assign to scriptName.
+     */
+    public void setScriptName(String v) 
+        throws Exception
+    {
+        if (v != null)
+        {
+            this.scriptName = v;
         }
     }
 
@@ -629,6 +658,18 @@ public class ScarabModule
             {
                 GlobalParameterManager
                     .setString(GlobalParameter.MODULE_SCHEME, this, scheme);
+            }
+            catch (Exception e)
+            {
+                // Nothing here
+            }
+        }
+        if (scriptName != null)
+        {
+            try
+            {
+                GlobalParameterManager
+                    .setString(GlobalParameter.MODULE_SCRIPT_NAME, this, scriptName);
             }
             catch (Exception e)
             {

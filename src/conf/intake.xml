@@ -372,6 +372,10 @@
             <rule name="maxLength" value="10"/>
             <rule name="required" value="true"></rule>
         </field>
+        <field name="ScriptName" key="scriptName" type="String">
+            <rule name="maxLength" value="255"/>
+            <rule name="required" value="true"></rule>
+        </field>
         <field name="ArchiveEmail" key="email" type="String">
             <rule name="maxLength" value="99"/>
         </field>

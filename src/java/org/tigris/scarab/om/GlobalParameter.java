@@ -52,7 +52,7 @@ import org.apache.torque.om.Persistent;
  * This class represents a Global Parameter.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: GlobalParameter.java,v 1.4 2003/04/17 22:55:31 jon Exp $
+ * @version $Id: GlobalParameter.java,v 1.5 2003/04/29 23:01:00 jon Exp $
  */
 public  class GlobalParameter 
     extends org.tigris.scarab.om.BaseGlobalParameter
@@ -68,5 +68,6 @@ public  class GlobalParameter
     // Domain parameters
     public static final String MODULE_DOMAIN = "module-domain";
     public static final String MODULE_PORT = "module-port";
-    public static final String MODULE_SCHEME = "module-scheme";    
+    public static final String MODULE_SCHEME = "module-scheme";
+    public static final String MODULE_SCRIPT_NAME = "module-script-name";
 }
