@@ -33,7 +33,7 @@ rem
 rem   JPDA_ADDRESS    (Optional) Java runtime options used when the "jpda start"
 rem                   command is executed. The default is "jdbconn".
 rem
-rem $Id: catalina.bat,v 1.17 2002/07/04 00:11:40 jon Exp $
+rem $Id: catalina.bat,v 1.18 2002/09/24 21:30:12 jon Exp $
 rem ---------------------------------------------------------------------------
 
 rem Guess CATALINA_HOME if not defined
