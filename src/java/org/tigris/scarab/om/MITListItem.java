@@ -2,6 +2,7 @@
 package org.tigris.scarab.om;
 
 
+import org.apache.commons.lang.Objects;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -73,5 +74,32 @@ public  class MITListItem
             key = sb.toString();
         }
         return key;
+    }
+
+    public int hashCode()
+    {
+        int hashCode = 10;
+        if (getModuleId() != null) 
+        {
+            hashCode += getModuleId().hashCode();
+        }
+        if (getIssueTypeId() != null) 
+        {
+            hashCode += getIssueTypeId().hashCode();
+        }
+        return hashCode;
+    }
+
+    public boolean equals(Object obj)
+    {
+        boolean isEqual = false;
+        if (obj instanceof MITListItem) 
+        {
+            MITListItem item = (MITListItem)obj;
+            isEqual = Objects.equals(this.getModuleId(), item.getModuleId());
+            isEqual &= Objects.equals(this.getIssueTypeId(), 
+                                      item.getIssueTypeId());
+        }
+        return isEqual;
     }
 }
