@@ -1,16 +1,44 @@
 <div id="wizard1" class="app">
-$page.setTitle("Enter New Issue")
+$page.setTitle("Enter Issue")
 
 #set ($issue = $scarabR.ReportingIssue)
 #set ( $action = $link.setPage("entry,Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm") )
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 
 <h2>$page.Title</h2>
+<div id="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+<tr>
+<th><small>1:</small> Summary info</th>
+<td><small>2:</small> <a href="Wizard2" title="view duplicate check information">Duplicate check</a></td>
+<td><small>3:</small> <a href="Wizard3" title="view verbose information">Verbose info</a></td>
+</tr>
+</table>
+</div>
+
 <form name="ReportForm" method="get" action="$action">
 
 <p class="functnbar">
-<input type="submit" name="eventSubmit_doCheckforduplicates" value="Check For Duplicates" />&#160;
-<input type="reset" value="reset" /></p>
+<input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates" />&#160;
+<input type="reset" value="reset form" /></p>
+
+<form name="EntryTemplate
+<h3>Apply issue entry template</h3>
+
+<div class="axial">
+ <table width="100%" cellpadding="3" cellspacing="2" border="1">
+ <tr>
+ <th width="120">templates:</th>
+
+ <td><select>
+ <option>No template</option>
+ <option>Template X</option>
+ <option>Template Y</option>
+ <option>Template Z</option>
+ </select> &#160;<input type="submit" value="select" /> &#160;<a href="#">template list</a></td>
+ </tr>
+ </table>
+</div>
 
 <h3>Input your issue</h3>
 
