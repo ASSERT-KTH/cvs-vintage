@@ -142,7 +142,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.18 $
+@version $Revision: 1.19 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -376,7 +376,9 @@ public abstract class AbstractWebDeployer
       }
       catch(Exception e)
       {
-         throw new DeploymentException("Error during deploy", e);
+         DeploymentException ex = new DeploymentException("Error during deploy", e);
+         di.context.put(ERROR, ex);
+         throw ex;
       }
       finally
       {
