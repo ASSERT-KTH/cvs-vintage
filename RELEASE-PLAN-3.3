@@ -68,9 +68,21 @@ Tomcat 3.3 Milestone 2 Release:
     Should that not be the case, this release may be skipped since the
     beta release is expected a week later.
 
-Tomcat 3.3 Beta:
+Tomcat 3.3 Milestone 3 Release:
 
-	Code Freeze/Tag Date:	March 15, 2001
+	Code Freeze/Tag Date:	May 12, 2001 
+	Release Manager:	Larry Isaacs
+
+     Known issues in order of priority
+
+     1. getRequestURI() should return an encoded string (if feasible)
+     2. Update build process to create archives and internal directory
+        structure consistent with other Jakarta projects, i.e. use
+        jakarta-tomcat-3.3-xxx.
+
+Tomcat 3.3 Beta 1:
+
+	Code Freeze/Tag Date:	March 26, 2001
 	Release Manager:	Larry Isaacs
 
      No major change will be done after the Beta is build without a 
@@ -83,21 +95,67 @@ Tomcat 3.3 Beta:
      During the beta period we will fix all remaining bugs and run the manual
      tests for the bugs that have no automated test case.
 
-Tomcat 3.3 Addition Betas:
+     Known issues in order of priority:
+     1. Port all missing updates to Jasper from Tomcat 3.2.2 and verify that
+        all Jasper theading issues are dealt with.  This includes Bugzilla
+        Bugs 80,140,1039,1123,1280,1646
+     2. Check HttpSessionFacade for spec compliance.
+        Know problems:
+        A. setAttribute() calls valueBound() after storing the
+           object in the session.  The spec calls for the reverse.
+        B. setAttribute() doesn't call valueUnbound() for the
+           object it replaces, if present.
+     3. Session recyling includes keeping the HttpSessionFacade.  I believe
+        this represents a security risk.   May need to discard session
+        facades, or at least discard them for untrusted web applications.
+     4. Update getRemoteHost() to be consistent with Tomcat 3.2.2, if
+        appropriate.  In Tomcat 3.2.2, it no longer does a reverse DNS
+        lookup.
+     5. Verify no reqressions.
+     6. TBD...
 
-	Code Freeze/Tag Date:	Weekly from March 15, 2001
+
+Tomcat 3.3 Beta 2:
+
+	Code Freeze/Tag Date:	June 2, 2001
 	Release Manager:	Larry Isaacs
- 
-    After the first beta, we will periodically build beta releases in
-    order to track the evolution.
+
+     This release should fix any major bugs found in the 
+     prior beta and any missed regressions. 
+
+     Known issues in order of priority:
+     1. TBD...
+
 
 Tomcat 3.3 Final Release
 
-	Code Freeze Date:	Apr 5, 2001
+	Code Freeze Date:	June 9, 2001
 	Release Manager:	Larry Isaacs
 
-    The final build. The pre-requisite for the release is having no bugs in
-    the test suite, resolution for all known bugs and approval by the community.
+     The final build. The pre-requisite for the release is having no bugs in
+     the test suite, resolution for all known bugs and approval by the community.
+
+     Known issues in order of priority:
+     1. Update/fix documentation as much as possible
+
+
+Bugs That Won't Be Fixed In Tomcat 3.3
+
+The following Bugzilla Bugs are known issues that are not planned to be
+addressed in Tomcat 3.3.
+
+    Bug #75: Translation time attribute evaluation not provided to 
+             TagExtraInfo class 
+    Bug #143: Tag handlers with properties of type "Object" 
+    Bug #155: Quick Blurb saying "Everything is initialized" 
+    Bug #164: IIS Logging 
+    Bug #203: `tomcat.sh env` ruins the shell if $TOMCAT_HOME is not set 
+    Bug #451: ServletException displaying wrong lines in debug information 
+    Bug #481: Misleading exception report 
+    Bug #524: Can't use Apache SSI with mod_jserv 
+    Bug #631: RequestDispatcher.include output is in wrong order 
+    Bug #1057: Context Paths and numerals. 
+    Bug #1433: Comments are parsed inside <jsp:include> tag. 
     
 
 Release criteria
