@@ -68,7 +68,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.13 2002/04/26 19:57:24 jmcnally Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.14 2002/05/14 00:04:05 elicia Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -107,30 +107,6 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
          }
      }
                 
-    /**
-     * Manages clicking of the create new button
-     *
-     * @deprecated !FIXME! I could not find where this is being used, so
-     * marking it as deprecated.  if it is actually being used
-     * remove the tag. - jdm
-     */
-    public void doCreatenew( RunData data, TemplateContext context )
-        throws Exception
-    {
-        IntakeTool intake = getIntakeTool(context);
-        IssueType issueType = new IssueType();
-        Group group = intake.get("IssueType", issueType.getQueryKey());
-        issueType.setParentId(new NumberKey("0"));
-        group.setProperties(issueType);
-        issueType.save();
-
-        // Create template type.
-        IssueType template = new IssueType();
-        template.setName(issueType.getName() + " Template");
-        template.setParentId(issueType.getIssueTypeId());
-        template.save();
-    }
-        
     public void doCopy( RunData data, TemplateContext context )
         throws Exception
     {
