@@ -37,10 +37,10 @@
 
 <div class="functnbar">
 #if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
-    <input type="submit" value="Move this issue" name="eventSubmit_doMove" />&#160;
+    <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doMove" />&#160;
 #end
 #if (!$copyToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
-    <input type="submit" value="Copy this issue" name="eventSubmit_doCopy" />
+    <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doCopy" />
 #end
 </div>
 
