@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.223 2002/12/05 00:13:05 jon Exp $
+ * @version $Id: Issue.java,v 1.224 2002/12/05 23:42:33 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -455,9 +455,11 @@ public class Issue
                            Attachment attachment, ScarabUser user)
         throws Exception
     {
-        // FIXME: l10n this string...
-        String description = "Added comment to issue";
-        return addMessage(activitySet, description, attachment, user);
+        String desc = Localization.getString(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "AddComment");
+        return addMessage(activitySet, desc, attachment, user);
     }
 
     /**
@@ -468,9 +470,11 @@ public class Issue
                             Attachment attachment, ScarabUser user)
         throws Exception
     {
-        // FIXME: l10n this string...
-        String description = "Added note to issue";
-        return addMessage(activitySet, description, attachment, user);
+        String desc = Localization.getString(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "AddNote");
+        return addMessage(activitySet, desc, attachment, user);
     }
 
     /**
@@ -1712,12 +1716,17 @@ public class Issue
 //        depend.setActivitySet(activitySet);
         depend.save();
 
+        
         // Save activitySet record for parent
-        String desc = new StringBuffer("Added '")
-            .append(depend.getDependType().getName())
-            .append("' child dependency on issue ")
-            .append(childIssue.getUniqueId())
-            .toString();
+        Object[] args = {
+            depend.getDependType().getName(),
+            childIssue.getUniqueId()
+        };
+
+        String desc = Localization.format(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "AddParentDependency", args);
 
         // Save activity record
         Activity activity = ActivityManager
@@ -1725,11 +1734,14 @@ public class Issue
                                 desc, childIssue.getUniqueId());
 
         // Save activitySet record for child
-        desc = new StringBuffer("Added '")
-            .append(depend.getDependType().getName())
-            .append("' parent dependency on issue ")
-            .append(this.getUniqueId())
-            .toString();
+        Object[] args2 = {
+            depend.getDependType().getName(),
+            this.getUniqueId()
+        };
+        desc = Localization.format(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "AddChildDependency", args2);
 
         // Save activity record
         ActivityManager
@@ -1989,7 +2001,6 @@ public class Issue
 
         // Generate comment to deal with attributes that do not
         // Exist in destination module, as well as the user attributes.
-        // Later will find another solution for user attributes.
         StringBuffer attachmentBuf = new StringBuffer();
         StringBuffer delAttrsBuf = new StringBuffer();
         if (reason != null && reason.length() > 0)
@@ -1998,8 +2009,10 @@ public class Issue
         }
         if (commentAttrs.size() > 0)
         {
-            attachmentBuf.append("Did not copy over the "
-                 + "following attribute info: ").append("\n");
+            attachmentBuf.append(Localization.getString(
+               ScarabConstants.DEFAULT_BUNDLE_NAME,
+               Locale.getDefault(),
+               "DidNotCopyAttributes"));
             for (int i=0;i<commentAttrs.size();i++)
             {
                 AttributeValue attVal = getAttributeValue((Attribute)commentAttrs.get(i));
@@ -2014,29 +2027,41 @@ public class Issue
            // Also create a regular comment with non-matching attribute info
            Attachment comment = new Attachment();
            comment.setTextFields(user, newIssue, Attachment.COMMENT__PK);
-           StringBuffer commentBuf = new StringBuffer("The following attributes and values " + 
-                                                      "were not copied from artifact ");
-           commentBuf.append(getUniqueId()).append(": \n");
+
+           StringBuffer commentBuf = new StringBuffer(Localization.format(
+              ScarabConstants.DEFAULT_BUNDLE_NAME,
+              Locale.getDefault(),
+              "DidNotCopyAttributesFromArtifact", getUniqueId()));
            commentBuf.append(delAttrs);
            comment.setData(commentBuf.toString());
-           comment.setName("comment");
+           comment.setName(Localization.getString(
+               ScarabConstants.DEFAULT_BUNDLE_NAME,
+               Locale.getDefault(),
+               "Comment"));
            comment.save();
         }
         else
         {
-            attachmentBuf.append("All attributes were copied.");
+            attachmentBuf.append(Localization.getString(
+               ScarabConstants.DEFAULT_BUNDLE_NAME,
+               Locale.getDefault(),
+               "AllCopied"));
         }
         attachment.setData(attachmentBuf.toString()); 
-
-        
             
         if (action.equals("move"))
         {
-            attachment.setName("Moved issue note");
+            attachment.setName(Localization.getString(
+               ScarabConstants.DEFAULT_BUNDLE_NAME,
+               Locale.getDefault(),
+               "MovedIssueNote"));
         }
         else
         {
-            attachment.setName("Copied issue note");
+            attachment.setName(Localization.getString(
+               ScarabConstants.DEFAULT_BUNDLE_NAME,
+               Locale.getDefault(),
+               "CopiedIssueNote"));
         }
         attachment.setTextFields(user, newIssue, Attachment.MODIFICATION__PK);
         attachment.save();
@@ -2066,35 +2091,65 @@ public class Issue
         String comment2 = null;
         if (action.equals("copy"))
         {
-            comment = " copied from issue ";
-            comment2 = " copied to issue ";
+            Object[] args3= {"copied", "from"};
+            comment = Localization.format(
+               ScarabConstants.DEFAULT_BUNDLE_NAME,
+               Locale.getDefault(),
+               "MoveCopyString", args3);
+            Object[] args4= {"copied", "to"};
+            comment2 = Localization.format(
+               ScarabConstants.DEFAULT_BUNDLE_NAME,
+               Locale.getDefault(),
+               "MoveCopyString", args4);
         }
         else
         {
-            comment = " moved from issue ";
-            comment2 = " moved to issue ";
+            Object[] args5= {"moved", "from"};
+            comment = Localization.format(
+               ScarabConstants.DEFAULT_BUNDLE_NAME,
+               Locale.getDefault(),
+               "MoveCopyString", args5);
+            Object[] args6 = {"moved", "to"};
+            comment2 = Localization.format(
+               ScarabConstants.DEFAULT_BUNDLE_NAME,
+               Locale.getDefault(),
+               "MoveCopyString", args6);
             // delete original issue
             delete(user);
         }
 
         // Save activity record
-        descBuf = new StringBuffer(comment).append(getUniqueId());
-        descBuf.append(" in module ").append(oldModule.getName());
-        descBuf.append(" / ").append(getIssueType().getName());
+        Object[] args = {
+            comment,
+            getUniqueId(),
+            oldModule.getName(),
+            getIssueType().getName()
+        };
+        String desc = Localization.format(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "MovedIssueDescription", args);
 
         ActivityManager
             .createTextActivity(newIssue, zeroAttribute, activitySet2,
-                                descBuf.toString(), null,
+                                desc, null,
                                 getUniqueId(), newIssue.getUniqueId());
 
         // Save activity record for old issue
-        descBuf2 = new StringBuffer(comment2).append(newIssue.getUniqueId());
-        descBuf2.append(" in module ").append(newModule.getName());
-        descBuf2.append(" / ").append(newIssueType.getName());
+        Object[] args2 = {
+            comment2,
+            newIssue.getUniqueId(),
+            newModule.getName(),
+            newIssueType.getName()
+        };
+        desc = Localization.format(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "MovedIssueDescription", args2);
 
         ActivityManager
             .createTextActivity(this, zeroAttribute, activitySet2,
-                                descBuf2.toString(), null,
+                                desc, null,
                                 getUniqueId(), newIssue.getUniqueId());
 
         return newIssue;
@@ -3045,13 +3100,14 @@ public class Issue
             attachment.save();
            
             // Generate description of modification
-            String from = "changed comment from '";
-            String to = "' to '";
-            int capacity = from.length() + oldComment.length() +
-                to.length() + newComment.length();
-            String description = new StringBuffer(capacity)
-                .append(from).append(oldComment).append(to)
-                .append(newComment).append('\'').toString();
+            Object[] args = {
+                oldComment,
+                newComment
+            };
+            String desc = Localization.format(
+                ScarabConstants.DEFAULT_BUNDLE_NAME,
+                Locale.getDefault(),
+                "ChangedComment", args);
 
             if (activitySet == null)
             {
@@ -3063,7 +3119,7 @@ public class Issue
             // Save activity record
             ActivityManager
                 .createTextActivity(this, null, activitySet,
-                                    description, attachment,
+                                    desc, attachment,
                                     oldComment, newComment);
                                     
         }
@@ -3084,9 +3140,10 @@ public class Issue
 
         // Generate description of modification
         String name = attachment.getName();
-        String description = new StringBuffer(name.length() + 14)
-            .append("deleted URL '").append(name).append("'")
-            .toString();
+        String desc = Localization.format(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "UrlDeletedDesc", name);
 
         if (activitySet == null)
         {
@@ -3098,8 +3155,11 @@ public class Issue
         // Save activity record
         ActivityManager
             .createTextActivity(this, null, activitySet,
-                                description, attachment, oldUrl, 
-                                "Deleted url");
+                                desc, attachment, oldUrl, 
+                                Localization.getString(
+                                ScarabConstants.DEFAULT_BUNDLE_NAME,
+                                Locale.getDefault(),
+                                "UrlDeleted"));
         return activitySet;
     }
 
@@ -3117,9 +3177,11 @@ public class Issue
         // Generate description of modification
         String name = attachment.getFileName();
         String path = attachment.getRelativePath();
-        String description = new StringBuffer(path.length()+name.length()+38)
-            .append("deleted attachment for file '").append(name)
-            .append("'; path=").append(path).toString();
+        Object[] args = {name, path};
+        String desc = Localization.format(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "FileDeletedDesc", args);
 
         if (activitySet == null)
         {
@@ -3131,8 +3193,11 @@ public class Issue
         // Save activity record
         ActivityManager
             .createTextActivity(this, null, activitySet,
-                                description, attachment, name, 
-                                "Deleted file");
+                                desc, attachment, name, 
+                                Localization.getString(
+                                ScarabConstants.DEFAULT_BUNDLE_NAME,
+                                Locale.getDefault(),
+                                "FileDeleted"));
         return activitySet;
     }
 
