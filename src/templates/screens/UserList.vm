@@ -101,7 +101,7 @@
 </div>
   #end
 
-#userList($mitList true true $parameters)
+#userList($mitList true true $parameters false)
 
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAddusers" value="$l10n.AddAssignee" />
