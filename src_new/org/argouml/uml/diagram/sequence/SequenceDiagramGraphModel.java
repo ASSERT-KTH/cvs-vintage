@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.44 2005/01/30 20:48:44 linus Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.45 2005/02/03 21:50:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -431,7 +431,8 @@ public class SequenceDiagramGraphModel
      */
     public List getEdges() {
         Vector allEdges = new Vector();
-        Iterator it = Model.getFacade().getOwnedElements(collaboration).iterator();
+        Iterator it = 
+            Model.getFacade().getOwnedElements(collaboration).iterator();
         while (it.hasNext()) {
             Object o = it.next();
             if (Model.getFacade().isAAssociationRole(o)) {
@@ -529,32 +530,6 @@ public class SequenceDiagramGraphModel
                     }
                 }
             }
-        }
-        return res;
-    }
-
-    /**
-     * Return one end of an edge.
-     *
-     * @see org.tigris.gef.graph.BaseGraphModel#getSourcePort(java.lang.Object)
-     */
-    public Object getSourcePort(Object edge) {
-        Object res = null;
-        if (Model.getFacade().isALink(edge)) {
-            res = Model.getCommonBehaviorHelper().getSource(edge);
-        }
-        return res;
-    }
-
-    /**
-     * Return  the other end of an edge.
-     *
-     * @see org.tigris.gef.graph.BaseGraphModel#getDestPort(java.lang.Object)
-     */
-    public Object getDestPort(Object edge) {
-        Object res = null;
-        if (Model.getFacade().isALink(edge)) {
-            res = Model.getCommonBehaviorHelper().getDestination(edge);
         }
         return res;
     }
@@ -722,7 +697,8 @@ public class SequenceDiagramGraphModel
                         Model.getCommonBehaviorFactory()
                             .createCallAction();
                 }
-            } else if (Model.getMetaTypes().getCreateAction().equals(actionType)) {
+            } else if (Model.getMetaTypes().getCreateAction()
+                    .equals(actionType)) {
                 if (fromPort instanceof LinkPort
                     && Model.getFacade().isAObject(toPort)) {
                     fromObject = ((LinkPort) fromPort).getObject();
@@ -731,7 +707,8 @@ public class SequenceDiagramGraphModel
                         Model.getCommonBehaviorFactory()
                             .createCreateAction();
                 }
-            } else if (Model.getMetaTypes().getReturnAction().equals(actionType)) {
+            } else if (Model.getMetaTypes().getReturnAction()
+                    .equals(actionType)) {
                 if (fromPort instanceof LinkPort
                     && toPort instanceof LinkPort) {
                     fromObject = ((LinkPort) fromPort).getObject();
@@ -741,7 +718,8 @@ public class SequenceDiagramGraphModel
                             .createReturnAction();
 
                 }
-            } else if (Model.getMetaTypes().getDestroyAction().equals(actionType)) {
+            } else if (Model.getMetaTypes().getDestroyAction()
+                    .equals(actionType)) {
                 if (fromPort instanceof LinkPort
                     && toPort instanceof LinkPort) {
                     fromObject = ((LinkPort) fromPort).getObject();
@@ -750,9 +728,11 @@ public class SequenceDiagramGraphModel
                         Model.getCommonBehaviorFactory()
                             .createDestroyAction();
                 }
-            } else if (Model.getMetaTypes().getSendAction().equals(actionType)) {
+            } else if (Model.getMetaTypes().getSendAction()
+                    .equals(actionType)) {
                 ;// no implementation, not of importance to sequence diagrams
-            } else if (Model.getMetaTypes().getTerminateAction().equals(actionType)) {
+            } else if (Model.getMetaTypes().getTerminateAction()
+                    .equals(actionType)) {
                 ;// not implemented yet
             }
         }

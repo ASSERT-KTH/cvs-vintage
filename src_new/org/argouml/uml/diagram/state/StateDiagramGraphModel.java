@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.63 2005/01/30 20:48:15 linus Exp $
+// $Id: StateDiagramGraphModel.java,v 1.64 2005/02/03 21:50:40 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,34 +160,6 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
 	}
         LOG.debug("TODO: getOutEdges of MState");
         return new Vector(); //wasteful!
-    }
-
-    /**
-     * Return one end of an edge.
-     *
-     * @see org.tigris.gef.graph.BaseGraphModel#getSourcePort(java.lang.Object)
-     */
-    public Object getSourcePort(Object edge) {
-        if (Model.getFacade().isATransition(edge)) {
-	    return Model.getStateMachinesHelper()
-		.getSource(/* (MTransition) */edge);
-	}
-        LOG.debug("TODO: getSourcePort of MTransition");
-        return null;
-    }
-
-    /**
-     * Return the other end of an edge.
-     *
-     * @see org.tigris.gef.graph.BaseGraphModel#getDestPort(java.lang.Object)
-     */
-    public Object getDestPort(Object edge) {
-        if (Model.getFacade().isATransition(edge)) {
-	    return Model.getStateMachinesHelper()
-		.getDestination(/* (MTransition) */edge);
-	}
-        LOG.debug("TODO: getDestPort of MTransition");
-        return null;
     }
 
     ////////////////////////////////////////////////////////////////

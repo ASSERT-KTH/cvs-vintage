@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.44 2005/01/30 20:47:55 linus Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.45 2005/02/03 21:50:40 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,18 +92,23 @@ public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
      */
     public List getPorts(Object nodeOrEdge) {
         Vector res = new Vector();  //wasteful!
-        if (Model.getFacade().isANode(nodeOrEdge)) res.addElement(nodeOrEdge);
+        if (Model.getFacade().isANode(nodeOrEdge)) 
+            res.addElement(nodeOrEdge);
         if (Model.getFacade().isANodeInstance(nodeOrEdge)) {
 	    res.addElement(nodeOrEdge);
         }
 
-	if (Model.getFacade().isAComponent(nodeOrEdge)) res.addElement(nodeOrEdge);
+	if (Model.getFacade().isAComponent(nodeOrEdge)) 
+	    res.addElement(nodeOrEdge);
 	if (Model.getFacade().isAComponentInstance(nodeOrEdge)) {
 	    res.addElement(nodeOrEdge);
         }
-        if (Model.getFacade().isAClass(nodeOrEdge)) res.addElement(nodeOrEdge);
-        if (Model.getFacade().isAInterface(nodeOrEdge)) res.addElement(nodeOrEdge);
-        if (Model.getFacade().isAObject(nodeOrEdge)) res.addElement(nodeOrEdge);
+        if (Model.getFacade().isAClass(nodeOrEdge)) 
+            res.addElement(nodeOrEdge);
+        if (Model.getFacade().isAInterface(nodeOrEdge)) 
+            res.addElement(nodeOrEdge);
+        if (Model.getFacade().isAObject(nodeOrEdge)) 
+            res.addElement(nodeOrEdge);
         return res;
     }
 
@@ -186,49 +191,6 @@ public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
     public List getOutEdges(Object port) {
 	return new Vector(); // TODO:?
     }
-
-
-    /**
-     * Return one end of an edge.
-     *
-     * @see org.tigris.gef.graph.BaseGraphModel#getSourcePort(java.lang.Object)
-     */
-    public Object getSourcePort(Object edge) {
-        if (edge instanceof CommentEdge) {
-            return ((CommentEdge) edge).getSource();
-        } else if (Model.getFacade().isARelationship(edge)) {
-	    return Model.getCoreHelper().getSource(/*(MRelationship)*/ edge);
-	} else
-	    if (Model.getFacade().isALink(edge)) {
-		return Model.getCommonBehaviorHelper().getSource(edge);
-	    }
-
-	LOG.debug("TODO: getSourcePort");
-
-	return null;
-    }
-
-
-    /** Return  the other end of an edge
-     *
-     * @see org.tigris.gef.graph.BaseGraphModel#getDestPort(java.lang.Object)
-     */
-    public Object getDestPort(Object edge) {
-        if (edge instanceof CommentEdge) {
-            return ((CommentEdge) edge).getSource();
-        } else if (Model.getFacade().isARelationship(edge)) {
-	    return Model.getCoreHelper().getDestination(edge);
-	} else if (Model.getFacade().isALink(edge)) {
-	    return Model.getCommonBehaviorHelper()
-		.getDestination(/*(MLink)*/ edge);
-	}
-
-	LOG.debug("TODO: getDestPort");
-
-	return null;
-    }
-
-
 
     ////////////////////////////////////////////////////////////////
     // MutableGraphModel implementation
@@ -340,7 +302,8 @@ public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
 	    }
 	}
 	if (Model.getFacade().isAGeneralizableElement(node)) {
-	    Iterator iter = Model.getFacade().getGeneralizations(node).iterator();
+	    Iterator iter = 
+	        Model.getFacade().getGeneralizations(node).iterator();
 	    while (iter.hasNext()) {
 		// g contains a Generalization
 		Object g = iter.next();
