@@ -46,27 +46,20 @@ package org.tigris.scarab.screens.base;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Velocity Stuff 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.om.security.*;
-import org.apache.turbine.modules.*; 
-import org.apache.turbine.modules.screens.*;
-import org.apache.turbine.services.velocity.*; 
-import org.apache.turbine.util.*; 
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+
 // Scarab Stuff
-import org.tigris.scarab.om.*;
-import org.tigris.scarab.screens.base.*;
-import org.tigris.scarab.util.*;
-import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.screens.base.RequireLoginFirst;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
-    This class is responsible for building the Context up
+    This class is responsible for building the TemplateContext up
     for Scarab system.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabContextLoginFirst.java,v 1.5 2001/05/14 21:43:55 jon Exp $
+    @version $Id: ScarabContextLoginFirst.java,v 1.6 2001/07/11 07:33:48 jon Exp $
 */
 public abstract class ScarabContextLoginFirst extends RequireLoginFirst
 {
@@ -75,7 +68,8 @@ public abstract class ScarabContextLoginFirst extends RequireLoginFirst
     /**
         Require people to implement this method
     */
-    public abstract void doBuildTemplate( RunData data, Context context ) throws Exception;
+    public abstract void doBuildTemplate( RunData data, 
+        TemplateContext context ) throws Exception;
 
     /**
         Ok, this is where we will implement a the cool pull model

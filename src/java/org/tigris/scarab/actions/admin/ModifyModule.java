@@ -46,18 +46,15 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Velocity Stuff 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.util.*;
-import org.apache.turbine.modules.actions.*;
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
-import org.apache.turbine.services.velocity.*;
+
 // Scarab Stuff
-import org.tigris.scarab.actions.base.*;
-import org.tigris.scarab.om.*;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
@@ -66,14 +63,14 @@ import org.tigris.scarab.util.ScarabConstants;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyModule.java,v 1.3 2001/07/05 00:04:37 jon Exp $
+    @version $Id: ModifyModule.java,v 1.4 2001/07/11 07:33:46 jon Exp $
 */
 public class ModifyModule extends RequireLoginFirstAction
 {
     /**
         This manages clicking the Modify button
     */
-    public void doModify( RunData data, Context context ) throws Exception
+    public void doModify( RunData data, TemplateContext context ) throws Exception
     {
         try
         {
@@ -96,7 +93,7 @@ public class ModifyModule extends RequireLoginFirstAction
     /**
         This manages clicking the Insert button
     */
-    public void doInsert( RunData data, Context context ) throws Exception
+    public void doInsert( RunData data, TemplateContext context ) throws Exception
     {
         IntakeTool intake = (IntakeTool)context
            .get(ScarabConstants.INTAKE_TOOL);
@@ -130,14 +127,14 @@ public class ModifyModule extends RequireLoginFirstAction
     /**
         This manages clicking the cancel button
     */
-    public void doCancel( RunData data, Context context ) throws Exception
+    public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
         data.setMessage("Changes were not saved!");
     }
     /**
         does nothing.
     */
-    public void doPerform( RunData data, Context context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
         doCancel(data, context);
     }

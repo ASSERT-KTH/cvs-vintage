@@ -46,14 +46,11 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.util.*;
-import org.apache.turbine.modules.*;
-import org.apache.turbine.modules.actions.*;
+import org.apache.turbine.TemplateAction;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.RunData;
+
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
 
@@ -61,14 +58,14 @@ import org.tigris.scarab.util.ScarabConstants;
     This class will allow you to set the selected project for a user.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: SetSelectedProject.java,v 1.3 2001/05/14 21:43:54 jon Exp $
+    @version $Id: SetSelectedProject.java,v 1.4 2001/07/11 07:33:46 jon Exp $
 */
-public class SetSelectedProject extends VelocityAction
+public class SetSelectedProject extends TemplateAction
 {
     /**
         This manages clicking the Refresh button
     */
-    public void doSelect( RunData data, Context context ) throws Exception
+    public void doSelect( RunData data, TemplateContext context ) throws Exception
     {
         data.getParameters().add (ScarabConstants.CURRENT_PROJECT, 
             data.getParameters().getString(ScarabConstants.PROJECT_CHANGE_BOX, "-1"));
@@ -76,7 +73,7 @@ public class SetSelectedProject extends VelocityAction
     /**
         does nothing.
     */
-    public void doPerform( RunData data, Context context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
     }
 }

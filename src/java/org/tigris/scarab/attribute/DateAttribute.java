@@ -46,10 +46,11 @@ package org.tigris.scarab.attribute;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.turbine.util.RunData;
 /** 
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.2 $ $Date: 2001/02/23 03:11:32 $
+ * @version $Revision: 1.3 $ $Date: 2001/07/11 07:33:47 $
  */
-public class DateAttribute extends FreeFormAttribute {}
+public class DateAttribute extends FreeFormAttribute
+{
+}

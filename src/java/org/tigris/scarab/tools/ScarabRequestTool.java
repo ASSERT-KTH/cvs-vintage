@@ -48,8 +48,9 @@ package org.tigris.scarab.tools;
 
 // Turbine
 import org.apache.turbine.om.security.User;
-import org.apache.turbine.services.db.om.*;
-import org.apache.turbine.util.RunData;
+import org.apache.turbine.services.db.om.NumberKey;
+import org.apache.turbine.services.db.om.ComboKey;
+import org.apache.turbine.RunData;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.velocity.TurbineVelocity;
@@ -57,10 +58,20 @@ import org.apache.turbine.util.pool.Recyclable;
 
 
 // Scarab
-import org.tigris.scarab.om.*;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.om.ModulePeer;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.Attachment;
+import org.tigris.scarab.om.AttachmentPeer;
+import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.AttributeOptionPeer;
+import org.tigris.scarab.om.RModuleAttribute;
+import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
-import org.tigris.scarab.util.*;
+import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
 
 /**

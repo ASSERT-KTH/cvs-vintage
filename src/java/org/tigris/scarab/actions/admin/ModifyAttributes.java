@@ -48,14 +48,9 @@ package org.tigris.scarab.actions.admin;
 
 import java.util.Vector;
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.util.*;
-import org.apache.turbine.modules.*;
-import org.apache.turbine.modules.actions.*;
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
 import org.apache.turbine.services.db.om.StringKey;
 import org.apache.turbine.services.db.om.ObjectKey;
 import org.apache.turbine.services.db.om.NumberKey;
@@ -65,9 +60,11 @@ import org.apache.turbine.services.intake.model.Field;
 import org.apache.turbine.services.intake.model.BooleanField;
 import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.turbine.services.pull.TurbinePull;
+
 // Scarab Stuff
-import org.tigris.scarab.actions.base.*;
-import org.tigris.scarab.om.*;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -76,16 +73,16 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.10 2001/06/29 02:45:33 jon Exp $
+    @version $Id: ModifyAttributes.java,v 1.11 2001/07/11 07:33:46 jon Exp $
 */
-public class ModifyAttributes extends VelocityAction
+public class ModifyAttributes extends RequireLoginFirstAction
 {
     /**
      * On the admin,attribute-show.vm page, when you click the button,
      * this will get the right Attribute from the database and put it into
      * the $scarabR tool.
      */
-    public void doSelectattribute( RunData data, Context context ) 
+    public void doSelectattribute( RunData data, TemplateContext context ) 
         throws Exception
     {
         String template = data.getParameters()
@@ -108,7 +105,7 @@ public class ModifyAttributes extends VelocityAction
      * If someone wants to edit the attributes, handle the clicking
      * of the button.
      */
-    public void doModifyattributeoptions( RunData data, Context context )
+    public void doModifyattributeoptions( RunData data, TemplateContext context )
         throws Exception
     {
         String template = data.getParameters()
@@ -123,7 +120,7 @@ public class ModifyAttributes extends VelocityAction
      * Used on AttributeEdit.vm to change the attribute type for 
      * an Attribute.
      */
-    public void doModifyattributetype( RunData data, Context context )
+    public void doModifyattributetype( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -146,7 +143,7 @@ public class ModifyAttributes extends VelocityAction
      * Used on AttributeEdit.vm to change the attribute name for
      * an Attribute.
      */
-    public void doModifyattributename( RunData data, Context context )
+    public void doModifyattributename( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -169,7 +166,7 @@ public class ModifyAttributes extends VelocityAction
      * AttributeOption or add a new one if the name doesn't already exist.
      */
     public synchronized void 
-        doAddormodifyattributeoptions( RunData data, Context context )
+        doAddormodifyattributeoptions( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -257,7 +254,7 @@ public class ModifyAttributes extends VelocityAction
     /**
      * Manages clicking of the AllDone button
      */
-    public void doAlldone( RunData data, Context context ) throws Exception
+    public void doAlldone( RunData data, TemplateContext context ) throws Exception
     {
         String nextTemplate = data.getParameters().getString(
             ScarabConstants.NEXT_TEMPLATE );
@@ -268,7 +265,7 @@ public class ModifyAttributes extends VelocityAction
     /**
         This manages clicking the cancel button
     */
-    public void doCancel( RunData data, Context context ) throws Exception
+    public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
         data.setMessage("Changes were not saved!");
     }
@@ -276,7 +273,7 @@ public class ModifyAttributes extends VelocityAction
     /**
         does nothing.
     */
-    public void doPerform( RunData data, Context context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
         doCancel(data, context);
     }

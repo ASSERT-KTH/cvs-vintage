@@ -46,13 +46,11 @@ package org.tigris.scarab.security;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
-
 // Turbine
 import org.apache.turbine.util.pool.InitableRecyclable;
 import org.apache.turbine.services.pull.ApplicationTool;
-import org.apache.turbine.util.RunData;
-import org.apache.turbine.util.TurbineException;
+import org.apache.turbine.RunData;
+//import org.apache.turbine.util.TurbineException;
 
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
@@ -63,7 +61,7 @@ import org.tigris.scarab.om.ScarabUser;
  * extends this class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefaultScarabSecurity.java,v 1.2 2001/05/31 01:18:38 jmcnally Exp $
+ * @version $Id: DefaultScarabSecurity.java,v 1.3 2001/07/11 07:33:49 jon Exp $
 */
 public class DefaultScarabSecurity 
     implements ScarabSecurity, InitableRecyclable, ApplicationTool

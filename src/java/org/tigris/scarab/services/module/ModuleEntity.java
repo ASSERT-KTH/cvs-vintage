@@ -57,14 +57,14 @@ import org.apache.turbine.services.db.om.ObjectKey;
 import org.apache.turbine.services.db.om.NumberKey;
 import org.apache.turbine.om.security.Role;
 import org.apache.turbine.om.security.User;
-import org.apache.turbine.util.RunData;
+import org.apache.turbine.RunData;
 import org.apache.turbine.services.db.util.Criteria;
 
 /**
  * This class describes a Module
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.7 2001/07/05 00:49:04 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.8 2001/07/11 07:33:49 jon Exp $
  */
 public interface ModuleEntity
 {

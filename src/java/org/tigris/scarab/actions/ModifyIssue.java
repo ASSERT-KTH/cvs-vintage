@@ -46,26 +46,25 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Date;
+import java.util.HashMap;
 import java.math.BigDecimal;
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.util.*;
+import org.apache.turbine.TemplateAction;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.RunData;
+
 import org.apache.turbine.services.db.om.NumberKey;
-import org.apache.turbine.services.resources.*;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
 import org.apache.turbine.services.db.om.ObjectKey;
-import org.apache.turbine.modules.*;
-import org.apache.turbine.modules.actions.*;
-import org.apache.turbine.om.*;
 import org.apache.turbine.om.security.User;
+import org.apache.turbine.util.SequencedHashtable;
+import org.apache.turbine.util.ParameterParser;
 
 // Scarab Stuff
 import org.tigris.scarab.om.*;
@@ -77,12 +76,12 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.6 2001/07/07 02:39:45 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.7 2001/07/11 07:33:46 jon Exp $
 */
-public class ModifyIssue extends VelocityAction
+public class ModifyIssue extends TemplateAction
 {
 
-    public void doSubmitattributes( RunData data, Context context )
+    public void doSubmitattributes( RunData data, TemplateContext context )
         throws Exception
     {
         String id = data.getParameters().getString("id");
@@ -208,19 +207,19 @@ public class ModifyIssue extends VelocityAction
     }
 
    }
-   public void doSubmiturl (RunData data, Context context ) 
+   public void doSubmiturl (RunData data, TemplateContext context ) 
         throws Exception
    {
-        SubmitAttachment (data, context, "url");
+        submitAttachment (data, context, "url");
    } 
 
-   public void doSubmitcomment (RunData data, Context context ) 
+   public void doSubmitcomment (RunData data, TemplateContext context ) 
         throws Exception
    {
-        SubmitAttachment (data, context, "comment");
+        submitAttachment (data, context, "comment");
    } 
 
-   private void SubmitAttachment (RunData data, Context context, String type)
+   private void submitAttachment (RunData data, TemplateContext context, String type)
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
@@ -272,7 +271,7 @@ public class ModifyIssue extends VelocityAction
         setTemplate(data, template);            
    } 
 
-   public void doDeleteurl (RunData data, Context context )
+   public void doDeleteurl (RunData data, TemplateContext context )
         throws Exception
     {                          
         ParameterParser params = data.getParameters();
@@ -301,7 +300,7 @@ public class ModifyIssue extends VelocityAction
     *  Modifies the dependency type between the current issue
     *  And its child issue.
     */
-    public void doUpdatechild (RunData data, Context context )
+    public void doUpdatechild (RunData data, TemplateContext context )
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
@@ -345,7 +344,7 @@ public class ModifyIssue extends VelocityAction
     *  Modifies the dependency type between the current issue
     *  And its parent issue.
     */
-    public void doUpdateparent (RunData data, Context context )
+    public void doUpdateparent (RunData data, TemplateContext context )
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
@@ -389,7 +388,7 @@ public class ModifyIssue extends VelocityAction
     *  Adds a dependency between this issue and another issue.
     *  This issue will be the child. 
     */
-    public void doAdddependency (RunData data, Context context )
+    public void doAdddependency (RunData data, TemplateContext context )
         throws Exception
     {                          
         String template = data.getParameters().getString(ScarabConstants.TEMPLATE, null);
@@ -444,14 +443,14 @@ public class ModifyIssue extends VelocityAction
     /**
         This manages clicking the Cancel button
     */
-    public void doCancel( RunData data, Context context ) throws Exception
+    public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
         setTemplate(data, "Start.vm");
     }
     /**
         calls doCancel()
     */
-    public void doPerform( RunData data, Context context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
         doCancel(data, context);
     }

@@ -45,20 +45,22 @@ package org.tigris.scarab.attribute;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */ 
-import java.util.*;
 
-import org.apache.turbine.util.RunData;
+// JDK Stuff
+import java.util.List;
+
+// Turbine Stuff
 import org.apache.turbine.om.security.Role;
-import org.apache.turbine.services.db.util.Criteria;
 
+// Scarab Stuff
+import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.*;
 import org.tigris.scarab.services.module.ModuleEntity;
 
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.5 $ $Date: 2001/07/05 00:04:37 $
+ * @version $Revision: 1.6 $ $Date: 2001/07/11 07:33:47 $
  */
 public class UserAttribute extends AttributeValue
 {
@@ -94,7 +96,7 @@ public class UserAttribute extends AttributeValue
     {
         // exclude users with Roles Guest or Observer 
         // !FIXME! these roles need to be defined
-        String[] permissions = null;
+        //String[] permissions = null;
 
         List matches = 
             module.getUsers(partialUserName, (String)null);

@@ -49,15 +49,16 @@ package org.tigris.scarab.security;
 import java.util.List;
 
 // Turbine
-import org.apache.turbine.util.RunData;
 import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.util.Log;
 import org.apache.turbine.util.TurbineException;
 import org.apache.turbine.services.security.TurbineSecurity;
 import org.apache.turbine.services.db.om.Persistent;
-//import org.apache.turbine.om.security.User;
-//import org.apache.turbine.om.security.Group;
-import org.apache.turbine.om.security.*;
+import org.apache.turbine.om.security.User;
+import org.apache.turbine.om.security.Group;
+import org.apache.turbine.om.security.TurbinePermissionPeer;
+import org.apache.turbine.om.security.TurbineUserGroupRolePeer;
+import org.apache.turbine.om.security.TurbineRolePermissionPeer;
 
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
@@ -67,7 +68,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurity.java,v 1.7 2001/07/05 00:04:38 jon Exp $
+ * @version $Id: TurbineDBScarabSecurity.java,v 1.8 2001/07/11 07:33:49 jon Exp $
 */
 public class TurbineDBScarabSecurity 
     extends DefaultScarabSecurity

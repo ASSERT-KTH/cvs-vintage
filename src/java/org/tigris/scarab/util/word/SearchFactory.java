@@ -47,15 +47,13 @@ package org.tigris.scarab.util.word;
  */ 
 
 import org.apache.turbine.services.resources.TurbineResources;
-import org.apache.turbine.util.RunData;
 import org.apache.turbine.util.Log;
-// import org.apache.turbine.util.db.pool.DBConnection;
 
 /**
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.2 2001/06/29 01:57:27 jmcnally Exp $
+ * @version $Id: SearchFactory.java,v 1.3 2001/07/11 07:33:50 jon Exp $
  */
 public class SearchFactory
 {

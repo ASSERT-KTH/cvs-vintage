@@ -46,31 +46,25 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.util.*;
-import org.apache.turbine.util.db.*;
-import org.apache.turbine.modules.*;
-import org.apache.turbine.modules.actions.*;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.RunData;
+
 // Scarab Stuff
-import org.tigris.scarab.actions.base.*;
-import org.tigris.scarab.om.*;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
     This class will handle creation of a new project
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: AddProject.java,v 1.4 2001/05/01 02:09:02 jmcnally Exp $
+    @version $Id: AddProject.java,v 1.5 2001/07/11 07:33:46 jon Exp $
 */
 public class AddProject extends RequireLoginFirstAction
 {
     /**
         This manages clicking the Add button
     */
-    public void doAdd( RunData data, Context context ) throws Exception
+    public void doAdd( RunData data, TemplateContext context ) throws Exception
     {
         try
         {
@@ -88,14 +82,14 @@ public class AddProject extends RequireLoginFirstAction
     /**
         This manages clicking the cancel button
     */
-    public void doCancel( RunData data, Context context ) throws Exception
+    public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
         data.setMessage("Changes were not saved!");
     }
     /**
         does nothing.
     */
-    public void doPerform( RunData data, Context context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
         doCancel(data, context);
     }

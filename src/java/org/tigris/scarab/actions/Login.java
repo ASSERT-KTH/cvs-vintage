@@ -46,12 +46,11 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.modules.actions.VelocityAction;
+import org.apache.turbine.TemplateAction;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.RunData;
+
 import org.apache.turbine.om.security.User;
 import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.turbine.services.pull.TurbinePull;
@@ -59,8 +58,9 @@ import org.apache.turbine.services.resources.TurbineResources;
 import org.apache.turbine.services.security.TurbineSecurity;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
-import org.apache.turbine.util.*;
-import org.apache.turbine.util.security.*;
+import org.apache.turbine.util.security.UnknownEntityException;
+import org.apache.turbine.util.security.TurbineSecurityException;
+
 // Scarab Stuff
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
@@ -71,14 +71,14 @@ import org.tigris.scarab.om.ScarabUser;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.10 2001/06/22 01:26:12 jmcnally Exp $
+    @version $Id: Login.java,v 1.11 2001/07/11 07:33:46 jon Exp $
 */
-public class Login extends VelocityAction
+public class Login extends TemplateAction
 {
     /**
         This manages clicking the Login button
     */
-    public void doLogin( RunData data, Context context ) throws Exception
+    public void doLogin( RunData data, TemplateContext context ) throws Exception
     {
         data.setACL(null);
 
@@ -103,7 +103,7 @@ public class Login extends VelocityAction
     /**
         Checks to make sure that the user exists, has been confirmed.
     */
-    public boolean checkUser(RunData data, Context context)
+    public boolean checkUser(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -182,7 +182,7 @@ public class Login extends VelocityAction
     /**
         calls doLogin()
     */
-    public void doPerform( RunData data, Context context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
         doLogin(data, context);
     }

@@ -44,20 +44,17 @@ package org.tigris.scarab.attribute;
  * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */ 
-import java.util.*;
+ */
 
-import org.tigris.scarab.om.*;
-// import org.apache.turbine.util.db.*;
-import org.apache.turbine.util.RunData;
-
+// Scarab Stuff
+import org.tigris.scarab.om.AttributeValue;
 
 /**
  *  This is a superclass for free-form attributes such as string, date
  *  etc...
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.5 $ $Date: 2001/06/29 00:49:06 $
+ * @version $Revision: 1.6 $ $Date: 2001/07/11 07:33:47 $
  */
 public abstract class FreeFormAttribute extends AttributeValue
 {

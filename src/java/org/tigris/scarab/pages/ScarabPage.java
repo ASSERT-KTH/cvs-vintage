@@ -46,15 +46,13 @@ package org.tigris.scarab.pages;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.modules.*; 
-import org.apache.turbine.modules.pages.*; 
-import org.apache.turbine.util.*; 
+import org.apache.turbine.TemplatePage;
+import org.apache.turbine.RunData;
+import org.apache.turbine.services.template.TurbineTemplate;
+
 // Scarab Stuff
+import org.tigris.scarab.om.BaseScarabObject;
 import org.tigris.scarab.util.ScarabConstants;
 
 /**
@@ -62,9 +60,9 @@ import org.tigris.scarab.util.ScarabConstants;
     for the Default Page.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabPage.java,v 1.4 2001/05/11 00:45:43 jmcnally Exp $
+    @version $Id: ScarabPage.java,v 1.5 2001/07/11 07:33:47 jon Exp $
 */
-public class ScarabPage extends VelocityPage
+public class ScarabPage extends TemplatePage
 {
     /**
      * builds up the context for display of variables on the page.
@@ -74,7 +72,7 @@ public class ScarabPage extends VelocityPage
         super.doBuildBeforeAction(data);
 
         //until we get the user and module set through normal application
-        Context context = TurbineVelocity.getContext(data);
-        org.tigris.scarab.om.BaseScarabObject.tempWorkAround(data,context);
+        BaseScarabObject.tempWorkAround(data, 
+            TurbineTemplate.getTemplateContext( data ));
     }
 }

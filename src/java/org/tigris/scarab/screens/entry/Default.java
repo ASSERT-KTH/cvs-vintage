@@ -46,37 +46,30 @@ package org.tigris.scarab.screens.entry;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.*;
-
-// Velocity  Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
-
 // Turbine Stuff 
-import org.apache.turbine.om.*; 
-import org.apache.turbine.modules.*; 
-import org.apache.turbine.modules.screens.*; 
-import org.apache.turbine.util.*; 
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.TemplateSecureScreen;
+import org.apache.turbine.services.template.TurbineTemplate;
 
 // Scarab Stuff
 import org.tigris.scarab.security.ScarabSecurity;
-import org.tigris.scarab.util.*;
-import org.tigris.scarab.tools.*;
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
     This class is responsible for building the Context up
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.4 2001/07/06 21:45:39 jmcnally Exp $
+    @version $Id: Default.java,v 1.5 2001/07/11 07:33:48 jon Exp $
 */
-public class Default extends VelocitySecureScreen
+public class Default extends TemplateSecureScreen
 {
     /**
         builds up the context for display of variables on the page.
     */
-    public void doBuildTemplate( RunData data, Context context ) 
+    public void doBuildTemplate( RunData data, TemplateContext context ) 
         throws Exception 
     {   
     }
@@ -86,7 +79,7 @@ public class Default extends VelocitySecureScreen
      */
     protected boolean isAuthorized( RunData data ) throws Exception
     {
-        Context context = getContext(data);
+        TemplateContext context = TurbineTemplate.getTemplateContext(data);
         ScarabSecurity security = (ScarabSecurity)context
             .get(ScarabConstants.SECURITY_TOOL);
         ScarabRequestTool scarab = (ScarabRequestTool)context
@@ -99,7 +92,7 @@ public class Default extends VelocitySecureScreen
             // Note: we need to replace '/' with ',' so that 
             //       the hidden input field will have the right
             //       value for ParameterParser to parse.
-            getContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
+            context.put( ScarabConstants.NEXT_TEMPLATE, 
                                   data.getTemplateInfo()
                                   .getScreenTemplate().replace('/',',') );
             doRedirect(data, "Login.vm");

@@ -46,24 +46,23 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 import java.math.BigDecimal;
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.util.*;
+import org.apache.turbine.TemplateAction;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.RunData;
+
+import org.apache.turbine.util.SequencedHashtable;
+
 import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.services.db.om.NumberKey;
-import org.apache.turbine.services.resources.*;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
-import org.apache.turbine.modules.*;
-import org.apache.turbine.modules.actions.*;
-import org.apache.turbine.om.*;
+import org.apache.turbine.services.resources.TurbineResources;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
@@ -76,7 +75,8 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.RModuleAttributePeer;
-import org.tigris.scarab.util.*;
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
@@ -84,9 +84,9 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.24 2001/07/10 19:14:33 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.25 2001/07/11 07:33:46 jon Exp $
 */
-public class ReportIssue extends VelocityAction
+public class ReportIssue extends TemplateAction
 {
 
     private Field getSummaryField(IntakeTool intake, Issue issue)
@@ -98,7 +98,7 @@ public class ReportIssue extends VelocityAction
         return group.get("Value");
     }
 
-    public void doSubmitattributes( RunData data, Context context )
+    public void doSubmitattributes( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -170,7 +170,7 @@ public class ReportIssue extends VelocityAction
         user.setReportingIssueStartPoint("entry,Wizard1.vm");
     }
 
-    private boolean reusedSearchStuff(RunData data, Context context, 
+    private boolean reusedSearchStuff(RunData data, TemplateContext context, 
                                       String event, int threshold, 
                                       String nextTemplate)
         throws Exception
@@ -233,7 +233,7 @@ public class ReportIssue extends VelocityAction
     }
 
 
-    public void doEnterissue( RunData data, Context context )
+    public void doEnterissue( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -336,7 +336,7 @@ public class ReportIssue extends VelocityAction
         }
     }
 
-    public void doAddnote( RunData data, Context context ) 
+    public void doAddnote( RunData data, TemplateContext context ) 
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -382,7 +382,7 @@ public class ReportIssue extends VelocityAction
         }
     }
 
-    public void doAddvote( RunData data, Context context ) 
+    public void doAddvote( RunData data, TemplateContext context ) 
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -423,7 +423,7 @@ public class ReportIssue extends VelocityAction
     }
 
 
-    public void doGotowizard3( RunData data, Context context )
+    public void doGotowizard3( RunData data, TemplateContext context )
         throws Exception
     {
         setTemplate(data, "entry,Wizard3.vm");
@@ -432,7 +432,7 @@ public class ReportIssue extends VelocityAction
     /**
         This manages clicking the Cancel button
     */
-    public void doCancel( RunData data, Context context ) throws Exception
+    public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
         String template = TurbineResources
             .getString("template.homepage", "Start.vm");
@@ -441,7 +441,7 @@ public class ReportIssue extends VelocityAction
     /**
         calls doCancel()
     */
-    public void doPerform( RunData data, Context context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
         doCancel(data, context);
     }

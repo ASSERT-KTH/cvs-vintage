@@ -49,13 +49,9 @@ package org.tigris.scarab.actions.admin;
 import java.util.Vector;
 import java.util.List;
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.util.*;
-import org.apache.turbine.modules.actions.*;
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
 import org.apache.turbine.services.db.om.StringKey;
 import org.apache.turbine.services.db.om.ObjectKey;
 import org.apache.turbine.services.db.om.NumberKey;
@@ -65,9 +61,12 @@ import org.apache.turbine.services.intake.model.Field;
 import org.apache.turbine.services.intake.model.BooleanField;
 import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.turbine.services.pull.TurbinePull;
+
 // Scarab Stuff
-import org.tigris.scarab.actions.base.*;
-import org.tigris.scarab.om.*;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.RModuleAttribute;
+import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -77,16 +76,16 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.4 2001/07/05 00:04:37 jon Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.5 2001/07/11 07:33:46 jon Exp $
  */
-public class ModifyModuleAttributes extends VelocityAction
+public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
     /**
      * Used on ModuleAttributeEditor.vm to change the properties
      * of existing RModuleAttributes or to add a new one
      */
     public synchronized void 
-        doModifyattributes( RunData data, Context context )
+        doModifyattributes( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -138,7 +137,7 @@ public class ModifyModuleAttributes extends VelocityAction
      * AttributeOption or add a new one.
      */
     public synchronized void 
-        doAddormodifymoduleoptions( RunData data, Context context )
+        doAddormodifymoduleoptions( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -230,7 +229,7 @@ public class ModifyModuleAttributes extends VelocityAction
     /**
      * Manages clicking of the AllDone button
      */
-    public void doAlldone( RunData data, Context context ) throws Exception
+    public void doAlldone( RunData data, TemplateContext context ) throws Exception
     {
         String nextTemplate = data.getParameters().getString(
             ScarabConstants.NEXT_TEMPLATE );
@@ -241,7 +240,7 @@ public class ModifyModuleAttributes extends VelocityAction
     /**
         This manages clicking the cancel button
     */
-    public void doCancel( RunData data, Context context ) throws Exception
+    public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
         data.setMessage("Changes were not saved!");
     }
@@ -249,7 +248,7 @@ public class ModifyModuleAttributes extends VelocityAction
     /**
         does nothing.
     */
-    public void doPerform( RunData data, Context context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
         doCancel(data, context);
     }

@@ -46,37 +46,28 @@ package org.tigris.scarab.screens.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.*;
-
-// Velocity  Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
-
 // Turbine Stuff 
-import org.apache.turbine.om.*; 
-import org.apache.turbine.modules.*; 
-import org.apache.turbine.modules.screens.*; 
-import org.apache.turbine.util.*; 
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.TemplateSecureScreen;
 
 // Scarab Stuff
 import org.tigris.scarab.om.BaseScarabObject;
-import org.tigris.scarab.util.*;
-import org.tigris.scarab.tools.*;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
-    This class is responsible for building the Context up
+    This class is responsible for building the TemplateContext up
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.3 2001/05/30 01:54:39 jon Exp $
+    @version $Id: Default.java,v 1.4 2001/07/11 07:33:48 jon Exp $
 */
-public class Default extends VelocitySecureScreen
+public class Default extends TemplateSecureScreen
 {
     /**
         builds up the context for display of variables on the page.
     */
-    public void doBuildTemplate( RunData data, Context context ) 
+    public void doBuildTemplate( RunData data, TemplateContext context ) 
         throws Exception 
     {   
     }
@@ -91,7 +82,7 @@ public class Default extends VelocitySecureScreen
             // Note: we need to replace '/' with ',' so that 
             //       the hidden input field will have the right
             //       value for ParameterParser to parse.
-            getContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
+            getTemplateContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
                                   data.getTemplateInfo()
                                   .getScreenTemplate().replace('/',',') );
             doRedirect(data, "Login.vm");

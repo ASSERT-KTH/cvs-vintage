@@ -49,7 +49,6 @@ package org.tigris.scarab.security;
 import java.util.List;
 
 // Turbine
-import org.apache.turbine.util.RunData;
 import org.apache.turbine.util.Log;
 import org.apache.turbine.util.TurbineException;
 
@@ -71,7 +70,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Security wrapper around helm
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: HelmScarabSecurity.java,v 1.2 2001/05/31 01:18:38 jmcnally Exp $
+ * @version $Id: HelmScarabSecurity.java,v 1.3 2001/07/11 07:33:49 jon Exp $
 */
 public class HelmScarabSecurity 
     extends DefaultScarabSecurity

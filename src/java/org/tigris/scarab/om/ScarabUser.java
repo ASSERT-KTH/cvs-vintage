@@ -51,7 +51,7 @@ import org.apache.turbine.om.security.User;
 import org.apache.turbine.om.security.Role;
 import org.apache.turbine.services.db.om.ObjectKey;
 import org.apache.turbine.services.db.om.NumberKey;
-import org.apache.turbine.util.RunData;
+import org.apache.turbine.RunData;
 
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.Issue;
@@ -60,7 +60,7 @@ import org.tigris.scarab.om.Issue;
     This is an interface which describes what a ScarabUser is...
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.26 2001/07/10 19:07:01 jmcnally Exp $
+    @version $Id: ScarabUser.java,v 1.27 2001/07/11 07:33:47 jon Exp $
 */
 public interface ScarabUser extends User
 {

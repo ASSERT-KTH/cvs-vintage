@@ -46,25 +46,11 @@ package org.tigris.scarab.screens.base;
  * individuals on behalf of Collab.Net.
  */ 
 
-// JDK Imports
-import java.util.Vector;
-
-// Turbine/Village/ECS Imports
-import org.apache.turbine.modules.*;
-import org.apache.turbine.modules.screens.*;
-import org.apache.turbine.util.*;
-import org.apache.turbine.util.velocity.*;
-import org.apache.turbine.util.db.*;
-import org.apache.turbine.om.security.*;
-import org.apache.turbine.om.security.peer.*;
-import org.apache.ecs.*;
-import org.apache.ecs.html.*;
-import org.apache.ecs.filter.*;
-
-// Velocity Stuff
-import org.apache.turbine.services.velocity.*;
-import org.apache.velocity.*;
-import org.apache.velocity.context.*; 
+// Turbine Stuff
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.TemplateSecureScreen;
+import org.apache.turbine.services.template.TurbineTemplate;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
@@ -76,9 +62,9 @@ import org.tigris.scarab.util.ScarabConstants;
     logged in. That part isn't a priority yet though.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RequireLoginFirst.java,v 1.3 2001/05/24 02:12:56 jmcnally Exp $    
+    @version $Id: RequireLoginFirst.java,v 1.4 2001/07/11 07:33:48 jon Exp $    
 */
-public abstract class RequireLoginFirst extends VelocitySecureScreen
+public abstract class RequireLoginFirst extends TemplateSecureScreen
 {
     /**
         sets the template to ScarabLogin.vm if the user hasn't logged in yet
@@ -87,8 +73,9 @@ public abstract class RequireLoginFirst extends VelocitySecureScreen
     {
         if (!data.getUser().hasLoggedIn())
         {
-            getContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
-                                  data.getTemplateInfo().getScreenTemplate() );
+            TurbineTemplate.getTemplateContext(data)
+                .put( ScarabConstants.NEXT_TEMPLATE, 
+                      data.getTemplateInfo().getScreenTemplate() );
             doRedirect(data, "Login.vm");
             return false;
         }
@@ -98,5 +85,6 @@ public abstract class RequireLoginFirst extends VelocitySecureScreen
     /**
         Require people to implement this method
     */
-    public abstract void doBuildTemplate( RunData data, Context context ) throws Exception;
+    public abstract void doBuildTemplate( RunData data, 
+        TemplateContext context ) throws Exception;
 }

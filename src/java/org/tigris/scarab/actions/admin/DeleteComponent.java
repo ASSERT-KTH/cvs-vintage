@@ -46,18 +46,14 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
-// Turbine Stuff 
-import org.apache.turbine.util.*;
-import org.apache.turbine.util.db.*;
-import org.apache.turbine.modules.*;
-import org.apache.turbine.modules.actions.*;
+// Turbine Stuff
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.RunData;
+import org.apache.turbine.services.db.util.Criteria;
+
 // Scarab Stuff
-import org.tigris.scarab.actions.base.*;
-import org.tigris.scarab.om.*;
+import org.tigris.scarab.om.ModulePeer;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
     This class will attempt to delete a component. Right now, it is
@@ -66,14 +62,14 @@ import org.tigris.scarab.om.*;
     right now though. :-(
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: DeleteComponent.java,v 1.4 2001/03/03 00:07:07 jmcnally Exp $
+    @version $Id: DeleteComponent.java,v 1.5 2001/07/11 07:33:46 jon Exp $
 */
 public class DeleteComponent extends RequireLoginFirstAction
 {
     /**
         This manages clicking the Delete button
     */
-    public void doDelete( RunData data, Context context ) throws Exception
+    public void doDelete( RunData data, TemplateContext context ) throws Exception
     {
         try
         {
@@ -103,13 +99,13 @@ public class DeleteComponent extends RequireLoginFirstAction
         button. Don't do anything if it is clicked. We only want
         the doDelete button.
     */
-    public void doModify( RunData data, Context context ) throws Exception
+    public void doModify( RunData data, TemplateContext context ) throws Exception
     {
     }
     /**
         does nothing.
     */
-    public void doPerform( RunData data, Context context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
     }
 }

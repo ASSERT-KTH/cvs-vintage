@@ -46,25 +46,20 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.util.*;
+import org.apache.turbine.TemplateAction;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.RunData;
+
+import org.apache.turbine.util.Log;
 import org.apache.turbine.util.velocity.VelocityEmail;
-import org.apache.turbine.om.security.*;
-import org.apache.turbine.om.security.peer.*;
 import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.turbine.services.pull.TurbinePull;
-import org.apache.turbine.services.resources.*;
-import org.apache.turbine.services.security.*;
-import org.apache.turbine.modules.*;
-import org.apache.turbine.modules.actions.*;
+
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.util.*;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
         This class  will create a 
@@ -73,14 +68,14 @@ import org.tigris.scarab.util.*;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.11 2001/05/09 01:51:34 jmcnally Exp $
+    @version $Id: RegisterConfirm.java,v 1.12 2001/07/11 07:33:46 jon Exp $
 */
-public class RegisterConfirm extends VelocityAction
+public class RegisterConfirm extends TemplateAction
 {
     /**
         This manages clicking the Register confirm button
     */
-    public void doConfirmregistration( RunData data, Context context ) throws Exception
+    public void doConfirmregistration( RunData data, TemplateContext context ) throws Exception
     {
         String template = data.getParameters().getString(ScarabConstants.TEMPLATE, null);
         String nextTemplate = data.getParameters().getString(
@@ -109,6 +104,7 @@ public class RegisterConfirm extends VelocityAction
             }
             
             // send an email that is for confirming the registration
+/* FIXME!!!!!!!!!!
             VelocityEmail ve = new VelocityEmail();
             ve.setContext(context);
             ve.setTo(su.getFirstName() + " " + su.getLastName(), su.getEmail());
@@ -124,7 +120,7 @@ public class RegisterConfirm extends VelocityAction
                 TurbineResources.getString("scarab.email.register.template",
                     "email/Confirmation.vm"));
             ve.send();
-            
+*/            
             // set the next template on success
             setTemplate (data, nextTemplate);
         }
@@ -140,7 +136,7 @@ public class RegisterConfirm extends VelocityAction
     /**
         returns you to Register.vm
     */
-    public void doBack( RunData data, Context context ) throws Exception
+    public void doBack( RunData data, TemplateContext context ) throws Exception
     {
         // grab the ScarabRequestTool object so that we can populate the 
         // internal User object for redisplay of the form data on the screen
@@ -158,7 +154,7 @@ public class RegisterConfirm extends VelocityAction
     /**
         calls doRegisterConfirm()
     */
-    public void doPerform( RunData data, Context context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
         doConfirmregistration(data, context);
     }

@@ -46,23 +46,22 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 import java.math.BigDecimal;
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.util.*;
+import org.apache.turbine.TemplateAction;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.RunData;
+
+import org.apache.turbine.util.SequencedHashtable;
+
 import org.apache.turbine.util.db.Criteria;
-import org.apache.turbine.services.resources.*;
+import org.apache.turbine.services.resources.TurbineResources;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
-import org.apache.turbine.modules.*;
-import org.apache.turbine.modules.actions.*;
-import org.apache.turbine.om.*;
 
 // Scarab Stuff
 import org.tigris.scarab.om.BaseScarabObject;
@@ -74,7 +73,7 @@ import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.RModuleAttributePeer;
-import org.tigris.scarab.util.*;
+import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.word.IssueSearch;
 
@@ -82,11 +81,11 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.5 2001/07/05 00:04:37 jon Exp $
+    @version $Id: Search.java,v 1.6 2001/07/11 07:33:46 jon Exp $
 */
-public class Search extends VelocityAction
+public class Search extends TemplateAction
 {
-    public void doIssueIdFind( RunData data, Context context )
+    public void doIssueIdFind( RunData data, TemplateContext context )
         throws Exception
     {
         // the IssueView page takes a string id, nothing
@@ -137,7 +136,7 @@ public class Search extends VelocityAction
         }
         */
 
-    public void doSearch( RunData data, Context context )
+    public void doSearch( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -185,7 +184,7 @@ public class Search extends VelocityAction
         }
     }
 
-    public void doAddvote( RunData data, Context context ) 
+    public void doAddvote( RunData data, TemplateContext context ) 
         throws Exception
     {
         /*
@@ -200,14 +199,14 @@ public class Search extends VelocityAction
     /**
         This manages clicking the Cancel button
     */
-    public void doCancel( RunData data, Context context ) throws Exception
+    public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
         setTemplate(data, "Start.vm");
     }
     /**
         calls doCancel()
     */
-    public void doPerform( RunData data, Context context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
         doCancel(data, context);
     }

@@ -46,44 +46,37 @@ package org.tigris.scarab.screens;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-import org.apache.velocity.context.*; 
 // Turbine Stuff 
-import org.apache.turbine.modules.*; 
-import org.apache.turbine.modules.screens.*; 
-import org.apache.turbine.util.*; 
-
-import org.tigris.scarab.om.BaseScarabObject;
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.TemplateScreen;
+import org.apache.turbine.services.template.TurbineTemplate;
 
 /**
     This class is responsible for building the Context up
     for the Default Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.9 2001/05/24 02:39:21 jmcnally Exp $
+    @version $Id: Default.java,v 1.10 2001/07/11 07:33:48 jon Exp $
 */
-public class Default extends VelocityScreen
+public class Default extends TemplateScreen
 {
     /**
         builds up the context for display of variables on the page.
     */
-    public void doBuildTemplate( RunData data, Context context ) throws Exception 
+    public void doBuildTemplate( RunData data, TemplateContext context ) throws Exception 
     {
-        //context.put("startTime", new Long(System.currentTimeMillis()));
     }
 
-    /*
+/*
     public void doPostBuildTemplate( RunData data )
     {
-        Context context = TurbineVelocity.getContext(data);
+        TemplateContext context = TurbineTemplate.getTemplateContext(data);
         long startTime = ((Long)context.get("startTime")).longValue();
         Thread t = Thread.currentThread();
         long now = System.currentTimeMillis();
         System.out.println(t + "Default Screen time: " +
                            (now-startTime) + " ms");
     }
-    */
-    
+*/
 }
