@@ -1,20 +1,12 @@
-/*
- * Copyright (c) 2001 Peter Antman Tim <peter.antman@tim.se>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
+
 package org.jboss.jms.ra;
 
 import java.io.Serializable;
@@ -37,7 +29,7 @@ import javax.jms.Queue;
 import javax.jms.ExceptionListener;
 import javax.jms.ConnectionMetaData;
 
-import org.jboss.jms.ra.client.JmsSessionFactory;
+import org.jboss.logging.Logger;
 
 /**
  * Implements the JMS Connection API and produces {@link JmsSession} objects.
@@ -45,11 +37,13 @@ import org.jboss.jms.ra.client.JmsSessionFactory;
  * <p>Created: Thu Mar 29 15:36:51 2001
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JmsSessionFactoryImpl
    implements JmsSessionFactory, Serializable, Referenceable
 {
+   private static final Logger log = Logger.getLogger(JmsSessionFactoryImpl.class);
+   
    private static final String ISE =
       "This method is not applicatable in JMS resource adapter";
 
@@ -125,7 +119,8 @@ public class JmsSessionFactoryImpl
          return (QueueSession)cm.allocateConnection(mcf, info);
       }
       catch (ResourceException e) {
-         e.printStackTrace();
+         log.error("could not create session", e);
+
          JMSException je =
             new JMSException("Could not create a session: " + e);
          je.setLinkedException(e);
@@ -164,6 +159,8 @@ public class JmsSessionFactoryImpl
          return (TopicSession)cm.allocateConnection(mcf, info);
       }
       catch (ResourceException e) {
+         log.error("could not create session", e);
+         
          JMSException je = new JMSException
             ("Could not create a session: " + e);
          je.setLinkedException(e);

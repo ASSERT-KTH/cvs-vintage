@@ -1,20 +1,12 @@
-/*
- * Copyright (c) 2001 Peter Antman Tim <peter.antman@tim.se>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
+
 package org.jboss.jms.ra;
 
 import java.util.Set;
@@ -37,27 +29,29 @@ import javax.resource.spi.security.PasswordCredential;
 
 import org.jboss.jms.jndi.JMSProviderAdapter;
 
+import org.jboss.logging.Logger;
+
 /**
- * JmsManagedConnectionFactory.java
- *
+ * ???
  *
  * Created: Sat Mar 31 03:08:35 2001
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JmsManagedConnectionFactory
    implements ManagedConnectionFactory
 {
-   private PrintWriter logWriter = null;
-   private JmsLogger logger = new JmsLogger();
+   private static final Logger log = Logger.getLogger(JmsManagedConnection.class);
+
    /** Settable attributes in ra.xml */
    private JmsMCFProperties mcfProperties = new JmsMCFProperties();
 
-   //For local access
+   /** For local access. */
    private JMSProviderAdapter adapter;
    
    public JmsManagedConnectionFactory() {
+      // empty
    }
    
    /**
@@ -89,8 +83,10 @@ public class JmsManagedConnectionFactory
       // OK we got autentication stuff
       JmsManagedConnection mc = new JmsManagedConnection
          (this, info,cred.name, cred.pwd);
+
       // Set default logwriter according to spec
-      mc.setLogWriter(logWriter);
+      // user57: screw the logWriter stuff for now it sucks ass
+      
       return mc;
 
    }
@@ -127,15 +123,12 @@ public class JmsManagedConnectionFactory
             // FIXME, Here we have a problem, jms connection 
             // may be anonymous, have a user name
 		
-            if (
-                (mc.getUserName() == null || 
+            if ((mc.getUserName() == null || 
                  (mc.getUserName() != null && 
-                  mc.getUserName().equals(cred.name))
-                 ) &&
-                mcf.equals(this)) {
+                  mc.getUserName().equals(cred.name))) && mcf.equals(this))
+            {
                // Now check if ConnectionInfo equals
                if (info.equals( mc.getInfo() )) {
-
                   return mc;
                }
             }
@@ -144,23 +137,16 @@ public class JmsManagedConnectionFactory
       return null;
    }
 
-   /**
-    * 
-    */
    public void setLogWriter(PrintWriter out)
-      throws ResourceException {
-      this.logWriter = out;
-      logger.setLogWriter(out);
+      throws ResourceException
+   {
+      log.debug("Ignoring call to setLogWriter()");
    }
    
-   /**
-    * 
-    */
+
    public PrintWriter getLogWriter() throws ResourceException {
-      return logWriter;    
+      return null;
    }
-
-
 
    /**
     * Checks for equality ower the configured properties.
@@ -169,7 +155,8 @@ public class JmsManagedConnectionFactory
       if (obj == null) return false;
       if (obj instanceof JmsManagedConnectionFactory) {
 	 return mcfProperties.equals( ((JmsManagedConnectionFactory)obj).getProperties());
-      } else {
+      }
+      else {
          return false;
       }
    }
@@ -179,6 +166,7 @@ public class JmsManagedConnectionFactory
    }
 
    // --- Connfiguration API ---
+   
    public void setJmsProviderAdapterJNDI(String jndi) {
       mcfProperties.setProviderJNDI(jndi);
    }
@@ -214,12 +202,11 @@ public class JmsManagedConnectionFactory
       return  mcfProperties.getPassword();
    }
 
-
-
    /**
     * Set the default session typ
     *
     * @param type either javax.jms.Topic or javax.jms.Queue
+    * 
     * @exception ResourceException if type was not a valid type.
     */
    public void setSessionDefaultType(String type) throws ResourceException {
@@ -233,7 +220,7 @@ public class JmsManagedConnectionFactory
    /**
     * For local access
     */
-   public void setJmsProviderAdapter(JMSProviderAdapter adapter) {
+   public void setJmsProviderAdapter(final JMSProviderAdapter adapter) {
       this.adapter = adapter;
    }
     
@@ -241,12 +228,12 @@ public class JmsManagedConnectionFactory
       return adapter;
    }
 
-   //---- Private helper methods
    private ConnectionRequestInfo getInfo(ConnectionRequestInfo info) {   
       if (info == null) {
 	 // Create a default one
 	 return new JmsConnectionRequestInfo(mcfProperties);
-      } else {
+      }
+      else {
 	 // Fill the one with any defaults
 	 ((JmsConnectionRequestInfo)info).setDefaults(mcfProperties);
 	 return info;
@@ -254,7 +241,8 @@ public class JmsManagedConnectionFactory
    }
    
    //---- MCF to MCF API
+   
    protected JmsMCFProperties getProperties() {
       return mcfProperties;
    }
-} // JmsManagedConnectionFactory
+}

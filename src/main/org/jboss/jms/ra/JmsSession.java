@@ -1,20 +1,11 @@
-/*
- * Copyright (c) 2001 Peter Antman Tim <peter.antman@tim.se>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
 
 package org.jboss.jms.ra;
 
@@ -23,6 +14,11 @@ import javax.jms.*;
 
 import javax.resource.spi.ConnectionEvent;
 
+import org.jboss.logging.Logger;
+
+// make sure we throw the jmx variety
+import javax.jms.IllegalStateException;
+
 /**
  * Adapts the JMS QueueSession and TopicSession API to a JmsManagedConnection.
  *
@@ -30,11 +26,13 @@ import javax.resource.spi.ConnectionEvent;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JmsSession
    implements QueueSession, TopicSession
 {
+   private static final Logger log = Logger.getLogger(JmsSession.class);
+   
    /** The managed connection for this session. */
    private JmsManagedConnection mc; // = null;
 
@@ -52,12 +50,12 @@ public class JmsSession
     *
     * @return    The session
     *
-    * @throws javax.jms.IllegalStateException    The session is closed
+    * @throws IllegalStateException    The session is closed
     */
    private Session getSession() throws JMSException {
       // ensure that the connection is opened
       if (mc == null)
-         throw new javax.jms.IllegalStateException("The session is closed");
+         throw new IllegalStateException("The session is closed");
 
       return mc.getSession();
    }
@@ -113,22 +111,22 @@ public class JmsSession
    /**
     * Always throws an Exception.
     *
-    * @throws javax.jms.IllegalStateException     Method not allowed.
+    * @throws IllegalStateException     Method not allowed.
     */
    public MessageListener getMessageListener() throws JMSException
    {
-      throw new javax.jms.IllegalStateException("Method not allowed");      
+      throw new IllegalStateException("Method not allowed");      
    }
     
    /**
     * Always throws an Exception.
     *
-    * @throws javax.jms.IllegalStateException     Method not allowed.
+    * @throws IllegalStateException     Method not allowed.
     */
    public void setMessageListener(MessageListener listener)
       throws JMSException
    {
-      throw new javax.jms.IllegalStateException("Method not allowed");
+      throw new IllegalStateException("Method not allowed");
    }
 
    /**
@@ -150,7 +148,8 @@ public class JmsSession
    public void close() throws JMSException
    {
       if (mc != null) {
-         mc.getLogger().log(Level.FINE, "Closing session");
+         log.debug("Closing session");
+
          // Special stuff FIXME
          mc.removeHandle(this);
          ConnectionEvent ev =

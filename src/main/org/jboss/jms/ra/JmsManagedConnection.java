@@ -1,20 +1,12 @@
-/*
- * Copyright (c) 2001 Peter Antman Tim <peter.antman@tim.se>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
+
 package org.jboss.jms.ra;
 
 import java.util.Vector;
@@ -48,6 +40,8 @@ import javax.resource.spi.ConnectionEvent;
 
 import org.jboss.jms.ConnectionFactoryHelper;
 import org.jboss.jms.jndi.JMSProviderAdapter;
+
+import org.jboss.logging.Logger;
 
 /**
  * Managed Connection, manages one or more JMS sessions.
@@ -114,11 +108,13 @@ import org.jboss.jms.jndi.JMSProviderAdapter;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JmsManagedConnection
    implements ManagedConnection
 {
+   private static final Logger log = Logger.getLogger(JmsManagedConnection.class);
+   
    private JmsManagedConnectionFactory mcf;
    private JmsConnectionRequestInfo info;
    private String user; // = null;
@@ -134,10 +130,6 @@ public class JmsManagedConnection
    private XAResource xaResource;
    private boolean xaTransacted; // = false;
 
-   /** Should we have one for each connection */
-   private PrintWriter logWriter; // = null;
-   private JmsLogger logger = new JmsLogger();
-    
    /** Holds all current JmsSession handles. */
    private Set handles = new HashSet();
 
@@ -161,6 +153,8 @@ public class JmsManagedConnection
       throws ResourceException 
    {
       this.mcf = mcf;
+
+      // seem like its asking for trouble here
       this.info = (JmsConnectionRequestInfo)info;
       this.user = user;
       this.pwd = pwd;
@@ -318,8 +312,11 @@ public class JmsManagedConnection
     * @param l   The connection event listener to be added.
     */
    public void addConnectionEventListener(final ConnectionEventListener l) {
-      logger.log(Level.FINE,"ConnectionEvent listener added");
       listeners.addElement(l);
+      
+      if (log.isDebugEnabled()) {
+         log.debug("ConnectionEvent listener added: " + l);
+      }
    }
 
    /**
@@ -355,7 +352,7 @@ public class JmsManagedConnection
             xaResource = xaQueueSession.getXAResource();
          }
       }
-      logger.log(Level.FINE, "Leaving out XAResource");
+      log.debug("Leaving out XAResource");
 
       return xaResource;
    }
@@ -368,7 +365,7 @@ public class JmsManagedConnection
     * @throws ResourceException
     */
    public LocalTransaction getLocalTransaction() throws ResourceException {
-      logger.log(Level.FINE, "Leaving out LocalTransaction");
+      log.debug("Leaving out LocalTransaction");
       return new JmsLocalTransaction(this);
    }
 
@@ -396,19 +393,16 @@ public class JmsManagedConnection
     * @throws ResourceException
     */
    public void setLogWriter(final PrintWriter out) throws ResourceException {
-      this.logWriter = out;
-      if (out != null) {
-         logger.setLogWriter(out);
-      }
+      log.debug("Ignoring call to setLogWriter()");
    }
     
    /**
     * Get the log writer for this connection.
     *
-    * @return   The log writer for this connection.
+    * @return   Always null
     */
    public PrintWriter getLogWriter() throws ResourceException {
-      return logWriter;
+      return null;
    }
 
    // --- Api to JmsSession
@@ -421,18 +415,10 @@ public class JmsManagedConnection
    protected Session getSession() {
       if (info.isTopic()) {
          return topicSession;
-      } else {
+      }
+      else {
          return queueSession;
       }
-   }
-
-   /**
-    * Get the logger for this connection.
-    *
-    * @return    The logger for this connection.
-    */
-   protected JmsLogger getLogger() {
-      return logger;
    }
 
    /**
@@ -441,7 +427,8 @@ public class JmsManagedConnection
     * @param event    The event to send.
     */
    protected void sendEvent(final ConnectionEvent event) {
-      logger.log(Level.FINE,"Sending connection event: " + event.getId());
+      log.debug("Sending connection event: " + event.getId());
+
       Vector list = (Vector) listeners.clone();
       int size = list.size();
       
@@ -567,7 +554,7 @@ public class JmsManagedConnection
             con = ConnectionFactoryHelper.createTopicConnection(factory,
                                                                 user,
                                                                 pwd);
-            logger.log(Level.FINE, "created connection: " + con);
+            log.debug("created connection: " + con);
 
             if (con instanceof XATopicConnection) {
                xaTopicSession = ((XATopicConnection)con).createXATopicSession();
@@ -577,26 +564,24 @@ public class JmsManagedConnection
             else if (con instanceof TopicConnection) {
                topicSession =
                   ((TopicConnection)con).createTopicSession(transacted, ack);
-               logger.log(Level.WARNING,
-                          "Using a non-XA TopicConnection.  " +
-                          "It will not be able to participate in a Global UOW");
+               log.debug("Using a non-XA TopicConnection.  " +
+                         "It will not be able to participate in a Global UOW");
             }
             else {
-               logger.log(Level.SEVERE,
-                          "Error in getting session for con: " + con);
-                    throw new ResourceException
-                       ("Connection was not reconizable: " + con);
+               log.error("Error in getting session for con: " + con);
+               throw new ResourceException
+                  ("Connection was not reconizable: " + con);
             }
 
-            logger.log(Level.FINE, "xaTopicSession: " + xaTopicSession);
-            logger.log(Level.FINE, "topicSession: " + topicSession);
+            log.debug("xaTopicSession: " + xaTopicSession);
+            log.debug("topicSession: " + topicSession);
          }
          else { // isQueue
             factory = context.lookup(adapter.getQueueFactoryRef());
             con = ConnectionFactoryHelper.createQueueConnection(factory,
                                                                 user,
                                                                 pwd);
-            logger.log(Level.FINE, "created connection: " + con);
+            log.debug("created connection: " + con);
 
             if (con instanceof XAQueueConnection) {
                xaQueueSession =
@@ -607,23 +592,21 @@ public class JmsManagedConnection
             else if (con instanceof QueueConnection) {
                queueSession =
                   ((QueueConnection)con).createQueueSession(transacted, ack);
-               logger.log(Level.WARNING,
-                          "Using a non-XA QueueConnection.  " +
-                          "It will not be able to participate in a Global UOW");
+               log.debug("Using a non-XA QueueConnection.  " +
+                         "It will not be able to participate in a Global UOW");
             }
             else {
-               logger.log(Level.SEVERE,
-                          "Error in getting session for con: " + con);
-                    throw new ResourceException
-                       ("Connection was not reconizable: " + con);
+               log.error("Error in getting session for con: " + con);
+               throw new ResourceException
+                  ("Connection was not reconizable: " + con);
             }
 
-            logger.log(Level.FINE, "xaQueueSession: " + xaQueueSession);
-            logger.log(Level.FINE, "queueSession: " + queueSession);
+            log.debug("xaQueueSession: " + xaQueueSession);
+            log.debug("queueSession: " + queueSession);
          }
 	 con.start();
-         logger.log(Level.FINE, "transacted: " + transacted);
-         logger.log(Level.FINE, "ack mode: " + ack);
+         log.debug("transacted: " + transacted);
+         log.debug("ack mode: " + ack);
       }
       catch (NamingException e) {
          CommException ce = new CommException(e.toString());
