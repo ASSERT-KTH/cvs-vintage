@@ -58,7 +58,7 @@ import org.apache.fulcrum.TurbineServices;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.22 2004/02/17 22:01:27 pledbrook Exp $
+ * @version $Id: ScarabSecurity.java,v 1.23 2004/10/06 14:46:59 dep4b Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -281,18 +281,6 @@ public class ScarabSecurity
     public static String getActionPermission(String action)
     {
         return getService().getActionPermissionImpl(action);
-    }
-
-    /*
-    public static String getPermission(String task)
-    {
-        return getService().getPermissionImpl(task);
-    }
-    */
-
-    public static Configuration getProps()
-    {
-        return getService().getConfiguration();
     }
 
     /**
