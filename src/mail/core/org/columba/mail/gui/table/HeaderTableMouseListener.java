@@ -19,6 +19,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
 import org.columba.mail.gui.table.action.ViewMessageAction;
 import org.columba.mail.gui.table.util.MessageNode;
 
@@ -39,14 +40,15 @@ public class HeaderTableMouseListener extends MouseAdapter {
 		super();
 
 		this.headerTableViewer = headerTableViewer;
-		viewMessageAction = new ViewMessageAction(headerTableViewer.getMailFrameController());
+		viewMessageAction =
+			new ViewMessageAction(headerTableViewer.getMailFrameController());
 	}
 
 	protected void processPopup(MouseEvent event) {
 		MessageNode[] nodes = headerTableViewer.getView().getSelectedNodes();
-		
+
 		//headerTableViewer.getActionListener().changeMessageActions();
-		
+
 		if (nodes.length == 0) {
 			// select node
 
@@ -82,6 +84,7 @@ public class HeaderTableMouseListener extends MouseAdapter {
 
 		}
 
+		
 	}
 
 	public void mouseReleased(MouseEvent event) {
@@ -90,18 +93,24 @@ public class HeaderTableMouseListener extends MouseAdapter {
 			processPopup(event);
 
 		}
+		
+		
 	}
 
 	public void mouseClicked(MouseEvent event) {
 		//headerTableViewer.getActionListener().changeMessageActions();		
 		//headerTableViewer.showMessage();
-		if( event.getModifiers() == InputEvent.BUTTON1_MASK ) {
+		if (event.getModifiers() == InputEvent.BUTTON1_MASK) {
 			viewMessageAction.actionPerformed(null);
 		}
+		
+		if ( event.getClickCount() == 2 ) processDoubleClick();
 
 	}
 
-	private void processDoubleClick() {
+	protected void processDoubleClick() {
+		// open message in new message-frame
 
+		new OpenMessageWithMessageFrameAction(headerTableViewer.getMailFrameController()).actionPerformed(null);
 	}
 }
