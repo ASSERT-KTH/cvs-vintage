@@ -6,7 +6,7 @@
 #if ($currentIssue.Module != $scarabR.CurrentModule)
 
 <p class="alert">
-You are viewing an issue in a different Module than is currently selected.
+You are viewing an issue in a different module ($currentIssue.Module.Name) than is currently selected.
 </p>
 
 #end
