@@ -965,16 +965,18 @@ try{
 
     /**
      * Gets the IssueType associated with the information
-     * passed around in the query string. Returns null if
-     * the Module could not be found.
+     * passed around in the query string. 
+     * If it has not been selected, defaults to first nav issue type.
      */
     public IssueType getCurrentIssueType() throws Exception
     {
         if (currentIssueType == null)
         {
-            currentIssueType = getIssueType(
-                data.getParameters()
-                .getString(ScarabConstants.CURRENT_ISSUE_TYPE, "1"));
+            if (currentModule != null)
+            {
+                List navIssueTypes = getCurrentModule().getNavIssueTypes();
+                currentIssueType = (IssueType)navIssueTypes.get(0);
+            }
         }
         return currentIssueType;
     }
