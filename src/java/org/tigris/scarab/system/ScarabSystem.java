@@ -53,7 +53,7 @@ import org.apache.turbine.om.*;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.baseom.*;
 import org.tigris.scarab.baseom.peer.*;
-import org.tigris.scarab.intake.IntakeSystem;
+// import org.tigris.scarab.intake.IntakeSystem;
 
 // Velocity
 import org.apache.velocity.util.FieldMethodizer;
@@ -76,7 +76,7 @@ public class ScarabSystem
     /**
      * provides access to the intake field objects
      */
-    private IntakeSystem intake;
+    //    private IntakeSystem intake;
 
     /**
      * Constructor does initialization stuff
@@ -85,7 +85,7 @@ public class ScarabSystem
     {
         constants = new FieldMethodizer(
             "org.tigris.scarab.util.ScarabConstants");
-        intake = new IntakeSystem();
+        //intake = new IntakeSystem();
     }
 
     /**
@@ -138,9 +138,10 @@ public class ScarabSystem
 
     /**
      * provides access to the intake field objects
-     */
+     * /
     public IntakeSystem getIntake()
     {
         return intake; 
     }
+    */
 }
