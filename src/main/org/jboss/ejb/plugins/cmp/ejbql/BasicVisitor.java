@@ -15,7 +15,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
  * extensions translate just a few elements of the tree.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class BasicVisitor implements JBossQLParserVisitor
 {
@@ -26,11 +26,13 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTEJBQL node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       for(int i = 0; i < node.jjtGetNumChildren(); i++)
       {
          if(i > 0)
+         {
             buf.append(' ');
+         }
          node.jjtGetChild(i).jjtAccept(this, data);
       }
       return data;
@@ -38,7 +40,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTFrom node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.FROM);
       for(int i = 0; i < node.jjtGetNumChildren(); i++)
       {
@@ -53,7 +55,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTCollectionMemberDeclaration node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.IN).append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(')').append(' ');
@@ -63,7 +65,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTRangeVariableDeclaration node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(' ');
       node.jjtGetChild(1).jjtAccept(this, data);
@@ -72,7 +74,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTSelect node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.SELECT);
       node.jjtGetChild(0).jjtAccept(this, data);
       return data;
@@ -80,7 +82,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTWhere node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.WHERE);
       node.jjtGetChild(0).jjtAccept(this, data);
       return data;
@@ -88,7 +90,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTOr node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       for(int i = 1; i < node.jjtGetNumChildren(); ++i)
       {
@@ -109,7 +111,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTAnd node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       for(int i = 1; i < node.jjtGetNumChildren(); i++)
       {
@@ -121,7 +123,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTNot node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.NOT);
       node.jjtGetChild(0).jjtAccept(this, data);
       return data;
@@ -129,7 +131,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTConditionalParenthetical node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(')');
@@ -138,7 +140,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTBetween node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       if(node.not)
       {
@@ -153,7 +155,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTIn node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       if(node.not)
       {
@@ -172,7 +174,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTLike node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       if(node.not)
       {
@@ -190,7 +192,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTNullComparison node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(SQLUtil.IS);
       if(node.not)
@@ -203,7 +205,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTIsEmpty node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(SQLUtil.IS);
       if(node.not)
@@ -216,7 +218,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTMemberOf node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       if(node.not)
       {
@@ -229,7 +231,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTStringComparison node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(' ').append(node.opp).append(' ');
       node.jjtGetChild(1).jjtAccept(this, data);
@@ -238,7 +240,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTBooleanComparison node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       if(node.jjtGetNumChildren() == 2)
       {
@@ -250,7 +252,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTDatetimeComparison node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(' ').append(node.opp).append(' ');
       node.jjtGetChild(1).jjtAccept(this, data);
@@ -259,7 +261,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTEntityComparison node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(' ').append(node.opp).append(' ');
       node.jjtGetChild(1).jjtAccept(this, data);
@@ -268,7 +270,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTValueClassComparison node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(' ').append(node.opp).append(' ');
       node.jjtGetChild(1).jjtAccept(this, data);
@@ -277,7 +279,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTArithmeticComparison node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(' ').append(node.opp).append(' ');
       node.jjtGetChild(1).jjtAccept(this, data);
@@ -286,7 +288,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTPlusMinus node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       for(int i = 0; i < node.jjtGetNumChildren(); i++)
       {
          if(i > 0)
@@ -300,7 +302,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTMultDiv node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       for(int i = 0; i < node.jjtGetNumChildren(); i++)
       {
          if(i > 0)
@@ -314,7 +316,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTNegation node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append('-');
       node.jjtGetChild(0).jjtAccept(this, data);
       return data;
@@ -322,7 +324,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTArithmeticParenthetical node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(')');
@@ -331,7 +333,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTStringParenthetical node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(')');
@@ -340,7 +342,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTConcat node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.CONCAT).append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(SQLUtil.COMMA);
@@ -351,7 +353,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTSubstring node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.SUBSTRING).append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(SQLUtil.COMMA);
@@ -364,7 +366,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTLCase node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.LCASE).append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(')');
@@ -373,7 +375,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTUCase node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.UCASE).append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(')');
@@ -382,7 +384,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTLength node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.LENGTH).append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(')');
@@ -391,7 +393,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTLocate node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.LOCATE).append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(SQLUtil.COMMA);
@@ -407,7 +409,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTAbs node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.ABS).append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(')');
@@ -416,7 +418,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTSqrt node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.SQRT).append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(')');
@@ -425,9 +427,9 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTCount node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.COUNT).append('(');
-      ASTPath path = (ASTPath) node.jjtGetChild(0);
+      ASTPath path = (ASTPath)node.jjtGetChild(0);
       path.children[0].jjtAccept(this, data);
       buf.append(')');
       return data;
@@ -435,9 +437,9 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTMax node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.MAX).append('(');
-      ASTPath path = (ASTPath) node.jjtGetChild(0);
+      ASTPath path = (ASTPath)node.jjtGetChild(0);
       path.children[0].jjtAccept(this, data);
       buf.append(')');
       return data;
@@ -445,9 +447,9 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTMin node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.MIN).append('(');
-      ASTPath path = (ASTPath) node.jjtGetChild(0);
+      ASTPath path = (ASTPath)node.jjtGetChild(0);
       path.children[0].jjtAccept(this, data);
       buf.append(')');
       return data;
@@ -455,9 +457,9 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTAvg node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.AVG).append('(');
-      ASTPath path = (ASTPath) node.jjtGetChild(0);
+      ASTPath path = (ASTPath)node.jjtGetChild(0);
       path.children[0].jjtAccept(this, data);
       buf.append(')');
       return data;
@@ -465,9 +467,9 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTSum node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.SUM).append('(');
-      ASTPath path = (ASTPath) node.jjtGetChild(0);
+      ASTPath path = (ASTPath)node.jjtGetChild(0);
       path.children[0].jjtAccept(this, data);
       buf.append(')');
       return data;
@@ -475,9 +477,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTOrderBy node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
-
-      buf.append(SQLUtil.ORDERBY);
+      StringBuffer buf = (StringBuffer)data;
       for(int i = 0; i < node.jjtGetNumChildren(); i++)
       {
          if(i > 0)
@@ -491,7 +491,7 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTOrderByPath node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
 
       node.jjtGetChild(0).jjtAccept(this, data);
       if(node.ascending)
@@ -507,63 +507,63 @@ public class BasicVisitor implements JBossQLParserVisitor
 
    public Object visit(ASTPath node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(node.getPath());
       return data;
    }
 
    public Object visit(ASTIdentifier node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(node.identifier);
       return data;
    }
 
    public Object visit(ASTAbstractSchema node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(node.abstractSchemaName);
       return data;
    }
 
    public Object visit(ASTParameter node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append("?").append(node.number);
       return data;
    }
 
    public Object visit(ASTExactNumericLiteral node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(node.literal);
       return data;
    }
 
    public Object visit(ASTApproximateNumericLiteral node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(node.literal);
       return data;
    }
 
    public Object visit(ASTStringLiteral node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(node.value);
       return data;
    }
 
    public Object visit(ASTBooleanLiteral node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       buf.append(node.value);
       return data;
    }
 
    public Object visit(ASTLimitOffset node, Object data)
    {
-      StringBuffer buf = (StringBuffer) data;
+      StringBuffer buf = (StringBuffer)data;
       int child = 0;
       if(node.hasOffset)
       {
