@@ -670,6 +670,9 @@
     <fileset dir="${java.home}">
       <include name="lib/classes.zip"/>
     </fileset>
+    <fileset dir="${ant.home}">
+      <include name="lib/ant.jar"/>
+    </fileset>
   </path>
 
   <target name="javadoc" depends="main,webapps,tomcat-jars">
@@ -684,7 +687,7 @@
              use="true"
              windowtitle="Tomcat and Jasper Internal API"
              doctitle="Tomcat and Jasper Internal API"
-             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."
+             bottom="Copyright © 2001 Apache Software Foundation. All Rights Reserved."
              />
   </target>
   <target name="javadoc.tomcat" depends="main,webapps,tomcat-jars">
@@ -697,7 +700,7 @@
              use="true"
              windowtitle="Tomcat API"
              doctitle="Tomcat API"
-             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+             bottom="Copyright © 2001 Apache Software Foundation. All Rights Reserved."/>
   </target>
   <target name="javadoc.tomcat.core" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.tomcat.core"
@@ -709,7 +712,7 @@
              use="true"
              windowtitle="Tomcat Core API"
              doctitle="Tomcat Core API"
-             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+             bottom="Copyright © 2001 Apache Software Foundation. All Rights Reserved."/>
   </target>
   <target name="javadoc.tomcat.facade" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.tomcat.facade"
@@ -721,7 +724,7 @@
              use="true"
              windowtitle="Tomcat Facade API"
              doctitle="Tomcat Facade API"
-             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+             bottom="Copyright © 2001 Apache Software Foundation. All Rights Reserved."/>
   </target>
   <target name="javadoc.tomcat.modules" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.tomcat.modules.*"
@@ -733,7 +736,7 @@
              use="true"
              windowtitle="Tomcat Modules API"
              doctitle="Tomcat Modules API"
-             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+             bottom="Copyright © 2001 Apache Software Foundation. All Rights Reserved."/>
   </target>
   <target name="javadoc.tomcat.startup" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.tomcat.startup"
@@ -745,7 +748,7 @@
              use="true"
              windowtitle="Tomcat Startup API"
              doctitle="Tomcat Startup API"
-             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+             bottom="Copyright © 2001 Apache Software Foundation. All Rights Reserved."/>
   </target>
   <target name="javadoc.tomcat.util" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.tomcat.util.*"
@@ -757,7 +760,7 @@
              use="true"
              windowtitle="Tomcat Utilities API"
              doctitle="Tomcat Utilities API"
-             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+             bottom="Copyright © 2001 Apache Software Foundation. All Rights Reserved."/>
   </target>
   <target name="javadoc.jasper" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.jasper.*"
@@ -769,7 +772,7 @@
              use="true"
              windowtitle="Jasper API"
              doctitle="Jasper API"
-             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+             bottom="Copyright © 2001 Apache Software Foundation. All Rights Reserved."/>
   </target>
 
   <target name="dist.war" depends="dist.prepare" >
