@@ -122,10 +122,12 @@ public class AttachmentRule extends BaseRule
                 + sourceFileName.substring(sourceFileName.lastIndexOf('.'));
             
             // copy the file into its new location
-            FileReader in = new FileReader(path);
-            FileWriter out = new FileWriter(newFile);
+            FileReader in = null;
+            FileWriter out = null;
             try
             {
+                in = new FileReader(path);
+                out = new FileWriter(newFile);
                 int c;
                 while ((c = in.read()) != -1)
                 {
@@ -134,8 +136,14 @@ public class AttachmentRule extends BaseRule
             }
             finally
             {
-                in.close();
-                out.close();
+                if (in != null)
+                {
+                    in.close();
+                }
+                if (out != null)
+                {
+                    out.close();
+                }
             }
             
             attachment.setFilePath(newFile);
