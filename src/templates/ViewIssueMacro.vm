@@ -8,7 +8,7 @@
       <div class="axial">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
         <tr>
-         <th width="120">issue id #:</th>
+         <th width="120">Issue ID #:</th>
          <td>#$currentIssue.UniqueId</td>
         </tr>
 
@@ -92,7 +92,7 @@
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
         <tr>
          <th width="120">committed by:</th>
-        #set ($createdUser = $scarabR.getUser($currentIssue.CreatedBy.toString()) )
+        #set ($createdUser = $scarabR.getUser($currentIssue.CreatedBy) )
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
         </tr>
 
@@ -108,7 +108,7 @@
           #else 
               #set( $comma = ",")
           #end
-          #set ($assignedUser = $scarabR.getUser($ass.UserId.toString()) )
+          #set ($assignedUser = $scarabR.getUser($ass.UserId) )
           #<a href="mailto:$assignedUser.Email">$assignedUser.UserName</a>$comma
         #end
     #end
@@ -251,7 +251,7 @@
         <select name="parent_depend_type_id_$parent.IssueId" class="select">
             #foreach ($dependType in $currentIssue.getAllDependencyTypes())
               #set ( $selected = "" )
-              #if ( $parent.getDependency($currentIssue).TypeId.toString().equals($dependType.DependTypeId.toString()))
+              #if ( $parent.getDependency($currentIssue).TypeId.equals($dependType.DependTypeId))
                 #set ( $selected = " selected" )
               #end
               <option$selected value="$dependType.DependTypeId">
@@ -312,7 +312,7 @@
             <option>Choose dependency type</option>
             #foreach ($dependType in $currentIssue.getAllDependencyTypes())
               #set ( $selected = "" )
-              #if ( $currentIssue.getDependency($child).TypeId.toString().equals($dependType.DependTypeId.toString()) )
+              #if ( $currentIssue.getDependency($child).TypeId.equals($dependType.DependTypeId) )
                 #set ( $selected = " selected" )
               #end
               <option$selected value="$dependType.DependTypeId">
@@ -348,7 +348,7 @@
     #foreach($comment in $currentIssue.Comments)
         <tr>
          <th width="60">$comment.FormattedCreatedDate 
-       #set ( $commentUser = $scarabR.getUser($comment.CreatedBy.toString()) )
+       #set ( $commentUser = $scarabR.getUser($comment.CreatedBy) )
          <a href="mailto:$commentUser.Email">$commentUser.UserName</a>
          </th>
 
@@ -430,10 +430,10 @@
 
 #if ($currentIssue.isHistoryLong())
    #if ($fullHistory.equals("true"))
-        #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssue.IssueId.toString()).setPathInfo("fullhistory", "false").setPage("ViewIssue.vm").toString() )
+        #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssue.IssueId).setPathInfo("fullhistory", "false").setPage("ViewIssue.vm") )
         <p><a href="$historyLink">hide complete history</p></a>
    #else
-        #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssue.IssueId.toString()).setPathInfo("fullhistory", "true").setPage("ViewIssue.vm").toString() )
+        #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssue.IssueId).setPathInfo("fullhistory", "true").setPage("ViewIssue.vm")) )
         <p><a href="$historyLink">show complete history</p></a>
    #end
 #end
