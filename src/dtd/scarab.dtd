@@ -1,12 +1,13 @@
 <!ELEMENT scarab (module+)>
 
-<!ELEMENT module (parent-module, fullname, code, issue+)>
+<!ELEMENT module (name, code, issue+)>
 <!ATTLIST module id CDATA #REQUIRED>
+<!ATTLIST module parent CDATA #REQUIRED>
 
-<!ELEMENT issue (artifact-type, attribute+, dependency*, attachment*, transaction?)>
+<!ELEMENT issue (artifact-type, issue-attribute+, dependency*, attachment*, transaction?)>
 <!ATTLIST issue id CDATA #REQUIRED>
 
-<!ELEMENT attribute (name, value, type?, old-value?)>
+<!ELEMENT issue-attribute (name, value, type)>
 
 <!ELEMENT dependency (type, (child | parent))>
 
@@ -15,10 +16,10 @@
 <!ELEMENT transaction (type, activity+)>
 <!ATTLIST transaction id CDATA #REQUIRED>
 
-<!ELEMENT activity (attribute, description)>
+<!ELEMENT activity (activity-attribute, description)>
 
-<!ELEMENT parent-module (#PCDATA)>
-<!ELEMENT fullname (#PCDATA)>
+<!ELEMENT activity-attribute (name, value, old-value)>
+
 <!ELEMENT code (#PCDATA)>
 <!ELEMENT artifact-type (#PCDATA)>
 <!ELEMENT name (#PCDATA)>

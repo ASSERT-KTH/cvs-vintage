@@ -25,22 +25,21 @@ ID_CODE, not the primary key column.
 -->
 
 <scarab>
-    <module id="5">
-        <parent-module>Global</parent-module>
-        <fullname>Turbine &gt; Source</fullname>
+    <module id="6" parent="3">
+        <name>Source</name>
         <code>TBNS</code>
         <issue id="101">
             <artifact-type>Defect</artifact-type>
-            <attribute>
+            <issue-attribute>
                 <name>Status</name>
                 <value>New</value>
                 <type>combo-box</type>
-            </attribute>
-            <attribute>
+            </issue-attribute>
+            <issue-attribute>
                 <name>Priority</name>
                 <value>High</value>
                 <type>combo-box</type>
-            </attribute>
+            </issue-attribute>
 
             <dependency>
                 <type>non-blocking</type>
@@ -60,21 +59,21 @@ ID_CODE, not the primary key column.
             <transaction id="7">
                 <type>Edit Issue</type>
                 <activity>
-                    <attribute>
+                    <activity-attribute>
                         <name>Priority</name>
                         <value>High</value>
                         <old-value>NULL</old-value>
-                    </attribute>
+                    </activity-attribute>
                     <description>
                         Issue TBNS101 had attribute Priority set to high
                     </description>
                 </activity>
                 <activity>
-                    <attribute>
+                    <activity-attribute>
                         <name>Status</name>
                         <value>unconfirmed</value>
                         <old-value>NULL</old-value>
-                    </attribute>
+                    </activity-attribute>
                     <description>
                         Issue TBNS101 had attribute Status set to 
                         unconfirmed
@@ -84,16 +83,16 @@ ID_CODE, not the primary key column.
         </issue>
         <issue id="203">
             <artifact-type>Defect</artifact-type>
-            <attribute>
+            <issue-attribute>
                 <name>Status</name>
                 <value>Closed</value>
                 <type>combo-box</type>
-            </attribute>
-            <attribute>
+            </issue-attribute>
+            <issue-attribute>
                 <name>Resolution</name>
                 <value>Fixed</value>
                 <type>combo-box</type>
-            </attribute>
+            </issue-attribute>
             <dependency>
                 <type>blocking</type>
                 <parent>TBNS101</parent>
