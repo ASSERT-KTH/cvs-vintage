@@ -82,16 +82,14 @@ public class Main {
 
   }
 
-  public static void main(String[] arg) {
-    final String[] args = arg;
-
+  public static void main(String[] args) {
     ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
     cmdLineParser.initCmdLine(args);
 
     MainInterface.DEBUG = cmdLineParser.isDebugOption();
     // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser  
 
-    loadInVMInstance(arg);
+    loadInVMInstance(args);
 
     final StartUpFrame frame = new StartUpFrame();
     frame.setVisible(true);
