@@ -220,7 +220,6 @@
          manifest="${etc.dir}/run.mf"
     >
         <include name="org/jboss/Main*.*" />
-        <include name="org/jboss/security/SecurityAssociation.class" />
         <include name="org/jboss/dependencies/**" />
     </jar>
 
@@ -235,12 +234,11 @@
         <exclude name="org/jboss/ejb/deployment/**" />
         <exclude name="org/jboss/ejb/plugins/jaws/deployment/**" />
         <exclude name="org/jboss/jms/ra/META-INF*" />
+        <exclude name="org/jboss/tm/GlobalId.class" />
         <!-- Exclude the security classes that must be on the classpath -->
-        <exclude name="org/jboss/security/SecurityAssociation.class" />
         <exclude name="org/jboss/security/AnybodyPrincipal.class" />
         <exclude name="org/jboss/security/NobodyPrincipal.class" />
         <exclude name="org/jboss/security/SimplePrincipal.class" />
-        <exclude name="org/jboss/tm/GlobalId.class" />
     </jar>
 
 
