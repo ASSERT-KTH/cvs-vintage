@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class JDBCRemoveEntityCommand {
    
@@ -69,10 +69,11 @@ public class JDBCRemoveEntityCommand {
       HashMap oldRelations = removeFromRelations(context);
 
       // update the related entities (stores the removal from relationships)
-      if(!oldRelations.isEmpty()) {
-         if (!manager.getContainer().getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
+      if(!oldRelations.isEmpty()) 
+      {
+         if(!manager.getContainer().getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
          {
-            manager.getContainer().synchronizeEntitiesWithinTransaction(
+            manager.getContainer().getEntityInvocationRegistry().synchronizeEntities(
                context.getTransaction());
          }
       }
