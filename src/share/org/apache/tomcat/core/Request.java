@@ -65,7 +65,6 @@ import org.apache.tomcat.util.http.Parameters;
 import org.apache.tomcat.util.http.ContentType;
 import org.apache.tomcat.util.http.Cookies;
 
-import org.apache.tomcat.util.Counters;
 import org.apache.tomcat.util.SimplePrincipal;
 import org.apache.tomcat.util.buf.MessageBytes;
 
@@ -190,8 +189,6 @@ public class Request {
     Exception errorException;
 
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
-    // Accounting
-    private Counters cntr=new Counters(ContextManager.MAX_NOTES);
 
     // -------------------- Constructor --------------------
 
@@ -300,13 +297,16 @@ public class Request {
     public void setServerPort(int serverPort ) {
 	this.serverPort=serverPort;
     }
-
     public MessageBytes remoteAddr() {
 	return remoteAddrMB;
     }
 
     public MessageBytes remoteHost() {
 	return remoteHostMB;
+    }
+
+    public void setRemoteHost(String remoteHost) {
+	this.remoteHost=remoteHost;
     }
 
     public String getLocalHost() {
@@ -808,10 +808,6 @@ public class Request {
 	return notes[pos];
     }
 
-    public final Counters getCounters() {
-	return cntr;
-    }
-
     // -------------------- Recycling -------------------- 
     public void recycle() {
 	initRequest();
@@ -844,8 +840,6 @@ public class Request {
 	
 	scookies.recycle();
 	
-	// counters and notes
-        cntr.recycle();
         for( int i=0; i<ContextManager.MAX_NOTES; i++ ) notes[i]=null;
 
 	// sub-req

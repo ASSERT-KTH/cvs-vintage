@@ -58,7 +58,6 @@
  */ 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.util.Counters;
 import org.apache.tomcat.util.log.Log;
 
 /**
@@ -131,7 +130,6 @@ public class Handler {
     Handler prev;
 
 
-    private Counters cntr=new Counters(ContextManager.MAX_NOTES);
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
 
     // -------------------- Constructor --------------------
@@ -346,14 +344,5 @@ public class Handler {
     public final Object getNote( int pos ) {
 	return notes[pos];
     }
-
-    /** Accounting information. Not implemented - it'll contain usefull
-	information like LAST_ACCESSED, INVOCATION_COUNT, SERVICE_TIME,
-	ERRROS, IN_INCLUDE, etc.
-     */
-    public final Counters getCounters() {
-	return cntr;
-    }
-
 
 }

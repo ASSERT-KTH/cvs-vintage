@@ -68,8 +68,6 @@ import java.util.Vector;
 
 import org.apache.tomcat.util.buf.MessageBytes;
 
-import org.apache.tomcat.util.Counters;
-
 import org.apache.tomcat.util.threads.TimeStamp;
 
 /**
@@ -111,7 +109,6 @@ public class ServerSession  implements  Serializable {
     Object manager;
     Context context;
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
-    private Counters cntr=new Counters(ContextManager.MAX_NOTES);
     private int state=STATE_NEW;
     Object facade;
     
@@ -237,10 +234,5 @@ public class ServerSession  implements  Serializable {
     public final Object getNote( int pos ) {
 	return notes[pos];
     }
-
-    public final Counters getCounters() {
-	return cntr;
-    }
-    
 }
 
