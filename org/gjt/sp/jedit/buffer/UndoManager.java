@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: UndoManager.java,v 1.21 2003/06/05 02:43:03 spestov Exp $
+ * @version $Id: UndoManager.java,v 1.22 2003/06/21 00:28:50 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class UndoManager
@@ -71,7 +71,6 @@ public class UndoManager
 		{
 			undoCount--;
 
-			boolean dirty = buffer.isDirty();
 			int caret = undosLast.undo();
 			redosFirst = undosLast;
 			undosLast = undosLast.prev;
@@ -367,9 +366,9 @@ public class UndoManager
 		//{{{ redo() method
 		int redo()
 		{
+			buffer.remove(offset,length);
 			if(redoClearDirty == this)
 				buffer.setDirty(false);
-			buffer.remove(offset,length);
 			return offset;
 		} //}}}
 
