@@ -15,7 +15,8 @@
  <input type="text" name="id" size="15" maxlength="255" tabindex="1" />
     &#160;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" />
 </form>
-</td><td>
+</td>
+<td>
 <form action="$link.setPage("Index.vm").setAction("Search")" method="get">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
   <select name="go" tabindex="3" onChange="this.form.submit();">
@@ -51,7 +52,39 @@
   <input type="hidden" value="foo" name="eventSubmit_doSelectquery" />
   <noscript><input type="submit" value="Go" name="foo" tabindex="4" /></noscript>
 </form>
-   </td>
+  </td>
+
+  <td>
+    ## Add Template list to the top bar so that using a template will be easier
+    #set ($allTemplates = $scarabR.IssueTemplates)
+    #if ($allTemplates.size() > 0)
+    
+    #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($scarabR.CurrentIssueType))
+    #if ($rmit.Dedupe)
+      #set ($wizardScreen = "entry,Wizard1.vm")
+    #else
+      #set ($wizardScreen = "entry,Wizard3.vm")
+    #end 
+
+    <form action="$link.setPage("SaveTemplate.vm")" method="POST">
+    <input type="hidden" name="action" value="TemplateList" />
+    <input type="hidden" name="eventSubmit_doUsetemplate" value="foo" />
+    <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="$wizardScreen" />
+    #set ($user = $data.User)
+    #set ($permItemDelete = $scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
+    <select name="templateId" tabindex="5" onChange="this.form.submit();">
+         <option value="0">Select template...</option>
+     #foreach ($template in $allTemplates)
+       #set ($isCreatedBy = $template.isCreatingUser($user))
+       #if ($permItemDelete || $isCreatedBy)
+         <option value="$templateId">$template.TemplateInfo.Name</option>
+       #end
+     #end
+    </select>
+    <noscript><input type="submit" value="Go" name="foo" tabindex="6" /></noscript>
+    </form>
+    #end
+    </td>
   </tr>
  </table>
 </div>
