@@ -13,11 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.menu;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.MenuPluginHandler;
@@ -59,8 +59,7 @@ public class Menu extends JMenuBar {
             ((MenuPluginHandler) MainInterface.pluginManager.getHandler(
                 "org.columba.core.menu")).insertPlugins(this);
         } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
+            throw new RuntimeException(ex);
         }
     }
 
