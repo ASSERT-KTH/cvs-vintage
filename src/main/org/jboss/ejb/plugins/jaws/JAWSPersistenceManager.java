@@ -79,7 +79,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -289,7 +289,7 @@ public class JAWSPersistenceManager
          try
          {
             con = getConnection();
-            stmt = con.prepareStatement(createSql);
+            stmt = con.prepareStatement(dropSql);
             stmt.executeUpdate();
             log.debug("Table "+entity.getTableName()+" removed");
          } catch (SQLException e)
@@ -477,6 +477,7 @@ public class JAWSPersistenceManager
             {
                // Try findByX
                String cmpFieldName = finderMethod.getName().substring(6).toLowerCase();
+					System.out.println("Finder:"+cmpFieldName);
                
                for (int i = 0; i < CMPFields.size(); i++)
                {
@@ -729,7 +730,7 @@ public class JAWSPersistenceManager
          String updateSql = "UPDATE "+entity.getTableName()+" SET ";
          Object[] currentState = getState(ctx);
          boolean[] dirtyField = new boolean[currentState.length];
-         Object[] oldState = (Object[])ctx.getPersistenceContext();
+         Object[] oldState = ((PersistenceContext)ctx.getPersistenceContext()).state;
          boolean dirty = false;
          int refIdx = 0;
          for (int i = 0;i < currentState.length; i++)
