@@ -75,7 +75,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.10 2002/04/30 19:50:49 elicia Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.11 2002/05/02 00:27:45 elicia Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -131,9 +131,12 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                   .getInstance(new NumberKey(optionId));
 
                RModuleOption rmo = module.getRModuleOption(option, issueType);
+               List rmos = module.getRModuleOptions(option.getAttribute(),
+                                                    issueType, false);
                try
                {
                    rmo.delete(user);
+                   rmos.remove(rmo);
                }
                catch (Exception e)
                {
@@ -146,6 +149,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                try
                {
                    rmo2.delete(user);
+                   rmos.remove(rmo);
                }
                catch (Exception e)
                {
