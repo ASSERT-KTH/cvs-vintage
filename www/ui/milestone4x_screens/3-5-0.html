@@ -141,84 +141,51 @@
 	<!-- Scarab - App -->
 	<div class="app" id="div3-5-0">
 		<h2>Workflow customization options (3.5.0)</h2>
+
+
+		<div id="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+			<th>Workflow customization options</th>
+			<td><a href="#">Custom Alert email list</a></td>
+			</tr>
+			</table>
+		</div>
 		
 		<p class="functnbar"><input type="submit" value="save" />&#160;<input type="submit" value="cancel" />&#160;<input type="submit" value="reset to defaults" /></p>
 		
-		<h3>My new issue alert (email) <a href="#">(edit)</a></h3>
+		<h3>New issue alert email</h3>
 		
-		<p><input type="checkbox" /> allow assignee to reassign issue</p>
-		<p><input type="checkbox" /> allow assignee to share/add multiple assignees</p>
-		
-		<h3>Response required setting</h3>
-		
-		<p><select>
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">Assign options</th>
+			<td>
+				<p><input type="checkbox" /> allow assignee to reassign issue</p>
+				<p><input type="checkbox" /> allow assignee to share/add multiple assignees</p>
+</td>
+			</tr>
+			<tr>
+			<th width="120">"Response required" options</th>
+			<td><p><select>
 		<option>1 day</option>
 		<option>2 day</option>
 		<option>3 day</option>
 		</select>
-		</p>
+		</p></td>
+			</tr>
 		
-		<h3>If no response options</h3>
-		
-		<p><input type="checkbox" /> send email to team lead</p>
-		<p><input type="checkbox" /> send email to assignee</p>
-		<p><input type="checkbox" /> add to assignee metrics report</p>
-		<p><input type="checkbox" /> return to unassigned issues queue</p>
-		
-		<h3>New issue email</h3>
-		
-		<p><input type="checkbox" /> One email delivery <select>
-		<option>daily</option>
-		<option>weekly</option>
-		<option>on methodist feast days</option>
-		</select> with all new issues</p>
-		<p><input type="checkbox" /> one email per new issue.</p>
-		
-		<h3>Daily status (email) <a href="#">(edit)</a></h3>
-		
-		<p><input type="checkbox" /> all new issues / assignees for all projects 
-		<select>
-		<option>daily</option>
-		<option>hourly</option>
-		<option>both</option>
-		</select>
-		</p>
-		
-		<p><input type="checkbox" /> new issues / assignees per project 
-		<select>
-		<option>daily</option>
-		<option>hourly</option>
-		<option>both</option>
-		</select>
-		</p>
-		
-		<h3>Issue report (email) <a href="#">(edit)</a></h3>
-		
-		<p><input type="checkbox" /> all assigned issues 
-		<select>
-		<option>daily</option>
-		<option>hourly</option>
-		<option>both</option>
-		</select>
-		</p>
-		
-		<p><input type="checkbox" /> all unassigned issues 
-		<select>
-		<option>daily</option>
-		<option>hourly</option>
-		<option>both</option>
-		</select>
-		</p>
-		
-		<p><input type="checkbox" /> all issues 
-		<select>
-		<option>daily</option>
-		<option>hourly</option>
-		<option>both</option>
-		</select>
-		</p>
-
+			<tr>
+			<th width="120">"If no response" options</th>
+			<td>
+				<p><input type="checkbox" checked /> send email to team lead</p>
+				<p><input type="checkbox" checked /> send email to assignee</p>
+				<p><input type="checkbox" checked /> return to unassigned issues queue</p>
+			</td>
+			</tr>		
+		</table>
 		<p class="functnbar"><input type="submit" value="save" />&#160;<input type="submit" value="cancel" />&#160;<input type="submit" value="reset to defaults" /></p>
+
 	</div>
 	<!-- Scarab - App -->
 
