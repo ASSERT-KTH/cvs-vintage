@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.215 2002/11/13 00:31:25 jon Exp $
+ * @version $Id: Issue.java,v 1.216 2002/11/14 18:07:50 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2921,23 +2921,23 @@ public class Issue
      * It will return a non-null String
      * which is the workflow error message otherwise it will return null.
      */
-    public String doCheckInitialAttributeValueWorkflow(HashMap newValues, ScarabUser user)
+    public String doCheckInitialAttributeValueWorkflow(HashMap newValues, 
+                                                       ScarabUser user)
         throws Exception
     {
-        Object[] keys = newValues.keySet().toArray();
         String msg = null;
-
-        for (int i=0; i < keys.length; i++)
+        Iterator iter = newValues.keySet().iterator();
+        while (iter.hasNext())
         {
-            NumberKey attrId = (NumberKey)keys[i];
+            NumberKey attrId = (NumberKey)iter.next();
             Attribute attr = AttributeManager.getInstance(new NumberKey(attrId));
-
             if (attr.isOptionAttribute())
             {
                 AttributeOption toOption = AttributeOptionManager
                      .getInstance(new NumberKey((String)newValues.get(attrId)));
-                msg = WorkflowFactory.getInstance().checkInitialTransition(toOption, 
-                                                  this, newValues, user);
+                msg = WorkflowFactory.getInstance().checkInitialTransition(
+                                                    toOption, this, 
+                                                    newValues, user);
             }
             if (msg != null)
             {
@@ -2953,30 +2953,33 @@ public class Issue
      * which is the workflow error message otherwise it will return null.
      */
     public String doCheckAttributeValueWorkflow(HashMap newAttVals, 
-                                                Attachment attachment, ScarabUser user)
+                                                Attachment attachment, 
+                                                ScarabUser user)
         throws Exception
     {
         SequencedHashMap avMap = getModuleAttributeValuesMap(); 
         AttributeValue oldAttVal = null;
         AttributeValue newAttVal = null;
-        Iterator iter = avMap.iterator();
         String msg = null;
-
+        Iterator iter = newAttVals.keySet().iterator();
         while (iter.hasNext())
         {
-            oldAttVal = (AttributeValue)avMap.get(iter.next());
-            newAttVal = (AttributeValue)newAttVals.get(oldAttVal.getAttributeId());
+            NumberKey attrId = (NumberKey)iter.next();
+            Attribute attr = AttributeManager.getInstance(new NumberKey(attrId));
+            oldAttVal = (AttributeValue)avMap.get(attr.getName().toUpperCase());
+            newAttVal = (AttributeValue)newAttVals.get(attrId);
             AttributeOption fromOption = null;
             AttributeOption toOption = null;
 
-            if (newAttVal != null)
+            if (newAttVal.getValue() != null)
             {
                 if (oldAttVal.getOptionId() != null 
                     && newAttVal.getAttribute().isOptionAttribute())
                 {
                     fromOption = oldAttVal.getAttributeOption();
                     toOption = newAttVal.getAttributeOption();
-                    msg = WorkflowFactory.getInstance().checkTransition(fromOption, 
+                    msg = WorkflowFactory.getInstance().checkTransition(
+                                                        fromOption, 
                                                         toOption, this, 
                                                         newAttVals, user);
                 }
