@@ -54,7 +54,7 @@ $page.setTitle("Add/remove attributes from view")
   #set ($order = 1)
   #foreach ($moduleUserAttribute in $rmuas)
    #if ($attribute.Name.equals($moduleUserAttribute.Attribute.Name))
-    #set ($checked = 'checked="true"')
+    #set ($checked = 'checked="checked"')
     #set ($order = $moduleUserAttribute.Order)
    #end
   #end

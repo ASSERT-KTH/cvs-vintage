@@ -65,12 +65,12 @@ $page.setTitle("Copy/move issue")
 
 #set ($checked = "")
 #if ($select_action.equals("copy"))
-  #set ($checked = 'checked="true"')
+  #set ($checked = 'checked="checked"')
 #end
 <p><input type="radio" name="select_action" value="copy" $checked /> Copy</p>
 #set ($checked = "")
 #if ($select_action.equals("move"))
-  #set ($checked = 'checked="true"')
+  #set ($checked = 'checked="checked"')
 #end
 <p><input type="radio" name="select_action" value="move" $checked /> Move</p>
 

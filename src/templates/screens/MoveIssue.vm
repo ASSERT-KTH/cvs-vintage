@@ -51,11 +51,10 @@ $page.setTitle("Copy/move issue")
  <option>Select Module...</option>
  #foreach ($module in $security.getModules($user, "Issue | Enter"))
   #if ($module.ModuleId.equals($moduleId))
-    #set ($selected = 'selected="true"')
+    <option selected="selected" value="$module.ModuleId" />$module.Name
   #else
-    #set ($selected = "")
+    <option value="$module.ModuleId" />$module.Name
   #end
-  <option value="$module.ModuleId" $selected>$module.Name</option>
  #end
 </select>
 </p>
@@ -63,12 +62,12 @@ $page.setTitle("Copy/move issue")
 <h3>Action</h3>
 #set ($checked = "")
 #if ($select_action.equals("copy"))
-  #set ($checked = 'checked="true"')
+  #set ($checked = 'checked="checked"')
 #end
 <p><input type="radio" name="select_action" value="copy" $checked /> Copy</p>
 #set ($checked = "")
 #if ($select_action.equals("move"))
-  #set ($checked = 'checked="true"')
+  #set ($checked = 'checked="checked"')
 #end
 <p><input type="radio" name="select_action" value="move" $checked /> Move</p>
 
