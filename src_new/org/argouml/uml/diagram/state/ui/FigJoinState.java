@@ -1,4 +1,4 @@
-// $Id: FigJoinState.java,v 1.12 2004/08/04 20:51:08 mvw Exp $
+// $Id: FigJoinState.java,v 1.13 2004/09/02 17:07:21 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigJoinState.java
 // Classes: FigJoinState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigJoinState.java,v 1.12 2004/08/04 20:51:08 mvw Exp $
+// $Id: FigJoinState.java,v 1.13 2004/09/02 17:07:21 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -38,21 +38,17 @@ import java.util.Iterator;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRect;
 
-/** Class to display graphics for a UML MState in a diagram. */
-
+/** Class to display graphics for a UML Join State in a diagram. 
+ */
 public class FigJoinState extends FigStateVertex {
 
     ////////////////////////////////////////////////////////////////
     // constants
 
     private static final int MARGIN = 2;
-
     private static final int X = 10;
-
     private static final int Y = 10;
-
     private static final int WIDTH = 80;
-
     private static final int HEIGHT = 9;
 
     ////////////////////////////////////////////////////////////////
@@ -114,7 +110,7 @@ public class FigJoinState extends FigStateVertex {
         getBigPort().setBounds(x, y, w, h);
         head.setBounds(x, y, w, h);
 
-        calcBounds(); //_x = x; _y = y; _w = w; _h = h;
+        calcBounds(); 
         updateEdges();
         firePropChange("bounds", oldBounds, getBounds());
     }

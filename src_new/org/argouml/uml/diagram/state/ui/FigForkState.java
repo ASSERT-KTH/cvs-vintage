@@ -1,4 +1,4 @@
-// $Id: FigForkState.java,v 1.12 2004/08/03 19:59:49 mvw Exp $
+// $Id: FigForkState.java,v 1.13 2004/09/02 17:07:21 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigForkState.java
 // Classes: FigForkState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigForkState.java,v 1.12 2004/08/03 19:59:49 mvw Exp $
+// $Id: FigForkState.java,v 1.13 2004/09/02 17:07:21 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -38,7 +38,7 @@ import java.util.Iterator;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRect;
 
-/** Class to display graphics for a UML MState in a diagram. */
+/** Class to display graphics for a UML ForkState in a diagram. */
 
 public class FigForkState extends FigStateVertex {
 
@@ -46,13 +46,9 @@ public class FigForkState extends FigStateVertex {
     // constants
 
     private static final int MARGIN = 2;
-
     private static final int X = 10;
-
     private static final int Y = 10;
-
     private static final int WIDTH = 80;
-
     private static final int HEIGHT = 9;
 
     ////////////////////////////////////////////////////////////////
@@ -113,7 +109,7 @@ public class FigForkState extends FigStateVertex {
         getBigPort().setBounds(x, y, w, h);
         head.setBounds(x, y, w, h);
 
-        calcBounds(); //_x = x; _y = y; _w = w; _h = h;
+        calcBounds(); 
         updateEdges();
         firePropChange("bounds", oldBounds, getBounds());
     }
