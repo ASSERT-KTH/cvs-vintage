@@ -8,62 +8,80 @@
 package org.jboss.security;
 
 import java.security.Principal;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
- * The RunAsIdentity is a CallerIdentity that associates the run-as principal
- * with his run-as role.
+ * The RunAsIdentity is a Principal that associates the run-as principal
+ * with his run-as role(s).
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class RunAsIdentity extends CallerIdentity
 {
-   /** The run-as role */
-   private Principal runAsRole;
-   private boolean anonymousPrincipal;
+   /** The run-as role principals */
+   private Set runAsRoles = new HashSet();
 
-   // hash code cache
-   private int hashCode;
-
-   // The name of the anonymous run-as principal
-   private static final String ANONYMOUS_PRINCIPAL = "anonymous";
+   private static final String ANOYMOUS_PRINCIPAL = "anonymous";
 
    /**
-    * Construct an unmutable instance of an anonymous RunAsIdentity
+    * Construct an inmutable instance of a RunAsIdentity
     */
-   public RunAsIdentity(String runAsRole)
+   public RunAsIdentity(String roleName, String principalName)
    {
-      super(ANONYMOUS_PRINCIPAL, null);
+      // we don't support run-as credetials
+      super(principalName != null ? principalName : ANOYMOUS_PRINCIPAL, null);
 
-      if (runAsRole == null)
-         throw new IllegalArgumentException("runAsRole cannot be null");
+      if (roleName == null)
+         throw new IllegalArgumentException("The run-as identity must have at least one role");
 
-      this.runAsRole = new SimplePrincipal(runAsRole);
-      this.anonymousPrincipal = true;
+      runAsRoles.add(new SimplePrincipal(roleName));
    }
 
    /**
-    * Construct an unmutable instance of a RunAsIdentity
+    * Construct an inmutable instance of a RunAsIdentity
     */
-   public RunAsIdentity(String runAsRole, String runAsPrincipal, Object runAsCredential)
+   public RunAsIdentity(String roleName, String principalName, Set extraRoleNames)
    {
-      super(runAsPrincipal != null ? runAsPrincipal : ANONYMOUS_PRINCIPAL, runAsCredential);
-      
-      if (runAsRole == null)
-         throw new IllegalArgumentException("runAsRole cannot be null");
+      this(roleName, principalName);
 
-      this.runAsRole = new SimplePrincipal(runAsRole);
-      this.anonymousPrincipal = (runAsPrincipal == null);
+      // these come from the assembly-descriptor
+      if (extraRoleNames != null)
+      {
+         Iterator it = extraRoleNames.iterator();
+         while (it.hasNext())
+         {
+            String extraRoleName = (String) it.next();
+            runAsRoles.add(new SimplePrincipal(extraRoleName));
+         }
+      }
    }
 
-   public Principal getRunAsRole()
+   public Set getRunAsRoles()
    {
-      return runAsRole;
+      return new HashSet(runAsRoles);
    }
 
-   public boolean isAnonymousPrincipal()
+   public boolean doesUserHaveRole(Principal role)
    {
-      return anonymousPrincipal;
+      return runAsRoles.contains(role);
+   }
+
+   /**
+    * True if the run-as principal has any of the method roles
+    */
+   public boolean doesUserHaveRole(Set methodRoles)
+   {
+      Iterator it = methodRoles.iterator();
+      while (it.hasNext())
+      {
+         Principal role = (Principal) it.next();
+         if (doesUserHaveRole(role))
+            return true;
+      }
+      return false;
    }
 
    /**
@@ -72,32 +90,6 @@ public class RunAsIdentity extends CallerIdentity
     */
    public String toString()
    {
-      return "[role=" + runAsRole + ",principal=" + getName() + "]";
-   }
-
-   /**
-    * Indicates whether some other object is "equal to" this one.
-    */
-   public boolean equals(Object obj)
-   {
-      if (obj == null) return false;
-      if (obj instanceof RunAsIdentity)
-      {
-         RunAsIdentity other = (RunAsIdentity)obj;
-         return super.equals(obj) && runAsRole.equals(other.runAsRole);
-      }
-      return false;
-   }
-
-   /**
-    * Returns a hash code value for the object.
-    */
-   public int hashCode()
-   {
-      if (hashCode == 0)
-      {
-         hashCode = toString().hashCode();
-      }
-      return hashCode;
+      return "[roles=" + runAsRoles + ",principal=" + getName() + "]";
    }
 }

@@ -38,7 +38,7 @@ import java.util.*;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.71 $
+ * @version $Revision: 1.72 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -514,15 +514,11 @@ public abstract class EnterpriseContext
        * The current caller is either the principal associated with the method invocation
        * or the current run-as principal.
        */ 
-      public boolean isCallerInRole(String role)
+      public boolean isCallerInRole(String roleName)
       {
-         RunAsIdentity runAs = SecurityAssociation.peekRunAsIdentity();
-         if (principal == null && runAs == null)
+         RunAsIdentity runAsIdentity = SecurityAssociation.peekRunAsIdentity();
+         if (principal == null && runAsIdentity == null)
             return false;
-
-         // Caller is an anonymous run-as principal that has just one role
-         if (runAs != null && runAs.isAnonymousPrincipal())
-            return role.equals(runAs.getRunAsRole());
 
          RealmMapping rm = con.getRealmMapping();
          if (rm == null)
@@ -546,23 +542,25 @@ public abstract class EnterpriseContext
          while (it.hasNext())
          {
             SecurityRoleRefMetaData meta = (SecurityRoleRefMetaData) it.next();
-            if (meta.getName().equals(role))
+            if (meta.getName().equals(roleName))
             {
-               role = meta.getLink();
+               roleName = meta.getLink();
                matchFound = true;
                break;
             }
          }
 
          if (!matchFound)
-            log.warn("no match found for security role " + role +
+            log.warn("no match found for security role " + roleName +
                     " in the deployment descriptor.");
 
          HashSet set = new HashSet();
-         set.add(new SimplePrincipal(role));
+         set.add(new SimplePrincipal(roleName));
 
-         boolean ret = rm.doesUserHaveRole(principal, set);
-         return ret;
+         if (runAsIdentity == null)
+            return rm.doesUserHaveRole(principal, set);
+         else
+            return runAsIdentity.doesUserHaveRole(set);
       }
    
       public UserTransaction getUserTransaction() 

@@ -7,6 +7,7 @@
 package org.jboss.ejb.plugins;
 
 import java.security.Principal;
+import java.util.Set;
 
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
@@ -19,7 +20,7 @@ import org.jboss.security.RunAsIdentity;
 /** An interceptor that enforces the run-as identity declared by a bean.
 
 @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
-@version $Revision: 1.8 $
+@version $Revision: 1.9 $
 */
 public class RunAsSecurityInterceptor extends AbstractInterceptor
 {
@@ -43,8 +44,7 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
            {
               String roleName = secMetaData.getRunAsRoleName();
               String principalName = secMetaData.getRunAsPrincipalName();
-              String credential = secMetaData.getRunAsCredential();
-              runAsIdentity = new RunAsIdentity(roleName, principalName, credential);
+              runAsIdentity = new RunAsIdentity(roleName, principalName);
            }
         }
     }

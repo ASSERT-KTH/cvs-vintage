@@ -15,11 +15,7 @@ import org.w3c.dom.Element;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The top level meta data from the jboss.xml and ejb-jar.xml descriptor.
@@ -31,7 +27,7 @@ import java.util.Set;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -50,8 +46,8 @@ public class ApplicationMetaData
     * Items are instance of RelationMetaData.
     */
    private ArrayList relationships = new ArrayList();
-   /** The assembly-descriptor/security-roles */
-   private ArrayList securityRoles = new ArrayList();
+   /** The assembly-descriptor */
+   private AssemblyDescriptorMetaData assemblyDescriptor = new AssemblyDescriptorMetaData();
    /** A HashMap<String, ConfigurationMetaData> for container configs */   
    private HashMap configurations = new HashMap();
    /** A HashMap<String, InvokerProxyBindingMetaData> for invoker bindings */
@@ -115,8 +111,6 @@ public class ApplicationMetaData
       return isEJB2x() && ejbMinorVersion == 1;
    }
 
-   /**
-    */
    public Iterator getEnterpriseBeans()
    {
       return beans.iterator();
@@ -153,6 +147,11 @@ public class ApplicationMetaData
    public Iterator getRelationships()
    {
       return relationships.iterator();
+   }
+
+   public AssemblyDescriptorMetaData getAssemblyDescriptor()
+   {
+      return assemblyDescriptor;
    }
 
    public Iterator getConfigurations()
@@ -410,20 +409,19 @@ public class ApplicationMetaData
       }
 
       // read the assembly descriptor (optional)
-      Element assemblyDescriptor = getOptionalChild(element,
-         "assembly-descriptor");
-      if (assemblyDescriptor != null)
+      Element descrElement = getOptionalChild(element, "assembly-descriptor");
+      if (descrElement != null)
       {
          // set the security roles (optional)
-         iterator = getChildrenByTagName(assemblyDescriptor, "security-role");
+         iterator = getChildrenByTagName(descrElement, "security-role");
          while (iterator.hasNext())
          {
             Element securityRole = (Element) iterator.next();
             try
             {
-               String role = getElementContent(getUniqueChild(securityRole,
-                  "role-name"));
-               securityRoles.add(role);
+               String roleName = getElementContent(getUniqueChild(securityRole, "role-name"));
+               SecurityRoleMetaData srMetaData = new SecurityRoleMetaData(roleName);
+               assemblyDescriptor.addSecurityRoleMetaData(srMetaData);
             }
             catch (DeploymentException e)
             {
@@ -433,7 +431,7 @@ public class ApplicationMetaData
          }
 
          // set the method permissions (optional)
-         iterator = getChildrenByTagName(assemblyDescriptor,
+         iterator = getChildrenByTagName(descrElement,
             "method-permission");
          try
          {
@@ -502,7 +500,7 @@ public class ApplicationMetaData
          }
 
          // set the container transactions (optional)
-         iterator = getChildrenByTagName(assemblyDescriptor,
+         iterator = getChildrenByTagName(descrElement,
             "container-transaction");
          try
          {
@@ -575,7 +573,7 @@ public class ApplicationMetaData
          }
 
          // Get the exclude-list methods
-         Element excludeList = getOptionalChild(assemblyDescriptor,
+         Element excludeList = getOptionalChild(descrElement,
             "exclude-list");
          if (excludeList != null)
          {
@@ -814,6 +812,30 @@ public class ApplicationMetaData
          {
             throw new DeploymentException("Error in jboss.xml for " +
                "Bean " + ejbName + ": " + e.getMessage());
+         }
+      }
+
+      // read the assembly descriptor (optional)
+      Element descrElement = getOptionalChild(element, "assembly-descriptor");
+      if (descrElement != null)
+      {
+         // set the security roles (optional)
+         iterator = getChildrenByTagName(descrElement, "security-role");
+         while (iterator.hasNext())
+         {
+            Element securityRole = (Element) iterator.next();
+            String roleName = getElementContent(getUniqueChild(securityRole, "role-name"));
+            SecurityRoleMetaData securityRoleMetaData = assemblyDescriptor.getSecurityRoleByName(roleName);
+            if (securityRoleMetaData == null)
+               throw new DeploymentException("Security role '" + roleName + "' defined in jboss.xml" +
+                       "is not defined in ejb-jar.xml");
+
+            Iterator itPrincipalNames = getChildrenByTagName(securityRole, "principal-name");
+            while (itPrincipalNames.hasNext())
+            {
+               String principalName = getElementContent((Element)itPrincipalNames.next());
+               securityRoleMetaData.addPrincipalName(principalName);
+            }
          }
       }
 

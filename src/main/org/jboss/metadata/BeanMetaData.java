@@ -30,8 +30,9 @@ import java.util.*;
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
+ * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.57 $
+ * @version $Revision: 1.58 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -786,22 +787,9 @@ public abstract class BeanMetaData
       Element securityIdentityElement = getOptionalChild(element, "security-identity");
       if (securityIdentityElement != null)
       {
-         String runAsPrincipal = getElementContent(getOptionalChild(securityIdentityElement,
+         String runAsPrincipal = getElementContent(getUniqueChild(securityIdentityElement,
                  "run-as-principal"), securityIdentity.getRunAsPrincipalName());
-         String runAsCredential = getElementContent(getOptionalChild(securityIdentityElement,
-                 "run-as-credential"), securityIdentity.getRunAsCredential());
-         boolean runAsAnomymous = getOptionalChild(securityIdentityElement, "run-as-anonymous") != null;
-         if (runAsPrincipal != null && runAsCredential != null)
-         {
-            securityIdentity.setRunAsPrincipalName(runAsPrincipal);
-            securityIdentity.setRunAsCredential(runAsCredential);
-         }
-         else if (runAsAnomymous == true)
-         {
-            securityIdentity.setRunAsAnonymous(true);
-         }
-         else
-            throw new DeploymentException("The security-identity should define a principal/credential or a run-as-anonymous element");
+         securityIdentity.setRunAsPrincipalName(runAsPrincipal);
       }
 
       // Method attributes of the bean
@@ -887,18 +875,5 @@ public abstract class BeanMetaData
          String dependsName = getElementContent(dependsElement);
          depends.add(ObjectNameFactory.create(dependsName));
       } // end of for ()
-
    }
-
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
-
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
 }
-
-/*
-vim:ts=3:sw=3:et
-*/

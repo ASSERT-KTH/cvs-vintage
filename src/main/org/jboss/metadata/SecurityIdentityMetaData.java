@@ -6,9 +6,8 @@
  */
 package org.jboss.metadata;
 
-import org.w3c.dom.Element;
-
 import org.jboss.deployment.DeploymentException;
+import org.w3c.dom.Element;
 
 /**
  * The meta data object for the security-identity element.
@@ -22,7 +21,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class SecurityIdentityMetaData extends MetaData
 {
@@ -42,14 +41,6 @@ public class SecurityIdentityMetaData extends MetaData
     * The principal that corresponds to run-as role
     */
    private String runAsPrincipalName;
-   /**
-    * The credential that corresponds to run-as role
-    */
-   private String runAsCredential;
-   /**
-    * The run-as role is not associated with a principal/credential
-    */
-   private boolean runAsAnonymous;
 
    public String getDescription()
    {
@@ -74,26 +65,6 @@ public class SecurityIdentityMetaData extends MetaData
    public void setRunAsPrincipalName(String principalName)
    {
       this.runAsPrincipalName = principalName;
-   }
-
-   public String getRunAsCredential()
-   {
-      return runAsCredential;
-   }
-
-   public void setRunAsCredential(String runAsCredential)
-   {
-      this.runAsCredential = runAsCredential;
-   }
-
-   public boolean isRunAsAnonymous()
-   {
-      return runAsAnonymous;
-   }
-
-   public void setRunAsAnonymous(boolean runAsAnonymous)
-   {
-      this.runAsAnonymous = runAsAnonymous;
    }
 
    /**
