@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.105 2003/07/28 14:40:35 thierrylach Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.106 2003/07/28 16:53:39 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -802,6 +802,15 @@ public class ScarabUserImpl
         throws TorqueException
     {
         return internalUser.getMITLists();
+    }
+
+    /**
+     * @see ScarabUser#hasAnySearchableRMITs().
+     */
+    public boolean hasAnySearchableRMITs()
+        throws Exception    
+    {
+        return internalUser.hasAnySearchableRMITs();
     }
   
     /**

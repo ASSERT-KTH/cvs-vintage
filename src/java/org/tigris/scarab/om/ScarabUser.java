@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.87 2003/05/15 18:42:24 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.88 2003/07/28 16:53:39 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -322,6 +322,13 @@ public interface ScarabUser extends User
 
     List getMITLists()
         throws TorqueException;
+
+    /**
+     * Checks if the user can search for issues of at least one issue type
+     * in one module.
+     */
+    public boolean hasAnySearchableRMITs()
+        throws Exception;
 
     /**
      * Returns a List of RModuleIssueTypes for which the user has the

@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.85 2003/07/26 02:29:30 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.86 2003/07/28 16:53:39 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -828,9 +828,7 @@ public abstract class AbstractScarabUser
 
 
     /**
-     * @see ScarabUser#getSearchableRMITs(String, String, String, String).
-     * This list does not include
-     * RModuleIssueTypes that are part of the current MITList.
+     * @see ScarabUser#hasAnySearchableRMITs().
      */
     public boolean hasAnySearchableRMITs()
         throws Exception    
