@@ -22,11 +22,12 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiProtocolTests.java,v 1.10 2005/03/09 18:12:37 benoitf Exp $
+ * $Id: MultiProtocolTests.java,v 1.11 2005/03/10 16:48:34 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.clients;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
 import javax.naming.NameNotFoundException;
@@ -347,10 +348,11 @@ public class MultiProtocolTests extends TestCase {
     }
 
     /**
-     * Check that the bind/lookup works on flat registry like JRMP registry
-     * Bind objects/obj1 and objects2/obj2 and check that lookup returns different objects
-     * On flat registry lookup return same object as it returns only value before /
-     * Carol should handle this case to make it working even if this is a flat registry
+     * Check that the bind/lookup works on flat registry like JRMP registry Bind
+     * objects/obj1 and objects2/obj2 and check that lookup returns different
+     * objects On flat registry lookup return same object as it returns only
+     * value before / Carol should handle this case to make it working even if
+     * this is a flat registry
      */
     public void testCompositeNameId() {
 
@@ -373,21 +375,22 @@ public class MultiProtocolTests extends TestCase {
             fail("Can't bind object 1: " + e);
         }
 
-
         // lookup objects
         BasicSerializableObject bsoResult1 = null;
         BasicSerializableObject bsoResult2 = null;
 
         try {
-            bsoResult1 = (BasicSerializableObject) PortableRemoteObject.narrow(ic.lookup(id1), BasicSerializableObject.class);
-            bsoResult2 = (BasicSerializableObject) PortableRemoteObject.narrow(ic.lookup(id2), BasicSerializableObject.class);
+            bsoResult1 = (BasicSerializableObject) PortableRemoteObject.narrow(ic.lookup(id1),
+                    BasicSerializableObject.class);
+            bsoResult2 = (BasicSerializableObject) PortableRemoteObject.narrow(ic.lookup(id2),
+                    BasicSerializableObject.class);
         } catch (Exception e) {
             fail("Can't lookup object : " + e);
         }
 
         // Now compare objects and they should be different !
-        assertFalse("Should be different : obj1 = " + bsoResult1 + ", obj2 = " + bsoResult2 + ".", bsoResult1.equals(bsoResult2));
-
+        assertFalse("Should be different : obj1 = " + bsoResult1 + ", obj2 = " + bsoResult2 + ".", bsoResult1
+                .equals(bsoResult2));
 
         // Another check. List context and see if there is our two names
         try {
@@ -422,7 +425,7 @@ public class MultiProtocolTests extends TestCase {
             fail("Can't list registry : " + e);
         }
 
-        //unbind
+        // unbind
         try {
             ic.unbind(id1);
             ic.unbind(id2);
@@ -430,6 +433,56 @@ public class MultiProtocolTests extends TestCase {
             fail("Can't unbind object : " + e);
         }
 
+    }
+
+    /**
+     * Test basic commands on java:comp/env (ENC) or java:comp environment
+     */
+    public void testJavaCompEnvironment() {
+
+        String tstId = "testJavaEnvironment";
+        // bind
+        try {
+            ic.bind("java:comp/env/testJavaEnvironment", tstId);
+        } catch (Exception e) {
+            fail("Can't bind java:comp/env/testJavaEnvironment " + e);
+        }
+
+        Context javaComp = null;
+        try {
+            javaComp = (Context) ic.lookup("java:comp/");
+        } catch (NamingException e) {
+            fail("Cannot lookup java:comp : " + e);
+        }
+
+        try {
+            javaComp.lookup("env");
+        } catch (NamingException e) {
+            fail("Cannot lookup javaComp.lookup(\"env\") : " + e);
+        }
+
+        Context javaCompEnv = null;
+        try {
+            javaCompEnv = (Context) ic.lookup("java:comp/env");
+        } catch (NamingException e) {
+            fail("Cannot lookup java:comp/env : " + e);
+        }
+
+        try {
+            javaCompEnv.createSubcontext("ejb");
+        } catch (NamingException e) {
+            fail("Cannot use lookup javaCompEnv.createSubcontext(\"ejb\") " + e);
+        }
+
+        // lookup String
+        String resId = null;
+        try {
+            resId = (String) ic.lookup("java:comp/env/testJavaEnvironment");
+        } catch (Exception e) {
+            fail("Can't lookup object java:comp/env/testJavaEnvironment : " + e);
+        }
+
+        assertEquals(tstId, resId);
 
     }
 
@@ -438,10 +491,10 @@ public class MultiProtocolTests extends TestCase {
      * @return the test suite to launch
      */
     public static Test suite() {
-        return new TestSuite(MultiProtocolTests.class);
-        //In case of launching only one test
+         return new TestSuite(MultiProtocolTests.class);
+        // In case of launching only one test
         /*TestSuite testSuite = new TestSuite();
-        testSuite.addTest(new MultiProtocolTests("testCompositeNameId"));
+        testSuite.addTest(new MultiProtocolTests("testJavaCompEnvironment"));
         return testSuite;*/
 
     }
