@@ -66,7 +66,6 @@ public class EditContactDialog implements ActionListener, DocumentListener
 		//config = AddressbookConfig.get("addressbook");
 
 		init();
-
 	}
 
 	/*
@@ -229,9 +228,7 @@ public class EditContactDialog implements ActionListener, DocumentListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		String command;
-
-		command = e.getActionCommand();
+		String command = e.getActionCommand();
 
 		if (command.equals("CANCEL"))
 		{
@@ -301,7 +298,6 @@ public class EditContactDialog implements ActionListener, DocumentListener
 
 			displayNameTextField.setText(displayName);
 		}
-
 	}
 
 	public void showDialog()
@@ -326,15 +322,6 @@ public class EditContactDialog implements ActionListener, DocumentListener
 
 	public void update()
 	{
-		String str;
-
-		str = addressTextField.getText();
-
-		if (str.length() == 0)
-			okButton.setEnabled(false);
-		else
-			okButton.setEnabled(true);
-
+		okButton.setEnabled(addressTextField.getText().length() > 0);
 	}
-
 }
