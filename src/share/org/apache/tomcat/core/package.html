@@ -99,9 +99,6 @@
        <li>org.apache.tomcat.util.threads.TimeStamp: ServerSession/rm </li>
 
        <li>org.apache.tomcat.util.SimplePrincipal - Request/->facade</li>
-       <li>org.apache.tomcat.util.depend.*: Context/rm </li> 
-       <li>org.apache.tomcat.util.Counters - Handler/rm</li>
-
     </ul>
 
     Indirect dependencies:
@@ -110,5 +107,38 @@
       <li>collections.MultipMap ( http )
 
     </ul>
+
+    <h2>Sandboxing</h2>
+    
+    Tomcat core and the associated utils can be sandboxed. In order to operate,
+    it'll need the following permissions:
+
+   <h2>JDK support</h2>
+   
+   Tomcat core and the utilities it depends on are JDK1.1 compatible. 
+
+   <p>Modules may require JDK1.2 or special APIs, but it is allways possible
+     to use a more limited version that works on JDK1.1. Most modules
+     that are distributed with tomcat are JDK1.1 compatible ( but they
+     can take advantage of JDK1.2 features if detected ).</p>
+   
+   <h2>Notes</h2>
+
+   <p>Modules may store various "notes" ( the name is from apache ). Notes are 
+   internal attributes, and can be accessed by name and by index ( to 
+   avoid hashtable lookups in the critical path ).<p>
+
+   <p>Notes are used for attribute-specific informations, and are a mechanism
+     to share information between related modules.</p>
+
+   <p>The following notes are known defined:</p> 
+   <!-- XXX move this in the modules documentation - the core doesn't care -->
+
+   <ul>
+     <li>configFile - CM - ServerXmlReader - location of server.xml </li>
+     <li></li>
+     <li></li>
+   </ul>
+    
   </body>
 </html>
