@@ -48,19 +48,27 @@ package org.tigris.scarab.pages;
 
 // Turbine Stuff 
 import org.apache.turbine.pipeline.ClassicPipeline;
+import org.apache.turbine.modules.Module;
 import org.apache.turbine.RunData;
-import org.apache.turbine.services.template.TurbineTemplate;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.services.security.TurbineSecurity;
+import org.apache.turbine.services.db.om.NumberKey;
 
 // Scarab Stuff
-import org.tigris.scarab.om.BaseScarabObject;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserImpl;
+
 
 /**
     This class is responsible for building the Context up
     for the Default Page.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabPage.java,v 1.6 2001/07/13 23:18:14 jon Exp $
+    @version $Id: ScarabPage.java,v 1.7 2001/07/17 20:44:17 jmcnally Exp $
 */
 public class ScarabPage extends ClassicPipeline
 {
@@ -71,9 +79,52 @@ public class ScarabPage extends ClassicPipeline
         throws Exception 
     {
         //until we get the user and module set through normal application
-        BaseScarabObject.tempWorkAround(data, 
-            TurbineTemplate.getTemplateContext( data ));
+        tempWorkAround(data, Module.getTemplateContext( data ));
 
         super.preExecuteAction(data);
     }
+
+    /**
+     * This method gives us a user with a current module.
+     * It should be removed as soon as we have some way to set 
+     * this within the application
+     */
+    public static void tempWorkAround( RunData data, 
+                                TemplateContext context ) 
+        throws Exception
+    {
+
+        ScarabRequestTool scarab = (ScarabRequestTool)
+            context.get(ScarabConstants.SCARAB_REQUEST_TOOL);
+          
+        if ( data.getUser() == null ) 
+        {
+            ScarabUser user = (ScarabUser) TurbineSecurity.getAnonymousUser();
+            // bad bad bad...
+            ((ScarabUserImpl)user).setPrimaryKey(new NumberKey("2"));
+            user.setUserName("workarounduser");
+            scarab.setUser(user);
+            data.setUser(user);
+        }
+          
+        if ( scarab.getUser().getCurrentModule() == null ) 
+        {
+            ModuleEntity module = 
+                ModuleManager.getInstance(
+                    new NumberKey("5"));
+            scarab.getUser().setCurrentModule(module);
+        }
+    }
+
+    // a temporary fix for losing TemplateInfo !FIXME!
+    public static String getScreenTemplate(RunData data)
+    {
+        String temp = data.getParameters().getString("template",null);
+        if ( temp != null )
+        {
+            temp = temp.replace(',', '/');
+        }
+        return temp;
+    }
+
 }

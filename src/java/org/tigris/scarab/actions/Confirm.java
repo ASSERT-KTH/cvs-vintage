@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Confirm.java,v 1.12 2001/07/17 07:46:05 jon Exp $
+    @version $Id: Confirm.java,v 1.13 2001/07/17 20:44:16 jmcnally Exp $
 */
 public class Confirm extends TemplateAction
 {
@@ -101,8 +101,8 @@ public class Confirm extends TemplateAction
         {
             // grab the ScarabRequestTool object so that we can populate the internal User object
             // for redisplay of the form data on the screen
-            ApplicationTool srt = TurbinePull.getTool(context, 
-                ScarabConstants.SCARAB_REQUEST_TOOL);
+            ApplicationTool srt = 
+                getTool(context, ScarabConstants.SCARAB_REQUEST_TOOL);
             if (srt != null)
             {
                 ((ScarabRequestTool)srt).setUser((ScarabUser)data.getUser().getTemp( 

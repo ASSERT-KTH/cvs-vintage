@@ -56,13 +56,14 @@ import org.apache.turbine.services.template.TurbineTemplate;
 import org.tigris.scarab.security.ScarabSecurity;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.pages.ScarabPage;
 
 /**
     This class is responsible for building the Context up
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.7 2001/07/17 07:46:05 jon Exp $
+    @version $Id: Default.java,v 1.8 2001/07/17 20:44:17 jmcnally Exp $
 */
 public class Default extends TemplateSecureScreen
 {
@@ -79,7 +80,7 @@ public class Default extends TemplateSecureScreen
      */
     protected boolean isAuthorized( RunData data ) throws Exception
     {
-        TemplateContext context = TurbineTemplate.getTemplateContext(data);
+        TemplateContext context = getTemplateContext(data);
         ScarabSecurity security = (ScarabSecurity)context
             .get(ScarabConstants.SECURITY_TOOL);
         ScarabRequestTool scarab = (ScarabRequestTool)context
@@ -93,8 +94,7 @@ public class Default extends TemplateSecureScreen
             //       the hidden input field will have the right
             //       value for ParameterParser to parse.
             context.put( ScarabConstants.NEXT_TEMPLATE, 
-                                  data.getTemplateInfo()
-                                  .getScreenTemplate().replace('/',',') );
+               ScarabPage.getScreenTemplate(data).replace('/',',') );
             setTarget(data, "Login.vm");
             return false;
         }

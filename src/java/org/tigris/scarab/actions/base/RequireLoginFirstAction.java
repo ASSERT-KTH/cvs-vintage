@@ -53,6 +53,7 @@ import org.apache.turbine.TemplateSecureAction;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.pages.ScarabPage;
 
 /**
     All you have to do is extend this screen to require someone
@@ -61,7 +62,7 @@ import org.tigris.scarab.util.ScarabConstants;
     logged in. That part isn't a priority yet though.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RequireLoginFirstAction.java,v 1.5 2001/07/13 23:18:14 jon Exp $    
+    @version $Id: RequireLoginFirstAction.java,v 1.6 2001/07/17 20:44:16 jmcnally Exp $    
 */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -73,7 +74,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         if (!data.getUser().hasLoggedIn())
         {
             data.getParameters().add (ScarabConstants.NEXT_TEMPLATE,
-                data.getTemplateInfo().getScreenTemplate());
+                ScarabPage.getScreenTemplate(data));
             setTarget(data, "Login.vm");
             return false;
         }

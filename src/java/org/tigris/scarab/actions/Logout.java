@@ -57,7 +57,7 @@ import org.apache.turbine.services.security.TurbineSecurity;
     This class is responsible for Logging a user out of the system.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Logout.java,v 1.4 2001/07/17 01:38:40 jmcnally Exp $
+    @version $Id: Logout.java,v 1.5 2001/07/17 20:44:16 jmcnally Exp $
 */
 public class Logout extends TemplateAction
 {
@@ -70,7 +70,7 @@ public class Logout extends TemplateAction
         data.setUser (TurbineSecurity.getAnonymousUser());
         data.save();
         data.setMessage("You have been logged out!");
-        setTemplate(data, "Login.vm");
+        setTarget(data, "Login.vm");
     }
     /**
         calls doLogout()

@@ -55,13 +55,14 @@ import org.apache.turbine.services.pool.InitableRecyclable;
 
 // Scarab
 import org.tigris.scarab.om.*;
+import org.tigris.scarab.pages.ScarabPage;
 
 /**
     This class adds a ModuleManager.CURRENT_PROJECT to every link. This class is added
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.6 2001/07/17 01:52:07 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.7 2001/07/17 20:44:17 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -117,7 +118,7 @@ public class ScarabLink extends TemplateLink
      */
     public String getCurrentView()
     {
-        return data.getTemplateInfo().getScreenTemplate().replace('/', ',');
+        return ScarabPage.getScreenTemplate(data).replace('/', ',');
     }
 
     public ScarabLink setPathInfo(String key, String value)

@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.14 2001/07/17 07:46:05 jon Exp $
+    @version $Id: Login.java,v 1.15 2001/07/17 20:44:16 jmcnally Exp $
 */
 public class Login extends TemplateAction
 {
@@ -132,8 +132,8 @@ public class Login extends TemplateAction
             // check the CONFIRM_VALUE
             if (!user.isConfirmed())
             {
-                ApplicationTool srt = TurbinePull.getTool(context, 
-                    ScarabConstants.SCARAB_REQUEST_TOOL);
+                ApplicationTool srt = 
+                    getTool(context, ScarabConstants.SCARAB_REQUEST_TOOL);
                 if (srt != null)
                 {
                     user = TurbineSecurity.getUserInstance();

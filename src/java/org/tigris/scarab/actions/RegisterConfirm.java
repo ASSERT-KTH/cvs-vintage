@@ -68,7 +68,7 @@ import org.tigris.scarab.util.ScarabConstants;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.15 2001/07/17 07:46:05 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.16 2001/07/17 20:44:16 jmcnally Exp $
 */
 public class RegisterConfirm extends TemplateAction
 {
@@ -96,8 +96,8 @@ public class RegisterConfirm extends TemplateAction
             su.createNewUser();
             // grab the ScarabSystem object so that we can populate the internal User object
             // for redisplay of the form data on the screen
-            ApplicationTool srt = TurbinePull.getTool(context, 
-                ScarabConstants.SCARAB_REQUEST_TOOL);
+            ApplicationTool srt = 
+                getTool(context, ScarabConstants.SCARAB_REQUEST_TOOL);
             if (srt != null)
             {
                 ((ScarabRequestTool)srt).setUser(su);
@@ -140,8 +140,8 @@ public class RegisterConfirm extends TemplateAction
     {
         // grab the ScarabRequestTool object so that we can populate the 
         // internal User object for redisplay of the form data on the screen
-        ApplicationTool srt = TurbinePull.getTool(context, 
-            ScarabConstants.SCARAB_REQUEST_TOOL);
+        ApplicationTool srt = 
+            getTool(context, ScarabConstants.SCARAB_REQUEST_TOOL);
         if (srt != null)
         {
             ((ScarabRequestTool)srt).setUser((ScarabUser)data.getUser()
