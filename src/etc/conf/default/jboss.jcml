@@ -106,10 +106,10 @@
    -->
 
   <!-- For Message Driven Beans -->
-  <mbean code="org.jboss.spydermq.SpyderMQService" name="DefaultDomain:service=SpyderMQ" />
-  <mbean code="org.jboss.jms.jndi.JMSProviderLoader" name=":service=JMSProviderLoader,name=SpyderMQProvider">
+  <mbean code="org.jbossmq.server.JBossMQService" name="DefaultDomain:service=JBossMQ" />
+  <mbean code="org.jboss.jms.jndi.JMSProviderLoader" name=":service=JMSProviderLoader,name=JBossMQProvider">
     <attribute name="ProviderName">DefaultJMSProvider</attribute>
-    <attribute name="ProviderAdapterClass">org.jboss.jms.jndi.SpyderMQProvider</attribute>
+    <attribute name="ProviderAdapterClass">org.jboss.jms.jndi.JBossMQProvider</attribute>
   </mbean>
   <mbean code="org.jboss.jms.asf.ServerSessionPoolLoader" name=":service=ServerSessionPoolMBean,name=StdJMSPool">
     <attribute name="PoolName">StdJMSPool</attribute>

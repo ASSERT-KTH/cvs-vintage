@@ -21,7 +21,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 /**
- * SpyderMQProvider.java
+ * JBossMQProvider.java
  *
  *
  * Created: Fri Dec 22 09:34:04 2000
@@ -30,13 +30,13 @@ import javax.naming.NamingException;
  * @version
  */
 
-public class SpyderMQProvider implements JMSProviderAdapter, java.io.Serializable{
+public class JBossMQProvider implements JMSProviderAdapter, java.io.Serializable{
     public static final String TOPIC_CONNECTION_FACTORY="XATopicConnectionFactory";
     public static final String QUEUE_CONNECTION_FACTORY="XAQueueConnectionFactory";
     
     private String name;
     private String url;
-    public SpyderMQProvider() {
+    public JBossMQProvider() {
 	
     }
     
@@ -50,4 +50,4 @@ public class SpyderMQProvider implements JMSProviderAdapter, java.io.Serializabl
     }
     public  String getTopicFactoryName(){return TOPIC_CONNECTION_FACTORY;}
     public String getQueueFactoryName(){return QUEUE_CONNECTION_FACTORY;}
-} // SpyderMQProvider
+} // JBossMQProvider

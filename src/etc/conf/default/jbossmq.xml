@@ -4,14 +4,14 @@
 
 	<!-- Setup the persistence settings -->
 	<PersistenceManager>
-		<DataDirectory>../../spyderMQ/</DataDirectory>
+		<DataDirectory>../../db/jbossmq/</DataDirectory>
 	</PersistenceManager>
 
 	<!-- The physical topics known by the server -->
 	<Topic><Name>metrics</Name></Topic>
 	<Topic><Name>beancache</Name></Topic>
 	<Topic><Name>testTopic</Name></Topic>
-        <Topic><Name>testDurableTopic</Name></Topic>
+	<Topic><Name>testDurableTopic</Name></Topic>
 	<Topic><Name>example</Name></Topic>
 	<Topic><Name>bob</Name></Topic>
 
@@ -45,8 +45,8 @@
 		<QueueConnectionFactoryJNDI>QueueConnectionFactory</QueueConnectionFactoryJNDI>
 		<XATopicConnectionFactoryJNDI>XATopicConnectionFactory</XATopicConnectionFactoryJNDI>
 		<XAQueueConnectionFactoryJNDI>XAQueueConnectionFactory</XAQueueConnectionFactoryJNDI>
-		<ReceiverClass>org.spydermq.distributed.server.ConnectionReceiverOIL</ReceiverClass>
-		<ServerClass>org.spydermq.distributed.server.DistributedJMSServerOIL</ServerClass>
+		<ReceiverClass>org.jbossmq.distributed.server.ConnectionReceiverOIL</ReceiverClass>
+		<ServerClass>org.jbossmq.distributed.server.DistributedJMSServerOIL</ServerClass>
 	</InvocationLayer>
 	<InvocationLayer>
 		<Name>UIL</Name>
@@ -54,8 +54,8 @@
 		<QueueConnectionFactoryJNDI>UILQueueConnectionFactory</QueueConnectionFactoryJNDI>
 		<XATopicConnectionFactoryJNDI>UILXATopicConnectionFactory</XATopicConnectionFactoryJNDI>
 		<XAQueueConnectionFactoryJNDI>UILXAQueueConnectionFactory</XAQueueConnectionFactoryJNDI>
-		<ReceiverClass>org.spydermq.distributed.server.ConnectionReceiverUIL</ReceiverClass>
-		<ServerClass>org.spydermq.distributed.server.DistributedJMSServerUIL</ServerClass>
+		<ReceiverClass>org.jbossmq.distributed.server.ConnectionReceiverUIL</ReceiverClass>
+		<ServerClass>org.jbossmq.distributed.server.DistributedJMSServerUIL</ServerClass>
 	</InvocationLayer>
 	<InvocationLayer>
 		<Name>RMI</Name>
@@ -63,8 +63,8 @@
 		<QueueConnectionFactoryJNDI>RMIQueueConnectionFactory</QueueConnectionFactoryJNDI>
 		<XATopicConnectionFactoryJNDI>RMIXATopicConnectionFactory</XATopicConnectionFactoryJNDI>
 		<XAQueueConnectionFactoryJNDI>RMIXAQueueConnectionFactory</XAQueueConnectionFactoryJNDI>
-		<ReceiverClass>org.spydermq.distributed.server.ConnectionReceiverRMIImpl</ReceiverClass>
-		<ServerClass>org.spydermq.distributed.server.DistributedJMSServerRMIImpl</ServerClass>
+		<ReceiverClass>org.jbossmq.distributed.server.ConnectionReceiverRMIImpl</ReceiverClass>
+		<ServerClass>org.jbossmq.distributed.server.DistributedJMSServerRMIImpl</ServerClass>
 	</InvocationLayer>
 	
 </Server>
