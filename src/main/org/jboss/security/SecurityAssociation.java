@@ -32,7 +32,7 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.6 $
+@version $Revision: 1.7 $
 */
 public final class SecurityAssociation
 {
@@ -45,7 +45,16 @@ public final class SecurityAssociation
 
     static
     {
-        boolean useThreadLocal = Boolean.getBoolean("org.jboss.security.SecurityAssociation.ThreadLocal");
+        boolean useThreadLocal = false;
+        try
+        {
+           useThreadLocal = Boolean.getBoolean("org.jboss.security.SecurityAssociation.ThreadLocal");
+        }
+        catch(SecurityException e)
+        {
+           // Just use the default
+        }
+
         if( useThreadLocal )
         {
             threadPrincipal = new ThreadLocal();
