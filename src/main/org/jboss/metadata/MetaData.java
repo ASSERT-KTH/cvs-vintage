@@ -20,7 +20,7 @@ import org.jboss.deployment.DeploymentException;
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public abstract class MetaData
    implements Cloneable, XmlLoadable
@@ -179,10 +179,6 @@ public abstract class MetaData
          else if( children.item(i).getNodeType() == Node.COMMENT_NODE )
          {
             // Ignore comment nodes
-         }
-         else
-         {
-            result += children.item(i).getFirstChild();
          }
       }
       return result.trim();
