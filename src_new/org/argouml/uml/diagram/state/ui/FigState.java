@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.22 2005/01/30 20:48:12 linus Exp $
+// $Id: FigState.java,v 1.23 2005/03/17 18:25:23 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -132,6 +132,7 @@ public abstract class FigState extends FigStateVertex {
      */
     protected void updateListeners(Object newOwner) {
         super.updateListeners(newOwner);
+        Object oldOwner = getOwner();
         if (newOwner != null) {
             // register for events from all internal transitions
             Object state = newOwner;
@@ -153,7 +154,8 @@ public abstract class FigState extends FigStateVertex {
                 Model.getPump().addModelEventListener(this,
                         Model.getFacade().getExit(state));
             }
-        } else {
+        } 
+        if (oldOwner != null) {
             // lets remove all registrations since this is called
             // BEFORE the owner is changed (I hope nobody is going to
             // change that...) the owner is the oldOwner
