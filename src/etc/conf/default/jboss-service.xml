@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.30 2002/02/16 04:39:59 user57 Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.31 2002/02/24 10:24:31 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -16,7 +16,7 @@
      | if the installation is local and the configuration is from file
      | then there is no need to list the files and it should commented
    -->
-  <classpath codebase="lib/ext" archives="*"/>
+  <classpath codebase="lib" archives="*"/>
 
   <!-- ==================================================================== -->
   <!-- Class Loading                                                        -->
@@ -83,7 +83,7 @@
      | Uncomment to use Tyrex (tyrex.exolab.org) transaction manager plugin
      | instead of the org.jboss.tm.TransactionManagerService and comment out
      | the TransactionManagerService above.
-     | Make sure you have Xerces in lib/ext. At the moment JBoss does not
+     | Make sure you have Xerces in lib/. At the moment JBoss does not
      | ship Xerces as part of distribution. Version 1.x seems to work fine,
      | though 2.x should as well, use whichever you like.
      |

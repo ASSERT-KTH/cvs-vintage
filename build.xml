@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.70 2002/02/22 04:24:54 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.71 2002/02/24 10:24:31 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -202,6 +202,13 @@
       <pathelement path="${jboss.common.lib}/jboss-common.jar"/>
     </path>
 
+    <!-- System -->
+    <property name="jboss.system.root" value="${project.root}/system/output"/>
+    <property name="jboss.system.lib" value="${jboss.system.root}/lib"/>
+    <path id="jboss.system.classpath">
+      <pathelement path="${jboss.system.lib}/jboss-system.jar"/>
+    </path>
+
     <!-- Naming -->
     <property name="jboss.naming.root" value="${project.root}/naming/output"/>
     <property name="jboss.naming.lib" value="${jboss.naming.root}/lib"/>
@@ -213,6 +220,7 @@
     <path id="dependentmodule.classpath">
       <path refid="jboss.j2ee.classpath"/>
       <path refid="jboss.common.classpath"/>
+      <path refid="jboss.system.classpath"/>
       <path refid="jboss.naming.classpath"/>
     </path>
 
@@ -512,63 +520,10 @@
       </fileset>
     </jar>
 
-    <!-- 
-       | jboss-boot.jar
-       |
-       | This file is always local and contains the basic classed required
-       | to start the server and setup network service loading.
-     -->
-    <jar jarfile="${build.lib}/jboss-boot.jar" manifest="${build.etc}/manifest/version.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/Version.class"/>
-        <include name="org/jboss/system/BootstrapLogger.class"/>
-        <include name="org/jboss/system/UnifiedClassLoader*.class"/>
-        <include name="org/jboss/system/MBeanClassLoader*.class"/>
-        <include name="org/jboss/system/ServiceLibraries*.class"/>
-        <include name="org/jboss/system/Server*.class"/>
-      </fileset>
-      <fileset dir="${build.resources}">
-        <include name="org/jboss/version.properties"/>
-      </fileset>
-
-      <!-- 
-         | HACK, HACK, HACK 
-         |
-         | Allows core components to use these common classes.  Should 
-         | fix this so they can be loaded from the net.  May need to abstract
-         | Server to a Loader, whichs setsup SCL and then loads + starts Server...
-       -->
-      <fileset dir="${jboss.common.root}/classes">
-        <include name="org/jboss/util/jmx/ObjectNameFactory*.class"/>
-      </fileset>
-    </jar>
-
-    <!-- jboss-spine.jar -->
-    <jar jarfile="${build.lib}/jboss-spine.jar" manifest="${build.etc}/manifest/version.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/logging/**"/>
-        <include name="org/jboss/system/Service.class"/>
-        <include name="org/jboss/system/ServiceMBean.class"/>
-        <include name="org/jboss/system/ServiceMBeanSupport.class"/>
-        <include name="org/jboss/system/ServiceController*.class"/>
-        <include name="org/jboss/system/ServiceCreator*.class"/>
-        <include name="org/jboss/system/ServiceConfigurator.class"/>
-        <include name="org/jboss/system/ServiceContext.class"/>
-        <include name="org/jboss/system/ConfigurationException.class"/>
-        <include name="org/jboss/system/Info*"/>
-        <include name="org/jboss/deployment/MainDeployer*.class"/>
-        <include name="org/jboss/deployment/SARDeployer*.class"/>
-        <include name="org/jboss/deployment/DeploymentInfo.class"/>
-        <include name="org/jboss/deployment/DeployerMBean*.class"/>
-        <include name="org/jboss/deployment/DeploymentException.class"/>
-      </fileset>
-    </jar>
-	 
     <!-- jboss-client.jar -->
     <jar jarfile="${build.lib}/jboss-client.jar"
          manifest="${build.etc}/manifest/version.mf">
       <fileset dir="${build.classes}">
-        <include name="org/jboss/deployment/DeploymentException.class"/>
         <include name="org/jboss/proxy/**"/>
         <include name="org/jboss/invocation/Invoker.class"/>
         <include name="org/jboss/invocation/Invocation.class"/>
@@ -579,8 +534,6 @@
         <include name="org/jboss/ejb/ListCacheKey.class"/>
         <include name="org/jboss/ejb/FastKey.class"/>
         <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
-        <include name="org/jboss/logging/Logger.class"/>
-        <include name="org/jboss/logging/TracePriority.class"/>
         <include name="org/jboss/monitor/client/*.class"/>
         <include name="org/jboss/tm/TransactionPropagationContextFactory.class"/>
         <include name="org/jboss/tm/GlobalId.class"/>
@@ -594,20 +547,6 @@
     <jar jarfile="${build.lib}/boot.jar" manifest="${build.etc}/manifest/boot.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/Boot*"/>
-      </fileset>
-    </jar>
-
-    <!-- run.jar -->
-    <jar jarfile="${build.lib}/run.jar" manifest="${build.etc}/manifest/run.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/Main*"/>
-      </fileset>
-    </jar>
-
-    <!-- shutdown.jar -->
-    <jar jarfile="${build.lib}/shutdown.jar" manifest="${build.etc}/manifest/shutdown.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/Shutdown*"/>
       </fileset>
     </jar>
 
@@ -757,11 +696,10 @@
        | JBoss/Testsuite Support
      -->
 
-    <!-- deploy.jar -->
-    <jar jarfile="${build.lib}/deploy.jar"
+    <!-- testsuite-support.jar -->
+    <jar jarfile="${build.lib}/testsuite-support.jar"
          manifest="${build.etc}/manifest/deploy.mf">
       <fileset dir="${build.classes}">
-         <include name="org/jboss/deployment/**"/>
          <include name="org/jboss/jmx/service/Deployer.class"/>
          <include name="org/jboss/jmx/connector/RemoteMBeanServer**"/>
          <include name="org/jboss/jmx/connector/notification/RMI**"/>
@@ -770,9 +708,6 @@
          <include name="org/jboss/jmx/connector/rmi/RMIClientConnectorImpl*.class"/>
          <include name="org/jboss/jmx/connector/rmi/RMIConnectorImpl_Stub.class"/>
          <include name="org/jboss/jmx/connector/ConnectorFactory*.class"/>
-         <include name="org/jboss/system/Service.class"/>
-         <include name="org/jboss/system/ServiceMBean*.class"/>
-         <include name="org/jboss/logging/**"/>
          <include name="org/jboss/ejb/CacheKey.class"/>
       </fileset>
     </jar>

@@ -36,7 +36,7 @@ import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.StatefulSessionPersistenceManager;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
 import org.jboss.logging.Logger;
-import org.jboss.system.ServerConfigMBean;
+import org.jboss.system.server.ServerConfigImplMBean;
 import org.jboss.util.jmx.MBeanServerLocator;
 
 /**
@@ -47,7 +47,7 @@ import org.jboss.util.jmx.MBeanServerLocator;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -90,7 +90,7 @@ public class StatefulSessionFilePersistenceManager
 
       // Get the system data directory
       File systemDataDir = (File)
-         MBeanServerLocator.locate().getAttribute(ServerConfigMBean.OBJECT_NAME, "DataDir");
+         MBeanServerLocator.locate().getAttribute(ServerConfigImplMBean.OBJECT_NAME, "DataDir");
 
       // Gte a handle on the sysdata/sessions/ejbname directory
       dataDir = new File(new File(systemDataDir, "sessions"), ejbName);

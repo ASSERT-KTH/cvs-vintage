@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: user-service.xml,v 1.1 2002/02/16 01:33:26 user57 Exp $ -->
+<!-- $Id: user-service.xml,v 1.2 2002/02/24 10:24:31 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -10,7 +10,11 @@
 
 <server>
 
-  <classpath codebase="lib/ext" archives="*"/>
+  <!--
+     | Specify required libraries here.
+   -->
+
+  <classpath codebase="lib" archives="*"/>
   
   <!--
      | Add custom MBeans here.  MBeans should be registered under the

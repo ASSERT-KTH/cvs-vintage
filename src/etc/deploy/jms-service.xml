@@ -2,7 +2,7 @@
 
 <server>
  
-  <classpath codebase="lib/ext" archives="*"/>
+  <classpath codebase="lib" archives="*"/>
 
   <!-- ==================================================================== -->
   <!-- JMS Stuff                                                            -->

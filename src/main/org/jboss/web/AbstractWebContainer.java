@@ -56,7 +56,7 @@ import org.jboss.naming.ENCFactory;
 import org.jboss.naming.Util;
 import org.jboss.security.plugins.NullSecurityManager;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.system.ServerConfigMBean;
+import org.jboss.system.server.ServerConfigImplMBean;
 
 /** A template pattern class for web container integration into JBoss. This class
 should be subclasses by web container providers wishing to integrate their
@@ -148,7 +148,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.34 $
+@version $Revision: 1.35 $
 */
 public abstract class AbstractWebContainer 
    extends ServiceMBeanSupport 
@@ -260,7 +260,7 @@ public abstract class AbstractWebContainer
       try
       {
          File systemTmpDir = (File)
-            server.getAttribute(ServerConfigMBean.OBJECT_NAME, "TempDir");
+            server.getAttribute(ServerConfigImplMBean.OBJECT_NAME, "TempDir");
          tmpDeployDir = new File(systemTmpDir, "deploy");
       }
       catch (Exception e)
