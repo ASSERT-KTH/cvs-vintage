@@ -61,7 +61,7 @@ import org.tigris.scarab.om.ROptionOption;
  * A Testing Suite for the om.Attribute class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: AttributeOptionTest.java,v 1.1 2001/09/11 03:41:47 jon Exp $
+ * @version $Id: AttributeOptionTest.java,v 1.2 2001/09/28 21:58:55 jon Exp $
  */
 public class AttributeOptionTest extends BaseTestCase
 {
@@ -110,7 +110,7 @@ public class AttributeOptionTest extends BaseTestCase
         while (itr.hasNext())
         {
             AttributeOption val = ((AttributeOption)itr.next());
-            System.out.println (val.getWeight() + " : " + val.getName());
+            System.out.println (val);
         }
         int size = options.size();
         assertEquals(size, 8);
@@ -134,7 +134,7 @@ public class AttributeOptionTest extends BaseTestCase
         while (itr.hasNext())
         {
             AttributeOption val = ((AttributeOption)itr.next());
-            System.out.println (val.getWeight() + " : " + val.getName());
+            System.out.println (val);
         }
         int size = options.size();
         assertEquals(size, 1);
