@@ -52,7 +52,7 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
 import org.apache.torque.om.NumberKey;
-import org.apache.turbine.services.intake.IntakeTool;
+import org.apache.turbine.tool.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
 
@@ -70,7 +70,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.3 2001/08/02 07:11:36 jon Exp $
+    @version $Id: ConfigureIssueList.java,v 1.4 2001/08/09 07:59:52 jon Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {

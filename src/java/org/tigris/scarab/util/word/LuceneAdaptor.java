@@ -54,7 +54,7 @@ import org.apache.turbine.Turbine;
 import org.apache.torque.om.NumberKey;
 
 // import org.apache.fulcrum.servlet.TurbineServlet;
-import org.apache.turbine.util.StringStackBuffer;
+import org.apache.commons.util.StringStack;
 
 // Scarab classes
 import org.tigris.scarab.om.AttributeValue;
@@ -73,7 +73,7 @@ import com.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdaptor.java,v 1.6 2001/08/02 20:38:06 jmcnally Exp $
+ * @version $Id: LuceneAdaptor.java,v 1.7 2001/08/09 07:59:54 jon Exp $
  */
 public class LuceneAdaptor 
     implements SearchIndex
@@ -217,7 +217,7 @@ public class LuceneAdaptor
         IndexSearcher is = new IndexSearcher(path); 
         Hits hits = is.search(q);
         // remove duplicates
-        StringStackBuffer deduper = new StringStackBuffer();
+        StringStack deduper = new StringStack();
         for ( int i=0; i<hits.length(); i++) 
         {
             deduper.add( hits.doc(i).get(ISSUE_ID) );

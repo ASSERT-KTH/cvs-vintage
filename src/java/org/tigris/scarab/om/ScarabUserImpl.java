@@ -59,7 +59,7 @@ import org.apache.torque.util.Criteria;
 import org.apache.torque.om.BaseObject;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
-import org.apache.turbine.util.GenerateUniqueId;
+import org.apache.commons.util.GenerateUniqueId;
 
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.Issue;
@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.12 2001/08/02 22:20:40 elicia Exp $
+    @version $Id: ScarabUserImpl.java,v 1.13 2001/08/09 07:59:53 jon Exp $
 */
 public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 {    

@@ -399,6 +399,13 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Build our version of Flux easily                                   -->
+    <!-- ================================================================== -->
+    <target name="build-flux">
+        <exec executable="ant" dir="${flux.dir}"/>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Build our version of Commons-Sandbox-Util easily                   -->
     <!-- There is a dependency on stuff in here in fulcrum                  -->
     <!-- ================================================================== -->
@@ -455,6 +462,22 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Upgrade our version of Flux easily                                 -->
+    <!-- ================================================================== -->
+    <target name="upgrade-flux" depends="build-flux">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/flux*.jar"/>
+            </fileset>
+        </delete>
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${flux.dir}/bin">
+                <include name="**/flux*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Upgrade our version of Commons-Sandbox-Util easily                 -->
     <!-- ================================================================== -->
     <target name="upgrade-commons-sandbox-util" depends="build-commons-sandbox-util">
@@ -475,6 +498,7 @@
     <!-- ================================================================== -->
     <target name="upgrade-jakarta" 
             depends="upgrade-fulcrum,upgrade-torque,upgrade-turbine,
+                     upgrade-flux,
                      upgrade-commons-sandbox-util">
     </target>
 

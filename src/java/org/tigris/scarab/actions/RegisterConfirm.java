@@ -66,7 +66,7 @@ import org.tigris.scarab.util.ScarabConstants;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.18 2001/08/02 07:11:37 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.19 2001/08/09 07:59:52 jon Exp $
 */
 public class RegisterConfirm extends TemplateAction
 {
@@ -102,7 +102,7 @@ public class RegisterConfirm extends TemplateAction
             }
             
             // send an email that is for confirming the registration
-/* FIXME!!!!!!!!!!
+/* FIXME!!!!!!!!!!!
             VelocityEmail ve = new VelocityEmail();
             ve.setContext(context);
             ve.setTo(su.getFirstName() + " " + su.getLastName(), su.getEmail());
@@ -118,7 +118,7 @@ public class RegisterConfirm extends TemplateAction
                 TurbineResources.getString("scarab.email.register.template",
                     "email/Confirmation.vm"));
             ve.send();
-*/            
+*/
             // set the next template on success
             setTarget(data, nextTemplate);
         }

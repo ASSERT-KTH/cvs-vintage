@@ -59,11 +59,11 @@ import org.apache.turbine.RunData;
 import org.apache.torque.om.NumberKey; 
 import org.apache.torque.om.ObjectKey; 
 import org.apache.torque.om.NumberKey;
-import org.apache.turbine.services.intake.IntakeTool;
+import org.apache.turbine.tool.IntakeTool;
 import org.apache.torque.util.Criteria;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
-import org.apache.turbine.util.SequencedHashtable;
+import org.apache.commons.util.SequencedHashtable;
 import org.apache.turbine.util.ParameterParser;
 
 // Scarab Stuff
@@ -92,7 +92,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.18 2001/08/07 20:19:32 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.19 2001/08/09 07:59:52 jon Exp $
 */
 public class ModifyIssue extends TemplateAction
 {

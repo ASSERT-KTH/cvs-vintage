@@ -47,7 +47,7 @@ package org.tigris.scarab.util;
  */ 
 
 // Turbine
-import org.apache.turbine.util.template.TemplateLink;
+import org.apache.turbine.tool.TemplateLink;
 import org.apache.turbine.RunData;
 import org.apache.turbine.util.ParameterParser;
 import org.apache.fulcrum.pool.InitableRecyclable;
@@ -60,7 +60,7 @@ import org.tigris.scarab.pages.ScarabPage;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.9 2001/08/02 07:11:43 jon Exp $
+    @version $Id: ScarabLink.java,v 1.10 2001/08/09 07:59:53 jon Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable

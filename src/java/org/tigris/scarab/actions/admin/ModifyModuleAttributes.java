@@ -53,7 +53,7 @@ import java.util.List;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.torque.om.NumberKey;
-import org.apache.turbine.services.intake.IntakeTool;
+import org.apache.turbine.tool.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.BooleanField;
 
@@ -70,7 +70,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.8 2001/08/02 07:11:37 jon Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.9 2001/08/09 07:59:52 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {

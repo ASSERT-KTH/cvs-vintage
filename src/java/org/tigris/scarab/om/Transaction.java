@@ -48,8 +48,8 @@ package org.tigris.scarab.om;
 
 // Turbine classes
 import org.apache.torque.util.Criteria; 
-import org.apache.turbine.util.ObjectUtils;
-import org.apache.turbine.util.StringUtils;
+import org.apache.commons.util.ObjectUtils;
+import org.apache.commons.util.StringUtils;
 import org.apache.turbine.util.ParameterParser;
 import org.apache.turbine.util.Log;
 import org.apache.torque.om.Persistent;

@@ -53,7 +53,7 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.security.TurbineSecurity;
-import org.apache.turbine.util.StringUtils;
+import org.apache.commons.util.StringUtils;
 import org.apache.turbine.RunData;
 import org.apache.torque.util.Criteria;
 
@@ -61,7 +61,7 @@ import org.apache.torque.util.Criteria;
  * This class has static methods for working with a Module object
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.9 2001/08/02 07:11:42 jon Exp $
+ * @version $Id: ModuleManager.java,v 1.10 2001/08/09 07:59:53 jon Exp $
  */
 public abstract class ModuleManager
 {

@@ -60,7 +60,7 @@ import java.sql.Connection;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
-import org.apache.turbine.util.SequencedHashtable;
+import org.apache.commons.util.SequencedHashtable;
 import org.apache.torque.pool.DBConnection;
 import org.apache.torque.map.DatabaseMap;
 

@@ -31,12 +31,12 @@ This page is for editing the Attributes which are defined globally.
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th><a href="#"><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0"/></a><a href="#"><img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
-<th><a href="#">attribute name:</a></th>
-<th><a href="#">input type:</a></th>
-<th><a href="#">description:</a></th>
-<th><a href="#">author:</a></th>
-<th><a href="#">creation date:</a></th>
+<th><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0"/><img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></th>
+<th>attribute name:</th>
+<th>input type:</th>
+<th>description:</th>
+<th>author:</th>
+<th>creation date:</th>
 </tr>
 
 #set ( $attgroup = $intake.Attribute.Default ) 

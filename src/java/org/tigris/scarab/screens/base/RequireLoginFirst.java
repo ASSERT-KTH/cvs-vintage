@@ -50,7 +50,6 @@ package org.tigris.scarab.screens.base;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureScreen;
-import org.apache.turbine.services.template.TurbineTemplate;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
@@ -63,7 +62,7 @@ import org.tigris.scarab.pages.ScarabPage;
     logged in. That part isn't a priority yet though.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RequireLoginFirst.java,v 1.7 2001/07/17 21:40:30 jon Exp $    
+    @version $Id: RequireLoginFirst.java,v 1.8 2001/08/09 07:59:53 jon Exp $    
 */
 public abstract class RequireLoginFirst extends TemplateSecureScreen
 {
@@ -74,8 +73,7 @@ public abstract class RequireLoginFirst extends TemplateSecureScreen
     {
         if (!data.getUser().hasLoggedIn())
         {
-
-            TurbineTemplate.getTemplateContext(data)
+            getTemplateContext( data )
                 .put( ScarabConstants.NEXT_TEMPLATE, 
                       ScarabPage.getScreenTemplate(data) );
             setTarget(data, "Login.vm");

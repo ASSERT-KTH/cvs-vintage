@@ -49,7 +49,7 @@ package org.tigris.scarab.actions.admin;
 // Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.services.intake.IntakeTool;
+import org.apache.turbine.tool.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 
 // Scarab Stuff
@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyModule.java,v 1.5 2001/07/17 21:40:27 jon Exp $
+    @version $Id: ModifyModule.java,v 1.6 2001/08/09 07:59:52 jon Exp $
 */
 public class ModifyModule extends RequireLoginFirstAction
 {

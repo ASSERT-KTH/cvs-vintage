@@ -51,9 +51,9 @@ import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.ComboKey;
 import org.apache.turbine.RunData;
-import org.apache.turbine.services.intake.IntakeTool;
+import org.apache.turbine.modules.Module;
+import org.apache.turbine.tool.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
-import org.apache.turbine.services.template.TurbineTemplate;
 import org.apache.fulcrum.pool.Recyclable;
 
 // Scarab
@@ -175,7 +175,7 @@ public class ScarabRequestTool implements ScarabRequestScope,
 
     private IntakeTool getIntakeTool()
     {
-        return (IntakeTool)TurbineTemplate.getTemplateContext(data)
+        return (IntakeTool)Module.getTemplateContext(data)
             .get(ScarabConstants.INTAKE_TOOL);
     }
 

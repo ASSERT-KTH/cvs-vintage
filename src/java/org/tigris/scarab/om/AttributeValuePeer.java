@@ -94,7 +94,7 @@ public class AttributeValuePeer
         TurbineGlobalCacheService tgcs = 
             (TurbineGlobalCacheService)TurbineServices
             .getInstance().getService(GlobalCacheService.SERVICE_NAME);
-
+        
         String key = getClassCacheKey(className);
         Class c = null;
         try

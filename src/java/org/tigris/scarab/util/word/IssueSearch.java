@@ -55,7 +55,7 @@ import java.util.ArrayList;
 // Turbine classes
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
-import org.apache.turbine.util.SequencedHashtable;
+import org.apache.commons.util.SequencedHashtable;
 
 // Scarab classes
 import org.tigris.scarab.om.Attribute;
