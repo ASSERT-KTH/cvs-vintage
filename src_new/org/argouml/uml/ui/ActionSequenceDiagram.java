@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.23 2003/10/27 20:24:15 kataka Exp $
+// $Id: ActionSequenceDiagram.java,v 1.24 2003/10/29 22:41:27 kataka Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,10 +27,10 @@ package org.argouml.uml.ui;
 import java.awt.event.ActionEvent;
 
 import org.argouml.kernel.ProjectManager;
-import org.argouml.ui.ProjectBrowser;
+import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
-
 
 /** 
  * <p>Action to add a new sequence diagram.</p>
@@ -53,23 +53,39 @@ public class ActionSequenceDiagram extends UMLChangeAction {
         super("action.sequence-diagram", true, true);
     }
 
-    
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
-    public void actionPerformed(ActionEvent e) {       
+    public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        UMLSequenceDiagram diagram = new UMLSequenceDiagram();
-        ProjectManager.getManager().getCurrentProject().addMember(diagram);        
+        Object target = TargetManager.getInstance().getModelTarget();
+        Object owner = null;
+        if (ModelFacade.isAClassifier(target)) {
+            owner = ModelFacade.getNamespace(target);
+        } else if (ModelFacade.isAOperation(target)) {
+            owner = ModelFacade.getNamespace(target);
+        }
+        Object collaboration =
+            UmlFactory.getFactory().getCollaborations().buildCollaboration(
+                owner,
+                target);
+        UMLSequenceDiagram diagram = new UMLSequenceDiagram(collaboration);
+        ProjectManager.getManager().getCurrentProject().addMember(diagram);
         TargetManager.getInstance().setTarget(diagram);
-        ProjectBrowser.getInstance().getNavigatorPane().forceUpdate();
     }
 
     /**
      * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled(java.lang.Object[])
      */
-    public boolean shouldBeEnabled(Object[] targets) {    
-        return true;
+    public boolean shouldBeEnabled() {
+        Object target = TargetManager.getInstance().getModelTarget();
+        if (ModelFacade.isAClassifier(target)
+            || ModelFacade.isAOperation(target)) {
+            return true;
+        }
+
+        return false;
     }
+
 
 } /* end class ActionSequenceDiagram */

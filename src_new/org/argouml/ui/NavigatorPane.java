@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.58 2003/10/19 21:54:57 alexb Exp $
+// $Id: NavigatorPane.java,v 1.59 2003/10/29 22:41:25 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,21 +30,17 @@ import java.awt.Dimension;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
 
 import org.apache.log4j.Logger;
-
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.QuadrantPanel;
-import org.argouml.ui.explorer.DnDExplorerTree;
-import org.argouml.ui.explorer.ExportExplorer;
 import org.argouml.ui.explorer.ExplorerTree;
+import org.argouml.ui.explorer.ExplorerTreeModel;
+import org.argouml.ui.explorer.ExportExplorer;
+import org.argouml.ui.explorer.NameOrder;
 import org.argouml.ui.explorer.PerspectiveComboBox;
 import org.argouml.ui.explorer.PerspectiveManager;
-import org.argouml.ui.explorer.ExplorerTreeModel;
-import org.argouml.ui.explorer.NameOrder;
 import org.argouml.ui.explorer.TypeThenNameOrder;
-
 import org.tigris.toolbar.ToolBar;
 
 /**
@@ -55,7 +51,7 @@ import org.tigris.toolbar.ToolBar;
  *
  * <p>Perspectives are now built in the Perspective Manager.
  *
- * $Id: NavigatorPane.java,v 1.58 2003/10/19 21:54:57 alexb Exp $
+ * $Id: NavigatorPane.java,v 1.59 2003/10/29 22:41:25 kataka Exp $
  */
 public class NavigatorPane
     extends JPanel

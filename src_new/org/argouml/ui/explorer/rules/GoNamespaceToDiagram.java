@@ -1,4 +1,4 @@
-// $Id: GoNamespaceToDiagram.java,v 1.2 2003/10/27 22:08:56 kataka Exp $
+// $Id: GoNamespaceToDiagram.java,v 1.3 2003/10/29 22:41:26 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import org.argouml.application.api.Argo;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 /**
@@ -62,7 +63,13 @@ public class GoNamespaceToDiagram implements PerspectiveRule {
                     if (ModelFacade.isABehavioralFeature(context)) {
                     	continue;
                     }
-                }                
+                }       
+                // sequence diagrams are not shown as children of the collaboration that
+                // they show but as children of the classifier/operation the
+                // collaboration represents
+                if (diagram instanceof UMLSequenceDiagram) {
+                	continue;
+                }         
                 if (diagram.getNamespace() == namespace) {
                     returnList.add(diagram);
                 }

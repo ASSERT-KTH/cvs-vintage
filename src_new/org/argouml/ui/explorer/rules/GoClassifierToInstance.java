@@ -1,4 +1,4 @@
-// $Id: GoNamespaceToOwnedElements.java,v 1.2 2003/10/29 22:41:26 kataka Exp $
+// $Id: GoClassifierToInstance.java,v 1.1 2003/10/29 22:41:26 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,34 +22,41 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+// Original author: jaap.branderhorst@xs4all.nl
+
 package org.argouml.ui.explorer.rules;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.argouml.model.ModelFacade;
 
-public class GoNamespaceToOwnedElements implements PerspectiveRule {
+/**
+ * @author : jaap.branderhorst@xs4all.nl
+ */
+public class GoClassifierToInstance implements PerspectiveRule {
 
-    public String getRuleName() {
-        return "nsp -> owned elems";
+    /**
+     * 
+     */
+    public GoClassifierToInstance() {
+        super();
+        // TODO Auto-generated constructor stub
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
+    public String getRuleName() {
+        return "Classifier -> Instance";
+    }
+
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) {
-        
-        if (!(org.argouml.model.ModelFacade.isANamespace(parent)))
-            return null;
-        Collection ownedElements = ModelFacade.getOwnedElements(parent);
-        Iterator it = ownedElements.iterator();
-        Collection ret = new ArrayList();
-        while (it.hasNext()) {
-        	Object o = it.next();
-        	if (!ModelFacade.isACollaboration(o)) {
-        		ret.add(o);
-        	}
-        }
-        return ret;
+        if (!ModelFacade.isAClassifier(parent))
+        	return null;
+        return ModelFacade.getInstances(parent);
     }
 
 }

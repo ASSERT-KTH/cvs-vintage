@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactory.java,v 1.22 2003/10/27 20:24:14 kataka Exp $
+// $Id: CollaborationsFactory.java,v 1.23 2003/10/29 22:41:25 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -164,6 +164,23 @@ public class CollaborationsFactory extends AbstractUmlModelFactory {
         }
         throw new IllegalArgumentException("Argument is not a namespace");
 
+    }
+    
+    /**
+     * Builds a collaboration that is owned by a certain namespace and represents the
+     * given represented element.
+     * @param namespace
+     * @param representedElement
+     * @return
+     */
+    public Object buildCollaboration(Object namespace, Object representedElement) {
+    	if (ModelFacade.isANamespace(namespace) && (ModelFacade.isAClassifier(representedElement) || ModelFacade.isAObject(representedElement))) {
+    		Object collaboration = buildCollaboration(namespace);
+    		if (ModelFacade.isAClassifier(representedElement)) ModelFacade.setRepresentedClassifier(collaboration, representedElement);
+    		if (ModelFacade.isAOperation(representedElement)) ModelFacade.setRepresentedOperation(collaboration, representedElement);
+    		return collaboration;
+    	}
+		throw new IllegalArgumentException("Argument is not a namespace or element that can be represented by a collaboration");
     }
 
     /**

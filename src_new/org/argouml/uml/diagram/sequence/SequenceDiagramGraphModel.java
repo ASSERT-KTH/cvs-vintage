@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.24 2003/10/27 20:22:32 kataka Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.25 2003/10/29 22:41:27 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SequenceDiagramGraphModel.java
 // Classes: SequenceDiagramGraphModel
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SequenceDiagramGraphModel.java,v 1.24 2003/10/27 20:22:32 kataka Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.25 2003/10/29 22:41:27 kataka Exp $
 
 package org.argouml.uml.diagram.sequence;
 
@@ -38,7 +38,6 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsFactory;
@@ -100,10 +99,8 @@ public class SequenceDiagramGraphModel
 	 * project.
 	 *
 	 */
-	public SequenceDiagramGraphModel() {
-		_collaboration =
-			CollaborationsFactory.getFactory().buildCollaboration(
-				ProjectManager.getManager().getCurrentProject().getRoot());
+	public SequenceDiagramGraphModel(Object collaboration) {
+		_collaboration = collaboration;			
 	}
 
 	/** Return all edges in the graph */

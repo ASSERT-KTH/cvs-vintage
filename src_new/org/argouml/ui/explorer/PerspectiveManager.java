@@ -1,4 +1,4 @@
-// $Id: PerspectiveManager.java,v 1.5 2003/10/27 22:08:55 kataka Exp $
+// $Id: PerspectiveManager.java,v 1.6 2003/10/29 22:41:25 kataka Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,7 +119,7 @@ public class PerspectiveManager {
         packagePerspective.addRule(new GoProjectToModel());
         packagePerspective.addRule(new GoNamespaceToOwnedElements());
         packagePerspective.addRule(new GoNamespaceToDiagram());
-        packagePerspective.addRule(new GoModelToCollaboration());
+        // packagePerspective.addRule(new GoModelToCollaboration());
         packagePerspective.addRule(new GoUseCaseToExtensionPoint());
         packagePerspective.addRule(new GoClassifierToStructuralFeature());
         packagePerspective.addRule(new GoClassifierToBeh());
@@ -144,6 +144,7 @@ public class PerspectiveManager {
         packagePerspective.addRule(new GoStateToExit());
 		packagePerspective.addRule(new GoClassifierToSequenceDiagram());
 		packagePerspective.addRule(new GoOperationToSequenceDiagram());
+		packagePerspective.addRule(new GoClassifierToInstance());
         
         ExplorerPerspective diagramPerspective = 
             new ExplorerPerspective("combobox.item.diagram-centric");
