@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: Section.java,v 1.4 2001/01/03 08:28:41 tobias Exp $
+ * $Id: Section.java,v 1.5 2002/05/31 13:02:14 lqd Exp $
  */
 
 // standard imports
@@ -34,129 +34,152 @@ import java.text.ParseException;
 /**
  * Represents a section in the EJB spec.
  *
- * @author 	Juha Lindfors
- * @version $Revision: 1.4 $
- * @since  	JDK 1.3
+ * @author Juha Lindfors
+ * @version $Revision: 1.5 $
+ * @since  JDK 1.3
  */
 public class Section {
 
-    private String[] section;
-    
-    /*
-     * Constructor
-     */
-    public Section(String id) {
-    
-        try {
-            section = parseSection(id);
-        }
-        catch (ParseException e) {
-            throw new IllegalArgumentException(CONSTRUCTION_ERROR);
-        }
-    
-    }
+   private String[] section;
+   private String info;
 
-/*
- ****************************************************************************
- * 
- *      PUBLIC INSTANCE METHODS
- *
- ****************************************************************************
- */
- 
-    
-    /*
-     * Returns the section number by index
-     */
-    public String getSectionToken(int index) {
-    
-        if (section.length >= index)
-            throw new IndexOutOfBoundsException(GET_SECTION_INDEX_ERROR);
-            
-        return section[index];
-    }
- 
-    public Iterator getSectionTokens() {
-        return Collections.unmodifiableList(Arrays.asList(section)).iterator();
-    }
-    
-    /*
-     * Returns the section string
-     */
-    public String getSection() {
-        
-        StringBuffer buffer = new StringBuffer();
-        
-        for (int i = 0; i < section.length; ++i) {
-            buffer.append(section[i]);
-            
-            if (i + 1 < section.length)
-                buffer.append(".");
-        }
-        
-        return buffer.toString();
-    }
-    
-    /*
-     * String representation of this object
-     */
-    public String toString() {
-        return getSection();
-    }
-    
-    
-    
-/*
- ****************************************************************************
- *
- *      PRIVATE INSTANCE METHODS
- *
- ****************************************************************************
- */
+   /**
+    * Default Constructor
+    */
+   public Section( String id )
+   {
+      try
+      {
+         section = parseSection( id );
+      } catch ( ParseException e )
+      {
+         throw new IllegalArgumentException( CONSTRUCTION_ERROR );
+      }
+   }
 
-    /*
-     * parses the id string into section array
-     */
-    private String[] parseSection(String id) throws ParseException {
-    
-        StringTokenizer tokenizer = new StringTokenizer(id, DELIMETER);
-        int count = tokenizer.countTokens();
-        
-        String[] token = new String[count];
-        
-        for (int i = 0; tokenizer.hasMoreTokens(); ++i) {
-            String str = tokenizer.nextToken();
-            
-            token[i] = str;
-        }
-        
-        return token;
-    }
-    
-    
-/*
- ****************************************************************************
- *
- *      PRIVATE CONSTANTS
- *
- ****************************************************************************
- */
- 
-    /*
-     * Used by the parseSection() to tokenize the section id string
-     */
-    private final static String DELIMETER = ".";
-    
-    /*
-     * Error messages
-     */
-    private final static String PARSE_SECTION_ERROR =
-        "Section token cannot be longer than one character";
-    private final static String GET_SECTION_INDEX_ERROR =
-        "Section index too large";
-    private final static String CONSTRUCTION_ERROR =
-        "Cannot parse section string";
-        
+   /**
+    * Constructor that takes an additional String parameter which
+    * gives a hint about the actual error that occured.
+    */
+   public Section( String id, String info )
+   {
+      this( id );
+      this.info = info;
+   }
+
+   /*
+    ********************************************************************
+    *
+    * PUBLIC INSTANCE METHODS
+    *
+    ********************************************************************
+    */
+
+   /**
+    * Returns the section number by index
+    */
+   public String getSectionToken( int index )
+   {
+      if( section.length >= index )
+         throw new IndexOutOfBoundsException(GET_SECTION_INDEX_ERROR);
+
+      return section[index];
+   }
+
+   public Iterator getSectionTokens()
+   {
+      return Collections.unmodifiableList(Arrays.asList(section)).iterator();
+   }
+
+   /**
+    * Returns the section string
+    */
+   public String getSection() {
+      StringBuffer buffer = new StringBuffer();
+
+      for ( int i = 0; i < section.length; ++i )
+      {
+         buffer.append( section[i] );
+         if ( i + 1 < section.length )
+            buffer.append(".");
+      }
+
+      return buffer.toString();
+   }
+
+   /**
+    * String representation of this object
+    */
+   public String toString()
+   {
+      if( info != null )
+      {
+         return getSection() + ": " + info;
+      } else
+      {
+         return getSection();
+      }
+   }
+
+   public boolean hasInfo()
+   {
+      return ( info != null ) ? true : false;
+   }
+
+   public String getInfo()
+   {
+      return info;
+   }
+
+   /*
+    ********************************************************************
+    *
+    * PRIVATE INSTANCE METHODS
+    *
+    ********************************************************************
+    */
+
+   /*
+    * parses the id string into section array
+    */
+   private String[] parseSection( String id )
+      throws ParseException
+   {
+      StringTokenizer tokenizer = new StringTokenizer( id, DELIMETER );
+      String[] token = new String[ tokenizer.countTokens() ];
+
+      for (int i = 0; tokenizer.hasMoreTokens(); ++i) {
+         token[i] = tokenizer.nextToken();
+      }
+
+      return token;
+   }
+
+
+   /*
+    ********************************************************************
+    *
+    * PRIVATE CONSTANTS
+    *
+    ********************************************************************
+    */
+
+   /*
+    * Used by the parseSection() to tokenize the section id string
+    */
+   private final static String DELIMETER = ".";
+
+   /*
+    * Error messages
+    */
+   private final static String PARSE_SECTION_ERROR =
+      "Section token cannot be longer than one character";
+   private final static String GET_SECTION_INDEX_ERROR =
+      "Section index too large";
+   private final static String CONSTRUCTION_ERROR =
+      "Cannot parse section string";
 }
 
-
+/*
+vim:ts=3:sw=3:et
+*/

@@ -19,50 +19,43 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationStrategy.java,v 1.7 2001/06/18 20:01:29 mnf999 Exp $
+ * $Id: VerificationStrategy.java,v 1.8 2002/05/31 13:02:14 lqd Exp $
  */
 
 
 // standard imports
 import java.util.Iterator;
 
-
 // non-standard class dependencies
 import org.gjt.lindfors.pattern.Strategy;
 
-import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EntityMetaData;
+import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.SessionMetaData;
 
-
 /**
- * << DESCRIBE THE CLASS HERE >>
- *
- * For more detailed documentation, refer to the
- * <a href="" << INSERT DOC LINK HERE >> </a>
- *
- * @see     << OTHER RELATED CLASSES >>
- *
- * @author 	<a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
- * @version $Revision: 1.7 $
- * @since  	JDK 1.3
+ * @author  <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
+ * @version $Revision: 1.8 $
+ * @since   JDK 1.3
  */
-public interface VerificationStrategy extends Strategy {
+public interface VerificationStrategy
+   extends Strategy
+{
+   /**
+    * Does the entity check
+    */
+   abstract void checkEntity( EntityMetaData entity );
 
-    /*
-     * Does the entity check
-     */
-    abstract void checkEntity(EntityMetaData entity);
-    
-    /*
-     * Checks the session
-     */
-    abstract void checkSession(SessionMetaData session);
-    
-    /*
-     * Checks the message driven beans (EJB 2.0 only).
-     */
-    abstract void checkMessageBean(BeanMetaData session);
-    
+   /**
+    * Checks the session
+    */
+   abstract void checkSession( SessionMetaData session );
+
+   /**
+    * Checks the message driven beans (EJB 2.0 only).
+    */
+   abstract void checkMessageBean( MessageDrivenMetaData message );
 }
-
+/*
+vim:ts=3:sw=3:et
+*/

@@ -19,7 +19,7 @@ package org.jboss.verifier.event;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationEvent.java,v 1.9 2001/01/03 08:28:43 tobias Exp $
+ * $Id: VerificationEvent.java,v 1.10 2002/05/31 13:02:14 lqd Exp $
  */
 
 
@@ -36,7 +36,7 @@ import org.jboss.verifier.Section;
 /**
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since  	JDK 1.3
  */
 public class VerificationEvent extends EventObject {
@@ -47,18 +47,15 @@ public class VerificationEvent extends EventObject {
     private boolean isOk      = false;
     private boolean isWarning = false;
 
-
     /*
      * Contains a short, one line message for this event.
      */
     private String message  = "<undefined>";
-
     private String beanName = "<unnamed>";
-    
     private Method method   = null;
-    
     private String section  = null;
- 
+    private String info = null;
+
 /*
  *************************************************************************
  *
@@ -66,107 +63,140 @@ public class VerificationEvent extends EventObject {
  *
  *************************************************************************
  */
- 
 
-    /*
-     * Constructor
-     */
-    public VerificationEvent(VerificationEventGenerator source) {
-        super(source);
-    }
+   /*
+    * Constructor
+    */
+   public VerificationEvent( VerificationEventGenerator source )
+   {
+      super(source);
+   }
 
-    public VerificationEvent(VerificationEventGenerator source, String message) {
-        this(source);
-        setMessage(message);
-    }
+   public VerificationEvent( VerificationEventGenerator source,
+      String message)
+   {
+      this(source);
+      setMessage(message);
+   }
 
-    public void setState(String state) {
+   public void setState(String state)
+   {
+      if( WARNING.equalsIgnoreCase(state) )
+      {
+         isWarning = true;
+         isOk = false;
+      }
+      else if( OK.equalsIgnoreCase(state) )
+      {
+         isOk = true;
+         isWarning = false;
+      }
+      else
+      {
+         throw new IllegalArgumentException( STATE_NOT_RECOGNIZED + ": "
+            + state);
+      }
+   }
 
-        if (WARNING.equalsIgnoreCase(state)) {
-            isWarning = true;
-            isOk      = false;
-        }
+   public boolean isOk()
+   {
+      return isOk;
+   }
 
-        else if (OK.equalsIgnoreCase(state)) {
-            isOk      = true;
-            isWarning = false;
-        }
+   public boolean isWarning()
+   {
+      return isWarning;
+   }
 
-        else
-            throw new IllegalArgumentException(STATE_NOT_RECOGNIZED + ": " + state);
-    }
+   public void setMessage( String msg )
+   {
+      this.message = msg;
+   }
 
-    public boolean isOk() {
-        return isOk;
-    }
+   public void setName( String name )
+   {
+      this.beanName = name;
+   }
 
-    public boolean isWarning() {
-        return isWarning;
-    }
+   public void setSection( Section section )
+   {
+      this.section = section.getSection();
 
-    public void setMessage(String msg) {
-        this.message = msg;
-    }
+      if( section.hasInfo() )
+         this.info = section.getInfo();
+   }
 
-    public void setName(String name) {
-        this.beanName = name;
-    }
-    
-    public void setSection(Section section) {
-        this.section = section.getSection();
-    }
-    
-    public void setMethod(Method method) {
-        if (method == null) 
-            return;
-            
-        this.method = method;
-    }
-    
-    public String getMessage() {
-        return beanName + ": " + message;
-    }
+   public void setMethod(Method method)
+   {
+      if( method == null )
+         return;
 
-    public String getVerbose() {
-        
-        StringBuffer buf = new StringBuffer(512);
-        String linebreak = System.getProperty("line.separator");
-        
-        buf.append(linebreak + "Bean   : " + beanName + linebreak);
-        
-        if (method != null) {
-            String returnType = getShortClassName(method.getReturnType());
-            
-            Class[] arguments  = method.getParameterTypes();
-            String  arglist    = getCommaSeparatedList(getShortClassNames(arguments));
-            
-            Class[] exceptions = method.getExceptionTypes();
-            String  exclist    = getCommaSeparatedList(getShortClassNames(exceptions));
-            
-            buf.append("Method : " + Modifier.toString(method.getModifiers()) + " " +
-                                     returnType        + " " + 
-                                     method.getName()  + "(" +
-                                     arglist           + ")");
-            if (exclist.length() > 0)
-                buf.append(" throws " + exclist.toString());
-               
-            buf.append(linebreak);
-        }
-        
-        int offset = section.lastIndexOf(".");
-        if (!Character.isDigit(section.charAt(offset+1)))            
-             buf.append("Section: " + section.substring(0, offset)  + linebreak);
-        else buf.append("Section: " + section + linebreak);
-        
-        buf.append("Warning: " + message  + linebreak);
-        
-        return buf.toString();
-    }
+      this.method = method;
+   }
 
-    public String getName() {
-        return beanName;
-    }
-    
+   public String getMessage()
+   {
+      return beanName + ": " + message;
+   }
+
+   public String getVerbose()
+   {
+      StringBuffer buf = new StringBuffer(512);
+      String linebreak = System.getProperty("line.separator");
+
+      buf.append(linebreak + "Bean   : " + beanName + linebreak);
+
+      if( method != null )
+      {
+         String returnType = getShortClassName( method.getReturnType() );
+
+         Class[] arguments = method.getParameterTypes();
+         String arglist = getCommaSeparatedList( getShortClassNames(
+            arguments) );
+
+         Class[] exceptions = method.getExceptionTypes();
+         String  exclist = getCommaSeparatedList(getShortClassNames(
+            exceptions) );
+
+         buf.append( "Method : " + Modifier.toString(method.getModifiers()) +
+            " " + returnType        + " " +
+            method.getName()  + "(" +
+            arglist           + ")");
+
+         if ( exclist.length() > 0 )
+            buf.append(" throws " + exclist.toString());
+
+         buf.append(linebreak);
+      }
+
+      int offset = section.lastIndexOf(".");
+      if ( !Character.isDigit(section.charAt(offset+1)) )
+         buf.append("Section: " + section.substring(0, offset)  + linebreak);
+      else
+         buf.append("Section: " + section + linebreak);
+
+      buf.append( "Warning: " );
+      if( message != null )
+      {
+         buf.append( message + linebreak );
+      }
+      else
+      {
+         buf.append( "No warning message found, please file a Bug " +
+            "report." );
+      }
+
+      if( info != null )
+         buf.append("Info   : " + info + linebreak );
+
+      return buf.toString();
+   }
+
+   public String getName()
+   {
+      return beanName;
+   }
+
 /*
  *************************************************************************
  *
@@ -174,59 +204,63 @@ public class VerificationEvent extends EventObject {
  *
  *************************************************************************
  */
+   private String[] getShortClassNames( Class[] c )
+   {
+      String[] names = new String[c.length];
 
-    private String[] getShortClassNames(Class[] c) {
-        String[] names = new String[c.length];
-        
-        for (int i = 0; i < c.length; ++i)
-            names[i] = getShortClassName(c[i]);
-            
-        return names;
-    }
-    
-    /*
-     * Returns class name without package path
-     */
-    private String getShortClassName(Class c) {
+      for (int i = 0; i < c.length; ++i)
+         names[i] = getShortClassName( c[i] );
 
-        String className = c.getName();
-        int len    = className.length();
-        int offset = className.lastIndexOf(".");
-                
-        String name = "";
-                
-        if (offset == -1)
-            name = className;
-        else
-            name = className.substring(offset+1, len);
+      return names;
+   }
 
-        return name;                    
-    }
-    
-    /*
-     * builds a comma separated string list of objects
-     */
-    private String getCommaSeparatedList(Object[] list) {
-        if (list == null || list.length <= 0)
-            return "";
-        
-        if (list.length == 1)
-            return list[0].toString();
-            
-        StringBuffer buf = new StringBuffer(256);
-        buf.append(list[0]);
-        
-        for (int i = 1; i < list.length; ++i)
-            buf.append(", ").append(list[i]);
-            
-        return buf.toString();
-    }
-    
+   /*
+    * Returns class name without package path
+    */
+   private String getShortClassName( Class c )
+   {
+      String className = c.getName();
+      int len = className.length();
+      int offset = className.lastIndexOf( "." );
+
+      String name = "";
+
+      if (offset == -1)
+         name = className;
+      else
+         name = className.substring(offset+1, len);
+
+      return name;
+   }
+
+   /*
+    * builds a comma separated string list of objects
+    */
+   private String getCommaSeparatedList( Object[] list )
+   {
+      if (list == null || list.length <= 0)
+         return "";
+
+      if (list.length == 1)
+         return list[0].toString();
+
+      StringBuffer buf = new StringBuffer( 256 );
+      buf.append( list[0] );
+
+      for (int i = 1; i < list.length; ++i)
+      {
+         buf.append( ", " );
+         buf.append( list[i] );
+      }
+
+      return buf.toString();
+   }
+
     /*
      * String constants
      */
-    private final static String STATE_NOT_RECOGNIZED =
-        "Unknown event state";
-
+   private final static String STATE_NOT_RECOGNIZED = "Unknown event state";
 }
-
+/*
+vim:ts=3:sw=3:et
+*/
