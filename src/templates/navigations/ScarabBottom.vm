@@ -13,3 +13,8 @@
     </TR>
   </TABLE>
 <!-- end copyright -->
+
+<hr noshade size=1>
+
+<p>Debugging:</p>
+[ $data.Parameters ]
