@@ -165,11 +165,14 @@ dd	{
 .datatablechild th {
 	background: #c3c3c3;
 	color: #000;
-	font-weight: normal;
+	font-weight: bold;
 	}
-.datatablechild tr.a td {
-	background: #cf9;
+	
+.dividers, .dividers table, .dividers td {
+	background: #99ccff;
+	vertical-align: middle;
 	}
+
 .axial th {
 	background: #efefef;
 	text-align: right;
