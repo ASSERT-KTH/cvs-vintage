@@ -109,17 +109,11 @@
     <copy tofile="${tomcat.build}/LICENSE" file="LICENSE"/>
 
     <!-- include ant, it is used for testing and will be used for
-    configuration and few other tasks -->
+    configuration and few other tasks 
     <copy todir="${tomcat.build}/bin">
             <fileset dir="${ant.bin}"/>
-        </copy>
-
-    <!-- 
-    <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
-	  file="${ant.lib}/jaxp.jar"/>
-    <copy tofile="${tomcat.build}/lib/container/parser.jar" 
-	  file="${ant.lib}/parser.jar"/>
-     -->
+    </copy>
+    -->
 
     <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
 	  file="${jaxp.home}/jaxp.jar"/>
@@ -144,8 +138,6 @@
     <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.sh" cr="remove"/>
     <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.bat" cr="add"/>
 
-    <chmod perm="+x" file="${tomcat.build}/bin/ant"/>
-    <chmod perm="+x" file="${tomcat.build}/bin/antRun"/>
     <chmod perm="+x" file="${tomcat.build}/bin/tomcat.sh"/>
     <chmod perm="+x" file="${tomcat.build}/bin/jspc.sh"/>
     <chmod perm="+x" file="${tomcat.build}/bin/startup.sh"/>
@@ -247,7 +239,7 @@
 	   deprecation="off" 
 	   srcdir="src/share">
       <classpath>
-	<pathelement location="${tomcat.build}/lib/tomcat_util.jar"/>
+	<pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
       </classpath>
       <include name="org/apache/tomcat/core/**"/>    
     </javac>
@@ -273,8 +265,8 @@
 	   deprecation="off" 
 	   srcdir="src/share">
       <classpath>
-	<pathelement location="${tomcat.build}/lib/tomcat_util.jar"/>
-	<pathelement location="${tomcat.build}/lib/tomcat_core.jar"/>
+	<pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
+	<pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
       </classpath>
       <include name="org/apache/tomcat/startup/**"/>    
       <exclude name="**/EmbededTomcat.java" unless="jdk12.present"/>
@@ -282,6 +274,12 @@
     <jar jarfile="${tomcat.build}/lib/container/tomcat-startup.jar" 
 	 basedir="${tomcat.build}/classes"
 	 manifest="src/build/manifests/manifest.startup"> 
+      <include name="org/apache/tomcat/startup/**"/>    
+    </jar>
+
+    <jar jarfile="${tomcat.build}/lib/etomcat.jar" 
+	 basedir="${tomcat.build}/classes"
+	 manifest="src/build/manifests/manifest.embedded"> 
       <include name="org/apache/tomcat/startup/**"/>    
     </jar>
   </target>
@@ -296,8 +294,8 @@
 	   srcdir="src/facade22">
       <classpath>
 	<pathelement location="${servlet22.jar}"/>
-	<pathelement location="${tomcat.build}/lib/tomcat_util.jar"/>
-	<pathelement location="${tomcat.build}/lib/tomcat_core.jar"/>
+	<pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
+	<pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
       </classpath>
       <include name="org/apache/tomcat/facade/**"/>    
     </javac>
@@ -316,8 +314,8 @@
 	   optimize="${optimize}" 
 	   deprecation="off">
       <classpath>
-	<pathelement location="${tomcat.build}/lib/tomcat_util.jar"/>
-	<pathelement location="${tomcat.build}/lib/tomcat_core.jar"/>
+	<pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
+	<pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
       </classpath>
       <include name="org/apache/tomcat/modules/**"/>    
       <!-- <exclude 
@@ -370,7 +368,8 @@
     </jar>
 
     <jar jarfile="${tomcat.build}/lib/container/jasper.jar" 
-	 basedir="${tomcat.build}/classes" >
+	 basedir="${tomcat.build}/classes" 
+	 manifest="src/build/manifests/manifest.jspc" >
       <include name="org/apache/jasper/**"/> 
       <!-- 
       <exclude name="org/apache/jasper/Constants.class"/> 
@@ -442,7 +441,7 @@
 	 basedir="${tomcat.build}/webapps/admin/WEB-INF/classes"> 
       <include name="org/apache/tomcat/util/test/**"/>    
     </jar>
-    <delete dir="${tomcat.build}/webapps/admin/WEB-INF/classes/org" />
+    <!-- delete dir="${tomcat.build}/webapps/admin/WEB-INF/classes/org" / -->
       
   </target>
 
