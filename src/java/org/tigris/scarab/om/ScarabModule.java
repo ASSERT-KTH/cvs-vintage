@@ -48,6 +48,7 @@ package org.tigris.scarab.om;
 
 // JDK classes
 import java.util.List;
+import java.util.Vector;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Map;
@@ -123,6 +124,22 @@ public class ScarabModule
         issue.setCreatedDate(now);
         issue.setDeleted(false);
         return issue;
+    }
+
+    /**
+     * List of Query objects associated with this module.
+     *
+     */
+    public Vector getQueries()
+        throws Exception
+    {
+        Vector queries = null;
+        Criteria crit = new Criteria(2)
+            .add(QueryPeer.MODULE_ID, getModuleId())
+            .add(QueryPeer.DELETED, 0);
+        queries = QueryPeer.doSelect(crit);
+
+        return queries;
     }
 
     /**
