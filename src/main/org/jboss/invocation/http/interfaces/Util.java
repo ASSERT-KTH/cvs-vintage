@@ -7,9 +7,6 @@
 package org.jboss.invocation.http.interfaces;
 
 import java.io.InputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.ObjectOutputStream;
@@ -18,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.net.ssl.HttpsURLConnection;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledValue;
 import org.jboss.logging.Logger;
@@ -26,7 +24,7 @@ import org.jboss.security.SecurityAssociationAuthenticator;
 /** Common client utility methods
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
 */
 public class Util
 {
@@ -60,12 +58,12 @@ public class Util
        full usage of HTTP 1.1 features, pooling, etc.
        */
       HttpURLConnection conn = (HttpURLConnection) externalURL.openConnection();
-      if( conn instanceof com.sun.net.ssl.HttpsURLConnection )
+      if( conn instanceof HttpsURLConnection )
       {
          // See if the org.jboss.security.ignoreHttpsHost property is set
          if( Boolean.getBoolean("org.jboss.security.ignoreHttpsHost") == true )
          {
-            com.sun.net.ssl.HttpsURLConnection sconn = (com.sun.net.ssl.HttpsURLConnection) conn;
+            HttpsURLConnection sconn = (HttpsURLConnection) conn;
             AnyhostVerifier verifier = new AnyhostVerifier();
             sconn.setHostnameVerifier(verifier);
          }
