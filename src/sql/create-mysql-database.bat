@@ -23,9 +23,6 @@ mysql scarab < mysql-turbine-id-table-init.sql
 echo Importing mysql-scarab-id-table-init.sql...
 mysql scarab < mysql-scarab-id-table-init.sql
 
-echo Importing mysql-scarab-security.sql...
-mysql scarab < mysql-scarab-security.sql
-
 echo Importing mysql-scarab-required-data.sql...
 mysql scarab < mysql-scarab-required-data.sql
 
@@ -34,4 +31,7 @@ mysql scarab < mysql-scarab-default-data.sql
 
 echo Importing mysql-scarab-sample-data.sql...
 mysql scarab < mysql-scarab-sample-data.sql
+
+echo Importing mysql-scarab-security.sql...
+mysql scarab < mysql-scarab-security.sql
 
