@@ -9,18 +9,21 @@ package org.jboss.ejb.plugins;
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
+import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.metadata.AssemblyDescriptorMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityIdentityMetaData;
-import org.jboss.metadata.AssemblyDescriptorMetaData;
-import org.jboss.metadata.ApplicationMetaData;
-import org.jboss.security.*;
-import org.jboss.mx.util.MBeanServerLocator;
+import org.jboss.security.AnybodyPrincipal;
+import org.jboss.security.AuthenticationManager;
+import org.jboss.security.RealmMapping;
+import org.jboss.security.RunAsIdentity;
+import org.jboss.security.SecurityAssociation;
+import org.jboss.security.SecurityRolesAssociation;
 
 import javax.ejb.EJBException;
-import javax.management.MBeanServer;
 import java.security.Principal;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The SecurityInterceptor is where the EJB 2.0 declarative security model
@@ -29,7 +32,7 @@ import java.util.Map;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -52,9 +55,6 @@ public class SecurityInterceptor extends AbstractInterceptor
 
    // A map of SecurityRolesMetaData from jboss.xml
    protected Map securityRoles;
-
-   // The unauthenticated principal
-   protected Principal unauthPrincipal;
 
    /** Called by the super class to set the container to which this interceptor
     belongs. We obtain the security manager and runAs identity to use here.
@@ -82,7 +82,6 @@ public class SecurityInterceptor extends AbstractInterceptor
 
          securityManager = container.getSecurityManager();
          realmMapping = container.getRealmMapping();
-         unauthPrincipal = new SimplePrincipal(applicationMetaData.getUnauthenticatedPrincipal());
       }
    }
 
@@ -179,34 +178,22 @@ public class SecurityInterceptor extends AbstractInterceptor
       RunAsIdentity callerRunAsIdentity = SecurityAssociation.peekRunAsIdentity();
       if (callerRunAsIdentity == null)
       {
-         if (principal != null && principal.equals(unauthPrincipal) == false)
+         // Check the security info from the method invocation
+         SecurityRolesAssociation.setSecurityRoles(securityRoles);
+         if (securityManager.isValid(principal, credential) == false)
          {
-            // Check the security info from the method invocation
-            SecurityRolesAssociation.setSecurityRoles(securityRoles);
-            if (securityManager.isValid(principal, credential) == false)
-            {
-               String msg = "Authentication exception, principal=" + principal;
-               log.error(msg);
-               SecurityException e = new SecurityException(msg);
-               throw new EJBException("checkSecurityAssociation", e);
-            }
-            else
-            {
-               SecurityAssociation.setPrincipal(principal);
-               SecurityAssociation.setCredential(credential);
-               if (trace)
-               {
-                  log.trace("Authenticated  principal=" + principal);
-               }
-            }
+            String msg = "Authentication exception, principal=" + principal;
+            log.error(msg);
+            SecurityException e = new SecurityException(msg);
+            throw new EJBException("checkSecurityAssociation", e);
          }
          else
          {
-            principal = unauthPrincipal;
             SecurityAssociation.setPrincipal(principal);
+            SecurityAssociation.setCredential(credential);
             if (trace)
             {
-               log.trace("Unauthenticated  principal=" + principal);
+               log.trace("Authenticated  principal=" + principal);
             }
          }
       }
