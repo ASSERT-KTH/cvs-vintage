@@ -47,6 +47,8 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.tigris.scarab.test.BaseTestCase;
 import org.tigris.scarab.om.IssueType;
@@ -58,10 +60,12 @@ import org.apache.torque.om.NumberKey;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.10 2002/03/12 01:35:12 elicia Exp $
+ * @version $Id: IssueTest.java,v 1.11 2002/03/13 00:20:11 elicia Exp $
  */
 public class IssueTest extends BaseTestCase
 {
+    private List issueList = new ArrayList();;
+
     /**
      * Creates a new instance.
      *
@@ -79,7 +83,14 @@ public class IssueTest extends BaseTestCase
     protected void runTest()
         throws Throwable
     {
+        createTestIssues(); 
+        loopThruTestIssues();
+    }
+    
+    private void createTestIssues() throws Exception
+    {
         // loops thru module and issue type combinations
+        // creates an issue in each combination
         for (int i = 1;i<nbrDfltModules+1;i++)
         {
             for (int j = 1;j<nbrDfltIssueTypes+1;j++)
@@ -87,18 +98,36 @@ public class IssueTest extends BaseTestCase
                 Issue issue = new Issue();
                 ModuleEntity module = (ModuleEntity) ScarabModulePeer
                     .retrieveByPK(new NumberKey(Integer.toString(i)));
-                System.out.println("MODULE=" + module.getName());
                 issue.setModule(module);
                 IssueType issueType = (IssueType)IssueTypePeer
                     .retrieveByPK(new NumberKey(Integer.toString(j)));
-                System.out.println("ISSUE TYPE = " + issueType.getName());
                 issue.setIssueType(issueType);
-                testGetAllAttributeValuesMap(issue);
-                testGetUniqueId(issue);
+                issueList.add(issue);
             }
         }
     }
-    
+
+    private void loopThruTestIssues() throws Exception
+    {
+        for (int i = 1;i<issueList.size();i++)
+        {
+            Issue issue = (Issue)issueList.get(i);
+            System.out.println("MODULE=" + issue.getModule().getName());
+            System.out.println("ISSUE TYPE = " + issue.getIssueType()
+                                                      .getName());
+            testGetUniqueId(issue);
+            testGetAllAttributeValuesMap(issue);
+         }
+    }
+
+    private void testGetUniqueId(Issue issue) throws Exception
+    {
+
+        String strUniqueID = null;
+        strUniqueID = issue.getUniqueId();
+        System.out.println ("Unique id: " + strUniqueID);   
+    }
+
     private void testGetAllAttributeValuesMap(Issue issue) throws Exception
     {
         System.out.println ("testGetAllAttributeValuesMap()");
@@ -121,11 +150,4 @@ public class IssueTest extends BaseTestCase
         assertEquals (expectedSize, map.size());
     }
 
-    private void testGetUniqueId(Issue issue) throws Exception
-    {
-
-        String strUniqueID = null;
-        strUniqueID = issue.getUniqueId();
-        System.out.println ("Unique id: " + strUniqueID);   
-    }
 }
