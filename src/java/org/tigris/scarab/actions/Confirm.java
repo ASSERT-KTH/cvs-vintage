@@ -61,6 +61,7 @@ import org.apache.turbine.modules.actions.*;
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.peer.ScarabUserPeer;
+import org.tigris.scarab.system.*;
 import org.tigris.scarab.util.*;
 
 /**
@@ -68,7 +69,7 @@ import org.tigris.scarab.util.*;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Confirm.java,v 1.2 2001/01/04 03:02:10 jon Exp $
+    @version $Id: Confirm.java,v 1.3 2001/01/23 07:30:09 jon Exp $
 */
 public class Confirm extends VelocityAction
 {
@@ -78,9 +79,13 @@ public class Confirm extends VelocityAction
     */
     public void doConfirm( RunData data, Context context ) throws Exception
     {
-        String username = data.getParameters().getString ( "email", "" );
-        String confirm = data.getParameters().getString ( "confirm", "" );
-        
+        String template = data.getParameters().getString(ScarabConstants.TEMPLATE, null);
+        String nextTemplate = data.getParameters().getString(
+            ScarabConstants.NEXT_TEMPLATE, template );
+
+        String username = data.getParameters().getString ( "Email", "" );
+        String confirm = data.getParameters().getString ( "Confirmed", "" );
+
         // check to see if the user's confirmation code is valid.
         if (ScarabUser.checkConfirmationCode(username, confirm))
         {
@@ -89,18 +94,26 @@ public class Confirm extends VelocityAction
             {
                 // NO PROBLEMS! :-)
                 data.setMessage("Your account has been confirmed. Welcome to Scarab!");
+                setTemplate(data, nextTemplate);
             }
             else
             {
                 data.setMessage("Your account has not been confirmed. There has been an error.");
-                setTemplate(data, "Confirm.vm");
+                setTemplate(data, template);
             }
         }
         else // we don't have confirmation! :-(
         {
-            context.put ("email", username);
-            data.setMessage("Sorry, that email address and confirmation code is invalid.");
-            setTemplate(data, "Confirm.vm");
+            // grab the ScarabSystem object so that we can populate the internal User object
+            // for redisplay of the form data on the screen
+            ScarabSystem ss = (ScarabSystem) context.get (ScarabConstants.SCARAB_SYSTEM);
+            if (ss != null)
+            {
+                ss.setUser((User)data.getUser().getTemp(ScarabConstants.SESSION_REGISTER));
+            }
+        
+            data.setMessage("Sorry, that email address and/or confirmation code is invalid.");
+            setTemplate(data, template);
         }
     }
     /**
@@ -108,7 +121,8 @@ public class Confirm extends VelocityAction
     */
     public void doCancel( RunData data, Context context ) throws Exception
     {
-        setTemplate(data, "Login.vm");
+        setTemplate(data, data.getParameters().getString(
+                ScarabConstants.CANCEL_TEMPLATE, "Login.vm"));
     }
     /**
         calls doCancel()
