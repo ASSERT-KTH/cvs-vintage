@@ -1,13 +1,13 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/SessionIdGenerator.java,v 1.2 2000/05/23 00:43:47 jon Exp $
- * $Revision: 1.2 $
- * $Date: 2000/05/23 00:43:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/SessionIdGenerator.java,v 1.3 2000/06/17 00:24:45 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/06/17 00:24:45 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -23,15 +23,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -59,17 +59,17 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.util;
 
 /**
- * This class generates a unique 10+ character id. This is good 
+ * This class generates a unique 10+ character id. This is good
  * for authenticating users or tracking users around.
  * <p>
  * This code was borrowed from Apache JServ.JServServletManager.java.
- * It is what Apache JServ uses to generate session ids for users. 
+ * It is what Apache JServ uses to generate session ids for users.
  * Unfortunately, it was not included in Apache JServ as a class
  * so I had to create one here in order to use it.
  *
@@ -89,7 +89,7 @@ public class SessionIdGenerator {
      */
     static private int session_count = 0;
     static private long lastTimeVal = 0;
-    static private java.util.Random randomSource = new java.util.Random();
+    static private java.util.Random randomSource = new java.security.SecureRandom();
 
     // MAX_RADIX is 36
     /*
@@ -118,7 +118,7 @@ public class SessionIdGenerator {
     static synchronized public String getIdentifier (String jsIdent)
     {
         StringBuffer sessionId = new StringBuffer();
-    
+
         // random value ..
         long n = randomSource.nextLong();
         if (n < 0) n = -n;
@@ -128,13 +128,13 @@ public class SessionIdGenerator {
         n += maxRandomLen;
         sessionId.append (Long.toString(n, Character.MAX_RADIX)
                   .substring(1));
-    
+
         long timeVal = (System.currentTimeMillis() / ticDifference);
         // cut..
         timeVal %= maxSessionLifespanTics;
         // padding, see above
         timeVal += maxSessionLifespanTics;
-    
+
         sessionId.append (Long.toString (timeVal, Character.MAX_RADIX)
                   .substring(1));
 
@@ -148,9 +148,9 @@ public class SessionIdGenerator {
           lastTimeVal = timeVal;
           session_count = 0;
         }
-        sessionId.append (Long.toString (++session_count, 
+        sessionId.append (Long.toString (++session_count,
                      Character.MAX_RADIX));
-        
+
         if (jsIdent != null && jsIdent.length() > 0) {
             return sessionId.toString()+"."+jsIdent;
         }
