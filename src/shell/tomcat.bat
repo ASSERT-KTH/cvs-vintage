@@ -29,7 +29,7 @@ rem         its "classpath" internally.  To add your classes to those of
 rem         Tomcat, refer to the Tomcat Users Guide (tomcat_ug.html found
 rem         in the "doc" directory.
 rem
-rem $Id: tomcat.bat,v 1.37 2001/08/21 05:52:12 costin Exp $
+rem $Id: tomcat.bat,v 1.38 2001/08/24 03:16:53 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -47,6 +47,8 @@ if not "%OS%" == "Windows_NT" goto cont
 set _NULL=
 set _CONTAINER=container
 :cont
+rem main startup class
+set _MAIN=org.apache.tomcat.startup.Main
 
 rem ----- Verify and Set Required Environment Variables ---------------------
 
@@ -101,11 +103,17 @@ if "%1" == "stop" goto stopServer
 if "%1" == "run" goto runServer
 if "%1" == "env" goto doEnv
 if "%1" == "jspc" goto runJspc
+if "%1" == "enableAdmin" goto enableAdmin
+if "%1" == "estart" goto estart
 
 :doUsage
 echo Usage:  tomcat (  env ^| jspc ^| run ^| start ^| stop )
 echo Commands:
+echo   enableAdmin - Trust the admin web application,
+echo                 i.e. rewrites conf/apps-admin.xml with trusted="true"
 echo   env -   Set up environment variables that Tomcat would use
+echo   estart - Start Tomcat using the/your EmbeddedTomcat class which
+echo            uses a hardcoded set of modules
 echo   jspc -  Run JSPC in Tomcat's environment
 echo   run -   Start Tomcat in the current window
 echo   start - Start Tomcat in a separate window
@@ -115,33 +123,50 @@ goto cleanup
 :startServer
 echo Starting Tomcat in new window
 if "%2" == "-security" goto startSecure
-%_STARTJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Main start %2 %3 %4 %5 %6 %7 %8 %9
+%_STARTJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :startSecure
 echo Starting Tomcat with a SecurityManager
-%_SECSTARTJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Main start -sandbox %3 %4 %5 %6 %7 %8 %9
+%_SECSTARTJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start -sandbox %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runServer
+rem Backwards compatibility for enableAdmin
+if "%2" == "enableAdmin" goto oldEnbAdmin
+if "%2" == "-enableAdmin" goto oldEnbAdmin
 rem Running Tomcat in this window
 if "%2" == "-security" goto runSecure
-%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Main start %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runSecure
 rem Running Tomcat with a SecurityManager
-%_RUNJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Main start -sandbox %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start -sandbox %3 %4 %5 %6 %7 %8 %9
+goto cleanup
+
+:enableAdmin
+rem Run enableAdmin
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% enableAdmin %2 %3 %4 %5 %6 %7 %8 %9
+goto cleanup
+
+:oldEnbAdmin
+rem Run enableAdmin
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% enableAdmin %3 %4 %5 %6 %7 %8 %9
+goto cleanup
+
+:estart
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% estart %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :stopServer
 rem Stopping the Tomcat Server
-%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Main stop %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% stop %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runJspc
 rem Run JSPC in Tomcat's Environment
-%_RUNJAVA% %JSPC_OPTS% -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Main jspc %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %JSPC_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% jspc %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 rem ----- Set CLASSPATH to Tomcat's Runtime Environment ----------------------- 
@@ -198,11 +223,13 @@ goto finish
 rem ----- Restore Environment Variables ---------------------------------------
 
 :cleanup
-set TEST_JAR=
 set _LIBJARS=
 set _SECSTARTJAVA=
 set _STARTJAVA=
 set _RUNJAVA=
+SET _MAIN=
+SET _CONTAINER=
+Set _NULL=
 set CLASSPATH=%_CLASSPATH%
 set _CLASSPATH=
 set TOMCAT_HOME=%_TOMCAT_HOME%
