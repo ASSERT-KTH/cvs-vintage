@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Constants.java,v 1.4 1999/10/20 11:20:08 akv Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/20 11:20:08 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Constants.java,v 1.5 1999/10/20 21:20:29 mandar Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/10/20 21:20:29 $
  *
  * ====================================================================
  * 
@@ -157,6 +157,14 @@ public class Constants {
     public static final String
         TAGLIB_DTD_RESOURCE = "/org/apache/jasper/resources/web-jsptaglib_1_1.dtd";
 
+    /**
+     * ID and location of the DTD for web-app deployment descriptors. 
+     */
+    public static final String 
+        WEBAPP_DTD_PUBLIC_ID = "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN";
+    public static final String
+        WEBAPP_DTD_RESOURCE = "/org/apache/tomcat/deployment/web.dtd";
+    
     /**
      * Default URLs to download the pluging for Netscape and IE.
      */

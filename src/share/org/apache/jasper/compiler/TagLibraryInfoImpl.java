@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.2 1999/10/20 11:22:55 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:22:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.3 1999/10/20 21:20:36 mandar Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/20 21:20:36 $
  *
  * ====================================================================
  * 
@@ -98,6 +98,7 @@ import org.apache.jasper.runtime.JspLoader;
  */
 public class TagLibraryInfoImpl extends TagLibraryInfo {
     static private final String TLD = "META-INF/taglib.tld";
+    static private final String WEBAPP_INF = "/WEB-INF/web.xml";
 
     XmlDocument tld;
 
@@ -131,147 +132,176 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
         return sw.toString();
     }
     
-    TagLibraryInfoImpl(JspEngineContext ctxt, String prefix, String uri) 
+    TagLibraryInfoImpl(JspEngineContext ctxt, String prefix, String uriIn) 
         throws IOException, JasperException
     {
-        super(prefix, uri);
+	// XXX. should super be initialized with "dummy" uri?
+        super(prefix, uriIn);
 
+	this.ctxt = ctxt;
         ZipInputStream zin;
         InputStream in = null;
         URL url = null;
         boolean relativeURL = false;
-        
-        if (!uri.startsWith("/")) {
-            url = new URL(uri);
-            in = url.openStream();
-        } else {
-            relativeURL = true;
-            in = ctxt.getServletContext().getResourceAsStream(uri);
-        }
-        
-        zin = new ZipInputStream(in);
-        this.jarEntries = new Hashtable();
-        this.ctxt = ctxt;
+	this.uri = uriIn;
 
-        // First copy this file into our work directory! 
-        {
-            File jspFile = new File(ctxt.getJspFile());
-            String jarFileName = ctxt.getOutputDir()+File.separatorChar+
-                jspFile.getParent().toString();
-            File jspDir = new File(jarFileName);
-            jspDir.mkdirs();
+	if (!uriIn.endsWith("jar")) {
+	    // Parse web.xml.
+	    InputStream is = ctxt.getServletContext().getResourceAsStream(WEBAPP_INF);
+	    
+	    if (is == null) {
+		throw new IOException(Constants.getString("jsp.error.webxml_not_found"));
+	    }
+	    
+	    URL dtdURL =  this.getClass().getResource(Constants.WEBAPP_DTD_RESOURCE);
+	    XmlDocument webtld = JspUtil.parseXMLDoc(is, dtdURL,
+						     Constants.WEBAPP_DTD_PUBLIC_ID);
+	    NodeList nList =  webtld.getElementsByTagName("taglib");
+	    
+	    // Check if a macthing "taglib" exists.
+	    // XXX. Some changes that akv recommended.
+	    if (nList.getLength() != 0) {
+		for(int i = 0; i < nList.getLength(); i++) {
+		    Element e = (Element) nList.item(i);
+		    NodeList nodeL = e.getChildNodes();
+		    String tagLoc = null;
+		    boolean match = false;
+		    for(int j = 0; j < nodeL.getLength(); j++) {
+			Element em = (Element) nodeL.item(j);
+			String tname = em.getNodeName();
+			if (tname.equals("taglib-location")) {
+			    tagLoc = ((Text)em.getFirstChild()).getData();
+			}
+			if (tname.equals("taglib-uri")) {
+			    String tmpUri =  ((Text)em.getFirstChild()).getData();
+			    if (tmpUri != null && tmpUri.equals(uriIn))
+				match = true;
+			}
+		    }
+		if (match == true && tagLoc != null) this.uri = tagLoc;
+		}
+	    }
+	    
+	    // "uri" should point to the correct tld location.
+	    System.out.println ("modified uri = " + this.uri);
+	    if (!uri.startsWith("/")) {
+		url = new URL(uri);
+		in = url.openStream();
+	    } else {
+		relativeURL = true;
+		in = ctxt.getServletContext().getResourceAsStream(uri);
+	    }
+	    
+	    if (in == null)
+		throw new JasperException(Constants.getString("jsp.error.tld_not_found",
+							      new Object[] {TLD}));
+	    
+	    //Now parse the tld.
+	    parseTLD(in);
+	}
+	    
+	// FIXME Take this stuff out when taglib changes are thoroughly tested.
+	if (uriIn.endsWith("jar")) {
+	    
+	    if (!uriIn.startsWith("/")) {
+		url = new URL(uriIn);
+		in = url.openStream();
+	    } else {
+		relativeURL = true;
+		in = ctxt.getServletContext().getResourceAsStream(uriIn);
+	    }
+	    
+	    zin = new ZipInputStream(in);
+	    this.jarEntries = new Hashtable();
+	    this.ctxt = ctxt;
+	    
+	    // First copy this file into our work directory! 
+	    {
+		File jspFile = new File(ctxt.getJspFile());
+		String jarFileName = ctxt.getOutputDir()+File.separatorChar+
+		    jspFile.getParent().toString();
+		File jspDir = new File(jarFileName);
+		jspDir.mkdirs();
+	    
+		if (relativeURL)
+		    jarFileName = jarFileName+File.separatorChar+new File(uri).getName();
+		else                    
+		    jarFileName = jarFileName+File.separatorChar+
+			new File(url.getFile()).getName();
+	    
+		Constants.message("jsp.message.copyinguri", 
+	                          new Object[] { uri, jarFileName },
+				  Constants.MED_VERBOSITY);
+	    
+		if (relativeURL)
+		    copy(ctxt.getServletContext().getResourceAsStream(uri),
+			 jarFileName);
+		else
+		    copy(url.openStream(), jarFileName);
+	    
+	        ctxt.getClassLoader().addJar(jarFileName);
+	    }
+	    
+	    
+	    boolean tldFound = false;
+	    ZipEntry entry;
+	    while ((entry = zin.getNextEntry()) != null) {
+		if (entry.getName().equals(TLD)) {
+		    /*******
+		     * This hack is necessary because XML reads until the end 
+		     * of an inputstream -- does not use available()
+		     * -- and closes the inputstream when it can't
+		     * read no more.
+		     */
+		    
+		    // BEGIN HACK
+		    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		    int b;
+		    while (zin.available() != 0) {
+			b = zin.read();
+			if (b == -1)
+			    break;
+			baos.write(b);
+		    }
 
-            if (relativeURL)
-                jarFileName = jarFileName+File.separatorChar+new File(uri).getName();
-            else                    
-                jarFileName = jarFileName+File.separatorChar+
-                    new File(url.getFile()).getName();
-
-            Constants.message("jsp.message.copyinguri", 
-                              new Object[] { uri, jarFileName },
-                              Constants.MED_VERBOSITY);
-
-            if (relativeURL)
-                copy(ctxt.getServletContext().getResourceAsStream(uri),
-                     jarFileName);
-            else
-                copy(url.openStream(), jarFileName);
-            
-            ctxt.getClassLoader().addJar(jarFileName);
-        }
-        
-
-        boolean tldFound = false;
-        ZipEntry entry;
-        while ((entry = zin.getNextEntry()) != null) {
-            if (entry.getName().equals(TLD)) {
-                /*******
-                 * This hack is necessary because XML reads until the end 
-                 * of an inputstream -- does not use available()
-                 * -- and closes the inputstream when it can't
-                 * read no more.
-                 */
-
-                // BEGIN HACK
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                int b;
-                while (zin.available() != 0) {
-                    b = zin.read();
-                    if (b == -1)
-                        break;
-                    baos.write(b);
-                }
-                    
-                baos.close();
-                ByteArrayInputStream bais 
-                    = new ByteArrayInputStream(baos.toByteArray());
-                // END HACK
-                tldFound = true;
-                parseTLD(bais);
-            } else {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                int b;
-                while (zin.available() != 0) {
-                    b = zin.read();
-                    if (b == -1)
-                        break;
-                    baos.write(b);
-                }
-                baos.close();
-                jarEntries.put(entry.getName(), baos.toByteArray());
-            }
-            zin.closeEntry();
-        }
-        if (!tldFound)
-            throw new JasperException(Constants.getString("jsp.error.tld_not_found",
-                                                          new Object[] {
-                                                              TLD
-                                                          }
-                                                          ));
+		    baos.close();
+		    ByteArrayInputStream bais 
+			= new ByteArrayInputStream(baos.toByteArray());
+		    // END HACK
+		    tldFound = true;
+		    parseTLD(bais);
+		} else {
+		    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		    int b;
+		    while (zin.available() != 0) {
+			b = zin.read();
+			if (b == -1)
+			    break;
+			baos.write(b);
+		    }
+		    baos.close();
+		    jarEntries.put(entry.getName(), baos.toByteArray());
+		}
+		zin.closeEntry();
+	    }
+	    
+	    if (!tldFound)
+		throw new JasperException(Constants.getString("jsp.error.tld_not_found",
+							      new Object[] {
+		    TLD
+			}
+							      ));
+	} // Take this out (END of if(endsWith("jar")))
     }
     
         
     private void parseTLD(InputStream in) 
         throws JasperException
     {
-        XmlDocumentBuilder builder = new XmlDocumentBuilder();
-
-                
-        com.sun.xml.parser.ValidatingParser 
-            parser = new com.sun.xml.parser.ValidatingParser();
-
-        /***
-         * These lines make sure that we have an internal catalog entry for 
-         * the taglib.dtd file; this is so that jasper can run standalone 
-         * without running out to the net to pick up the taglib.dtd file.
-         */
-        Resolver resolver = new Resolver();
-        URL dtdURL = this.getClass().getResource(Constants.TAGLIB_DTD_RESOURCE);
-        
-        resolver.registerCatalogEntry(Constants.TAGLIB_DTD_PUBLIC_ID, 
-                                      dtdURL.toString());
-        
-        try {
-            parser.setEntityResolver(resolver);
-            parser.setDocumentHandler(builder);
-            builder.setParser(parser);
-            builder.setDisableNamespaces(false);
-            parser.parse(new InputSource(in));
-        } catch (SAXException sx) {
-            throw new JasperException(Constants.getString("jsp.error.parse.error.in.TLD",
-                                                          new Object[] {
-                                                              sx.getMessage()
-                                                          }
-                                                          ));
-        } catch (IOException io) {
-            throw new JasperException(Constants.getString("jsp.error.unable.to.open.TLD",
-                                                          new Object[] {
-                                                              io.getMessage()
-                                                          }
-                                                          ));
-        }
-        
-        tld = builder.getDocument();
+	URL tagUrl = this.getClass().getResource(Constants.TAGLIB_DTD_RESOURCE);
+	tld = JspUtil.parseXMLDoc(in, tagUrl,
+				  Constants.TAGLIB_DTD_PUBLIC_ID);
+	
         Vector tagVector = new Vector();
         NodeList list = tld.getElementsByTagName("taglib");
 
@@ -367,9 +397,8 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
         if (teiclass != null && !teiclass.equals(""))
             try {
                 Class teiClass = ctxt.getClassLoader().loadClass(teiclass);
-
                 tei = (TagExtraInfo) teiClass.newInstance();
-            } catch (ClassNotFoundException cex) {
+	    } catch (ClassNotFoundException cex) {
                 Constants.message("jsp.warning.teiclass.is.null",
                                   new Object[] {
                                       teiclass, cex.getMessage()
