@@ -57,7 +57,7 @@
  * Description: Global definitions and include files that should exist     *
  *              anywhere                                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.4 $                                               *
  ***************************************************************************/
 
 #ifndef JK_GLOBAL_H
@@ -122,6 +122,9 @@ extern "C" {
     #define PATH_SEPERATOR          (';')
     #define FILE_SEPERATOR          ('\\')
     #define PATH_ENV_VARIABLE       ("PATH")
+
+    /* incompatible names... */
+    #define strcasecmp stricmp
 #else
     #define JK_METHOD
     #define C_LEVEL_TRY_START       

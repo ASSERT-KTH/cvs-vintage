@@ -58,7 +58,7 @@
  *              several workers.                                           *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.4 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -148,7 +148,7 @@ static char *get_cookie(jk_ws_service_t *s,
     unsigned i;
 
     for(i = 0 ; i < s->num_headers ; i++) {
-        if(0 == stricmp(s->headers_names[i], "cookie")) {
+        if(0 == strcasecmp(s->headers_names[i], "cookie")) {
 
             char *id_start;
             for(id_start = strstr(s->headers_values[i], name) ; 

@@ -57,7 +57,7 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #include <jni.h>
@@ -472,6 +472,16 @@ static int load_jvm_dll(jni_worker_t *p,
         }
 
         FreeLibrary(hInst);
+    }
+#else 
+    void *handle = dlopen(path, RTLD_NOW | RTLD_GLOBAL);
+    if(handle) {
+        jni_create_java_vm = dlsym(handle, "JNI_CreateJavaVM");
+        jni_get_default_java_vm_init_args = dlsym(handle, "JNI_GetDefaultJavaVMInitArgs");
+        if(jni_create_java_vm && jni_get_default_java_vm_init_args) {
+            return JK_TRUE;
+        }
+        dlclose(handle);
     }
 #endif
 
