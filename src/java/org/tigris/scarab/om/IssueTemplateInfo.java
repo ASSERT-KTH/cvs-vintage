@@ -114,8 +114,8 @@ public  class IssueTemplateInfo
                               "email/RequireApproval.vm");
                 
                 ScarabUser[] toUsers = module.getUsers(ScarabSecurity.MODULE__EDIT);
-		Email.sendEmail(context, module, null, Arrays.asList(toUsers), 
-				null, subject, template);
+                Email.sendEmail(context, module, null, Arrays.asList(toUsers), 
+                                null, subject, template);
             }
         }
         save();
