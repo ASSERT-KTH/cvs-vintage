@@ -56,7 +56,7 @@
           <td>
        #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
        #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
-          $attVal.AttributeOption.Name
+          $!attVal.AttributeOption.Name
        #else
           $!attrInput.Value
        #end
