@@ -209,8 +209,10 @@ public class WorkDirSetup extends BaseInterceptor {
 	} else {
 	    File hostD=new File( sb.toString());
 	    hostD.mkdirs();
-	    
-	    workDirF=new File( hostD, URLEncoder.encode( ctx.getPath() ));
+
+	    String path=ctx.getPath();
+	    if( path.startsWith("/")) path=path.substring(1);
+	    workDirF=new File( hostD, URLEncoder.encode( path ));
 	}
 	ctx.setWorkDir( workDirF );
     }
