@@ -1,0 +1,35 @@
+$Id: TODO,v 1.1 1999/10/15 23:35:02 duncan Exp $
+
+This is the living To-Do list for Tomcat
+
+  * Reduce garbage. We need to recycle objects wherever
+    possible. Right now Tomcat is pretty lax about this and there's
+    lots of low hanging fruit.
+
+  * Better factor out parsind and processing modules to make clearly
+    seperated lines between servers and containers.
+
+  * Work with J2EE team and other server vendors to better define the
+    interfaces that allow Tomcat to be embedded into their products.
+
+  * Merge mod_jserv into tomcat cvs, work is underway to split it into
+    mod_ajp, mod_wrapper, and mod_ballance.
+
+  * Possibly experiment with XDR to replace AJP as a TCP connector
+    protocol.
+
+  * Implement mod_unixsock, mod_pipes, and mod_doors watching for
+    integration issues with APR.
+
+  * Experiment with mod_corba for direct integration into J2EE
+    compliant servers.
+
+  * Smooth build with Apache httpd 1.3.x
+
+  * Work on build issues with Apache httpd 2.x
+
+  * Add stress tests to product tests.
+
+  * Add JSP performance tests -- maybe work with JMeter on this?
+
+  * Improve error reporting.
