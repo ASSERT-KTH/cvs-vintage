@@ -18,11 +18,8 @@ package org.columba.mail.folder.headercache;
 import java.util.Enumeration;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.HeaderItem;
-import org.columba.core.config.TableItem;
 import org.columba.mail.coder.EncodedWordDecoder;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
@@ -77,11 +74,13 @@ public abstract class CachedFolder extends LocalFolder {
 		EncodedWordDecoder decoder = new EncodedWordDecoder();
 
 		// get list of used-defined headerfields
-		TableItem v = MailConfig.getMainFrameOptionsConfig().getTableItem();
+		String[] list = CachedHeaderfieldOwner.getCachedHeaderfieldArray();
+
+		//TableItem v = MailConfig.getMainFrameOptionsConfig().getTableItem();
 		String column;
-		for (int j = 0; j < v.count(); j++) {
-			HeaderItem headerItem = v.getHeaderItem(j);
-			column = (String) headerItem.get("name");
+		for (int j = 0; j < list.length; j++) {
+
+			column = (String) list[j];
 
 			Object item = h.get(column);
 
@@ -217,7 +216,7 @@ public abstract class CachedFolder extends LocalFolder {
 
 		// set message source
 		message.setSource(source);
-		if( source == null) {
+		if (source == null) {
 			source = new String();
 		}
 
