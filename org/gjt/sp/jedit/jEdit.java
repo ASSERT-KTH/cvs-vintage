@@ -37,6 +37,7 @@ import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.jedit.gui.*;
 import org.gjt.sp.jedit.help.HelpViewer;
 import org.gjt.sp.jedit.io.*;
+import org.gjt.sp.jedit.pluginmgr.PluginManager;
 import org.gjt.sp.jedit.search.SearchAndReplace;
 import org.gjt.sp.jedit.syntax.*;
 import org.gjt.sp.jedit.textarea.*;
@@ -46,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.167 2003/05/26 00:15:40 spestov Exp $
+ * @version $Id: jEdit.java,v 1.168 2003/05/30 02:43:52 spestov Exp $
  */
 public class jEdit
 {
@@ -3286,13 +3287,16 @@ public class jEdit
 		if(pluginErrors == null)
 			return;
 
-		String caption = jEdit.getProperty(
+		String caption = getProperty(
 			"plugin-error.caption" + (pluginErrors.size() == 1
 			? "-1" : ""));
 
-		new ErrorListDialog(
-			jEdit.getFirstView(),
-			jEdit.getProperty("plugin-error.title"),
+		Frame frame = (PluginManager.getInstance() == null
+			? (Frame)viewsFirst
+			: (Frame)PluginManager.getInstance());
+
+		new ErrorListDialog(frame,
+			getProperty("plugin-error.title"),
 			caption,pluginErrors,true);
 		pluginErrors = null;
 	} //}}}
