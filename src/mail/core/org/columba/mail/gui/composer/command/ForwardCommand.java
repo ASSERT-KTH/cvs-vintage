@@ -15,10 +15,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -32,7 +34,6 @@ import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.InputStreamMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeType;
-
 
 /**
  * Forward message as attachment.
@@ -55,8 +56,8 @@ public class ForwardCommand extends FolderCommand {
 
     public void updateGUI() throws Exception {
         // open composer frame
-        controller = new ComposerController();
-        controller.openView();
+        controller = (ComposerController)
+                MainInterface.frameModel.openView("Composer");
 
         // apply model
         controller.setComposerModel(model);

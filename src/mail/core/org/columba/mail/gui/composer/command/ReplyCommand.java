@@ -15,12 +15,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommand;
@@ -50,7 +52,6 @@ import java.nio.charset.Charset;
 
 import java.text.DateFormat;
 
-
 /**
  * Reply to message.
  * <p>
@@ -78,8 +79,8 @@ public class ReplyCommand extends FolderCommand {
 
     public void updateGUI() throws Exception {
         // open composer frame
-        controller = new ComposerController();
-        controller.openView();
+        controller = (ComposerController)
+                MainInterface.frameModel.openView("Composer");
 
         // apply model
         controller.setComposerModel(model);

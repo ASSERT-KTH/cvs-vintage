@@ -13,10 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.facade;
 
-import org.columba.mail.gui.composer.ComposerController;
-
+import org.columba.core.main.MainInterface;
 
 /**
  * @author fdietz
@@ -29,19 +29,6 @@ public class ComposerFacade {
  */
     public static void openComposer() {
         // Choice btw. text and html will be based on stored option
-        ComposerController controller = createComposer();
-        controller.openView();
-    }
-
-    /**
- *
- * open up composer window and return reference
- *
- *
- * @return        ComposerController
- */
-    public static ComposerController createComposer() {
-        // Choice btw. text and html will be based on stored option
-        return new ComposerController();
+        MainInterface.frameModel.openView("Composer");
     }
 }

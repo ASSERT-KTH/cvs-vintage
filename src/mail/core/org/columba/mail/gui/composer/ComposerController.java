@@ -78,10 +78,8 @@ public class ComposerController extends AbstractFrameController
     /** Buffer for listeners used by addContainerListenerForEditor and createView */
     private List containerListenerBuffer;
 
-    public ComposerController() {
-        super("Composer",
-            new ViewItem(MailInterface.config.get("composer_options")
-                                             .getElement("/options/gui/view")));
+    public ComposerController(ViewItem view) {
+        super("Composer", view);
     }
 
     public boolean checkState() {

@@ -132,6 +132,8 @@ public abstract class AbstractFrameController implements FrameMediator {
         // initialize default view options
         XmlElement defaultView = new XmlElement("view");
         XmlElement window = new XmlElement("window");
+        window.addAttribute("x", "0");
+        window.addAttribute("y", "0");
         window.addAttribute("width", "640");
         window.addAttribute("height", "480");
         window.addAttribute("maximized", "true");

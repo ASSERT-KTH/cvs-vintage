@@ -104,8 +104,8 @@ public class CmdLineArgumentHandler {
                 model.setBodyText(body);
             }
 
-            ComposerController c = new ComposerController();
-            c.openView();
+            ComposerController c = (ComposerController)
+                    MainInterface.frameModel.openView("Composer");
             c.setComposerModel(model);
         }
     }

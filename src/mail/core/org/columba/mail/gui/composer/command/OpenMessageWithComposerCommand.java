@@ -15,10 +15,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommand;
@@ -44,7 +46,6 @@ import org.columba.ristretto.parser.MessageParser;
 import java.util.Iterator;
 import java.util.List;
 
-
 /**
  * Open message in composer.
  *
@@ -66,8 +67,8 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 
     public void updateGUI() throws Exception {
         // open composer frame
-        controller = new ComposerController();
-        controller.openView();
+        controller = (ComposerController)
+                MainInterface.frameModel.openView("Composer");
 
         // apply model
         controller.setComposerModel(model);

@@ -13,12 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.util;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.gui.composer.ComposerController;
@@ -33,7 +35,6 @@ import java.net.URL;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-
 
 public class URLController implements ActionListener {
     private String address;
@@ -104,8 +105,8 @@ public class URLController implements ActionListener {
         String enableHtml = htmlElement.getAttribute("enable", "false");
         model.setHtml(Boolean.valueOf(enableHtml).booleanValue());
 
-        ComposerController controller = new ComposerController();
-        controller.openView();
+        ComposerController controller = (ComposerController)
+                MainInterface.frameModel.openView("Composer");
         controller.setComposerModel(model);
     }
 
