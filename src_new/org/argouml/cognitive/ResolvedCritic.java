@@ -1,4 +1,4 @@
-// $Id: ResolvedCritic.java,v 1.13 2005/02/16 23:47:11 bobtarling Exp $
+// $Id: ResolvedCritic.java,v 1.14 2005/02/20 19:42:11 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,8 +74,7 @@ public class ResolvedCritic {
     }
 
     /**
-     * Same as {@link #ResolvedCritic(Critic,VectorSet,boolean)
-     * ResolvedCritic(c, offs, true)}.
+     * Same as {@link #ResolvedCritic(Critic,ListSet,boolean)}.
      *
      * @param c The Critic that has been resolved.
      * @param offs The set of objects that triggered the Critic.

@@ -1,4 +1,4 @@
-// $Id: CompoundCritic.java,v 1.12 2005/02/16 23:47:19 bobtarling Exp $
+// $Id: CompoundCritic.java,v 1.13 2005/02/20 19:42:11 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,9 @@ public class CompoundCritic extends Critic {
     ////////////////////////////////////////////////////////////////
     // instance variables
 
-    /**  The sub-critics that make up this CompoundCritic. */
+    /**
+     * The sub-critics that make up this CompoundCritic.
+     */
     private Vector critics = new Vector();
 
     ////////////////////////////////////////////////////////////////
@@ -227,8 +229,7 @@ public class CompoundCritic extends Critic {
     }
 
     /**
-     * @see org.argouml.cognitive.Poster#expand(java.lang.String,
-     * org.tigris.gef.util.VectorSet)
+     * @see org.argouml.cognitive.Poster#expand(java.lang.String, ListSet)
      */
     public String expand(String desc, ListSet offs) {
 	throw new UnsupportedOperationException();
