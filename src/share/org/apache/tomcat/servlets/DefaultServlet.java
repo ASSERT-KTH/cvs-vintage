@@ -93,6 +93,10 @@ public class DefaultServlet extends HttpServlet {
             docBase += "/";
         }
 
+        // ensure docBase relative to home
+        if (!(new File(docBase)).isAbsolute())
+            docBase = context.getContextManager().getHome() + "/" + docBase;
+
 	// debug 
 	String dbg=getServletConfig().getInitParameter("debug");
 	if( dbg!=null) debug=1;

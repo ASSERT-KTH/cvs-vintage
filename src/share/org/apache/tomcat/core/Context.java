@@ -698,6 +698,10 @@ public class Context {
 	
 	String realPath= this.getDocBase() + mappedPath;
 
+        // evaluate relative paths relative to the context's home
+        if (!(new File(realPath).isAbsolute()))
+            realPath = contextM.getHome() + "/" + realPath;
+
 	// Probably not needed - it will be used on the local FS
 	realPath = FileUtil.patch(realPath);
 
