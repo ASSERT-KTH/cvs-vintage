@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.180 2003/06/11 02:00:46 spestov Exp $
+ * @version $Id: jEdit.java,v 1.181 2003/06/15 02:59:21 spestov Exp $
  */
 public class jEdit
 {
@@ -1657,6 +1657,13 @@ public class jEdit
 				buffer.getStringProperty(Buffer.ENCODING));
 		}
 
+		String path = buffer.getSymlinkPath();
+		if((VFSManager.getVFSForPath(path).getCapabilities()
+			& VFS.CASE_INSENSITIVE_CAP) != 0)
+		{
+			path = path.toLowerCase();
+		}
+		bufferHash.remove(path);
 		removeBufferFromList(buffer);
 		buffer.close();
 		DisplayManager.bufferClosed(buffer);

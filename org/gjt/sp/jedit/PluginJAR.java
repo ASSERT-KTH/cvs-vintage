@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.30 2003/06/05 21:54:15 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.31 2003/06/15 02:59:21 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -999,8 +999,8 @@ public class PluginJAR
 				i < cache.cachedBrowserActionNames.length;
 				i++)
 			{
-				 cache.cachedBrowserActionNames[i]
-				 	= jEdit.getProperty(
+				 cache.cachedBrowserActionToggleFlags[i]
+				 	= jEdit.getBooleanProperty(
 					cache.cachedBrowserActionNames[i]
 					+ ".toggle");
 			}
