@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.logging;
 
 import org.apache.log4j.Level;
@@ -22,26 +23,21 @@ import org.columba.core.config.Config;
 import org.columba.core.main.MainInterface;
 
 /**
- * @author frd
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * A wrapper class for log4j. This class initialized and configures
+ * a log4j logger. Depending on the debug flag (--debug command line
+ * option reflected in MainInterface.DEBUG) the logger will either
+ * show all debug messages (debug, info, warn, error) or nothing.
  */
 public class ColumbaLogger {
 	public static Logger log;
-	
-	static
-	{
+
+	static {
 		log = Logger.getLogger("org.columba");
-		PropertyConfigurator.configure( Config.getLoggingPropertyFile().toString() );
-		
-		if ( MainInterface.DEBUG) {
+		PropertyConfigurator.configure(Config.getLoggingPropertyFile().toString());
+		if (MainInterface.DEBUG) {
 			log.setLevel(Level.DEBUG);
-    	}
-		else {
-			log.setLevel(Level.INFO);
-    	}
+		} else {
+			log.setLevel(Level.OFF);
+		}
 	}
 }
