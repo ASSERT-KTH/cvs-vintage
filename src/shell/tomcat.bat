@@ -22,7 +22,7 @@ rem                implementation, and the "tools.jar" from the JDK.
 rem
 rem   JAVA_HOME    Must point at your Java Development Kit installation.
 rem
-rem $Id: tomcat.bat,v 1.29 2000/09/04 21:24:49 larryi Exp $
+rem $Id: tomcat.bat,v 1.30 2000/09/08 01:02:27 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -52,8 +52,8 @@ goto cleanup
 rem ----- Prepare Appropriate Java Execution Commands -----------------------
 
 if not "%OS%" == "Windows_NT" goto noTitle
-set _SECSTARTJAVA=start "Secure Tomcat 3.2" "%JAVA_HOME%\bin\java"
-set _STARTJAVA=start "Tomcat 3.2" "%JAVA_HOME%\bin\java"
+set _SECSTARTJAVA=start "Secure Tomcat 3.3" "%JAVA_HOME%\bin\java"
+set _STARTJAVA=start "Tomcat 3.3" "%JAVA_HOME%\bin\java"
 set _RUNJAVA="%JAVA_HOME%\bin\java"
 goto setClasspath
 
