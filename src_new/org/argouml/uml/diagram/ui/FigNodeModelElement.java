@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.115 2004/08/04 20:00:39 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.116 2004/08/05 20:58:03 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -286,16 +286,23 @@ public abstract class FigNodeModelElement
         ArgoEventPump.removeListener(ArgoEvent.ANY_NOTATION_EVENT, this);
     }
 
-// TODO: Too close to a release to introduce this now
-// but I think we need this clone method at this level to save
-// duplicated code in ancestors
-// Bob Tarling 28 Jan 2004
-//    public Object clone() {
-//        FigNodeModelElement figClone = (FigNodeModelElement) super.clone();
-//        figClone._bigPort = _bigPort;
-//        figClone._name = _name;
-//        return figClone;
-//    }
+    /**
+     * After the base clone method has been called determine which child
+     * figs of the clone represent the name, stereotype and port.
+     */
+    public Object clone() {
+        FigNodeModelElement clone = (FigNodeModelElement)super.clone();
+        Iterator thisIter = this.getFigs(null).iterator();
+        Iterator cloneIter = clone.getFigs(null).iterator();
+        while (thisIter.hasNext()) {
+            Fig thisFig = (Fig)thisIter.next();
+            Fig cloneFig = (Fig)cloneIter.next();
+            if (thisFig == getBigPort()) clone.setBigPort(cloneFig);
+            if (thisFig == name) clone.name = (FigText)cloneFig;
+            if (thisFig == stereo) clone.stereo = (FigText)cloneFig;
+        }
+        return clone;
+    }
 // _enclosedFigs, _encloser and _eventSenders may also need to be cloned
 // must check usage
 // MVW: What are these Clone functions used for? Who would want to clone a fig? 
