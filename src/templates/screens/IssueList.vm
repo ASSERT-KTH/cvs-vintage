@@ -138,10 +138,14 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
   </table>
 
 <div class="functnbar3">
-<input type="submit" value="Assign" name="eventSubmit_doReassignselected" />&#160;
+#if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
+   <input type="submit" value="Assign" name="eventSubmit_doReassignselected" />&#160;
+#end
 <input type="submit" value="View verbose"  name="eventSubmit_doViewselected" />&#160;
 <small>selected</small>&#160;&#160;<img src="$data.Request.ContextPath/images/seperator.gif" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;
-<input type="submit" value="Assign" name="eventSubmit_doReassignall" />&#160;
+#if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
+  <input type="submit" value="Assign" name="eventSubmit_doReassignall" />&#160;
+#end
 <input type="submit" value="View verbose" name="eventSubmit_doViewselected" />&#160;
 <small>all</small>&#160;
 </div>
