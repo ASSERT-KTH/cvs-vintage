@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.131 2003/04/16 23:21:08 dlr Exp $
+ * @version $Id: ScarabModule.java,v 1.132 2003/04/17 16:21:21 dlr Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -290,7 +290,7 @@ public class ScarabModule
             int totalResultSize = result.size();
 
             // if there are results, sort the result set
-            if (totalResultSize > 0 && resultSize != 0)
+            if (totalResultSize > 0 && resultSize > 0)
             {
                 Collections.sort(result, c);
                 List limitedResult = new ArrayList(resultSize);
