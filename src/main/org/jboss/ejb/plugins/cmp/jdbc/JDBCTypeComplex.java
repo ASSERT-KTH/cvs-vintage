@@ -24,7 +24,7 @@ import javax.ejb.EJBException;
  * details on how this is done.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCTypeComplex implements JDBCType {
    private JDBCTypeComplexProperty[] properties;
@@ -112,8 +112,9 @@ public class JDBCTypeComplex implements JDBCType {
 
       try {
          return property.getColumnValue(value);
+      } catch(EJBException e) {
+         throw e;
       } catch(Exception e) {
-         e.printStackTrace();
          throw new EJBException("Error getting column value", e);
       }
    }
