@@ -59,8 +59,10 @@ import org.apache.fulcrum.template.TurbineTemplate;
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.fulcrum.template.TemplateEmail;
 import org.apache.fulcrum.mimetype.TurbineMimeTypes;
+import org.apache.fulcrum.ServiceException;
 
 import org.apache.turbine.Turbine;
+
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.GlobalParameter;
@@ -75,9 +77,9 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.26 2003/04/21 19:39:15 jackrepenning Exp $
+ * @version $Id: Email.java,v 1.27 2003/04/22 01:36:08 jon Exp $
  */
-public class Email
+public class Email extends TemplateEmail
 {
     private static final int TO = 0;
     private static final int CC = 1;
@@ -136,8 +138,7 @@ public class Email
             Locale locale = (Locale)i.next();
             Log.get().debug("Sending email for locale=" + locale);
             l10n.init(locale);
-            TemplateEmail te = getTemplateEmail(context, fromUser, 
-                                                replyToUser, template);        
+            Email te = getEmail(context, fromUser, replyToUser, template);
             te.setCharset(getCharset(locale));
        
             List[] toAndCC = (List[])userLocaleMap.get(locale);
@@ -189,7 +190,7 @@ public class Email
         {
             Log.get().debug("Archive was sent separately.");
             l10n.init(moduleLocale);
-            TemplateEmail te = getTemplateEmail(context, fromUser, 
+            Email te = getEmail(context, fromUser, 
                                                 replyToUser, template);        
             te.setCharset(getCharset(moduleLocale));
             te.addTo(archiveEmail, null);
@@ -235,12 +236,21 @@ public class Email
                           null, template);
     }
 
+    /**
+     * FIXME: Need to override this method and make it so that 
+     * we create our own velocity engine which renders the template
+     */
+    protected String handleRequest()
+        throws ServiceException
+    {
+        return super.handleRequest();
+    }
 
-    private static TemplateEmail getTemplateEmail(EmailContext context,
+    private static Email getEmail(EmailContext context,
         Object fromUser, Object replyToUser, String template)
         throws Exception
     {
-        TemplateEmail te = new TemplateEmail();
+        Email te = new Email();
         if (context == null) 
         {
             context = new EmailContext();
