@@ -13,11 +13,21 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+package org.columba.core.gui.focus;
 
-package org.columba.core.gui.util;
+import javax.swing.JComponent;
 
-public interface SelectionListener {
-
-	public void selectionChanged( SelectionChangedEvent e );
-
+/**
+ * @author frd
+ *
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
+ */
+public interface FocusOwner {
+	
+	boolean enableAction();
+	
+	JComponent getComponent();
 }

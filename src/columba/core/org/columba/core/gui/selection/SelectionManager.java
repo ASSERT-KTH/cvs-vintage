@@ -13,13 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui;
+package org.columba.core.gui.selection;
 
 import java.util.Hashtable;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.gui.util.SelectionHandler;
-import org.columba.core.gui.util.SelectionListener;
 
 public class SelectionManager {
 

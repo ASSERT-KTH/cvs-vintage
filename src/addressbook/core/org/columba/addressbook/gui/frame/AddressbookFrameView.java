@@ -25,10 +25,10 @@ import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.gui.menu.AddressbookMenu;
 import org.columba.addressbook.gui.table.TableView;
 import org.columba.addressbook.gui.tree.TreeView;
-import org.columba.core.gui.ToolBar;
 import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.frame.FrameView;
 import org.columba.core.gui.menu.Menu;
+import org.columba.core.gui.toolbar.ToolBar;
 
 public class AddressbookFrameView extends FrameView {
 	//private AddressbookInterface addressbookInterface;

@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui;
+package org.columba.core.gui.toolbar;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

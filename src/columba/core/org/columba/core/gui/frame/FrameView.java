@@ -26,8 +26,8 @@ import javax.swing.JPanel;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.config.WindowItem;
-import org.columba.core.gui.ToolBar;
 import org.columba.core.gui.menu.Menu;
+import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.WindowMaximizer;
 

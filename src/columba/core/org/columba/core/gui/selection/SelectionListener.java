@@ -14,8 +14,10 @@
 //
 //All Rights Reserved.
 
-package org.columba.core.gui.util;
+package org.columba.core.gui.selection;
 
-public class SelectionChangedEvent {
+public interface SelectionListener {
+
+	public void selectionChanged( SelectionChangedEvent e );
 
 }

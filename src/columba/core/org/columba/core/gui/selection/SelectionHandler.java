@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.core.gui.util;
+package org.columba.core.gui.selection;
 
 import java.util.Vector;
 

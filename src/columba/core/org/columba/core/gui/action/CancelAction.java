@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.core.gui.statusbar;
+package org.columba.core.gui.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;

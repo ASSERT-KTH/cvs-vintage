@@ -4,7 +4,7 @@
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package org.columba.core.gui;
+package org.columba.core.gui.menu;
 
 import javax.swing.JPopupMenu;
 
