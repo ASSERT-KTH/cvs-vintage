@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.41 2003/10/27 22:41:31 alexb Exp $
+// $Id: UMLClassDiagram.java,v 1.42 2003/10/30 20:45:46 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.41 2003/10/27 22:41:31 alexb Exp $
+// $Id: UMLClassDiagram.java,v 1.42 2003/10/30 20:45:46 jjones Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -155,7 +155,7 @@ public class UMLClassDiagram extends UMLDiagram {
      */
     protected Object[] getUmlActions() {
         Object actions[] = {
-            getPackageActions(),
+            _actionPackage,
             _actionClass,
             getAssociationActions(),
             _actionDepend,
@@ -173,6 +173,7 @@ public class UMLClassDiagram extends UMLDiagram {
     }
     
     // remove the comment marks to enable models and subsystems.
+    // also replace _actionPackage with getPackageActions() in getUmlActions().
     private Object[] getPackageActions() {
         /* subsystem, model enabled 
 	   Object actions[] = 
