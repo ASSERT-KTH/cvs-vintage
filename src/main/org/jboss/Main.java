@@ -12,6 +12,7 @@ import java.net.URL;
 
 import javax.management.MBeanException;
 import javax.management.RuntimeMBeanException;
+import javax.management.RuntimeErrorException;
 
 import org.jboss.system.MBeanClassLoader;
 import org.jboss.system.ServiceLibraries;
@@ -28,7 +29,7 @@ import org.jboss.system.ServerConfig;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.66 $
+ * @version $Revision: 1.67 $
  */
 public class Main
    implements Runnable
@@ -48,6 +49,9 @@ public class Main
       }
       catch (RuntimeMBeanException e) {
          e.getTargetException().printStackTrace();
+      }
+      catch (RuntimeErrorException e) {
+	 e.getTargetError().printStackTrace();
       }
       catch (Exception e) {
          e.printStackTrace();
