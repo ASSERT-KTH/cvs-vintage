@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.26 2004/12/16 16:12:41 mvw Exp $
+// $Id: UMLModelElementListModel2.java,v 1.27 2004/12/17 13:41:16 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,8 @@ public abstract class UMLModelElementListModel2
     /**
      * Constructor for UMLModelElementListModel2.
      *
-     * @param name the event name
+     * @param name the name of the event to listen to, which triggers us 
+     *             to update the list model from the UML data
      */
     public UMLModelElementListModel2(String name) {
         super();
