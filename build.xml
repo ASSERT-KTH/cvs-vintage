@@ -69,6 +69,8 @@
                file="${jakarta-commons}/dbcp/dist/commons-dbcp.jar" />
     <available property="jdk12.present"
                classname="java.security.PrivilegedAction"/>
+    <available property="jaxp-present"
+               file="${jaxp.home}/jaxp.jar" />
     <available property="jaxp10-present"
                file="${jaxp.home}/parser.jar" />
     <available property="jaxp11-present"
@@ -100,10 +102,14 @@
           file="${jaxp.home}/parser.jar"/>
   </target>
 
-  <target name="prepare.jaxp11" depends="detect" if="jaxp11-present" >
-    <echo message="Installing JAXP-1.1"/>
+  <target name="include.jaxp" depends="detect" if="jaxp-present" >
+    <echo message="Including jaxp.jar" />
     <copy tofile="${tomcat.build}/lib/container/jaxp.jar"
           file="${jaxp.home}/jaxp.jar"/>
+  </target>
+
+  <target name="prepare.jaxp11" depends="detect,include.jaxp" if="jaxp11-present" >
+    <echo message="Installing JAXP-1.1"/>
     <copy tofile="${tomcat.build}/lib/container/xalan.jar"
           file="${jaxp.home}/xalan.jar"/>
     <copy tofile="${tomcat.build}/lib/container/crimson.jar"
