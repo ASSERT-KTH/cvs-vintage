@@ -94,6 +94,7 @@ import org.tigris.scarab.om.DependTypePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.services.cache.ScarabCache; 
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.upload.TurbineUploadService;
 import org.apache.fulcrum.upload.UploadService;
@@ -107,7 +108,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.104 2002/07/02 21:17:24 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.105 2002/07/15 19:22:33 jmcnally Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -970,9 +971,18 @@ public class ModifyIssue extends BaseModifyIssue
             scarabR.setAlertMessage("Could not locate issue: " + id);
             return;
         }
-        data.getParameters().add("issue_ids", 
-              issue.getUniqueId());
-        setTarget(data, "AssignIssue.vm");            
+        ScarabUser user = (ScarabUser)data.getUser();
+        if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
+                               issue.getModule()))
+        {
+            data.getParameters().add("issue_ids", issue.getUniqueId());
+            setTarget(data, "AssignIssue.vm");
+        }
+        else
+        {
+            scarabR.setAlertMessage(
+                "Insufficient permissions to assign users.");
+        }
     }
 
     /**

@@ -195,7 +195,9 @@
 <div class="functnbar3">
 ##<input type="submit" value="Add new" name="eventSubmit_doAssign" />&#160;
 ##<input type="submit" value="Delete selected" name="eventSubmit_doUnassign" />&#160;
+#if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
 <input type="submit" value="Edit list" name="eventSubmit_doEditassignees" />
+#end
 </div>
 #end
 
