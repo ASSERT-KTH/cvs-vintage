@@ -18,6 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
 import org.columba.mail.gui.tree.TreeController;
@@ -76,7 +77,7 @@ public class FolderTreeMouseListener extends MouseAdapter
 
     public void mouseClicked(MouseEvent e)
     {
-    	if ( e.getButton() == MouseEvent.BUTTON1 ) treeController.selectFolder();
+    	if ( SwingUtilities.isLeftMouseButton(e) ) treeController.selectFolder();
     	/*
         if ( e.getClickCount() == 1 )
         {
