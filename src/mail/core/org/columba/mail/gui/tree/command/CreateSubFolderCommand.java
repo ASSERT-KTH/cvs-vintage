@@ -17,7 +17,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.command;
 
+import java.text.MessageFormat;
 import java.util.Hashtable;
+
+import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
@@ -25,7 +28,9 @@ import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.FolderCreationException;
 import org.columba.mail.folder.FolderFactory;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Create subfolder command.
@@ -37,8 +42,6 @@ public class CreateSubFolderCommand extends Command {
 
 	private AbstractFolder parentFolder;
 
-	private boolean success;
-
 	private Hashtable attributes;
 
 	/**
@@ -48,19 +51,6 @@ public class CreateSubFolderCommand extends Command {
 	 */
 	public CreateSubFolderCommand(DefaultCommandReference reference) {
 		super(reference);
-
-		success = true;
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateGUI() throws Exception {
-		if (success) {
-			/*
-			 * MailInterface.treeModel.nodeStructureChanged(parentFolder);
-			 */
-		}
 	}
 
 	/**
@@ -74,15 +64,12 @@ public class CreateSubFolderCommand extends Command {
 		try {
 			AbstractFolder subFolder = FolderFactory.getInstance()
 					.createDefaultChild(parentFolder, name);
-
-			// if folder creation failed
-			//  -> don't update tree ui
-			if (subFolder == null) {
-				success = false;
-			}
-		} catch (Exception ex) {
-			success = false;
-			throw ex;
+		} catch (FolderCreationException ex) {
+			// show error message 
+			JOptionPane.showMessageDialog(null, 
+					MessageFormat.format( MailResourceLoader.getString("dialog", "folder",
+							"error_no_subfolder_allowed"), new String[] {parentFolder.getName()} ),MailResourceLoader.getString("dialog", "folder",
+							"error_title"), JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

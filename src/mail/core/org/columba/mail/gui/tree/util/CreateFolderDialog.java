@@ -24,6 +24,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.text.MessageFormat;
 import java.util.Comparator;
 
 import javax.swing.BorderFactory;
@@ -218,7 +219,7 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(null, MailResourceLoader
 						.getString("dialog", "folder", "error_char_text"),
 						MailResourceLoader.getString("dialog", "folder",
-								"error_char_title"), JOptionPane.ERROR_MESSAGE);
+								"error_title"), JOptionPane.ERROR_MESSAGE);
 
 				return;
 			}

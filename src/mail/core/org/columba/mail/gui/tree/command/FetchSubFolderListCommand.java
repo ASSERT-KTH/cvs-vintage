@@ -22,7 +22,6 @@ import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 
 /**
@@ -34,7 +33,7 @@ public class FetchSubFolderListCommand extends FolderCommand {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.tree.command");
 
-	AbstractFolder treeNode;
+	IMAPRootFolder imapRoot;
 
 	/**
 	 * Constructor for FetchSubFolderListCommand.
@@ -49,9 +48,12 @@ public class FetchSubFolderListCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		/*
-		 * MailInterface.treeModel.nodeStructureChanged(treeNode);
-		 */
+        // remove all subfolders that are not marked as existonserver
+        
+        if( imapRoot != null ) {
+        	imapRoot.removeNotMarkedSubfolders(imapRoot);
+        }
+
 	}
 
 	/**
@@ -64,22 +66,12 @@ public class FetchSubFolderListCommand extends FolderCommand {
 			return;
 		}
 
-		treeNode = (AbstractFolder) r.getFolder();
-
-		if (treeNode instanceof IMAPRootFolder) {
-			((IMAPRootFolder) treeNode).syncSubscribedFolders();
+		if (r.getFolder() instanceof IMAPRootFolder) {
+			imapRoot = (IMAPRootFolder) r.getFolder();
+			
+			imapRoot.syncSubscribedFolders();
+			
+			// The update of the treemodell follows in the updategui method
 		}
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#undo(Worker)
-	 */
-	public void undo(Worker worker) throws Exception {
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#redo(Worker)
-	 */
-	public void redo(Worker worker) throws Exception {
 	}
 }

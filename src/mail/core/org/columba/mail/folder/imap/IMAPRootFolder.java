@@ -36,351 +36,371 @@ import org.columba.ristretto.imap.ListInfo;
 /**
  * Root folder for IMAP folders.
  */
-public class IMAPRootFolder extends AbstractFolder implements RootFolder, IMAPServerOwner {
+public class IMAPRootFolder extends AbstractFolder implements RootFolder,
+		IMAPServerOwner {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.imap");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.folder.imap");
 
-    private static final int ONE_SECOND = 1000;
-    private static final String[] SPECIAL_FOLDER_NAMES = {
-        "trash", "drafts", "templates", "sent"
-    };
-    private IMAPProtocol imap;
+	private static final int ONE_SECOND = 1000;
 
-    //private boolean select=false;
-    private boolean fetch = false;
-    private StringBuffer cache;
-    private int state;
-    private List lsubList;
+	private static final String[] SPECIAL_FOLDER_NAMES = { "trash", "drafts",
+			"templates", "sent" };
 
-    //    private ImapOperator operator;
-    private AccountItem accountItem;
-    private IMAPServer server;
+	private IMAPProtocol imap;
 
-    /**
-     * parent directory for mail folders
-     *
-     * for example: "/home/donald/.columba/mail/"
-     */
-    private String parentPath;
+	//private boolean select=false;
+	private boolean fetch = false;
 
-    /**
-     * Status information updates are handled in using StatusObservable.
-     * <p>
-     * Every command has to register its interest to this events before
-     * accessing the folder.
-     */
-    protected StatusObservable observable;
+	private StringBuffer cache;
 
-    public IMAPRootFolder(FolderItem folderItem, String path) {
-        //super(node, folderItem);
-        super(folderItem);
+	private int state;
 
-        // remember parent path
-        // (this is necessary for IMAPRootFolder sync operations)
-        parentPath = path;
+	private List lsubList;
 
-        observable = new StatusObservableImpl();
+	//    private ImapOperator operator;
+	private AccountItem accountItem;
 
-        accountItem = MailInterface.config.getAccountList().uidGet(folderItem.getInteger(
-                    "account_uid"));
+	private IMAPServer server;
 
-        updateConfiguration();
-    }
+	/**
+	 * parent directory for mail folders
+	 * 
+	 * for example: "/home/donald/.columba/mail/"
+	 */
+	private String parentPath;
 
-    public IMAPRootFolder(AccountItem accountItem, String path) {
-        //super(node, folderItem);
-        //super(getDefaultItem("IMAPRootFolder", getDefaultProperties()));
-        super(accountItem.get("name"), "IMAPRootFolder");
-        observable = new StatusObservableImpl();
+	/**
+	 * Status information updates are handled in using StatusObservable.
+	 * <p>
+	 * Every command has to register its interest to this events before
+	 * accessing the folder.
+	 */
+	protected StatusObservable observable;
 
-        //remember parent path
-        // (this is necessary for IMAPRootFolder sync operations)
-        parentPath = path;
+	public IMAPRootFolder(FolderItem folderItem, String path) {
+		//super(node, folderItem);
+		super(folderItem);
 
-        this.accountItem = accountItem;
+		// remember parent path
+		// (this is necessary for IMAPRootFolder sync operations)
+		parentPath = path;
 
-        getConfiguration().set("account_uid", accountItem.getInteger("uid"));
+		observable = new StatusObservableImpl();
 
-        updateConfiguration();
-    }
+		accountItem = MailInterface.config.getAccountList().uidGet(
+				folderItem.getInteger("account_uid"));
 
-    /**
-     * @param type
-     */
-    public IMAPRootFolder(String name, String type) {
-        super(name, type);
+		updateConfiguration();
+	}
 
-        FolderItem item = getConfiguration();
-        item.set("property", "accessrights", "system");
-        item.set("property", "subfolder", "true");
-    }
+	public IMAPRootFolder(AccountItem accountItem, String path) {
+		//super(node, folderItem);
+		//super(getDefaultItem("IMAPRootFolder", getDefaultProperties()));
+		super(accountItem.get("name"), "IMAPRootFolder");
+		observable = new StatusObservableImpl();
 
-    public String getDefaultChild() {
-        return "IMAPFolder";
-    }
+		//remember parent path
+		// (this is necessary for IMAPRootFolder sync operations)
+		parentPath = path;
 
-    /**
-     * @return observable containing status information
-     */
-    public StatusObservable getObservable() {
-        return observable;
-    }
+		this.accountItem = accountItem;
 
-    protected void syncFolder(AbstractFolder parent, String name, ListInfo info)
-        throws Exception {
-        LOG.info("creating folder=" + name);
+		getConfiguration().set("account_uid", accountItem.getInteger("uid"));
 
-        if ((name.indexOf(server.getDelimiter()) != -1)
-                && (name.indexOf(server.getDelimiter()) != (name.length() - 1))) {
-            // delimiter found
-            //  -> recursively create all necessary folders to create
-            //  -> the final folder
-            String subchild = name.substring(0,
-                    name.indexOf(server.getDelimiter()));
-            AbstractFolder subFolder = (AbstractFolder) parent.findChildWithName(subchild,
-                    false);
+		updateConfiguration();
+	}
 
-            // if folder doesn't exist already
-            if (subFolder == null) {
-                subFolder = new IMAPFolder(subchild, "IMAPFolder",
-                        getParentPath());
-                parent.add(subFolder);
-                parent.getConfiguration().getRoot().addElement(
-                        subFolder.getConfiguration().getRoot());
-                MailInterface.treeModel.insertNodeInto(subFolder, parent,
-                    parent.getIndex(subFolder));
+	/**
+	 * @param type
+	 */
+	public IMAPRootFolder(String name, String type) {
+		super(name, type);
 
-                ((IMAPFolder) subFolder).existsOnServer = true;
-                subFolder.getConfiguration().set("selectable", "false");
+		FolderItem item = getConfiguration();
+		item.set("property", "accessrights", "system");
+		item.set("property", "subfolder", "true");
+	}
 
-                // this is the final folder
-                //subFolder = addIMAPChildFolder(parent, info, subchild);
-            } else {
-                if (!((IMAPFolder) subFolder).existsOnServer) {
-                    ((IMAPFolder) subFolder).existsOnServer = true;
-                    subFolder.getConfiguration().set("selectable", "false");
-                }
-            }
+	public String getDefaultChild() {
+		return "IMAPFolder";
+	}
 
-            // recursively go on
-            syncFolder(subFolder,
-                name.substring(name.indexOf(server.getDelimiter()) + 1), info);
-        } else {
-            // no delimiter found
-            //  -> this is already the final folder
-            // if folder doesn't exist already
-            AbstractFolder subFolder = (AbstractFolder) parent.findChildWithName(name,
-                    false);
+	/**
+	 * @return observable containing status information
+	 */
+	public StatusObservable getObservable() {
+		return observable;
+	}
 
-            if (subFolder == null) {
-                subFolder = new IMAPFolder(name, "IMAPFolder", getParentPath());
-                parent.add(subFolder);
-                parent.getConfiguration().getRoot().addElement(
-                        subFolder.getConfiguration().getRoot());
-                MailInterface.treeModel.insertNodeInto(subFolder, parent,
-                    parent.getIndex(subFolder));
-            }
-            ((IMAPFolder) subFolder).existsOnServer = true;
+	protected void syncFolder(AbstractFolder parent, String name, ListInfo info)
+			throws Exception {
 
-            if (info.getParameter(ListInfo.NOSELECT)) {
-                subFolder.getConfiguration().set("selectable", "false");
-            } else {
-                subFolder.getConfiguration().set("selectable", "true");
-            }
-        }
-    }
+		if ((name.indexOf(server.getDelimiter()) != -1)
+				&& (name.indexOf(server.getDelimiter()) != (name.length() - 1))) {
+			// delimiter found
+			//  -> recursively create all necessary folders to create
+			//  -> the final folder
+			String subchild = name.substring(0, name.indexOf(server
+					.getDelimiter()));
+			AbstractFolder subFolder = (AbstractFolder) parent
+					.findChildWithName(subchild, false);
 
-    protected void markAllSubfoldersAsExistOnServer(AbstractFolder parent,
-        boolean value) {
-        AbstractFolder child;
+			// if folder doesn't exist already
+			if (subFolder == null) {
+				subFolder = new IMAPFolder(subchild, "IMAPFolder",
+						getParentPath());
+				parent.add(subFolder);
+				parent.getConfiguration().getRoot().addElement(
+						subFolder.getConfiguration().getRoot());
+				MailInterface.treeModel.insertNodeInto(subFolder, parent,
+						parent.getIndex(subFolder));
 
-        for (int i = 0; i < parent.getChildCount(); i++) {
-            child = (AbstractFolder) parent.getChildAt(i);
+				((IMAPFolder) subFolder).existsOnServer = true;
+				subFolder.getConfiguration().set("selectable", "false");
 
-            if (child instanceof IMAPFolder) {
-                ((IMAPFolder) child).existsOnServer = value;
-                markAllSubfoldersAsExistOnServer(child, value);
-            }
-        }
-    }
+				// this is the final folder
+				//subFolder = addIMAPChildFolder(parent, info, subchild);
+			} else {
+				if (!((IMAPFolder) subFolder).existsOnServer) {
+					((IMAPFolder) subFolder).existsOnServer = true;
+					subFolder.getConfiguration().set("selectable", "false");
+				}
+			}
 
-    protected void removeNotMarkedSubfolders(AbstractFolder parent)
-        throws Exception {
-        AbstractFolder child;
+			// recursively go on
+			syncFolder(subFolder, name.substring(name.indexOf(server
+					.getDelimiter()) + 1), info);
+		} else {
+			// no delimiter found
+			//  -> this is already the final folder
+			// if folder doesn't exist already
+			AbstractFolder subFolder = (AbstractFolder) parent
+					.findChildWithName(name, false);
 
-        // first remove all subfolders recursively
-        for (int i = 0; i < parent.getChildCount(); i++) {
-            child = (AbstractFolder) parent.getChildAt(i);
+			if (subFolder == null) {
+				subFolder = new IMAPFolder(name, "IMAPFolder", getParentPath());
+				parent.add(subFolder);
+				parent.getConfiguration().getRoot().addElement(
+						subFolder.getConfiguration().getRoot());
+				MailInterface.treeModel.insertNodeInto(subFolder, parent,
+						parent.getIndex(subFolder));
+			}
+			((IMAPFolder) subFolder).existsOnServer = true;
 
-            if (child instanceof IMAPFolder) {
-                removeNotMarkedSubfolders(child);
-            }
-        }
+			// Check the Noselect flag
+			if (info.getParameter(ListInfo.NOSELECT)) {
+				subFolder.getConfiguration().set("selectable", "false");
+			} else {
+				subFolder.getConfiguration().set("selectable", "true");
+			}
 
-        // maybe remove this folder
-        if (parent instanceof IMAPFolder) {
-            if (!((IMAPFolder) parent).existsOnServer) {
-                MailInterface.treeModel.removeNodeFromParent(parent);
-                parent.removeFolder();
-            }
-        }
-    }
+			// Check the Noinferior flag
+			if (info.getParameter(ListInfo.NOINFERIORS)
+					&& info.getDelimiter() != null) {
+				subFolder.getConfiguration().set("noinferiors", "true");
+			} else {
+				subFolder.getConfiguration().set("noinferiors", "false");
+			}
+		}
+	}
 
-    public void findSpecialFolders() {
-        SpecialFoldersItem folders = accountItem.getSpecialFoldersItem();
+	protected void markAllSubfoldersAsExistOnServer(AbstractFolder parent,
+			boolean value) {
+		AbstractFolder child;
 
-        for (int i = 0; i < SPECIAL_FOLDER_NAMES.length; i++) {
-            // Find special
-            int specialUid = folders.getInteger(SPECIAL_FOLDER_NAMES[i]);
+		for (int i = 0; i < parent.getChildCount(); i++) {
+			child = (AbstractFolder) parent.getChildAt(i);
 
-            // if have already a suitable folder skip the search
-            if (this.findChildWithUID(specialUid, true) == null) {
-                // search for a folder thats on the IMAP account
-                // first try to find the local translation of special
-                AbstractFolder specialFolder = this.findChildWithName(MailResourceLoader.getString(
-                            "tree", SPECIAL_FOLDER_NAMES[i]), true);
+			if (child instanceof IMAPFolder) {
+				((IMAPFolder) child).existsOnServer = value;
+				markAllSubfoldersAsExistOnServer(child, value);
+			}
+		}
+	}
 
-                if (specialFolder == null) {
-                    // fall back to the english version
-                    specialFolder = this.findChildWithName(SPECIAL_FOLDER_NAMES[i],
-                            true);
-                }
+	public void removeNotMarkedSubfolders(AbstractFolder parent)
+			throws Exception {
+		AbstractFolder child;
 
-                if (specialFolder != null) {
-                    // we found a suitable folder -> set it
-                    folders.set(SPECIAL_FOLDER_NAMES[i], specialFolder.getUid());
-                }
-            }
-        }
-    }
+		// first remove all subfolders recursively
+		for (int i = 0; i < parent.getChildCount(); i++) {
+			child = (AbstractFolder) parent.getChildAt(i);
 
-    public void syncSubscribedFolders() {
-        // first clear all flags
-        markAllSubfoldersAsExistOnServer(this, false);
+			if (child instanceof IMAPFolder) {
+				removeNotMarkedSubfolders(child);
+			}
+		}
 
-        IMAPFolder inbox = (IMAPFolder) this.findChildWithName("INBOX", false);
-        inbox.existsOnServer = true;
+		// maybe remove this folder
+		if (parent instanceof IMAPFolder) {
+			if (!((IMAPFolder) parent).existsOnServer) {
+				MailInterface.treeModel.removeNodeFromParent(parent);
+				parent.removeFolder();
+			}
+		}
+	}
 
-        try {
-            // create and tag all subfolders on server
-            ListInfo[] listInfo = getServer().fetchSubscribedFolders();
+	public void findSpecialFolders() {
+		SpecialFoldersItem folders = accountItem.getSpecialFoldersItem();
 
-            if (listInfo != null) {
-                for (int i = 0; i < listInfo.length; i++) {
-                    ListInfo info = listInfo[i];
-                    LOG.fine("delimiter=" + getServer().getDelimiter());
+		for (int i = 0; i < SPECIAL_FOLDER_NAMES.length; i++) {
+			// Find special
+			int specialUid = folders.getInteger(SPECIAL_FOLDER_NAMES[i]);
 
-                    String folderPath = info.getName();
+			// if have already a suitable folder skip the search
+			if (this.findChildWithUID(specialUid, true) == null) {
+				// search for a folder thats on the IMAP account
+				// first try to find the local translation of special
+				AbstractFolder specialFolder = this.findChildWithName(
+						MailResourceLoader.getString("tree",
+								SPECIAL_FOLDER_NAMES[i]), true);
 
-                    syncFolder(this, folderPath, info);
-                }
-            }
+				if (specialFolder == null) {
+					// fall back to the english version
+					specialFolder = this.findChildWithName(
+							SPECIAL_FOLDER_NAMES[i], true);
+				}
 
-            // remove all subfolders that are not marked as existonserver
-            removeNotMarkedSubfolders(this);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+				if (specialFolder != null) {
+					// we found a suitable folder -> set it
+					folders
+							.set(SPECIAL_FOLDER_NAMES[i], specialFolder
+									.getUid());
+				}
+			}
+		}
+	}
 
-        // This fixes the strange behaviour of the courier imapserver
-        // which sets the \Noselect flag on INBOX
-        inbox.getConfiguration().set("selectable", "true");
+	public void syncSubscribedFolders() {
+		// first clear all flags
+		markAllSubfoldersAsExistOnServer(this, false);
 
-        findSpecialFolders();
-    }
+		IMAPFolder inbox = (IMAPFolder) this.findChildWithName("INBOX", false);
+		inbox.existsOnServer = true;
 
-    public IMAPServer getServer() {
-        return server;
-    }
+		try {
+			// create and tag all subfolders on server
+			ListInfo[] listInfo = getServer().fetchSubscribedFolders();
 
-    public void updateConfiguration() {
-        server = new IMAPServer(accountItem.getImapItem(), this);
-    }
+			for (int i = 0; i < listInfo.length; i++) {
+				ListInfo info = listInfo[i];
+				LOG.fine("delimiter=" + getServer().getDelimiter());
 
-    /**
-     * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter,
-     *      java.lang.Object, org.columba.core.command.WorkerStatusController)
-     */
-    public Object[] searchMessages(Filter filter, Object[] uids)
-        throws Exception {
-        return null;
-    }
+				String folderPath = info.getName();
 
-    /**
-     * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter,
-     *      org.columba.core.command.WorkerStatusController)
-     */
-    public Object[] searchMessages(Filter filter) throws Exception {
-        return null;
-    }
+				syncFolder(this, folderPath, info);
+			}
 
-    /**
-     * @return
-     */
-    public AccountItem getAccountItem() {
-        return accountItem;
-    }
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.mail.folder.FolderTreeNode#addSubfolder(org.columba.mail.folder.FolderTreeNode)
-     */
-    public void addSubfolder(AbstractFolder child) throws Exception {
-        if (child instanceof IMAPFolder) {
-            getServer().createMailbox("", child.getName());
-        } 
+		// This fixes the strange behaviour of the courier imapserver
+		// which sets the \Noselect flag on INBOX
+		inbox.getConfiguration().set("selectable", "true");
 
-        super.addSubfolder(child);
-    }
+		findSpecialFolders();
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.mail.folder.Folder#save()
-     */
-    public void save() throws Exception {
-        LOG.info("Logout from IMAPServer " + getName());
+	public IMAPServer getServer() {
+		return server;
+	}
 
-        getServer().logout();
-    }
+	public void updateConfiguration() {
+		server = new IMAPServer(accountItem.getImapItem(), this);
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.mail.folder.RootFolder#getTrashFolder()
-     */
-    public AbstractFolder getTrashFolder() {
-        AbstractFolder ret = findChildWithUID(accountItem.getSpecialFoldersItem()
-                                                         .getInteger("trash"),
-                true);
+	/**
+	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter,
+	 *      java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 */
+	public Object[] searchMessages(Filter filter, Object[] uids)
+			throws Exception {
+		return null;
+	}
 
-        // has the imap account no trash folder using the default trash folder
-        if (ret == null) {
-            ret = MailInterface.treeModel.getTrashFolder();
-        }
+	/**
+	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter,
+	 *      org.columba.core.command.WorkerStatusController)
+	 */
+	public Object[] searchMessages(Filter filter) throws Exception {
+		return null;
+	}
 
-        return ret;
-    }
+	/**
+	 * @return
+	 */
+	public AccountItem getAccountItem() {
+		return accountItem;
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.mail.folder.RootFolder#getInbox()
-     */
-    public AbstractFolder getInboxFolder() {
-        return (IMAPFolder) this.findChildWithName("INBOX", false);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.FolderTreeNode#addSubfolder(org.columba.mail.folder.FolderTreeNode)
+	 */
+	public void addSubfolder(AbstractFolder child) throws Exception {
+		if (child instanceof IMAPFolder) {
+			getServer().createMailbox("", child.getName());
+		}
 
-    /**
-     * Parent directory for mail folders.
-     * <p>
-     * For example: /home/donald/.columba/mail
-     *
-     * @return Returns the parentPath.
-     */
-    public String getParentPath() {
-        return parentPath;
-    }
+		super.addSubfolder(child);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.Folder#save()
+	 */
+	public void save() throws Exception {
+		LOG.info("Logout from IMAPServer " + getName());
+
+		getServer().logout();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.RootFolder#getTrashFolder()
+	 */
+	public AbstractFolder getTrashFolder() {
+		AbstractFolder ret = findChildWithUID(accountItem
+				.getSpecialFoldersItem().getInteger("trash"), true);
+
+		// has the imap account no trash folder using the default trash folder
+		if (ret == null) {
+			ret = MailInterface.treeModel.getTrashFolder();
+		}
+
+		return ret;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.RootFolder#getInbox()
+	 */
+	public AbstractFolder getInboxFolder() {
+		return (IMAPFolder) this.findChildWithName("INBOX", false);
+	}
+
+	/**
+	 * Parent directory for mail folders.
+	 * <p>
+	 * For example: /home/donald/.columba/mail
+	 * 
+	 * @return Returns the parentPath.
+	 */
+	public String getParentPath() {
+		return parentPath;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.AbstractFolder#supportsAddFolder()
+	 */
+	public boolean supportsAddFolder(AbstractFolder folder) {
+		return true;
+	}
 }

@@ -575,6 +575,7 @@ public class IMAPServer {
 			try {
 				//MainInterface.processor.addOp(c);
 				c.execute(NullWorkerStatusController.getInstance());
+				c.updateGUI();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -734,9 +735,13 @@ public class IMAPServer {
 			else
 				fullName = mailboxName;
 
-			// create the mailbox on the server
-			protocol.create(fullName);
-
+			
+			// check if the mailbox already exists -> subscribe only
+			if( protocol.list("", fullName).length == 0 ) {
+				// 	create the mailbox on the server
+				protocol.create(fullName);
+			}
+			
 			// subscribe to the new mailbox
 			protocol.subscribe(fullName);
 		} catch (IMAPDisconnectedException e) {
@@ -1052,32 +1057,11 @@ public class IMAPServer {
 			CommandCancelledException {
 		int actState;
 
-		actState = protocol.getState();
-
-		while (actState < IMAPProtocol.AUTHENTICATED) {
-			switch (actState) {
-			case IMAPProtocol.LOGOUT: {
-				openConnection();
-				break;
-			}
-
-			case IMAPProtocol.NON_AUTHENTICATED: {
+		ensureConnectedState();
+		
+		if (protocol.getState() < IMAPProtocol.AUTHENTICATED) {
 				login();
-				break;
-			}
-
-			}
-
-			actState = protocol.getState();
 		}
-
-		/*
-		 * if ((getState() == STATE_AUTHENTICATE) || (getState() ==
-		 * STATE_SELECTED)) { // ok, we are logged in } else { // we are in
-		 * Imap4.STATE_NONAUTHENTICATE // -> force new login login(); // if
-		 * login was successfull if (getState() == STATE_AUTHENTICATE) { //
-		 * synchronize folder list with server parent.syncSubscribedFolders(); } }
-		 */
 	}
 
 	/**

@@ -55,6 +55,7 @@ import org.columba.mail.parser.PassiveHeaderParserInputStream;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPException;
 import org.columba.ristretto.imap.IMAPFlags;
+import org.columba.ristretto.imap.ListInfo;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
@@ -793,5 +794,14 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	public Header getAllHeaderFields(Object uid) throws Exception {
 		return getServer().getAllHeaders(uid, getImapPath() );
+
 	}
+
+	/**
+	 * @see org.columba.mail.folder.AbstractFolder#supportsAddFolder()
+	 */
+	public boolean supportsAddFolder(AbstractFolder folder) {
+		return true;
+	}
+
 }

@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.main.MailInterface;
@@ -115,7 +116,7 @@ public class FolderFactory {
      * @throws Exception
      */
     public AbstractFolder createDefaultChild(AbstractFolder parent, String name)
-        throws Exception {
+        throws FolderCreationException {
         List possibleChilds = getPossibleChilds(parent);
 
         if (possibleChilds.size() > 0) {
@@ -135,12 +136,17 @@ public class FolderFactory {
      * @throws Exception
      */
     public AbstractFolder createChild(AbstractFolder parent, String name,
-        String childType) throws Exception {
-        AbstractFolder child = (AbstractFolder) handler.getPlugin(childType,
-                new Object[] { name, childType, path });
+        String childType) throws FolderCreationException {
+        AbstractFolder child;
+		try {
+			child = (AbstractFolder) handler.getPlugin(childType,
+			        new Object[] { name, childType, path });
 
-        // Add child to parent
-        parent.addSubfolder(child);
+			// Add child to parent
+			parent.addSubfolder(child);
+		}  catch (Exception e) {
+			throw new FolderCreationException(e);
+		}
         return child;
     }
 
