@@ -4,16 +4,11 @@
 # 
 # -------------------------------------------------------------------
 
-
-
-#######################################
+# -------------------------------------------------------------------
+# 
+#  T U R B I N E  P R O J E C T
 #
-#  B A S I C   P R O P E R T I E S
-#
-#######################################
-
-torque.home = .
-
+# -------------------------------------------------------------------
 # This is the name of your Turbine project. Your generated sources
 # will be named using the project name selected below. If your
 # project=killerapp then you will have a generated:
@@ -27,8 +22,15 @@ torque.home = .
 #
 # The object model sources generated are independent of
 # the project name selected.
-torque.project = scarab
+# -------------------------------------------------------------------
 
+project=scarab
+
+# -------------------------------------------------------------------
+#
+#  T A R G E T  D A T A B A S E
+#
+# -------------------------------------------------------------------
 # This is the target database, only considered when generating
 # the SQL for your Turbine project. Your possible choices are
 #
@@ -42,16 +44,8 @@ torque.project = scarab
 #
 # Default: none
 # -------------------------------------------------------------------
-torque.database=@DATABASE_TYPE@
 
-torque.idTableXMLFile = 
-
-# These settings will allow you to customize the way your schema
-# documentation is created.
-# Valid formats are: html, anakia (for use with jakarta-site2)
-torque.doc.format = html
-
-torque.initialID = 101
+database=@DATABASE_TYPE@
 
 # -------------------------------------------------------------------
 #
@@ -72,20 +66,20 @@ torque.initialID = 101
 # addIntakeRetrievable=implement Intake's Retrievable interface
 # -------------------------------------------------------------------
 
-torque.targetPackage=org.tigris.scarab.om
-torque.basePrefix=Base
-torque.addSaveMethod=true
-torque.addGetByNameMethod=true
-torque.complexObjectModel=true
-torque.addTimeStamp=false
-torque.addIntakeRetrievable=true
-torque.overloadKeySetters=true
+targetPackage=org.tigris.scarab.om
+basePrefix=Base
+addSaveMethod=true
+addGetByNameMethod=true
+complexObjectModel=true
+addTimeStamp=false
+addIntakeRetrievable=true
+overloadKeySetters=true
 
 # -------------------------------------------------------------------
 # Generate Manager classes that use JCS for caching.  This is still
 # considered experimental.
 # -------------------------------------------------------------------
-torque.useManagers=true
+useManagers=true
 
 # -------------------------------------------------------------------
 #
@@ -99,43 +93,39 @@ torque.useManagers=true
 # NOTE: Scarab is not using the properties here, maybe in the future
 # -------------------------------------------------------------------
 
-torque.databaseUrl = @DATABASE_URL@
-torque.databaseDriver = @DATABASE_DRIVER@
-torque.databaseUser = @DATABASE_USER@
-torque.databasePassword = @DATABASE_PASSWORD@
-torque.createDatabaseUrl = @DATABASE_ADMIN_URL@
+databaseUrl = @DATABASE_URL@
+databaseDriver = @DATABASE_DRIVER@
+databaseUser = @DATABASE_USER@
+databasePassword = @DATABASE_PASSWORD@
+createDatabaseUrl = @DATABASE_ADMIN_URL@
 
 
 # Tells JDBC task that javaName attribute for the tables and columns
 # should be made same as SQL name.
-torque.sameJavaName=false
+sameJavaName=false
 
-
-#######################################
+# -------------------------------------------------------------------
 #
-#  D I R E C T O R I E S
+#  D O C U M E N T A T I O   S E T T I N G S
 #
-#######################################
+# -------------------------------------------------------------------
+# These settings will allow you to customize the way your schema
+# documentation is created.
+# Valid formats are: html, anakia (for use with jakarta-site2)
+# -------------------------------------------------------------------
+documentationFormat=html
 
-torque.output.dir = ${torque.home}/../../../../../../src
-torque.schema.dir = ${torque.home}/schema
+# -------------------------------------------------------------------
+# You should NOT have to edit anything below here.
+# -------------------------------------------------------------------
 
-torque.doc.dir = ${torque.output.dir}/doc
-torque.java.dir = ${torque.output.dir}/java
-torque.javadoc.dir = ${torque.output.dir}/javadoc
-torque.ojb.dir = ${torque.output.dir}/ojb
-torque.sql.dir = ${torque.output.dir}/sql
-torque.basezip.dir = ${torque.output.dir}
-
-#######################################
+# -------------------------------------------------------------------
+# 
+#  T E M P L A T E  P A T H
 #
-#  P A T H S
-#
-#######################################
+# -------------------------------------------------------------------
 
-torque.templatePath = templates
-torque.useClasspath = false
-
+templatePath = templates
 
 # -------------------------------------------------------------------
 # 
@@ -151,28 +141,18 @@ DataDumpControlTemplate = data/dump/Control.vm
 DataSQLControlTemplate = sql/load/Control.vm
 DocControlTemplate = doc/Control.vm
 
-torque.template.sql = ${SQLControlTemplate}
-torque.template.om = ${OMControlTemplate}
-torque.template.idTable = ${idTableControlTemplate}
-torque.template.dataDtd = ${DataDTDControlTemplate}
-torque.template.dataDump = ${DataDumpControlTemplate}
-torque.template.dataSql = ${DataSQLControlTemplate}
-torque.template.doc = ${DocControlTemplate}
-torque.template.sqlDbInit = sql/db-init/Control.vm
-torque.template.ojb = ojb/repository/Control.vm
-torque.template.ojbModel = ojb/model/Control.vm
-
-
-#######################################
+# -------------------------------------------------------------------
+# 
+#  O U T P U T  D I R E C T O R Y
 #
-#  C O M P I L E   S E T T I N G S
+# -------------------------------------------------------------------
+
+outputDirectory=../../../../../../src
+
+# -------------------------------------------------------------------
+# 
+#  S C H E M A  D I R E C T O R Y
 #
-#######################################
+# -------------------------------------------------------------------
 
-torque.compile.src.dir = ${torque.java.dir}
-torque.compile.build.dir = bin/classes
-torque.compile.debug = on
-torque.compile.deprecation = off
-torque.compile.optimize = off
-
-
+schemaDirectory=schema
