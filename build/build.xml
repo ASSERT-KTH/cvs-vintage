@@ -199,14 +199,14 @@
         
         <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
         <copy todir="${build.project}" filtering="yes">
-            <fileset dir="${src.html.dir}" defaultexcludes="no">
+            <fileset dir="${src.html.dir}">
                 <include name="**/*.html"/>
                 <include name="**/*.js"/>
             </fileset>
         </copy>
 
         <copy todir="${build.project}/dtd" filtering="yes">
-            <fileset dir="${src.dtd.dir}" defaultexcludes="no">
+            <fileset dir="${src.dtd.dir}">
                 <include name="**/scarab.dtd"/>
                 <include name="**/scarab-settings.dtd"/>
             </fileset>
@@ -296,7 +296,7 @@
         <filter token="TEMPLATE_CACHE" value="${scarab.template.cache}"/>
         
         <copy todir="${build.project.webinf}/conf" filtering="yes" overwrite="true">
-            <fileset dir="${src.conf.dir}/" defaultexcludes="no">
+            <fileset dir="${src.conf.dir}/">
                 <include name="*.properties"/>
                 <include name="*.xml"/>
             </fileset>
@@ -338,7 +338,7 @@
         <!-- the source code directory -->
         <filter token="OM" value="org.tigris.scarab.om"/>
         <copy todir="${build.src.scarab}/org" filtering="yes">
-            <fileset dir="${src.java.dir.scarab}/org" defaultexcludes="no">
+            <fileset dir="${src.java.dir.scarab}/org">
                 <include name="**/*.java"/>
                 <include name="**/*.xml"/>
                 <include name="**/*.properties"/>
@@ -373,7 +373,7 @@
     <!-- ================================================================== -->
     <target name="copy-templates" if="scarab.copy.templates">
         <copy todir="${build.project.webinf}/templates" filtering="no">
-            <fileset dir="${src.templates.dir}" defaultexcludes="no"/>
+            <fileset dir="${src.templates.dir}"/>
         </copy>
     </target>
 
@@ -384,7 +384,7 @@
         if="lucene.present">
 
         <copy todir="${build.src.scarab}/org" filtering="yes">
-            <fileset dir="${src.java.dir.scarab}/org" defaultexcludes="no">
+            <fileset dir="${src.java.dir.scarab}/org">
                 <include name="**/*Lucene*.java"/>
             </fileset>
         </copy>
