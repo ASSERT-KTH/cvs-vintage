@@ -50,60 +50,43 @@ package org.tigris.scarab.actions;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.torque.om.NumberKey;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
- *  This class will allow you to set the selected Issue Type for a user.
+ * This is a generic action for allowing someone to set the NEXT_TEMPLATE
+ * and redirect to the defined template.
  *       
- *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: SelectIssueType.java,v 1.5 2002/01/15 22:53:38 jon Exp $
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: Redirect.java,v 1.1 2002/01/15 22:53:38 jon Exp $
  */
-public class SelectIssueType extends RequireLoginFirstAction
+public class Redirect extends RequireLoginFirstAction
 {
     /**
-        This manages clicking the Refresh button
-    */
-    public void doSelect( RunData data, TemplateContext context ) throws Exception
+     * This will redirect to whatever NEXT_TEMPLATE is
+     * set to be. If that isn't set, it goes to template.homepage
+     * and then finally to Index.vm
+     */
+    public void doRedirect(RunData data, TemplateContext context)
+        throws Exception
     {
-        // set the next issue type
-        String newIssueType = 
-            data.getParameters().getString(ScarabConstants.NEW_ISSUE_TYPE);
-        if (newIssueType == null)
-        {
-            setTarget(data, "SelectIssueType.vm");
-            return;
-        }
-        data.getParameters().setString(ScarabConstants.CURRENT_ISSUE_TYPE, 
-            newIssueType);
-        
-        IssueType issueType = (IssueType)IssueTypePeer.
-                               retrieveByPK(new NumberKey(newIssueType));
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        scarabR.setCurrentIssueType(issueType);
-        scarabR.setReportingIssue(null);
-        data.getParameters().remove(ScarabConstants.REPORTING_ISSUE);
-
         // set the next template
         String nextTemplate = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE, 
             Turbine.getConfiguration()
-                       .getString("template.homepage", "SelectIssueType.vm") );
+                       .getString("template.homepage", "Index.vm"));
 
         setTarget(data, nextTemplate);
     }
 
     /**
-        calls doSelect().
-    */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
+     * calls doRedirect().
+     */
+    public void doPerform(RunData data, TemplateContext context)
+        throws Exception
     {
-        doSelect(data, context);
+        doRedirect(data, context);
     }
 }

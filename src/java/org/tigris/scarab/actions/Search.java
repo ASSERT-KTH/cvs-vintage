@@ -57,6 +57,7 @@ import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 
 import org.apache.commons.util.SequencedHashtable;
+import org.apache.commons.util.StringUtils;
 
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.torque.om.NumberKey; 
@@ -84,7 +85,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.49 2002/01/11 00:42:47 elicia Exp $
+    @version $Id: Search.java,v 1.50 2002/01/15 22:53:38 jon Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -94,7 +95,7 @@ public class Search extends RequireLoginFirstAction
                                 "required to submit your request. Please " +
                                 "see error messages."; 
 
-    public void doSearch( RunData data, TemplateContext context )
+    public void doSearch(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -103,13 +104,13 @@ public class Search extends RequireLoginFirstAction
 
         context.put("queryString", getQueryString(data));
 
-        if ( intake.isAllValid() ) 
+        if (intake.isAllValid()) 
         {
             ScarabRequestTool scarabR = getScarabRequestTool(context);
             IssueSearch search = new IssueSearch(scarabR.getCurrentModule(), 
                                                  scarabR.getCurrentIssueType());
             Group searchGroup = intake.get("SearchIssue", 
-                                     scarabR.getSearch().getQueryKey() );
+                                     scarabR.getSearch().getQueryKey());
             searchGroup.setProperties(search);
 
             SequencedHashtable avMap = search.getModuleAttributeValuesMap();
@@ -118,7 +119,7 @@ public class Search extends RequireLoginFirstAction
             {
                 AttributeValue aval = (AttributeValue)avMap.get(i.next());
                 Group group = intake.get("AttributeValue", aval.getQueryKey());
-                if ( group != null ) 
+                if (group != null) 
                 {
                     group.setProperties(aval);
                 }                
@@ -132,7 +133,7 @@ public class Search extends RequireLoginFirstAction
             catch (Exception e)
             {
             }
-            if ( matchingIssues != null && matchingIssues.size() > 0 )
+            if (matchingIssues != null && matchingIssues.size() > 0)
             {
                 List issueIdList = new ArrayList();
                 i = matchingIssues.iterator();
@@ -159,7 +160,7 @@ public class Search extends RequireLoginFirstAction
     /**
         Redirects to form to save the query. May redirect to Login page.
     */
-    public void doRedirecttosavequery( RunData data, TemplateContext context )
+    public void doRedirecttosavequery(RunData data, TemplateContext context)
          throws Exception
     {        
         context.put("queryString", getQueryString(data));
@@ -171,7 +172,7 @@ public class Search extends RequireLoginFirstAction
     /**
         Saves query.
     */
-    public void doSavequery( RunData data, TemplateContext context )
+    public void doSavequery(RunData data, TemplateContext context)
          throws Exception
     {        
         IntakeTool intake = getIntakeTool(context);
@@ -179,14 +180,14 @@ public class Search extends RequireLoginFirstAction
         ScarabUser user = (ScarabUser)data.getUser();
         Query query = scarabR.getQuery();
         Group queryGroup = intake.get("Query", 
-                                      query.getQueryKey() );
+                                      query.getQueryKey());
 
         Field name = queryGroup.get("Name");
         name.setRequired(true);
         Field value = queryGroup.get("Value");
         context.put("queryString", value);
 
-        if ( intake.isAllValid() ) 
+        if (intake.isAllValid()) 
         {
             queryGroup.setProperties(query);
             query.setUserId(user.getUserId());
@@ -208,14 +209,14 @@ public class Search extends RequireLoginFirstAction
     /**
         Edits the stored story.
     */
-    public void doEditstoredquery( RunData data, TemplateContext context )
+    public void doEditstoredquery(RunData data, TemplateContext context)
          throws Exception
     {        
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Query query = scarabR.getQuery();
         Group queryGroup = intake.get("Query", 
-                                      query.getQueryKey() );
+                                      query.getQueryKey());
         String newValue = getQueryString(data);
         queryGroup.setProperties(query);
         query.setValue(newValue);
@@ -227,20 +228,55 @@ public class Search extends RequireLoginFirstAction
     /**
         Runs the stored story.
     */
-    public void doRunstoredquery( RunData data, TemplateContext context )
+    public void doRunstoredquery(RunData data, TemplateContext context)
          throws Exception
-    {        
+    {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Query query = scarabR.getQuery();
-	ScarabUser user = (ScarabUser)data.getUser();
-	user.setTemp(ScarabConstants.CURRENT_QUERY, query.getValue());
+        ScarabUser user = (ScarabUser)data.getUser();
+        user.setTemp(ScarabConstants.CURRENT_QUERY, query.getValue());
         setTarget(data, "IssueList.vm");
+    }
+
+    /** 
+     * This method handles clicking the Go button in the SearchNav.vm
+     * file. First it checks to see if the select box passed in a number
+     * or a string. If it is a number, then we run the stored query
+     * assuming the number is the query id. Else, we assume it is a
+     * string and that is our template to redirect to.
+     */
+    public void doSelectquery(RunData data, TemplateContext context)
+        throws Exception
+    {
+        String go = data.getParameters().getString("go");
+        if (go != null && go.length() > 0)
+        {
+            // if the string is a number, then execute
+            // doRunstoredquery()
+            if (StringUtils.isNumeric(go))
+            {
+                doRunstoredquery(data, context);
+            }
+            else
+            {
+                setTarget(data, go);
+            }
+        }
+        else
+        {
+            // set the next template
+            String nextTemplate = data.getParameters()
+                .getString(ScarabConstants.NEXT_TEMPLATE, 
+                Turbine.getConfiguration()
+                           .getString("template.homepage", "Index.vm"));
+            setTarget(data, nextTemplate);
+        }
     }
 
     /**
         Redirects to ViewIssueLong.
     */
-    public void doViewall( RunData data, TemplateContext context )
+    public void doViewall(RunData data, TemplateContext context)
          throws Exception
     {        
         setTarget(data, "ViewIssueLong.vm");            
@@ -249,7 +285,7 @@ public class Search extends RequireLoginFirstAction
     /**
         Gets selected id's and redirects to ViewIssueLong.
     */
-    public void doViewselected( RunData data, TemplateContext context )
+    public void doViewselected(RunData data, TemplateContext context)
          throws Exception
     {        
         getSelected(data, context);
@@ -259,7 +295,7 @@ public class Search extends RequireLoginFirstAction
     /**
         Redirects to AssignIssue.
     */
-    public void doReassignall( RunData data, TemplateContext context )
+    public void doReassignall(RunData data, TemplateContext context)
          throws Exception
     {        
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -276,7 +312,7 @@ public class Search extends RequireLoginFirstAction
     /**
         Gets selected id's and redirects to AssignIssue.
     */
-    public void doReassignselected( RunData data, TemplateContext context )
+    public void doReassignselected(RunData data, TemplateContext context)
          throws Exception
     {
         getSelected(data, context);
@@ -286,13 +322,13 @@ public class Search extends RequireLoginFirstAction
     /**
         redirects to AssignIssue.
     */
-    public void doRefinequery( RunData data, TemplateContext context )
+    public void doRefinequery(RunData data, TemplateContext context)
          throws Exception
     {        
         setTarget(data, "AdvancedQuery.vm");            
     }
 
-    public String getQueryString( RunData data) throws Exception
+    public String getQueryString(RunData data) throws Exception
     {
         String queryString = null;
         StringBuffer buf = new StringBuffer();
@@ -318,7 +354,7 @@ public class Search extends RequireLoginFirstAction
     /**
         Retrieves list of selected issue id's and puts in the context.
     */
-    private void getSelected( RunData data, TemplateContext context ) 
+    private void getSelected(RunData data, TemplateContext context) 
     {
         List newIssueIdList = new ArrayList();
         String key;

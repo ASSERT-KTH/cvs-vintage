@@ -53,15 +53,15 @@ import org.apache.turbine.RunData;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.actions.base.ScarabTemplateAction;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
  *  This class will allow you to set the selected Module for a user.
  *       
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: SelectModule.java,v 1.3 2001/09/30 18:31:38 jon Exp $
+ *  @version $Id: SelectModule.java,v 1.4 2002/01/15 22:53:38 jon Exp $
  */
-public class SelectModule extends ScarabTemplateAction
+public class SelectModule extends RequireLoginFirstAction
 {
     /**
         This manages clicking the Refresh button
