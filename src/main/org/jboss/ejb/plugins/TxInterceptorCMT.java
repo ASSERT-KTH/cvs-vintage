@@ -44,7 +44,7 @@ import java.util.ArrayList;
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- *  @version $Revision: 1.41 $
+ *  @version $Revision: 1.42 $
  */
 public class TxInterceptorCMT
 extends AbstractTxInterceptor implements XmlLoadable
@@ -189,29 +189,29 @@ extends AbstractTxInterceptor implements XmlLoadable
 
    private void printMethod(Method m, byte type)
    {
-      String name;
+      String txName;
       switch(type)
       {
          case MetaData.TX_MANDATORY:
-            name = "TX_MANDATORY";
+            txName = "TX_MANDATORY";
             break;
          case MetaData.TX_NEVER:
-            name = "TX_NEVER";
+            txName = "TX_NEVER";
             break;
          case MetaData.TX_NOT_SUPPORTED:
-            name = "TX_NOT_SUPPORTED";
+            txName = "TX_NOT_SUPPORTED";
             break;
          case MetaData.TX_REQUIRED:
-            name = "TX_REQUIRED";
+            txName = "TX_REQUIRED";
             break;
          case MetaData.TX_REQUIRES_NEW:
-            name = "TX_REQUIRES_NEW";
+            txName = "TX_REQUIRES_NEW";
             break;
          case MetaData.TX_SUPPORTS:
-            name = "TX_SUPPORTS";
+            txName = "TX_SUPPORTS";
             break;
          default:
-            name = "TX_UNKNOWN";
+            txName = "TX_UNKNOWN";
       }
 
       String methodName;
@@ -225,7 +225,7 @@ extends AbstractTxInterceptor implements XmlLoadable
 
       if (log.isTraceEnabled())
       {
-         log.trace(name + " for " + methodName);
+         log.trace(txName + " for " + methodName);
       }
    }
 

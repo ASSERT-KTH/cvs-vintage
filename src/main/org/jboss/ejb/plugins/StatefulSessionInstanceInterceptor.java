@@ -36,7 +36,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -223,7 +223,8 @@ public class StatefulSessionInstanceInterceptor
             mi.setEnterpriseContext(ctx);
             
             // BMT beans will lock and replace tx no matter what, CMT do work on transaction
-            if (!((SessionMetaData)container.getBeanMetaData()).isBeanManagedTx())
+            boolean isBMT = ((SessionMetaData)container.getBeanMetaData()).isBeanManagedTx();
+            if (isBMT == false)
             {
                
                // Do we have a running transaction with the context
@@ -473,8 +474,10 @@ public class StatefulSessionInstanceInterceptor
             // finish the transaction association
             ctx.setTransaction(null);
             
-            // unlock this context
-            ctx.unlock();
+            // the context is locked in beforeCompletion()
+            // which is only called in case of commit() and not rollback() 
+            if (ctx.isLocked())
+               ctx.unlock();
             
             if (notifySession)
             {
