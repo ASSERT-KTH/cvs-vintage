@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.29 2003/09/15 21:29:43 alexb Exp $
+// $Id: UmlModelEventPump.java,v 1.30 2003/09/17 21:17:06 thierrylach Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -659,7 +659,7 @@ public final class UmlModelEventPump implements MElementListener {
      */
     public void stopPumpingEvents() {
 
-	MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_DISABLED);
+        MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_DISABLED);
     }
     
     /**
@@ -667,7 +667,7 @@ public final class UmlModelEventPump implements MElementListener {
      */
     public void startPumpingEvents() {
 
-	MFactoryImpl.flushEvents();
+        MFactoryImpl.flushEvents();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
     }
     
@@ -676,7 +676,7 @@ public final class UmlModelEventPump implements MElementListener {
      */
     public void flushModelEvents() {
 
-	MFactoryImpl.flushEvents();
+        MFactoryImpl.flushEvents();
     }
 }
 
@@ -1169,8 +1169,8 @@ class EventTreeDefinition {
     }
 
     /**
-     * <p>Add all event sources described by the given document. The document must match 
-     * the pattern given by the following example:
+     * <p>Add all event sources described by the given document.
+     * The document must match  the pattern given by the following example:
      * 
      * <pre>
      * &lt;eventtree&gt;
@@ -1283,7 +1283,8 @@ class EventTreeDefinition {
      * @param name
      * @return
      */
-    public synchronized EventKey[] getEventTypes(Class modelClass, String name) {
+    public synchronized EventKey[] getEventTypes(Class modelClass,
+                                                 String name) {
         modelClass = formatClass(modelClass);
         Map nameMap = (Map) _definition.get(modelClass);
         if (nameMap != null) {
