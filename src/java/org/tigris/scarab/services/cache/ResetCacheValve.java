@@ -75,6 +75,7 @@ public class ResetCacheValve
     public void invoke( RunData data, ValveContext context )
         throws IOException, TurbineException
     {
+        // Covenient place to add some timing metrics
         Long start = (Long)data.getRequest().getAttribute(KEY);
         if (start == null) 
         {
@@ -89,8 +90,9 @@ public class ResetCacheValve
             log.debug(s);
         }
         
-
+        // clear the short-term cache
         ScarabCache.clear();
+
         // Pass control to the next Valve in the Pipeline
         context.invokeNext( data );
     }
