@@ -377,6 +377,8 @@ public class BodyTextViewer extends JTextPane implements Viewer,
 				// encapsulate bodytext in html-code
 				body = transformToHTML(new StringBuffer(body));
 
+				//setText(body);
+				
 				LOG.finest("validated bodytext:\n" + body);
 
 			} catch (Exception ex) {
@@ -457,6 +459,7 @@ public class BodyTextViewer extends JTextPane implements Viewer,
 	 */
 	public void updateGUI() throws Exception {
 
+		
 		if (!htmlMessage) {
 
 			// display bodytext
@@ -465,7 +468,8 @@ public class BodyTextViewer extends JTextPane implements Viewer,
 			// this call has to happen in the awt-event dispatcher thread
 			setPage(url);
 		}
-
+		
+		
 		//		 setup base url in order to be able to display images
 		// in html-component
 		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");

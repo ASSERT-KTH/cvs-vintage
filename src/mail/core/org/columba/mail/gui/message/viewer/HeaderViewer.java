@@ -79,6 +79,8 @@ public class HeaderViewer extends JPanel implements Viewer {
 
 	private StatusPanel statusPanel;
 
+	private boolean hasAttachment;
+
 	public HeaderViewer() {
 
 		setLayout(new BorderLayout());
@@ -177,11 +179,8 @@ public class HeaderViewer extends JPanel implements Viewer {
 			break;
 		}
 
-		//map = initHeaderFields(header);
-		boolean hasAttachment = ((Boolean) folder.getAttribute(uid,
+		hasAttachment = ((Boolean) folder.getAttribute(uid,
 				"columba.attachment")).booleanValue();
-
-		getStatusPanel().setStatus(hasAttachment);
 
 		visible = true;
 
@@ -260,7 +259,7 @@ public class HeaderViewer extends JPanel implements Viewer {
 	 */
 	public void updateGUI() throws Exception {
 		getHeaderTextPane().setHeader(map);
-
+		getStatusPanel().setStatus(hasAttachment);
 	}
 
 	/**
@@ -412,13 +411,14 @@ public class HeaderViewer extends JPanel implements Viewer {
 
 		private JLabel decryptionLabel;
 
+		private JPanel leftPanel;
+
 		public StatusPanel() {
+
 			setLayout(new FlowLayout());
 
 			attachmentLabel = new JLabel();
-
 			decryptionLabel = new JLabel();
-
 			add(attachmentLabel);
 			add(decryptionLabel);
 		}
