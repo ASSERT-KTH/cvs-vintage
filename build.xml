@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: build.xml,v 1.36 2005/02/17 09:08:43 benoitf Exp $
+ - $Id: build.xml,v 1.37 2005/03/07 16:01:00 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -241,11 +241,11 @@
     <!-- copy default file in the compile base -->
     <copy file="${ext}/carol-defaults.properties"
           tofile="${build}/classes/carol-defaults.properties" />
-      <subant target="dist.jar" inheritall="true">
-        <fileset dir="${archive}" includes="*.xml"/>
-      </subant>
-    <copy file="${externals}/commons-cli.jar"
-          tofile="${dist.lib}/commons-cli.jar" />
+    <subant target="dist.jar" inheritall="true">
+      <fileset dir="${archive}" includes="*.xml" />
+    </subant>
+    <copy file="${externals}/commons-cli-1.0.jar"
+          tofile="${dist.lib}/commons-cli-1.0.jar" />
   </target>
 
 
@@ -291,8 +291,8 @@
   <!-- *************************************-->
   <!-- *********      CONFIG    ************-->
   <!-- *************************************-->
-  <!-- This target simply copy the present ext 
-  in ${dist.config} directory and copy the ext/README 
+  <!-- This target simply copy the present ext
+  in ${dist.config} directory and copy the ext/README
   in the ${dist} directory -->
   <target name="config" description="Build carol configuration directory">
     <mkdir dir="${dist.config}" />
