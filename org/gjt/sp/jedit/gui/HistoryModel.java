@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * A history list. One history list can be used by several history text
  * fields.
  * @author Slava Pestov
- * @version $Id: HistoryModel.java,v 1.6 2003/01/12 03:08:24 spestov Exp $
+ * @version $Id: HistoryModel.java,v 1.7 2003/01/31 04:49:30 spestov Exp $
  */
 public class HistoryModel
 {
@@ -124,8 +124,9 @@ public class HistoryModel
 
 	//{{{ loadHistory() method
 	/**
-	 * Loads the history from the specified file. jEdit calls this
-	 * on startup.
+	 * Loads the history from the specified file.
+	 *
+	 * jEdit calls this method on startup.
 	 * @param The file
 	 */
 	public static void loadHistory(File file)
@@ -183,8 +184,9 @@ public class HistoryModel
 
 	//{{{ saveHistory() method
 	/**
-	 * Saves the history to the specified file. jEdit calls this when
-	 * it is exiting.
+	 * Saves the history to the specified file.
+	 *
+	 * jEdit calls this method when it is exiting.
 	 * @param file The file
 	 */
 	public static void saveHistory(File file)

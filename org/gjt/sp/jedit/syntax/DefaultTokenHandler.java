@@ -23,11 +23,10 @@
 package org.gjt.sp.jedit.syntax;
 
 /**
- * An implementation of the <code>TokenHandler</code> interface that
- * builds a linked list of tokens.
+ * Builds a linked list of tokens without any additional processing.
  *
  * @author Slava Pestov
- * @version $Id: DefaultTokenHandler.java,v 1.12 2002/06/04 08:48:13 spestov Exp $
+ * @version $Id: DefaultTokenHandler.java,v 1.13 2003/01/31 04:49:31 spestov Exp $
  * @since jEdit 4.1pre1
  */
 public class DefaultTokenHandler implements TokenHandler

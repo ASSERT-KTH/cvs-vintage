@@ -29,11 +29,13 @@ import java.awt.Component;
 //}}}
 
 /**
+ * An action.<p>
+ *
  * Instead of subclassing EditAction directly, you should now write an
  * actions.xml file.
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.12 2003/01/12 03:08:23 spestov Exp $
+ * @version $Id: EditAction.java,v 1.13 2003/01/31 04:49:30 spestov Exp $
  */
 public abstract class EditAction
 {

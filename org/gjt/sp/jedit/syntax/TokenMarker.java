@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.46 2003/01/20 02:02:28 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.47 2003/01/31 04:49:31 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -742,6 +742,9 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 	//}}}
 
 	//{{{ LineContext class
+	/**
+	 * Stores persistent per-line syntax parser state.
+	 */
 	public static class LineContext
 	{
 		private static Hashtable intern = new Hashtable();

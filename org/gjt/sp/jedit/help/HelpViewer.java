@@ -39,10 +39,10 @@ import org.gjt.sp.util.Log;
 //}}}
 
 /**
- * jEdit's HTML viewer. It uses a Swing JEditorPane to display the HTML,
+ * jEdit's searchable help viewer. It uses a Swing JEditorPane to display the HTML,
  * and implements a URL history.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.7 2003/01/12 03:08:24 spestov Exp $
+ * @version $Id: HelpViewer.java,v 1.8 2003/01/31 04:49:31 spestov Exp $
  */
 public class HelpViewer extends JFrame implements EBComponent
 {

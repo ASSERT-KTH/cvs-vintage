@@ -24,6 +24,12 @@ import java.util.Vector;
 
 import org.gjt.sp.util.Log;
 
+/**
+ * A set of option panes shown in one branch in the options dialog.
+ *
+ * @author Slava Pestov
+ * @version $Id: OptionGroup.java,v 1.2 2003/01/31 04:49:30 spestov Exp $
+ */
 public class OptionGroup
 {
 	public OptionGroup(String name)

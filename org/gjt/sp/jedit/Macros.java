@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * This class records and runs macros.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.26 2003/01/12 03:08:23 spestov Exp $
+ * @version $Id: Macros.java,v 1.27 2003/01/31 04:49:30 spestov Exp $
  */
 public class Macros
 {
@@ -707,6 +707,9 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 	//}}}
 
 	//{{{ Recorder class
+	/**
+	 * Handles macro recording.
+	 */
 	public static class Recorder implements EBComponent
 	{
 		View view;

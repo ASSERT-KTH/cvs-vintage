@@ -22,9 +22,9 @@ package org.gjt.sp.jedit.search;
 import org.gjt.sp.jedit.*;
 
 /**
- * An abstract interface for matching files.
+ * An abstract interface representing a set of files.
  * @author Slava Pestov
- * @version $Id: SearchFileSet.java,v 1.3 2002/05/28 01:50:19 spestov Exp $
+ * @version $Id: SearchFileSet.java,v 1.4 2003/01/31 04:49:31 spestov Exp $
  */
 public interface SearchFileSet
 {

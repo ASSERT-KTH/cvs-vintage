@@ -28,15 +28,15 @@ import java.awt.Graphics2D;
  * Subclasses of this class can perform custom painting and tool tip
  * handling in the text area and gutter.
  *
- * @see TextAreaPainter.addExtension(TextAreaExtension)
- * @see TextAreaPainter.removeExtension(TextAreaExtension)
- * @see Gutter.addExtension(TextAreaExtension)
- * @see Gutter.removeExtension(TextAreaExtension)
+ * @see TextAreaPainter#addExtension(TextAreaExtension)
+ * @see TextAreaPainter#removeExtension(TextAreaExtension)
+ * @see Gutter#addExtension(TextAreaExtension)
+ * @see Gutter#removeExtension(TextAreaExtension)
  *
  * @since jEdit 4.0pre4
  *
  * @author Slava Pestov
- * @version $Id: TextAreaExtension.java,v 1.2 2002/01/17 10:37:55 spestov Exp $
+ * @version $Id: TextAreaExtension.java,v 1.3 2003/01/31 04:49:31 spestov Exp $
  */
 public abstract class TextAreaExtension
 {

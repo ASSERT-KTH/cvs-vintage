@@ -32,6 +32,8 @@ import org.gjt.sp.util.Log;
 //}}}
 
 /**
+ * Inter-process communication.<p>
+ *
  * The edit server protocol is very simple. <code>$HOME/.jedit/server</code>
  * is an ASCII file containing two lines, the first being the port number,
  * the second being the authorization key.<p>
@@ -51,7 +53,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.8 2002/05/19 03:34:01 spestov Exp $
+ * @version $Id: EditServer.java,v 1.9 2003/01/31 04:49:30 spestov Exp $
  */
 public class EditServer extends Thread
 {

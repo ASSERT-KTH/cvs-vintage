@@ -26,11 +26,11 @@ import javax.swing.text.Segment;
 import org.gjt.sp.jedit.Buffer;
 
 /**
- * A fold handler that folds lines based markers embedded in the text.
- * ("{{{"
- * and "}}}").
+ * A fold handler that folds lines based on markers ("{{{" and "}}}")
+ * embedded in the text.
+ *
  * @author Slava Pestov
- * @version $Id: ExplicitFoldHandler.java,v 1.5 2002/03/28 04:08:42 spestov Exp $
+ * @version $Id: ExplicitFoldHandler.java,v 1.6 2003/01/31 04:49:30 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ExplicitFoldHandler extends FoldHandler

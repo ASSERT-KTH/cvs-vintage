@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
 //}}}
 
 /**
- * Class with several useful GUI functions.<p>
+ * Various GUI functions.<p>
  *
  * It provides methods for:
  * <ul>
@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.50 2003/01/14 01:11:35 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.51 2003/01/31 04:49:30 spestov Exp $
  */
 public class GUIUtilities
 {

@@ -38,17 +38,19 @@ import org.gjt.sp.util.*;
 //}}}
 
 /**
- * The status bar, used for the following:
+ * The status bar used to display various information to the user.<p>
+ *
+ * Currently, it is used for the following:
  * <ul>
  * <li>Displaying caret position information
- * <li>Displaying readNextChar() prompts
- * <li>Displaying the status of the overwrite, multi select flags
- * <li>I/O progress
- * <li>Memory status
- * <li>And so on
+ * <li>Displaying <code>readNextChar()</code> prompts
+ * <li>Displaying <code>setMessage()</code> messages
+ * <li>Displaying I/O progress
+ * <li>Displaying various editor settings
+ * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.48 2003/01/12 03:08:24 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.49 2003/01/31 04:49:30 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */

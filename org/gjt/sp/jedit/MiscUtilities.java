@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.31 2003/01/12 03:08:23 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.32 2003/01/31 04:49:30 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -540,7 +540,8 @@ loop:		for(int i = 0; i < str.length(); i++)
 
 	//{{{ globToRE() method
 	/**
-	 * Converts a Unix-style glob to a regular expression.
+	 * Converts a Unix-style glob to a regular expression.<p>
+	 *
 	 * ? becomes ., * becomes .*, {aa,bb} becomes (aa|bb).
 	 * @param glob The glob pattern
 	 */
@@ -922,6 +923,9 @@ loop:		for(int i = 0; i < str.length(); i++)
 	} //}}}
 
 	//{{{ MenuItemCompare class
+	/**
+	 * Compares menu item labels.
+	 */
 	public static class MenuItemCompare implements Compare
 	{
 		public int compare(Object obj1, Object obj2)

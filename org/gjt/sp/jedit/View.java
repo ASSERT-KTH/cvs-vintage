@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.textarea.*;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.47 2003/01/29 01:08:36 spestov Exp $
+ * @version $Id: View.java,v 1.48 2003/01/31 04:49:30 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -99,7 +99,8 @@ public class View extends JFrame implements EBComponent
 	public static final int ABOVE_SYSTEM_BAR_LAYER = 150;
 
 	/**
-	 * System tool bar layer. jEdit uses this for the main tool bar.
+	 * System tool bar layer.
+	 * jEdit uses this for the main tool bar.
 	 * @see #addToolBar(int,int,java.awt.Component)
 	 * @since jEdit 4.0pre7
 	 */

@@ -39,9 +39,9 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.15 2003/01/15 01:50:25 spestov Exp $
+ * @version $Id: Java14.java,v 1.16 2003/01/31 04:49:30 spestov Exp $
  */
-public class Java14
+class Java14
 {
 	//{{{ init() method
 	public static void init()

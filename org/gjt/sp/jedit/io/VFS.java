@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * Swing UI calls directly.
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.20 2003/01/11 19:46:41 spestov Exp $
+ * @author $Id: VFS.java,v 1.21 2003/01/31 04:49:31 spestov Exp $
  */
 public abstract class VFS
 {
@@ -203,8 +203,9 @@ public abstract class VFS
 
 	//{{{ constructPath() method
 	/**
-	 * This method should not be called directly! To ensure correct
-	 * behavior, you <b>must</b> call
+	 * This method should not be called directly.<p>
+	 *
+	 * To ensure correct behavior, you <b>must</b> call
 	 * <code>MiscUtilities.constructPath()</code> instead.<p>
 	 *
 	 * Constructs a path from the specified directory and

@@ -24,6 +24,11 @@ package org.gjt.sp.util;
 
 import java.util.Vector;
 
+/**
+ * Implements consumer/producer locking scemantics.
+ * @author Peter Graves
+ * @version $Id: ReadWriteLock.java,v 1.6 2003/01/31 04:49:31 spestov Exp $
+ */
 public class ReadWriteLock
 {
 	//{{{ readLock() method

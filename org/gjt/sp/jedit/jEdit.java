@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.100 2003/01/30 02:58:40 spestov Exp $
+ * @version $Id: jEdit.java,v 1.101 2003/01/31 04:49:30 spestov Exp $
  */
 public class jEdit
 {
@@ -1970,7 +1970,9 @@ public class jEdit
 
 	//{{{ closeView() method
 	/**
-	 * Closes a view. jEdit will exit if this was the last open view.
+	 * Closes a view.
+	 *
+	 * jEdit will exit if this was the last open view.
 	 */
 	public static void closeView(View view)
 	{
