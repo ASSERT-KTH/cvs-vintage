@@ -204,15 +204,20 @@ public class Response {
     
     
     public void reset() throws IllegalStateException {
+	if( ! included ) {
+	    // Reset the headers only if this is the main request,
+	    // not for included
+	    contentType = DEFAULT_CONTENT_TYPE;
+	    locale = DEFAULT_LOCALE;
+	    characterEncoding = DEFAULT_CHAR_ENCODING;
+	    contentLength = -1;
+	    status = 200;
+	    headers.clear();
+	}
+	
 	// Force the PrintWriter to flush its data to the output
-        // stream before resetting the output stream
-        //
-	contentType = DEFAULT_CONTENT_TYPE;
-        locale = DEFAULT_LOCALE;
-	characterEncoding = DEFAULT_CHAR_ENCODING;
-	contentLength = -1;
-	status = 200;
-
+	// stream before resetting the output stream
+	//
 	// Reset the stream
 	if( commited ) {
 	    String msg = sm.getString("servletOutputStreamImpl.reset.ise"); 
@@ -220,8 +225,6 @@ public class Response {
 	}
 	oBuffer.reset();
 
-        // Clear the headers
-        if( ! included) headers.clear();
     }
 
     public void finish() throws IOException {

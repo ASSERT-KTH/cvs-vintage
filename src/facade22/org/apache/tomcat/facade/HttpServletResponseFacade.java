@@ -108,6 +108,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     // -------------------- Public methods --------------------
 
     public void addCookie(Cookie cookie) {
+	if( response.isIncluded() ) return;
 	// layer costs - this can be avoided, but it's not a
 	// frequent operation ( for example sc can be reused )
 	ServerCookie sc=new ServerCookie();

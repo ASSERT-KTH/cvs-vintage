@@ -39,9 +39,6 @@
   <property name="servlet22.jar" 
     value="bin/servlet22.jar"/>
 
-  <property name="servlet23.jar"
-    value="bin/servlet23.jar" />
-
   <!-- default servlet.jar, used to compile webapps -->
   <!-- we use 2.2 because the api is backward compatible, but it
        may have problems in the reverse direction -->
@@ -92,12 +89,8 @@
 
     <!-- new dir struct for running both 2.2 and 2.3 -->
     <mkdir dir="${tomcat.build}/lib/servlet22"/>
-    <mkdir dir="${tomcat.build}/lib/servlet23"/>
     <copyfile src="${servlet22.jar}" 
       dest="${tomcat.build}/lib/servlet22/servlet22.jar"/>
-    <copyfile src="${servlet23.jar}" 
-      dest="${tomcat.build}/lib/servlet23/servlet23.jar"/>
-
     <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.sh" cr="remove"/>
     <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.bat" cr="add"/>
 
@@ -260,28 +253,6 @@
     </jar>
   </target>
 
-  <!-- ==================== Servlet 23 (default) implementation ========== -->
-  <target name="facade23" depends="init" >
-    <javac destdir="${tomcat.build}/classes"
-      debug="${debug}" 
-      optimize="${optimize}"
-      deprecation="off"
-      srcdir="src/facade23" >
-      <classpath>
-	<pathelement location="${servlet23.jar}" />
-	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
-	<pathelement location="${tomcat.build}/lib/tomcat_core.jar" />
-	<pathelement location="${tomcat.build}/lib/tomcat_modules.jar" />
-      </classpath>
-      <include name="org/apache/tomcat/facade23/**" />    
-    </javac>
-    <jar jarfile="${tomcat.build}/lib/servlet23/facade23.jar"
-      basedir="${tomcat.build}/classes" > 
-      <include name="org/apache/tomcat/facade23/**" /> 
-    </jar>
-  </target>
-
-
   <!-- ====================  "Standard" interceptors  ========== -->
   <target name="tomcat_modules" depends="init" >
     <javac destdir="${tomcat.build}/classes"
@@ -338,7 +309,7 @@
      />
   </target>
 
-  <target name="tomcat-jars-new" depends="tomcat_util,tomcat.jar,tomcat_core,jasper,tomcat_modules,facade22,facade23,tomcat_config,dav">
+  <target name="tomcat-jars-new" depends="tomcat_util,tomcat.jar,tomcat_core,jasper,tomcat_modules,facade22,tomcat_config,dav">
   </target>
 
   <!-- ==================== J2EE integration ========== -->
