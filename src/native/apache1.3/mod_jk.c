@@ -109,11 +109,20 @@ typedef struct {
     jk_map_t *uri_to_context;
     jk_uri_worker_map_t *uw_map;
 
+    /*
+     * SSL Support
+     */
     int  ssl_enable;
     char *https_indicator;
     char *certs_indicator;
     char *cipher_indicator;
     char *sesion_indicator;
+
+    /*
+     * Environment variables support
+     */
+    int envvars_in_use;
+    table *envvars;       
 
     server_rec *s;
 } jk_server_conf_t;
@@ -349,39 +358,45 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->ssl_cipher   = NULL;
     s->ssl_session  = NULL;
 
-
-    /*
-    {
-        array_header *t = ap_table_elts(r->subprocess_env);        
-        if(t && t->nelts) {
-            int i;
-            table_entry *elts = (table_entry *)t->elts;
-            for(i = 0 ; i < t->nelts ; i++) {
-                fprintf(stderr, 
-                        "subprocess_env[%d].[%s]=[%s]\n", 
-                        i, elts[i].key, elts[i].val);
-                fflush(stderr);
-                fprintf(stdout, 
-                        "subprocess_env[%d].[%s]=[%s]\n", 
-                        i, elts[i].key, elts[i].val);
-                fflush(stdout);
-            }
-        }
-    }
-    */
-
-    if(conf->ssl_enable) {
+    if(conf->ssl_enable || conf->envvars_in_use) {
         ap_add_common_vars(r);
 
-        ssl_temp = (char *)ap_table_get(r->subprocess_env, conf->https_indicator);
-        if(ssl_temp && !strcasecmp(ssl_temp, "on")) {
-            s->is_ssl       = JK_TRUE;
-            s->ssl_cert     = (char *)ap_table_get(r->subprocess_env, conf->certs_indicator);
-            if(s->ssl_cert) {
-    	        s->ssl_cert_len = strlen(s->ssl_cert);
+        if(conf->ssl_enable) {
+            ssl_temp = (char *)ap_table_get(r->subprocess_env, 
+                                            conf->https_indicator);
+            if(ssl_temp && !strcasecmp(ssl_temp, "on")) {
+                s->is_ssl       = JK_TRUE;
+                s->ssl_cert     = (char *)ap_table_get(r->subprocess_env, 
+                                                       conf->certs_indicator);
+                if(s->ssl_cert) {
+    	            s->ssl_cert_len = strlen(s->ssl_cert);
+                }
+                s->ssl_cipher   = (char *)ap_table_get(r->subprocess_env, 
+                                                       conf->cipher_indicator);
+                s->ssl_session  = (char *)ap_table_get(r->subprocess_env, 
+                                                       conf->sesion_indicator);
             }
-            s->ssl_cipher   = (char *)ap_table_get(r->subprocess_env, conf->cipher_indicator);
-            s->ssl_session  = (char *)ap_table_get(r->subprocess_env, conf->sesion_indicator);
+        }
+
+        if(conf->envvars_in_use) {
+            array_header *t = ap_table_elts(conf->envvars);        
+            if(t && t->nelts) {
+                int i;
+                table_entry *elts = (table_entry *)t->elts;
+                s->attributes_names = ap_palloc(r->pool, sizeof(char *) * t->nelts);
+                s->attributes_values = ap_palloc(r->pool, sizeof(char *) * t->nelts);
+
+                for(i = 0 ; i < t->nelts ; i++) {
+                    s->attributes_names[i] = elts[i].key;
+                    s->attributes_values[i] = (char *)ap_table_get(r->subprocess_env, 
+                                                                   elts[i].key);
+                    if(!s->attributes_values[i]) {
+                        s->attributes_values[i] = elts[i].val;
+                    }
+                }
+
+                s->num_attributes = t->nelts;
+            }
         }
     }
 
@@ -553,6 +568,24 @@ static const char *jk_set_log_level(cmd_parms *cmd,
     return NULL;
 }
 
+
+static const char *jk_add_env_var(cmd_parms *cmd, 
+                                  void *dummy, 
+                                  char *env_name,
+                                  char *default_value)
+{
+    server_rec *s = cmd->server;
+    jk_server_conf_t *conf =
+        (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
+
+    conf->envvars_in_use = JK_TRUE;
+    
+    ap_table_add(conf->envvars, env_name, default_value);
+
+    return NULL;
+}
+
+
 static const command_rec jk_cmds[] =
 {
     /*
@@ -606,6 +639,10 @@ static const command_rec jk_cmds[] =
      "Name of the Apache environment that contains SSL session"},
     {"JkExtractSSL", jk_set_enable_ssl, NULL, RSRC_CONF, FLAG,
      "Turns on SSL processing and information gathering by mod_jk"},     
+
+
+    {"JkEnvVar", jk_add_env_var, NULL, RSRC_CONF, TAKE2,
+     "Adds a name of environment variable that should be sent to Tomcat"},     
     {NULL}
 };
 
@@ -707,6 +744,11 @@ static void *create_jk_config(ap_pool *p, server_rec *s)
         jk_error_exit(APLOG_MARK, APLOG_EMERG, s, p, "Memory error");
     }
     c->uw_map = NULL;
+
+
+    c->envvars_in_use = JK_FALSE;
+    c->envvars = ap_make_table(p, 0);
+
     c->s = s;
 
     return c;
@@ -747,6 +789,16 @@ static void *merge_jk_config(ap_pool *p,
                 }
             }
         }
+    }
+
+    if(base->envvars_in_use) {
+        overrides->envvars_in_use = JK_TRUE;
+        
+        overrides->envvars = 
+                ap_overlay_tables(p, 
+                                  overrides->envvars, 
+                                  base->envvars);
+
     }
 
     if(overrides->log_file && overrides->log_level >= 0) {
@@ -865,4 +917,17 @@ module MODULE_VAR_EXPORT jk_module = {
     NULL,                       /* apache child process initializer */
     NULL,                       /* apache child process exit/cleanup */
     NULL                        /* [1] post read_request handling */
+#ifdef EAPI
+    /*
+     * Extended module APIs, needed when using SSL.
+     * STDC say that we do not have to have them as NULL but
+     * why take a chance
+     */
+    ,NULL,                      /* add_module */
+    NULL,                       /* remove_module */
+    NULL,                       /* rewrite_command */
+    NULL,                       /* new_connection */
+    NULL                       /* close_connection */
+#endif /* EAPI */
+
 };
