@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for JBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.18 $
+*   @version $Revision: 1.19 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -420,18 +420,16 @@ implements J2eeDeployerMBean
          }
 
          // JBoss
-         it = _d.ejbModules.iterator ();
-         while (it.hasNext ())
-         {
-            m = (Deployment.Module)it.next ();
-            
-            log.log ("Starting module " + m.name);
-            
-            // Call the ContainerFactory that is loaded in the JMX server
-            server.invoke(jarDeployer, "deploy",
-               new Object[] { m.localUrls.firstElement().toString () }, new String[] { "java.lang.String" });
-         }       
-	  }
+         // gather the ejb module urls and deploy the application
+         Vector tmp = new java.util.Vector();
+         for( it = _d.ejbModules.iterator(); it.hasNext(); )
+            tmp.add( ((Deployment.Module) it.next()).localUrls.firstElement().toString() );
+         String[] jarUrls = new String[ tmp.size() ];
+         tmp.toArray( jarUrls );
+         // Call the ContainerFactory that is loaded in the JMX server
+         server.invoke(jarDeployer, "deploy",
+            new Object[]{ _d.localUrl.toString(), jarUrls }, new String[]{ String.class.getName(), String[].class.getName() } );
+	 }
       catch (MBeanException _mbe)
       {
          log.error ("Starting "+m.name+" failed!");
@@ -445,6 +443,7 @@ implements J2eeDeployerMBean
       catch (RuntimeMBeanException e)
       {
          log.error ("Starting "+m.name+" failed!");
+         e.getTargetException ().printStackTrace();
          throw new J2eeDeploymentException ("Error while starting "+m.name+": " + e.getTargetException ().getMessage (), e.getTargetException ());
       }
       catch (JMException _jme)
@@ -468,61 +467,65 @@ implements J2eeDeployerMBean
    {
       // save the old classloader, tomcat replaces my classloader somehow?!
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader ();
-      
       StringBuffer error = new StringBuffer ();
-      ObjectName[] container = new ObjectName[] {jarDeployer, warDeployer};
-      Iterator modules[] = new Iterator[] {_d.ejbModules.iterator (),_d.webModules.iterator ()};
-      for (int i = 0; i < container.length; ++i)
+
+      // stop the jar modules (the ContainerFactory is responsible for undeploying
+      // all jars associated w/ a given application)
+      stopModule( jarDeployer, _d.name, _d.localUrl.toString(), error );
+
+      // stop the web modules
+      if( warDeployer != null )
       {
-         if (container[i] == null && modules[i].hasNext ())
+         for( Iterator webModules = _d.webModules.iterator(); webModules.hasNext(); )
          {
-            // in case we are not running with tomcat
-            // should only happen for tomcat (i=1)
-            log.warning("Cannot find web container");
-            continue;
-         }         
-         
-         while (modules[i].hasNext ())
-         {
-            Deployment.Module m = (Deployment.Module)modules[i].next ();
-            try
-            {
-               // Call the ContainerFactory/EmbededTomcat that is loaded in the JMX server
-               Object result = server.invoke(container[i], "isDeployed",
-                  new Object[] { m.localUrls.firstElement ().toString () }, new String[] { "java.lang.String" });
-               if (((Boolean)result).booleanValue ())
-               {
-                  
-                  log.log ("Stopping module " + m.name);
-                  server.invoke(container[i], "undeploy",
-                     new Object[] { m.localUrls.firstElement ().toString () }, new String[] { "java.lang.String" });
-               }
-               else
-                  log.log ("Module " + m.name+" is not running");
-            
-            }
-            catch (MBeanException _mbe) 
-            {
-               log.error ("Unable to stop module " + m.name + ": " + _mbe.getTargetException ().getMessage ());
-               error.append("Unable to stop module " + m.name + ": " + _mbe.getTargetException ().getMessage ());
-               error.append ("/n");
-            } 
-            catch (JMException _jme)
-            {
-               log.error ("Unable to stop module " + m.name + ": " + _jme.getMessage ());
-               error.append("Unable to stop module " + m.name + ": fatal error while calling "+container[i]+": " + _jme.getMessage ());
-               error.append ("/n");
-            }
+            Deployment.Module m = (Deployment.Module)webModules.next ();
+            stopModule( warDeployer, m.name, m.localUrls.firstElement().toString(), error );
          }
       }
-      if (!error.toString ().equals (""))
-         // there was at least one error...
-      throw new J2eeDeploymentException ("Error(s) on stopping application "+_d.name+":\n"+error.toString ());
+      else
+      {
+         // in case we are not running with tomcat
+         // should only happen for tomcat (i=1)
+         log.warning("Cannot find web container");
+      }
+
+      if (!error.toString ().equals ("")) // there was at least one error...
+        throw new J2eeDeploymentException ("Error(s) on stopping application "+_d.name+":\n"+error.toString ());
 
       // restore the classloader
       Thread.currentThread().setContextClassLoader (oldCl);
    }
-   
+
+   private void stopModule( ObjectName container, String moduleName, String moduleUrl, StringBuffer error )
+   {
+      try
+      {
+         // Call the ContainerFactory/EmbededTomcat that is loaded in the JMX server
+         Object result = server.invoke(container, "isDeployed",
+            new Object[] { moduleUrl }, new String[] { "java.lang.String" });
+         if (((Boolean)result).booleanValue ())
+         {
+            log.log ("Stopping module " + moduleName);
+            server.invoke(container, "undeploy",
+              new Object[] { moduleUrl }, new String[] { "java.lang.String" });
+         }
+         else
+            log.log ("Module " + moduleName + " is not running");
+      }
+      catch (MBeanException _mbe)
+      {
+         log.error ("Unable to stop module " + moduleName + ": " + _mbe.getTargetException ().getMessage ());
+         error.append("Unable to stop module " + moduleName + ": " + _mbe.getTargetException ().getMessage ());
+         error.append ("/n");
+      }
+      catch (JMException _jme)
+      {
+         log.error ("Unable to stop module " + moduleName + ": " + _jme.getMessage ());
+         error.append("Unable to stop module " + moduleName + ": fatal error while calling " + container + ": " + _jme.getMessage ());
+         error.append ("/n");
+      }
+   }
+
    /** Checks the Deplyment if it is correctly deployed.
    *   @param app to check
    *   @throws J2eeDeploymentException if some inconsistency in the deployment is
@@ -533,41 +536,23 @@ implements J2eeDeployerMBean
       boolean result = false;
       int count = 0;
       int others = 0;
-      
-      ObjectName[] container = new ObjectName[] {jarDeployer, warDeployer};
-      Iterator modules[] = new Iterator[] {_d.ejbModules.iterator (),_d.webModules.iterator ()};
-      for (int i = 0; i < container.length; ++i)
+
+
+      // Call the ContainerFactory/EmbededTomcat that is loaded in the JMX server
+      Object o = checkModule( jarDeployer, _d.name, _d.localUrl.toString() );
+
+      if( o == null )
+        ++others;
+      else
+        result = ((Boolean) o).booleanValue();
+
+      if (warDeployer != null )
       {
-         if (container[i] == null && modules[i].hasNext ())
+         for( Iterator webModules = _d.webModules.iterator(); webModules.hasNext(); )
          {
-            // in case we are not running with tomcat
-            // should only happen for tomcat (i=1)
-            log.warning("Cannot find web container");
-            continue;
-         }         
-         
-         while (modules[i].hasNext ())
-         {
-            Deployment.Module m = (Deployment.Module)modules[i].next ();
-            Object o = null;
-            try
-            {
-               
-               log.log ("Checking module " + m.name);
-               // Call the ContainerFactory/EmbededTomcat that is loaded in the JMX server
-               o = server.invoke(container[i], "isDeployed",
-                  new Object[] { m.localUrls.firstElement ().toString () }, new String[] { "java.lang.String" });
-            
-            }
-            catch (MBeanException _mbe) 
-            {
-               log.error ("Error while checking module " + m.name + ": " + _mbe.getTargetException ().getMessage ());
-            } 
-            catch (JMException _jme)
-            {
-               log.error ("Fatal error while checking module " + m.name + ": " + _jme.getMessage ());
-            }
-            
+            Deployment.Module m = (Deployment.Module)webModules.next ();
+            o = checkModule( warDeployer, m.name, m.localUrls.firstElement().toString() );
+
             if (o == null) // had an exception
                ++others;
             else if (count++ == 0) // first module -> set state
@@ -576,6 +561,12 @@ implements J2eeDeployerMBean
                ++others;
          }
       }
+      else
+      {
+         // in case we are not running with tomcat
+         log.warning("Cannot find web container");
+      }
+
       if (others > 0)
          // there was at least one error...
       throw new J2eeDeploymentException ("Application "+_d.name+" is not correctly deployed! ("+
@@ -585,33 +576,53 @@ implements J2eeDeployerMBean
          " are not)");
       return result;
    }
-   
-   
-   
+
+   private Object checkModule( ObjectName container, String moduleName, String moduleUrl )
+    {
+            try
+            {
+               log.log ("Checking module " + moduleName);
+               // Call the ContainerFactory/EmbededTomcat that is loaded in the JMX server
+               return server.invoke(container, "isDeployed",
+                  new Object[] { moduleUrl }, new String[] { "java.lang.String" });
+            }
+            catch (MBeanException _mbe)
+            {
+               log.error ("Error while checking module " + moduleName + ": " + _mbe.getTargetException ().getMessage ());
+               return null;
+            }
+            catch (JMException _jme)
+            {
+               log.error ("Fatal error while checking module " + moduleName + ": " + _jme.getMessage ());
+               return null;
+            }
+    }
+
+
+
    /** tests if the web container deployer is available */
    private boolean warDeployerAvailable ()
    {
       return server.isRegistered (warDeployer);
    }
-   
-   
+
+
    /**
    * creates an application class loader for this deployment
    * this class loader will be shared between jboss and tomcat via the contextclassloader
    */
    private void createContextClassLoader(Deployment deployment) {
-      
-      // get urls we want all classloaders of this application to share 
+
+      // get urls we want all classloaders of this application to share
       URL[] urls = new URL[deployment.commonUrls.size ()];
       for (int i = 0, l = deployment.commonUrls.size (); i < l; ++i)
-         urls[i] = (URL)deployment.commonUrls.elementAt (i); 
-      
+         urls[i] = (URL)deployment.commonUrls.elementAt (i);
+
       // create classloader
       ClassLoader parent = Thread.currentThread().getContextClassLoader();
       URLClassLoader appCl = new URLClassLoader(urls, parent);
-      
+
       // set it as the context class loader for the deployment thread
       Thread.currentThread().setContextClassLoader(appCl);
    }
-
 }
