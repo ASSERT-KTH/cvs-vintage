@@ -289,15 +289,21 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- signing jar-files for Java WebStart -->
         <!-- all libs and columba.jar need to be signed -->
         <!-- you need to specify the alias and the passwords on the commandline -->
-	<property name="alias" value="columba_key"/>
-        <property name="storepass" value="storepass"/>
-        <property name="keypass" value="keypass"/>
+	<property name="alias" value="TheColumbaProject"/>
+        <property name="storepass" value="columba"/>
+        <property name="keypass" value="columba"/>
 
-        <target name="webstart" depends="jar">
+        <target name="webstart">
          <signjar alias="${alias}" storepass="${storepass}" keypass="${keypass}">
-          <fileset dir="${dest}">
+          <fileset dir="${src}">
            <include name="columba.jar"/>
-           <include name="libs/*.jar"/>
+           <include name="lib/xalan.jar"/>
+	   <include name="lib/jaxp.jar"/>
+           <include name="lib/log4j.jar"/>
+           <include name="lib/lucene-1.3-rc1.jar"/>
+           <include name="lib/junit.jar"/>
+           <include name="lib/jakarta-oro-2.0.6.jar"/>
+           <include name="lib/jargs.jar"/>
           </fileset>
          </signjar>
         </target>
