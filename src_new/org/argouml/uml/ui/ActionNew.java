@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.25 2004/12/11 11:22:33 mvw Exp $
+// $Id: ActionNew.java,v 1.26 2004/12/11 12:15:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ import org.argouml.ui.targetmanager.TargetManager;
  *
  * @stereotype singleton
  */
-public class ActionNew extends UMLAction {
+public class ActionNew extends ActionFileOperations {
 
     ////////////////////////////////////////////////////////////////
     // static variables
@@ -66,7 +66,7 @@ public class ActionNew extends UMLAction {
     public void actionPerformed(ActionEvent e) {
         Project p = ProjectManager.getManager().getCurrentProject();
         
-        if (!(new ActionOpenProject()).askConfirmationAndSave()) return;
+        if (!askConfirmationAndSave()) return;
         
 	// we should remove all open dialogs. They have as parent the
 	// ProjectBrowser

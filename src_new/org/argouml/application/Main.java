@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.104 2004/11/25 10:32:57 mkl Exp $
+// $Id: Main.java,v 1.105 2004/12/11 12:15:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,7 +115,8 @@ public class Main {
         Translator.init();
         // create an anonymous class as a kind of adaptor for the cognitive
         // System to provide proper translation/i18n.
-        org.argouml.cognitive.Translator.setTranslator(new AbstractCognitiveTranslator() {
+        org.argouml.cognitive.Translator.setTranslator(
+                new AbstractCognitiveTranslator() {
             public String i18nlocalize(String key) {
                 return Translator.localize(key);
             }

@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.36 2004/12/11 11:22:32 mvw Exp $
+// $Id: ActionSaveProject.java,v 1.37 2004/12/11 12:15:49 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ import org.argouml.ui.cmd.GenericArgoMenuBar;
  * @see ActionOpenProject
  * @stereotype singleton
  */
-public class ActionSaveProject extends UMLAction {
+public class ActionSaveProject extends ActionFileOperations {
     /** logger */
     private static final Logger LOG = Logger.getLogger(ActionSaveProject.class);
   

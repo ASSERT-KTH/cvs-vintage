@@ -1,4 +1,4 @@
-// $Id: ActionRevertToSaved.java,v 1.5 2004/10/13 05:52:29 linus Exp $
+// $Id: ActionRevertToSaved.java,v 1.6 2004/12/11 12:15:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ import org.argouml.ui.ProjectBrowser;
  *
  * @see ActionOpenProject
  */
-public class ActionRevertToSaved extends UMLAction {
+public class ActionRevertToSaved extends ActionFileOperations {
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -84,7 +84,7 @@ public class ActionRevertToSaved extends UMLAction {
                   JOptionPane.YES_NO_OPTION);
 
         if (response == JOptionPane.YES_OPTION) {        
-            new ActionOpenProject().loadProject(p.getURL());
+            loadProject(p.getURL());
         }
     }
     
