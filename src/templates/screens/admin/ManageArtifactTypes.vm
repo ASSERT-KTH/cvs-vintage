@@ -27,13 +27,23 @@
 #if ($pageNum == 0)
   #set ($pageNum = 1)
 #end
+<input type="hidden" name="pageNum" value="$pageNum" />
 
 #set ($rmits = $module.getRModuleIssueTypes($sortColumn, $sortPolarity))
 #set ($listSize = $rmits.size())
 
+
 #if ($rmits.size() > $resultsPerPage)
  #set ($paginated = "true")
  #set ($pagList = $scarabR.getPaginatedList($rmits, $pageNum.toString(), $resultsPerPage.toString()))
+ ##  Pass display values from previous pages so can determine if there are
+ ## More than 5 (the limit)
+ #foreach ($rmit in $rmits)
+   #if (!$pagList.contains($rmit))
+     #set ($rmitGroup = $intake.RModuleIssueType.mapTo($rmit) )
+     <input type="hidden" name="$rmitGroup.Display.Key" value="$rmitGroup.Display.Value">
+   #end
+ #end
  #if ($pagList)
    #set ($rmits = $pagList)
  #end
