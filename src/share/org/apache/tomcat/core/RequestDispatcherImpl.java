@@ -80,9 +80,6 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     private Context context;
     
     private Request subRequest = null;
-    private String name = null;
-    private String urlPath;
-    private String queryString;
 
     RequestDispatcherImpl(Context context) {
         this.context = context;
@@ -98,6 +95,9 @@ public class RequestDispatcherImpl implements RequestDispatcher {
         Request realRequest = ((HttpServletRequestFacade)request).getRealRequest();
         Response realResponse = ((HttpServletResponseFacade)response).getRealResponse();
 
+	String urlPath=realRequest.getLookupPath();
+	String queryString=realRequest.getQueryString();
+	
 	// according to specs
 	if (realResponse.isStarted()) {
             String msg = sm.getString("rdi.forward.ise");
@@ -118,137 +118,26 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     public void include(ServletRequest request, ServletResponse response)
-    throws ServletException, IOException {
+	throws ServletException, IOException
+    {
 	HttpServletRequest req = (HttpServletRequest)request;
-
-	// XXX instead of setting the new parameters and back to original,
-	// it should just use a sub-request ( by cloning the original ) 
-	// That will simplify everything and make the code clear ( costin )
-	
-	// 
-        // XXX
-        // while this appears to work i believe the code
-        // could be streamlined/normalized a bit.
-
-	// if we are in a chained include, then we'll store the attributes
-	// from the last round so that we've got them for the next round
-
-	String request_uri =
-            (String)req.getAttribute(Constants.Attribute.RequestURI);
-	String servlet_path =
-            (String)req.getAttribute(Constants.Attribute.ServletPath);
-	String path_info =
-            (String)req.getAttribute(Constants.Attribute.PathInfo);
-	String query_string =
-	    (String)req.getAttribute(Constants.Attribute.QueryString);
-
-	HttpServletRequestFacade reqFacade =
-	    (HttpServletRequestFacade)request;
-	HttpServletResponseFacade resFacade =
-	    (HttpServletResponseFacade)response;
-        Request realRequest = reqFacade.getRealRequest();
-	Response realResponse = resFacade.getRealResponse();
-        String originalQueryString = realRequest.getQueryString();
-        Hashtable originalParameters = realRequest.getParametersCopy();
-
-
-	// XXX
-	// not sure why we're pre-pending context.getPath() here
-	//req.setAttribute(Constants.Attribute.RequestURI,
-        //    context.getPath() + urlPath);
-
-        // XXX
-        // added the "check for null" to get the named dispatcher
-        // stuff working ... this might break something else
-
-        if (urlPath != null) {
-	    req.setAttribute(Constants.Attribute.RequestURI,
-                urlPath);
-        }
-
-	if (subRequest.getServletPath() != null) {
-	    req.setAttribute(Constants.Attribute.ServletPath,
-                subRequest.getServletPath());
-	}
-
-	if (subRequest.getPathInfo() != null) {
-	    req.setAttribute(Constants.Attribute.PathInfo,
-                subRequest.getPathInfo());
-	}
+        Request realRequest = ((HttpServletRequestFacade)request).getRealRequest();
+	Response realResponse = ((HttpServletResponseFacade)response).getRealResponse();
 
         // add new query string parameters to request
         // if names are duplicates, new values will be prepended to arrays
-        addQueryString( reqFacade.getRealRequest(), this.queryString );
-
-        if (reqFacade.getRealRequest().getQueryString() != null) {
-	    req.setAttribute(Constants.Attribute.QueryString,
-                reqFacade.getRealRequest().getQueryString());
-        }
+        //XXX TODO addQueryString( reqFacade.getRealRequest(), this.queryString );
 
 	IncludedResponse iResponse = new IncludedResponse(realResponse);
-
-	subRequest.getWrapper().handleRequest(reqFacade, iResponse);
-
-        // revert the parameters and query string to its original value
-        reqFacade.getRealRequest().setParameters(originalParameters);
-        reqFacade.getRealRequest().setQueryString(originalQueryString);
-	// XXX revert to the old parameters too - it was broken in the previous
-	// model  - it is still bad
-	reqFacade.getRealRequest().processQueryString();
+	// XXX Make sure we "clone" all usefull informations 
+	subRequest.setResponse( realResponse );
+	subRequest.setServerName( realRequest.getServerName() );
 	
-
-	if (request_uri != null) {
-	    req.setAttribute(Constants.Attribute.RequestURI, request_uri);
-	} else {
-	    reqFacade.removeAttribute(Constants.Attribute.RequestURI);
+	try {
+	    subRequest.getWrapper().handleRequest(subRequest.getFacade() , iResponse);
+	} catch( Exception ex) {
+	    ex.printStackTrace();
 	}
-
-	if (servlet_path != null) {
-	    req.setAttribute(Constants.Attribute.ServletPath,
-                servlet_path);
-	} else {
-	    reqFacade.removeAttribute(Constants.Attribute.ServletPath);
-	}
-
-	if (path_info != null) {
-	    req.setAttribute(Constants.Attribute.PathInfo, path_info);
-	} else {
-	    reqFacade.removeAttribute(Constants.Attribute.PathInfo);
-	}
-
-	if (query_string != null) {
-	    req.setAttribute(Constants.Attribute.QueryString,
-                query_string);
-	} else {
-	    reqFacade.removeAttribute(Constants.Attribute.QueryString);
-	}
-    }
-
-    void setName(String name) {
-        this.name = name;
-	this.subRequest =
-	    context.lookupServletByName(this.name);
-    }
-
-    void setPath(String urlPath) {
-	// assert urlPath!=null
-	int len=urlPath.length();
-	int i = urlPath.indexOf("?");
-
-	if (i>-1) {
-	    if(i<len)
-		this.queryString =urlPath.substring(i + 1, urlPath.length());
-	    urlPath = urlPath.substring(0, i);
-	}
-
-	this.urlPath = urlPath;
-
-	this.subRequest = context.getContextManager().createRequest(context, urlPath);
-	context.getContextManager().processRequest(subRequest);
-    }
-
-    boolean isValid() {
-        return (this.subRequest != null);
     }
 
     /**

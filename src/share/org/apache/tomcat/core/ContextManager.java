@@ -346,8 +346,10 @@ public class ContextManager {
 	lr.setRequestAdapter( reqA);
 	lr.setLookupPath( urlPath );
 	lr.setQueryString( queryString );
-	lr.setContext( ctx );
+	lr.processQueryString();
 
+	lr.setContext( ctx );
+	
 	// XXX set query string too 
 	return lr;
     }

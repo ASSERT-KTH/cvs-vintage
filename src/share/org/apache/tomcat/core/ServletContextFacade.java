@@ -154,17 +154,7 @@ public class ServletContextFacade implements ServletContext {
     }
 
     public RequestDispatcher getNamedDispatcher(String name) {
-        if (name == null) {
-	    String msg = sm.getString("scfacade.dispatcher.iae2", name);
-	    throw new IllegalArgumentException(msg);
-	}
-
-        RequestDispatcherImpl requestDispatcher =
-	    new RequestDispatcherImpl(context);
-
-	requestDispatcher.setName(name);
-
-	return (requestDispatcher.isValid()) ? requestDispatcher : null;
+	return context.getNamedDispatcher( name );
     }
 
     public String getServerInfo() {

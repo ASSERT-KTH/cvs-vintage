@@ -259,16 +259,29 @@ public class Context {
 	     ! path.startsWith("/")) {
 	    return null; // spec say "return null if we can't return a dispather
 	}
-	//	Request subReq=context.getContextManager().createRequest( path );
-	//        RequestDispatcherImpl requestDispatcher = new RequestDispatcherImpl(subReq);
+
+	Request subReq=contextM.createRequest( this, path );
+	contextM.processRequest(subReq);
 	
-	RequestDispatcherImpl requestDispatcher = new RequestDispatcherImpl(this);
-	requestDispatcher.setPath( path ) ;
-	
-	return requestDispatcher;
+	return new RequestDispatcherImpl(subReq);
     }
 
+    public RequestDispatcher getNamedDispatcher(String name) {
+        if (name == null)
+	    return null;
 
+	ServletWrapper wrapper = getServletByName( name );
+	if (wrapper == null)
+	    return null;
+
+	// creates a new subrequest, and set the wrapper.
+	Request subR = new Request();
+	subR.setWrapper( wrapper );
+	subR.setPathInfo("");
+	subR.setContext( this );
+	
+        return  new RequestDispatcherImpl(subR);
+    }
 
     /** Implements getResource() - use a sub-request to let interceptors do the job.
      */
@@ -296,8 +309,9 @@ public class Context {
     
     Context getContext(String path) {
 	if (! path.startsWith("/")) {
-            String msg = sm.getString("sfcacade.context.iae", path);
-	    throw new IllegalArgumentException(msg);
+	    return null; // according to spec, null is returned
+	    // if we can't  return a servlet, so it's more probable
+	    // servlets will check for null than IllegalArgument
 	}
         return contextM.getContextByPath(path);
     }
@@ -852,20 +866,6 @@ public class Context {
 	prefixMappedServlets.remove(mapping);
 	extensionMappedServlets.remove(mapping);
 	pathMappedServlets.remove(mapping);
-    }
-
-    Request lookupServletByName(String servletName) {
-        Request lookupResult = null;
-
-	ServletWrapper wrapper = (ServletWrapper)servlets.get(servletName);
-
-	if (wrapper != null) {
-	    lookupResult = new Request();
-	    lookupResult.setWrapper( wrapper );
-	    lookupResult.setPathInfo("");
-	}
-
-        return lookupResult;
     }
 
     public ServletWrapper getServletByName(String servletName) {

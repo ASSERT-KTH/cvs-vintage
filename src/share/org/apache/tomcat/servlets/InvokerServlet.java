@@ -87,9 +87,9 @@ public class InvokerServlet extends HttpServlet {
         context = facade.getRealContext();
     }
     
-    public void service(HttpServletRequest request,
-        HttpServletResponse response)
-    throws ServletException, IOException {
+    public void service(HttpServletRequest request,HttpServletResponse response)
+	throws ServletException, IOException
+    {
         String requestPath = request.getRequestURI();
 	String pathInfo = (String)request.getAttribute(
             Constants.Attribute.PathInfo);
@@ -102,6 +102,7 @@ public class InvokerServlet extends HttpServlet {
 	    Constants.Attribute.RequestURI);
 	boolean inInclude = false;
 
+	// XXX XXX XXX in the new model we are _never_ inInclude
 	if (includedRequestURI != null) {
 	    inInclude = true;
 	} else {
@@ -199,12 +200,21 @@ public class InvokerServlet extends HttpServlet {
 	// request dispatcher forwards through the invoker. This is
 	// some seriously sick code here that needs to be done
 	// better, but this will do the trick for now.
-	
-	String savedServletPath = (String)realRequest.getAttribute(
-            Constants.Attribute.ServletPath);
-	String savedPathInfo = (String)realRequest.getAttribute(
-            Constants.Attribute.PathInfo);
+	String savedServletPath=null;
+	String savedPathInfo =null;
 
+
+	// XXX XXX XXX need to be removed after the include hacks are out
+	if( ! inInclude )  {
+	    savedPathInfo=realRequest.getPathInfo();
+	    savedServletPath=realRequest.getServletPath();
+	} else {
+	    savedServletPath = (String)realRequest.getAttribute(
+			       Constants.Attribute.ServletPath);
+	    savedPathInfo = (String)realRequest.getAttribute(
+			       Constants.Attribute.PathInfo);
+	}
+	
 	if (! inInclude) {
 	    realRequest.setServletPath(newServletPath);
 	    realRequest.setPathInfo(newPathInfo);
@@ -229,7 +239,10 @@ public class InvokerServlet extends HttpServlet {
 
         wrapper.handleRequest(requestfacade, responsefacade);
 
-	if (inInclude) {
+	if (!inInclude) {
+	    realRequest.setServletPath( savedServletPath);
+	    realRequest.setPathInfo(savedPathInfo);
+	} else {
 	    if (savedServletPath != null) {
 		realRequest.setAttribute(
                     Constants.Attribute.ServletPath, savedServletPath);

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.18 2000/01/12 06:35:20 costin Exp $
- * $Revision: 1.18 $
- * $Date: 2000/01/12 06:35:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.19 2000/01/12 19:54:02 costin Exp $
+ * $Revision: 1.19 $
+ * $Date: 2000/01/12 19:54:02 $
  *
  * ====================================================================
  *
@@ -590,6 +590,7 @@ public class Request  {
 
 
     public void setPathInfo(String pathInfo) {
+	///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
         this.pathInfo = pathInfo;
     }
 
