@@ -61,6 +61,7 @@ package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.io.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -128,13 +129,13 @@ public class WorkDirSetup extends BaseInterceptor {
 
 	// 
 	if ( cleanWorkDir ) {
-	    clearDir(ctx.getWorkDir() );
+	    FileUtil.clearDir(ctx.getWorkDir() );
 	}
     }
 
     public void contextShutdown( Context ctx ) {
 	if ( cleanWorkDir ) {
-	    clearDir(ctx.getWorkDir());
+	    FileUtil.clearDir(ctx.getWorkDir());
 	}
     }
 
@@ -194,31 +195,6 @@ public class WorkDirSetup extends BaseInterceptor {
 	}
 	ctx.setWorkDir( workDirF );
     }
-
-    private void clearDir(File dir) {
-        String[] files = dir.list();
-
-        if (files != null) {
-	    for (int i = 0; i < files.length; i++) {
-	        File f = new File(dir, files[i]);
-
-	        if (f.isDirectory()) {
-		    clearDir(f);
-	        }
-
-	        try {
-	            f.delete();
-	        } catch (Exception e) {
-	        }
-	    }
-
-	    try {
-	        dir.delete();
-	    } catch (Exception e) {
-	    }
-        }
-    }
-
 
 	
 }
