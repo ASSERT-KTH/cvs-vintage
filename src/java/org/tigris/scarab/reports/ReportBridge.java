@@ -368,21 +368,14 @@ public  class ReportBridge
         
         return generatedDate;
     }
-    
 
     /**
      * Date used for a single date report.
      */
     public Date getDefaultDate() 
     {
-        Date date = null;
         ReportDate rdate = reportDefn.getDefaultDate();
-        if (rdate != null) 
-        {
-            date = new Date(rdate.getTime());
-        }
-        Log.get().debug("Default date is " + date);
-        return date;
+        return (rdate != null ? new Date(rdate.getTime()) : null);
     }
 
     /**
