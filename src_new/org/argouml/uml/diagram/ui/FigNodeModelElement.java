@@ -24,7 +24,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.17 2002/06/05 06:43:59 thn Exp $
+// $Id: FigNodeModelElement.java,v 1.18 2002/06/09 15:43:34 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -84,13 +84,13 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
   // instance variables
 
   protected FigRect _bigPort;
-  protected FigText _name;
-  protected FigText _stereo;
+  public FigText _name;
+  public FigText _stereo;
   protected Vector _enclosedFigs = new Vector();
   protected Fig _encloser = null;
   protected boolean _readyToEdit = true;
   protected boolean suppressCalcBounds = false;
-  protected int _shadowSize = 1;
+  public int _shadowSize = 1;
 
   ////////////////////////////////////////////////////////////////
   // constructors
