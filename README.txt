@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.19 2001/08/24 18:10:03 jon Exp $
+$Id: README.txt,v 1.20 2001/09/24 14:42:36 jon Exp $
 
 Welcome to Scarab!
 
@@ -163,7 +163,7 @@ NOTE: If you need to specify a host/username/password, you will need to
       prevents you from needing to edit it, simply pass the
       username/password in as arguments when you execute it.
       
-      ./create-mysql-database.sh USERNAME PASSWORD
+      ./create-mysql-database.sh USERNAME PASSWORD DATABASE_NAME
       
       Also make sure to edit the src/conf/TurbineResources.properties
       file and modify the database.default.url,
