@@ -128,7 +128,8 @@ public class StaticInterceptor extends BaseInterceptor {
 	File file=new File( absPath );
 
 	if( file.isFile() ) {
-	    if( debug > 0 ) log( "Setting handler to file ");
+	    if( debug > 0 ) log( "Setting handler to file " + absPath);
+	    req.setNote( realFileNote, absPath );
 	    req.setWrapper(  ctx.getServletByName( "tomcat.fileHandler"));
 	    return 0;
 	}
@@ -239,11 +240,12 @@ class FileHandler extends ServletWrapper  {
 	    subReq=req.getChild();
 
 	Context ctx=subReq.getContext();
-	String pathInfo=req.getPathInfo();
-	String absPath = (String)req.getNote( realFileNote );
+	String pathInfo=subReq.getPathInfo();
+	String absPath = (String)subReq.getNote( realFileNote );
 	if( absPath==null ) 
 	    absPath=ctx.getRealPath( pathInfo );
 
+	if( debug>0) log( "Requested file = " + absPath);
 	String base = ctx.getAbsolutePath();
 	absPath = extraCheck( base, absPath );
 	if( absPath==null ) {
@@ -252,6 +254,7 @@ class FileHandler extends ServletWrapper  {
 	}
 
 	File file = new File( absPath );
+	if( debug>0) log( "After paranoic checks = " + absPath);
 	
         String mimeType=ctx.getMimeMap().getContentTypeFor(absPath);
 
@@ -313,7 +316,7 @@ class FileHandler extends ServletWrapper  {
 	if (absPath.endsWith("/") ||
 	    absPath.endsWith("\\") ||
 	    absPath.endsWith(".")) {
-	    log("EndsWith \\/.");
+	    log("Ends with \\/. " + absPath);
 	    return null;
 	}
 
@@ -366,7 +369,7 @@ class DirHandler extends ServletWrapper  {
 	Request subReq=req;
 	if( inInclude ) subReq = req.getChild();
 	Context ctx=req.getContext();
-	String pathInfo=req.getPathInfo();
+	String pathInfo=subReq.getPathInfo();
 	if( pathInfo == null ) pathInfo="";
 	String absPath=ctx.getRealPath( pathInfo );
 	File file = new File( absPath );
