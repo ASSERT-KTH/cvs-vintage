@@ -16,7 +16,7 @@ import org.jboss.deployment.DeploymentException;
  * file's relationships elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class RelationMetaData extends MetaData {
    /** Name of the relation. Loaded from the ejb-relation-name element. */
@@ -109,7 +109,13 @@ public class RelationMetaData extends MetaData {
       // JBossCMP needs ejb-relation-name if jbosscmp-jdbc.xml is used to map relationships.
       if(relationName == null)
       {
-         relationName = left.getRelationshipRoleName() + "-" + right.getRelationshipRoleName();
+         // generate unique name, we can't rely on ejb-relationship-role-name being unique
+         relationName =
+            left.getEntityName() +
+            (left.getCMRFieldName() == null ? "" : "_" + left.getCMRFieldName()) +
+            "-" +
+            right.getEntityName() +
+            (right.getCMRFieldName() == null ? "" : "_" + right.getCMRFieldName());
       }
 
       // assure that the left role and right role do not have the same name
