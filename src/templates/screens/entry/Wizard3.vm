@@ -109,7 +109,7 @@ $page.setTitle("Enter issue")
 
 ## ATTACHMENT
 <h4>Add Attachment</h4>
-<div class="axial">
+<div>
   <table cellpadding="3" cellspacing="2" border="0">
     #set ($atch = $scarabR.Attachment)
     #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
