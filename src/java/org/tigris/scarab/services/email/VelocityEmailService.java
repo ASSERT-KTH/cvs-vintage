@@ -62,6 +62,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.io.OutputStreamWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.app.event.EventCartridge;
@@ -108,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:james@jamestaylor.org">James Taylor</a>
- * @version $Id: VelocityEmailService.java,v 1.2 2003/04/25 03:12:35 dlr Exp $
+ * @version $Id: VelocityEmailService.java,v 1.3 2003/05/03 05:15:46 jmcnally Exp $
  */
 public class VelocityEmailService
     extends BaseTemplateEngineService
@@ -187,8 +188,36 @@ public class VelocityEmailService
         throws ServiceException
     {
         String results = null;
+        if (charset == null)
+	    {
+            StringWriter writer = null;
+            try
+            {
+                writer = new StringWriter();
+                handleRequest(context, filename, writer, encoding);
+                results = writer.toString();
+            }
+            catch (Exception e)
+            {
+                renderingError(filename, e);
+            }
+            finally
+            {
+                try
+                {
+                    if (writer != null)
+                    {
+                        writer.close();
+                    }
+                }
+                catch (IOException ignored)
+                {
+                }
+            }
+        }
+        else 
+        {
         ByteArrayOutputStream bytes = null;
-
         try
         {
             bytes = new ByteArrayOutputStream();
@@ -213,6 +242,8 @@ public class VelocityEmailService
             {
             }
         }
+        }
+        
         return results;
     }
 

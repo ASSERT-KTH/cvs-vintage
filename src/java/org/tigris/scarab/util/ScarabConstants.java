@@ -53,7 +53,7 @@ import org.apache.fulcrum.localization.Localization;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.57 2003/04/29 23:02:22 jon Exp $
+ * @version $Id: ScarabConstants.java,v 1.58 2003/05/03 05:15:46 jmcnally Exp $
  */
 public interface ScarabConstants
 {
@@ -239,6 +239,11 @@ public interface ScarabConstants
      */
     Locale DEFAULT_LOCALE =  new Locale(Localization.getDefaultLanguage(), 
                                         Localization.getDefaultCountry());
+
+    /**
+     * Scarab.properties key for email encoding property.
+     */
+    String DEFAULT_EMAIL_ENCODING_KEY = "scarab.email.encoding";   
 
     Integer INTEGER_0 = new Integer(0);
 

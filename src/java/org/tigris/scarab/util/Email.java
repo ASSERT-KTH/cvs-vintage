@@ -84,7 +84,7 @@ import org.tigris.scarab.services.email.VelocityEmail;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.31 2003/04/30 01:12:13 jon Exp $
+ * @version $Id: Email.java,v 1.32 2003/05/03 05:15:46 jmcnally Exp $
  */
 public class Email extends TemplateEmail
 {
@@ -428,11 +428,17 @@ public class Email extends TemplateEmail
      */
     private static String getCharset(Locale locale)
     {
-        String charset = TurbineMimeTypes.getCharSet(locale);
-        if ("ja".equals(locale.getLanguage())) 
+        String charset = Turbine.getConfiguration()
+            .getString(ScarabConstants.DEFAULT_EMAIL_ENCODING_KEY, "").trim();
+        if (charset.length() == 0 || "native".equals(charset))
         {
-            charset = "ISO-2022-JP";
+            charset = TurbineMimeTypes.getCharSet(locale);
+            if ("ja".equals(locale.getLanguage())) 
+            {
+                charset = "ISO-2022-JP";
+            }
         }
+
         return charset;
     }
 
