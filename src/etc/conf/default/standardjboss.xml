@@ -5,7 +5,7 @@
 <!--  Standard JBoss Configuration                                         -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.53 2002/10/30 23:17:04 dsundstrom Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.54 2002/11/12 18:16:14 dsundstrom Exp $ -->
 <jboss>
   <invoker-proxy-bindings>
     <invoker-proxy-binding>
@@ -270,7 +270,9 @@
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
@@ -320,7 +322,9 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
@@ -368,7 +372,9 @@
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
@@ -418,7 +424,9 @@
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
@@ -467,7 +475,9 @@
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
@@ -516,7 +526,9 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
@@ -563,7 +575,9 @@
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <!-- CMT -->
         <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -594,7 +608,9 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <!-- CMT -->
         <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -633,7 +649,9 @@
         <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
         <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         @jca.connection.interceptor@
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
       </container-interceptors>
       <instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
       <persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
@@ -677,7 +695,9 @@
         <interceptor transaction="Bean">org.jboss.ejb.plugins.StatefulSessionInstanceInterceptor</interceptor>
         <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
         <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         @jca.connection.interceptor@
         <interceptor>org.jboss.ejb.plugins.StatefulHASessionSynchronisationInterceptor</interceptor>
       </container-interceptors>
@@ -715,7 +735,9 @@
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
@@ -764,7 +786,9 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
@@ -812,7 +836,9 @@
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
@@ -859,7 +885,7 @@
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.RunAsSecurityInterceptor</interceptor>
+        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <!-- CMT -->
         <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
