@@ -1,4 +1,3 @@
-#macro (XMLExportIssuesRender $foo)$foo#end
 #if($renderedFromScreen) #XMLExportIssues($issueIdList) #end
 
 #macro (XMLExportIssues $issueIdList)
@@ -23,6 +22,7 @@
 #foreach ($issueId in $issueIdList)
   #set ($issue = $scarabR.getIssue($issueId))
   #if ($issue)
+
     <issue>
       <id>$issue.IdCount</id>
       <artifact-type>$issue.IssueType.Name</artifact-type>
@@ -39,6 +39,7 @@
           </created-date>
           <activities>
           #foreach ($activity in $activitySet.ActivityList)
+            #if ($activity.Issue.equals($issue))
 
             <activity>
               <id>$activity.ActivityId</id>
@@ -73,12 +74,25 @@
               <new-value>$!activity.NewValue</new-value>
               #end
 
+              #set ($activityDepend = $activity.Depend)
+              #if ($activityDepend)
+
+              <depend>
+                <id>$activityDepend.DependId</id>
+                <parent>$activityDepend.ObservedId</parent>
+                <child>$activityDepend.ObserverId</child>
+                <type>$activityDepend.DependType.Name</type>
+              </depend>
+              #end
+              #set ($activityDepend = false)
+
               <description>$activity.Description</description>
 
               #set ($activityAttachment = $activity.Attachment)
               #attachment ($activityAttachment)
 
             </activity>
+          #end
           #end
 
           </activities>
@@ -89,30 +103,6 @@
       #end
 
       </activity-sets>
-
-      #set ($dependA = $issue.DependsRelatedByObserverId)
-      #set ($dependB = $issue.DependsRelatedByObservedId)
-      #if (!$dependA.isEmpty() || !$dependB.isEmpty())
-
-      <dependencies>
-      #foreach ($depend in $dependA)
-
-        <dependency>
-          <type>$depend.DependType.Name</type>
-          <parent>$depend.IssueRelatedByObservedId.FederatedId</parent>
-        </dependency>
-      #end
-      #foreach ($depend in $dependB)
-
-        <dependency>
-          <type>$depend.DependType.Name</type>
-          <child>$depend.IssueRelatedByObserverId.FederatedId</child>
-        </dependency>
-      #end
-
-      </dependencies>
-      #end
-
     </issue>
   #end
 #end
