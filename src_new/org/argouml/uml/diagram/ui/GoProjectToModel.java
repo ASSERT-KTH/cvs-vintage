@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoProjectToModel.java,v 1.1 2003/02/01 21:53:35 kataka Exp $
+// $Id: GoProjectToModel.java,v 1.2 2003/04/15 00:17:27 alexb Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -43,10 +43,5 @@ public class GoProjectToModel extends AbstractGoRule {
       }
       return null;
   }
-  
-  public boolean isLeaf(Object node) {
-    return !(node instanceof Project && getChildCount(node) > 0);
-  }
-
 
 }

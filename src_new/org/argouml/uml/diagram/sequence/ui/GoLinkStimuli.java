@@ -20,7 +20,7 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-// $Id: GoLinkStimuli.java,v 1.8 2003/01/24 20:19:59 kataka Exp $
+// $Id: GoLinkStimuli.java,v 1.9 2003/04/15 00:17:26 alexb Exp $
 package org.argouml.uml.diagram.sequence.ui;
 
 import java.util.Collection;
@@ -33,13 +33,12 @@ import ru.novosoft.uml.behavior.common_behavior.MLink;
 
 
 public class GoLinkStimuli extends AbstractGoRule {
+    
   public Collection getChildren(Object parent) {
     if (!(parent instanceof MLink)) return null;
     return ((MLink)parent).getStimuli();
   }
-  public boolean isLeaf(Object node) {
-    return !(node instanceof MLink && getChildCount(node) > 0);
-  }
+
     /**
      * @see org.argouml.ui.AbstractGoRule#getRuleName()
      */

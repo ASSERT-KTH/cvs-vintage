@@ -21,7 +21,7 @@
 //CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 //UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoStateToDoActivity.java,v 1.2 2002/12/28 14:46:30 kataka Exp $
+// $Id: GoStateToDoActivity.java,v 1.3 2003/04/15 00:17:26 alexb Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -41,13 +41,6 @@ import ru.novosoft.uml.behavior.state_machines.MState;
  * @since Dec 25, 2002
  */
 public class GoStateToDoActivity extends AbstractGoRule {
-
-    /**
-     * @see javax.swing.tree.TreeModel#isLeaf(java.lang.Object)
-     */
-    public boolean isLeaf(Object node) {
-        return !(node instanceof MState && getChildCount(node) > 0);
-    }
 
     /**
      * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)

@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.1 2002/12/31 07:32:34 kataka Exp $
+// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.2 2003/04/15 00:17:26 alexb Exp $
 package org.argouml.uml.diagram.ui;
 
 import java.util.Collection;
@@ -45,16 +45,10 @@ import ru.novosoft.uml.foundation.core.MOperation;
 public class GoBehavioralFeatureToStateDiagram extends AbstractGoRule {
 
     /**
-     * @see javax.swing.tree.TreeModel#isLeaf(java.lang.Object)
-     */
-    public boolean isLeaf(Object node) {
-        return !(node instanceof MOperation && getChildCount(node) > 0);
-    }
-
-    /**
      * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
+        
         if (parent instanceof MBehavioralFeature) {
             MBehavioralFeature operation = (MBehavioralFeature)parent;
             Collection col = operation.getBehaviors();

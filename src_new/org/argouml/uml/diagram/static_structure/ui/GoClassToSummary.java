@@ -36,7 +36,7 @@ import org.argouml.ui.AbstractGoRule;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  *
  * @author  alexb, $Author: alexb $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
@@ -74,12 +74,6 @@ public class GoClassToSummary extends AbstractGoRule {
           return list;
       }
       return null;
-  }
-
-
-
-  public boolean isLeaf(Object node) {
-    return ( getChildCount(node) < 1);
   }
 
   private boolean hasIncomingDependencies(Object parent){

@@ -24,7 +24,7 @@
 // File: GoUseCaseToExtensionPoint.java
 // Classes: GoUseCaseToExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: GoUseCaseToExtensionPoint.java,v 1.9 2003/02/01 21:53:36 kataka Exp $
+// $Id: GoUseCaseToExtensionPoint.java,v 1.10 2003/04/15 00:17:27 alexb Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // display of extension points in the navigator pane.
@@ -49,8 +49,8 @@ import ru.novosoft.uml.foundation.core.MClassifier;
  */
 
 public class GoUseCaseToExtensionPoint extends AbstractGoRule {
+    
     protected static Category cat = Category.getInstance(GoUseCaseToExtensionPoint.class);
-
 
     /**
      * <p>Give a name to this rule.</p>
@@ -68,21 +68,6 @@ public class GoUseCaseToExtensionPoint extends AbstractGoRule {
             return ((MUseCase)parent).getExtensionPoints();
         }
         return null;
-    }
-
-
-
-    /**
-     * <p>Test if the given object is a leaf from a use case.</p>
-     *
-     * @param node  The node to test.
-     *
-     * @return      <code>false</code> if node is a use case and has
-     *              children, <code>true</code> otherwise.
-     */
-
-    public boolean isLeaf(Object node) {
-        return !((node instanceof MClassifier) && (getChildCount(node) > 0));
     }
 
 }  /* End of class GoUseCaseToExtensionPoint */

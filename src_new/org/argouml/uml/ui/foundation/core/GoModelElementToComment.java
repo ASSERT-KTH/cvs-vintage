@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoModelElementToComment.java,v 1.1 2003/01/21 11:23:21 kataka Exp $
+// $Id: GoModelElementToComment.java,v 1.2 2003/04/15 00:17:27 alexb Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.Collection;
@@ -37,13 +37,6 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  * @since Jan 21, 2003
  */
 public class GoModelElementToComment extends AbstractGoRule {
-
-    /**
-     * @see javax.swing.tree.TreeModel#isLeaf(java.lang.Object)
-     */
-    public boolean isLeaf(Object node) {
-        return !((node instanceof MModelElement) && (getChildCount(node) > 0));
-    }
 
     /**
      * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)

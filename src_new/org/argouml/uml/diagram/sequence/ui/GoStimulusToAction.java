@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoStimulusToAction.java,v 1.1 2003/02/01 21:53:35 kataka Exp $
+// $Id: GoStimulusToAction.java,v 1.2 2003/04/15 00:17:26 alexb Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -44,11 +44,6 @@ public class GoStimulusToAction extends AbstractGoRule {
         Vector vector = new Vector();
         vector.addElement(action);
         return vector;
-
-    }
-
-    public boolean isLeaf(Object node) {
-        return !(node instanceof MStimulus && getChildCount(node) > 0);
 
     }
 
