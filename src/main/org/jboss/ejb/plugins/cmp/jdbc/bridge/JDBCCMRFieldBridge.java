@@ -55,7 +55,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    // ------ Invocation messages ------
@@ -1012,18 +1012,46 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    public int loadArgumentResults(
          ResultSet rs,
          int parameterIndex,
-         Object[] argumentRef) {
+         Object[] fkRef) {
 
       if(!hasForeignKey()) {
          return parameterIndex;
       }
 
+      // value of this field,  will be filled in below
+      Object[] argumentRef = new Object[1];
       for(Iterator fields = foreignKeyFields.iterator(); fields.hasNext();) {
          JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)fields.next();
          parameterIndex = field.loadArgumentResults(
                rs,
                parameterIndex,
                argumentRef);
+      
+         if(field.getMetaData().getPrimaryKeyField() != null) {
+            // if we are tring to set a null value 
+            // into a null pk, we are already done.
+            if(argumentRef[0] != null || fkRef[0] != null) {
+            
+               // if we don't have a pk object yet create one
+               if(fkRef[0] == null) {
+                  fkRef[0] = relatedEntity.createPrimaryKeyInstance();
+               }
+            
+               try {
+                  // Set this field's value into the primary key object.
+                  field.getMetaData().getPrimaryKeyField().set(
+                        fkRef[0],
+                        argumentRef[0]);
+               } catch(Exception e) {
+                  // Non recoverable internal exception
+                  throw new EJBException("Internal error setting foreign-key " +
+                        "field " + getFieldName(), e);
+               }
+            }
+         } else {
+            // This field is the primary key, so no extraction is necessary.
+            fkRef[0] = argumentRef[0];
+         }
       }
       return parameterIndex;
    }
