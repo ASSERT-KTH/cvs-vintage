@@ -151,6 +151,12 @@
       <!-- no dependencies -->
       <include name="org/apache/tomcat/startup/StopTomcat.java"/>    
     </javac>
+    <copy todir="${tomcat.build}/classes/org/apache/tomcat/resources">
+            <fileset dir="src/share/org/apache/tomcat/resources">
+                <include name="**/*.properties"/>
+                <include name="**/*.dtd"/>
+            </fileset>
+    </copy>
     <jar jarfile="${tomcat.build}/lib/stop-tomcat.jar" 
 	 basedir="${tomcat.build}/classes" 
 	 manifest="src/build/manifest.stop-tomcat"> 
@@ -384,10 +390,10 @@
     <copy tofile="${tomcat.dist}/lib/servlet.jar" file="${servlet22.jar}"/>
 
     <!-- Add Tomcat internal javadoc -->
-    <mkdir dir="${tomcat.dist}/webapps/ROOT/javadoc"/>
+    <mkdir dir="${tomcat.build}/webapps/ROOT/javadoc"/>
     <javadoc packagenames="org.apache.tomcat.core" 
 	     sourcepath="src/share;src/facade22" 
-	     destdir="${tomcat.dist}/webapps/ROOT/javadoc" 
+	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
 	     author="true" 
 	     version="true" 
 	     use="true" 
@@ -397,7 +403,7 @@
 
     <javadoc packagenames="org.apache.tomcat.modules.*" 
 	     sourcepath="src/share;src/facade22" 
-	     destdir="${tomcat.dist}/webapps/ROOT/javadoc" 
+	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
 	     author="true" 
 	     version="true" 
 	     use="true" 
