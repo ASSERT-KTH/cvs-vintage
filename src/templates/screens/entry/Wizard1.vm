@@ -86,17 +86,19 @@ $page.setTitle("Enter issue")
      $attVal.RModuleAttribute.DisplayValue
    </th>
    <td>
-    #if ( $attVal.Attribute.AttributeType.Name == "string" )
-        #if ($templateId)
-          #templateAttrValueText ( $attVal "50" $templAttrInput.Value)
-        #else
-           #attrValueText ( $attVal "50" )
-        #end
-    #else
+    #if ($attVal.Attribute.isOptionAttribute())
         #if ($templateId)
           #templateAttrValueLeafSelect ($attVal $templAttVal $field "")
         #else
           #attrValueLeafSelect ($attVal $field "")
+        #end
+    #elseif ($attVal.Attribute.isUserAttribute())
+       #userSelectBox ($attVal "5" "multiple")
+    #else
+        #if ($templateId)
+          #templateAttrValueText ( $attVal "50" $templAttrInput.Value)
+        #else
+           #attrValueText ( $attVal "50" )
         #end
     #end
      #attrValueErrorMsg ( $attVal $field )
