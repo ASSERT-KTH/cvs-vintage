@@ -1,4 +1,4 @@
-// $Id: Parser.java,v 1.15 2003/08/21 20:33:36 thn Exp $
+// $Id: Parser.java,v 1.16 2003/09/14 01:51:07 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Parser.java
 // Classes: Parser
 // Original Author:
-// $Id: Parser.java,v 1.15 2003/08/21 20:33:36 thn Exp $
+// $Id: Parser.java,v 1.16 2003/09/14 01:51:07 bobtarling Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -58,7 +58,7 @@ public abstract class Parser {
     //   public abstract MAssociationEnd parseAssociationEnd(String s);
     public abstract Object parseMultiplicity(String s);
     public abstract Object parseState(String s);
-    public abstract MTransition parseTransition(MTransition trans, String s);
+    public abstract Object parseTransition(Object trans, String s);
     public abstract Object parseAction(String s);
     public abstract MGuard parseGuard(String s);
     public abstract MEvent parseEvent(String s);

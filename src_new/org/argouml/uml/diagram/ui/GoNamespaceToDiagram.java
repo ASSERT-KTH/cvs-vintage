@@ -1,7 +1,7 @@
 
 
 
-// $Id: GoNamespaceToDiagram.java,v 1.5 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: GoNamespaceToDiagram.java,v 1.6 2003/09/14 01:51:07 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import java.util.List;
 import org.argouml.application.api.Argo;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.ModelFacade;
 import org.argouml.ui.AbstractGoRule;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
@@ -64,7 +65,7 @@ public class GoNamespaceToDiagram extends AbstractGoRule {
                 UMLDiagram d = (UMLDiagram) it.next();
                 if (d instanceof UMLStateDiagram) {
                     UMLStateDiagram sd = (UMLStateDiagram) d;
-                    if (org.argouml.model.ModelFacade.isABehavioralFeature(sd.getStateMachine().getContext()))
+                    if (ModelFacade.isABehavioralFeature(ModelFacade.getContext(ModelFacade.getStateMachine(sd))))
                     	continue;
                 }
                 // patch for 0.14 stability to disable SD's

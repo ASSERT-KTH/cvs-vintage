@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.16 2003/08/30 23:23:49 alexb Exp $
+// $Id: StateMachinesHelper.java,v 1.17 2003/09/14 01:51:06 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,8 +73,8 @@ public class StateMachinesHelper {
      * @param trans
      * @return MStateVertex
      */
-    public MStateVertex getSource(MTransition trans) {
-        return trans.getSource();
+    public Object getSource(Object trans) {
+        return ((MTransition)trans).getSource();
     }
 
     /**
@@ -84,8 +84,8 @@ public class StateMachinesHelper {
      * @param trans
      * @return MStateVertex
      */
-    public MStateVertex getDestination(MTransition trans) {
-        return trans.getTarget();
+    public Object getDestination(Object trans) {
+        return ((MTransition)trans).getTarget();
     }
 
     

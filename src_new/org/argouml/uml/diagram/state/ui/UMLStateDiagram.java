@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.38 2003/09/13 22:06:06 alexb Exp $
+// $Id: UMLStateDiagram.java,v 1.39 2003/09/14 01:51:06 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.38 2003/09/13 22:06:06 alexb Exp $
+// $Id: UMLStateDiagram.java,v 1.39 2003/09/14 01:51:06 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -58,7 +58,7 @@ public class UMLStateDiagram extends UMLDiagram {
     /**
      * this diagram needs to be deleted when its statemachine is deleted.
      */
-    MStateMachine theStateMachine;
+    Object theStateMachine;
 
     ////////////////
     // actions for toolbar
@@ -160,8 +160,8 @@ public class UMLStateDiagram extends UMLDiagram {
      */
     public void initialize(Object o) {
         if (ModelFacade.isAStateMachine(o)) {
-            MStateMachine sm = (MStateMachine) o;
-            Object context = sm.getContext();
+            Object sm = /*(MStateMachine)*/ o;
+            Object context = ModelFacade.getContext(sm);
             Object contextNamespace = null;
             if (ModelFacade.isAClassifier(context)) {
                 contextNamespace = context;
@@ -196,7 +196,7 @@ public class UMLStateDiagram extends UMLDiagram {
      *
      * @author psager@tigris.org Jan. 24, 2oo2
      */
-    public void setup(Object namespace, MStateMachine sm) {
+    public void setup(Object namespace, Object/*MStateMachine*/ sm) {
         setNamespace(namespace);
 
         // add the diagram as a listener to the statemachine so
@@ -216,8 +216,8 @@ public class UMLStateDiagram extends UMLDiagram {
         lay.setGraphEdgeRenderer(rend);
     }
 
-    public MStateMachine getStateMachine() {
-        return (MStateMachine)((StateDiagramGraphModel) getGraphModel()).getMachine();
+    public Object getStateMachine() {
+        return /*(MStateMachine)*/((StateDiagramGraphModel) getGraphModel()).getMachine();
     }
 
     /**

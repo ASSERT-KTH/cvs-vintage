@@ -1,4 +1,4 @@
-// $Id: FigSimpleState.java,v 1.6 2003/09/13 22:06:06 alexb Exp $
+// $Id: FigSimpleState.java,v 1.7 2003/09/14 01:51:06 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,8 +44,6 @@ import org.tigris.gef.presentation.FigLine;
 import org.tigris.gef.presentation.FigRRect;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
-
-import ru.novosoft.uml.behavior.state_machines.MState;
 
 /** Class to display graphics for a UML MState in a diagram. */
 
@@ -195,7 +193,7 @@ public class FigSimpleState extends FigState {
 	    Object state = getOwner();
 	    if (state == null) return;
 	    String s = ft.getText();
-	    ParserDisplay.SINGLETON.parseStateBody((MState)state, s);
+	    ParserDisplay.SINGLETON.parseStateBody(/*(MState)*/state, s);
 	}
     }
    

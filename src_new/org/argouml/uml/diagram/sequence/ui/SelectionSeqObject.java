@@ -1,4 +1,4 @@
-// $Id: SelectionSeqObject.java,v 1.14 2003/09/13 11:00:11 bobtarling Exp $
+// $Id: SelectionSeqObject.java,v 1.15 2003/09/14 01:51:06 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,11 +71,8 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.FigPoly;
 import org.tigris.gef.presentation.Handle;
-import ru.novosoft.uml.behavior.common_behavior.MCallAction;
 import ru.novosoft.uml.behavior.common_behavior.MLink;
 import ru.novosoft.uml.behavior.common_behavior.MLinkEnd;
-import ru.novosoft.uml.behavior.common_behavior.MObject;
-
 public class SelectionSeqObject extends SelectionWButtons  {
     protected static Logger cat = 
         Logger.getLogger(SelectionSeqObject.class);
