@@ -1,4 +1,4 @@
-// $Id: TreeModelComposite.java,v 1.18 2004/09/01 16:18:40 mvw Exp $
+// $Id: TreeModelComposite.java,v 1.19 2004/09/03 19:28:46 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
  * that determine how to link parents to children in the tree. Those
  * rules can now be found in PerspectiveSupport.
  *
- * <p>$Id: TreeModelComposite.java,v 1.18 2004/09/01 16:18:40 mvw Exp $
+ * <p>$Id: TreeModelComposite.java,v 1.19 2004/09/03 19:28:46 mvw Exp $
  */
 public class TreeModelComposite extends TreeModelSupport implements TreeModel {
 
@@ -78,9 +78,9 @@ public class TreeModelComposite extends TreeModelSupport implements TreeModel {
      */
     public Object getChild(Object parent, int index) {
 
-        int nSubs = _goRules.size();
+        int nSubs = getGoRules().size();
         for (int i = 0; i < nSubs; i++) {
-            TreeModel tm = (TreeModel) _goRules.elementAt(i);     
+            TreeModel tm = (TreeModel) getGoRules().elementAt(i);     
             int childCount = tm.getChildCount(parent);
             if (index < childCount) {              
                 return tm.getChild(parent, index);
@@ -96,9 +96,9 @@ public class TreeModelComposite extends TreeModelSupport implements TreeModel {
     public int getChildCount(Object parent) {
 
         int childCount = 0;
-        int nSubs = _goRules.size();
+        int nSubs = getGoRules().size();
         for (int i = 0; i < nSubs; i++) {
-            TreeModel tm = (TreeModel) _goRules.elementAt(i);
+            TreeModel tm = (TreeModel) getGoRules().elementAt(i);
             childCount += tm.getChildCount(parent);
         }
         return childCount;
@@ -111,9 +111,9 @@ public class TreeModelComposite extends TreeModelSupport implements TreeModel {
     public int getIndexOfChild(Object parent, Object child) {
 
         int childCount = 0;
-        int nSubs = _goRules.size();
+        int nSubs = getGoRules().size();
         for (int i = 0; i < nSubs; i++) {
-            TreeModel tm = (TreeModel) _goRules.elementAt(i);           
+            TreeModel tm = (TreeModel) getGoRules().elementAt(i);           
             int childIndex = tm.getIndexOfChild(parent, child);
             if (childIndex != -1) {               
                 return childIndex + childCount;
@@ -138,9 +138,9 @@ public class TreeModelComposite extends TreeModelSupport implements TreeModel {
      * @return  true if <I>node</I> is a leaf
      */
     public boolean isLeaf(Object node) {
-        int nSubs = _goRules.size();
+        int nSubs = getGoRules().size();
         for (int i = 0; i < nSubs; i++) {
-            TreeModel tm = (TreeModel) _goRules.elementAt(i);
+            TreeModel tm = (TreeModel) getGoRules().elementAt(i);
             if (!tm.isLeaf(node))
                 return false;
         }

@@ -1,4 +1,4 @@
-// $Id: GUITestMultiEditorPane.java,v 1.2 2004/02/24 08:28:19 linus Exp $
+// $Id: GUITestMultiEditorPane.java,v 1.3 2004/09/03 19:28:47 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GUITestMultiEditorPane.java,v 1.2 2004/02/24 08:28:19 linus Exp $
+// $Id: GUITestMultiEditorPane.java,v 1.3 2004/09/03 19:28:47 mvw Exp $
 package org.argouml.ui;
 
 import java.awt.Component;
@@ -68,7 +68,7 @@ public class GUITestMultiEditorPane extends TestCase {
     public void testTargetSet() {
         try {
             MultiEditorPane pane = new MultiEditorPane();
-            Component[] tabs = pane._tabs.getComponents();
+            Component[] tabs = pane.getTabs().getComponents();
             Object target = new Object();
             boolean[] shouldBeEnabled = getShouldBeEnabled(target, tabs);
             TargetEvent e =
@@ -81,7 +81,7 @@ public class GUITestMultiEditorPane extends TestCase {
 				    target,
 				});
             pane.targetSet(e);
-            assertEnabled(pane._tabs, shouldBeEnabled);
+            assertEnabled(pane.getTabs(), shouldBeEnabled);
             target = new UMLClassDiagram();
             shouldBeEnabled = getShouldBeEnabled(target, tabs);
             e = new TargetEvent(
@@ -94,7 +94,7 @@ public class GUITestMultiEditorPane extends TestCase {
 				    target
 				});
             pane.targetSet(e);
-            assertEnabled(pane._tabs, shouldBeEnabled);
+            assertEnabled(pane.getTabs(), shouldBeEnabled);
             target = CoreFactory.getFactory().createClass();
             shouldBeEnabled = getShouldBeEnabled(target, tabs);
             e =
@@ -107,7 +107,7 @@ public class GUITestMultiEditorPane extends TestCase {
 				    target,
 				});
             pane.targetSet(e);
-            assertEnabled(pane._tabs, shouldBeEnabled);
+            assertEnabled(pane.getTabs(), shouldBeEnabled);
             target = new FigText(0, 0, 0, 0);
             shouldBeEnabled = getShouldBeEnabled(target, tabs);
             e = new TargetEvent(this,
@@ -119,7 +119,7 @@ public class GUITestMultiEditorPane extends TestCase {
 				    target,
 				});
             pane.targetSet(e);
-            assertEnabled(pane._tabs, shouldBeEnabled);
+            assertEnabled(pane.getTabs(), shouldBeEnabled);
         } catch (Exception ex) {
             // on a headless system (without display) this will crash
         }
