@@ -127,9 +127,15 @@ dd	{
  margin-bottom: .67em
  }
 #navcolumn div div {
- padding-left: 1em;
- margin-bottom: 0
- }
+    margin-top: .5em;
+    padding-left: 1em;
+    margin-bottom: 0
+    }
+#navcolumn div div div {
+    margin-top: .2em;
+    padding-left: 1.2em;
+    margin-bottom: 0
+    }
 #banner, #banner td { 
 	background: #369;
 	color: white;
@@ -141,6 +147,15 @@ body #banner #login a {
 	color: white;
 	padding: .25em;
 	margin: 0;
+	}
+#modulenav {
+	background-color: #fff;
+	padding: .1em;
+	margin: 0;
+	border-bottom: 2px solid #666 
+	}
+#modulenav td {
+	align: right 
 	}
 .tabs th {
 	color: black;
