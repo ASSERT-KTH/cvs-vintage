@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: TransportStruct.java,v 1.4 2005/01/28 09:13:30 benoitf Exp $
+ * $Id: TransportStruct.java,v 1.5 2005/01/28 09:17:23 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.csiv2.struct;
@@ -45,7 +45,7 @@ public class TransportStruct implements Serializable {
     /**
      * Default ssl port
      */
-    private static final int DEFAULT_SSL_PORT = 2003;
+    public static final int DEFAULT_SSL_PORT = 2003;
 
     /**
      * TransportAddress
