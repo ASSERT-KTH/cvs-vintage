@@ -31,7 +31,7 @@ import java.util.Vector;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @author <a href="joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public final class SQLUtil
 {
@@ -98,6 +98,13 @@ public final class SQLUtil
    public static String fixTableName(String tableName, DataSource dataSource)
       throws DeploymentException
    {
+      // don't fix the quited table name
+      char firstChar = tableName.charAt(0);
+      if(firstChar == '"' || firstChar == '\'')
+      {
+         return tableName;
+      }
+
       // Separate schema name and table name
       String strSchema = "";
       int iIndex;
