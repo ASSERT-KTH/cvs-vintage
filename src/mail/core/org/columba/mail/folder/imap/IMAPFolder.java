@@ -444,7 +444,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * The IMAP copy command also keeps the flags intact. So, there's no need
 	 * to change these manually.
 	 * 
-	 * @see org.columba.mail.folder.Folder#innerCopy(org.columba.mail.folder.Folder, java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#innerCopy(org.columba.mail.folder.MailboxInterface, java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
 	public void innerCopy(MailboxInterface destFolder, Object[] uids)
 		throws Exception {
@@ -454,7 +454,19 @@ public class IMAPFolder extends RemoteFolder {
 			uids,
 			getImapPath());
 
-		//			mailbox was modified
+		// update messagefolderinfo of destination-folder
+		// -> this is necessary to reflect the changes visually
+		for (int i = 0; i < uids.length; i++) {
+			Flags flag = (Flags) getFlags(uids[i]);
+			// increment recent count of messages if appropriate
+			if (flag.getRecent())
+				destFolder.getMessageFolderInfo().incRecent();
+			// increment unseen count of messages if appropriate
+			if (!flag.getSeen())
+				destFolder.getMessageFolderInfo().incUnseen();
+		}
+
+		// mailbox was modified
 		changed = true;
 	}
 
