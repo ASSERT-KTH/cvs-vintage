@@ -25,10 +25,16 @@ import org.jboss.util.Service;
  *   @see Container
  *   @see ContainerFactory
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.14 $
+ *   @version $Revision: 1.15 $
+ *
+ * <p><b>Revisions:</b><br>
+ * <p><b>2001/08/06: dain</b>
+ * <ol>
+ *   <li>Moved synchronizeEntitiesWithinTransaction to this class.
+ * </ol>
  */
 public class Application
-	implements Service
+   implements Service
 {
    // Constants -----------------------------------------------------
     
@@ -52,7 +58,7 @@ public class Application
     * transaction EntitySynchronizationInterceptor and InstanceSynchronization
     * manage this instance.
     */
-   private TxEntityMap txEntityMap = new TxEntityMap();
+   private ApplicationTxEntityMap txEntityMap = new ApplicationTxEntityMap();
 
    // Static --------------------------------------------------------
 
@@ -66,16 +72,16 @@ public class Application
 	 */
    public void addContainer(Container con)
    {
-       containers.put(con.getBeanMetaData().getEjbName(), con);
-	   con.setApplication(this);
+      containers.put(con.getBeanMetaData().getEjbName(), con);
+      con.setApplication(this);
    }
    
 
-	/**
-	 * Remove a container from this application.
-	 *
-	 * @param   con  
-	 */
+   /**
+    * Remove a container from this application.
+    *
+    * @param   con  
+    */
    public void removeContainer(Container con)
    {
       containers.remove(con.getBeanMetaData().getEjbName());
@@ -97,95 +103,95 @@ public class Application
    }
    
 
-	/**
-	 * Get a container from this Application that corresponds to a given name
-	 *
-	 * @param   name  ejb-name name defined in ejb-jar.xml
-     *
-	 * @return  container for the named bean, or null if the container was not found   
-	 */
+   /**
+    * Get a container from this Application that corresponds to a given name
+    *
+    * @param   name  ejb-name name defined in ejb-jar.xml
+    *
+    * @return  container for the named bean, or null if the container was not found   
+    */
    public Container getContainer(String name)
    {
       return (Container)containers.get(name);
    }
    
 
-	/**
-	 * Get all containers in this Application.
-	 *
-	 * @return  a collection of containers for each enterprise bean in this application
-     *          unit.
-	 */
+   /**
+    * Get all containers in this Application.
+    *
+    * @return  a collection of containers for each enterprise bean in this application
+    *          unit.
+    */
    public Collection getContainers()
    {
       return containers.values();
    }
    
 
-	/**
-	 *	Get the class loader of this Application. 
-	 *
-	 * @return     
-	 */
+   /**
+    *	Get the class loader of this Application. 
+    *
+    * @return     
+    */
    public ClassLoader getClassLoader()
    {
       return classLoader;
    }
    
 
-	/**
-	 *	Set the class loader of this Application
-	 *
-	 * @param   name  
-	 */
+   /**
+    *	Set the class loader of this Application
+    *
+    * @param   name  
+    */
    public void setClassLoader(ClassLoader cl)
    {
       this.classLoader = cl;
    }
    
 
-	/**
-	 *	Get the name of this Application. 
-	 *
-	 * @return     
-	 */
+   /**
+    *	Get the name of this Application. 
+    *
+    * @return     
+    */
    public String getName()
    {
       return name;
    }
    
 
-	/**
-	 *	Set the name of this Application
-	 *
-	 * @param   name  
-	 */
+   /**
+    *	Set the name of this Application
+    *
+    * @param   name  
+    */
    public void setName(String name)
    {
       this.name = name;
    }
    
 
-	/**
-	 *	Get the URL from which this Application was deployed
-	 *
-	 * @return     
-	 */
+   /**
+    *	Get the URL from which this Application was deployed
+    *
+    * @return     
+    */
    public URL getURL()
    {
       return url;
    }
    
 
-	/**
-	 *	Set the URL that was used to deploy this Application
-	 *
-	 * @param   url  
-	 */
+   /**
+    *	Set the URL that was used to deploy this Application
+    *
+    * @param   url  
+    */
    public void setURL(URL url)
    {
-		if (url == null)
-			throw new IllegalArgumentException("Null URL");
+      if (url == null)
+         throw new IllegalArgumentException("Null URL");
 	
       this.url = url;
       
@@ -194,89 +200,91 @@ public class Application
          name = url.toString();
    }
 	
-	/**
-	 * Gets the transaction to entity map object, which contains a map from 
-	 * a transaction to every entity used in that transaction.
-	 * @return the transaction to entity map for this application
-	 */
-   public TxEntityMap getTxEntityMap() {
+   /**
+    * Gets the transaction to entity map object, which contains a map from 
+    * a transaction to every entity used in that transaction.
+    * @return the transaction to entity map for this application
+    */
+   public ApplicationTxEntityMap getTxEntityMap() {
       return txEntityMap;
    }
 
    /**
     * Stores all of the entities associated with the specified transaction.
-	 * @param tx the transaction that associated entites will be stored
-	 * @throws Exception if an problem occures while storing the entities
+    * @param tx the transaction that associated entites will be stored
+    * @throws Exception if an problem occures while storing the entities
     */
    public void synchronizeEntitiesWithinTransaction(Transaction tx) throws RemoteException {
-		// If there is no transaction, there is nothing to synchronize.
-		if(tx != null) {
-			Object[] entities = getTxEntityMap().getEntities(tx);
-			for (int i = 0; i < entities.length; i++) {
-				EntityEnterpriseContext ctx = (EntityEnterpriseContext)entities[i];
-				EntityContainer container = (EntityContainer)ctx.getContainer();
-				container.getPersistenceManager().storeEntity(ctx);
-			}
-		}
+      // If there is no transaction, there is nothing to synchronize.
+      if(tx != null) 
+      {
+         EntityEnterpriseContext[] entities = getTxEntityMap().getEntities(tx);
+         for (int i = 0; i < entities.length; i++) 
+         {
+            EntityEnterpriseContext ctx = entities[i];
+            EntityContainer container = (EntityContainer)ctx.getContainer();
+            container.getPersistenceManager().storeEntity(ctx);
+         }
+      }
    }
    
-	// Service implementation ----------------------------------------
+   // Service implementation ----------------------------------------
     
     /**
      * Initializes all the containers of this application.
      *
      * @exception Exception
      */
-	public void init()
-	   throws Exception
-	{
-		Iterator enum = containers.values().iterator();
-		while (enum.hasNext())
-		{
-			Container con = (Container)enum.next();
-			con.init();
-		}
-	}
-	
-    /**
+   public void init()
+      throws Exception
+   {
+      Iterator enum = containers.values().iterator();
+      while (enum.hasNext())
+      {
+         Container con = (Container)enum.next();
+         con.init();
+      }
+   }
+   
+   /**
      * Starts all the containers of this application.
      *
      * @exception Exception
      */
-	public void start()
-	   throws Exception
-	{
-		Iterator enum = containers.values().iterator();
-		while (enum.hasNext())
-		{
-			Container con = (Container)enum.next();
-            con.start();        
-		}
-	}
+   public void start()
+      throws Exception
+   {
+      Iterator enum = containers.values().iterator();
+      while (enum.hasNext())
+      {
+         Container con = (Container)enum.next();
+         con.start();        
+      }
+   }
 	
-    /**
+   /**
      * Stops all the containers of this application.
      */
-	public void stop()
-	{
-		Iterator enum = containers.values().iterator();
-		while (enum.hasNext())
-		{
-			Container con = (Container)enum.next();
-            con.stop();
-		}
-	}
+   public void stop()
+   {
+      Iterator enum = containers.values().iterator();
+      while (enum.hasNext())
+      {
+         Container con = (Container)enum.next();
+         con.stop();
+      }
+   }
 	
-    /**
+   /**
      * Destroys all the containers of this application.
      */
-	public void destroy()
-	{
-		Iterator enum = containers.values().iterator();
-		while (enum.hasNext())
-		{
-			Container con = (Container)enum.next();
-			con.destroy();
-		}
-	}
+   public void destroy()
+   {
+      Iterator enum = containers.values().iterator();
+      while (enum.hasNext())
+      {
+         Container con = (Container)enum.next();
+         con.destroy();
+      }
+   }
 }

@@ -8,6 +8,9 @@ package org.jboss.ejb;
 
 import java.util.HashMap;
 import javax.transaction.Transaction;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.Synchronization;
 
 /**
  * This class provides a way to find out what entities are contained in
@@ -16,7 +19,16 @@ import javax.transaction.Transaction;
  * Used in EntitySynchronizationInterceptor.
  * 
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
+ *
+ * Revisions:
+ *
+ * <p><b>Revisions:</b><br>
+ * <p><b>2001/08/06: marcf</b>
+ * <ol>
+ *   <li>Got rid of disassociate and added a javax.transaction.Synchronization.  The sync will clean up the map now.
+ *   <li>This class now interacts with ApplicationTxEntityMap available in Application
+ * </ol>
  */
 public class TxEntityMap
 {
@@ -26,50 +38,55 @@ public class TxEntityMap
     * associate entity with transaction
     */
    public synchronized void associate(Transaction tx,
-                                      EntityEnterpriseContext entity)
+                                      EntityEnterpriseContext entity) throws RollbackException, SystemException
    {
       HashMap entityMap = (HashMap)m_map.get(tx);
       if (entityMap == null)
       {
          entityMap = new HashMap();
          m_map.put(tx, entityMap);
+         tx.registerSynchronization(new TxEntityMapCleanup(this, tx));
       }
+      entity.getContainer().getApplication().getTxEntityMap().associate(tx, entity);
       entityMap.put(entity.getCacheKey(), entity);
    }
 
-   /**
-    * Disassociate entity with transaction.  When the transaction has no
-    * more entities.  it is removed from this class's internal HashMap.
-    */
-   public synchronized void disassociate(Transaction tx,
-                                         EntityEnterpriseContext ctx)
+   public synchronized EntityEnterpriseContext getCtx(Transaction tx,
+                                                      CacheKey key)
    {
       HashMap entityMap = (HashMap)m_map.get(tx);
-      if (entityMap == null)
-      {
-         return;
-      }
-      entityMap.remove(ctx.getCacheKey());
-      
-      // When all entities are gone, cleanup!
-      // cleanup involves removing the transaction
-      // from the map
-      if (entityMap.size() <= 0)
-      {
-         m_map.remove(tx);
-      }
+      return (EntityEnterpriseContext)entityMap.get(key);
    }
-	
-   /**
-    * get all EntityEnterpriseContext that are involved with a transaction.
-    */
-   public synchronized Object[] getEntities(Transaction tx)
+
+   private class TxEntityMapCleanup implements Synchronization
    {
-      HashMap entityMap = (HashMap)m_map.get(tx);
-      if (entityMap == null) // there are no entities associated
+      TxEntityMap map;
+      Transaction tx;
+
+      public TxEntityMapCleanup(TxEntityMap map,
+                                Transaction tx)
       {
-         return new Object[0];
+         this.map = map;
+         this.tx = tx;
       }
-      return entityMap.values().toArray();
+
+      // Synchronization implementation -----------------------------
+  
+      public void beforeCompletion()
+      {
+         /* complete */
+      }
+  
+      public void afterCompletion(int status)
+      {
+         synchronized(map)
+         {
+            HashMap entityMap = (HashMap)m_map.remove(tx);
+            if (entityMap != null)
+            {
+               entityMap.clear();
+            }
+         }
+      }
    }
 }

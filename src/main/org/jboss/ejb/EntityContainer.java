@@ -46,7 +46,7 @@ import javax.management.j2ee.CountStatistic;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  *
  * <p><b>Revisions:</b>
  *
@@ -97,6 +97,8 @@ public class EntityContainer
    /** This is the instancepool that is to be used */
    protected InstancePool instancePool;
 
+   protected TxEntityMap txEntityMap = new TxEntityMap();
+
    /**
     * This is the first interceptor in the chain. The last interceptor must
     * be provided by the container itself.
@@ -140,6 +142,11 @@ public class EntityContainer
    public InstancePool getInstancePool()
    {
       return instancePool;
+   }
+
+   public TxEntityMap getTxEntityMap()
+   {
+      return txEntityMap;
    }
 
    public void setInstanceCache(InstanceCache ic)
@@ -385,9 +392,9 @@ public class EntityContainer
    public void remove(MethodInvocation mi)
       throws RemoteException, RemoveException
    {
-		// synchronize entities with the datastore before the bean is removed
-		// this will write queued updates so datastore will be consistent before removal
-		getApplication().synchronizeEntitiesWithinTransaction(mi.getTransaction());
+      // synchronize entities with the datastore before the bean is removed
+      // this will write queued updates so datastore will be consistent before removal
+      getApplication().synchronizeEntitiesWithinTransaction(mi.getTransaction());
 		
       // Get the persistence manager to do the dirty work
       getPersistenceManager().removeEntity((EntityEnterpriseContext)mi.getEnterpriseContext());
