@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.164 2003/11/24 16:58:13 mkl Exp $
+// $Id: ModelFacade.java,v 1.165 2003/11/24 17:28:32 d00mst Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -5935,10 +5935,7 @@ public class ModelFacade {
         String tag,
         String value) {
         if (target instanceof MModelElement) {
-            MTaggedValue tv = MFactory.getDefaultFactory().createTaggedValue();
-            tv.setModelElement((MModelElement)target);
-            tv.setTag(tag);
-            tv.setValue(value);
+	    ((MModelElement)target).setTaggedValue(tag, value);
             return;
         }
         throw new IllegalArgumentException("Unrecognized object : " + 
