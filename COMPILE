@@ -1,0 +1,9 @@
+compile with:
+
+javac org/columba/main/Main.java -classpath .:./ext/parser.jar:./ext/jaxp.jar
+
+javac org/columba/gui/themes/*.java
+
+start with:
+
+java org/columba/main/Main
