@@ -1,4 +1,4 @@
-// $Id: ChildGenDMElements.java,v 1.3 2003/06/30 19:23:18 linus Exp $
+// $Id: ChildGenDMElements.java,v 1.4 2003/08/21 20:27:02 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChildGenDMElements.java
 // Classes: ChildGenDMElements
 // Original Author: jrobbins
-// $Id: ChildGenDMElements.java,v 1.3 2003/06/30 19:23:18 linus Exp $
+// $Id: ChildGenDMElements.java,v 1.4 2003/08/21 20:27:02 alexb Exp $
 
 package org.argouml.kernel;
 
@@ -35,6 +35,12 @@ import org.tigris.gef.util.*;
 
 import org.argouml.cognitive.*;
 
+/**
+ * This Class does not belong in the kernel of ArgoUml.
+ *
+ * @deprecated since 0.15.1, remove in 0.15.2,
+ *             replaced by inner class in Designer.
+ */
 public class ChildGenDMElements implements ChildGenerator {
     /** Reply a Enumeration of the children of the given Object */
     public Enumeration gen(Object o) {

@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.14 2003/06/30 18:00:16 linus Exp $
+// $Id: Designer.java,v 1.15 2003/08/21 20:28:16 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.14 2003/06/30 18:00:16 linus Exp $
+// $Id: Designer.java,v 1.15 2003/08/21 20:28:16 alexb Exp $
 
 package org.argouml.cognitive;
 
@@ -649,5 +649,15 @@ public class Designer
     
     /** just returns false */
     public boolean canFixIt(ToDoItem item) { return false; }
+    
+    class ChildGenDMElements implements ChildGenerator {
+        /** Reply a Enumeration of the children of the given Object */
+        public Enumeration gen(Object o) {
+            if (o instanceof Design)
+                return ((Design) o).elements();
+            else
+                return EnumerationEmpty.theInstance();
+        }
+    } /* end class ChildGenDMElements */
     
 } /* end class Designer */
