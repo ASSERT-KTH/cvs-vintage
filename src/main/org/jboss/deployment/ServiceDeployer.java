@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.StringTokenizer;
+
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;
 import javax.management.MBeanServer;
@@ -30,17 +31,21 @@ import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.jboss.system.Service;
-import org.jboss.system.ServiceLibraries;
-import org.jboss.system.ServiceMBeanSupport;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import org.jboss.system.Service;
+import org.jboss.system.ServiceLibraries;
+import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.system.ConfigurationException;
 
 /**
  * This is the main Service Deployer API.
@@ -49,7 +54,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.22 $ <p>
+ * @version   $Revision: 1.23 $ <p>
  *
  * <b>20010830 marc fleury:</b>
  * <ul>initial import
@@ -70,7 +75,7 @@ import org.xml.sax.SAXException;
  *        deploy. Made undeploy work, and implemented sar dependency management
  *        and recursive deploy/undeploy.
  * </ol>
- 
+ *
  * <p><b>20010907 david maplesden:</b>
  * <ul>
  *  <li>Added support for "depends" tag
@@ -128,7 +133,7 @@ public class ServiceDeployer
           * @param dir       Directory of candidate file.
           * @param filename  Filename of candidate file.
           * @return          Whether candidate file should be deployed by
-          *      this deployer.
+          *                  this deployer.
           */
          public boolean accept(File dir, String filename)
          {
@@ -162,11 +167,16 @@ public class ServiceDeployer
    public Object deploy(URL url)
        throws MalformedURLException, IOException, DeploymentException
    {
+      boolean debug = log.isDebugEnabled();
+      
       ServiceDeploymentInfo sdi = getSdi(url, true);
       
       if (sdi.state == ServiceDeploymentInfo.MBEANSLOADED)
       {
-         log.debug("document " + url + " is already deployed, undeploy first if you wish to redeploy");
+         if (debug) {
+            log.debug("document " + url + 
+               " is already deployed, undeploy first if you wish to redeploy");
+         }
          return sdi;
       }
       
@@ -189,19 +199,25 @@ public class ServiceDeployer
          try
          {
             NodeList lds = sdi.dd.getElementsByTagName("local-directory");
-            log.debug("about to copy " + lds.getLength() + " local directories");
+          
+            if (debug)
+               log.debug("about to copy " + lds.getLength() + " local directories");
             for (int i = 0; i< lds.getLength(); i++)
             {
                Element ld = (Element)lds.item(i);
                String path = ld.getAttribute("path");
-               log.debug("about to copy local directory at " + path);
+               
+               if (debug) log.debug("about to copy local directory at " + path);
                log.warn("using jboss.system.home property");
                File jbossHomeDir = new File(System.getProperty("jboss.system.home"));
-               File localBaseDir = new File(jbossHomeDir, "db"+File.separator);
-               //Get the url of the local copy from the classloader.
+               File localBaseDir = new File(jbossHomeDir, "db");
+               
+               // Get the url of the local copy from the classloader.
                URL localUrl = (URL)sdi.getClassUrls().get(0);
-               log.debug("copying from " + localUrl.toString() + path);
-               log.debug("copying to " + localBaseDir);
+               if (debug) {
+                  log.debug("copying from " + localUrl.toString() + path);
+                  log.debug("copying to " + localBaseDir);
+               }
                
                inflateJar(localUrl, localBaseDir, path);
             }
@@ -212,7 +228,7 @@ public class ServiceDeployer
          }
          
          // install the MBeans in this descriptor
-         log.debug("addMBeans: url " + url);
+         if (debug) log.debug("addMBeans: url " + url);
          
          List mbeans = sdi.mbeans;
          mbeans.clear();
@@ -223,7 +239,8 @@ public class ServiceDeployer
          {
             Element mbean = (Element)nl.item(i);
             
-            log.debug("deploying with ServiceController mbean " + mbean);
+            if (debug)
+               log.debug("deploying with ServiceController mbean " + mbean);
             
             ObjectName service = (ObjectName)invoke(
                getServiceControllerName(),
@@ -237,13 +254,15 @@ public class ServiceDeployer
                objectNameToSupplyingPackageMap.put(service, url);
             }
          }
+         
          // create the services
          Iterator iterator = sdi.mbeans.iterator();
          while (iterator.hasNext()) 
          {
             ObjectName service = (ObjectName) iterator.next();
             
-            // The service won't be created until explicitely dependent mbeans are created
+            // The service won't be created until explicitely 
+            // dependent mbeans are created
             invoke(
                getServiceControllerName(),
                "create",
@@ -257,7 +276,8 @@ public class ServiceDeployer
          {
             ObjectName service2 = (ObjectName) iterator2.next();
             
-            // The service won't be started until explicitely dependent mbeans are started
+            // The service won't be started until explicitely 
+            // dependent mbeans are started
             invoke(
                getServiceControllerName(),
                "start",
@@ -270,13 +290,15 @@ public class ServiceDeployer
    
    private ServiceDeploymentInfo loadFiles(URL url) throws DeploymentException
    {
+      boolean debug = log.isDebugEnabled();
+      
       ServiceDeploymentInfo sdi = getSdi(url, true);
       
       if (sdi.state == ServiceDeploymentInfo.EMPTY)
       {
          try
          {
-            log.info("deploying: " + url);
+            if (debug) log.debug("deploying: " + url);
             
             // A service can be as simple as a directory from which to load classes
             if(url.toString().endsWith("/"))  
@@ -292,13 +314,15 @@ public class ServiceDeployer
                
                // unpack SARs
                extractPackages(localFile.toURL(), sdi);
+
+               if (debug) {
+                  log.debug("jars from deployment: " + sdi.getClassUrls());
+                  log.debug("xml's from deployment: " + sdi.getXmlUrls());
+               }
                
-               log.debug("jars from deployment: " + sdi.getClassUrls());
-               log.debug("xml's from deployment: " + sdi.getXmlUrls());
+               // OK, what are we trying to deploy? create the Deployement Descriptor
                
-               //OK, what are we trying to deploy? create the Deployement Descriptor
-               
-               //A plain xml file with mbean classpath elements and mbean config.
+               // A plain xml file with mbean classpath elements and mbean config.
                if (localFile.getName().endsWith("service.xml"))
                {
                   sdi.dd = getDocument(localFile.toURL());
@@ -325,6 +349,7 @@ public class ServiceDeployer
                      
                      throw new DeploymentException("No META-INF/jboss-service.xml found in alleged sar!");
                   }
+                  
                   //sdi.state = ServiceDeploymentInfo.CLASSESLOADED;
                   log.debug("got document jboss-service.xml from cl");
                }
@@ -357,6 +382,8 @@ public class ServiceDeployer
    private void parseXMLClasspath(URL url, ServiceDeploymentInfo sdi) 
        throws DeploymentException
    {
+      boolean debug = log.isDebugEnabled();
+
       Document dd = sdi.dd;
       
       Collection classpath = sdi.classpath;
@@ -366,17 +393,16 @@ public class ServiceDeployer
       for (int i = 0; i < classpaths.getLength(); i++)
       {
          Element classpathElement = (Element)classpaths.item(i);
-         log.debug("found classpath " + classpath);
+         if (debug) log.debug("found classpath " + classpath);
          
-         //String codebase = System.getProperty("jboss.system.libraryDirectory");
          String codebase = "";
          String archives = "";
          
-         //Does it specify a codebase?
+         // Does it specify a codebase?
          if (classpathElement != null)
          {
-            
-            log.debug("setting up classpath " + classpath);
+            if (debug) log.debug("setting up classpath " + classpath);
+
             // Load the codebase
             codebase = classpathElement.getAttribute("codebase").trim();
             
@@ -405,10 +431,11 @@ public class ServiceDeployer
             {
                codebase += "/";
             }
-            log.debug("codebase is " + codebase);
-            //Load the archives
+            if (debug) log.debug("codebase is " + codebase);
+            
+            // Load the archives
             archives = classpathElement.getAttribute("archives").trim();
-            log.debug("archives are " + archives);
+            if (debug) log.debug("archives are " + archives);
          }
          
          if (codebase.startsWith("file:") && archives.equals("*"))
@@ -466,7 +493,8 @@ public class ServiceDeployer
             }
             
             // Still no codebase? safeguard
-            if (codebase.equals("")) codebase = System.getProperty("jboss.system.libraryDirectory");
+            if (codebase.equals("")) 
+               codebase = System.getProperty("jboss.system.libraryDirectory");
                
             if (archives.equals("*") || archives.equals("")) 
             {
@@ -538,7 +566,7 @@ public class ServiceDeployer
             
             loadFiles(neededUrl);
             
-            log.debug("deployed classes for " + neededUrl);
+            if (debug) log.debug("deployed classes for " + neededUrl);
          }
          catch (DeploymentException e) {
             log.error("problem deploying classes for " + neededUrl, e);
@@ -566,7 +594,9 @@ public class ServiceDeployer
    public void undeploy(URL url, Object localurlObject)
       throws MalformedURLException, IOException, DeploymentException
    {
-      log.info("undeploying: " + url);
+      if (log.isDebugEnabled()) {
+         log.debug("undeploying: " + url);
+      }
       
       ServiceDeploymentInfo sdi = getSdi(url, false);
       
@@ -581,7 +611,7 @@ public class ServiceDeployer
       //delete the copied directories if possible.
       sdi.cleanup(getLog());
       
-      //Hey, man, we're all cleaned up!
+      // Hey, man, we're all cleaned up!
    }
    
    /**
@@ -593,7 +623,7 @@ public class ServiceDeployer
     * @exception java.lang.Exception  Thrown if we are supplied an invalid name.
     */
    public ObjectName preRegister(MBeanServer server, ObjectName name)
-       throws java.lang.Exception
+       throws Exception
    {
       super.preRegister(server, name);
       log.debug("ServiceDeployer preregistered with mbean server");
@@ -610,7 +640,7 @@ public class ServiceDeployer
     *
     * @param registrationDone  Description of Parameter
     */
-   public void postRegister(java.lang.Boolean registrationDone)
+   public void postRegister(Boolean registrationDone)
    {
       try
       {
@@ -618,9 +648,9 @@ public class ServiceDeployer
          
          //Start us up, which also sets up the deploy temp directory
          invoke(getServiceControllerName(),
-         "create",
-         new Object[] {objectName},
-         new String[] {"javax.management.ObjectName"});
+            "create",
+            new Object[] {objectName},
+            new String[] {"javax.management.ObjectName"});
          
          invoke(getServiceControllerName(),
             "start",
@@ -657,7 +687,7 @@ public class ServiceDeployer
       {
          log.warn("Exception getting document:", e);
          throw new DeploymentException(e.getMessage());
-      } // end of try-catch
+      }
    }
    
    // Private --------------------------------------------------------
@@ -665,15 +695,17 @@ public class ServiceDeployer
    private void removeMBeans(URL url, ServiceDeploymentInfo sdi) 
        throws DeploymentException
    {
-      log.debug("removeMBeans: url " + url);
+      boolean debug = log.isDebugEnabled();
+      
+      if (debug) log.debug("removeMBeans: url " + url);
       List services = sdi.mbeans;
       int lastService = services.size();
       
-      //stop services in reverse order.
+      // stop services in reverse order.
       for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
       {
          ObjectName name = (ObjectName)i.previous();
-         log.debug("stopping mbean " + name);
+         if (debug) log.debug("stopping mbean " + name);
          invoke(getServiceControllerName(),
             "stop",
             new Object[] {name},
@@ -683,7 +715,7 @@ public class ServiceDeployer
       for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
       {
          ObjectName name = (ObjectName)i.previous();
-         log.debug("destroying mbean " + name);
+         if (debug) log.debug("destroying mbean " + name);
          invoke(getServiceControllerName(),
             "destroy",
             new Object[] {name},
@@ -693,12 +725,12 @@ public class ServiceDeployer
       for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
       {
          ObjectName name = (ObjectName)i.previous();
-         log.debug("removing mbean " + name);
+         if (debug) log.debug("removing mbean " + name);
          invoke(getServiceControllerName(),
             "remove",
             new Object[] {name},
             new String[] {"javax.management.ObjectName"});
-         //we don't supply it any more, maybe someone else will later.
+         // we don't supply it any more, maybe someone else will later.
          objectNameToSupplyingPackageMap.remove(name);
       }
       
@@ -716,12 +748,11 @@ public class ServiceDeployer
     * @throws MalformedObjectNameException
     */
    private ObjectName parseObjectName(final Element element)
-       throws org.jboss.system.ConfigurationException, MalformedObjectNameException
+       throws ConfigurationException, MalformedObjectNameException
    {
       String name = ((org.w3c.dom.Text)element.getFirstChild()).getData().trim();
       if (name == null || name.trim().equals("")) {
-         throw new org.jboss.system.ConfigurationException
-         ("Name element must have a value.");
+         throw new ConfigurationException("Name element must have a value.");
       }
       return new ObjectName(name);
    }
@@ -765,18 +796,19 @@ public class ServiceDeployer
    private ServiceDeploymentInfo getSdi(URL url, boolean createIfMissing) 
        throws DeploymentException
    {
-      ServiceDeploymentInfo sdi = (ServiceDeploymentInfo)urlToServiceDeploymentInfoMap.get(url);
+      ServiceDeploymentInfo sdi = 
+         (ServiceDeploymentInfo)urlToServiceDeploymentInfoMap.get(url);
       if (sdi == null)
       {
          if (createIfMissing)
          {
             sdi = new ServiceDeploymentInfo(url);
             urlToServiceDeploymentInfoMap.put(url, sdi);
-         } // end of if ()
+         }
          else
          {
             throw new DeploymentException(url + " is not deployed as expected");
-         } // end of else
+         }
       }
       return sdi;
    }
