@@ -37,7 +37,8 @@ import org.jboss.util.ServiceMBeanSupport;
  *  @see TxManager
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.10 $
+ *  @author Toby Allsopp (toby.allsopp@peace.com)
+ *  @version $Revision: 1.11 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
