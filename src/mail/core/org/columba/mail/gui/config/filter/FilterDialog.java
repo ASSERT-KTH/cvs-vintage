@@ -70,7 +70,7 @@ public class FilterDialog extends JDialog implements ActionListener {
     private boolean dialogWasCancelled = true;
 
     public FilterDialog(JFrame parent, Filter filter) {
-        super(parent, false);
+        super(parent, true);
 
         setTitle(MailResourceLoader.getString("dialog", "filter",
                 "dialog_title"));
