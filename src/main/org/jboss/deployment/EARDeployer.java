@@ -8,37 +8,37 @@
 package org.jboss.deployment;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.OutputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
-
-import java.net.URL;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.net.URLClassLoader;
-
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipInputStream;
-
-import javax.management.ObjectName;
-import javax.management.MBeanServer;
+import javax.management.InstanceNotFoundException;
+import javax.management.JMException;
 import javax.management.MalformedObjectNameException;
+import javax.management.MBeanException;
+import javax.management.MBeanServer;
+import javax.management.ObjectInstance;
+import javax.management.ObjectName;
+import javax.management.RuntimeErrorException;
+import javax.management.RuntimeMBeanException;
 
 import org.jboss.logging.Logger;
 import org.jboss.management.j2ee.J2EEApplication;
+import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.file.JarUtils;
-
 import org.w3c.dom.Element;
-
 
 /**
  * Enterprise Archive Deployer.
@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -80,7 +80,23 @@ public class EARDeployer
          J2eeApplicationMetaData metaData = new J2eeApplicationMetaData(root);
          di.metaData = metaData;
          in.close();
-         
+
+         // Check for a jboss-app.xml descriptor
+         in = di.localCl.getResourceAsStream("META-INF/jboss-app.xml");
+         if( in != null )
+         {
+            Element jbossApp = xfl.getDocument(in, "META-INF/jboss-app.xml").getDocumentElement();
+            in.close();
+            //add service archives to metadata
+            metaData.importXml(jbossApp, true);
+            String repositoryName = MetaData.getOptionalChildContent(jbossApp, "loader-repository");
+            if( repositoryName != null )
+            {
+               // Get the required object name of the repository
+               di.repositoryClassName = MetaData.getOptionalChildContent(root, "loader-repository-class");
+               di.repositoryName = new ObjectName(repositoryName);
+	    }
+	 }
          // resolve the watch
          if (di.url.getProtocol().equals("file"))
          {
@@ -103,16 +119,49 @@ public class EARDeployer
          
          // Obtain the sub-deployment list
          File parentDir = null;
-         String urlPrefix = null;
+         HashMap extractedJars = new HashMap();
+
          if (di.isDirectory) 
          {
             parentDir = new File(di.localUrl.getFile());
          } 
          else
          {
-            // Build a jar url to then ear archive entry
-            urlPrefix = "jar:" + di.localUrl + "!/";
+            /* Extract each entry so that deployment modules can be processed
+             and any manifest entries referenced by the ear modules are located
+             in the same unpacked directory structure.
+            */
+            String urlPrefix = "jar:" + di.localUrl + "!/";
+            JarFile jarFile = new JarFile(di.localUrl.getFile());
+            // For each entry, test if deployable, if so
+            // extract it and store the related URL in map
+            for (Enumeration e = jarFile.entries(); e.hasMoreElements();)
+            {
+               JarEntry entry = (JarEntry)e.nextElement();
+               String name = entry.getName();
+               try 
+               {
+                  URL url = new URL(urlPrefix + name);
+                  if (isDeployable(name, url))
+                  {
+                     // Obtain a jar url for the nested jar
+                    URL nestedURL = JarUtils.extractNestedJar(url, this.tempDeployDir);
+                    // and store in it in map
+                    extractedJars.put(name, nestedURL);
+                  }
+               }
+               catch (MalformedURLException mue)
+               {
+                  log.warn("Jar entry invalid. Ignoring: " + name, mue);
+               }
+               catch (IOException ex)
+               {
+                  log.warn("Failed to extract nested jar. Ignoring: " + name, ex);
+               }
+            }
          }
+
+         // Create subdeployments for the ear modules
          for (Iterator iter = metaData.getModules(); iter.hasNext(); )
          {
             J2eeModuleMetaData mod = (J2eeModuleMetaData)iter.next();
@@ -123,16 +172,13 @@ public class EARDeployer
                if (di.isDirectory)
                {
                   File f = new File(parentDir, fileName);
-                  sub = new DeploymentInfo(f.toURL(), di, server);
+                  sub = new DeploymentInfo(f.toURL(), di, getServer());
                }
                else
                {
-                  String entryURL = urlPrefix + fileName;
-                  URL jarURL = new URL(entryURL);
-                  // Extract the nested jar from its ear
-                  URL nestedURL = JarUtils.extractNestedJar(jarURL, super.tempDeployDir);
-                  sub = new DeploymentInfo(nestedURL, di, server);
-
+                  // The nested jar url was placed into extractedJars above
+                  URL nestedURL = (URL) extractedJars.get(fileName);
+                  sub = new DeploymentInfo(nestedURL, di, getServer());
                }
                // Set the context-root on web modules
                if( mod.isWeb() )
@@ -164,6 +210,19 @@ public class EARDeployer
    public void destroy(DeploymentInfo di) throws DeploymentException
    {
       log.info("Undeploying J2EE application, destroy step: " + di.url);
+      // Remove any deployment specific repository
+      if( di.repositoryName.equals(DeploymentInfo.DEFAULT_LOADER_REPOSITORY) == false )
+      {
+         log.debug("Destroying ear loader repository:"+di.repositoryName);
+         try
+         {
+            this.server.unregisterMBean(di.repositoryName);
+         }
+         catch(Exception e)
+         {
+            log.warn("Failed to unregister ear loader repository", e);
+         }
+      }
 
       // Destroy the appropriate JSR-77 instance
       J2EEApplication.destroy(server, di.shortName);
