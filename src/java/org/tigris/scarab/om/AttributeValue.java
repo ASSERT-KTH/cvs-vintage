@@ -76,7 +76,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.79 2002/12/14 00:12:48 elicia Exp $
+ * @version $Id: AttributeValue.java,v 1.80 2002/12/17 16:17:56 jon Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -126,13 +126,13 @@ public abstract class AttributeValue
     public void setChainedValue(AttributeValue  v)
         throws Exception
     {
-        if ( v == null ) 
+        if (v == null)
         {
             this.chainedValue = null;
         }
         else 
         {        
-            if ( v.getAttributeId() == null && getAttributeId() != null ) 
+            if (v.getAttributeId() == null && getAttributeId() != null) 
             {
                 v.setAttributeId(getAttributeId());
             }
@@ -141,22 +141,22 @@ public abstract class AttributeValue
             {
                 throw new ScarabException(
                     "Values for different Attributes cannot be chained: " +
-                    v.getAttributeId() + " and " + getAttributeId() );
+                    v.getAttributeId() + " and " + getAttributeId());
             }
             
-            if ( v.getIssueId() == null && getIssueId() != null ) 
+            if (v.getIssueId() == null && getIssueId() != null) 
             {
                 v.setIssueId(getIssueId());
             }
-            else if ( v.getIssue() != null 
-                      && !v.getIssue().equals(getIssue()) )
+            else if (v.getIssue() != null 
+                      && !v.getIssue().equals(getIssue()))
             {
                 throw new ScarabException(
                     "Values for different Issues cannot be chained: " +
-                    v.getIssueId() + " and " + getIssueId() );
+                    v.getIssueId() + " and " + getIssueId());
             }
 
-            if ( this.chainedValue == null ) 
+            if (this.chainedValue == null) 
             {
                 this.chainedValue = v;
             }
@@ -165,7 +165,7 @@ public abstract class AttributeValue
                 chainedValue.setChainedValue(v);
             }
             
-            if ( activitySet != null ) 
+            if (activitySet != null) 
             {
                 v.startActivitySet(activitySet);
             }        
@@ -183,7 +183,7 @@ public abstract class AttributeValue
         List list = new ArrayList();
         list.add(this);
         AttributeValue av = getChainedValue();
-        while ( av != null ) 
+        while (av != null) 
         {
             list.add(av);
             av = av.getChainedValue();
@@ -198,7 +198,7 @@ public abstract class AttributeValue
         throws TorqueException
     {
         super.setAttributeId(nk);
-        if ( chainedValue != null ) 
+        if (chainedValue != null) 
         {
             chainedValue.setAttributeId(nk);
         }
@@ -211,7 +211,7 @@ public abstract class AttributeValue
         throws TorqueException
     {
         super.setIssueId(nk);
-        if ( chainedValue != null ) 
+        if (chainedValue != null) 
         {
             chainedValue.setIssueId(nk);
         }
@@ -229,13 +229,13 @@ public abstract class AttributeValue
     public void startActivitySet(ActivitySet activitySet)
         throws ScarabException, Exception
     {
-        if ( activitySet == null ) 
+        if (activitySet == null) 
         {
             String mesg = "Cannot start a activitySet using null ActivitySet"; 
             throw new ScarabException(mesg);
         }
         
-        if ( this.activitySet == null ) 
+        if (this.activitySet == null) 
         {
             this.activitySet = activitySet;
         }
@@ -265,7 +265,7 @@ public abstract class AttributeValue
                 oldValue = a.getNewValue();
             }
         }
-        if ( chainedValue != null ) 
+        if (chainedValue != null) 
         {
             chainedValue.startActivitySet(activitySet);
         }
@@ -278,7 +278,7 @@ public abstract class AttributeValue
         oldValue = null;
         oldOptionIdIsSet = false;
         oldValueIsSet = false;
-        if ( chainedValue != null ) 
+        if (chainedValue != null) 
         {
             chainedValue.endActivitySet();
         }
@@ -287,7 +287,7 @@ public abstract class AttributeValue
     private void checkActivitySet(String errorMessage)
         throws ScarabException
     {
-        if ( activitySet == null ) 
+        if (activitySet == null) 
         {
             throw new ScarabException(errorMessage);
         }
@@ -296,7 +296,7 @@ public abstract class AttributeValue
     public String getQueryKey()
     {
         String key = super.getQueryKey();
-        if ( key == null || key.length() == 0 ) 
+        if (key == null || key.length() == 0) 
         {
             try
             {
@@ -346,12 +346,12 @@ public abstract class AttributeValue
      */
     public String getOptionIdAsString()
     {
-      String optionIdString = "";
-      if (getOptionId() != null)
-      {
-          optionIdString = getOptionId().toString();
-      }
-      return optionIdString;
+        String optionIdString = "";
+        if (getOptionId() != null)
+        {
+            optionIdString = getOptionId().toString();
+        }
+        return optionIdString;
     }
 
     /**
@@ -363,7 +363,7 @@ public abstract class AttributeValue
     public void setOptionId(NumberKey optionId)
         throws TorqueException
     {
-        if ( optionId != null && optionId.getValue() != null ) 
+        if (optionId != null && optionId.getValue() != null) 
         {
             Module module = getIssue().getModule();
             IssueType issueType = getIssue().getIssueType();
@@ -394,10 +394,10 @@ public abstract class AttributeValue
                         throw new TorqueException(e);
                     }
                 }
-                for ( int i=options.size()-1; i>=0; i-- ) 
+                for (int i=options.size()-1; i>=0; i--) 
                 {
                     RModuleOption option = (RModuleOption)options.get(i);
-                    if ( option.getOptionId().equals(optionId) ) 
+                    if (option.getOptionId().equals(optionId)) 
                     {
                         setValueOnly(option.getDisplayValue());
                         break;
@@ -422,11 +422,11 @@ public abstract class AttributeValue
     public void setNumericValue(int v)
     {        
         setValueOnly(String.valueOf(v));
-        if ( v != getNumericValue() )
+        if (v != getNumericValue())
         { 
             // if the value is set multiple times before saving only
             // save the last saved value
-            if ( !isNew() && !oldNumericValueIsSet ) 
+            if (!isNew() && !oldNumericValueIsSet) 
             {
                 oldNumericValue = getNumericValue();
                 oldNumericValueIsSet = true;
@@ -438,11 +438,11 @@ public abstract class AttributeValue
     protected void setOptionIdOnly(NumberKey optionId)
         throws TorqueException
     {
-        if ( !ObjectUtils.equals(optionId, getOptionId()) )
+        if (!ObjectUtils.equals(optionId, getOptionId()))
         { 
             // if the value is set multiple times before saving only
             // save the last saved value
-            if ( !isNew() && !oldOptionIdIsSet && getOptionId() != null) 
+            if (!isNew() && !oldOptionIdIsSet && getOptionId() != null) 
             {
                 oldOptionId = new NumberKey(getOptionId());
                 oldOptionIdIsSet = true;
@@ -460,7 +460,7 @@ public abstract class AttributeValue
     public void setUserId(NumberKey userId)
         throws TorqueException
     {
-        if ( userId != null && userId.getValue() != null ) 
+        if (userId != null && userId.getValue() != null) 
         {
             ScarabUser user = ScarabUserManager.getInstance(userId);
             setValueOnly(user.getUserName());
@@ -477,11 +477,11 @@ public abstract class AttributeValue
     protected void setUserIdOnly(NumberKey value)
         throws TorqueException
     {
-        if ( !ObjectUtils.equals(value, getUserId()) )
+        if (!ObjectUtils.equals(value, getUserId()))
         { 
             // if the value is set multiple times before saving only
             // save the last saved value
-            if ( !isNew() && !oldUserIdIsSet ) 
+            if (!isNew() && !oldUserIdIsSet) 
             {
                 oldUserId = new NumberKey(getUserId());
                 oldUserIdIsSet = true;
@@ -505,13 +505,13 @@ public abstract class AttributeValue
     public void setOptionIds(NumberKey[] ids)
         throws Exception
     {
-        if ( ids != null && ids.length > 0 ) 
+        if (ids != null && ids.length > 0) 
         {
             setOptionId(ids[0]);
         }
-        if ( ids != null && ids.length > 1 ) 
+        if (ids != null && ids.length > 1) 
         {
-            for ( int i=1; i<ids.length; i++ ) 
+            for (int i=1; i<ids.length; i++) 
             {            
                 AttributeValue av = AttributeValue                
                     .getNewInstance(getAttributeId(), getIssue());
@@ -536,13 +536,13 @@ public abstract class AttributeValue
     public void setUserIds(NumberKey[] ids)
         throws Exception
     {
-        if ( ids != null && ids.length > 0 ) 
+        if (ids != null && ids.length > 0) 
         {
             setUserId(ids[0]);
         }
-        if ( ids != null && ids.length > 1 ) 
+        if (ids != null && ids.length > 1) 
         {
-            for ( int i=1; i<ids.length; i++ ) 
+            for (int i=1; i<ids.length; i++) 
             {            
                 AttributeValue av = AttributeValue                
                     .getNewInstance(getAttributeId(), getIssue());
@@ -559,11 +559,11 @@ public abstract class AttributeValue
 
     protected void setValueOnly(String value)
     {
-        if ( !ObjectUtils.equals(value, getValue()) )
+        if (!ObjectUtils.equals(value, getValue()))
         { 
             // if the value is set multiple times before saving only
             // save the last saved value
-            if ( !isNew() && !oldValueIsSet ) 
+            if (!isNew() && !oldValueIsSet) 
             {
                 oldValue = getValue();
                 oldValueIsSet = true;
@@ -632,9 +632,9 @@ public abstract class AttributeValue
         boolean result = false;
         Attribute[] qsAttributes = getIssue().getModule()
             .getQuickSearchAttributes(getIssue().getIssueType());
-        for ( int i=qsAttributes.length-1; i>=0; i--) 
+        for (int i=qsAttributes.length-1; i>=0; i--) 
         {
-            if ( qsAttributes[i].equals(getAttribute()) ) 
+            if (qsAttributes[i].equals(getAttribute())) 
             {
                 result = true;
                 break;
@@ -762,7 +762,7 @@ public abstract class AttributeValue
     public void save(Connection dbcon)
         throws TorqueException
     {
-        if ( isModified() && !getAttribute().isUserAttribute())
+        if (isModified() && !getAttribute().isUserAttribute())
         {
             try
             {
@@ -792,85 +792,85 @@ public abstract class AttributeValue
             }
         }
         super.save(dbcon);
-        if ( chainedValue != null ) 
+        if (chainedValue != null) 
         {
             chainedValue.save(dbcon);
         }
         endActivitySet();
     }
 
-        /**
-         * Gets the Activity record associated with this AttributeValue
-         * It can only be retrieved after the save() method has been called 
-         * since that is when it is generated.
-         */
-        public Activity getActivity()
-        {
-            return this.saveActivity;
-        }
+    /**
+     * Gets the Activity record associated with this AttributeValue
+     * It can only be retrieved after the save() method has been called 
+     * since that is when it is generated.
+     */
+    public Activity getActivity()
+    {
+        return this.saveActivity;
+    }
 
-        /**
-         * Allows you to override the description for
-         * the activity that is generated when this attributevalue
-         * is saved.
-         */
-        public void setActivityDescription(String string)
-        {
-            this.activityDescription = string;
-        }
+    /**
+     * Allows you to override the description for
+     * the activity that is generated when this attributevalue
+     * is saved.
+     */
+    public void setActivityDescription(String string)
+    {
+        this.activityDescription = string;
+    }
 
-        /**
-         * Not sure it is a good idea to save description in activity record
-         * the description can be generated from the other data and it brings
-         * up i18n issues.
-         */
-        private String getActivityDescription()
-            throws TorqueException
+    /**
+     * Not sure it is a good idea to save description in activity record
+     * the description can be generated from the other data and it brings
+     * up i18n issues.
+     */
+    private String getActivityDescription()
+        throws TorqueException
+    {
+        if (activityDescription != null)
         {
-            if (activityDescription != null)
+            return activityDescription;
+        }
+        String name = getAttribute().getName();
+        String newValue = getValue();
+        StringBuffer sb = new StringBuffer()
+            .append(name);
+        if (getDeleted())
+        {
+            sb.append(" has been undefined.");        
+        }
+        else
+        {
+            if (oldValue == null) 
             {
-                return activityDescription;
-            }
-            String name = getAttribute().getName();
-            String newValue = getValue();
-            StringBuffer sb = new StringBuffer()
-                .append(name);
-            if (getDeleted())
-            {
-               sb.append(" has been undefined.");        
+                sb.append(" set");
             }
             else
             {
-               if ( oldValue == null ) 
-               {
-                   sb.append(" set");
-               }
-               else
-               {
-                   sb.append(" changed from '");
-                   if (oldValue.length() > 25) 
-                   {
-                       sb.append(oldValue.substring(0,25)).append("...");
-                   }
-                   else
-                   {
-                       sb.append(oldValue);
-                   }
-                   sb.append('\'');
-               }
-               sb.append(" to '");
-               if (newValue.length() > 25) 
-               {
-                   sb.append(newValue.substring(0,25)).append("...");
-               }
-               else
-               {
-                   sb.append(newValue);
-               }
-               sb.append('\'');
-           }
-           return sb.toString();
-       }
+                sb.append(" changed from '");
+                if (oldValue.length() > 25) 
+                {
+                    sb.append(oldValue.substring(0,25)).append("...");
+                }
+                else
+                {
+                    sb.append(oldValue);
+                }
+                sb.append('\'');
+            }
+            sb.append(" to '");
+            if (newValue.length() > 25) 
+            {
+                sb.append(newValue.substring(0,25)).append("...");
+            }
+            else
+            {
+                sb.append(newValue);
+            }
+            sb.append('\'');
+        }
+        return sb.toString();
+    }
 
 
     /**
