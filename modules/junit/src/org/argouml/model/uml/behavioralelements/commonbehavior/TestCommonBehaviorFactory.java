@@ -64,5 +64,5 @@ public class TestCommonBehaviorFactory extends TestCase {
 
 	CheckUMLModelHelper.createAndRelease(this, 
 	    CommonBehaviorFactory.getFactory(), objs);
-    }
+    }         public void testRemoves() {    	String [] objs = {	    "Action",	    "ActionSequence",	    "Argument",	    "AttributeLink",	    "CallAction",	    "ComponentInstance",	    "CreateAction",	    "DataValue",	    "DestroyAction",	    "Exception",	    "Instance",	    "Link",	    "LinkEnd",	    "NodeInstance",	    "Object",	    "Reception",	    "ReturnAction",	    "SendAction",	    "Signal",	    "Stimulus",	    "TerminateAction",	    "UninterpretedAction"	};	CheckUMLModelHelper.testRemove(this, 	    CommonBehaviorFactory.getFactory(), objs);    }
 }

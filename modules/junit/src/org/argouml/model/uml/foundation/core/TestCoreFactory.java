@@ -82,5 +82,5 @@ public class TestCoreFactory extends TestCase {
 	CheckUMLModelHelper.createAndRelease(this, 
 	    CoreFactory.getFactory(),
 	    objs);
-    }
+    }         public void testRemoves() {    	String [] objs = {	     "Abstraction",	    "Association",	    "AssociationClass",	    "AssociationEnd",	    "Attribute",	    // "BehavioralFeature",	    "Binding",	    "Class",	    "Classifier",	    "Comment",	    "Component",	    "Constraint",	    "DataType",	    "Dependency",	    // "Element",	    "ElementResidence",	    // "Feature",	    "Flow",	    "Generalization",	    "Interface",	    "Method",	    // "ModelElement",	    "Namespace",	    "Node",	    "Operation",	    "Parameter",	    "Permission",	    // "PresentationElement",	    "Relationship",	    // "StructuralFeature",	    "TemplateParameter",	    "Usage"	};	CheckUMLModelHelper.testRemove(this, 	    CoreFactory.getFactory(), objs);    }
 }
