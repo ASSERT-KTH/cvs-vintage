@@ -1,3 +1,4 @@
+// $Id: TestActionClassDiagram.java,v 1.2 2003/05/11 14:13:51 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,53 +22,39 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TestActionClassDiagram.java,v 1.1 2003/01/09 19:53:20 kataka Exp $
-
 package org.argouml.uml.ui;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.model_management.MModelImpl;
-import ru.novosoft.uml.model_management.MPackageImpl;
 
 /**
  * Test for ActionClassDiagram.
  * @author JBranderhorst
  */
-public class TestActionClassDiagram extends AbstractTestActionAddDiagram {
+public class TestActionClassDiagram extends GUITestActionClassDiagram {
 
-	/**
-	 * Constructor for TestActionClassDiagram.
-	 * @param arg0
-	 */
-	public TestActionClassDiagram(String arg0) {
-		super(arg0);
-	}
+    /**
+     * Constructor for TestActionClassDiagram.
+     * @param arg0 name of test case.
+     */
+    public TestActionClassDiagram(String arg0) {
+	super(arg0);
+    }
 
-	/**
-	 * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
-	 */
-	protected ActionAddDiagram getAction() {
-		return ActionClassDiagram.SINGLETON;
-	}
+    /**
+     * Disable the test that doesn't work without head.
+     */
+    public void testCreateDiagram() { }
 
-	/**
-	 * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
-	 */
-	protected MNamespace getNamespace() {
-		return new MPackageImpl();
-	}
+    /**
+     * Disable the test that doesn't work without head.
+     */
+    public void testDifferentNames() { }
 
-	/**
-	 * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getValidNamespaceClasses()
-	 */
-	protected List getValidNamespaceClasses() {
-		List returnList = new ArrayList();
-		returnList.add(MPackageImpl.class);
-		returnList.add(MModelImpl.class);
-		return returnList;
-	}
+    /**
+     * Disable the test that doesn't work without head.
+     */
+    // public void testValidTestNamespace() { }
 
+    /**
+     * Disable the test that doesn't work without head.
+     */
+    // public void testValidNamespaces() { }
 }

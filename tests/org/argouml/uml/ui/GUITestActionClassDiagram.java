@@ -1,5 +1,5 @@
-// $Id: TestActionCollaborationDiagram.java,v 1.2 2003/05/11 14:13:51 linus Exp $
-// Copyright (c) 2003 The Regents of the University of California. All
+// $Id: GUITestActionClassDiagram.java,v 1.1 2003/05/11 14:13:51 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,40 +24,50 @@
 
 package org.argouml.uml.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.model_management.MModelImpl;
+import ru.novosoft.uml.model_management.MPackageImpl;
+
 /**
- * 
- * @author jaap.branderhorst@xs4all.nl	
- * @since Jan 9, 2003
+ * Test for ActionClassDiagram.
+ * @author JBranderhorst
  */
-public class TestActionCollaborationDiagram
-    extends GUITestActionCollaborationDiagram
-{
+public class GUITestActionClassDiagram extends AbstractTestActionAddDiagram {
 
     /**
-     * Constructor for TestActionCollaborationDiagram.
-     * @param arg0 name of the test case
+     * Constructor for GUITestActionClassDiagram.
+     * @param arg0 the name of the test case.
      */
-    public TestActionCollaborationDiagram(String arg0) {
-        super(arg0);
+    public GUITestActionClassDiagram(String arg0) {
+	super(arg0);
     }
 
     /**
-     * Disable the test that doesn't work without head.
+     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
      */
-    public void testCreateDiagram() { }
+    protected ActionAddDiagram getAction() {
+	return ActionClassDiagram.SINGLETON;
+    }
 
     /**
-     * Disable the test that doesn't work without head.
+     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
      */
-    public void testDifferentNames() { }
+    protected MNamespace getNamespace() {
+	return new MPackageImpl();
+    }
 
     /**
-     * Disable the test that doesn't work without head.
+     * @see org.argouml.uml.ui.
+     * AbstractTestActionAddDiagram#getValidNamespaceClasses()
      */
-    // public void testValidTestNamespace() { }
+    protected List getValidNamespaceClasses() {
+	List returnList = new ArrayList();
+	returnList.add(MPackageImpl.class);
+	returnList.add(MModelImpl.class);
+	return returnList;
+    }
 
-    /**
-     * Disable the test that doesn't work without head.
-     */
-    // public void testValidNamespaces() { }
 }

@@ -1,5 +1,5 @@
-// $Id: TestActionCollaborationDiagram.java,v 1.2 2003/05/11 14:13:51 linus Exp $
-// Copyright (c) 2003 The Regents of the University of California. All
+// $Id: GUITestActionUseCaseDiagram.java,v 1.1 2003/05/11 14:13:51 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,40 +24,52 @@
 
 package org.argouml.uml.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.novosoft.uml.foundation.core.MClassifierImpl;
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.model_management.MPackageImpl;
+
 /**
- * 
+ * Test for actionusecasediagram.
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 9, 2003
  */
-public class TestActionCollaborationDiagram
-    extends GUITestActionCollaborationDiagram
+public class GUITestActionUseCaseDiagram
+    extends AbstractTestActionAddDiagram 
 {
 
     /**
-     * Constructor for TestActionCollaborationDiagram.
-     * @param arg0 name of the test case
+     * Constructor
+     * @param arg0 test case name.
      */
-    public TestActionCollaborationDiagram(String arg0) {
+    public GUITestActionUseCaseDiagram(String arg0) {
         super(arg0);
     }
 
     /**
-     * Disable the test that doesn't work without head.
+     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
      */
-    public void testCreateDiagram() { }
+    protected ActionAddDiagram getAction() {
+        return ActionUseCaseDiagram.SINGLETON;
+    }
 
     /**
-     * Disable the test that doesn't work without head.
+     * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
      */
-    public void testDifferentNames() { }
+    protected MNamespace getNamespace() {
+        return new MPackageImpl();
+    }
 
     /**
-     * Disable the test that doesn't work without head.
+     * @see AbstractTestActionAddDiagram#getValidNamespaceClasses()
      */
-    // public void testValidTestNamespace() { }
+    protected List getValidNamespaceClasses() {
+        List rl = new ArrayList();
+        rl.add(MPackageImpl.class);
+        rl.add(MClassifierImpl.class);
+        return rl;
+    }
 
-    /**
-     * Disable the test that doesn't work without head.
-     */
-    // public void testValidNamespaces() { }
 }
