@@ -47,7 +47,7 @@ import org.jboss.logging.log4j.JBossCategory;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -411,6 +411,7 @@ public class AutoDeployer
                // Add to list of files to deploy automatically
                watchedURLs.add(new Deployment(fileUrl));
                deployedURLs.put(fileUrl, fileUrl);
+               log.info("Auto-deploying " + fileUrl);
             }
          }
       }
