@@ -69,7 +69,7 @@
 
 <div class="axial">
 #set ($attrValues = $currentTemplate.ModuleAttributeValuesMap)
-#foreach ($attrgroup in $issueType.getAttributeGroups($module))
+#foreach ($attrgroup in $module.getAttributeGroups($issueType))
   #if (!$attrgroup.Attributes.isEmpty())
     <table cellpadding="3" cellspacing="2" border="0">
     <h4>$attrgroup.Name</h4>
