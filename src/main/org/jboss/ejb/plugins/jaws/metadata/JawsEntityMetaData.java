@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.ejb.plugins.jaws.metadata;
 
 import java.util.ArrayList;
@@ -30,84 +31,88 @@ import org.jboss.metadata.XmlLoadable;
 import org.jboss.logging.Logger;
 
 /**
- *	<description>
+ * <description>
  *
- *	@see <related>
- *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *      @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- *      @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- *      @author <a href="mailto:menonv@cpw.co.uk">Vinay Menon</a>
- *	@version $Revision: 1.12 $
+ * @see <related>
+ * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @author <a href="mailto:menonv@cpw.co.uk">Vinay Menon</a>
+ * @version $Revision: 1.13 $
  *
  *      Revisions:
  *      20010621 Bill Burke: made read-ahead defaultable in standardjboss.xml and jaws.xml
  *
-
  *
  */
-public class JawsEntityMetaData extends MetaData implements XmlLoadable {
+public class JawsEntityMetaData
+   extends MetaData
+   implements XmlLoadable
+{
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
 
-   // parent metadata structures
+   /** Parent metadata structure. */
    private JawsApplicationMetaData jawsApplication;
+
+   /** Parent metadata structure. */
    private EntityMetaData entity;
 
-   // the name of the bean (same as entity.getEjbName())
+   /** The name of the bean (same as entity.getEjbName()). */
    private String ejbName = null;
 
-   // the name of the table to use for this bean
+   /** The name of the table to use for this bean. */
    private String tableName = null;
 
-   // do we have to try and create the table on deployment?
+   /** Do we have to try and create the table on deployment? */
    private boolean createTable;
 
-   // do we have to drop the table on undeployment?
+   /** Do we have to drop the table on undeployment? */
    private boolean removeTable;
 
-   // do we use tuned updates?
+   /** Do we use tuned updates? */
    private boolean tunedUpdates;
 
-   // do we use 'SELECT ... FOR UPDATE' syntax?
+   /** Do we use 'SELECT ... FOR UPDATE' syntax? */
    private boolean selectForUpdate;
 
-   // is the bean read-only?
+   /** Is the bean read-only? */
    private boolean readOnly;
 
-   // make finders by default read-ahead?
+   /** Make finders by default read-ahead? */
    private boolean readAhead;
 
    private int timeOut;
 
-   // should the table have a primary key constraint?
+   /** Should the table have a primary key constraint? */
    private boolean pkConstraint;
 
-   // is the bean's primary key a composite object
+   /** Is the bean's primary key a composite object? */
    private boolean compositeKey;
 
-   // the class of the primary key
+   /** The class of the primary key. */
    private Class primaryKeyClass;
 
-   // the fields we must persist for this bean
+   /** The fields we must persist for this bean. */
    private Hashtable cmpFields = new Hashtable();
 
-   // the fields that belong to the primary key (if composite)
+   /** The fields that belong to the primary key (if composite). */
    private ArrayList pkFields = new ArrayList();
 
-   // finders for this bean
+   /** Finders for this bean. */
    private ArrayList finders = new ArrayList();
 
-	// the bean level datasource
-    /**
-     * This will now support datasources at the bean level. If no datasource
-     * has been specified at the bean level then the global datasource is used
-     *
-     * This provides flexiblity for having single deployment units connecting to
-     * different datasources for different beans.
-     *
-     */
-	private DataSource dataSource=null;
+   // the bean level datasource
+   /**
+    * This will now support datasources at the bean level. If no datasource
+    * has been specified at the bean level then the global datasource is used
+    *
+    * This provides flexiblity for having single deployment units connecting to
+    * different datasources for different beans.
+    *
+    */
+   private DataSource dataSource=null;
 
    /**
     * Here we store the basename of all detailed fields in jaws.xml
@@ -125,7 +130,9 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 
    // Constructors --------------------------------------------------
 
-   public JawsEntityMetaData(JawsApplicationMetaData app, EntityMetaData ent) throws DeploymentException {
+   public JawsEntityMetaData(JawsApplicationMetaData app, EntityMetaData ent)
+      throws DeploymentException
+   {
       // initialisation of this object goes as follows:
       //  - constructor
       //  - importXml() for standardjaws.xml and jaws.xml
@@ -135,10 +142,15 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
       ejbName = entity.getEjbName();
       compositeKey = entity.getPrimKeyField() == null;
 
-      try {
-         primaryKeyClass = jawsApplication.getClassLoader().loadClass(entity.getPrimaryKeyClass());
-      } catch (ClassNotFoundException e) {
-         throw new DeploymentException("could not load primary key class: " + entity.getPrimaryKeyClass());
+      try
+      {
+         primaryKeyClass =
+            jawsApplication.getClassLoader().loadClass(entity.getPrimaryKeyClass());
+      }
+      catch (ClassNotFoundException e)
+      {
+         throw new DeploymentException(
+            "could not load primary key class: " + entity.getPrimaryKeyClass());
       }
 
       // we replace the . by _ because some dbs die on it...
@@ -148,7 +160,8 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
       // build the metadata for the cmp fields now in case there is no jaws.xml
       Iterator cmpFieldNames = entity.getCMPFields();
 
-      while (cmpFieldNames.hasNext()) {
+      while (cmpFieldNames.hasNext())
+      {
          String cmpFieldName = (String)cmpFieldNames.next();
          CMPFieldMetaData cmpField = new CMPFieldMetaData(cmpFieldName, this);
 
@@ -156,19 +169,26 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
       }
 
       // build the pkfields metadatas
-      if (compositeKey) {
+      if (compositeKey)
+      {
          Field[] pkClassFields = primaryKeyClass.getFields();
 
          for (int i = 0; i < pkClassFields.length; i++) {
             Field pkField = pkClassFields[i];
             CMPFieldMetaData cmpField = (CMPFieldMetaData)cmpFields.get(pkField.getName());
 
-            if (cmpField == null) throw new DeploymentException("Bean " + ejbName + " has PK of type " + primaryKeyClass.getName() + ", so it should have a cmp-field named " + pkField.getName());
+            if (cmpField == null)
+            {
+               throw new DeploymentException(
+                  "Bean " + ejbName + " has PK of type " + primaryKeyClass.getName() +
+                  ", so it should have a cmp-field named " + pkField.getName());
+            }
 
             pkFields.add(new PkFieldMetaData(pkField, cmpField, this));
          }
-
-      } else {
+      }
+      else
+      {
          String pkFieldName = entity.getPrimKeyField();
          CMPFieldMetaData cmpField = (CMPFieldMetaData)cmpFields.get(pkFieldName);
 
@@ -206,20 +226,20 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 
    public boolean hasCompositeKey() { return compositeKey; }
 
-    //Return appropriate datasource
-    public DataSource getDataSource()
-    {
-        //If a local datasource has been specified use it
-        if(this.dataSource!=null)
-        {
-            return dataSource;
-        }
-        //Use the gloabal datasource
-        else
-        {
-            return jawsApplication.getDataSource();
-        }
-    }
+   // Return appropriate datasource
+   public DataSource getDataSource()
+   {
+      // If a local datasource has been specified use it
+      if(this.dataSource != null)
+      {
+         return dataSource;
+      }
+      // Use the gloabal datasource
+      else
+      {
+         return jawsApplication.getDataSource();
+      }
+   }
 
    public String getDbURL() { return jawsApplication.getDbURL(); }
 
@@ -243,7 +263,9 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 
    // XmlLoadable implementation ------------------------------------
 
-   public void importXml(Element element) throws DeploymentException {
+   public void importXml(Element element)
+      throws DeploymentException
+   {
       // This method will be called:
       //  - with element = <default-entity> from standardjaws.xml (always)
       //  - with element = <default-entity> from jaws.xml (if provided)
@@ -251,25 +273,36 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 
       // All defaults are set during the first call. The following calls override them.
 
-        //get the bean level datasouce name
+      //get the bean level datasouce name
       String dataSourceName = getElementContent(getOptionalChild(element, "datasource"));
 
-        //if a local datasource name is found bind it and set the local datasource
-        if(dataSourceName!=null)
-        {
-          // Make sure it is prefixed with java:
-            if (!dataSourceName.startsWith("java:/"))
-               dataSourceName = "java:/"+dataSourceName;
+      //if a local datasource name is found bind it and set the local datasource
+      if (dataSourceName!=null)
+      {
+         // Make sure it is prefixed with java:
+         if (!dataSourceName.startsWith("java:/"))
+         {
+            dataSourceName = "java:/"+dataSourceName;
 
-            // find the datasource
-            if (! dataSourceName.startsWith("jdbc:")) {
-                try {
-                    this.dataSource = (DataSource)new InitialContext().lookup(dataSourceName);
-                } catch (NamingException e) {
-                    throw new DeploymentException(e.getMessage());
-                }
+            // TODO: Authors, PLEASE have a look here, original indentation
+            //       leads to the assumption, that the following IF only is
+            //       evaluated, when the previous IF is true -- but the
+            //       language doesn't look for indentation! Cleared that up
+            //       by inserting a block. PLEASE VERYFY THAT I'M RIGHT!
+         }
+         // find the datasource
+         if (! dataSourceName.startsWith("jdbc:"))
+         {
+            try
+            {
+               this.dataSource = (DataSource)new InitialContext().lookup(dataSourceName);
             }
-        }
+            catch (NamingException e)
+            {
+               throw new DeploymentException(e.getMessage());
+            }
+         }
+      }
 
       // get table name
       String tableStr = getElementContent(getOptionalChild(element, "table-name"));
@@ -310,22 +343,26 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
       // cmp fields
       Iterator iterator = getChildrenByTagName(element, "cmp-field");
 
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          Element cmpField = (Element)iterator.next();
          String fieldName = getElementContent(getUniqueChild(cmpField, "field-name"));
 
          CMPFieldMetaData cmpFieldMetaData = getCMPFieldByName(fieldName);
-         if (cmpFieldMetaData == null) {
-				// Before we throw an exception, we have to check for nested cmp-fields.
-				// We just add a new CMPFieldMetaData.
-            if (isDetailedFieldDescription(fieldName)) {
+         if (cmpFieldMetaData == null)
+         {
+            // Before we throw an exception, we have to check for nested cmp-fields.
+            // We just add a new CMPFieldMetaData.
+            if (isDetailedFieldDescription(fieldName))
+            {
                // We obviously have a cmp-field like "data.categoryPK" in jaws.xml
                // and a cmp-field "data" in ejb-jar.xml.
                // In this case, we assume the "data.categoryPK" as a detailed description for "data".
                cmpFieldMetaData = new CMPFieldMetaData(fieldName, this);
                cmpFields.put(fieldName, cmpFieldMetaData);
             }
-            else {
+            else
+            {
                throw new DeploymentException("cmp-field '"+fieldName+"' found in jaws.xml but not in ejb-jar.xml");
             }
          }
@@ -335,7 +372,8 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
       // finders
       iterator = getChildrenByTagName(element, "finder");
 
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          Element finder = (Element)iterator.next();
          FinderMetaData finderMetaData = new FinderMetaData();
          finderMetaData.setReadAhead(readAhead);
@@ -350,18 +388,22 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
     * @return true For a fieldname declared in jaws.xml like "data.categoryPK" if
     * there was a fieldname declared in ejb-jar.xml like "data".
     */
-   private boolean isDetailedFieldDescription(String fieldName) {
+   private boolean isDetailedFieldDescription(String fieldName)
+   {
       String fieldBaseName = CMPFieldMetaData.getFirstComponent(fieldName);
 
-      if (detailedFieldDescriptions.containsKey(fieldBaseName)) {
+      if (detailedFieldDescriptions.containsKey(fieldBaseName))
+      {
          return true;
       }
 
       CMPFieldMetaData cmpFieldMetaData = getCMPFieldByName(fieldBaseName);
-      if (cmpFieldMetaData == null) {
+      if (cmpFieldMetaData == null)
+      {
          return false;
       }
-      else {
+      else
+      {
          detailedFieldDescriptions.put(fieldBaseName, detailedBoolean);
          cmpFields.remove(fieldBaseName);
          return true;
