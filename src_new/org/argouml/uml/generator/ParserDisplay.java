@@ -24,7 +24,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.21 2002/08/16 23:50:50 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.22 2002/08/17 12:42:16 d00mst Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -276,15 +276,11 @@ public class ParserDisplay extends Parser {
   }
 */
 
-  public void parseAttributeFig(MClassifier cls, MAttribute at, String text) {
+  public void parseAttributeFig(MClassifier cls, MAttribute at, String text) throws ParseException {
     if (cls == null || at == null)
 	return;
 
-    try {
-	parseAttribute(text, at);
-    } catch (ParseException pe) {
-	System.out.println("parseAttributeFig: " + pe);
-    }
+    parseAttribute(text, at);
   }
 
     /**
@@ -461,6 +457,7 @@ protected String parseOutMultiplicity(MAttribute f, String s) {
     String visibility = null;
     boolean hasColon = false;
     boolean hasEq = false;
+    int multindex = -1;
     MyTokenizer st;
 
     s = s.trim();
@@ -489,6 +486,7 @@ protected String parseOutMultiplicity(MAttribute f, String s) {
 		if (multiplicity != null)
 		    throw new ParseException("Attribute cannot have two multiplicities", st.getTokenIndex());
 		multiplicity = "";
+		multindex = st.getTokenIndex() + 1;
 		while (true) {
 		    token = st.nextToken();
 		    if ("]".equals(token))
@@ -572,7 +570,7 @@ protected String parseOutMultiplicity(MAttribute f, String s) {
 
     if (visibility != null) {
 	MVisibilityKind vis = getVisibility(visibility.trim());
-        attr.setVisibility(vis);
+	attr.setVisibility(vis);
     }
 
     if (name != null)
@@ -588,8 +586,13 @@ protected String parseOutMultiplicity(MAttribute f, String s) {
 	attr.setInitialValue(initExpr);
     }
 
-    if (multiplicity != null)
-	attr.setMultiplicity(UmlFactory.getFactory().getDataTypes().createMultiplicity(multiplicity.trim()));
+    if (multiplicity != null) {
+	try {
+	    attr.setMultiplicity(UmlFactory.getFactory().getDataTypes().createMultiplicity(multiplicity.trim()));
+	} catch (IllegalArgumentException iae) {
+	    throw new ParseException("Bad multiplicity (" + iae + ")", multindex);
+	}
+    }
 
     // Properties
     if (properties != null)
