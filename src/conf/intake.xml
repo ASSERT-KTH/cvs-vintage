@@ -85,6 +85,19 @@
         <field name="Deleted" key="del" type="boolean"/>
 </group>
 
+<group name="IssueType" key="itype" mapToObject="om.IssueType">
+        <field name="IssueTypeId" key="itypeid" type="NumberKey">
+           <rule name="mask" value="^$|[0-9]+">Please select a valid choice</rule>
+        </field>
+        <field name="Name" key="name" type="String">
+            <rule name="maxLength" value="255"/>
+        </field>
+        <field name="Description" key="desc" type="String">
+            <rule name="maxLength" value="255"/>
+        </field>
+        <field name="Template" key="tem" type="boolean"/>
+</group>
+
 <group name="AttributeType" key="attt" mapToObject="om.AttributeType">
         <field name="AttributeTypeId" key="atttid" type="NumberKey">
            <rule name="mask" value="^$|[0-9]+">Please select a valid choice</rule>
@@ -134,6 +147,16 @@
            <rule name="minValue" value="1">Please enter a value greater than 0</rule>
         </field>
 -->
+</group>
+
+<group name="RModuleIssueType" key="rmit" mapToObject="om.RModuleIssueType">
+        <field name="Display" key="dis" type="boolean"/>
+        <field name="Active" key="act" type="boolean"/>
+        <field name="Order" key="order" type="int" 
+                mapToProperty="Order">
+           <rule name="maxValue" value="99">Please enter a value less than 99</rule>
+           <rule name="minValue" value="1">Please enter a value greater than 0</rule>
+        </field>
 </group>
 
 <group name="RModuleUserAttribute" key="rmua" mapToObject="om.RModuleUserAttribute">
