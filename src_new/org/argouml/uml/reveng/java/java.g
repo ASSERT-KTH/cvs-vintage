@@ -60,7 +60,7 @@ import java.util.*;
  *
  * Version tracking now done with following ID:
  *
- * $Id: java.g,v 1.5 2001/03/24 15:44:44 marcus Exp $
+ * $Id: java.g,v 1.6 2001/03/26 16:58:25 marcus Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -981,8 +981,13 @@ primaryExpression
  *  
  */
 newExpression
-	:	"new" type
-		(	LPAREN argList RPAREN (classBlock)?
+	{String t = null;}
+	:	"new" t=type
+		(	LPAREN argList RPAREN
+			(	{ getModeller().addAnonymousClass(t); }
+				classBlock
+				{ getModeller().popClassifier(); }
+			)?
 
 			//java 1.1
 			// Note: This will allow bad constructs like

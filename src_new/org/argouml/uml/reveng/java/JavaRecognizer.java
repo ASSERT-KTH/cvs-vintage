@@ -77,7 +77,7 @@ import antlr.collections.impl.ASTArray;
  *
  * Version tracking now done with following ID:
  *
- * $Id: JavaRecognizer.java,v 1.5 2001/03/24 15:44:44 marcus Exp $
+ * $Id: JavaRecognizer.java,v 1.6 2001/03/26 16:58:25 marcus Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -3182,9 +3182,10 @@ public JavaRecognizer(ParserSharedInputState state) {
  */
 	public final void newExpression() throws RecognitionException, TokenStreamException {
 		
+		String t = null;
 		
 		match(LITERAL_new);
-		type();
+		t=type();
 		{
 		switch ( LA(1)) {
 		case LPAREN:
@@ -3196,7 +3197,13 @@ public JavaRecognizer(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case LCURLY:
 			{
+				if ( inputState.guessing==0 ) {
+					getModeller().addAnonymousClass(t);
+				}
 				classBlock();
+				if ( inputState.guessing==0 ) {
+					getModeller().popClassifier();
+				}
 				break;
 			}
 			case SEMI:
