@@ -1,0 +1,122 @@
+<html>
+<head>
+<title>UserIssueEntry</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF">
+<h3>Entering an issue</h3>
+<p><!--<h3>Selecting a module</h3>
+<p>Before opening a new issue, you must first determine to what module the issue 
+  belongs. The &quot;Current Module&quot; link in the upper right corner of your 
+  screen identifies the module in which you are currently working. To change modules, 
+  click on the name of your current module. The <b>Select Module </b>screen will 
+  appear. To help identify which module you need, read the descriptions provided 
+  directly to the right of the module name. To select a module, click on it's 
+  name. The <b>Artifact type</b> screen will appear.</p>
+<p><i>Define module; how does one get to the module selection screen? </i></p>
+ --></p>
+<h3>Selecting an issue (artifact) type</h3>
+Artifacts refer to the categories of issues available in your current module. 
+Be careful to assign your issue to the appropriate artifact category. The default 
+types are defect, patch, task, feature, and enhancements. 
+<ul>
+  <li><b>Defects</b> are issues identified within existing feature/functionality.</li>
+  <li><b>Patches</b> are edits submitted as fixes to defects.</li>
+  <li><b>Tasks</b> describe undertakings required for the support of a Feature 
+    or enhancement. Tasks can be upgrading software to support new functionality, 
+    reviewing similar projects to discover how similar problems were solved, or 
+    reading up on a new technology.</li>
+  <li><b>Features</b> are new functionality to be incorporated into the project</li>
+  <li><b>Enhancements</b> are improvements to existing features.</li>
+</ul>
+<p>Once you have selected the artifact type that best describes your issue, click 
+  on the name of the artifact. The <b>Enter issue</b> screen will appear.</p>
+<h3>Entering an issue, long format</h3>
+<p>Entering an issue is a three step process. </p>
+<ol>
+  <li>Enter brief descriptive information about your issue</li>
+  <li>Check the database for duplicates of your issue. </li>
+  <li>Enter a full description and save the issue to the database.</li>
+</ol>
+<p><b>Step 1: Enter descriptive information.</b></p>
+<ul>
+  <li>Summary: a brief statement describing the issue. Considering using keywords 
+    in this field.</li>
+  <li>Platform: select the affected platform from the drop down list.</li>
+  <li>Operating system: select the affected platform from the drop down list.</li>
+</ul>
+<p>Click the &quot;Check for duplicates&quot; button to continue.</p>
+<p><b>Step2: Check for duplicates</b></p>
+<p>Once you've clicked the &quot;Check for duplicates&quot; button the database 
+  is scanned for similar issues <i>how deeply in depth should we go with the process 
+  by which this is done?</i> </p>
+<p>If duplicates are found a report of similar issues will be presented with your 
+  issue listed at the top. Review the issues listed for fit. You can do a number 
+  of things at this point:</p>
+<ul>
+  <li>Review individual issues by clicking on their id. The full issue description 
+    will appear. </li>
+  <li>Sort issues by each of the categories. Click on the name of the category 
+    to change the sort order</li>
+  <li>Alter one or more issues at the same time. Click on the check box to the 
+    left of the issue ids that you would like to manipulate. You can then enter 
+    a note in the <b>note</b> field and click the <b>submit note only</b> button 
+    to add a note to the comments section of all issues selected. Additionally, 
+    you can add a vote to the issues you've selected by clicking the <b>add vote 
+    to selected</b> button.</li>
+  <li>Skip this process by clicking on the <b>bypass duplicates</b> button.</li>
+</ul>
+<p><b>Step 3: Enter a full description - Verbose form</b></p>
+<p>The Verbose Info screen allows you to add detailed information about your issue. 
+  Required fields have an * (astrick) beside their title. You should be as descriptive 
+  as possible. Use all of the attributes to describe your issue.</p>
+<dl> 
+  <dt>&nbsp;&nbsp;<!--<dt><b>Description</b> - enter a description of the issue. Descriptions should 
+    be <b><i>enter guidelines</i></b></dt>
+  <dt><b>Status</b> - select from the pull down menu</dt>
+  <dt><b>Resolution</b> - choose from the pull down menu</dt>
+  <dt><b>Vote -</b></dt>
+  <dt><b>Severity - </b></dt>
+  <dt><b>Functional Area -</b></dt>
+ --></dt>
+</dl>
+<p><b>Setting dependencies</b></p>
+<p>Issues often have dependencis on other issues. One issue may require a resolution 
+  from another before any work can be done. Two issues may have parellel resolutions 
+  and need to be tracked together, though they have no direct influence on one 
+  another. Dependencies are defined as parent/child relationships within Scarab. 
+  Child issues are those with defined dependencies on other issues. </p>
+<p>There are three levels of dependencies within Scarab: blocking ,duplicating 
+  and non-blocking. Blocking issues prevent the issue being blocked, from being 
+  resolved. The blocking issue must be addressed before the blocked issue can 
+  be resolved.</p>
+<p>Sometime duplicate issues may be entered and need to be tracked seperately. 
+  Marking an issue as a duplicate allows users to track efforts on both issues. 
+  Duplicates may be in different modules or the same module.</p>
+<p>Marking issues as non-blocking dependencies also allows users to simultaneously 
+  track efforts on two or more issues.</p>
+<p>You can track the progress of interrelated issues by using the <b>Dependencies</b> 
+  section of the issue and clicking on either the issue id or the Issue summary 
+  links to the issues. In this area you can also redefine the Dependency type.</p>
+<p><b>Issue attachments</b></p>
+<p>You can include an attachment for the issue. To do so, enter a brief description 
+  of the attachement and use the browse button to navigate to the file on your 
+  local system or enter a path for the file.</p>
+<p><b>Where to go from here</b></p>
+<p>After completing the issue entry process you can select where to go from there. 
+</p>
+<ul>
+  <li>Enter new issue</li>
+  <li>Start page</li>
+  <li>Assign issue</li>
+</ul>
+<p><!--a Verbose info - Short form - this is a full issue entry screen - each of these 
+  items is customizable? required fields can be changed? a. enter description 
+  : need guidelines for descriptions b. select assigned to. not required c. select 
+  status; need guidelines d. select resolution; need guidelines e. select priority, 
+  vote, severity, and functional area.\ f. add attachment; need guidelines g. 
+  select workflow options; this redirects user after issue is saved. can Enter 
+  new issue, return to start page, assign issue h. click &quot;save&quot;  --></p>
+</body>
+</html>
