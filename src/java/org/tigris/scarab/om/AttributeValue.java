@@ -76,7 +76,7 @@ import org.tigris.scarab.om.ModuleManager;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.62 2002/06/26 23:57:55 jon Exp $
+ * @version $Id: AttributeValue.java,v 1.63 2002/06/27 04:16:47 jmcnally Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -539,9 +539,7 @@ public abstract class AttributeValue
     public boolean isRequired()
        throws Exception
     {
-        RModuleAttribute rma = getIssue().getModule()
-            .getRModuleAttribute(getAttribute(), getIssue().getIssueType());
-        return rma.getRequired();
+        return getRModuleAttribute().getRequired();
     }
 
     public boolean isSet()
@@ -553,10 +551,8 @@ public abstract class AttributeValue
     public RModuleAttribute getRModuleAttribute()
         throws Exception
     {
-        Module module = ModuleManager
-            .getInstance(getIssue().getModuleId());
-        return module.getRModuleAttribute(getAttribute(),
-                                          getIssue().getIssueType()); 
+        return getIssue().getModule()
+            .getRModuleAttribute(getAttribute(), getIssue().getIssueType()); 
     }
 
     public AttributeOption getAttributeOption()
