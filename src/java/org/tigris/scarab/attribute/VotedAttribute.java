@@ -59,7 +59,7 @@ import java.util.*;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.4 $ $Date: 2001/01/16 08:31:39 $
+ * @version $Revision: 1.5 $ $Date: 2001/01/23 22:33:44 $
  */
 public abstract class VotedAttribute extends OptionAttribute
 {
@@ -80,8 +80,10 @@ public abstract class VotedAttribute extends OptionAttribute
         votes = new Hashtable();
         ScarabIssueAttributeVote vote;
         Criteria crit = new Criteria();
-        crit.add(ScarabIssueAttributeVotePeer.ATTRIBUTE_ID, getId())
-            .add(ScarabIssueAttributeVotePeer.ISSUE_ID, getIssue().getPrimaryKeyAsLong());
+        crit.add(ScarabIssueAttributeVotePeer.ATTRIBUTE_ID, 
+                 getScarabAttribute().getPrimaryKey())
+            .add(ScarabIssueAttributeVotePeer.ISSUE_ID, 
+                 getScarabIssue().getPrimaryKey());
         Vector res = ScarabIssueAttributeVotePeer.doSelect(crit);
         for (i=0; i<res.size(); i++)
         {
@@ -89,8 +91,10 @@ public abstract class VotedAttribute extends OptionAttribute
             votes.put(new Integer(vote.getUserId()), getOptionById(vote.getOptionId()));
         }
         Criteria crit1 = new Criteria()
-            .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, getId())
-            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, getIssue().getPrimaryKeyAsLong());
+            .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, 
+                 getScarabAttribute().getPrimaryKey())
+            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, 
+                 getScarabIssue().getPrimaryKey());
         if (ScarabIssueAttributeValuePeer.doSelect(crit1).size()==1)
             loaded = true;
         result = computeResult();
@@ -111,12 +115,17 @@ public abstract class VotedAttribute extends OptionAttribute
      */
     public void setValue(String newValue,RunData data) throws Exception
     {
-        Integer userId = new Integer(((ScarabUser)data.getUser()).getPrimaryKeyAsInt());
+        Integer userId = new Integer(((ScarabUser)data.getUser())
+                                     .getPrimaryKeyAsInt());
         ScarabAttributeOption vote = getOptionById(Integer.parseInt(newValue));
         Criteria crit = new Criteria();
-        crit.add(ScarabIssueAttributeVotePeer.ISSUE_ID, getIssue().getPrimaryKeyAsLong())
-            .add(ScarabIssueAttributeVotePeer.ATTRIBUTE_ID, getId())
-            .add(ScarabIssueAttributeVotePeer.USER_ID, ((TurbineUser)data.getUser()).getPrimaryKeyAsLong());
+        crit.add(ScarabIssueAttributeVotePeer.ISSUE_ID, 
+                 getScarabIssue().getPrimaryKey())
+            .add(ScarabIssueAttributeVotePeer.ATTRIBUTE_ID, 
+                 getScarabAttribute().getPrimaryKey())
+            .add(ScarabIssueAttributeVotePeer.USER_ID, 
+                 ((TurbineUser)data.getUser()).getPrimaryKey());
+
         if (votes.containsKey(userId))
         {
             if (newValue == null)
@@ -128,7 +137,8 @@ public abstract class VotedAttribute extends OptionAttribute
             else
             {
                 //change the vote
-                crit.add(ScarabIssueAttributeVotePeer.OPTION_ID, vote.getId()); //FOIXME: is this correct?
+                crit.add(ScarabIssueAttributeVotePeer.OPTION_ID, 
+                         vote.getPrimaryKey()); //FOIXME: is this correct?
                 ScarabIssueAttributeVotePeer.doUpdate(crit);
                 votes.put(userId, vote);
             }
@@ -143,7 +153,8 @@ public abstract class VotedAttribute extends OptionAttribute
             else
             {
                 //new vote
-                crit.add(ScarabIssueAttributeVotePeer.OPTION_ID, vote.getId());
+                crit.add(ScarabIssueAttributeVotePeer.OPTION_ID, 
+                         vote.getPrimaryKey());
                 ScarabIssueAttributeVotePeer.doInsert(crit);
                 votes.put(userId, vote);
             }
@@ -151,8 +162,10 @@ public abstract class VotedAttribute extends OptionAttribute
         
         result = computeResult();
         Criteria crit1 = new Criteria();
-        crit1.add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, getId())
-            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, getIssue().getId())
+        crit1.add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, 
+                  getScarabAttribute().getPrimaryKey())
+            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, 
+                 getScarabIssue().getPrimaryKey())
             .add(ScarabIssueAttributeValuePeer.VALUE, result);
         if (loaded)
         {
@@ -173,3 +186,4 @@ public abstract class VotedAttribute extends OptionAttribute
         return result;
     }
 }
+

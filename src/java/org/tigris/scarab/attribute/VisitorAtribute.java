@@ -57,7 +57,7 @@ import org.apache.turbine.util.db.Criteria;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.3 $ $Date: 2001/01/16 08:31:39 $
+ * @version $Revision: 1.4 $ $Date: 2001/01/23 22:33:44 $
  */
 public abstract class VisitorAtribute extends Attribute
 {
@@ -67,8 +67,10 @@ public abstract class VisitorAtribute extends Attribute
     public void init() throws Exception
     {
         Criteria crit = new Criteria()
-            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, getIssue().getId())
-            .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, getId());
+            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, 
+                 getScarabIssue().getPrimaryKey())
+            .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, 
+                 getScarabAttribute().getPrimaryKey());
 
         Vector results = ScarabIssueAttributeValuePeer.doSelect(crit);
         if (results.size() == 1)
@@ -96,10 +98,12 @@ public abstract class VisitorAtribute extends Attribute
     {
         user = (ScarabUser)usersById.get(new Integer(newValue));
         Criteria crit = new Criteria()
-            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, getIssue().getId())
-            .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, getId())
+            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, 
+                 getScarabIssue().getPrimaryKey())
+            .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, 
+                 getScarabAttribute().getPrimaryKey())
             .add(ScarabIssueAttributeValuePeer.VALUE, user.getUserName())
-            .add(ScarabIssueAttributeValuePeer.USER_ID, user.getPrimaryKeyAsLong());
+            .add(ScarabIssueAttributeValuePeer.USER_ID, user.getPrimaryKey());
         if (loaded)
         {
             ScarabIssueAttributeValuePeer.doUpdate(crit);
@@ -137,9 +141,11 @@ public abstract class VisitorAtribute extends Attribute
         for (i=0; i<users.size(); i++)
         {
             user = (ScarabUser)users.get(i);
-            usersById.put(new Integer(((ScarabUser)user).getPrimaryKeyAsInt()), user);
+            usersById.put(new Integer(((ScarabUser)user)
+                                      .getPrimaryKeyAsInt()), user);
         }
         Object[] res = {users, usersById};
         return res;
     }
 }
+

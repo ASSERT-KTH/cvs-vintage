@@ -46,27 +46,37 @@ package org.tigris.scarab.attribute;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.turbine.util.RunData;
 import java.util.*;
+
+import org.apache.turbine.util.RunData;
+import org.apache.turbine.util.ParameterParser;
+
 import org.tigris.scarab.baseom.*;
 import org.tigris.scarab.baseom.peer.*;
 import org.apache.turbine.util.db.Criteria;
 import org.apache.turbine.om.peer.BasePeer;
 import com.workingdogs.village.Record;
 
+import org.tigris.scarab.baseom.*;
+
 /** 
- * All attributes must extend this class. All attribuites have a name.
+ * All attributes must extend this class. All attributes have a name.
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.1 $ $Date: 2000/12/18 05:03:29 $
+ * @version $Revision: 1.2 $ $Date: 2001/01/23 22:33:44 $
  */
 public abstract class Attribute
 {
-    private int id = -1;
-    private String name;
+    //    private int id = -1;
+    //    private String name;
     
-    private ScarabIssue issue;
+    private ScarabAttribute scarabAttribute;
+    private ScarabIssue scarabIssue;
+    protected ScarabIssueAttributeValue scarabIssueAttributeValue;
+
     private String controlName;
     protected boolean loaded = false;
+
+    
     
     /*
      *  this is cache of Attribute resources key is Attribute_id
@@ -90,48 +100,115 @@ public abstract class Attribute
      * @param issue Isuue object which this attribute is associated with
      * @param intId This Attribute's Id
      */
-    public static synchronized Attribute getInstance(int intId, ScarabIssue issue) throws Exception
+    public static synchronized Attribute getInstance(
+        ScarabIssueAttributeValue siav) throws Exception
+    {
+        int intId = siav.getAttributeId();
+        Integer id = new Integer(intId);
+        ScarabIssue issue = siav.getScarabIssue();
+        boolean firstTime;
+        
+        ScarabAttribute scarabAttribute;
+        Object[] res = new Object[2];
+
+        if ((firstTime=!resources.containsKey(id)))
+        {
+            System.out.println("First time for Attribute: " + id);
+            scarabAttribute = ScarabAttributePeer.retrieveByPK(intId);
+            if ( scarabAttribute == null) // is this check needed?
+            {
+                throw new Exception("Attribute with ID " + id + 
+                                    " can not be found"); //FIXME
+            }
+            res[0] = scarabAttribute;
+            resources.put(id,res);
+        }
+        else
+        {
+            System.out.println("Should save hit for Attribute: " + id);
+            res = (Object[])resources.get(id);
+            scarabAttribute = (ScarabAttribute)res[0];
+        }
+
+        String className = scarabAttribute
+            .getScarabAttributeType().getJavaClassName();
+        Attribute attr = (Attribute)Class.forName(className).newInstance();
+        attr.setScarabAttribute(scarabAttribute);
+        attr.setScarabIssue(issue);
+        attr.controlName = new StringBuffer("attr")
+            .append(intId)
+            .append("_")
+            .append(issue.getPrimaryKey())
+            .toString();
+        if (firstTime)
+        {
+            res[1] = attr.loadResources();
+        }
+        attr.setResources(res[1]);
+        attr.setScarabIssueAttributeValue(siav);
+        attr.init();
+        return attr;
+    }
+
+    /** Creates, initializes and returns a new Attribute.
+     * @return new Attribute instance
+     * @param issue Isuue object which this attribute is associated with
+     * @param intId This Attribute's Id
+     */
+    public static synchronized Attribute getInstance(
+        ScarabRModuleAttribute srma, ScarabIssue issue) throws Exception
+    {
+        return getInstance(srma.getAttributeId(), issue);
+    }
+
+    /** Creates, initializes and returns a new Attribute.
+     * @return new Attribute instance
+     * @param issue Isuue object which this attribute is associated with
+     * @param intId This Attribute's Id
+     */
+    public static synchronized Attribute getInstance(int intId, 
+        ScarabIssue issue) throws Exception
     {
         Integer id = new Integer(intId);
         boolean firstTime;
         
-        Object[] res;
-        
-        if ((firstTime=resources.containsKey(id)))
+        ScarabAttribute scarabAttribute;
+        Object[] res = new Object[2];
+
+        if ((firstTime=!resources.containsKey(id)))
         {
-            res = (Object[])resources.get(id);
-            
+            System.out.println("First time for Attribute: " + id);
+            scarabAttribute = ScarabAttributePeer.retrieveByPK(intId);
+            if ( scarabAttribute == null) // is this check needed?
+            {
+                throw new Exception("Attribute with ID " + id + 
+                                    " can not be found"); //FIXME
+            }
+            res[0] = scarabAttribute;
+            resources.put(id,res);
         }
         else
         {
-            Criteria crit = new Criteria(ScarabAttributePeer.ATTRIBUTE_ID, intId);
-            crit.addJoin(ScarabAttributePeer.ATTRIBUTE_TYPE_ID, ScarabAttributeTypePeer.ATTRIBUTE_TYPE_ID)
-                .addSelectColumn(ScarabAttributeTypePeer.JAVA_CLASS_NAME)
-                .addSelectColumn(ScarabAttributePeer.ATTRIBUTE_NAME)
-                .setSingleRecord(true);
-            Vector attrVector = BasePeer.doSelect(crit);
-            if (attrVector.isEmpty())
-                throw new Exception("Attribute with ID " + id + " can not be found"); //FIXME
-            Record rec = (Record)attrVector.elementAt(0);
-            //rec.getValue(ScarabAttributePeer.ATTRIBUTE_NAME).asString();
-            res = new Object[3];
-            res[0] = rec.getValue(ScarabAttributeTypePeer.JAVA_CLASS_NAME).asString();
-            res[1] = rec.getValue(ScarabAttributePeer.ATTRIBUTE_NAME).asString();
+            System.out.println("Should save hit for Attribute: " + id);
+            res = (Object[])resources.get(id);
+            scarabAttribute = (ScarabAttribute)res[0];
         }
-        Attribute attr = (Attribute)Class.forName((String)res[0]).newInstance();
-        attr.setId(intId);
-        attr.setName((String)res[1]);
+
+        String className = scarabAttribute
+            .getScarabAttributeType().getJavaClassName();
+        Attribute attr = (Attribute)Class.forName(className).newInstance();
+        attr.setScarabAttribute(scarabAttribute);
+        attr.setScarabIssue(issue);
         attr.controlName = new StringBuffer("attr")
             .append(intId)
             .append("_")
-            .append(issue.getId())
+            .append(issue.getPrimaryKey())
             .toString();
         if (firstTime)
         {
-            res[2] = attr.loadResources();
-            resources.put(id, res);
+            res[1] = attr.loadResources();
         }
-        attr.setResources(res[2]);
+        attr.setResources(res[1]);
         attr.init();
         return attr;
     }
@@ -154,35 +231,70 @@ public abstract class Attribute
      */
     protected abstract void setResources(Object resources);
     
-    private void setId(int id)
+
+    
+    /**
+     * Get the value of scarabAttribute.
+     * @return value of scarabAttribute.
+     */
+    public ScarabAttribute getScarabAttribute() 
     {
-        this.id = id;
+        return scarabAttribute;
     }
     
-    private void setName(String name)
+    /**
+     * Set the value of scarabAttribute.
+     * @param v  Value to assign to scarabAttribute.
+     */
+    private void setScarabAttribute(ScarabAttribute  v) 
     {
-        this.name = name;
+        this.scarabAttribute = v;
     }
+    /**
+     * Get the value of scarabIssueAttributeValue.
+     * @return value of scarabIssueAttributeValue.
+     */
+    public ScarabIssueAttributeValue getScarabIssueAttributeValue() 
+    {
+        return scarabIssueAttributeValue;
+    }
+    
+    /**
+     * Set the value of scarabIssueAttributeValue.
+     * @param v  Value to assign to scarabIssueAttributeValue.
+     */
+    public void setScarabIssueAttributeValue(ScarabIssueAttributeValue  v) 
+    {
+        this.scarabIssueAttributeValue = v;
+    }
+    
+
     
     /** Override this method if you need any initialization for this attr.
      * @throws Exception Generic Exception
      */
     public abstract void init() throws Exception;
     
+    /*
+    private void setId(int id)
+    {
+        this.id = id;
+    }
     /** returns this Attribute's id
      * @return this Attribute's id
-     */
+     
     public int getId()
     {
         return id;
     }
+    */
     
     /** Gets the Name attribute of the Attribute object
      * @return The Name value
      */
     public String getName()
     {
-        return name;
+        return scarabAttribute.getName();
     }
 
     /** displays the attribute.
@@ -198,10 +310,19 @@ public abstract class Attribute
      * returns ScarabIssue object this attribute belongs to
      * @return ScarabIssue object
      */
-    public ScarabIssue getIssue()
+    public ScarabIssue getScarabIssue()
     {
-        return issue;
+        return scarabIssue;
     }
+    /**
+     * Set the value of scarabIssueAttributeValue.
+     * @param v  Value to assign to scarabIssueAttributeValue.
+     */
+    private void setScarabIssue(ScarabIssue  v) 
+    {
+        this.scarabIssue = v;
+    }
+
     /** Updates both InternalValue and Value of the Attribute object and saves them
      * to database
      * @param newValue String representation of new value.
@@ -225,5 +346,40 @@ public abstract class Attribute
     {
         // TODO: control name can be scrambled for security.
         return controlName;
+    }
+
+/*
+    public String getQueryKey()
+    {
+        StringBuffer qs = new StringBuffer("Attribute[");
+        if ( !scarabAttribute.isNew() ) 
+        {
+            qs.append(scarabAttribute.getId().toString());
+        }
+        return qs.append("]").toString();
+    }
+*/
+    public String getQueryKey()
+    {
+        return scarabIssueAttributeValue.getQueryOID();
+    }
+
+    public boolean supportsVoting()
+    {
+        return false;
+    }
+
+    public static Vector getAttributes(ParameterParser pp) 
+        throws Exception
+    {
+        Vector sAttValues = ScarabIssueAttributeValue
+            .getScarabIssueAttributeValues(pp);
+        Vector attValues = new Vector(sAttValues.size());
+        for ( int i=0; i<sAttValues.size(); i++) 
+        {
+            attValues.add( getInstance( 
+                (ScarabIssueAttributeValue) sAttValues.get(i) ));
+        }
+        return attValues;
     }
 }

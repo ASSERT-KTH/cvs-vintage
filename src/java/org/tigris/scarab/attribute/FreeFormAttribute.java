@@ -60,7 +60,7 @@ import java.util.*;
  *  etc...
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.1 $ $Date: 2000/12/18 05:03:29 $
+ * @version $Revision: 1.2 $ $Date: 2001/01/23 22:33:44 $
  */
 public abstract class FreeFormAttribute extends Attribute
 {
@@ -69,16 +69,23 @@ public abstract class FreeFormAttribute extends Attribute
     
     public void init() throws Exception
     {
-        Criteria crit = new Criteria()
-            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, getIssue().getId())
-            .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, getId());
         
-        Vector results = ScarabIssueAttributeValuePeer.doSelect(crit);
-        if (results.size() == 1)
+        ScarabIssueAttributeValue sIAValue = null; 
+        if ( getScarabIssue().isNew() ) 
         {
-            value = ((ScarabIssueAttributeValue)results.get(0)).getValue();
-            loaded = true;
+            sIAValue = new ScarabIssueAttributeValue();
+            sIAValue.setScarabAttribute(getScarabAttribute());
+            sIAValue.setScarabIssue(getScarabIssue());
+            sIAValue.setDeleted(false);                
         }
+        else 
+        {
+            sIAValue = ScarabIssueAttributeValuePeer
+                .retrieveByPK( getScarabAttribute().getAttributeId(), 
+                               getScarabIssue().getIssueId() );
+            loaded = true;
+        }        
+        scarabIssueAttributeValue = sIAValue;        
     }
 
     public void setResources(Object resources) 
@@ -98,8 +105,10 @@ public abstract class FreeFormAttribute extends Attribute
         value = newValue;
         
         Criteria crit = new Criteria();
-        crit.add(ScarabIssueAttributeValuePeer.ISSUE_ID, getIssue().getId())
-            .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, getId())
+        crit.add(ScarabIssueAttributeValuePeer.ISSUE_ID, 
+                 getScarabIssue().getPrimaryKey())
+            .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, 
+                 getScarabAttribute().getPrimaryKey())
             .add(ScarabIssueAttributeValuePeer.VALUE, value);
 
         if (loaded)
