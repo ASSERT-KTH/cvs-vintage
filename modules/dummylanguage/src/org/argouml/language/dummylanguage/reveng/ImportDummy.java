@@ -1,5 +1,5 @@
-// $Id: ImportDummy.java,v 1.2 2003/06/29 23:16:08 linus Exp $
- // Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: ImportDummy.java,v 1.3 2004/08/27 05:44:22 linus Exp $
+ // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,25 +22,19 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: ImportDummy.java,v 1.2 2003/06/29 23:16:08 linus Exp $
-
 package org.argouml.language.dummylanguage.reveng;
 
-import org.argouml.kernel.*;
-import org.argouml.uml.reveng.*;
-import org.argouml.application.api.*;
-import org.argouml.util.FileFilters;
+import org.argouml.uml.reveng.FileImportSupport;
 import org.argouml.util.SuffixFilter;
-
-import java.io.*;
 
 /**
 * Class for testing import interface.
 * No real import is done.
  */
 public class ImportDummy extends FileImportSupport {
-
     /**
+     * @see org.argouml.uml.reveng.FileImportSupport#getSuffixFilters()
+     *
      * Provides an array of suffix filters for the module.
      * @return SuffixFilter[] files with these suffixes will be processed.
      */
@@ -49,20 +43,30 @@ public class ImportDummy extends FileImportSupport {
 	return result;
     }
 
-    /** Display name of the module. */
+    /**
+     * @see org.argouml.application.api.ArgoModule#getModuleName()
+     *
+     * Display name of the module.
+     */
     public String getModuleName() {
 	return "Dummy";
     }
 
-    /** Textual description of the module. */
+    /**
+     * @see org.argouml.application.api.ArgoModule#getModuleDescription()
+     *
+     * Textual description of the module.
+     */
     public String getModuleDescription() {
 	return "Dummy import from files";
     }
 
+    /**
+     * @see org.argouml.application.api.ArgoModule#getModuleKey()
+     */
     public String getModuleKey() {
 	return "module.import.dummy-files";
     }
-
 }
 
 
