@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.10 2002/01/30 04:47:55 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.11 2002/02/02 02:58:41 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -278,55 +278,59 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Attribute attribute = scarabR.getAttribute();
+        String[] attributeIds = data.getParameters()
+                                    .getStrings("attribute_ids");
  
-        if (attribute.getAttributeId() == null)
+        if (attributeIds == null || attributeIds.length <= 0)
         { 
             data.setMessage("Please select an attribute.");
+            return;
         }
         else
         {        
-            IntakeTool intake = getIntakeTool(context);
-
-            IssueType issueType = scarabR.getIssueType();
-            ModuleEntity module = scarabR.getCurrentModule();
-
-            // add module-attribute groupings
-            RModuleAttribute rma = module.addRModuleAttribute(issueType);
-            Group rmaGroup = intake.get("RModuleAttribute", 
-                                         IntakeTool.DEFAULT_KEY);
-            rmaGroup.setProperties(rma);
-            rma.setAttributeId(attribute.getAttributeId());
-            rma.save();
-
-            IssueType templateType = 
-                scarabR.getIssueType(issueType.getTemplateId().toString());
-
-            // add module-attributeoption mappings
-            List options = attribute.getAttributeOptions();
-            for (int i=0;i < options.size();i++)
+            for (int i=0; i < attributeIds.length; i++)
             {
-                AttributeOption option = (AttributeOption)options.get(i);
-                RModuleOption rmo = module.addRModuleOption(issueType, 
-                                                            option);
-                rmo.save();
+                Attribute attribute = 
+                    scarabR.getAttribute(new NumberKey(attributeIds[i]));
+                IntakeTool intake = getIntakeTool(context);
 
-                // add module-attributeoption mappings to template type
-                RModuleOption rmo2 = module.
-                     addRModuleOption(templateType, option);
-                rmo2.save();
+                IssueType issueType = scarabR.getIssueType();
+                ModuleEntity module = scarabR.getCurrentModule();
+
+                // add module-attribute groupings
+                RModuleAttribute rma = module.addRModuleAttribute(issueType);
+                rma.setAttributeId(attribute.getAttributeId());
+                rma.save();
+
+                // add module-attribute mappings to template type
+                IssueType templateType = 
+                   scarabR.getIssueType(issueType.getTemplateId().toString());
+                RModuleAttribute rma2 = module
+                   .addRModuleAttribute(templateType);
+                rma2.setAttributeId(attribute.getAttributeId());
+                rma2.save();
+
+                // add module-attributeoption mappings
+                List options = attribute.getAttributeOptions();
+                for (int j=0;i < options.size();j++)
+                {
+                    AttributeOption option = (AttributeOption)options.get(j);
+                    RModuleOption rmo = module.addRModuleOption(issueType, 
+                                                                option);
+                    rmo.save();
+
+                    // add module-attributeoption mappings to template type
+                    RModuleOption rmo2 = module.
+                         addRModuleOption(templateType, option);
+                    rmo2.save();
+                }
+
+                // attribute group-attribute mapping
+                AttributeGroup attGroup = scarabR.getAttributeGroup();
+                RAttributeAttributeGroup raag =  
+                    attGroup.addRAttributeAttributeGroup(attribute);
+                raag.save();
             }
-
-            // add module-attribute mappings to template type
-            RModuleAttribute rma2 = module.addRModuleAttribute(templateType);
-            rma2.setAttributeId(attribute.getAttributeId());
-            rma2.save();
-
-            // attribute group-attribute mapping
-            AttributeGroup attGroup = scarabR.getAttributeGroup();
-            RAttributeAttributeGroup raag =  
-                attGroup.addRAttributeAttributeGroup(attribute);
-            raag.save();
             doCancel(data, context);
         }
     }
