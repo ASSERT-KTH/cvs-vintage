@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version   $Revision: 1.19 $ <p>
+* @version   $Revision: 1.20 $ <p>
 *
 *      <b>20010830 marc fleury:</b>
 *      <ul>initial import
@@ -691,7 +691,7 @@ implements ServiceDeployerMBean
       for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
       {
          ObjectName name = (ObjectName)i.previous();
-         log.debug("undeploying mbean " + name);
+         log.debug("stopping mbean " + name);
          invoke(getServiceControllerName(),
             "stop",
             new Object[] {name},
@@ -700,7 +700,7 @@ implements ServiceDeployerMBean
       for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
       {
          ObjectName name = (ObjectName)i.previous();
-         log.debug("undeploying mbean " + name);
+         log.debug("destroying mbean " + name);
          invoke(getServiceControllerName(),
             "destroy",
             new Object[] {name},
@@ -709,7 +709,7 @@ implements ServiceDeployerMBean
       for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
       {
          ObjectName name = (ObjectName)i.previous();
-         log.debug("undeploying mbean " + name);
+         log.debug("removing mbean " + name);
          invoke(getServiceControllerName(),
             "remove",
             new Object[] {name},
