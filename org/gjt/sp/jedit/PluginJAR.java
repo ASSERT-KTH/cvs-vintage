@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.zip.*;
 import org.gjt.sp.jedit.browser.VFSBrowser;
 import org.gjt.sp.jedit.gui.DockableWindowManager;
-import org.gjt.sp.jedit.msg.PluginUpdate;
+import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.util.Log;
 //}}}
 
@@ -96,7 +96,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.15 2003/05/02 23:14:17 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.16 2003/05/02 23:36:00 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -587,7 +587,7 @@ public class PluginJAR
 		classLoader.activate();
 
 		EditBus.send(new PluginUpdate(this,PluginUpdate.LOADED));
-		EditBus.send(new DynamicMenuUpdate("plugins"));
+		EditBus.send(new DynamicMenuChanged("plugins"));
 	} //}}}
 
 	//{{{ uninit() method
