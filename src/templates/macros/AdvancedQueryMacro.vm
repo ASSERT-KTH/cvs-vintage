@@ -41,7 +41,7 @@ from:&#160;<input type="text" size="20"
 
 ## ATTRIBUTES
 <div class="axial">
-#foreach ($group in $issueType.getAttributeGroups($module))
+#foreach ($group in $module.getAttributeGroups($issueType))
   #if (!$group.Attributes.isEmpty())
     <h3>$group.Name</h3>
     <table cellpadding="3" cellspacing="2" border="0">
