@@ -9,9 +9,9 @@
 #set ($searchField = $data.Parameters.getString("searchField" , ""))
 
 #if ($userAttrs.isEmpty())
- <p class="alert">There are no active user attributes to which to assign users.</p>
+ <p class="alert">$l10n.NoAssignableUserAttributes</p>
 #elseif ($issueListSize == 0)
- <p class="alert">Please select an issue or issues with which to associate users.</p>
+ <p class="alert">$l10n.AssociateUsersAndIssues</p>
 #else
 
 #printCollisionInfo()
@@ -59,7 +59,7 @@
  #set ($issue = $scarabR.getIssue($issueId))
  #if ($issue)
 
-<h3>Personnel associated with the issue $issue.UniqueId</h3>
+<h3>$l10n.PersonnelAssociatedWithIssue</h3>
 
     ## if there is no temporary list, use list of already-assigned users
     #set ($noUsers = "false")
@@ -74,13 +74,13 @@
     #end
 
     #if ($noUsers.equals("true"))
-     <p class="alert">None assigned.</p>
+     <p class="alert">$l10n.NoneAssigned.</p>
      <p><a href="#add">$l10n.ClickHereToSelectUsersPart1</a> $l10n.format("ClickHereToSelectUsersPart2", $issueListSize)</p>
     #else
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
-		<th nowrap="nowrap">Select</th>
+		<th nowrap="nowrap">$l10n.Select</th>
 		<th>$l10n.Name</th>
 		<th>$l10n.Username</th>
 		<th>$l10n.Association</th>
@@ -142,7 +142,7 @@
 
 
 #else
- <p class="alert"> The issue Id, $issueId, is not valid.</p>
+ <p class="alert"> $l10n.IssueIdNotValid</p>
 #end
 #end
 
@@ -150,8 +150,8 @@
  <table cellpadding="3" cellspacing="2" border="0">
     
  <tr>
-   <th>Reason for change</th>
-   <td>Please enter a reason for the changes made above before selecting "Done"   
+   <th>$l10n.ReasonForChange</th>
+   <td>$l10n.EnterReason   
          <p><textarea rows="4" cols="60" name ="reason"></textarea></p>
    </td>
  </tr>
@@ -235,16 +235,16 @@
 
 ## USER SEARCH
 
-<a name="add"><h3>Possible users</h3></a> 
+<a name="add"><h3>$l10n.PossibleUsers</h3></a> 
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th>Filter string</th>
+   <th>$l10n.FilterString</th>
    <td><input type="text" name="searchString" />&nbsp;
      <select name="searchField" >
-      <option value="First Name">First name</option>
-      <option value="Last Name">Last name</option>
-      <option value="Username">Username</option>
+      <option value="First Name">$l10n.FirstName</option>
+      <option value="Last Name">$l10n.LastName</option>
+      <option value="Username">$l10n.Username</option>
      </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="Filter" /></td>
   </tr>
 </table>
@@ -253,7 +253,7 @@
 #if ($searchString && $searchString.length() > 0)
    #set ($searchResults = $scarabR.UserSearchResults) 
    #if ( $searchResults.isEmpty())
-      <p class="alert">No users match your criteria. Displaying full user list.</p>
+      <p class="alert">$l10n.NoUsersMatch</p>
       #set ($searchResults = $scarabR.Users)
    #end
 #else
@@ -277,7 +277,7 @@
 	<th nowrap="nowrap">Select</th>
     <th>#userSort ("name" "Name")</th>
 	<th>#userSort ("username" "Username")</th>
-	<th>Association</th>
+	<th>$l10n.Association</th>
 	</tr>
    #foreach ($user in $searchResults)
     #indexedRows($velocityCount)

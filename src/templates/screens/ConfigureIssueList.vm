@@ -19,12 +19,12 @@
   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
 
-<h3>Attributes</h3>
+<h3>$l10n.Attributes</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
-  <th>Show/hide</th>
-  <th>Attribute name</th>
-  <th>Columnar sequence</th>
+  <th>$l10n.ShowHide</th>
+  <th>$l10n.AttributeName</th>
+  <th>$l10n.ColumnSequence</th>
  </tr>
 
  #foreach ($moduleAttribute in $moduleAttributes)
