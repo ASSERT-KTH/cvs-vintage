@@ -275,11 +275,13 @@ public class HeaderTableModel extends AbstractTableModel {
 
 		if (headerList == null) {
 			tree.setRootNode(root);
+			fireTableDataChanged();
 			return;
 		}
 
 		if (headerList.count() == 0) {
 			tree.setRootNode(root);
+			fireTableDataChanged();
 			return;
 		}
 
