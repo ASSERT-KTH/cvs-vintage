@@ -265,6 +265,8 @@ public class TableModelThreadedView extends TableModelPlugin {
 			HeaderInterface header = node.getHeader();
 
 			String id = (String) header.get("Message-ID");
+			if ( id==null ) id = (String) header.get("Message-Id");
+			
 			//System.out.println("id: "+id);
 			if (id == null)
 				id = new String("<bogus-id:" + (idCount++) + ">");
@@ -488,6 +490,8 @@ public class TableModelThreadedView extends TableModelPlugin {
 		HeaderInterface childHeader = child.getHeader();
 
 		String id = (String) childHeader.get("Message-ID");
+		if ( id==null ) id = (String) childHeader.get("Message-Id");;
+		
 		if (id == null)
 			id = new String("<bogus-id:" + (idCount++) + ">");
 

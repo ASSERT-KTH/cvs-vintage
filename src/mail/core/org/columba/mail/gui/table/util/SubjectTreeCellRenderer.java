@@ -50,11 +50,11 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 	private Color foreground;
 
 	private Font font;
-	
+
 	public SubjectTreeCellRenderer(JTree tree) {
 		super();
 		this.tree1 = tree;
-		
+
 		image1 = ImageLoader.getSmallImageIcon("folder.png");
 
 		//image2 = ImageLoader.getImageIcon("table.unread", "");
@@ -79,17 +79,15 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 		int row,
 		boolean hasFocus) {
 
-			super.getTreeCellRendererComponent(
-					tree,
-					value,
-					isSelected,
-					expanded,
-					leaf,
-					row,
-					hasFocus);
-		
-		
-		
+		super.getTreeCellRendererComponent(
+			tree,
+			value,
+			isSelected,
+			expanded,
+			leaf,
+			row,
+			hasFocus);
+
 		/*
 		TreePath path = tree1.getPathForRow(row);
 		if (path == null)
@@ -110,6 +108,8 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 			System.out.println("header is null");
 			return this;
 		}
+		
+		
 
 		if (header.getFlags() != null) {
 			if (header.getFlags().getRecent()) {
@@ -122,8 +122,9 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 				setFont(plainFont);
 			}
 		}
-
-		String subject = (String) header.get("subject");
+		
+		
+		String subject = (String) header.get("Subject");
 		if (subject != null)
 			setText(subject);
 		else
@@ -132,10 +133,8 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 		setIcon(null);
 
 		return this;
-		
-		
+
 	}
-	
 
 	/**
 	 * Returns the background.

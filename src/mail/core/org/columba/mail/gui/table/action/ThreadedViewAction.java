@@ -123,6 +123,7 @@ public class ThreadedViewAction
 		
 		
 		updateTable(getState());
+		
 	}
 
 	protected void updateTable(boolean enableThreadedView) {
