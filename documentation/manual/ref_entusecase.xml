@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_entusecase.xml,v 1.18 2003/10/12 09:33:33 linus Exp $ -->
+<!-- $Id: ref_entusecase.xml,v 1.19 2003/11/11 14:09:25 mvw Exp $ -->
 <!--
 
 Description of all the artifacts associated with use case diagrams within
@@ -1882,8 +1882,8 @@ Lists the <quote>depending</quote> ends
 
             <para>Text area.
 Lists the <quote>depending</quote> ends
-            of the relationship, i.e. the end supplying what is needed by
-            the other end.</para>
+            of the relationship, i.e. the end that makes use of the other end.
+            </para>
 
             <para>
 &Button1; Double Click on a client will navigate to that use case.
