@@ -1,16 +1,11 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!-- DTD for configuration file". -->
+<?xml version="1.0" encoding="UTF-8"?>
 
+<!ELEMENT tree (folder*)>
 
-<!ELEMENT tree ( folder* ) >
-
-
-<!ELEMENT folder (folder*, property) >
- <!ATTLIST folder type CDATA #REQUIRED>
- <!ATTLIST folder uid CDATA #REQUIRED>
- 
-<!ELEMENT property>
- <!ATTLIST property name CDATA #REQUIRED>
- <!ATTLIST property accessrights CDATA #REQUIRED>
- <!ATTLIST property subfolder (true|false) "true">
- 
+<!ELEMENT folder (folder*)>
+<!ATTLIST folder
+ name CDATA #REQUIRED
+ type (localroot|addresses|remoteroot) #REQUIRED
+ uid CDATA #REQUIRED
+ accessrights CDATA #REQUIRED
+>

@@ -1,37 +1,49 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!-- DTD for configuration file". -->
+<?xml version="1.0" encoding="UTF-8"?>
 
+<!ELEMENT options (gui)>
 
-<!ELEMENT options ( gui ) >
+<!ELEMENT gui (table,viewlist)>
 
-<!ELEMENT gui ( table, viewlist) >
-
-<!ELEMENT table (column) >
- <!ATTLIST table selected CDATA "Date">
- <!ATTLIST table ascending (true|false) "true">
+<!ELEMENT table (column+)>
+<!ATTLIST table
+ selected CDATA "Date"
+ ascending (true|false) "true"
+>
  
-<!ELEMENT column>
- <!ATTLIST column name CDATA #REQUIRED>
- <!ATTLIST column position CDATA #REQUIRED>
- <!ATTLIST column size CDATA #REQUIRED>
- <!ATTLIST column enabled CDATA #REQUIRED>
+<!ELEMENT column EMPTY>
+<!ATTLIST column
+ name CDATA #REQUIRED
+ position CDATA #REQUIRED
+ size CDATA #REQUIRED
+ enabled CDATA #REQUIRED
+>
 
-<!ELEMENT viewlist (view*) >
+<!ELEMENT viewlist (view*)>
 
-<!ELEMENT view ( window, toolbars, splitpanes ) >
+<!ELEMENT view (window,toolbars,splitpanes)>
+<!ATTLIST view
+ id CDATA #REQUIRED
+>
 
-<!ELEMENT window>
- <!ATTLIST window x CDATA "0">
- <!ATTLIST window y CDATA "0">
- <!ATTLIST window width CDATA "900">
- <!ATTLIST window height CDATA "700">
- <!ATTLIST window maximized (true|false) "true">
+<!ELEMENT window EMPTY>
+<!ATTLIST window
+ x CDATA "0"
+ y CDATA "0"
+ width CDATA "900"
+ height CDATA "700"
+ maximized (true|false) "true"
+>
  
-<!ELEMENT toolbars>
- <!ATTLIST toolbars show_main (true|false) "true">
- <!ATTLIST toolbars show_filter (true|false) "true">
- <!ATTLIST toolbars show_folderinfo (true|false) "true">
+<!ELEMENT toolbars EMPTY>
+<!ATTLIST toolbars
+ show_main (true|false) "true"
+ show_filter (true|false) "true"
+ show_folderinfo (true|false) "true"
+>
  
-<!ELEMENT splitpanes>
- <!ATTLIST splitpanes main CDATA "200">
- <!ATTLIST splitpanes header CDATA "200">
+<!ELEMENT splitpanes EMPTY>
+<!ATTLIST splitpanes
+ main CDATA "200"
+ header CDATA "200"
+ attachment CDATA "100"
+>

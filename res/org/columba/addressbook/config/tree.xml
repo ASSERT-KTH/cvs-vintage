@@ -1,29 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tree SYSTEM "tree.dtd">
 
 <tree>
- <folder type="LocalRootFolder" uid="100" >
-  <property name="Local Addressbooks" accessrights="system" subfolder="true" />
-  
-  <folder type="AddressbookFolder" uid="101">
-   <property name="Personal Addressbook" accessrights="system" subfolder="true" />
-  </folder>
-  
-  <folder type="AddressbookFolder" uid="102">
-   <property name="Collected Addresses" accessrights="system" subfolder="true" />
-  </folder>
-  
+ <folder name="Local Addressbooks" type="localroot" uid="100" accessrights="system">
+  <folder name="Personal Addressbook" type="addresses" uid="101" accessrights="system"/>
+  <folder name="Collected Addresses" type="addresses" uid="102" accessrights="system"/>
  </folder> 
- 
- <folder type="RemoteRootFolder" uid="200" >
-  <property name="Remote Addressbooks" accessrights="system" subfolder="true" />
- </folder>
- 
+ <folder name="Remote Addressbooks" type="remoteroot" uid="200" accessrights="system"/>
 </tree>
-
-
-
-
-
-
-
-

@@ -1,26 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!DOCTYPE folderlist SYSTEM "folder.dtd">
 
 <folderlist>
- <folder 
- 	name="Root" 
- 	class="org.columba.mail.folder.Root" />
- <folder 
- 	name="LocalRootFolder" 
- 	class="org.columba.mail.folder.LocalRootFolder" />
- <folder 
- 	name="IMAPRootFolder" 
- 	class="org.columba.mail.folder.imap.IMAPRootFolder" />
- <folder 
- 	name="MHFolder" 
- 	class="org.columba.mail.folder.mh.CachedMHFolder" />
- <folder 
- 	name="IMAPFolder" 
- 	class="org.columba.mail.folder.imap.IMAPFolder" />	
- <folder 
- 	name="VirtualFolder" 
- 	class="org.columba.mail.folder.virtual.VirtualFolder" />	
- <folder 
- 	name="OutboxFolder" 
- 	class="org.columba.mail.folder.outbox.OutboxFolder" />
+ <folder name="Root" class="org.columba.mail.folder.Root"/>
+ <folder name="LocalRootFolder" class="org.columba.mail.folder.LocalRootFolder"/>
+ <folder name="IMAPRootFolder" class="org.columba.mail.folder.imap.IMAPRootFolder"/>
+ <folder name="MHFolder" class="org.columba.mail.folder.mh.CachedMHFolder"/>
+ <folder name="IMAPFolder" class="org.columba.mail.folder.imap.IMAPFolder"/>
+ <folder name="VirtualFolder" class="org.columba.mail.folder.virtual.VirtualFolder"/>
+ <folder name="OutboxFolder" class="org.columba.mail.folder.outbox.OutboxFolder"/>
 </folderlist>
