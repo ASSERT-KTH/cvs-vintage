@@ -3,6 +3,14 @@
 <html>
  <head>
   <title>Scarab</title>
+<!--  <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" /> -->
+<!--  <meta http-equiv="Content-type" content="text/html; charset=EUC-KR" /> -->
+  <meta http-equiv="Content-type" content="$data.ContentType" />
+
+  <style type="text/css">
+  @import url($data.Request.ContextPath/style/ns4_toxins.css);
+  </style>
+
   <link rel="stylesheet" type="text/css" href="$data.Request.ContextPath/style/main.css" />
   <link rel="stylesheet" type="text/css" href="$data.Request.ContextPath/style/print.css" media="print" />
   <link rel="alternate stylesheet" title="compact" type="text/css" href="$data.Request.ContextPath/style/compact.css" />
