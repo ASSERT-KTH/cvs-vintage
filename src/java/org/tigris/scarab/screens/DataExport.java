@@ -52,6 +52,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import org.apache.turbine.Turbine;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 
@@ -100,13 +101,27 @@ class DataExport extends Default
         super.doBuildTemplate(data, context);
         String format = ScarabUtil.findValue(data, ExportFormat.KEY_NAME);
 
+        // look for a configuration toggle for the encoding to which to
+        // export.  TODO : make this per request configurable (with a per-
+        // language default) to allow use of scarab ina multilingual 
+        // environment.
+        String encoding = Turbine.getConfiguration()
+            .getString("scarab.dataexport.encoding");
+        String encodingSpecifier = "";
+        if (encoding != null && !encoding.equals(""))
+        {
+            encodingSpecifier = "; charset=" + encoding;
+        }
+
         if (ExportFormat.EXCEL_FORMAT.equalsIgnoreCase(format))
         {
-            data.getResponse().setContentType("application/vnd.ms-excel");
+            data.getResponse().setContentType("application/vnd.ms-excel" +
+                                              encodingSpecifier);
         }
         else
         {
-            data.getResponse().setContentType("text/plain");
+            data.getResponse().setContentType("text/plain" + 
+                                              encodingSpecifier);
         }
         // Since we're streaming the TSV content directly from our
         // data source, we don't know its length ahead of time.
