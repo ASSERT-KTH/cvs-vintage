@@ -57,7 +57,6 @@
  *
  */ 
 
-
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.context.*;
@@ -422,8 +421,10 @@ public class Container implements Cloneable{
 	in
     */
     public void addInterceptor( BaseInterceptor bi ) {
+	bi.setContext( getContext() );
+	
 	for( int i=0; i< PREDEFINED_I.length -1 ; i++ ) {
-	    if( bi.hasHook( PREDEFINED_I[i] )) {
+	    if( IntrospectionUtils.hasHook( bi, PREDEFINED_I[i] )) {
 		if( interceptors[i]==null )
 		    interceptors[i]=new Vector();
 		if( dL > 0 ) debug( "Adding " + PREDEFINED_I[i] + " " +bi );

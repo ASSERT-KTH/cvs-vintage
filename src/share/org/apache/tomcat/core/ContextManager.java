@@ -176,30 +176,13 @@ public final class ContextManager implements LogAware{
     public static final String TOMCAT_VERSION = "3.3 dev";
     public static final String TOMCAT_NAME = "Tomcat Web Server";
     
-    /** Property used to set the random number generator
-     */
-    public static final String RANDOM_CLASS_PROPERTY=
-	"tomcat.sessionid.randomclass";
-
-    /** Property used to set the base directory ( tomcat home )
+    /** System property used to set the base directory ( tomcat home )
      */
     public static final String TOMCAT_HOME=
 	"tomcat.home";
 
-    /** Default work dir, relative to home
-     */
-    public static final String DEFAULT_WORK_DIR="work";
-
-    // Accounting
-    /** time when init() started
-     */
-    public static final int ACC_INIT_START=0;
-    /** Time when init() finished()
-     */
-    public static final int ACC_INIT_END=1;
-    public static final int ACCOUNTS=2;
-
     // State
+
     /** Server is not initialized
      */
     public static final int STATE_PRE_INIT=0;
@@ -207,10 +190,12 @@ public final class ContextManager implements LogAware{
 	addContext() can be called.
      */
     public static final int STATE_INIT=1;
+
     /** Engine is running. All configured contexts are
 	initialized ( contextInit()), and requests can be served.
      */
     public static final int STATE_START=2;
+
     /** Engine has stoped
      */
     public static final int STATE_STOP=3;
@@ -219,8 +204,8 @@ public final class ContextManager implements LogAware{
 
     private int state=STATE_PRE_INIT;
     
-    /** Contexts managed by this server
-     */
+    // All contexts managed by the server ( can belong to different
+    // virtual hosts )
     private Vector contextsV=new Vector();
 
     private int debug=0;
@@ -240,24 +225,15 @@ public final class ContextManager implements LogAware{
     /** The directory where tomcat is installed
      */
     private String installDir;
-
-    // "/" on the default host 
-    private Context rootContext;
     
     // Server properties ( interceptors, etc ) - it's one level above "/"
     private Container defaultContainer;
 
-    // the application loader. ContextManager is loaded with
-    // a class loader containing tomcat-specific classes,
-    // use parent loader to avoid polution
+    // the embedding application loader. @see getParentLoader
     private ClassLoader parentLoader;
-    // tomcat classes ( used to load tomcat)
-    private URL serverClassPath[];
 
     // Store Loggers before initializing them
-    private Hashtable Loggers;
-
-    private Counters cntr=new Counters(ACCOUNTS);
+    private Hashtable loggers;
 
     /**
      * Construct a new ContextManager instance with default values.
@@ -267,119 +243,6 @@ public final class ContextManager implements LogAware{
         defaultContainer.setContext( null );
 	defaultContainer.setContextManager( this );
         defaultContainer.setPath( null ); // default container
-    }
-
-    // -------------------- Server functions --------------------
-
-    /**
-     *  Init() is called after the context manager is set up
-     *  and configured ( all setFoo methods are called, all initial
-     *  interceptors are added and their setters are called ).
-     *
-     *  CM will call the following hooks:
-     *   - Interceptor.engineInit()
-     *
-     *  It will tehn call initContext() for all the contexts (
-     *  including those added by interceptors )
-     */
-    public final void init()  throws TomcatException {
-	if(debug>0 ) log( "Tomcat classpath = " +
-			     System.getProperty( "java.class.path" ));
-
-	cntr.touchCounter( ACC_INIT_START );
-
-	BaseInterceptor cI[]=getInterceptors();
-	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].engineInit( this );
-	}
-
-	state=STATE_INIT;
-	Enumeration existingCtxE=contextsV.elements();
-	while( existingCtxE.hasMoreElements() ) {
-	    Context ctx=(Context)existingCtxE.nextElement();
-
-	    cI=getInterceptors(ctx.getContainer());
-	    for( int i=0; i< cI.length; i++ ) {
-		cI[i].addContext( this, ctx );
-	    }
-	}
-
-	cntr.touchCounter( ACC_INIT_END);
-    }
-
-    /** Remove all contexts.
-     *  Call Intereptor.engineShutdown hooks.
-     */
-    public final void shutdown() throws TomcatException {
-	Enumeration enum = getContexts();
-	while (enum.hasMoreElements()) {
-	    removeContext((Context)enum.nextElement());
-	}
-
-	BaseInterceptor cI[]=getInterceptors();
-	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].engineShutdown( this );
-	}
-    }
-
-    /** Stop the context and release all resources.
-     */
-    public final void shutdownContext( Context ctx ) throws TomcatException {
-	// XXX This is here by accident, it should be moved as part
-	// of a normal context interceptor that will handle all standard
-	// start/stop actions
-
-	// shut down and servlets
-	Enumeration enum = ctx.getServletNames();
-	while (enum.hasMoreElements()) {
-	    String key = (String)enum.nextElement();
-	    Handler wrapper = ctx.getServletByName( key );
-	    ctx.removeServletByName( key );
-	    try {
-		wrapper.destroy();
-	    } catch(Exception ex ) {
-		ctx.log( "Error in destroy ", ex);
-	    }
-	}
-
-	BaseInterceptor cI[]=getInterceptors(ctx.getContainer());
-	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].contextShutdown( ctx );
-	}
-    }
-
-    /** Will start the connectors and begin serving requests.
-     *  It must be called after init.
-     *  XXX Do nothing ?? Tomcat is started up by calling the init
-     *  hooks, there is no need for special code here - in the worst
-     *  case we should add a new hook
-     */
-    public final void start() throws Exception {
-    	// init contexts
-	Enumeration enum = getContexts();
-	while (enum.hasMoreElements()) {
-	    Context ctx = (Context)enum.nextElement();
-	    try {
-		BaseInterceptor cI[]=getInterceptors(ctx.getContainer());
-		for( int i=0; i< cI.length; i++ ) {
-		    cI[i].contextInit( ctx );
-		}
-	    } catch (TomcatException ex ) {
-		if( ctx!=null ) {
-		    log( "ERROR initializing " + ctx.toString(), ex );
-		    removeContext( ctx  );
-		}
-	    }
-	}
-	// Note that contextInit() will triger other 
-	
-	state=STATE_START;
-    }
-
-    /** Will stop all connectors
-     */
-    public final void stop() throws Exception {
-	shutdown();
     }
 
     // -------------------- setable properties --------------------
@@ -431,17 +294,6 @@ public final class ContextManager implements LogAware{
 	return workDir;
     }
 
-    /** Sets the name of the class used for generating random numbers by the
-     *  session id generator. By default this is <code>java.security.SecureRandom</code>.
-     */
-    public final void setRandomClass(String randomClass) {
-        System.setProperty(RANDOM_CLASS_PROPERTY, randomClass);
-    }
-
-    public final String getRandomClass() {
-        String randomClass = System.getProperty(RANDOM_CLASS_PROPERTY);
-        return randomClass == null ? "java.security.SecureRandom" : randomClass;
-    }
 
     /** Debug level
      */
@@ -464,13 +316,27 @@ public final class ContextManager implements LogAware{
     /**
      *  Parent loader is the "base" class loader of the
      *	application that starts tomcat, and includes no
-     *	tomcat classes. All servlet loaders will have it as
-     *  a parent loader, as if the webapps would be loaded
-     *  by the embeding app ( using parentLoader ).
+     *	tomcat classes.
+     * 
+     *  Each web applications will use a loader that will have it as
+     *  a parent loader, so all classes visible to parentLoader
+     *  will be available to servlets.
      *
-     *  Tomcat will add servlet.jar and any other extension
-     *  it is configured to - for example trusted webapps
-     *  may have tomcat internal classes in classpath. 
+     *  Tomcat will add the right servlet.jar and Facade.
+     *
+     *  Trusted applications will also see the internal tomcat
+     *  classes.
+     *
+     *  Interceptors may also add custom classes to a webapp,
+     *  based on tomcat configuration.
+     *
+     *  Tomcat.core and all internal classes will be loaded by
+     *  another class loader, having the same parentLoader.
+     *
+     *  <pre>
+     *  parentLoader  -> tomcat.core.loader [ -> trusted.webapp.loader ]
+     *                -> webapp.loaders
+     *  </pre>
      */
     public final void setParentLoader( ClassLoader cl ) {
 	parentLoader=cl;
@@ -480,16 +346,9 @@ public final class ContextManager implements LogAware{
 	return parentLoader;
     }
 
-    public final URL[] getServerClassPath() {
-	if( serverClassPath==null ) return new URL[0];
-	return serverClassPath;
-    }
-    
-    public final void setServerClassPath( URL urls[] ) {
-	serverClassPath=urls;
-    }
-
-    /** Default container
+    /** Default container. The interceptors for this container will
+	be called for all requests, and it will be associated with
+	invalid requests ( where context can't be found ).
      */
     public final Container getContainer() {
         return defaultContainer;
@@ -499,38 +358,98 @@ public final class ContextManager implements LogAware{
         defaultContainer = newDefaultContainer;
     }
 
-    /** Accounting support - various counters associated with the server
-     */
-    public final Counters getCounters() {
-	return cntr;
+    public final void addInterceptor( BaseInterceptor ri ) {
+	// The interceptors are handled per/container ( thanks to Nacho
+	// for this contribution ).
+        defaultContainer.addInterceptor(ri);
     }
 
-    // -------------------- Contexts --------------------
+
+    // -------------------- Server functions --------------------
 
     /**
-     * Initializes this context to be able to accept requests. This action
-     * will cause the context to load it's configuration information
-     * from the webapp directory in the docbase.
+     *  Init() is called after the context manager is set up
+     *  and configured ( all setFoo methods are called, all initial
+     *  interceptors are added and their setters are called ).
      *
-     * <p>This method must be called
-     * before any requests are handled by this context. It will be called
-     * after the context was added, typically when the engine starts
-     * or after the admin adds a new context.
+     *  CM will:
+     *   - call Interceptor.engineInit() hook
+     *   - move to state= INIT
+     *   - call Interceptor.addContext() hook for all contexts
+     *     added before init() and those added  by interceptors in
+     *     engineInit hook ).
+     *
+     *  It is possible to add and init contexts later. 
+     *
+     *  Note that addContext() is called each time a context is added,
+     *  and that can be _before_ tomcat is initialized.
+     *
+     * @see addContext()
      */
-    public final void initContext( Context ctx ) throws TomcatException {
-	if( state!= STATE_PRE_INIT ) {
-	    BaseInterceptor cI[]=getInterceptors(ctx.getContainer());
+    public final void init()  throws TomcatException {
+	if(debug>0 ) log( "Tomcat init");
+
+	BaseInterceptor cI[]=defaultContainer.getInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].setContextManager( this );
+	    cI[i].engineInit( this );
+	}
+
+	state=STATE_INIT;
+
+	// delayed execution of addContext
+	Enumeration existingCtxE=contextsV.elements();
+	while( existingCtxE.hasMoreElements() ) {
+	    Context ctx=(Context)existingCtxE.nextElement();
+	    cI=ctx.getContainer().getInterceptors();
 	    for( int i=0; i< cI.length; i++ ) {
-		cI[i].contextInit( ctx );
+		cI[i].addContext( this, ctx );
 	    }
+	    ctx.setState( Context.STATE_ADDED );
 	}
     }
 
-    /** Return the "default" context for the "default" host.
+    /** Remove all contexts.
+     *  - call removeContext ( that will call Interceptor.removeContext hooks )
+     *  - call Interceptor.engineShutdown() hooks.
      */
-    public Context getDefaultContext() {
-	return rootContext;
+    public final void shutdown() throws TomcatException {
+	Enumeration enum = getContexts();
+	while (enum.hasMoreElements()) {
+	    removeContext((Context)enum.nextElement());
+	}
+
+	BaseInterceptor cI[]=defaultContainer.getInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].engineShutdown( this );
+	}
     }
+
+    /** Will start the connectors and begin serving requests.
+     *  It must be called after init.
+     */
+    public final void start() throws TomcatException {
+	
+	Enumeration enum = getContexts();
+	while (enum.hasMoreElements()) {
+	    Context ctx = (Context)enum.nextElement();
+	    BaseInterceptor cI[]=ctx.getContainer().getInterceptors();
+	    for( int i=0; i< cI.length; i++ ) {
+		cI[i].contextInit( ctx );
+	    }
+	    ctx.setState( Context.STATE_READY );
+	}
+	
+	state=STATE_START;
+    }
+
+    /** Will stop all connectors
+     */
+    public final void stop() throws Exception {
+	shutdown();
+    }
+
+    // -------------------- Contexts --------------------
 
     /** Return the list of contexts managed by this server
      */
@@ -541,86 +460,112 @@ public final class ContextManager implements LogAware{
     /**
      * Adds a new Context to the set managed by this ContextManager.
      *
+     * If the server is initialized ( ContextManager.init() was called )
+     * the addContext() hook will be called, otherwise the call will
+     * be delayed until the server enters INIT state.
+     *
+     * The context will be in DISABLED state until start() is called.
+     *
      * @param ctx context to be added.
      */
     public final void addContext( Context ctx ) throws TomcatException {
 	log("Adding context " +  ctx.toString());
+	
 	// Make sure context knows about its manager.
 	ctx.setContextManager( this );
-
-	// If the context already exist - the interceptors need
-	// to deal with that ( either replace or throw an exception ).
-
+	ctx.setState( Context.STATE_NEW );
+	
 	contextsV.addElement( ctx );
 
-	if( ctx.getHost() == null && ctx.getPath().equals(""))
-	    rootContext = ctx;
-	
 	if( state == STATE_PRE_INIT )
-	    return;
+	    return; 
 	
-	BaseInterceptor cI[]=getInterceptors(ctx.getContainer());
+	BaseInterceptor cI[]=ctx.getContainer().getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].addContext( this, ctx );
 	}
+	ctx.setState( Context.STATE_ADDED );
     }
 
-    /** Shut down and removes a context from service
+    /** Shut down and removes a context from service.
      */
     public final void removeContext( Context context ) throws TomcatException {
 	if( context==null ) return;
 
 	log( "Removing context " + context.toString());
 	
-	BaseInterceptor cI[]=getInterceptors(context.getContainer());
+	// disable the context.
+	if( context.getState() == Context.STATE_READY )
+	    shutdownContext( context );
+
+	if( context.getState() == Context.STATE_DISABLED )
+	    return;
+	
+	context.setState( Context.STATE_NEW );
+
+	// remove it from operation
+	BaseInterceptor cI[]=context.getContainer().getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].removeContext( this, context );
 	}
 
-	shutdownContext( context );
 	contextsV.removeElement(context);
     }
 
 
-    // -------------------- Interceptors --------------------
-    // The interceptors are handled per/container ( thanks to Nacho
-    // for this contribution ).
-    
-    public final void addInterceptor( BaseInterceptor ri ) {
-        defaultContainer.addInterceptor(ri);
+    /**
+     * Initializes this context to be able to accept requests. This action
+     * will cause the context to load it's configuration information
+     * from the webapp directory in the docbase.
+     *
+     * <p>This method must be called
+     * before any requests are handled by this context. It will be called
+     * after the context was added, typically when the engine starts
+     * or after the admin adds a new context.
+     *
+     * After this call, the context will be in READY state and will
+     * be able to server requests.
+     */
+    public final void initContext( Context ctx ) throws TomcatException {
+	if( state!= STATE_PRE_INIT ) {
+	    BaseInterceptor cI[]=ctx.getContainer().getInterceptors();
+	    for( int i=0; i< cI.length; i++ ) {
+		cI[i].contextInit( ctx );
+	    }
+	}
+	ctx.setState( Context.STATE_READY );
     }
 
-    public final BaseInterceptor[] getInterceptors() {
-	return defaultContainer.getInterceptors();
-    }
-    
-    public final BaseInterceptor[] getInterceptors( Container ct ) {
-	return ct.getInterceptors();
-    }
-    
-    public final BaseInterceptor[] getInterceptors( Request req ,
-					      int hook_id)
-    {
-        Context ctx=req.getContext();
-        if( ctx == null )
-           return defaultContainer.getInterceptors(hook_id);
-        Container ct=ctx.getContainer();
-        BaseInterceptor[] ari=ct.getInterceptors(hook_id);
+    /** Stop the context. After the call the context will be disabled,
+	( DISABLED state ) and it'll not be able to serve requests.
+	The context will still be available and can be enabled later
+	by calling initContext(). Requests mapped to this context
+	should report a "temporary unavailable" message.
+	
 
-	return ari;
+	All servlets will be destroyed, and resources held by the
+	context will be freed.
+     */
+    public final void shutdownContext( Context ctx ) throws TomcatException {
+	ctx.setState( Context.STATE_DISABLED ); // called before
+	// the hook, no request should be allowed in unstable state
+
+	BaseInterceptor cI[]=ctx.getContainer().getInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].contextShutdown( ctx );
+	}
     }
 
     // -------------------- Request processing / subRequest ------------------
     // -------------------- Main request processing methods ------------------
 
     /** Prepare the req/resp pair for use in tomcat.
-     *  Call it after you create the request/response objects
+     *  Call it after you create the request/response objects.
+     *  ( for example in a connector, or when an internal sub-request is
+     *  created )
      */
     public final void initRequest( Request req, Response resp ) {
-	// used to be done in service(), but there is no need to do it
-	// every time.
 	// We may add other special calls here.
-	// XXX Maybe make it a callback?
 	resp.setRequest( req );
 	req.setResponse( resp );
 	req.setContextManager( this );
@@ -630,7 +575,6 @@ public final class ContextManager implements LogAware{
     /** This is the entry point in tomcat - the connectors ( or any other
      *  component able to generate Request/Response implementations ) will
      *  call this method to get it processed.
-     *  XXX make sure the alghoritm is right, deal with response codes
      */
     public final void service( Request req, Response res ) {
 	internalService( req, res );
@@ -641,8 +585,8 @@ public final class ContextManager implements LogAware{
 	    handleError( req, res, ex );
 	}
 	finally {
-	    BaseInterceptor reqI[]= getInterceptors(req,
-						    Container.H_postRequest);
+	    BaseInterceptor reqI[]= req.getContainer().
+		getInterceptors(Container.H_postRequest);
 
 	    for( int i=0; i< reqI.length; i++ ) {
 		reqI[i].postRequest( req, res );
@@ -654,12 +598,12 @@ public final class ContextManager implements LogAware{
     }
 
     // Request processing steps and behavior
-    private void internalService( Request req, Response res ) {
+    private final void internalService( Request req, Response res ) {
 	try {
 	    /* assert req/res are set up
 	       corectly - have cm, and one-one relation
 	    */
-	    // wront request - parsing error
+	    // wrong request - parsing error
 	    int status=res.getStatus();
 
 	    if( status >= 400 ) {
@@ -670,6 +614,7 @@ public final class ContextManager implements LogAware{
 	    }
 
 	    status= processRequest( req );
+
 	    if( status != 0 ) {
 		if( debug > 0)
 		    log("Error mapping the request " + req + " " + status);
@@ -677,7 +622,7 @@ public final class ContextManager implements LogAware{
 		return;
 	    }
 
-	    if( req.getWrapper() == null ) {
+	    if( req.getHandler() == null ) {
 		status=404;
 		if( debug > 0)
 		    log("No handler for request " + req + " " + status);
@@ -688,7 +633,7 @@ public final class ContextManager implements LogAware{
 	    String roles[]=req.getRequiredRoles();
 	    if(roles != null ) {
 		status=0;
-		BaseInterceptor reqI[]= req.getContext().getContainer().
+		BaseInterceptor reqI[]= req.getContainer().
 		    getInterceptors(Container.H_authorize);
 
 		// Call all authorization callbacks. 
@@ -706,7 +651,7 @@ public final class ContextManager implements LogAware{
 		return;
 	    }
 
-	    req.getWrapper().service(req, res);
+	    req.getHandler().service(req, res);
 
 	} catch (Throwable t) {
 	    handleError( req, res, t );
@@ -716,6 +661,9 @@ public final class ContextManager implements LogAware{
     /** Will find the Handler for a servlet, assuming we already have
      *  the Context. This is also used by Dispatcher and getResource -
      *  where the Context is already known.
+     *
+     *  This method will only map the request, it'll not do authorization
+     *  or authentication.
      */
     public final int processRequest( Request req ) {
 	if(debug>9) log("Before processRequest(): "+req.toString());
@@ -728,7 +676,8 @@ public final class ContextManager implements LogAware{
 	    status=ri[i].contextMap( req );
 	    if( status!=0 ) return status;
 	}
-
+	req.setState(Request.STATE_CONTEXT_MAPPED );
+	
 	ri=defaultContainer.getInterceptors(Container.H_requestMap);
 	for( int i=0; i< ri.length; i++ ) {
 	    if( debug > 1 )
@@ -736,6 +685,7 @@ public final class ContextManager implements LogAware{
 	    status=ri[i].requestMap( req );
 	    if( status!=0 ) return status;
 	}
+	req.setState(Request.STATE_MAPPED );
 
 	if(debug>9) log("After processRequest(): "+req.toString());
 
@@ -772,15 +722,14 @@ public final class ContextManager implements LogAware{
 	}
 
 	if( debug >4 ) log("createRequest " + origPath + " " + urlPath  );
-	Request req= createRequest( urlPath );
-	String host=ctx.getHost();
-	if( host != null) req.setServerName( host );
+	Request req= createSubRequest( ctx.getHost(), urlPath );
+	req.setContext( ctx );
 	return req;
     }
 
     /** Create a new sub-request, deal with query string
      */
-    public final Request createRequest( String urlPath ) {
+    private final Request createSubRequest( String host, String urlPath ) {
 	String queryString=null;
 	int i = urlPath.indexOf("?");
 	int len=urlPath.length();
@@ -792,8 +741,11 @@ public final class ContextManager implements LogAware{
 
 	Request lr = new Request();
 	lr.setContextManager( this );
-	lr.setRequestURI( urlPath );
-	lr.setQueryString( queryString );
+	lr.requestURI().setString( urlPath );
+	lr.queryString().setString(queryString );
+
+	if( host != null) lr.setServerName( host );
+
 	return lr;
     }
 
@@ -813,8 +765,7 @@ public final class ContextManager implements LogAware{
 	    // servlets will check for null than IllegalArgument
 	}
 	// absolute path
-	Request lr=this.createRequest( path );
-	if( base.getHost() != null ) lr.setServerName( base.getHost() );
+	Request lr=this.createSubRequest( base.getHost(), path );
 	this.processRequest(lr);
         return lr.getContext();
     }
@@ -822,7 +773,7 @@ public final class ContextManager implements LogAware{
 
     // -------------------- Error handling --------------------
     
-    /** Called for error-codes
+    /** Called for error-codes. Will call the error hook.
      */
     public final void handleStatus( Request req, Response res, int code ) {
 	if( code!=0 )
@@ -830,7 +781,7 @@ public final class ContextManager implements LogAware{
 	
 	BaseInterceptor ri[];
 	int status;
-	ri=getInterceptors( req, Container.H_handleError );
+	ri=req.getContainer().getInterceptors( Container.H_handleError );
 	
 	for( int i=0; i< ri.length; i++ ) {
 	    status=ri[i].handleError( req, res, null );
@@ -844,7 +795,7 @@ public final class ContextManager implements LogAware{
     void handleError( Request req, Response res , Throwable t  ) {
 	BaseInterceptor ri[];
 	int status;
-	ri=getInterceptors( req, Container.H_handleError );
+	ri=req.getContainer().getInterceptors( Container.H_handleError );
 	
 	for( int i=0; i< ri.length; i++ ) {
 	    status=ri[i].handleError( req, res, t );
@@ -959,12 +910,12 @@ public final class ContextManager implements LogAware{
     public final void addLogger(Logger l) {
 	if (debug>20)
 	    log("addLogger: " + l, new Throwable("trace"), Logger.DEBUG);
-        if( Loggers==null ) Loggers=new Hashtable();
-        Loggers.put(l.toString(),l);
+        if( loggers==null ) loggers=new Hashtable();
+        loggers.put(l.toString(),l);
     }
 
     public final Hashtable getLoggers(){
-        return Loggers;
+        return loggers;
     }
 
     public final void log(String msg) {
@@ -983,4 +934,18 @@ public final class ContextManager implements LogAware{
         loghelper.log(msg, t, level);
     }
 
+    // -------------------- DEPRECATED --------------------
+    /** System property used to set the random number generator
+     */
+    public static final String RANDOM_CLASS_PROPERTY=
+	"tomcat.sessionid.randomclass";
+
+    // XXX RandomClass will be set on the interceptor that sets it
+    //     public final String getRandomClass() {
+    // XXX XXX @deprecated - use  interceptor properties
+    public final void setRandomClass(String randomClass) {
+        System.setProperty(RANDOM_CLASS_PROPERTY, randomClass);
+    }
+
+    
 }
