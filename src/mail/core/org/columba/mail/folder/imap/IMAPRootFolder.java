@@ -831,7 +831,12 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener, Ro
 	 * @see org.columba.mail.folder.RootFolder#getTrashFolder()
 	 */
 	public FolderTreeNode getTrashFolder() {
-		return findChildWithUID( accountItem.getSpecialFoldersItem().getInteger("trash"), true );
+        FolderTreeNode ret = findChildWithUID( accountItem.getSpecialFoldersItem().getInteger("trash"), true );
+        // has the imap account no trash folder using the default trash folder
+        if (ret == null) {
+            ret = MailInterface.treeModel.getTrashFolder();
+        }
+		return ret;
 	}
 
 	/* (non-Javadoc)
