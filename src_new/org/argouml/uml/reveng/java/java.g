@@ -60,7 +60,7 @@ import java.util.*;
  *
  * Version tracking now done with following ID:
  *
- * $Id: java.g,v 1.12 2002/08/15 21:19:40 linus Exp $
+ * $Id: java.g,v 1.13 2003/02/04 20:07:44 thn Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -1147,7 +1147,7 @@ options {
 	exportVocab=Java;      // call the vocabulary "Java"
 	testLiterals=false;    // don't automatically test for literals
 	k=4;                   // four characters of lookahead
-//	charVocabulary='\u0003'..'\uFFFF';
+	charVocabulary='\u0003'..'\u0451';
 }
 
 {

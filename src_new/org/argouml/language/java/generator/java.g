@@ -1,4 +1,4 @@
-// $Id: java.g,v 1.5 2002/12/23 23:06:02 thn Exp $
+// $Id: java.g,v 1.6 2003/02/04 20:07:44 thn Exp $
 
 header {
 	package org.argouml.language.java.generator;
@@ -63,7 +63,7 @@ header {
  *
  * Version tracking now done with following ID:
  *
- * $Id: java.g,v 1.5 2002/12/23 23:06:02 thn Exp $
+ * $Id: java.g,v 1.6 2003/02/04 20:07:44 thn Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -1055,6 +1055,7 @@ options {
 	exportVocab=Java;      // call the vocabulary "Java"
 	testLiterals=false;    // don't automatically test for literals
 	k=4;                   // four characters of lookahead
+	charVocabulary='\u0003'..'\u0451';
 }
 
 

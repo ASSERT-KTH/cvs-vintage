@@ -1,17 +1,25 @@
 // $ANTLR 2.7.1: "../src_new/org/argouml/language/java/generator/java.g" -> "JavaRecognizer.java"$
 
-package org.argouml.language.java.generator;
+	package org.argouml.language.java.generator;
 
-import java.util.Vector;
+	import java.util.Vector;
 
-import antlr.NoViableAltException;
-import antlr.ParserSharedInputState;
-import antlr.RecognitionException;
-import antlr.Token;
 import antlr.TokenBuffer;
-import antlr.TokenStream;
 import antlr.TokenStreamException;
+import antlr.TokenStreamIOException;
+import antlr.ANTLRException;
+import antlr.LLkParser;
+import antlr.Token;
+import antlr.TokenStream;
+import antlr.RecognitionException;
+import antlr.NoViableAltException;
+import antlr.MismatchedTokenException;
+import antlr.SemanticException;
+import antlr.ParserSharedInputState;
 import antlr.collections.impl.BitSet;
+import antlr.collections.AST;
+import antlr.ASTPair;
+import antlr.collections.impl.ASTArray;
 
 /** Java 1.2 Recognizer
  *
@@ -70,7 +78,7 @@ import antlr.collections.impl.BitSet;
  *
  * Version tracking now done with following ID:
  *
- * $Id: JavaRecognizer.java,v 1.6 2002/12/24 23:05:39 kataka Exp $
+ * $Id: JavaRecognizer.java,v 1.7 2003/02/04 20:07:44 thn Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
