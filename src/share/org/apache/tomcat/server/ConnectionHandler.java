@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ConnectionHandler.java,v 1.2 1999/10/28 05:15:28 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/28 05:15:28 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ConnectionHandler.java,v 1.3 1999/10/29 23:40:48 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/29 23:40:48 $
  *
  * ====================================================================
  *
@@ -186,8 +186,8 @@ class ConnectionHandler extends Thread {
 		int contentLength = request.getIntHeader("content-length");
 
 		if (contentLength != -1) {
-		    ServletInputStreamImpl sis =
-			(ServletInputStreamImpl)request.getInputStream();
+		    BufferedServletInputStream sis =
+			(BufferedServletInputStream)request.getInputStream();
 		    sis.setLimit(contentLength+2);
 		}
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.1 1999/10/09 00:29:59 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:29:59 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.2 1999/10/29 23:40:44 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/29 23:40:44 $
  *
  * ====================================================================
  * 
@@ -72,13 +72,13 @@ import javax.servlet.*;
  */
 
 /**
- *
+ * Default implementation use RequestAdapter to read data.
  *
  * @author James Duncan Davidson <duncan@eng.sun.com>
  * @author Jason Hunter <jch@eng.sun.com>
  */
 
-public abstract class BufferedServletInputStream extends ServletInputStream {
+public class BufferedServletInputStream extends ServletInputStream {
 
     // XXX
     // our limit code is not syncronized... Does it need to be?
@@ -87,12 +87,28 @@ public abstract class BufferedServletInputStream extends ServletInputStream {
     
     private int bytesRead = 0;
     private int limit = -1;
+    private RequestAdapter reqA;
     
     public BufferedServletInputStream() {
     }
 
-    public abstract int doRead() throws IOException;
-    public abstract int doRead( byte b[], int off, int len ) throws IOException;
+    public BufferedServletInputStream( RequestAdapter reqA ) {
+	this.reqA=reqA;
+    }
+    
+    public void setRequestAdapter(RequestAdapter reqA ) {
+	this.reqA=reqA;
+    }
+    
+    public int doRead() throws IOException {
+	// assert reqA!=null
+	return reqA.doRead(); // XXX do the real "buffered" reads, this should go away
+    }
+    
+    public  int doRead( byte b[], int off, int len ) throws IOException {
+	// assert reqA!=null
+	return reqA.doRead( b, off, len );
+    }    
     
     public void setLimit(int limit) {
 	bytesRead = 0;
@@ -134,6 +150,10 @@ public abstract class BufferedServletInputStream extends ServletInputStream {
 	}
     }
     
+
+    /**
+     * @deprecated Not part of Servlet API, without it we can avoid a lot of GC.
+     */
     public String readLine() throws IOException {
 
 	// don't need to do any limit checking here

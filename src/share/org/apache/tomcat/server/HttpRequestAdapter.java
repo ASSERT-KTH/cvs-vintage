@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpRequestAdapter.java,v 1.1 1999/10/28 05:18:19 costin Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/28 05:18:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpRequestAdapter.java,v 1.2 1999/10/29 23:40:49 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/29 23:40:49 $
  *
  * ====================================================================
  *
@@ -77,12 +77,15 @@ public class HttpRequestAdapter extends RequestAdapterImpl {
         StringManager.getManager(Constants.Package);
     private Socket socket;
     private boolean moreRequests = false;
+    InputStream sin;
     
     public HttpRequestAdapter() {
         super();
     }
 
-    public void setSocket(Socket socket) {
+    public void setSocket(Socket socket) throws IOException {
+	sin = socket.getInputStream();
+	in = new BufferedServletInputStream(this);
         this.socket = socket;
     	moreRequests = true;
     }
@@ -95,12 +98,25 @@ public class HttpRequestAdapter extends RequestAdapterImpl {
         return moreRequests;
     }
     
+    public int doRead() throws IOException {
+	return sin.read();
+    }
+
+    public int doRead(byte[] b, int off, int len) throws IOException {
+	return sin.read(b, off, len);
+    }
+
     public void readNextRequest(Response response) throws IOException {
-	InputStream sin = socket.getInputStream();
-	ServletInputStreamImpl sis = new ServletInputStreamImpl(sin);
-	in=sis;
-	
-	processRequestLine(response, sis.readLine());
+	String line="";
+	// cut&paste from BufferedInputStream.
+	// XXX reuse buff, avoid creating strings 
+	byte[] buf = new byte[1024];
+	int count = in.readLine(buf, 0, buf.length);
+	if (count >= 0) {
+	    line=new String(buf, 0, count);
+	}
+
+	processRequestLine(response,line);
 
 	// XXX
 	//    return if an error was detected in processing the
@@ -113,7 +129,7 @@ public class HttpRequestAdapter extends RequestAdapterImpl {
 
 	// for 0.9, we don't have headers!
 	if(protocol!=null)
-	    headers.read(sis);
+	    headers.read(in);
 	//	processCookies(); // called later
 
 	// 	contentLength = headers.getIntHeader("content-length");

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.6 1999/10/28 17:02:56 costin Exp $
- * $Revision: 1.6 $
- * $Date: 1999/10/28 17:02:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.7 1999/10/29 23:40:51 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 1999/10/29 23:40:51 $
  *
  * ====================================================================
  *
@@ -150,12 +150,12 @@ class AJPRequestAdapter extends RequestAdapterImpl {
     
     public AJPRequestAdapter(Socket so) {
 	this.socket=so;
+	in = new BufferedServletInputStream( this );
     }
     
     protected void readNextRequest() throws IOException {
 	//	System.out.println("In AJPREquest");
 	InputStream sin = socket.getInputStream();
-	in = new HttpServletIS(sin);
 
 	Hashtable env_vars=new Hashtable();
 

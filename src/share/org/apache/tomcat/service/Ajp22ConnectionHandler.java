@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp22ConnectionHandler.java,v 1.4 1999/10/28 16:57:40 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/28 16:57:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp22ConnectionHandler.java,v 1.5 1999/10/29 23:40:52 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/10/29 23:40:52 $
  *
  * ====================================================================
  *
@@ -290,8 +290,8 @@ class Ajp22Request extends RequestAdapterImpl {
     // XXX Use setXXX instead!!!
     protected int readNextRequest() throws IOException {
 
-	Ajp22ServletIS in = new Ajp22ServletIS(proto);
-	this.in=in;
+	// not implemented in 22
+	in = new BufferedServletInputStream(this);
 
 	env_vars=new Hashtable();
 
@@ -491,25 +491,6 @@ class Ajp22Response extends Response implements Ajp22Constants {
 	//	 BuffTool.dump ( buff, pos ); // length + header
 	proto.out.write( buff, 0, pos );
      }
-}
-
-class Ajp22ServletIS extends BufferedServletInputStream {
-    private InputStream in;
-    MessageConnector proto;
-    
-    Ajp22ServletIS( MessageConnector proto) {
-	super();
-	this.proto=proto;
-	this.in = null;
-    }
-
-    public int doRead() throws IOException {
-	return in.read();
-    }
-
-    public int doRead(byte[] b, int off, int len) throws IOException {
-	return in.read(b, off, len);
-    }
 }
 
 class Ajp22ServletOS extends BufferedServletOutputStream implements Ajp22Constants { 

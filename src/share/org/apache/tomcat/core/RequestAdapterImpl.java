@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestAdapterImpl.java,v 1.3 1999/10/28 05:15:24 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/28 05:15:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestAdapterImpl.java,v 1.4 1999/10/29 23:40:46 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/29 23:40:46 $
  *
  * ====================================================================
  *
@@ -172,8 +172,14 @@ public class RequestAdapterImpl implements  RequestAdapter {
 	return remoteHost;
     }    
 
+    // you need to override this method if you want non-empty InputStream
     public  int doRead( byte b[], int off, int len ) throws IOException {
 	return -1; // not implemented - implement getInputStream 
+    }
+
+    // you need to override this method if you want non-empty InputStream
+    public int doRead() throws IOException {
+	return -1;
     }
     
     // -------------------- "cooked" info --------------------

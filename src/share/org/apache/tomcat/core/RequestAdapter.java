@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestAdapter.java,v 1.2 1999/10/28 05:15:24 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/28 05:15:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestAdapter.java,v 1.3 1999/10/29 23:40:46 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/29 23:40:46 $
  *
  * ====================================================================
  *
@@ -184,4 +184,12 @@ public interface RequestAdapter {
     public String getContentType();
 
     public  void recycle(); 
+
+
+    // XXX I hate this - but the only way to remove this method from the
+    // inteface is to implement it on top of doRead(b[]).
+    // Don't use this method if you can ( it is bad for performance !!)
+    public int doRead() throws IOException;
+    
+
 }

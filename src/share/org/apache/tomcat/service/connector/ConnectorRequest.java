@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/ConnectorRequest.java,v 1.3 1999/10/28 05:15:31 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/28 05:15:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/ConnectorRequest.java,v 1.4 1999/10/29 23:40:53 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/29 23:40:53 $
  *
  * ====================================================================
  *
@@ -76,16 +76,19 @@ import javax.servlet.http.*;
 public class ConnectorRequest extends RequestAdapterImpl {
     MsgConnector con;
     Hashtable env_vars;
-    
+
+    private InputStream in;
+    byte bodyBuff[];
+    int blen;
+    int pos;
+
     public ConnectorRequest( MsgConnector con ) {
 	super();
 	this.con=con;
-    }
+	pos=0;
+	this.in = new BufferedServletInputStream( this ); 
+   }
     
-    public void recycle() {
-	super.recycle();
-    }
-
     protected int decodeRequest(MsgBuffer msg) throws IOException {
 
 	env_vars=new Hashtable();
@@ -111,9 +114,8 @@ public class ConnectorRequest extends RequestAdapterImpl {
 	byte initialBodyChunk[] = new byte[msg.getMaxLen()];
 	int len=msg.getBytes(initialBodyChunk); // XXX reuse ? 
 
-	ConnectorServletIS in = new ConnectorServletIS(con, initialBodyChunk , len);
-	this.in=in;
-
+	bodyBuff=initialBodyChunk;
+	blen=len;
 	
 	method= (String)env_vars.get("REQUEST_METHOD");
 	protocol=(String)env_vars.get("SERVER_PROTOCOL");
@@ -145,6 +147,34 @@ public class ConnectorRequest extends RequestAdapterImpl {
 	
 	return 0;
     }    
+
+
+    public void recycle( ) {
+	super.recycle();
+	pos=0;
+    }
+    
+    public int doRead() throws IOException {
+	if( pos > blen ) {
+	    System.out.println("Read after end " + pos + " " + blen );
+	    return  -1;
+	}
+	return bodyBuff[pos++];
+    } 
+
+    public int doRead(byte[] b, int off, int len) throws IOException {
+	// XXXXXX Stupid, but the whole thing must be rewriten ( see super()! )
+	for( int i=off; i<len+off; i++) {
+	    int a=doRead();
+	    if(a==-1) {
+		System.out.println("Y");
+		return i-off;
+	    }
+	    b[i]=(byte)a;
+	}
+	System.out.println("doRead " + off + " " + len );
+	return len;
+    }
 
 }
 

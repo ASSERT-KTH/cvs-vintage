@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServerRequest.java,v 1.5 1999/10/28 05:15:28 costin Exp $
- * $Revision: 1.5 $
- * $Date: 1999/10/28 05:15:28 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServerRequest.java,v 1.6 1999/10/29 23:40:49 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 1999/10/29 23:40:49 $
  *
  * ====================================================================
  *
@@ -91,7 +91,7 @@ public class ServerRequest extends Request {
 	this.reqA=new HttpRequestAdapter();
     }
 
-    void setSocket(Socket socket) {
+    void setSocket(Socket socket) throws IOException {
 	((HttpRequestAdapter)reqA).setSocket(socket);
     }
 
