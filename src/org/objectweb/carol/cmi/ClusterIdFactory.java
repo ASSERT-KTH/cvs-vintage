@@ -39,29 +39,20 @@ public class ClusterIdFactory {
     }
 
     public static synchronized void generate() throws ClusterException {
-        startType0();
-    }
-
-    /**
-     * IDs generate by this method are 10 byte long and have the highest bit of
-     * their first byte set to zero.
-     * This property may be used to generate other types of IDs.
-     */
-    private static void startType0() throws ClusterException {
-        try {
-            InetAddress a = InetAddress.getLocalHost();
-            byte aa[] = a.getAddress();
-            startTypeIp(a);
-        } catch (UnknownHostException e) {
-            throw new ClusterException("Error in getLocalHost() : " + e.toString());
-        }
+        startTypeIp();
     }
 
     /**
      * Generate a cluster id based on a IP address.
      * @param a ip address
      */
-    private static void startTypeIp(java.net.InetAddress a) throws ClusterException {
+    private static void startTypeIp() throws ClusterException {
+        InetAddress a;
+        try {
+            a = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new ClusterException("Error in getLocalHost() : " + e.toString());
+        }
         byte aa[] = a.getAddress();
         if (aa.length != 4) {
             throw new ClusterException(
@@ -69,7 +60,7 @@ public class ClusterIdFactory {
         }
         if (aa[0] == 127) {
             throw new ClusterException(
-                "Loopback IP address not allowed in ClusterIdFactory");
+                "Loopback IP address not allowed in ClusterIdFactory : fix /etc/hosts (or equivalent) so that java.net.InetAddress.getLocalHost() does not return 127.x.x.x");
         }
         try {
             ss = new java.net.ServerSocket(0, 1, a);
