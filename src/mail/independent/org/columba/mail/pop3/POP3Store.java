@@ -247,7 +247,7 @@ public class POP3Store {
     PasswordDialog dialog;
     boolean login = false;
 
-    String password;
+    String password = null;
     String user = new String("");
     String method = new String("");
     boolean save = false;
