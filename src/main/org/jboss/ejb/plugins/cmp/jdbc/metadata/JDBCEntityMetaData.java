@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -186,9 +186,9 @@ public final class JDBCEntityMetaData {
    private final int fetchSize;
 
    /**
-    * The create-entity-command class
+    * entity command meta data
     */
-   private final Class createEntityCommand;
+   private final JDBCEntityCommandMetaData entityCommand;
 
    /**
     * Constructs jdbc entity meta data defined in the jdbcApplication and 
@@ -334,7 +334,7 @@ public final class JDBCEntityMetaData {
       readOnly = false;
       readTimeOut = -1;
       readAhead = JDBCReadAheadMetaData.DEFAULT;
-      createEntityCommand = null;
+      entityCommand = null;
    }
 
    /**
@@ -618,73 +618,42 @@ public final class JDBCEntityMetaData {
          queries.putAll(newQueries);
       }
 
-      // create entity command
-      String createEntityCommandStr = MetaData.
-         getOptionalChildContent(element, "create-entity-command");
-      if(createEntityCommandStr != null) {
+      // get the entity command for this entity
+      Element entityCommandEl = 
+            MetaData.getOptionalChild(element, "entity-command");
 
-         // look at datasource mapping first
-         JDBCEntityCommandMetaData entityCommandMetaData = null;
-         if(datasourceMapping != null) {
-            entityCommandMetaData = datasourceMapping.
-               getEntityCommand( createEntityCommandStr );
+      if(entityCommandEl != null) {
+
+         // command name in xml
+         String entityCommandName = entityCommandEl.getAttribute( "name" );
+
+         // default entity command
+         // The logic to assign the default value:
+         // - if entity-command isn't specified in the entity element,
+         //   then it is assigned from the defaults;
+         // - if command name in entity equals command name in defaults
+         //   then it is assigned from the defaults
+         // - else try to find a command in entity-commands with the command
+         //   name specified in the entity.
+         //   if the match is found it'll be the default, else default is null
+         JDBCEntityCommandMetaData defaultEntityCommand =
+            defaultValues.getEntityCommand();
+
+         if( (defaultEntityCommand == null)
+            || ( !entityCommandName.equals(
+               defaultEntityCommand.getCommandName()) ) ) {
+            defaultEntityCommand = jdbcApplication.getEntityCommandByName(
+                                      entityCommandName );
          }
 
-         if(entityCommandMetaData != null) {
-            createEntityCommand = entityCommandMetaData.getCommandClass();
+         if(defaultEntityCommand != null) {
+            entityCommand = new JDBCEntityCommandMetaData( entityCommandEl,
+                                   defaultEntityCommand );
          } else {
-            Element entityCommands = MetaData.
-               getOptionalChild(element, "entity-commands");
-            // it's possible it's null in case of entity element
-            if( entityCommands != null ) {
-
-               // iterate through the commands
-               Element entityCommand = null;
-               for(Iterator iter = MetaData.getChildrenByTagName(
-                  entityCommands, "entity-command"); iter.hasNext();) {
-          
-                  Element command = (Element) iter.next();
-                  String commandName = MetaData.getUniqueChildContent(
-                     command, "command-name");
-                  if(createEntityCommandStr.equals(commandName)) {
-                     entityCommand = command;
-                     break;
-                  }
-               }
-
-               // check whether the command found
-               if( entityCommand == null ) {
-                  // set to default in case the element passed in is entity
-                  createEntityCommand = defaultValues.getCreateEntityCommand();
-                  // the command specified in defaults or entity doesn't
-                  // exist in defaults
-                  if(createEntityCommand == null) {
-                     throw new DeploymentException("entity command not found: "
-                        + createEntityCommandStr);
-                  }
-               } else {
-                  String commandClass = MetaData.getUniqueChildContent(
-                     entityCommand, "command-class");
-                  if(commandClass == null) {
-                     throw new DeploymentException(
-                        "command-class isn't specified for command: "
-                        + createEntityCommandStr);
-                  }
-                
-                  try {
-                     createEntityCommand = getClassLoader().
-                        loadClass( commandClass );
-                  } catch (ClassNotFoundException e) {
-                     throw new DeploymentException(
-                     "command-class not found: " + commandClass);
-                  }
-               }
-            } else {
-               createEntityCommand = defaultValues.getCreateEntityCommand();
-            }
+            entityCommand = new JDBCEntityCommandMetaData( entityCommandEl );
          }
       } else {
-         createEntityCommand = defaultValues.getCreateEntityCommand();
+         entityCommand = defaultValues.getEntityCommand();
       }
    }
 
@@ -1056,6 +1025,14 @@ public final class JDBCEntityMetaData {
    public Class getPrimaryKeyClass() {
       return primaryKeyClass;
    }
+
+   /**
+    * Gets the entity command metadata
+    * @return the entity command metadata
+    */
+   public JDBCEntityCommandMetaData getEntityCommand() {
+      return entityCommand;
+   }
    
    /**
     * Is this entity read only? A readonly entity will never be stored into
@@ -1097,14 +1074,6 @@ public final class JDBCEntityMetaData {
     */
    public JDBCReadAheadMetaData getReadAhead() {
       return readAhead;
-   }
-
-   /**
-    * Gets the create entity command class
-    * @return create entity command class
-    */
-   public Class getCreateEntityCommand() {
-      return createEntityCommand;
    }
 
    /**
