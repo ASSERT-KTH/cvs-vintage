@@ -39,7 +39,7 @@
     <property name="torque.java.dir" value="${build.src.scarab}/torque"/>
     
     <property name="torquedoc.destdir" value="${basedir}/target/torquedoc"/>
-    <property name="scarab.war.file.dir" value="${build.webapps}"/>
+    <property name="scarab.war.file.dir" value="${build.dir}"/>
     <property name="scarab.war.file.name" value="scarab.war"/>
     <property name="scarab.war.file" value="${scarab.war.file.dir}/${scarab.war.file.name}"/>
 
