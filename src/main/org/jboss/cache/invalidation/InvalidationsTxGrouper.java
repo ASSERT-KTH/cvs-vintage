@@ -8,14 +8,18 @@
 package org.jboss.cache.invalidation;
 
 import javax.transaction.Transaction;
+
 import org.jboss.logging.Logger;
+import org.jboss.tm.TransactionLocal;
+
 import java.util.HashMap;
 import javax.transaction.Synchronization;
-import org.jboss.cache.invalidation.InvalidationGroup;
+
 import java.io.Serializable;
 import java.util.HashSet;
-import javax.transaction.Status;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Utility class that can be used to group invalidations in a set of
@@ -25,7 +29,7 @@ import java.util.Iterator;
  * - by transaction
  * - by InvalidationManager instance
  * - by InvalidationGroup
- *
+ * <p/>
  * This object will manage the transaction registering by itself if not
  * already done.
  * Thus, once a transaction commits, it will prepare a set of BatchInvalidation
@@ -33,204 +37,178 @@ import java.util.Iterator;
  * for each InvalidationGroup. Then it will call the IM.batchInvalidation
  * method.
  *
+ * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
+ * @version $Revision: 1.5 $
  * @see InvalidationManagerMBean
  * @see BatchInvalidation
- * @see InvalidationsTxGrouper.InvalidationSynchronization
- *
- * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.4 $
- *
- * <p><b>Revisions:</b>
- *
- * <p><b>26 septembre 2002 Sacha Labourey:</b>
- * <ul>
- * <li> First implementation </li>
- * </ul>
+ * @see InvalidatorSynchronization
  */
-
 public class InvalidationsTxGrouper
 {
-   
+
    // Constants -----------------------------------------------------
    
    // Attributes ----------------------------------------------------
    
    // Static --------------------------------------------------------
    
-   protected static HashMap synchronizations = new HashMap();
-   protected static Logger log = Logger.getLogger(InvalidationsTxGrouper.class);
+   private static final TransactionLocal synchLocal = new TransactionLocal();
+   static Logger log = Logger.getLogger(InvalidationsTxGrouper.class);
 
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
    
-   public static void registerInvalidationSynchronization(Transaction tx, InvalidationGroup group, Serializable key) throws Exception
+   public static void registerInvalidationSynchronization(Transaction tx, InvalidationGroup group, Serializable key)
+      throws Exception
    {
-      InvalidatorSynchronization synch = null;
-      synchronized(synchronizations)
+      InvalidatorSynchronization synch = (InvalidatorSynchronization) synchLocal.get(tx);
+      if(synch == null)
       {
-         synch = (InvalidatorSynchronization)synchronizations.get(tx);
-         if (synch == null)
-         {
-            synch = new InvalidatorSynchronization(tx);
-            tx.registerSynchronization(synch);
-         }
+         synch = new InvalidatorSynchronization(tx);
+         synchLocal.set(tx, synch);
+         tx.registerSynchronization(synch);
       }
       synch.addInvalidation(group, key);
    }
-
-   // Z implementation ----------------------------------------------
-   
-   // Y overrides ---------------------------------------------------
-   
-   // Package protected ---------------------------------------------
-   
-   // Protected -----------------------------------------------------
-   
-   // Private -------------------------------------------------------
-   
-   // Inner classes -------------------------------------------------
-
 }
 
-    class InvalidatorSynchronization
-      implements Synchronization
+class InvalidatorSynchronization
+   implements Synchronization
+{
+   /**
+    * The transaction we follow.
+    */
+   protected Transaction tx;
+
+   /**
+    * The context we manage.
+    */
+   protected HashMap ids = new HashMap();
+
+   /**
+    * Create a new isynchronization instance.
+    */
+   InvalidatorSynchronization(Transaction tx)
    {
-      /**
-       *  The transaction we follow.
-       */
-      protected Transaction tx;
-  
-      /**
-       *  The context we manage.
-       */
-      protected HashMap ids = new HashMap();
-  
-      /**
-       *  Create a new isynchronization instance.
-       */
-      InvalidatorSynchronization(Transaction tx)
+      this.tx = tx;
+   }
+
+   public void addInvalidation(InvalidationGroup group, Serializable key)
+   {
+      InvalidationManagerMBean im = group.getInvalidationManager();
+
+      // the grouping is (in order): by InvalidationManager, by InvalidationGroup
+      //
+
+      Map relatedInvalidationMgr;
+      synchronized(ids)
       {
-         this.tx = tx;
+         relatedInvalidationMgr = (HashMap) ids.get(im);
+         if(relatedInvalidationMgr == null)
+         {
+            relatedInvalidationMgr = new HashMap();
+            ids.put(im, relatedInvalidationMgr);
+         }
       }
 
-      public void addInvalidation(InvalidationGroup group, Serializable key)
+      Set relatedInvalidations;
+      synchronized(relatedInvalidationMgr)
       {
-         InvalidationManagerMBean im = group.getInvalidationManager ();
-
-         // the grouping is (in order): by InvalidationManager, by InvalidationGroup
-         //
-         HashMap relatedInvalidationMgr = (HashMap)ids.get(im);         
-         if (relatedInvalidationMgr == null)
+         relatedInvalidations = (HashSet) relatedInvalidationMgr.get(group);
+         if(relatedInvalidations == null)
          {
-            synchronized (ids)
-            {
-               relatedInvalidationMgr = (HashMap)ids.get(im); // to avoid race conditions
-               if (relatedInvalidationMgr == null)
-               {
-                  relatedInvalidationMgr = new HashMap ();
-                  ids.put (im, relatedInvalidationMgr);
-               }               
-            }
+            relatedInvalidations = new HashSet();
+            relatedInvalidationMgr.put(group, relatedInvalidations);
          }
-         
-         HashSet relatedInvalidations = (HashSet)relatedInvalidationMgr.get(group);         
-         if (relatedInvalidations == null)
-         {
-            synchronized (relatedInvalidationMgr)
-            {
-               relatedInvalidations = (HashSet)relatedInvalidationMgr.get(group); // to avoid race conditions
-               if (relatedInvalidations == null)
-               {
-                  relatedInvalidations = new HashSet ();
-                  relatedInvalidationMgr.put (group, relatedInvalidations);
-               }               
-            }
-         }
-         
-         relatedInvalidations.add(key);
       }
-  
-      // Synchronization implementation -----------------------------
-  
-      
-      public void beforeCompletion()
+
+      relatedInvalidations.add(key);
+   }
+
+   // Synchronization implementation -----------------------------
+
+   public void beforeCompletion()
+   {
+   }
+
+
+   public void afterCompletion(int status)
+   {
+      // This is an independent point of entry. We need to make sure the
+      // thread is associated with the right context class loader
+      //
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+
+      try
       {
-         // This is an independent point of entry. We need to make sure the
-         // thread is associated with the right context class loader
-         //
-         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-         
          try
          {
-            try
-            {
-               sendBatchInvalidations();
-            }
-            catch (Exception ex)
-            {
-               InvalidationsTxGrouper.log.warn("Failed sending invalidations messages", ex);
-            }
-            synchronized (InvalidationsTxGrouper.synchronizations)
-            {
-               InvalidationsTxGrouper.synchronizations.remove(tx);
-            }
+            sendBatchInvalidations();
          }
-         finally
+         catch(Exception ex)
          {
-            Thread.currentThread().setContextClassLoader(oldCl);
+            InvalidationsTxGrouper.log.warn("Failed sending invalidations messages", ex);
          }
       }
-      
-  
-      public void afterCompletion(int status)
+      finally
       {
-         // complete
+         Thread.currentThread().setContextClassLoader(oldCl);
       }
-      
-      protected void sendBatchInvalidations()
-      {
-         // we iterate over all InvalidationManager involved
-         //
-         Iterator imIter = ids.keySet ().iterator ();
-         while (imIter.hasNext ())
-         {
-            InvalidationManagerMBean im = (InvalidationManagerMBean)imIter.next ();
-            
-            // get associated groups
-            //            
-            HashMap relatedInvalidationMgr = (HashMap)ids.get(im);     
-            
-            BatchInvalidation[] bomb = new BatchInvalidation[relatedInvalidationMgr.size ()];
-            
-            Iterator groupsIter = relatedInvalidationMgr.keySet ().iterator ();
-            int i=0;
-            while (groupsIter.hasNext ())
-            {
-               InvalidationGroup group = (InvalidationGroup)groupsIter.next ();
-               HashSet sourceIds = (HashSet)relatedInvalidationMgr.get (group);
-               
-               Serializable[] ids = new Serializable[sourceIds.size ()];
-               sourceIds.toArray (ids);
-               BatchInvalidation batch = new BatchInvalidation (ids, group.getGroupName ());
-               
-               bomb[i] = batch;
-               
-               i++;
-            }
-            
-            // do the batch-invalidation for this IM
-            //
-            im.batchInvalidate (bomb);
-            
-         }
-         
-         // Help the GC to remove this big structure
-         //
-         this.ids = null;
-         
-      }
-      
    }
-   
+
+   protected void sendBatchInvalidations()
+   {
+      boolean trace = InvalidationsTxGrouper.log.isTraceEnabled();
+      if(trace)
+      {
+         InvalidationsTxGrouper.log.trace("Begin sendBatchInvalidations, tx=" + tx);
+      }
+      // we iterate over all InvalidationManager involved
+      //
+      Iterator imIter = ids.keySet().iterator();
+      while(imIter.hasNext())
+      {
+         InvalidationManagerMBean im = (InvalidationManagerMBean) imIter.next();
+
+         // get associated groups
+         //
+         HashMap relatedInvalidationMgr = (HashMap) ids.get(im);
+
+         BatchInvalidation[] bomb = new BatchInvalidation[relatedInvalidationMgr.size()];
+
+         Iterator groupsIter = relatedInvalidationMgr.keySet().iterator();
+         int i = 0;
+         while(groupsIter.hasNext())
+         {
+            InvalidationGroup group = (InvalidationGroup) groupsIter.next();
+            HashSet sourceIds = (HashSet) relatedInvalidationMgr.get(group);
+            String groupName = group.getGroupName();
+            if(trace)
+            {
+               InvalidationsTxGrouper.log.trace("Adding ids to bomb(" + groupName + "): " + sourceIds);
+            }
+            Serializable[] ids = new Serializable[sourceIds.size()];
+            sourceIds.toArray(ids);
+            BatchInvalidation batch = new BatchInvalidation(ids, groupName);
+
+            bomb[i] = batch;
+
+            i++;
+         }
+
+         // do the batch-invalidation for this IM
+         //
+         im.batchInvalidate(bomb);
+      }
+      if(trace)
+      {
+         InvalidationsTxGrouper.log.trace("End sendBatchInvalidations, tx=" + tx);
+      }
+
+      // Help the GC to remove this big structure
+      //
+      this.ids = null;
+   }
+}
