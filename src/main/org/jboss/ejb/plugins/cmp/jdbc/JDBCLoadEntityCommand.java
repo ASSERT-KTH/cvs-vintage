@@ -41,7 +41,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class JDBCLoadEntityCommand {
    private final JDBCStoreManager manager;
@@ -235,9 +235,9 @@ public class JDBCLoadEntityCommand {
                6 + tableName.length() +
                7 + whereClause.length());
 
-         sql.append("SELECT ").append(columnNamesClause);
+         sql.append("SELECT ").append(columnNamesClause.toString());
          sql.append(" FROM ").append(tableName);
-         sql.append(" WHERE ").append(whereClause);
+         sql.append(" WHERE ").append(whereClause.toString());
          return sql.toString();
       }
  

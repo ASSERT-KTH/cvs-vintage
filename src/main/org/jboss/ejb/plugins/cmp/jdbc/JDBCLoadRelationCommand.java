@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JDBCLoadRelationCommand {
    private final JDBCStoreManager manager;
@@ -288,9 +288,9 @@ public class JDBCLoadRelationCommand {
                6 + fromClause.length() +
                7 + whereClause.length());
 
-         sql.append("SELECT ").append(columnNamesClause);
-         sql.append(" FROM ").append(fromClause);
-         sql.append(" WHERE ").append(whereClause);
+         sql.append("SELECT ").append(columnNamesClause.toString());
+         sql.append(" FROM ").append(fromClause.toString());
+         sql.append(" WHERE ").append(whereClause.toString());
          return sql.toString();
       }
    }
