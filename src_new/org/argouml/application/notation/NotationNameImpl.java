@@ -1,4 +1,4 @@
-// $Id: NotationNameImpl.java,v 1.22 2005/01/09 14:58:04 linus Exp $
+// $Id: NotationNameImpl.java,v 1.23 2005/02/16 21:06:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -163,11 +163,6 @@ public class NotationNameImpl
         return getTitle();
     }
 
-    /*public String toString() {
-        if (_version == null) return "{NotationNameImpl:" + _name + "}";
-        return "{NotationNameImpl:" + _name + " version " + _version + "}";
-    }*/
-
     /**
      * @param k1 first part of the given name
      * @param k2 2nd part of the given name
@@ -180,7 +175,7 @@ public class NotationNameImpl
         if (k2.equals("")) {
             return k1;
         }
-	return k1 + "." + k2;
+	return k1 + " " + k2;
     }
 
     private static void fireEvent(int eventType, NotationName nn) {
@@ -217,11 +212,11 @@ public class NotationNameImpl
     }
 
     /**
-     * Finds a NotationName matching the configuration string.
-     * Returns null if no match.
+     * Finds a NotationName matching the string matching 
+     * the name of the notation. Returns null if no match.
      *
-     * @param s the configuration string
-     * @return the name of the notation or null
+     * @param s the name string
+     * @return the notationName or null
      */
     public static NotationName findNotation(String s) {
         ListIterator iterator = notations.listIterator();

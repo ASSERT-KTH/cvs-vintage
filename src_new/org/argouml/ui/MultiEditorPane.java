@@ -1,4 +1,4 @@
-// $Id: MultiEditorPane.java,v 1.45 2005/01/29 15:36:24 mvw Exp $
+// $Id: MultiEditorPane.java,v 1.46 2005/02/16 21:06:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,8 +50,8 @@ import org.tigris.swidgets.Horizontal;
 /**
  * The upper right pane in the ArgoUML user interface.  It may have several
  * tabs with different kinds of "major" editors that allow the user to
- * edit whatever is selected in the NavigatorPane.
- * Currently, there is only the diagram tab.
+ * edit whatever is selected in the ExplorerPane. <p>
+ * Currently, there is only the Diagram tab.
  */
 public class MultiEditorPane
     extends JPanel
