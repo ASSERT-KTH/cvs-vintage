@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.8 2002/07/22 06:20:08 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.9 2002/07/25 12:54:18 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -97,15 +97,8 @@ public class UMLStateDiagram extends UMLDiagram {
  *  will load properly.
  */
   public UMLStateDiagram() {
-  	String name = null;
-  	Object[] args = {name};
-  	do {
-        name = "state diagram " + _StateDiagramSerial;
-        _StateDiagramSerial++;
-        args[0] = name;
-    }
-    while (vetoCheck("name", args));
-    try { setName(name); } catch (PropertyVetoException pve) { }
+  	
+    try { setName(getNewDiagramName()); } catch (PropertyVetoException pve) { }
   }
 
   public UMLStateDiagram(MClass m, MStateMachine sm) {
@@ -224,6 +217,18 @@ public MStateMachine getStateMachine() {
     _toolBar.addSeparator();
 
     _toolBar.add(_diagramName);
+  }
+  
+  protected static String getNewDiagramName() {
+  	String name = null;
+  	Object[] args = {name};
+  	do {
+        name = "state diagram " + _StateDiagramSerial;
+        _StateDiagramSerial++;
+        args[0] = name;
+    }
+    while (TheInstance.vetoCheck("state", args));
+    return name;
   }
 
 } /* end class UMLStateDiagram */
