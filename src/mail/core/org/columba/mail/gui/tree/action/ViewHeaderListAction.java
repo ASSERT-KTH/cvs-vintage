@@ -15,44 +15,44 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.action;
 
-import java.awt.event.ActionEvent;
-
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 
+import java.awt.event.ActionEvent;
+
+
 public class ViewHeaderListAction extends AbstractColumbaAction {
-	/**
-	 * @param controller
-	 */
-	public ViewHeaderListAction(FrameMediator controller) {
-		super(controller, "ViewHeaderListAction");
-	}
+    /**
+ * @param controller
+ */
+    public ViewHeaderListAction(FrameMediator controller) {
+        super(controller, "ViewHeaderListAction");
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] references=
-			(FolderCommandReference[]) getFrameMediator()
-				.getSelectionManager()
-				.getSelection("mail.tree");
+    /* (non-Javadoc)
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] references = (FolderCommandReference[]) getFrameMediator()
+                                                                             .getSelectionManager()
+                                                                             .getSelection("mail.tree");
 
-		if (references.length == 1) {
-			if ((references[0].getFolder() instanceof Folder)) {
-				MainInterface.processor.addOp(
-					new ViewHeaderListCommand(getFrameMediator(), references));
-			} else {
-				// show empty message list
-				TableController c=
-					((TableViewOwner) getFrameMediator()).getTableController();
-				c.clear();
-			}
-		}
-	}
+        if (references.length == 1) {
+            if ((references[0].getFolder() instanceof Folder)) {
+                MainInterface.processor.addOp(new ViewHeaderListCommand(
+                        getFrameMediator(), references));
+            } else {
+                // show empty message list
+                TableController c = ((TableViewOwner) getFrameMediator()).getTableController();
+                c.clear();
+            }
+        }
+    }
 }

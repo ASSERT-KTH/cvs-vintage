@@ -57,8 +57,8 @@ public class TreeSelectionHandler extends SelectionHandler
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.util.SelectionHandler#getSelection()
-     */
+ * @see org.columba.core.gui.util.SelectionHandler#getSelection()
+ */
     public DefaultCommandReference[] getSelection() {
         FolderCommandReference[] references = new FolderCommandReference[selectedFolders.size()];
         ListIterator it = selectedFolders.listIterator();
@@ -72,16 +72,16 @@ public class TreeSelectionHandler extends SelectionHandler
     }
 
     /* (non-Javadoc)
-     * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
-     */
+ * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
+ */
     public void valueChanged(TreeSelectionEvent e) {
         // BUGFIX but don't know why that bug occurs 
         if (e.getPath() == null) {
             return;
         }
 
-		// If the tree is in a DND action then we dont need to update all
-		// listeners, since this only a temporary folder selection.
+        // If the tree is in a DND action then we dont need to update all
+        // listeners, since this only a temporary folder selection.
         if (view.isInDndAction()) {
             return;
         }

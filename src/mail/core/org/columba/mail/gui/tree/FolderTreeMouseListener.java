@@ -56,15 +56,15 @@ public class FolderTreeMouseListener extends MouseAdapter {
         }
 
         /*
-        if ( e.getClickCount() == 1 )
-        {
-            treeController.selectFolder();
-        }
-        else if ( e.getClickCount() == 2 )
-        {
-            treeController.expandImapRootFolder();
-        }
-        */
+if ( e.getClickCount() == 1 )
+{
+    treeController.selectFolder();
+}
+else if ( e.getClickCount() == 2 )
+{
+    treeController.expandImapRootFolder();
+}
+*/
     }
 
     private void maybeShowPopup(MouseEvent e) {

@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.util;
 
+
 /**
  * @version         1.0
  * @author
@@ -37,8 +38,8 @@ public class CTransferableTreePath implements Transferable {
     private DataFlavor[] _flavors = { TREEPATH_FLAVOR };
 
     /**
-    * Constructs a transferrable tree path object for the specified path.
-    */
+* Constructs a transferrable tree path object for the specified path.
+*/
     public CTransferableTreePath(TreePath path) {
         _path = path;
     }

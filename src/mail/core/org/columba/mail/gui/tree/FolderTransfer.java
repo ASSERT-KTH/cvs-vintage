@@ -29,14 +29,13 @@ import java.io.IOException;
  * @author redsolo
  */
 public class FolderTransfer implements Transferable {
-
     /** The only <code>DataFlavor</code> that this transfer allows. */
     public static DataFlavor FLAVOR;
 
     static {
         try {
-            FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType
-                    + "-" + FolderTransfer.class.getName());
+            FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType +
+                    "-" + FolderTransfer.class.getName());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -45,24 +44,24 @@ public class FolderTransfer implements Transferable {
     private Folder folderReference;
 
     /**
-     * Creates a transferable for transfering folders.
-     * @param folder the folder that is being transfered.
-     */
+ * Creates a transferable for transfering folders.
+ * @param folder the folder that is being transfered.
+ */
     public FolderTransfer(Folder folder) {
         folderReference = folder;
     }
 
     /**
-     * Returns the folder reference for this transfer.
-     * @return a Folder
-     */
+ * Returns the folder reference for this transfer.
+ * @return a Folder
+ */
     public Folder getFolderReference() {
         return folderReference;
     }
 
     /** {@inheritDoc} */
     public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[] {FLAVOR};
+        return new DataFlavor[] { FLAVOR };
     }
 
     /** {@inheritDoc} */
@@ -71,8 +70,8 @@ public class FolderTransfer implements Transferable {
     }
 
     /** {@inheritDoc} */
-    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-
+    public Object getTransferData(DataFlavor flavor)
+        throws UnsupportedFlavorException, IOException {
         if (!isDataFlavorSupported(flavor)) {
             throw new UnsupportedFlavorException(flavor);
         }

@@ -41,9 +41,9 @@ import java.awt.event.ActionEvent;
 public class FolderOptionsAction extends AbstractColumbaAction
     implements SelectionListener {
     /**
-     * @param frameMediator
-     * @param name
-     */
+ * @param frameMediator
+ * @param name
+ */
     public FolderOptionsAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
@@ -59,8 +59,8 @@ public class FolderOptionsAction extends AbstractColumbaAction
     }
 
     /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
     public void actionPerformed(ActionEvent evt) {
         // it is safe here to cast to AbstractMailFrameControlller
         FolderCommandReference[] r = (FolderCommandReference[]) ((AbstractMailFrameController) frameMediator).getTreeSelection();
@@ -69,7 +69,8 @@ public class FolderOptionsAction extends AbstractColumbaAction
         FolderTreeNode folder = r[0].getFolder();
 
         // cast to Folder
-        new FolderOptionsDialog((Folder) folder, (AbstractMailFrameController) frameMediator);
+        new FolderOptionsDialog((Folder) folder,
+            (AbstractMailFrameController) frameMediator);
     }
 
     public void selectionChanged(SelectionChangedEvent e) {

@@ -41,7 +41,8 @@ import javax.swing.KeyStroke;
  *
  * @author Frederik
  */
-public class RenameFolderAction extends AbstractColumbaAction implements SelectionListener {
+public class RenameFolderAction extends AbstractColumbaAction
+    implements SelectionListener {
     public RenameFolderAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
@@ -63,7 +64,8 @@ public class RenameFolderAction extends AbstractColumbaAction implements Selecti
     public void actionPerformed(ActionEvent evt) {
         FolderCommandReference[] r = (FolderCommandReference[]) ((AbstractMailFrameController) frameMediator).getTreeSelection();
 
-        new FolderOptionsDialog((Folder) r[0].getFolder(), true, (AbstractMailFrameController) frameMediator);
+        new FolderOptionsDialog((Folder) r[0].getFolder(), true,
+            (AbstractMailFrameController) frameMediator);
     }
 
     public void selectionChanged(SelectionChangedEvent evt) {

@@ -38,9 +38,9 @@ public class CreateSubFolderCommand extends Command {
     private Hashtable attributes;
 
     /**
-     * Constructor for CreateSubFolderCommand.
-     * @param references
-     */
+ * Constructor for CreateSubFolderCommand.
+ * @param references
+ */
     public CreateSubFolderCommand(DefaultCommandReference[] references) {
         super(references);
 
@@ -51,8 +51,8 @@ public class CreateSubFolderCommand extends Command {
     }
 
     /**
-     * @see org.columba.core.command.Command#updateGUI()
-     */
+ * @see org.columba.core.command.Command#updateGUI()
+ */
     public void updateGUI() throws Exception {
         if (success) {
             MailInterface.treeModel.nodeStructureChanged(parentFolder);
@@ -60,17 +60,18 @@ public class CreateSubFolderCommand extends Command {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         parentFolder = ((FolderCommandReference) getReferences()[0]).getFolder();
 
         String name = ((FolderCommandReference) getReferences()[0]).getFolderName();
 
         /*
-        attributes = parentFolder.getAttributes();
-        attributes.put("name", name);
-        */
+attributes = parentFolder.getAttributes();
+attributes.put("name", name);
+*/
         try {
             FolderTreeNode subFolder = FolderFactory.getInstance()
                                                     .createDefaultChild(parentFolder,
@@ -88,14 +89,14 @@ public class CreateSubFolderCommand extends Command {
     }
 
     /**
-     * @see org.columba.core.command.Command#undo(Worker)
-     */
+ * @see org.columba.core.command.Command#undo(Worker)
+ */
     public void undo(Worker worker) throws Exception {
     }
 
     /**
-     * @see org.columba.core.command.Command#undo(Worker)
-     */
+ * @see org.columba.core.command.Command#undo(Worker)
+ */
     public void redo(Worker worker) throws Exception {
     }
 }

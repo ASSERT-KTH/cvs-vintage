@@ -17,15 +17,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.action;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
-
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
@@ -35,6 +31,12 @@ import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+
 /**
  * Move selected folder down for one row.
  * <p>
@@ -42,73 +44,64 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author fdietz
  */
-public class MoveDownAction
-	extends AbstractColumbaAction
-	implements SelectionListener {
+public class MoveDownAction extends AbstractColumbaAction
+    implements SelectionListener {
+    /**
+ * @param frameMediator
+ * @param name
+ */
+    public MoveDownAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_folder_movedown"));
+        setEnabled(false);
 
-	/**
-	 * @param frameMediator
-	 * @param name
-	 */
-	public MoveDownAction(FrameMediator frameMediator) {
-		super(
-			frameMediator,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_movedown"));
-		setEnabled(false);
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, ActionEvent.ALT_MASK));
 
-		// shortcut key
-		putValue(
-			ACCELERATOR_KEY,
-			KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, ActionEvent.ALT_MASK));
+        ((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
+    }
 
-		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
-	}
+    /**
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
+    public void actionPerformed(ActionEvent arg0) {
+        FolderCommandReference[] r = (FolderCommandReference[]) ((MailFrameMediator) frameMediator).getTreeSelection();
 
-	/**
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-		FolderCommandReference[] r =
-			(FolderCommandReference[]) ((MailFrameMediator) frameMediator)
-				.getTreeSelection();
+        FolderTreeNode folder = r[0].getFolder();
 
-		FolderTreeNode folder = r[0].getFolder();
+        int newIndex = folder.getParent().getIndex(folder);
+        newIndex = newIndex + 1;
+        ((FolderTreeNode) folder.getParent()).insert(folder, newIndex);
 
-		int newIndex = folder.getParent().getIndex(folder);
-		newIndex = newIndex + 1;
-		((FolderTreeNode) folder.getParent()).insert(folder, newIndex);
+        MailInterface.treeModel.nodeStructureChanged(folder.getParent());
+    }
 
-		MailInterface.treeModel.nodeStructureChanged(folder.getParent());
+    /**
+ * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+ */
+    public void selectionChanged(SelectionChangedEvent e) {
+        if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+            FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
-	}
+            if ((folder != null) && folder instanceof Folder) {
+                FolderItem item = folder.getFolderItem();
 
-	/**
-	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-	 */
-	public void selectionChanged(SelectionChangedEvent e) {
-		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-			FolderTreeNode folder =
-				((TreeSelectionChangedEvent) e).getSelected()[0];
+                if (item.get("property", "accessrights").equals("user")) {
+                    int index = folder.getParent().getIndex(folder);
 
-			if ((folder != null) && folder instanceof Folder) {
-				FolderItem item = folder.getFolderItem();
-
-				if (item.get("property", "accessrights").equals("user")) {
-					int index = folder.getParent().getIndex(folder);
-					if (index < folder.getParent().getChildCount() - 1)
-						setEnabled(true);
-					else
-						setEnabled(false);
-				} else {
-					setEnabled(false);
-				}
-			}
-		} else {
-			setEnabled(false);
-		}
-	}
-
+                    if (index < (folder.getParent().getChildCount() - 1)) {
+                        setEnabled(true);
+                    } else {
+                        setEnabled(false);
+                    }
+                } else {
+                    setEnabled(false);
+                }
+            }
+        } else {
+            setEnabled(false);
+        }
+    }
 }

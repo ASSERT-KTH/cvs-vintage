@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.util;
 
+
 /**
  * @version         1.0
  * @author

@@ -23,20 +23,20 @@ public class TreeMenu extends MailContextMenu {
     //protected FrameController frameMediator;
 
     /**
-     *
-     */
+ *
+ */
     public TreeMenu(FrameMediator frameController) {
         super(frameController, "org/columba/mail/action/tree_contextmenu.xml");
 
         /*
-        this.frameMediator = frameMediator;
+this.frameMediator = frameMediator;
 
-        menuGenerator =
-                new PopupMenuGenerator(
-                        frameMediator,
-                        "org/columba/mail/action/tree_contextmenu.xml");
-        menuGenerator.createPopupMenu(this);
-        */
+menuGenerator =
+        new PopupMenuGenerator(
+                frameMediator,
+                "org/columba/mail/action/tree_contextmenu.xml");
+menuGenerator.createPopupMenu(this);
+*/
     }
 
     public void extendMenuFromFile(String path) {

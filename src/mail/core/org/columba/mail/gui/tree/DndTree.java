@@ -293,14 +293,14 @@ public class DndTree extends JTree implements DragSourceListener,
     }
 
     /*
-     * // Use this method if you want to see the boundaries of the //
-     * autoscroll active region. Toss it out, otherwise. public void
-     * paintComponent(Graphics g) { super.paintComponent(g); Rectangle raOuter =
-     * getBounds(); Rectangle raInner = getParent().getBounds();
-     * g.setColor(Color.red); g.drawRect(-raOuter.x + 12, -raOuter.y + 12,
-     * raInner.width - 24, raInner.height - 24); }
-     *
-     */
+ * // Use this method if you want to see the boundaries of the //
+ * autoscroll active region. Toss it out, otherwise. public void
+ * paintComponent(Graphics g) { super.paintComponent(g); Rectangle raOuter =
+ * getBounds(); Rectangle raInner = getParent().getBounds();
+ * g.setColor(Color.red); g.drawRect(-raOuter.x + 12, -raOuter.y + 12,
+ * raInner.width - 24, raInner.height - 24); }
+ *
+ */
 
     //	TreeModelListener interface...
     public void treeNodesChanged(TreeModelEvent e) {
@@ -413,8 +413,8 @@ public class DndTree extends JTree implements DragSourceListener,
         }
 
         /**
-         * This is where the ghost image is drawn
-         */
+ * This is where the ghost image is drawn
+ */
         public void dragOver(DropTargetDragEvent e) {
             // Even if the mouse is not moving, this method is still invoked 10
             // times per second
@@ -495,10 +495,10 @@ public class DndTree extends JTree implements DragSourceListener,
             _raGhost = _raGhost.createUnion(_raCueLine);
 
             /*
-             * // Do this if you want to prohibit dropping onto the drag source
-             * if (path.equals(_pathSource)) e.rejectDrag(); else
-             * e.acceptDrag(e.getDropAction());
-             */
+ * // Do this if you want to prohibit dropping onto the drag source
+ * if (path.equals(_pathSource)) e.rejectDrag(); else
+ * e.acceptDrag(e.getDropAction());
+ */
         }
 
         public void dropActionChanged(DropTargetDragEvent e) {
@@ -631,19 +631,19 @@ public class DndTree extends JTree implements DragSourceListener,
             }
 
             /*
-             * // Do this if you want to prohibit dropping onto the drag
-             * source... Point pt = e.getLocation(); TreePath path =
-             * getClosestPathForLocation(pt.x, pt.y); if
-             * (path.equals(_pathSource)) return false;
-             *
-             */
+ * // Do this if you want to prohibit dropping onto the drag
+ * source... Point pt = e.getLocation(); TreePath path =
+ * getClosestPathForLocation(pt.x, pt.y); if
+ * (path.equals(_pathSource)) return false;
+ *
+ */
             /*
-             * // Do this if you want to select the best flavor on offer...
-             * DataFlavor[] flavors = e.getCurrentDataFlavors(); for (int i = 0;
-             * i < flavors.length; i++ ) { DataFlavor flavor = flavors[i]; if
-             * (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
-             * return true; }
-             */
+ * // Do this if you want to select the best flavor on offer...
+ * DataFlavor[] flavors = e.getCurrentDataFlavors(); for (int i = 0;
+ * i < flavors.length; i++ ) { DataFlavor flavor = flavors[i]; if
+ * (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
+ * return true; }
+ */
             return true;
         }
 
@@ -659,18 +659,18 @@ public class DndTree extends JTree implements DragSourceListener,
             }
 
             /*
-             * // Do this if you want to prohibit dropping onto the drag
-             * source... Point pt = e.getLocation(); TreePath path =
-             * getClosestPathForLocation(pt.x, pt.y); if
-             * (path.equals(_pathSource)) return false;
-             */
+ * // Do this if you want to prohibit dropping onto the drag
+ * source... Point pt = e.getLocation(); TreePath path =
+ * getClosestPathForLocation(pt.x, pt.y); if
+ * (path.equals(_pathSource)) return false;
+ */
             /*
-             * // Do this if you want to select the best flavor on offer...
-             * DataFlavor[] flavors = e.getCurrentDataFlavors(); for (int i = 0;
-             * i < flavors.length; i++ ) { DataFlavor flavor = flavors[i]; if
-             * (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
-             * return true; }
-             */
+ * // Do this if you want to select the best flavor on offer...
+ * DataFlavor[] flavors = e.getCurrentDataFlavors(); for (int i = 0;
+ * i < flavors.length; i++ ) { DataFlavor flavor = flavors[i]; if
+ * (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
+ * return true; }
+ */
             return true;
         }
     }

@@ -42,7 +42,8 @@ import javax.swing.JOptionPane;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class RemoveFolderAction extends AbstractColumbaAction implements SelectionListener {
+public class RemoveFolderAction extends AbstractColumbaAction
+    implements SelectionListener {
     public RemoveFolderAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",

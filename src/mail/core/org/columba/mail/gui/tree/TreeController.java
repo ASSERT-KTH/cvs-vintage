@@ -23,10 +23,8 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
-import org.columba.mail.gui.table.dnd.MessageTransferHandler;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
 import javax.swing.JPopupMenu;
@@ -72,13 +70,14 @@ public class TreeController implements TreeWillExpandListener {
 
         getView().setTransferHandler(new TreeViewTransferHandler());
         getView().setDragEnabled(true);
+
         /*
-        getView().getInputMap().put(
-                KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0),
-                "RENAME");
-        RenameFolderAction action = new RenameFolderAction(mailFrameController);
-        getView().getActionMap().put("RENAME", action);
-        */
+getView().getInputMap().put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0),
+        "RENAME");
+RenameFolderAction action = new RenameFolderAction(mailFrameController);
+getView().getActionMap().put("RENAME", action);
+*/
     }
 
     public TreeModel getModel() {
@@ -119,9 +118,9 @@ public class TreeController implements TreeWillExpandListener {
     }
 
     /**
-     * Returns the mailFrameController.
-     * @return MailFrameController
-     */
+ * Returns the mailFrameController.
+ * @return MailFrameController
+ */
     public AbstractMailFrameController getMailFrameController() {
         return mailFrameController;
     }
@@ -138,15 +137,15 @@ public class TreeController implements TreeWillExpandListener {
         }
 
         /*
-        // fetch new sub folder list
-        // -> this is a hack for imap folder:
-        // -> when expanding the IMAPRootFolder the
-        // -> list of folders gets synchronized
-        FolderCommandReference[] cr = new FolderCommandReference[1];
-        cr[0] = new FolderCommandReference(treeNode);
+// fetch new sub folder list
+// -> this is a hack for imap folder:
+// -> when expanding the IMAPRootFolder the
+// -> list of folders gets synchronized
+FolderCommandReference[] cr = new FolderCommandReference[1];
+cr[0] = new FolderCommandReference(treeNode);
 
-        MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
-        */
+MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
+*/
         // save expanded state
         saveExpandedState(treeNode, e.getPath());
     }

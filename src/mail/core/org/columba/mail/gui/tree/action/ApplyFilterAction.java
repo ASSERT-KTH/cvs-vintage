@@ -41,7 +41,8 @@ import javax.swing.KeyStroke;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ApplyFilterAction extends AbstractColumbaAction implements SelectionListener {
+public class ApplyFilterAction extends AbstractColumbaAction
+    implements SelectionListener {
     public ApplyFilterAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",

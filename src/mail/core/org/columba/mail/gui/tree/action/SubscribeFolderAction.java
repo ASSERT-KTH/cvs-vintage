@@ -15,16 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.action;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
-
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
+
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
@@ -33,71 +29,68 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+
 /**
  * @author frd
  *
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class SubscribeFolderAction
-    extends AbstractColumbaAction
+public class SubscribeFolderAction extends AbstractColumbaAction
     implements SelectionListener {
-    
     private IMAPRootFolder rootFolder;
-    
+
     public SubscribeFolderAction(FrameMediator frameMediator) {
-        super(
-            frameMediator,
-            MailResourceLoader.getString(
-                "menu",
-                "mainframe",
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
                 "menu_folder_subscribe"));
 
         // tooltip text
-        putValue(
-            SHORT_DESCRIPTION,
-            MailResourceLoader
-                .getString("menu", "mainframe", "menu_folder_subscribe")
-                .replaceAll("&", ""));
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_folder_subscribe").replaceAll("&", ""));
 
         // icons
         putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("remotehost.png"));
         putValue(LARGE_ICON, ImageLoader.getImageIcon("remotehost.png"));
 
         // shortcut key
-        putValue(
-            ACCELERATOR_KEY,
+        putValue(ACCELERATOR_KEY,
             KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
 
         setEnabled(false);
 
-        ((MailFrameMediator) frameMediator).registerTreeSelectionListener(
-            this);
-
+        ((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
     }
 
     /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
     public void actionPerformed(ActionEvent evt) {
         new SubscribeDialog(rootFolder);
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-     */
+ * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+ */
     public void selectionChanged(SelectionChangedEvent e) {
         if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
             FolderTreeNode selected = ((TreeSelectionChangedEvent) e).getSelected()[0];
-            if( selected instanceof IMAPFolder ) {
+
+            if (selected instanceof IMAPFolder) {
                 rootFolder = (IMAPRootFolder) ((IMAPFolder) selected).getRootFolder();
-                setEnabled(true);                
-            } else if ( selected instanceof IMAPRootFolder ) {
+                setEnabled(true);
+            } else if (selected instanceof IMAPRootFolder) {
                 rootFolder = (IMAPRootFolder) selected;
-                setEnabled(true);                
+                setEnabled(true);
             } else {
                 setEnabled(false);
-            }            
+            }
         } else {
             setEnabled(false);
         }

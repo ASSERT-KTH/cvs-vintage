@@ -17,12 +17,13 @@ package org.columba.mail.gui.tree;
 
 import org.columba.core.facade.DialogFacade;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveFolderCommand;
-import org.columba.mail.gui.table.*;
+import org.columba.mail.gui.table.MessageReferencesTransfer;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -30,6 +31,7 @@ import java.awt.datatransfer.Transferable;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 import javax.swing.tree.TreePath;
+
 
 /**
  * A Transferhandler for the TreeView.
@@ -44,7 +46,6 @@ import javax.swing.tree.TreePath;
  * @author redsolo
  */
 public class TreeViewTransferHandler extends TransferHandler {
-
     /** {@inheritDoc} */
     public boolean importData(JComponent comp, Transferable transferProxy) {
         boolean dataWasImported = false;
@@ -54,36 +55,42 @@ public class TreeViewTransferHandler extends TransferHandler {
 
             try {
                 DataFlavor[] dataFlavors = transferProxy.getTransferDataFlavors();
-                for (int i = 0; (i < dataFlavors.length) && (!dataWasImported); i++) {
+
+                for (int i = 0; (i < dataFlavors.length) && (!dataWasImported);
+                        i++) {
                     if (dataFlavors[i].equals(FolderTransfer.FLAVOR)) {
-                        dataWasImported = importFolderReferences(treeView, (FolderTransfer) transferProxy.getTransferData(FolderTransfer.FLAVOR));
-                    } else if (dataFlavors[i].equals(MessageReferencesTransfer.FLAVOR)) {
-                        MessageReferencesTransfer messageTransferable =
-                                        (MessageReferencesTransfer) transferProxy.getTransferData(MessageReferencesTransfer.FLAVOR);
-                        dataWasImported = importMessageReferences(treeView, messageTransferable);
+                        dataWasImported = importFolderReferences(treeView,
+                                (FolderTransfer) transferProxy.getTransferData(
+                                    FolderTransfer.FLAVOR));
+                    } else if (dataFlavors[i].equals(
+                                MessageReferencesTransfer.FLAVOR)) {
+                        MessageReferencesTransfer messageTransferable = (MessageReferencesTransfer) transferProxy.getTransferData(MessageReferencesTransfer.FLAVOR);
+                        dataWasImported = importMessageReferences(treeView,
+                                messageTransferable);
                     }
                 }
             } catch (Exception e) { // UnsupportedFlavorException, IOException
                 DialogFacade.showExceptionDialog(e);
             }
         }
+
         return dataWasImported;
     }
 
     /**
-     * Try to import the folder references.
-     * Current implementation can only MOVE folders, it cannot copy
-     * them to a new destination. The actual MOVE call is done in the
-     * <code>exportDone()</code> method.
-     * <p>
-     * This method returns true if dragged folder and destination folder
-     * is not null.
-     * @param treeView the tree view to import data into.
-     * @param transferable the folder references.
-     * @return true if the folders could be imported; false otherwise.
-     */
-    private boolean importFolderReferences(TreeView treeView, FolderTransfer transferable) {
-
+ * Try to import the folder references.
+ * Current implementation can only MOVE folders, it cannot copy
+ * them to a new destination. The actual MOVE call is done in the
+ * <code>exportDone()</code> method.
+ * <p>
+ * This method returns true if dragged folder and destination folder
+ * is not null.
+ * @param treeView the tree view to import data into.
+ * @param transferable the folder references.
+ * @return true if the folders could be imported; false otherwise.
+ */
+    private boolean importFolderReferences(TreeView treeView,
+        FolderTransfer transferable) {
         boolean dataWasImported = false;
 
         FolderTreeNode destFolder = treeView.getDropTargetFolder();
@@ -99,15 +106,16 @@ public class TreeViewTransferHandler extends TransferHandler {
     }
 
     /**
-     * Try to import the message references.
-     * This method copies the messages to the new folder. Note that it
-     * will not delete them, since this is done by the transferhandler that
-     * initiated the drag.
-     * @param treeView the tree view to import data into.
-     * @param transferable the message references.
-     * @return true if the messages could be imported; false otherwise.
-     */
-    private boolean importMessageReferences(TreeView treeView, MessageReferencesTransfer transferable) {
+ * Try to import the message references.
+ * This method copies the messages to the new folder. Note that it
+ * will not delete them, since this is done by the transferhandler that
+ * initiated the drag.
+ * @param treeView the tree view to import data into.
+ * @param transferable the message references.
+ * @return true if the messages could be imported; false otherwise.
+ */
+    private boolean importMessageReferences(TreeView treeView,
+        MessageReferencesTransfer transferable) {
         boolean dataWasImported = false;
 
         Folder destFolder = (Folder) treeView.getDropTargetFolder();
@@ -127,6 +135,7 @@ public class TreeViewTransferHandler extends TransferHandler {
     protected void exportDone(JComponent source, Transferable data, int action) {
         if (source instanceof TreeView) {
             TreeView treeView = (TreeView) source;
+
             if (data instanceof FolderTransfer) {
                 Folder draggedFolder = ((FolderTransfer) data).getFolderReference();
                 exportFolder(treeView, draggedFolder);
@@ -135,14 +144,13 @@ public class TreeViewTransferHandler extends TransferHandler {
     }
 
     /**
-     * Export the folder.
-     * Since there is only Virtual Folders who can be copied, then
-     * all other actions are MOVE.
-     * @param treeView the treeview that has dragged folder
-     * @param folder the folder to move.
-     */
+ * Export the folder.
+ * Since there is only Virtual Folders who can be copied, then
+ * all other actions are MOVE.
+ * @param treeView the treeview that has dragged folder
+ * @param folder the folder to move.
+ */
     private void exportFolder(TreeView treeView, Folder folder) {
-
         FolderCommandReference[] commandRef = new FolderCommandReference[2];
         commandRef[0] = new FolderCommandReference(folder);
         commandRef[1] = new FolderCommandReference(treeView.getDropTargetFolder());
@@ -154,9 +162,11 @@ public class TreeViewTransferHandler extends TransferHandler {
     /** {@inheritDoc} */
     public int getSourceActions(JComponent c) {
         int action = TransferHandler.NONE;
+
         if (c instanceof TreeView) {
             action = TransferHandler.MOVE;
         }
+
         return action;
     }
 
@@ -186,12 +196,18 @@ public class TreeViewTransferHandler extends TransferHandler {
             TreeView treeView = (TreeView) comp;
 
             FolderTreeNode dropTarget = treeView.getDropTargetFolder();
+
             if (dropTarget != null) {
-                for (int k = 0; (k < transferFlavors.length) && (!canHandleOneOfDataFlavors); k++) {
-                    if (transferFlavors[k].equals(MessageReferencesTransfer.FLAVOR)) {
-                        canHandleOneOfDataFlavors = canHandleMessageImport(treeView, dropTarget);
+                for (int k = 0;
+                        (k < transferFlavors.length) &&
+                        (!canHandleOneOfDataFlavors); k++) {
+                    if (transferFlavors[k].equals(
+                                MessageReferencesTransfer.FLAVOR)) {
+                        canHandleOneOfDataFlavors = canHandleMessageImport(treeView,
+                                dropTarget);
                     } else if (transferFlavors[k].equals(FolderTransfer.FLAVOR)) {
-                        canHandleOneOfDataFlavors = canHandleFolderImport(treeView, dropTarget);
+                        canHandleOneOfDataFlavors = canHandleFolderImport(treeView,
+                                dropTarget);
                     }
                 }
             }
@@ -201,19 +217,19 @@ public class TreeViewTransferHandler extends TransferHandler {
     }
 
     /**
-     * Returns true if the dragged folder can be imported to the dropped folder.
-     * @param treeView the treeview containing the drag/drop folders.
-     * @param dropTarget the folder node that is intended for the drop action.
-     * @return true if the dragged folder can be imported to the dropped folder.
-     */
-    private boolean canHandleFolderImport(TreeView treeView, FolderTreeNode dropTarget) {
+ * Returns true if the dragged folder can be imported to the dropped folder.
+ * @param treeView the treeview containing the drag/drop folders.
+ * @param dropTarget the folder node that is intended for the drop action.
+ * @return true if the dragged folder can be imported to the dropped folder.
+ */
+    private boolean canHandleFolderImport(TreeView treeView,
+        FolderTreeNode dropTarget) {
         boolean canImport = false;
 
         FolderTreeNode dragTarget = treeView.getSelectedNodeBeforeDragAction();
-        if ((dragTarget != null)
-            && (!dragTarget.isNodeDescendant(dropTarget))
-            && (dragTarget != dropTarget))
-        {
+
+        if ((dragTarget != null) && (!dragTarget.isNodeDescendant(dropTarget)) &&
+                (dragTarget != dropTarget)) {
             canImport = dropTarget.supportsAddFolder(dragTarget);
         }
 
@@ -221,15 +237,17 @@ public class TreeViewTransferHandler extends TransferHandler {
     }
 
     /**
-     * Returns true if the dragged messages can be imported to the dropped folder.
-     * @param treeView the treeview containing the drop folder.
-     * @param dropTarget the folder node that is intended for the drop action.
-     * @return true if the dragged messages can be imported to the dropped folder.
-     */
-    private boolean canHandleMessageImport(TreeView treeView, FolderTreeNode dropTarget) {
+ * Returns true if the dragged messages can be imported to the dropped folder.
+ * @param treeView the treeview containing the drop folder.
+ * @param dropTarget the folder node that is intended for the drop action.
+ * @return true if the dragged messages can be imported to the dropped folder.
+ */
+    private boolean canHandleMessageImport(TreeView treeView,
+        FolderTreeNode dropTarget) {
         boolean canImport = false;
 
         FolderTreeNode dragTarget = treeView.getSelectedNodeBeforeDragAction();
+
         if (dragTarget != dropTarget) {
             canImport = dropTarget.supportsAddMessage();
         }

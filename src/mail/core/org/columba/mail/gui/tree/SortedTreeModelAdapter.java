@@ -29,6 +29,7 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+
 /**
  * This is an tree model adapter that sorts the underlying tree model.
  * This adapter is to be used between the JTree view and the original tree model if the
@@ -48,7 +49,6 @@ import javax.swing.tree.TreePath;
  * @author redsolo
  */
 public class SortedTreeModelAdapter implements TreeModel, TreeModelListener {
-
     /** The original tree model that has all the actual data that this adapter uses. */
     private TreeModel originalModel;
 
@@ -56,14 +56,15 @@ public class SortedTreeModelAdapter implements TreeModel, TreeModelListener {
     private List listeners;
 
     /** A cached list of children. */
-    private List   cachedChildList;
+    private List cachedChildList;
+
     /** The cached children list has this object as its parent. */
     private Object cachedChildListParent;
 
     /**
-     * Creates a sorted TreeModel that retrieves the data from the original tree model.
-     * @param original the mode that is to be displayed as sorted.
-     */
+ * Creates a sorted TreeModel that retrieves the data from the original tree model.
+ * @param original the mode that is to be displayed as sorted.
+ */
     public SortedTreeModelAdapter(TreeModel original) {
         originalModel = original;
         listeners = new LinkedList();
@@ -80,37 +81,39 @@ public class SortedTreeModelAdapter implements TreeModel, TreeModelListener {
         int index = -1;
         List childs = getChildList(parent);
         int childCount = childs.size();
+
         for (int i = 0; (i < childCount) && (index == -1); i++) {
             if (childs.get(i).equals(child)) {
                 index = i;
             }
         }
+
         return index;
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
-     * Current implementation invokes this method on the original tree model without any changes.
-     */
+ * {@inheritDoc}
+ * <p>
+ * Current implementation invokes this method on the original tree model without any changes.
+ */
     public Object getRoot() {
         return originalModel.getRoot();
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
-     * Current implementation invokes this method on the original tree model without any changes.
-     */
+ * {@inheritDoc}
+ * <p>
+ * Current implementation invokes this method on the original tree model without any changes.
+ */
     public int getChildCount(Object parent) {
         return originalModel.getChildCount(parent);
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
-     * Current implementation invokes this method on the original tree model without any changes.
-     */
+ * {@inheritDoc}
+ * <p>
+ * Current implementation invokes this method on the original tree model without any changes.
+ */
     public boolean isLeaf(Object node) {
         return originalModel.isLeaf(node);
     }
@@ -126,31 +129,32 @@ public class SortedTreeModelAdapter implements TreeModel, TreeModelListener {
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
-     * Current implementation invokes this method on the original tree model without any changes.
-     */
+ * {@inheritDoc}
+ * <p>
+ * Current implementation invokes this method on the original tree model without any changes.
+ */
     public void valueForPathChanged(TreePath path, Object newValue) {
         originalModel.valueForPathChanged(path, newValue);
     }
 
     /**
-     * Returns the parent node for the event.
-     * @param event the event.
-     * @return the parent node for the event.
-     */
+ * Returns the parent node for the event.
+ * @param event the event.
+ * @return the parent node for the event.
+ */
     private MutableTreeNode getParentNodeFromEvent(TreeModelEvent event) {
         Object[] paths = event.getPath();
+
         return (MutableTreeNode) paths[paths.length - 1];
     }
 
     /**
-     * Returns a new TreeEvent that has the correct changed children indexes and objects.
-     * This method takes the indicies array from the old event, changes the indexing so it
-     * corresponds to the sorted model list, and then sorts the indicies in ascending order.
-     * @param oldEvent the event from the original model.
-     * @return a new TreeEvent for this sorted tree model.
-     */
+ * Returns a new TreeEvent that has the correct changed children indexes and objects.
+ * This method takes the indicies array from the old event, changes the indexing so it
+ * corresponds to the sorted model list, and then sorts the indicies in ascending order.
+ * @param oldEvent the event from the original model.
+ * @return a new TreeEvent for this sorted tree model.
+ */
     private TreeModelEvent getSortedTreeEvent(TreeModelEvent oldEvent) {
         int numberOfChilds = oldEvent.getChildIndices().length;
         MutableTreeNode parentNode = getParentNodeFromEvent(oldEvent);
@@ -165,11 +169,15 @@ public class SortedTreeModelAdapter implements TreeModel, TreeModelListener {
             int newIndex = getIndexOfChild(parentNode, oldEventChilds[i]);
             newEventIndicies[i] = newIndex;
         }
+
         Arrays.sort(newEventIndicies);
+
         for (int i = 0; i < numberOfChilds; i++) {
             newEventChilds[i] = getChild(parentNode, newEventIndicies[i]);
         }
-        return new TreeModelEvent(this, oldEvent.getPath(), newEventIndicies, newEventChilds);
+
+        return new TreeModelEvent(this, oldEvent.getPath(), newEventIndicies,
+            newEventChilds);
     }
 
     /** {@inheritDoc} */
@@ -178,6 +186,7 @@ public class SortedTreeModelAdapter implements TreeModel, TreeModelListener {
         resetCachedChildList();
 
         TreeModelEvent newEvent = getSortedTreeEvent(e);
+
         for (Iterator iter = listeners.iterator(); iter.hasNext();) {
             TreeModelListener listener = (TreeModelListener) iter.next();
             listener.treeNodesInserted(newEvent);
@@ -190,55 +199,59 @@ public class SortedTreeModelAdapter implements TreeModel, TreeModelListener {
         //.... since the tree nodes name can change this will
         // make it impossible to find the old index to fire the events to/from
         //
-
         MutableTreeNode parent = getParentNodeFromEvent(e);
         int[] allIndicies = new int[getChildCount(parent)];
         Object[] allObjects = new Object[getChildCount(parent)];
+
         for (int i = 0; i < allIndicies.length; i++) {
             allIndicies[i] = i;
             allObjects[i] = getChild(parent, i);
         }
 
-        TreeModelEvent newEvent = new TreeModelEvent(this, e.getPath(), allIndicies, allObjects);
+        TreeModelEvent newEvent = new TreeModelEvent(this, e.getPath(),
+                allIndicies, allObjects);
+
         for (Iterator iter = listeners.iterator(); iter.hasNext();) {
             TreeModelListener listener = (TreeModelListener) iter.next();
             listener.treeNodesChanged(newEvent);
         }
+
         //the new event needs the new indicies
+
         /*resetCachedChildList();
 
+TreeModelEvent newEvent = getSortedTreeEvent(e);
+for (Iterator iter = listeners.iterator(); iter.hasNext();) {
+    TreeModelListener listener = (TreeModelListener) iter.next();
+    listener.treeNodesChanged(newEvent);
+}*/
+        /*System.out.println("cached parent=" + cachedChildListParent);
+MutableTreeNode parent = getParentNodeFromEvent(e);
+
+boolean eventWasFired = false;
+
+int[] oldIndicies = e.getChildIndices();
+if ((parent == cachedChildListParent) && (oldIndicies.length == 1)) {
+    List oldChildList = cachedChildList;
+    resetCachedChildList();
+    List newChildList = getChildList(parent);
+
+    Object oldChangedChild = e.getChildren()[0];
+    if (oldChildList.indexOf(oldChangedChild) == newChildList.indexOf(oldChangedChild)) {
+        System.out.println("changing same place");
         TreeModelEvent newEvent = getSortedTreeEvent(e);
         for (Iterator iter = listeners.iterator(); iter.hasNext();) {
             TreeModelListener listener = (TreeModelListener) iter.next();
             listener.treeNodesChanged(newEvent);
-        }*/
-        /*System.out.println("cached parent=" + cachedChildListParent);
-        MutableTreeNode parent = getParentNodeFromEvent(e);
-
-        boolean eventWasFired = false;
-
-        int[] oldIndicies = e.getChildIndices();
-        if ((parent == cachedChildListParent) && (oldIndicies.length == 1)) {
-            List oldChildList = cachedChildList;
-            resetCachedChildList();
-            List newChildList = getChildList(parent);
-
-            Object oldChangedChild = e.getChildren()[0];
-            if (oldChildList.indexOf(oldChangedChild) == newChildList.indexOf(oldChangedChild)) {
-                System.out.println("changing same place");
-                TreeModelEvent newEvent = getSortedTreeEvent(e);
-                for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-                    TreeModelListener listener = (TreeModelListener) iter.next();
-                    listener.treeNodesChanged(newEvent);
-                }
-                eventWasFired = true;
-            }
         }
-        if (!eventWasFired) {
-            TreeModelEvent newEvent = new TreeModelEvent(this, e.getPath(), null, null);
-            treeStructureChanged(newEvent);
-        }
-        System.out.println("tree nodes changed");*/
+        eventWasFired = true;
+    }
+}
+if (!eventWasFired) {
+    TreeModelEvent newEvent = new TreeModelEvent(this, e.getPath(), null, null);
+    treeStructureChanged(newEvent);
+}
+System.out.println("tree nodes changed");*/
     }
 
     /** {@inheritDoc} */
@@ -246,23 +259,25 @@ public class SortedTreeModelAdapter implements TreeModel, TreeModelListener {
         // TODO quickfix for removed events, firing the tree structure changed event instead.
 
         /*
-        resetCachedChildList();
-        TreeModelEvent newEvent = getSortedTreeEvent(e);
-        for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-            TreeModelListener listener = (TreeModelListener) iter.next();
-            listener.treeNodesRemoved(newEvent);
-        }*/
-        TreeModelEvent newEvent = new TreeModelEvent(this, e.getPath(), null, null);
+resetCachedChildList();
+TreeModelEvent newEvent = getSortedTreeEvent(e);
+for (Iterator iter = listeners.iterator(); iter.hasNext();) {
+    TreeModelListener listener = (TreeModelListener) iter.next();
+    listener.treeNodesRemoved(newEvent);
+}*/
+        TreeModelEvent newEvent = new TreeModelEvent(this, e.getPath(), null,
+                null);
         treeStructureChanged(newEvent);
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
-     * Current implementation invokes this method on the original tree model without any changes.
-     */
+ * {@inheritDoc}
+ * <p>
+ * Current implementation invokes this method on the original tree model without any changes.
+ */
     public void treeStructureChanged(TreeModelEvent e) {
         resetCachedChildList();
+
         // This event is only on affected nodes and downward, so we dont need to create a new event.
         for (Iterator iter = listeners.iterator(); iter.hasNext();) {
             TreeModelListener listener = (TreeModelListener) iter.next();
@@ -271,47 +286,52 @@ public class SortedTreeModelAdapter implements TreeModel, TreeModelListener {
     }
 
     /**
-     * Resets the cached child list.
-     */
+ * Resets the cached child list.
+ */
     private void resetCachedChildList() {
         cachedChildListParent = null;
         cachedChildList = null;
     }
 
     /**
-     * Returns the children for the treenode as a sorted list.
-     * @param parent the parent tree node to get all children for.
-     * @return a sorted List containing all children for the parent.
-     */
+ * Returns the children for the treenode as a sorted list.
+ * @param parent the parent tree node to get all children for.
+ * @return a sorted List containing all children for the parent.
+ */
     private List getChildList(Object parent) {
         List childList;
+
         if (parent == cachedChildListParent) {
             childList = cachedChildList;
         } else {
             childList = new ArrayList();
+
             int childCount = originalModel.getChildCount(parent);
+
             for (int i = 0; i < childCount; i++) {
                 childList.add(originalModel.getChild(parent, i));
             }
+
             Collections.sort(childList, new ChildComparator());
 
             cachedChildList = childList;
             cachedChildListParent = parent;
         }
+
         return childList;
     }
 
     /**
-     * Comparator to use when sorting the tree model list.
-     * This uses the String.compareTo() method to do the actual work, note that
-     * it is done using lowercase.
-     * @author redsolo
-     */
+ * Comparator to use when sorting the tree model list.
+ * This uses the String.compareTo() method to do the actual work, note that
+ * it is done using lowercase.
+ * @author redsolo
+ */
     private static class ChildComparator implements Comparator {
-
         /** {@inheritDoc} */
         public int compare(Object o1, Object o2) {
-            return o1.toString().toLowerCase().compareTo(o2.toString().toLowerCase());
+            return o1.toString().toLowerCase().compareTo(o2.toString()
+                                                           .toLowerCase());
         }
     }
 }

@@ -28,8 +28,8 @@ public class TreeSelectionChangedEvent extends SelectionChangedEvent {
     }
 
     /**
-     * @return FolderTreeNode
-     */
+ * @return FolderTreeNode
+ */
     public FolderTreeNode[] getSelected() {
         return selected;
     }

@@ -57,9 +57,9 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer //extends JL
     private Font italicFont;
 
     /**
-     * Generates a new CellRenderer. In this contructor font and images are set to local variables. The fonts are
-     * depended on the current UIManager.
-     */
+ * Generates a new CellRenderer. In this contructor font and images are set to local variables. The fonts are
+ * depended on the current UIManager.
+ */
     public FolderTreeCellRenderer() {
         super();
 
@@ -75,19 +75,19 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer //extends JL
     }
 
     /**
-     * The tooltip text and unseen counter for the current folder component are set. If the folder has unseen Messages the
-     * folder self is show as bold and the unseen message counter is added to the folder label. The folder becomes a tooltip
-     * where infos (unseen, recent, total) are set. If the folder is an Imap-folder and not selectable the folder is set to
-     * italic with a darkgrey background.
-     * @see javax.swing.tree.TreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree, java.lang.Object, boolean, boolean, boolean, int, boolean)
-     */
+ * The tooltip text and unseen counter for the current folder component are set. If the folder has unseen Messages the
+ * folder self is show as bold and the unseen message counter is added to the folder label. The folder becomes a tooltip
+ * where infos (unseen, recent, total) are set. If the folder is an Imap-folder and not selectable the folder is set to
+ * italic with a darkgrey background.
+ * @see javax.swing.tree.TreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree, java.lang.Object, boolean, boolean, boolean, int, boolean)
+ */
     public Component getTreeCellRendererComponent(JTree tree, Object value,
         boolean isSelected, boolean expanded, boolean leaf, int row,
         boolean hasFocusVar) {
         /* RIYAD: Even though we don't do anything with this value, what it
-         * is doing is setting up the selection colors and such as implemented
-         * per the default cell rendered.
-         */
+ * is doing is setting up the selection colors and such as implemented
+ * per the default cell rendered.
+ */
         super.getTreeCellRendererComponent(tree, value, isSelected, expanded,
             leaf, row, hasFocusVar);
 
