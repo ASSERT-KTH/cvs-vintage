@@ -40,7 +40,7 @@ public class MoveFolderCommand extends Command {
     private AbstractFolder destParentFolder;
     private int[] destChildIndicies;
 
-    private MessageFolder srcParentFolder;
+    private AbstractFolder srcParentFolder;
     private int[] srcChildIndicies;
     private Object[] srcChildObjects;
 
@@ -72,7 +72,7 @@ public class MoveFolderCommand extends Command {
         // get destination folder
         destParentFolder = ((FolderCommandReference) getReferences()[1]).getFolder();
 
-        srcParentFolder = (MessageFolder) movedFolder.getParent();
+        srcParentFolder = (AbstractFolder)movedFolder.getParent();
         srcChildIndicies = new int[] {srcParentFolder.getIndex(movedFolder)};
         srcChildObjects = new Object[] {movedFolder};
 
