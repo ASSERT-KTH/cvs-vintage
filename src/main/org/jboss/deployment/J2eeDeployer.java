@@ -54,7 +54,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for jBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.8 $
+*   @version $Revision: 1.9 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -281,7 +281,20 @@ implements J2eeDeployerMBean
    {
       if (!warDeployerAvailable ())
          log.log ("No war deployer found - only EJB deployment available...");
-   
+         
+      // clean up the deployment directory since on some Windowz the file removement
+      // during runtime doesnt work...
+      log.log("cleaning up deployment directory "+DEPLOYMENT_DIR.toURL());
+      File[] files =  DEPLOYMENT_DIR.listFiles();
+      for (int i = 0, l = files.length; i<l; ++i)
+         try
+         {
+            URLWizzard.deleteTree(files[i].toURL());
+         }
+         catch (IOException _ioe)
+         {
+            log.log("couldnd remove file tree: "+files[i].toURL().toString());
+         }
    }
    
    
@@ -472,23 +485,14 @@ implements J2eeDeployerMBean
       m.name = getAppName (_source);
       log.log ("installing ejb package: " + m.name);
       
-      // the base dir for this EJB package
-      URL destDir = URLWizzard.createTempDir (_d.localUrl, "ejb");
-      
       // download the package...
-      URL localUrl = URLWizzard.download(_source, new URL (destDir, "ejb.jar"));
+      URL localUrl = URLWizzard.downloadTemporary(_source, _d.localUrl, "ejb", ".jar");
       
       // download alternative Descriptors (ejb-jar.xml, jboss.xml, ...)
       // DOESNT WORK YET!!!
       if (_altDD != null && _altDD.length > 0)
       {
-         URL metaDir = new URL (destDir.getFile () + "/META-INF"); 
-         for (int i = 0, l = _altDD.length; i < l; ++i)
-         {
-            URLWizzard.download (_altDD[i], new URL (metaDir,"bla"));
-         }
-         // this in the classpath before the real jar file to find this descriptors first
-         m.localUrls.add (destDir);
+         ;
       }
       
       m.localUrls.add (localUrl);
@@ -508,11 +512,8 @@ implements J2eeDeployerMBean
       m.name = getAppName (_source);
       log.log ("installing web package: " + m.name);
       
-      // the base dir for this WAR package
-      URL destDir = URLWizzard.createTempDir (_d.localUrl, "war");
-      
       // download the package...
-      URL localUrl = URLWizzard.downloadAndInflate (_source, new URL (destDir, "expandedWar"));
+      URL localUrl = URLWizzard.downloadAndInflateTemporary (_source, _d.localUrl, "war");
       
       // save the contextName
       m.webContext = _context;
@@ -521,12 +522,7 @@ implements J2eeDeployerMBean
       // DOESNT WORK YET!!!
       if (_altDD != null && _altDD.length > 0)
       {
-         URL metaDir = new URL (destDir.getFile () + "/WEB-INF"); 
-         for (int i = 0, l = _altDD.length; i < l; ++i)
-         {
-            URLWizzard.download (_altDD[i], new URL (metaDir,"bla"));
-         }
-         m.localUrls.add (destDir);
+         ;
       }
       
       m.localUrls.add (localUrl);
@@ -550,9 +546,6 @@ implements J2eeDeployerMBean
    */
    private void addCommonLibs (Deployment _d, Manifest _mf, URL _base) throws IOException
    {
-      if (_d.commonLibs == null)
-         _d.commonLibs = URLWizzard.createTempDir (_d.localUrl, "common");
-
       String cp = _mf.getMainAttributes ().getValue(Attributes.Name.CLASS_PATH);
       
       if (cp != null)
@@ -564,8 +557,7 @@ implements J2eeDeployerMBean
             try
             {
                URL src = new URL(_base, classPath);
-               URL dest = new URL (_d.commonLibs, getAppName (src));
-               _d.commonUrls.add (URLWizzard.download (src, dest));
+               _d.commonUrls.add (URLWizzard.downloadTemporary (src, _d.localUrl, "lib", ".jar"));
                log.error("added " + classPath + " to common classpath");
             } 
             catch (Exception e)
@@ -587,6 +579,14 @@ implements J2eeDeployerMBean
       try 
       {
          url = new URL (DEPLOYMENT_DIR.toURL (), _name);
+         
+         // because of the deletion problem in some WIndowz 
+         // we remove the CONFIG separatly (this should always work)
+         // so that on stopService () now exceptions were thrown when he thinks
+         // some apps are still deployed...
+         URLWizzard.deleteTree (new URL (url, CONFIG));      
+         log.log (CONFIG+" file deleted.");
+         
          URLWizzard.deleteTree (url);      
          log.log ("file tree "+url.toString ()+" deleted.");
       } catch (MalformedURLException _mfe) { // should never happen

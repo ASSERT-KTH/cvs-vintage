@@ -15,7 +15,7 @@ import java.util.Vector;
 /** Represents a J2EE application or module (EJB.jar, Web.war or App.ear). <br>
 *
 *  @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*  @version $Revision: 1.3 $
+*  @version $Revision: 1.4 $
 */
 public class Deployment
    implements java.io.Serializable
@@ -25,9 +25,6 @@ public class Deployment
    
    /** the local position of the apps root directory */
    protected URL localUrl;
-   
-   /** the directory for common libraries */
-   protected URL commonLibs;
    
    /** the content of the <code>commonLibs</code> directory as 
    URL Collection */

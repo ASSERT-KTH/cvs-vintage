@@ -33,7 +33,7 @@ import java.util.jar.Manifest;
 * Very scratchy! Any improvements are welcome!
 *      
 *	@author Daniel Schulze <daniel.schulze@telkel.com>
-*	@version $Revision: 1.4 $
+*	@version $Revision: 1.5 $
 */
 public class URLWizzard
 {
@@ -150,11 +150,7 @@ public class URLWizzard
    }
    
    
-   
-   
-   
-   
-   /** inflates the given zip file into the given directory */
+   /** inflates the given zip file into the given directory  */
    public static URL downloadAndInflate (URL _src, URL _dest) throws IOException
    {
       InputStream in;
@@ -203,6 +199,14 @@ public class URLWizzard
       
       return _dest;
    }
+
+   /** inflates the given zip file into a directory created in the dest directory with the 
+   given prefix */
+   public static URL downloadAndInflateTemporary (URL _src, URL _destDir, String _prefix) throws IOException
+   {
+      return downloadAndInflate (_src, createTempDir (_destDir, _prefix));
+   }
+   
    
    /** creates a directory like the File.createTempFile method */
    public static URL createTempDir (URL _baseDir, String _prefix) throws IOException
