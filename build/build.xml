@@ -36,12 +36,16 @@
     <property name="src.lib.dir" value="${basedir}/../lib"/>
     <property name="src.sql.dir" value="${src.dir}/sql"/>
     <property name="src.templates.dir" value="${src.dir}/templates"/>
-    <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
+    <property name="src.usecases.dir" value="${src.dir}/usecases"/>
 
+    <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
 
     <!-- Build classpath -->
     <path id="classpath">
         <fileset dir="${src.lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${basedir}">
             <include name="**/*.jar"/>
         </fileset>
     </path>
@@ -344,6 +348,15 @@
         >
             <classpath refid="classpath"/>
     </javadoc>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Creates the Usecase documentation                                  -->
+    <!-- ================================================================== -->
+    <target name="usecases" depends="prepare">
+        <ant antfile="build.xml" 
+                dir="${src.usecases.dir}" target="docs">
+        </ant>
     </target>
 
     <!-- ================================================================== -->
