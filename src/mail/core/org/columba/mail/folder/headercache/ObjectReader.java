@@ -28,6 +28,12 @@ import java.util.Date;
 
 
 /**
+ * Object stream reader used by header-cache.
+ * <p>
+ * To make this more failsafe, ObjectWriter is using a ".backup" file.
+ * 
+ * @see ObjectWriter
+ * 
  * @author fdietz
  */
 public class ObjectReader {
@@ -41,9 +47,11 @@ public class ObjectReader {
     protected File file;
     protected FileInputStream istream;
     protected ObjectInputStream ois;
+    protected File newFile;
 
     public ObjectReader(File file) throws Exception {
         this.file = file;
+		
         istream = new FileInputStream(file.getPath());
         ois = new ObjectInputStream(new BufferedInputStream(istream));
         

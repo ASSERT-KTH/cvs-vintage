@@ -18,63 +18,100 @@
 package org.columba.mail.folder.headercache;
 
 import java.awt.Color;
-
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
-
 import java.util.Date;
 
+import org.columba.core.main.MainInterface;
 
 /**
+ * Object stream writer used to save header-cache files.
+ * <p>
+ * To make this more failsafe, we first try to save the file as ".backup". If
+ * everything went ok, we rename this file to the original filename. If not, the
+ * ObjectReader class is using the last working version of the file instead.
+ * 
  * @author fdietz
  */
 public class ObjectWriter {
-    private static final int NULL = 0;
-    private static final int STRING = 1;
-    private static final int DATE = 2;
-    private static final int BOOLEAN = 3;
-    private static final int INTEGER = 4;
-    private static final int COLOR = 5;
-    private static final int OBJECT = 6;
-    protected File file;
-    protected FileOutputStream ostream;
-    protected ObjectOutputStream oos;
+	private static final int NULL = 0;
+	private static final int STRING = 1;
+	private static final int DATE = 2;
+	private static final int BOOLEAN = 3;
+	private static final int INTEGER = 4;
+	private static final int COLOR = 5;
+	private static final int OBJECT = 6;
+	protected File file;
+	protected FileOutputStream ostream;
+	protected ObjectOutputStream oos;
+	protected File newFile;
 
-    public ObjectWriter(File file) throws Exception {
-        this.file = file;
-        ostream = new FileOutputStream(file.getPath());
-        oos = new ObjectOutputStream(ostream);
-    }
+	public ObjectWriter(File file) throws Exception {
+		this.file = file;
 
-    public void writeObject(Object value) throws Exception {
-        Object o = value;
+		// create ".backup" file from original filename
+		newFile = new File(file.getAbsolutePath() + ".new");
 
-        if (o == null) {
-            oos.writeInt(NULL);
-        } else if (o instanceof String) {
-            oos.writeInt(STRING);
-            oos.writeUTF((String) o);
-        } else if (o instanceof Integer) {
-            oos.writeInt(INTEGER);
-            oos.writeInt(((Integer) o).intValue());
-        } else if (o instanceof Boolean) {
-            oos.writeInt(BOOLEAN);
-            oos.writeBoolean(((Boolean) o).booleanValue());
-        } else if (o instanceof Date) {
-            oos.writeInt(DATE);
-            oos.writeLong(((Date) o).getTime());
-        } else if (o instanceof Color) {
-            oos.writeInt(COLOR);
-            oos.writeInt(((Color) o).getRGB());
-        } else {
-            oos.writeInt(OBJECT);
-            oos.writeObject(value);
-        }
-    }
+		// use the ".backup" file, instead of the original
+		ostream = new FileOutputStream(newFile.getPath());
+		oos = new ObjectOutputStream(ostream);
+	}
 
-    public void close() throws Exception {
-        oos.close();
-        ostream.close();
-    }
+	public void writeObject(Object value) throws Exception {
+		Object o = value;
+
+		if (o == null) {
+			oos.writeInt(NULL);
+		} else if (o instanceof String) {
+			oos.writeInt(STRING);
+			oos.writeUTF((String) o);
+		} else if (o instanceof Integer) {
+			oos.writeInt(INTEGER);
+			oos.writeInt(((Integer) o).intValue());
+		} else if (o instanceof Boolean) {
+			oos.writeInt(BOOLEAN);
+			oos.writeBoolean(((Boolean) o).booleanValue());
+		} else if (o instanceof Date) {
+			oos.writeInt(DATE);
+			oos.writeLong(((Date) o).getTime());
+		} else if (o instanceof Color) {
+			oos.writeInt(COLOR);
+			oos.writeInt(((Color) o).getRGB());
+		} else {
+			oos.writeInt(OBJECT);
+			oos.writeObject(value);
+		}
+	}
+
+	public void close() throws Exception {
+
+		try {
+			// close all file streams
+			oos.close();
+			ostream.close();
+		} catch (IOException e) {
+			if (MainInterface.DEBUG)
+				e.printStackTrace();
+
+			// wasn't able to successfully finish saving the ".backup" file
+			// -> simply leave the original message untouched
+			// --> original message will be used next time
+			
+			newFile.delete();
+			
+			return;
+		}
+
+		// successfully saved ".backup" file
+		File oldFile = new File(file.getAbsolutePath() + ".old");
+		if ( oldFile.exists() ) oldFile.delete();
+		
+		// rename original to failsafe ".old" file
+		file.renameTo(oldFile);
+		// rename ".new" to original resulting file
+		newFile.renameTo(file);
+
+	}
 }
