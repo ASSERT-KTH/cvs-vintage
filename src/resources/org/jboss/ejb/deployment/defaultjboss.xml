@@ -1,59 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ejboss>
+<jboss>
     <enterprise-beans>
     </enterprise-beans>
     <resource-managers>
     </resource-managers>
     <container-configurations>
-        <container-configuration configuration-class="com.dreambean.ejx.ejboss.StatelessSessionContainerConfiguration">
+        <container-configuration configuration-class="org.jboss.ejb.deployment.StatelessSessionContainerConfiguration">
             <container-name>Singleton Stateless SessionBean</container-name>
-            <container-invoker>org.ejboss.ejb.jrmp.server.JRMPContainerInvoker</container-invoker>
-            <instance-pool>org.ejboss.ejb.container.SingletonStatelessSessionInstancePool</instance-pool>
+            <container-invoker>org.jboss.ejb.jrmp.server.JRMPContainerInvoker</container-invoker>
+            <instance-pool>org.jboss.ejb.container.SingletonStatelessSessionInstancePool</instance-pool>
             <instance-cache></instance-cache>
             <persistence-manager></persistence-manager>
-            <container-invoker-conf>
-                <optimized>false</optimized>
-            </container-invoker-conf>
         </container-configuration>
-        <container-configuration configuration-class="com.dreambean.ejx.ejboss.EntityContainerConfiguration">
+        <container-configuration configuration-class="org.jboss.ejb.deployment.EntityContainerConfiguration">
             <container-name>BMP EntityBean</container-name>
-            <container-invoker>org.ejboss.ejb.jrmp.server.JRMPContainerInvoker</container-invoker>
-            <instance-pool>org.ejboss.ejb.container.EntityInstancePool</instance-pool>
-            <instance-cache>org.ejboss.ejb.container.RandomEntityInstanceCache</instance-cache>
-            <persistence-manager>org.ejboss.ejb.container.BMPPersistenceManager</persistence-manager>
-            <container-invoker-conf>
-                <optimized>false</optimized>
-            </container-invoker-conf>
-            <container-cache-conf>
-                <min-size>10</min-size>
-                <max-size>100</max-size>
-                <passivation-interval>20</passivation-interval>
-            </container-cache-conf>
+            <container-invoker>org.jboss.ejb.jrmp.server.JRMPContainerInvoker</container-invoker>
+            <instance-pool>org.jboss.ejb.container.EntityInstancePool</instance-pool>
+            <instance-cache>org.jboss.ejb.container.RandomEntityInstanceCache</instance-cache>
+            <persistence-manager>org.jboss.ejb.container.BMPPersistenceManager</persistence-manager>
         </container-configuration>
-        <container-configuration configuration-class="com.dreambean.ejx.ejboss.StatelessSessionContainerConfiguration">
+        <container-configuration configuration-class="org.jboss.ejb.deployment.StatelessSessionContainerConfiguration">
             <container-name>Default Stateless SessionBean</container-name>
-            <container-invoker>org.ejboss.ejb.jrmp.server.JRMPContainerInvoker</container-invoker>
-            <instance-pool>org.ejboss.ejb.container.StatelessSessionInstancePool</instance-pool>
+            <container-invoker>org.jboss.ejb.jrmp.server.JRMPContainerInvoker</container-invoker>
+            <instance-pool>org.jboss.ejb.container.StatelessSessionInstancePool</instance-pool>
             <instance-cache></instance-cache>
             <persistence-manager></persistence-manager>
-            <container-invoker-conf>
-                <optimized>false</optimized>
-            </container-invoker-conf>
         </container-configuration>
-        <container-configuration configuration-class="com.dreambean.ejx.ejboss.EntityContainerConfiguration">
+        <container-configuration configuration-class="org.jboss.ejb.deployment.EntityContainerConfiguration">
             <container-name>CMP EntityBean</container-name>
-            <container-invoker>org.ejboss.ejb.jrmp.server.JRMPContainerInvoker</container-invoker>
-            <instance-pool>org.ejboss.ejb.container.EntityInstancePool</instance-pool>
-            <instance-cache>org.ejboss.ejb.container.RandomEntityInstanceCache</instance-cache>
-            <persistence-manager>org.ejboss.ejb.container.CMPFilePersistenceManager</persistence-manager>
-            <container-invoker-conf>
-                <optimized>false</optimized>
-            </container-invoker-conf>
-            <container-cache-conf>
-                <min-size>10</min-size>
-                <max-size>100</max-size>
-                <passivation-interval>20</passivation-interval>
-            </container-cache-conf>
+            <container-invoker>org.jboss.ejb.jrmp.server.JRMPContainerInvoker</container-invoker>
+            <instance-pool>org.jboss.ejb.container.EntityInstancePool</instance-pool>
+            <instance-cache>org.jboss.ejb.container.RandomEntityInstanceCache</instance-cache>
+            <persistence-manager>org.jboss.ejb.container.CMPFilePersistenceManager</persistence-manager>
         </container-configuration>
     </container-configurations>
-</ejboss>
+</jboss>
