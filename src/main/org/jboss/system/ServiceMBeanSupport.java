@@ -31,7 +31,7 @@ import org.apache.log4j.NDC;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -45,7 +45,7 @@ import org.apache.log4j.NDC;
  *    <li> Add the own MBean Service Name to be remembered in an attribute
  * </ul>
  */
-public abstract class ServiceMBeanSupport
+public class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
    implements ServiceMBean, MBeanRegistration
 {
@@ -71,13 +71,14 @@ public abstract class ServiceMBeanSupport
    private int id = 0;
 
    /**
-    * Initialize <t>ServiceMBeanSupport</tt>.
+    * Construct a <t>ServiceMBeanSupport</tt>.
     *
     * <p>Sets up logging.
     */
-   protected ServiceMBeanSupport()
+   public ServiceMBeanSupport()
    {
       log = Logger.getLogger(getClass());
+      log.trace("Constructing");
    }
    
    // Public --------------------------------------------------------
@@ -89,9 +90,7 @@ public abstract class ServiceMBeanSupport
       //
       // TODO: Check if this gets called often, if so cache this
       //
-      String classname = this.getClass().getName();
-      return classname.substring(classname.lastIndexOf(".") + 1,
-                                 classname.length());
+      return org.jboss.util.Classes.stripPackageName(this.getClass());
    }
    
    public ObjectName getServiceName() {
