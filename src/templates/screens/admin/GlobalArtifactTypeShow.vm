@@ -74,7 +74,7 @@
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-#if (!$nditempty)
+#if (!$deletedIssueTypes.isEmpty())
  <h3>$l10n.DeletedArtifactTypes</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
