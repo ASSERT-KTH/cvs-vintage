@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.128 2004/12/28 20:16:47 bobtarling Exp $
+// $Id: Project.java,v 1.129 2004/12/29 23:53:35 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -423,6 +423,15 @@ public class Project implements java.io.Serializable, TargetListener {
                 }
             }
         }
+        
+        /* Issue 2909: if there is no diagram left, then let's add a default
+         * new one... */
+        if (diagrams.size() < 1) {
+            ArgoDiagram defaultDiagram = new UMLClassDiagram(treeRoot);
+            addMember(defaultDiagram);
+            setActiveDiagram(defaultDiagram); 
+            TargetManager.getInstance().setTarget(defaultDiagram);
+        }
     }
 
     /**
@@ -764,7 +773,6 @@ public class Project implements java.io.Serializable, TargetListener {
             }
         }
         d.removeChangeRegistryAsListener(saveRegistry);
-        setNeedsSave(true);
     }
 
     /**
