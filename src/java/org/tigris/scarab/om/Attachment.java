@@ -73,6 +73,10 @@ import org.tigris.scarab.util.ScarabException;
  * probably be implemented as attributes (with some ui redesign).     
  * The obvious form of attachment is a file uploaded and associated with
  * an issue, such as a screenshot showing an error or a patch.
+ *
+ * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: Attachment.java,v 1.37 2002/06/20 21:45:37 jon Exp $
  */
 public class Attachment 
     extends BaseAttachment
