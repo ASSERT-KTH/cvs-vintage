@@ -1,4 +1,4 @@
-// $Id: CrConsiderSingleton.java,v 1.13 2003/02/02 20:47:42 kataka Exp $
+// $Id: CrConsiderSingleton.java,v 1.14 2003/02/05 09:56:52 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,13 +95,20 @@ public class CrConsiderSingleton extends CrUML {
 
     public boolean predicate2(Object dm, Designer dsgr) {
 
-        // Only look at classes
+        // Only look at classes...
 
         if (!(ModelFacade.isAClass(dm))) {
             return NO_PROBLEM;
         }
-
-	if (!(ModelFacade.isPrimaryObject(dm))) return NO_PROBLEM;
+        
+        // with a name...
+        if (ModelFacade.getName(dm) == null ||
+            "".equals(ModelFacade.getName(dm))) {
+                return NO_PROBLEM;
+        }
+        
+        // ... and not incompletely imported
+        if (!(ModelFacade.isPrimaryObject(dm))) return NO_PROBLEM;
 
         // Check for Singleton stereotype, uninitialised instance variables and
         // outgoing associations, as per JavaDoc above.
