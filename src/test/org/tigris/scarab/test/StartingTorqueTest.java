@@ -9,6 +9,7 @@ package org.tigris.scarab.test;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.torque.Torque;
+import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.ActivityManager;
 
 import junit.framework.TestCase;
@@ -29,7 +30,9 @@ public class StartingTorqueTest extends TestCase {
 			Torque.init(config);
 
 			System.out.println("Success Initing Torque!");
-			ActivityManager.getInstance(new Long(1));
+			Activity activity = ActivityManager.getInstance(new Long(1));
+			assertNotNull(activity);
+			assertEquals(1,activity.getActivityId().intValue());
 		} catch (Exception e) {
 			System.out.println("Can't initialize Torque!!");
 			e.printStackTrace();
