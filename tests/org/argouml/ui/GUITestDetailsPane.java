@@ -1,4 +1,4 @@
-// $Id: GUITestDetailsPane.java,v 1.5 2004/11/01 19:55:22 mvw Exp $
+// $Id: GUITestDetailsPane.java,v 1.6 2004/11/05 10:03:46 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GUITestDetailsPane.java,v 1.5 2004/11/01 19:55:22 mvw Exp $
+// $Id: GUITestDetailsPane.java,v 1.6 2004/11/05 10:03:46 bobtarling Exp $
 package org.argouml.ui;
 
 import javax.swing.JPanel;
@@ -30,10 +30,11 @@ import javax.swing.JPanel;
 import junit.framework.TestCase;
 
 import org.argouml.model.uml.CoreFactory;
-import org.argouml.swingext.Horizontal;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
+
+import org.tigris.swidgets.Horizontal;
 
 /**
  * @author jaap.branderhorst@xs4all.nl

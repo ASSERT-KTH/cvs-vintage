@@ -1,4 +1,4 @@
-// $Id: GUITestPropertyPanels.java,v 1.10 2004/10/21 19:25:27 mvw Exp $
+// $Id: GUITestPropertyPanels.java,v 1.11 2004/11/05 10:03:46 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,10 +61,11 @@ import org.argouml.kernel.ZargoFilePersister;
 import org.argouml.model.ModelFacade;
 // import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlHelper;
-import org.argouml.swingext.Horizontal;
 import org.argouml.ui.targetmanager.TargetEvent;
 // import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.cognitive.critics.ChildGenUML;
+
+import org.tigris.swidgets.Horizontal;
 
 /**
  * GuiTestPropertyPanels attempts to load a project file and iterates through
