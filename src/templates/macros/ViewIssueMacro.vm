@@ -349,7 +349,6 @@ $l10n.NoComments
   #if (!$currentIssue.Urls.isEmpty())
   <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveurl" />&#160;
   #end
-  <input type="submit" value="$l10n.AddNew" name="eventSubmit_doSubmiturl" />&#160;
   #if (!$currentIssue.Urls.isEmpty())
   <input type="submit" value="$l10n.Delete"  name="eventSubmit_doDeleteurl" />
   #end
