@@ -24,24 +24,28 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 import javax.xml.parsers.*;
 
-
 import org.jboss.logging.Log;
 import org.jboss.util.Service;
 import org.jboss.util.ServiceFactory;
 import org.jboss.util.ServiceMBeanSupport;
 import org.jboss.util.XmlHelper;
 
-/** The ConfigurationService MBean is loaded when JBoss starts up by the
-JMX MLet. The ConfigurationService in turn loads the jboss.jcml configuration
-when loadConfiguration() is invoked. This instantiates JBoss specific mbean
-services that wish to be controlled by the JBoss ServiceControl/Service
-lifecycle service.
+/** 
+ * The ConfigurationService MBean is loaded when JBoss starts up by the
+ * JMX MLet.
  *
- *   @see org.jboss.util.Service
- *   @see org.jboss.util.ServiceControl
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.22 $
+ * <p>The ConfigurationService in turn loads the jboss.jcml configuration 
+ *    when {@link #loadConfiguration} is invoked. This instantiates JBoss 
+ *    specific mbean services that wish to be controlled by the JBoss 
+ *    {@link ServiceControl}/{@link Service} lifecycle service.
+ *
+ * @see org.jboss.util.Service
+ * @see org.jboss.util.ServiceControl
+ *
+ * @author  Rickard Öberg (rickard.oberg@telkel.com)
+ * @author  Scott_Stark@displayscape.com
+ * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
+ * @version $Revision: 1.23 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -115,7 +119,7 @@ public class ConfigurationService
                   // It's ok, skip to next one
                   continue;
                 }
-
+                
                 // Set attributes
                 NodeList attrs = mbeanElement.getElementsByTagName("attribute");
                 for (int j = 0; j < attrs.getLength(); j++)
@@ -248,8 +252,8 @@ public class ConfigurationService
          try {
          	out = new PrintWriter(new FileOutputStream(confFile.getFile()));
 	     } catch (java.io.FileNotFoundException e) {
-	     	log.error("Configuration file "+confFile.getFile()+" must be available and writable.");
-	     	log.exception(e);
+           log.error("Configuration file "+confFile.getFile()+" must be available and writable.");
+           log.exception(e);
 	     }
 	     out.print(xml);
 	     out.close();
@@ -298,6 +302,73 @@ public class ConfigurationService
     }
 
     // Protected -----------------------------------------------------
+
+    /**
+     * Provides a wrapper around the information about which constructor 
+     * that MBeanServer should use to construct a MBean.
+     *
+     * <p>XML syntax for contructor:
+     *   <pre>
+     *      <constructor>
+     *         <arg type="xxx" value="yyy"/>
+     *         ...
+     *         <arg type="xxx" value="yyy"/>
+     *      </constructor>
+     *   </pre>
+     */
+    protected static class ConstructorInfo
+    {
+       public static final Object EMPTY_PARAMS[] = {};
+       public static final String EMPTY_SIGNATURE[] = {};
+
+       /** The constructor signature. */
+       public String[] signature = EMPTY_SIGNATURE;
+
+       /** The constructor parameters. */
+       public Object[] params = EMPTY_PARAMS;
+       
+       /**
+        * Create a ConstructorInfo object for the given configuration.
+        *
+        * @param element   The element to build info for.
+        * @return          A constructor information object.
+        *
+        * @throws ConfigurationException   Failed to create info object.
+        */
+       public static ConstructorInfo create(Element element)
+          throws ConfigurationException
+       {
+          ConstructorInfo info = new ConstructorInfo();
+
+          NodeList list = element.getElementsByTagName("constructor");
+          if (list.getLength() > 1) {
+             throw new ConfigurationException
+                ("only one <constructor> element may be defined");
+          }
+          else if (list.getLength() == 1) {
+             element = (Element)list.item(0);
+             
+             // get all of the "arg" elements
+             list = element.getElementsByTagName("arg");
+             int length = list.getLength();
+             info.params = new Object[length];
+             info.signature = new String[length];
+             
+             // decode the values into params & signature
+             for (int j=0; j<length; j++) {
+                Element arg = (Element)list.item(j);
+                //
+                // NOTE: should coerce value to the correct type??
+                //
+                info.signature[j] = arg.getAttribute("type");
+                info.params[j] = arg.getAttribute("value");
+             }
+          }
+          
+          return info;
+       }
+    }
+
     protected void create(Document configuration)
         throws Exception
     {
@@ -328,9 +399,20 @@ public class ConfigurationService
                   {
                      try
                      {
-                        // Create MBean
-                        ObjectInstance instance = server.createMBean(code, objectName,
-                            new ObjectName(server.getDefaultDomain(), "service", "MLet"));
+                        // get the constructor params/sig to use
+                        ConstructorInfo constructor = 
+                           ConstructorInfo.create(mbeanElement);
+
+                        // Could probably cache this value
+                        ObjectName loader = new ObjectName(server.getDefaultDomain(), "service", "MLet");
+
+                        // Create the MBean instance
+                        ObjectInstance instance = 
+                           server.createMBean(code, 
+                                              objectName, 
+                                              loader, 
+                                              constructor.params, 
+                                              constructor.signature);
                         
                         info = server.getMBeanInfo(instance.getObjectName());
                      } catch (Throwable ex)
