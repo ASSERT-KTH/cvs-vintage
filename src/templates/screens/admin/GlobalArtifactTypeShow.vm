@@ -16,18 +16,18 @@
 #if (!$sortPolarity || $sortPolarity.length() == 0)
    #set ($sortPolarity = "asc")
 #end
-#set ($allIssueTypes = $scarabG.getAllIssueTypes($sortColumn, $sortPolarity))
-
+#set ($nondeletedIssueTypes = $scarabG.getAllIssueTypes(false, $sortColumn, $sortPolarity))
+#set ($deletedIssueTypes = $scarabG.getAllIssueTypes(true, $sortColumn, $sortPolarity))
 
 ## PAGINATION
 ## if results exceed limit, get subset list
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
 #set ($pageNum = $data.Parameters.getInt("pageNum", 1))
-#if ($resultsPerPage > 0 && $allIssueTypes.size() > $resultsPerPage)
+#if ($resultsPerPage > 0 && $nondeletedIssueTypes.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($pagList = $scarabR.getPaginatedList($allIssueTypes, $pageNum, $resultsPerPage))
+ #set ($pagList = $scarabR.getPaginatedList($nondeletedIssueTypes, $pageNum, $resultsPerPage))
  #if ($pagList)
-   #set ($allIssueTypes = $pagList)
+   #set ($nondeletedIssueTypes = $pagList)
  #end
 #end
 
@@ -37,39 +37,66 @@
 
 <h3>$l10n.IssueTypes</h3>
 
-#if ($allIssueTypes.isEmpty())
+#if ($nondeletedIssueTypes.isEmpty())
 <p>$l10n.ClickAddNewToAddGlobalIssueType</p>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th width="70">$l10n.Select</th>
-<th>#sort ("name" "Type")</th>
-<th>#sort ("desc" "Description")</th>
-<th>$l10n.Deleted</th>
+<th>#sort ("name" "Name")</th>
+<th>$l10n.Locked</th>
+<th>$l10n.Default</th>
 </tr>
-#foreach ($issueType in $allIssueTypes)
+#foreach ($issueType in $nondeletedIssueTypes)
 #indexedRows($velocityCount)
 <td><input type="checkbox" name="action_$issueType.IssueTypeId"></td>
 <td><a href="$link.setPage("admin,GlobalArtifactTypeEdit.vm").setPathInfo("issuetypeid", "$issueType.IssueTypeId")">$issueType.Name</a>
 </td>
-<td>$issueType.Description</td>
     #set ($group = $intake.IssueType.mapTo($issueType))
-<td>$group.Deleted</td>
+<td>#booleanCheckbox($group.Locked)</td>
+<td>#booleanCheckbox($group.Default)</td>
 </tr>
 #end
 </table>
 #end
 
+
+
 <div class="functnbar3">
+<input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
 <input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
-#if (!$allIssueTypes.isEmpty())
+#if (!$nondeletedIssueTypes.isEmpty())
 <input type="submit" value="$l10n.CopySelected" name="eventSubmit_doCopy" />&#160;
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDelete" />
 #end
 </div>
 
 #if ($paginated)
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
+
+#if (!$deletedIssueTypes.isEmpty())
+ <h3>Deleted artifact types</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+ <tr>
+ <th>&nbsp;</th>
+ <th>Name</th>
+ </tr>
+
+#foreach ($issueType in $deletedIssueTypes)
+#indexedRows($velocityCount)
+<td><input type="checkbox" name="action_$issueType.IssueTypeId"></td>
+<td><a href="$link.setPage("admin,GlobalArtifactTypeEdit.vm").setPathInfo("issuetypeid", "$issueType.IssueTypeId")">$issueType.Name</a>
+</td>
+ </tr>
+#end
+</table>
+
+<div class="functnbar3">
+<input type="submit" value="$l10n.UndeleteSelected" name="eventSubmit_doUndelete"/>
+</div>
+#end
+
 </div>       
 
 $intake.declareGroups()
