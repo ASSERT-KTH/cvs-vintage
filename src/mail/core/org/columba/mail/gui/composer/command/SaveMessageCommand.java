@@ -12,6 +12,7 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.message.HeaderInterface;
+import org.columba.main.MainInterface;
 
 /**
  * @author freddy
@@ -46,6 +47,8 @@ public class SaveMessageCommand extends FolderCommand {
 		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.ADD, folder, headerList );
 		 
 		frame.tableController.tableChanged(ev);
+		
+		MainInterface.treeModel.nodeChanged(folder);
 	}
 
 	/**

@@ -34,7 +34,7 @@ import org.columba.mail.message.MimePartTree;
  */
 public class MimeTreeRenderer {
 	
-	private static final String rendererPath = "org.columba.modules.mail.composer.mimepartrenderers.";
+	private static final String rendererPath = "org.columba.mail.composer.mimepartrenderers.";
 	
 	private static final String[] renderers = {
 		"MultipartRenderer", "MultipartSignedRenderer" };

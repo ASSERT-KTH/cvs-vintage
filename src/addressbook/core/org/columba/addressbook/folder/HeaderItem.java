@@ -14,9 +14,8 @@
 
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.folder.*;
-
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 public class HeaderItem {
 
@@ -153,12 +152,21 @@ public class HeaderItem {
 	}
 
 	public Object clone() {
+		/*
 		HeaderItem item = null;
 		try{
 			item = (HeaderItem)super.clone();
 		}catch(CloneNotSupportedException cnse){} //does not occur
 		//necessary?
 		item.setHashtable((Hashtable) hashtable.clone());
+		return item;
+		*/
+		
+		HeaderItem item = new HeaderItem();
+		item.setUid( getUid() );
+		item.setFolder( getFolder() );
+		item.setHashtable( (Hashtable) hashtable.clone() );
+		
 		return item;
 	}
 }
