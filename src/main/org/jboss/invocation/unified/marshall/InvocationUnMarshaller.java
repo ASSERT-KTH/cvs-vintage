@@ -38,8 +38,12 @@ public class InvocationUnMarshaller extends SerializableUnMarshaller
          if(param instanceof MarshalledInvocation)
          {
             MarshalledInvocation mi = (MarshalledInvocation) param;
-            TransactionPropagationContextImporter tpcImporter = TransactionPropagationContextUtil.getTPCImporter();
-            mi.setTransaction(tpcImporter.importTransactionPropagationContext(mi.getTransactionPropagationContext()));
+            Object txCxt = mi.getTransactionPropagationContext();
+            if(txCxt != null)
+            {
+               TransactionPropagationContextImporter tpcImporter = TransactionPropagationContextUtil.getTPCImporter();
+               mi.setTransaction(tpcImporter.importTransactionPropagationContext(txCxt));
+            }
          }
       }
 
