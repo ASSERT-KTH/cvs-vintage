@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.16 2003/08/21 20:13:48 alexb Exp $
+// $Id: ProjectManager.java,v 1.17 2003/08/26 18:56:04 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,8 +21,6 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
-// $Id: ProjectManager.java,v 1.16 2003/08/21 20:13:48 alexb Exp $
 
 package org.argouml.kernel;
 
@@ -242,13 +240,13 @@ public final class ProjectManager {
     }
 
     /**
-     * Reads an old format XMI file. This format is no longer actively supported
-     * but for legacy reasons still present.
-     * @param url
-     * @return Project
-     * @throws IOException
+     * Reads an XMI file.<p>
      *
-     * @deprecated since 0.15.1, remove in 0.16
+     * This could be used to import models from other tools.
+     *
+     * @param url is the file name of the file
+     * @return Project is a new project containing the read model
+     * @throws IOException is thrown if some error occurs
      */
     private Project loadProjectFromXMI(URL url) throws IOException {
         Project p = new Project();
