@@ -80,6 +80,16 @@ public class ServerXmlHelper {
     private static StringManager sm =
 	StringManager.getManager("org.apache.tomcat.resources");
 
+    public static final String[] MODULE_PKGS={
+	"org.apache.tomcat.modules.session.",
+	"org.apache.tomcat.modules.server.",
+	"org.apache.tomcat.modules.config.",
+	"org.apache.tomcat.modules.security.",
+	"org.apache.tomcat.request.", // OLD
+	"org.apache.tomcat.context." // OLD
+    };
+       
+    
     public ServerXmlHelper() {
     }
 
@@ -94,7 +104,7 @@ public class ServerXmlHelper {
 
     public static void setInterceptorRules( XmlMapper xh ) {
 	xh.addRule( "ContextManager/ContextInterceptor",
-		    xh.objectCreate(null, "className"));
+		    xh.objectCreate(null, "className", MODULE_PKGS));
 	xh.addRule( "ContextManager/ContextInterceptor",
 		    xh.setProperties() );
 	xh.addRule( "ContextManager/ContextInterceptor",
@@ -104,7 +114,7 @@ public class ServerXmlHelper {
 				 "org.apache.tomcat.core.BaseInterceptor"));
 
 	xh.addRule( "ContextManager/RequestInterceptor",
-		    xh.objectCreate(null, "className"));
+		    xh.objectCreate(null, "className", MODULE_PKGS));
 	xh.addRule( "ContextManager/RequestInterceptor",
 		    xh.setProperties() );
 	xh.addRule( "ContextManager/RequestInterceptor",
@@ -139,7 +149,7 @@ public class ServerXmlHelper {
 	
 	// Configure context interceptors
 	xh.addRule( "Context/Interceptor",
-		    xh.objectCreate(null, "className"));
+		    xh.objectCreate(null, "className", MODULE_PKGS));
 	xh.addRule( "Context/Interceptor",
 		    xh.setProperties() );
 	xh.addRule( "Context/Interceptor",
@@ -149,7 +159,7 @@ public class ServerXmlHelper {
 				 "org.apache.tomcat.core.BaseInterceptor"));
 	// Old style 
 	xh.addRule( "Context/RequestInterceptor",
-		    xh.objectCreate(null, "className"));
+		    xh.objectCreate(null, "className", MODULE_PKGS));
 	xh.addRule( "Context/RequestInterceptor",
 		    xh.setProperties() );
 	xh.addRule( "Context/RequestInterceptor",
@@ -167,7 +177,7 @@ public class ServerXmlHelper {
 
     public void setConnectorHelper( XmlMapper xh ) {
 	xh.addRule( "ContextManager/Connector",
-		    xh.objectCreate(null, "className"));
+		    xh.objectCreate(null, "className", MODULE_PKGS));
 	xh.addRule( "ContextManager/Connector",
 		    xh.setParent( "setContextManager",
 				  "org.apache.tomcat.core.ContextManager") );

@@ -6,7 +6,7 @@ import java.io.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.modules.server.*;
-import org.apache.tomcat.session.StandardSessionInterceptor;
+import org.apache.tomcat.modules.session.*;
 import org.apache.tomcat.context.*;
 import org.apache.tomcat.util.log.*;
 import java.security.*;
@@ -360,7 +360,7 @@ public class EmbededTomcat { // extends WebService
 	// 	LogEvents logEventsI=new LogEvents();
 	// 	addRequestInterceptor( logEventsI );
 
-	SessionInterceptor sessI=new SessionInterceptor();
+	SessionId sessI=new SessionId();
 	addInterceptor( sessI );
 
 	SimpleMapper1 mapI=new SimpleMapper1();
@@ -375,7 +375,7 @@ public class EmbededTomcat { // extends WebService
 	addInterceptor( staticI );
 	mapI.setDebug(0);
 
-	addInterceptor( new StandardSessionInterceptor());
+	addInterceptor( new SimpleSessionStore());
 	
 	// access control ( find if a resource have constraints )
 	AccessInterceptor accessI=new AccessInterceptor();

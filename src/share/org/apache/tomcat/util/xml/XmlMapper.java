@@ -515,6 +515,15 @@ public class XmlMapper
 	return new ObjectCreate( classN, attrib);
     }
 
+    /** Create an object using an attribute value as the class name
+	If no attribute use classN as a default. If the class name
+	has no ".", use the third parameter as prefix
+     */
+    public XmlAction objectCreate( String classN, String attrib,String pref[])
+    {
+	return new ObjectCreate( classN, attrib, pref);
+    }
+
     /** Set object properties using XML attributes
      */
     public XmlAction setProperties(  ) {
@@ -594,6 +603,7 @@ public class XmlMapper
 class ObjectCreate extends XmlAction {
     String className;
     String attrib;
+    String pref[]=null;
 
     /**
      * Create an object of the specified class name.
@@ -619,6 +629,13 @@ class ObjectCreate extends XmlAction {
 	this.attrib=attrib;
     }
 
+    public ObjectCreate(String classN, String attrib, String pref[]) {
+	className=classN;
+	this.attrib=attrib;
+	this.pref=pref;
+    }
+
+    
     public void start( SaxContext ctx) throws Exception {
 	String tag=ctx.getCurrentElement();
 	String classN=className;
@@ -628,7 +645,22 @@ class ObjectCreate extends XmlAction {
 	    if (attributes.getValue(attrib) != null)
 		classN= attributes.getValue(attrib);
 	}
-	Class c=Class.forName( classN );
+	Class c=null;
+	if( pref!=null && classN.indexOf( "." ) <0 ) {
+	    for( int i=0; i<pref.length; i++ ) {
+		try {
+		    c=Class.forName( pref[i] + classN );
+		    if( c!=null ) break;
+		} catch( Exception ex ) {
+		    if( ctx.getDebug() > 0 )
+			ctx.log( "Try " + pref[i] + classN );
+		    // ignore
+		}
+	    }
+	}
+	if( c==null ) {
+	    c=Class.forName( classN );
+	}
 	Object o=c.newInstance();
 	ctx.pushObject(o);
 	if( ctx.getDebug() > 0 )

@@ -99,7 +99,7 @@
 
       <!-- ==================== Interceptors ==================== -->
         <ContextInterceptor 
-            className="org.apache.tomcat.context.DefaultCMSetter" />
+            className="org.apache.tomcat.context.DefaultCMSetter" >
 
         <!-- 
          ContextInterceptor className="org.apache.tomcat.context.LogEvents" 
@@ -137,8 +137,7 @@
         <!-- Session interceptor will extract the session id from cookies and 
              deal with URL rewriting ( by fixing the URL )
           -->
-        <RequestInterceptor 
-            className="org.apache.tomcat.modules.session.SessionId" />
+        <RequestInterceptor className="SessionId" />
 
         <!-- Find the container ( context and prefix/extension map ) 
              for a request.
@@ -180,8 +179,7 @@
         <!-- Plug a session manager. You can plug in more advanced session
              modules.
           -->
-        <RequestInterceptor 
-            className="org.apache.tomcat.modules.session.SimpleSessionStore" />
+        <RequestInterceptor className="SimpleSessionStore" />
 
         <!-- Check if the request requires an authenticated role.
           -->
