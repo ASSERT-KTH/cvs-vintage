@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.nio.charset.Charset;
+import java.text.DateFormat;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
@@ -34,11 +35,13 @@ import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
+import org.columba.mail.util.MailResourceLoader;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
 import org.columba.ristretto.message.Address;
+import org.columba.ristretto.message.AddressListRenderer;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MimeHeader;
@@ -56,6 +59,7 @@ public class ReplyCommand extends FolderCommand {
     protected final String[] headerfields =
         new String[] {
             "Subject",
+			"Date",
             "From",
             "To",
             "Reply-To",
@@ -127,14 +131,6 @@ public class ReplyCommand extends FolderCommand {
 
             String quotedBodyText = createQuotedBody(folder, uids, address);
 
-            /*
-             * *20040210, karlpeder* Remove html comments - they are not
-             * displayed properly in the composer
-             */ 
-            if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
-            	quotedBodyText = HtmlParser.removeComments(quotedBodyText);
-            }
-            	
             // debug output
             ColumbaLogger.log.info("Quoted body text:\n" + quotedBodyText);
             
@@ -171,7 +167,7 @@ public class ReplyCommand extends FolderCommand {
         if (to.length == 0) {
             to = new Address[] { rfcHeader.getFrom()};
         }
-
+        
         // Add addresses to the addressbook
         MessageBuilderHelper.addAddressesToAddressbook(to);
         model.setTo(to);
@@ -194,17 +190,53 @@ public class ReplyCommand extends FolderCommand {
     throws IOException, Exception {
 
         InputStream  bodyStream = folder.getMimePartBodyStream(uids[0], address);
-        /*
-         * original message is sent "inline" - model is setup according to the
-         * type of the original message. NB: If the original message was plain
-         * text, the message type seen here is always text. If the original
-         * message contained html, the message type seen here will depend on
-         * the "prefer html" option.
-         */
+
+        // Quote original message - different methods for text and html 
         if( model.isHtml() ) {
-            // TODO Quote with HTML
-            return StreamUtils.readInString(bodyStream).toString();                        
+            // Html: Insertion of text before and after original message
+        	
+        	// get necessary headerfields
+        	BasicHeader rfcHeader = new BasicHeader(
+        			folder.getHeaderFields(uids[0], headerfields));
+        	String subject = rfcHeader.getSubject();
+        	String date = DateFormat.getDateTimeInstance(
+        			DateFormat.LONG, DateFormat.MEDIUM).
+					format(rfcHeader.getDate());
+        	String from = AddressListRenderer.renderToHTMLWithLinks(
+        			new Address[] { rfcHeader.getFrom() }).toString();
+        	String to = AddressListRenderer.renderToHTMLWithLinks(
+        			rfcHeader.getTo()).toString();
+
+        	// build "quoted" message
+        	StringBuffer buf = new StringBuffer();
+			buf.append("<html><body><p>");
+			buf.append(MailResourceLoader.getString(
+					"dialog", "composer", "original_message_start"));
+			buf.append("<br>" + 
+					MailResourceLoader.getString("header", "header", "subject") + 
+					": " + subject);
+			buf.append("<br>" + 
+					MailResourceLoader.getString("header", "header", "date") +
+					": " + date);
+			buf.append("<br>" +
+					MailResourceLoader.getString("header", "header", "from") +
+					": " + from);
+			buf.append("<br>" +
+					MailResourceLoader.getString("header", "header", "to") + 
+					": " + to);
+			buf.append("</p>");
+			buf.append(HtmlParser.removeComments(	// comments are not displayed correctly in composer
+					HtmlParser.getHtmlBody(
+						StreamUtils.readInString(bodyStream).toString())));
+			buf.append("<p>");
+			buf.append(MailResourceLoader.getString(
+					"dialog", "composer", "original_message_end"));
+			buf.append("</p></body></html>");
+
+			return buf.toString();
+        	
         } else {
+        	// Text: Addition of > before each line
             return StreamUtils.readInString(new QuoteFilterInputStream(bodyStream)).toString();            
         }
     }
