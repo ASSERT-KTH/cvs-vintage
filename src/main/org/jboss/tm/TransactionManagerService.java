@@ -37,7 +37,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *  @see TxManager
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
@@ -45,8 +45,8 @@ public class TransactionManagerService
 {
    // Constants -----------------------------------------------------
    public static String JNDI_NAME = "java:/TransactionManager";
-   public static String JNDI_IMPORTER = "java:/TransactionPropagationContextExporter";
-   public static String JNDI_EXPORTER = "java:/TransactionPropagationContextImporter";
+   public static String JNDI_IMPORTER = "java:/TransactionPropagationContextImporter";
+   public static String JNDI_EXPORTER = "java:/TransactionPropagationContextExporter";
     
    // Attributes ----------------------------------------------------
 
