@@ -240,7 +240,15 @@ public class StaticInterceptor extends BaseInterceptor {
 final class FileHandler extends Handler  {
     int realFileNote;
     Context context;
-    
+    /**
+     * The set of SimpleDateFormat formats to use in getDateHeader().
+     */
+    protected static final SimpleDateFormat formats[] = {
+	new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US),
+	new SimpleDateFormat("EEEEEE, dd-MMM-yy HH:mm:ss zzz", Locale.US),
+	new SimpleDateFormat("EEE MMMM d HH:mm:ss yyyy", Locale.US)
+    };
+
     FileHandler() {
 	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.fileHandler";
@@ -283,8 +291,35 @@ final class FileHandler extends Handler  {
 	}
 
 	File file = new File( absPath );
+        String headerValue=req.getHeader("If-Modified-Since");
+/**/
+        headerValue = req.getHeader("If-Modified-Since");
+        if (headerValue != null) {
+
+            Date date = null;
+
+            // Parsing the HTTP Date
+            for (int i = 0; (date == null) && (i < formats.length); i++) {
+                try {
+                    date = formats[i].parse(headerValue);
+                } catch (ParseException e) {
+                    ;
+                }
+            }
+
+            if ((date != null)
+                && (file.lastModified() <= (date.getTime() + 1000)) ) {
+                // The entity has not been modified since the date
+                // specified by the client. This is not an error case.
+                context.getContextManager().handleStatus( req, res, 304);
+                return;
+            }
+
+
+        }
+/**/
 	if( debug>0) log( "After paranoic checks = " + absPath);
-	
+
         String mimeType=ctx.getMimeMap().getContentTypeFor(absPath);
 
 	if (mimeType == null) {
