@@ -53,4 +53,34 @@ public class DefaultItemTest extends TestCase {
 		assertFalse("The item is equal to a null object", item.equals(null));
 		assertTrue("The items are not equal", item.equals(new DefaultItem((XmlElement)item.getRoot().clone()) ));
 	}
+	
+	/*
+	 * Test for clone()
+	 */
+	public void testClone() {
+		DefaultItem item1 = new DefaultItem(new XmlElement("EL"));
+		DefaultItem item2 = (DefaultItem) item1.clone();
+		assertEquals("The parent and the cloned object are not equal", item1, item2);
+		assertNotSame("The parent and the cloned object are the same", item1, item2);
+		assertNotSame("The parent and the cloned Xml Elements objects are the same object.", item1.getRoot(), item2.getRoot() );
+		assertEquals("The parent and the cloned Xml Elements objects are not equal.", item1.getRoot(), item2.getRoot() );
+		assertEquals("The parent and the cloned object did not return the same hashcodes", item1.hashCode(), item2.hashCode());
+		
+		XmlElement xml = new XmlElement();
+		xml.setName("a NAME");
+		xml.addAttribute("key","values");
+		xml.addAttribute("key2","other values");
+		xml.addSubElement("child");
+		xml.addSubElement(new XmlElement("child2"));
+
+		item1 = new DefaultItem(xml);
+		item2 = (DefaultItem) item1.clone();
+		assertEquals("The parent and the cloned object are not equal", item1, item2);
+		assertNotSame("The parent and the cloned object are the same", item1, item2);
+		assertSame("The getRoot() method did not return the same object put in", xml, item1.getRoot());
+		assertNotSame("The parent and the cloned Xml Elements objects are the same object.", item1.getRoot(), item2.getRoot() );
+		assertEquals("The parent and the cloned Xml Elements objects are not equal.", item1.getRoot(), item2.getRoot() );
+		assertNotSame("The parent and the cloned Xml Elements objects are the same object.", xml, item2.getRoot() );
+		assertEquals("The parent and the cloned object did not return the same hashcodes", item1.hashCode(), item2.hashCode());
+	}
 }
