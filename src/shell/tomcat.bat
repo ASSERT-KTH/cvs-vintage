@@ -4,37 +4,49 @@ rem tomcat.bat - Start/Stop Script for the TOMCAT Server
 rem
 rem Environment Variable Prerequisites:
 rem
-rem   TOMCAT_HOME  (Optional) May point at your Tomcat distribution
-rem                directory.  If not present, the current working
-rem                directory is assumed.
-rem                Note: This batch file does not function properly
-rem                if TOMCAT_HOME contains spaces.
+rem   JAVA_HOME      Must point at your Java Development Kit installation.
 rem
-rem   TOMCAT_OPTS  (Optional) Java runtime options used when the "start",
-rem                "stop", or "run" command is executed
+rem   TOMCAT_HOME    (Optional) Should point to the directory containing
+rem                  Tomcat's "conf" and "webapps" directory.
+rem                  If not present, the current working directory is
+rem                  assumed.
+rem                  Note: This batch file does not function properly
+rem                  if TOMCAT_HOME contains spaces.
 rem
-rem   CLASSPATH    (Optional) This batch file will automatically add
-rem                what Tomcat needs to the CLASSPATH.  This consists
-rem                of TOMCAT_HOME\classes and all the jar files in
-rem                TOMCAT_HOME\lib. This will include the "jaxp.jar"
-rem                and "parser.jar" files from the JAXP Reference
-rem                implementation, and the "tools.jar" from the JDK.
+rem   TOMCAT_INSTALL (Optional) Should point to the directory containing
+rem                  Tomcat's "lib" directory.
+rem                  If not present, the current working directory is
+rem                  assumed.  If this doesn't contain a "lib" directory,
+rem                  or if the "lib" directory doesn't contain tomcat.jar.
+rem                  TOMCAT_HOME is used.
 rem
-rem   JAVA_HOME    Must point at your Java Development Kit installation.
+rem   TOMCAT_OPTS    (Optional) Java runtime options used when the "start",
+rem                  "stop", or "run" command is executed
 rem
-rem $Id: tomcat.bat,v 1.35 2001/07/17 03:46:05 costin Exp $
+rem   NOTE: Tomcat does not use your system's CLASSPATH setting.  Instead
+rem         Tomcat starts using only tomcat.jar on the classpath and builds
+rem         its "classpath" internally.  To add your classes to those of
+rem         Tomcat, refer to the Tomcat Users Guide (tomcat_ug.html found
+rem         in the "doc" directory.
+rem
+rem $Id: tomcat.bat,v 1.36 2001/08/19 22:52:51 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
 rem ----- Save Environment Variables That May Change ------------------------
 
-set _CP=%CP%
 set _TOMCAT_HOME=%TOMCAT_HOME%
+set _TOMCAT_INSTALL=%TOMCAT_INSTALL%
 set _CLASSPATH=%CLASSPATH%
 
 rem ----- Internal Environment Vars used somewhere --------------------------
 
-set TEST_JAR=lib\tomcat.jar
+set _NULL=nul
+set _CONTAINER=contai~1
+if not "%OS%" == "Windows_NT" goto cont
+set _NULL=
+set _CONTAINER=container
+:cont
 
 rem ----- Verify and Set Required Environment Variables ---------------------
 
@@ -43,14 +55,25 @@ echo You must set JAVA_HOME to point at your Java Development Kit installation
 goto cleanup
 :gotJavaHome
 
-if not "%TOMCAT_HOME%" == "" goto gotTomcatHome
+if not "%TOMCAT_HOME%" == "" goto gotTcHome
 set TOMCAT_HOME=.
-:gotTomcatHome
-if exist "%TOMCAT_HOME%\%TEST_JAR%" goto okTomcatHome
-echo Unable to locate %TEST_JAR%, check the value of TOMCAT_HOME.
+:gotTcHome
+if exist "%TOMCAT_HOME%\conf\%_NULL%" goto okTcHome
+echo "%TOMCAT_HOME%\conf" not found.
+echo Unable to locate Tomcat's "conf" directory, check the value of TOMCAT_HOME.
 goto cleanup
-:okTomcatHome
+:okTcHome
 
+if not "%TOMCAT_INSTALL%" == "" goto gotTcInstall
+set TOMCAT_INSTALL=.
+if exist "%TOMCAT_INSTALL%\lib\tomcat.jar" goto okTcInstall
+set TOMCAT_INSTALL=%TOMCAT_HOME%
+:gotTcInstall
+if exist "%TOMCAT_INSTALL%\lib\tomcat.jar" goto okTcInstall
+echo "%TOMCAT_INSTALL%\lib\tomcat.jar" not found.
+echo Unable to locate "lib\tomcat.jar", check the value of TOMCAT_INSTALL.
+goto cleanup
+:okTcInstall
 
 rem ----- Prepare Appropriate Java Execution Commands -----------------------
 
@@ -67,7 +90,7 @@ set _RUNJAVA="%JAVA_HOME%\bin\java"
 
 :setClasspath
 
-set CLASSPATH=%TOMCAT_HOME%\lib\tomcat.jar
+set CLASSPATH=%TOMCAT_INSTALL%\lib\tomcat.jar
 
 rem ----- Execute The Requested Command -------------------------------------
 
@@ -90,9 +113,6 @@ echo   run -   Start Tomcat in the current window
 echo   start - Start Tomcat in a separate window
 echo   stop -  Stop Tomcat
 goto cleanup
-
-:doEnv
-goto finish
 
 :startServer
 echo Starting Tomcat in new window
@@ -132,6 +152,56 @@ rem Run JSPC in Tomcat's Environment
 %_RUNJAVA% %JSPC_OPTS% -Dtomcat.home=%TOMCAT_HOME% org.apache.jasper.JspC %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
+rem ----- Set CLASSPATH to Tomcat's Runtime Environment ----------------------- 
+
+:doEnv
+rem Try to determine if TOMCAT_INSTALL contains spaces
+if exist %TOMCAT_INSTALL%\lib\%_NULL% goto dynClasspath
+echo Your TOMCAT_INSTALL or TOMCAT_HOME appears to contain spaces.
+echo Unable to set CLASSPATH dynamically.
+goto staticClasspath
+
+:dynClasspath
+set _LIBJARS=
+for %%i in (%TOMCAT_HOME%\lib\%_CONTAINER%\*.*) do call %TOMCAT_HOME%\bin\cpappend.bat %%i
+if not "%_LIBJARS%" == "" goto getLibJars
+echo Unable to set CLASSPATH dynamically.
+if "%OS%" == "Windows_NT" goto staticClasspath
+echo Note: To set the CLASSPATH dynamically on Win9x systems
+echo       only DOS 8.3 names may be used in TOMCAT_HOME or TOMCAT_INSTALL!
+goto staticClasspath
+
+:getLibJars
+for %%i in (%TOMCAT_HOME%\lib\common\*.*) do call %TOMCAT_HOME%\bin\cpappend.bat %%i
+for %%i in (%TOMCAT_HOME%\lib\apps\*.*) do call %TOMCAT_HOME%\bin\cpappend.bat %%i
+
+echo Setting your CLASSPATH to Tomcat's runtime set of jars.
+rem Note: _LIBJARS already contains a leading semicolon
+set CLASSPATH=%CLASSPATH%%_LIBJARS%
+goto finish
+
+:staticClasspath
+echo Setting your CLASSPATH statically.
+rem Add lib jars
+if exist "%TOMCAT_HOME%\lib\tomcat.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\tomcat.jar
+rem Add lib\container jars
+if exist "%TOMCAT_HOME%\lib\container\crimson.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\container\crimson.jar
+if exist "%TOMCAT_HOME%\lib\container\facade22.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\container\facade22.jar
+if exist "%TOMCAT_HOME%\lib\container\jasper.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\container\jasper.jar
+if exist "%TOMCAT_HOME%\lib\container\jaxp.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\container\jaxp.jar
+if exist "%TOMCAT_HOME%\lib\container\tomcat_modules.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\container\tomcat_modules.jar
+if exist "%TOMCAT_HOME%\lib\container\tomcat_util.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\container\tomcat_util.jar
+if exist "%TOMCAT_HOME%\lib\container\tomcat-startup.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\container\tomcat-startup.jar
+if exist "%TOMCAT_HOME%\lib\container\xalan.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\container\xalan.jar
+rem Add lib\common jars
+if exist "%TOMCAT_HOME%\lib\common\connector_util.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\common\connector_util.jar
+if exist "%TOMCAT_HOME%\lib\common\core_util.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\common\core_util.jar
+if exist "%TOMCAT_HOME%\lib\common\jasper-runtime.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\common\jasper-runtime.jar
+if exist "%TOMCAT_HOME%\lib\common\servlet.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\common\servlet.jar
+if exist "%TOMCAT_HOME%\lib\common\tomcat_core.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\common\tomcat_core.jar
+
+goto finish
+
 
 rem ----- Restore Environment Variables ---------------------------------------
 
@@ -145,6 +215,6 @@ set CLASSPATH=%_CLASSPATH%
 set _CLASSPATH=
 set TOMCAT_HOME=%_TOMCAT_HOME%
 set _TOMCAT_HOME=
-set CP=%_CP%
-set _CP=
+set TOMCAT_INSTALL=%_TOMCAT_INSTALL%
+set _TOMCAT_INSTALL=
 :finish
