@@ -190,7 +190,7 @@ public class Attachment
      * exists the file is moved to its final location.
      *
      * @param dbCon a <code>DBConnection</code> value
-     * @exception Exception if an error occurs
+     * @exception TorqueException if an error occurs
      */
     public void save(DBConnection dbCon)
         throws TorqueException
