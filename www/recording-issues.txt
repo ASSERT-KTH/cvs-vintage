@@ -1,4 +1,4 @@
-$Id: recording-issues.txt,v 1.5 2002/11/13 20:40:54 elicia Exp $
+$Id: recording-issues.txt,v 1.6 2002/11/26 22:38:15 elicia Exp $
 
 This document details all of the database modifications for each
 'action'. In other words, if you want to create a dependency (the
@@ -101,6 +101,41 @@ Attributes:
             AttachmentId = null (see above requirement)
 
     Delete (NEED TO FINISH):
+
+
+
+Move/Copy Issue
+    
+        One ActivitySet
+            TYPE_ID = 3
+            CREATED_BY = user that moved issue
+            CREATED_DATE = date moved
+            AttachmentId = 
+                ATTACHMENT_TYPE_ID = 4 (modification)
+                ATTACHMENT_NAME = 'Copied issue note'
+                ATTACHMENT_DATA =  user-provided reason and selected
+                                   attribute data for attributes that
+                                   do not exist target module/issue type
+
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = NULL
+                CREATED_BY = user doing attribute create
+                MODIFIED_DATE = Set to cre date
+                CREATED_DATE = SET to cre date
+                DELETED = 0
+            
+        Activity N
+            IssueId = 100
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = 'SCB1' (old issue id)
+            NEW_VALUE = 'SCB2' (new issue id)
+            DESCRIPTION = ' copied from issue PACS1 in module Pacman JVM >
+                            Source / Defect'
+            AttachmentId = null (see above requirement)
+
+
 
 
 Dependencies:
