@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * One instance of this class is created for each supported edit mode.
  *
  * @author Slava Pestov
- * @version $Id: Mode.java,v 1.3 2001/12/01 05:48:47 spestov Exp $
+ * @version $Id: Mode.java,v 1.4 2002/01/09 07:21:53 spestov Exp $
  */
 public class Mode
 {
@@ -132,7 +132,7 @@ public class Mode
 		//if(jEdit.getBooleanProperty(prefix + "customSettings"))
 		//{
 			String property = jEdit.getProperty(prefix + key);
-			if(property != null)
+			if(property != null && property.length() != 0)
 			{
 				Object value;
 				try
@@ -212,7 +212,13 @@ public class Mode
 	 */
 	public void setProperties(Hashtable props)
 	{
+		String filenameGlob = (String)getProperty("filenameGlob");
+		String firstlineGlob = (String)getProperty("firstlineGlob");
 		this.props = props;
+		if(filenameGlob != null)
+			props.put("filenameGlob",filenameGlob);
+		if(firstlineGlob != null)
+			props.put("firstlineGlob",firstlineGlob);
 	} //}}}
 
 	//{{{ accept() method

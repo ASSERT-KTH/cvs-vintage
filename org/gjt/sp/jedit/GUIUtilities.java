@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.20 2002/01/06 09:32:25 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.21 2002/01/09 07:21:53 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -262,7 +262,7 @@ public class GUIUtilities
 		else
 			mi = new EnhancedMenuItem(label,action);
 
-		if(setMnemonic && mnemonic != '\0')
+		if(!OperatingSystem.isMacOS() && setMnemonic && mnemonic != '\0')
 			mi.setMnemonic(mnemonic);
 
 		return mi;

@@ -28,6 +28,8 @@ import javax.swing.border.*;
 import javax.swing.text.Segment;
 import javax.swing.*;
 import java.awt.event.*;
+import java.awt.font.*;
+import java.awt.geom.*;
 import java.awt.*;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.textarea.*;
@@ -46,7 +48,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.13 2002/01/02 04:49:58 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.14 2002/01/09 07:21:53 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -392,10 +394,14 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 			VICaretStatus.this.setBackground(UIManager.getColor("Label.background"));
 			VICaretStatus.this.setFont(UIManager.getFont("Label.font"));
 
-			Dimension size = new Dimension(
-				VICaretStatus.this.getFontMetrics(
-				VICaretStatus.this.getFont())
-				.stringWidth(testStr),0);
+			Font font = VICaretStatus.this.getFont();
+			FontRenderContext frc = new FontRenderContext(null,false,false);
+
+			Rectangle2D bounds = font.getStringBounds(testStr,frc);
+			lm = font.getLineMetrics(testStr,frc);
+
+			Dimension size = new Dimension((int)bounds.getWidth(),
+				(int)bounds.getHeight());
 			VICaretStatus.this.setPreferredSize(size);
 		} //}}}
 
@@ -406,8 +412,6 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 
 			if(!buffer.isLoaded())
 				return;
-
-			FontMetrics fm = g.getFontMetrics();
 
 			JEditTextArea textArea = view.getTextArea();
 
@@ -455,11 +459,13 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 
 			g.drawString(buf.toString(),
 				VICaretStatus.this.getBorder().getBorderInsets(this).left + 1,
-				(VICaretStatus.this.getHeight() + fm.getAscent()) / 2 - 1);
+				(int)((VICaretStatus.this.getHeight() - lm.getHeight()) / 2
+				+ lm.getAscent()));
 		} //}}}
 
 		//{{{ Private members
 		private Segment seg = new Segment();
+		private LineMetrics lm;
 
 		//{{{ getVirtualPosition() method
 		private int getVirtualPosition(int dot, Buffer buffer, JEditTextArea textArea)
