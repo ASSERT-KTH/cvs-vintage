@@ -206,7 +206,7 @@ public class MetricsInterceptor extends AbstractInterceptor
 
             // lookup the connection factory and topic and create a JMS session
             Context namingContext       = new InitialContext();
-            TopicConnectionFactory fact = (TopicConnectionFactory)namingContext.lookup("TopicConnectionFactory");
+            TopicConnectionFactory fact = (TopicConnectionFactory)namingContext.lookup("ConnectionFactory");
 
             connection  = fact.createTopicConnection();
 
