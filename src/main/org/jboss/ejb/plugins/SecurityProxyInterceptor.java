@@ -14,6 +14,7 @@ import javax.naming.InitialContext;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvokerContainer;
+import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.MethodInvocation;
 
 import org.jboss.security.EJBSecurityManager;
@@ -27,7 +28,7 @@ proxy. It is added just before the container interceptor so that the
 interceptor has access to the EJB instance and context.
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public class SecurityProxyInterceptor extends AbstractInterceptor
 {
@@ -117,7 +118,10 @@ public class SecurityProxyInterceptor extends AbstractInterceptor
         // Apply any custom security checks
         if( securityProxy != null )
         {
-            EJBContext ctx = mi.getEnterpriseContext().getEJBContext();
+            EJBContext ctx = null;
+            EnterpriseContext ectx = mi.getEnterpriseContext();
+            if( ectx != null )
+                ctx = ectx.getEJBContext();
             Object[] args = mi.getArguments();
             securityProxy.setEJBContext(ctx);
             try

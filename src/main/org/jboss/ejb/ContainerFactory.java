@@ -37,37 +37,36 @@ import javax.naming.NamingException;
 import javax.management.MBeanServer;
 import javax.management.MBeanRegistration;
 import javax.management.ObjectName;
+import javax.management.RuntimeMBeanException;
 import javax.transaction.TransactionManager;
 
+import org.w3c.dom.Element;
+
+import org.jboss.ejb.plugins.AbstractInstanceCache;
+import org.jboss.ejb.plugins.SecurityProxyInterceptor;
+import org.jboss.ejb.plugins.StatefulSessionInstancePool;
 import org.jboss.logging.Log;
-import org.jboss.logging.ConsoleLogging;
-import org.jboss.logging.ConsoleLoggingMBean;
-
-import org.jboss.util.MBeanProxy;
-import org.jboss.web.WebClassLoader;
-import org.jboss.web.WebServiceMBean;
-
-import org.jboss.ejb.plugins.*;
-
-import org.jboss.verifier.BeanVerifier;
-import org.jboss.verifier.event.VerificationEvent;
-import org.jboss.verifier.event.VerificationListener;
-
-import org.jboss.security.EJBSecurityManager;
-import org.jboss.security.RealmMapping;
-
+import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
+import org.jboss.metadata.MetaData;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.XmlFileLoader;
-import org.jboss.logging.Logger;
-
 import org.jboss.mgt.EJB;
 import org.jboss.mgt.Module;
+import org.jboss.security.EJBSecurityManager;
+import org.jboss.security.RealmMapping;
+import org.jboss.util.MBeanProxy;
+import org.jboss.verifier.BeanVerifier;
+import org.jboss.verifier.event.VerificationEvent;
+import org.jboss.verifier.event.VerificationListener;
+import org.jboss.web.WebClassLoader;
+import org.jboss.web.WebServiceMBean;
+
 
 /**
 *   A ContainerFactory is used to deploy EJB applications. It can be given a URL to
@@ -81,9 +80,9 @@ import org.jboss.mgt.Module;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Peter Antman (peter.antman@tim.se)
-*   @author Scott Stark(Scott_Stark@displayscape.com)
+*   @author Scott Stark(Scott.Stark@jboss.org)
 *
-*   @version $Revision: 1.74 $
+*   @version $Revision: 1.75 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -95,6 +94,14 @@ public class ContainerFactory
   public static String DEFAULT_ENTITY_BMP_CONFIGURATION = "Default BMP EntityBean";
   public static String DEFAULT_ENTITY_CMP_CONFIGURATION = "Default CMP EntityBean";
   public static String DEFAULT_MESSAGEDRIVEN_CONFIGURATION = "Default MesageDriven Bean";
+  // Constants uses with container interceptor configurations
+    public static final int BMT = 1;
+    public static final int CMT = 2;
+    public static final int ANY = 3;
+    static final String BMT_VALUE = "Bean";
+    static final String CMT_VALUE = "Container";
+    static final String ANY_VALUE = "Both";
+
   // Attributes ----------------------------------------------------
   // Temp directory where deployed jars are stored
   File tmpDir;
@@ -583,7 +590,7 @@ public class ContainerFactory
     // Stolen from Stateless deploy
     // Create container
     MessageDrivenContainer container = new MessageDrivenContainer();
-    int transType = ((MessageDrivenMetaData)bean).isContainerManagedTx() ? ContainerInterceptors.CMT : ContainerInterceptors.BMT;
+    int transType = ((MessageDrivenMetaData)bean).isContainerManagedTx() ? CMT : BMT;
 
     initializeContainer( container, conf, bean, transType, cl, localCl );
     container.setContainerInvoker( createContainerInvoker( conf, cl ) );
@@ -603,7 +610,7 @@ public class ContainerFactory
     ConfigurationMetaData conf = bean.getContainerConfiguration();
     // Create container
     StatelessSessionContainer container = new StatelessSessionContainer();
-    int transType = ((SessionMetaData)bean).isContainerManagedTx() ? ContainerInterceptors.CMT : ContainerInterceptors.BMT;
+    int transType = ((SessionMetaData)bean).isContainerManagedTx() ? CMT : BMT;
     initializeContainer( container, conf, bean, transType, cl, localCl );
     if (bean.getHome() != null)
       container.setContainerInvoker( createContainerInvoker( conf, cl ) );
@@ -623,7 +630,7 @@ public class ContainerFactory
     ConfigurationMetaData conf = bean.getContainerConfiguration();
     // Create container
     StatefulSessionContainer container = new StatefulSessionContainer();
-    int transType = ((SessionMetaData)bean).isContainerManagedTx() ? ContainerInterceptors.CMT : ContainerInterceptors.BMT;
+    int transType = ((SessionMetaData)bean).isContainerManagedTx() ? CMT : BMT;
     initializeContainer( container, conf, bean, transType, cl, localCl );
     if (bean.getHome() != null)
       container.setContainerInvoker( createContainerInvoker( conf, cl ) );
@@ -647,7 +654,7 @@ public class ContainerFactory
     ConfigurationMetaData conf = bean.getContainerConfiguration();
     // Create container
     EntityContainer container = new EntityContainer();
-    int transType = ContainerInterceptors.CMT;
+    int transType = CMT;
     initializeContainer( container, conf, bean, transType, cl, localCl );
     if (bean.getHome() != null)
       container.setContainerInvoker( createContainerInvoker( conf, cl ) );
@@ -692,62 +699,65 @@ public class ContainerFactory
         getServer().invoke( name, "start", new Object[] {}, new String[] {} );
         getServer().setAttribute( name, new javax.management.Attribute( "Container", container ) );
      }
-     catch( Exception e ) {
-        e.printStackTrace();
+     catch( Exception e )
+     {
+         if( e instanceof RuntimeMBeanException )
+         {
+             RuntimeMBeanException rme = (RuntimeMBeanException) e;
+             rme.getTargetException().printStackTrace();
+         }
+         else
+         {
+            e.printStackTrace();
+         }
      }
   }
-  
+
+  /** Perform the common steps to initializing a container.
+   */
   private void initializeContainer( Container container, ConfigurationMetaData conf, BeanMetaData bean, int transType, ClassLoader cl, ClassLoader localCl )
     throws NamingException, DeploymentException
     {
-    // Create classloader for this container
-    // Only used to unique the bean ENC and does not augment class loading
-    container.setClassLoader( new URLClassLoader( new URL[ 0 ], cl ) );
-    // Create local classloader for this container
-    // For loading resources that must come from the local jar.  Not for loading classes!
-    container.setLocalClassLoader( new URLClassLoader( new URL[ 0 ], localCl ) );
-    // Set metadata
-    container.setBeanMetaData( bean );
-    // Set transaction manager
-    InitialContext iniCtx = new InitialContext();
-    container.setTransactionManager( (TransactionManager) iniCtx.lookup( "java:/TransactionManager" ) );
+        // Create classloader for this container
+        // Only used to unique the bean ENC and does not augment class loading
+        container.setClassLoader( new URLClassLoader( new URL[ 0 ], cl ) );
+        // Create local classloader for this container
+        // For loading resources that must come from the local jar.  Not for loading classes!
+        container.setLocalClassLoader( new URLClassLoader( new URL[ 0 ], localCl ) );
+        // Set metadata
+        container.setBeanMetaData( bean );
+        // Set transaction manager
+        InitialContext iniCtx = new InitialContext();
+        container.setTransactionManager( (TransactionManager) iniCtx.lookup( "java:/TransactionManager" ) );
 
-        // Set security manager & role mapping manager
+        // Set security domain manager
         String securityDomain = bean.getApplicationMetaData().getSecurityDomain();
+        String confSecurityDomain = conf.getSecurityDomain();
+        /* These are deprecated.
         String securityManagerJNDIName = conf.getAuthenticationModule();
         String roleMappingManagerJNDIName = conf.getRoleMappingManager();
+         */
 
-        if( securityDomain != null && securityDomain.startsWith("java:/jaas") == false )
-            securityDomain = "java:/jaas/" + securityDomain;
-        if( securityDomain != null || ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null)) )
+        if( securityDomain != null || confSecurityDomain != null )
         {   // Either the application has a security domain or the container has security setup
             try
             {
-                if( securityManagerJNDIName == null )
-                    securityManagerJNDIName = securityDomain;
-                System.out.println("lookup securityManager name: "+securityManagerJNDIName);
-                EJBSecurityManager ejbS = (EJBSecurityManager)iniCtx.lookup(securityManagerJNDIName);
+                if( confSecurityDomain == null )
+                    confSecurityDomain = securityDomain;
+                System.out.println("lookup securityDomain manager name: "+confSecurityDomain);
+                Object securityMgr = iniCtx.lookup(confSecurityDomain);
+                EJBSecurityManager ejbS = (EJBSecurityManager) securityMgr;
+                RealmMapping rM = (RealmMapping) securityMgr;
                 container.setSecurityManager( ejbS );
-            }
-            catch (NamingException ne)
-            {
-                throw new DeploymentException( "Could not find the Security Manager specified for this container, name="+securityManagerJNDIName, ne);
-            }
-
-            try
-            {
-                if( roleMappingManagerJNDIName == null )
-                    roleMappingManagerJNDIName = securityDomain;
-                RealmMapping rM = (RealmMapping)iniCtx.lookup(roleMappingManagerJNDIName);
                 container.setRealmMapping( rM );
             }
             catch (NamingException ne)
             {
-                throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
+                throw new DeploymentException( "Could not find the Security Manager specified for this container, name="+confSecurityDomain, ne);
             }
         }
 
-        // Set security proxies
+        // Load the security proxy instance if one was configured
         String securityProxyClassName = bean.getSecurityProxy();
         if( securityProxyClassName != null )
         {
@@ -760,13 +770,98 @@ public class ContainerFactory
             }
             catch(Exception e)
             {
-                throw new DeploymentException("Missing SecurityProxy (in jboss.xml or standardjboss.xml): " + conf.getContainerInvoker() +" - " + e);
+                throw new DeploymentException("Failed to create SecurityProxy of type: " + securityProxyClassName + ", "+ conf.getContainerInvoker() +" - " + e);
             }
         }
 
-       // Create interceptors
-       ContainerInterceptors.addInterceptors(container, transType, metricsEnabled, conf.getContainerInterceptorsConf());
+       // Install the container interceptors based on the configuration
+       addInterceptors(container, transType, conf.getContainerInterceptorsConf());
+    }
 
+    /** Given a container-interceptors element of a container-configuration,
+    add the indicated interceptors to the container depending on the container
+    transcation type and metricsEnabled flag.
+
+    @param container, the container instance to setup.
+    @param transType, one of the BMT, CMT or ANY constants.
+    @param element, the container-interceptors element from the container-configuration.
+    */
+    private void addInterceptors(Container container, int transType, Element element)
+    {
+        // Get the interceptor stack(either jboss.xml or standardjboss.xml)
+        Iterator interceptorElements = MetaData.getChildrenByTagName(element, "interceptor");
+        String transTypeString = stringTransactionValue(transType);
+        ClassLoader loader = container.getClassLoader();
+        /* First build the container interceptor stack from interceptorElements
+            match transType and metricsEnabled values
+        */
+        ArrayList istack = new ArrayList();
+        while( interceptorElements != null && interceptorElements.hasNext() )
+        {
+            Element ielement = (Element) interceptorElements.next();
+            /* Check that the interceptor is configured for the transaction mode of the bean
+                by comparing its 'transaction' attribute to the string representation
+                of transType
+            */
+            String transAttr = ielement.getAttribute("transaction");
+            if( transAttr.length() == 0 || transAttr.equalsIgnoreCase(transTypeString) )
+            {   // The transaction type matches the container bean trans type, check the metricsEnabled
+                String metricsAttr = ielement.getAttribute("metricsEnabled");
+                boolean metricsInterceptor = metricsAttr.equalsIgnoreCase("true");
+                if( metricsEnabled == false && metricsInterceptor == true )
+                    continue;
+
+                String className = null;
+                try
+                {
+                    className = MetaData.getElementContent(ielement);
+                    Class clazz = loader.loadClass(className);
+                    Interceptor interceptor = (Interceptor) clazz.newInstance();
+                    istack.add(interceptor);
+                }
+                catch(Exception e)
+                {
+                     Logger.warning("Could not load the "+className+" interceptor for this container");
+                     Logger.exception(e);
+                }
+            }
+        }
+
+        if( istack.size() == 0 )
+            Logger.warning("There are no interceptors configured. Check the standardjboss.xml file");
+
+        // Now add the interceptors to the container
+        for(int i = 0; i < istack.size(); i ++)
+        {
+            Interceptor interceptor = (Interceptor) istack.get(i);
+            container.addInterceptor(interceptor);
+        }
+
+        /* If there is a security proxy associated with the container add its
+         interceptor just before the container interceptor
+        */
+        if( container.getSecurityProxy() != null )
+            container.addInterceptor(new SecurityProxyInterceptor());
+
+        // Finally we add the last interceptor from the container
+        container.addInterceptor(container.createContainerInterceptor());
+    }
+
+    /**
+     */
+    private static String stringTransactionValue(int transType)
+    {
+        String transaction = ANY_VALUE;
+        switch( transType )
+        {
+            case BMT:
+                transaction = BMT_VALUE;
+            break;
+            case CMT:
+                transaction = CMT_VALUE;
+            break;
+        }
+        return transaction;
     }
 
   private static ContainerInvoker createContainerInvoker( ConfigurationMetaData conf, ClassLoader cl )
@@ -836,4 +931,3 @@ public class ContainerFactory
     return ic;
     }
   }
-
