@@ -226,6 +226,9 @@ public class BasicTableModelSorter extends TreeTableModelDecorator {
                 }
                 else if (item1 instanceof String) {
                     result = collator.compare((String) item1, (String) item2);
+                   
+                } else if ( item1 instanceof Boolean) {
+                	result = collator.compare((Boolean) item1, (Boolean) item2);
                 }
             }
 

@@ -33,6 +33,7 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.gui.table.model.TableModelSorter;
 import org.columba.mail.gui.table.plugins.BasicHeaderRenderer;
 import org.columba.mail.gui.table.plugins.BasicRenderer;
 import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
@@ -49,10 +50,11 @@ import org.columba.mail.plugin.TableRendererPluginHandler;
 public class TableView extends TreeTable implements OptionsSerializer {
 	private HeaderTableModel headerTableModel;
 	private TableRendererPluginHandler handler;
-
-	public TableView(HeaderTableModel headerTableModel) {
+	private TableModelSorter sorter;
+	public TableView(HeaderTableModel headerTableModel, TableModelSorter sorter) {
 		super();
 
+		this.sorter = sorter;
 		this.headerTableModel= headerTableModel;
 
 		setModel(headerTableModel);
@@ -150,7 +152,7 @@ public class TableView extends TreeTable implements OptionsSerializer {
 				c,
 				name,
 				r,
-				new BasicHeaderRenderer(),
+				new BasicHeaderRenderer(name, sorter),
 				size,
 				false);
 		} else {
@@ -179,7 +181,7 @@ public class TableView extends TreeTable implements OptionsSerializer {
 					c,
 					name,
 					r,
-					new BasicHeaderRenderer(),
+					new BasicHeaderRenderer(name, sorter),
 					size,
 					lockSize);
 			}

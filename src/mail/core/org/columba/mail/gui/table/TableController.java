@@ -168,7 +168,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
 		updateManager= new TableModelUpdateManager(tableModelSorter);
 
 		// init view
-		view= new TableView(headerTableModel);
+		view= new TableView(headerTableModel, tableModelSorter);
 
 		// pass tree to model, used by the threaded-view
 		headerTableModel.setTree((Tree) view.getTree());
@@ -438,6 +438,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
 		// remember previously selected folder
 		previouslySelectedFolder= folder;
+		
 	}
 
 	/**

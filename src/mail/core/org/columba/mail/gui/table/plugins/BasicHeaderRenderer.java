@@ -17,36 +17,65 @@ package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
 
+import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
+import org.columba.core.gui.util.AscendingIcon;
+import org.columba.core.gui.util.DescendingIcon;
+import org.columba.mail.gui.table.model.TableModelSorter;
 
 public class BasicHeaderRenderer extends DefaultTableCellRenderer {
-    public BasicHeaderRenderer() {
-        super();
+	private TableModelSorter sorter;
 
-        setHorizontalAlignment(SwingConstants.LEFT);
-        setHorizontalTextPosition(SwingConstants.LEFT);
-    }
+	private ImageIcon ascending= new AscendingIcon();
+	private ImageIcon descending= new DescendingIcon();
 
-    public Component getTableCellRendererComponent(JTable table, Object value,
-        boolean isSelected, boolean hasFocus, int row, int column) {
-        if (table != null) {
-            JTableHeader header = table.getTableHeader();
+	private String name;
 
-            if (header != null) {
-                setForeground(header.getForeground());
-                setBackground(header.getBackground());
-                setFont(header.getFont());
-            }
-        }
+	public BasicHeaderRenderer(String name, TableModelSorter sorter) {
+		super();
 
-        setText((value == null) ? "" : value.toString());
-        setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+		this.name= name;
+		this.sorter= sorter;
 
-        return this;
-    }
+		setHorizontalAlignment(SwingConstants.LEFT);
+		setHorizontalTextPosition(SwingConstants.LEFT);
+	}
+
+	public Component getTableCellRendererComponent(
+		JTable table,
+		Object value,
+		boolean isSelected,
+		boolean hasFocus,
+		int row,
+		int column) {
+		if (table != null) {
+			JTableHeader header= table.getTableHeader();
+
+			if (header != null) {
+				setForeground(header.getForeground());
+				setBackground(header.getBackground());
+				setFont(header.getFont());
+			}
+		}
+
+		setText((value == null) ? "" : value.toString());
+		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+
+		if (sorter.getSortingColumn().equals(name)) {
+			if (sorter.getSortingOrder()) {
+				setIcon(descending);
+			} else {
+				setIcon(ascending);
+			}
+		} else {
+			setIcon(null);
+		}
+
+		return this;
+	}
 }

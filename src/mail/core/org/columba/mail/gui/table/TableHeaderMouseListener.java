@@ -31,15 +31,12 @@ import javax.swing.table.TableColumnModel;
 
 
 /**
- * @author fdietz
- *
- * MouseListener for selecting columns with the left mouse
+ * Mouse listener for selecting columns with the left mouse
  * to change the sorting order.
+ * <p>
+ * Also responsible for changing the icon in the renderer
  *
- *
- * Its also responsible for changing the icon in the renderer
- *
- *
+ * @author fdietz
  */
 public class TableHeaderMouseListener extends MouseAdapter {
     private TableView view;

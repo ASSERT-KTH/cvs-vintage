@@ -29,6 +29,13 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
 
+/**
+ * Mouse listener used to handle the table selection and the popup
+ * menu viewing.
+ * 
+ *
+ * @author fdietz
+ */
 public class HeaderTableMouseListener extends MouseAdapter {
     private TableController headerTableViewer;
     private ViewMessageAction viewMessageAction;
