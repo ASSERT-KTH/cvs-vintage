@@ -1,4 +1,4 @@
-// $Id: CrAlreadyRealizes.java,v 1.13 2005/02/19 23:22:38 mvw Exp $
+// $Id: CrAlreadyRealizes.java,v 1.14 2005/03/05 21:06:10 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,7 @@ public class CrAlreadyRealizes extends CrUML {
         setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_INHERITANCE);
 	setKnowledgeTypes(Critic.KT_SEMANTICS, Critic.KT_PRESENTATION);
-	addTrigger("genealization");
+	addTrigger("genealization"); //TODO: typo?
 	addTrigger("realization");
     }
 
