@@ -12,7 +12,7 @@
               <li><a href="$link.setPage("help,UserIssueTemplates.vm")">Using templates</a></li>
               <li><strong>Modifying issues</strong> 
                 <ul>
-                  <li><a href="#info">Managing information</a></li>
+                  <li><a href="#manage">Managing information</a></li>
                   <li><a href="#users">Associating users</a></li>
                   <li><a href="#move">Moving issues</a></li>
                 </ul>
@@ -38,7 +38,7 @@
   <li>move issue</li>
 </ul>
 
-  <h3><strong><a name="info" id="info">Managing issue information</a></strong></h3>
+  <h3><strong><a name="manage" id="manage">Managing issue information</a></strong></h3>
   <p>Almost all attributes of an issue are editable from the view issue screen. 
     You can alter most attribues, if you have the proper permission level, view 
     user associations, add url links, create dependencies, add attachments, and 
