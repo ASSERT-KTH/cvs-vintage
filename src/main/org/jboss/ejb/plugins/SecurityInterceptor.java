@@ -31,7 +31,7 @@ import java.util.Set;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -227,7 +227,9 @@ public class SecurityInterceptor extends AbstractInterceptor
             {
                Set userRoles = realmMapping.getUserRoles(principal);
                String method = mi.getMethod().getName();
+               BeanMetaData beanMetaData = container.getBeanMetaData();
                String msg = "Insufficient method permissions, principal=" + principal
+                  + ", ejbName=" + beanMetaData.getEjbName()
                   + ", method=" + method + ", interface=" + iface
                   + ", requiredRoles=" + methodRoles + ", principalRoles=" + userRoles;
                SecurityException e = new SecurityException(msg);
@@ -242,7 +244,9 @@ public class SecurityInterceptor extends AbstractInterceptor
             if (callerRunAsIdentity.doesUserHaveRole(methodRoles) == false)
             {
                String method = mi.getMethod().getName();
-               String msg = "Insufficient method permissions, runAsPrincipal=" + callerRunAsIdentity.getName()
+               BeanMetaData beanMetaData = container.getBeanMetaData();
+               String msg = "Insufficient method permissions, principal=" + principal
+                  + ", ejbName=" + beanMetaData.getEjbName()
                   + ", method=" + method + ", interface=" + iface
                   + ", requiredRoles=" + methodRoles + ", runAsRoles=" + callerRunAsIdentity.getRunAsRoles();
                SecurityException e = new SecurityException(msg);
