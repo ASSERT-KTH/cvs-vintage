@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.10 2001/01/23 01:40:29 jon Exp $
+$Id: README.txt,v 1.11 2001/03/27 03:14:58 jon Exp $
 
 Welcome to Scarab!
 
@@ -80,10 +80,10 @@ NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are using
 NOTE: If you already have an existing Tomcat installation and prefer to run 
       Scarab from there, create a file called .ant.properties in the build 
       directory or in your $HOME directory. The contents of this file should be 
-      a single line equating the variable build.dir to the path to Tomcat. For 
-      example:
+      a single line equating the variable build.dir.scarab to the path to 
+      Tomcat. For example:
 
-      build.dir=/usr/local/jakarta-tomcat
+      build.dir.scarab=/usr/local/jakarta-tomcat
 
 NOTE: There may be problems building and running Scarab with Tomcat 3.2.1. 
       If your current Tomcat installation is not 4.0, you can either compile to 
