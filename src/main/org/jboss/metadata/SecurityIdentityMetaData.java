@@ -20,7 +20,7 @@ identity to be used.
 Used in: session, entity, message-driven
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.2 $
+@version $Revision: 1.3 $
 */
 public class SecurityIdentityMetaData extends MetaData
 {
@@ -69,12 +69,10 @@ public class SecurityIdentityMetaData extends MetaData
         if( callerIdent != null )
         {
             useCallerIdentity = true;
-System.out.println("SecurityIdentity, useCallerIdentity");
         }
         else
         {
             runAsRoleName = getElementContent(getUniqueChild(runAs, "role-name"));
-System.out.println("SecurityIdentity, runAsRoleName="+runAsRoleName);
         }
 	}
 
