@@ -277,6 +277,7 @@
         <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/> 
         <filter token="ADMIN_USERNAME"    value="${scarab.user.username}"/>
+        <filter token="ANONYMOUS_USERNAME"    value="${scarab.anonymous.username}"/>
 
         <!-- the SQL data population scripts directory -->
         <copy todir="${database.instance.sql.dir}" filtering="yes">
