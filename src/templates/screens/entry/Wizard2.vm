@@ -32,23 +32,23 @@
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
     #if ($rma.Active)
+     #if ($currentIssue.getAttributeValue($att))
       #set ($attVal = $currentIssue.getAttributeValue($att))
-      #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
       <td>
-        #if ($attVal.Attribute.AttributeType.ValidationKey)
-             ## TODO not sure what this is
-        #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
-           #set ($attrOptionIdValue = $attrInput.OptionId.toString())
-           #if ($attrOptionIdValue.length() > 0)
-             $att.getAttributeOption($attrOptionIdValue).Name
-           #else
+        #if ($attVal.Attribute.isOptionAttribute())
+          #if ($attVal.isSet())
+             $attVal.AttributeOption.Name
+          #else
              ---
-           #end
+          #end
         #else
-             $!attrInput.Value
+             $!attVal.Value
         #end
       </td>
+     #else
+      <td>---</td>
      #end
+    #end
   #end
 #end
 </tr>
