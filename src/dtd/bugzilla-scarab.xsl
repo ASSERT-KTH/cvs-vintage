@@ -6,6 +6,7 @@
 <scarab>
     <module id="6" parent="3">
         <name>Source</name>
+        <description>Source</description>
         <code>TBNS</code>
         <xsl:for-each select="bug">
         <xsl:choose>
