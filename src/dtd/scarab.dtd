@@ -3,10 +3,10 @@
 <!ELEMENT module (fullname, code, issue+)>
 <!ATTLIST module id CDATA #REQUIRED>
 
-<!ELEMENT issue (artifact-type, issue-attribute+, dependency*, attachment*, transaction?)>
+<!ELEMENT issue (artifact-type, attribute+, dependency*, attachment*, transaction?)>
 <!ATTLIST issue id CDATA #REQUIRED>
 
-<!ELEMENT attribute (name, value)>
+<!ELEMENT attribute (name, value, type?, old-value?)>
 
 <!ELEMENT dependency (type, (child | parent))>
 
@@ -15,7 +15,7 @@
 <!ELEMENT transaction (type, activity+)>
 <!ATTLIST transaction id CDATA #REQUIRED>
 
-<!ELEMENT activity (old-value, new-value, activity-attribute, description)>
+<!ELEMENT activity (old-value, new-value, attribute, description)>
 
 <!ELEMENT fullname (#PCDATA)>
 <!ELEMENT code (#PCDATA)>
@@ -23,6 +23,8 @@
 <!ELEMENT type (#PCDATA)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT value (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT old-value (#PCDATA)>
 <!ELEMENT child (#PCDATA)>
 <!ELEMENT parent (#PCDATA)>
 <!ELEMENT path (#PCDATA)>
@@ -30,10 +32,4 @@
 <!ELEMENT modified-date (#PCDATA)>
 <!ELEMENT created-by (#PCDATA)>
 <!ELEMENT modified-by (#PCDATA)>
-<!ELEMENT old-value (#PCDATA)>
-<!ELEMENT new-value (#PCDATA)>
-<!ELEMENT activity-attribute (#PCDATA)>
-<!ELEMENT issue-attribute (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
-
-

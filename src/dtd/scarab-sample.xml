@@ -26,14 +26,16 @@ easier to work with.
         <code>TBNS</code>
         <issue id="101">
             <artifact-type>Defect</artifact-type>
-            <issue-attribute>
+            <attribute>
                 <name>Status</name>
                 <value>New</value>
-            </issue-attribute>
-            <issue-attribute>
+                <type>combo-box</type>
+            </attribute>
+            <attribute>
                 <name>Priority</name>
                 <value>High</value>
-            </issue-attribute>
+                <type>combo-box</type>
+            </attribute>
 
             <dependency>
                 <type>non-blocking</type>
@@ -53,17 +55,21 @@ easier to work with.
             <transaction id="7">
                 <type>Edit Issue</type>
                 <activity>
-                    <old-value>NULL</old-value>
-                    <new-value>High</new-value>
-                    <activity-attribute>Priority</activity-attribute>
+                    <attribute>
+                        <name>Priority</name>
+                        </value>High</value>
+                        <old-value>NULL</old-value>
+                    </attribute>
                     <description>
                         Issue TBNS101 had attribute Priority set to high
                     </description>
                 </activity>
                 <activity>
-                    <old-value>NULL</old-value>
-                    <new-value>unconfirmed</new-value>
-                    <activity-attribute>Status</activity-attribute>
+                    <attribute>
+                        <name>Status</name>
+                        <value>unconfirmed</value>
+                        <old-value>NULL</old-value>
+                    </attribute>
                     <description>
                         Issue TBNS101 had attribute Status set to 
                         unconfirmed
@@ -73,14 +79,16 @@ easier to work with.
         </issue>
         <issue id="203">
             <artifact-type>Defect</artifact-type>
-            <issue-attribute>
+            <attribute>
                 <name>Status</name>
                 <value>Closed</value>
-            </issue-attribute>
-            <issue-attribute>
+                <type>combo-box</type>
+            </attribute>
+            <attribute>
                 <name>Resolution</name>
                 <value>Fixed</value>
-            </issue-attribute>
+                <type>combo-box</type>
+            </attribute>
             <dependency>
                 <type>blocking</type>
                 <parent>101</parent>
