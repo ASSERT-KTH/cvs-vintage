@@ -59,6 +59,7 @@ import java.util.Locale;
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
 import org.apache.regexp.RESyntaxException;
+import com.workingdogs.village.Record;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
@@ -124,7 +125,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.98 2003/05/02 16:18:49 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.99 2003/05/05 22:30:33 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -598,6 +599,7 @@ public abstract class AbstractScarabModule
         }
         return reports;
     }
+
 
     /**
      * Gets a list of attributes for this module with a specific
@@ -1268,6 +1270,20 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         return getRModuleAttributes(issueType, false);
+    }
+
+    /**
+     * Returns true if module has attributes associated with issue type.
+     */
+    public boolean hasAttributes(IssueType issueType)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
+        crit.add(RModuleAttributePeer.MODULE_ID, getModuleId());
+        crit.addSelectColumn("count(" + RModuleAttributePeer.ATTRIBUTE_ID + ")");
+        return ((Record)IssuePeer.doSelectVillageRecords(crit).get(0))
+            .getValue(1).asInt() > 0;
     }
 
     /**

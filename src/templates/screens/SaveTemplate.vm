@@ -32,6 +32,9 @@
 </div>
 #end
 
+#if (!$module.hasAttributes($issueType))
+<p class="alert">$l10n.NoAttributesForTemplate</p>
+#else
 
 #if ($templateId)
   <input type="hidden" name="templateId" value="$templateId" />
@@ -137,6 +140,7 @@
 #SaveTemplateBar("2")
 
 $intake.declareGroups()
+#end
 #end
 
 </form>
