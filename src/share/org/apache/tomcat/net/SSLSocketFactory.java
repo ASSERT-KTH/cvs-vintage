@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/SSLSocketFactory.java,v 1.1 2000/06/14 19:07:19 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/06/14 19:07:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/SSLSocketFactory.java,v 1.2 2000/07/01 00:43:25 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/07/01 00:43:25 $
  *
  * ====================================================================
  *
@@ -181,7 +181,7 @@ public class SSLSocketFactory
 
 	    return;
 	} catch(Exception e) {
-	    e.printStackTrace();
+	    //	    e.printStackTrace();
 	    if( e instanceof IOException )
 		throw (IOException)e;
 	    throw new IOException(e.getMessage());
@@ -214,7 +214,7 @@ public class SSLSocketFactory
 	    kstore.load(istream, keyPass.toCharArray());
 	    return kstore;
 	} catch(Exception ex) {
-	    ex.printStackTrace();
+	    //	    ex.printStackTrace();
 	    throw new IOException( "Can't load server certificate" );
 	}
     }

@@ -262,6 +262,8 @@ public class EmbededTomcat { // extends WebService
     public void start() {
 	try {
 	    contextM.start();
+	} catch( IOException ex ) {
+	    System.out.println("Error starting endpoing " + ex.toString());
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
 	}

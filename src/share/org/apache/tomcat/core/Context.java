@@ -426,6 +426,9 @@ public class Context {
         this.isDistributable = isDistributable;
     }
 
+    public void setDistributable(String s) {
+	// XXX
+    }
 
     public int getSessionTimeOut() {
         return this.sessionTimeOut;
