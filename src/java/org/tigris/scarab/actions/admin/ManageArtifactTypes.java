@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.13 2002/05/31 21:45:47 elicia Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.14 2002/05/31 21:49:40 jon Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -106,7 +106,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                 }
                 if (navCount > 5)
                 {
-                   scarabR.setAlertMessage("You cannot select more than 5 Issue types "
+                   scarabR.setAlertMessage("You cannot select more than 5 issue types "
                                    + "to appear in the left hand navigation.");
                    return;
                 }
@@ -188,7 +188,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                 if (rmits.size() < 1)
                 {
                     scarabR.setAlertMessage("You cannot have fewer than one "
-                                    + "artifact type.");
+                                    + "issue type.");
                     break;
                 }
                 else
@@ -214,9 +214,9 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                             rmit2.delete(user);
 
                             scarabR.setConfirmMessage(
-                                "The selected issue Types have"
+                                "The selected issue types have"
                                 + " been removed from the module.");
-                           module.getNavIssueTypes().remove(issueType);
+                            module.getNavIssueTypes().remove(issueType);
                         }
                     }
                     catch (Exception e)
@@ -229,7 +229,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
 
         if (!foundOne)
         {
-            scarabR.setAlertMessage("Please select an issue Type " + 
+            scarabR.setAlertMessage("Please select an issue type " + 
                 "to delete from the module.");
         }
     }
