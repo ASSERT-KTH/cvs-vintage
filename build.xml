@@ -44,6 +44,15 @@
 		</xmlvalidate>
 	</target>
 	
+	<target name="init-native" description="Initialises platform dependant stuff" >
+		<condition property="native.library.path" value="${native.win32}" >
+			<os family="windows"/>			
+		</condition>
+
+		<condition property="native.library.path" value="${native.linux}" >
+			<os name="linux"/>			
+		</condition>		
+	</target >
 	
 	<target name="init" description="Initialises the build system">
 		
@@ -55,7 +64,7 @@
 		<mkdir dir="${release.base}" />
 		
 		<property name="debugbuild" value="true" />
-		
+			
 		<tstamp/>
 		<property name="version" value="${DSTAMP}" />
 		
@@ -77,6 +86,7 @@
 			<pathelement path="${lib.jdom}"/>			
 			<pathelement path="${lib.jpim}"/>			
 			<pathelement path="${lib.je}"/>						
+			<pathelement path="${lib.jdic}"/>						
 		</path>
 		<path id="run.classpath" >
 			<path refid="compile.classpath" />
@@ -135,7 +145,8 @@
 			<include name="${lib.jniwraplib}"/>
 			<include name="${lib.jdom}"/>			
 			<include name="${lib.jpim}"/>			
-			<include name="${lib.je}"/>	
+			<include name="${lib.je}"/>
+			<include name="${lib.jdic}" />
 			<!-- never sign JavaHelp, its already signed by SUN -->
 			<!-- never sign jniwrapper, its already signed by jniwrapper.com -->
 		</fileset>			
@@ -232,7 +243,7 @@
 			<exclude name="native/**"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.core.main.Main" />
-				<attribute name="Class-Path" value=" ${manual.jar} ${lib.junit} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.winpack} ${lib.jniwrap} ${lib.jdom} ${lib.jpim} ${lib.je}"/>
+				<attribute name="Class-Path" value=" ${manual.jar} ${lib.junit} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.winpack} ${lib.jniwrap} ${lib.jdom} ${lib.jpim} ${lib.je} ${lib.jdic}"/>
 				<attribute name="Sealed" value="false"/>
 			</manifest>
 		</jar>
@@ -283,6 +294,7 @@
 				<include name="CHANGES"/>
 				<include name="columba.jar"/>
 				<include name="run.sh"/>
+				<include name="${native.linux}/*.so"/>
 				<include name="${lib.forms}"/>
 				<include name="${lib.jscf}"/>
 				<include name="${lib.jargs}"/>
@@ -297,6 +309,12 @@
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>									
 			</zipfileset>
+			<zipfileset dir="${native.linux}" prefix="columba-win32-${version}-bin/lib">
+				<!-- This is a workaround until there is a unified
+					jdic jar available (tstich) -->
+				<include name="${lib.jdic}" />
+			</zipfileset>
+			
 		</zip>
 	</target>
 
@@ -305,6 +323,7 @@
 	<target name="zip-bin-win32" depends="jar, linefeeds-win32"
 	description="Creates packaged Columba release">
 		<echo message="the zipfile is going to columba-win32-${version}-bin.zip "/>
+		
 		<zip zipfile="${release.base}/columba-win32-${version}-bin.zip" update="true">
 			<zipfileset dir="${basedir}" prefix="columba-win32-${version}-bin">
 				<include name="README"/>
@@ -314,7 +333,7 @@
 				<include name="run.bat"/>
 				<include name="columba.jar"/>
 				<include name="**/*.jar"/>
-				<include name="**/*.dll"/>
+				<include name="${native.win32}/*.dll"/>
 				<include name="${lib.forms}"/>
 				<include name="${lib.jscf}"/>
 				<include name="${lib.jargs}"/>
@@ -330,6 +349,8 @@
 				<include name="${lib.je}"/>		
 				<include name="${lib.jniwrap}"/>
 				<include name="${lib.winpack}"/>
+				<include name="${lib.jdic}" />
+
 				<include name="native.win32.launcher/Columba.exe" />
 				<include name="native.win32.launcher/Columba.lap" />
 			</zipfileset>
@@ -463,15 +484,17 @@
 	<target name="build" depends="compile" description="Compiles Columba"/>
 
 	<!-- to run the application via ant, this is good for testing and coding in xemacs -->
-	<target name="run" depends="compile"  description="Starts Columba">
+	<target name="run" depends="init-native,compile"  description="Starts Columba">
 		<java classname="org.columba.core.main.Main" fork="yes">
+			<jvmarg value="-Djava.library.path=${native.library.path}"/>
 			<classpath refid="run.classpath" />
 		</java>
 	</target>
 
-	<target name="run-debug" depends="compile"  description="Starts Columba with the --debug option">
+	<target name="run-debug" depends="init-native,compile"  description="Starts Columba with the --debug option">
 		<java classname="org.columba.core.main.Main" fork="yes">
 			<arg value="--debug"/>
+			<jvmarg value="-Djava.library.path=${native.library.path}"/>
 			<classpath refid="run.classpath" />
 		</java>
 	</target>
@@ -522,14 +545,14 @@
 				<include name="${lib.plastic}"/>			
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
-				<include name="${lib.je}"/>									
+				<include name="${lib.je}"/>						
+				<include name="${manual.jar}"/>						
 			</fileset>
 		</copy>
 
 		<copy toDir="${dist.rpm}/SOURCES/columba-${version}/" file="${dist.rpm}/run.sh"/>
 		<replace file="${dist.rpm}/SOURCES/columba-${version}/run.sh" token="@version@" value="${version}"/>
-		<chmod file="${dist.rpm}/SOURCES/columba-${version}/run.sh" perm="a+x" />
-		
+
 		<tar destfile="${dist.rpm}/SOURCES/columba-${version}.tar" >
 			<tarfileset dir="${dist.rpm}/SOURCES/columba-${version}" prefix="columba-${version}">
 				<include name="**" />
@@ -567,6 +590,7 @@
 			<arg value="/dJE=${lib.je}" />
 			<arg value="/dJDOM=${lib.jdom}" />
 			<arg value="/dJPIM=${lib.jpim}" />
+			<arg value="/dJDIC=${lib.jdic}" />
 		</exec>		
 
 		<exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
@@ -589,6 +613,7 @@
 			<arg value="/dJE=${lib.je}" />
 			<arg value="/dJDOM=${lib.jdom}" />
 			<arg value="/dJPIM=${lib.jpim}" />
+			<arg value="/dJDIC=${lib.jdic}" />
 		</exec>		
 	</target>
 		

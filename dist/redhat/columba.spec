@@ -22,13 +22,16 @@ rm -rf $RPM_BUILD_ROOT
 %build
 
 %install
-rm -rf $RPM_BUILD_ROOT/opt/columba-%{version}
-mkdir -p $RPM_BUILD_ROOT/opt/columba-%{version}
-rm -rf $RPM_BUILD_ROOT/usr/bin
-mkdir -p $RPM_BUILD_ROOT/usr/bin
-rm -rf $RPM_BUILD_ROOT/etc
-mkdir -p $RPM_BUILD_ROOT/etc
-cp -R * $RPM_BUILD_ROOT/opt/columba-%{version}
+install -m 0755 -d $RPM_BUILD_ROOT/opt/columba-%{version}
+install -m 0755 -d $RPM_BUILD_ROOT/opt/columba-%{version}/lib
+install -m 0755 -d $RPM_BUILD_ROOT/usr/bin
+install -m 0644 columba.jar $RPM_BUILD_ROOT/opt/columba-%{version}/
+install -m 0644 AUTHORS $RPM_BUILD_ROOT/opt/columba-%{version}/
+install -m 0644 README $RPM_BUILD_ROOT/opt/columba-%{version}/
+install -m 0644 CHANGES $RPM_BUILD_ROOT/opt/columba-%{version}/
+install -m 0644 LICENSE $RPM_BUILD_ROOT/opt/columba-%{version}/
+install -m 0755 run.sh $RPM_BUILD_ROOT/opt/columba-%{version}/
+install -m 0644 lib/* $RPM_BUILD_ROOT/opt/columba-%{version}/lib/
 ln -sf /opt/columba-%{version}/run.sh $RPM_BUILD_ROOT/usr/bin/columba
 
 
@@ -36,6 +39,6 @@ ln -sf /opt/columba-%{version}/run.sh $RPM_BUILD_ROOT/usr/bin/columba
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root)
 /usr/bin/columba
 /opt/columba-%{version}/*
+/opt/columba-%{version}
