@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/ContextManager.java,v 1.6 2000/01/08 22:55:45 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/01/08 22:55:45 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/ContextManager.java,v 1.7 2000/01/08 23:04:46 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/01/08 23:04:46 $
  *
  * ====================================================================
  *
@@ -85,8 +85,7 @@ import java.util.*;
  * @author James Todd [gonzo@eng.sun.com]
  * @author Harish Prabandham
  */
-
-public class ContextManager  implements Server {
+public class ContextManager {
 
     /**
      * The string constants for this ContextManager.

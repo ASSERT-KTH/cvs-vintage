@@ -83,11 +83,11 @@ implements ServletContext {
 
     private StringManager sm =
         StringManager.getManager(Constants.Package);
-    private Server server;
+    private ContextManager contextM;
     private Context context;
 
-    ServletContextFacade(Server server, Context context) {
-        this.server = server;
+    ServletContextFacade(ContextManager server, Context context) {
+        this.contextM = server;
         this.context = context;
     }
 
@@ -132,7 +132,7 @@ implements ServletContext {
 	    throw new IllegalArgumentException(msg);
 	}
 
-        return server.getContextByPath(path).getFacade();
+        return contextM.getContextByPath(path).getFacade();
     }
 
     public int getMajorVersion() {
@@ -327,7 +327,7 @@ implements ServletContext {
     }
 
     public String getServerInfo() {
-        return server.getServerInfo();
+        return contextM.getServerInfo();
     }
 
     public void log(String msg) {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.5 1999/11/02 00:46:20 costin Exp $
- * $Revision: 1.5 $
- * $Date: 1999/11/02 00:46:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.6 2000/01/08 23:04:47 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/01/08 23:04:47 $
  *
  * ====================================================================
  *
@@ -103,7 +103,7 @@ import java.util.*;
 // WARNING: Some of the APIs in this class are used by J2EE. 
 // Please talk to harishp@eng.sun.com before making any changes.
 //
-public class HttpServer implements Server {
+public class HttpServer {
     // XXX move to Constants
     public static final String VHOST_PORT="vhost_port";
     public static final String VHOST_NAME="vhost_name";
