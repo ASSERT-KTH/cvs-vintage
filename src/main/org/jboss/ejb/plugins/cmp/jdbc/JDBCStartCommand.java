@@ -23,7 +23,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCStartCommand extends JDBCUpdateCommand implements StartCommand {
    // Constructors --------------------------------------------------
@@ -43,7 +43,10 @@ public class JDBCStartCommand extends JDBCUpdateCommand implements StartCommand 
          // create relation tables
          JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
          for(int i=0; i<cmrFields.length; i++) {
-            if(!cmrFields[i].hasForeignKey() && !cmrFields[i].getRelatedCMRField().hasForeignKey()) {
+            //Verify that there is a related CMR field (to avoid NPE)
+            if(!cmrFields[i].hasForeignKey() 
+                  && cmrFields[i].getRelatedCMRField() != null 
+                  && !cmrFields[i].getRelatedCMRField().hasForeignKey()) {
                createTable(cmrFields[i].getRelationTableName(), getRelationCreateTableSQL(cmrFields[i]));
             }
          }
