@@ -17,7 +17,7 @@ import java.util.Properties;
  *  Provides access to JBoss version (and build) properties.
  *
  * @author     <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 public final class Version
 {
@@ -170,20 +170,23 @@ public final class Version
    }
 
    /**
-    *  Returns a property value as an int.
+    * Returns a property value as an int.
     *
-    * @param  name  Description of Parameter
-    * @return       The IntProperty value
+    * @return   The property value, or -1 if there was a problem converting
+    *           it to an int.
     */
    private int getIntProperty(final String name)
    {
-      return Integer.valueOf(props.getProperty(name)).intValue();
+      try {
+         return Integer.valueOf(props.getProperty(name)).intValue();
+      }
+      catch (Exception e) {
+         return -1;
+      }
    }
 
    /**
     *  Load the version properties from a resource.
-    *
-    * @return    Description of the Returned Value
     */
    private Properties loadProperties()
    {
