@@ -211,7 +211,7 @@ level using the authentication-module and role-mapping-manager elements.
       
       Used in: session, entity
       -->
-<!ELEMENT resource-ref (res-ref-name , resource-name)>
+<!ELEMENT resource-ref (res-ref-name , (resource-name | jndi-name | res-url)>
 
 <!-- 
         The res-ref-name element gives the "code name" of a resource. It is 
