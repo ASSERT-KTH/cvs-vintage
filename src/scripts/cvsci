@@ -1,0 +1,120 @@
+#!/bin/sh
+
+# Simple script that wraps the 'cvs' binary to question the
+# user for an issue id and add "[IssueID: XXXX]" to the beginning
+# of the commit message which can then be used to generate a 
+# message to tell Scarab to do something. This script disables 
+# the use of the -F flag because we want to force people to 
+# use the -m flag.
+#
+# @author Jon S. Stevens <jon@collab.net>
+#
+# $Id: cvsci,v 1.1 2002/06/24 17:04:25 jon Exp $
+
+CMDNAME=`basename "$0"`
+PATHNAME=`echo $0 | sed "s,$CMDNAME\$,,"`
+CVS=`which cvs`
+
+if [ ! -x "${CVS}" ] ; then
+    echo
+    echo "The cvs binary needs to be in your PATH!"
+    echo
+    exit 1
+fi
+
+logfile=""
+
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    --help|-\?)
+        usage=t
+        break
+        ;;
+    -F)
+        logfile="$2"
+        shift;;
+    -m)
+        logmessage="$2"
+        shift;;
+    -r)
+        revision="$2"
+        shift;;
+    -n)
+        nomoduleprogram="t"
+        ;;
+    -R)
+        recursivedirectories="t"
+        ;;
+    -l)
+        localdirectories="t"
+        ;;
+    -f)
+        forcedirectories="t"
+        ;;
+    -*)
+        echo "$CMDNAME: invalid option: $1" 1>&2
+        echo "Try '$CMDNAME --help' for more information." 1>&2
+        exit 1
+        ;;
+    *)
+        ;;
+    esac
+    shift
+done
+
+if [ ! -z "${logfile}" ] ; then
+    echo "Sorry, this script does not support the -F option."
+    echo "Please use the -m option instead."
+    exit 1
+fi
+
+if [ -z "${logmessage}" ] ; then
+    echo "Sorry, you must enter a message using the -m option."
+    exit 1
+fi
+
+if echo '\c' | grep -s c >/dev/null 2>&1
+then
+    ECHO_N="echo -n"
+    ECHO_C=""
+else
+    ECHO_N="echo"
+    ECHO_C='\c'
+fi
+
+$ECHO_N "Enter issue id: "$ECHO_C
+read IssueId
+issueid="$IssueId"
+
+if [ -z "${issueid}" ] ; then
+    echo "You must enter an issue id!"
+    exit 1
+fi
+
+NCMD=
+if [ "${nomoduleprogram}" = "t" ] ; then
+    NCMD="-n"
+fi
+RCMD=
+if [ "${recursivedirectories}" = "t" ] ; then
+    RCMD="-R"
+fi
+LCMD=
+if [ "${localdirectories}" = "t" ] ; then
+    LCMD="-l"
+fi
+FCMD=
+if [ "${forcedirectories}" = "t" ] ; then
+    FCMD="-f"
+fi
+REVCMD=
+if [ "${revision}" != "" ] ; then
+    REVCMD="-r ${revision}"
+fi
+MSGCMD="-m \"[IssueID: ${IssueId}] ${logmessage}\""
+
+CVSCMD="$NCMD $RCMD $LCMD $FCMD $REVCMD $MSGCMD"
+#echo $CVSCMD
+
+${CVS} ci "${CVSCMD}"
