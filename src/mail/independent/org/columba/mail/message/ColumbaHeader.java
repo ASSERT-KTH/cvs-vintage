@@ -1,24 +1,23 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.message;
 
-import org.columba.core.gui.util.ColorFactory;
+import java.util.logging.Logger;
 
-import org.columba.mail.folder.headercache.CachedHeaderfields;
+import org.columba.core.gui.util.ColorFactory;
 
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Attributes;
@@ -28,6 +27,7 @@ import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeType;
 import org.columba.ristretto.parser.HeaderParser;
+
 
 /**
  * Represents a RFC822-compliant header
@@ -47,6 +47,9 @@ import org.columba.ristretto.parser.HeaderParser;
  * @author tstich, fdietz
  */
 public class ColumbaHeader {
+    
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.message");
+    
     protected Header header;
     protected Attributes attributes;
     protected Flags flags;
@@ -122,11 +125,16 @@ public class ColumbaHeader {
     }
 
     public Object clone() {
-        ColumbaHeader clone = new ColumbaHeader();
-        clone.attributes = (Attributes) this.attributes.clone();
-        clone.flags = (Flags) this.flags.clone();
-        clone.header = (Header) this.header.clone();
-
+        ColumbaHeader clone;
+        try {
+            clone = (ColumbaHeader) super.clone();
+            clone.attributes = (Attributes) this.attributes.clone();
+            clone.flags = (Flags) this.flags.clone();
+            clone.header = (Header) this.header.clone();
+        } catch (CloneNotSupportedException e) {
+            LOG.warning("Internal error when cloning object: " + e);
+            throw new RuntimeException("Unknown error when cloning ColumbaHeader.", e);
+        }
         return clone;
     }
 
@@ -136,24 +144,24 @@ public class ColumbaHeader {
     }
 
     /* (non-Javadoc)
- * @see org.columba.mail.message.HeaderInterface#count()
- */
+     * @see org.columba.mail.message.HeaderInterface#count()
+     */
     public int count() {
         return attributes.count() + header.count() + 5;
     }
 
     /* (non-Javadoc)
- * @see org.columba.mail.message.HeaderInterface#getFlags()
- */
+     * @see org.columba.mail.message.HeaderInterface#getFlags()
+     */
     public Flags getFlags() {
         return flags;
     }
 
     /**
- * Note: Don't use this method anymore when accessing
- * attributes like "columba.size", use getAttribute() instead
- *
- */
+     * Note: Don't use this method anymore when accessing
+     * attributes like "columba.size", use getAttribute() instead
+     *
+     */
     public Object get(String s) {
         if (s.startsWith("columba.flags.")) {
             String flag = s.substring("columba.flags.".length());
@@ -181,9 +189,12 @@ public class ColumbaHeader {
     }
 
     /* (non-Javadoc)
- * @see org.columba.mail.message.HeaderInterface#set(java.lang.String, java.lang.Object)
- */
+     * @see org.columba.mail.message.HeaderInterface#set(java.lang.String, java.lang.Object)
+     */
     public void set(String s, Object o) {
+        if (o == null) {
+            return;
+        }
         if (s.startsWith("columba.flags")) {
             String flag = s.substring("columba.flags.".length());
             boolean value = ((Boolean) o).booleanValue();
@@ -231,36 +242,36 @@ public class ColumbaHeader {
     }
 
     /**
- * @return
- */
+     * @return
+     */
     public Header getHeader() {
         return header;
     }
 
     /**
- * @return
- */
+     * @return
+     */
     public Attributes getAttributes() {
         return attributes;
     }
 
     /**
- * @param attributes
- */
+     * @param attributes
+     */
     public void setAttributes(Attributes attributes) {
         this.attributes = attributes;
     }
 
     /**
- * @param flags
- */
+     * @param flags
+     */
     public void setFlags(Flags flags) {
         this.flags = flags;
     }
 
     /**
- * @param header
- */
+     * @param header
+     */
     public void setHeader(Header header) {
         this.header = header;
     }
