@@ -1,4 +1,5 @@
 #set ( $action = $link.setPage("IssueList.vm").setAction("Search") )
+
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 #set($search = $scarabR.Search)
@@ -31,7 +32,6 @@
 #end
 		</tr>
 		
-#set( $issueList = $user.getTemp("issueList") )
 #foreach ($issue in $issueList)
 
     #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $issue.IssueId.toString()).setPage("ViewIssue.vm").toString() )
