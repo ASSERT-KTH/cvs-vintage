@@ -26,7 +26,7 @@
 // File: CrUnconventionalOperName.java
 // Classes: CrUnconventionalOperName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalOperName.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrUnconventionalOperName.java,v 1.3 2002/03/01 08:08:32 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -60,7 +60,7 @@ public class CrUnconventionalOperName extends CrUML {
     String nameStr = myName;
     if (nameStr == null || nameStr.length() == 0) return NO_PROBLEM;
     char initalChar = nameStr.charAt(0);
-    if ((oper.getStereotype()!=null) && "constructor".equals(oper.getStereotype().getName()) )
+    if ((oper.getStereotype()!=null) && "create".equals(oper.getStereotype().getName()) )
       return NO_PROBLEM;
     if (!Character.isLowerCase(initalChar)) return PROBLEM_FOUND;
     return NO_PROBLEM;
