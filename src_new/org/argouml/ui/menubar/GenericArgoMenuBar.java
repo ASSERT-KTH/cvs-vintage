@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.53 2004/08/14 19:28:19 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.54 2004/08/29 19:48:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,6 @@ import org.tigris.gef.base.CmdAdjustPageBreaks;
 import org.tigris.gef.base.CmdSelectAll;
 import org.tigris.gef.base.CmdSelectInvert;
 import org.tigris.gef.base.CmdZoom;
-import org.tigris.gef.util.Localizer;
 import org.tigris.toolbar.ToolBar;
 
 /**
@@ -163,6 +162,10 @@ public class GenericArgoMenuBar extends JMenuBar
     protected JMenu _help = null;
 
 
+    /**
+     * The constructor.
+     * 
+     */
     public GenericArgoMenuBar() {
         initMenus();
     }
@@ -194,6 +197,10 @@ public class GenericArgoMenuBar extends JMenuBar
 	item.setMnemonic(mnemonic);
     }
 
+    /**
+     * @param key the key to localize
+     * @return the localized string
+     */
     protected static final String menuLocalize(String key) {
 	return Translator.localize(MENU + prepareKey(key));
     }
@@ -455,7 +462,8 @@ public class GenericArgoMenuBar extends JMenuBar
 
         _edit.addSeparator();
 
-        JMenuItem removeItem = _edit.add(ActionDeleteFromDiagram.getSingleton());
+        JMenuItem removeItem = 
+            _edit.add(ActionDeleteFromDiagram.getSingleton());
         setMnemonic(removeItem, "Remove from Diagram");
         setAccelerator(removeItem, delKey);
 
