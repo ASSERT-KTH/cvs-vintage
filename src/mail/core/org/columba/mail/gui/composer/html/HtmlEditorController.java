@@ -26,12 +26,14 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.html.HTML;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.composer.AbstractEditorController;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.html.util.FormatInfo;
 
 /**
  * Controller part of controller-view frame work for composing html messages
@@ -356,25 +358,44 @@ public class HtmlEditorController
 	 * the HTML component only. This includes almost all actions in
 	 * package org.columba.mail.gui.composer.html.action
 	 * <p>
-	 * TODO: This is a bit more complex, because you additionally need to 
-	 * read the state of the text. This is necessary to for example toggle
-	 * the BoldFormatAction. 
+	 * The information to the observers contains information about the 
+	 * format at the current caret position and about text selections.
+	 * The information is encapsulated in a FormatInfo object.
 	 * 
 	 * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
 	 */
 	public void caretUpdate(CaretEvent e) {
+		// update state of actions such as cut, copy, paste, undo... 
 		MainInterface.focusManager.updateActions();
 
+		// get info on current text selection
+		boolean textSelected = false;
+		String  text = view.getSelectedText();
+		if (text == null) {
+			textSelected = false;
+		} else if (text.length() > 0) {
+			textSelected = true;
+		}
+		
+		// get attributes, i.e. formatting information
+		int pos = e.getDot() - 1;	// -1 necessary for some reason!?
+		AttributeSet attr = view.getHtmlDoc().
+				getCharacterElement(pos).getAttributes();
+		
+		// notify observers (typically formatting actions).
+		setChanged();
+		notifyObservers(new FormatInfo(attr, textSelected));	
+
+/*
 		boolean bool = false;
 		if (view.getSelectedText() == null) {
 			bool = false;
 		} else if (view.getSelectedText().length() > 0) {
 			bool = true;
 		}
-
 		setChanged();
 		notifyObservers(new Boolean(bool));
-
+*/
 	}
 
 }

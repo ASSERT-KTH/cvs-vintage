@@ -313,6 +313,8 @@ public class ComposerController
 		accountController = new AccountController(this);
 		composerSpellCheck = new ComposerSpellCheck(this);
 
+		// set default html or text based on stored option
+		// ... can be overridden by setting the composer model
 		XmlElement optionsElement =
 			MailConfig.get("composer_options").getElement("/options");
 		XmlElement htmlElement = optionsElement.getElement("html");

@@ -19,11 +19,16 @@ import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.text.AttributeSet;
+import javax.swing.text.StyleConstants;
+
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
+import org.columba.mail.gui.composer.html.util.FormatInfo;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -55,18 +60,38 @@ public class UnderlineFormatAction extends CheckBoxAction implements Observer {
 		setLargeIcon(ImageLoader.getImageIcon("stock_text_underline.png"));
 		setSmallIcon(
 			ImageLoader.getSmallImageIcon("stock_text_underline-16.png"));
+
+		// register for text selection changes
+		((ComposerController) frameController)
+			.getEditorController()
+			.addObserver(
+			this);
 	}
 
 	/**
-		 * Method is called when text selection has changed.
-		 * <p>
-		 * Enable/Disable this actions on selection changes. 
-		 * 
-		 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-		 */
+	 * Method is called when text selection has changed.
+	 * <p>
+	 * Set state of togglebutton / -menu to pressed / not pressed
+	 * when selections change. 
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
 	public void update(Observable arg0, Object arg1) {
-		Boolean isSelected = (Boolean) arg1;
 
+		if (arg1 == null) {
+			return; 
+		}
+		
+		// check if current text is bold or not - and set state accordingly
+		FormatInfo info = (FormatInfo) arg1;
+		AttributeSet attr = info.getTextAttributes();
+		boolean isUnderline = StyleConstants.isUnderline(attr);		
+
+		// TODO: Find some way to set the state of the toggle button
+		//       and -menu, i.e. whether it is pressed or not
+
+		/*
+		Boolean isSelected = (Boolean) arg1;
 		if (isSelected.equals(Boolean.TRUE)) {
 			// text is selected
 			setEnabled(true);
@@ -74,7 +99,7 @@ public class UnderlineFormatAction extends CheckBoxAction implements Observer {
 			// no selection
 			setEnabled(false);
 		}
-
+		*/
 	}
 
 	/* (non-Javadoc)

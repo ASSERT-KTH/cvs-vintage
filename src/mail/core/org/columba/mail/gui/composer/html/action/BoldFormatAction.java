@@ -19,15 +19,19 @@ import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.text.AttributeSet;
+import javax.swing.text.StyleConstants;
+
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
+import org.columba.mail.gui.composer.html.util.FormatInfo;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * Format selected text as bodl "<b>"
+ * Format selected text as bold "<b>"
  *
  * @author fdietz
  */
@@ -65,13 +69,28 @@ public class BoldFormatAction extends CheckBoxAction implements Observer {
 	/**
 	 * Method is called when text selection has changed.
 	 * <p>
-	 * Enable/Disable this actions on selection changes. 
+	 * Set state of togglebutton / -menu to pressed / not pressed
+	 * when selections change. 
 	 * 
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(Observable arg0, Object arg1) {
-		Boolean isSelected = (Boolean) arg1;
+		
+		if (arg1 == null) {
+			return; 
+		}
+		
+		// check if current text is bold or not - and set state accordingly
+		FormatInfo info = (FormatInfo) arg1;
+		AttributeSet attr = info.getTextAttributes();
+		boolean isBold = StyleConstants.isBold(attr);		
 
+		// TODO: Find some way to set the state of the toggle button
+		//       and -menu, i.e. whether it is pressed or not
+		////this.setState(isBold); // THIS DOESN'T WORK!
+
+		/*
+		Boolean isSelected = (Boolean) arg1;
 		if (isSelected.equals(Boolean.TRUE)) {
 			// text is selected
 			setEnabled(true);
@@ -79,7 +98,7 @@ public class BoldFormatAction extends CheckBoxAction implements Observer {
 			// no selection
 			setEnabled(false);
 		}
-
+		*/
 	}
 
 	/* (non-Javadoc)
