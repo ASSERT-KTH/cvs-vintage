@@ -6,16 +6,14 @@
  */
 package org.jboss.proxy.compiler;
 
-import org.jboss.logging.Logger;
-
-
 /**
  * Manages bytecode assembly for dynamic proxy generation.
  *
+ * <p>This is the only data needed at runtime.
+ *
  * @author Unknown
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-   // this is the only data needed at runtime:
 public class Runtime
    extends ClassLoader
 {
@@ -48,10 +46,11 @@ public class Runtime
       throws Throwable {
       java.lang.reflect.Method method = methods[methodNum];
       if (method.getName().equals( "writeReplace" ))
-         {
-            return new ProxyProxy( invocationHandler, copyTargetTypes() );
+      {
+         return new ProxyProxy( invocationHandler, copyTargetTypes() );
+         
+      }
 
-         }
       return invocationHandler.invoke(null, methods[methodNum], values);
    }
 
@@ -120,5 +119,4 @@ public class Runtime
       }
       return cl.getResource(name);
    }
-
 }
