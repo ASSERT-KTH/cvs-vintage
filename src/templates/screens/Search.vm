@@ -103,7 +103,6 @@ $page.setTitle("Simple query")
     <th width="120">Sort by</th>
     <td>
       <select name="sortColumn">
-        <option value="">Choose..</option>
         #foreach ($attKey in $attrValues.sequence())
            #set ($attVal = $attrValues.get($attKey))
            <option value="$attVal.AttributeId">$attVal</option>
