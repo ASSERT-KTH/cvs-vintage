@@ -262,6 +262,17 @@
             <Parameter name="port" value="8007"/>
         </Connector>
 
+        <!--
+             JNI connector, make sure that you update the native_lib
+             Parameter to point to your jni_connect.dll.
+         -->
+        <!-- 
+        <Connector className="org.apache.tomcat.service.JNIEndpointConnector">
+            <Parameter name="native_lib" 
+               value="D:\tomcat\bin\i386\jni_connect.dll"/>
+        </Connector>
+         -->
+
         <!-- ==================== Special webapps ==================== -->
         <!-- You don't need this if you place your app in webapps/
              and use defaults. 

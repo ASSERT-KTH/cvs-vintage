@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!ENTITY % boolean "(true|false|on|off|yes|no)">
+
+<!ELEMENT Server (Logger | ContextManager )* >
+
+<!ELEMENT Logger EMPTY >
+<!ATTLIST Logger
+          name                CDATA #REQUIRED
+          verbosityLevel      CDATA #IMPLIED
+          path                CDATA #IMPLIED >
+
+<!ELEMENT ContextManager ( ContextInterceptor | Connector | Context | Host )* >
+<!ATTLIST ContextManager
+          debug   CDATA #IMPLIED
+          workdir CDATA #IMPLIED>
+
+<!ELEMENT ContextInterceptor EMPTY>
+<!ATTLIST ContextInterceptor
+          className   CDATA #REQUIRED
+          debug      CDATA #IMPLIED
+
+          port      CDATA #IMPLIED
+          secure      CDATA #IMPLIED
+
+          listings      CDATA #IMPLIED
+
+          driverName      CDATA #IMPLIED
+          connectionURL   CDATA #IMPLIED
+          userTable       CDATA #IMPLIED
+          userNameCol     CDATA #IMPLIED
+          userCredCol     CDATA #IMPLIED
+          userRoleTable   CDATA #IMPLIED
+          roleNameCol     CDATA #IMPLIED >
+
+<!ELEMENT Connector ( Parameter )* >
+<!ATTLIST Connector
+          className   CDATA #REQUIRED
+          debug      CDATA #IMPLIED >
+
+<!ELEMENT Parameter EMPTY >
+<!ATTLIST Parameter
+          name      CDATA #REQUIRED
+          value     CDATA #REQUIRED >
+
+<!ELEMENT Host  ( Context )* >
+<!ATTLIST Host
+          name       CDATA #REQUIRED >
+
+<!ELEMENT Context EMPTY >
+<!ATTLIST Context
+          path       CDATA #REQUIRED
+          docBase    CDATA #REQUIRED 
+          reloadable CDATA #IMPLIED
+          trusted    CDATA #IMPLIED
+          debug      CDATA #IMPLIED >

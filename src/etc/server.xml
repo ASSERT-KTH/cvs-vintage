@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- 
+<!DOCTYPE Server SYSTEM "server.dtd" >
+-->
 
 <Server>
     <!-- Debug low-level events in XmlMapper startup -->
@@ -251,12 +254,22 @@
                 value="org.apache.tomcat.util.net.SSLSocketFactory" />
         </Connector>
         -->
+        <!--
+             JNI connector, make sure that you update the native_lib
+             Parameter to point to your jni_connect.dll.
+         -->
+        <!-- 
+        <Connector className="org.apache.tomcat.service.JNIEndpointConnector">
+            <Parameter name="native_lib" 
+               value="D:\tomcat\bin\i386\jni_connect.dll"/>
+        </Connector>
+         -->
 
         <!-- Apache AJP12 support. This is also used to shut down tomcat.
           -->
         <Connector className="org.apache.tomcat.service.PoolTcpConnector">
             <Parameter name="handler" 
-       value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
+        value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
             <Parameter name="port" value="8007"/>
         </Connector>
 
