@@ -123,7 +123,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.65 2002/12/03 20:58:59 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.66 2002/12/10 20:38:59 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -2071,36 +2071,42 @@ try{
 
             // set module-attribute defaults
             List rmas = parentModule.getRModuleAttributes(issueType);
-            for (int j=0; j<rmas.size(); j++)
+            if (rmas != null && rmas.size() >0)
             {
-                rma1 = (RModuleAttribute)rmas.get(j);
-                rma2 = rma1.copy();
-                rma2.setModuleId(newModuleId);
-                rma2.setAttributeId(rma1.getAttributeId());
-                rma2.setIssueTypeId(rma1.getIssueTypeId());
-                rma2.save();
-                        
-                // set module-option mappings
-                Attribute attribute = rma1.getAttribute();
-                if (attribute.isOptionAttribute())
+                for (int j=0; j<rmas.size(); j++)
                 {
-                    List rmos = parentModule.getRModuleOptions(attribute,
-                                                               issueType);
-                    for (int m=0; m<rmos.size(); m++)
+                    rma1 = (RModuleAttribute)rmas.get(j);
+                    rma2 = rma1.copy();
+                    rma2.setModuleId(newModuleId);
+                    rma2.setAttributeId(rma1.getAttributeId());
+                    rma2.setIssueTypeId(rma1.getIssueTypeId());
+                    rma2.save();
+                            
+                    // set module-option mappings
+                    Attribute attribute = rma1.getAttribute();
+                    if (attribute.isOptionAttribute())
                     {
-                        RModuleOption rmo1 = (RModuleOption)rmos.get(m);
-                        RModuleOption rmo2 = rmo1.copy();
-                        rmo2.setOptionId(rmo1.getOptionId());
-                        rmo2.setModuleId(newModuleId);
-                        rmo2.setIssueTypeId(issueType.getIssueTypeId());
-                        rmo2.save();
+                        List rmos = parentModule.getRModuleOptions(attribute,
+                                                                   issueType);
+                        if (rmos != null && rmos.size() > 0)
+                        {
+                            for (int m=0; m<rmos.size(); m++)
+                            {
+                                RModuleOption rmo1 = (RModuleOption)rmos.get(m);
+                                RModuleOption rmo2 = rmo1.copy();
+                                rmo2.setOptionId(rmo1.getOptionId());
+                                rmo2.setModuleId(newModuleId);
+                                rmo2.setIssueTypeId(issueType.getIssueTypeId());
+                                rmo2.save();
 
-                        // Save module-option mappings for template types
-                        RModuleOption rmo3 = rmo1.copy();
-                        rmo3.setOptionId(rmo1.getOptionId());
-                        rmo3.setModuleId(newModuleId);
-                        rmo3.setIssueTypeId(issueType.getTemplateId());
-                        rmo3.save();
+                                // Save module-option mappings for template types
+                                RModuleOption rmo3 = rmo1.copy();
+                                rmo3.setOptionId(rmo1.getOptionId());
+                                rmo3.setModuleId(newModuleId);
+                                rmo3.setIssueTypeId(issueType.getTemplateId());
+                                rmo3.save();
+                            }
+                        }
                     }
                 }
             }
