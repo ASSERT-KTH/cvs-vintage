@@ -44,7 +44,10 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener
 	public GeneralOptionsDialog( JFrame frame )
 	{
 		//LOCALIZE
-		super( frame, "General Options", true );
+		super( frame, MailResourceLoader.getString(
+                                    "dialog",
+                                    "general",
+                                    "dialog_title"), true );
 		initComponents();
 		pack();
 		setLocationRelativeTo(null);
@@ -58,24 +61,29 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener
 		fontPanel.updateComponents( b );
 	}
 
-
 	protected void initComponents()
 	{
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout(0,0));
 		centerPane = new JTabbedPane();
 		generalPanel = new GeneralPanel();
-		//LOCALIZE
-		centerPane.add( generalPanel, "General" );
+		centerPane.add(generalPanel, MailResourceLoader.getString(
+                                    "dialog",
+                                    "general",
+                                    "general"));
 		composerPanel = new ComposerPanel();
 		//LOCALIZE
 		centerPane.add( composerPanel, "Composer" );
 		themePanel = new ThemePanel();
-		//LOCALIZE
-		centerPane.add( themePanel, "Themes and Icons" );
+		centerPane.add(themePanel, MailResourceLoader.getString(
+                                    "dialog",
+                                    "general",
+                                    "themes_icons"));
 		fontPanel = new FontPanel();
-		//LOCALIZE
-		centerPane.add( fontPanel, "Fonts" );
+		centerPane.add(fontPanel, MailResourceLoader.getString(
+                                    "dialog",
+                                    "general",
+                                    "fonts"));
 		contentPane.add(centerPane, BorderLayout.CENTER);
 		JPanel bottomPanel = new JPanel(new BorderLayout(0,0));
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 11, 11));
