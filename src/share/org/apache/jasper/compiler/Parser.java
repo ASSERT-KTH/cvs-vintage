@@ -752,7 +752,13 @@ public class Parser {
                             String tagEnd = "</"+tag+">";
                             // Parse until the end of the tag body. 
                             // Then skip the tag end... 
-                            parser.parse(tagEnd);
+                            if (bc.equalsIgnoreCase(TagInfo.BODY_CONTENT_TAG_DEPENDENT))
+                                // accept no core elements for tag dependent,
+                                // i.e. literal inclusion of the content
+                                parser.parse(tagEnd, new Class[] {});
+                            else
+                                // it is JSP body content, so accept all core elements
+                                parser.parse(tagEnd);
                             reader.advance(tagEnd.length());
                             listener.handleTagEnd(bodyStart, reader.mark(), prefix, 
                                                   shortTagName, attrs, tli, ti);

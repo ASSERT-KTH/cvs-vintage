@@ -59,6 +59,7 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.SingleThreadModel;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -150,7 +151,16 @@ public class JspServlet extends HttpServlet {
 		if (precompile)
 		    return;
 
-                theServlet.service(request, response);
+		if (theServlet instanceof SingleThreadModel) {
+		    // sync on the wrapper so that the freshness
+		    // of the page is determined right before servicing
+		    synchronized (this) {
+			theServlet.service(request, response);
+		    }
+		} else {
+		    theServlet.service(request, response);
+		}
+
             } catch (FileNotFoundException ex) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, 
                                    Constants.getString("jsp.error.file.not.found", 
