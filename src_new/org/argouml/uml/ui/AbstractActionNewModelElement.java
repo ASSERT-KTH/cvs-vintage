@@ -1,4 +1,4 @@
-// $Id: AbstractActionNewModelElement.java,v 1.8 2003/09/21 13:57:07 alexb Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.9 2003/10/12 08:55:24 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,10 +22,10 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionNewModelElement.java,v 1.8 2003/09/21 13:57:07 alexb Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.9 2003/10/12 08:55:24 linus Exp $
 package org.argouml.uml.ui;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 
 /**
  * @since Oct 3, 2002
@@ -36,7 +36,7 @@ public abstract class AbstractActionNewModelElement extends UMLChangeAction {
     private Object/*MModelElement*/ _target;
     
     protected AbstractActionNewModelElement() {
-        super(Argo.localize("CoreMenu", "action.new"), true, NO_ICON);
+        super(Translator.localize("action.new"), true, NO_ICON);
     }  
     
      /**

@@ -1,4 +1,4 @@
-// $Id: ActionSettings.java,v 1.13 2003/08/28 20:03:36 jjones Exp $
+// $Id: ActionSettings.java,v 1.14 2003/10/12 08:55:24 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 
+import org.argouml.i18n.Translator;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.PluggableSettingsTab;
 import org.argouml.application.api.SettingsTabPanel;
@@ -70,7 +71,7 @@ public class ActionSettings extends UMLAction
     protected ArgoDialog dlg = null;
 
     protected ActionSettings() {
-        super(Argo.localize(Argo.MENU_BUNDLE, "action.settings"), HAS_ICON);
+        super(Translator.localize("action.settings"), HAS_ICON);
     }
 
     /** Helper for localization.

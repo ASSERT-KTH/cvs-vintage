@@ -1,4 +1,4 @@
-// $Id: ActionSetSourcePath.java,v 1.14 2003/09/09 19:57:26 alexb Exp $
+// $Id: ActionSetSourcePath.java,v 1.15 2003/10/12 08:55:24 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -107,7 +107,7 @@ public class ActionSetSourcePath extends UMLAction {
 	}
 
 	String sChooserTitle =
-	    Translator.localize("CoreMenu", "action.set-source-path");
+	    Translator.localize("action.set-source-path");
 	if (type != null)
 	    sChooserTitle += ' ' + type;
 	if (name != null)

@@ -1,4 +1,4 @@
-// $Id: ActionCopy.java,v 1.7 2003/06/30 21:59:34 linus Exp $
+// $Id: ActionCopy.java,v 1.8 2003/10/12 08:55:24 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,18 +57,18 @@ public class ActionCopy extends AbstractAction implements CaretListener {
     // constructors
 
     private ActionCopy() {
-        super(Translator.localize("CoreMenu", LOCALIZE_KEY));
+        super(Translator.localize(LOCALIZE_KEY));
         Icon icon =
             ResourceLoaderWrapper
 	    .getResourceLoaderWrapper()
 	    .lookupIconResource(
 				Translator.getImageBinding(LOCALIZE_KEY),
-				Translator.localize("CoreMenu", LOCALIZE_KEY));
+				Translator.localize(LOCALIZE_KEY));
         if (icon != null)
             putValue(Action.SMALL_ICON, icon);
         putValue(
 		 Action.SHORT_DESCRIPTION,
-		 Translator.localize("CoreMenu", LOCALIZE_KEY) + " ");
+		 Translator.localize(LOCALIZE_KEY) + " ");
     }
 
     public static ActionCopy getInstance() {

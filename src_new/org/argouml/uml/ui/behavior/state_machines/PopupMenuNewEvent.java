@@ -1,4 +1,4 @@
-// $Id: PopupMenuNewEvent.java,v 1.3 2003/06/29 23:50:12 linus Exp $
+// $Id: PopupMenuNewEvent.java,v 1.4 2003/10/12 08:55:25 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.behavior.state_machines;
 
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionRemoveModelElement;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 
@@ -46,7 +45,7 @@ public class PopupMenuNewEvent extends JPopupMenu {
         super();
 
         JMenu newMenu = new JMenu();
-        newMenu.setText(Argo.localize("CoreMenu", "New"));
+        newMenu.setText(Translator.localize("action.new"));
         newMenu.add(ActionNewCallEvent.SINGLETON);
         ActionNewCallEvent.SINGLETON.setTarget(list.getTarget());
         ActionNewCallEvent.SINGLETON.putValue(ActionNewEvent.ROLE, role);

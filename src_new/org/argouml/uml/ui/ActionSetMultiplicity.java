@@ -1,4 +1,4 @@
-// $Id: ActionSetMultiplicity.java,v 1.4 2003/06/30 21:59:35 linus Exp $
+// $Id: ActionSetMultiplicity.java,v 1.5 2003/10/12 08:55:24 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,12 +22,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetMultiplicity.java,v 1.4 2003/06/30 21:59:35 linus Exp $
+// $Id: ActionSetMultiplicity.java,v 1.5 2003/10/12 08:55:24 linus Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 
 /**
  * Framework action to set the multiplicity of some modelelement.
@@ -41,7 +41,7 @@ public abstract class ActionSetMultiplicity extends UMLChangeAction {
      * @param s
      */
     protected ActionSetMultiplicity() {
-        super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
+        super(Translator.localize("Set"), true, NO_ICON);
     }
             
     /**

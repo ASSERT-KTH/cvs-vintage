@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.3 2003/06/30 18:00:23 linus Exp $
+// $Id: ActionExportXMI.java,v 1.4 2003/10/12 08:55:24 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionExportXMI.java,v 1.3 2003/06/30 18:00:23 linus Exp $
+// $Id: ActionExportXMI.java,v 1.4 2003/10/12 08:55:24 linus Exp $
 package org.argouml.ui;
 
 import java.awt.event.ActionEvent;
@@ -192,10 +192,8 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
         // show a chooser dialog for the file name, only xmi is allowed
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle(Translator.localize(
-				       "CoreMenu",
 				       "action.export-project-as-xmi"));
         chooser.setApproveButtonText(Translator.localize(
-				             "CoreMenu",
 					     "filechooser.export"));
         chooser.setFileFilter(new FileFilter() 
 	    {

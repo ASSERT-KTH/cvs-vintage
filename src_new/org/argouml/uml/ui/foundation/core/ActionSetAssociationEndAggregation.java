@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndAggregation.java,v 1.5 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: ActionSetAssociationEndAggregation.java,v 1.6 2003/10/12 08:55:25 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetAssociationEndAggregation.java,v 1.5 2003/09/28 19:10:53 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.JRadioButton;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
@@ -43,7 +42,8 @@ import org.argouml.uml.ui.UMLRadioButtonPanel;
  */
 public class ActionSetAssociationEndAggregation extends UMLChangeAction {
 
-    public static final ActionSetAssociationEndAggregation SINGLETON = new ActionSetAssociationEndAggregation();
+    public static final ActionSetAssociationEndAggregation SINGLETON = 
+	new ActionSetAssociationEndAggregation();
 
     public final static String AGGREGATE_COMMAND = "aggregate";
     public final static String COMPOSITE_COMMAND = "composite";
@@ -54,7 +54,7 @@ public class ActionSetAssociationEndAggregation extends UMLChangeAction {
      * @param s
      */
     protected ActionSetAssociationEndAggregation() {
-        super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
+        super(Translator.localize("action.set"), true, NO_ICON);
     }
 
     /**

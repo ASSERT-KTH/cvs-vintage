@@ -1,4 +1,4 @@
-// $Id: ActionSetSubmachineStateSubmachine.java,v 1.2 2003/06/29 23:50:12 linus Exp $
+// $Id: ActionSetSubmachineStateSubmachine.java,v 1.3 2003/10/12 08:55:25 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,12 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.behavior.state_machines;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -45,7 +44,7 @@ public class ActionSetSubmachineStateSubmachine extends UMLChangeAction {
      * @param s
      */
     protected ActionSetSubmachineStateSubmachine() {
-        super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
+        super(Translator.localize("action.set"), true, NO_ICON);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationRoleBase.java,v 1.8 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: ActionSetAssociationRoleBase.java,v 1.9 2003/10/12 08:55:24 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui.behavior.collaborations;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -47,7 +47,7 @@ public class ActionSetAssociationRoleBase extends UMLChangeAction {
      * @param s
      */
     protected ActionSetAssociationRoleBase() {
-        super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
+        super(Translator.localize("Set"), true, NO_ICON);
     }   
 
     /**

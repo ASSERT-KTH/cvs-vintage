@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.37 2003/10/08 18:16:27 jjones Exp $
+// $Id: GenericArgoMenuBar.java,v 1.38 2003/10/12 08:55:24 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,8 +21,6 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
-//$Id: GenericArgoMenuBar.java,v 1.37 2003/10/08 18:16:27 jjones Exp $
 
 package org.argouml.ui.menubar;
 
@@ -144,6 +142,11 @@ public class GenericArgoMenuBar extends JMenuBar
         initMenus();
     }
 
+    /** Gets the shortcut for a key.
+     *
+     * @deprecated in 0.15.1. No longer needed since we have moved from
+     *             the MenuResouceBundle.java to menu.properties.
+     */
     protected static final KeyStroke getShortcut(String key) {
         return Localizer.getShortcut("CoreMenu", key);
     }
@@ -157,7 +160,6 @@ public class GenericArgoMenuBar extends JMenuBar
     protected static final void setMnemonic(JMenuItem item,
 					    String key, char defMnemonic)
     {
-//        String localMnemonic = Argo.localize("CoreMenu", "Mnemonic_" + key);
 	String propertykey = new String();
 	if(item instanceof JMenu) {
 	    propertykey = MENU + prepareKey(key) + ".mnemonic";
@@ -175,7 +177,6 @@ public class GenericArgoMenuBar extends JMenuBar
     }
 
     protected static final String menuLocalize(String key) {
-//        return Argo.localize("CoreMenu", key);
 	return Argo.localize(BUNDLE, MENU + prepareKey(key));
     }
 

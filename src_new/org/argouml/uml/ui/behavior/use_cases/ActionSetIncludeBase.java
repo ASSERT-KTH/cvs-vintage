@@ -1,4 +1,4 @@
-// $Id: ActionSetIncludeBase.java,v 1.6 2003/09/14 18:10:43 bobtarling Exp $
+// $Id: ActionSetIncludeBase.java,v 1.7 2003/10/12 08:55:25 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,12 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.behavior.use_cases;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -46,7 +45,7 @@ public class ActionSetIncludeBase extends UMLChangeAction {
      * @param s
      */
     protected ActionSetIncludeBase() {
-        super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
+        super(Translator.localize("action.set"), true, NO_ICON);
     }
 
     

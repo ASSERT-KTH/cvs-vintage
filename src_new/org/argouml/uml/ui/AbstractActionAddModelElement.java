@@ -1,4 +1,4 @@
-// $Id: AbstractActionAddModelElement.java,v 1.9 2003/09/22 18:58:41 bobtarling Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.10 2003/10/12 08:55:24 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionAddModelElement.java,v 1.9 2003/09/22 18:58:41 bobtarling Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.10 2003/10/12 08:55:24 linus Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -30,7 +30,7 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.ui.ProjectBrowser;
 
 /**
@@ -46,7 +46,7 @@ public abstract class AbstractActionAddModelElement extends UMLChangeAction {
     private boolean _exclusive = true;
     
     protected AbstractActionAddModelElement() {
-        super(Argo.localize("CoreMenu", "Add"), true, NO_ICON);
+        super(Translator.localize("Add"), true, NO_ICON);
     }
         
 
