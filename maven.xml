@@ -1,5 +1,5 @@
 
-<project default="default"
+<project default="war:war"
     xmlns:j="jelly:core"
     xmlns:u="jelly:util">
   <!--preGoal name="java:jar-resources"-->
