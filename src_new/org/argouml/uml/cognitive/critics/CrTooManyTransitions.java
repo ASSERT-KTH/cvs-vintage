@@ -1,5 +1,4 @@
-
-// $Id: CrTooManyTransitions.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrTooManyTransitions.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,15 +25,13 @@
 // File: CrTooManyTransitions.java
 // Classes: CrTooManyTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyTransitions.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrTooManyTransitions.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import org.argouml.cognitive.Designer;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.behavior.state_machines.MStateVertex;
-
 /** A critic to detect when a class can never have instances (of
  *  itself of any subclasses). */
 
@@ -59,11 +56,11 @@ public class CrTooManyTransitions extends CrUML {
     // critiquing API
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAStateVertex(dm))) return NO_PROBLEM;
-	MStateVertex sv = (MStateVertex) dm;
+	Object sv = /*(MStateVertex)*/ dm;
 
 	int threshold = ((Integer) getArg(THRESHOLD)).intValue();
-	Collection in = sv.getIncomings();
-	Collection out = sv.getOutgoings();
+	Collection in = ModelFacade.getIncomings(sv);
+	Collection out = ModelFacade.getOutgoings(sv);
 	int inSize = (in == null) ? 0 : in.size();
 	int outSize = (out == null) ? 0 : out.size();
 	if (inSize + outSize <= threshold) return NO_PROBLEM;

@@ -1,4 +1,4 @@
-// $Id: CrLinkWithoutStimulus.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrLinkWithoutStimulus.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrLinkWithoutStimulus.java
 // Classes: CrLinkWithoutStimulus
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrLinkWithoutStimulus.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrLinkWithoutStimulus.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -35,15 +35,10 @@ import java.util.Collection;
 import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.sequence.ui.FigSeqLink;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 import org.tigris.gef.util.VectorSet;
-
-
-
-import ru.novosoft.uml.behavior.common_behavior.MLink;
-
-
 
 
 
@@ -92,10 +87,10 @@ public class CrLinkWithoutStimulus extends CrUML {
 	for (int i = 0; i < size; i++) {
 	    if (figs.elementAt(i) instanceof FigSeqLink) {
 		FigSeqLink fsl = (FigSeqLink) figs.elementAt(i);
-		MLink ml = (MLink) fsl.getOwner();
+		Object ml = /*(MLink)*/ fsl.getOwner();
 		boolean found = false;
-		if (ml.getStimuli() != null) {
-		    Collection col = ml.getStimuli();
+		if (ModelFacade.getStimuli(ml) != null) {
+		    Collection col = ModelFacade.getStimuli(ml);
 		    if (col.size() == 0) found = true;          
 		}
 		else found = true;
@@ -114,4 +109,3 @@ public class CrLinkWithoutStimulus extends CrUML {
     } 
 
 } /* end class CrLinkWithoutStimulus.java */
-

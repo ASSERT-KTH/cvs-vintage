@@ -1,4 +1,4 @@
-// $Id: CrNodeInstanceWithoutClassifier.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrNodeInstanceWithoutClassifier.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,11 +32,10 @@ import java.util.Collection;
 import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.FigMNodeInstance;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.tigris.gef.util.VectorSet;
-import ru.novosoft.uml.behavior.common_behavior.MNodeInstance;
-
 /**
  * A critic to detect when there are node-instances that
  * are inside another element
@@ -88,9 +87,9 @@ public class CrNodeInstanceWithoutClassifier extends CrUML {
 	    if (!(obj instanceof FigMNodeInstance)) continue;
 	    FigMNodeInstance fn = (FigMNodeInstance) obj;
 	    if (fn != null) {
-		MNodeInstance noi = (MNodeInstance) fn.getOwner();
+		Object noi = /*(MNodeInstance)*/ fn.getOwner();
 		if (noi != null) {
-		    Collection col = noi.getClassifiers();
+		    Collection col = ModelFacade.getClassifiers(noi);
 		    if (col.size() > 0) continue;     
 		}       
 		if (offs == null) {
@@ -105,4 +104,3 @@ public class CrNodeInstanceWithoutClassifier extends CrUML {
 
 
 } /* end class CrNodeInstanceWithoutClassifier.java */
-

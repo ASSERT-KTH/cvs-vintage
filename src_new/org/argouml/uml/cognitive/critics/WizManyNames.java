@@ -1,4 +1,4 @@
-// $Id: WizManyNames.java,v 1.7 2003/09/04 20:11:42 thierrylach Exp $
+// $Id: WizManyNames.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WizManyNames.java
 // Classes: WizManyNames
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizManyNames.java,v 1.7 2003/09/04 20:11:42 thierrylach Exp $
+// $Id: WizManyNames.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -38,8 +38,7 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.cognitive.ui.WizStepManyTextFields;
 import org.argouml.kernel.Wizard;
-import ru.novosoft.uml.foundation.core.MModelElement;
-
+import org.argouml.model.ModelFacade;
 
 /** A non-modal wizard to help the user change the name of a
  *  MModelElement to a better name. */
@@ -70,8 +69,8 @@ public class WizManyNames extends Wizard {
 		Vector names = new Vector();
 		int size = _mes.size();
 		for (int i = 0; i < size; i++) {
-		    MModelElement me = (MModelElement) _mes.elementAt(i);
-		    names.addElement(me.getName());
+		    Object me = /*(MModelElement)*/ _mes.elementAt(i);
+		    names.addElement(ModelFacade.getName(me));
 		}
 		_step1 = new WizStepManyTextFields(this, _instructions, names);
 	    }
@@ -94,8 +93,8 @@ public class WizManyNames extends Wizard {
 	    try {
 		int size = _mes.size();
 		for (int i = 0; i < size; i++) {
-		    MModelElement me = (MModelElement) _mes.elementAt(i);
-		    me.setName((String) newNames.elementAt(i));
+		    Object me = /*(MModelElement)*/ _mes.elementAt(i);
+		    ModelFacade.setName(me, (String) newNames.elementAt(i));
 		}
 	    }
 	    catch (Exception pve) {

@@ -1,6 +1,4 @@
-
-
-// $Id: CrTooManyOper.java,v 1.8 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrTooManyOper.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +25,7 @@
 // File: CrTooManyOper.java
 // Classes: CrTooManyOper
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyOper.java,v 1.8 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrTooManyOper.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -35,10 +33,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.foundation.core.MClassifier;
-
-
-
 /** A critic to detect when a classifier has to many operations). 
  *  TODO: exclude getter and setter operations from count
  */
@@ -62,10 +56,10 @@ public class CrTooManyOper extends CrUML {
     // critiquing API
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
-	MClassifier cls = (MClassifier) dm;
+	Object cls = /*(MClassifier)*/ dm;
 	// TODO: consider inherited attributes?
 	int threshold = ((Integer) getArg(THRESHOLD)).intValue();
-	Collection str = cls.getFeatures();
+	Collection str = ModelFacade.getFeatures(cls);
 	if (str == null) return NO_PROBLEM;
 	int n = 0;
 	for (Iterator iter = str.iterator(); iter.hasNext();) {

@@ -1,5 +1,4 @@
-
-// $Id: CrWrongDepEnds.java,v 1.8 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrWrongDepEnds.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: CrWrongDepEnds.java
 // Classes: CrWrongDepEnds
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrWrongDepEnds.java,v 1.8 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrWrongDepEnds.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -39,10 +38,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.ui.FigDependency;
 import org.tigris.gef.util.VectorSet;
-import ru.novosoft.uml.behavior.common_behavior.MObject;
-import ru.novosoft.uml.foundation.core.MDependency;
-import ru.novosoft.uml.foundation.core.MModelElement;
-
 /**
  * A critic to detect when in a deployment-diagram the supplier or the
  * client of a dependency is a mobject and inside a figComponent and
@@ -96,35 +91,39 @@ public class CrWrongDepEnds extends CrUML {
 	    if (!(obj instanceof FigDependency)) continue;
 	    FigDependency fd = (FigDependency) obj;
 	    if (!(ModelFacade.isADependency(fd.getOwner()))) continue;
-	    MDependency dep = (MDependency) fd.getOwner();
-	    Collection suppliers = dep.getSuppliers();
+	    Object dep = /*(MDependency)*/ fd.getOwner();
+	    Collection suppliers = ModelFacade.getSuppliers(dep);
 	    int count = 0;
 	    if (suppliers != null && (suppliers.size() > 0)) {
 		Iterator it = suppliers.iterator();
 		while (it.hasNext()) {
-		    MModelElement moe = (MModelElement) it.next();
+		    Object moe = /*(MModelElement)*/ it.next();
 		    if (ModelFacade.isAObject(moe)) {
-			MObject obj_sup = (MObject) moe;
-			if (obj_sup.getElementResidences() != null
-			    && (obj_sup.getElementResidences().size() > 0))
-			    count = count + 2;
-			if (obj_sup.getComponentInstance() != null)
-			    count = count + 1;
+			Object obj_sup = /*(MObject)*/ moe;
+			if (ModelFacade.getElementResidences(obj_sup) != null
+			        && (ModelFacade.getElementResidences(obj_sup).size() > 0)) {
+			    count += 2;
+                        }
+			if (ModelFacade.getComponentInstance(obj_sup) != null) {
+			    count++;
+                        }
 		    }
 		}
 	    }
-	    Collection clients = dep.getClients();
+	    Collection clients = ModelFacade.getClients(dep);
 	    if (clients != null && (clients.size() > 0)) {
 		Iterator it = clients.iterator();
 		while (it.hasNext()) {
-		    MModelElement moe = (MModelElement) it.next();
+		    Object moe = /*(MModelElement)*/ it.next();
 		    if (ModelFacade.isAObject(moe)) {
-			MObject obj_cli = (MObject) moe;
-			if (obj_cli.getElementResidences() != null
-			    && (obj_cli.getElementResidences().size() > 0))
-			    count = count + 2;
-			if (obj_cli.getComponentInstance() != null)
-			    count = count + 1;
+			Object obj_cli = /*(MObject)*/ moe;
+			if (ModelFacade.getElementResidences(obj_cli) != null
+			        && (ModelFacade.getElementResidences(obj_cli).size() > 0)) {
+			    count += 2;
+                        }
+			if (ModelFacade.getComponentInstance(obj_cli) != null) {
+			    count++;
+                        }
 		    }
 		}
 	    }

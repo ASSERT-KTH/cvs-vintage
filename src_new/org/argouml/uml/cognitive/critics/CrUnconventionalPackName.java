@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalPackName.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrUnconventionalPackName.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrUnconventionalPackName.java
 // Classes: CrUnconventionalPackName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalPackName.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrUnconventionalPackName.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,8 +37,6 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.foundation.core.MModelElement;
-
 public class CrUnconventionalPackName extends CrUML {
 
     public CrUnconventionalPackName() {
@@ -70,9 +68,9 @@ public class CrUnconventionalPackName extends CrUML {
     public void initWizard(Wizard w) {
 	if (w instanceof WizMEName) {
 	    ToDoItem item = w.getToDoItem();
-	    MModelElement me = (MModelElement) item.getOffenders().elementAt(0);
+	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
 	    String ins = "Change the name of this package.";
-	    String nameStr = me.getName();
+	    String nameStr = ModelFacade.getName(me);
 	    String sug = "";
 	    int size = nameStr.length();
 	    for (int i = 0; i < size; i++) {
@@ -89,4 +87,3 @@ public class CrUnconventionalPackName extends CrUML {
     public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 
 } /* end class CrUnconventionalPackName */
-

@@ -1,4 +1,4 @@
-// $Id: WizCueCards.java,v 1.5 2003/08/30 22:04:20 alexb Exp $
+// $Id: WizCueCards.java,v 1.6 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WizCueCards.java
 // Classes: WizCueCards
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizCueCards.java,v 1.5 2003/08/30 22:04:20 alexb Exp $
+// $Id: WizCueCards.java,v 1.6 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -36,10 +36,6 @@ import javax.swing.JPanel;
 import org.argouml.cognitive.ui.WizStepCue;
 import org.argouml.kernel.Wizard;
 import org.tigris.gef.util.VectorSet;
-import ru.novosoft.uml.foundation.core.MModelElement;
-
-
-
 /** A non-modal wizard to help the user change navigability
  *  of an association. */
 
@@ -52,11 +48,11 @@ public class WizCueCards extends Wizard {
 
     public int getNumSteps() { return _cues.size(); }
 
-    public MModelElement getModelElement() {
+    public Object getModelElement() {
 	if (_item != null) {
 	    VectorSet offs = _item.getOffenders();
 	    if (offs.size() >= 1) {
-		MModelElement me = (MModelElement) offs.elementAt(0);
+		Object me = /*(MModelElement)*/ offs.elementAt(0);
 		return me;
 	    }
 	}

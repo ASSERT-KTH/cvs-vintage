@@ -1,5 +1,4 @@
-
-// $Id: CrNWayAgg.java,v 1.8 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrNWayAgg.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +27,7 @@
 // File: CrNWayAgg.java
 // Classes: CrNWayAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNWayAgg.java,v 1.8 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrNWayAgg.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
 
 // 12 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Code corrected as part
 // of fix to issue 619.
@@ -41,10 +40,6 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.foundation.core.MAssociation;
-import ru.novosoft.uml.foundation.core.MAssociationEnd;
-import ru.novosoft.uml.foundation.data_types.MAggregationKind;
-
 /**
  * <p> A critic to check that no end of a 3-way (or more) association is an
  *   aggregation.</p>
@@ -130,13 +125,13 @@ public class CrNWayAgg extends CrUML {
         // Get the assocations and connections. No problem (there is a separate
         // critic) if this is a binary association or is an association role.
 
-        MAssociation asc = (MAssociation) dm;
+        Object asc = /*(MAssociation)*/ dm;
 
         if (ModelFacade.isAAssociationRole(asc)) {
             return NO_PROBLEM;
         }
 
-        Collection   conns = asc.getConnections();
+        Collection conns = ModelFacade.getConnections(asc);
 
         if ((conns == null) || (conns.size() <= 2)) {
             return NO_PROBLEM;
@@ -147,12 +142,8 @@ public class CrNWayAgg extends CrUML {
         Iterator enum = conns.iterator();
 
         while (enum.hasNext()) {
-            MAssociationEnd  ae = (MAssociationEnd) enum.next();
-            MAggregationKind ak = ae.getAggregation();
-
-            if (ak != null &&
-                (MAggregationKind.AGGREGATE.equals(ak) ||
-                 MAggregationKind.COMPOSITE.equals(ak))) {
+            Object  ae = /*(MAssociationEnd)*/ enum.next();
+            if (ModelFacade.isAggregate(ae) || ModelFacade.isComposite(ae)) {
                 return PROBLEM_FOUND;
             }
         }

@@ -1,4 +1,4 @@
-// $Id: CrNoTriggerOrGuard.java,v 1.8 2003/09/01 14:02:50 bobtarling Exp $
+// $Id: CrNoTriggerOrGuard.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,20 +27,13 @@
 // File: CrNoTriggerOrGuard.java
 // Classes: CrNoTriggerOrGuard.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoTriggerOrGuard.java,v 1.8 2003/09/01 14:02:50 bobtarling Exp $
+// $Id: CrNoTriggerOrGuard.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.behavior.state_machines.MEvent;
-import ru.novosoft.uml.behavior.state_machines.MGuard;
-import ru.novosoft.uml.behavior.state_machines.MStateVertex;
-import ru.novosoft.uml.behavior.state_machines.MTransition;
-
-
-
 public class CrNoTriggerOrGuard extends CrUML {
 
     public CrNoTriggerOrGuard() {
@@ -53,19 +46,18 @@ public class CrNoTriggerOrGuard extends CrUML {
 
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isATransition(dm))) return NO_PROBLEM;
-	MTransition tr = (MTransition) dm;
-	MEvent t = tr.getTrigger();
-	MGuard g = tr.getGuard();
-	MStateVertex sv = tr.getSource();
+	Object tr = /*(MTransition)*/ dm;
+	Object/*MEvent*/ t = ModelFacade.getTrigger(tr);
+	Object g = ModelFacade.getGuard(tr);
+	Object sv = ModelFacade.getSource(tr);
 	if (!(ModelFacade.isAState(sv))) return NO_PROBLEM;
 	if (ModelFacade.getDoActivity(sv) != null) return NO_PROBLEM;
 	boolean hasTrigger =
-	    (t != null && t.getName() != null && t.getName().length() > 0);
+	    (t != null && ModelFacade.getName(t) != null && ModelFacade.getName(t).length() > 0);
 	if (hasTrigger) return NO_PROBLEM;
-	boolean noGuard = (g == null || g.getExpression() == null ||
-			   g.getExpression().getBody() == null ||
-			   g.getExpression().getBody() == null ||
-			   g.getExpression().getBody().length() == 0);
+	boolean noGuard = (g == null || ModelFacade.getExpression(g) == null ||
+			   ModelFacade.getBody(ModelFacade.getExpression(g)) == null ||
+			   ModelFacade.getBody(ModelFacade.getExpression(g)).toString().length() == 0);
 	if (noGuard) return PROBLEM_FOUND;
 	return NO_PROBLEM;
     }

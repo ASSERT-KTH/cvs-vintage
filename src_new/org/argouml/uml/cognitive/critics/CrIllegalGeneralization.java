@@ -1,5 +1,4 @@
-
-// $Id: CrIllegalGeneralization.java,v 1.7 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrIllegalGeneralization.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,16 +27,12 @@
 // File: CrIllegalGeneralization.java
 // Classes: CrIllegalGeneralization
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalGeneralization.java,v 1.7 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrIllegalGeneralization.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.foundation.core.MGeneralization;
-
-
-
 /** Well-formedness rule [1] for MGeneralization. See page 32 of UML 1.1
  *  Semantics. OMG document ad/97-08-04.
  *  This critic checks that the parent and child in a generalization are
@@ -56,9 +51,9 @@ public class CrIllegalGeneralization extends CrUML {
 
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAGeneralization(dm))) return NO_PROBLEM;
-	MGeneralization gen = (MGeneralization) dm;
-	Object cls1 = gen.getParent();
-	Object cls2 = gen.getChild();
+	Object gen = /*(MGeneralization)*/ dm;
+	Object cls1 = ModelFacade.getParent(gen);
+	Object cls2 = ModelFacade.getChild(gen);
 	if (cls1 == null || cls2 == null) return NO_PROBLEM;
 	java.lang.Class javaClass1 = cls1.getClass();
 	java.lang.Class javaClass2 = cls2.getClass();

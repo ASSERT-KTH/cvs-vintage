@@ -1,5 +1,4 @@
-
-// $Id: CrWrongLinkEnds.java,v 1.8 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrWrongLinkEnds.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrWrongLinkEnds.java,v 1.8 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrWrongLinkEnds.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -39,7 +38,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.static_structure.ui.FigLink;
 import org.tigris.gef.util.VectorSet;
-import ru.novosoft.uml.behavior.common_behavior.MLink;
 import ru.novosoft.uml.behavior.common_behavior.MLinkEnd;
 
 /**
@@ -95,8 +93,8 @@ public class CrWrongLinkEnds extends CrUML {
 	    if (!(obj instanceof FigLink)) continue;
 	    FigLink fl = (FigLink) obj;
 	    if (!(ModelFacade.isALink(fl.getOwner()))) continue;
-	    MLink link = (MLink) fl.getOwner();
-	    Collection ends = link.getConnections();
+	    Object link = /*(MLink)*/ fl.getOwner();
+	    Collection ends = ModelFacade.getConnections(link);
 	    if (ends != null && (ends.size() > 0)) {
 		int count = 0;
 		Iterator it = ends.iterator();

@@ -1,4 +1,4 @@
-// $Id: CrObjectWithoutClassifier.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrObjectWithoutClassifier.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrObjectWithoutClassifier.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrObjectWithoutClassifier.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -33,11 +33,10 @@ import java.util.Collection;
 import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.FigObject;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.tigris.gef.util.VectorSet;
-import ru.novosoft.uml.behavior.common_behavior.MObject;
-
 /**
  * A critic to detect when an object in a deployment-diagram
  * is not inside a component or a component-instance
@@ -89,9 +88,9 @@ public class CrObjectWithoutClassifier extends CrUML {
 	    if (!(obj instanceof FigObject)) continue;
 	    FigObject fo = (FigObject) obj;
 	    if (fo != null) {
-		MObject mobj = (MObject) fo.getOwner();
+		Object mobj = /*(MObject)*/ fo.getOwner();
 		if (mobj != null) {
-		    Collection col = mobj.getClassifiers();
+		    Collection col = ModelFacade.getClassifiers(mobj);
 		    if (col.size() > 0) continue;     
 		}       
 		if (offs == null) {
@@ -105,4 +104,3 @@ public class CrObjectWithoutClassifier extends CrUML {
     } 
  
 } /* end class CrObjectWithoutClassifier.java */
-

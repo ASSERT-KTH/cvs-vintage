@@ -1,4 +1,4 @@
-// $Id: WizMEName.java,v 1.7 2003/09/04 20:11:42 thierrylach Exp $
+// $Id: WizMEName.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WzMEName.java
 // Classes: WzMEName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizMEName.java,v 1.7 2003/09/04 20:11:42 thierrylach Exp $
+// $Id: WizMEName.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,9 +37,8 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.cognitive.ui.WizStepTextField;
 import org.argouml.kernel.Wizard;
+import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.VectorSet;
-
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /** A non-modal wizard to help the user change the name of a
  *  MModelElement to a better name. */
@@ -60,11 +59,11 @@ public class WizMEName extends Wizard {
 								       
     public int getNumSteps() { return 1; }
 									   
-    public MModelElement getModelElement() {
+    public Object getModelElement() {
 	if (_item != null) {
 	    VectorSet offs = _item.getOffenders();
 	    if (offs.size() >= 1) {
-		MModelElement me = (MModelElement) offs.elementAt(0);
+		Object me = /*(MModelElement)*/ offs.elementAt(0);
 		return me;
 	    }
 	}
@@ -73,9 +72,9 @@ public class WizMEName extends Wizard {
 									       
     public String getSuggestion() {
 	if (_suggestion != null) return _suggestion;
-	MModelElement me = getModelElement();
+	Object me = getModelElement();
 	if (me != null) {
-	    String n = me.getName();
+	    String n = ModelFacade.getName(me);
 	    return n;
 	}
 	return "";
@@ -122,8 +121,8 @@ public class WizMEName extends Wizard {
 	    String newName = _suggestion;
 	    if (_step1 != null) newName = _step1.getText();
 	    try {
-		MModelElement me = getModelElement();
-		me.setName(newName);
+		Object me = getModelElement();
+		ModelFacade.setName(me, newName);
 	    }
 	    catch (Exception pve) {
 		cat.error("could not set name", pve);

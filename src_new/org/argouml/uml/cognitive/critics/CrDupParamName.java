@@ -1,5 +1,4 @@
-
-// $Id: CrDupParamName.java,v 1.10 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrDupParamName.java,v 1.11 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +27,7 @@
 // File: CrDupParamName.java
 // Classes: CrDupParamName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupParamName.java,v 1.10 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrDupParamName.java,v 1.11 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -39,10 +38,6 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
 
-
-import ru.novosoft.uml.foundation.core.MBehavioralFeature;
-import ru.novosoft.uml.foundation.core.MOperation;
-import ru.novosoft.uml.foundation.core.MParameter;
 
 /** Well-formedness rule [1] for MBehavioralFeature. See page 28 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
@@ -58,15 +53,15 @@ public class CrDupParamName extends CrUML {
 
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isABehavioralFeature(dm))) return NO_PROBLEM;
-	MBehavioralFeature bf = (MBehavioralFeature) dm;
-	Vector params = new Vector(bf.getParameters());
+	Object bf = /*(MBehavioralFeature)*/ dm;
+	Vector params = new Vector(ModelFacade.getParameters(bf));
 	params.remove(UmlHelper.getHelper().getCore()
-		      .getReturnParameter((MOperation) bf));
+		      .getReturnParameter(/*(MOperation)*/ bf));
 	Vector namesSeen = new Vector();
 	Iterator enum = params.iterator();
 	while (enum.hasNext()) {
-	    MParameter p = (MParameter) enum.next();
-	    String pName = p.getName();
+	    Object p = /*(MParameter)*/ enum.next();
+	    String pName = ModelFacade.getName(p);
 	    if (pName == null || "".equals(pName)) continue;
 	    String nameStr = pName;
 	    if (nameStr == null || nameStr.length() == 0) continue;

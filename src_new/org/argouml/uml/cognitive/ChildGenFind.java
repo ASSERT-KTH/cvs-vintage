@@ -1,5 +1,4 @@
-
-// $Id: ChildGenFind.java,v 1.9 2003/08/30 22:04:19 alexb Exp $
+// $Id: ChildGenFind.java,v 1.10 2003/09/11 00:07:17 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: ChildGenFind.java
 // Classes: ChildGenFind
 // Original Author: jrobbins
-// $Id: ChildGenFind.java,v 1.9 2003/08/30 22:04:19 alexb Exp $
+// $Id: ChildGenFind.java,v 1.10 2003/09/11 00:07:17 bobtarling Exp $
 
 
 package org.argouml.uml.cognitive;
@@ -39,11 +38,6 @@ import org.argouml.model.ModelFacade;
 
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.util.ChildGenerator;
-
-import ru.novosoft.uml.behavior.state_machines.MState;
-import ru.novosoft.uml.behavior.state_machines.MTransition;
-import ru.novosoft.uml.foundation.core.MAssociation;
-import ru.novosoft.uml.foundation.core.MClassifier;
 
 /** This class gives critics access to parts of the UML model of the
  *  design.  It defines a gen() function that returns the "children"
@@ -88,16 +82,16 @@ public class ChildGenFind implements ChildGenerator {
 	//     // TODO: associationclasses fit both of the next 2 cases
 
 	if (ModelFacade.isAClassifier(o)) {
-	    MClassifier cls = (MClassifier) o;
+	    Object cls = /*(MClassifier)*/ o;
 	    //      EnumerationComposite res = new EnumerationComposite();
-	    Vector res = new Vector(cls.getFeatures());
-	    res.addAll(cls.getBehaviors());
+	    Vector res = new Vector(ModelFacade.getFeatures(cls));
+	    res.addAll(ModelFacade.getBehaviors(cls));
 	    return res.elements();
 	}
 
 	if (ModelFacade.isAAssociation(o)) {
-	    MAssociation asc = (MAssociation) o;
-	    return new Vector(asc.getConnections()).elements();
+	    Object asc = /*(MAssociation)*/ o;
+	    return new Vector(ModelFacade.getConnections(asc)).elements();
 	    //      Vector assocEnds = asc.getConnections();
 	    //if (assocEnds != null) return assocEnds.elements();
 	}
@@ -136,18 +130,18 @@ public class ChildGenFind implements ChildGenerator {
 	}
 
 	if (ModelFacade.isAState(o)) {
-	    MState s = (MState) o;
+	    Object s = /*(MState)*/ o;
 	    //Vector interns = s.getInternalTransition();
 	    //if (interns != null) return interns.elements();
-	    return new Vector(s.getInternalTransitions()).elements();
+	    return new Vector(ModelFacade.getInternalTransitions(s)).elements();
 	}
 
 	if (ModelFacade.isATransition(o)) {
-	    MTransition tr = (MTransition) o;
+	    Object tr = /*(MTransition)*/ o;
 	    Vector res = new Vector();
-	    res.add(tr.getTrigger());
-	    res.add(tr.getGuard());
-	    res.add(tr.getEffect());
+	    res.add(ModelFacade.getTrigger(tr));
+	    res.add(ModelFacade.getGuard(tr));
+	    res.add(ModelFacade.getEffect(tr));
 	    /*
 	      Vector parts = new Vector();  // wasteful!!
 	      if (tr.getTrigger() != null) parts.addElement(tr.getTrigger());

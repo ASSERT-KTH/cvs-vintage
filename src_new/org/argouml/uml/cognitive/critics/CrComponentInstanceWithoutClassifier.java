@@ -1,4 +1,4 @@
-// $Id: CrComponentInstanceWithoutClassifier.java,v 1.7 2003/08/31 00:17:57 bobtarling Exp $
+// $Id: CrComponentInstanceWithoutClassifier.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,11 +37,6 @@ import org.argouml.uml.diagram.deployment.ui.FigComponentInstance;
 import org.argouml.uml.diagram.deployment.ui.FigMNodeInstance;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.tigris.gef.util.VectorSet;
-import ru.novosoft.uml.behavior.common_behavior.MComponentInstance;
-
-
-
-
 /**
  * A critic to detect when there are component-instances that
  * are not inside a node-instance
@@ -99,9 +94,9 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
 	    if (!(obj instanceof FigComponentInstance)) continue;
 	    FigComponentInstance figComponentInstance = (FigComponentInstance) obj;
 	    if (figComponentInstance != null) {
-		MComponentInstance coi = (MComponentInstance) figComponentInstance.getOwner();
+		Object coi = /*(MComponentInstance)*/ figComponentInstance.getOwner();
 		if (coi != null) {
-		    Collection col = coi.getClassifiers();
+		    Collection col = ModelFacade.getClassifiers(coi);
 		    if (col.size() > 0) continue;     
 		}       
 		if (offs == null) {

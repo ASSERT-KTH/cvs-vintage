@@ -1,4 +1,4 @@
-// $Id: CrUnnavigableAssoc.java,v 1.7 2003/09/01 11:51:09 bobtarling Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnnavigableAssoc.java,v 1.7 2003/09/01 11:51:09 bobtarling Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -34,9 +34,6 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.foundation.core.MAssociation;
-import ru.novosoft.uml.foundation.core.MAssociationEnd;
-
 /** A critic to detect when a class can never have instances (of
  *  itself of any subclasses). */
 
@@ -51,13 +48,13 @@ public class CrUnnavigableAssoc extends CrUML {
 
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAAssociation(dm))) return NO_PROBLEM;
-	MAssociation asc = (MAssociation) dm;
-	Collection conn = asc.getConnections();
+	Object asc = /*(MAssociation)*/ dm;
+	Collection conn = ModelFacade.getConnections(asc);
 	if (ModelFacade.isAAssociationRole(asc))
 	    conn = ModelFacade.getConnections(asc);
 	for (Iterator iter = conn.iterator(); iter.hasNext();) {
-	    MAssociationEnd ae = (MAssociationEnd) iter.next();
-	    if (ae.isNavigable()) return NO_PROBLEM;
+	    Object ae = /*(MAssociationEnd)*/ iter.next();
+	    if (ModelFacade.isNavigable(ae)) return NO_PROBLEM;
 	}
 	return PROBLEM_FOUND;
     }
