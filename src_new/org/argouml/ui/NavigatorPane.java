@@ -93,7 +93,7 @@ import ru.novosoft.uml.model_management.MModel;
  *  <li>statistics gathering - not really used</li>
  * </ol>
  *
- * $Id: NavigatorPane.java,v 1.30 2003/04/14 09:27:08 jhraigniac Exp $
+ * $Id: NavigatorPane.java,v 1.31 2003/04/14 23:52:55 alexb Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -188,7 +188,6 @@ public class NavigatorPane
         _perspectives = new Vector();
         _navHistory = new Vector();
         _historyIndex = 0;
-        
     }
     
     ////////////////////////////////////////////////////////////////
@@ -270,6 +269,18 @@ public class NavigatorPane
      */
     public void forceUpdate() {
         _tree.forceUpdate();
+    }
+    
+    /**
+     * Countpart to forceUpdate() that only updates viewable
+     * rows, instead of rebuilding the whole tree; a vast improvement
+     * in performance.
+     *
+     * @see org.argouml.model.uml.UmlModelListener
+     */
+    public void forceUpdate(Object changed){
+        
+        _tree.forceUpdate(changed);
     }
     
     /**
