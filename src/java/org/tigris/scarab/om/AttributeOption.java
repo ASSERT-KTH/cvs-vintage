@@ -149,25 +149,25 @@ public class AttributeOption
         throws Exception
     {
         String parentIds = null;
-        AttributeOption[] parents = getParents();
+        List parents = getParents();
         if ( parents == null ) 
         {
             parentIds = "";
         }
         else 
         {
-            StringBuffer sb = new StringBuffer(5*parents.length);
-            for ( int i=0; i<parents.length; i++ ) 
+            StringBuffer sb = new StringBuffer(5*parents.size());
+            for ( int i=0; i<parents.size(); i++ ) 
             {
                 if ( i > 0 ) 
                 {
                     sb.append(',');
                 }
-                sb.append(parents[i].getPrimaryKey().toString());
+                sb.append(((AttributeOption)parents.get(i))
+                    .getPrimaryKey().toString());
             }
             parentIds = sb.toString();
         }
-        
         return parentIds;
     }
 
@@ -285,40 +285,38 @@ public class AttributeOption
         }
     }
 
-    public AttributeOption[] getParents()
+    public List getParents()
         throws Exception
     {
-        AttributeOption[] options = null;
+        List options = null;
         NumberKey[] parentIds = 
             (NumberKey[])childParentMap.get(getPrimaryKey());
         if ( parentIds != null ) 
         {
-            options = new AttributeOption[parentIds.length];
+            options = new ArrayList(parentIds.length);
             for ( int i=parentIds.length-1; i>=0; i-- ) 
             {
-                options[i] = getAttribute().getAttributeOption(parentIds[i]);
+                options.add(getAttribute().getAttributeOption(parentIds[i]));
             }
         }
         
         return options;
     }
 
-
-    public AttributeOption[] getChildren()    
+    public List getChildren()    
         throws Exception
     {
-        AttributeOption[] options = null;
+        List options = null;
         NumberKey[] childIds = 
             (NumberKey[])parentChildMap.get(getPrimaryKey());
         if ( childIds != null ) 
         {
-            options = new AttributeOption[childIds.length];
+            options = new ArrayList(childIds.length);
             for ( int i=childIds.length-1; i>=0; i-- ) 
             {
-                options[i] = getAttribute().getAttributeOption(childIds[i]);
+                options.add(getAttribute().getAttributeOption(childIds[i]));
             }
         }
-        
         return options;
     }
 
@@ -516,4 +514,3 @@ public class AttributeOption
         AttributeOption.childParentMap = childParentMap;
     }
 }
-
