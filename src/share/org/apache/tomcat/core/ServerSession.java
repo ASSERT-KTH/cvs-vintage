@@ -86,20 +86,38 @@ import org.apache.tomcat.util.buf.TimeStamp;
  */
 public class ServerSession {
 
+    /** Session is new. Modules can do all the preparation
+	work - set id, register it for expiration, etc
+    */
     public static final int STATE_NEW=0;
 
+    /** The session was accessed. Nothing big.
+     */
     public static final int STATE_ACCESSED=1;
 
+    /** If you set the server session object in the
+	EXPIRED state, it'll do all the cleanup and
+	be removed from the active sessions.
+
+	You must make sure you recycle the object
+	after setState(STATE_EXPIRED)
+    */
     public static final int STATE_EXPIRED=2;
 
     public static final int STATE_INVALID=3;
 
+    /** The session will be prepared for suspending -
+	same as for reload. What can be preserved will be,
+	or unbind events will be generated.
+    */
     public static final int STATE_SUSPEND=4;
 
+    /** After restart - or after reload
+     */
     public static final int STATE_RESTORED=5;
 
     private int debug=0;
-    private MessageBytes id = new MessageBytes();
+    private MessageBytes id = MessageBytes.newInstance();
     // XXX This must be replaced with a more efficient storage
     private Hashtable attributes = new Hashtable();
 
@@ -107,6 +125,7 @@ public class ServerSession {
     boolean distributable=false;
     Object manager;
     Context context;
+    ContextManager contextM;
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
     private int state=STATE_NEW;
     Object facade;
@@ -126,7 +145,10 @@ public class ServerSession {
 	return manager;
     }
 
-    /** The web application that creates this session
+    /** The web application that creates this session.
+     *  Don't relly on this, as we may have cross-context
+     *  sessions in a future version. Used to get the session options,
+     *  represents the webapp that creates the session.
      */
     public Context getContext() {
 	return context;
@@ -134,6 +156,10 @@ public class ServerSession {
 
     public void setContext( Context ctx ) {
 	context=ctx;
+    }
+
+    public void setContextManager( ContextManager cm ) {
+	this.contextM=cm;
     }
 
     public Object getFacade() {
@@ -211,7 +237,7 @@ public class ServerSession {
     }
 
     public void removeAllAttributes() {
-	if( debug > 0 ) System.out.println("ServerSession:removeAllAttributes");
+	if( debug > 0 ) contextM.log("ServerSession:removeAllAttributes");
 	Enumeration attrs = getAttributeNames();
 	while (attrs.hasMoreElements()) {
 	    String attr = (String) attrs.nextElement();
@@ -220,13 +246,13 @@ public class ServerSession {
     }
 
     public void removeAttribute(String name) {
-	if( debug > 0 ) System.out.println("ServerSession:removeAllAttribute "+ name);
+	if( debug > 0 ) contextM.log("ServerSession:removeAllAttribute "+ name);
 	// Hashtable is already synchronized
 	attributes.remove(name);
     }
 
     public void setAttribute(String name, Object value) {
-	if( debug > 0 ) System.out.println("ServerSession:setAttribute "+ name);
+	if( debug > 0 ) contextM.log("ServerSession:setAttribute "+ name);
 	attributes.put(name, value);
     }
 
@@ -243,6 +269,13 @@ public class ServerSession {
     public boolean isValid() {
 	return getTimeStamp().isValid();
     }
+
+    /** Display debug messages. Set by the session creator - typically the
+     *  session store ( SimpleSessionStore in 3.3 ).
+     */
+    public void setDebug(int d) {
+	debug=d;
+    }
     
     /**
      * Release all object references, and initialize instance variables, in
@@ -250,7 +283,8 @@ public class ServerSession {
      */
     public void recycle() {
 	// Reset the instance variables associated with this Session
-	if( debug > 0 ) System.out.println("ServerSession:recycle ");
+	if( debug > 0 ) contextM.log("ServerSession:recycle ");
+	facade=null;
 	attributes.clear();
 	ts.recycle();
 	id.recycle();
