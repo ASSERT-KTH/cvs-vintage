@@ -17,9 +17,8 @@
 #else
   #set ($search = $scarabR.NewSearch)
 #end
-#if (!$search)
-  #set ($search = $scarabR.NewSearch)
-#end
+#set ( $xMITSearch = $search.isXMITSearch() )
+
 
 #set ($intake = $scarabR.getConditionalIntake($scarabG.Constant.CURRENT_QUERY))
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
@@ -216,7 +215,7 @@ $l10n.From:&#160;<input type="text" size="20"
  #end
     <option#selected($selected) value=0>$l10n.AnyValue</option>
 
-#if ( $search.isXMITSearch() )
+#if ( $xMITSearch )
  #set ( $options = $search.getLeafRModuleOptions($selectedAttribute))
 #else
  ## single module/issuetype search so we will show attribute groups
@@ -275,7 +274,6 @@ $l10n.From:&#160;<input type="text" size="20"
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
-#set ( $xMITSearch = $search.isXMITSearch() )
 #if (!$xMITSearch)
   #set ( $module = $search.Module )
   #set ( $issueType = $search.IssueType )
