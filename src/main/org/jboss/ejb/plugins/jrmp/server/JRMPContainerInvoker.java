@@ -72,7 +72,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.18 $
+ *      @version $Revision: 1.19 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -336,6 +336,17 @@ public abstract class JRMPContainerInvoker
    public void stop()
    {
       //MF FIXME: do we need to remove the stuff from JNDI and un-export the stuff?
+	  try {
+		  InitialContext ctx = new InitialContext();
+		  ctx.unbind(container.getBeanMetaData().getJndiName());
+		  ctx.unbind("invokers/"+container.getBeanMetaData().getJndiName());
+		  
+		  UnicastRemoteObject.unexportObject(this, true);
+		  
+	  } catch (Exception e) {
+		  // ignore.
+	  }
+	  
       GenericProxy.removeLocal(container.getBeanMetaData().getJndiName());
    }
 
