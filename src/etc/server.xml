@@ -178,7 +178,7 @@
           -->
       <!-- ==================== Connectors ==================== -->
 
-       <!-- new http adapter. Attributes:
+       <!-- old http adapter. Attributes:
                secure - use SSL ( https )
                keystore, keypass - certs for SSL
                port 
@@ -186,12 +186,13 @@
                               by default report Tomcat Web Server ...
                               set an empty string to avoid sending server header 
         -->
+        <!-- Uncomment this if useing a 1.1 JDK
         <Http10Connector   port="8080" 
 			   secure="false"
 			   maxThreads="100"
 			   maxSpareThreads="50"
 			   minSpareThreads="10" />
-
+        -->
         <!--
             Uncomment this for SSL support. You _need_ to set up a
             server certificate if you want this to work, and you
@@ -211,20 +212,18 @@
         -->
 
         <!--
-	    Uncomment for HTTP 1.1 support using the Coyote adapter and
+	    HTTP 1.1 support using the Coyote adapter and
 	    and Http11 processor from jakarta-tomcat-connectors.
 
 	    Note: CoyoteConnector supports the same attributes as
 	          Http10Connector
   	    -->
 	 
-        <!--
-        <CoyoteConnector2   port="8081" 
+        <CoyoteConnector   port="8080" 
                maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
-               enableLookups="false" redirectPort="8443" acceptCount="100"
+               enableLookups="false"  acceptCount="100"
                debug="0" connectionTimeout="20000" 
                disableUploadTimeout="true" />
-	    -->
 
 	    <!-- Note : To disable connection timeouts, set connectionTimeout value
 	     to -1 -->
@@ -245,6 +244,7 @@
              The JniConnector will be self-enable only if JNI mode is detected.
          -->
         <JniConnector /> 
+
 
         <!-- Apache AJP12 support. This is also used to shut down tomcat.
              Parameter "address" defines network interface this Interceptor
@@ -275,15 +275,13 @@
              
              tomcatAuthentication="false"
           -->
-             
+        <!-- old JK support.  Uncomment if you need to use a 1.1 JDK     
         <Ajp13Connector port="8009" />
+	-->
 
-        <!-- Jk2 support using coyote. Uncomment and comment Ajp13Connector 
-          -->
-        <!--
-        <CoyoteConnector2 processorClassName="org.apache.jk.server.JkCoyoteHandler" 
+        <!-- Jk2 support using coyote.    -->
+        <CoyoteConnector processorClassName="org.apache.jk.server.JkCoyoteHandler" 
                           port="8009" />
-         -->
 
       <!-- 
            Context definitions can be placed here ( not recommended ) or 
