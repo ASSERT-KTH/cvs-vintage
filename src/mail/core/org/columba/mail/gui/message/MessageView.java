@@ -72,6 +72,12 @@ public class MessageView extends CScrollPane {
 		hv.addHyperlinkListener(l);
 		bodyTextViewer.addHyperlinkListener(l);
 	}
+	
+	public void addMouseListener( MouseListener l )
+	{
+		hv.addMouseListener(l);
+		bodyTextViewer.addMouseListener(l);
+	}
 
 	
 	

@@ -86,8 +86,6 @@ public class URLController implements ActionListener {
 		this.link = u;
 	}
 
-	
-
 	public void compose(String address) {
 		ComposerController controller = new ComposerController(null);
 
@@ -119,6 +117,22 @@ public class URLController implements ActionListener {
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+	}
+
+	public JPopupMenu createMenu(URL url) {
+		if (url.getProtocol().equalsIgnoreCase("mailto")) {
+			// found email address
+
+			setAddress(url.getFile());
+			JPopupMenu menu = createContactMenu(url.getFile());
+			return menu;
+
+		} else {
+
+			setLink(url);
+			JPopupMenu menu = createLinkMenu();
+			return menu;
 		}
 	}
 
