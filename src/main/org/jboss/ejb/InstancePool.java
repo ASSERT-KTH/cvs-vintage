@@ -9,48 +9,39 @@ package org.jboss.ejb;
 import java.rmi.RemoteException;
 
 /**
- *	<description> 
+ * Defines the model for a EnterpriseContext instance pool.
  *      
- *	@see <related>
- *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *	@version $Revision: 1.4 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @version $Revision: 1.5 $
  */
 public interface InstancePool
    extends ContainerPlugin
 {
-   // Constants -----------------------------------------------------
-    
-   // Attributes ----------------------------------------------------
-    
-   // Static --------------------------------------------------------
-   
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
    /**
-    *   Get an instance without identity.
-    *   Can be used by finders and create-methods, or stateless beans
+    * Get an instance without identity.
+    * 
+    * <p>Can be used by finders and create-methods, or stateless beans
     *
-    * @return     Context /w instance
-    * @exception   RemoteException  
+    * @return    Context/w instance
+    * 
+    * @throws Exception    RemoteException  
     */
-   public EnterpriseContext get()
-      throws Exception;
+   EnterpriseContext get() throws Exception;
    
    /**
-    *   Return an anonymous instance after invocation.
+    * Return an anonymous instance after invocation.
     *
-    * @param   ctx  
+    * @param ctx    The context to free.
     */
-   public void free(EnterpriseContext ctx);
+   void free(EnterpriseContext ctx);
    
    /**
-    *   Discard an anonymous instance after invocation.
-    *   This is called if the instance should not be reused, perhaps due to some
-    *   exception being thrown from it.
+    * Discard an anonymous instance after invocation.
+    * This is called if the instance should not be reused, perhaps due to some
+    * exception being thrown from it.
     *
-    * @param   ctx  
+    * @param ctx    The context to discard.
     */
-   public void discard(EnterpriseContext ctx);
+   void discard(EnterpriseContext ctx);
 }
 
