@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.46 2004/11/01 19:55:11 mvw Exp $
+// $Id: ActionRemoveFromModel.java,v 1.47 2004/11/13 20:21:49 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,14 +145,6 @@ public class ActionRemoveFromModel extends UMLChangeAction {
                 }
                 newTarget = getNewTarget(target);
                 p.moveToTrash(target);
-                /*
-                if (target instanceof Diagram) {
-                    Diagram firstDiagram = (Diagram) p.getDiagrams().get(0);
-                    if (target != firstDiagram)
-                        TargetManager.getInstance().setTarget(firstDiagram);
-                }
-                */
-
             }
         }
         
