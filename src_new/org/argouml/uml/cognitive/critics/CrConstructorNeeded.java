@@ -1,4 +1,4 @@
-// $Id: CrConstructorNeeded.java,v 1.8 2003/02/02 20:47:42 kataka Exp $
+// $Id: CrConstructorNeeded.java,v 1.9 2003/05/31 17:09:45 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,6 +92,10 @@ public class CrConstructorNeeded extends CrUML {
         if (!(ModelFacade.isAClass(dm))) {
             return NO_PROBLEM;
         }
+
+	// We don't consider secondary stuff.
+	if (!(ModelFacade.isPrimaryObject(dm))) 
+	    return NO_PROBLEM;
 
         // Types don't need a constructor.
         if (ModelFacade.isType(dm)) {
