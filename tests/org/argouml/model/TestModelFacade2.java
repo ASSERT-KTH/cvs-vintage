@@ -1,4 +1,4 @@
-// $Id: TestModelFacade2.java,v 1.8 2005/01/02 16:43:47 linus Exp $
+// $Id: TestModelFacade2.java,v 1.9 2005/01/03 16:31:04 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,6 @@ package org.argouml.model;
 import java.util.Collection;
 
 import junit.framework.TestCase;
-import ru.novosoft.uml.behavior.activity_graphs.MActivityGraph;
-import ru.novosoft.uml.behavior.activity_graphs.MPartition;
 
 /**
  * Tests some specific methods in ModelFacade.<p>
@@ -86,13 +84,13 @@ public class TestModelFacade2 extends TestCase {
     public void testSetModelElementContainer() {
 	UmlFactory fy = Model.getUmlFactory();
 
-	MActivityGraph container =
+	Object container =
 	    fy.getActivityGraphs().createActivityGraph();
-	MPartition partition = fy.getActivityGraphs().createPartition();
+	Object partition = fy.getActivityGraphs().createPartition();
 
 	ModelFacade.setModelElementContainer(partition, container);
 
-	Collection collection = container.getPartitions();
+	Collection collection = ModelFacade.getPartitions(container);
 	assertTrue(collection.contains(partition));
     }
 

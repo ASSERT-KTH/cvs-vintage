@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.235 2005/01/02 16:43:56 linus Exp $
+// $Id: ModelFacade.java,v 1.236 2005/01/03 16:31:09 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4992,6 +4992,21 @@ public class ModelFacade {
         //
 	return illegalArgumentObject(handle);
     }
+
+    /**
+     * Get the partitions from a container.
+     *
+     * @param container The container.
+     * @return The partitions (a collection).
+     */
+    public static Collection getPartitions(Object container) {
+        if (container instanceof MActivityGraph) {
+            return ((MActivityGraph) container).getPartitions();
+        }
+        //
+	return illegalArgumentCollection(container);
+    }
+
 
     ////////////////////////////////////////////////////////////////
     // Other querying methods
