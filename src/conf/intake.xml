@@ -522,7 +522,7 @@
         <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
     </field>
     <field name="Name" key="n" type="String">
-        <required-message>intake_EnterNameForTemplate</required-message>
+        <rule name="required" value="true">intake_EnterNameForTemplate</rule>
         <rule name="mask" value="\S">intake_EnterNameForTemplate</rule>
         <rule name="maxLength" value="255">intake_NameMustBeLessThan256Characters</rule>
     </field>
