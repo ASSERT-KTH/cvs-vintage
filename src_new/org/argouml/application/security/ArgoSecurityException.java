@@ -1,4 +1,4 @@
-// $Id: ArgoSecurityException.java,v 1.4 2003/06/30 18:00:16 linus Exp $
+// $Id: ArgoSecurityException.java,v 1.5 2004/03/09 20:33:32 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,19 +31,19 @@ package org.argouml.application.security;
  */
 public class ArgoSecurityException extends SecurityException
 {
-    private boolean _hidden = false;
+    private boolean hidden = false;
 
     public ArgoSecurityException() {
         this(false);
     } 
 
-    public ArgoSecurityException(boolean hidden) {
+    public ArgoSecurityException(boolean h) {
         super();
-	_hidden = hidden;
+	hidden = h;
     }
 
     public boolean isHidden() {
-        return _hidden;
+        return hidden;
     }
 
 }
