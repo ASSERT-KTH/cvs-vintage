@@ -1,6 +1,6 @@
 <html>
 <head>
-  <!-- $Id: tomcat-iis-howto.html,v 1.6 2001/11/07 13:42:39 larryi Exp $ -->
+  <!-- $Id: tomcat-iis-howto.html,v 1.7 2002/01/13 02:29:42 larryi Exp $ -->
   <!-- Copyright 1999-2001, Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <link rel="stylesheet" href="style.css">
@@ -21,7 +21,7 @@ and JSP requests to Tomcat (and this way, serve them to clients). </p>
 <h2>Document Conventions and Assumptions</h2>
 
 <p>&lt;tomcat_home&gt; is the root directory of tomcat. Your Tomcat
-installation should have the following subdirectories:
+installation should have the following subdirectories:</p>
 
 <ol>
   <li>&lt;tomcat_home&gt;\conf - Where you can place various configuration files</li>
@@ -36,7 +36,7 @@ server.</p>
 
 <h2>Supported Configuration</h2>
 
-<p>The IIS-Tomcat redirector was developed and tested on:
+<p>The IIS-Tomcat redirector was developed and tested on:</p>
 
 <ol>
   <li>Win2k SP2, WinNT4.0-i386 SP4/SP5/SP6a, and Win98 </li>
@@ -56,7 +56,7 @@ Jakarta project.</p>
 
 <h2>Installation</h2>
 
-<p>As of Tomcat 3.2, a pre-built version of the ISAPI redirector server plugin,
+<p>As of Tomcat 3.2, a pre-built version of the Tomcat redirector plugin,
 <tt>isapi_redirect.dll</tt>, is available under the win32/i386 directory where you
 downloaded the <a href="http://jakarta.apache.org/site/binindex.html">
 Tomcat binary distribution.</a> For those using Netscape as your browser, try
@@ -66,26 +66,30 @@ Netscape to download DLL files.</p>
 <p>You can also build a copy locally from the source in Tomcat's source
 distribution.</p>
 
-<p>The Tomcat redirector requires three entities:
+<p>The Tomcat redirector requires three entities:</p>
 
 <ol>
-  <li>isapi_redirect.dll - The IIS server plugin, either obtain a pre-built
+  <li>isapi_redirect.dll - The Tomcat redirector plugin, either obtain a pre-built
   DLL or build it yourself (see the build section).</li>
   <li>workers.properties - A file that describes the host(s) and port(s) used
   by the workers (Tomcat processes). A sample <tt>workers.properties</tt> can
-  be found under the <tt>conf</tt> directory. </li>
+  be found under the <tt>conf/jk</tt> directory. </li>
   <li>uriworkermap.properties - A file that maps URL-Path patterns to
   workers. A sample <tt>uriworkermap.properties</tt> can be found under the
-  <tt>conf</tt> directory as well.</li>
+  <tt>conf/jk</tt> directory as well. Also, this is one of the files generated
+  by the <a href="serverxml.html#IISConfig">IISConfig</a> module included by
+  default in the <code>server.xml</code> file. The
+  <code>uriworkermap.properties</code> file it generates is written to the
+  <code>conf/auto</code> directory.</li>
 </ol>
 
-<p>The installation includes the following parts:
+<p>The installation includes the following parts:</p>
 
 <ol>
   <li>Start Tomcat 3.3 with the &quot;jkconf&quot; specified so configuration
       files are written.</li>
-  <li>Configuring the ISAPI redirector with a configuration files and
-      checking that you can serve servlets with IIS.</li>
+  <li>Configure the Tomcat redirector plugin with the configuration files and
+      check that you can serve servlets and JSPs with IIS.</li>
   <li>Repeat the appropriate portions of the previous steps when changes to
       configuration or contexts occur.</li>
 </ol>
@@ -95,7 +99,7 @@ distribution.</p>
 <p>The default installation of Tomcat 3.3 includes the
 <a href="serverxml.html#IISConfig">IISConfig</a> module in the
 <code>server.xml</code> file.  This module is responsible for writting the
-configuration files used for the IIS installation and operation.</p>
+configuration files used for Tomcat redirector plugin installation and operation.</p>
 
 <p>In Tomcat 3.3, configuration files are written on demand. You must start
 Tomcat 3.3 with the &quot;jkconf&quot; option specified. Tomcat 3.3 will
@@ -104,35 +108,73 @@ while an instance of Tomcat 3.3 is running.  This differs from prior versions
 of Tomcat where the configuration files are written each time Tomcat is
 started.</p>
 
-<p>The IISConfig writes two configuration files.  The first is the registry
-configuration file, which by default will be
+<p>The IISConfig module in Tomcat 3.3 writes two configuration files.  The first
+is the registry configuration file, which by default will be
 <code>conf/auto/iis_redirect.reg</code>.  The second is the worker map
 configuration file, which by default will be
 <code>conf/auto/uriworkermap.properties</code>.</p>
 
-<h3>Configuring the ISAPI Redirector</h3>
+<p>The IISConfig module in Tomcat 3.3.1 writes a third configuration file.  This
+file contains the same settings as the registry configuration file and
+provides an alternate means of configuring the Tomcat redirector plugin
+without relying on the registry.  It defaults to writing
+<code>conf/auto/isapi_redirect.properties</code>.</p>
 
-<p>The following step show how to configure the isapi redirector plugin.</p>
+<p>To use the &quot;properties&quot; file instead of registry settings,
+the &quot;properties&quot; file must have the same name as the redirector
+plugin DLL, except with a &quot;.properties&quot; extension.  It must also be
+located in the same directory as the DLL. If both the &quot;properties&quot;
+file and registry settings exist, the &quot;properties&quot; file will be
+used.</p>
+
+<h3>Configuring the ISAPI Tomcat Redirector</h3>
+
+<p>The following steps show how to configure the Tomcat redirector plugin.</p>
 
 <ol>
-  <li>Enter the registry settings from the registry configuration file into
-    the registry.  This can be done from Windows Explorer by double-clicking
-    the file or by right-clicking the file and selecting <code>Open</code>
-    or <code>Merge</code>.</li>
+  <li>Build or download the Tomcat redirector plugin DLL,
+    <code>isapi_redirect.dll</code>, and place it in a suitable location.
+    A typical location is <code>TOMCAT_HOME\bin\native</code>.  If you are
+    installing on WinNT or Win2k, make sure IIS runs with a user that can
+    access this directory.<br>
+    <br></li>
+  <li>Use either of the following two methods to provide configuration settings
+    to the redirector plugin DLL.<br>
+    <br>
+    <ol type="a">
+      <li>Copy the <code>IISConfig</code> generated &quot;proprties&quot; file,
+        <code>isapi_redirect.properties</code>, or a manually created one,
+        to the directory where the redirector plugin DLL is found. Rename this
+        file to have the same base name as the redirector plugin DLL should they
+        happen to be different.</li>
+      <li>Enter the registry settings from the registry configuration file into
+        the registry.  This can be done from Windows Explorer by double-clicking
+        the file or by right-clicking the file and selecting <code>Open</code>
+        or <code>Merge</code>.</li>
+    </ol>
+    <b>Note:</b> If both are done, the &quot;properties&quot; file takes
+      priority.<br>
+    <br></li>
   <li>Using the IIS management console, add a new virtual directory to your
-    IIS/PWS web site. The name of the virtual directory must be jakarta. Its
-	physical path should be the directory where you placed isapi_redirect.dll
-	(for example it is c:\jakarta-tomcat\bin\native). While creating this new
-	virtual directory assign it with execute access.</li>
-  <li>Add isapi_redirect.dll as a filter in your IIS/PWS web site. The name of
-    the filter should reflect its task (for example,
-    &quot;Jakarta Redirector&quot;). Its executable must be our
-	<code>isapi_redirect.dll</code>.  On WinNT and Win2k, you can use the
-    IIS Management console to add the filter.  For PWS on Win98, you'll need 
-	to use regedit and add/edit the &quot;Filter DLLs&quot; key under 
-	<code>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\W3SVC\Parameters.</code>
+    IIS/PWS web site. The name of the virtual directory must be <b>jakarta</b>.
+    Its	physical path should be the directory where you placed the redirector
+    plugin DLL, <code>isapi_redirect.dll</code>
+    (for example c:\jakarta-tomcat\bin\native). While creating this new
+	virtual directory, assign it with execute access.<br>
+    <br></li>
+  <li>Add the redirector plugin DLL, <code>isapi_redirect.dll</code>, as a
+    filter to your IIS/PWS web site. The name of the filter should reflect its task
+    (for example, &quot;Jakarta Redirector&quot;). Its executable must be the
+	redirector plugin DLL, <code>isapi_redirect.dll</code>.<br>
+    <br>
+    On WinNT and Win2k, you can use the IIS Management console to add the filter.<br>
+    <br>
+    For PWS on Win98, you'll need to use regedit and add/edit the
+    &quot;Filter DLLs&quot; key under
+    <code>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\W3SVC\Parameters.</code>
     This key contains a comma separated list of dlls ( full paths ). You need to
-    add the full path to isapi_redirect.dll to this key.</li>
+    add the full path to redirector plugin DLL, isapi_redirect.dll, to this key.<br>
+    <br></li>
   <li>Restart IIS/PWS (stop + start the IIS service).  If you are using WinNT
     or Win2k, you can make sure that the jakarta filter is successfully loaded
     by checking for a green up-pointing arrow.<br>
@@ -152,19 +194,19 @@ on correcting the problem.</p>
 <h3>Adding additional Contexts</h3>
 
 <p>The examples context is useful for verifying your installation, but you will also need
-to add your own contexts. Adding a new context requires two operations:
+to add your own contexts. Adding a new context requires two operations:</p>
 
 <ol>
   <li>Adding the context to Tomcat (This is covered in the
     <a href="tomcat-ug.html#context_addcust">Tomcat User's Guide</a>).</li>
-  <li>Adding the context to the ISAPI redirector.</li>
+  <li>Adding the context to the Tomcat redirector plugin.</li>
 </ol>
 
-<p>Adding a context to the ISAPI redirector is simple, all you need to do is to
+<p>Adding a context to the Tomcat redirector plugin is simple, all you need to do is to
 start Tomcat 3.3 with &quot;jkconf&quot; option specified again. After the
 worker map file is rewritten, restart IIS/PWS.</p>
 
-<p>If you are using a manually modified worker map file, edit the file
+<p>If you are using a manually modified URI to worker map file, edit the file
 to add a line that looks like: </p>
 
 <p><tt>/context/*=worker_name</tt></p>
@@ -179,15 +221,87 @@ to add a line that looks like: </p>
 <p>After saving <tt>uriworkermap.properties</tt> restart IIS/PWS and it will
 serve the new context.</p>
 
-<h2>Building the redirector</h2>
+<h3>The Tomcat Redirector Plugin Configuration Settings</h3>
 
-<p>The redirector was developed using Visual C++ Ver.6.0, so having this environment is a
-prereq if you want to perform a custom build.</p>
+<p>The following is an example isapi_redirect.properties file which contains
+the default settings for Tomcat 3.3.</p>
 
-<p>The steps that you need to take are:
+<pre>
+extension_uri=/jakarta/isapi_redirect.dll
+log_file=E:\Jakarta\Tc33x\jakarta-tomcat\dist\tomcat\logs\iis_redirect.log
+log_level=emerg
+worker_file=E:\Jakarta\Tc33x\jakarta-tomcat\dist\tomcat\conf\jk\workers.properties
+worker_mount_file=E:\Jakarta\Tc33x\jakarta-tomcat\dist\tomcat\conf\auto\uriworkermap.properties
+</pre>
+
+<p>The Tomcat redirector plugin for Tomcat 3.3.1 supporta an additional setting
+with the following default.</p>
+
+<pre>
+uri_select=parsed
+</pre>
+
+<p>The following table describes the use of each of these settings:</p>
+
+<table border="1" cellpadding="2">
+<tr><th align="left">Setting</th><th align="left">Description</th>
+    <th align="left">Default</th></tr>
+<tr><td valign="top">extension_uri</td>
+    <td>The URI used by the redirector plugin's filter to redirect the request
+    to the extension. This setting consists of the name of the
+    virtual directory followed by the name of the DLL.</td>
+    <td>/jakarta/isapi_redirect.dll</td></tr>
+<tr><td valign="top">log_file</td>
+    <td>The path of the log file for the redirector plugin DLL</td>
+    <td><i>must be specified</i></td></tr>
+<tr><td>log_level</td>
+    <td>The quantity of log output desired. Valid values are
+    debug, info, error, and emerg.</td><td>emerg</td></tr>
+<tr><td valign="top">worker_file</td>
+    <td>The path to the workers definition file, typically named
+    <code>worker.properties</code></td>
+    <td><i>must be specified</i></td></tr>
+<tr><td valign="top">worker_mount_file</td>
+   <td>The path to the URI to worker map file, typically named
+    <code>uriworkermap.properties</code>.</td>
+    <td><i>must be specified</i></td></tr>
+<tr><td valign="top">uri_select<br>
+    <b>[Tomcat 3.3.1]</b></td>
+    <td>This settings controls which of several forms of
+    the URI is passed to Tomcat.  The following are the valid values:<br>
+    <br>
+    <table>
+    <tr><th align="left">Value</th><th align="left">Description</th></tr>
+    <tr><td valign="top">parsed</td><td>Internally, the redirector plugin
+        normalizes and decodes the request URI before checking the request
+        against the URI to worker mappings. This value passes this
+        normalized/decoded version of the URI to Tomcat.</td></tr>
+    <tr><td valign="top">unparsed</td>
+        <td>Passes the original (i.e. unnormalized and undecoded) request URI
+        to Tomcat.</td></tr>
+    <tr><td valign="top">escaped</td>
+        <td>Passes a re-encoded version normalized/decoded request URI to
+        Tomcat.</td></tr>
+    </table>
+    <br>
+    Setting this value properly is important so that request data, such as
+    HttpServletRequest.getRequestURI(), are returned with the proper encoding.
+    Tomcat 3.3 and later requires the <code>parsed</code> setting. Tomcat 3.2.x
+    can use either <code>unparsed</code> or <code>escaped</code>.  For
+    Tomcat 3.2.1 and earlier, <code>escaped</code> should be used since it
+    does not do its own normalization.
+    </td><td valign="top">parsed</td></tr>
+</table>
+
+<h2>Building the Tomcat redirector</h2>
+
+<p>The Tomcat redirector was developed using Visual C++ Ver.6.0, so having this
+environment is a prerequisite if you want to perform a custom build.</p>
+
+<p>The steps that you need to take are:</p>
 
 <ol>
-  <li>Change directory to the isapi plugins source directory.</li>
+  <li>Change directory to the isapi redirector plugins source directory.</li>
   <li>Execute the following command:<br>
     <tt>MSDEV isapi.dsp /MAKE ALL</tt><br>
     If msdev is not in your path, enter the full path to msdev.exe</li>
@@ -201,11 +315,11 @@ it using the build menu.</p>
 <h2>How does it work? </h2>
 
 <ol>
-  <li>The IIS-Tomcat redirector is an IIS plugin (filter + extension), IIS load the redirector
+  <li>The IIS-Tomcat redirector is an IIS plugin (filter + extension), IIS loads the redirector
     plugin and calls its filter function for each in-coming request. </li>
   <li>The filter then tests the request URL against a list of URI-paths held inside
     <tt>uriworkermap.properties</tt>, If the current request matches one of the entries in the list of
-    URI-paths, the filter transfer the request to the extension.</li>
+    URI-paths, the filter transfers the request to the extension.</li>
   <li>The extension collects the request parameters and forwards them to the appropriate
     worker using the ajp1X protocol.</li>
   <li>The extension collects the response from the worker and returns it to the browser.</li>
@@ -230,7 +344,7 @@ gif files in the examples context, there is no need to serve them from the Tomca
 IIS will suffice.</p>
 
 <p>Making IIS serve static files that are part of the Tomcat contexts requires the
-following:
+following:</p>
 
 <ol>
   <li>Configuring IIS to know about the Tomcat contexts</li>
@@ -281,7 +395,7 @@ example to spread the load among different machines). To achieve such goal you w
 to define several workers and assign each context with its own worker.</p>
 
 <p>Defining workers is done in <tt>workers.properties</tt>, this file includes
-two types of entries:
+two types of entries:</p>
 
 <ol>
   <li>An entry that lists all the workers defined. For example:<br>
@@ -310,7 +424,7 @@ different contexts each with its own worker. For example look at the following
 
 <h2><a name="troubleshoot">Troubleshooting</a></h2>
 
-<p>It is easy to have the ISAPI redirector not work the first time you try to install
+<p>It is easy to have the Tomcat redirector not work the first time you try to install
 it.  If this happens to you, here are some steps to follow to try to correct the
 problem. These steps aren't guaranteed to cover all possible problems, but they
 should help find the typical mistakes.  If you make any corrections during these
@@ -330,7 +444,7 @@ context works correctly if you access Tomcat directly.</p>
     Web Site Activity Log&quot; is checked in the Advanced Options of the Personal 
     Web Manager.</li>
   <li>Start the PWS service and Tomcat.</li>
-  <li>Check for the presence of the ISAPI redirector log file you specified in 
+  <li>Check for the presence of the Tomcat redirector log file you specified in 
     the <tt>log_file</tt> setting. If not found, check the following: 
     <ol type="A">
       <li>Check the &quot;Filter DLLs&quot; setting in the &quot;HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\W3SVC\Parameters&quot; 
@@ -342,7 +456,7 @@ context works correctly if you access Tomcat directly.</p>
       <li>Check the <tt>log_file</tt> setting for typos, name and data. Also ensure 
         the directory in which the log file will appear already exists.</li>
     </ol>
-    If the above are set correctly, the ISAPI redirector should be able to create 
+    If the above are set correctly, the Tomcat redirector should be able to create 
     the log file.</li>
   <li>Invoke the URL &quot;http://localhost/examples/jsp/index.html&quot; in your 
     browser. Case is important. The characters following &quot;localhost&quot; 
@@ -351,7 +465,7 @@ context works correctly if you access Tomcat directly.</p>
     log file in found in SYSTEM/LogFiles/W3SVC1. 
     <ol type="A">
       <li>If the last line contains: <tt>GET &quot;/examples/jsp/index.html HTTP/1.1&quot; 
-        404</tt>, then the ISAPI redirector is not recognizing that it should 
+        404</tt>, then the Tomcat redirector is not recognizing that it should 
         be handling requests for the &quot;/examples&quot; context. Check the 
         following: 
         <ol>
@@ -359,10 +473,10 @@ context works correctly if you access Tomcat directly.</p>
           <li>Check the <tt>worker_file</tt> setting for typos, name and data.</li>
           <li>Check the <tt>worker_mount_file</tt> setting typos, name and data.</li>
         </ol>
-        If these are set correctly, the ISAPI redirector should recognize that 
+        If these are set correctly, the Tomcat redirector should recognize that 
         it should handle requests for the &quot;/examples&quot; context.</li>
       <li>If the last line contains something like: <tt>GET &quot;/jakarta/isapi_redirect.dll 
-        HTTP1.1&quot;</tt>, then the ISAPI redirector is recognizing that it should 
+        HTTP1.1&quot;</tt>, then the Tomcat redirector is recognizing that it should 
         handle the request, but is not successful at getting Tomcat to service 
         the request. 
         <ol>
@@ -405,19 +519,19 @@ context works correctly if you access Tomcat directly.</p>
     &quot;Save Web Site Activity Log&quot; is checked in the Advanced Options of
     the Personal Web Manager.</li>
   <li>Start the World Wide Web Publishing Service and Tomcat.</li>
-  <li>Check for the presence of the ISAPI redirector log file you specified in the
+  <li>Check for the presence of the Tomcat redirector log file you specified in the
     <tt>log_file</tt> setting. If not found, check the following:
     <ol type="A">
       <li>Check the &quot;executable&quot; you set for the filter in the IIS
         Management Console and make sure the path is correct.</li>
       <li>Check the spelling of the &quot;HKEY_LOCAL_MACHINE\SOFTWARE\Apache Software
-        Foundation\Jakarta Isapi Redirector\1.0&quot; key. Case isn't important,
+        Foundation\Jakarta Tomcat Redirector\1.0&quot; key. Case isn't important,
         but an incorrect letter will prevent the isapi_redirect.dll from finding
         its registry settings.</li>
       <li>Check the <tt>log_file</tt> setting for typos, name and data.  Also
         ensure the directory in which the log file will appear already exists.</li>
     </ol>
-    If the above are set correctly, the ISAPI redirector should be able to create
+    If the above are set correctly, the Tomcat redirector should be able to create
     the log file.</li>
   <li>Check the jakarta filter you added and make sure its status shows a green
     upward-pointing arrow. If not, check the following:
@@ -434,7 +548,7 @@ context works correctly if you access Tomcat directly.</p>
     SYSTEM32/LogFiles/W3SVC1.
     <ol type="A">
       <li>The last line should contain something like: <tt>GET &quot;/jakarta/isapi_redirect.dll
-        HTTP1.1&quot;</tt>, which indicates the ISAPI redirector is recognizing
+        HTTP1.1&quot;</tt>, which indicates the Tomcat redirector is recognizing
         that it should handle the request.
         <ol>
           <li>If the number following <tt>GET &quot;/...&quot;</tt> is 404, check
