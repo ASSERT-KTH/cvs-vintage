@@ -18,6 +18,7 @@ package org.columba.mail.gui.message.util;
 import java.io.BufferedReader;
 import java.io.StringReader;
 
+import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
@@ -44,9 +45,21 @@ public class DocumentParser {
 	Pattern addressPattern;
 	PatternMatcher addressMatcher;
 
+	PatternCompiler quotingCompiler;
+	Pattern quotingPattern;
+	PatternMatcher quotingMatcher;
+
 	PatternCompiler characterCompiler;
 	Pattern characterPattern;
 	PatternMatcher characterMatcher;
+
+	private final static String[] smilyCode =
+		{ ":-\\)", ":-\\(", ":-\\|", ";-\\)" };
+	private final static String[] smilyImage =
+		{ "smile.gif", "sad.gif", "normal.gif", "wink.gif" };
+	public DocumentParser() {
+
+	}
 
 	/*
 	 * parse text and transform every email-address
@@ -164,12 +177,16 @@ public class DocumentParser {
 						case '&' :
 							sb.append("&amp;");
 							break;
+						case ' ' :
+							sb.append("&nbsp;");
+							break;
 						case '\t' :
 							sb.append("&nbsp;&nbsp;&nbsp;&nbsp;");
 							break;
 						case '\n' :
 							sb.append("<br>");
 							break;
+
 						default :
 							sb.append(ss.charAt(i));
 							break;
@@ -273,6 +290,63 @@ public class DocumentParser {
 		}
 
 		return output.toString();
+	}
+
+	/*
+		 * 
+		 * make quotes font-color darkgray
+		 *
+		 */
+	public String markQuotings(String input) throws Exception {
+
+		//String pattern = "\\n[ \\t]*(&gt;(([^\\n])*))";
+		String pattern = "(^(&nbsp;)*&gt;[^\\n]*)|\\n((&nbsp;)*&gt;[^\\n]*)";
+
+		quotingCompiler = new Perl5Compiler();
+		quotingPattern =
+			quotingCompiler.compile(
+				pattern,
+				Perl5Compiler.CASE_INSENSITIVE_MASK);
+
+		quotingMatcher = new Perl5Matcher();
+
+		String r = Util.substitute(quotingMatcher, quotingPattern,
+			//new Perl5Substitution("\n<quote class=\"bodytext\" style=\"color:#949494;\">$1</quote>"),
+	new Perl5Substitution("\n<font class=\"quoting\">$1$3</font>"),
+		input,
+		Util.SUBSTITUTE_ALL);
+		return r;
+
+	}
+
+	public String addSmilies(String input) throws Exception {
+
+		for (int i = 0; i < smilyCode.length; i++)
+			input = replaceStringWithImage(input, smilyCode[i], smilyImage[i]);
+
+		return input;
+	}
+
+	private String replaceStringWithImage(
+		String input,
+		String pattern,
+		String image)
+		throws MalformedPatternException {
+
+		quotingCompiler = new Perl5Compiler();
+		quotingPattern =
+			quotingCompiler.compile(
+				pattern,
+				Perl5Compiler.CASE_INSENSITIVE_MASK);
+
+		quotingMatcher = new Perl5Matcher();
+
+		String r = Util.substitute(quotingMatcher, quotingPattern,
+			//new Perl5Substitution("\n<quote class=\"bodytext\" style=\"color:#949494;\">$1</quote>"),
+	new Perl5Substitution("<IMG SRC=\"" + image + "\">"),
+		input,
+		Util.SUBSTITUTE_ALL);
+		return r;
 	}
 
 }

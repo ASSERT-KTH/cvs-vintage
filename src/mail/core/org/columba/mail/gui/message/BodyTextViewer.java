@@ -21,6 +21,7 @@ import java.io.File;
 import java.net.URL;
 
 import javax.swing.JTextPane;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import org.columba.core.config.Config;
@@ -40,7 +41,6 @@ import org.columba.mail.gui.message.util.DocumentParser;
  */
 public class BodyTextViewer extends JTextPane {
 
-
 	// stylesheet is created dynamically because
 	// user configurable fonts are used
 	private String css = "";
@@ -57,6 +57,12 @@ public class BodyTextViewer extends JTextPane {
 		htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
 
+		//		setup base url in order to be able to display images
+		// in html-component
+		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
+		ColumbaLogger.log.debug(baseUrl.toString());
+		((HTMLDocument) getDocument()).setBase(baseUrl);
+
 		parser = new DocumentParser();
 
 		setContentType("text/html");
@@ -71,7 +77,7 @@ public class BodyTextViewer extends JTextPane {
 	 *
 	 */
 	protected void initStyleSheet() {
-		
+
 		// read configuration from options.xml file
 		XmlElement mainFont =
 			Config.get("options").getElement("/options/gui/textfont");
@@ -82,31 +88,32 @@ public class BodyTextViewer extends JTextPane {
 		// create css-stylesheet string 
 		// set font of html-element <P> 
 		css =
-			"<style type=\"text/css\"><!--p {font-family:\""
+			"<style type=\"text/css\"><!-- .bodytext {font-family:\""
 				+ name
 				+ "\"; font-size:\""
 				+ size
-				+ "pt\"}--></style>";
+				+ "pt; \"}"
+				+ ".quoting {color:#949494;}; --></style>";
 	}
 
 	public void setBodyText(String bodyText, boolean html) {
+
 		if (html) {
 			try {
 				// this is a HTML message
-				
+
 				// try to fix broken html-strings
 				String validated = parser.validateHTMLString(bodyText);
 				ColumbaLogger.log.debug("validated bodytext:\n" + validated);
 
 				// create temporary file
 				File tempFile = TempFileStore.createTempFileWithSuffix("html");
-				
+
 				// save bodytext to file
 				DiskIO.saveStringInFile(tempFile, validated);
 
-			
 				URL url = tempFile.toURL();
-				
+
 				// use asynchronous loading method setPage to display
 				// URL correctly
 				setPage(url);
@@ -132,18 +139,23 @@ public class BodyTextViewer extends JTextPane {
 			// this is a text/plain message
 			try {
 				// substitute special characters like:
-				//  <,>,&,\t,\n
+				//  <,>,&,\t,\n		
 				String r = parser.substituteSpecialCharacters(bodyText);
-				
+
 				// parse for urls and substite with HTML-code
 				r = parser.substituteURL(r);
 				// parse for email addresses and substite with HTML-code
 				r = parser.substituteEmailAddress(r);
-				
-				
+
+				// parse for quotings and color the darkgray
+				r = parser.markQuotings(r);
+
+				// add smilies
+				r = parser.addSmilies(r);
+
 				// encapsulate bodytext in html-code
 				r = transformToHTML(new StringBuffer(r));
-				
+
 				ColumbaLogger.log.debug("validated bodytext:\n" + r);
 
 				// display bodytext
@@ -164,7 +176,9 @@ public class BodyTextViewer extends JTextPane {
 	 */
 	protected String transformToHTML(StringBuffer buf) {
 		// prepend
-		buf.insert(0, "<HTML><HEAD>" + css + "</HEAD><BODY ><P>");
+		buf.insert(
+			0,
+			"<HTML><HEAD>" + css + "</HEAD><BODY class=\"bodytext\"><P>");
 		// append
 		buf.append("</P></BODY></HTML>");
 		return buf.toString();
