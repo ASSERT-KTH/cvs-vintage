@@ -22,11 +22,10 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -35,8 +34,10 @@ import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.table.AddressbookTableModel;
 import org.columba.addressbook.gui.util.HeaderItemDNDManager;
 import org.columba.addressbook.parser.AddressParser;
+import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -48,8 +49,8 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation.
  */
 public class HeaderController
-	implements TableModelListener, KeyListener, DropTargetListener {
-	
+	implements TableModelListener, DropTargetListener, FocusOwner {
+
 	ComposerController controller;
 	HeaderView view;
 
@@ -63,11 +64,14 @@ public class HeaderController
 
 		view = new HeaderView(this);
 
-		view.getTable().addKeyListener(this);
+		//view.getTable().addKeyListener(this);
 
+		// register at focus manager
+		MainInterface.focusManager.registerComponent(this);
+		
 		dropTarget = new DropTarget(view.getTable(), this);
 		dropTarget2 = new DropTarget(view, this);
-		
+
 		appendRow();
 	}
 
@@ -82,7 +86,7 @@ public class HeaderController
 
 		System.out.println("no recipient");
 		NotifyDialog dialog = new NotifyDialog();
-		dialog.showDialog(MailResourceLoader.getString("menu","mainframe","composer_no_recipients_found")); //$NON-NLS-1$
+		dialog.showDialog(MailResourceLoader.getString("menu", "mainframe", "composer_no_recipients_found")); //$NON-NLS-1$
 
 		return false;
 	}
@@ -112,11 +116,10 @@ public class HeaderController
 
 	public void appendRow() {
 		view.getTable().appendRow();
-		
+
 	}
-	
-	public void editLastRow()
-	{
+
+	public void editLastRow() {
 		view.getTable().editLastRow();
 	}
 
@@ -128,12 +131,12 @@ public class HeaderController
 		for (Iterator it = v.iterator(); it.hasNext();) {
 			try {
 				HeaderItem item = (HeaderItem) it.next();
-//		for (int i = 0; i < v.size(); i++) {
-//			try {
-//				
-//				HeaderItem item = (HeaderItem) v.get(i);
-				ColumbaLogger.log.debug("item="+item.toString());
-				
+				//		for (int i = 0; i < v.size(); i++) {
+				//			try {
+				//				
+				//				HeaderItem item = (HeaderItem) v.get(i);
+				ColumbaLogger.log.debug("item=" + item.toString());
+
 				String field = (String) item.get("field");
 
 				if (field == null) {
@@ -225,11 +228,12 @@ public class HeaderController
 	}
 
 	public void setHeaderItemLists(HeaderItemList[] lists) {
-		((ComposerModel)controller.getModel()).setToList(lists[0].getVector());
+		((ComposerModel) controller.getModel()).setToList(lists[0].getVector());
 
-		((ComposerModel)controller.getModel()).setCcList( lists[1].getVector() );
+		((ComposerModel) controller.getModel()).setCcList(lists[1].getVector());
 
-		((ComposerModel)controller.getModel()).setBccList(  lists[2].getVector() );
+		((ComposerModel) controller.getModel()).setBccList(
+			lists[2].getVector());
 
 		updateComponents(true);
 	}
@@ -248,12 +252,12 @@ public class HeaderController
 		model.getToList().clear();
 		model.getCcList().clear();
 		model.getBccList().clear();
-
+		
 		for (int i = 0; i < view.table.getRowCount(); i++) {
 			HeaderItem item =
 				(HeaderItem) view.getAddressbookTableModel().getHeaderItem(i);
 			String field = (String) item.get("field");
-
+		
 			if (field.equals("To")) {
 				model.getToList().add(item);
 			} else if (field.equals("Cc")) {
@@ -272,6 +276,7 @@ public class HeaderController
 
 	/****************** Key Listener ****************************/
 
+	/*
 	public void keyPressed(KeyEvent k) {
 		switch (k.getKeyCode()) {
 			case (KeyEvent.VK_DELETE) :
@@ -283,9 +288,11 @@ public class HeaderController
 		}
 	}
 
-	public void keyReleased(KeyEvent k) {}
-	public void keyTyped(KeyEvent k) {}
-
+	public void keyReleased(KeyEvent k) {
+	}
+	public void keyTyped(KeyEvent k) {
+	}
+	*/
 	/***************************** DND *****************************/
 
 	public void dragEnter(DropTargetDragEvent event) {
@@ -351,5 +358,89 @@ public class HeaderController
 		view.getTable().appendRow();
 	}
 
-	public void dropActionChanged(DropTargetDragEvent event) {}
+	public void dropActionChanged(DropTargetDragEvent event) {
+	}
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#copy()
+	 */
+
+	/***************** FocusOwner implementation ***************************/
+
+	public void copy() {
+		// not supported by gui component
+
+	}
+
+	public void cut() {
+		view.removeSelected();
+	}
+
+	public void delete() {
+		view.removeSelected();
+
+	}
+
+	public JComponent getComponent() {
+		return view.getTable();
+	}
+
+	public boolean isCopyActionEnabled() {
+		// not supported by gui component
+		return false;
+	}
+
+	
+	public boolean isCutActionEnabled() {
+		if (view.getSelectedCount() > 0)
+			return true;
+
+		return false;
+	}
+
+	public boolean isDeleteActionEnabled() {
+		if (view.getSelectedCount() > 0)
+			return true;
+
+		return false;
+	}
+
+	public boolean isPasteActionEnabled() {
+		// not supported by gui component
+		return false;
+	}
+
+	public boolean isRedoActionEnabled() {
+		// not supported by gui component
+		return false;
+	}
+
+	public boolean isSelectAllActionEnabled() {
+		return true;
+	}
+
+	public boolean isUndoActionEnabled() {
+		// not supported by gui component
+		return false;
+	}
+
+	public void paste() {
+		// not supported by gui component
+
+	}
+
+	public void redo() {
+		// not supported by gui component
+
+	}
+
+	public void selectAll() {
+		view.getTable().selectAll();
+
+	}
+
+	public void undo() {
+		// not supported by gui component
+
+	}
+
 }

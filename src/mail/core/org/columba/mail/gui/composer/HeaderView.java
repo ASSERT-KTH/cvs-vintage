@@ -26,12 +26,14 @@ import org.columba.addressbook.gui.table.AddressbookTableModel;
 import org.columba.mail.gui.composer.util.AddressbookTableView;
 
 /**
- * @author frd
+ * JTable including a nested JComboBox.
+ * <p>
+ * Table contains two column. The first for choosing To:, Cc: or Bcc:,
+ * the second column for recipients;
+ * <p>
+ * TODO: HeaderView should extend AddressbookTableView !
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public class HeaderView extends JScrollPane {
 	
@@ -68,6 +70,11 @@ public class HeaderView extends JScrollPane {
 	public int count()
 	{
 		return getTable().getRowCount();
+	}
+	
+	public int getSelectedCount()
+	{
+		return getTable().getSelectedRowCount();
 	}
 	
 	public void removeSelected()

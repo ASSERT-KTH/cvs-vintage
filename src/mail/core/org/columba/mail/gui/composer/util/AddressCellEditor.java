@@ -57,7 +57,6 @@ public class AddressCellEditor
 
 		getEditor().getEditorComponent().addKeyListener(this);
 		
-		
 
 	}
 
