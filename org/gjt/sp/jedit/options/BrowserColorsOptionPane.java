@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Browser color editor.
  * @author Slava Pestov
- * @version $Id: BrowserColorsOptionPane.java,v 1.2 2001/11/23 09:08:49 spestov Exp $
+ * @version $Id: BrowserColorsOptionPane.java,v 1.3 2001/11/25 03:42:15 spestov Exp $
  */
 public class BrowserColorsOptionPane extends AbstractOptionPane
 {
@@ -186,14 +186,14 @@ class BrowserColorsModel extends AbstractTableModel
 	void add()
 	{
 		entries.addElement(new Entry("",UIManager.getColor("Tree.foreground")));
-		fireTableStructureChanged();
+		fireTableRowsInserted(entries.size() - 1,entries.size() - 1);
 	} //}}}
 
 	//{{{ remove() method
 	void remove(int index)
 	{
 		entries.removeElementAt(index);
-		fireTableStructureChanged();
+		fireTableRowsDeleted(entries.size(),entries.size());
 	} //}}}
 
 	//{{{ save() method

@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * The text area repaint manager. It performs double buffering and paints
  * lines of text.
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.11 2001/11/24 13:03:36 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.12 2001/11/25 03:42:16 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -798,7 +798,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 			if(bracketHighlight
 				&& physicalLine == textArea.getBracketLine()
-				&& textArea.isHighlightVisible())
+				&& textArea.isBracketHighlightVisible())
 				paintBracketHighlight(gfx,physicalLine,y);
 		}
 

@@ -38,7 +38,7 @@ import org.gjt.sp.util.IntegerArray;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.14 2001/11/24 13:03:36 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.15 2001/11/25 03:42:15 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -479,8 +479,8 @@ loop:		for(;;)
 		for(int i = start; i < positions.size(); i++)
 		{
 			bh = (PosBottomHalf)positions.elementAt(i);
-			if(bh.offset < offset)
-				System.err.println("fuck: " + bh.offset);
+			//if(bh.offset < offset)
+			//	System.err.println("fuck: " + bh.offset);
 			bh.offset += length;
 		}
 	} //}}}

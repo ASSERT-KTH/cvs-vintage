@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.14 2001/11/24 13:03:36 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.15 2001/11/25 03:42:15 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -535,6 +535,8 @@ public class GUIUtilities
 	public static String[] showVFSFileDialog(View view, String path,
 		int type, boolean multipleSelection)
 	{
+		hideSplashScreen();
+
 		VFSFileChooserDialog fileChooser = new VFSFileChooserDialog(
 			view,path,type,multipleSelection);
 		String[] selectedFiles = fileChooser.getSelectedFiles();

@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.14 2001/11/24 09:45:13 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.15 2001/11/25 03:42:15 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -531,7 +531,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 		else
 		{
 			path = this.path;
-			filter = null;
+			filter = jEdit.getProperty("vfs.browser.default-filter");
 		}
 
 		if(!(VFSManager.getVFSForPath(path) instanceof FileVFS))

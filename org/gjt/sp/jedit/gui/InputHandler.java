@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.5 2001/11/14 09:35:20 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.6 2001/11/25 03:42:15 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler extends KeyAdapter
@@ -110,9 +110,11 @@ public abstract class InputHandler extends KeyAdapter
 	 */
 	public void setRepeatEnabled(boolean repeat)
 	{
+		boolean oldRepeat = this.repeat;
 		this.repeat = repeat;
 		repeatCount = 0;
-		view.getStatus().setMessage(null);
+		if(oldRepeat != repeat)
+			view.getStatus().setMessage(null);
 	} //}}}
 
 	//{{{ getRepeatCount() method
@@ -131,9 +133,11 @@ public abstract class InputHandler extends KeyAdapter
 	 */
 	public void setRepeatCount(int repeatCount)
 	{
+		boolean oldRepeat = this.repeat;
 		repeat = true;
 		this.repeatCount = repeatCount;
-		view.getStatus().setMessage(null);
+		if(oldRepeat != repeat)
+			view.getStatus().setMessage(null);
 	} //}}}
 
 	//{{{ getLastAction() method
