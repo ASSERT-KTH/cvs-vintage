@@ -1,4 +1,4 @@
-// $Id: TestUMLFeatureOwnerScopeCheckBox.java,v 1.2 2002/12/21 19:48:10 linus Exp $
+// $Id: TestUMLFeatureOwnerScopeCheckBox.java,v 1.3 2002/12/22 00:36:52 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,9 @@ public class TestUMLFeatureOwnerScopeCheckBox extends TestCase {
 	// If so, all tests are inconclusive.
 	try {
 	    box = new UMLFeatureOwnerScopeCheckBox(mockcomp);
-	} catch (java.lang.InternalError e) {
+	} catch (java.lang.InternalError e1) {
+	    return;
+	} catch (java.lang.NoClassDefFoundError e2) {
 	    return;
 	}
     }

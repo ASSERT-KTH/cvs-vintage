@@ -1,4 +1,4 @@
-// $Id: TestUMLElementOwnershipSpecificationCheckBox.java,v 1.4 2002/12/21 19:48:10 linus Exp $
+// $Id: TestUMLElementOwnershipSpecificationCheckBox.java,v 1.5 2002/12/22 00:36:52 linus Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,7 +88,9 @@ public class TestUMLElementOwnershipSpecificationCheckBox extends TestCase {
 	// If so, all tests are inconclusive.
 	try {
 	    box = new UMLElementOwnershipSpecificationCheckBox(mockcomp);
-	} catch (java.lang.InternalError e) {
+	} catch (java.lang.InternalError e1) {
+	    return;
+	} catch (java.lang.NoClassDefFoundError e2) {
 	    return;
 	}
         elem.addMElementListener(box);
