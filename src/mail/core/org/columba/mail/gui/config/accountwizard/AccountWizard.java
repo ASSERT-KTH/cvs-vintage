@@ -14,21 +14,27 @@
 
 package org.columba.mail.gui.config.accountwizard;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Hashtable;
 
-import javax.swing.*;
+import javax.swing.JDialog;
 
-import org.columba.core.gui.util.*;
-import org.columba.core.gui.util.wizard.*;
-import org.columba.main.*;
-import org.columba.mail.config.*;
-import org.columba.mail.gui.config.account.*;
-import org.columba.mail.gui.tree.*;
-import org.columba.mail.gui.tree.util.*;
-import org.columba.mail.gui.util.*;
-import org.columba.mail.folder.*;
+import org.columba.core.gui.util.DialogStore;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.wizard.DefaultWizardPanel;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.IdentityItem;
+import org.columba.mail.config.ImapItem;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.config.PopItem;
+import org.columba.mail.config.SmtpItem;
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.gui.config.account.AccountDialog;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.main.MainInterface;
 
 public class AccountWizard implements ActionListener
 {
@@ -292,11 +298,24 @@ public class AccountWizard implements ActionListener
 			imap.setUser(incomingServerPanel.getLogin());
 
 			
-			Folder parentFolder =
-				(Folder) MainInterface.treeModel.addImapRootFolder(
+			IMAPRootFolder parentFolder =
+				(IMAPRootFolder) MainInterface.treeModel.addImapRootFolder(
 					item.getName(),
 					imap,
 					item.getUid());
+			MainInterface.treeModel.nodeStructureChanged(parentFolder.getParent());
+
+			Hashtable attributes = parentFolder.getAttributes();
+			attributes.put("name","INBOX");
+			
+			try
+			{
+				parentFolder.addSubFolder( attributes );
+			}
+			catch ( Exception ex )
+			{
+				ex.printStackTrace();
+			}
 
 		}
 
