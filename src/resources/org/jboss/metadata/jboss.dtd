@@ -61,8 +61,7 @@ Overview of the architecture of jboss.xml
       <container-pool-conf />
       <commit-option />
       <optiond-refresh-rate />
-      <role-mapping-manager/>
-      <authentication-module/>
+      <security-domain/>
     </container-configuration>
 
   </container-configurations>
@@ -93,11 +92,15 @@ deployed
   -->
 <!ELEMENT enforce-ejb-restrictions (#PCDATA)>
 
-<!-- The security-domain element allows one to specify a module wide
-security manager domain. It specifies the JNDI name of the security
+<!-- The security-domain element specifies the JNDI name of the security
 manager that implements the EJBSecurityManager and RealmMapping for
-the domain. One can still override these interfaces at the container
-level using the authentication-module and role-mapping-manager elements.
+the domain. When specified at the jboss level it specifies the security
+domain for all j2ee components in the deployment unit.
+One can override the global security-domain at the container
+level using the security-domain element at the container-configuration
+level.
+
+  Used in: jboss, container-configuration
 -->
 <!ELEMENT security-domain (#PCDATA)>
 
@@ -368,7 +371,7 @@ level using the authentication-module and role-mapping-manager elements.
     
     Used in: container-configurations
     -->
-<!ELEMENT container-configuration (container-name , call-logging , container-invoker , container-interceptors? , instance-pool? , instance-cache? , persistence-manager? , transaction-manager? , container-invoker-conf? , container-cache-conf? , container-pool-conf? , commit-option? , optiond-refresh-rate? , (role-mapping-manager , authentication-module?)?)>
+<!ELEMENT container-configuration (container-name , call-logging , container-invoker , container-interceptors? , instance-pool? , instance-cache? , persistence-manager? , transaction-manager? , container-invoker-conf? , container-cache-conf? , container-pool-conf? , commit-option? , optiond-refresh-rate? , (security-domain | (role-mapping-manager , authentication-module))?)>
 
 <!--
     The configuration-class attribute is used to indicate the
@@ -717,7 +720,8 @@ default if metricsEnabled is not explicitly given.
 <!--
       The role-mapping-manager element specifies the JNDI name of the
       org.jboss.security.RealmMapping implementation that is to be used by the
-      container SecurityInterceptor.
+      container SecurityInterceptor. Its use is deprecated in favor of the
+      security-domain element.
 
       Used in: container-configuration
       -->
@@ -726,7 +730,8 @@ default if metricsEnabled is not explicitly given.
 <!--
       The authentication-module element specifies the JNDI name of the
       org.jboss.security.EJBSecurityManager implementation that is to be used
-      by the container SecurityInterceptor.
+      by the container SecurityInterceptor. Its use is deprecated in favor of
+      the security-domain element.
 
       Used in: container-configuration
       -->
