@@ -16,30 +16,29 @@ import javax.management.ObjectName;
    
 import org.jboss.logging.Log;
 
-/** An abstract base class JBoss services can subclass
- *      
- *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.10 $
- */
+/** An abstract base class JBoss services can subclass to implement a
+service that conforms to the ServiceMBean interface. Subclasses must
+override {@link #getName() getName} method and should override 
+{@link #initService() initService}, {@link #startService() startService},
+{@link #stopService() stopService}, {@link #destroyService() destroyService}
+as approriate.
+
+@see org.jboss.util.ServiceMBean
+
+@author Rickard Öberg (rickard.oberg@telkel.com)
+@author Scott_Stark@displayscape.com
+@version $Revision: 1.11 $
+*/
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
-   implements ServiceMBean, MBeanRegistration, Service
+   implements ServiceMBean, MBeanRegistration
 {
    // Attributes ----------------------------------------------------
    private int state;
    private MBeanServer server;
-   public static String[] states = {"Stopped","Stopping","Starting","Started"};
-   public static int STOPPED  = 0;
-   public static int STOPPING = 1;
-   public static int STARTING = 2;
-   public static int STARTED  = 3;
-   
    private int id = 0;
-   
    protected Log log;
-    
+
    // Static --------------------------------------------------------
 
    // Public --------------------------------------------------------

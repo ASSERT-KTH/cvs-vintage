@@ -6,24 +6,27 @@
  */
 package org.jboss.util;
 
-/**
- *   <description> 
- *      
- *   @see <related>
+/** An interface describing a JBoss service MBean.
+
+@see org.jboss.util.Service
+@see org.jboss.util.ServiceMBeanSupport
+
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.4 $
  */
 public interface ServiceMBean
 	extends Service
 {
    // Constants -----------------------------------------------------
-    
-   // Static --------------------------------------------------------
+   public static final String[] states = {"Stopped","Stopping","Starting","Started"};
+   public static final int STOPPED  = 0;
+   public static final int STOPPING = 1;
+   public static final int STARTING = 2;
+   public static final int STARTED  = 3;
 
    // Public --------------------------------------------------------
    public String getName();
-
    public int getState();
-   
    public String getStateString();
 }
