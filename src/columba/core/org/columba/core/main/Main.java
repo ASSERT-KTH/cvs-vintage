@@ -36,7 +36,6 @@ import org.columba.core.plugin.PluginManager;
 import org.columba.core.profiles.Profile;
 import org.columba.core.profiles.ProfileManager;
 import org.columba.core.session.SessionController;
-import org.columba.core.trayicon.ColumbaTrayIcon;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.main.MailMain;
 
@@ -135,9 +134,6 @@ public class Main {
 		if (frame != null) {
 			frame.setVisible(false);
 		}
-
-		// show Trayicon
-		ColumbaTrayIcon.getInstance().addToSystemTray();
 
 		// handle the commandline arguments of the modules
 		MailMain.getInstance().handleCommandLineParameters(ColumbaCmdLineParser.getInstance().getParsedCommandLine());		

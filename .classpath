@@ -10,7 +10,6 @@
 	<classpathentry kind="src" path="src/addressbook/core"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
-	<classpathentry kind="lib" path="lib/jargs.jar"/>
 	<classpathentry kind="lib" path="lib/jwizz-0.1.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jhall.jar"/>
@@ -27,5 +26,6 @@
 	<classpathentry kind="lib" path="lib/ristretto-1.0_RC2.jar"/>
 	<classpathentry kind="lib" path="lib/jscf-0.2.jar"/>
 	<classpathentry kind="lib" path="lib/frapuccino-1.0pre1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.0.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
