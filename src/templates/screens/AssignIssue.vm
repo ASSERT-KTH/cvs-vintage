@@ -37,7 +37,7 @@
     </td>
     <td><a href="mailto:$user.Email">$user.UserName</a></td>
     <td>$!user.Name</td>
-    <td><select name="asso_user_{$userId}_issue_{$issue.IssueId}">
+    <td><select name="asso_user_{$userId}_attr_{$attr.AttributeId}_issue_{$issue.IssueId}">
      #foreach ($selectUserAttr in $userAttrs)
       #set ($selected = $attr.AttributeId.toString().equals($selectUserAttr.AttributeId.toString()))
       #if ($user.hasPermission($selectUserAttr.Permission, $module))

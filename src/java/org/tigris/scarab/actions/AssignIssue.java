@@ -78,7 +78,7 @@ import org.tigris.scarab.util.EmailContext;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.99 2003/06/30 19:38:22 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.100 2003/07/09 18:32:45 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -198,7 +198,7 @@ public class AssignIssue extends BaseModifyIssue
                 item.add(su);
                 userList.remove(item);
 
-                String newKey = "asso_user_{" + userId + "}_issue_{" + issueId + '}';
+                String newKey = "asso_user_{" + userId + "}_attr_{" + attrId + "}_issue_{" + issueId + '}';
                 String newAttrId = params.get(newKey);
                 Attribute newAttribute = AttributeManager
                      .getInstance(new Integer(newAttrId));
