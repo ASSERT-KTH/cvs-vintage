@@ -84,7 +84,7 @@ public class IIOPDummyClientInterceptor extends LocalObject implements ClientReq
      * send client context with the request. The sendingRequest method of the JPortableInterceptors
      * is called prior to marshalling arguments and contexts
      * @param JClientRequestInfo jri the jrmp client info 
-     * @exception IOException if an exception occur with the ObjectOutput
+     * @exception ForwardRequest if an exception occur with the ObjectOutput
      */
     public void send_request(ClientRequestInfo jri) throws ForwardRequest {
 	try {
@@ -99,7 +99,6 @@ public class IIOPDummyClientInterceptor extends LocalObject implements ClientReq
     /**
      * Receive reply interception
      * @param JClientRequestInfo jri the jrmp client info 
-     * @exception IOException if an exception occur with the ObjectOutput
      */
     public void receive_reply(ClientRequestInfo jri) {
 	try {

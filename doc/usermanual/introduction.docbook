@@ -47,13 +47,16 @@
       </itemizedlist>
     </para>
     <para>
-      The CAROL library provides also non standard tools for RMI architecture:
+      The CAROL library provides also non standard tools for RMI and JNDI architecture:
       <itemizedlist>
 	<listitem>
 	  <para>a set of mechanisms for implicit context propagation in RMI JRMP,</para>
 	</listitem>
 	<listitem>
 	  <para>a set of mechanisms for Referenceable object binding via a CosNaming.</para>
+	</listitem>
+	<listitem>
+	  <para>a set of mechanisms for RMI Registry, Jeremie Registry and CosNaming management.</para>
 	</listitem>
       </itemizedlist>
       Please see the <link linkend="non-standard">Non standard CAROL tools and mechanisms</link> chapter for more information.  

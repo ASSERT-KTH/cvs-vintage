@@ -22,7 +22,7 @@
     <title>CAROL configuration</title>
     <sect2>
       <title>General configuration files</title>
-      <para>CAROL configuration is based on two properties files. The <filename>carol.properties</filename> file and the <filename>jndi.properties</filename> file. One of the <filename>carol.properties</filename> file or the <filename>jndi.properties</filename> file is mandatory to configure CAROL. If there is no JNDI configuration in the <filename>carol.properties</filename> file, CAROL will automatically search for this configuration informations inside the <filename>jndi.properties</filename> file. If there is no <filename>carol.properties</filename>, CAROL will automatically use a default value based on the jndi informations.</para>
+      <para>CAROL configuration is based on two properties files. The <filename>carol.properties</filename> file and the <filename>jndi.properties</filename> file. One of the <filename>carol.properties</filename> file or the <filename>jndi.properties</filename> file is mandatory to configure CAROL. If there is no JNDI configuration in the <filename>carol.properties</filename> file, CAROL will automatically search for this configuration informations inside the <filename>jndi.properties</filename> file. If there is no <filename>carol.properties</filename>, CAROL will automatically use a default values based on the jndi informations (for PortableRemoteObjectClass and NameServiceClass.</para>
       <note>
 	<para>CAROL use, for JNDI conformance, the standard <filename>jndi.properties</filename> file (for only one activated RMI architecture). For multi RMI architectures with multi name services (registry and CosNaming for example) CAROL need a JNDI configuration inside the <filename>carol.properties</filename>. In this case, if, for one (and only one) of those activated RMI, the JNDI configuration missing, the <filename>jndi.properties</filename> file is used by CAROL.</para>
       </note>
@@ -52,6 +52,12 @@
 		<entry>Yes</entry>
 	      </row>
 	      <row>
+		<entry>carol.start.all.ns</entry>
+		<entry>'true', 'false'</entry>
+		<entry>If this property is set to 'true', CAROL will automatically start all non started and configured Name Services.</entry>
+		<entry>No, default: false</entry>
+	      </row>
+	      <row>
 		<entry>carol.jvm.'property-name'</entry>
 		<entry>'property-value'</entry>
 		<entry>All extra JVM property for all RMI (directly pass to the JVM with 'name' name and 'value' value without any verifications). This is equivalent to put -D'property-name'='property-value' in the Java JVM option.</entry>
@@ -77,8 +83,14 @@
 	      <row>
 		<entry>carol.rmi.XXX .PortableRemoteObjectClass</entry>
 		<entry>'XXX portable remote object class name'</entry>
-		<entry>The portable remote object delegate class name for this RMI (CAROL provide those classes for RMI JRMP and JEREMIE, see below).</entry>
+		<entry>The portable remote object delegate class name for this RMI (CAROL provide implementation of those classes for RMI JRMP and JEREMIE, see below).</entry>
 		<entry>Yes, for all activated rmi.</entry>
+	      </row>
+	      <row>
+		<entry>carol.rmi.XXX.NameServiceClass</entry>
+		<entry>'XXX carol Name Service class name'</entry>
+		<entry>The Name Service class name for this RMI (CAROL provide implementation of those classes for RMI JRMP, RMI IIOP and JEREMIE, see below).</entry>
+		<entry>No, this property is only necessary for automatically start a Name Service for this protocol.</entry>
 	      </row>
 	      <row>
 		<entry>carol.jndi.XXX.'property-name'</entry>
@@ -104,8 +116,14 @@
 	    <listitem>  
 	      <para><property>carol.rmi.activated</property> property is set to JRMP default and activated protocol.</para>
 	    </listitem>
+	    <listitem>  
+	      <para><property>carol.start.all.ns</property> property is set to true for automatically start a RMI Registry.</para>
+	    </listitem>
 	    <listitem>
 	      <para>The <property>carol.rmi.jrmp.PortableRemoteObjectClass</property> property is set to <classname>org.objectweb.carol.rmi.multi.JrmpPRODelegate</classname>. This class is provide by CAROL to simulate a RMI IIOP portable remote object delegate in JRMP.</para>
+	    </listitem>
+	    <listitem>
+	      <para>The <property>carol.rmi.jrmp.NameServiceClass</property> property is set to <classname>org.objectweb.carol.jndi.ns.JRMPRegistry</classname>. This class is provide by CAROL to automatically start and stop a RMI Registry.</para>
 	    </listitem>
 	    <listitem>  
 	      <para><property>carol.jvm.jrmp.server.portnumber</property> property can be set for setting the TCP port used by RMI connections. This property can be set directly to the jvm with a -Djrmp.server.portnumber='port number' property.</para>
@@ -132,9 +150,15 @@
 	    <listitem>
 	      <para>The <property>carol.rmi.activated</property> property is set to IIOP default and activated protocol.</para>
 	    </listitem>
+	    <listitem>  
+	      <para><property>carol.start.all.ns</property> property is set to true for automatically start a CosNaming.</para>
+	    </listitem>
 	    <listitem>
 	      <para>The <property>carol.rmi.iiop.PortableRemoteObjectClass</property> property is set to <classname>com.sun.corba.se.internal.javax.rmi.PortableRemoteObject</classname>. This class is a Sun RMI IIOP standard portable remote object delegate.</para>
-	      </listitem>
+            </listitem>
+	    <listitem>
+	      <para>The <property>carol.rmi.iiop.NameServiceClass</property> property is set to <classname>org.objectweb.carol.jndi.ns.IIOPCosNaming</classname>. This class is provide by CAROL to automatically start and stop a RMI IIOP CosNaming.</para>
+	    </listitem>
 	    <listitem>
 	      <para>JNDI is configured classical properties.</para>
 	    </listitem>
@@ -164,8 +188,14 @@
 	    <listitem>
 	      <para>The carol.rmi.activated property is set to JEREMIE default and activated protocols</para>
 	    </listitem>
+	    <listitem>  
+	      <para><property>carol.start.all.ns</property> property is set to true for automatically start a Jeremie Registry.</para>
+	    </listitem>
 	    <listitem>
 	      <para>The <property>carol.rmi.jeremie.PortableRemoteObjectClass</property> property is set to <classname>org.objectweb.carol.rmi.multi.JeremiePRODelegate</classname>. This class is provided by CAROL to simulate a RMI IIOP portable remote object delegate in JEREMIE.</para>
+	    </listitem>
+	    <listitem>
+	      <para>The <property>carol.rmi.jeremie.NameServiceClass</property> property is set to <classname>org.objectweb.carol.jndi.ns.JeremieRegistry</classname>. This class is provide by CAROL to automatically start and stop a Jeremie Registry.</para>
 	    </listitem>
 	    <listitem>
 	      <para>JNDI is configured with classical property values for JEREMIE</para>

@@ -61,7 +61,12 @@ public class CarolDefaultValues {
     /**
      * activation Prefix
      */
-    public static String ACTIVATION_PREFIX="activated";
+    public static String ACTIVATION_PREFIX="activated";    
+
+    /**
+     * name service class prefix
+     */
+    public static String NS_PREFIX="NameServiceClass"; 
 
     /**
      * portable remote object Prefix
@@ -78,6 +83,10 @@ public class CarolDefaultValues {
      */
     public static String URL_PREFIX="java.naming.provider.url";
 
+    /**
+     * start name service Prefix
+     */
+    public static String START_NS_PREFIX="start.all.ns";
     
     /**
      * default CAROL Properties with all configuration
@@ -89,36 +98,38 @@ public class CarolDefaultValues {
     public static String jrmpName="jrmp";
     public static String jrmpJNDIPrefix="rmi";
     public static String jrmpPROD="org.objectweb.carol.rmi.multi.JrmpPRODelegate";
+    public static String jrmpNS="org.objectweb.carol.jndi.ns.JRMPRegistry";
     public static Properties jrmpProps = new Properties();
 
     // default for iiop
     public static String iiopName="iiop";   
     public static String iiopJNDIPrefix="iiop";
     public static String iiopPROD="com.sun.corba.se.internal.javax.rmi.PortableRemoteObject";
+    public static String iiopNS="org.objectweb.carol.jndi.ns.IIOPCosNaming";
     public static Properties iiopProps = new Properties();
 
     //default for jeremie
     public static String jeremieName="jeremie";
     public static String jeremieJNDIPrefix="jrmi";
     public static String jeremiePROD="org.objectweb.carol.rmi.multi.JeremiePRODelegate";
+    public static String jeremieNS="org.objectweb.carol.jndi.ns.JeremieRegistry";
     public static Properties jeremieProps = new Properties();
 
     static {
 
 	// add jrmp default configuration 
 	jrmpProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX,jrmpName); 
-	jrmpProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+jrmpName+".PortableRemoteObjectClass",jrmpPROD); 
-	jrmpProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX, jrmpName); 
-	
+	jrmpProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+jrmpName+"."+PRO_PREFIX,jrmpPROD);
+	jrmpProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+jrmpName+"."+NS_PREFIX,jrmpNS); 
+
 	// add iiop default configuration
 	iiopProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX,iiopName); 
-	iiopProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+iiopName+".PortableRemoteObjectClass",iiopPROD); 
-	iiopProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX, iiopName);
-		
+	iiopProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+iiopName+"."+PRO_PREFIX,iiopPROD);
+	iiopProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+iiopName+"."+NS_PREFIX,iiopNS);
 	// add jeremie default configuration
 	jeremieProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX,jeremieName); 
-	jeremieProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+jeremieName+".PortableRemoteObjectClass",jeremiePROD); 
-	jeremieProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX, jeremieName);
+	jeremieProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+jeremieName+"."+PRO_PREFIX,jeremiePROD); 
+	jeremieProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+jeremieName+"."+NS_PREFIX,jeremieNS);
     }
 
     /**
@@ -148,7 +159,7 @@ public class CarolDefaultValues {
 	    	throw new RMIConfigurationException("Rmi protocol unknow, the jndi property " + URL_PREFIX + " is not set");  
 	    }
 	} else if (!rmiConfigurationExist(rmiP)) {  //rmiP is not null but there is no rmi configuration inside
-	    	if (jndiP==null) throw new RMIConfigurationException("No carol or jndi properties found");
+	    if (jndiP==null) throw new RMIConfigurationException("No carol or jndi properties found");
 	    String url = jndiP.getProperty(URL_PREFIX);
 	    if (url != null) {
 		String protocol = getRMIProtocol(url);
@@ -169,7 +180,7 @@ public class CarolDefaultValues {
 	    } else {
 	    	throw new RMIConfigurationException("Rmi protocol unknow, the jndi property " + URL_PREFIX + " is not set");  
 	    }
-	} else { //rmiP is not null and there is rmi configuration inside 
+	} else { //rmiP is not null and there is rmi configuration inside
 	    return rmiP;
 	}		
     }

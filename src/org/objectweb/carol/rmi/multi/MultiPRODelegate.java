@@ -92,8 +92,8 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      */
     public void exportObject(Remote obj) throws RemoteException {
 	if (TraceCarol.isDebugRmiCarol()) {
-            TraceCarol.debugRmiCarol("MultiPRODelegate.exportObject(" +obj.getClass().getName()
-				     +" obj)/rmi name=" +pcur.getCurrentRMIName());
+            TraceCarol.debugRmiCarol("MultiPRODelegate.exportObject(" +simpleClass(obj.getClass().getName())
+				     +" obj)/rmi name=\"" +pcur.getCurrentRMIName()+"\"");
         }
 	try {
 	    if (init) { 
@@ -124,8 +124,8 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      */
     public void unexportObject(Remote obj) throws NoSuchObjectException {
 	if (TraceCarol.isDebugRmiCarol()) {
-            TraceCarol.debugRmiCarol("MultiPRODelegate.unexportObject(" + obj.getClass().getName()
-				     +" obj)/rmi name=" + pcur.getCurrentRMIName());
+            TraceCarol.debugRmiCarol("MultiPRODelegate.unexportObject(" + simpleClass(obj.getClass().getName())
+				     +" obj)/rmi name=\"" + pcur.getCurrentRMIName()+"\"");
         }
 	try {
 	    if (init) {	
@@ -153,9 +153,9 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      */ 
     public void connect(Remote target,Remote source) throws RemoteException {
 	if (TraceCarol.isDebugRmiCarol()) {
-            TraceCarol.debugRmiCarol("MultiPRODelegate.connect("+target.getClass().getName() + " target,"
-				     +source.getClass().getName()
-				     +" source)/rmi name="+ pcur.getCurrentRMIName());
+            TraceCarol.debugRmiCarol("MultiPRODelegate.connect("+simpleClass(target.getClass().getName()) + " target,"
+				     +simpleClass(source.getClass().getName())
+				     +" source)/rmi name=\""+ pcur.getCurrentRMIName()+"\"");
         }
 	try {
 	    if (init) {
@@ -185,9 +185,9 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      */
     public Object narrow(Object obj, Class newClass ) throws ClassCastException {
 	if (TraceCarol.isDebugRmiCarol()) {
-            TraceCarol.debugRmiCarol("MultiPRODelegate.narrow("+obj.getClass().getName() + " obj,"
-				     +newClass.getName()
-				     +" class)/rmi name="+ pcur.getCurrentRMIName());
+            TraceCarol.debugRmiCarol("MultiPRODelegate.narrow("+simpleClass(obj.getClass().getName()) + " obj,"
+				     +simpleClass(newClass.getName())
+				     +" class)/rmi name=\""+ pcur.getCurrentRMIName()+"\"");
         }
 	try {
 	    if (init) {
@@ -211,8 +211,8 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      */
     public Remote toStub(Remote obj) throws NoSuchObjectException {
 	if (TraceCarol.isDebugRmiCarol()) {
-            TraceCarol.debugRmiCarol("MultiPRODelegate.toStub(" +obj.getClass().getName()
-				     +" obj)/rmi name=" +pcur.getCurrentRMIName());
+            TraceCarol.debugRmiCarol("MultiPRODelegate.toStub(" +simpleClass(obj.getClass().getName())
+				     +" obj)/rmi name=\"" +pcur.getCurrentRMIName()+"\"");
         }
 	try {
 	    if (init) {
@@ -239,5 +239,12 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	pcur = ProtocolCurrent.getCurrent();
 	activesProtocols = pcur.getPortableRemoteObjectHashtable();
 	init = true;
+    }
+
+    /**
+     * Just the name of the class without the package
+     */
+    private String simpleClass(String c) {
+	return c.substring(c.lastIndexOf('.') +1);
     }
 }

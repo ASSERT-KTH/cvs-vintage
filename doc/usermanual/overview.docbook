@@ -273,6 +273,12 @@
 	  The second non standard CAROL features is a way to register Referenceable and Serializable objects in a CosNaming through JNDI. The IIOP InitialContext delivered for IIOP wrap the  Referenceable or Serializable object into a standard remote object. This remote object is exported into the JNDI context bind(or rebind) method and unexported into the JNDI context unbind method. CAROL use automatically, on the server side, this mechanism with a standard CAROL IIOP configuration (you need to call the IIOP protocol 'iiop' in the <filename>carol.properties</filename> file see the <link linkend="configuration">CAROL configuration</link> chapter).  
 	</para>
 	<para>For a JNDI java RMI IIOP client you can use the <classname>IIOPContextWrapperFactory</classname> by setting the <property>-Djava.naming.factory.initial</property> jvm properties (with the full name of the factory). This factory builds a JNDI Context based on you <filename>jndi.properties</filename> uses the wrapping mechanism. For other client (Non JNDI), you can re-build manually the Referenceable or Serializable object for the CosNaming wrapper remote object (see inside the <classname>IIOPContextWrapper</classname> class for a detailed mechanism. A CAROL server can be also an IIOP CAROL client without any extra configuration than in a classical IIOP CAROL server.</para>
+      </sect2>      
+      <sect2>
+	<title>Name Service Management</title>
+	<para>
+	  The third non standard CAROL features is a way to start and stop automatically RMI Name Services. This mechanism is based on a API/SPI system. The API is represented by the <classname>org.objectweb.carol.jndi.ns.NameServiceManager</classname>. This class provide static methods for start and stop configured name services for each protocol. A CAROL configuration property can be set inside the carol.properties for automatically start all non started and configured Name Services (see the configuration chapter). Carol provide also three Name Service SPI implementation for RMI Registry, Jeremie Registry and CosNaming management. This mechanism start those Name Services on the port defined by the jndi url property.
+	</para>
       </sect2>
     </sect1>
   <sect1> 

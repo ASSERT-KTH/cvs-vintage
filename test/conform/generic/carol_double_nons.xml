@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+ - The contents of this file are subject to the LGPL Licence 
+ - 
+ - Autor:               <a href="sebastien.chassande@inriaples.fr">Sebastien Chassande</a>
+ - Carol Modifications :<a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
+ -
+ - Compilation directive for testing a basic server with carol over sun jrmp
+ - this test create 3 jvm (server 1, junit-client 1, junit client 2) 
+ - for carol multi rmi unit testing 
+ -
+ - to call this projecrt set the properties : 
+ -                      stub.jar.name1, stub.jar.name2,
+ -                      client.properties.file.name1,  client.properties.file.name2,
+ -                      server.properties.file.name1,  server.properties.file.name2
+ -                      test.client.pkg1, test.client.pkg2,
+ -                      test.client.jvm.xtra1,    test.client.jvm.xtra2
+ -->
+<project name="carol.test.double.server.nons" default="all" >
+
+  <!-- test result location -->
+  <property name="report.dir"  value="${test.dist.results}/${test.name}"/>
+
+  <!-- test tmp location -->
+  <property name="test.tmp.client1"               value="${test.tmp}/client/1"/>
+  <property name="test.tmp.client2"               value="${test.tmp}/client/2"/>
+  <property name="test.tmp.server"                value="${test.tmp}/server"/>
+  <property name="test.multi.jvmargs"             value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate -Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory -Djava.security.policy=${test.ext}/java.policy"/>
+  <property name="test.client.jvmarg1"            value="${test.client.jvm.xtra1}"/>
+  <property name="test.client.jvmarg2"            value="${test.client.jvm.xtra2}"/>
+  <property name="trace.properties.file.name"     value="trace.properties"/>
+
+  <!-- Building of a path which contains carol jars for tests compilation-->
+  <path id="test.client.classpath1"> 
+    <fileset dir="${carol.dist}/lib">
+      <include name="**/*.jar"/>
+    </fileset>  
+    <fileset dir="${test.dist.lib}">
+      <include name="**/carol_test.jar"/>
+      <include name="**/${stub.jar.name1}"/>
+    </fileset>  
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset>  
+    <pathelement location="${test.tmp.client1}"/>
+  </path>
+
+  <path id="test.client.classpath2"> 
+    <fileset dir="${carol.dist}/lib">
+      <include name="**/*.jar"/>
+    </fileset>  
+    <fileset dir="${test.dist.lib}">
+      <include name="**/carol_test.jar"/>
+      <include name="**/${stub.jar.name2}"/>
+    </fileset> 
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement location="${test.tmp.client2}"/>
+  </path>
+
+  <path id="test.server.classpath">
+    <fileset dir="${carol.dist}/lib">
+      <include name="**/*.jar"/>
+    </fileset> 
+    <fileset dir="${test.dist.lib}">
+      <include name="**/carol_test.jar"/>
+      <include name="**/${stub.jar.name1}"/>  
+      <include name="**/${stub.jar.name2}"/>   
+    </fileset> 
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset> 
+    <pathelement location="${test.tmp.server}"/>
+  </path>
+  
+  <target name="all">
+    <antcall  target="purge.tmp.dir"/>
+    <antcall  target="build.tmp.dir"/>
+    <antcall  target="launch.test.double.nons"/>
+  </target>
+
+  <!-- lauching directories purge and creation -->
+   <target name="purge.tmp.dir">
+    <delete dir="${test.tmp.client1}"/>
+    <delete dir="${test.tmp.client2}"/>
+    <delete dir="${test.tmp.server}"/>
+  </target>
+
+  <target name="build.tmp.dir">
+    <mkdir dir="${test.tmp.client1}"/>  
+    <mkdir dir="${test.tmp.client2}"/>   
+    <mkdir dir="${test.tmp.server}"/>
+
+    <copy file="${test.ext}/${client.properties.file.name1}" tofile="${test.tmp.client1}/jndi.properties" /> 
+    <copy file="${test.ext}/${client.properties.file.name2}" tofile="${test.tmp.client2}/jndi.properties" /> 
+    <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.server}/trace.properties" />  
+
+    <copy file="${test.ext}/${server.properties.file.name1}" tofile="${test.tmp.server}/carol.properties" />  
+    <copy file="${test.ext}/${server.properties.file.name2}" tofile="${test.tmp.server}/jndi.properties" /> 
+    <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.server}/trace.properties" /> 
+
+  </target>
+
+  <!-- test launching --> 
+  <!-- those tests are launch with a parallele task -->
+  <target name="launch.test.double.nons">
+    
+    <condition property="is.jvm.1.4">
+      <equals  arg1="${ant.java.version}" arg2="1.4"/>
+    </condition>
+
+    <parallel>
+
+      <sequential>
+	<sleep seconds="3"/>
+	<java classname="org.objectweb.carol.jtests.conform.basic.server.BasicServer" fork="true" timeout="20000">
+	  <jvmarg line="${test.multi.jvmargs}"/>
+	  <classpath refid="test.server.classpath"/>
+	</java>
+      </sequential>
+
+      <sequential>
+	<sleep seconds="5"/>
+	<delete dir="${report.dir}" />
+	<mkdir dir="${report.dir}" />
+	<mkdir dir="${report.dir}/html" />
+	<junit printsummary="yes" 
+	  haltonfailure="no"
+	  haltonerror="no"
+	  fork="yes" >
+	  <classpath refid="test.client.classpath1" />
+	  <formatter type="xml"/>
+	  <batchtest fork="yes" todir="${report.dir}">
+	    <fileset dir="${test.src}">
+	      <include name="${test.client.pkg1}/*Test.java" />
+	    </fileset>
+	  </batchtest>
+	</junit>
+      </sequential>
+
+      <sequential>
+	<sleep seconds="5"/>
+	<mkdir dir="${report.dir}" />
+	<mkdir dir="${report.dir}/html" />
+	<junit printsummary="yes" 
+	  haltonfailure="no"
+	  haltonerror="no"
+	  fork="yes" >
+	  <classpath refid="test.client.classpath2" />
+	  <formatter type="xml"/>
+	  <batchtest fork="yes" todir="${report.dir}">
+	    <fileset dir="${test.src}">
+	      <include name="${test.client.pkg2}/*Test.java" />
+	    </fileset>
+	  </batchtest>
+	</junit>
+      </sequential>
+
+    </parallel>
+
+    <antcall  target="report"/>
+  </target> 
+
+  <target name="report" if="is.jvm.1.4" >
+    <junitreport todir="${report.dir}">
+      <fileset dir="${report.dir}">
+	<include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${report.dir}/html"/>
+    </junitreport>
+  </target>
+
+</project>

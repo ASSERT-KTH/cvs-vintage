@@ -59,6 +59,16 @@ public class RMIConfiguration {
     private String pro = null;
 
     /**
+     * name service for this protocol
+     */
+    private String nameServiceName = null; 
+
+    /**
+     * port number for this protocol name servce
+     */
+    private int port = 0;
+
+    /**
      * extra system properties
      */
     private Properties jndiProperties = null;
@@ -85,6 +95,7 @@ public class RMIConfiguration {
 
 	// RMI Properties
 	rmiName=name;
+
 	// activation flag
 	// search if the rmi name existe in the activated prefix
 	if (rmiProperties.getProperty( activatedPref ) == null) {
@@ -100,12 +111,15 @@ public class RMIConfiguration {
 
 	// PortableRemoteObjectClass flag	
 	if (rmiProperties.getProperty( rmiPref + "." + CarolDefaultValues.PRO_PREFIX ) == null) {
-	    throw new RMIConfigurationException("The flag " + rmiPref + "." + CarolDefaultValues.PRO_PREFIX + " missing in the configuration file");
+	    throw new RMIConfigurationException("The flag " + rmiPref + "." + CarolDefaultValues.PRO_PREFIX + " missing in the configuration file for the rmi name: " + name);
 	} else {
 	    pro = rmiProperties.getProperty( rmiPref + "." + CarolDefaultValues.PRO_PREFIX ).trim();
 	}	
 	
-	// jndi properties
+	// NameServiceClass flag (not mandatory)	
+	if (rmiProperties.getProperty( rmiPref + "." + CarolDefaultValues.NS_PREFIX ) != null) {
+	    nameServiceName = rmiProperties.getProperty( rmiPref + "." + CarolDefaultValues.NS_PREFIX ).trim();
+	}	
 
 	// search for the configuration file
 	boolean inRmiFile = false;	
@@ -130,7 +144,7 @@ public class RMIConfiguration {
 		if (current.startsWith(jndiPref)) {
 		    this.jndiProperties.setProperty(current.substring(jndiPref.length()+1), rmiProperties.getProperty(current));    
 		}
-	    }
+	    }	    
 	} else {
 	    if (jndiProperties == null) {
 		throw new RMIConfigurationException("Missing JNDI Configuration for: " + rmiName);
@@ -138,7 +152,31 @@ public class RMIConfiguration {
 		this.jndiProperties=jndiProperties;
 	    }
 	}
-
+	port = getPortOfUrl(this.jndiProperties.getProperty(CarolDefaultValues.URL_PREFIX));
+	
+	// log this configuration
+	if (TraceCarol.isDebugCarol()) {
+	    TraceCarol.debugCarol("RMIConfiguration.RMIConfiguration(String name, Properties rmiProperties, Properties jndiProperties)");
+	    String lg = "RMI " + rmiName + " Configuration ";
+	    if (activate) {
+		lg +=          "is activated";
+	    } else {
+		lg +=          "is NOT activated";
+	    }
+	    TraceCarol.debugCarol(lg);
+   	    TraceCarol.debugCarol("Portable Remote Object Delegate Class: "+pro);
+	    TraceCarol.debugCarol("JNDI Properties={");
+	    for (Enumeration e = this.jndiProperties.propertyNames()  ; e.hasMoreElements() ;) {
+		String k = (String)e.nextElement();
+		if (e.hasMoreElements()) {
+		    TraceCarol.debugCarol(k+"="+this.jndiProperties.getProperty(k));
+		} else {
+		    TraceCarol.debugCarol(k+"="+this.jndiProperties.getProperty(k)+"}");
+		}
+	    }
+	    TraceCarol.debugCarol("name service name=" +nameServiceName);
+	    TraceCarol.debugCarol("port number=" +port);
+	}
     }
   
     /**
@@ -185,18 +223,39 @@ public class RMIConfiguration {
     }
 
     /**
-     * to String method return the String for this context
-     * @return String environement
+     * @return the jndi properties port for this protocol name service
+     * -1 if the port is not configured
      */
-    public String toString() {
-	String result =                  "RMI " + rmiName + " Configuration: \n";
-	if (activate) {
-	    result +=          "is activated\n";
-	} else {
-	    result +=          "is NOT activated\n";
-	}
-        result +="Portable Remote Object Delegate Class: "+pro+"\n";
-	result +="JNDI Properties =\n" +jndiProperties +"\n";
-	return result;
+    public int getPort() {
+	return port;
     }
+
+    /**
+     * @return the name service class name
+     */
+    public String getNameService() {
+	return nameServiceName;
+    }
+       
+    /**
+     * Parses the given url, and returns the port number.
+     * 0 is given in error case)
+     */
+    static int getPortOfUrl(String url) {
+	int portNumber = 0;
+	try {
+	    StringTokenizer st = new StringTokenizer(url,":");
+	    st.nextToken();
+	    st.nextToken();
+	    if (st.hasMoreTokens()) {
+		StringTokenizer lastst = new StringTokenizer(st.nextToken(),"/");
+		String pts = lastst.nextToken().trim();
+		portNumber = new Integer(pts).intValue();
+	    }
+	    return portNumber;
+	} catch (Exception e) {
+	    return -1;
+	}
+    }
+
 }

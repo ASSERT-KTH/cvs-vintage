@@ -65,7 +65,7 @@ public class ProtocolInterceptor extends LocalObject implements  ServerRequestIn
     /**
      * Receive request context 
      * @param JServerRequestInfo the jrmp server request information
-     * @exception IOException if an exception occur with the ObjectOutput
+     * @exception ForwardRequest if an exception occur with the ObjectOutput
      */
     public void receive_request_service_contexts(ServerRequestInfo jri) throws ForwardRequest {	
     }
@@ -73,7 +73,7 @@ public class ProtocolInterceptor extends LocalObject implements  ServerRequestIn
     /**
      * Receive request 
      * @param JServerRequestInfo the jrmp server request information
-     * @exception IOException if an exception occur with the ObjectOutput
+     * @exception ForwardRequest if an exception occur with the ObjectOutput
      */
     public void receive_request(ServerRequestInfo jri) throws ForwardRequest {
 	ProtocolCurrent.getCurrent().setRMI("iiop");
@@ -82,7 +82,6 @@ public class ProtocolInterceptor extends LocalObject implements  ServerRequestIn
     /**
      * send reply with context
      * @param JServerRequestInfo the jrmp server request information
-     * @exception IOException if an exception occur with the ObjectOutput
      */
     public void send_reply(ServerRequestInfo jri)  {
 

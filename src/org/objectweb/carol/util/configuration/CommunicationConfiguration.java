@@ -40,6 +40,8 @@ import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
 // carol import 
 import org.objectweb.carol.util.multi.ProtocolCurrent;
+import org.objectweb.carol.jndi.ns.NameServiceManager;
+import org.objectweb.carol.jndi.ns.NameServiceException;
 
 /*
  * Interface <code>CommunicationConfiguration</code> for Communication environment
@@ -50,9 +52,14 @@ import org.objectweb.carol.util.multi.ProtocolCurrent;
 public class CommunicationConfiguration {
 
     /**
-     * boolean true if the protocol context where load from the comunication.xml file
+     * boolean true if the protocol context where load from thefile
      */
     private static boolean configurationLoaded = false;
+
+    /**
+     * boolean true if non started name server need to launch
+     */
+    private static boolean startNS = false;
 
     /** 
      * Protocol environement hashtable, all rmi Configuration 
@@ -167,21 +174,21 @@ public class CommunicationConfiguration {
       public static synchronized void loadCarolConfiguration(Properties rmiProps, Properties jndiProps) throws RMIConfigurationException {
 	// init Trace 
 	TraceCarol.configure();
-	Properties carolProps = CarolDefaultValues.getCarolProperties(rmiProps, jndiProps);
-	  
+	Properties carolProps = CarolDefaultValues.getCarolProperties(rmiProps, jndiProps);	  
 	Properties jvmProps = new Properties();	    
 	jvmProps.putAll(System.getProperties());
 	  
 	String jvmPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JVM_PREFIX;
 	String rmiPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.RMI_PREFIX;
 	String jndiPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JNDI_PREFIX;
-	String activation_prefix = rmiPref + "."  + CarolDefaultValues.ACTIVATION_PREFIX;
+	String activationPrefix = rmiPref + "."  + CarolDefaultValues.ACTIVATION_PREFIX;
+	String nsPrefix =  CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.START_NS_PREFIX;
 	
     	//Parse the properties
 	for (Enumeration e =  carolProps.propertyNames() ; e.hasMoreElements() ;) {
 
 	    String pkey = ((String)e.nextElement()).trim();
-	    if  (pkey.startsWith(activation_prefix)) { // get default rmi name : the first activated rmi
+	    if  (pkey.startsWith(activationPrefix)) { // get default rmi name : the first activated rmi
 		StringTokenizer pTok = new StringTokenizer(carolProps.getProperty(pkey), ",");
 		if (pTok.hasMoreTokens()) {
 		    defaultRMI = (pTok.nextToken()).trim();
@@ -190,6 +197,8 @@ public class CommunicationConfiguration {
 		    TraceCarol.error(msg);
 		    throw new RMIConfigurationException(msg);
 		}
+	    } else if (pkey.startsWith(nsPrefix)) { // start or not non started name service
+	       	startNS = new Boolean(carolProps.getProperty(pkey).trim()).booleanValue();
 	    } else if (pkey.startsWith(jvmPref)) { // jvm properties
 		jvmProps.setProperty(pkey.substring(jvmPref.length()+1), (carolProps.getProperty(pkey)).trim());	
 	    } else if ((pkey.startsWith(rmiPref)) || (pkey.startsWith(jndiPref))) { // this is a carol properties
@@ -212,18 +221,42 @@ public class CommunicationConfiguration {
  	// add the jvm properties in the jvm 
 	System.setProperties(jvmProps);
 	configurationLoaded = true;
-	if (TraceCarol.isDebugCarol()) {
-            TraceCarol.debugCarol("CommunicationConfiguration: The configuration is load:\n"+
-				  getConfigurationString() + "\n");
-        }
 	if (getDefaultProtocol() == null) {
 	    String msg = "The default protocol : " + defaultRMI + " must be configured inside the carol properties files";
 	    TraceCarol.error(msg);
+
 	    throw new RMIConfigurationException(msg);
+	}
+
+	if (startNS) {
+	    if (TraceCarol.isDebugCarol()) {
+		TraceCarol.debugCarol("Start non started Name Servers");
+	    }
+	    try {
+		NameServiceManager.getNSManagerCurrent().startNonStartedNS();
+	    } catch (NameServiceException nse) {
+		String msg = "Can't start Name Servers";
+		TraceCarol.error(msg, nse);
+		throw new RMIConfigurationException(msg);
+	    }
 	}
       }
 
-    
+    /**
+     * public static boolean check communication configuration method
+     * @return boolean true if the configuration seam to be ok
+     */
+    public static boolean checkCarolConfiguration() {
+	try {
+	    if (!configurationLoaded) {
+		loadCarolConfiguration();
+	    }
+	    return true;
+	} catch (RMIConfigurationException rmi) {
+	    return false;
+	}
+    }
+
     /**
      * This method activate a rmi architecture with is name. You need to load the CAROL configuration before using thid method.
      * @param String rmi name 
@@ -275,20 +308,6 @@ public class CommunicationConfiguration {
 	    throw new RMIConfigurationException(msg); 
 	} else {
 	    rmiC.desactivate();
-	}
-    }
-
-    /**
-     * public static toString method
-     */
-    public static String getConfigurationString() {
-	try {
-	    return "CAROL configuration:\n\n" 
-		+ getAllRMIConfiguration() 
-		+"\n\nClasspath: " + System.getProperty("java.class.path") + "\n";
-	} catch (Exception e) {
-	    return "Can't check CAROL configuration:\n" + e 
-		+" Classpath: " + System.getProperty("java.class.path") + "\n";
 	}
     }
 }

@@ -88,7 +88,7 @@ public class BasicServer {
     public static void main(String [] args) {
 	
 
-	try {	    
+	try {
 
 	    // create, export and bind TheBasicObject an the BasicMultiObject (wich call the BasicObject)
 	    ba = new BasicObject();

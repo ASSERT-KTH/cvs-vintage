@@ -112,8 +112,9 @@ public class ProtocolCurrent {
 	    
 	    // trace Protocol current
 	    if (TraceCarol.isDebugCarol()) {
-		TraceCarol.debugCarol("ProtocolCurrent: The ProtocolCurrent is set:\n"+
-				       this + "\n");
+		TraceCarol.debugCarol("ProtocolCurrent.ProtocolCurrent()");
+		TraceCarol.debugCarol("Number of rmi:" + icHashtable.size());
+		TraceCarol.debugCarol("Default:"+ defaultRMI);
 	    }
 	    
 	} catch (Exception e) {
