@@ -15,7 +15,7 @@ import org.jboss.deployment.DeploymentException;
  * Describes the security configuration information for the IOR.
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public class IorSecurityConfigMetaData
    implements Serializable
@@ -126,6 +126,14 @@ public class IorSecurityConfigMetaData
       public static final String CONFIDENTIALITY_SUPPORTED = "SUPPORTED";
       public static final String CONFIDENTIALITY_REQUIRED = "REQUIRED";
 
+      public static final String DETECT_MISORDERING_NONE = "NONE";
+      public static final String DETECT_MISORDERING_SUPPORTED = "SUPPORTED";
+      public static final String DETECT_MISORDERING_REQUIRED = "REQUIRED";
+
+      public static final String DETECT_REPLAY_NONE = "NONE";
+      public static final String DETECT_REPLAY_SUPPORTED = "SUPPORTED";
+      public static final String DETECT_REPLAY_REQUIRED = "REQUIRED";
+
       public static final String ESTABLISH_TRUST_IN_TARGET_NONE = "NONE";
       public static final String ESTABLISH_TRUST_IN_TARGET_SUPPORTED = "SUPPORTED";
 
@@ -148,6 +156,20 @@ public class IorSecurityConfigMetaData
       private final String confidentiality;
 
       /**
+       * detect-misordering indicates if the server (target) supports detection
+       * of message sequence errors. The values are NONE, SUPPORTED or REQUIRED.
+       * Optional element.
+       */
+      private final String detectMisordering;
+
+      /**
+       * detect-replay indicates if the server (target) supports detection
+       * of message replay attempts. The values are NONE, SUPPORTED or REQUIRED.
+       * Optional element.
+       */
+      private final String detectReplay;
+
+      /**
        * establish-trust-in-target element indicates if the target is capable of authenticating to a client.
        * The values are NONE or SUPPORTED.
        * Required element.
@@ -166,7 +188,9 @@ public class IorSecurityConfigMetaData
          integrity = INTEGRITY_SUPPORTED;
          confidentiality = CONFIDENTIALITY_SUPPORTED;
          establishTrustInTarget = ESTABLISH_TRUST_IN_TARGET_SUPPORTED;
-         establishTrustInClient = ESTABLISH_TRUST_IN_CLIENT_SUPPORTED;         
+         establishTrustInClient = ESTABLISH_TRUST_IN_CLIENT_SUPPORTED;
+         this.detectMisordering = DETECT_MISORDERING_SUPPORTED;
+         this.detectReplay = DETECT_REPLAY_SUPPORTED;
       }
 
       /**
@@ -214,6 +238,42 @@ public class IorSecurityConfigMetaData
                " but got " + value);
          }
 
+         value = MetaData.getUniqueChildContent(element, "detect-misordering");
+         if( DETECT_MISORDERING_NONE.equalsIgnoreCase(value) )
+         {
+            this.detectMisordering = DETECT_MISORDERING_NONE;
+         }
+         else if( DETECT_MISORDERING_REQUIRED.equalsIgnoreCase(value) )
+         {
+            this.detectMisordering = DETECT_MISORDERING_REQUIRED;
+         }
+         else if( DETECT_MISORDERING_SUPPORTED.equalsIgnoreCase(value) )
+         {
+            this.detectMisordering = DETECT_MISORDERING_SUPPORTED;
+         }
+         else
+         {
+            this.detectMisordering = DETECT_MISORDERING_SUPPORTED;
+         }
+
+         value = MetaData.getUniqueChildContent(element, "detect-replay");
+         if( DETECT_REPLAY_NONE.equalsIgnoreCase(value) )
+         {
+            this.detectReplay = DETECT_REPLAY_NONE;
+         }
+         else if( DETECT_REPLAY_REQUIRED.equalsIgnoreCase(value) )
+         {
+            this.detectReplay = DETECT_REPLAY_REQUIRED;
+         }
+         else if( DETECT_REPLAY_SUPPORTED.equalsIgnoreCase(value) )
+         {
+            this.detectReplay = DETECT_REPLAY_SUPPORTED;
+         }
+         else
+         {
+            this.detectReplay = DETECT_REPLAY_SUPPORTED;
+         }
+
          value = MetaData.getUniqueChildContent(element, "establish-trust-in-target");
          if(ESTABLISH_TRUST_IN_TARGET_NONE.equalsIgnoreCase(value))
          {
@@ -259,6 +319,15 @@ public class IorSecurityConfigMetaData
       public String getConfidentiality()
       {
          return confidentiality;
+      }
+      public String getDetectMisordering()
+      {
+         return detectMisordering;
+      }
+
+      public String getDetectReplay()
+      {
+         return detectReplay;
       }
 
       public String getEstablishTrustInTarget()

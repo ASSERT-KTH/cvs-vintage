@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.12 2004/07/18 00:26:18 ejort Exp $
+$Id: jboss_4_0.dtd,v 1.13 2004/08/02 16:32:08 starksm Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -1375,7 +1375,9 @@ ior-security-config element describes the security configuration information for
 <!--
 transport-config is the root element for security between the end points
 -->
-<!ELEMENT transport-config ( integrity, confidentiality, establish-trust-in-target, establish-trust-in-client )> 
+<!ELEMENT transport-config ( integrity, confidentiality,
+ establish-trust-in-target, establish-trust-in-client, detect-misordering?
+ detect-replay?)> 
 
 <!--
 integrity element indicates if the server (target) supports integrity protected messages. 
@@ -1400,6 +1402,18 @@ establish-trust-in-client element indicates if the target is capable of authenti
 values are NONE, SUPPORTED or REQUIRED.
 -->  
 <!ELEMENT establish-trust-in-client ( #PCDATA)>
+
+<!--
+The optional detect-misordering indicates if the server (target) supports
+detection of message sequence errors. The values are NONE, SUPPORTED or REQUIRED.
+-->  
+<!ELEMENT detect-misordering ( #PCDATA)>
+
+<!--
+The optional detect-replay indicates if the server (target) supports detection
+of message replay attempts. The values are NONE, SUPPORTED or REQUIRED.
+-->  
+<!ELEMENT detect-replay ( #PCDATA)>
 
 <!--
 as-context (CSIv2 authentication service) is the element describing the authentication 
