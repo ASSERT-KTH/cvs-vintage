@@ -69,7 +69,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.54 2003/07/17 20:07:36 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.55 2003/07/17 21:46:38 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -139,10 +139,12 @@ public  class IssueType
         return hasIssues((Module) null);
     }        
 
-    /**
-     *  If module name is not the same as global name,
-     *  Return global name in parentheses.
-     */
+   /**
+    * If module name is identical to global name, return the global 
+    * name. Otherwise return the module name followed by a space 
+    * and the global name in parentheses.
+    * @return a <code>String</code> representation of the display name.
+    */
     public String getDisplayName(Module module)
         throws Exception
     {
