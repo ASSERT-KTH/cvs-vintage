@@ -97,8 +97,11 @@ public class ColumbaViewer extends AbstractViewer {
 
     public Process openURL(URL url) {
         boolean save = false;
+        File viewerFile = null;
         String viewer = MimeRouter.getInstance().getViewer("text", "html");
-        File viewerFile = new File(viewer);
+        if (viewer != null) {
+        	viewerFile = new File(viewer);
+        }
 
         // if viewer is not yet specified
         // or if viewer app is not found
