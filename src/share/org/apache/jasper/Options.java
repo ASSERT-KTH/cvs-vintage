@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.3 1999/10/12 08:33:51 bergsten Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/12 08:33:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.4 1999/10/15 00:09:18 akv Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/15 00:09:18 $
  *
  * ====================================================================
  * 
@@ -111,6 +111,11 @@ public final class Options {
      * to have a jsp initParam of type ieClassId="<value>"
      */
     public String ieClassId = "clsid:8AD9C840-044E-11D1-B3E9-00805F499D93";
+
+    /**
+     * What classpath should I use while compiling generated servlets?
+     */
+    public String classpath = null;
     
 
     /**
@@ -156,6 +161,14 @@ public final class Options {
     }
 
     /**
+     * What classpath should I use while compiling the servlets
+     * generated from JSP files?
+     */
+    public String getClassPath() {
+        return classpath;
+    }
+
+    /**
      * Create an Options object using data available from
      * ServletConfig and ServletContext. 
      */
@@ -163,9 +176,9 @@ public final class Options {
         String keepgen = config.getInitParameter("keepgenerated");
         if (keepgen != null) {
             if (keepgen.equalsIgnoreCase("true"))
-                keepGenerated = true;
+                this.keepGenerated = true;
             else if (keepgen.equalsIgnoreCase("false"))
-                keepGenerated = false;
+                this.keepGenerated = false;
             else Constants.message ("jsp.warning.keepgen", Constants.FATAL_ERRORS);
         }
             
@@ -179,18 +192,22 @@ public final class Options {
             else Constants.message ("jsp.warning.largeFile", Constants.FATAL_ERRORS);
         }
 
-        String senderr = config.getInitParameter ("sendErrToClient");
+        String senderr = config.getInitParameter("sendErrToClient");
         if (senderr != null) {
             if (senderr.equalsIgnoreCase("true"))
-                sendErrorToClient = true;
+                this.sendErrorToClient = true;
             else if (senderr.equalsIgnoreCase("false"))
-                sendErrorToClient = false;
+                this.sendErrorToClient = false;
             else Constants.message ("jsp.warning.sendErrToClient", Constants.FATAL_ERRORS);
         }
 
-        String ieClassId = config.getInitParameter ("ieClassId");
+        String ieClassId = config.getInitParameter("ieClassId");
         if (ieClassId != null)
-            ieClassId = ieClassId;
+            this.ieClassId = ieClassId;
+
+        String classpath = config.getInitParameter("classpath");
+        if (classpath != null)
+            this.classpath = classpath;
 
         String verbosityLevel = config.getInitParameter("jspVerbosityLevel");
             
