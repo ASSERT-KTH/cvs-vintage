@@ -376,9 +376,12 @@ final class FileHandler extends Handler  {
 	}
     }
 
+    // This should be deprecated as dangerous.
     static void setDateHeader( Response res, String name, long value ) {
-	MimeHeaders headers=res.getMimeHeaders();
-	headers.setValue( name ).setTime( value );
+	if( ! res.isIncluded() ) {
+	    MimeHeaders headers=res.getMimeHeaders();
+	    headers.setValue( name ).setTime( value );
+	}
     }
 
     /** All path checks that were part of DefaultServlet
