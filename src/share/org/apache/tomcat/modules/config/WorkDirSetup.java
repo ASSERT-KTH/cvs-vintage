@@ -204,6 +204,9 @@ public class WorkDirSetup extends BaseInterceptor {
 	sb.append(cm.getWorkDir());
 	sb.append(File.separator);
 	String host=ctx.getHost();
+	// # 457
+	if( host!=null )
+	    host=host.replace(':', '_');
 	if( host==null ) 
 	    sb.append( "DEFAULT" );
 	else
