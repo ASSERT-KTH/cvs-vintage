@@ -218,7 +218,7 @@
 	          Http10Connector
 	 -->
         <!--
-        <CoyoteConnector   port="8081" 
+        <CoyoteConnector2   port="8081" 
 			   secure="false"
 			   maxThreads="100"
 			   maxSpareThreads="50"
@@ -262,10 +262,16 @@
              true is the default. 
              
              tomcatAuthentication="false"
-             
-
           -->
+             
         <Ajp13Connector port="8009" />
+
+        <!-- Jk2 support using coyote. Uncomment and comment Ajp13Connector 
+          -->
+        <!--
+        <CoyoteConnector2 processorClassName="org.apache.jk.server.JkCoyoteHandler" 
+                          port="8009" />
+         -->
 
       <!-- 
            Context definitions can be placed here ( not recommended ) or 
