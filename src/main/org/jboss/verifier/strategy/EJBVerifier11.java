@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.6 2000/06/07 00:02:53 mulder Exp $
+ * $Id: EJBVerifier11.java,v 1.7 2000/06/11 18:12:39 juha Exp $
  */
 
 
@@ -51,7 +51,7 @@ import com.dreambean.ejx.ejb.Entity;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -240,7 +240,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              *
              * Spec 6.5.3
              */
-            if (hasSessionSynchronizationInterface(bean))
+            if (hasSessionSynchronizationInterface(bean)) {
 
                 if (!isStateful(session)) {
                     fireSpecViolationEvent(SECTION_6_5_3_a, name);
@@ -253,7 +253,8 @@ public class EJBVerifier11 extends AbstractVerifier {
 
                     status = false;
                 }
-
+            }
+            
 
             /*
              * A session bean MUST implement AT LEAST one ejbCreate method.
@@ -475,7 +476,7 @@ public class EJBVerifier11 extends AbstractVerifier {
 
         for (int i = 0; i < interfaces.length; ++i) {
 
-            if ((SESSIONSYNCHRONIZATION_INTERFACE).equals(interfaces[i].getName()))
+            if ( (SESSIONSYNCHRONIZATION_INTERFACE).equals(interfaces[i].getName()) )
                 return true;
         }
 
