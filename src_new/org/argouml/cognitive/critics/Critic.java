@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.22 2003/02/02 11:34:06 kataka Exp $
+// $Id: Critic.java,v 1.23 2003/02/12 12:41:02 mkl Exp $
 
 
 package org.argouml.cognitive.critics;
@@ -688,15 +688,10 @@ public class Critic implements Poster, Serializable {
    * @see Critic#canFixIt */
   public void fixIt(ToDoItem item, Object arg) { }
 
-  /** Reply a string that describes this Critic. Mainly useful for
-   *  debugging. */
+  /** Reply a string that describes this Critic. Identical to getCriticName() 
+   */
   public String toString() {
-    return this.getClass().getName() + "(" +
-      getCriticKey() + "," +
-      getCriticType() + "," +
-      getDecisionCategory() + "," +
-      getHeadline() + "," +
-      getPriority() + ")";
+      return getCriticName();
   }
 
 } /* end class Critic */
