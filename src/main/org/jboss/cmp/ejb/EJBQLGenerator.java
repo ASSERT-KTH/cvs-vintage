@@ -12,14 +12,19 @@ package org.jboss.cmp.ejb;
 import java.util.Iterator;
 
 import org.jboss.cmp.query.CollectionRelation;
+import org.jboss.cmp.query.Comparison;
 import org.jboss.cmp.query.CrossJoin;
+import org.jboss.cmp.query.InnerJoin;
+import org.jboss.cmp.query.Literal;
 import org.jboss.cmp.query.Path;
 import org.jboss.cmp.query.Projection;
 import org.jboss.cmp.query.Query;
 import org.jboss.cmp.query.QueryNode;
 import org.jboss.cmp.query.QueryVisitor;
 import org.jboss.cmp.query.RangeRelation;
-import org.jboss.cmp.query.InnerJoin;
+import org.jboss.cmp.query.Expression;
+import org.jboss.cmp.query.Parameter;
+import org.jboss.cmp.query.ConditionExpression;
 
 /**
  * Transformer that produces EJB-QL text of a query against a EJB schema.
@@ -109,5 +114,30 @@ public class EJBQLGenerator implements QueryVisitor
    public Object visit(InnerJoin join, Object param)
    {
       throw new UnsupportedOperationException("EJB-QL does not support inner joins");
+   }
+
+   public Object visit(Comparison comparison, Object param)
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   public Object visit(ConditionExpression expression, Object param)
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   public Object visit(Expression expression, Object param)
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   public Object visit(Literal join, Object param)
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   public Object visit(Parameter queryParam, Object param)
+   {
+      throw new UnsupportedOperationException();
    }
 }

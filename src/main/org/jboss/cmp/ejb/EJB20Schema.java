@@ -17,6 +17,7 @@ import java.util.Set;
 import org.jboss.cmp.schema.AbstractClass;
 import org.jboss.cmp.schema.AbstractSchema;
 import org.jboss.cmp.schema.DuplicateNameException;
+import org.jboss.cmp.schema.AbstractType;
 
 /**
  * An implementation of an AbstractSchema for EJB based systems.
@@ -28,6 +29,16 @@ public class EJB20Schema implements AbstractSchema
    private Map entitiesBySchemaName = new HashMap();
    private Map relationsByName = new HashMap();
 
+   private static final AbstractType[] builtins = {
+      new JavaType(void.class, AbstractType.VOID),
+      new JavaType(Object.class, AbstractType.OBJECT),
+      new JavaType(boolean.class, AbstractType.BOOLEAN),
+      new JavaType(String.class, AbstractType.STRING),
+      new JavaType(int.class, AbstractType.INTEGER),
+      new JavaType(double.class, AbstractType.FLOAT),
+      new JavaType(java.util.Date.class, AbstractType.DATETIME)
+   };
+
    public AbstractClass getClassByName(String name)
    {
       return getEntityBySchemaName(name);
@@ -36,6 +47,11 @@ public class EJB20Schema implements AbstractSchema
    public boolean isClassNameInUse(String name)
    {
       return ejbNames.contains(name) || entitiesBySchemaName.keySet().contains(name);
+   }
+
+   public AbstractType getBuiltinType(int family)
+   {
+      return builtins[family];
    }
 
    /**

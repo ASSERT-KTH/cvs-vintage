@@ -40,4 +40,6 @@ public interface AbstractSchema
     * @return true if the schema considers the name to be used
     */
    public boolean isClassNameInUse(String name);
+
+   public AbstractType getBuiltinType(int family);
 }

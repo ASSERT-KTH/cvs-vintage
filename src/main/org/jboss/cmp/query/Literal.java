@@ -7,27 +7,27 @@
  *                                     *
  ***************************************/
 
-package org.jboss.cmp.ejb;
+package org.jboss.cmp.query;
 
-import org.jboss.cmp.schema.AbstractClass;
 import org.jboss.cmp.schema.AbstractType;
 
-public abstract class Entity implements AbstractClass
+public class Literal extends Expression
 {
-   protected String ejbName;
+   Object value;
 
-   protected Entity(String ejbName)
+   public Literal(AbstractType type, Object value)
    {
-      this.ejbName = ejbName;
+      super(type);
+      this.value = value;
    }
 
-   public String getName()
+   public Object getValue()
    {
-      return ejbName;
+      return value;
    }
 
-   public int getFamily()
+   public Object accept(QueryVisitor visitor, Object param)
    {
-      return AbstractType.OBJECT;
+      return visitor.visit(this, param);
    }
 }

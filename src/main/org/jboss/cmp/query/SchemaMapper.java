@@ -16,6 +16,7 @@ import java.util.Map;
 import org.jboss.cmp.schema.AbstractAssociationEnd;
 import org.jboss.cmp.schema.AbstractAttribute;
 import org.jboss.cmp.schema.AbstractClass;
+import org.jboss.cmp.schema.AbstractType;
 
 /**
  * Transforms a query against one schema into a query against another.
@@ -59,6 +60,26 @@ public class SchemaMapper extends QueryCloner
       {
          throw new UnmappedEntryException("No map entry found for "+e.cause, e.cause);
       }
+   }
+
+   public Object visit(Query query, Object param)
+   {
+      AbstractType[] oldParams = query.getParameters();
+      AbstractType[] params = null;
+      if (oldParams != null)
+      {
+         params = new AbstractType[oldParams.length];
+         for (int i = 0; i < oldParams.length; i++)
+         {
+            params[i] = (AbstractType) map(oldParams[i]);
+         }
+      }
+      Query newQuery = new Query(params);
+      newQuery.setRelation((Relation) query.getRelation().accept(this, newQuery));
+      newQuery.setProjection((Projection) query.getProjection().accept(this, newQuery));
+      if (query.getFilter() != null)
+         newQuery.setFilter((QueryNode) query.getFilter().accept(this, newQuery));
+      return newQuery;
    }
 
    public Object visit(Path path, Object param)

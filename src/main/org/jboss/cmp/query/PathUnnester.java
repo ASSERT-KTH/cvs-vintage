@@ -33,13 +33,13 @@ public class PathUnnester extends QueryCloner
       return query;
    }
 
-   public Object visit(Query query, Object param)
-   {
-      Query newQuery = new Query();
-      newQuery.setRelation((Relation) query.getRelation().accept(this, newQuery));
-      newQuery.setProjection((Projection) query.getProjection().accept(this, newQuery));
-      return newQuery;
-   }
+//   public Object visit(Query query, Object param)
+//   {
+//      Query newQuery = new Query();
+//      newQuery.setRelation((Relation) query.getRelation().accept(this, newQuery));
+//      newQuery.setProjection((Projection) query.getProjection().accept(this, newQuery));
+//      return newQuery;
+//   }
 
    public Object visit(CrossJoin join, Object param)
    {

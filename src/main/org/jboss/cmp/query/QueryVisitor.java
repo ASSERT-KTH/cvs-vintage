@@ -27,4 +27,14 @@ public interface QueryVisitor
    public Object visit(CrossJoin join, Object param);
 
    public Object visit(InnerJoin join, Object param);
+
+   public Object visit(Comparison comparison, Object param);
+
+   public Object visit(ConditionExpression expression, Object param);
+
+   public Object visit(Expression expression, Object param);
+
+   public Object visit(Literal literal, Object param);
+
+   public Object visit(Parameter queryParam, Object param);
 }

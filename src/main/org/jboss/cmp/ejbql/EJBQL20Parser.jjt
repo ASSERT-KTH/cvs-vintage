@@ -129,8 +129,8 @@ void Term() :
 void Factor() :
 {}
 {
-    PathExpression()
-  | Literal()
+    Literal()
+  | PathExpression()
   | InputParameter()
   | "(" Expression() ")"
   | <CONCAT> "(" Expression() "," Expression() ")"
@@ -162,16 +162,16 @@ void Identifier() #Identifier() :
 void InputParameter() #InputParameter:
 {Token t;}
 {
-  "?" t=<INTEGER_LITERAL> { jjtThis.id = Integer.parseInt(t.image); }
+  "?" t=<INTEGER_LITERAL> { jjtThis.id = Integer.parseInt(t.image)-1; }
 }
 
 void Literal() #Literal :
 {}
 {
-    <INTEGER_LITERAL>
-  | <FLOATING_POINT_LITERAL>
-  | <STRING_LITERAL>
-  | <BOOLEAN_LITERAL>
+    jjtThis.token=<INTEGER_LITERAL>
+  | jjtThis.token=<FLOATING_POINT_LITERAL>
+  | jjtThis.token=<STRING_LITERAL>
+  | jjtThis.token=<BOOLEAN_LITERAL>
 }
 
 TOKEN [IGNORE_CASE]:
@@ -199,6 +199,7 @@ TOKEN [IGNORE_CASE]:
   | < SQRT:       "SQRT" >
   | < SUBSTRING:  "SUBSTRING" >
   | < WHERE:      "WHERE" >
+  | < BOOLEAN_LITERAL: "FALSE" | "TRUE" >
 }
 
 TOKEN:
@@ -235,11 +236,6 @@ TOKEN:
       | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]
     >
   | < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
-}
-
-TOKEN [IGNORE_CASE] :
-{
-  < BOOLEAN_LITERAL: "FALSE" | "TRUE" >
 }
 
 SKIP :

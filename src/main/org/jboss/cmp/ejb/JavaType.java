@@ -14,14 +14,21 @@ import org.jboss.cmp.schema.AbstractType;
 public class JavaType implements AbstractType
 {
    private String name;
+   private int family;
 
-   public JavaType(Class clazz)
+   public JavaType(Class clazz, int family)
    {
       this.name = clazz.getName();
+      this.family = family;
    }
 
    public String getName()
    {
       return name;
+   }
+
+   public int getFamily()
+   {
+      return family;
    }
 }

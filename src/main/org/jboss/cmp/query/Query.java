@@ -12,6 +12,8 @@ package org.jboss.cmp.query;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jboss.cmp.schema.AbstractType;
+
 /**
  * Class used to represent a Query against a schema. This represents the query
  * in terms of basic relational operators: relations, projections and filters.
@@ -20,10 +22,21 @@ import java.util.Map;
  */
 public class Query extends BaseNode
 {
+   private AbstractType[] parameters;
    private Relation relation;
    private Projection projection;
+   private QueryNode filter;
 
    private final Map aliases = new HashMap();
+
+   public Query()
+   {
+   }
+
+   public Query(AbstractType[] parameters)
+   {
+      this.parameters = parameters;
+   }
 
    public void setRelation(Relation relation)
    {
@@ -45,6 +58,11 @@ public class Query extends BaseNode
       return projection;
    }
 
+   public AbstractType[] getParameters()
+   {
+      return parameters;
+   }
+
    public void addAlias(NamedRelation relation)
    {
       aliases.put(relation.getAlias(), relation);
@@ -58,6 +76,16 @@ public class Query extends BaseNode
    public NamedRelation getRelation(String alias)
    {
       return (NamedRelation) aliases.get(alias);
+   }
+
+   public QueryNode getFilter()
+   {
+      return filter;
+   }
+
+   public void setFilter(QueryNode filter)
+   {
+      this.filter = filter;
    }
 
    public Object accept(QueryVisitor visitor, Object param)

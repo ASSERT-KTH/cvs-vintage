@@ -7,19 +7,8 @@
  *                                     *
  ***************************************/
 
-package org.jboss.cmp.ejbql;
+package org.jboss.cmp.query;
 
-public class ASTLiteral extends SimpleNode
+public abstract class Condition extends BaseNode
 {
-   public Token token;
-
-   public ASTLiteral(int i)
-   {
-      super(i);
-   }
-
-   public Object jjtAccept(ParserVisitor visitor, Object data) throws CompileException
-   {
-      return visitor.visit(this, data);
-   }
 }

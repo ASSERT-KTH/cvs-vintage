@@ -15,6 +15,7 @@ import java.util.Map;
 import org.jboss.cmp.schema.AbstractAssociationEnd;
 import org.jboss.cmp.schema.AbstractAttribute;
 import org.jboss.cmp.schema.AbstractClass;
+import org.jboss.cmp.schema.AbstractType;
 
 public class Table implements AbstractClass
 {
@@ -61,5 +62,10 @@ public class Table implements AbstractClass
    public void setPkFields(String[] pkFields)
    {
       this.pkFields = pkFields;
+   }
+
+   public int getFamily()
+   {
+      return AbstractType.OBJECT;
    }
 }

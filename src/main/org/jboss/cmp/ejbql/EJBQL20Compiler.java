@@ -10,15 +10,24 @@
 package org.jboss.cmp.ejbql;
 
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jboss.cmp.query.CollectionRelation;
+import org.jboss.cmp.query.Comparison;
 import org.jboss.cmp.query.CrossJoin;
+import org.jboss.cmp.query.Expression;
+import org.jboss.cmp.query.Literal;
 import org.jboss.cmp.query.NamedRelation;
 import org.jboss.cmp.query.Path;
 import org.jboss.cmp.query.Projection;
 import org.jboss.cmp.query.Query;
+import org.jboss.cmp.query.QueryNode;
 import org.jboss.cmp.query.RangeRelation;
 import org.jboss.cmp.query.Relation;
+import org.jboss.cmp.query.Parameter;
+import org.jboss.cmp.query.Condition;
+import org.jboss.cmp.query.ConditionExpression;
 import org.jboss.cmp.schema.AbstractAssociationEnd;
 import org.jboss.cmp.schema.AbstractAttribute;
 import org.jboss.cmp.schema.AbstractClass;
@@ -36,12 +45,12 @@ public class EJBQL20Compiler implements ParserVisitor
       parser = new EJBQL20Parser(new StringReader(""));
    }
 
-   public Query compile(String ejbql) throws ParseException, CompileException
+   public Query compile(String ejbql, AbstractType[] params) throws ParseException, CompileException
    {
       parser.ReInit(new StringReader(ejbql));
       ASTEJBQL rootNode = parser.EJBQL();
 
-      return (Query) rootNode.jjtAccept(this, null);
+      return (Query) rootNode.jjtAccept(this, params);
    }
 
    public Object visit(SimpleNode node, Object data)
@@ -51,7 +60,8 @@ public class EJBQL20Compiler implements ParserVisitor
 
    public Object visit(ASTEJBQL node, Object data) throws CompileException
    {
-      Query query = new Query();
+      Query query = new Query((AbstractType[]) data);
+
       // visit FROM first to define all the identification_variables
       ((VisitableNode) node.jjtGetChild(1)).jjtAccept(this, query);
 
@@ -159,29 +169,112 @@ public class EJBQL20Compiler implements ParserVisitor
       return data;
    }
 
-   public Object visit(ASTWhere node, Object data)
+   public Object visit(ASTWhere node, Object data) throws CompileException
    {
+      Query query = (Query) data;
+      VisitableNode conditionNode = (VisitableNode) node.jjtGetChild(0);
+      query.setFilter((QueryNode)conditionNode.jjtAccept(this, data));
       return null;
    }
 
-   public Object visit(ASTOr node, Object data)
+   public Object visit(ASTOr node, Object data) throws CompileException
    {
-      return null;
+      ConditionExpression expr = new ConditionExpression(ConditionExpression.OR);
+      for (int i=0; i < node.jjtGetNumChildren(); i++)
+      {
+         Condition child = (Condition) ((VisitableNode)node.jjtGetChild(i)).jjtAccept(this, data);
+         expr.addChild(child);
+      }
+      return expr;
    }
 
-   public Object visit(ASTAnd node, Object data)
+   public Object visit(ASTAnd node, Object data) throws CompileException
    {
-      return null;
+      ConditionExpression expr = new ConditionExpression(ConditionExpression.AND);
+      for (int i=0; i < node.jjtGetNumChildren(); i++)
+      {
+         Condition child = (Condition) ((VisitableNode)node.jjtGetChild(i)).jjtAccept(this, data);
+         expr.addChild(child);
+      }
+      return expr;
    }
 
-   public Object visit(ASTNot node, Object data)
+   public Object visit(ASTNot node, Object data) throws CompileException
    {
-      return null;
+      ConditionExpression expr = new ConditionExpression(ConditionExpression.NOT);
+      Condition child = (Condition) ((VisitableNode)node.jjtGetChild(0)).jjtAccept(this, data);
+      expr.addChild(child);
+      return expr;
    }
 
-   public Object visit(ASTCondition node, Object data)
+   private static final Map operatorMap = new HashMap();
+   static {
+      operatorMap.put("=", Comparison.EQUAL);
+      operatorMap.put("<>", Comparison.NOTEQUAL);
+      operatorMap.put("<", Comparison.LESSTHAN);
+      operatorMap.put("<=", Comparison.LESSEQUAL);
+      operatorMap.put(">", Comparison.GREATERTHAN);
+      operatorMap.put(">=", Comparison.GREATEREQUAL);
+   }
+
+   public Object visit(ASTCondition node, Object data) throws CompileException
    {
-      return null;
+      Token token = node.token;
+      switch (token.kind)
+      {
+         case EJBQL20ParserConstants.COMPARISION_OPERATOR:
+            String operator = (String) operatorMap.get(token.image);
+            if (operator == null)
+               throw new IllegalStateException("Unkown operator: "+token.image);
+
+            Expression left = (Expression) ((VisitableNode)node.jjtGetChild(0)).jjtAccept(this, data);
+            Expression right = (Expression) ((VisitableNode)node.jjtGetChild(1)).jjtAccept(this, data);
+            int leftFamily = left.getType().getFamily();
+            int rightFamily = right.getType().getFamily();
+
+            switch (leftFamily)
+            {
+               case AbstractType.STRING:
+                  if (rightFamily != AbstractType.STRING)
+                     throw new CompileException("Type mismatch");
+                  if (operator != Comparison.EQUAL && operator != Comparison.NOTEQUAL)
+                     throw new CompileException("Invalid string comparison operator: "+operator);
+                  break;
+               case AbstractType.INTEGER:
+               case AbstractType.FLOAT:
+                  if (rightFamily != AbstractType.INTEGER && rightFamily != AbstractType.FLOAT)
+                     throw new CompileException("Type mismatch");
+                  break;
+               case AbstractType.BOOLEAN:
+                  if (rightFamily != AbstractType.BOOLEAN)
+                     throw new CompileException("Type mismatch");
+                  if (operator != Comparison.EQUAL && operator != Comparison.NOTEQUAL)
+                     throw new CompileException("Invalid boolean comparison operator: "+operator);
+                  break;
+               case AbstractType.DATETIME:
+                  if (rightFamily != AbstractType.DATETIME)
+                     throw new CompileException("Type mismatch");
+                  if (operator != Comparison.EQUAL &&
+                        operator != Comparison.NOTEQUAL &&
+                        operator != Comparison.LESSTHAN &&
+                        operator != Comparison.GREATERTHAN)
+                     throw new CompileException("Invalid datetime comparison operator: " + operator);
+                  break;
+               case AbstractType.OBJECT:
+                  if (left instanceof Path)
+                  {
+                     Path path = (Path) left;
+                     if (path.isCollection())
+                        throw new CompileException("Invalid use of collection path: "+path);
+                  }
+                  if (operator != Comparison.EQUAL && operator != Comparison.NOTEQUAL)
+                     throw new CompileException("Invalid entity bean comparison operator: "+operator);
+                  break;
+            }
+            return new Comparison(left, operator, right);
+         default:
+            throw new CompileException("Unknown condition token "+token.image);
+      }
    }
 
    public Object visit(ASTPath node, Object data) throws CompileException
@@ -234,13 +327,57 @@ public class EJBQL20Compiler implements ParserVisitor
       return null;
    }
 
-   public Object visit(ASTInputParameter node, Object data)
+   public Object visit(ASTInputParameter node, Object data) throws CompileException
    {
-      return null;
+      Query query = (Query)data;
+      AbstractType[] queryParams = query.getParameters();
+      if (queryParams == null || queryParams.length <= node.id || node.id < 0)
+         throw new CompileException("Invalid query parameter: "+(node.id+1));
+      return new Parameter(query, node.id);
    }
 
    public Object visit(ASTLiteral node, Object data)
    {
-      return null;
+      AbstractType type;
+      Object value;
+      String image = node.token.image;
+      switch (node.token.kind)
+      {
+         case EJBQL20ParserConstants.INTEGER_LITERAL:
+            type = schema.getBuiltinType(AbstractType.INTEGER);
+            if (image.endsWith("l") || image.endsWith("L"))
+               value = Long.decode(image.substring(0, image.length()-1));
+            else
+               value = Integer.decode(image);
+            break;
+         case EJBQL20ParserConstants.FLOATING_POINT_LITERAL:
+            type = schema.getBuiltinType(AbstractType.FLOAT);
+            value = Double.valueOf(image);
+            break;
+         case EJBQL20ParserConstants.STRING_LITERAL:
+            type = schema.getBuiltinType(AbstractType.STRING);
+            value = unEscape(image);
+            break;
+         case EJBQL20ParserConstants.BOOLEAN_LITERAL:
+            type = schema.getBuiltinType(AbstractType.BOOLEAN);
+            value = "true".equalsIgnoreCase(image) ? Boolean.TRUE : Boolean.FALSE;
+            break;
+         default:
+            throw new IllegalStateException("Unknown literal: "+node.id);
+      }
+      return new Literal(type, value);
+   }
+
+   private String unEscape(String s)
+   {
+      StringBuffer buf = new StringBuffer(s.length()+16);
+      for (int i=1; i < s.length()-1; i++)
+      {
+         char c = s.charAt(i);
+         if (c == '\'' && s.charAt(i+1) == '\'')
+            i++;
+         buf.append(c);
+      }
+      return buf.toString();
    }
 }

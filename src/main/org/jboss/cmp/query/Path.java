@@ -17,18 +17,17 @@ import org.jboss.cmp.schema.AbstractAssociationEnd;
 import org.jboss.cmp.schema.AbstractAttribute;
 import org.jboss.cmp.schema.AbstractType;
 
-public class Path extends BaseNode
+public class Path extends Expression
 {
    private final NamedRelation root;
    private final List steps;
-   private AbstractType type;
    private boolean collection;
 
    public Path(NamedRelation root)
    {
+      super(root.getType());
       this.root = root;
       steps = new ArrayList();
-      type = root.getType();
       collection = true;
    }
 
@@ -54,11 +53,6 @@ public class Path extends BaseNode
    public Iterator listSteps()
    {
       return steps.iterator();
-   }
-
-   public AbstractType getType()
-   {
-      return type;
    }
 
    public boolean isCollection()

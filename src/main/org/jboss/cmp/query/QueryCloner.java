@@ -27,9 +27,11 @@ public class QueryCloner implements QueryVisitor
 
    public Object visit(Query query, Object param)
    {
-      Query newQuery = new Query();
+      Query newQuery = new Query(query.getParameters());
       newQuery.setRelation((Relation) query.getRelation().accept(this, newQuery));
       newQuery.setProjection((Projection) query.getProjection().accept(this, newQuery));
+      if (query.getFilter() != null)
+         newQuery.setFilter((QueryNode) query.getFilter().accept(this, newQuery));
       return newQuery;
    }
 
@@ -91,5 +93,39 @@ public class QueryCloner implements QueryVisitor
             (NamedRelation)join.getJoin().accept(this, param),
             (Relation)join.getRight().accept(this, param),
             join.getAssociationEnd());
+   }
+
+   public Object visit(Comparison comparison, Object param)
+   {
+      String operator = comparison.getOperator();
+      Expression left = (Expression) comparison.getLeft().accept(this, param);
+      Expression right = (Expression) comparison.getRight().accept(this, param);
+      return new Comparison(left, operator, right);
+   }
+
+   public Object visit(ConditionExpression expression, Object param)
+   {
+      ConditionExpression expr = new ConditionExpression(expression.getOperator());
+      for (Iterator i = expression.getChildren().iterator(); i.hasNext();)
+      {
+         Condition condition = (Condition) i.next();
+         expr.addChild((QueryNode)condition.accept(this, param));
+      }
+      return expr;
+   }
+
+   public Object visit(Expression expression, Object param)
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   public Object visit(Literal literal, Object param)
+   {
+      return new Literal(literal.getType(), literal.getValue());
+   }
+
+   public Object visit(Parameter queryParam, Object param)
+   {
+      return new Parameter((Query)param, queryParam.getIndex());
    }
 }
