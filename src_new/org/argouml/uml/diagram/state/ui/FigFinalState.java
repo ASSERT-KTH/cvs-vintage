@@ -1,4 +1,4 @@
-// $Id: FigFinalState.java,v 1.22 2004/09/02 17:07:21 mvw Exp $
+// $Id: FigFinalState.java,v 1.23 2004/10/30 20:20:52 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,6 @@ public class FigFinalState extends FigStateVertex {
     ////////////////////////////////////////////////////////////////
     // constants
 
-    private static final int MARGIN = 2;
     private static final int X = 10;
     private static final int Y = 10;
     private static final int WIDTH = 24;
@@ -59,7 +58,6 @@ public class FigFinalState extends FigStateVertex {
     // instance variables
 
     private FigCircle inCircle;
-    //private FigCircle outCircle;
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -108,7 +106,6 @@ public class FigFinalState extends FigStateVertex {
     public Object clone() {
         FigFinalState figClone = (FigFinalState) super.clone();
         Iterator it = figClone.getFigs(null).iterator();
-        //figClone.setBigPort((FigRect) it.next());
         figClone.setBigPort((FigCircle) it.next());
         figClone.inCircle = (FigCircle) it.next();
         
