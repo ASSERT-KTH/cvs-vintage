@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.11 2001/05/18 19:20:22 larryi Exp $
- * $Revision: 1.11 $
- * $Date: 2001/05/18 19:20:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.12 2001/06/24 22:44:16 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2001/06/24 22:44:16 $
  *
  * ====================================================================
  *
@@ -428,6 +428,9 @@ class TcpWorkerThread implements ThreadPoolRunnable {
 			con=(TcpConnection)connectionCache.get();
 			if( con == null ) 
 			    con = new TcpConnection();
+		    } else {
+			if( con==null )
+			    continue;
 		    }
 		    
 		    con.setEndpoint(endpoint);
