@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: building.xml,v 1.4 2003/06/14 21:07:23 linus Exp $ -->
+<!-- $Id: building.xml,v 1.5 2003/07/04 21:21:38 linus Exp $ -->
 
   <chapter id="buildingandtools">
     <title>Building from source</title>
@@ -1139,8 +1139,13 @@ This is done in the
 <filename class="directory">argouml/src_new</filename>
 directory of the newly created copy
 by issueing the command <command>build dist-release</command>!
-This takes around 10 minutes on my machine 
-(Linus Tolke May 2003 JDK1.3.1_01/700MHz/256MB).
+(Linus:
+It takes around 10 minutes on my machine 
+	JDK1.3.1_01/700MHz/256MB (May 2003),
+It takes around 30 minutes on a Lysator machine simultaneously 
+doing a lot of other things.
+	JDK1.3.1_06/sun4d/256MB (July 2003).
+)
 </para>
 	    <para>
 On a Cygwin/Unix system you need to 
@@ -1185,8 +1190,13 @@ Run the JUnit test cases in
 by issueing the command
 <command>build alltests</command>
 in the <filename class="directory">argouml/src_new</filename> directory.
-This takes around 12 minutes on my machine 
-(Linus Tolke May 2003 JDK1.3.1_01/700MHz/256MB).
+(Linus
+It takes around 12 minutes on my machine 
+	JDK1.3.1_01/700MHz/256MB (May 2003),
+It takes around three hours on a Lysator machine simultaneously
+doing a lot of other things and the X session over a 50kb/s modem.
+	JDK1.3.1_06/sun4d/256MB (July 2003).
+)
 </para>
 		  <para>
 There should not be any failed tests. 
