@@ -59,8 +59,9 @@ public class MoveMessageCommand extends CopyMessageCommand {
 
 			ev =
 				new TableChangedEvent(
-					TableChangedEvent.UPDATE,
-					r[i].getFolder());
+					TableChangedEvent.REMOVE,
+					r[i].getFolder(),
+					r[i].getUids());
 
 			MainInterface.frameModel.tableChanged(ev);
 
@@ -70,7 +71,7 @@ public class MoveMessageCommand extends CopyMessageCommand {
 		FolderCommandReference u = adapter.getUpdateReferences();
 		if (u != null) {
 
-			ev = new TableChangedEvent(TableChangedEvent.UPDATE, u.getFolder());
+			ev = new TableChangedEvent(TableChangedEvent.REMOVE, u.getFolder(), u.getUids());
 
 			MainInterface.frameModel.tableChanged(ev);
 
