@@ -35,8 +35,6 @@ PATH=${PATH}:/usr/local/bin:${ANT_HOME}/bin:${MYSQL}
 export PATH
 echo "Path: $PATH"
 
-exit
-
 ## Kill Catalina
 cd ${DIR}
 if [ -x ${SCARAB}/target/bin/catalina.sh ] ; then
