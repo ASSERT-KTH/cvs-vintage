@@ -87,7 +87,7 @@ import org.tigris.scarab.util.export.ExportFormat;
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.14 2003/04/19 00:22:59 dlr Exp $
+ * @version $Id: ConfigureReport.java,v 1.15 2003/04/19 00:42:15 dlr Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -1084,7 +1084,7 @@ public class ConfigureReport
     public void doGeneratereport(RunData data, TemplateContext context)
          throws Exception
     {
-        String format = data.getParameters().getString("format", null);
+        String format = ExportFormat.determine(data);
         if (ExportFormat.EXCEL_FORMAT.equalsIgnoreCase(format)
             || ExportFormat.TSV_FORMAT.equalsIgnoreCase(format))
         {
