@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.plugins.*;
 
@@ -56,7 +56,7 @@ public class CounterInterceptor extends AbstractInterceptor
       return container;
    }
 
-   public Object invokeHome(MethodInvocation mi) throws Exception {
+   public Object invokeHome(Invocation mi) throws Exception {
       long startTime=System.currentTimeMillis();
       try {
          return super.invokeHome(mi);
@@ -71,7 +71,7 @@ public class CounterInterceptor extends AbstractInterceptor
       }
    }
 
-   public Object invoke(MethodInvocation mi) throws Exception {
+   public Object invoke(Invocation mi) throws Exception {
       long startTime=System.currentTimeMillis();
       try {
          return super.invoke(mi);
@@ -86,7 +86,7 @@ public class CounterInterceptor extends AbstractInterceptor
       }
    }
 
-   public void init() throws java.lang.Exception {
+   public void create() throws java.lang.Exception {
       //get a reference to the CounterService from JNDI
       log.debug("CounterInterceptor initializing");
    }

@@ -23,7 +23,7 @@ This is a lazy cache policy in that objects are not checked for expiration
 until they are accessed.
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public class TimedCachePolicy extends TimerTask implements CachePolicy
 {
@@ -105,7 +105,7 @@ public class TimedCachePolicy extends TimerTask implements CachePolicy
 // Service implementation ----------------------------------------------
     /** Initializes the cache for use. Prior to this the cache has no store.
     */
-    public void init()
+    public void create()
     {
         if( threadSafe )
             entryMap = new HashMap();
