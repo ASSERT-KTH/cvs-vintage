@@ -104,7 +104,21 @@ public class StopTomcat {
 	secretFile=s;
 	commandLineParams=true;
     }
-    
+
+    public void setAjpid12( String s ) {
+        secretFile=s;
+        commandLineParams=true;
+        isAjp12=true;
+        isAjp13=false;
+    }
+
+    public void setAjpid13( String s ) {
+        secretFile=s;
+        commandLineParams=true;
+        isAjp12=false;
+        isAjp13=true;
+    }
+
     public void setH( String s ) {
 	tomcatHome=s;
 	System.getProperties().put("tomcat.home", s);
