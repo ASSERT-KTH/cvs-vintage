@@ -1,7 +1,7 @@
 /*
- * $Id: BodyContentImpl.java,v 1.1 1999/10/14 04:08:19 akv Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/14 04:08:19 $
+ * $Id: BodyContentImpl.java,v 1.2 1999/10/17 08:23:34 mode Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/17 08:23:34 $
  *
  * ====================================================================
  * 
@@ -112,10 +112,13 @@ public class BodyContentImpl extends BodyContent {
     private void reAllocBuff (int len) {
         //Need to re-allocate the buffer since it is to be
 	//unbounded according to the updated spec..
+
         char[] tmp = new char [bufferSize];
 	System.arraycopy(cb, 0, tmp, 0, cb.length);
+
 	//XXX Should it be multiple of DEFAULT_BUFFER_SIZE??
-	if (len < Constants.DEFAULT_BUFFER_SIZE) {
+
+	if (len <= Constants.DEFAULT_BUFFER_SIZE) {
 	    cb = new char [bufferSize + Constants.DEFAULT_BUFFER_SIZE];
 	    bufferSize += Constants.DEFAULT_BUFFER_SIZE;
 	} else {
@@ -124,15 +127,6 @@ public class BodyContentImpl extends BodyContent {
 	}
 	System.arraycopy(tmp, 0, cb, 0, tmp.length);
 	tmp = null;
-    }
-
-    /**
-     * Our own little min method, to avoid loading java.lang.Math if we've run
-     * out of file descriptors and we're trying to print a stack trace.
-     */
-    private int min(int a, int b) {
-	if (a < b) return a;
-	return b;
     }
 
     /**
@@ -162,21 +156,10 @@ public class BodyContentImpl extends BodyContent {
                 return;
             } 
 
-            if (len >= bufferSize - nextChar) {
-                /* If the request length exceeds the size of the output buffer,
-                   re-allocate atleast the length of the buffer. */
+            if (len >= bufferSize - nextChar)
 		   reAllocBuff (len);
-            }
 
-            int b = off, t = off + len;
-            while (b < t) {
-                int d = min(bufferSize - nextChar, t - b);
-                System.arraycopy(cbuf, b, cb, nextChar, d);
-                b += d;
-                nextChar += d;
-                if (nextChar >= bufferSize) 
-		    reAllocBuff(0);
-            }
+            System.arraycopy(cbuf, off, cb, nextChar, len);
         }
     }
 
@@ -198,15 +181,11 @@ public class BodyContentImpl extends BodyContent {
      */
     public void write(String s, int off, int len) throws IOException {
         synchronized (lock) {
-            int b = off, t = off + len;
-            while (b < t) {
-                int d = min(bufferSize - nextChar, t - b);
-                s.getChars(b, b + d, cb, nextChar);
-                b += d;
-                nextChar += d;
-                if (nextChar >= bufferSize) 
-		    reAllocBuff(0);
-            }
+	    if (len >= bufferSize - nextChar)
+	        reAllocBuff(len);
+
+            s.getChars(off, off + len, cb, nextChar);
+	    nextChar += len;
         }
     }
 
