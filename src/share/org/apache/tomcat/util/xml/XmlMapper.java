@@ -222,6 +222,56 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 	}
     }
 
+    /** read an XML input stream, construct and return the object hierarchy
+     */
+    public Object readXml(InputStream xmlFile, Object root)
+	throws Exception
+    {
+	if(root!=null) {
+	    Stack st=this.getObjectStack();
+	    this.root=root;
+	    st.push( root );
+	}
+	InputSource input;
+	Parser parser=null;
+	try {
+	    if(System.getProperty("org.xml.sax.parser") != null )
+		parser=ParserFactory.makeParser();
+	    else
+		parser=ParserFactory.makeParser("com.sun.xml.parser.Parser");
+
+	    input = new InputSource( new InputStreamReader(xmlFile));
+
+	    parser.setDocumentHandler( this);
+	    parser.setEntityResolver( this);
+	    parser.setDTDHandler( this);
+	    parser.parse( input );
+	    return root;
+	    // assume the stack is in the right position.
+	    // or throw an exception is more than one element is on the stack
+	} catch( IllegalAccessException ex1 ) {
+	    ex1.printStackTrace();
+	    throw new Exception( "Error creating sax parser" );
+	} catch(ClassNotFoundException  ex2 ) {
+	    ex2.printStackTrace();
+	    throw new Exception( "Error creating sax parser" );
+	} catch( InstantiationException ex3)  {
+	    ex3.printStackTrace();
+	    throw new Exception( "Error creating sax parser" );
+   	} catch (IOException ioe) {
+	    String msg = "Can't open config file: " + xmlFile +
+		" due to: " + ioe;
+	    throw new Exception(msg);
+	} catch (SAXException se) {
+	    System.out.println("ERROR reading " + xmlFile);
+	    System.out.println("At " + se.getMessage());
+	    //	    se.printStackTrace();
+	    System.out.println();
+	    Exception ex1=se.getException();
+	    throw ex1;
+	}
+    }
+
     class Rule {
 	XmlMatch match;
 	XmlAction action;
