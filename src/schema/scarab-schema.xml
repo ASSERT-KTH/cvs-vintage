@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://db.apache.org/torque/dtd/database_3_1.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.2 2004/10/11 23:11:56 jorgeuriarte Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.3 2004/10/28 18:40:47 dep4b Exp $ -->
 
 <database name="scarab" defaultJavaType="object">
 <!--
@@ -1042,10 +1042,6 @@
     <column name="REQUIRED" required="true" type="BOOLEANINT" 
         default="0" size="1" javaType="primitive"/>
     <!--
-        A required option for this attribute to be active in this module
-    -->
-    <column name="REQUIRED_OPTION_ID" required="false" type="INTEGER"></column>
-    <!--
         Column order.
     -->
     <column name="PREFERRED_ORDER" javaName="Order" required="true" default="0" type="INTEGER" javaType="primitive"/>
@@ -1061,6 +1057,10 @@
     -->
     <column name="DEFAULT_TEXT_FLAG" required="true" type="BOOLEANINT" 
         default="0" size="1" javaType="primitive"/>
+    <!--
+        A required option for this attribute to be active in this module
+    -->
+    <column name="REQUIRED_OPTION_ID" required="false" type="INTEGER"></column>
 
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
