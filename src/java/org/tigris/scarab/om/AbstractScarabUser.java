@@ -79,7 +79,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.93 2003/09/13 02:11:25 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.94 2003/09/17 01:45:25 dlr Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -336,7 +336,7 @@ public abstract class AbstractScarabUser
     {
         List copyToModules = new ArrayList();
         if (hasPermission(ScarabSecurity.ISSUE__MOVE, currentModule) 
-            || action.equals("copy"))
+            || "copy".equals(action))
         {
             Module[] userModules = getModules(ScarabSecurity.ISSUE__ENTER);
             for (int i=0; i<userModules.length; i++)
