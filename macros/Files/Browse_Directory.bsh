@@ -18,7 +18,10 @@
  * along with the jEdit program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: Browse_Directory.bsh,v 1.1 2001/09/02 05:39:27 spestov Exp $
+ * $Id: Browse_Directory.bsh,v 1.2 2001/11/06 17:14:45 jgellene Exp $
+ *
+ * Checked for jEdit 4.0 API
+ *
  */
 
 void browseDirectory()
@@ -28,12 +31,26 @@ void browseDirectory()
 	{
 		manager = view.getDockableWindowManager();
 		manager.addDockableWindow("vfs.browser");
-		browser = manager.getDockableWindow("vfs.browser");
+		browser = manager.getDockable("vfs.browser");
 		browser.setDirectory(path);
 	}
 }
 
 browseDirectory();
+
+/*
+	Macro index data (in DocBook format)
+
+<listitem>
+    <para><filename>Browse_Directory.bsh</filename></para>
+    <abstract><para>
+        Opens a directory supplied by the user in the file system
+        browser.
+    </para></abstract>
+</listitem>
+
+*/
+
 
 // end Browse_Directory.bsh
 
