@@ -77,12 +77,13 @@ import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.services.cache.ScarabCache; 
 
 /**
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.16 2002/03/14 01:13:10 jmcnally Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.17 2002/03/20 01:23:06 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -136,6 +137,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                                         ag.getQueryKey(), false);
             agGroup.setProperties(ag);
             ag.save();
+            ScarabCache.clear();
         } 
 
     }
