@@ -248,6 +248,8 @@
         <filter token="INTAKE_SERIALIZE_FILE" value="${scarab.intake.serialize.file}"/>
         <filter token="INTAKE_OPTIONAL_GROUPS" value="${intake.optional.groups}"/>
         <filter token="FILE_UPLOAD_PATH" value="${scarab.file.upload.path}"/>
+        <filter token="SCARAB_REGISTER_CHECK_VALID_A" value="${scarab.register.email.checkValidA}"/>
+        <filter token="SCARAB_REGISTER_BAD_EMAILS" value="${scarab.register.email.badEmails}"/>
         <filter token="EXTRA_TR_PROPERTIES" 
             value="${scarab.extra.tr.properties}"/>
         <filter token="TIMEZONE" value="${scarab.timezone}"/>
