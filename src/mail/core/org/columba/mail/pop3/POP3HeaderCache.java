@@ -26,6 +26,7 @@ import java.util.Enumeration;
 import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
@@ -82,21 +83,21 @@ public class POP3HeaderCache {
 	public HeaderList getHeaderList() throws Exception {
 		// if there exists a cache-file
 		//  try to load the cache	
-		if (headerCacheAlreadyLoaded == false) {
+		if (!headerCacheAlreadyLoaded) {
 			try {
 
 				if (headerFile.exists()) {
 					load();
 					headerCacheAlreadyLoaded = true;
-				} else
+				} else {
 					headerCacheAlreadyLoaded = true;
 				/*
-				else {
+                                 } else {
 					headerList =
 						folder.getDataStorageInstance().recreateHeaderList(
 							worker);
-				}
 				*/
+				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				headerCacheAlreadyLoaded = true;
@@ -117,11 +118,15 @@ public class POP3HeaderCache {
 		FileInputStream istream = new FileInputStream(headerFile.getPath());
 		ObjectInputStream p = new ObjectInputStream(istream);
 
-		ColumbaLogger.log.info("loading header-cache=" + headerFile);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("loading header-cache=" + headerFile);
+                }
 
 		int capacity = p.readInt();
 
-		ColumbaLogger.log.info("capacity=" + capacity);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("capacity=" + capacity);
+                }
 
 		/*
 		if (capacity != folder.getDataStorageInstance().getMessageCount()) {
@@ -172,14 +177,16 @@ public class POP3HeaderCache {
 	public void save() throws Exception {
 
 		// we didn't load any header to save
-		if (isHeaderCacheAlreadyLoaded() == false)
+		if (!isHeaderCacheAlreadyLoaded())
 			return;
 
 		// this has to called only if the uid becomes higher than Integer allows
 		//cleanUpIndex();
 
 		//System.out.println("saving headerfile: "+ headerFile.toString() );
-		ColumbaLogger.log.info("saveing header-cache=" + headerFile);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("saving header-cache=" + headerFile);
+                }
 
 		FileOutputStream istream = new FileOutputStream(headerFile.getPath());
 		ObjectOutputStream p = new ObjectOutputStream(istream);
@@ -187,7 +194,9 @@ public class POP3HeaderCache {
 		//int count = getMessageFileCount();
 		int count = headerList.count();
 
-		ColumbaLogger.log.info("capacity=" + count);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("capacity=" + count);
+                }
 
 		p.writeInt(count);
 
@@ -325,5 +334,4 @@ public class POP3HeaderCache {
 			p.writeObject(o);
 		}
 	}
-
 }

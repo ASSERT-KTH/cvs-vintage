@@ -174,14 +174,12 @@ public class FetchNewMessagesCommand extends Command {
 		return totalSize;
 	}
 
-	public void downloadNewMessages(
-		Vector newUIDList,
-		Vector messageSizeList,
-		Vector newMessagesUIDList,
-		Worker worker)
-		throws Exception {
-		ColumbaLogger.log.info(
-			"need to fetch " + newMessagesUIDList.size() + " messages.");
+	public void downloadNewMessages(Vector newUIDList, Vector messageSizeList,
+		Vector newMessagesUIDList, Worker worker) throws Exception {
+                
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("need to fetch " + newMessagesUIDList.size() + " messages.");
+                }
 
 		int totalSize =
 			calculateTotalSize(newUIDList, messageSizeList, newMessagesUIDList);
@@ -193,7 +191,9 @@ public class FetchNewMessagesCommand extends Command {
 		for (int i = 0; i < newMessageCount; i++) {
 			Object serverUID = newMessagesUIDList.get(i);
 
-			ColumbaLogger.log.info("fetch message with UID=" + serverUID);
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.info("fetch message with UID=" + serverUID);
+                        }
 
 			log(
 				"Fetching " + (i + 1) + "/" + newMessageCount + " messages...",
@@ -201,15 +201,14 @@ public class FetchNewMessagesCommand extends Command {
 
 			//int index = ( (Integer) result.get(serverUID) ).intValue();
 			int index = newUIDList.indexOf(serverUID);
-			ColumbaLogger.log.info(
-				"vector index=" + index + " server index=" + (index + 1));
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.info("vector index=" + index + " server index=" + (index + 1));
+                        }
 
 			int size = Integer.parseInt((String) messageSizeList.get(index));
 			size = Math.round(size / 1024);
 
-			if (server
-				.getAccountItem()
-				.getPopItem()
+			if (server.getAccountItem().getPopItem()
 				.getBoolean("enable_limit")) {
 				// check if message isn't too big to download
 				int maxSize =
@@ -217,24 +216,24 @@ public class FetchNewMessagesCommand extends Command {
 
 				// if message-size is bigger skip download of this message
 				if (size > maxSize) {
-					ColumbaLogger.log.info(
-						"skipping download of message, too big");
+					if (MainInterface.DEBUG) {
+                                                ColumbaLogger.log.info("skipping download of message, too big");
+                                        }
 					continue;
 				}
 			}
 
-			downloadMessage(
-				index,
+			downloadMessage(index,
 				Integer.parseInt((String) messageSizeList.get(index)),
-				serverUID,
-				worker);
+				serverUID, worker);
 		}
 
 	}
 
 	public Vector synchronize(Vector newUIDList) throws Exception {
-		ColumbaLogger.log.info(
-			"synchronize local UID-list with remote UID-list");
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("synchronize local UID-list with remote UID-list");
+                }
 		// synchronize local UID-list with server 		
 		Vector newMessagesUIDList = server.synchronize(newUIDList);
 
@@ -247,8 +246,9 @@ public class FetchNewMessagesCommand extends Command {
 		log("Fetching message size list...", worker);
 		// fetch message-size list 		
 		Vector messageSizeList = server.getMessageSizeList(worker);
-		ColumbaLogger.log.info(
-			"fetched message-size-list capacity=" + messageSizeList.size());
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("fetched message-size-list capacity=" + messageSizeList.size());
+                }
 		return messageSizeList;
 
 	}
@@ -262,16 +262,18 @@ public class FetchNewMessagesCommand extends Command {
 		log("Fetch UID list...", worker);
 
 		Vector newUIDList = server.getUIDList(totalMessageCount, worker);
-		ColumbaLogger.log.info(
-			"fetched UID-list capacity=" + newUIDList.size());
-
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("fetched UID-list capacity=" + newUIDList.size());
+                }
 		return newUIDList;
 	}
 
 	public void logout(WorkerStatusController worker) throws Exception {
 		server.logout();
 
-		ColumbaLogger.log.info("logout");
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("logout");
+                }
 
 		log("Logout...", worker);
 
