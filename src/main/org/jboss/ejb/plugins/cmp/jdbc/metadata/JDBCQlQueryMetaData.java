@@ -11,14 +11,25 @@ import org.jboss.metadata.QueryMetaData;
 import org.w3c.dom.Element;
 
 /**
- * Imutable class which contains information about an EJB QL query.
+ * Immutable class which contains information about an EJB QL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
+   /**
+    * The method to which this query is bound.
+    */
    private final Method method;
+
+   /**
+    * The ejb-ql fro the query.
+    */
    private final String ejbQl;
+
+   /**
+    * Should the query return Local or Remote beans.
+    */
    private final boolean resultTypeMappingLocal;
 
    /**
@@ -29,29 +40,38 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
    /**
     * Constructs a JDBCQlQueryMetaData which is defined by the queryMetaData
     * and is invoked by the specified method.
-    * @param queryMetaData the metadata about this query which was loaded from the ejb-jar.xml file
+    * @param queryMetaData the metadata about this query which was loaded 
+    *    from the ejb-jar.xml file
     * @param method the method which invokes this query
     */
    public JDBCQlQueryMetaData(QueryMetaData queryMetaData, Method method) {
       this.method = method;
       this.readAhead = JDBCReadAheadMetaData.DEFAULT;
       ejbQl = queryMetaData.getEjbQl();
-      resultTypeMappingLocal = (queryMetaData.getResultTypeMapping() == QueryMetaData.LOCAL);
+      resultTypeMappingLocal = 
+            (queryMetaData.getResultTypeMapping() == QueryMetaData.LOCAL);
    }
 
    /**
     * Constructs a JDBCQlQueryMetaData with data from the jdbcQueryMetaData
     * and additional data from the xml element
     * @param queryMetaData the metadata about this query
-    * @param queryElement the ejb-ql element which contains additional information about this query
+    * @param queryElement the ejb-ql element which contains additional
+    *    information about this query
     */
-   public JDBCQlQueryMetaData(JDBCQlQueryMetaData jdbcQueryMetaData, Element queryElement, Method method, JDBCReadAheadMetaData readAhead) {
+   public JDBCQlQueryMetaData(
+         JDBCQlQueryMetaData jdbcQueryMetaData,
+         Element queryElement,
+         Method method,
+         JDBCReadAheadMetaData readAhead) {
+      
       this.method = method;
       this.readAhead = readAhead;
       ejbQl = jdbcQueryMetaData.getEjbQl();
       resultTypeMappingLocal = jdbcQueryMetaData.resultTypeMappingLocal;
    }
 
+   // javadoc in parent class
    public Method getMethod() {
       return method;
    }
@@ -64,6 +84,7 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
       return ejbQl;
    }
 
+   // javadoc in parent class
    public boolean isResultTypeMappingLocal() {
       return resultTypeMappingLocal;
    }
@@ -81,7 +102,8 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
     * true if the objects are the same. Two JDBCQlQueryMetaData are the same
     * if they are both invoked by the same method.
     * @param o the reference object with which to compare
-    * @return true if this object is the same as the object argument; false otherwise
+    * @return true if this object is the same as the object argument; 
+    *    false otherwise
     */
    public boolean equals(Object o) {
       if(o instanceof JDBCQlQueryMetaData) {
@@ -100,10 +122,11 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
    }
    /**
     * Returns a string describing this JDBCQlQueryMetaData. The exact details
-    * of the representation are unspecified and subject to change, but the following
-    * may be regarded as typical:
+    * of the representation are unspecified and subject to change, but the 
+    * following may be regarded as typical:
     * 
-    * "[JDBCQlQueryMetaData: method=public org.foo.User findByName(java.lang.String)]"
+    * "[JDBCQlQueryMetaData: method=public org.foo.User
+    *       findByName(java.lang.String)]"
     *
     * @return a string representation of the object
     */
