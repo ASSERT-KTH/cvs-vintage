@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.25 2003/07/08 05:20:38 mkl Exp $
+// $Id: FigPackage.java,v 1.26 2003/07/08 22:45:02 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.25 2003/07/08 05:20:38 mkl Exp $
+// $Id: FigPackage.java,v 1.26 2003/07/08 22:45:02 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -458,7 +458,6 @@ public class FigPackage extends FigNodeModelElement {
             return;
         MModelElement me = (MModelElement) getOwner();
         MNamespace m = null;
-        ProjectBrowser pb = ProjectBrowser.getInstance();
         try {
             // If moved into an Package
             if (encloser != null
