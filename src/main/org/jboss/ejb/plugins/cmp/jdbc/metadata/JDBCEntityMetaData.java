@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
  *
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public final class JDBCEntityMetaData
 {
@@ -415,13 +415,12 @@ public final class JDBCEntityMetaData
       String dataSourceNameString = MetaData.getOptionalChildContent(element, "datasource");
       if(dataSourceNameString != null)
       {
-         if(dataSourceNameString.charAt(0) == '@')
+         if(MetaData.isSystemProperty(dataSourceNameString))
          {
-            String propName = dataSourceNameString.substring(1);
-            dataSourceName = System.getProperty(propName);
+            dataSourceName = MetaData.resolveSystemProperty(dataSourceNameString);
             if(dataSourceName == null)
             {
-               throw new DeploymentException("Property is not set: " + propName);
+               throw new DeploymentException("Property is not set: " + dataSourceNameString);
             }
          }
          else
@@ -439,13 +438,12 @@ public final class JDBCEntityMetaData
       String datasourceMappingString = MetaData.getOptionalChildContent(element, "datasource-mapping");
       if(datasourceMappingString != null)
       {
-         if(datasourceMappingString.charAt(0) == '@')
+         if(MetaData.isSystemProperty(datasourceMappingString))
          {
-            String propName = datasourceMappingString.substring(1);
-            datasourceMappingString = System.getProperty(propName);
+            datasourceMappingString = MetaData.resolveSystemProperty(datasourceMappingString);
             if(datasourceMappingString == null)
             {
-               throw new DeploymentException("Property is not set: " + propName);
+               throw new DeploymentException("Property is not set: " + datasourceMappingString);
             }
          }
 
