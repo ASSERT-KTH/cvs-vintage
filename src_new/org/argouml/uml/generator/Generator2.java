@@ -1,4 +1,4 @@
-// $Id: Generator2.java,v 1.9 2005/02/02 21:18:10 mvw Exp $
+// $Id: Generator2.java,v 1.10 2005/02/08 20:44:19 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -278,7 +278,8 @@ public abstract class Generator2
      */
     public String generateExpression(Object expr) {
         if (Model.getFacade().isAExpression(expr))
-            return generateUninterpreted((String) Model.getFacade().getBody(expr));
+            return generateUninterpreted(
+                    (String) Model.getFacade().getBody(expr));
         else if (Model.getFacade().isAConstraint(expr))
             return generateExpression(Model.getFacade().getBody(expr));
         return "";
