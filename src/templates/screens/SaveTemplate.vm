@@ -4,7 +4,7 @@
 #set ($currentTemplate = $scarabR.getIssueTemplate())
 #set ($templateInfo = $scarabR.IssueTemplateInfo)
 #set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo))
-#set ($issueGroup = $intake.Issue.mapTo($currentTemplate ))
+#set ($issueGroup = $intake.Issue.mapTo($currentTemplate))
 
 #if ($issueType)
 
@@ -21,8 +21,8 @@
   #if (!$data.User.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
      <p class="warningmark"><strong>$l10n.TemplateWarning</strong></p>
   #end
-#macro (SaveTemplateBar $var)
-<div class="functnbar$var">
+#macro (saveTemplateBar $id)
+<div class="functnbar$id">
 #if ($currentTemplate.IssueId)
   <input type="submit" value="$l10n.UseTemplate" name="eventSubmit_doUsetemplate" />&#160;
   <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />&#160; 
@@ -41,7 +41,7 @@
   <input type="hidden" name="templateId" value="$templateId" />
 #end
 
-#SaveTemplateBar("")
+#saveTemplateBar('')
 
 #asterisk()
 
@@ -138,7 +138,7 @@
   </div>
 #end
 
-#SaveTemplateBar("2")
+#saveTemplateBar('2')
 
 $intake.declareGroups()
 #end
