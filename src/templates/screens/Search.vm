@@ -1,7 +1,7 @@
 #set ($module = $scarabR.CurrentModule)
 <div class="app" id="search">
 
-#set ($search = $scarabR.Search)
+#set ($search = $scarabR.NewSearch)
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($searchTextAttributes = $search.QuickSearchTextAttributeValues)
