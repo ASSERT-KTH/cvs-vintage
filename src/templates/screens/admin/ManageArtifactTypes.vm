@@ -1,4 +1,4 @@
-$page.setTitle("Manage artifact types")
+$page.setTitle("Manage issue types")
 
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 
@@ -16,12 +16,12 @@ $page.setTitle("Manage artifact types")
 <small>changes</small>
 </div>
 
-<h3>Artifact types</h3>
+<h3>Issue types</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>Select</th>
-<th>Artifact type name</th>
+<th>Issue type name</th>
 <th>(In)active</th>
 <th>Show in left hand nav*</th>
 <th>Sequence #</th>
@@ -51,7 +51,8 @@ $page.setTitle("Manage artifact types")
 <small>artifact type(s)</small>
 </div>
 
-<p>* Maximum of five Artifact types in left hand navigation (first four selected will appear).</p>
+<p>* Maximum of five Issue types in left hand navigation (first four
+selected will appear).</p>
 
 <div class="functnbar2">
 <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
