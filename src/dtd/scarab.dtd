@@ -1,4 +1,6 @@
-<!ELEMENT scarab (module+)>
+<!ELEMENT scarab (user*, module+)>
+
+<!ELEMENT user (firstname, lastname, email)>
 
 <!ELEMENT module (name, code, issue+)>
 <!ATTLIST module id CDATA #REQUIRED>
@@ -13,13 +15,22 @@
 
 <!ELEMENT attachment (name, type, path?, data, mimetype, created-date, modified-date, created-by, modified-by)>
 
-<!ELEMENT transaction (type, activity+)>
+<!ELEMENT modified-date (#PCDATA)>
+<!ATTLIST modified-date format CDATA #REQUIRED>
+
+<!ELEMENT created-date (#PCDATA)>
+<!ATTLIST created-date format CDATA #REQUIRED>
+
+<!ELEMENT transaction (type, committed-by, activity+)>
 <!ATTLIST transaction id CDATA #REQUIRED>
 
 <!ELEMENT activity (activity-attribute, description)>
 
 <!ELEMENT activity-attribute (name, value, old-value, type)>
 
+<!ELEMENT firstname (#PCDATA)>
+<!ELEMENT lastname (#PCDATA)>
+<!ELEMENT email (#PCDATA)>
 <!ELEMENT code (#PCDATA)>
 <!ELEMENT artifact-type (#PCDATA)>
 <!ELEMENT committed-by (#PCDATA)>
@@ -33,7 +44,5 @@
 <!ELEMENT data (#PCDATA)>
 <!ELEMENT mimetype (#PCDATA)>
 <!ELEMENT modified-by (#PCDATA)>
-<!ELEMENT modified-date (#PCDATA)>
 <!ELEMENT created-by (#PCDATA)>
-<!ELEMENT created-date (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
