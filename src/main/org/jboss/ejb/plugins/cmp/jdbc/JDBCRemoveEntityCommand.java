@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class JDBCRemoveEntityCommand {
    
@@ -129,7 +129,9 @@ public class JDBCRemoveEntityCommand {
 
             if(!c.isEmpty()) {
                oldRelations.put(cmrField, new ArrayList(c));
-               c.clear();
+               // c.clear() is not allowed if fk is part of pk
+               //c.clear();
+               cmrField.setInstanceValue(context, null);
             }
          } else {
             Object o = cmrField.getInstanceValue(context);
