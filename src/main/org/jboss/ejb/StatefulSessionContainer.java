@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.15 $
+ *   @version $Revision: 1.16 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -527,6 +527,9 @@ public class StatefulSessionContainer
          // Select instance to invoke (container or bean)
          if (m.getDeclaringClass().equals(StatefulSessionContainer.this.getClass()))
          {
+			 //wire the transaction on the context, this is how the instance remember the tx
+              if (mi.getEnterpriseContext().getTransaction() == null) mi.getEnterpriseContext().setTransaction(mi.getTransaction());
+                
             // Invoke and handle exceptions
             try
             {
