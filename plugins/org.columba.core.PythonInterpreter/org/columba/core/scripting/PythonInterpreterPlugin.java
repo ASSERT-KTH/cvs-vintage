@@ -233,7 +233,7 @@ public final class PythonInterpreterPlugin extends AbstractInterpreter{
 			Object javaObject = pyObject.__tojava__(c);
 			*/
 
-			System.out.println("constructor=" + className);
+			//System.out.println("constructor=" + className);
 
 			/*
 			PyObject pyObject = parser.eval(className+"()");
@@ -254,10 +254,10 @@ public final class PythonInterpreterPlugin extends AbstractInterpreter{
 
 				pyObject = pyObject.__call__(pyArgs);
 			}
-			System.out.println("pyObject=" + pyObject);
+			//System.out.println("pyObject=" + pyObject);
 
 			Object javaObject = pyObject.__tojava__(PluginInterface.class);
-			System.out.println("javaObject=" + javaObject);
+			//System.out.println("javaObject=" + javaObject);
 			//( (DefaultPlugin) javaObject).run("asdfljasf");
 
 			return javaObject;
