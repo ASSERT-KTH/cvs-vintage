@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.14 2002/08/10 20:05:32 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.15 2002/08/12 18:32:36 spestov Exp $
  */
 public class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -257,7 +257,6 @@ public class OptionsDialog extends EnhancedDialog
 		addOptionPane(new AppearanceOptionPane(), jEditGroup);
 		addOptionPane(new TextAreaOptionPane(), jEditGroup);
 		addOptionPane(new GutterOptionPane(), jEditGroup);
-		addOptionPane(new ColorOptionPane(), jEditGroup);
 		addOptionPane(new SyntaxHiliteOptionPane(), jEditGroup);
 		addOptionPane(new LoadSaveOptionPane(), jEditGroup);
 		addOptionPane(new EditingOptionPane(), jEditGroup);
