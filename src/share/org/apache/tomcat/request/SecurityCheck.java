@@ -135,7 +135,7 @@ public class SecurityCheck extends  BaseInterceptor {
 	    	new SimpleRequestSecurityProviderImpl(roles);
 	    ctx.setRequestSecurityProvider(rsp);
 	}
-	
+
 	if( req.getRemoteUser() != null) return 0; // already authenticated
 
 	String authMethod=ctx.getAuthMethod();
@@ -315,7 +315,14 @@ class MemoryRealm {
     public void addUser(String name, String pass, String groups ) {
 	if( debug > 0 )  ctx.log( "Add user " + name + " " + pass + " " + groups );
 	passwords.put( name, pass );
-	addRole( groups, name );
+	groups += ",";
+	while (true) {
+	    int comma = groups.indexOf(",");
+	    if (comma < 0)
+		break;
+	    addRole( groups.substring(0, comma).trim(), name);
+	    groups = groups.substring(comma + 1);
+	}
     }
 
     public void addRole( String role, String user ) {

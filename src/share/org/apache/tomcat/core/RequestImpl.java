@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.25 2000/03/31 18:22:34 craigmcc Exp $
- * $Revision: 1.25 $
- * $Date: 2000/03/31 18:22:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.26 2000/04/06 06:00:44 craigmcc Exp $
+ * $Revision: 1.26 $
+ * $Date: 2000/04/06 06:00:44 $
  *
  * ====================================================================
  *
@@ -285,20 +285,7 @@ public class RequestImpl  implements Request {
     }
 
     public String getRemoteUser() {
-	if( remoteUser!=null)
-	    return remoteUser;
-
-	// Using the Servlet 2.2 semantics ...
-	//  return request.getRemoteUser();
-	java.security.Principal p = getUserPrincipal();
-
-	if (p != null) {
-	    return p.getName();
-	}
-
-	return null;
-
-        //return remoteUser;
+	return remoteUser;
     }
 
     public boolean isSecure() {
