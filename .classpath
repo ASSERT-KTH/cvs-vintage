@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
     <classpathentry kind="src" path="src"/>
-    <classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
+    <classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
     <classpathentry kind="lib" path="externals/commons-cli.jar"/>
     <classpathentry kind="lib" path="externals/jacorb.jar"/>
     <classpathentry kind="lib" path="externals/jonathan.jar"/>
@@ -12,5 +12,8 @@
     <classpathentry kind="lib" path="externals/ow_util_log_file.jar"/>
     <classpathentry kind="lib" path="externals/ow_util_log_wrp_log4j.jar"/>
     <classpathentry kind="lib" path="config/ow_util_ant_tasks.jar"/>
+    <classpathentry kind="lib" path="externals/xercesxmlapi-2.1.0.jar"/>
+    <classpathentry kind="lib" path="externals/javagroups-all.jar"/>
+    <classpathentry kind="lib" path="externals/xercesimpl-2.1.0.jar"/>
     <classpathentry kind="output" path="eclipse-bin"/>
 </classpath>
