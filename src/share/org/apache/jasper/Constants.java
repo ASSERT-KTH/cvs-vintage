@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Constants.java,v 1.3 1999/10/15 00:07:42 akv Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/15 00:07:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Constants.java,v 1.4 1999/10/20 11:20:08 akv Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/20 11:20:08 $
  *
  * ====================================================================
  * 
@@ -94,7 +94,8 @@ public class Constants {
      * These classes/packages are automatically imported by the
      * generated code. 
      *
-     * Should java.io.* be in here?
+     * FIXME: Need to trim this to what is there in PR2 and verify
+     *        with all our generators -akv.
      */
     public static final String[] STANDARD_IMPORTS = { 
 	"javax.servlet.*", "javax.servlet.http.*", "javax.servlet.jsp.*", 
@@ -110,8 +111,7 @@ public class Constants {
      * Other servlet engines can choose to have this attribute if they 
      * want to have this JSP engine running on them. 
      */
-    public static final String SERVLET_CLASSPATH = "servlet.classpath";
-
+    public static final String SERVLET_CLASSPATH = "org.apache.tomcat.jsp_classpath";
 
     /**
      * Codes that indicate how verbose you want the JSP engine to be. 
@@ -155,7 +155,7 @@ public class Constants {
     public static final String 
         TAGLIB_DTD_PUBLIC_ID = "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN";
     public static final String
-        TAGLIB_DTD_RESOURCE = "/org/apache/jasper/resources/taglib.dtd";
+        TAGLIB_DTD_RESOURCE = "/org/apache/jasper/resources/web-jsptaglib_1_1.dtd";
 
     /**
      * Default URLs to download the pluging for Netscape and IE.
@@ -165,7 +165,6 @@ public class Constants {
 
     public static final String IE_PLUGIN_URL = 
         "http://java.sun.com/products/plugin/1.2.2/jinstall-1_2_2-win.cab#Version=1,2,2,0";
-
 
     /**
      * This is where all our error messages and such are stored. 
