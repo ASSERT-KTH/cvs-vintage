@@ -29,7 +29,7 @@ rem         its "classpath" internally.  To add your classes to those of
 rem         Tomcat, refer to the Tomcat Users Guide (tomcat_ug.html found
 rem         in the "doc" directory.
 rem
-rem $Id: tomcat.bat,v 1.43 2001/09/01 21:02:03 larryi Exp $
+rem $Id: tomcat.bat,v 1.44 2001/09/09 22:00:45 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -77,7 +77,8 @@ set TOMCAT_INSTALL=%TOMCAT_HOME%
 :gotTcInstall
 if exist "%TOMCAT_INSTALL%\lib\tomcat.jar" goto okTcInstall
 echo "%TOMCAT_INSTALL%\lib\tomcat.jar" not found.
-echo Unable to locate "lib\tomcat.jar", check the value of TOMCAT_INSTALL.
+echo Unable to locate "lib\tomcat.jar", check the value of TOMCAT_HOME and/or
+echo     TOMCAT_INSTALL.
 goto cleanup
 :okTcInstall
 
