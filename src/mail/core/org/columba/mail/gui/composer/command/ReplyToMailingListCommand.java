@@ -43,6 +43,8 @@ import org.columba.ristretto.message.io.CharSequenceSource;
  */
 public class ReplyToMailingListCommand extends FolderCommand {
 
+	private static final String[] neededHeaders = { "Subject", "From", "To", "In-Reply-To", "Message-ID", "References", "X-Beenthere" };
+	
 	ComposerController controller;
 
 	/**
@@ -72,7 +74,11 @@ public class ReplyToMailingListCommand extends FolderCommand {
 		ColumbaMessage message = new ColumbaMessage();
 
 		ColumbaHeader header =
-			(ColumbaHeader) folder.getMessageHeader(uids[0]);
+//			(ColumbaHeader) folder.getMessageHeader(uids[0]);
+		new ColumbaHeader( folder.getHeaderFields(uids[0], neededHeaders));
+		
+		
+		
 		message.setHeader(header);
 		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 		message.setMimePartTree(mimePartTree);

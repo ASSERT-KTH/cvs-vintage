@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import javax.net.ssl.SSLException;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.StatusObservable;
@@ -57,6 +56,7 @@ import org.columba.ristretto.imap.protocol.DisconnectedException;
 import org.columba.ristretto.imap.protocol.IMAPException;
 import org.columba.ristretto.imap.protocol.IMAPProtocol;
 import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimePart;
@@ -1039,6 +1039,47 @@ public class IMAPStore {
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			getMimePart(uid, address, path);
+		}
+		return null;
+	}
+
+	/**
+	 * Get {@link MimePart}.
+	 * 
+	 * @param uid			message UID
+	 * @param address		address of MimePart in MimeTree
+	 * @param path			mailbox name
+	 * @return				mimepart
+	 * @throws Exception
+	 */
+	public Header getHeaders(Object uid, String[] keys, String path)
+		throws Exception {
+
+		ensureLoginState();
+		ensureSelectedState(path);
+
+		// create string representation
+		StringBuffer headerFields = new StringBuffer();
+		String name;
+		for (int j = 0; j < keys.length -1; j++) {
+			name = (String) keys[j];
+			headerFields.append(name);
+			headerFields.append(" ");
+		}
+		headerFields.append(keys[keys.length-1]);
+
+		try {
+			IMAPResponse[] responses =
+				getProtocol().fetchHeaderList( uid.toString() , headerFields.toString());
+
+			IMAPHeader header = IMAPHeaderParser.parse(responses[0]);
+
+			return header.getHeader();
+		} catch (BadCommandException ex) {
+		} catch (CommandFailedException ex) {
+		} catch (DisconnectedException ex) {
+			state = STATE_NONAUTHENTICATE;
+			return getHeaders(uid, keys, path);
 		}
 		return null;
 	}

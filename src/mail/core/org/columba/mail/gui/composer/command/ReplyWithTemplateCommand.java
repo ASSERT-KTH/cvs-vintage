@@ -91,6 +91,8 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 		ColumbaMessage message = new ColumbaMessage();
 
 		ColumbaHeader header = (ColumbaHeader) folder.getMessageHeader(uids[0]);
+		// TODO: Get only the part of the header that is needed. See ReplyToMailinglist.
+
 		message.setHeader(header);
 		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 		message.setMimePartTree(mimePartTree);

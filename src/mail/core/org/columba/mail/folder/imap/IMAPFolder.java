@@ -793,7 +793,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object, java.lang.String[])
 	 */
 	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
-		return null;
+		return getStore().getHeaders(uid, keys, getImapPath() );
 	}
 
 	/* (non-Javadoc)
