@@ -13,11 +13,11 @@ import java.rmi.server.*;
 import java.util.*;
 import javax.management.*;
 
-/**
- *
- *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.9 $
+/** The legacy JBoss logging framework base class.
+ * @deprecated, As of JBoss 2.3, replaced by the org.apache.log4j framework
+ * @author Rickard Öberg (rickard.oberg@telkel.com)
+ * @author Scott_Stark@displayscape.com
+ * @version $Revision: 1.10 $
  */
 public abstract class Log
 {

@@ -14,10 +14,10 @@ import java.util.*;
 import javax.management.*;
 
 /**
- *      
- *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ * @deprecated, As of JBoss 2.3, replaced by the org.apache.log4j framework
+ * @author Rickard Öberg (rickard.oberg@telkel.com)
+ * @author Scott_Stark@displayscape.com
+ * @version $Revision: 1.8 $
  */
 public class Logger
    extends NotificationBroadcasterSupport
