@@ -80,7 +80,7 @@ public class SaveMessageCommand extends FolderCommand {
 
         InputStream sourceStream = message.getSourceStream();
         folder.addMessage(sourceStream,
-            message.getHeader().getAttributes());
+            message.getHeader().getAttributes(), message.getFlags());
         sourceStream.close();
     }
 }

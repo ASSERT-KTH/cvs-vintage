@@ -687,7 +687,7 @@ public class VirtualFolder extends MessageFolder {
     /* (non-Javadoc)
  * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
  */
-    public Object addMessage(InputStream in, Attributes attributes)
+    public Object addMessage(InputStream in, Attributes attributes, Flags flags)
         throws Exception {
         return null;
     }

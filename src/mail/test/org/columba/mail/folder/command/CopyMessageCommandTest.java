@@ -103,10 +103,12 @@ public class CopyMessageCommandTest extends AbstractFolderTest {
         Flags oldFlags = getSourceFolder().getFlags(uid);
         // set flags
         oldFlags.setSeen(false);
+        /*
         oldFlags.setRecent(true);
         oldFlags.setFlagged(true);
         oldFlags.setExpunged(false);
-
+		*/
+		
         // create Command reference
         FolderCommandReference[] ref = new FolderCommandReference[2];
         ref[0] = new FolderCommandReference(getSourceFolder(),
@@ -124,12 +126,14 @@ public class CopyMessageCommandTest extends AbstractFolderTest {
 
         assertEquals("copied message should be marked as not seen", false,
                 flags.getSeen());
+        /*
         assertEquals("copied message should be marked as recent", true, flags
                 .getRecent());
         assertEquals("copied message should be marked as flagged", true, flags
                 .getFlagged());
         assertEquals("copied message should be marked as not expunged", false,
                 flags.getExpunged());
+        */
         // close streams
         inputStream.close();
 

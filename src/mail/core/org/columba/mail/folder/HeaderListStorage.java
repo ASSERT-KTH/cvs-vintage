@@ -82,16 +82,25 @@ public interface HeaderListStorage extends HeaderStorage{
      *         Exception
      */
     public Flags getFlags(Object uid) throws Exception;
-    
-    
+   
+    /**
+     * Sets the Flags of the selected message.
+     * 
+     * @param uid			selected message uid
+     * @param flags			new flags
+     * @throws Exception
+     */
+    public void setFlags(Object uid, Flags flags) throws Exception;
+     
     /**
      * @param uid
      * @param header
      * @param attributes
+     * @param flags
      * @return
      * @throws Exception
      */
-    public Object addMessage(Object uid, Header header, Attributes attributes)
+    public Object addMessage(Object uid, Header header, Attributes attributes, Flags flags)
     throws Exception;
     
     /**

@@ -102,13 +102,6 @@ public class TempFolder extends MessageFolder {
         return headerList;
     }
 
-    /**
-     * @see org.columba.modules.mail.folder.Folder#markMessage(Object[], int,
-     *      WorkerStatusController)
-     */
-    public void markMessage(Object[] uids, int variant)
-        throws Exception {
-    }
 
     /**
      * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
@@ -211,7 +204,7 @@ public class TempFolder extends MessageFolder {
         }
     }
 
-    public Object addMessage(InputStream in, Attributes attributes)
+    public Object addMessage(InputStream in, Attributes attributes, Flags flags)
         throws Exception {
 
         Message message = MessageParser.parse(
@@ -225,6 +218,10 @@ public class TempFolder extends MessageFolder {
 
         if (attributes != null) {
             h.setAttributes((Attributes) attributes.clone());
+        }
+        
+        if ( flags != null ) {
+            h.setFlags((Flags) flags.clone());
         }
 
         h.set("columba.uid", newUid);
@@ -343,7 +340,7 @@ public class TempFolder extends MessageFolder {
      * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
      */
     public Object addMessage(InputStream in) throws Exception {
-        return addMessage(in, null);
+        return addMessage(in, null, null);
     }
     /**
      * @see org.columba.mail.folder.Folder#getHeaderListStorage()

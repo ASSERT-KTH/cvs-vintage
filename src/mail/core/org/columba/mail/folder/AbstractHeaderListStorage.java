@@ -133,7 +133,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
      * @see org.columba.mail.folder.HeaderListStorage#addMessage(org.columba.ristretto.message.io.Source,
      *      org.columba.ristretto.message.Attributes)
      */
-    public Object addMessage(Object newUid, Header header, Attributes attributes)
+    public Object addMessage(Object newUid, Header header, Attributes attributes, Flags flags)
             throws Exception {
 
         ColumbaHeader h = new ColumbaHeader(header);
@@ -147,7 +147,8 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
          */
 
         h.setAttributes((Attributes) attributes.clone());
-
+        h.setFlags((Flags) flags.clone());
+        
         // remove all unnecessary headerfields which doesn't
         // need to be cached
         // -> saves much memory
@@ -176,6 +177,16 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * @see org.columba.mail.folder.HeaderListStorage#setFlags(java.lang.Object, org.columba.ristretto.message.Flags)
+     */
+    public void setFlags(Object uid, Flags flags) throws Exception {
+        if (getHeaderList().containsKey(uid)) {
+            ColumbaHeader h = getHeaderList().get(uid);
+            h.setFlags(flags);
+        } 
     }
 
     /**
@@ -260,4 +271,5 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 
     }
 
+   
 }

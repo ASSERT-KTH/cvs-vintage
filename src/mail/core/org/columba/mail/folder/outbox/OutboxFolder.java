@@ -26,6 +26,7 @@ import org.columba.mail.folder.HeaderListStorage;
 import org.columba.mail.folder.mh.CachedMHFolder;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.ristretto.message.Attributes;
+import org.columba.ristretto.message.Flags;
 
 /**
  * Additionally to {@CachedMHFolder}is capable of saving
@@ -96,9 +97,9 @@ public class OutboxFolder extends CachedMHFolder {
      * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream,
      *      org.columba.ristretto.message.Attributes)
      */
-    public Object addMessage(InputStream in, Attributes attributes)
+    public Object addMessage(InputStream in, Attributes attributes, Flags flags)
             throws Exception {
-        Object uid = super.addMessage(in, attributes);
+        Object uid = super.addMessage(in, attributes, flags);
         setAttribute(uid, "columba.recipients", attributes
                 .get("columba.recipients"));
 

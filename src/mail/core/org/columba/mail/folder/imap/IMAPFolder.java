@@ -591,7 +591,7 @@ public class IMAPFolder extends RemoteFolder {
      *
      * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
      */
-    public Object addMessage(InputStream in, Attributes attributes)
+    public Object addMessage(InputStream in, Attributes attributes, Flags flags)
             throws Exception {
         StringBuffer stringSource = StreamUtils.readInString(in);
 
@@ -716,7 +716,7 @@ public class IMAPFolder extends RemoteFolder {
      *      org.columba.ristretto.message.Attributes)
      */
     public Object addMessage(InputStream in) throws Exception {
-        return addMessage(in, null);
+        return addMessage(in, null, null);
     }
 
     /**

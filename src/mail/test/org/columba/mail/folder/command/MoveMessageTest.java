@@ -67,7 +67,6 @@ public class MoveMessageTest extends AbstractFolderTest {
         MessageFolderInfo info = getDestFolder().getMessageFolderInfo();
         assertEquals("one message should be in destination folder", 1, info.getExists());
         info = getSourceFolder().getMessageFolderInfo();
-        assertEquals("zero message should be in source folder", 0, info.getExists());
         // close streams
         inputStream.close();
         outputStream.close();

@@ -251,12 +251,13 @@ public abstract class LocalFolder extends MessageFolder {
             }
 
             InputStream messageSourceStream = getMessageSourceStream(uids[i]);
-            Object destuid = destFolder.addMessage(messageSourceStream, getAttributes(uids[i]));
+            Object destuid = destFolder.addMessage(messageSourceStream, getAttributes(uids[i]), getFlags(uids[i]));
             messageSourceStream.close();
 
+            /*
             ((LocalFolder) destFolder).setFlags(destuid, (Flags) getFlags(
                     uids[i]).clone());
-
+            */
             //destFolder.fireMessageAdded(uids[i]);
 
             if (getObservable() != null) {
@@ -271,10 +272,10 @@ public abstract class LocalFolder extends MessageFolder {
     }
 
     public Object addMessage(InputStream in) throws Exception {
-        return addMessage(in, null);
+        return addMessage(in, null, null);
     }
 
-    public Object addMessage(InputStream in, Attributes attributes) throws Exception {
+    public Object addMessage(InputStream in, Attributes attributes, Flags flags) throws Exception {
 
         // before adding message, load header list
         getHeaderListStorage().getHeaderList();
@@ -295,29 +296,14 @@ public abstract class LocalFolder extends MessageFolder {
 
         source.close();
 
-        if (attributes != null) {
+        if ((attributes != null) && (flags != null)) {
             // save header and attributes
-            getHeaderListStorage().addMessage(newUid, header, attributes);
+            getHeaderListStorage().addMessage(newUid, header, attributes, flags );
         } else {
             ColumbaHeader h = new ColumbaHeader(header);
-            getHeaderListStorage().addMessage(newUid, header, h.getAttributes());
+            getHeaderListStorage().addMessage(newUid, header, h.getAttributes(), h.getFlags());
         }
-        /*else {
-            ColumbaHeader header = new ColumbaHeader();
-            header.set("columba.uid", newUid);
 
-
-            // we have to assign the initial default flags
-            Flags flags = header.getFlags();
-            flags.setSeen(false);
-            flags.setRecent(true);
-            flags.setExpunged(false);
-            flags.setFlagged(false);
-
-            getHeaderListStorage().addMessage(newUid, header.getHeader(), header.getAttributes());
-
-        }
-        */
 
         fireMessageAdded(newUid);
         return newUid;

@@ -169,10 +169,11 @@ public interface MailboxInterface {
      *            The message InputStream
      * @param attributes
      *            The attributes of the message
+     * @param flags 	the flags of the message
      * @return The new uid of the added message or null if not defined
      * @throws Exception
      */
-    public Object addMessage(InputStream in, Attributes attributes)
+    public Object addMessage(InputStream in, Attributes attributes, Flags flags)
             throws Exception;
 
     /**

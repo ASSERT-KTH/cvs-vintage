@@ -47,9 +47,9 @@ public class MarkMessageTest extends AbstractFolderTest {
     public void testMarkAsReadMessage() throws Exception {
 
         // create Command reference
-        FolderCommandReference[] ref = new FolderCommandReference[2];
+        FolderCommandReference[] ref = new FolderCommandReference[1];
         ref[0] = new FolderCommandReference(getSourceFolder(),
-                new Object[] { uid});
+                new Object[] {uid});
         ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
         // create copy command
