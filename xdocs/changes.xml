@@ -7,6 +7,22 @@
 
   <body>
     <release version="b19" date="in cvs">
+      <action dev="hdabbous" type="fix">
+        Registration Email is generated with the correct
+        characterset from the configuration.
+      </action>
+      <action dev="hdabbous" type="add">
+        The default characterset has been changed from
+        dynamic to UTF-8. This is necessary, when the
+        ResourceBundle resolver mixes resources from
+        different Locales (e.g. korean and english).
+      </action>
+      <action dev="hdabbous" type="add">
+        Scarab now searches the ResourceBundles
+        following all browser specified Locales in
+        user prefered order. Ensure, that Scarab resolves
+        unresolved references from the english ResourceBundle.
+      </action>
       <action dev="pledbrook" type="fix">
         SCB1131 - No longer get an error on the "possible duplicates found"
         screen on systems lacking the sample data.
