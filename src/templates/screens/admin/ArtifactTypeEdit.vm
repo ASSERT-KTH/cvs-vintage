@@ -83,9 +83,9 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap">Select</th>
-<th>attribute group name</th>
-<th>active/inactive</th>
-<th>sequence #</th>
+<th>Attribute group name</th>
+<th>Active/inactive</th>
+<th>Sequence #</th>
 </tr>
 
 #set ($issueDedupeSequence = $issueType.getDedupeSequence($module))
@@ -136,11 +136,11 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">select</th>
+<th nowrap="nowrap">Select</th>
 <th>User Attribute name</th>
 <th>Per project name</th>
-<th>active/inactive</th>
-<th>sequence #</th>
+<th>Active/inactive</th>
+<th>Sequence #</th>
 </tr>
 
 #foreach ($userAttr in $userAttrs)
