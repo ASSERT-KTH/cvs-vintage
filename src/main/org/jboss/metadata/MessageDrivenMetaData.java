@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
 ' *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
 
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class MessageDrivenMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -107,7 +107,7 @@ public class MessageDrivenMetaData extends BeanMetaData {
 		if (transactionType.equals("Bean")) {
 			containerManagedTx = false;
 			String ack = getElementContent(getUniqueChild(element, "acknowledge-mode"));
-			if (ack.equals("AUTO_ACKNOWLEDGE"))
+			if ( ack.equals("Auto-acknowledge") || ack.equals("AUTO_ACKNOWLEDGE"))
 			    acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
 			else
 			    acknowledgeMode = DUPS_OK_ACKNOWLEDGE_MODE;
