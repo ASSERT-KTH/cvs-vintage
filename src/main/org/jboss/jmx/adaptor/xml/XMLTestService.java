@@ -6,7 +6,7 @@
 */
 package org.jboss.jmx.adaptor.xml;
 
-import java.io.StringBufferInputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Iterator;
 
 import javax.management.MBeanServer;
@@ -24,7 +24,7 @@ import org.w3c.dom.Document;
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 * @created June 22, 2001
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 */
 public class XMLTestService
   extends ServiceMBeanSupport
@@ -74,7 +74,7 @@ public class XMLTestService
       System.out.println( "Got object name: " + lName );
       // Create Test XML Document
       Document lTest = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
-        new StringBufferInputStream(
+        new ByteArrayInputStream(new String(
           "<jmx>" +
           "<invoke operation=\"stop\"><object-name name=\":service=Scheduler\"/></invoke>" +
           "<create-mbean code=\"org.jboss.util.Scheduler\">" +
@@ -94,7 +94,7 @@ public class XMLTestService
             "<attribute name=\"PeriodTime\">5000</attribute>" +
           "</set-attribute>" +
           "</jmx>"
-        )
+          ).getBytes())
       );
       System.out.println( "Call invokeXML with: " + lTest );
       getServer().invoke(
