@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.107 2002/09/04 22:05:37 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.108 2002/09/11 21:49:03 elicia Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -279,7 +279,7 @@
     <!--
         Module.
     -->
-    <column name="MODULE_ID" required="true" type="INTEGER"></column>
+    <column name="MODULE_ID" required="false" type="INTEGER"></column>
     <!--
         Issue type.
     -->
@@ -564,6 +564,11 @@
         Corresponds to. If is not, parent id is 0.
     -->
     <column name="PARENT_ID" required="true" type="INTEGER"></column>
+    <!--
+        Deduping on/off for this issuetype.
+    -->
+    <column name="DEDUPE" required="false" type="BOOLEANINT" 
+        default="1" size="1"/>
     <column name="DELETED" required="false" type="BOOLEANINT" 
         default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
@@ -853,6 +858,8 @@
     -->
     <column name="DELETED" required="false" type="BOOLEANINT" 
         default="0" size="1"/>
+    <column name="LOCKED" required="false" type="BOOLEANINT" 
+        default="0" size="1"/>
     <column name="CLASS_KEY" required="false" type="INTEGER" inheritance="single">
       <inheritance key="1" class="ScarabModuleContainer" extends="org.tigris.scarab.om.ScarabModule"/>
     </column>
@@ -904,9 +911,6 @@
     -->
     <column name="PREFERRED_ORDER" javaName="Order" required="true" default="0" type="INTEGER"/>
     <!--
-        Flag, which marks this attribute as being useful for deduping.
-    -->
-    <!--
         Flag, which marks this attribute as being eligible for quick search.
     -->
     <column name="QUICK_SEARCH" required="true" type="BOOLEANINT" 
@@ -924,6 +928,63 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
+        <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
+    </foreign-key>
+
+    <index name="IX_REQUIRED">
+        <index-column name="REQUIRED"/>
+    </index>
+    <index name="IX_QUICKSEARCH">
+        <index-column name="QUICK_SEARCH"/>
+    </index>
+</table>
+
+<!--
+    Attributes that are mapped to a global issue type.
+-->
+<table name="SCARAB_R_ISSUETYPE_ATTRIBUTE" idMethod="none" javaName="RIssueTypeAttribute">
+    <!--
+        Attribute.
+    -->
+    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Issue type.
+    -->
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Flag, which marks that module attribute is not used.
+    -->
+    <column name="ACTIVE" required="true" type="BOOLEANINT" 
+        default="1" size="1"></column>
+    <!--
+        Flag, which marks that issues entered for this module must have
+        this attribute set.
+    -->
+    <column name="REQUIRED" required="true" type="BOOLEANINT" 
+        default="0" size="1"></column>
+    <!--
+        Column order.
+    -->
+    <column name="PREFERRED_ORDER" javaName="Order" required="true" default="0" type="INTEGER"/>
+    <!--
+        Flag, which marks this attribute as being eligible for quick search.
+    -->
+    <column name="QUICK_SEARCH" required="true" type="BOOLEANINT" 
+        default="0" size="1"/>
+    <!--
+        Flag, which marks that this attribute should be used in the email
+        subject line, when an issue is created. May be used in other
+        contexts as well
+    -->
+    <column name="DEFAULT_TEXT_FLAG" required="true" type="BOOLEANINT" 
+        default="0" size="1" />
+    <column name="LOCKED" required="false" type="BOOLEANINT" 
+        default="0" size="1"/>
+
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE">
+        <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
@@ -976,6 +1037,49 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
+        <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
+    </foreign-key>
+</table>
+
+<!--
+    Attribute options that are mapped to a global issue type.
+-->
+<table name="SCARAB_R_ISSUETYPE_OPTION" idMethod="none" javaName="RIssueTypeOption">
+    <!--
+        Issue Type.
+    -->
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Option.
+    -->
+    <column name="OPTION_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Value that represents the option in the UI.
+    -->
+    <column name="DISPLAY_VALUE" required="false" type="VARCHAR" size="255"/>
+    <!--
+        Flag, which marks that option has been deleted within the module.
+    -->
+    <column name="ACTIVE" required="true" type="BOOLEANINT" 
+        default="1" size="1"></column>
+    <column name="LOCKED" required="false" type="BOOLEANINT" 
+        default="0" size="1"/>
+    <!--
+        Allows the template engineer and module owner some means to 
+        order option listings.
+    -->
+    <column name="PREFERRED_ORDER" javaName="Order" required="false" 
+            default="-1" type="INTEGER"/>
+    <column name="WEIGHT" javaName="Weight" required="false" 
+            default="-1" type="INTEGER"/>
+
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
+        <reference local="OPTION_ID" foreign="OPTION_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
+        <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
 </table>
 
