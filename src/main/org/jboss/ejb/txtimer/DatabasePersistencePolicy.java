@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: DatabasePersistencePolicy.java,v 1.9 2004/12/12 10:01:35 starksm Exp $
+// $Id: DatabasePersistencePolicy.java,v 1.10 2004/12/20 21:21:08 starksm Exp $
 
 import org.jboss.ejb.ContainerMBean;
 import org.jboss.logging.Logger;
@@ -37,12 +37,14 @@ import java.util.List;
  * database.
  *
  * @author Thomas.Diesler@jboss.org
+ * @author Scott.Stark@jboss.org
  * @jmx.mbean name="jboss.ejb:service=EJBTimerService,persistencePolicy=database"
  * extends="org.jboss.system.Service, org.jboss.ejb.txtimer.PersistencePolicy"
  * @since 09-Sep-2004
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
-public class DatabasePersistencePolicy extends ServiceMBeanSupport implements NotificationListener, DatabasePersistencePolicyMBean
+public class DatabasePersistencePolicy extends ServiceMBeanSupport
+   implements NotificationListener, DatabasePersistencePolicyMBean
 {
    // logging support
    private static Logger log = Logger.getLogger(DatabasePersistencePolicy.class);
@@ -225,6 +227,23 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       {
          log.warn("Unable to clear timers", e);
       }
+   }
+
+   /** Re-read the current persistent timers list, clear the db of timers,
+    * and restore the timers.
+    * 
+    * @jmx.managed-operation 
+    */ 
+   public void resetAndRestoreTimers() throws SQLException
+   {
+      timersToRestore = dbpPlugin.selectTimers();
+      log.debug("Found " + timersToRestore.size() + " timer(s)");
+      if (timersToRestore.size() > 0)
+      {
+         // delete all timers
+         clearTimers();
+      }
+      restoreTimers();
    }
 
    // MBean attributes *************************************************************************************************\
