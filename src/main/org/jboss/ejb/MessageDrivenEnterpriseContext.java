@@ -7,34 +7,34 @@
 
 package org.jboss.ejb;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-
-import java.security.Principal;
-import java.security.Identity;
-
-import java.rmi.RemoteException;
-import java.util.Properties;
-import java.util.Date;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.io.Serializable;
-
-import javax.ejb.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.rmi.RemoteException;
+import java.security.Principal;
+import java.util.Collection;
+import java.util.Date;
+import javax.ejb.EJBContext;
+import javax.ejb.EJBException;
+import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalHome;
+import javax.ejb.MessageDrivenBean;
+import javax.ejb.MessageDrivenContext;
+import javax.ejb.Timer;
+import javax.ejb.TimerService;
 import javax.transaction.UserTransaction;
 
-import org.jboss.metadata.MetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
+import org.jboss.metadata.MetaData;
 
 /**
  * Context for message driven beans.
  * 
- * @version <tt>$Revision: 1.23 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version <tt>$Revision: 1.24 $</tt>
  */
 public class MessageDrivenEnterpriseContext
    extends EnterpriseContext
@@ -63,6 +63,7 @@ public class MessageDrivenEnterpriseContext
 
       try
       {
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_CREATE);
          Method ejbCreate = instance.getClass().getMethod("ejbCreate", new Class[0]);
          ejbCreate.invoke(instance, new Object[0]);
       }
