@@ -55,7 +55,8 @@
   <!-- set by default if "ant" command is used -->
   <property name="ant.home" value="${install.dir}/jakarta-ant"/>
   <property name="jsse.home" value="${install.dir}/jsse1.0.2"/>
-  <property name="jaxp.home" value="${install.dir}/jaxp1.0.1"/>
+  <property name="jaxp.home" location="bin" />
+  <property name="crimson.home" value="${install.dir}/jaxp-1.1"/>
   <property name="ant.bin" value="${ant.home}/bin"/>
   <property name="ant.lib" value="${ant.home}/lib"/>
   <property name="jsse.lib" value="${jsse.home}/lib"/>
@@ -160,6 +161,7 @@
     <mkdir dir="${tomcat.build}/bin"/>
     <mkdir dir="${tomcat.build}/doc"/>
     <mkdir dir="${tomcat.build}/webapps"/>
+    <mkdir dir="${tomcat.build}/internal"/>
     <mkdir dir="${tomcat.build}/native"/>
 
     <copy todir="${tomcat.build}/bin">
@@ -512,12 +514,7 @@
     </jar>
   </target>
 
-  <target name="jasper34" if="jakarta-tomcat-jasper-present">
-    <ant antfile="${jakarta-tomcat-jasper}/jasper34/build.xml"
-         target="install"/>
-  </target>
-
-  <target name="tomcat-jars" depends="prepare,connector_util,tomcat_util,tomcat.jar,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,connector,facade22,tomcat-startup,jasper34">
+  <target name="tomcat-jars" depends="prepare,connector_util,tomcat_util,tomcat.jar,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,connector,facade22,tomcat-startup">
   </target>
 
   <target name="tomcat-jars-new" depends="tomcat-jars">
