@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.30 2002/08/11 06:52:16 linus Exp $
+// $Id: Modeller.java,v 1.31 2002/08/15 21:19:40 linus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -1264,5 +1264,12 @@ public class Modeller
       }
     }
   }
+
+    public void addCall(String method, String obj) {
+	if (obj.equals(""))
+	    System.out.println("Add call to method " + method);
+	else
+	    System.out.println("Add call to method " + method + " in " + obj);
+    }
 }
 
