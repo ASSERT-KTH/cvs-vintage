@@ -1,4 +1,4 @@
-// $Id: GoClassToSummary.java,v 1.8 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoClassToSummary.java,v 1.9 2004/06/22 13:14:53 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.model.ModelFacade;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.8 $
+ * $Revision: 1.9 $
  *
  * @author  alexb, $Author: d00mst $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
@@ -78,6 +78,13 @@ public class GoClassToSummary extends AbstractPerspectiveRule{
         if (ModelFacade.isAClass(parent)) {
 	    Set set = new HashSet();
 	    set.add(parent);
+	    set.addAll(ModelFacade.getAttributes(parent));
+	    set.addAll(ModelFacade.getOperations(parent));
+	    set.addAll(ModelFacade.getAssociationEnds(parent));
+	    set.addAll(ModelFacade.getSupplierDependencies(parent));
+	    set.addAll(ModelFacade.getClientDependencies(parent));
+	    set.addAll(ModelFacade.getGeneralizations(parent));
+	    set.addAll(ModelFacade.getSpecializations(parent));
 	    return set;
 	}
 
