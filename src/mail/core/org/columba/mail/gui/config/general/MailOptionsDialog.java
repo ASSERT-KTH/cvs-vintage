@@ -42,8 +42,6 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.config.Config;
-import org.columba.core.config.GuiItem;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
@@ -71,8 +69,6 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 	JButton quotedColorButton;
 
 	JCheckBox emptyTrashCheckBox;
-
-	JComboBox toolbarComboBox;
 
 	JLabel spellLabel;
 	JButton spellButton;
@@ -162,31 +158,6 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			else
 				preferHtmlCheckBox.setSelected(false);
 
-			GuiItem item = Config.getOptionsConfig().getGuiItem();
-			boolean withIcon = false;
-			if (item.getBoolean("toolbar", "enable_icon"))
-				withIcon = true;
-			boolean enableText = false;
-			if (item.getBoolean("toolbar", "enable_text"))
-				enableText = true;
-			boolean alignment = false;
-			if (item.getBoolean("toolbar", "text_position"))
-				alignment = true;
-
-			int state = -1;
-			if (withIcon && !enableText)
-				state = 0;
-			else if (!withIcon && enableText)
-				state = 1;
-			else if (withIcon && enableText) {
-				if (alignment)
-					state = 2;
-				else
-					state = 3;
-			}
-
-			toolbarComboBox.setSelectedIndex(state);
-
 			XmlElement composerOptions =
 				MailConfig.getComposerOptionsConfig().getRoot().getElement(
 					"/options");
@@ -205,9 +176,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			if (forward == null) {
 				forward = composerOptions.addSubElement("forward");
 			}
-			
+
 			String forwardStyle = forward.getAttribute("style", "attachment");
-			if ( forwardStyle.equals("attachment"))
+			if (forwardStyle.equals("attachment"))
 				forwardComboBox.setSelectedIndex(0);
 			else
 				forwardComboBox.setSelectedIndex(1);
@@ -270,33 +241,6 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			else
 				html.addAttribute("prefer", Boolean.FALSE.toString());
 
-			GuiItem item = Config.getOptionsConfig().getGuiItem();
-
-			int state = toolbarComboBox.getSelectedIndex();
-
-			if (state == 0) {
-				item.set("toolbar", "enable_text", Boolean.FALSE.toString());
-				item.set("toolbar", "enable_icon", Boolean.TRUE.toString());
-			} else if (state == 1) {
-				item.set("toolbar", "enable_text", Boolean.TRUE.toString());
-				item.set("toolbar", "enable_icon", Boolean.FALSE.toString());
-			} else if (state >= 2) {
-				item.set("toolbar", "enable_text", Boolean.TRUE.toString());
-				item.set("toolbar", "enable_icon", Boolean.TRUE.toString());
-
-				if (state == 2)
-					item.set(
-						"toolbar",
-						"text_position",
-						Boolean.TRUE.toString());
-				else
-					item.set(
-						"toolbar",
-						"text_position",
-						Boolean.FALSE.toString());
-
-			}
-
 			XmlElement composerOptions =
 				MailConfig.getComposerOptionsConfig().getRoot().getElement(
 					"/options");
@@ -311,17 +255,16 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			// @see org.columba.mail.gui.composer.SubjectController
 			subject.notifyObservers();
 
-
 			XmlElement forward = composerOptions.getElement("forward");
-			if ( forwardComboBox.getSelectedIndex() == 0)
+			if (forwardComboBox.getSelectedIndex() == 0)
 				forward.addAttribute("style", "attachment");
 			else
 				forward.addAttribute("style", "inline");
-			
+
 			// notify listeners
 			// @see org.columba.mail.gui.table.action.ForwardAction	
 			forward.notifyObservers();
-			
+
 			// composer
 			MailConfig.getComposerOptionsConfig().getSpellcheckItem().set(
 				"executable",
@@ -362,31 +305,6 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 					"dialog",
 					"general",
 					"prefer_html"));
-
-		JLabel toolbarLabel =
-			new JLabel(
-				MailResourceLoader.getString("dialog", "general", "toolbar"));
-
-		toolbarComboBox =
-			new JComboBox(
-				new String[] {
-					MailResourceLoader.getString(
-						"dialog",
-						"general",
-						"toolbar_icons"),
-					MailResourceLoader.getString(
-						"dialog",
-						"general",
-						"toolbar_text"),
-					MailResourceLoader.getString(
-						"dialog",
-						"general",
-						"toolbar_below"),
-					MailResourceLoader.getString(
-						"dialog",
-						"general",
-						"toolbar_beside")});
-		toolbarLabel.setLabelFor(toolbarComboBox);
 
 		// composer
 		spellLabel =

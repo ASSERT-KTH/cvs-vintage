@@ -17,6 +17,8 @@
 package org.columba.mail.gui.composer.text;
 
 import java.awt.Font;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -25,7 +27,9 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.core.config.Config;
 import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.composer.AbstractEditorController;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.util.UndoDocument;
@@ -36,21 +40,39 @@ import org.columba.mail.gui.composer.util.UndoDocument;
  * @author frd, Karl Peder Olesen (karlpeder)
  *
  */
-public class TextEditorController extends AbstractEditorController
-	implements DocumentListener, CaretListener {
-	
+public class TextEditorController
+	extends AbstractEditorController
+	implements DocumentListener, CaretListener, Observer {
+
 	/*
 	 * *20030906, karlpeder* Changed to extend AbstractEditorController
 	 * to be able to fit into frame work supporting both plain text and
 	 * html composing.
 	 */
-	
+
 	//ComposerController controller;
 
 	/** The editor view, i.e. the component used for editing text */
 	private TextEditorView view;
 	/** Document used in the editor view */
 	private UndoDocument document;
+
+	//	name of font
+	private String name;
+
+	// size of font
+	private String size;
+
+	// currently used font
+	private Font font;
+
+	// font configuration
+	private XmlElement textFontElement;
+
+	private XmlElement fonts;
+
+	// overwrite look and feel font settings
+	private boolean overwrite;
 
 	public TextEditorController(ComposerController controller) {
 		super(controller);
@@ -63,6 +85,35 @@ public class TextEditorController extends AbstractEditorController
 		MainInterface.focusManager.registerComponent(this);
 
 		view.addCaretListener(this);
+
+		XmlElement options = Config.get("options").getElement("/options");
+		XmlElement guiElement = options.getElement("gui");
+		fonts = guiElement.getElement("fonts");
+		if (fonts == null)
+			fonts = guiElement.addSubElement("fonts");
+
+		overwrite =
+			new Boolean(fonts.getAttribute("overwrite", "true")).booleanValue();
+
+		// register for configuration changes
+		fonts.addObserver(this);
+
+		textFontElement = fonts.getElement("text");
+		if (textFontElement == null)
+			textFontElement = fonts.addSubElement("text");
+
+		if (overwrite) {
+			name = "Default";
+			size = "12";
+
+			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
+
+		} else {
+			name = textFontElement.getAttribute("name", "Default");
+			size = textFontElement.getAttribute("size", "12");
+
+			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
+		}
 	}
 
 	/* *20030906, karlpeder* Removed, use misc. setView* / getView* 
@@ -111,7 +162,7 @@ public class TextEditorController extends AbstractEditorController
 	// This means that we only have a single instance of these
 	// specific actions, which is shared by all menuitems and
 	// toolbar buttons.
-	
+
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.focus.FocusOwner#copy()
 	 */
@@ -238,8 +289,7 @@ public class TextEditorController extends AbstractEditorController
 		MainInterface.focusManager.updateActions();
 	}
 
-
-    /********************** Methods necessary to hide view from clients *******/
+	/********************** Methods necessary to hide view from clients *******/
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.gui.composer.AbstractEditorController#getViewUIComponent()
@@ -290,6 +340,39 @@ public class TextEditorController extends AbstractEditorController
 	 */
 	public void setViewEnabled(boolean enabled) {
 		view.setEnabled(enabled);
+	}
+
+	/**
+	 * Gets fired when configuration changes occur.
+	 * 
+	 * @see org.columba.core.gui.config.GeneralOptionsDialog
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable arg0, Object arg1) {
+		// fonts
+
+		overwrite =
+			new Boolean(fonts.getAttribute("overwrite", "true")).booleanValue();
+
+		if (overwrite == false) {
+
+			// use default font settings
+			name = "Default";
+			size = "12";
+
+			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
+
+		} else {
+			// overwrite look and feel font settings
+			name = textFontElement.getAttribute("name", "Default");
+			size = textFontElement.getAttribute("size", "12");
+
+			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
+			
+			setViewFont(font);
+		}
+
 	}
 
 }

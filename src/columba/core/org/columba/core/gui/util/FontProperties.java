@@ -16,6 +16,8 @@
 package org.columba.core.gui.util;
 
 import java.awt.Font;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
@@ -39,16 +41,19 @@ import org.columba.core.xml.XmlElement;
  * gui element.
  * generall Look and Feels set this. If the user wants
  * to overwrite the Look and Feel font settings he/she 
- * has to change options.xml:/options/gui/mainfont
+ * has to change options.xml:/options/gui/fonts
  * attribute: overwrite (true/false)
  * 
  * default is of course "false", to respect Look and Feel
  * settings
  * 
  */
-public class FontProperties {
+public class FontProperties implements Observer {
 
 	protected static GuiItem item;
+
+	private static boolean overwrite;
+	private XmlElement fonts;
 
 	/**
 	 * 
@@ -56,6 +61,21 @@ public class FontProperties {
 	public FontProperties() {
 
 		item = Config.getOptionsConfig().getGuiItem();
+
+		XmlElement options = Config.get("options").getElement("/options");
+		XmlElement gui = options.getElement("gui");
+		fonts = gui.getElement("fonts");
+		if (fonts == null)
+			fonts = gui.addSubElement("fonts");
+
+		// register as configuration change listener	
+		fonts.addObserver(this);
+
+		String str = fonts.getAttribute("overwrite", "false");
+		if (str.equals("true"))
+			overwrite = true;
+		else
+			overwrite = false;
 	}
 
 	/**
@@ -66,8 +86,9 @@ public class FontProperties {
 	 */
 	public static void setFont() {
 		// should we really overwrite the Look and Feel font settings
-		if ( !isOverwriteThemeSettings() ) return;
-		
+		if (!isOverwriteThemeSettings())
+			return;
+
 		FontUIResource mainFont = new FontUIResource(getMainFont());
 
 		UIManager.put("Label.font", mainFont);
@@ -90,7 +111,6 @@ public class FontProperties {
 		UIManager.put("TabbedPane.font", mainFont);
 		UIManager.put("List.font", mainFont);
 
-		
 	}
 
 	public static Font getTextFont() {
@@ -100,28 +120,43 @@ public class FontProperties {
 	public static Font getMainFont() {
 		return item.getMainFont();
 	}
-	
+
 	/**
 	 * 
 	 * 
 	 * @return	true if user wants to overwrite Look and Feel font settings,
 	 * 		    else otherwise
 	 */
-	public static boolean isOverwriteThemeSettings()
-	{
+	public static boolean isOverwriteThemeSettings() {
 		XmlElement mainfont = item.getElement("mainfont");
 		String overwrite = mainfont.getAttribute("overwrite");
-		
+
 		// create attribute if not available
-		if ( overwrite == null )
-		{
-			 mainfont.addAttribute("overwrite","false");
-			 overwrite = "false"; 
-		} 
-		
-		if ( overwrite.equals("true")) return true;
-		
+		if (overwrite == null) {
+			mainfont.addAttribute("overwrite", "false");
+			overwrite = "false";
+		}
+
+		if (overwrite.equals("true"))
+			return true;
+
 		return false;
+	}
+
+	/**
+	 * Gets fired if configuration changes.
+	 * 
+	 * @see org.colulmba.core.gui.config.GeneralOptionsDialog
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable arg0, Object arg1) {
+		String str = fonts.getAttribute("overwrite", "false");
+		if (str.equals("true"))
+			overwrite = true;
+		else
+			overwrite = false;
+
 	}
 
 }

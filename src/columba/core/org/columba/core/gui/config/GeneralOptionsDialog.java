@@ -91,11 +91,15 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 	JLabel languageLabel;
 	JComboBox languageComboBox;
 
+	JFrame frame;
+
 	public GeneralOptionsDialog(JFrame frame) {
 		super(
 			frame,
 			MailResourceLoader.getString("dialog", "general", "dialog_title"),
 			true);
+
+		this.frame = frame;
 
 		try {
 			// get plugin-handler
@@ -120,12 +124,28 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 	}
 
 	public void updateComponents(boolean b) {
-		GuiItem item = Config.getOptionsConfig().getGuiItem();
-		mainFont = item.getMainFont();
-		textFont = item.getTextFont();
+		XmlElement options = Config.get("options").getElement("/options");
+		XmlElement gui = options.getElement("gui");
+		XmlElement themeElement = gui.getElement("theme");
 
-		XmlElement themeElement =
-			Config.get("options").getElement("options/gui/theme");
+		XmlElement fonts = gui.getElement("fonts");
+		if (fonts == null)
+			fonts = gui.addSubElement("fonts");
+
+		String overwrite = fonts.getAttribute("overwrite", "false");
+
+		XmlElement mainFontElement = fonts.getElement("main");
+		if (mainFontElement == null)
+			mainFontElement = fonts.addSubElement("main");
+
+		XmlElement textFontElement = fonts.getElement("text");
+		if (textFontElement == null)
+			textFontElement = fonts.addSubElement("text");
+
+		GuiItem item = Config.getOptionsConfig().getGuiItem();
+		//mainFont = item.getMainFont();
+		//textFont = item.getTextFont();
+
 		theme = themeElement.getAttribute("name");
 
 		if (b) {
@@ -134,17 +154,37 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 			lfComboBox.setSelectedItem(theme);
 
 			// fonts
-			mainFontButton.setText(mainFont.getFontName());
+			String mainName = mainFontElement.getAttribute("name", "Default");
+			String mainSize = mainFontElement.getAttribute("size", "12");
+			mainFont =
+				new Font(mainName, Font.PLAIN, Integer.parseInt(mainSize));
 
-			textFontButton.setText(textFont.getFontName());
+			String textName = textFontElement.getAttribute("name", "Default");
+			String textSize = textFontElement.getAttribute("size", "12");
+			textFont =
+				new Font(textName, Font.PLAIN, Integer.parseInt(textSize));
 
-			overwriteCheckBox.setSelected(
-				item.getBoolean("mainfont", "overwrite"));
+			mainFontButton.setText(mainName);
+			mainFontButton.setFont(mainFont);
+			textFontButton.setText(textName);
+			textFontButton.setFont(textFont);
+
+			if (overwrite.equals("true"))
+				overwriteCheckBox.setSelected(true);
+			else {
+				overwriteCheckBox.setSelected(false);
+				// disable button, too
+				textFontButton.setEnabled(false);
+				mainFontButton.setEnabled(false);
+			}
+
+			/*
 			actionPerformed(
 				new ActionEvent(
 					overwriteCheckBox,
 					ActionEvent.ACTION_PERFORMED,
 					null));
+			*/
 
 			// language
 			Locale[] available = GlobalResourceLoader.getAvailableLocales();
@@ -178,15 +218,32 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 					state = 2;
 				else
 					state = 3;
+
+				toolbarComboBox.setSelectedIndex(state);
+
 			}
 		} else {
 
 			// fonts
-			item.set("textfont", "name", getTextFont().getName());
-			item.set("textfont", "size", getTextFont().getSize());
-			item.set("mainfont", "name", getMainFont().getName());
-			item.set("mainfont", "size", getMainFont().getSize());
-			item.set("mainfont", "overwrite", overwriteCheckBox.isSelected());
+			textFontElement.addAttribute("name", getTextFont().getName());
+			textFontElement.addAttribute(
+				"size",
+				new Integer(getTextFont().getSize()).toString());
+
+			mainFontElement.addAttribute("name", getMainFont().getName());
+			mainFontElement.addAttribute(
+				"size",
+				new Integer(getMainFont().getSize()).toString());
+
+			fonts.addAttribute(
+				"overwrite",
+				Boolean.toString(overwriteCheckBox.isSelected()));
+
+			// notify all listeners
+			// @see org.columba.core.gui.util.FontProperties
+			// @see org.columba.mail.gui.message.BodyTextViewer
+			// @see org.columba.mail.gui.composer.text.TextEditorController
+			fonts.notifyObservers();
 
 			// look and feel
 			String selection = (String) lfComboBox.getSelectedItem();
@@ -278,11 +335,11 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 		builder.append(overwriteCheckBox, 5);
 		builder.nextLine();
-		
+
 		builder.append(mainFontLabel);
 		builder.append(mainFontButton, 3);
 		builder.nextLine();
-		
+
 		builder.append(textFontLabel);
 		builder.append(textFontButton, 3);
 		builder.nextLine();
@@ -346,7 +403,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		mainFontButton.addActionListener(this);
 		textFontButton = new JButton("text font");
 		textFontButton.addActionListener(this);
-		
+
 		toolbarLabel = new JLabel("Toolbar Style:");
 		toolbarComboBox =
 			new JComboBox(
@@ -424,8 +481,22 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 			updateComponents(false);
 
+			// TODO until we can get all the settings update immediately
+			// we just open a message box, telling the user to restart
+
+			// switch to new theme
 			ThemeSwitcher.setTheme();
+			// notify frame to update
+			ThemeSwitcher.updateFrame(frame);
+
+			// set fonts
 			FontProperties.setFont();
+
+			/*
+			JOptionPane.showInternalMessageDialog(
+				frame,
+				"You have to restart Columba for the changes to take effect!");
+			*/
 
 		} else if (action.equals("CANCEL")) {
 

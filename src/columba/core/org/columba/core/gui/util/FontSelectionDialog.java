@@ -75,6 +75,8 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
 
         initData();
         initComponents();
+        
+        dialog.setLocationRelativeTo(null);
     }
 
     private void initComponents()
