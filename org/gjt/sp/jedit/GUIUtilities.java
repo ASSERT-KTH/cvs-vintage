@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.52 2003/02/03 02:07:59 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.53 2003/02/04 01:19:50 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -845,17 +845,19 @@ public class GUIUtilities
 		y = jEdit.getIntegerProperty(name + ".y",y);
 
 		// Make sure the window is displayed in visible region
-		if(x < -4 || x > screen.width)
+		Rectangle osbounds = OperatingSystem.getScreenBounds();
+		
+		if(x < osbounds.x || x+width > osbounds.width)
 		{
-			if (width > screen.width)
-				width = screen.width;
-			x = (screen.width - width) / 2;
+			if (width > osbounds.width)
+				width = osbounds.width;
+			x = (osbounds.width - width) / 2;
 		}
-		if(y < -4 || y > screen.height)
+		if(y < osbounds.y || y+height > osbounds.height)
 		{
-			if (height >= screen.height)
-				height = screen.height;
-			y = (screen.height - height) / 2;
+			if (height >= osbounds.height)
+				height = osbounds.height;
+			y = (osbounds.height - height) / 2;
 		}
 
 		Rectangle desired = new Rectangle(x,y,width,height);

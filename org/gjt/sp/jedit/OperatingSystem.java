@@ -19,6 +19,8 @@
 
 package org.gjt.sp.jedit;
 
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import javax.swing.UIManager;
 import java.io.File;
 import org.gjt.sp.util.Log;
@@ -26,11 +28,42 @@ import org.gjt.sp.util.Log;
 /**
  * Operating system detection routines.
  * @author Slava Pestov
- * @version $Id: OperatingSystem.java,v 1.7 2003/02/03 02:07:59 spestov Exp $
+ * @version $Id: OperatingSystem.java,v 1.8 2003/02/04 01:19:51 spestov Exp $
  * @since jEdit 4.0pre4
  */
 public class OperatingSystem
 {
+	public static final Rectangle getScreenBounds()
+	{
+		int screenX = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+		int screenY = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+		int x, y, w, h;
+		
+		if (isMacOS())
+		{
+			x = 0;
+			y = 22;
+			w = screenX;
+			h = screenY - y - 4;//shadow size
+		}
+		else if (isWindows())
+		{
+			x = -4;
+			y = -4;
+			w = screenX - 2*x;
+			h = screenY - 2*y;
+		}
+		else
+		{
+			x = 0;
+			y = 0;
+			w = screenX;
+			h = screenY;
+		}
+		
+		return new Rectangle(x,y,w,h);
+	}
+	
 	//{{{ isDOSDerived() method
 	/**
 	 * Returns if we're running Windows 95/98/ME/NT/2000/XP, or OS/2.
