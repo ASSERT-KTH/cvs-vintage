@@ -15,12 +15,10 @@
     <tr>
      <td width="100" id="leftcol">
       <div id="projnav">
-       <a href="#">projectnav</a> 
-       <ul>
-        <li><a href="#">item1</a></li>
-        <li><a href="#">item2</a></li>
-       </ul>
-       <p><a href="http://collabnet.cleverchimp.com/dtds/validator.html">validate me</a></p>
+      <form action="$link.setPage("IssueView.vm")" method="get">	
+Ê Ê Ê Issue# <input type="text" name="id" size="8" maxlength="255" />	Ê
+Ê Ê Ê Ê Ê Ê Ê<input type="submit" name="Submit" value="Find" />	Ê
+Ê Ê Ê </form>
       </div>
      </td>
      <td id="bodycol">
