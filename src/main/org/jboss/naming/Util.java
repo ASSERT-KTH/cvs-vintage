@@ -10,7 +10,7 @@ import javax.naming.NamingException;
 /** A static utility class for common JNDI operations.
  *
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class Util
 {
@@ -46,6 +46,8 @@ public class Util
             {
                 subctx = ctx.createSubcontext(ctxName);
             }
+            // The current subctx will be the ctx for the next name component
+            ctx = subctx;
         }
         return subctx;
     }
