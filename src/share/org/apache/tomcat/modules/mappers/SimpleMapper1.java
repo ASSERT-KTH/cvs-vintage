@@ -182,6 +182,10 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	String path=ct.getPath();
 	String ctxP=ctx.getPath();
 
+	// Special containers ( the default is url-mapping ).
+	if( ct.isSpecial() ) return;
+	if( ct.getNote( "type" ) != null )  return;
+	
 	if(ct.getRoles() != null || ct.getTransport() != null ) {
 	    // it was only a security map, no handler defined
 	    return;
