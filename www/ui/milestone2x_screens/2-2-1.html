@@ -64,7 +64,7 @@
 			<div>&nbsp;&nbsp;+ <a href="#">Documents</a></div>
 			<div>&nbsp;&nbsp;- <strong>Issue tracking</strong></div>
 			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="enter issue, verbose and advanced">Enter issue</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Queries</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="Query functions and save query list">Queries</a></div>
 			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="reports operations">Reports</a></div>
 			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="vote management panel">Vote mgmt.</a></div>
 			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="adjust your workflow options">Workflow optns.</a></div>
@@ -142,16 +142,6 @@
 	<!-- Scarab - App -->
 	<div class="app" id="div2-2-1">
 		<h2>Save query (2.2.1)</h2>
-		
-		<div id="tabs">
-			<table cellpadding="3" cellspacing="0" border="0">
-			<tr>
-			<td><a href="#" title="view advanced query information">Avanced query</a></td>
-			<td><a href="#" title="view custom query information">Custom</a></td>
-			<th>Saved queries</th>
-			</tr>
-			</table>
-		</div>
 		
 		<p class="functnbar"><input type="submit" value="save/submit" />&nbsp;<input type="submit" value="execute" />&nbsp;<input type="submit" value="cancel" /></p>
 		
@@ -713,8 +703,143 @@
 </td>
         </tr>
 
+
+
        </table>
       </div>
+
+
+	  <h3>Subscription info</h3>
+
+<div class="axial">
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th width="120">Default frequency</th>
+
+         <td><select>
+          <option>every half hour</option>
+          <option>hourly</option>
+		  <option>twice daily</option>
+		  <option>daily</option>
+		  <option>weekly</option>		  
+		 </select></td>
+        </tr>
+
+        <tr>
+         <th width="120">role permissions: admin only</th>
+
+         <td><select>
+          <option>Root admin</option>
+          <option>Project manager</option>
+		  <option>QA</option>
+		  <option>Developer</option>
+		  <option>Observer</option>		  
+		 </select></td>
+        </tr>
+        
+        </table>
+</div>
+
+
+
+	  <h3>Current subscriber list: Admin only</h3>	
+      
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+ 		 <th>&nbsp;</th>
+
+         <th>User</th>
+
+         <th>Role</th>
+
+         <th>User selected frequency</th>
+
+        </tr>
+        <tr class="a">
+ 		 <td><input type="checkbox" /></td>
+         
+         <td><a href="mailto:">userX@text.com</a></td>
+
+         <td>Developer</td>
+
+         <td><select>
+          <option>every half hour</option>
+          <option>hourly</option>
+		  <option>twice daily</option>
+		  <option>daily</option>
+		  <option>weekly</option>		  
+		 </select></td>
+
+        </tr>
+
+        <tr class="b">
+ 		 <td><input type="checkbox" /></td>
+
+         <td><a href="mailto:">userX@text.com</a></td>
+
+         <td>Project manager</td>
+
+         <td><select>
+          <option>every half hour</option>
+          <option>hourly</option>
+		  <option>twice daily</option>
+		  <option>daily</option>
+		  <option>weekly</option>		  
+		 </select></td>
+
+        </tr>
+        
+        <tr class="a">
+ 		 <td><input type="checkbox" /></td>
+
+         <td><a href="mailto:">userX@text.com</a></td>
+
+         <td>Developer</td>
+
+         <td><select>
+          <option>every half hour</option>
+          <option>hourly</option>
+		  <option>twice daily</option>
+		  <option>daily</option>
+		  <option>weekly</option>		  
+		 </select></td>
+
+        </tr>        
+        </table>
+
+		<input type="submit" value="revoke subscription" />
+		
+		<h3>Search results view prefs</h3>
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">sort by:</th>
+			<td><select>
+			<option>
+			attriute X
+			</option>
+			<option>
+			attriute Y
+			</option>
+			<option>
+			attriute Z
+			</option>
+			</select>&nbsp;<select>
+			<option>
+			ascending
+			</option>
+			<option>
+			descending
+			</option>
+			</select></td>
+			</tr>
+			<tr>
+			<th width="120">issues per page:</th>
+			<td><input type="radio" name="foo" /> 25 <input type="radio" name="foo" /> 50 <input type="radio" name="foo" /> 75 <input type="radio" name="foo" /> 100</td>
+			</tr>
+			</table>
+		</div>
+
 
 		<p class="functnbar"><input type="submit" value="save/submit" />&nbsp;<input type="submit" value="execute" />&nbsp;<input type="submit" value="cancel" /></p>
 	</div>
