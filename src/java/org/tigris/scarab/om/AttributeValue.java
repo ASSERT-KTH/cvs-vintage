@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.99 2003/09/12 23:47:13 elicia Exp $
+ * @version $Id: AttributeValue.java,v 1.100 2003/09/16 00:52:09 elicia Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -659,10 +659,6 @@ Leaving here so that John can remove or fix.
             {
                 rma = module.getRModuleAttribute(
                     getAttribute(), getIssue().getIssueType());
-                if (rma == null)
-                {
-                    throw new Exception ("RMA is null: Please report this issue.");
-                }
             }
             else
             {

@@ -58,7 +58,12 @@ $user.setHomePage("query")
       #end
     #end
   #end
-  <option value="$att.Attribute.QueryKey"#selected($selected)>$att.RModuleAttribute.DisplayValue</option>
+  #set ($rma = $att.RModuleAttribute)
+  #if ($rma)
+  <option value="$att.Attribute.QueryKey"#selected($selected)>$rma.DisplayValue</option>
+  #else
+  <option value="$att.Attribute.QueryKey"#selected($selected)>$att.Attribute.Name</option>
+  #end
   #set ($selected = false)
 #end
    </select>
