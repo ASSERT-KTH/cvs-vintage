@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.8 2000/06/22 23:24:15 alex Exp $
- * $Revision: 1.8 $
- * $Date: 2000/06/22 23:24:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.9 2000/07/11 03:13:35 alex Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/07/11 03:13:35 $
  *
  * ====================================================================
  *
@@ -93,7 +93,7 @@ import java.util.*;
  * @author Costin@eng.sun.com
  * @author Gal Shachor [shachor@il.ibm.com]
  */
-public class PoolTcpEndpoint  { // implements Endpoint {
+public class PoolTcpEndpoint extends Logger.Helper  { // implements Endpoint {
 
     private StringManager sm = StringManager.getManager("org.apache.tomcat.service");
 
@@ -107,8 +107,6 @@ public class PoolTcpEndpoint  { // implements Endpoint {
 
     TcpConnectionHandler handler;
 
-    private LogHelper loghelper = new LogHelper("tc_log", "PoolTcpEndpoint");
-
     private InetAddress inet;
     private int port;
 
@@ -116,21 +114,14 @@ public class PoolTcpEndpoint  { // implements Endpoint {
     private ServerSocket serverSocket;
 
     ThreadPoolRunnable listener;
-    boolean running = true;
+    private boolean running = false;
     static final int debug=0;
 
     ThreadPool tp;
 
     public PoolTcpEndpoint() {
+	super("tc_log");	// initialize default logger
 	tp = new ThreadPool();
-    }
-
-    private void log( String msg ) {
-	loghelper.log(msg);
-    }
-    
-    private void log(String msg, Throwable t, int level) {
-	loghelper.log(msg, t, level);
     }
     
     // -------------------- Configuration --------------------
@@ -199,6 +190,10 @@ public class PoolTcpEndpoint  { // implements Endpoint {
 	    return handler;
     }
 
+    public boolean isRunning() {
+	return running;
+    }
+    
     /**
      * Allows the server developer to specify the backlog that
      * should be used for server sockets. By default, this value
@@ -227,33 +222,27 @@ public class PoolTcpEndpoint  { // implements Endpoint {
     // -------------------- Public methods --------------------
 
     public void startEndpoint() throws IOException, InstantiationException {
-	    try {
-	        if(factory==null)
-		        factory=ServerSocketFactory.getDefault();
-	        if(serverSocket==null) {
-		        if (inet == null) {
-		            serverSocket = factory.createSocket(port, backlog);
-    		    } else {
-	    	        serverSocket = factory.createSocket(port, backlog, inet);
-		        }
-	        }
-	        if(isPool) {
-		    tp.start();
+	try {
+	    if(factory==null)
+		factory=ServerSocketFactory.getDefault();
+	    if(serverSocket==null) {
+		if (inet == null) {
+		    serverSocket = factory.createSocket(port, backlog);
+		} else {
+		    serverSocket = factory.createSocket(port, backlog, inet);
 		}
-	    } catch( IOException ex ) {
-	        // throw?
-	        // ex.printStackTrace();
-	        running=false;
-            throw ex;
-	        // throw new HttpServerException(msg);
-	    } catch( InstantiationException ex1 ) {
-	        // throw?
-	        // ex1.printStackTrace();
-	        running=false;
-            throw ex1;
-	        // throw new HttpServerException(msg);
 	    }
-	    running=true;
+	} catch( IOException ex ) {
+	    log("couldn't start endpoint", ex);
+            throw ex;
+	} catch( InstantiationException ex1 ) {
+	    log("couldn't start endpoint", ex1);
+            throw ex1;
+	}
+	if(isPool) {
+	    tp.start();
+	}
+	running = true;
         if(isPool) {
     	    listener = new TcpWorkerThread(this);
             tp.runIt(listener);
@@ -263,13 +252,17 @@ public class PoolTcpEndpoint  { // implements Endpoint {
     }
 
     public void stopEndpoint() {
-        tp.shutdown();
-	running=false;
-	try {
-	    serverSocket.close(); // XXX?
-	} catch(Exception e) {
+	log("Stopping endpoint");
+	if (running) {
+	    log("Stack trace that called stopEndpoint():", new Throwable("trace"), Logger.DEBUG);
+	    tp.shutdown();
+	    running = false;
+	    try {
+		serverSocket.close(); // XXX?
+	    } catch(Exception e) {
+	    }
+	    serverSocket = null;
 	}
-	serverSocket = null;
     }
 
     // -------------------- Private methods
@@ -277,29 +270,26 @@ public class PoolTcpEndpoint  { // implements Endpoint {
     Socket acceptSocket() {
         Socket accepted = null;
     	try {
-    	    if(running == true) {
-        	    if(null!= serverSocket) {
-            		accepted = serverSocket.accept();
-    	        	if(running == false) {
-    	        	    if(null != accepted) {
-        		            accepted.close();  // rude, but unlikely!
-        		            accepted = null;
-        		        }
-    		        }
-			if( factory != null && accepted != null)
-			    factory.initSocket( accepted );
+    	    if (running) {
+		if(null!= serverSocket) {
+		    accepted = serverSocket.accept();
+		    if(running == false) {
+			if(null != accepted) {
+			    accepted.close();  // rude, but unlikely!
+			    accepted = null;
+			}
+		    }
+		    if( factory != null && accepted != null)
+			factory.initSocket( accepted );
     	        }
-    	    }
-	    
-    	} catch(InterruptedIOException iioe) {
+    	    }	    
+    	}
+	catch(InterruptedIOException iioe) {
     	    // normal part -- should happen regularly so
     	    // that the endpoint can release if the server
     	    // is shutdown.
-    	    // you know, i really wish that there was a
-    	    // way for the socket to timeout without
-    	    // tripping an exception. Exceptions are so
-    	    // 'spensive.
-    	} catch (SocketException e) {
+    	}
+	catch (SocketException e) {
 
 	    // TCP stacks can throw SocketExceptions when the client
 	    // disconnects.  We don't want this to shut down the
@@ -307,8 +297,8 @@ public class PoolTcpEndpoint  { // implements Endpoint {
 	    // solution?  Should we compare the message string to
 	    // "Connection reset by peer"?
 
-	    // socket exceptions just after closing endpoint aren't
-	    // even logged
+	    // socket exceptions just after closing endpoint (when
+	    // running=false) aren't even logged
     	    if (running != false) {
 		String msg = sm.getString("endpoint.err.nonfatal",
 					  serverSocket, e);
@@ -321,10 +311,10 @@ public class PoolTcpEndpoint  { // implements Endpoint {
 	// exceptions, catch them here and log as above
 
 	catch(Throwable e) {
-    	    running = false;
     	    String msg = sm.getString("endpoint.err.fatal",
 				      serverSocket, e);
 	    log(msg, e, Logger.ERROR);
+	    stopEndpoint();	// safe to call this from inside thread pool?
     	}
 
     	return accepted;
@@ -385,7 +375,7 @@ class TcpWorkerThread implements ThreadPoolRunnable {
 	}
 	
 	// Create per-thread cache
-	while(endpoint.running) {
+	while(endpoint.isRunning()) {
 	    Socket s = endpoint.acceptSocket();
 	    if(null != s) {
 		// Continue accepting on another thread...
