@@ -60,7 +60,7 @@ import org.tigris.scarab.util.ScarabException;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Depend.java,v 1.18 2002/12/09 06:02:28 jon Exp $
+ * @version $Id: Depend.java,v 1.19 2002/12/29 01:12:45 jon Exp $
  */
 public class Depend 
     extends BaseDepend
@@ -185,8 +185,15 @@ public class Depend
         }
         super.setObserverId(childIssue.getIssueId());
     }
-        
+     
+    /**
+     * Copies the properties from the passed in object
+     * onto this object.
+     */   
+    public void setProperties(Depend depend)
+    {
+        this.setObservedId(depend.getObservedId());
+        this.setObserverId(depend.getObserverId());
+        this.setTypeId(depend.getTypeId());
+    }
 }
-
-
-
