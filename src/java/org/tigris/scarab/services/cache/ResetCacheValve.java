@@ -69,7 +69,7 @@ public class ResetCacheValve
     private static final String KEY = 
         ResetCacheValve.class.getName() + ".start";
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
