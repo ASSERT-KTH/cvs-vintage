@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.22 2005/01/31 20:54:37 linus Exp $
+// $Id: ParseState.java,v 1.23 2005/03/01 19:44:15 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 
 /**
@@ -37,6 +38,12 @@ import org.argouml.model.Model;
  * @author Marcus Andersson
  */
 class ParseState {
+    
+    /**
+     * Logger.<p>
+     */
+    private static final Logger LOG = Logger.getLogger(ParseState.class);
+    
     /**
      * When the classifier parse is finished, these features will be
      * removed from the model.
@@ -99,6 +106,9 @@ class ParseState {
     public ParseState(ParseState previousState,
                       Object mClassifier,
                       Object currentPackage) {
+        
+        LOG.info("Parsing the state of " + mClassifier);
+        
 	classnamePrefix =
 	    previousState.classnamePrefix
 	    + Model.getFacade().getName(mClassifier)
@@ -302,11 +312,13 @@ class ParseState {
      * @return The found operation, null if not found.
      */
     public Object getOperation(String name) {
+        LOG.info("Searching through obsolete features for " + name);
 	for (Iterator i = obsoleteFeatures.iterator(); i.hasNext();) {
-	    Object mFeature = i.next();
-	    if (Model.getFacade().isAOperation(mFeature)
-		&& name.equals(Model.getFacade().getName(mFeature))) {
-		return mFeature;
+	    Object feature = i.next();
+            LOG.info("Checking feature " + feature);
+	    if (Model.getFacade().isAOperation(feature)
+                    && name.equals(Model.getFacade().getName(feature))) {
+		return feature;
 	    }
 	}
 	return null;
