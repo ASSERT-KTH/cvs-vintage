@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.14 2004/12/26 22:57:28 bobtarling Exp $
+// $Id: GeneratorPHP4.java,v 1.15 2004/12/28 13:59:05 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,11 +47,12 @@ import org.argouml.application.api.Argo;
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.PluggableNotation;
 
+import org.argouml.kernel.ProjectManager;
 import org.argouml.language.php.PHPDocumentor;
 
 import org.argouml.model.ModelFacade;
+import org.argouml.model.UUIDManager;
 
-import org.argouml.uml.UUIDManager;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
 
@@ -1173,7 +1174,7 @@ public class GeneratorPHP4
      */
     private final String generateSection(Object modelElement, String sIndent,
                                    String sSuffix) {
-        String uuid = UUIDManager.getInstance().getUUID(modelElement);
+        String uuid = ProjectManager.getUUID(modelElement);
         if (uuid == null) {
             uuid = (new UID().toString());
             ModelFacade.setUUID(modelElement, uuid);

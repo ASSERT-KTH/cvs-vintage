@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.39 2004/12/27 18:34:11 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.40 2004/12/28 13:59:04 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,10 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelListener;
 import org.argouml.ui.ArgoDiagram;
+import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.uml.ui.ActionSaveProject;
 
 /**
@@ -267,5 +269,18 @@ public final class ProjectManager implements PropertyChangeListener {
             getCurrentProject().setNeedsSave(true);
         }
         
+    }
+
+    /**
+     * Return the UUID of the element.
+     *
+     * @param base base element (MBase type)
+     * @return UUID
+     */
+    public static String getUUID(Object base) {
+        if (base instanceof CommentEdge) {
+            return (String) ((CommentEdge) base).getUUID();
+        }
+        return ModelFacade.getUUID(base);
     }
 }

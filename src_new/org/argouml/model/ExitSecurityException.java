@@ -1,4 +1,4 @@
-// $Id: ArgoSecurityException.java,v 1.6 2004/09/11 09:25:57 mvw Exp $
+// $Id: ExitSecurityException.java,v 1.1 2004/12/28 13:59:02 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.application.security;
+package org.argouml.model;
 
 /** An Argo security exception.
  *
  *  @author Thierry Lach
  *  @since 0.9.4
  */
-public class ArgoSecurityException extends SecurityException
+public class ExitSecurityException extends SecurityException
 {
     private boolean hidden = false;
 
@@ -37,7 +37,7 @@ public class ArgoSecurityException extends SecurityException
      * The constructor.
      * 
      */
-    public ArgoSecurityException() {
+    public ExitSecurityException() {
         this(false);
     } 
 
@@ -46,7 +46,7 @@ public class ArgoSecurityException extends SecurityException
      * 
      * @param h true if the exception is hidden
      */
-    public ArgoSecurityException(boolean h) {
+    public ExitSecurityException(boolean h) {
         super();
 	hidden = h;
     }

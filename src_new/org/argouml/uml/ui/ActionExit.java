@@ -1,4 +1,4 @@
-// $Id: ActionExit.java,v 1.19 2004/12/27 18:34:14 bobtarling Exp $
+// $Id: ActionExit.java,v 1.20 2004/12/28 13:59:18 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,10 @@ import javax.swing.JOptionPane;
 
 import org.argouml.application.api.CommandLineInterface;
 import org.argouml.application.api.Configuration;
-import org.argouml.application.security.ArgoSecurityManager;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.ExitSecurityManager;
 import org.argouml.ui.ProjectBrowser;
 
 /**
@@ -122,7 +122,7 @@ public class ActionExit extends UMLAction
      * @return true if it is OK.
      */
     public boolean doCommand(String argument) {
-        ArgoSecurityManager.getInstance().setAllowExit (true);
+        ExitSecurityManager.getInstance().setAllowExit (true);
         System.exit (0);
 	return true;
     }

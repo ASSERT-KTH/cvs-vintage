@@ -1,4 +1,4 @@
-// $Id: CheckMain.java,v 1.2 2004/10/05 06:01:13 linus Exp $
+// $Id: CheckMain.java,v 1.3 2004/12/28 13:59:16 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import java.net.MalformedURLException;
 import junit.framework.Assert;
 
 import org.argouml.application.Main;
-import org.argouml.application.security.ArgoSecurityManager;
+import org.argouml.model.ExitSecurityManager;
 
 /**
  * This class is a helper for testing things connected to the Main class.
@@ -47,7 +47,7 @@ public final class CheckMain {
      */
     public static void callMain(String[] args) {
         Main.main(args);
-        ArgoSecurityManager.getInstance().setAllowExit(true);
+        ExitSecurityManager.getInstance().setAllowExit(true);
     }
 
 

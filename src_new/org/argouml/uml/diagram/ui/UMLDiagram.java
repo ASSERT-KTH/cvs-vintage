@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.59 2004/12/26 22:12:53 bobtarling Exp $
+// $Id: UMLDiagram.java,v 1.60 2004/12/28 13:59:03 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,11 +39,11 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.UUIDManager;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
 import org.argouml.ui.targetmanager.TargetManager;
-import org.argouml.uml.UUIDManager;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.tigris.gef.base.ModeBroom;
 import org.tigris.gef.base.ModeCreateFigCircle;
@@ -235,7 +235,7 @@ public abstract class UMLDiagram
         String s = super.getClassAndModelID();
         if (getOwner() == null)
             return s;
-        String id = UUIDManager.getInstance().getUUID(getOwner());
+        String id = ProjectManager.getUUID(getOwner());
         return s + "|" + id;
     }
 

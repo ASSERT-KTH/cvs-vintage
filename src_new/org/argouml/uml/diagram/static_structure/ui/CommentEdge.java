@@ -1,4 +1,4 @@
-// $Id: CommentEdge.java,v 1.3 2004/12/21 22:30:16 mvw Exp $
+// $Id: CommentEdge.java,v 1.4 2004/12/28 13:59:09 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 package org.argouml.uml.diagram.static_structure.ui;
 
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.UUIDManager;
+import org.argouml.model.UUIDManager;
 
 
 /**

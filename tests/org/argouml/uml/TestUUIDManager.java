@@ -1,4 +1,4 @@
-// $Id: TestUUIDManager.java,v 1.2 2004/10/21 19:25:24 mvw Exp $
+// $Id: TestUUIDManager.java,v 1.3 2004/12/28 13:59:04 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,8 @@
  * Created on 13.10.2004
  */
 package org.argouml.uml;
+
+import org.argouml.model.UUIDManager;
 
 import junit.framework.TestCase;
 

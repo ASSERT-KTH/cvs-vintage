@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.23 2004/12/26 22:57:28 bobtarling Exp $
+// $Id: GeneratorCpp.java,v 1.24 2004/12/28 13:59:07 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,10 +44,11 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.PluggableNotation;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.UUIDManager;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.uml.DocumentationManager;
-import org.argouml.uml.UUIDManager;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
 
@@ -1929,7 +1930,7 @@ public class GeneratorCpp extends Generator2
 
 
     private String generateSectionTop(Object op, String localIndent) {
-        String id = UUIDManager.getInstance().getUUID(op);
+        String id = ProjectManager.getUUID(op);
         if (id == null) {
             id = (new UID().toString());
             // id =  op.getName() + "__" + static_count;
@@ -1939,7 +1940,7 @@ public class GeneratorCpp extends Generator2
     }
 
     private String generateSectionBottom(Object op, String localIndent) {
-        String id = UUIDManager.getInstance().getUUID(op);
+        String id = ProjectManager.getUUID(op);
         if (id == null) {
             id = (new UID().toString());
             // id =  op.getName() + "__" + static_count;

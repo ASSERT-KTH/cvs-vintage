@@ -1,4 +1,4 @@
-// $Id: UUIDManager.java,v 1.15 2004/12/26 22:12:52 bobtarling Exp $
+// $Id: UUIDManager.java,v 1.1 2004/12/28 13:59:02 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml;
+package org.argouml.model;
 
 import java.net.InetAddress;
 import java.util.Collection;
@@ -31,9 +31,6 @@ import java.net.UnknownHostException;
 import java.rmi.server.UID;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.security.ArgoSecurityManager;
-import org.argouml.model.ModelFacade;
-import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 
 /**
  * @stereotype singleton
@@ -61,7 +58,7 @@ public class UUIDManager {
             LOG.fatal("On Unix systems this usually indicates that your "
 		      + "/etc/hosts file is incorrectly setup.");
             LOG.fatal("Stopping execution of ArgoUML.");
-            ArgoSecurityManager.getInstance().setAllowExit(true);
+            ExitSecurityManager.getInstance().setAllowExit(true);
             System.exit(-1);
         }
     }
@@ -132,7 +129,7 @@ public class UUIDManager {
         Collection ownedElements = ModelFacade.getOwnedElements(model);
 	Iterator oeIterator = ownedElements.iterator();
         
-        String uuid = getUUID(model);
+        String uuid = ModelFacade.getUUID(model);
         if (uuid == null) {
 	    ModelFacade.setUUID(model, getNewUUID());
 	}
@@ -154,7 +151,7 @@ public class UUIDManager {
                 || ModelFacade.isAStereotype(me)
 		|| ModelFacade.isAUseCase(me)) {
 
-                uuid = getUUID(me);
+                uuid = ModelFacade.getUUID(me);
                 if (uuid == null) {
                     ModelFacade.setUUID(me, getNewUUID());
                 }
@@ -166,18 +163,5 @@ public class UUIDManager {
 		createModelUUIDS(me);
 	    }
         }
-    }
-  
-    /**
-     * Return the UUID of the element.
-     *
-     * @param base base element (MBase type)
-     * @return UUID
-     */
-    public static String getUUID(Object base) {
-        if (base instanceof CommentEdge) {
-            return (String) ((CommentEdge) base).getUUID();
-        }
-        return ModelFacade.getUUID(base);
     }
 } /* end class UUIDManager */
