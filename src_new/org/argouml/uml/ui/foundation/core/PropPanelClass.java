@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.65 2004/11/23 21:45:35 mvw Exp $
+// $Id: PropPanelClass.java,v 1.66 2004/11/23 22:06:32 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -109,33 +109,6 @@ public class PropPanelClass extends PropPanelClassifier {
                 "button.new-class"), new ActionNewClass());
         addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
-
-    /**
-     * Add an inner class. 
-     */
-//    public void addInnerClass() {
-//        Object target = getTarget();
-//        if (org.argouml.model.ModelFacade.isAClassifier(target)) {
-//            Object classifier = /* (MClassifier) */target;
-//            Object inner = CoreFactory.getFactory().buildClass(classifier);
-//            TargetManager.getInstance().setTarget(inner);
-//        }
-//    }
-
-    /**
-     * Add a new class.
-     */
-//    public void newClass() {
-//        Object target = getTarget();
-//        if (org.argouml.model.ModelFacade.isAClassifier(target)) {
-//            Object classifier = /* (MClassifier) */target;
-//            Object ns = ModelFacade.getNamespace(classifier);
-//            if (ns != null) {
-//                Object peer = CoreFactory.getFactory().buildClass(ns);
-//                TargetManager.getInstance().setTarget(peer);
-//            }
-//        }
-//    }
 
     /**
      * Returns the operationScroll.
