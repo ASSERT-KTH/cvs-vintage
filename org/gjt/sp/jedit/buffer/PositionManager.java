@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.21 2003/07/21 19:49:29 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.22 2003/07/21 21:22:12 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
@@ -67,33 +67,14 @@ public class PositionManager
 			}
 		}
 
-		if(root != null)
-		check(root,new java.util.Vector());
+		/* if(root != null)
+			check(root,new java.util.Vector()); */
 		/* if(Debug.POSITION_DEBUG)
 			root.dump(0); */
 
-		//check(root,new java.util.Vector());
 		return new PosTopHalf(bh);
 	} //}}}
 
-	void check(PosBottomHalf bh, java.util.Vector vec)
-	{
-		if(vec.contains(bh))
-			throw new InternalError("Foo!");
-		vec.add(bh);
-		if(bh.left != null)
-		{
-			if(bh.left.parent != bh)
-				throw new InternalError("bitch");
-			check(bh.left,vec);
-		}
-		if(bh.right != null)
-		{
-			if(bh.right.parent != bh)
-				throw new InternalError("nigga");
-			check(bh.right,vec);
-		}
-	}
 	//{{{ contentInserted() method
 	public synchronized void contentInserted(int offset, int length)
 	{
