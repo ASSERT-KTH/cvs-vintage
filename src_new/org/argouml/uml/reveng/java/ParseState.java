@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.23 2005/03/01 19:44:15 bobtarling Exp $
+// $Id: ParseState.java,v 1.24 2005/03/01 23:57:25 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -109,22 +109,22 @@ class ParseState {
         
         LOG.info("Parsing the state of " + mClassifier);
         
-	classnamePrefix =
-	    previousState.classnamePrefix
-	    + Model.getFacade().getName(mClassifier)
-	    + "$";
-	obsoleteFeatures =
-	    new Vector(Model.getFacade().getFeatures(mClassifier));
-	obsoleteInnerClasses =
-	    new Vector(Model.getFacade().getOwnedElements(mClassifier));
-	context =
-	    new OuterClassifierContext(
-	            previousState.context,
-	            mClassifier,
-	            currentPackage,
-	            classnamePrefix);
-	classifier = mClassifier;
-	anonymousClassCounter = previousState.anonymousClassCounter;
+        classnamePrefix =
+            previousState.classnamePrefix
+            + Model.getFacade().getName(mClassifier)
+            + "$";
+        obsoleteFeatures =
+            new Vector(Model.getFacade().getFeatures(mClassifier));
+        obsoleteInnerClasses =
+            new Vector(Model.getFacade().getOwnedElements(mClassifier));
+        context =
+            new OuterClassifierContext(
+                    previousState.context,
+                    mClassifier,
+                    currentPackage,
+                    classnamePrefix);
+        classifier = mClassifier;
+        anonymousClassCounter = previousState.anonymousClassCounter;
     }
 
     /**
@@ -222,10 +222,12 @@ class ParseState {
      */
     public void removeObsoleteFeatures() {
     	if (obsoleteFeatures == null) {
-	    return;
-	}
+            return;
+        }
     	for (Iterator i = obsoleteFeatures.iterator(); i.hasNext();) {
-	    Model.getCoreHelper().removeFeature(classifier, i.next());
+            Object feature = i.next();
+            Model.getCoreHelper().removeFeature(classifier, feature);
+            Model.getUmlFactory().delete(feature);
     	}
     }
 
