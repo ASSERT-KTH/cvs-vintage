@@ -45,7 +45,7 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -102,6 +102,15 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          return this.id;
       }
 
+      public String toString()
+      {
+         StringBuffer buffer = new StringBuffer(100);
+         buffer.append("TXLOCK waitingTx=").append(waitingTx);
+         buffer.append(" id=").append(id);
+         buffer.append(" thread=").append(threadName);
+         buffer.append(" queued=").append(isQueued);
+         return buffer.toString();
+      }
    }
 
    protected TxLock getTxLock(Transaction miTx)
@@ -140,6 +149,8 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
    public boolean lockNoWait(Transaction transaction) throws Exception
    {
       this.sync();
+      if (log.isTraceEnabled())
+         log.trace("lockNoWait tx=" + transaction + " " + toString());
       try
       {
          // And are we trying to enter with another transaction?
@@ -246,7 +257,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
             // if this non-transctional thread was
             // scheduled in txWaitQueue, we need to call nextTransaction
             // Otherwise, threads in txWaitQueue will never wake up.
-            nextTransaction();
+            nextTransaction(trace);
          }
          this.releaseSync();
       }
@@ -272,26 +283,31 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
              // And are we trying to enter with another transaction?
              !getTransaction().equals(miTx))
       {
-         // For deadlock detection.
-         // miTx is waiting for this.tx to finish so put it
-         // in the waiting table and do deadlock detection.
-         if (miTx != null)
+         // Check for a deadlock on every cycle
+         try
          {
-            synchronized (waiting)
-            {
-               waiting.put(miTx, this);
-            }
+            deadlockDetection(miTx);
          }
-         deadlockDetection(miTx);
+         catch (Exception e)
+         {
+            // We were queued, not any more
+            if (txLock != null && txLock.isQueued)
+            {
+               txLocks.remove(txLock);
+               txWaitQueue.remove(txLock);
+            }
+            throw e;
+         }
+
          wasScheduled = true;
          // That's no good, only one transaction per context
          // Let's put the thread to sleep the transaction demarcation will wake them up
-         if( trace ) log.trace("Transactional contention on context"+id);
+         if( trace ) log.trace("Transactional contention on context miTx=" + miTx + " " + toString());
          
          if (txLock == null)
             txLock = getTxLock(miTx);
          
-         if( trace ) log.trace("Begin wait on Tx="+getTransaction());
+         if( trace ) log.trace("Begin wait on " + txLock + " " + toString());
          
          // And lock the threads on the lock corresponding to the Tx in MI
          synchronized(txLock)
@@ -305,7 +321,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          
          this.sync();
          
-         if( trace ) log.trace("End wait on TxLock="+getTransaction());
+         if( trace ) log.trace("End wait on " + txLock + " " + toString());
          if (isTxExpired(miTx))
          {
             log.error(Thread.currentThread() + "Saw rolled back tx="+miTx+" waiting for txLock"
@@ -323,7 +339,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
             else if (getTransaction() != null && getTransaction().equals(miTx))
             {
                // We're not qu
-               nextTransaction();
+               nextTransaction(trace);
             }
             if (miTx != null)
             {
@@ -349,7 +365,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
     * - schedule the next transaction by notifying all threads waiting on the transaction
     * - setting the thread with the new transaction so there is no race with incoming calls
     */
-   protected void nextTransaction() 
+   protected void nextTransaction(boolean trace) 
    {
       if (!synched)
       {
@@ -359,22 +375,17 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       setTransaction(null);
       this.isReadOnlyTxLock = true;
       // is there a waiting list?
+      TxLock thelock = null;
       if (!txWaitQueue.isEmpty())
       {
-         TxLock thelock = (TxLock) txWaitQueue.removeFirst();
+         thelock = (TxLock) txWaitQueue.removeFirst();
          txLocks.remove(thelock);
          thelock.isQueued = false;
          // The new transaction is the next one, important to set it up to avoid race with 
          // new incoming calls
          if (thelock.waitingTx != null)
-         {
-            synchronized (waiting)
-            {
-               waiting.remove(thelock.waitingTx);
-            }
-         }
+            removeWaiting(thelock.waitingTx);
          setTransaction(thelock.waitingTx);
-         //         log.debug(Thread.currentThread()+" handing off to "+lock.threadName);
          synchronized(thelock) 
          { 
             // notify All threads waiting on this transaction.
@@ -382,20 +393,24 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
             thelock.notifyAll();
          }
       }
-      else
-      {
-         //         log.debug(Thread.currentThread()+" handing off to empty queue");
-      }
+      if (trace)
+         log.trace("nextTransaction: " + thelock + " " + toString());
    }
    
    public void endTransaction(Transaction transaction)
    {
-      nextTransaction();
+      boolean trace = log.isTraceEnabled();
+      if (trace)
+         log.trace("endTransaction: " + toString());
+      nextTransaction(trace);
    }
 
    public void wontSynchronize(Transaction trasaction)
    {
-      nextTransaction();
+      boolean trace = log.isTraceEnabled();
+      if (trace)
+         log.trace("wontSynchronize: " + toString());
+      nextTransaction(trace);
    }
    
    /**
@@ -408,6 +423,9 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
    { 
       Transaction tx = mi.getTransaction();
 
+      if (log.isTraceEnabled())
+         log.trace("endInvocation: miTx=" + tx + " " + toString());
+
       if (isReadOnlyTxLock && tx != null)
       {
          // If we are not the owner, won't synchronize was
@@ -416,10 +434,22 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
             return;
 
          if (isReadOnlyTxLock)
-         {
             endTransaction(tx);
-         }
       }
+   }
+
+   public String toString()
+   {
+      StringBuffer buffer = new StringBuffer(100);
+      buffer.append("QPL bean=").append(container.getBeanMetaData().getEjbName());
+      buffer.append(" hash=").append(hashCode());
+      buffer.append(" id=").append(id);
+      buffer.append(" tx=").append(getTransaction());
+      buffer.append(" readOnly=").append(isReadOnlyTxLock);
+      buffer.append(" synched=").append(synched);
+      buffer.append(" timeout=").append(txTimeout);
+      buffer.append(" queue=").append(txWaitQueue);
+      return buffer.toString();
    }
 }
 

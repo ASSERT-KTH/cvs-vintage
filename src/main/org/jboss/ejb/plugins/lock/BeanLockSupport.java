@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
@@ -97,38 +97,66 @@ public abstract class BeanLockSupport
    // This following is for deadlock detection
    protected static HashMap waiting = new HashMap();
 
-   public void deadlockDetection(Transaction miTx) throws Exception
+   public void deadlockDetection(Transaction miTx)
+      throws ApplicationDeadlockException
    {
-      /* Just doesn't work with UserTransactions
-      if (Thread.currentThread().equals(holdingThread))
-      {
-         throw new ApplicationDeadlockException("Application deadlock detected: Current thread already has tx lock in different transaction.", false);
-      }
-      */
-      if (miTx == null) return;
+      if (miTx == null) 
+         return;
 
       HashSet set = new HashSet();
       set.add(miTx);
       
       Object checkTx = this.tx;
+
       synchronized(waiting)
       {
-	 while (checkTx != null)
-	 {
-	    Object waitingFor = waiting.get(checkTx);
-          if (waitingFor != null)
-             waitingFor = ((BeanLock) waitingFor).getTransaction();
-	    if (waitingFor != null)
-	    {
-	       if (set.contains(waitingFor))
+          addWaiting(miTx);
+
+          while (checkTx != null)
+          {
+             Object waitingFor = waiting.get(checkTx);
+             if (waitingFor != null)
+                waitingFor = ((BeanLock) waitingFor).getTransaction();
+             if (waitingFor != null)
 	       {
-		  log.error("Application deadlock detected: " + miTx + " has deadlock conditions.  Two or more transactions contending for same resources and each have locks eachother need.");
-		  throw new ApplicationDeadlockException("Application deadlock detected: Two or more transactions contention.", true);
-	       }
-	       set.add(waitingFor);
-	    }
-	    checkTx = waitingFor;
-	 }
+                if (set.contains(waitingFor))
+                {
+                   log.error("Application deadlock detected: " + miTx + " has deadlock conditions.  Two or more transactions contending for same resources and each have locks each other needs.");
+                   if (log.isTraceEnabled())
+                      log.trace("WAITING=" + waiting);
+                   removeWaiting(miTx);
+                   throw new ApplicationDeadlockException("Application deadlock detected: Two or more transactions contention.", true);
+                 }
+	           set.add(waitingFor);
+             }
+             checkTx = waitingFor;
+          }
+      }
+   }
+
+   /**
+    * Add a transaction waiting for a lock
+    */
+   public void addWaiting(Transaction tx)
+   {
+      if (tx == null)
+         throw new IllegalArgumentException("Attempt to addWaiting with a null transaction");
+      synchronized (waiting)
+      {
+         waiting.put(tx, this);
+      }
+   }
+
+   /**
+    * Remove a transaction waiting for a lock
+    */
+   public void removeWaiting(Transaction tx)
+   {
+      if (tx == null)
+         throw new IllegalArgumentException("Attempt to removeWaiting with a null transaction");
+      synchronized (waiting)
+      {
+         waiting.remove(tx);
       }
    }
 }
