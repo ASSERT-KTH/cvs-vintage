@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.28 $" />  
+     <property name="revision" value="$Revision: 1.29 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -1111,9 +1111,74 @@ mod_webapp into mod_jk )
       <gtest request="GET /test/meta-inf/Manifest.mf HTTP/1.0"
              returnCode="${http.protocol} 4" />
 
+   </target>
+
+   <target name="security_chk">
       <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld.jsp%20 HTTP/1.0"
            returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /test/jsp/HelloWorld.jsp%2520 HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /test/jsp/HelloWorld.jsp%00 HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /%2e%2e/%2e%2e/%00.jsp HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /%252e%252e/%252e%252e/%00.jsp HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /%2e%2e/%2e%2e/%5cLICENSE%00.jsp HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /%2e%2e/%2e%2e/%5cLICENSE/%00.jsp HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /%252e%252e/%252e%252e/%5cLICENSE%00.jsp HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /%252e%252e/%252e%252e/%5cLICENSE/%00.jsp HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return HTML, not JSP source"
+           request="GET /test/jsp/HelloWorld.js%70 HTTP/1.0"
+           returnCode="${http.protocol} 200" 
+           goldenFile="${gdir}/HelloWorld.txt"
+      />
+
+      <gtest description="This URL should return HTML, not JSP source"
+           request="GET /test/jsp/HelloWorld.js%2570 HTTP/1.0"
+           returnCode="${http.protocol} 200" 
+           goldenFile="${gdir}/HelloWorld.txt"
+      />
+      <gtest description="This URL should return HTML, not JSP source"
+           request="GET /test/jsp/HelloWorld%2Ejsp HTTP/1.0"
+           returnCode="${http.protocol} 200" 
+           goldenFile="${gdir}/HelloWorld.txt"
+      />
+
+      <gtest description="This URL should return HTML, not JSP source"
+           request="GET /test/jsp/HelloWorld%252Ejsp HTTP/1.0"
+           returnCode="${http.protocol} 200" 
+           goldenFile="${gdir}/HelloWorld.txt"
       />
    </target>
 
@@ -1135,7 +1200,7 @@ mod_webapp into mod_jk )
    </target>
 
    <!-- ==================== All targets ====================  -->
-   <target name="client" depends="file,params,writer,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable,headers">
+   <target name="client" depends="file,params,writer,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable,headers,security_chk">
    </target>
 
    <!-- ==================== Aux targets ==================== -->
