@@ -1,4 +1,4 @@
-// $Id: SplashPanel.java,v 1.5 2003/06/30 18:00:24 linus Exp $
+// $Id: SplashPanel.java,v 1.6 2003/11/23 12:04:07 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,8 @@ import java.awt.Font;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.AbstractButton; //MVW
+
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
@@ -85,6 +87,8 @@ class SplashPanel extends JPanel {
 	// JPanel main = new JPanel(new BorderLayout());
 	// setBorder(new EtchedBorder(EtchedBorder.RAISED));
 	add(top, BorderLayout.NORTH);
+
+  splashButton.setHorizontalAlignment(AbstractButton.CENTER); //MVW
 	add(splashButton, BorderLayout.CENTER);
 	// add(_statusBar, BorderLayout.SOUTH);
     }
