@@ -1,4 +1,3 @@
-$page.setTitle("Select global attribute")
 #set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
 #set ($issueType = $scarabR.IssueType)
 #set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "data"))
@@ -17,7 +16,7 @@ $page.setTitle("Select global attribute")
 #end
 
 <div class="app" id="globalAttributeSelect">
-<h2>$page.Title</h2>
+<h2>Select global attribute</h2>
 
 <form action="$link.setPage("admin,AttributeSelect.vm")" method="post">
 <input type="hidden" name="action" value="admin.AttributeGroupEdit" />
@@ -42,7 +41,7 @@ module.</strong></p>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap"></th>
-<th>Attribute name</th>
+<th>Name</th>
 <th>Description</th>
 <th>Input type</th>
 <th>Author</th>

@@ -5,11 +5,11 @@
 #if ($attribute.AttributeId)
    #set ($attgroup = $intake.Attribute.mapTo($attribute))
    #set ($createNew = "false")
-   $page.setTitle("Edit Global Attribute '$attribute.Name'")
+   $page.setTitle("Edit global attribute '$attribute.Name'")
 #else
    #set ($attgroup = $intake.Attribute.Default)
    #set ($createNew = "true")
-   $page.setTitle("Create New Global Attribute")
+   $page.setTitle("Create new global attribute")
 #end
 
 <div class="app" id="div3-0-2-0">
@@ -38,7 +38,7 @@ On this screen, one can modify system wide Attribute information.
 <input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
 </div>
 
-<h3>Attribute info</h3>
+<h3>Info</h3>
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
@@ -54,14 +54,14 @@ On this screen, one can modify system wide Attribute information.
     </select>
   </td>
  <tr>
-  <th>* Attribute name</th>
+  <th>* Name</th>
   <td>
     <input type="text" name="$attgroup.Name.Key" value="$!attgroup.Name" />
     #fieldErrorMsg($attgroup.Name "")
   </td>
  </tr>
  <tr>
-  <th>* Attribute description</th>
+  <th>* Description</th>
   <td>
     <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attgroup.Description</textarea>
     #fieldErrorMsg($attgroup.Description "")
