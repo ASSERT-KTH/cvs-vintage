@@ -1,4 +1,4 @@
-$Id: TODO,v 1.2 1999/10/16 23:07:38 akv Exp $
+$Id: TODO,v 1.3 1999/10/20 11:12:07 akv Exp $
 
 This is the living To-Do list for Tomcat
 
@@ -31,6 +31,12 @@ This is the living To-Do list for Tomcat
 
     * Configuration system for Tomcat Standalone and Tomcat+Apache.
 
+    * The messages.properties file for the JSP engine is all messed
+      up. At some point we need to figure out a uniform nomenclature
+      for all the resource (errors, warnings) names and clean things
+      up in the code too. (The earlier the better... its already too
+      late :) 
+
   * Integration with Apache
 
     * Merge mod_jserv into tomcat cvs, work is underway to split it into
@@ -56,10 +62,5 @@ This is the living To-Do list for Tomcat
     * Add some JSP product tests -- there are none right now
 
     * Add performance tests -- maybe work with JMeter on this
-
-
-
-
-     
 
   
