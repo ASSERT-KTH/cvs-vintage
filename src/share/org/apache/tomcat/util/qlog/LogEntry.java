@@ -56,12 +56,6 @@
  */ 
 package org.apache.tomcat.util.qlog;
 
-import java.io.Writer;
-import java.io.StringWriter;
-import java.io.PrintWriter;
-
-import java.util.Date;
-
 /**
  * This is an entry that is created in response to every
  * Logger.log(...) call.

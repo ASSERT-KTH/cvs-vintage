@@ -1,9 +1,9 @@
 /*
  * ====================================================================
- * 
+ *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -19,15 +19,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -53,14 +53,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */ 
+ */
 package org.apache.tomcat.util.qlog;
-
-import java.io.Writer;
-import java.io.StringWriter;
-import java.io.PrintWriter;
-
-import java.util.Date;
 
 import org.apache.tomcat.util.collections.SimplePool;
 
@@ -88,9 +82,9 @@ public class QueueLogger extends Logger {
     /**
      * Adds a log message and stack trace to the queue and returns
      * immediately. The logger daemon thread will pick it up later and
-     * actually print it out. 
+     * actually print it out.
      *
-     * @param	message		the message to log. 
+     * @param	message		the message to log.
      * @param	t		the exception that was thrown.
      * @param	verbosityLevel	what type of message is this?
      * 				(WARNING/DEBUG/INFO etc)
@@ -104,7 +98,7 @@ public class QueueLogger extends Logger {
 	    super.log( prefix, message, t , verbosityLevel );
 	    return;
 	}
-	
+
 	if (verbosityLevel <= getVerbosityLevel()) {
             // check wheter we are logging to a file
             if (path!= null){
@@ -121,7 +115,7 @@ public class QueueLogger extends Logger {
 	    if( entry == null ) {
 		entry=new LogEntry(this);
 	    }
-	    
+
 	    if( timestamp ) {
 		entry.setDate(System.currentTimeMillis());
 	    } else {
@@ -133,7 +127,7 @@ public class QueueLogger extends Logger {
 	    logDaemon.add(entry);
 	}
     }
-    
+
     /** Flush the queue - in a separate thread, so that
 	caller doesn't have to wait
     */
@@ -143,14 +137,14 @@ public class QueueLogger extends Logger {
 	// log thread, which logs as soon as it gets an entry )
 	//emptyQueue();
     }
-    
+
     // 	Thread workerThread = new Thread(flusher);
     // 	workerThread.start();
     //     Runnable flusher = new Runnable() {
     // 	    public void run() {
     // 		QueueLogger.emptyQueue();
     // 	    }};
-    
+
     private static final char[] NEWLINE=Logger.NEWLINE;
     // There is only one thread, so we can reuse this
     char outBuffer[]=new char[512]; // resize
@@ -166,17 +160,17 @@ public class QueueLogger extends Logger {
 	}
 	try {
 	    outSB.setLength(0);
-		    
+
 	    logEntry.print( outSB );
 	    outSB.append( NEWLINE );
-	    
+
 	    int len=outSB.length();
 	    if( len > outBuffer.length ) {
 		outBuffer=new char[len];
 	    }
 	    outSB.getChars(0, len, outBuffer, 0);
 	    if (sink != null) {
-		sink.write( outBuffer, 0, len );	    
+		sink.write( outBuffer, 0, len );
 		sink.flush();
 		//System.out.print(sink + " "  + new String(outBuffer,0,len) );
 	    } else {
