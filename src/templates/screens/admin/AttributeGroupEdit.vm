@@ -6,7 +6,7 @@
 
 #if (!$groupId)
 <p class="alert">$l10n.GroupNotFound
-<a href="$link.setPage("admin,ManageArtifactTypes.vm")>here</a>.</p>
+<a href="$link.setPage("admin,ManageArtifactTypes.vm")">here</a>.</p>
 #else
 
 <form method="post" action="$link.setPage("admin,AttributeGroupEdit.vm")">
