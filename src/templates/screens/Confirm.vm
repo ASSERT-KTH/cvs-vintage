@@ -1,7 +1,7 @@
 <div class="app" id="confirm">
 $page.setTitle("Confirm Your Email Address")
 
-<h2$page.Title</h2
+<h2>$page.Title</h2>
 
 ## attempt to get the user out of the temp hashtable
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))

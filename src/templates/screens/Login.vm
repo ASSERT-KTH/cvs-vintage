@@ -1,41 +1,40 @@
-$page.setTitle("Welcome to Scarab") 
+<div class="app" id="login">
+$page.setTitle("Login to Scarab") 
 
-<div class="app">
+<h2>$page.Title</h2>
 
- <h3>$page.Title</h3>
-
- <p>New users, <a href="$link.setPage("Register.vm")"><strong>register here</strong></a>.</p>
+<p>New users, <a href="$link.setPage("Register.vm")"><strong>register here</strong></a>.</p>
 
 #set ($paramNext = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE))
 
 <form action="$link.setPage("Login.vm")" method="post" name="login">
   <input type="hidden" name="action" value="Login" /> 
 #if ($nextTemplate && $nextTemplate.length() > 0)
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" /> 
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" /> 
 #elseif ($paramNext && $paramNext.length() > 0)
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$paramNext" /> 
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$paramNext" /> 
 #else
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" /> 
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" />
 #end 
 
 #set ( $loginGroup = $intake.Login.Default )
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
-<tr><th>Email address</th>
+<tr>
+<th>Email address</th>
 <td>
 <input name="$loginGroup.Username.Key" value="$!loginGroup.Username.Value" size="25" type="text" />
 #fieldErrorMsg ($loginGroup.Username "")
 </td>
 </tr>
-
-<tr><th>Password</th>
+<tr>
+<th>Password</th>
 <td>
 <input name="$loginGroup.Password.Key" value="" size="25" type="password" />
 #fieldErrorMsg ($loginGroup.Password "")
 </td>
 </tr>
-
 <tr>
 <td>&#160;</td><td><input type="submit" name="eventSubmit_doLogin" value="Login" /></td>
 </tr>
@@ -43,6 +42,5 @@ $page.setTitle("Welcome to Scarab")
 </div>
 
 $intake.declareGroups()
- </form>
-
+</form>
 </div>

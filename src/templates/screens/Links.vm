@@ -1,4 +1,4 @@
-<div id="links" class="app">
+<div class="app" id="links">
 $page.setTitle("Scarab Links")
 
 <h2>$l10n.SCARAB_LINKS</h2>
@@ -26,30 +26,28 @@ $page.setTitle("Scarab Links")
 <h3>Admin Pages</h3>
 <ul>
 <li>
-    <a href="$link.setPage("admin,ArtifactTypeEdit.vm")">admin,ArtifactTypeEdit.vm</a>
+ <a href="$link.setPage("admin,ArtifactTypeEdit.vm")">admin,ArtifactTypeEdit.vm</a>
 </li>
 <li>
-    <a href="$link.setPage("admin,GlobalAttributeShow.vm")">admin,GlobalAttributeShow.vm</a>
+ <a href="$link.setPage("admin,GlobalAttributeShow.vm")">admin,GlobalAttributeShow.vm</a>
 </li>
 <!--
 <li>
-    <a 
-href="$link.setPage("admin,AttributeShow.vm")">admin,AttributeShow.vm</a> 
+ <a href="$link.setPage("admin,AttributeShow.vm")">admin,AttributeShow.vm</a> 
 (not working currently)</li>
 <li>
-    <a 
-href="$link.setPage("admin,ModuleAttributeEditor.vm")">admin,ModuleAttributeEditor.vm</a> 
+ <a href="$link.setPage("admin,ModuleAttributeEditor.vm")">admin,ModuleAttributeEditor.vm</a> 
 (not working currently)</li>
 -->
 <li>
-    <a href="$link.setPage("FluxIndex.vm")">Flux</a>
+ <a href="$link.setPage("FluxIndex.vm")">Flux</a>
 </li>
 </ul>
 
 <h3>Documentation</h3>
 <ul>
 <li>
-    <a href="http://scarab.whichever.com/api/">Javadoc API Documentation</a>
+ <a href="http://scarab.whichever.com/api/">Javadoc API Documentation</a>
 </li>
 </ul>
 

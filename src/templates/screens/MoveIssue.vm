@@ -1,4 +1,8 @@
+<div class="app" id="moveissue">
 $page.setTitle("Copy / Move Issue")
+
+<h2>$page.Title</h2>
+
 #set ($action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "MoveIssue2.vm"))
 #set ($user = $data.User)
 #set ($currentModule = $scarabR.CurrentModule)
@@ -6,71 +10,73 @@ $page.setTitle("Copy / Move Issue")
 #set ($issueId = $data.Parameters.getString("id"))
 #set ($issue = $scarabR.getIssue($issueId))
 
-
-<div class="app" id="div2-6-1">
-
 <form method="post" action="$action">
 <input type="hidden" name="id" value="$issueId">
 
-          <h3>Issue to be Copied / Moved</h3>
+<div class="functnbar">
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr>
+  <td><input type="submit" value="Next" name="eventSubmit_doMapattributes" /></td>
+ </tr>
+</table>
+</div>
 
-       <table width="100%" border="1" cellspacing="2" cellpadding="3">
-        <tr>
-         <th>Summary</th>
-         <th>Date Committed</th>
-         <th>Committed By</th>
-        </tr>
-        <tr class="a">
-         <td>
-             #set ($AttrValues = $issue.AllAttributeValuesMap)
-             #set( $attVal =  $AttrValues.get("SUMMARY"))
-             #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-           $attVal.Value
-         </td>  
+<h3>Issue to be Copied / Moved</h3>
 
-         <td>$format.getDate($scarabG.DateFormat, $issue.CreatedDate)</td>
-
-         <td>
-             #set ($createdUser = $issue.CreatedBy)
-             <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
-         </td>
-        </tr>
-        </table>
-
-          
-          <h3>Destination Module</h3>
-          <p> 
-          <select name="module_id">
-             <option>Select Module...</option>
-          #foreach( $module in $security.getModules($user, "Issue | Enter") )
-                  <option value="$module.ModuleId"
-                  #if ($module.ModuleId.equals($moduleId) )
-                   selected="selected"
-                  #end
-                    >$module.Name</option>
-          #end
-         </select>
-          </p>
-          
-          <h3>Action</h3>
-          <p><input type="radio" name="select_action" value="copy" 
-             #if ($select_action.equals("copy") )
-                checked
-             #end /> Copy
-          </p>
-          <p><input type="radio" name="select_action" value="move" 
-             #if ($select_action.equals("move") )
-                checked
-             #end /> Move
-          </p>  
-
-<p class="functnbar">
-<input type="submit" value="Next" name="eventSubmit_doMapattributes"/>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+ <tr>
+  <th>Summary</th>
+  <th>Date Committed</th>
+  <th>Committed By</th>
+ </tr>
+ <tr class="a">
+  <td>
+   #set ($AttrValues = $issue.AllAttributeValuesMap)
+   #set( $attVal =  $AttrValues.get("SUMMARY"))
+   #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+   $attVal.Value
+  </td>  
+  <td>$format.getDate($scarabG.DateFormat, $issue.CreatedDate)</td>
+  <td>
+   #set ($createdUser = $issue.CreatedBy)
+   <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+  </td>
+ </tr>
+</table>
+   
+<h3>Destination Module</h3>
+<p> 
+<select name="module_id">
+ <option>Select Module...</option>
+ #foreach( $module in $security.getModules($user, "Issue | Enter") )
+  <option value="$module.ModuleId"
+  #if ($module.ModuleId.equals($moduleId) )
+   selected="selected"
+  #end
+  >$module.Name</option>
+ #end
+</select>
 </p>
 
-     </td>
-    </tr>
-   </table>
-</form>
+<h3>Action</h3>
+<p><input type="radio" name="select_action" value="copy" 
+#if ($select_action.equals("copy") )
+ checked
+#end /> Copy
+</p>
+<p><input type="radio" name="select_action" value="move" 
+#if ($select_action.equals("move") )
+ checked
+#end /> Move
+</p>  
 
+<div class="functnbar2">
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr>
+  <td><input type="submit" value="Next" name="eventSubmit_doMapattributes" /></td>
+ </tr>
+</table>
+</div>
+
+</form>
 </div>
