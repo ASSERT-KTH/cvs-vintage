@@ -87,7 +87,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.21 2002/07/30 22:48:14 jmcnally Exp $
+    @version $Id: Approval.java,v 1.22 2002/08/16 03:57:46 elicia Exp $
 */
 public class Approval extends RequireLoginFirstAction
 {
@@ -130,8 +130,7 @@ public class Approval extends RequireLoginFirstAction
                comment = params.getString("query_comment_" + queryId);
 
                userId = params.getString("query_user_" + queryId);
-               toUser = (ScarabUser) ScarabUserImplPeer
-                                     .retrieveByPK(new NumberKey(userId));
+               toUser = scarabR.getUser(userId);
                artifact = "query";
                artifactName = query.getName();
 
@@ -187,7 +186,7 @@ public class Approval extends RequireLoginFirstAction
                    }
                    actionWord = "rejected";
                } 
-               else if (action.equals("Approve"))
+               else if (action.equals("approve"))
                {
                    try
                    {
