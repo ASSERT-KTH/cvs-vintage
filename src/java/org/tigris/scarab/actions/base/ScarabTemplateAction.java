@@ -46,6 +46,10 @@ package org.tigris.scarab.actions.base;
  * individuals on behalf of Collab.Net.
  */
  
+// Java Stuff
+import java.util.Stack;
+import java.util.HashMap;
+
  // Turbine Stuff
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateAction;
@@ -61,7 +65,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.9 2001/12/12 20:06:07 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.10 2001/12/31 23:43:02 elicia Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -167,16 +171,17 @@ public abstract class ScarabTemplateAction extends TemplateAction
                             .getString(ScarabConstants.BACK_TEMPLATE, defaultValue);
     }
 
-    /**
-     * Require people to implement this method
-     */
-    public abstract void doPerform( RunData data, TemplateContext context )
-        throws Exception;
 
-    public void doGotocancel( RunData data, TemplateContext context )
+    public void doSave( RunData data, TemplateContext context )
         throws Exception
     {
-        setTarget(data, getCancelTemplate(data));            
+    }
+
+    public void doDone( RunData data, TemplateContext context )
+        throws Exception
+    {
+        doSave(data, context);
+        doCancel(data, context);
     }
 
     public void doGonext( RunData data, TemplateContext context )
@@ -203,6 +208,28 @@ public abstract class ScarabTemplateAction extends TemplateAction
         IntakeTool intake = getIntakeTool(context);
         intake.removeAll();
         setTarget(data, getCurrentTemplate(data));            
+    }
+
+    public void doCancel( RunData data, TemplateContext context )
+        throws Exception
+    {
+        String cancelTo = null;
+
+        ScarabUser user = (ScarabUser)data.getUser();
+        Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
+        cancelTargets.pop();
+        String cancelPage = (String)cancelTargets.pop();
+        if (cancelTargets.contains(cancelPage))
+        {
+            int cancelPageIndex = cancelTargets.indexOf(cancelPage);
+            for (int i = cancelTargets.size(); i > (cancelPageIndex + 1); i--)
+            {
+               cancelTargets.pop();
+            }
+            cancelPage = (String)cancelTargets.pop();
+        }
+
+        data.setTarget(cancelPage);
     }
         
 }

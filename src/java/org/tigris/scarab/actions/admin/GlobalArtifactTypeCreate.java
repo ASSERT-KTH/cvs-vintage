@@ -50,83 +50,47 @@ import java.util.List;
 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.intake.model.Field;
 
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
-import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributePeer;
-import org.tigris.scarab.om.ROptionOption;
-import org.tigris.scarab.om.ParentChildAttributeOption;
-import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.IssueType;
+//import org.tigris.scarab.om.IssueTypePeer;
+//import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
- * This class deals with modifying Global Attributes.
+ * This class deals with modifying Global Artifact Types.
  *
- * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.9 2001/12/31 23:43:02 elicia Exp $
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.1 2001/12/31 23:43:02 elicia Exp $
  */
-public class GlobalAttributes extends RequireLoginFirstAction
+public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
 
     /**
-     * On the admin,GlobalAttributeShow.vm page, delete the selected attributes.
+     * creates new global artifact type
      */
-    public void doSave( RunData data, TemplateContext context ) 
+    public void doSave( RunData data, TemplateContext context )
         throws Exception
     {
-        String template = data.getParameters()
-            .getString(ScarabConstants.TEMPLATE, null);
-        String nextTemplate = data.getParameters().getString(
-            ScarabConstants.NEXT_TEMPLATE, template );
+        IntakeTool intake = getIntakeTool(context);
+        IssueType issueType = new IssueType();
+        Group group = intake.get("IssueType", issueType.getQueryKey());
+        issueType.setParentId(new NumberKey("0"));
+        group.setProperties(issueType);
+        issueType.save();
 
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
-        if ( intake.isAllValid() ) 
-        {
-            List allAttributes = AttributePeer.getAllAttributes();
-            for (int i=0;i<allAttributes.size();i++)
-            {
-                Attribute attr = (Attribute) allAttributes.get(i);
-                Group attrGroup = intake.get("Attribute", attr.getQueryKey(),false);
-                try
-                {
-                    if (attrGroup != null)
-                    {
-                        attrGroup.setProperties(attr);
-                        attr.save();
-                        intake.remove(attrGroup);
-                    }
-                }
-                catch (Exception e)
-                {
-                    data.setMessage("Failure: " + e.getMessage());
-                    return;
-                }
-            }
-        }
-    }
+        // Create template type.
+        IssueType template = new IssueType();
+        template.setName(issueType.getName() + " Template");
+        template.setParentId(issueType.getIssueTypeId());
+        template.save();
 
-    /**
-     * Manages clicking of the create new button
-     */
-    public void doCreatenew( RunData data, TemplateContext context )
-        throws Exception
-    {
-        String template = data.getParameters()
-            .getString(ScarabConstants.TEMPLATE, null);
-        String nextTemplate = data.getParameters().getString(
-            ScarabConstants.OTHER_TEMPLATE, template );
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
         setTarget(data, nextTemplate);
-
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        scarabR.setAttribute(Attribute.getInstance());        
     }
     
 }

@@ -46,6 +46,10 @@ package org.tigris.scarab.actions.base;
  * individuals on behalf of Collab.Net.
  */ 
 
+// Java Stuff
+import java.util.Stack;
+import java.util.HashMap;
+
 // Turbine Stuff
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
@@ -57,13 +61,14 @@ import org.apache.fulcrum.intake.model.Group;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.screens.Default;
+import org.tigris.scarab.om.ScarabUser;
 
 /**
  * This is a badly named class which is essentially equivalent to the 
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.17 2001/12/12 20:06:07 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.18 2001/12/31 23:43:02 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -99,7 +104,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     public String getCurrentTemplate(RunData data)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.TEMPLATE, null);
+                   .getString(ScarabConstants.TEMPLATE, null);
     }
 
     /**
@@ -109,7 +114,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     public String getCurrentTemplate(RunData data, String defaultValue)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.TEMPLATE, defaultValue);
+                   .getString(ScarabConstants.TEMPLATE, defaultValue);
     }
 
     /**
@@ -118,7 +123,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     public String getNextTemplate(RunData data)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.NEXT_TEMPLATE, null);
+                   .getString(ScarabConstants.NEXT_TEMPLATE, null);
     }
 
     /**
@@ -127,7 +132,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     public String getNextTemplate(RunData data, String defaultValue)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.NEXT_TEMPLATE, defaultValue);
+                   .getString(ScarabConstants.NEXT_TEMPLATE, defaultValue);
     }
 
     /**
@@ -136,16 +141,18 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     public String getCancelTemplate(RunData data)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.CANCEL_TEMPLATE, null);
+                   .getString(ScarabConstants.CANCEL_TEMPLATE, null);
     }
 
     /**
-     * Returns the cancelTemplate to be executed. Otherwise returns defaultValue.
+     * Returns the cancelTemplate to be executed. 
+     * Otherwise returns defaultValue.
      */
     public String getCancelTemplate(RunData data, String defaultValue)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.CANCEL_TEMPLATE, defaultValue);
+                   .getString(ScarabConstants.CANCEL_TEMPLATE, 
+                              defaultValue);
     }
 
     /**
@@ -154,16 +161,17 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     public String getBackTemplate(RunData data)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.BACK_TEMPLATE, null);
+                   .getString(ScarabConstants.BACK_TEMPLATE, null);
     }
 
     /**
-     * Returns the backTemplate to be executed. Otherwise returns defaultValue.
+     * Returns the backTemplate to be executed. 
+     * Otherwise returns defaultValue.
      */
     public String getBackTemplate(RunData data, String defaultValue)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.BACK_TEMPLATE, defaultValue);
+                   .getString(ScarabConstants.BACK_TEMPLATE, defaultValue);
     }
 
     /**
@@ -176,16 +184,16 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
                    .getString(ScarabConstants.OTHER_TEMPLATE);
     }
 
-    /**
-     * Require people to implement this method
-     */
-    public abstract void doPerform( RunData data, TemplateContext context )
-        throws Exception;
-
-    public void doGotocancel( RunData data, TemplateContext context )
+    public void doSave( RunData data, TemplateContext context )
         throws Exception
     {
-        setTarget(data, getCancelTemplate(data));            
+    }
+
+    public void doDone( RunData data, TemplateContext context )
+        throws Exception
+    {
+        doSave(data, context);
+        doCancel(data, context);
     }
 
     public void doGonext( RunData data, TemplateContext context )
@@ -194,9 +202,13 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         setTarget(data, getNextTemplate(data));            
     }
 
-    public void doGotoothertemplate( RunData data, TemplateContext context )
+    public void doGotoothertemplate( RunData data, 
+                                     TemplateContext context )
         throws Exception
     {
+        data.getParameters().remove(ScarabConstants.CANCEL_TEMPLATE);
+        data.getParameters().add(ScarabConstants.CANCEL_TEMPLATE, 
+                                 data.getTarget());
         setTarget(data, getOtherTemplate(data));            
     }
 
@@ -214,4 +226,26 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         setTarget(data, getCurrentTemplate(data));            
     }
         
+    public void doCancel( RunData data, TemplateContext context )
+        throws Exception
+    {
+        String cancelTo = null;
+
+        ScarabUser user = (ScarabUser)data.getUser();
+        Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
+        cancelTargets.pop();
+        String cancelPage = (String)cancelTargets.pop();
+        if (cancelTargets.contains(cancelPage))
+        {
+            int cancelPageIndex = cancelTargets.indexOf(cancelPage);
+            for (int i = cancelTargets.size(); i > (cancelPageIndex + 1); i--)
+            {
+               cancelTargets.pop();
+            }
+            cancelPage = (String)cancelTargets.pop();
+        }
+
+        data.setTarget(cancelPage);
+    }
+
 }
