@@ -7,10 +7,8 @@
 
 package org.jboss.naming;
 
-import java.io.InputStream;
 import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.io.ObjectStreamException;
+import java.io.InputStream;
 import java.io.Serializable;
 
 import java.lang.reflect.Constructor;
@@ -51,7 +49,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * 
  * @see org.jboss.naming.NonSerializableFactory
  * 
- * @version <tt>$Revision: 1.13 $</tt>
+ * @version <tt>$Revision: 1.14 $</tt>
  * @author  Scott.Stark@jboss.org
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -74,7 +72,7 @@ public class ExternalContext
       throws IOException, NamingException
    {   
       setJndiName(jndiName);
-      setProperties(contextPropsURL);
+      setPropertiesURL(contextPropsURL);
    }
 
    /**
@@ -194,14 +192,19 @@ public class ExternalContext
     *
     * @jmx:managed-attribute
     */
-   public void setProperties(String rawProps) throws IOException
+   public void setProperties(final Properties props) throws IOException
    {
-      Properties props = new Properties();
-
-      // java.util.Properties really needs a load(Writer)
-      props.load(new java.io.StringBufferInputStream(rawProps));
-      
       contextInfo.setProperties(props);
+   }
+
+   /**
+    * Get the InitialContex class environment properties.
+    *
+    * @jmx:managed-attribute
+    */
+   public Properties getProperties() throws IOException
+   {
+      return contextInfo.getProperties();
    }
    
    /**
@@ -388,6 +391,11 @@ public class ExternalContext
       public void setProperties(final Properties props)
       {
          contextProps = props;
+      }
+
+      public Properties getProperties()
+      {
+         return contextProps;
       }
       
       public void loadProperties(String contextPropsURL) throws IOException
