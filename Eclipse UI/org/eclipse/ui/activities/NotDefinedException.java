@@ -25,13 +25,13 @@ package org.eclipse.ui.activities;
  * 
  * @since 3.0
  */
-public class ActivityNotDefinedException extends Exception {
+public class NotDefinedException extends Exception {
 
 	/**
 	 * Constructs a <code>ActivityNotDefinedException</code> with no specified 
 	 * detail message. 
 	 */	
-	public ActivityNotDefinedException() {
+	public NotDefinedException() {
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class ActivityNotDefinedException extends Exception {
 	 *
 	 * @param s	the detail message.
 	 */	
-	public ActivityNotDefinedException(String s) {
+	public NotDefinedException(String s) {
 		super(s);
 	}
 }

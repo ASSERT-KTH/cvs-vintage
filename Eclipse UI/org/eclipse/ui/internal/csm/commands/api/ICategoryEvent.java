@@ -13,34 +13,42 @@ package org.eclipse.ui.internal.csm.commands.api;
 
 /**
  * <p>
- * Signals that an attempt was made to access the attributes of an undefined
- * command.
+ * An instance of <code>ICategoryEvent</code> describes changes to an instance of 
+ * <code>ICategory</code>. 
  * </p>
  * <p>
- * This class is not intended to be extended by clients.
- * </p> 
+ * This interface is not intended to be extended or implemented by clients.
+ * </p>
  * <p>
  * <em>EXPERIMENTAL</em>
  * </p>
  * 
  * @since 3.0
+ * @see ICategory
+ * @see ICategoryListener#categoryChanged
  */
-public class CommandNotDefinedException extends Exception {
+public interface ICategoryEvent {
 
 	/**
-	 * Constructs a <code>CommandNotDefinedException</code> with no specified 
-	 * detail message. 
-	 */	
-	public CommandNotDefinedException() {
-	}
-
-	/**
-	 * Constructs a <code>CommandNotDefinedException</code> with the specified 
-	 * detail message. 
+	 * Returns the instance of <code>ICategory</code> that has changed.
 	 *
-	 * @param s	the detail message.
+	 * @return the instance of <code>ICategory</code> that has changed. 
+	 *         Guaranteed not to be <code>null</code>.
+	 */
+	ICategory getCategory();
+
+	/**
+	 * TODO javadoc
 	 */	
-	public CommandNotDefinedException(String s) {
-		super(s);
-	}
+	boolean hasDefinedChanged();
+	
+	/**
+	 * TODO javadoc
+	 */	
+	boolean hasDescriptionChanged();	
+	
+	/**
+	 * TODO javadoc
+	 */		
+	boolean hasNameChanged();
 }
