@@ -1,8 +1,6 @@
 <div class="app" id="advancedquery">
 <h2>$page.Title</h2>
 
-<h3>Search the Scarab knowledge base</h3>
-
 <form action="$link.setPage("AdvancedQuery.vm")" method="post">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="UserList.vm" />
