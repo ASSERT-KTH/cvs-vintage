@@ -75,6 +75,8 @@ public class ComposerController
 	public ComposerController(String id, DefaultFrameModel model) {
 		this(id, model, new Message());
 		
+		getView().addWindowListener(this);
+		
 		//composerModel = new ComposerModel();
 	}
 
@@ -86,6 +88,7 @@ public class ComposerController
 		
 		((ComposerModel)model).setMessage(message);
 
+		getView().addWindowListener(this);
 		//this.message = message;
 		//composerInterface.viewItem = MailConfig.getComposerOptionsConfig().getViewItem();
 		//composerModel = new ComposerModel();
@@ -321,6 +324,7 @@ public class ComposerController
 	}
 
 	public void windowClosing(WindowEvent e) {
+		saveAndClose();
 	}
 
 	public void windowDeactivated(WindowEvent e) {

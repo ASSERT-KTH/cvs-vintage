@@ -218,4 +218,12 @@ public class ComposerView extends FrameView {
 		return new ToolBar( MailConfig.get("composer_toolbar").getElement("toolbar"), controller);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.frame.FrameView#loadWindowPosition()
+	 */
+	public void loadWindowPosition() {
+
+		super.loadWindowPosition();
+	}
+
 }

@@ -24,7 +24,7 @@ import org.columba.core.xml.XmlElement;
 
 public abstract class DefaultFrameModel {
 
-	protected Hashtable controllers;
+	
 
 	protected int nextId = 0;
 
@@ -33,7 +33,7 @@ public abstract class DefaultFrameModel {
 	protected XmlElement defaultView;
 
 	public DefaultFrameModel() {
-		controllers = new Hashtable();
+		
 
 		defaultView = new XmlElement("view");
 		XmlElement window = new XmlElement("window");
@@ -59,12 +59,15 @@ public abstract class DefaultFrameModel {
 		 * Registers the View
 		 * @param view
 		 */
+	/*
 	protected void register(String id, FrameController controller) {
 		controllers.put(id, controller);
 		controller.setItem(new ViewItem(createDefaultConfiguration(id)));
 		
 		MainInterface.frameModelManager.register(controller);
 	}
+	*/
+
 
 	protected XmlElement createDefaultConfiguration(String id) {
 		XmlElement child = (XmlElement) defaultView.clone();
@@ -73,17 +76,34 @@ public abstract class DefaultFrameModel {
 		return child;
 	}
 
+	void register(String id, FrameController controller)
+	{
+	}
+	
+	
 	/**
 			 * Unregister the View from the Model
 			 * @param view
 			 * @return boolean true if there are no more views for the model
 			 */
+	
+	void unregister(String id )
+	{
+	}
+	
+	void saveAndUnregister(String id)
+	{
+	}
+	
+	/*
 	protected void unregister(String id) {
 		FrameController controller = (FrameController) controllers.get(id);
 		controllers.remove(id);
 		defaultView = controller.getItem().getRoot();
 	}
+	*/
 
+	/*
 	public void saveAndUnregister(String id) {
 		//		remove from list
 		FrameController controller = (FrameController) controllers.get(id);
@@ -91,5 +111,6 @@ public abstract class DefaultFrameModel {
 
 		MainInterface.frameModelManager.unregister(controller);
 	}
+	*/
 
 }

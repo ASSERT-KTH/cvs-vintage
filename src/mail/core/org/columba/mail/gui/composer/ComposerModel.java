@@ -19,8 +19,9 @@ import java.util.Vector;
 
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.parser.ListParser;
-import org.columba.core.gui.frame.DefaultFrameModel;
 import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.frame.SingleViewFrameModel;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.Message;
@@ -32,13 +33,13 @@ import org.columba.mail.message.MimePart;
  * Model for message composer dialog
  * 
  */
-public class ComposerModel extends DefaultFrameModel {
+public class ComposerModel extends SingleViewFrameModel {
 
 	Message message;
 	AccountItem accountItem;
 	String bodytext;
 	String charsetName;
-	
+
 	Vector attachments;
 
 	Vector toList;
@@ -49,10 +50,25 @@ public class ComposerModel extends DefaultFrameModel {
 	boolean encryptMessage;
 
 	public ComposerModel() {
-		this(new Message());
+		this(
+			MailConfig.getComposerOptionsConfig().getViewItem().getRoot(),
+			new Message());
 	}
-	
+
 	public ComposerModel(Message message) {
+		this(
+			MailConfig.getComposerOptionsConfig().getViewItem().getRoot(),
+			message);
+	}
+
+	public ComposerModel(XmlElement root) {
+
+		this(root, new Message());
+	}
+
+	public ComposerModel(XmlElement root, Message message) {
+		super(root);
+
 		this.message = message;
 
 		toList = new Vector();
@@ -63,7 +79,6 @@ public class ComposerModel extends DefaultFrameModel {
 
 		charsetName = "auto";
 	}
-
 
 	public void setTo(String s) {
 		if (s == null)
@@ -92,31 +107,26 @@ public class ComposerModel extends DefaultFrameModel {
 		}
 
 	}
-	
-	public void setHeaderField(String key, String value)
-	{
+
+	public void setHeaderField(String key, String value) {
 		message.getHeader().set(key, value);
 	}
-	
+
 	public String getHeaderField(String key) {
-			return (String) message.getHeader().get(key);
-		}
-	
-	public void setToList( Vector v )
-	{
+		return (String) message.getHeader().get(key);
+	}
+
+	public void setToList(Vector v) {
 		this.toList = v;
 	}
-	
-	public void setCcList( Vector v )
-	{
+
+	public void setCcList(Vector v) {
 		this.ccList = v;
 	}
-	
-	public void setBccList( Vector v )
-	{
+
+	public void setBccList(Vector v) {
 		this.bccList = v;
 	}
-	
 
 	public Vector getToList() {
 		return toList;
@@ -166,7 +176,6 @@ public class ComposerModel extends DefaultFrameModel {
 		//notifyListeners();
 
 	}
-	
 
 	public String getSignature() {
 		return "signature";
@@ -190,9 +199,7 @@ public class ComposerModel extends DefaultFrameModel {
 
 	public void setAccountItem(String host, String address) {
 		setAccountItem(
-			MailConfig.getAccountList().hostGetAccount(
-				host,
-				address));
+			MailConfig.getAccountList().hostGetAccount(host, address));
 	}
 
 	/**
@@ -200,7 +207,7 @@ public class ComposerModel extends DefaultFrameModel {
 	 * @return String
 	 */
 	public String getCharsetName() {
-		if( charsetName.equals( "auto" ) )
+		if (charsetName.equals("auto"))
 			charsetName = System.getProperty("file.encoding");
 
 		return charsetName;
@@ -245,21 +252,20 @@ public class ComposerModel extends DefaultFrameModel {
 	public void setEncryptMessage(boolean encryptMessage) {
 		this.encryptMessage = encryptMessage;
 	}
-	
-	public String getPriority() {
-			if (message.getHeader().get("X-Priority") == null)
-				return "Normal";
-			else
-				return (String) message.getHeader().get("X-Priority");
-		}
 
-	public void setPriority(String s)
-	{
+	public String getPriority() {
+		if (message.getHeader().get("X-Priority") == null)
+			return "Normal";
+		else
+			return (String) message.getHeader().get("X-Priority");
+	}
+
+	public void setPriority(String s) {
 		message.getHeader().set("X-Priority", s);
 	}
-	
+
 	public FrameController createInstance(String id) {
-		return new ComposerController(id,this);
+		return new ComposerController(id, this);
 	}
-	
+
 }

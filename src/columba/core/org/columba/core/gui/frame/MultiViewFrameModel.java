@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.frame;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.main.MainInterface;
@@ -29,10 +30,13 @@ import org.columba.core.xml.XmlElement;
  */
 public abstract class MultiViewFrameModel extends DefaultFrameModel {
 
+	protected Hashtable controllers;
 	protected XmlElement viewList;
 
 	public MultiViewFrameModel(XmlElement viewList) {
 		super();
+		
+		controllers = new Hashtable();
 
 		this.viewList = viewList;
 

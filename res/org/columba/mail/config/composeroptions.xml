@@ -3,8 +3,8 @@
 
 <options> 
  <gui>
-  <view>
-    <window x="0" y="0" width="900" height="700"/> 
+  <view id="0">
+    <window x="0" y="0" width="600" height="700" maximized="false"/> 
     <toolbars show_main="true" show_filter="true" show_folderinfo="true" />
     <splitpanes main="200" header="200" attachment="100" />
     <addressbook enabled="false" />
