@@ -113,7 +113,7 @@
      <td>
      <select name="$pcaoGroup.ParentId.Key">
      #if ($pcao.ParentId.toString().equals("0"))
-        <option selected="selected" value="0">Root</option>
+        <option selected="selected" value="0">$l10n.Root</option>
      #else
         <option value="0">$l10n.Root</option>
      #end
