@@ -24,7 +24,7 @@ import org.w3c.dom.NodeList;
  * @see Service
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * 
  * <p><b>Revisions:</b>
  * <p><b>2001/08/03 marcf </b>
@@ -57,7 +57,6 @@ public class ServiceCreator
     */
    public ObjectInstance create(Element mbeanElement) throws Exception
    {
-		
       ObjectName name = parseObjectName(mbeanElement);
 		
       // marcf fixme add and remove the classlaoder from the controller
@@ -79,7 +78,7 @@ public class ServiceCreator
       // get the constructor params/sig to use
       ConstructorInfo constructor =
          ConstructorInfo.create(mbeanElement);
-      log.info("About to create bean: "+name);
+      log.debug("About to create bean: "+name);
 		
       // Create the MBean instance
       try 
@@ -89,7 +88,7 @@ public class ServiceCreator
                                                       loader,
                                                       constructor.params,
                                                       constructor.signature);
-         log.info("Created bean: "+name);
+         log.debug("Created bean: "+name);
 		
          return instance;
 	
@@ -100,7 +99,7 @@ public class ServiceCreator
          try 
          {
             server.unregisterMBean(name);
-         } catch (Exception othere) 
+         } catch (Exception ignore)
          { } // end of try-catch
          
          throw e;
