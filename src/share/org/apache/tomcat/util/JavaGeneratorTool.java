@@ -146,7 +146,7 @@ public class JavaGeneratorTool {
      *          the mapFile or the coresponding class file is not found
      */
     public static int readVersion(String classDir, String baseClassName) {
-	File mapFile=new File( classDir + "/" + baseClassName + ".ver");
+	File mapFile=new File( classDir + File.separator + baseClassName + ".ver");
 	if( ! mapFile.exists() )
 	    return -1;
 	
@@ -183,7 +183,7 @@ public class JavaGeneratorTool {
     public static void writeVersion(String classDir, String baseClassName,
 				    int version)
     {
-	File mapFile=new File( 	classDir + "/" + baseClassName + ".ver");
+	File mapFile=new File( 	classDir + File.separator + baseClassName + ".ver");
 
 	try {
 	    File dir=new File(mapFile.getParent());
