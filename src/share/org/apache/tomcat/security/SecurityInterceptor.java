@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/Attic/SecurityInterceptor.java,v 1.1 1999/10/31 00:24:33 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/31 00:24:33 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/Attic/SecurityInterceptor.java,v 1.2 1999/11/13 03:59:34 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/13 03:59:34 $
  *
  * ====================================================================
  *
@@ -492,7 +492,7 @@ public final class SecurityInterceptor implements ServiceInterceptor {
 	if (guarantee == null)
 	    return;
 	if (guarantee.equals(UserDataConstraint.INTEGRAL_TRANSPORT) ||
-	    guarantee.equals(UserDataConstraint.SECURE_TRANSPORT)) {
+	    guarantee.equals(UserDataConstraint.CONFIDENTIAL_TRANSPORT)) {
 	    if (!req.isSecure()) {
 		;	// XXX - Create error response, throw
 		;	// InterceptorException
