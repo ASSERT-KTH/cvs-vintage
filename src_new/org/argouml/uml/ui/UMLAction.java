@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.21 2004/02/22 15:16:42 d00mst Exp $
+// $Id: UMLAction.java,v 1.22 2004/02/23 22:19:04 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,6 +68,22 @@ public class UMLAction extends AbstractAction {
             Actions.addAction(this);
         // Jaap B. 17-6-2003 added next line to make sure every action is in the right enable condition on creation.
         setEnabled(shouldBeEnabled());
+    }
+
+    /**
+     * Sets one of this object's properties using the associated key. If the
+     * value has changed, a <code>PropertyChangeEvent</code> is sent to
+     * listeners.
+     *
+     * @param key a <code>String</code> containing the key.
+     * @param value an <code>Object</code> value.
+     */
+    public void putValue(String key, Object value) {
+	if (iconName != null && Action.SMALL_ICON.equals(key)) {
+	    iconName = null;
+	}
+
+	super.putValue(key, value);
     }
 
     /**
