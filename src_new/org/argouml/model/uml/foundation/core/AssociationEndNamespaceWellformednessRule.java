@@ -1,4 +1,4 @@
-// $Id: AssociationEndNamespaceWellformednessRule.java,v 1.5 2003/10/22 12:52:14 bobtarling Exp $
+// $Id: AssociationEndNamespaceWellformednessRule.java,v 1.6 2003/11/11 22:01:16 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,7 @@ public class AssociationEndNamespaceWellformednessRule
      * Checks that an associatonends namespace is the same as the
      * owning association has
      * 
-     * @see org.argouml.model.uml.AbstractWellformednessRule#isWellformed(MBase,Object)
+     * @see org.argouml.model.uml.AbstractWellformednessRule#isWellformed(Object,Object)
      */
     public boolean isWellformed(Object /*MBase*/ element, Object newValue) {
 	if (element instanceof MAssociationEnd && newValue instanceof MNamespace) {

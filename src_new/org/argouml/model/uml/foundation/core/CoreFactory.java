@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.61 2003/11/10 12:35:46 jhraigniac Exp $
+// $Id: CoreFactory.java,v 1.62 2003/11/11 22:01:16 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1575,7 +1575,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * deletion.
      * </p>
      * @param elem
-     * @see UmlFactory#delete(MBase)
+     * @see UmlFactory#delete(Object)
      */
     public void deleteAssociationEnd(MAssociationEnd elem) {
 	MAssociation assoc = elem.getAssociation();
@@ -1613,7 +1613,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * - AssociationEnds that have this classifier as type
      * </p>
      * @param elem
-     * @see UmlFactory#delete(MBase)
+     * @see UmlFactory#delete(Object)
      */
     public void deleteClassifier(Object elem) {
 	if (elem != null && elem instanceof MClassifier) {
@@ -1688,7 +1688,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * and are binary. (that is, they only have one supplier and one client)
      * </p>
      * @param elem
-     * @see UmlFactory#delete(MBase)
+     * @see UmlFactory#delete(Object)
      */
     public void deleteModelElement(MModelElement elem) {
 	Collection supplierDep = elem.getSupplierDependencies();

@@ -1,5 +1,5 @@
-// $Id: MultiEditorPane.java,v 1.31 2003/11/10 12:33:14 jhraigniac Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: MultiEditorPane.java,v 1.32 2003/11/11 22:01:15 linus Exp $
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -162,9 +162,9 @@ public class MultiEditorPane
      * TODO: check if the target is needed for the multieditorpane as an
      * instance variable.
      * @return Object
-     * @deprecated As of ArgoUml version 0.13.5, use {@link
-     * org.argouml.ui.targetmanager.TargetManager.getTarget()
-     * TargetManager.getInstance().getTarget()} instead
+     * @deprecated As of ArgoUml version 0.13.5, use 
+     * {@link org.argouml.ui.targetmanager.TargetManager#getTarget()}
+     * instead
      */
     public Object getTarget() {
         return TargetManager.getInstance().getTarget();
