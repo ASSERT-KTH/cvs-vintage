@@ -1,4 +1,4 @@
-// $Id: SettingsTabEnvironment.java,v 1.11 2003/11/10 20:18:13 alexb Exp $
+// $Id: SettingsTabEnvironment.java,v 1.12 2003/11/10 20:24:38 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -125,7 +125,6 @@ public class SettingsTabEnvironment extends SettingsTabHelper
 
 	labelConstraints.gridy = 5;
 	fieldConstraints.gridy = 5;
-        buttonConstraints.gridy = 5;
   	top.add(createLabel("${user.dir}"), labelConstraints);
         _userDir = createTextField();
 	_userDir.setEnabled(false);
