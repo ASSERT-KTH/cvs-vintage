@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.36 2004/07/22 20:17:25 linus Exp $
+// $Id: ActionOpenProject.java,v 1.37 2004/08/10 19:36:29 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,11 +161,11 @@ public class ActionOpenProject
                     Globals.setLastDirectory(path);
                     URL url = theFile.toURL();
                     if (url != null) {
-			loadProject(url);
-			// notification of menu bar
-			GenericArgoMenuBar menuBar =
-			    (GenericArgoMenuBar) pb.getJMenuBar();
-			menuBar.addFileSaved(theFile.getCanonicalPath());
+                        loadProject(url);
+                        // notification of menu bar
+                        GenericArgoMenuBar menuBar =
+                            (GenericArgoMenuBar) pb.getJMenuBar();
+                        menuBar.addFileSaved(theFile.getCanonicalPath());
                     }
                 }
             }
