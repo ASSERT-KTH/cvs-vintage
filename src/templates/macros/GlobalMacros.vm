@@ -17,7 +17,7 @@
   #if ($size.length() == 0)
    <option value="">$l10n.Choose</option>
   #end
-  #foreach ($option in $module.getOptionTree($attr, $issueType))
+  #foreach ($option in $module.getOptionTree($attr, $issueType, false))
     #set ($selected = false)
     #set ($canMakeTransition = true)
     #if ($newValues && $newValues.toString() != '')
@@ -46,9 +46,20 @@
          #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
     #end
     #if ($canMakeTransition)
-    <option value="$option.OptionId"#selected($selected)>
-#foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
-          $option.DisplayValue</option>
+	#if($selected)
+	    	<option value="$option.OptionId"#selected($selected)>
+    		#foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
+		#if ($option.Active) 
+        		$option.DisplayValue</option>
+		#else
+        		[I] $option.DisplayValue</option>
+
+		#end
+	#elseif($option.Active)
+	    	<option value="$option.OptionId"#selected($selected)>
+    		#foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
+        	$option.DisplayValue</option>
+	#end
     #end
   #end
 </select>

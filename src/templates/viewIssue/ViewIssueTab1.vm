@@ -65,7 +65,11 @@
                    <td>
                    #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
                    #if ($isOptionAttr)
-                     $!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
+			#if ($module.getRModuleOption($attVal.AttributeOption, $issueType).Active)
+                       	   $!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
+			#else
+                       	   [I]$!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
+			#end
                    #else
                      $!attrInput.Value
                    #end
@@ -73,7 +77,29 @@
                  </tr>
               #end
             #end
-        #end
+	#else
+	    #set ($allAttrValues = $currentIssue.getModuleAttributeValuesMap(false))		
+            #set ($attVal = $allAttrValues.get($att.getName().toUpperCase()))
+            #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
+ 	    #set ($isOptionAttr = $attVal.Attribute.isOptionAttribute())
+	    #if ($attVal.isSet() && !$attrInput.Value.toString().trim().equals(""))
+            	   <tr>
+              	     <th> 
+                     [I] $rma.DisplayValue</th>
+                     <td>
+                     #if ($isOptionAttr)
+			#if ($module.getRModuleOption($attVal.AttributeOption, $issueType).Active)
+                       	   $!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
+			#else
+                       	   [I]$!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
+			#end
+                     #else
+                       $!attrInput.Value
+                     #end 
+                     </td>
+                   </tr>
+	    #end
+        #end 
       #end
 </table>
   #end
