@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.addressbook.gui.frame;
 
 import javax.swing.event.ListSelectionListener;
@@ -24,12 +25,10 @@ import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ViewPluginHandler;
-
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
@@ -61,8 +60,7 @@ public class AddressbookFrameController extends AbstractFrameController
             handler = (ViewPluginHandler) MainInterface.pluginManager.getHandler(
                     "org.columba.core.view");
         } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
+            throw new RuntimeException(ex);
         }
 
         // get view using the plugin handler found above
@@ -76,11 +74,8 @@ public class AddressbookFrameController extends AbstractFrameController
         }
 
         view.init(tree.getView(), table.getView());
-
         view.getFrame().pack();
-
         view.getFrame().setVisible(true);
-
         return view;
     }
 

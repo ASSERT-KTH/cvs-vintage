@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.frame;
 
 import java.awt.event.KeyEvent;
@@ -21,11 +22,11 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.DialogStore;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ViewPluginHandler;
+
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
@@ -39,14 +40,11 @@ import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.gui.view.AbstractMailView;
 import org.columba.mail.main.MailInterface;
 
-
 /**
- *
  *  Mail frame controller which contains a tree, table and a message
  *  viewer.
  *
  *  @author fdietz
- *
  */
 public class ThreePaneMailFrameController extends AbstractMailFrameController
     implements TableViewOwner, TreeViewOwner {
@@ -118,8 +116,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
             handler = (ViewPluginHandler) MainInterface.pluginManager.getHandler(
                     "org.columba.core.view");
         } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
+            throw new RuntimeException(ex);
         }
 
         // get view using the plugin handler found above
@@ -144,9 +141,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
         super.init();
 
         treeController = new TreeController(this, MailInterface.treeModel);
-
         tableController = new TableController(this);
-
         folderInfoPanel = new FolderInfoPanel();
 
         //treeController.getTreeSelectionManager().addFolderSelectionListener(folderInfoPanel);
@@ -194,5 +189,4 @@ treeController.getTreeSelectionManager().registerSelectionListener(""
     public TreeController getTreeController() {
         return treeController;
     }
-
 }
