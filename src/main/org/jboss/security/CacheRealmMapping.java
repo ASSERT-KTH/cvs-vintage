@@ -31,33 +31,37 @@ import org.jboss.util.ServiceMBeanSupport;
 import org.jboss.system.RealmMapping;
 
 /**
- *	CacheRealmMapping has two purposes (one of them currently unimplemented.)
- *	It allows beans to have mappings for multiple security realms, and it
- *	(eventually) will cache data from realms that allow it.	
+ *  CacheRealmMapping has two purposes (one of them currently unimplemented.)
+ *  It allows beans to have mappings for multiple security realms, and it
+ *  (eventually) will cache data from realms that allow it. 
  *      
  *   @see EJBSecurityManager
  *   @author Daniel O'Connor docodan@nycap.rr.com
  */
 public class CacheRealmMapping implements RealmMapping
 {
-	private LinkedList realms = new LinkedList();
+    private LinkedList realms = new LinkedList();
 
-	public void addRealmMapping( RealmMapping realmMapping )
-	{
-		realms.add( realmMapping );
-	}
+    public Principal getPrincipal( Principal principal ) {
+        return principal;
+    }
 
-	public boolean doesUserHaveRole( Principal principal, Set roleNames )
-	{
-		Iterator iter=realms.iterator();
-		while( iter.hasNext() )
-		{
-			RealmMapping realmMapping = (RealmMapping) iter.next();
-			if (realmMapping.doesUserHaveRole( principal, roleNames ))
-				return true;
-		}
-		return false;
-	}
-	
+    public void addRealmMapping( RealmMapping realmMapping )
+    {
+        realms.add( realmMapping );
+    }
+
+    public boolean doesUserHaveRole( Principal principal, Set roleNames )
+    {
+        Iterator iter=realms.iterator();
+        while( iter.hasNext() )
+        {
+            RealmMapping realmMapping = (RealmMapping) iter.next();
+            if (realmMapping.doesUserHaveRole( principal, roleNames ))
+                return true;
+        }
+        return false;
+    }
+    
 }
 

@@ -12,5 +12,15 @@ import java.util.Set;
 
 public interface RealmMapping
 {
-	public boolean doesUserHaveRole( Principal principal, Set roleNames );
+    /**
+     * This method should return Principal for the bean that may differ 
+     * from the original Principal in the operational environment.
+     */
+    public Principal getPrincipal( Principal principal );
+
+    /**
+     * This method checks if the given ("original") Principal has
+     * at least on of the roles in the given set.
+     */
+    public boolean doesUserHaveRole( Principal principal, Set roleNames );
 }

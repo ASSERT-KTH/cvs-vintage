@@ -41,6 +41,10 @@ import org.jboss.system.RealmMapping;
 public class SimpleRealmMapping implements RealmMapping
 {
 
+  public Principal getPrincipal( Principal principal ) {
+    return principal;
+  }
+
   public boolean doesUserHaveRole( Principal principal, Set roleNames )
   {
     if (roleNames == null)

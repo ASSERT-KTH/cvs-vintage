@@ -43,6 +43,10 @@ import org.jboss.system.RealmMapping;
 public class DatabaseRealmMapping implements RealmMapping
 {
 
+  public Principal getPrincipal( Principal principal ) {
+    return principal;
+  }
+
   public boolean doesUserHaveRole( Principal principal, Set roleNames )
   {
     Connection con = null;
