@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
  *
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  */
 public final class JDBCEntityMetaData
 {
@@ -211,6 +211,8 @@ public final class JDBCEntityMetaData
 
    private final JDBCAuditMetaData audit;
 
+   private final Class qlCompiler;
+
 
    /**
     * Constructs jdbc entity meta data defined in the jdbcApplication and
@@ -334,6 +336,7 @@ public final class JDBCEntityMetaData
       readOnly = false;
       readTimeOut = -1;
       tablePostCreateCmd = null;
+      qlCompiler = null;
 
       // build the metadata for the cmp fields now in case there is
       // no jbosscmp-jdbc.xml
@@ -606,6 +609,23 @@ public final class JDBCEntityMetaData
          fetchSize = defaultValues.getFetchSize();
       }
 
+      String compiler = MetaData.getOptionalChildContent(element, "ql-compiler");
+      if(compiler == null)
+      {
+         qlCompiler = defaultValues.qlCompiler;
+      }
+      else
+      {
+         try
+         {
+            qlCompiler = Thread.currentThread().getContextClassLoader().loadClass(compiler);
+         }
+         catch(ClassNotFoundException e)
+         {
+            throw new DeploymentException("Failed to load compiler implementation: " + compiler);
+         }
+      }
+
       //
       // cmp fields
       //
@@ -746,9 +766,9 @@ public final class JDBCEntityMetaData
       for(Iterator queriesIterator = defaultValues.queries.values().iterator();
           queriesIterator.hasNext();)
       {
-         JDBCQueryMetaData query = queryFactory.createJDBCQueryMetaData(
+         JDBCQueryMetaData query = JDBCQueryMetaDataFactory.createJDBCQueryMetaData(
             (JDBCQueryMetaData)queriesIterator.next(),
-            readAhead);
+            readAhead, qlCompiler);
          queries.put(query.getMethod(), query);
       }
 
@@ -1276,6 +1296,11 @@ public final class JDBCEntityMetaData
       return readAhead;
    }
 
+   public Class getQLCompiler()
+   {
+      return qlCompiler;
+   }
+   
    /**
     * Compares this JDBCEntityMetaData against the specified object. Returns
     * true if the objects are the same. Two JDBCEntityMetaData are the same

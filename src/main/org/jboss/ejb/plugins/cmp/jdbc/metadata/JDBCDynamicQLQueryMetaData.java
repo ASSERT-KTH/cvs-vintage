@@ -14,7 +14,7 @@ import org.jboss.deployment.DeploymentException;
  * Immutable class which contains information about an DynamicQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
 {
@@ -37,12 +37,12 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
     * jboss-ql elemnt and is invoked by the specified method.
     * @param defaults the metadata about this query
     */
-   public JDBCDynamicQLQueryMetaData(JDBCDynamicQLQueryMetaData defaults, JDBCReadAheadMetaData readAhead)
+   public JDBCDynamicQLQueryMetaData(JDBCDynamicQLQueryMetaData defaults, JDBCReadAheadMetaData readAhead, Class compiler)
    {
       this.method = defaults.getMethod();
       this.readAhead = readAhead;
       this.resultTypeMappingLocal = defaults.isResultTypeMappingLocal();
-      compiler = defaults.compiler;
+      this.compiler = compiler;
    }
 
 

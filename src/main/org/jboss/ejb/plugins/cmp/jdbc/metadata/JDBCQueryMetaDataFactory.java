@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
  * on the query specifiection type.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JDBCQueryMetaDataFactory
 {
@@ -45,8 +45,7 @@ public class JDBCQueryMetaDataFactory
       Map queries = new HashMap(methods.length);
       for(int i = 0; i < methods.length; i++)
       {
-         queries.put(methods[i],
-            new JDBCQlQueryMetaData(queryData, methods[i]));
+         queries.put(methods[i], new JDBCQlQueryMetaData(queryData, methods[i], entity.getQLCompiler()));
       }
       return queries;
    }
@@ -92,13 +91,15 @@ public class JDBCQueryMetaDataFactory
 
    public static JDBCQueryMetaData createJDBCQueryMetaData(
       JDBCQueryMetaData jdbcQueryMetaData,
-      JDBCReadAheadMetaData readAhead) throws DeploymentException
+      JDBCReadAheadMetaData readAhead,
+      Class qlCompiler)
+      throws DeploymentException
    {
 
       // RAW-SQL
       if(jdbcQueryMetaData instanceof JDBCRawSqlQueryMetaData)
       {
-         return new JDBCRawSqlQueryMetaData(jdbcQueryMetaData.getMethod());
+         return new JDBCRawSqlQueryMetaData(jdbcQueryMetaData.getMethod(), qlCompiler);
       }
 
       // JBOSS-QL
@@ -106,7 +107,7 @@ public class JDBCQueryMetaDataFactory
       {
          return new JDBCJBossQLQueryMetaData(
             (JDBCJBossQLQueryMetaData) jdbcQueryMetaData,
-            readAhead);
+            readAhead, qlCompiler);
       }
 
       // DYNAMIC-SQL
@@ -114,7 +115,7 @@ public class JDBCQueryMetaDataFactory
       {
          return new JDBCDynamicQLQueryMetaData(
             (JDBCDynamicQLQueryMetaData) jdbcQueryMetaData,
-            readAhead);
+            readAhead, qlCompiler);
       }
 
       // DECLARED-SQL
@@ -122,7 +123,7 @@ public class JDBCQueryMetaDataFactory
       {
          return new JDBCDeclaredQueryMetaData(
             (JDBCDeclaredQueryMetaData) jdbcQueryMetaData,
-            readAhead);
+            readAhead, qlCompiler);
       }
 
       // EJB-QL: default
@@ -130,7 +131,7 @@ public class JDBCQueryMetaDataFactory
       {
          return new JDBCQlQueryMetaData(
             (JDBCQlQueryMetaData) jdbcQueryMetaData,
-            readAhead);
+            readAhead, qlCompiler);
       }
 
       throw new DeploymentException(
@@ -138,21 +139,21 @@ public class JDBCQueryMetaDataFactory
          jdbcQueryMetaData.getMethod().getName());
    }
 
-   private static JDBCQueryMetaData createJDBCQueryMetaData(
-      JDBCQueryMetaData jdbcQueryMetaData,
-      Element queryElement,
-      Method method,
-      JDBCReadAheadMetaData readAhead) throws DeploymentException
+   private JDBCQueryMetaData createJDBCQueryMetaData(JDBCQueryMetaData jdbcQueryMetaData,
+                                                     Element queryElement,
+                                                     Method method,
+                                                     JDBCReadAheadMetaData readAhead)
+      throws DeploymentException
    {
 
       // RAW-SQL
       Element rawSql = MetaData.getOptionalChild(queryElement, "raw-sql");
       if(rawSql != null)
       {
-         return new JDBCRawSqlQueryMetaData(method);
+         return new JDBCRawSqlQueryMetaData(method, entity.getQLCompiler());
       }
 
-      final Class qlCompiler = JDBCQueryManager.getQLCompiler(queryElement);
+      final Class qlCompiler = JDBCQueryManager.getQLCompiler(queryElement, entity);
 
       // JBOSS-QL
       Element jbossQL = MetaData.getOptionalChild(queryElement, "jboss-ql");

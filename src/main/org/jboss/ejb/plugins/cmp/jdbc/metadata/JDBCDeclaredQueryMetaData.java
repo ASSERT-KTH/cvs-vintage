@@ -12,14 +12,13 @@ import org.w3c.dom.Element;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
 
 
 /**
  * Imutable class contains information about a declated query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.18 $
+ *   @version $Revision: 1.19 $
  */
 public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData
 {
@@ -92,7 +91,7 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData
     * @param defaults the default values to use
     * @param readAhead the read-ahead properties for this query
     */
-   public JDBCDeclaredQueryMetaData(JDBCDeclaredQueryMetaData defaults, JDBCReadAheadMetaData readAhead)
+   public JDBCDeclaredQueryMetaData(JDBCDeclaredQueryMetaData defaults, JDBCReadAheadMetaData readAhead, Class qlCompiler)
    {
       this.method = defaults.getMethod();
       this.readAhead = readAhead;
@@ -110,7 +109,7 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData
       this.alias = defaults.getAlias();
       this.additionalColumns = defaults.getAdditionalColumns();
 
-      this.compiler = defaults.compiler;
+      this.compiler = qlCompiler;
    }
 
 

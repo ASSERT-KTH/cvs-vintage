@@ -23,6 +23,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDynamicQLQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCJBossQLQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.MetaData;
@@ -38,7 +39,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public final class JDBCQueryManager
 {
@@ -50,12 +51,7 @@ public final class JDBCQueryManager
    private final Map knownQueries = new HashMap();
    private final JDBCStoreManager manager;
 
-   public static final Class getDefaultQLCompilerClass()
-   {
-      return JDBCEJBQLCompiler.class;
-   }
-
-   public static final Class getQLCompiler(Element query)
+   public static final Class getQLCompiler(Element query, JDBCEntityMetaData entity)
       throws DeploymentException
    {
       String compiler = MetaData.getOptionalChildContent(query, "ql-compiler");
@@ -63,7 +59,7 @@ public final class JDBCQueryManager
 
       if(compiler == null || compiler.trim().length() == 0)
       {
-         impl = getDefaultQLCompilerClass();
+         impl = entity.getQLCompiler();
       }
       else
       {
@@ -148,8 +144,7 @@ public final class JDBCQueryManager
 
             // got it add it to known finders
             JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(
-               method,
-               readAhead);
+               method, readAhead, entity.getMetaData().getQLCompiler());
             knownQueries.put(method, factory.createFindByPrimaryKeyQuery(q));
 
             if(log.isDebugEnabled())
@@ -181,7 +176,7 @@ public final class JDBCQueryManager
          JDBCQueryMetaData findByPKMD = manager.getMetaData().getQueryMetaDataForMethod(method);
          JDBCReadAheadMetaData readAhead = (findByPKMD == null ?
             entity.getMetaData().getReadAhead() : findByPKMD.getReadAhead());
-         JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(method, readAhead);
+         JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(method, readAhead, entity.getMetaData().getQLCompiler());
          knownQueries.put(method, factory.createFindByPrimaryKeyQuery(q));
 
          if(log.isDebugEnabled())
@@ -316,7 +311,8 @@ public final class JDBCQueryManager
             {
                JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(
                   method,
-                  entity.getMetaData().getReadAhead());
+                  entity.getMetaData().getReadAhead(),
+                  entity.getMetaData().getQLCompiler());
                knownQueries.put(method, factory.createFindAllQuery(q));
             }
             else if(name.startsWith(FIND_BY) && !name.equals(FIND_BY_PK))
@@ -325,7 +321,8 @@ public final class JDBCQueryManager
                {
                   JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(
                      method,
-                     entity.getMetaData().getReadAhead());
+                     entity.getMetaData().getReadAhead(),
+                     entity.getMetaData().getQLCompiler());
                   knownQueries.put(method, factory.createFindByQuery(q));
                }
                catch(IllegalArgumentException e)

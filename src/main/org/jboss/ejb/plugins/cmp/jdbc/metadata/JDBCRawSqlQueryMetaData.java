@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
  * A raw sql query allows you to do anything sql allows you to do.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData
 {
@@ -28,10 +28,10 @@ public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData
     * method.
     * @param method the method which invokes this query
     */
-   public JDBCRawSqlQueryMetaData(Method method)
+   public JDBCRawSqlQueryMetaData(Method method, Class compiler)
    {
       this.method = method;
-      this.compiler = JDBCQueryManager.getDefaultQLCompilerClass();
+      this.compiler = compiler;
    }
 
    public Method getMethod()

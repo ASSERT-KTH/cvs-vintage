@@ -11,13 +11,12 @@ import java.lang.reflect.Method;
 import org.w3c.dom.Element;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
 
 /**
  * Immutable class which contains information about an JBossQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
 {
@@ -48,13 +47,13 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
     * jboss-ql elemnt and is invoked by the specified method.
     * @param defaults the metadata about this query
     */
-   public JDBCJBossQLQueryMetaData(JDBCJBossQLQueryMetaData defaults, JDBCReadAheadMetaData readAhead)
+   public JDBCJBossQLQueryMetaData(JDBCJBossQLQueryMetaData defaults, JDBCReadAheadMetaData readAhead, Class compiler)
    {
       this.method = defaults.getMethod();
       this.readAhead = readAhead;
       this.jbossQL = defaults.getJBossQL();
       this.resultTypeMappingLocal = defaults.isResultTypeMappingLocal();
-      this.compiler = defaults.compiler;
+      this.compiler = compiler;
    }
 
    /**
