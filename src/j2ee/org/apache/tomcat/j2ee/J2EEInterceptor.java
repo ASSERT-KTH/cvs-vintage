@@ -65,7 +65,7 @@ public class J2EEInterceptor extends BaseInterceptor {
 
     public void engineInit( ContextManager cm ) throws TomcatException {
 	super.engineInit(cm);
-	debug=0;
+	debug=10;
     }
     
     public void contextInit( Context ctx)
@@ -75,14 +75,14 @@ public class J2EEInterceptor extends BaseInterceptor {
     
     public int preService(Request request, Response response) {
 	Context ctx = request.getContext();
-	Handler sw=request.getWrapper();
-	if( ! (sw instanceof ServletWrapper) )
+	Handler sw=request.getHandler();
+	if( ! (sw instanceof ServletHandler) )
 	    return 0;
 	try {
-	    invM.preServletInvoke( ctx.getFacade(),
-				   ((ServletWrapper)sw).getServlet(), 
-				   request.getFacade(),
-				   response.getFacade() );
+	    invM.preServletInvoke( (ServletContext)ctx.getFacade(),
+				   ((ServletHandler)sw).getServlet(), 
+				   (HttpServletRequest)request.getFacade(),
+				   (HttpServletResponse)response.getFacade() );
 	} catch(Exception ex ) {
 	    return -1;
 	}
@@ -90,16 +90,16 @@ public class J2EEInterceptor extends BaseInterceptor {
     }
     public int postService(Request request, Response response) {
 	Context ctx = request.getContext();
-	Handler sw=request.getWrapper();
-	if( ! (sw instanceof ServletWrapper) )
+	Handler sw=request.getHandler();
+	if( ! (sw instanceof ServletHandler) )
 	    return 0;
 	try {
-	    invM.postServletInvoke( ctx.getFacade(),
-				    ((ServletWrapper)sw).getServlet(), 
-				    request.getFacade(),
-				    response.getFacade() );
+	    invM.postServletInvoke( (ServletContext)ctx.getFacade(),
+				    ((ServletHandler)sw).getServlet(), 
+				    (HttpServletRequest)request.getFacade(),
+				    (HttpServletResponse)response.getFacade());
 	    intLogRequest( request.getContext().getPath(),
-			   request.getRequestURI(),
+			   request.requestURI().toString(),
 			   null);
 	} catch(Exception ex ) {
 	    return -1;
@@ -109,11 +109,14 @@ public class J2EEInterceptor extends BaseInterceptor {
     
     /** Servlet Init  notification
      */
-    public void preServletInit( Context ctx, ServletWrapper sw )
+    public void preServletInit( Context ctx, Handler sw )
 	throws TomcatException
     {
+	if( ! (sw instanceof ServletHandler) )
+	    return;
 	try {
-	    invM.preInitInvoke( ctx.getFacade(), sw.getServlet());
+	    invM.preInitInvoke( (ServletContext)ctx.getFacade(),
+				((ServletHandler)sw).getServlet());
 	} catch(Exception ex ) {
 	    log("XXX " + invM + " " + ctx + " " + sw );
 	    throw new TomcatException( "Error in j2ee adapter " , ex );
@@ -121,11 +124,14 @@ public class J2EEInterceptor extends BaseInterceptor {
     }
 
     
-    public void postServletInit( Context ctx, ServletWrapper sw )
+    public void postServletInit( Context ctx, Handler sw )
 	throws TomcatException
     {
+	if( ! (sw instanceof ServletHandler) )
+	    return;
 	try {
-	    invM.postInitInvoke( ctx.getFacade(), sw.getServlet());
+	    invM.postInitInvoke( (ServletContext)ctx.getFacade(),
+				 ((ServletHandler)sw).getServlet());
 	} catch(Exception ex ) {
 	    throw new TomcatException( "Error in j2ee adapter " , ex );
 	}
@@ -133,12 +139,15 @@ public class J2EEInterceptor extends BaseInterceptor {
 
     /** Servlet Destroy  notification
      */
-    public void preServletDestroy( Context ctx, ServletWrapper sw )
+    public void preServletDestroy( Context ctx, Handler sw )
 	throws TomcatException
     {
+	if( ! (sw instanceof ServletHandler) )
+	    return;
 	try {
 	    if( sw != null && ctx != null )
-		invM.preDestroyInvoke( ctx.getFacade(), sw.getServlet());
+		invM.preDestroyInvoke( (ServletContext)ctx.getFacade(),
+				       ((ServletHandler)sw).getServlet());
 	    else
 		log("XXX J2EEInterceptor: sw, ctx=" +
 				   sw + " " +ctx);
@@ -149,12 +158,15 @@ public class J2EEInterceptor extends BaseInterceptor {
     }
 
     
-    public void postServletDestroy( Context ctx, ServletWrapper sw )
+    public void postServletDestroy( Context ctx, Handler sw )
 	throws TomcatException
     {
+	if( ! (sw instanceof ServletHandler) )
+	    return;
 	try {
 	    if( sw != null && ctx != null )
-		invM.postDestroyInvoke( ctx.getFacade(), sw.getServlet());
+		invM.postDestroyInvoke( (ServletContext)ctx.getFacade(),
+					((ServletHandler)sw).getServlet());
 	    else
 		log("XXX J2EEInterceptor: sw, ctx=" +
 				   sw + " " +ctx);
@@ -243,13 +255,13 @@ public class J2EEInterceptor extends BaseInterceptor {
 
 	String realm="default";  //ctx.getRealmName();
 
-	Handler h=req.getWrapper();
-	ServletWrapper sw=(ServletWrapper)h;
+	Handler h=req.getHandler();
+	ServletHandler sw=(ServletHandler)h;
 	String mappedRole=null;
 	String role=null;
 	for( int i=0; i< roles.length ; i++ ) {
 	    role=roles[i];
-	    mappedRole=sw.getSecurityRole( role );
+	    mappedRole=sw.getServletInfo().getSecurityRole( role );
 	    if( mappedRole==null) mappedRole=role;
 	    
 	    if(isUserInRole(appName, mappedRole) ) {
