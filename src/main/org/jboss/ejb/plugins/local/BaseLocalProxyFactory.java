@@ -38,6 +38,7 @@ import org.jboss.ejb.LocalProxyFactory;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
+import org.jboss.invocation.LocalEJBInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.naming.Util;
@@ -280,7 +281,7 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
 
       try
       {
-         Invocation invocation = new Invocation(
+         LocalEJBInvocation invocation = new LocalEJBInvocation(
                  null,
                  m,
                  args,
@@ -362,7 +363,7 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
 
       try
       {
-         Invocation invocation = new Invocation(
+         LocalEJBInvocation invocation = new LocalEJBInvocation(
                  id,
                  m,
                  args,

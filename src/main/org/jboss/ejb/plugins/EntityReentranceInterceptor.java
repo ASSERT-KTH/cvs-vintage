@@ -20,6 +20,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.ejb.plugins.lock.Entrancy;
 import org.jboss.ejb.plugins.lock.NonReentrantLock;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMRInvocation;
 
 /**
  * The role of this interceptor is to check for reentrancy.
@@ -32,7 +33,7 @@ import org.jboss.ejb.plugins.lock.NonReentrantLock;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class EntityReentranceInterceptor
         extends AbstractInterceptor
@@ -160,11 +161,14 @@ public class EntityReentranceInterceptor
       }
 
       // if this is a non-entrant message to the container let it through
-      Entrancy entrancy = (Entrancy) mi.getValue(Entrancy.ENTRANCY_KEY);
-      if (entrancy == Entrancy.NON_ENTRANT)
+      if (mi instanceof CMRInvocation)
       {
-         log.trace("NON_ENTRANT invocation");
-         return true;
+         Entrancy entrancy = ((CMRInvocation) mi).getEntrancy();
+         if (entrancy == Entrancy.NON_ENTRANT)
+         {
+            log.trace("NON_ENTRANT invocation");
+            return true;
+         }
       }
 
       return false;

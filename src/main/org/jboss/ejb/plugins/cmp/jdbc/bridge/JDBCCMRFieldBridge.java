@@ -70,7 +70,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.67 $
+ * @version $Revision: 1.68 $
  */
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 {
@@ -856,9 +856,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
          EntityCache instanceCache =
             (EntityCache)manager.getContainer().getInstanceCache();
 
-         Invocation invocation = new Invocation();
-         invocation.setValue(CMRMessage.CMR_MESSAGE_KEY, CMRMessage.GET_RELATED_ID, PayloadKey.AS_IS);
-         invocation.setValue(Entrancy.ENTRANCY_KEY, Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
+         CMRInvocation invocation = new CMRInvocation();
+         invocation.setCmrMessage(CMRMessage.GET_RELATED_ID);
+         invocation.setEntrancy(Entrancy.NON_ENTRANT);
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[]{this});
          invocation.setTransaction(tx);
@@ -896,9 +896,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
          EntityCache instanceCache =
             (EntityCache)manager.getContainer().getInstanceCache();
 
-         Invocation invocation = new Invocation();
-         invocation.setValue(CMRMessage.CMR_MESSAGE_KEY, CMRMessage.ADD_RELATION, PayloadKey.AS_IS);
-         invocation.setValue(Entrancy.ENTRANCY_KEY, Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
+         CMRInvocation invocation = new CMRInvocation();
+         invocation.setCmrMessage(CMRMessage.ADD_RELATION);
+         invocation.setEntrancy(Entrancy.NON_ENTRANT);
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[]{this, relatedId});
          invocation.setTransaction(tx);
@@ -938,9 +938,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
          EntityCache instanceCache =
             (EntityCache)manager.getContainer().getInstanceCache();
 
-         Invocation invocation = new Invocation();
-         invocation.setValue(CMRMessage.CMR_MESSAGE_KEY, CMRMessage.REMOVE_RELATION, PayloadKey.AS_IS);
-         invocation.setValue(Entrancy.ENTRANCY_KEY, Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
+         CMRInvocation invocation = new CMRInvocation();
+         invocation.setCmrMessage(CMRMessage.REMOVE_RELATION);
+         invocation.setEntrancy(Entrancy.NON_ENTRANT);
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[]{this, relatedId});
          invocation.setTransaction(tx);

@@ -15,6 +15,7 @@ import org.jboss.invocation.Invocation;
 import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMRMessage;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMRInvocation;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.logging.Logger;
 
@@ -25,7 +26,7 @@ import org.jboss.logging.Logger;
  * relationship.  This interceptor also manages the relation table data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class JDBCRelationInterceptor extends AbstractInterceptor
 {
@@ -67,7 +68,9 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
 
    public Object invoke(Invocation mi) throws Exception
    {
-      CMRMessage relationshipMessage = (CMRMessage)mi.getValue(CMRMessage.CMR_MESSAGE_KEY);
+      if (!(mi instanceof CMRInvocation)) return getNext().invoke(mi);
+
+      CMRMessage relationshipMessage = ((CMRInvocation)mi).getCmrMessage();
       if(relationshipMessage == null)
       {
          // Not a relationship message. Invoke down the chain
