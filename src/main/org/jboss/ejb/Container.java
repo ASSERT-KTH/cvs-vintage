@@ -77,7 +77,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.64 $
+* @version $Revision: 1.65 $
 *
 * <p><b>Revisions:</b>
 *
@@ -566,19 +566,23 @@ public abstract class Container implements DynamicMBean
             {
                ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
                
+               if (log.isDebugEnabled()) 
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               log.info("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
+               log.debug("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
             
             }   
             // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
             else if (!mi.getMethod().getDeclaringClass().isAssignableFrom(remoteInterface))
             {
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               log.info("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
                
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               log.info("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
-               
+               if (log.isDebugEnabled())
+               {
+                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
+                  log.debug("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
+                  
+                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
+                  log.debug("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
+               }
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                //Serialize deserialize
                mi = (Invocation) new MarshalledObject(new MarshalledInvocation(mi.payload)).get();
@@ -605,21 +609,23 @@ public abstract class Container implements DynamicMBean
                
                ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
                
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               log.info("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
+               if (log.isDebugEnabled())
+                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
+               log.debug("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
             
             }     
             // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
             else if (!mi.getMethod().getDeclaringClass().isAssignableFrom(remoteInterface))
             {
                
-               
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               log.info("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
-               
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               log.info("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
-               
+               if (log.isDebugEnabled())
+               {
+                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
+                  log.debug("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
+                  
+                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
+                  log.debug("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
+               }
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                //Serialize deserialize
                mi = (MarshalledInvocation) new MarshalledObject(new MarshalledInvocation(mi.payload)).get();
