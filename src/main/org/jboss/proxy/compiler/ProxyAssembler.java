@@ -14,9 +14,9 @@ import java.io.*;
  * A simple bytecode assembler.
  *
  * @author Unknown
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-class ProxyAssembler
+public class ProxyAssembler
 {
    // constant pool:
    Vector cv = new Vector();
