@@ -1,4 +1,4 @@
-// $Id: CrTooManyAttr.java,v 1.11 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrTooManyAttr.java,v 1.12 2004/11/02 10:12:04 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrTooManyAttr.java
 // Classes: CrTooManyAttr
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyAttr.java,v 1.11 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrTooManyAttr.java,v 1.12 2004/11/02 10:12:04 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -33,9 +33,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.model.ModelFacade;
-/** A critic to detect when a class can never have instances (of
- *  itself of any subclasses). */
-
+/** A critic to detect when a classifier has too many attributes.
+ * 
+ * 
+ * @author mkl
+ *
+ */
 public class CrTooManyAttr extends CrUML {
 
     ////////////////////////////////////////////////////////////////

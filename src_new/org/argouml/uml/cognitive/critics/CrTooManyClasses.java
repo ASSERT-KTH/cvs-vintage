@@ -1,4 +1,4 @@
-// $Id: CrTooManyClasses.java,v 1.10 2004/10/23 11:05:43 mvw Exp $
+// $Id: CrTooManyClasses.java,v 1.11 2004/11/02 10:12:04 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,15 +25,16 @@
 // File: CrTooManyClasses.java
 // Classes: CrTooManyClasses
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyClasses.java,v 1.10 2004/10/23 11:05:43 mvw Exp $
+// $Id: CrTooManyClasses.java,v 1.11 2004/11/02 10:12:04 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 
-/** A critic to detect when a class can never have instances (of
- *  itself of any subclasses). 
+/** A critic to detect when a classdiagram has too many classes.
+ * TODO: currently it checks for nodes (classes, interfaces, comments).
+ * This critic should be rewritten to work with namespaces.
  */
 public class CrTooManyClasses extends CrUML {
 
