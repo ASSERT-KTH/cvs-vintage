@@ -11,7 +11,7 @@
 
 <!ELEMENT dependency (type, (child | parent))>
 
-<!ELEMENT attachment (name, type, path?, data, mimetype, created-date, modified-date, created-by, modified-by)>
+<!ELEMENT attachment (name, type, (path | data), mimetype, created-date, modified-date, created-by, modified-by)>
 
 <!ELEMENT modified-date (#PCDATA)>
 <!ATTLIST modified-date format CDATA #REQUIRED>
