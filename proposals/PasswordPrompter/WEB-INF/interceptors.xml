@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Server>
+    <module name="PasswordPrompter" javaClass="org.apache.tomcat.modules.config.PasswordPrompter" />
+    <ContextManager>
+        <PasswordPrompter />
+    </ContextManager>
+</Server>
