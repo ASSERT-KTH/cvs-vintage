@@ -43,7 +43,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.61 $
+ * @version $Revision: 1.62 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -225,7 +225,7 @@ public class EntitySynchronizationInterceptor
       if (ctx.getId() != null)
       {
          
-         // Currently synched with underlying storage
+         // it doesn't need to be read, but it might have been changed from the db already.
          ctx.setValid(true);
          
          if (tx!= null)
@@ -236,6 +236,10 @@ public class EntitySynchronizationInterceptor
                lock.schedule(mi);
                register(ctx, tx); // Set tx
                lock.releaseMethodLock();
+               //The entity may be dirty, even after create, for instance if it has relationship
+               //fields populated in ejbPostCreate.  cf bug 523627
+               EntityContainer ctxContainer = (EntityContainer) ctx.getContainer();
+	       ctxContainer.getGlobalTxEntityMap().associate(tx, ctx);
             }
             finally
             {
