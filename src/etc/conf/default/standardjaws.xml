@@ -10,7 +10,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjaws.xml,v 1.29 2002/05/21 14:53:36 starksm Exp $ -->
+<!-- $Id: standardjaws.xml,v 1.30 2002/06/27 19:26:28 dsundstrom Exp $ -->
 
 <jaws>
    <datasource>java:/DefaultDS</datasource>
@@ -238,7 +238,7 @@
 	 </mapping>
 	 <mapping>
 	    <java-type>java.lang.Object</java-type>
-	    <jdbc-type>JAVA_OBJECT</jdbc-type>
+	    <jdbc-type>BLOB</jdbc-type>
 	    <sql-type>BLOB</sql-type>
 	    <!-- Change this from BLOB to RAW(255) if you know your
 	    serialized object will be <= 255 bytes -->
