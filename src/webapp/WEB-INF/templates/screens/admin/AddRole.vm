@@ -1,9 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: AddRole.vm,v 1.11 2004/01/27 09:06:14 dep4b Exp $
+@version $Id$
 *#
-
-#set ($lastAction = $data.Parameters.getString("lastAction"))
 
 <div id="addrole" class="app">
 
@@ -12,21 +10,16 @@
 <form name="EditUserForm" action="$link.setPage("admin,AddRole.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManageRoles" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageRoles.vm" />
-  <input type="hidden" name="lastAction" value="" />
 
 #set ($regGroup = $intake.EditRole.Default)
-#if (($lastAction) && ($lastAction == "addedrole"))
-    #set ($roleNameData = "")
-#else
-    #set ($roleNameData = $regGroup.RoleName)
-#end
+#set ($roleNameData = $regGroup.RoleName)
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
  <th>$l10n.Role</th>
  <td>
-   <input name="$regGroup.RoleName.Key" value="$roleNameData" type="text" size="25" />
+   <input name="$regGroup.RoleName.Key" value="$!roleNameData" type="text" size="25" />
    #fieldErrorMsg($regGroup.RoleName "")
  </td>
 </tr>

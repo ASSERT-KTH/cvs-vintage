@@ -7,6 +7,9 @@
 
   <body>
     <release version="b20" date="in dev">
+      <action dev="epugh" type="fix" due-to="Anthony Wong" issue-id="SCB1247">
+        Should show EditRole page after a new role is added
+      </action>           
       <action dev="epugh" type="fix" due-to="Anthony Wong" issue-id="SCB759">
         Users without the "Issue | Search" role can still see the search GUI
       </action>         

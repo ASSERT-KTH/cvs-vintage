@@ -71,7 +71,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageRoles.java,v 1.12 2004/11/04 17:51:15 dep4b Exp $
+ * @version $Id: ManageRoles.java,v 1.13 2004/11/05 09:06:25 dep4b Exp $
  */
 public class ManageRoles extends RequireLoginFirstAction
 {
@@ -133,15 +133,17 @@ public class ManageRoles extends RequireLoginFirstAction
                 role.setName(name);
                 
                 TurbineSecurity.addRole(role);
-                data.getParameters().setString("lastAction","addedrole");
+
                 String msg = l10n.format("RoleCreated", name);
                 getScarabRequestTool(context).setConfirmMessage(msg);
+
+                data.getParameters().setString("name", name);
+                doGotoeditrole(data, context);
             }
             catch (EntityExistsException eee)
             {
                 String msg = l10n.format("RoleExists", name);
                 getScarabRequestTool(context).setConfirmMessage(msg);
-                data.getParameters().setString("lastAction","");
             }
         }
     }
