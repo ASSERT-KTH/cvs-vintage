@@ -123,7 +123,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.89 2003/04/09 22:55:30 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.90 2003/04/12 20:01:53 jackrepenning Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -2261,7 +2261,7 @@ public abstract class AbstractScarabModule
         if (name == null || name.length() == 0) 
         {
             name = Localization.format(ScarabConstants.DEFAULT_BUNDLE_NAME,
-                Locale.getDefault(),
+                getLocale(),
                 "DefaultEmailNameForModule", 
                 getRealName().toUpperCase());
         }
@@ -2317,6 +2317,18 @@ public abstract class AbstractScarabModule
     private MethodResultCache getMethodResult()
     {
         return ModuleManager.getMethodResult();
+    }
+
+    /**
+     * Returns a (possibly user-specific) locale.
+     *
+     * @return a Locale selected for the Fulcrum Localization context
+     */
+    private Locale getLocale()
+    {
+        return new Locale
+            (Localization.getDefaultLanguage(),
+             Localization.getDefaultCountry());
     }
 }
 
