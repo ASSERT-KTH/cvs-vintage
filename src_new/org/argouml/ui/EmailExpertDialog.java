@@ -1,4 +1,4 @@
-// $Id: EmailExpertDialog.java,v 1.19 2004/11/04 17:23:16 bobtarling Exp $
+// $Id: EmailExpertDialog.java,v 1.20 2004/11/30 16:13:01 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
-import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Poster;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.i18n.Translator;
@@ -139,7 +138,6 @@ public class EmailExpertDialog extends ArgoDialog {
     public void actionPerformed(ActionEvent e) {
 	super.actionPerformed(e);   
 	if (e.getSource() == getOkButton()) {
-	    Designer dsgr = Designer.theDesigner();
 	    String to = emailTo.getText();
 	    String cc = emailCc.getText();
 	    String subject = emailSubject.getText();
