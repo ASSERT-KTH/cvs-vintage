@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# $Id: release.sh,v 1.2 2002/08/28 20:02:24 jon Exp $
+# $Id: release.sh,v 1.3 2002/09/07 19:30:05 jon Exp $
 #
 # Procedure for release:
 #
@@ -21,10 +21,11 @@
 #
 
 TAG=
+#TAG=SCARAB_1_0_B11
 #TAG=SCARAB_1_0_B10
 #TAG=SCARAB_1_0_B9
-VERSION=b10
-VERSIONNEXT=b11
+VERSION=b11
+VERSIONNEXT=b12
 
 if [ -z ${TAG} ] ; then
     echo "This script is not for the faint of heart.";
@@ -36,7 +37,7 @@ CVSROOT=:pserver:${USER}@scarab.tigris.org:/cvs
 export CVSROOT
 
 echo "removing scarab from /tmp/scarab"
-rm -r /tmp/scarab
+rm -rf /tmp/scarab
 
 cd /tmp
 START_DIR=`pwd`
@@ -68,6 +69,12 @@ echo "current dir4: "; echo `pwd`
 echo "running ant package"
 ant package
 
+cd ${START_DIR}/scarab
+echo "moving files to ~"
+mv scarab-*-${VERSION}.zip ~/
+mv scarab-*-${VERSION}.tar.gz ~/
+
+cd ${START_DIR}/scarab/build
 echo "Doing new version replacement 2"
 perl -pi -e "s/${VERSION}/${VERSIONNEXT}-dev/" default.properties
 # remove the tag
