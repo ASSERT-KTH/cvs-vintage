@@ -1046,6 +1046,11 @@ try{
         
         return reportGenerator;
     }
+
+    public void setReport(Report report)
+    {
+        this.reportGenerator = report;
+    }
     
     private static String getReportQueryString(ValueParser params) 
     {
