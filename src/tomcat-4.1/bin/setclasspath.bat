@@ -1,7 +1,7 @@
 rem ---------------------------------------------------------------------------
 rem Set CLASSPATH and Java options
 rem
-rem $Id: setclasspath.bat,v 1.3 2002/12/19 18:06:31 jon Exp $
+rem $Id: setclasspath.bat,v 1.4 2003/04/30 17:52:40 jon Exp $
 rem ---------------------------------------------------------------------------
 
 rem Make sure prerequisite environment variables are set
@@ -33,7 +33,7 @@ goto end
 :okBasedir
 
 rem Set the default -Djava.endorsed.dirs argument
-set JAVA_ENDORSED_DIRS=%BASEDIR%\bin;%BASEDIR%\common\endorsed
+set JAVA_ENDORSED_DIRS=%BASEDIR%\common\endorsed
 
 rem Set standard CLASSPATH
 rem Note that there are no quotes as we do not want to introduce random

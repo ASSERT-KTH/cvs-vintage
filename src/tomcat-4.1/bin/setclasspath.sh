@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 #  Set CLASSPATH and Java options
 #
-#  $Id: setclasspath.sh,v 1.3 2002/12/19 18:06:31 jon Exp $
+#  $Id: setclasspath.sh,v 1.4 2003/04/30 17:52:40 jon Exp $
 # -----------------------------------------------------------------------------
 
 # Make sure prerequisite environment variables are set
@@ -27,7 +27,7 @@ if [ ! -r "$BASEDIR"/bin/setclasspath.sh ]; then
 fi
 
 # Set the default -Djava.endorsed.dirs argument
-JAVA_ENDORSED_DIRS="$BASEDIR"/bin:"$BASEDIR"/common/endorsed
+JAVA_ENDORSED_DIRS="$BASEDIR"/common/endorsed
 
 # Set standard CLASSPATH
 CLASSPATH="$JAVA_HOME"/lib/tools.jar
