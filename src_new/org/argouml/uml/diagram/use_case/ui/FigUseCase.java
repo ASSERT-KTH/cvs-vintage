@@ -24,7 +24,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.14 2003/04/29 19:25:08 kataka Exp $
+// $Id: FigUseCase.java,v 1.15 2003/05/05 11:25:39 kataka Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -50,7 +50,7 @@ import org.apache.log4j.Category;
 import org.argouml.application.api.Notation;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.ui.ArgoJMenu;
-import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.CompartmentFigText;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.generator.ParserDisplay;
@@ -68,6 +68,7 @@ import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigLine;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
+
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
 import ru.novosoft.uml.behavior.use_cases.MUseCase;
@@ -949,7 +950,7 @@ public class FigUseCase extends FigNodeModelElement {
         // If we didn't get the EP compartment, we just select ourself.
 
         if (!targetIsSet) {
-            ProjectBrowser.getInstance().setTarget(getOwner());
+            TargetManager.getInstance().setTarget(getOwner());
         }
     }
 

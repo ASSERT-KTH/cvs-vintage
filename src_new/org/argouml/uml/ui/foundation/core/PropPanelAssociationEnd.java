@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.30 2003/05/04 08:44:30 kataka Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.31 2003/05/05 11:25:39 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import org.argouml.model.ModelFacade;
 import org.argouml.swingext.GridLayout2;
 import org.argouml.swingext.LabelledLayout;
 import org.argouml.swingext.Orientation;
-import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -203,7 +203,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         if (target instanceof MAssociationEnd) {
             MAssociation assoc = ((MAssociationEnd) target).getAssociation();
             if (assoc != null) {
-                ProjectBrowser.getInstance().setTarget(assoc);
+                TargetManager.getInstance().setTarget(assoc);
             }
         }
     }
@@ -217,7 +217,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         Object target = getTarget();
         if (ModelFacade.isAAssociationEnd(target)) {
             MAssociationEnd end = (MAssociationEnd) target;
-            ProjectBrowser.getInstance().setTarget(end.getOppositeEnd());           
+            TargetManager.getInstance().setTarget(end.getOppositeEnd());           
         }
     }
     

@@ -54,13 +54,7 @@ import org.argouml.kernel.PredInstanceOf;
 import org.argouml.kernel.PredNotInstanceOf;
 import org.argouml.kernel.PredOR;
 import org.argouml.kernel.ProjectManager;
-import org
-    .argouml
-    .model
-    .uml
-    .behavioralelements
-    .statemachines
-    .StateMachinesHelper;
+import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
 import org.argouml.swingext.Toolbar;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.collaboration.ui.GoAssocRoleMessages;
@@ -134,7 +128,7 @@ import ru.novosoft.uml.model_management.MSubsystem;
  *
  * <p>Perspectives are now built here.
  *
- * $Id: NavigatorPane.java,v 1.40 2003/05/04 16:43:53 kataka Exp $
+ * $Id: NavigatorPane.java,v 1.41 2003/05/05 11:25:38 kataka Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -382,7 +376,7 @@ public class NavigatorPane
         else
             row = row + 1;
         _tree.setSelectionRow(row);
-        ProjectBrowser.getInstance().setTarget(getSelectedObject());
+        TargetManager.getInstance().setTarget(getSelectedObject());
     }
 
     /** history method - to be moved into some HistoryManager
@@ -395,7 +389,7 @@ public class NavigatorPane
         else
             row = row - 1;
         _tree.setSelectionRow(row);
-        ProjectBrowser.getInstance().setTarget(getSelectedObject());
+        TargetManager.getInstance().setTarget(getSelectedObject());
     }
 
     ////////////////////////////////////////////////////////////////

@@ -24,7 +24,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.28 2003/05/04 08:44:30 kataka Exp $
+// $Id: PropPanelActor.java,v 1.29 2003/05/05 11:25:39 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -40,7 +40,7 @@ package org.argouml.uml.ui.behavior.use_cases;
 import org.argouml.application.api.Argo;
 import org.argouml.model.uml.behavioralelements.usecases.UseCasesFactory;
 import org.argouml.swingext.LabelledLayout;
-import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.foundation.core.PropPanelClassifier;
@@ -106,7 +106,7 @@ public class PropPanelActor extends PropPanelClassifier {
      */
 
     public void newActor() {
-        ProjectBrowser.getInstance().setTarget(UseCasesFactory.getFactory().buildActor(getTarget()));
+        TargetManager.getInstance().setTarget(UseCasesFactory.getFactory().buildActor(getTarget()));
     }
 
    

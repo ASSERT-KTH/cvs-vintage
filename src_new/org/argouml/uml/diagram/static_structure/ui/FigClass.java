@@ -25,7 +25,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.57 2003/05/01 08:49:40 kataka Exp $
+// $Id: FigClass.java,v 1.58 2003/05/05 11:25:38 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -54,6 +54,7 @@ import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.CompartmentFigText;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.generator.ParserDisplay;
@@ -927,7 +928,7 @@ public class FigClass extends FigNodeModelElement {
                 f = (Fig) v.elementAt(i + 1);
                 ((CompartmentFigText) f).setHighlighted(true);
                 highlightedFigText = (CompartmentFigText) f;
-                ProjectBrowser.getInstance().setTarget(f);
+                TargetManager.getInstance().setTarget(f);
             }
         } else if (f == _operVec && _operVec.getHeight() > 0) {
             Vector v = _operVec.getFigs();
@@ -938,12 +939,12 @@ public class FigClass extends FigNodeModelElement {
                 f = (Fig) v.elementAt(i + 1);
                 ((CompartmentFigText) f).setHighlighted(true);
                 highlightedFigText = (CompartmentFigText) f;
-                ProjectBrowser.getInstance().setTarget(f);
+                TargetManager.getInstance().setTarget(f);
             }
         }
         
         if (targetIsSet == false)
-            ProjectBrowser.getInstance().setTarget(getOwner());
+        TargetManager.getInstance().setTarget(getOwner());
             
 
     }

@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.31 2003/05/04 08:44:30 kataka Exp $
+// $Id: PropPanelUseCase.java,v 1.32 2003/05/05 11:25:39 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -44,6 +44,7 @@ import org.argouml.application.api.Argo;
 import org.argouml.model.uml.behavioralelements.usecases.UseCasesFactory;
 import org.argouml.swingext.LabelledLayout;
 import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelModifiers;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -174,7 +175,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
 
             MExtensionPoint extensionPoint =
                     UseCasesFactory.getFactory().buildExtensionPoint(useCase);
-            ProjectBrowser.getInstance().setTarget(extensionPoint);
+            TargetManager.getInstance().setTarget(extensionPoint);
             
         }
     }

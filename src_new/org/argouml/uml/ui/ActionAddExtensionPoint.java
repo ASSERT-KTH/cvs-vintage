@@ -24,7 +24,7 @@
 // File: ActionAddExtensionPoint.java
 // Classes: ActionAddExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: ActionAddExtensionPoint.java,v 1.4 2003/05/02 08:33:42 kataka Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.5 2003/05/05 11:25:39 kataka Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // the display of extension points.
@@ -35,7 +35,6 @@ package org.argouml.uml.ui;
 import java.awt.event.ActionEvent;
 
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 
 import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
@@ -141,7 +140,7 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
 	MExtensionPoint ep =
             UmlFactory.getFactory().getUseCases().buildExtensionPoint((MUseCase) target);
 
-	ProjectBrowser.getInstance().setTarget(ep);
+        TargetManager.getInstance().setTarget(ep);
 	super.actionPerformed(ae);
     }
 
