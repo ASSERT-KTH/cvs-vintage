@@ -19,7 +19,7 @@
 
     <property name="Name" value="JBoss"/>
     <property name="name" value="jboss"/>
-    <property name="version" value="2.1-BETA-MAR-26-2001"/>
+    <property name="version" value="2.3 BETA"/>
 
     <property name="bin.dir" value="${basedir}/bin"/>
     <property name="src.bin.dir" value="${basedir}/src/bin"/>
