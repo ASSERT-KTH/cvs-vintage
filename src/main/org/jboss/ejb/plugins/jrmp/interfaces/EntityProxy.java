@@ -25,11 +25,11 @@ import javax.ejb.EJBObject;
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 
 /**
- *	<description> 
+ *      <description> 
  *      
- *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *      @see <related>
+ *      @author Rickard Öberg (rickard.oberg@telkel.com)
+ *      @version $Revision: 1.4 $
  */
 public abstract class EntityProxy
    implements java.io.Serializable

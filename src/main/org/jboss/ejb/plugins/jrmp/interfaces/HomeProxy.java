@@ -13,11 +13,11 @@ import java.rmi.MarshalledObject;
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 
 /**
- *	<description> 
+ *      <description> 
  *      
- *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *      @see <related>
+ *      @author Rickard Öberg (rickard.oberg@telkel.com)
+ *      @version $Revision: 1.4 $
  */
 public abstract class HomeProxy
    implements java.io.Serializable
@@ -107,7 +107,6 @@ public abstract class HomeProxy
    {
       return containerStartup == ContainerRemote.startup;
    }
-	
+        
    // Inner classes -------------------------------------------------
 }
-
