@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: UndoManager.java,v 1.24 2004/04/30 19:55:28 spestov Exp $
+ * @version $Id: UndoManager.java,v 1.25 2004/07/04 06:56:17 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class UndoManager
@@ -142,7 +142,8 @@ public class UndoManager
 	//{{{ contentInserted() method
 	public void contentInserted(int offset, int length, String text, boolean clearDirty)
 	{
-		Edit toMerge = getLastEdit();
+		Edit last = getLastEdit();
+		Edit toMerge = getMergeEdit();
 
 		if(!clearDirty && toMerge instanceof Insert
 			&& redosFirst == null)
@@ -166,7 +167,7 @@ public class UndoManager
 
 		if(clearDirty)
 		{
-			redoClearDirty = toMerge;
+			redoClearDirty = last;
 			undoClearDirty = ins;
 		}
 
@@ -179,7 +180,8 @@ public class UndoManager
 	//{{{ contentRemoved() method
 	public void contentRemoved(int offset, int length, String text, boolean clearDirty)
 	{
-		Edit toMerge = getLastEdit();
+		Edit last = getLastEdit();
+		Edit toMerge = getMergeEdit();
 
 		if(!clearDirty && toMerge instanceof Remove
 			&& redosFirst == null)
@@ -207,7 +209,7 @@ public class UndoManager
 		Remove rem = new Remove(this,offset,length,text);
 		if(clearDirty)
 		{
-			redoClearDirty = toMerge;
+			redoClearDirty = last;
 			undoClearDirty = rem;
 		}
 
@@ -279,12 +281,17 @@ public class UndoManager
 		}
 	} //}}}
 
+	//{{{ getMergeEdit() method
+	private Edit getMergeEdit()
+	{
+		Edit last = getLastEdit();
+		return (compoundEdit != null ? compoundEdit.last : last);
+	} //}}}
+
 	//{{{ getLastEdit() method
 	private Edit getLastEdit()
 	{
-		if(compoundEdit != null)
-			return compoundEdit.last;
-		else if(undosLast instanceof CompoundEdit)
+		if(undosLast instanceof CompoundEdit)
 			return ((CompoundEdit)undosLast).last;
 		else
 			return undosLast;
