@@ -1,7 +1,7 @@
 #macro ( attrValueLeafSelect $attrValue $optionFieldName $size )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
     #set ( $attr = $attrValue.Attribute )
-    #set ( $module = $attrValue.Issue.Module )
+    #set ( $module = $attrValue.Issue.ScarabModule )
 
 <select name="$attrInput.get($optionFieldName).Key" 
 								#if($size.length())size="$size"#end>
@@ -42,7 +42,7 @@
 #macro ( attrValueHierarchySelect $attrValue $optionFieldName $size )
 #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
 #set ( $attr = $attrValue.Attribute )
-#set ( $module = $attrValue.Issue.Module )
+#set ( $module = $attrValue.Issue.ScarabModule )
 
 <select name="$attrInput.get($optionFieldName).Key" 
 								#if($size.length() != 1)size="$size"#end>
@@ -115,7 +115,7 @@ value="false" />
 #macro (userSelectBox $attrValue $size)
 #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
 #set ( $attr = $attrValue.Attribute )
-#set ( $module = $attrValue.Issue.Module )
+#set ( $module = $attrValue.Issue.ScarabModule )
 
 <select name="$attrInput.UserId.Key" 
 					#if($size.length())size="$size"#end>
