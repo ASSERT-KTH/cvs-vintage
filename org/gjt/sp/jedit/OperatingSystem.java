@@ -1,4 +1,7 @@
 /*
+ * :tabSize=8:indentSize=8:noTabs=false:
+ * :folding=explicit:collapseFolds=1:
+ *
  * OperatingSystem.java - OS detection
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
@@ -36,7 +39,7 @@ import org.gjt.sp.util.Log;
 /**
  * Operating system detection routines.
  * @author Slava Pestov
- * @version $Id: OperatingSystem.java,v 1.10 2003/04/22 19:46:15 spestov Exp $
+ * @version $Id: OperatingSystem.java,v 1.11 2003/04/24 02:36:38 spestov Exp $
  * @since jEdit 4.0pre4
  */
 public class OperatingSystem
@@ -245,6 +248,26 @@ L2:			for (int j=0; j < gc.length; j++)
 		return (isMacOS() && UIManager.getLookAndFeel().isNativeLookAndFeel());
 	} //}}}
 
+	//{{{ hasScreenMenuBar
+	/**
+	 * Returns whether the screen menu bar on Mac OS X is in use.
+	 * @since jEdit 4.2pre1
+	*/
+	public static final boolean hasScreenMenuBar()
+	{
+		if(!isMacOS())
+			return false;
+		else if(hasScreenMenuBar == -1)
+		{
+			String result = System.getProperty("apple.laf.useScreenMenuBar");
+			if (result == null)
+				result = System.getProperty("com.apple.macos.useScreenMenuBar");
+			hasScreenMenuBar = (result.equals("true")) ? 1 : 0;
+		}
+
+		return (hasScreenMenuBar == 1);
+	} //}}}
+
 	//{{{ isJava14() method
 	/**
 	 * Returns if Java 2 version 1.4 is in use.
@@ -265,6 +288,7 @@ L2:			for (int j=0; j < gc.length; j++)
 
 	private static int os;
 	private static boolean java14;
+	private static int hasScreenMenuBar = -1;
 
 	//{{{ Class initializer
 	static
