@@ -34,7 +34,7 @@ public class MenuPluginHandler extends AbstractPluginHandler {
 	/* (non-Javadoc)
 	 * @see org.columba.core.plugin.AbstractPluginHandler#getDefaultNames()
 	 */
-	public String[] getDefaultNames() {
+	public String[] getPluginIdList() {
 		return null;
 	}
 

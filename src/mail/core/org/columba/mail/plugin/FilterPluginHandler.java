@@ -15,9 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.plugin;
 
-import java.util.ListIterator;
-
-import org.columba.core.xml.XmlElement;
 
 
 
@@ -29,7 +26,7 @@ import org.columba.core.xml.XmlElement;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class LocalFilterPluginHandler extends AbstractFilterPluginHandler {
+public class FilterPluginHandler extends AbstractFilterPluginHandler {
 
 	
 
@@ -38,33 +35,12 @@ public class LocalFilterPluginHandler extends AbstractFilterPluginHandler {
 	 * @param id
 	 * @param config
 	 */
-	public LocalFilterPluginHandler() {
-		super("filter", "org/columba/mail/filter/filter.xml", "filterlist");
+	public FilterPluginHandler() {
+		super("org.columba.mail.filter", "org/columba/mail/filter/filter.xml", "filterlist");
 
 		
 	}
 	
-	/*
-	public void addPlugin(String name, File pluginFolder, XmlElement element) {
-			super.addPlugin(name, pluginFolder, element);
-
-			XmlElement child = element.getElement("arguments/filter");
-
-			parentNode.addElement(child);
-
-		}
-*/
-	/* (non-Javadoc)
-	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
-	 */
-	public void addExtension(String id, XmlElement extension) {
-		ListIterator iterator = extension.getElements().listIterator();
-		XmlElement filter;
-		while( iterator.hasNext() ) {
-			filter = (XmlElement) iterator.next();
-			filter.addAttribute("name", id + '$' + filter.getAttribute("name"));
-			parentNode.addElement(filter);
-		}
-	}
+	
 
 }

@@ -29,6 +29,7 @@ import org.columba.core.gui.util.wizard.DefaultWizardPanel;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
+import org.columba.mail.gui.tree.util.SelectFolderDialog;
 
 public class ImportWizard implements ActionListener
 {
@@ -148,12 +149,9 @@ public class ImportWizard implements ActionListener
 		}
 		else if (action.equals("DESTINATION"))
 		{
-			/*
+			
 			SelectFolderDialog dialog =
-				MainInterface
-					.frameController
-					.treeController
-					.getSelectFolderDialog();
+				MainInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 
@@ -162,7 +160,7 @@ public class ImportWizard implements ActionListener
 
 				sourcePanel.setDestination(path);
 			}
-			*/
+			
 			
 
 		}
@@ -170,11 +168,10 @@ public class ImportWizard implements ActionListener
 
 	public void finish()
 	{
-		// FIXME
-		
 		
 		String className = listPanel.getSelection();
 
+		/*
 		DefaultMailboxImporter importer = null;
 
 		Class actClass = null;
@@ -196,12 +193,7 @@ public class ImportWizard implements ActionListener
 		importer.init();
 		importer.setDestinationFolder(destFolder);
 		importer.setSourceFile(sourceFile);
-		/*
-		importer.register(MainInterface.taskManager);
-		MainInterface.taskManager.register(importer, 30);
-		importer.start();
-        destFolder.workerUpdate();
-        */
+		*/
         
 	}
 

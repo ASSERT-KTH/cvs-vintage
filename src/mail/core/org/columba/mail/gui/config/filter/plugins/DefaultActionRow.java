@@ -27,6 +27,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginInterface;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
+import org.columba.mail.gui.config.filter.util.ActionComboBoxRenderer;
 import org.columba.mail.plugin.FilterActionPluginHandler;
 
 public class DefaultActionRow implements PluginInterface {
@@ -45,6 +46,7 @@ public class DefaultActionRow implements PluginInterface {
 	protected int count;
 
 	
+	
 	public DefaultActionRow(ActionList list, FilterAction action) {
 		
 		this.filterAction = action;
@@ -52,6 +54,8 @@ public class DefaultActionRow implements PluginInterface {
 		
 		panel = new JPanel();
 	
+		
+		
 		initComponents();
 	
 		updateComponents(true);
@@ -86,10 +90,21 @@ public class DefaultActionRow implements PluginInterface {
 
 		FilterActionPluginHandler pluginHandler =
 			(FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
-				"filter_actions");
+				"org.columba.mail.filteraction");
+				
+		String[] names = pluginHandler.getPluginIdList();
+		
+		/*
+		for ( int i=0; i<names.length; i++ )
+		{
+			String userVisibleName;
+			transformationTable.put( userVisibleName, names[i]);
+		}
+		*/
 
-		actionComboBox = new JComboBox(pluginHandler.getDefaultNames());
-
+		actionComboBox = new JComboBox( names );
+		actionComboBox.setRenderer(new ActionComboBoxRenderer());
+		
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 1.0;
 		c.insets = new Insets(2, 5, 2, 5);
@@ -126,5 +141,7 @@ public class DefaultActionRow implements PluginInterface {
 	public void setFilterAction(FilterAction filterAction) {
 		this.filterAction = filterAction;
 	}
+
+
 
 }

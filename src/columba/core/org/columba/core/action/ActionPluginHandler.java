@@ -31,7 +31,7 @@ public class ActionPluginHandler extends AbstractPluginHandler{
 	/**
 	 * @see org.columba.core.plugin.AbstractPluginHandler#getNames()
 	 */
-	public String[] getDefaultNames() {
+	public String[] getPluginIdList() {
 		int count = parentNode.count();
 
 		String[] list = new String[count];

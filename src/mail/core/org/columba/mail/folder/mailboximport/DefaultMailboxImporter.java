@@ -43,7 +43,7 @@ public abstract class DefaultMailboxImporter
 	}
 
 
-	/*********** overwrite the following messages **************************/
+	/*********** overwrite the following methods **************************/
 
 	/**
 	 * overwrite this method to specify type
@@ -161,8 +161,14 @@ public abstract class DefaultMailboxImporter
 	/**
 	 * use this method to save a message to the specified destination folder
 	 */
-	protected void saveMessage(String rawString) throws Exception
+	protected void saveMessage(String rawString, WorkerStatusController worker) throws Exception
 	{
+		destinationFolder.addMessage(rawString, worker);
+		
+		counter++;
+
+		worker.setDisplayText("Importing messages: " + getCount());
+		
 		// FIXME
 		/*
 		int index = rawString.indexOf("\n\n");

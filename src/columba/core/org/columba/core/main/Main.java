@@ -58,8 +58,9 @@ import org.columba.mail.gui.config.accountwizard.AccountWizard;
 import org.columba.mail.gui.frame.MailFrameModel;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.plugin.FilterActionPluginHandler;
+import org.columba.mail.plugin.FilterPluginHandler;
 import org.columba.mail.plugin.FolderPluginHandler;
-import org.columba.mail.plugin.LocalFilterPluginHandler;
+import org.columba.mail.plugin.ImportPluginHandler;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
@@ -101,7 +102,6 @@ public class Main {
 
 	public static void main(String[] arg) {
 		final String[] args = arg;
-
 
 		/*
 		try {
@@ -206,23 +206,31 @@ public class Main {
 				MainInterface.processor.start();
 
 				MainInterface.pluginManager = new PluginManager();
-				MainInterface.pluginManager.registerHandler( new InterpreterHandler() );
-				
-		
+				MainInterface.pluginManager.registerHandler(
+					new InterpreterHandler());
+
 				MainInterface.pluginManager.registerHandler(
 					new FilterActionPluginHandler());
 				MainInterface.pluginManager.registerHandler(
-					new LocalFilterPluginHandler());
+					new FilterPluginHandler());
 				MainInterface.pluginManager.registerHandler(
 					new FolderPluginHandler());
 				MainInterface.pluginManager.registerHandler(
 					new ActionPluginHandler());
 				MainInterface.pluginManager.registerHandler(
 					new MenuPluginHandler());
+				MainInterface.pluginManager.registerHandler(
+					new ImportPluginHandler());
 
 				MainInterface.pluginManager.initPlugins();
-				
-				((ActionPluginHandler)MainInterface.pluginManager.getHandler("action")).addActionList("org/columba/mail/action/action.xml");
+
+				(
+					(
+						ActionPluginHandler) MainInterface
+							.pluginManager
+							.getHandler(
+						"action")).addActionList(
+					"org/columba/mail/action/action.xml");
 
 				frame.advance();
 
@@ -232,18 +240,23 @@ public class Main {
 
 				MainInterface.treeModel =
 					new TreeModel(MailConfig.getFolderConfig());
-					
-				MainInterface.frameModel = new MailFrameModel(MailConfig.get("mainframeoptions").getElement(
-				"/options/gui/viewlist"));
+
+				MainInterface.frameModel =
+					new MailFrameModel(
+						MailConfig.get("mainframeoptions").getElement(
+							"/options/gui/viewlist"));
 
 				frame.advance();
 
 				MainInterface.shutdownManager = new ShutdownManager();
-				MainInterface.shutdownManager.register( new SaveAllFoldersPlugin() );
-				MainInterface.shutdownManager.register( new SaveConfigPlugin() );
-				MainInterface.shutdownManager.register( new SavePOP3CachePlugin() );
-				MainInterface.shutdownManager.register( new SaveAllAddressbooksPlugin() );
-				
+				MainInterface.shutdownManager.register(
+					new SaveAllFoldersPlugin());
+				MainInterface.shutdownManager.register(new SaveConfigPlugin());
+				MainInterface.shutdownManager.register(
+					new SavePOP3CachePlugin());
+				MainInterface.shutdownManager.register(
+					new SaveAllAddressbooksPlugin());
+
 				return null;
 			}
 
@@ -252,9 +265,8 @@ public class Main {
 
 				//mainFrame.setVisible(true);
 
-				if (MailConfig.getAccountList().count()==0)
+				if (MailConfig.getAccountList().count() == 0)
 					new AccountWizard(false);
-				
 
 				new CmdLineArgumentHandler(args);
 			}

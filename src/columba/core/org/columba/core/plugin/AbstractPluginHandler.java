@@ -16,6 +16,7 @@
 package org.columba.core.plugin;
 
 import java.io.File;
+import java.util.Hashtable;
 
 import org.columba.core.loader.DefaultClassLoader;
 import org.columba.core.xml.XmlElement;
@@ -34,6 +35,9 @@ public abstract class AbstractPluginHandler {
 	protected String id;
 	protected PluginManager pluginManager;
 
+	//	translate plugin-id to user-visible name
+	//  example: org.columba.example.HelloWorld$HelloPlugin -> HelloWorld
+	protected Hashtable transformationTable;
 
 	/**
 	 * Constructor for PluginHandler.
@@ -43,10 +47,18 @@ public abstract class AbstractPluginHandler {
 
 		this.id = id;
 
-		if( config != null )
-		pluginListConfig = new PluginListConfig(config);
+		transformationTable = new Hashtable();
 
+		if (config != null)
+			pluginListConfig = new PluginListConfig(config);
 
+	}
+
+	/**
+	 * @return Hashtable
+	 */
+	public Hashtable getTransformationTable() {
+		return transformationTable;
 	}
 
 	protected PluginListConfig getConfig() {
@@ -57,7 +69,7 @@ public abstract class AbstractPluginHandler {
 		return id;
 	}
 
-	public abstract String[] getDefaultNames();
+	public abstract String[] getPluginIdList();
 
 	public Object loadPlugin(String className, Object[] args)
 		throws Exception {
@@ -66,40 +78,27 @@ public abstract class AbstractPluginHandler {
 
 	}
 
-
-
 	public Object getPlugin(String name, String className, Object[] args)
 		throws Exception {
 
 		try {
 			return loadPlugin(className, args);
 		} catch (ClassNotFoundException ex) {
-			String pluginId = name.substring(0,name.indexOf('$'));
-			//XmlElement parent = (XmlElement) MainInterface.pluginManager.getPluginElement(pluginId);
-			//XmlElement child = parent.getElement("runtime");
-			
+			String pluginId = name.substring(0, name.indexOf('$'));
+
 			String type = pluginManager.getPluginType(pluginId);
-			/*
-			String jar = child.getAttribute("jar");
-			//String importPackages = child.getAttribute("import");
-			
-			File file = (File) pluginFolders.get(name);
-			if ( jar!=null ) file = new File(file, jar);
-			*/
+
 			File pluginDir = pluginManager.getPluginDir(pluginId);
-			
-			return PluginLoader.loadExternalPlugin(className, type, pluginDir, args);
+
+			return PluginLoader.loadExternalPlugin(
+				className,
+				type,
+				pluginDir,
+				args);
 		}
 
 	}
 
-	/*
-	public void addPlugin(String id, File pluginFolder, XmlElement element) {
-		externalPlugins.put(id, element);
-		pluginFolders.put(id, pluginFolder);
-	}
-	*/
-	
 	public abstract void addExtension(String id, XmlElement extension);
 
 	/**

@@ -77,7 +77,7 @@ public abstract class AbstractSearchEngine {
 					AbstractFilterPluginHandler) MainInterface
 						.pluginManager
 						.getHandler(
-					"filter");
+					"org.columba.mail.filter");
 			instance = (AbstractFilter) handler.getActionPlugin(type, null);
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(

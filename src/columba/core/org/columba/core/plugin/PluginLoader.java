@@ -67,7 +67,7 @@ public class PluginLoader {
 
 		InterpreterHandler handler =
 			(InterpreterHandler) MainInterface.pluginManager.getHandler(
-				"interpreter");
+				"org.columba.core.interpreter");
 
 		Object instance = handler.getInterpreter(type);//, "org.columba.core.scripting.PythonInterpreterPlugin", null);
 

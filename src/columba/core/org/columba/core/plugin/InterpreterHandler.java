@@ -39,14 +39,14 @@ public class InterpreterHandler extends AbstractPluginHandler {
 	 */
 
 	public InterpreterHandler() {
-		super("interpreter", null);
+		super("org.columba.core.interpreter", null);
 		interpreterTable = new Hashtable();
 	}
 
 	/**
 	 * @see org.columba.core.plugin.AbstractPluginHandler#getDefaultNames()
 	 */
-	public String[] getDefaultNames() {
+	public String[] getPluginIdList() {
 		return null;
 	}
 

@@ -143,7 +143,7 @@ public class Filter extends DefaultItem {
 		// get plugin handler for filter actions
 		FilterActionPluginHandler pluginHandler =
 			(FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
-				"filter_actions");
+				"org.columba.mail.filteraction");
 
 		// get list of all filter actions
 		FilterActionList list = getFilterActionList();

@@ -139,21 +139,10 @@ public class ActionList extends JPanel implements ActionListener {
 
 		panel.setLayout(gridbag);
 
-		/*
-		c.fill = GridBagConstraints.NONE;
-		c.gridx = GridBagConstraints.REMAINDER;
-		c.weightx = 1.0;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		*/
-
-		/*
-		FilterActionPluginList actionListItem =
-					MailConfig.getFilterActionConfig().getFilterActionList();
-		*/
 
 		FilterActionPluginHandler pluginHandler =
 			(FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
-				"filter_actions");
+				"org.columba.mail.filteraction");
 
 		FilterActionList actionList = filter.getFilterActionList();
 
@@ -183,37 +172,7 @@ public class ActionList extends JPanel implements ActionListener {
 				row = new MarkActionRow(this,action);
 			}
 			
-			//row.init(this,action);
-
-			/*
-			String className = actionListItem.getGuiClassName(name);
-			DefaultActionRow row = null;
 			
-			
-			try
-			{
-				row = (DefaultActionRow) CClassLoader.instanciate(className, args);
-			}
-			catch ( Exception ex )
-			{
-				ex.printStackTrace();
-			} 
-			*/
-			/*
-			if (type == 0) {
-				// move
-				row = new FolderChooserActionRow(this, action);
-			} else if (type == 1) {
-				// copy
-				row = new FolderChooserActionRow(this, action);
-			} else if (type == 2) {
-				// mark as read
-				row = new MarkActionRow(this, action);
-			} else if (type == 3) {
-				// delete
-				row = new MarkActionRow(this, action);
-			}
-			*/
 
 			if (row != null) {
 				c.fill = GridBagConstraints.NONE;

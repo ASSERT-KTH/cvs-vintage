@@ -33,7 +33,8 @@ import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.wizard.DefaultWizardPanel;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.plugin.ImportPluginHandler;
 
 /**
  * @version 	1.0
@@ -47,10 +48,12 @@ public class ListPanel
 	private JLabel label;
 	private MultiLineLabel descriptionLabel;
 	
+	/*
 	private String[] importerList;
 	private String[] name;
 	private String[] description;
-
+	*/
+	
 	public ListPanel(
 		JDialog dialog,
 		ActionListener listener,
@@ -78,11 +81,13 @@ public class ListPanel
 	{
 		int index = list.getSelectedIndex();
 		
-		String key = importerList[index];
+		//String key = importerList[index];
 		
 		
 		
-		return key; 
+		//return key;
+		
+		return ""; 
 	}
 
 	protected JPanel createPanel(ActionListener listener)
@@ -112,7 +117,7 @@ public class ListPanel
 		middlePanel.setLayout(layout);
 
 		generateList();
-		list = new JList( name );
+		list = new JList();
 
 		JScrollPane scrollPane = new JScrollPane(list);
 		//scrollPane.setPreferredSize( new Dimension(200,200) );
@@ -149,6 +154,15 @@ public class ListPanel
 
 	protected void generateList()
 	{
+		ImportPluginHandler pluginHandler =
+					(ImportPluginHandler) MainInterface.pluginManager.getHandler(
+						"org.columba.mail.importer");
+			
+		String[] names = pluginHandler.getPluginIdList();
+		
+		list = new JList(names);
+					
+		/*
 		importerList = new String[] { "MBOX",
 						"PegasusMail",
 						"Mozilla",
@@ -164,19 +178,21 @@ public class ListPanel
 			name[i] = MailResourceLoader.getString("dialog", "mailboximport",importerList[i]+"_name");
 			description[i] = MailResourceLoader.getString("dialog","mailboximport", importerList[i]+"_description");
 		}
-		
+		*/
 		
 	}
 
 	public void valueChanged(ListSelectionEvent event)
 	{
 		
+		
 		int index = list.getSelectedIndex();
 		
+		/*
 		String str = description[index];
 		
 		descriptionLabel.setText( str );
-		
+		*/
 	}
 
 }

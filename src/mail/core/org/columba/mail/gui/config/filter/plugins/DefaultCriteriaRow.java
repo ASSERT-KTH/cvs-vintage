@@ -28,6 +28,7 @@ import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.plugin.PluginInterface;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
+import org.columba.mail.gui.config.filter.util.CriteriaComboBoxRenderer;
 
 public class DefaultCriteriaRow implements PluginInterface {
 	protected FilterCriteria criteria;
@@ -111,7 +112,9 @@ public class DefaultCriteriaRow implements PluginInterface {
 		panel.setLayout(gridbag);
 
 		//conditionComboBox = new JComboBox(pluginList.getFilters());
-		conditionComboBox = new JComboBox(pluginHandler.getDefaultNames());
+		conditionComboBox = new JComboBox(pluginHandler.getPluginIdList());
+		conditionComboBox.setRenderer(new CriteriaComboBoxRenderer());
+		
 		/*
 		for (int i = 0; i < conditionList.size(); i++) {
 			String name = (String) conditionList.get(i);

@@ -55,7 +55,7 @@ public class CriteriaList extends JPanel implements ActionListener {
 
 	public CriteriaList(Filter filter) {
 		super();
-		pluginHandler = MainInterface.pluginManager.getHandler("filter");
+		pluginHandler = MainInterface.pluginManager.getHandler("org.columba.mail.filter");
 
 		this.config = MainInterface.config;
 		this.filter = filter;
