@@ -85,13 +85,13 @@ public class FullNameDialog extends JDialog implements ActionListener {
             titleTextField.setText(contact.get(VCARD.N_PREFIX));
             lastnameTextField.setText(contact.get(VCARD.N_FAMILY));
             fornameTextField.setText(contact.get(VCARD.N_GIVEN));
-            middlenameTextField.setText(contact.get(VCARD.N_MIDDLE));
+            middlenameTextField.setText(contact.get(VCARD.N_ADDITIONALNAMES));
             suffixTextField.setText(contact.get(VCARD.N_SUFFIX));
         } else {
             contact.set(VCARD.N_PREFIX, titleTextField.getText());
             contact.set(VCARD.N_FAMILY, lastnameTextField.getText());
             contact.set(VCARD.N_GIVEN, fornameTextField.getText());
-            contact.set(VCARD.N_MIDDLE, middlenameTextField.getText());
+            contact.set(VCARD.N_ADDITIONALNAMES, middlenameTextField.getText());
             contact.set(VCARD.N_SUFFIX, suffixTextField.getText());
         }
     }

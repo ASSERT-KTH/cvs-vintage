@@ -30,6 +30,8 @@ import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.parser.VCardParser;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.ristretto.io.CharSequenceSource;
+import org.columba.ristretto.io.SourceInputStream;
 
 /**
  * Import VCARD contact to selected addressbook.
@@ -81,7 +83,8 @@ public class AddVCardAction extends DefaultTreeAction {
 					in.close();
 
 					// create contact card
-					Contact card = VCardParser.parse(strbuf.toString());
+					Contact card = VCardParser.read(new SourceInputStream(
+							new CharSequenceSource(strbuf.toString())));
 
 					// add to folder
 					destinationFolder.add(card);

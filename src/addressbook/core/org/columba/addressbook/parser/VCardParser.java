@@ -15,194 +15,276 @@
 //All Rights Reserved.
 package org.columba.addressbook.parser;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
+import java.util.StringTokenizer;
+
+import net.wimpi.pim.Pim;
+import net.wimpi.pim.contact.basicimpl.CommunicationsImpl;
+import net.wimpi.pim.contact.basicimpl.ContactImpl;
+import net.wimpi.pim.contact.basicimpl.EmailAddressImpl;
+import net.wimpi.pim.contact.basicimpl.OrganizationImpl;
+import net.wimpi.pim.contact.basicimpl.OrganizationalIdentityImpl;
+import net.wimpi.pim.contact.basicimpl.PersonalIdentityImpl;
+import net.wimpi.pim.contact.io.ContactMarshaller;
+import net.wimpi.pim.contact.io.ContactUnmarshaller;
+import net.wimpi.pim.contact.model.Communications;
+import net.wimpi.pim.contact.model.EmailAddress;
+import net.wimpi.pim.contact.model.OrganizationalIdentity;
+import net.wimpi.pim.contact.model.PersonalIdentity;
+import net.wimpi.pim.factory.ContactIOFactory;
 
 import org.columba.addressbook.model.Contact;
-
+import org.columba.addressbook.model.VCARD;
 
 /**
- * @version         1.0
- * @author
+ * Contact data parser for a vCard-standard compliant text/plain file.
+ * 
+ * @author fdietz
  */
 public class VCardParser {
-    public static Contact parse(String str) {
-        //char[] chars = new char[ str.length() ];
-        Contact card = new Contact();
 
-        List keys = new Vector();
-        List values = new Vector();
-        int pos = 0;
-        char ch;
-        StringBuffer line = new StringBuffer();
-        StringBuffer keybuf = new StringBuffer();
-        StringBuffer valuebuf = new StringBuffer();
-        boolean mode = false;
+	/**
+	 * Write vcard contact to outpustream.
+	 * 
+	 * @param c
+	 *            contact data
+	 * @param out
+	 *            outputstream
+	 */
+	public static void write(Contact c, OutputStream out) {
+		ContactIOFactory ciof = Pim.getContactIOFactory();
+		ContactMarshaller marshaller = ciof.createContactMarshaller();
+		marshaller.setEncoding("UTF-8");
 
-        while (pos < str.length()) {
-            ch = str.charAt(pos);
+		// create jpim contact instance
+		net.wimpi.pim.contact.model.Contact exportContact = new ContactImpl();
 
-            if (ch == '\n') {
-                values.add(valuebuf.toString());
+		PersonalIdentity identity = new PersonalIdentityImpl();
+		exportContact.setPersonalIdentity(identity);
 
-                //System.out.println("value:" + word);
-                //System.out.println("finished parsing line:" + line);
-                if (keys.size() > 1) {
-                    String key0 = (String) keys.get(0);
+		// set sort-string/displayname
+		if (c.get(VCARD.DISPLAYNAME) != null)
+			identity.setSortString(c.get(VCARD.DISPLAYNAME));
 
-                    if (key0.toLowerCase().equalsIgnoreCase("label")) {
-                        for (Iterator it = keys.iterator(); it.hasNext();) {
-                            String keyi = (String) it.next();
+		// set first name
+		identity.setFirstname(c.get(VCARD.N_GIVEN));
+		// set formatted name
+		identity.setFormattedName(c.formatGet(VCARD.FN));
+		// set last name
+		identity.setLastname(c.get(VCARD.N_FAMILY));
 
-                            // for (int i = 1; i < keys.size(); i++)
-                            // {
-                            // String keyi = (String) keys.get(i);
-                            System.out.println("label-key:" + keyi);
+		// add all additional names (middle names)
+		String[] s = getType(c.get(VCARD.N_ADDITIONALNAMES));
+		for (int i = 0; i < s.length; i++) {
+			identity.addAdditionalName(s[i]);
+		}
 
-                            card.formatSet(key0.toLowerCase(),
-                                keyi.toLowerCase(), valuebuf.toString());
-                            System.out.println("card:" + key0 + " - " + keyi +
-                                " :" + valuebuf.toString());
-                        }
-                    } else {
-                        for (Iterator it = keys.iterator(); it.hasNext();) {
-                            String keyi = (String) it.next();
+		// add all nicknames
+		s = getType(c.get(VCARD.NICKNAME));
+		for (int i = 0; i < s.length; i++) {
+			identity.addNickname(s[i]);
+		}
 
-                            // for (int i = 1; i < keys.size(); i++)
-                            // {
-                            // String keyi = (String) keys.get(i);
-                            card.set(key0.toLowerCase(), keyi.toLowerCase(),
-                                valuebuf.toString());
-                            System.out.println("card:" + key0 + " - " + keyi +
-                                " :" + valuebuf.toString());
-                        }
-                    }
-                } else if (keys.size() == 1) {
-                    String key0 = (String) keys.get(0);
+		// add all prefixes
+		s = getType(c.get(VCARD.N_PREFIX));
+		for (int i = 0; i < s.length; i++) {
+			identity.addPrefix(s[i]);
+		}
 
-                    if (key0.toLowerCase().equalsIgnoreCase("BEGIN")) {
-                        String s = (String) keys.get(0);
+		// add all suffixes
+		s = getType(c.get(VCARD.N_SUFFIX));
+		for (int i = 0; i < s.length; i++) {
+			identity.addSuffix(s[i]);
+		}
 
-                        if (s.toLowerCase().equalsIgnoreCase("BEGIN")) {
-                            System.out.println("vcard section begin");
-                        } else if (s.toLowerCase().equalsIgnoreCase("END")) {
-                            System.out.println("vcard section end");
-                        }
-                    } else if (key0.toLowerCase().equalsIgnoreCase("n")) {
-                        String s = null;
+		// set website/homepage
+		exportContact.setURL(c.get(VCARD.URL));
 
-                        if (values.size() > 0) {
-                            s = (String) values.get(0);
-                            card.set("n", "family", s);
-                        }
+		Communications communications = new CommunicationsImpl();
+		exportContact.setCommunications(communications);
 
-                        if (values.size() > 1) {
-                            card.set("n", "given", s);
-                            s = (String) values.get(1);
-                        }
+		// add email addresses
+		EmailAddress adr = new EmailAddressImpl();
+		adr.setType(EmailAddress.TYPE_INTERNET);
+		adr.setAddress(c.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_INTERNET));
+		communications.addEmailAddress(adr);
+		adr.setType(EmailAddress.TYPE_X400);
+		adr.setAddress(c.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_X400));
+		communications.addEmailAddress(adr);
+		
+		adr.setAddress(c.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_PREF));
+		communications.setPreferredEmailAddress(adr);
 
-                        if (values.size() > 2) {
-                            card.set("n", "middle", s);
-                            s = (String) values.get(2);
-                        }
+		OrganizationalIdentity organizationalIdentity = new OrganizationalIdentityImpl();
+		exportContact.setOrganizationalIdentity(organizationalIdentity);
+		organizationalIdentity.setOrganization(new OrganizationImpl());
 
-                        if (values.size() > 3) {
-                            card.set("n", "prefix", s);
-                            s = (String) values.get(3);
-                        }
+		// set name of organization
+		organizationalIdentity.getOrganization().setName(c.get(VCARD.ORG));
 
-                        if (values.size() > 4) {
-                            s = (String) values.get(4);
-                            card.set("n", "suffix", s);
-                        }
-                    } else if (key0.toLowerCase().equalsIgnoreCase("fn")) {
-                        card.formatSet(key0.toLowerCase(), valuebuf.toString());
-                    }
-                    /*
-else if ( key0.toLowerCase().equalsIgnoreCase("adr") )
-{
+		// save contact to outputstream
+		marshaller.marshallContact(out, exportContact);
+	}
 
-        String s = (String) values.get(0);
-        card.set( "adr","street", s );
-        s = (String) values.get(1);
-        card.set( "adr","locality", s );
-        s = (String) values.get(2);
-        card.set( "adr","region", s );
-        s = (String) values.get(3);
-        card.set( "adr","pcode", s );
-        s = (String) values.get(4);
-        card.set( "adr","country", s );
+	/**
+	 * Parse vCard contact data from inputstream.
+	 * 
+	 * @param in
+	 *            inputstream to vCard data
+	 * @return contact
+	 */
+	public static Contact read(InputStream in) {
+		ContactIOFactory ciof = Pim.getContactIOFactory();
+		ContactUnmarshaller unmarshaller = ciof.createContactUnmarshaller();
+		unmarshaller.setEncoding("UTF-8");
 
+		net.wimpi.pim.contact.model.Contact importContact = unmarshaller
+				.unmarshallContact(in);
 
+		Contact c = new Contact();
 
-}
-*/
-                    else {
-                        card.set(key0.toLowerCase(), valuebuf.toString());
+		OrganizationalIdentity organisationalIdentity = importContact
+				.getOrganizationalIdentity();
 
-                        //System.out.println("card:"+keys.get(0)+ " - " + word.toString() );
-                    }
-                } else {
-                    System.out.println("unable to parse clueful information");
-                }
+		// name of organisation
+		c.set(VCARD.ORG, organisationalIdentity.getOrganization().getName());
 
-                line = new StringBuffer();
-                keybuf = new StringBuffer();
-                valuebuf = new StringBuffer();
-                keys = new Vector();
-                values = new Vector();
-                mode = false;
-            } else if (ch == ';') {
-                //System.out.println("key:" + word);
-                if (mode == false) {
-                    //key
-                    keys.add(keybuf.toString());
-                    System.out.println("key:" + keybuf);
+		/*
+		 * not supported in ui anyway!
+		 * 
+		 * c.set(VCARD.ROLE, organisationalIdentity.getRole());
+		 * c.set(VCARD.TITLE, organisationalIdentity.getTitle());
+		 *  
+		 */
 
-                    keybuf = new StringBuffer();
-                } else {
-                    //value
-                    values.add(valuebuf.toString());
-                    System.out.println("value:" + valuebuf);
+		if (importContact.hasPersonalIdentity()) {
+			PersonalIdentity identity = importContact.getPersonalIdentity();
 
-                    valuebuf = new StringBuffer();
-                }
-            } else if (ch == ':') {
-                //System.out.println("key:" + word);
-                keys.add(keybuf.toString());
-                System.out.println("key:" + keybuf);
+			// displayname (Columba-specific additional attribute)
+			c.set(VCARD.DISPLAYNAME, identity.getSortString());
 
-                keybuf = new StringBuffer();
-                mode = true;
+			// sort-string
+			c.set(VCARD.SORTSTRING, identity.getSortString());
 
-                //System.out.println("value starts here");
-            } else {
-                // just collect characters
-                //word.append(ch);
-                //System.out.print(ch);
-                if (mode == false) {
-                    //key
-                    keybuf.append(ch);
-                } else {
-                    //value
-                    valuebuf.append(ch);
-                }
-            }
+			// list of nick names
+			if (identity.getNicknameCount() > 0)
+				c.set(VCARD.NICKNAME, getString(identity.listNicknames()));
 
-            pos++;
-            line.append(ch);
-        }
+			// list of prefixes
+			if (identity.listPrefixes().length > 0)
+				c.set(VCARD.N_PREFIX, getString(identity.listPrefixes()));
 
-        String email = card.get("email", "internet");
-        String fn = card.formatGet("fn");
+			c.set(VCARD.N_FAMILY, identity.getLastname());
+			c.set(VCARD.N_GIVEN, identity.getFirstname());
 
-        if (fn.length() != 0) {
-            card.set("displayname", fn);
-        } else if (email.length() != 0) {
-            card.set("displayname", email);
-        }
+			// list of additional names (middle names)
+			if (identity.listAdditionalNames().length > 0)
+				c.set(VCARD.N_ADDITIONALNAMES, getString(identity
+						.listAdditionalNames()));
 
-        return card;
-    }
+			// list of suffices
+			if (identity.listSuffixes().length > 0)
+				c.set(VCARD.N_SUFFIX, getString(identity.listSuffixes()));
+
+			// formatted name
+			c.formatSet(VCARD.FN, identity.getFormattedName());
+		}
+
+		// url to website/homepage
+		c.set(VCARD.URL, importContact.getURL());
+
+		// email addresses
+		if (importContact.hasCommunications()) {
+			Communications communications = importContact.getCommunications();
+
+			Iterator it = communications.getEmailAddresses();
+			while (it.hasNext()) {
+				EmailAddress adr = (EmailAddress) it.next();
+				String type = adr.getType();
+				if (type.equals(EmailAddress.TYPE_INTERNET))
+					c.set(VCARD.EMAIL, VCARD.EMAIL_TYPE_INTERNET, adr
+							.getAddress());
+				else if (type.equals(EmailAddress.TYPE_X400))
+					c.set(VCARD.EMAIL, VCARD.EMAIL_TYPE_X400, adr.getAddress());
+			}
+		}
+
+		/*
+		 * 
+		 * not supported in ui anyway
+		 * 
+		 * 
+		 * if (importContact.getAddressCount() > 0) {
+		 * 
+		 * Iterator it = importContact.getAddresses(); Address address =
+		 * (Address) it.next();
+		 * 
+		 * StringBuffer buf = new StringBuffer(); if ( address.isDomestic() )
+		 * buf.append(VCARD.ADR_TYPE_DOM+","); if ( address.isHome() )
+		 * buf.append(VCARD.ADR_TYPE_HOME+","); if ( address.isInternational() )
+		 * buf.append(VCARD.ADR_TYPE_INTL+","); if ( address.isParcel() )
+		 * buf.append(VCARD.ADR_TYPE_PARCEL+","); if ( address.isPostal() )
+		 * buf.append(VCARD.ADR_TYPE_POSTAL+","); if ( address.isWork() )
+		 * buf.append(VCARD.ADR_TYPE_WORK+","); // remove last "," character
+		 * buf.substring(0, buf.length()-1); // country c.set(VCARD.ADR_COUNTRY,
+		 * address.getCountry());
+		 * 
+		 * c.set(VCARD.ADR_POSTOFFICEBOX, address.getPostBox());
+		 * c.set(VCARD.ADR_EXTENDEDADDRESS, address.getExtended());
+		 * c.set(VCARD.ADR_STREETADDRESS, address.getStreet());
+		 * c.set(VCARD.ADR_REGION, address.getRegion());
+		 * c.set(VCARD.ADR_POSTALCODE, address.getPostalCode()); // address
+		 * label c.set(VCARD.LABEL_TYPE_DOM, address.getLabel());
+		 * c.set(VCARD.LABEL_TYPE_INTL, address.getLabel());
+		 * c.set(VCARD.LABEL_TYPE_POSTAL, address.getLabel());
+		 * c.set(VCARD.LABEL_TYPE_PARCEL, address.getLabel());
+		 * c.set(VCARD.LABEL_TYPE_HOME, address.getLabel());
+		 * c.set(VCARD.LABEL_TYPE_WORK, address.getLabel());
+		 * c.set(VCARD.LABEL_TYPE_PREF, address.getLabel()); }
+		 */
+
+		return c;
+	}
+
+	/**
+	 * Create array from comma-separated string.
+	 * 
+	 * @param s
+	 *            comma-separated string
+	 * @return string array
+	 */
+	static String[] getType(String s) {
+		ArrayList list = new ArrayList();
+
+		StringTokenizer tok = new StringTokenizer(s, ",");
+		while (tok.hasMoreTokens()) {
+			String t = tok.nextToken();
+			list.add(t);
+		}
+
+		return (String[]) list.toArray(new String[] { "" });
+
+	}
+
+	/**
+	 * Create comma-separated string from string array.
+	 * 
+	 * @param s
+	 *            string array
+	 * @return comma separated string
+	 */
+	static String getString(String[] s) {
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < s.length; i++) {
+			buf.append(s[i]);
+			if (i < s.length - 1)
+				buf.append(",");
+		}
+
+		return buf.toString();
+	}
+
 }

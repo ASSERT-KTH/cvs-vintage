@@ -55,9 +55,13 @@ public class VCARD {
 	public static String N = "n";
 
 	public static String N_PREFIX = "prefix";
+
 	public static String N_FAMILY = "family";
+
 	public static String N_GIVEN = "given";
-	public static String N_MIDDLE = "middle";
+
+	public static String N_ADDITIONALNAMES = "additionalnames";
+
 	public static String N_SUFFIX = "suffix";
 
 	/**
@@ -71,6 +75,19 @@ public class VCARD {
 	 * Example: Robbie
 	 */
 	public static String NICKNAME = "nickname";
+
+	/**
+	 * Type purpose: To specify the family name or given name text to be used
+	 * for national-language-specific sorting of the FN and N types.
+	 * <p>
+	 * The sort string is used to provide family name or given name text that is
+	 * to be used in locale- or national-language- specific sorting of the
+	 * formatted name and structured name types. Without this information,
+	 * sorting algorithms could incorrectly sort this vCard within a sequence of
+	 * sorted vCards. When this type is present in a vCard, then this family
+	 * name or given name value is used for sorting the vCard.
+	 */
+	public static String SORTSTRING = "sort-string";
 
 	/**
 	 * Columba-specific extension
@@ -109,19 +126,31 @@ public class VCARD {
 	public static String ADR = "adr";
 
 	public static String ADR_POSTOFFICEBOX = "pobox";
+
 	public static String ADR_EXTENDEDADDRESS = "extadd";
+
 	public static String ADR_STREETADDRESS = "street";
+
 	public static String ADR_LOCALITY = "locality";
-	public static String ADR_REGIN = "region";
+
+	public static String ADR_REGION = "region";
+
 	public static String ADR_POSTALCODE = "pcode";
+
 	public static String ADR_COUNTRY = "country";
 
 	public static String ADR_TYPE_DOM = "dom";
+
 	public static String ADR_TYPE_INTL = "intl";
+
 	public static String ADR_TYPE_POSTAL = "postal";
+
 	public static String ADR_TYPE_PARCEL = "parcel";
+
 	public static String ADR_TYPE_HOME = "home";
+
 	public static String ADR_TYPE_WORK = "work";
+
 	public static String ADR_TYPE_PREF = "pref";
 
 	/**
@@ -137,11 +166,17 @@ public class VCARD {
 	public static String LABEL = "label";
 
 	public static String LABEL_TYPE_DOM = "dom";
+
 	public static String LABEL_TYPE_INTL = "intl";
+
 	public static String LABEL_TYPE_POSTAL = "postal";
+
 	public static String LABEL_TYPE_PARCEL = "parcel";
+
 	public static String LABEL_TYPE_HOME = "home";
+
 	public static String LABEL_TYPE_WORK = "work";
+
 	public static String LABEL_TYPE_PREF = "pref";
 
 	/**
@@ -179,18 +214,31 @@ public class VCARD {
 	public static String TEL = "tel";
 
 	public static String TEL_TYPE_HOME = "home";
+
 	public static String TEL_TYPE_MSG = "msg";
+
 	public static String TEL_TYPE_WORK = "work";
+
 	public static String TEL_TYPE_PREF = "pref";
+
 	public static String TEL_TYPE_VOICE = "voice";
+
 	public static String TEL_TYPE_FAX = "fax";
+
 	public static String TEL_TYPE_CELL = "cell";
+
 	public static String TEL_TYPE_VIDEO = "video";
+
 	public static String TEL_TYPE_PAGER = "pager";
+
 	public static String TEL_TYPE_BBS = "bbs";
+
 	public static String TEL_TYPE_MODEM = "modem";
+
 	public static String TEL_TYPE_CAR = "car";
+
 	public static String TEL_TYPE_ISDN = "isdn";
+
 	public static String TEL_TYPE_PCS = "pcs";
 
 	/**
@@ -204,12 +252,12 @@ public class VCARD {
 	 * email address when more than one is specified.
 	 */
 	public static String EMAIL = "email";
-	
+
 	public static String EMAIL_TYPE_INTERNET = "internet";
+
 	public static String EMAIL_TYPE_X400 = "x400";
+
 	public static String EMAIL_TYPE_PREF = "pref";
-	
-	
 
 	/** ********************* Organizational Types ********************* */
 
@@ -231,6 +279,14 @@ public class VCARD {
 	public static String ROLE = "role";
 
 	/**
+	 * Type purpose: To specify the job title, functional position or
+	 * function of the object the vCard represents.
+	 * <p>
+	 * This type is based on the X.520 Title attribute.
+	 */
+	public static String TITLE = "title";
+
+	/**
 	 * Type purpose: To specify the organizational name and units associated
 	 * with the vCard.
 	 * <p>
@@ -240,7 +296,6 @@ public class VCARD {
 	 * names.
 	 */
 	public static String ORG = "org";
-	
-	
+
 	public static String URL = "url";
 }

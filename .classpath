@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="lib/winpack.jar"/>
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
 	<classpathentry kind="lib" path="lib/ristretto-1.0_RC2.jar"/>
+	<classpathentry kind="lib" path="lib/jpim.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

@@ -251,7 +251,7 @@ public class Contact {
 	{
 			String[] names = tryBreakName(fullName);
 			set(VCARD.N_GIVEN,names[0]);
-			set(VCARD.N_MIDDLE,names[1]);
+			set(VCARD.N_ADDITIONALNAMES,names[1]);
 			set(VCARD.N_FAMILY,names[2]);
 	}
 

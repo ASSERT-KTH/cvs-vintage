@@ -1,0 +1,23 @@
+BEGIN:VCARD
+VERSION:2.1
+X-EVOLUTION-FILE-AS:Nachname, Vorname
+FN:Herr Vorname Mittelname Nachname Sr.
+N:Nachname;Vorname;Mittelname;Herr;Sr.
+TEL;X-EVOLUTION-ASSISTANT:telefon-assistent
+TEL;CHARSET=UTF-8;QUOTED-PRINTABLE;WORK;VOICE:telefon-gesch=C3=A4ftlich
+TEL;CHARSET=UTF-8;QUOTED-PRINTABLE;WORK;FAX:telefon-fax-gesch=C3=A4ftlich
+TEL;HOME:telefon-zuhause
+TEL;CELL:telefon-mobil
+EMAIL;INTERNET:email@email.de
+EMAIL;INTERNET:email@email2.de
+EMAIL;INTERNET:email@email3.de
+URL:http://webaddress.de
+ORG:Organisation;abteilung
+X-EVOLUTION-OFFICE;CHARSET=UTF-8;QUOTED-PRINTABLE:B=C3=BCro
+TITLE;CHARSET=UTF-8;QUOTED-PRINTABLE:T=C3=A4tigkeit
+ROLE:beruf
+NICKNAME:spitzname
+CATEGORIES:Geschenke
+UID:pas-id-4148691800000000
+END:VCARD
+
