@@ -76,7 +76,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.89 $
+ * @version $Revision: 1.90 $
  */
 public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
 {
@@ -1310,7 +1310,7 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
    {
       // did we get more then one value for a single valued field
       if(isSingleValued() && values.size() > 1)
-         throw new EJBException("Data contains multiple values, but this cmr field is single valued");
+         throw new EJBException("Data contains multiple values, but this cmr field is single valued: " + values);
 
       // add the new values
       FieldState fieldState = getFieldState(myCtx);

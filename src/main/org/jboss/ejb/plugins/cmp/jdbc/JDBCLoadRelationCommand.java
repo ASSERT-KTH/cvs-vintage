@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public final class JDBCLoadRelationCommand
 {
@@ -234,7 +234,7 @@ public final class JDBCLoadRelationCommand
       {
          relationTableAlias = getRelationTable(cmrField);
          relatedTableAlias = (
-            relatedTable.equals(relationTable) ? relatedEntity.getTableName() + '_' + cmrField.getFieldName() : ""
+            relatedTable.equals(relationTable) ? getRelationTable(cmrField) + '_' + cmrField.getFieldName() : relatedEntity.getTableName()
          );
       }
       else
