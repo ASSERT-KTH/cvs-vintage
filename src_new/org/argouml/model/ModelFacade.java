@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.128 2003/09/13 18:16:32 alexb Exp $
+// $Id: ModelFacade.java,v 1.129 2003/09/13 22:06:05 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4361,6 +4361,21 @@ public class ModelFacade {
 					   + " or " + booleanExpression);
     }
 
+    /**
+     * Set the container of a statevertex.
+     * @param stateVertex
+     */
+    public static void setContainer(Object stateVertex, Object container) {
+        if (stateVertex instanceof MStateVertex &&
+            container instanceof MCompositeState) {
+            ((MStateVertex)stateVertex)
+                .setContainer((MCompositeState)container);
+            return;
+        }
+        throw new IllegalArgumentException("Unrecognized object " + stateVertex
+                                    +" or "+container);
+    }
+    
     /**
      * Sets the dispatch action for some stimulus
      * @param handle

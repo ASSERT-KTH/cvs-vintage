@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.30 2003/09/08 20:11:54 bobtarling Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.31 2003/09/13 22:06:05 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,20 +24,15 @@
 
 package org.argouml.uml.diagram.deployment;
 
-import org.apache.log4j.Logger;
+import java.beans.PropertyChangeEvent;
+import java.beans.VetoableChangeListener;
+import java.util.*;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorHelper;
-import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 
-import java.util.*;
-import java.beans.*;
-
-import org.tigris.gef.graph.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
-import ru.novosoft.uml.model_management.*;
+import org.argouml.model.uml.foundation.core.CoreHelper;
+import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorHelper;
+import org.apache.log4j.Logger;
 
 public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
     implements VetoableChangeListener 
@@ -263,9 +258,9 @@ public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
 	    Collection ends = ModelFacade.getLinkEnds(node);
 	    Iterator iter = ends.iterator();
 	    while (iter.hasNext()) {
-		MLinkEnd ae = (MLinkEnd) iter.next();
-		if (canAddEdge(ae.getLink()))
-		    addEdge(ae.getLink());
+		Object link = ModelFacade.getLink(iter.next());
+		if (canAddEdge(link))
+		    addEdge(link);
 		return;
 	    }
 	}

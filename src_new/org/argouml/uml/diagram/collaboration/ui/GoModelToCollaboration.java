@@ -1,4 +1,4 @@
-// $Id: GoModelToCollaboration.java,v 1.6 2003/09/11 21:10:09 bobtarling Exp $
+// $Id: GoModelToCollaboration.java,v 1.7 2003/09/13 22:06:05 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.diagram.collaboration.ui;
 
 import java.util.ArrayList;
@@ -34,7 +33,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.ui.AbstractGoRule;
 
-import ru.novosoft.uml.behavior.collaborations.MCollaboration;
 /**
  * @since Oct 1, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -50,7 +48,8 @@ public class GoModelToCollaboration extends AbstractGoRule {
 	if (org.argouml.model.ModelFacade.isAModel(parent)) {
             Object model = /*(MModel)*/ parent;
             Collection col = ModelManagementHelper.getHelper()
-		.getAllModelElementsOfKind(model, MCollaboration.class);
+		.getAllModelElementsOfKind(model,
+                    (Class)ModelFacade.COLLABORATION);
             List returnList = new ArrayList();
             Iterator it = col.iterator();
             while (it.hasNext()) {
