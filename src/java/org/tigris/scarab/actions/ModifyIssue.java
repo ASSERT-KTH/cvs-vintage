@@ -109,14 +109,18 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.73 2002/02/06 01:17:44 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.74 2002/02/11 01:57:19 jmcnally Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
-    private static final String ERROR_MESSAGE = "More information was " +
-                                "required to submit your request. Please " +
-                                "scroll down to see error messages."; 
+    private static final String ERROR_MESSAGE = 
+        "More information was required to submit your request. Please " +
+        "scroll down to see error messages."; 
 
+    private static final String EMAIL_ERROR = ", but could not send " +
+        "notification email due to a mail server error.";
+
+    private static final String DEFAULT_MSG = "Your changes were saved";
 
     public void doSubmitattributes(RunData data, TemplateContext context)
         throws Exception
@@ -245,11 +249,7 @@ public class ModifyIssue extends RequireLoginFirstAction
                 } 
             }
             intake.removeAll();
-            if (!transaction.sendEmail(new ContextAdapter(context), issue))
-            {
-                data.setMessage("Your changes were saved, but could not send "
-                         + "notification email due to a sendmail error.");
-            }
+            sendEmail(transaction, issue, DEFAULT_MSG, context, data);
         } 
         else
         {
@@ -298,14 +298,9 @@ public class ModifyIssue extends RequireLoginFirstAction
                                    String type)
         throws Exception
     {                          
-        String id = data.getParameters().getString("id");
-        Issue issue = getScarabRequestTool(context).getIssue();
         IntakeTool intake = getIntakeTool(context);
-        Attachment attachment = new Attachment();
         NumberKey typeId = null;
         Group group = null;
-        ScarabUser user = (ScarabUser)data.getUser();
-        Transaction transaction = new Transaction();
         
         if (type.equals("url"))
         {
@@ -342,38 +337,52 @@ public class ModifyIssue extends RequireLoginFirstAction
 //            }
             if (intake.isAllValid())
             {
+                Attachment attachment = new Attachment();
                 group.setProperties(attachment);
                 
+                ScarabUser user = (ScarabUser)data.getUser();
+                Issue issue = getScarabRequestTool(context).getIssue();
+
                 if (type.equals("url") || type.equals("comment"))
                 {
                     attachment.setTextFields(user, issue, typeId);
                     attachment.save();
                     if (type.equals("url"))
                     {
-                        // Save transaction record
-                        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                                           user, attachment);
-                        
-                        // Save activity record
-                        Activity activity = new Activity();
-                        
                         // Generate description of modification
-                        StringBuffer descBuf = new StringBuffer("added URL '");
-                        descBuf.append(nameField.toString()).append("'");
-                        String desc = descBuf.toString();
-                        activity.create(issue, null, desc, transaction, "", "");
+                        String name = nameField.toString();
+                        String desc = new StringBuffer(name.length() + 12)
+                            .append("added URL '").append(name).append('\'')
+                            .toString();
+                        registerActivity(desc, "Your url was saved", 
+                            issue, user, null, context, data, "", name);
                     }
+                    else 
+                    {
+                        // Generate description of modification
+                        String comment = dataField.toString();
+                        String desc = new StringBuffer(comment.length() + 12)
+                            .append("added comment '").append(comment)
+                            .append('\'').toString();
+                        registerActivity(desc, "Your comment was saved", 
+                            issue, user, null, context, data, "", comment); 
+                    }
+                    
                 }
                 else if (type.equals("file"))
                 {
                     addAttachment(issue, group, attachment, data, intake);
                     issue.save();
-                }
 
-                if (!transaction.sendEmail(new ContextAdapter(context), issue))
-                {
-                    data.setMessage("Your attachment was saved, but could not send notification email "
-                                     + "due to a sendmail error.");
+                    // Generate description of modification
+                    String name = attachment.getFileName();
+                    String path = attachment.getRelativePath();
+                    String desc = 
+                        new StringBuffer(path.length() + name.length() + 17)
+                   .append("added File '").append(name)
+                   .append("' at ").append(path).toString();
+                    registerActivity(desc, "Your file was added", issue, user, 
+                                     null, context, data);
                 }
 
                 String template = data.getParameters()
@@ -388,7 +397,21 @@ public class ModifyIssue extends RequireLoginFirstAction
         String template = data.getParameters()
                           .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue");
         setTarget(data, template);            
-   } 
+    } 
+
+    private void sendEmail(Transaction transaction, Issue issue, String msg,
+                           TemplateContext context, RunData data)
+        throws Exception
+    {
+        if (!transaction.sendEmail(new ContextAdapter(context), issue))
+        {
+            StringBuffer sb = 
+                new StringBuffer(msg.length() + EMAIL_ERROR.length());
+            sb.append(msg).append(EMAIL_ERROR);
+            data.setMessage(sb.toString());
+        }
+    }
+
 
     static void addAttachment(Issue issue, Group group, Attachment attachment, 
                               RunData data, IntakeTool intake)
@@ -459,11 +482,26 @@ public class ModifyIssue extends RequireLoginFirstAction
             if (key.startsWith("edit_comment"))
             {
                attachmentId = key.substring(13);
-               newComment = params.getString(key);
+               newComment = params.getString(key, "");
                Attachment attachment = (Attachment) AttachmentPeer
                                      .retrieveByPK(new NumberKey(attachmentId));
-               attachment.setDataAsString(newComment);
-               attachment.save();
+               String oldComment = attachment.getDataAsString();
+               if (!newComment.equals(oldComment)) 
+               {
+                   attachment.setDataAsString(newComment);
+                   attachment.save();
+                   
+                   // Generate description of modification
+                   String from = "changed comment from '";
+                   String to = "' to '";
+                   int capacity = from.length() + oldComment.length() +
+                       to.length() + newComment.length();
+                   String desc = new StringBuffer(capacity)
+                       .append(from).append(oldComment).append(to)
+                       .append(newComment).append('\'').toString();
+                   registerActivity(desc, DEFAULT_MSG, issue, user, 
+                       null, context, data, oldComment, newComment);
+               }               
             }
         }
     }
@@ -493,25 +531,13 @@ public class ModifyIssue extends RequireLoginFirstAction
                attachment.setDeleted(true);
                attachment.save();
 
-               // Save transaction record
-               Transaction transaction = new Transaction();
-               transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                                  user, null);
-
-               // Save activity record
-               Activity activity = new Activity();
-
                // Generate description of modification
-               StringBuffer descBuf = new StringBuffer("deleted URL '");
-               descBuf.append(attachment.getName()).append("'");
-               String desc = descBuf.toString();
-               activity.create(issue, null, desc, transaction, "", "");
-               issue.save();
-               if (!transaction.sendEmail(new ContextAdapter(context), issue))
-               {
-                    data.setMessage("Your link was deleted, but could not send notification email "
-                                     + "due to a sendmail error.");
-                }
+               String name = attachment.getName();
+               String desc = new StringBuffer(name.length() + 14)
+                   .append("deleted URL '").append(name).append("'")
+                   .toString();
+               registerActivity(desc, "Your link was deleted", 
+                                issue, user, null, context, data);
             } 
         }
         String template = data.getParameters()
@@ -544,30 +570,44 @@ public class ModifyIssue extends RequireLoginFirstAction
                attachment.setDeleted(true);
                attachment.save();
 
-               // Save transaction record
-               Transaction transaction = new Transaction();
-               transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                                  user, null);
-
-               // Save activity record
-               Activity activity = new Activity();
-
                // Generate description of modification
-               StringBuffer descBuf = new StringBuffer("deleted File '");
-               descBuf.append(attachment.getName()).append("'");
-               String desc = descBuf.toString();
-               activity.create(issue, null, desc, transaction, "", "");
-               issue.save();
-               if (!transaction.sendEmail(new ContextAdapter(context), issue))
-               {
-                    data.setMessage("Your file was deleted, but could not send notification email "
-                                     + "due to a sendmail error.");
-               }
+               String name = attachment.getFileName();
+               String path = attachment.getRelativePath();
+               String desc = new StringBuffer(path.length()+name.length()+38)
+                   .append("deleted attachment for File '").append(name)
+                   .append("'; path=").append(path).toString();
+               registerActivity(desc, "Your file was deleted", issue, user, 
+                                null, context, data);
             } 
         }
         String template = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE);
         setTarget(data, template);            
+    }
+
+    private void registerActivity(String description, String message,
+        Issue issue, ScarabUser user, Attachment attachment, 
+        TemplateContext context, RunData data)
+        throws Exception
+    {
+        registerActivity(description, message, issue, user, null, 
+                         context, data, "", "");
+    }
+
+    private void registerActivity(String description, String message,
+        Issue issue, ScarabUser user, Attachment attachment, 
+        TemplateContext context, RunData data, String oldVal, String newVal)
+        throws Exception
+    {
+        // Save transaction record
+        Transaction transaction = new Transaction();
+        transaction
+            .create(TransactionTypePeer.EDIT_ISSUE__PK, user, attachment);
+        
+        // Save activity record
+        Activity activity = new Activity();
+        activity.create(issue, null, description, transaction, oldVal, newVal);
+        sendEmail(transaction, issue, message, context, data);
     }
 
 
@@ -626,29 +666,21 @@ public class ModifyIssue extends RequireLoginFirstAction
                                      retrieveByPK(depend.getObservedId());
                     }
 
-                    // Save transaction record
-                    Transaction transaction = new Transaction();
-                    transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                                       user, null);
-
-                    // Save activity record
-                    Activity activity = new Activity();
-                    StringBuffer descBuf = new StringBuffer("changed dependency " 
-                                                            + "type on Issue ");
-                    descBuf.append(otherIssue.getUniqueId());
-                    descBuf.append(" from ").append(oldValue);
-                    descBuf.append(" to ").append(newValue.toString());
-                    String desc = descBuf.toString();
-                    activity.create(currentIssue, null, desc, transaction,
-                                    oldValue, newValue.toString());
                     currentIssue.save();
-                    if (!transaction.sendEmail(new ContextAdapter(context), 
-                                               currentIssue))
-                    {
-                         data.setMessage("Your changes were saved, but could "
-                                         + "not send notification "
-                                         + "email due to a sendmail error.");
-                    }
+                    // Save transaction record
+                    String uniqueId = otherIssue.getUniqueId();
+                    String s = "changed dependency type on Issue ";
+                    String from = " from ";
+                    String to = " to ";
+                    int capacity = s.length() + uniqueId.length() + 
+                        from.length() + oldValue.length() + to.length() + 
+                        newValue.length();
+                    String desc = new StringBuffer(capacity)
+                        .append(s).append(uniqueId).append(from)
+                        .append(oldValue).append(to).append(newValue)
+                        .toString();
+                    registerActivity(desc, DEFAULT_MSG, currentIssue, 
+                        user, null, context, data, oldValue, newValue);
                 }
             }
         }
@@ -734,6 +766,18 @@ public class ModifyIssue extends RequireLoginFirstAction
             depend.setDefaultModule(scarabR.getCurrentModule());
             group.setProperties(depend);
             depend.save();
+
+            // Save transaction record
+            String desc = new StringBuffer("added ")
+                .append(depend.getDependType().getName())
+                .append(" dependency for Issue ")
+                .append(depend.getObserverUniqueId())
+                .append(" on Issue ")
+                .append(issue.getUniqueId())
+                .toString();
+            registerActivity(desc, "added dependency", childIssue, 
+                             user, null, context, data);
+
             intake.remove(group);
         }
         else
@@ -811,6 +855,7 @@ public class ModifyIssue extends RequireLoginFirstAction
             }
         }
 
+        
         if (intake.isAllValid() && isValid)
         {
             depend.setObserverId(issue.getIssueId());
@@ -819,27 +864,15 @@ public class ModifyIssue extends RequireLoginFirstAction
             depend.save();
 
             // Save transaction record
-            Transaction transaction = new Transaction();
-            transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                               user, null);
-
-            // Save activity record
-            Activity activity = new Activity();
-            StringBuffer descBuf = new StringBuffer("added ");
-            descBuf.append(depend.getDependType().getName());
-            descBuf.append(" dependency for Issue ");
-            descBuf.append(issue.getUniqueId());
-            descBuf.append(" on Issue ");
-            descBuf.append(parentIssue.getUniqueId());
-            String desc = descBuf.toString();
-            activity.create(issue, null, desc, transaction, "", "");
-            issue.save();
-            if (!transaction.sendEmail(new ContextAdapter(context), issue))
-            {
-                data.setMessage("Your changes were saved, but could "
-                                + "not send notification email "
-                                + "due to a sendmail error.");
-            }
+            String desc = new StringBuffer("added ")
+                .append(depend.getDependType().getName())
+                .append(" dependency for Issue ")
+                .append(issue.getUniqueId())
+                .append(" on Issue ")
+                .append(parentIssue.getUniqueId())
+                .toString();
+            registerActivity(desc, DEFAULT_MSG, issue, 
+                             user, null, context, data);
         }
         else
         {
