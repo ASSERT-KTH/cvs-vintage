@@ -6,6 +6,9 @@
  */
 package org.jboss.tm;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import javax.transaction.xa.Xid;
 
 
@@ -16,15 +19,11 @@ import javax.transaction.xa.Xid;
  *
  *  @see XidImpl
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 public class GlobalId
-   implements java.io.Serializable
+   implements java.io.Externalizable
 {
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
-
    /**
     *  Hash code of this instance. This is really a sequence number.
     */
@@ -41,7 +40,11 @@ public class GlobalId
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
-
+   public GlobalId()
+   {
+      // Used for Externalizable support
+   }
+   
    /**
     *  Create a new instance. This constructor is public <em>only</em>
     *  to get around a class loader problem; it should be package-private.
@@ -75,7 +78,8 @@ public class GlobalId
          if (globalId.length != other.globalId.length)
             return false;
 
-         for (int i = 0; i < globalId.length; ++i)
+         int len = globalId.length;
+         for (int i = 0; i < len; ++i)
             if (globalId[i] != other.globalId[i])
                return false;
 
@@ -88,13 +92,20 @@ public class GlobalId
    {
       return hash;
    }
-
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
-
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
+   
+   // Externalizable implementation ---------------------------------
+   public void writeExternal(java.io.ObjectOutput out)
+      throws IOException
+   {
+      out.writeInt(hash);
+      out.writeObject(globalId);
+   }
+   
+   public void readExternal(java.io.ObjectInput in)
+      throws IOException, ClassNotFoundException
+   {
+      hash = in.readInt();
+      globalId = (byte[])in.readObject();
+   }
 }
 
