@@ -63,6 +63,8 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * Interface for a logging object. A logging object provides mechanism
@@ -295,13 +297,40 @@ public abstract class Logger {
      */
     public void setTimestamp(String value) {
 	if ("true".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value))
-	    timeStamp = true;
+	    timestamp = true;
 	else if ("false".equalsIgnoreCase(value) || "no".equalsIgnoreCase(value))
-	    timeStamp = false;
+	    timestamp = false;
     }
 
     public  boolean isTimestamp() {
-	return timeStamp;
+	return timestamp;
+    }
+
+    /**
+     * If we are timestamping at all, what format do we use to print
+     * the timestamp? See java.text.SimpleDateFormat.
+     *
+     * Default = "yyyy-MM-dd hh:mm:ss". Special case: "msec" => raw
+     * number of msec since epoch, very efficient but not
+     * user-friendly
+     **/
+    public void setTimestampFormat(String value)
+    {
+	if (value.equalsIgnoreCase("msec"))
+	    timestampRaw = true;
+	else {
+	    timestampRaw = false;
+	    timestampFormat = value;
+	    timestampFormatter = new SimpleDateFormat(timestampFormat);
+	}
+    }
+    
+    public String getTimestampFormat()
+    {
+	if (timestampRaw)
+	    return "msec";
+	else
+	    return timestampFormat;
     }
     
     /**
@@ -337,7 +366,30 @@ public abstract class Logger {
 	    custom = false;
     }
 
-    protected boolean custom;
+    protected String formatTimestamp(long msec) {
+	StringBuffer buf = new StringBuffer();
+	formatTimestamp(msec, buf);
+	return buf.toString();
+    }
+
+    // dummy variable to make SimpleDateFormat work right
+    static java.text.FieldPosition position = new java.text.FieldPosition(DateFormat.YEAR_FIELD);
+    
+    protected void formatTimestamp(long msec, StringBuffer buf) {
+	if (timestamp == false)
+	    return;
+	else if (timestampRaw) {
+	    buf.append(Long.toString(msec));
+	    return;
+	}
+	else {
+	    Date d = new Date(msec);
+	    timestampFormatter.format(d, buf, position);
+	    return;
+	}
+    }
+    
+    protected boolean custom = true;
     protected Writer sink = defaultSink;
     String path;
     protected String name;
@@ -346,5 +398,23 @@ public abstract class Logger {
     protected static Hashtable loggers = new Hashtable(5);
 
     private int level = WARNING;
-    protected boolean timeStamp = true;
+
+    /**
+     * Should we timestamp this log at all?
+     **/
+    protected boolean timestamp = true;
+
+    /**
+     * true = The timestamp format is raw msec-since-epoch <br>
+     * false = The timestamp format is a custom string to pass to SimpleDateFormat
+     **/
+    protected boolean timestampRaw = false;
+
+    /**
+     * The timestamp format string, default is "yyyy-MM-dd hh:mm:ss"
+     **/
+    protected String timestampFormat = "yyyy-MM-dd hh:mm:ss";
+
+    protected SimpleDateFormat timestampFormatter
+	= new SimpleDateFormat(timestampFormat);
 }
