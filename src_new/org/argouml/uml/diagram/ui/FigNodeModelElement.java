@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.106 2004/06/27 17:32:32 d00mst Exp $
+// $Id: FigNodeModelElement.java,v 1.107 2004/06/27 18:03:48 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -408,7 +408,9 @@ public abstract class FigNodeModelElement
 	Fig oldEncloser = _encloser;
 	if (encloser != oldEncloser) {
 	    Object owningModelelement = null;
-	    if (encloser == null) {
+	    if (encloser == null && !isVisible()) {
+		// Most likely we're being deleted.
+	    } else if (encloser == null) {
 		// moved outside another fig onto the diagram canvas
 		Project currentProject =
 		    ProjectManager.getManager().getCurrentProject();
