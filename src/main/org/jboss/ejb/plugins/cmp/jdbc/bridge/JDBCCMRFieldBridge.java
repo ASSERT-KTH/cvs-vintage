@@ -58,7 +58,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    // ------ Invocation messages ------
@@ -150,19 +150,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    private WeakReference relatedContainer;
    
    /**
-    * The related entity's entity cache.
-    */
-   private EntityCache relatedCache;
-   
-   /**
     * The related entity's jdbc store manager
     */
    private JDBCStoreManager relatedManager;
-   
-   /**
-    * The related entity's local container invoker.
-    */
-   private LocalProxyFactory relatedInvoker;
    
    /**
     * The related entity.
@@ -174,11 +164,6 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
     */
    private JDBCCMRFieldBridge relatedCMRField;
    
-   /**
-    * The related entity's local home interface.
-    */
-   private Class relatedLocalInterface;
-
    /**
     * da log.
     */
@@ -284,15 +269,6 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       // Related Container
       EntityContainer theContainer = relatedManager.getContainer();
       relatedContainer = new WeakReference(theContainer);
-
-      // Related Local Interface (Class)
-      relatedLocalInterface = theContainer.getLocalClass();
-
-      // Related Instance Cache
-      relatedCache = (EntityCache)theContainer.getInstanceCache();
-
-      // Related Container Invoker
-      relatedInvoker = theContainer.getLocalProxyFactory();
 
       // 
       // Initialize the key fields
@@ -458,17 +434,31 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    }
    
    /**
+    * The related container
+    */
+   private final EntityContainer getRelatedContainer() {
+      return (EntityContainer) relatedContainer.get();
+   }
+
+   /**
     * The related entity's local home interface.
     */
-   public Class getRelatedLocalInterface() {
-      return relatedLocalInterface;
+   public final Class getRelatedLocalInterface() {
+      return getRelatedContainer().getLocalClass();
    }
    
    /**
     * The related entity's local container invoker.
     */
-   public LocalProxyFactory getRelatedInvoker() {
-      return relatedInvoker;
+   public final LocalProxyFactory getRelatedInvoker() {
+      return getRelatedContainer().getLocalProxyFactory();
+   }
+
+   /**
+    * Gets the EntityCache from the related entity.
+    */
+   public final EntityCache getRelatedCache() {
+      return (EntityCache)getRelatedContainer().getInstanceCache();
    }
 
    public boolean isLoaded(EntityEnterpriseContext ctx) {
@@ -540,8 +530,8 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       try {
          if(fieldState.getValue().size() > 0) {
             Object fk = fieldState.getValue().iterator().next();
-            return relatedInvoker.getEntityEJBLocalObject(
-                  relatedCache.createCacheKey(fk));
+            return getRelatedInvoker().getEntityEJBLocalObject(
+                  getRelatedCache().createCacheKey(fk));
          }
          return null;
       } catch(EJBException e) {
