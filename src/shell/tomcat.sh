@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.5 1999/12/15 22:53:25 costin Exp $
+# $Id: tomcat.sh,v 1.6 2000/01/13 17:01:44 rubys Exp $
 
 # Shell script to start and stop the server
 
@@ -120,7 +120,11 @@ elif [ "$1" = "env" ] ; then
 
 else
   echo "Usage:"
-  echo "tomcat [start|stop]"
+  echo "tomcat (start|env|run|stop)"
+  echo "        start - start tomcat in the background"
+  echo "        run   - start tomcat in the foreground"
+  echo "        stop  - stop tomcat"
+
   exit 0
 fi
 
