@@ -822,6 +822,7 @@ try{
         {
             reportGenerator = new ReportGenerator();
             reportGenerator.setModule(getCurrentModule());
+            reportGenerator.setGeneratedBy((ScarabUser)data.getUser());
         }
         
         return reportGenerator;

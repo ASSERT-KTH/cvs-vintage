@@ -65,4 +65,15 @@ public class Format
         SimpleDateFormat newFormat = new SimpleDateFormat(format);
         return newFormat.format(date);
     }
+
+    /**
+     * Formats the current date according to the passed in format
+     * Uses SimpleDateFormat to do its magic.
+     */
+    public static String getNow(String format)
+         throws ParseException
+    {
+        SimpleDateFormat newFormat = new SimpleDateFormat(format);
+        return newFormat.format(new Date());
+    }
 }
