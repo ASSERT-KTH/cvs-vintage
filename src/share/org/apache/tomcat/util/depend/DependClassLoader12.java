@@ -251,8 +251,10 @@ class DependClassLoader12Impl extends URLClassLoader {
 	// resources.
 	byte data[]=null;
 	try {
-	    data=readFully( is );
-	    if( data.length==0 ) data=null;
+	    if( is.available() > 0 ) {
+		data=readFully( is );
+		if( data.length==0 ) data=null;
+	    }
 	    is.close();
 	} catch(IOException ex ) {
 	    if( debug > 0 ) ex.printStackTrace();
