@@ -542,7 +542,7 @@ public final class ContextManager {
 	if( state==STATE_NEW ) {
 	    init();
 	}
-
+        if( state==STATE_START ) return;
 	BaseInterceptor cI[]=defaultContainer.getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].engineStart( this );
@@ -561,9 +561,6 @@ public final class ContextManager {
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].engineStop( this );
 	}
-
-	// XXX we shouldn't call shutdown in stop !
-	shutdown();
     }
 
     /** Remove all contexts.
@@ -571,6 +568,7 @@ public final class ContextManager {
      *  - call Interceptor.engineShutdown() hooks.
      */
     public final void shutdown() throws TomcatException {
+        if( state==STATE_START ) stop();
 	while (!contextsV.isEmpty()) {
 	    removeContext((Context)contextsV.firstElement());
 	}
