@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.43 2004/07/18 18:56:02 kataka Exp $
+// $Id: UmlFactory.java,v 1.44 2004/07/19 20:25:48 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -718,6 +718,7 @@ public class UmlFactory extends AbstractUmlModelFactory {
         if (elem == null)
             throw new IllegalArgumentException("Element may not be null "
                 + "in delete");
+        UmlModelEventPump.getPump().stopPumpingEvents();
         if (elem instanceof MElement) {
             getCore().deleteElement((MElement) elem);
             if (elem instanceof MModelElement) {
@@ -812,6 +813,7 @@ public class UmlFactory extends AbstractUmlModelFactory {
             ((MBase) elem).remove();
             UmlModelEventPump.getPump().cleanUp((MBase) elem);
         }
+        UmlModelEventPump.getPump().startPumpingEvents();
     }
 
     /**
