@@ -53,7 +53,7 @@ import org.apache.fulcrum.localization.Localization;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.56 2003/04/25 20:01:20 jon Exp $
+ * @version $Id: ScarabConstants.java,v 1.57 2003/04/29 23:02:22 jon Exp $
  */
 public interface ScarabConstants
 {
@@ -95,12 +95,23 @@ public interface ScarabConstants
     String TEMPLATE = "template";
 
     /**
+     * This is the key value that stores the name of the action
+     * that is currently being executed.
+     */
+    String ACTION = "action";
+
+    /**
      * This is the key value that stores the name of the template
      * other than the next, or cancel, where a user can go
      * depending on an action.
      */
     String OTHER_TEMPLATE = "otherTemplate";
     
+    /**
+     * This is the key value that stores the issue
+     * id.
+     */
+    String ID = "id";
     
     /**
      * Primary System Object

@@ -67,7 +67,7 @@ import org.apache.commons.lang.StringUtils;
  * in upgraded databases.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: SetModuleDomainInfoValve.java,v 1.2 2003/04/21 20:08:59 jon Exp $
+ * @version $Id: SetModuleDomainInfoValve.java,v 1.3 2003/04/29 23:02:22 jon Exp $
  */
 public class SetModuleDomainInfoValve
     extends AbstractValve
@@ -122,6 +122,11 @@ public class SetModuleDomainInfoValve
         if (StringUtils.isEmpty(module.getScheme()))
         {
             module.setScheme(data.getServerScheme());
+            hasChanges = true;
+        }
+        if (StringUtils.isEmpty(module.getScriptName()))
+        {
+            module.setScriptName(data.getScriptName());
             hasChanges = true;
         }
         if (hasChanges)

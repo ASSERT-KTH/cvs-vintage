@@ -117,6 +117,16 @@
   </tr>
 *#
   <tr>
+   <th>* $l10n.Scheme</th>
+   <td>
+    <select name="$moduleGroup.Scheme.Key">
+      <option value="http" #if ($editModule && $editModule.Scheme.equals("http"))selected="selected" #end>http</option>
+      <option value="https" #if ($editModule && $editModule.Scheme.equals("https"))selected="selected" #end>https</option>
+    </select>
+    #fieldErrorMsg($moduleGroup.Scheme "")
+   </td>
+  </tr>
+  <tr>
    <th>* $l10n.Domain</th>
    <td>
     <input name="$moduleGroup.Domain.Key" value="$moduleGroup.Domain" type="text" size="25" />
@@ -131,13 +141,10 @@
    </td>
   </tr>
   <tr>
-   <th>* $l10n.Scheme</th>
+   <th>* $l10n.ScriptName</th>
    <td>
-    <select name="$moduleGroup.Scheme.Key">
-      <option value="http" #if ($editModule && $editModule.Scheme.equals("http"))selected="selected" #end>http</option>
-      <option value="https" #if ($editModule && $editModule.Scheme.equals("https"))selected="selected" #end>https</option>
-    </select>
-    #fieldErrorMsg($moduleGroup.Scheme "")
+    <input name="$moduleGroup.ScriptName.Key" value="$moduleGroup.ScriptName" type="text" size="25" />
+    #fieldErrorMsg($moduleGroup.ScriptName "")
    </td>
   </tr>
   <tr>
