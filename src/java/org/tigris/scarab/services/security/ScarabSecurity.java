@@ -61,7 +61,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.16 2002/10/17 00:26:51 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.17 2002/10/17 20:10:44 jmcnally Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -77,6 +77,12 @@ public class ScarabSecurity
     private static final String ACTION_PREFIX = "action.";
 
     private static final String MAP_PREFIX = "map.";
+
+    /**
+     * String used to indicate that an Action module does not require
+     * a permission.
+     */
+    public static final String NONE = "None";
 
     /** 
      * Specifies that a User is valid as an assignee for an issue.
@@ -235,7 +241,17 @@ public class ScarabSecurity
 
     protected String getActionPermissionImpl(String action)
     {
-        return getPermissionImpl(props.getString(ACTION_PREFIX + action));
+        String perm = null;
+        String property = props.getString(ACTION_PREFIX + action);
+        if (NONE.equals(property)) 
+        {
+            perm = NONE;
+        }
+        else 
+        {
+            perm = getPermissionImpl(property);
+        }
+        return perm;
     }
 
     protected String getPermissionImpl(String permConstant)

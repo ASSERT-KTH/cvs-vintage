@@ -77,7 +77,7 @@ import org.tigris.scarab.om.IssueType;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.40 2002/10/17 00:26:51 jmcnally Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.41 2002/10/17 20:10:44 jmcnally Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -97,8 +97,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     protected boolean isAuthorized( RunData data ) throws Exception
     {
         boolean auth = false;
-        String action = data.getAction();
-        String perm = ScarabSecurity.getActionPermission(action);
+        String perm = getRequiredPermission(data);
         TemplateContext context = getTemplateContext(data);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
@@ -106,14 +105,28 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         IssueType currentIssueType = scarabR.getCurrentIssueType();
         ScarabUser user = (ScarabUser)data.getUser();
 
-        // there should be no action that requires login that does
-        // not also have a permission
-        if (perm == null)
+        if (ScarabSecurity.NONE.equals(perm)) 
         {
-            //scarabR.setAlertMessage("Action is not assigned a permission.");
-            // FIXME! remove the following line and uncomment the previous
-            // after it is assumed that all the actions are accounted for.
-            auth = true;
+            if (currentModule == null)
+            {
+                scarabR.setInfoMessage(l10n.get("SelectModuleToWorkIn"));
+                Default.setTargetSelectModule(data);
+            }
+            else if (!user.hasLoggedIn()) 
+            {
+                scarabR.setInfoMessage(
+                     l10n.get("LoginToAccountWithPermissions"));
+                Default.setTargetLogin(data);
+                scarabR.setCurrentModule(null);
+            }
+            else 
+            {
+                auth = true;
+            }
+        }
+        else if (perm == null)
+        {
+            scarabR.setAlertMessage("Action is not assigned a permission.");
         }
         else
         {
@@ -121,7 +134,6 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
             {
                 scarabR.setInfoMessage(l10n.get("SelectModuleToWorkIn"));
                 Default.setTargetSelectModule(data);
-                auth = false;
             }
             else if (! user.hasLoggedIn() 
                 || !user.hasPermission(perm, currentModule))
@@ -131,7 +143,6 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
 
                 Default.setTargetLogin(data);
                 scarabR.setCurrentModule(null);
-                auth = false;
             }
             else 
             {
@@ -312,5 +323,20 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     protected Category log()
     {
         return log;
+    }
+
+    /**
+     * Flag that marks the action as requiring a permission mapping in
+     * Scarab.properties.  The default is true, so actions that only
+     * require login (or only require a permission given some critieria
+     * available in the arguments), should override this method.
+     *
+     * @param data a <code>RunData</code> value
+     * @param context a <code>TemplateContext</code> value
+     * @return a <code>boolean</code> value
+     */
+    protected String getRequiredPermission(RunData data)
+    {
+        return ScarabSecurity.getActionPermission(data.getAction());
     }
 }
