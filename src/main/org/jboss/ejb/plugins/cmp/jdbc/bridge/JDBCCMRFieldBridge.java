@@ -56,7 +56,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    // ------ Invocation messages ------
@@ -1005,9 +1005,14 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          return parameterIndex;
       }
 
+      Object fk = null;
+      Collection c = getFieldState(ctx).getValue();
+      if(c.size() > 0) {
+         fk = c.iterator().next();
+      }
       for(Iterator fields = foreignKeyFields.iterator(); fields.hasNext();) {
          JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)fields.next();
-         parameterIndex = field.setInstanceParameters(ps, parameterIndex, ctx);
+         parameterIndex = field.setPrimaryKeyParameters(ps, parameterIndex, fk);
       }
       return parameterIndex;
    }
