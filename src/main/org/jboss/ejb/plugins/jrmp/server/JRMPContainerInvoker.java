@@ -76,7 +76,7 @@ import org.w3c.dom.Element;
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *		@author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
- *      @version $Revision: 1.34 $
+ *      @version $Revision: 1.35 $
  */
 public class JRMPContainerInvoker
    extends RemoteServer
@@ -395,8 +395,6 @@ public class JRMPContainerInvoker
    throws Exception
    {
       // Check if this call really can be optimized
-      // If parent of callers classloader is != parent of our classloader -> not optimizable!
-      //      if (Thread.currentThread().getContextClassLoader().getParent() != container.getClassLoader().getParent())
       if (!m.getDeclaringClass().isAssignableFrom(((ContainerInvokerContainer)container).getHomeClass()))
       {
          RemoteMethodInvocation rmi = new RemoteMethodInvocation(null, m, args);
@@ -409,7 +407,13 @@ public class JRMPContainerInvoker
          rmi.setCredential( SecurityAssociation.getCredential() );
 
          // Invoke on the container, enforce marshalling
-         return invokeHome(new MarshalledObject(rmi)).get();
+         try
+         {
+            return invokeHome(new MarshalledObject(rmi)).get();
+         } catch (Exception e)
+         {
+            throw (Exception)new MarshalledObject(e).get();
+         }
       }
 
       // Set the right context classloader
@@ -449,7 +453,13 @@ public class JRMPContainerInvoker
          rmi.setCredential( SecurityAssociation.getCredential() );
 
          // Invoke on the container, enforce marshalling
-         return invoke(new MarshalledObject(rmi)).get();
+         try
+         {
+            return invoke(new MarshalledObject(rmi)).get();
+         } catch (Exception e)
+         {
+            throw (Exception)new MarshalledObject(e).get();
+         }
       }
 
       // Set the right context classloader

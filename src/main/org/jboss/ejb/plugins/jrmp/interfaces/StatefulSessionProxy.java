@@ -23,7 +23,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  * 		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.18 $
+ *      @version $Revision: 1.19 $
  */
 public class StatefulSessionProxy
    extends GenericProxy
@@ -161,16 +161,30 @@ public class StatefulSessionProxy
           // Set the transaction context
           rmi.setTransactionPropagationContext(getTransactionPropagationContext());
              
-          // Set the security stuff
-          // MF fixme this will need to use "thread local" and therefore same construct as above
-          // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
+             // Set the security stuff
+             // MF fixme this will need to use "thread local" and therefore same construct as above
+             // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
              // rmi.setCredential(sm != null? sm.getCredential() : null);
              // is the credential thread local? (don't think so... but...)
-          rmi.setPrincipal( getPrincipal() );
+             rmi.setPrincipal( getPrincipal() );
              rmi.setCredential( getCredential() );
           
-          // Invoke on the remote server, enforce marshalling
-             return container.invoke(new MarshalledObject(rmi)).get();
+             // Invoke on the remote server, enforce marshaling
+             if (isLocal())
+             {
+                // We need to make sure marshaling of exceptions is done properly
+                try
+                {
+                  return container.invoke(new MarshalledObject(rmi)).get();
+                } catch (Throwable e)
+                {
+                  throw (Throwable)new MarshalledObject(e).get();
+                }
+             } else
+             {
+               // Marshaling is done by RMI
+               return container.invoke(new MarshalledObject(rmi)).get();
+             }
           }
       }
    }

@@ -23,7 +23,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 *      @see <related>
 *      @author Rickard Öberg (rickard.oberg@telkel.com)
 * 	   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*      @version $Revision: 1.13 $
+*      @version $Revision: 1.14 $
 */
 public class StatelessSessionProxy
    extends GenericProxy
@@ -171,8 +171,22 @@ public class StatelessSessionProxy
 				rmi.setPrincipal( getPrincipal() );
 				rmi.setCredential( getCredential() );
 				
-				// Invoke on the remote server, enforce marshalling
-				return container.invoke(new MarshalledObject(rmi)).get();
+				// Invoke on the remote server, enforce marshaling
+				if (isLocal())
+				{
+				   // We need to make sure marshaling of exceptions is done properly
+				   try
+				   {
+				     return container.invoke(new MarshalledObject(rmi)).get();
+				   } catch (Throwable e)
+				   {
+				     throw (Throwable)new MarshalledObject(e).get();
+				   }
+				} else
+				{
+				  // Marshaling is done by RMI
+				  return container.invoke(new MarshalledObject(rmi)).get();
+				}
 			}
 		}
 	}
