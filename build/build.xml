@@ -743,9 +743,7 @@
     <!-- Runs the test suite                                                -->
     <!-- ================================================================== -->
     <target name="tests" depends="compile-tests">
-        <exec executable="ant" dir="${basedir}">
-            <arg line="-buildfile run-tests.xml"/>
-        </exec>
+        <ant antfile="run-tests.xml" dir="${basedir}" inheritall="false"/>
     </target>
 
     <!-- ================================================================== -->
