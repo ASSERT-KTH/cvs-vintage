@@ -1,4 +1,4 @@
-// $Id: TestUMLFeatureOwnerScopeCheckBox.java,v 1.4 2003/01/04 17:02:35 kataka Exp $
+// $Id: TestUMLFeatureOwnerScopeCheckBox.java,v 1.5 2003/01/31 21:07:24 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,15 +56,14 @@ public class TestUMLFeatureOwnerScopeCheckBox extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
-        elem = CoreFactory.getFactory().createAttribute();
-        MockUMLUserInterfaceContainer mockcomp = new MockUMLUserInterfaceContainer();
-        mockcomp.setTarget(elem);
+        elem = CoreFactory.getFactory().createAttribute();       
 	
 	// If we cannot create the box, we assume that it is because
 	// there is no GUI available.
 	// If so, all tests are inconclusive.
 	try {
 	    box = new UMLFeatureOwnerScopeCheckBox();
+        box.setTarget(elem);
 	} catch (java.lang.InternalError e1) {
 	    return;
 	} catch (java.lang.NoClassDefFoundError e2) {
