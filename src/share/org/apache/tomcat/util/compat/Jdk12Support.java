@@ -138,9 +138,16 @@ public class Jdk12Support extends Jdk11Compat {
             while(cl instanceof DependClassLoader && cl != null )
                 cl=((DependClassLoader)cl).getParentLoader();
             if (cl==null) break;
-            if (depth==c) return ((URLClassLoader)cl).getURLs();
+            if (depth==c) {
+		if(cl instanceof URLClassLoader)
+		    return ((URLClassLoader)cl).getURLs();
+		else if(cl instanceof SimpleClassLoader)
+		    return ((SimpleClassLoader)cl).getURLs();
+		else
+		    return null;
+	    }
             c++;
-            cl=((URLClassLoader)cl).getParent();
+            cl=getParentLoader(cl);
         }while((cl!=null) && ( depth >= c ));
         return null;
     }
