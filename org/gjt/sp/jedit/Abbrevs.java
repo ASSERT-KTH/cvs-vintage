@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Abbreviation manager.
  * @author Slava Pestov
- * @version $Id: Abbrevs.java,v 1.7 2002/08/09 19:47:09 spestov Exp $
+ * @version $Id: Abbrevs.java,v 1.8 2002/08/09 21:24:12 spestov Exp $
  */
 public class Abbrevs
 {
@@ -133,6 +133,7 @@ public class Abbrevs
 
 			// the first element of pp is the abbrev itself
 			abbrev = (String)pp.elementAt(0);
+			pp.removeElementAt(0);
 		} //}}}
 		//{{{ Handle ordinary abbrevs
 		else
@@ -558,8 +559,10 @@ public class Abbrevs
 
 							int pos = ch - '0';
 							posParamCount = Math.max(pos,posParamCount);
-							if(pos < pp.size())
-								buf.append(pp.elementAt(pos));
+							// $n is 1-indexed, but vector
+							// contents is zero indexed
+							if(pos <= pp.size())
+								buf.append(pp.elementAt(pos - 1));
 						}
 						else
 						{

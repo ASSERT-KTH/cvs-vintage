@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.52 2002/08/09 19:47:10 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.53 2002/08/09 21:24:12 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -155,6 +155,9 @@ public class VFSBrowser extends JPanel implements EBComponent
 		this.multipleSelection = multipleSelection;
 		this.floating = floating;
 		this.view = view;
+
+		currentEncoding = jEdit.getProperty("buffer.encoding",
+			System.getProperty("file.encoding"));
 
 		ActionHandler actionHandler = new ActionHandler();
 
@@ -308,9 +311,6 @@ public class VFSBrowser extends JPanel implements EBComponent
 				path = userHome;
 			}
 		}
-
-		currentEncoding = jEdit.getProperty("buffer.encoding",
-			System.getProperty("file.encoding"));
 
 		final String _path = path;
 

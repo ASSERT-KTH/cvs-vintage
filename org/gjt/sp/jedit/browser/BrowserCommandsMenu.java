@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.11 2002/06/23 06:07:03 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.12 2002/08/09 21:24:12 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -214,6 +214,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 			mi.setActionCommand("encoding@" + browser.currentEncoding);
 			grp.add(mi);
 			encodingMenuItems.put(browser.currentEncoding,mi);
+			encodingMenu.add(mi);
 		}
 
 		String systemEncoding = System.getProperty("file.encoding");
@@ -224,6 +225,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 			mi.setActionCommand("encoding@" + systemEncoding);
 			grp.add(mi);
 			encodingMenuItems.put(systemEncoding,mi);
+			encodingMenu.add(mi);
 		}
 
 		encodingMenu.addSeparator();
