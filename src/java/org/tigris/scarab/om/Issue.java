@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.186 2002/08/21 23:17:37 jon Exp $
+ * @version $Id: Issue.java,v 1.187 2002/08/23 01:30:08 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1589,6 +1589,61 @@ public class Issue
         return DependTypeManager.getAll();
     }
 
+    public ActivitySet doAddDependency(ActivitySet activitySet, Depend depend, 
+                                       Issue childIssue, ScarabUser user)
+        throws Exception
+    {
+        // Check whether the entered issue is already dependant on this
+        // Issue. If so, and it had been marked deleted, mark as undeleted.
+        Depend prevDepend = this.getDependency(childIssue);
+        if (prevDepend != null && prevDepend.getDeleted())
+        {
+            prevDepend.setDefaultModule(depend.getDefaultModule());
+            depend = prevDepend;
+            depend.setDeleted(false);
+        }
+        else if (prevDepend != null)
+        {
+            throw new Exception("This issue already has a dependency" 
+                                  + " on the issue id you entered.");
+        }
+        depend.save();
+
+        if (activitySet == null)
+        {
+            // Save activitySet record
+            activitySet = getActivitySet(user, null,
+                                        ActivitySetTypePeer.EDIT_ISSUE__PK);
+            activitySet.save();
+        }
+
+        // Save activitySet record for parent
+        String desc = new StringBuffer("Added '")
+            .append(depend.getDependType().getName())
+            .append("' child dependency on issue ")
+            .append(childIssue.getUniqueId())
+            .toString();
+
+        // Save activity record
+        ActivityManager
+            .createTextActivity(this, null, activitySet,
+                                desc, null,
+                                null, childIssue.getUniqueId());
+
+        // Save activitySet record for child
+        desc = new StringBuffer("Added '")
+            .append(depend.getDependType().getName())
+            .append("' parent dependency on issue ")
+            .append(this.getUniqueId())
+            .toString();
+
+        // Save activity record
+        ActivityManager
+            .createTextActivity(childIssue, null, activitySet,
+                                desc, null,
+                                null, this.getUniqueId());
+        return activitySet;
+    }
 
     /**
      * Returns type of dependency the passed-in issue has on

@@ -89,6 +89,7 @@ import org.tigris.scarab.om.ActivityManager;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.Depend;
+import org.tigris.scarab.om.DependManager;
 import org.tigris.scarab.om.DependPeer;
 import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.DependTypePeer;
@@ -111,7 +112,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.118 2002/08/21 23:09:15 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.119 2002/08/23 01:30:08 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -704,9 +705,17 @@ public class ModifyIssue extends BaseModifyIssue
             return;
         }
 
+        ScarabUser user = (ScarabUser)data.getUser();
+        if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
+                               issue.getModule()))
+        {
+            scarabR.setAlertMessage(
+                "Insufficient permission to edit this issue.");
+            return;
+        }
+
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
-        ScarabUser user = (ScarabUser)data.getUser();
         ActivitySet activitySet = null;
         for (int i =0; i<keys.length; i++)
         {
@@ -728,33 +737,6 @@ public class ModifyIssue extends BaseModifyIssue
         {
             scarabR.setInfoMessage("No files were changed.");
         }
-    }
-
-    private void registerActivity(String description, String message,
-        Issue issue, ScarabUser user, Attachment attachment, 
-        TemplateContext context, RunData data)
-        throws Exception
-    {
-        registerActivity(description, message, issue, user, attachment, 
-                         context, data, "", "");
-    }
-
-    private void registerActivity(String description, String message,
-        Issue issue, ScarabUser user, Attachment attachment, 
-        TemplateContext context, RunData data, String oldVal, String newVal)
-        throws Exception
-    {
-        // Save activitySet record
-        ActivitySet activitySet = issue.getActivitySet(user, attachment,
-                                  ActivitySetTypePeer.EDIT_ISSUE__PK);
-        activitySet.save();
-
-        // Save activity record
-        ActivityManager
-            .createTextActivity(issue, null, activitySet,
-                                description, attachment,
-                                oldVal, newVal);
-        sendEmail(activitySet, issue, message, context, data);
     }
 
     /**
@@ -857,12 +839,20 @@ public class ModifyIssue extends BaseModifyIssue
             scarabR.setAlertMessage(se.getMessage());
             return;
         }
+
         ScarabUser user = (ScarabUser)data.getUser();
+        if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
+                               issue.getModule()))
+        {
+            scarabR.setAlertMessage(
+                "Insufficient permission to edit this issue.");
+            return;
+        }
+
         IntakeTool intake = getIntakeTool(context);
         Group group = intake.get("Depend", IntakeTool.DEFAULT_KEY);
         Issue childIssue = null;
         boolean isValid = true;
-        Depend depend = new Depend();
 
         // Check that dependency type entered is valid
         Field type = group.get("TypeId");
@@ -870,6 +860,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!type.isValid())
         {
             type.setMessage("Please enter a valid dependency type.");
+            isValid = false;
         }
 
         // Check that child ID entered is valid
@@ -878,6 +869,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!childId.isValid())
         {
             childId.setMessage("Please enter a valid issue id.");
+            isValid = false;
         }
         else
         {
@@ -889,24 +881,6 @@ public class ModifyIssue extends BaseModifyIssue
                                    "not correspond to a valid issue.");
                 isValid = false;
             }
-            // Check whether the entered issue is already dependant on this
-            // Issue. If so, and it had been marked deleted, mark as undeleted.
-            else if (childIssue != null && issue.getDependency(childIssue) != null)
-            {
-                Depend prevDepend = issue.getDependency(childIssue);
-                if (prevDepend.getDeleted())
-                {
-                    depend = prevDepend;
-                    depend.setDeleted(false);
-                    depend.save();
-                }
-                else
-                {
-                    childId.setMessage("This issue already has a dependency" 
-                                      + " on the issue id you entered.");
-                    isValid = false;
-                }
-            }
             // Make sure issue is not being marked as dependant on itself.
             else if (childIssue != null && childIssue.equals(issue))
             {
@@ -917,54 +891,35 @@ public class ModifyIssue extends BaseModifyIssue
         }
         if (intake.isAllValid() && isValid)
         {
+            Depend depend = DependManager.getInstance();
             depend.setDefaultModule(scarabR.getCurrentModule());
             group.setProperties(depend);
-            depend.save();
+            ActivitySet activitySet = null;
+            try
+            {
+                activitySet = issue
+                    .doAddDependency(activitySet, depend, childIssue, user);
+                intake.remove(group);
+            }
+            catch (Exception e)
+            {
+                scarabR.setAlertMessage(e.getMessage());
+                return;
+            }
 
-            // Save activitySet record
-            ActivitySet activitySet = issue.getActivitySet(user, null,
-                                      ActivitySetTypePeer.EDIT_ISSUE__PK);
-            activitySet.save();
-
-            // Save activitySet record for parent
-            String desc = new StringBuffer("Added '")
-                .append(depend.getDependType().getName())
-                .append("' child dependency on issue ")
-                .append(childIssue.getUniqueId())
-                .toString();
-
-            // Save activity record
-            // FIXME: test to see if null instead of "" is ok.
-            ActivityManager
-                .createTextActivity(issue, null, activitySet,
-                                    desc, null,
-                                    "", childIssue.getUniqueId());
-            sendEmail(activitySet, childIssue, desc, context, data);
-
-            // Save activitySet record for child
-            desc = new StringBuffer("Added '")
-                .append(depend.getDependType().getName())
-                .append("' parent dependency on issue ")
-                .append(issue.getUniqueId())
-                .toString();
-
-            // Save activity record
-            // FIXME: test to see if null instead of "" is ok.
-            ActivityManager
-                .createTextActivity(childIssue, null, activitySet,
-                                    desc, null,
-                                    "", issue.getUniqueId());
-            sendEmail(activitySet, issue, desc, context, data);
-
+            if (activitySet != null)
+            {
+                // FIXME: I think that we are sending too many emails here
+                sendEmail(activitySet, childIssue, DEFAULT_MSG, context, data);
+                sendEmail(activitySet, issue, DEFAULT_MSG, context, data);
+            }
             scarabR.setConfirmMessage(DEFAULT_MSG);
-            intake.remove(group);
         }
         else
         {
             scarabR.setAlertMessage(ERROR_MESSAGE);
         }
     }
-
 
     /**
      * Redirects to AssignIssue page.

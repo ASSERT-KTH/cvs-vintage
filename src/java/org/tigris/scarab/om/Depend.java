@@ -55,6 +55,7 @@ import org.apache.torque.om.NumberKey;
 
 // Scarab classes
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.util.ScarabException;
 
 /** 
  * This class represents a Dependency object from the SCARAB_DEPEND table.
@@ -62,7 +63,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Depend.java,v 1.11 2002/07/02 18:56:11 jon Exp $
+ * @version $Id: Depend.java,v 1.12 2002/08/23 01:30:08 jon Exp $
  */
 public class Depend 
     extends BaseDepend
@@ -120,6 +121,11 @@ public class Depend
     public void setObserverUniqueId(String uniqueId)
          throws Exception
     {
+        if (getDefaultModule() == null)
+        {
+            throw new ScarabException("You need to call " + 
+                "setDefaultModule() before you can call this method.");
+        }
         Issue childIssue = null;
 	    childIssue = Issue.getIssueById(uniqueId);
 	    if (childIssue == null)
