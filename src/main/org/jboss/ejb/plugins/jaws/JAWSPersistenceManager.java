@@ -39,7 +39,7 @@ import javax.sql.DataSource;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityPersistenceManager;
+import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.logging.Log;
@@ -67,22 +67,23 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class JAWSPersistenceManager
-   implements EntityPersistenceManager
+   implements EntityPersistenceStore
 {
    // Constants -----------------------------------------------------
    
    // Attributes ----------------------------------------------------
    EntityContainer container;
    
+/*   
    Method ejbStore;
    Method ejbLoad;
    Method ejbActivate;
    Method ejbPassivate;
    Method ejbRemove;
-   
+*/   
    // Pre-calculated fields to speed things up
    ArrayList pkFields = new ArrayList(); // Field's in entity class
    ArrayList pkClassFields = new ArrayList(); // Field's in pk class
@@ -226,11 +227,14 @@ public class JAWSPersistenceManager
       makeSql();
       
      // Find EJB-methods
+	 // All the EJB method calls are moved to the CMPPersistenceManager
+   /*   
       ejbStore = EntityBean.class.getMethod("ejbStore", new Class[0]);
       ejbLoad = EntityBean.class.getMethod("ejbLoad", new Class[0]);
       ejbActivate = EntityBean.class.getMethod("ejbActivate", new Class[0]);
       ejbPassivate = EntityBean.class.getMethod("ejbPassivate", new Class[0]);
       ejbRemove = EntityBean.class.getMethod("ejbRemove", new Class[0]);
+	*/
    }
    
    public void start()
@@ -301,7 +305,8 @@ public class JAWSPersistenceManager
       }
    }
 	
-	public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
+	
+	public Object createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
 	throws RemoteException, CreateException
 	{
 		
@@ -337,11 +342,7 @@ public class JAWSPersistenceManager
 				// it exists, we need the DuplicateKey thingy
 				throw new DuplicateKeyException("Entity with key "+id+" already exists");
 			}
-			
-			// We know we are OK and can proceed with the insert
-			// Set id
-			ctx.setId(id);
-			
+				
 			// Insert in db
 			log.debug("Insert");
 			Connection con = null;
@@ -391,11 +392,14 @@ public class JAWSPersistenceManager
 			
 			ctx.setPersistenceContext(pCtx);
 		
+		
+			return id;
 		} catch (IllegalAccessException e) {
 			
 			log.exception(e);
 			throw new CreateException("Could not create entity:"+e);
 		}
+		
 	
 	}
    
@@ -661,16 +665,7 @@ public class JAWSPersistenceManager
 
    public void activateEntity(EntityEnterpriseContext ctx)
       throws RemoteException
-   {
-      // Call bean
-      try
-      {
-         ejbActivate.invoke(ctx.getInstance(), new Object[0]);
-      } catch (Exception e)
-      {
-         throw new ServerException("Activation failed", e);
-      }
-      
+   {      
       // Set new persistence context
       ctx.setPersistenceContext(new PersistenceContext());
    }
@@ -792,10 +787,7 @@ public class JAWSPersistenceManager
          // Store state to be able to do tuned updates
          PersistenceContext pCtx = (PersistenceContext)ctx.getPersistenceContext();
          if (readOnly) pCtx.lastRead = System.currentTimeMillis();
-         
-         // Call ejbLoad on bean instance
-         ejbLoad.invoke(ctx.getInstance(), new Object[0]);
-         
+              
          // Done
       } catch (Exception e)
       {
@@ -829,8 +821,6 @@ public class JAWSPersistenceManager
       PreparedStatement stmt = null;
       try
       {
-         // Call bean
-         ejbStore.invoke(ctx.getInstance(), new Object[0]);
          
          // Create tuned update
          String updateSql = "UPDATE "+tableName+" SET ";
@@ -959,15 +949,8 @@ public class JAWSPersistenceManager
 
    public void passivateEntity(EntityEnterpriseContext ctx)
       throws RemoteException
-   {
-      // Call bean
-      try
-      {
-         ejbPassivate.invoke(ctx.getInstance(), new Object[0]);
-      } catch (Exception e)
-      {
-         throw new ServerException("Passivation failed", e);
-      }
+   {  
+      // There is nothing to do here
    }
       
    public void removeEntity(EntityEnterpriseContext ctx)
@@ -978,9 +961,7 @@ public class JAWSPersistenceManager
       
       try
       {
-         // Call ejbRemove
-         ejbRemove.invoke(ctx.getInstance(), new Object[0]);
-      
+    
          // Remove from DB
          con = getConnection();
          stmt = con.prepareStatement(removeSql);
