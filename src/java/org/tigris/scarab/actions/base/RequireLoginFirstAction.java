@@ -69,7 +69,7 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.48 2003/04/22 01:40:37 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.49 2003/04/23 01:47:03 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -113,7 +113,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         }
         else if (perm == null)
         {
-            scarabR.setAlertMessage(l10n.get("ActionNotAssignedPermission."));
+            scarabR.setAlertMessage(l10n.get("ActionNotAssignedPermission"));
         }
         else
         {
