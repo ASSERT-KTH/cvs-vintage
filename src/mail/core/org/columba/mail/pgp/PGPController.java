@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -88,6 +90,7 @@ public class PGPController {
 	private String path;
 	private String id;
 	private int exitVal;
+    private byte[] byteArray = null;
 
 	private boolean save = false;
 
@@ -160,52 +163,24 @@ public class PGPController {
 	 */
 	public InputStream decrypt(InputStream cryptMessage, PGPItem item)
 		throws PGPException {
+            exitVal = -1;
+            String error = null;
 
-		int exitVal = -1;
-
-		if (this.getPassphrase(item) == false)
-			// user cancelled
-			throw new CancelledException();
-
-		String error = null;
-		try {
-
-			// create temporary file from encrypted data
-			if (tempFile == null)
-				createTempFileFromStream(cryptMessage);
-
-			// create stream from file
-			InputStream tempInputStream = getTempInputStream();
-
-			// decrypt stream
-			exitVal = utils[GPG].decrypt(item, tempInputStream);
-
-			// parse error message
-			error = utils[GPG].parse(utils[GPG].getErrorString());
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			throw new PGPException(error);
-		} finally {
-			// clear tempfile
-			if(!tempFile.delete()) {
-				tempFile.deleteOnExit();
-			}
-			tempFile = null;			
-		}
-
-		pgpMessage = new String(error);
-
-		if (exitVal == 2) {
-			// wrong passprase 
-			passwordMap.remove(item.get("id"));
-			
-
-			return decrypt(cryptMessage, item);
-		}
-
-
-		return utils[GPG].getStreamResult();
+            this.checkPassphrase(item);
+            try {
+                exitVal = utils[GPG].decrypt(item, cryptMessage);
+                ColumbaLogger.log.debug("exitVal=" + exitVal);
+            
+                error = utils[GPG].parse(utils[GPG].getErrorString());
+            } catch (Exception e) {
+                throw new PGPException(error);
+            }
+        
+            pgpMessage = new String(error);
+            if (exitVal != 0) {
+                throw new PGPException(error);
+            }
+            return utils[GPG].getStreamResult();
 	}
 	/**
 	 * Verify a given message with a given signature. Can the signature for the given message be verified the method
@@ -264,28 +239,21 @@ public class PGPController {
 		String error = "";
 
 		try {
+            this.createTempFileFromStream(pgpStream);
 
-			// create temporary file from encrypted data
-			if (tempFile == null)
-				createTempFileFromStream(pgpStream);
-
-			// create stream from file
-			InputStream tempInputStream = getTempInputStream();
-
-			exitVal = utils[GPG].encrypt(item, tempInputStream);
+			exitVal = utils[GPG].encrypt(item, this.getTempInputStream());
 			ColumbaLogger.log.debug("exitVal=" + exitVal);
 
 			error = utils[GPG].parse(utils[GPG].getErrorString());
 		} catch (Exception e) {
-
+		    byteArray = null;
 			throw new PGPException(error);
 
 		}
 
 		pgpMessage = new String(error);
-
-		// clear temporary file
-		tempFile = null;
+        
+        byteArray = null;
 
 		if (exitVal != 0) {
 			throw new PGPException(error);
@@ -313,48 +281,46 @@ public class PGPController {
 		throws PGPException {
 		exitVal = -1;
 		String error = null;
-		path = item.get("path");
-		id = item.get("id");
 
-		if (this.getPassphrase(item) == false)
-			// user cancelled
-			throw new CancelledException();
-
+        this.checkPassphrase(item);
 		try {
-
-			// create temporary file from encrypted data
-			if (tempFile == null)
-				createTempFileFromStream(pgpStream);
-
-			// create stream from file
-			InputStream tempInputStream = getTempInputStream();
-
-			exitVal = utils[GPG].sign(item, tempInputStream);
-			System.out.println("exitVal=" + exitVal);
-
-			error = utils[GPG].parse(utils[GPG].getErrorString());
-
+		    exitVal = utils[GPG].sign(item, pgpStream);
+		    ColumbaLogger.log.debug("exitVal=" + exitVal);
+		    
+		    error = utils[GPG].parse(utils[GPG].getErrorString());
 		} catch (Exception e) {
-			throw new PGPException(error);
+		    throw new PGPException(error);
 		}
-
+		
 		pgpMessage = new String(error);
-
-		if (exitVal == 2) {
-			// wrong passphrase
-
-			return sign(pgpStream, item);
-		}
-
-		// clear temporary file
-		tempFile = null;
-
 		if (exitVal != 0) {
-			throw new PGPException(error);
+		    throw new PGPException(error);
 		}
-
 		return utils[GPG].getStreamResult();
 	}
+    
+    /**
+     * Checks with a test string if the test String can be signed. The user is ask for his passphrase until the passphrase is ok or
+     * the user cancels the dialog. If the user cancels the dialog a PGPException with the error string from the pgp tool is thrown.
+     * This method returned normal only if the user give the right passphrase-
+     * @param item PGPItem used for signing the test string
+     * @exception PGPException if the user cancels the passphrase dialog or the pgp tool has errors and returns with exit code != 0.
+     */
+    private void checkPassphrase(PGPItem item) throws PGPException {
+          String testStr = "test";
+          int exitVal = -1;
+          // loop until signing was sucessful or the user cancels the passphrase dialog
+          while ((exitVal !=0) && (this.getPassphrase(item) == true)) { 
+              try {
+                  exitVal = utils[GPG].sign(item, new ByteArrayInputStream(testStr.getBytes()));
+              } catch (Exception e) {
+                  throw new PGPException(utils[GPG].parse(utils[GPG].getErrorString()));
+              }
+          }
+          if (exitVal != 0) {
+              throw new PGPException(utils[GPG].parse(utils[GPG].getErrorString()));
+          }
+      }
 
 	/**
 	 * signs an message and gives the signed message string back to the application. This method call the GPG-Util to sign 
@@ -516,5 +482,8 @@ public class PGPController {
 	{
 		passwordMap.clear();
 	}
-
+    
+    public void addPasswordToMap(String key, String item) {
+        this.passwordMap.put(key, item);
+    }
 }
