@@ -115,6 +115,7 @@ final class LoggerNameTreePanel extends JPanel implements Rule
     new SmallToggleButton();
   private final Set hiddenSet = new HashSet();
   private final Action hideAction;
+  private final LogPanelPreferenceModel preferenceModel;
 
   private final JList ignoreList = new JList();
   private final JScrollPane ignoreListScroll = new JScrollPane(ignoreList);
@@ -145,10 +146,11 @@ final class LoggerNameTreePanel extends JPanel implements Rule
    *
    * @param logTreeModel
    */
-  LoggerNameTreePanel(LogPanelLoggerTreeModel logTreeModel)
+  LoggerNameTreePanel(LogPanelLoggerTreeModel logTreeModel, LogPanelPreferenceModel preferenceModel)
   {
     super();
     this.logTreeModel = logTreeModel;
+    this.preferenceModel = preferenceModel;
 
     setLayout(new BorderLayout());
     setBorder(BorderFactory.createEtchedBorder());
@@ -567,7 +569,7 @@ final class LoggerNameTreePanel extends JPanel implements Rule
       {
         public void actionPerformed(ActionEvent e)
         {
-          LoggerNameTreePanel.this.setVisible(false);
+            preferenceModel.setLogTreePanelVisible(false);
         }
       };
 
@@ -983,14 +985,11 @@ final class LoggerNameTreePanel extends JPanel implements Rule
               public boolean evaluate(LoggingEvent e)
               {
                 boolean isHidden = getHiddenSet().contains(e.getLoggerName());
-                boolean result = !isHidden;
+                boolean result = (e.getLoggerName() != null) && (!isHidden);
 
                 if (result && isFocusOnSelected())
                 {
-                  result =
-                  result
-                    && e.getLoggerName() != null && e.getLoggerName().startsWith(
-                      currentlySelectedLoggerName);
+                  result = result &&  (e.getLoggerName().startsWith(currentlySelectedLoggerName+".") || e.getLoggerName().endsWith(currentlySelectedLoggerName)) ;
                 }
 
                 return result;
@@ -1032,7 +1031,7 @@ final class LoggerNameTreePanel extends JPanel implements Rule
    * DOCUMENT ME!
    *
    * @author $author$
-   * @version $Revision: 1.24 $, $Date: 2004/02/27 16:47:29 $
+   * @version $Revision: 1.25 $, $Date: 2004/03/10 08:32:38 $
    *
    * @author Paul Smith <psmith@apache.org>
         *
