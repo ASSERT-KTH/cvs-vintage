@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.110 2004/04/21 17:56:50 mvw Exp $
+// $Id: ParserDisplay.java,v 1.111 2004/04/28 17:55:34 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.110 2004/04/21 17:56:50 mvw Exp $
+// $Id: ParserDisplay.java,v 1.111 2004/04/28 17:55:34 mvw Exp $
 
 
 
@@ -3736,6 +3736,7 @@ public class ParserDisplay extends Parser {
     }
     
     /** This builds a CallAction  with default attributes.
+     * But without Operation!
      * 
      * @author MVW
      * @param s string representing the Script of the Action
