@@ -23,6 +23,7 @@ import java.util.List;
 import org.columba.core.io.CloneStreamMaster;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.SendableHeader;
+import org.columba.ristretto.message.io.SourceInputStream;
 
 public class SendableMessage extends ColumbaMessage {
 	
@@ -60,6 +61,10 @@ public class SendableMessage extends ColumbaMessage {
 	 * @return Returns the sourceStream.
 	 */
 	public InputStream getSourceStream() {
+		if (sourceStream == null) {
+			return new SourceInputStream(getSource());
+		}
+		
 		return sourceStream.getClone();
 	}
 

@@ -17,6 +17,9 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.command;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.main.MainInterface;
@@ -30,7 +33,9 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
+import org.columba.ristretto.imap.protocol.StreamUtils;
 import org.columba.ristretto.message.HeaderInterface;
+import org.columba.ristretto.message.io.FileSource;
 
 /**
  * @author freddy
@@ -93,7 +98,13 @@ public class SaveMessageCommand extends FolderCommand {
 			// -> this is necessary because SendableMessage contains
 			// -> additional information (like recipients list) which
 			// -> would get lost otherwise
-
+			File tempFile = File.createTempFile("columba-outbox","tmp");
+			FileOutputStream out = new FileOutputStream(tempFile);
+			StreamUtils.streamCopy( message.getSourceStream(), out);
+			out.close();
+			
+			message.setSource(new FileSource(tempFile));
+			
 			Object uid = folder.addMessage(message);
 
 		} else {
