@@ -55,14 +55,10 @@ import org.apache.turbine.TemplateContext;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-
 
 /**
  * Handles export of an issue list non-web formats.
