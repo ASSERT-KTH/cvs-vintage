@@ -18,9 +18,6 @@ import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-
-//import org.jboss.logging.log4j.JBossCategory;
-
 /**
 * Service Libraries. The service libraries is a central repository of all
 * classes loaded by the ClassLoaders
@@ -28,7 +25,7 @@ import javax.management.ObjectName;
 * @see <related>
 * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
-* @version $Revision: 1.13 $ <p>
+* @version $Revision: 1.14 $ <p>
 *
 *      <b>20010830 marc fleury:</b>
 *      <ul>initial import
@@ -403,6 +400,35 @@ implements ServiceLibrariesMBean, MBeanRegistration
       // If we reach here, all of the classloaders currently in the VM don't know about the class
 
       throw new ClassNotFoundException(name);
+   }
+
+   /** Obtain a listing of the URL for all UnifiedClassLoaders associated with
+    *the ServiceLibraries
+    */
+   public URL[] getURLs()
+   {
+      HashSet classpath = new HashSet();
+      Set classLoaders2;      
+      synchronized (this)
+      {
+         classLoaders2 = classLoaders;
+      }
+
+      for (Iterator iter = classLoaders2.iterator(); iter.hasNext();)
+      {
+         UnifiedClassLoader cl = (UnifiedClassLoader)iter.next();
+         URL[] urls = cl.getClasspath();
+         int length = urls != null ? urls.length : 0;
+         for(int u = 0; u < length; u ++)
+         {
+            URL path = urls[u];
+            classpath.add(path);
+         }
+      } // for all ClassLoaders
+
+      URL[] urls = new URL[classpath.size()];
+      classpath.toArray(urls);
+      return urls;
    }
 
    /** 
