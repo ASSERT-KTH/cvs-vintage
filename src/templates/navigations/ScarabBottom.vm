@@ -1,20 +1,15 @@
 
 <!-- copyright -->
-  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-    <TR>
-      <TD BGCOLOR="#000000" HEIGHT="1"><SPACER HEIGHT="1" TYPE="block"></TD>
-    </TR>
-    <TR>
-      <TD CLASS="PlainText">
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td id="globalnav">
 	&copy; 2001&nbsp;<a href="http://www.collab.net/">CollabNet</a> | 
 	<a href="http://scarab.tigris.org/">Scarab</a> |
-	<a href="$link.setPage("Links.vm")">Links</a>
-      </TD>
-    </TR>
-  </TABLE>
+	<a href="$link.setPage("links.vm")">Links</a>
+      </td>
+    </tr>
+  </table>
 <!-- end copyright -->
-
-<hr noshade size=1>
 
 <p>Debugging:</p>
 [ $data.Parameters ]
