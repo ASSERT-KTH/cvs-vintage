@@ -140,7 +140,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.26 $
+@version $Revision: 1.27 $
 */
 public abstract class AbstractWebContainer 
    extends ServiceMBeanSupport 
@@ -517,7 +517,6 @@ public abstract class AbstractWebContainer
          }
          Thread.currentThread().setContextClassLoader(loader);
          envCtx = (Context) iniCtx.lookup("java:comp");
-         log.debug("Created java:comp, encClassLoader:"+ENCFactory.getClassLoader(envCtx));
 
          // Add a link to the global transaction manager
          envCtx.bind("UserTransaction", new LinkRef("UserTransaction"));
