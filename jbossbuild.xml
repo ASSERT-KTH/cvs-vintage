@@ -37,7 +37,11 @@
          path="jboss-ql-parser"
          javacc="org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jjt"/>
 
-      <source id="main">
+      <source id="main"
+         rmic="org/jboss/tm/usertx/server/UserTransactionSessionFactoryImpl.class,
+               org/jboss/tm/usertx/server/UserTransactionSessionImpl.class,
+               org/jboss/invocation/jrmp/server/JRMPInvoker.class">
+
          <include input="jboss-ql-parser"/>
 
          <include input="commons"/>
@@ -50,6 +54,7 @@
          <include input="getopt"/>
          <include input="wsdl4j"/>
 
+         <include input="j2se-project"/>
          <include input="jmx-project"/>
          <include input="common-project"/>
          <include input="j2ee-project"/>
@@ -61,7 +66,6 @@
 
       <resource id="resources-root" path="."/>
 
-
       <!-- ============================================================ -->
       <!-- jboss.jar                                                    -->
       <!-- ============================================================ -->
@@ -69,6 +73,24 @@
       <artifactdef artifact="jboss.jar">
          <include input="main"/>
       </artifactdef>
+
+      <!-- ============================================================ -->
+      <!-- Services                                                     -->
+      <!-- ============================================================ -->
+
+      <artifactdef artifact="sqlexception-service.xml"/>
+
+
+      <!-- ============================================================ -->
+      <!-- Binary Artifacts                                             -->
+      <!-- ============================================================ -->
+
+      <artifactdef artifact="deployer.bat"/>
+      <artifactdef artifact="deployer.sh"/>
+      <artifactdef artifact="jboss_init_redhat.sh"/>
+      <artifactdef artifact="jboss_init_suse.sh"/>
+      <artifactdef artifact="shutdown.bat"/>
+      <artifactdef artifact="shutdown.sh"/>
 
    </componentdef>
 
