@@ -1,4 +1,4 @@
-// $Id: CrNavFromInterface.java,v 1.16 2005/02/19 23:22:38 mvw Exp $
+// $Id: CrNavFromInterface.java,v 1.17 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * A critic to detect navigation from an Interface to a Class in an
@@ -60,7 +61,7 @@ public class CrNavFromInterface extends CrUML {
         
         // Specify design issue category and knowledge type
 
-        addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
+        addSupportedDecision(UMLDecision.RELATIONSHIPS);
         setKnowledgeTypes(Critic.KT_SYNTAX);
 
         // This may not actually make any difference at present (the code

@@ -1,4 +1,4 @@
-// $Id: CrAlreadyRealizes.java,v 1.14 2005/03/05 21:06:10 mvw Exp $
+// $Id: CrAlreadyRealizes.java,v 1.15 2005/03/11 09:43:03 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.util.Set;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * Critic to detect whether a class implements unneedded realizations through
@@ -45,7 +46,7 @@ public class CrAlreadyRealizes extends CrUML {
      */
     public CrAlreadyRealizes() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_INHERITANCE);
+	addSupportedDecision(UMLDecision.INHERITANCE);
 	setKnowledgeTypes(Critic.KT_SEMANTICS, Critic.KT_PRESENTATION);
 	addTrigger("genealization"); //TODO: typo?
 	addTrigger("realization");

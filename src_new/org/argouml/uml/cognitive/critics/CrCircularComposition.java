@@ -1,4 +1,4 @@
-// $Id: CrCircularComposition.java,v 1.21 2005/02/19 23:22:37 mvw Exp $
+// $Id: CrCircularComposition.java,v 1.22 2005/03/11 09:43:03 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,11 +28,12 @@ import java.util.Enumeration;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
-import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ListSet;
+import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
 import org.argouml.uml.GenCompositeClasses;
+import org.argouml.uml.cognitive.UMLDecision;
 import org.argouml.uml.cognitive.UMLToDoItem;
 
 /**
@@ -47,7 +48,7 @@ public class CrCircularComposition extends CrUML {
      */
     public CrCircularComposition() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_CONTAINMENT);
+	addSupportedDecision(UMLDecision.CONTAINMENT);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	setPriority(ToDoItem.LOW_PRIORITY);
 	// no good trigger

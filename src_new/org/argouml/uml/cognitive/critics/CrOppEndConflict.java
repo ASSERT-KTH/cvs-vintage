@@ -1,4 +1,4 @@
-// $Id: CrOppEndConflict.java,v 1.13 2005/02/19 23:22:36 mvw Exp $
+// $Id: CrOppEndConflict.java,v 1.14 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.util.List;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * Well-formedness rule [2] for MClassifier. See page 29 of UML 1.1
@@ -48,9 +49,9 @@ public class CrOppEndConflict extends CrUML {
      */
     public CrOppEndConflict() {
         setupHeadAndDesc();
-        addSupportedDecision(CrUML.DEC_INHERITANCE);
-        addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
-        addSupportedDecision(CrUML.DEC_NAMING);
+        addSupportedDecision(UMLDecision.INHERITANCE);
+        addSupportedDecision(UMLDecision.RELATIONSHIPS);
+        addSupportedDecision(UMLDecision.NAMING);
         setKnowledgeTypes(Critic.KT_SYNTAX);
         addTrigger("associationEnd");
     }

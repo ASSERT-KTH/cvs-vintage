@@ -1,4 +1,4 @@
-// $Id: CrIllegalGeneralization.java,v 1.13 2005/02/19 23:22:39 mvw Exp $
+// $Id: CrIllegalGeneralization.java,v 1.14 2005/03/11 09:43:03 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * Well-formedness rule [1] for MGeneralization. See page 32 of UML 1.1
@@ -42,7 +43,7 @@ public class CrIllegalGeneralization extends CrUML {
      */
     public CrIllegalGeneralization() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_INHERITANCE);
+	addSupportedDecision(UMLDecision.INHERITANCE);
 	addTrigger("supertype");
 	addTrigger("subtype");
     }

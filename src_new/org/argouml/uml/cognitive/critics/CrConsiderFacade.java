@@ -1,4 +1,4 @@
-// $Id: CrConsiderFacade.java,v 1.12 2005/02/19 23:22:37 mvw Exp $
+// $Id: CrConsiderFacade.java,v 1.13 2005/03/11 09:43:03 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.cognitive.critics;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * A critic to suggest using the facade stereotype. <p>
@@ -41,7 +42,7 @@ public class CrConsiderFacade extends CrUML {
      */
     public CrConsiderFacade() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_MODULARITY);
+	addSupportedDecision(UMLDecision.MODULARITY);
 	addTrigger("ownedElement");
     }
 

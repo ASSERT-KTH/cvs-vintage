@@ -1,4 +1,4 @@
-// $Id: CrMultipleDeepHistoryStates.java,v 1.3 2005/02/19 23:22:39 mvw Exp $
+// $Id: CrMultipleDeepHistoryStates.java,v 1.4 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ListSet;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 import org.argouml.uml.cognitive.UMLToDoItem;
 
 /**
@@ -49,7 +50,7 @@ public class CrMultipleDeepHistoryStates extends CrUML {
      */
     public CrMultipleDeepHistoryStates() {
         setupHeadAndDesc();
-        addSupportedDecision(CrUML.DEC_STATE_MACHINES);
+        addSupportedDecision(UMLDecision.STATE_MACHINES);
         addTrigger("parent");
         addTrigger("kind");
     }

@@ -1,4 +1,4 @@
-// $Id: CrNodesOverlap.java,v 1.5 2005/02/19 23:22:37 mvw Exp $
+// $Id: CrNodesOverlap.java,v 1.6 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +26,12 @@ package org.argouml.uml.cognitive.critics;
 
 import java.awt.Rectangle;
 import java.util.Vector;
+
 import org.argouml.cognitive.Designer;
-import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ListSet;
+import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.uml.cognitive.UMLDecision;
 import org.argouml.uml.diagram.deployment.ui.FigObject;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
@@ -52,9 +54,9 @@ public class CrNodesOverlap extends CrUML {
     public CrNodesOverlap() {
 	// TODO: {name} is not expanded for diagram objects
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_CLASS_SELECTION);
-	addSupportedDecision(CrUML.DEC_EXPECTED_USAGE);
-	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
+	addSupportedDecision(UMLDecision.CLASS_SELECTION);
+	addSupportedDecision(UMLDecision.EXPECTED_USAGE);
+	addSupportedDecision(UMLDecision.STATE_MACHINES);
 	setKnowledgeTypes(Critic.KT_PRESENTATION);
     }
 

@@ -1,4 +1,4 @@
-// $Id: CrSubclassReference.java,v 1.16 2005/02/19 23:22:37 mvw Exp $
+// $Id: CrSubclassReference.java,v 1.17 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,11 +31,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.argouml.cognitive.Designer;
-import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ListSet;
+import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
 import org.argouml.uml.GenDescendantClasses;
+import org.argouml.uml.cognitive.UMLDecision;
 import org.argouml.uml.cognitive.UMLToDoItem;
 
 /**
@@ -51,8 +52,8 @@ public class CrSubclassReference extends CrUML {
      */
     public CrSubclassReference() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
-	addSupportedDecision(CrUML.DEC_PLANNED_EXTENSIONS);
+	addSupportedDecision(UMLDecision.RELATIONSHIPS);
+	addSupportedDecision(UMLDecision.PLANNED_EXTENSIONS);
 	setKnowledgeTypes(Critic.KT_SEMANTICS);
 	addTrigger("specialization");
 	addTrigger("associationEnd");

@@ -1,4 +1,4 @@
-// $Id: CrConstructorNeeded.java,v 1.21 2005/02/19 23:22:38 mvw Exp $
+// $Id: CrConstructorNeeded.java,v 1.22 2005/03/11 09:43:03 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * A critic to detect when a class requires a constructor.<p>
@@ -59,7 +60,7 @@ public class CrConstructorNeeded extends CrUML {
      */
     public CrConstructorNeeded() {
         setupHeadAndDesc();
-        addSupportedDecision(CrUML.DEC_STORAGE);
+        addSupportedDecision(UMLDecision.STORAGE);
         addKnowledgeType(Critic.KT_CORRECTNESS);
 
         // These may not actually make any difference at present (the code

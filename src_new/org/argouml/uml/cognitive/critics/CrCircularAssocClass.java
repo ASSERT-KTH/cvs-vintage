@@ -1,4 +1,4 @@
-// $Id: CrCircularAssocClass.java,v 1.13 2005/03/07 12:06:56 mkl Exp $
+// $Id: CrCircularAssocClass.java,v 1.14 2005/03/11 09:43:03 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * Critic to check that an association class does not take part in further
@@ -45,7 +46,7 @@ public class CrCircularAssocClass extends CrUML {
      */
     public CrCircularAssocClass() {
         setupHeadAndDesc();
-        addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
+        addSupportedDecision(UMLDecision.RELATIONSHIPS);
         setKnowledgeTypes(Critic.KT_SEMANTICS);
     }
 

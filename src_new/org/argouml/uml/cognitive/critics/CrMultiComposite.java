@@ -1,4 +1,4 @@
-// $Id: CrMultiComposite.java,v 1.12 2005/02/19 23:22:36 mvw Exp $
+// $Id: CrMultiComposite.java,v 1.13 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * Well-formedness rule [2] for MAssociationEnd. See page 28 of UML
@@ -42,7 +43,7 @@ public class CrMultiComposite extends CrUML {
      */
     public CrMultiComposite() {
         setupHeadAndDesc();
-        addSupportedDecision(CrUML.DEC_CONTAINMENT);
+        addSupportedDecision(UMLDecision.CONTAINMENT);
         setKnowledgeTypes(Critic.KT_SEMANTICS);
         addTrigger("aggregation");
         addTrigger("multiplicity");

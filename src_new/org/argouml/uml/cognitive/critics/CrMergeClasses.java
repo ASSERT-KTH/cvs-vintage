@@ -1,4 +1,4 @@
-// $Id: CrMergeClasses.java,v 1.19 2005/02/19 23:22:39 mvw Exp $
+// $Id: CrMergeClasses.java,v 1.20 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.util.List;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * A critic to check whether to classes sharing a 1..1 association can or
@@ -44,7 +45,7 @@ public class CrMergeClasses extends CrUML {
     public CrMergeClasses() {
         setupHeadAndDesc();
 	setPriority(ToDoItem.LOW_PRIORITY);
-	addSupportedDecision(CrUML.DEC_CLASS_SELECTION);
+	addSupportedDecision(UMLDecision.CLASS_SELECTION);
 	addTrigger("associationEnd");
     }
 

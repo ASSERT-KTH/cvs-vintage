@@ -1,4 +1,4 @@
-// $Id: CrZeroLengthEdge.java,v 1.4 2005/02/19 23:22:37 mvw Exp $
+// $Id: CrZeroLengthEdge.java,v 1.5 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,11 +22,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrZeroLengthEdge.java,v 1.4 2005/02/19 23:22:37 mvw Exp $
+// $Id: CrZeroLengthEdge.java,v 1.5 2005/03/11 09:43:04 mkl Exp $
 package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.uml.cognitive.UMLDecision;
 import org.tigris.gef.presentation.FigEdge;
 
 /** A critic to detect when an edge is very short in order to suggest to
@@ -46,9 +47,9 @@ public class CrZeroLengthEdge extends CrUML {
     public CrZeroLengthEdge() {
 	// TODO: {name} is not expanded for diagram objects
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
-	addSupportedDecision(CrUML.DEC_INHERITANCE);
-	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
+	addSupportedDecision(UMLDecision.RELATIONSHIPS);
+	addSupportedDecision(UMLDecision.INHERITANCE);
+	addSupportedDecision(UMLDecision.STATE_MACHINES);
 	setKnowledgeTypes(Critic.KT_PRESENTATION);
     }
 

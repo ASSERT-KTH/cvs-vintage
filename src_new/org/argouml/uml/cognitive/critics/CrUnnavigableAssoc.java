@@ -1,4 +1,4 @@
-// $Id: CrUnnavigableAssoc.java,v 1.15 2005/02/19 23:22:38 mvw Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.16 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrUnnavigableAssoc.java,v 1.15 2005/02/19 23:22:38 mvw Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.16 2005/03/11 09:43:04 mkl Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
@@ -31,6 +31,7 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 /** A critic to detect when a class can never have instances (of
  *  itself of any subclasses).
  *
@@ -43,7 +44,7 @@ public class CrUnnavigableAssoc extends CrUML {
      */
     public CrUnnavigableAssoc() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
+	addSupportedDecision(UMLDecision.RELATIONSHIPS);
 	addTrigger("end_navigable");
     }
 

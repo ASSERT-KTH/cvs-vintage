@@ -1,4 +1,4 @@
-// $Id: CrAssocNameConflict.java,v 1.16 2005/03/05 16:10:22 mvw Exp $
+// $Id: CrAssocNameConflict.java,v 1.17 2005/03/11 09:43:03 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrAssocNameConflict.java,v 1.16 2005/03/05 16:10:22 mvw Exp $
+// $Id: CrAssocNameConflict.java,v 1.17 2005/03/11 09:43:03 mkl Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
@@ -31,6 +31,7 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * Well-formedness rule [2] for MNamespace. See page 33 of UML 1.1
@@ -46,7 +47,7 @@ public class CrAssocNameConflict extends CrUML {
      */
     public CrAssocNameConflict() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_NAMING);
+	addSupportedDecision(UMLDecision.NAMING);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	// no good trigger
     }

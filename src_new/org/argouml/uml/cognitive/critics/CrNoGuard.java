@@ -1,4 +1,4 @@
-// $Id: CrNoGuard.java,v 1.14 2005/02/19 23:22:38 mvw Exp $
+// $Id: CrNoGuard.java,v 1.15 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.cognitive.critics;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 
 /**
@@ -42,7 +43,7 @@ public class CrNoGuard extends CrUML {
      */
     public CrNoGuard() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
+	addSupportedDecision(UMLDecision.STATE_MACHINES);
 	setKnowledgeTypes(Critic.KT_COMPLETENESS);
 	addTrigger("guard");
     }

@@ -1,4 +1,4 @@
-// $Id: CrMissingClassName.java,v 1.19 2005/02/19 23:22:36 mvw Exp $
+// $Id: CrMissingClassName.java,v 1.20 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * Well-formedness rule [1] for MNamespace. See page 33 of UML 1.1
@@ -43,7 +44,7 @@ public class CrMissingClassName extends CrUML {
      */
     public CrMissingClassName() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_NAMING);
+	addSupportedDecision(UMLDecision.NAMING);
 	setKnowledgeTypes(Critic.KT_COMPLETENESS, Critic.KT_SYNTAX);
 	addTrigger("name");
     }

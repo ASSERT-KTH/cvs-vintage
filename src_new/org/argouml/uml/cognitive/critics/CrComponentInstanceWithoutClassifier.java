@@ -1,4 +1,4 @@
-// $Id: CrComponentInstanceWithoutClassifier.java,v 1.19 2005/03/05 10:37:20 mvw Exp $
+// $Id: CrComponentInstanceWithoutClassifier.java,v 1.20 2005/03/11 09:43:03 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,12 +28,12 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.cognitive.Designer;
-import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ListSet;
+import org.argouml.cognitive.ToDoItem;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.uml.diagram.deployment.ui.FigComponentInstance;
-import org.argouml.uml.diagram.deployment.ui.FigMNodeInstance;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 
 /**
@@ -49,7 +49,7 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
      */
     public CrComponentInstanceWithoutClassifier() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_PATTERNS);
+	addSupportedDecision(UMLDecision.PATTERNS);
     }
 
     /**

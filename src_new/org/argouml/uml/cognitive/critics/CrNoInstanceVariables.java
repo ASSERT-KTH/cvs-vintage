@@ -1,4 +1,4 @@
-// $Id: CrNoInstanceVariables.java,v 1.28 2005/03/05 10:37:20 mvw Exp $
+// $Id: CrNoInstanceVariables.java,v 1.29 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * A critic to detect if a class has instance variables.
@@ -49,7 +50,7 @@ public class CrNoInstanceVariables extends CrUML {
      */
     public CrNoInstanceVariables() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_STORAGE);
+	addSupportedDecision(UMLDecision.STORAGE);
 	setKnowledgeTypes(Critic.KT_COMPLETENESS);
 	addTrigger("structuralFeature");
     }

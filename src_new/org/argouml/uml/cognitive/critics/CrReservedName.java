@@ -1,4 +1,4 @@
-// $Id: CrReservedName.java,v 1.26 2005/02/19 23:22:38 mvw Exp $
+// $Id: CrReservedName.java,v 1.27 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import org.argouml.cognitive.ui.Wizard;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * This critic checks whether a given name in the Model resembles or matches
@@ -187,7 +188,7 @@ public class CrReservedName extends CrUML {
     public CrReservedName() {
         setupHeadAndDesc();
 	setPriority(ToDoItem.HIGH_PRIORITY);
-	addSupportedDecision(CrUML.DEC_NAMING);
+	addSupportedDecision(UMLDecision.NAMING);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("name");
 	addTrigger("feature_name");

@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalClassName.java,v 1.20 2005/02/19 23:22:38 mvw Exp $
+// $Id: CrUnconventionalClassName.java,v 1.21 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * Critic to detect whether a class name obeys to certain rules.
@@ -42,7 +43,7 @@ public class CrUnconventionalClassName extends AbstractCrUnconventionalName {
      */
     public CrUnconventionalClassName() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_NAMING);
+	addSupportedDecision(UMLDecision.NAMING);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("name");
     }

@@ -1,4 +1,4 @@
-// $Id: CrInterfaceAllPublic.java,v 1.16 2005/02/19 23:22:39 mvw Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.17 2005/03/11 09:43:03 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrInterfaceAllPublic.java,v 1.16 2005/02/19 23:22:39 mvw Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.17 2005/03/11 09:43:03 mkl Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
@@ -31,6 +31,7 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * Well-formedness rule [3] for MInterface. See page 32 of UML 1.1
@@ -45,7 +46,7 @@ public class CrInterfaceAllPublic extends CrUML {
      */
     public CrInterfaceAllPublic() {
         setupHeadAndDesc();
-	addSupportedDecision(CrUML.DEC_PLANNED_EXTENSIONS);
+	addSupportedDecision(UMLDecision.PLANNED_EXTENSIONS);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("behavioralFeature");
     }

@@ -1,4 +1,4 @@
-// $Id: CrInvalidSynch.java,v 1.2 2005/02/19 23:22:39 mvw Exp $
+// $Id: CrInvalidSynch.java,v 1.3 2005/03/11 09:43:04 mkl Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,11 @@
 
 package org.argouml.uml.cognitive.critics;
 
+import java.util.Iterator;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.model.Model;
-
-import java.util.Iterator;
+import org.argouml.uml.cognitive.UMLDecision;
 
 /**
  * UML 1.5 Well-formedness rule [2] for Sync States.
@@ -41,7 +42,7 @@ public class CrInvalidSynch extends CrUML {
      */
     public CrInvalidSynch() {
         setupHeadAndDesc();
-        addSupportedDecision(CrUML.DEC_STATE_MACHINES);
+        addSupportedDecision(UMLDecision.STATE_MACHINES);
         addTrigger("incoming");
         addTrigger("outgoing");
     }
