@@ -10,7 +10,7 @@ rem
 rem   This script is assumed to run from the bin directory or have the
 rem   CATALINA_HOME env variable set.
 rem
-rem $Id: digest.bat,v 1.3 2001/08/21 18:42:34 jon Exp $
+rem $Id: digest.bat,v 1.4 2001/09/19 20:19:56 jon Exp $
 rem ---------------------------------------------------------------------------
 
 
@@ -57,7 +57,7 @@ if "%1" == "-a" (if "%2" neq "" (if "%3" neq "" goto doRun))
 :doUsage
 echo Usage:  digest -a [algorithm] [credentials]
 echo Commands:
-echo   algorithm   -   The algorithm to use, i.e. MD5, DES
+echo   algorithm   -   The algorithm to use, i.e. MD5, SHA1
 echo   credentials -   The credential to digest
 goto cleanup
 

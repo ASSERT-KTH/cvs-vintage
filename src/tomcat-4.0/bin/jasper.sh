@@ -13,7 +13,7 @@
 #   JAVA_HOME     
 #       Must point at your Java Development Kit installation.
 #
-# $Id: jasper.sh,v 1.9 2001/08/21 18:42:34 jon Exp $
+# $Id: jasper.sh,v 1.10 2001/09/19 20:19:56 jon Exp $
 # -----------------------------------------------------------------------------
 
 
@@ -47,30 +47,58 @@ if [ "$JASPER_OPTS" = "" ] ; then
 fi
 
 if [ "$JAVA_HOME" = "" ] ; then
-  echo You must set JAVA_HOME to point at your Java Development Kit installation
+  echo "You must set JAVA_HOME to point at your Java Development Kit installation"
   exit 1
 fi
 
-# ----- Set Up The System Classpath -------------------------------------------
 
-# FIXME CP=$JASPER_HOME/dummy
-# FIXME below
-CP=$CP:$JASPER_HOME/classes
-for i in $JASPER_HOME/lib/*.jar $JASPER_HOME/jasper/*.jar ; do
-  CP=$CP:$i
-CP=$CP:$JASPER_HOME/common/lib/servlet.jar
-done
+# ----- Cygwin Unix Paths Setup -----------------------------------------------
 
-# convert the existing path to windows
-if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
-   CP=`cygpath --path --windows "$CP"`
-   JASPER_HOME=`cygpath --path --windows "$JASPER_HOME"`
+# Cygwin support.  $cygwin _must_ be set to either true or false.
+case "`uname`" in
+  CYGWIN*) cygwin=true ;;
+  *) cygwin=false ;;
+esac
+ 
+# For Cygwin, ensure paths are in UNIX format before anything is touched
+if $cygwin ; then
+  [ -n "$JASPER_HOME" ] &&
+    JASPER_HOME=`cygpath --unix "$JASPER_HOME"`
+    [ -n "$JAVA_HOME" ] &&
+    JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
 fi
 
-echo Using CLASSPATH: $CP
+
+# ----- Set Up The System Classpath -------------------------------------------
+
+CP="$JASPER_HOME/classes"
+for i in $JASPER_HOME/jasper/*.jar ; do
+  CP=$CP:"$i"
+done
+for i in $JASPER_HOME/lib/*.jar ; do
+  CP=$CP:"$i"
+done
+CP=$CP:"$JASPER_HOME/common/classes"
+for i in $JASPER_HOME/common/lib/*.jar ; do
+  CP=$CP:"$i"
+done
+
+
+# ----- Cygwin Windows Paths Setup --------------------------------------------
+
+# convert the existing path to windows
+if $cygwin ; then
+   CP=`cygpath --path --windows "$CP"`
+   JASPER_HOME=`cygpath --path --windows "$JASPER_HOME"`
+   JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
+fi
 
 
 # ----- Execute The Requested Command -----------------------------------------
+
+echo "Using CLASSPATH:   $CP"
+echo "Using JASPER_HOME: $JASPER_HOME"
+echo "Using JAVA_HOME:   $JAVA_HOME"
 
 if [ "$1" = "jspc" ] ; then
 
@@ -81,7 +109,7 @@ if [ "$1" = "jspc" ] ; then
 
 else
 
-  echo "Usage: jasper.sh ( jspc )"
+  echo "Usage: jasper.sh [ jspc ]"
   echo "Commands:"
   echo   jspc - Run the jasper offline JSP compiler
   exit 1
