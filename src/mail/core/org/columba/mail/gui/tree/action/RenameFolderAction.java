@@ -63,7 +63,7 @@ public class RenameFolderAction extends AbstractColumbaAction implements Selecti
     public void actionPerformed(ActionEvent evt) {
         FolderCommandReference[] r = (FolderCommandReference[]) ((AbstractMailFrameController) frameMediator).getTreeSelection();
 
-        new FolderOptionsDialog((Folder) r[0].getFolder(), true);
+        new FolderOptionsDialog((Folder) r[0].getFolder(), true, (AbstractMailFrameController) frameMediator);
     }
 
     public void selectionChanged(SelectionChangedEvent evt) {

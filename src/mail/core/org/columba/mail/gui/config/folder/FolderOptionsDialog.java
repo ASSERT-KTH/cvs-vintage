@@ -28,7 +28,19 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -50,6 +62,9 @@ import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.folder.command.RenameFolderCommand;
 import org.columba.mail.folder.command.SyncSearchEngineCommand;
 import org.columba.mail.folder.search.DefaultSearchEngine;
+import org.columba.mail.folderoptions.FolderOptionsController;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.MessageFolderInfo;
 
@@ -98,14 +113,18 @@ public class FolderOptionsDialog
 	//JCheckBox overwriteOptionsCheckBox;
 	private CheckableTooltipList checkableList;
 
+	private MailFrameMediator mediator;
 	/**
 	 * Constructor
 	 *
 	 * @param folder                        selected folder
 	 * @param renameFolder                this is a "rename folder" operation
 	 */
-	public FolderOptionsDialog(Folder folder, boolean renameFolder) {
-		this(folder);
+	public FolderOptionsDialog(
+		Folder folder,
+		boolean renameFolder,
+		MailFrameMediator mediator) {
+		this(folder, mediator);
 
 		this.renameFolder= renameFolder;
 
@@ -123,9 +142,11 @@ public class FolderOptionsDialog
 	 *
 	 * @param folder                selected folder
 	 */
-	public FolderOptionsDialog(Folder folder) {
-		super();
+	public FolderOptionsDialog(Folder folder, MailFrameMediator mediator) {
+		super(mediator.getView(), true);
+
 		this.folder= folder;
+		this.mediator= mediator;
 
 		initComponents();
 
@@ -139,6 +160,7 @@ public class FolderOptionsDialog
 
 		nameTextField.selectAll();
 		nameTextField.requestFocus();
+
 	}
 
 	protected JPanel createGeneralPanel() {
@@ -295,6 +317,8 @@ public class FolderOptionsDialog
 		disableButton= new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "folderoptions", "use_default")); //$NON-NLS-1$
 		disableButton.setActionCommand("DISABLED"); //$NON-NLS-1$
 		disableButton.addActionListener(this);
+		enableButton.setEnabled(false);
+		disableButton.setEnabled(false);
 
 		/*
 		overwriteOptionsCheckBox = new JCheckBox("Overwrite global settings");
@@ -424,7 +448,8 @@ public class FolderOptionsDialog
 			// remove all old elements
 			property.removeAllElements();
 
-			CheckableItemListTableModel model= (CheckableItemListTableModel) checkableList.getModel();
+			CheckableItemListTableModel model=
+				(CheckableItemListTableModel) checkableList.getModel();
 
 			for (int i= 0; i < model.count(); i++) {
 				OptionsItem optionsItem= (OptionsItem) model.getElement(i);
@@ -432,23 +457,6 @@ public class FolderOptionsDialog
 				// add new element
 				property.addElement(optionsItem.getElement());
 			}
-
-			/*
-			item.set("property", "overwrite_default_settings",
-			    overwriteOptionsCheckBox.isSelected());
-			
-			
-			XmlElement table = property.getElement("table");
-			
-			if (table == null) {
-			    // create default table
-			    // use copy of global options as default
-			    table = (XmlElement) MailConfig.get("options")
-			                                   .getElement("/options/gui/table")
-			                                   .clone();
-			    property.addElement(table);
-			}
-			*/
 
 			//	only local folders have an full-text indexing capability
 			if (folder instanceof LocalFolder) {
@@ -476,6 +484,14 @@ public class FolderOptionsDialog
 					localFolder.setSearchEngine(null);
 				}
 			}
+
+			// restore settings
+			getMediator().getFolderOptionsController().load(FolderOptionsController.STATE_BEFORE);
+			
+			// re-select folder to make changes visible to the user
+			FolderCommandReference[] r= new FolderCommandReference[1];
+			r[0]= new FolderCommandReference(folder);
+			MainInterface.processor.addOp(new ViewHeaderListCommand(getMediator(), r));
 		}
 	}
 
@@ -515,11 +531,20 @@ public class FolderOptionsDialog
 			FolderItem item= folder.getFolderItem();
 			XmlElement property= item.getElement("property"); //$NON-NLS-1$
 
-			// reset all options 
+			// remove all options 
+			property.removeAllElements();
+
+			// create new default options
+			getMediator().getFolderOptionsController().createDefaultSettings(
+				folder);
+
+			/*
 			for (int i= 0; i < property.count(); i++) {
 				XmlElement child= property.getElement(i);
+			
 				child.addAttribute("overwrite", "false"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
+			*/
 
 			// update list view
 			CheckableItemListTableModel model=
@@ -604,4 +629,11 @@ public class FolderOptionsDialog
 			return pt;
 		}
 	}
+	/**
+	 * @return
+	 */
+	public MailFrameMediator getMediator() {
+		return mediator;
+	}
+
 }

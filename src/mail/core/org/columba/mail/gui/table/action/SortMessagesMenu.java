@@ -84,7 +84,7 @@ public class SortMessagesMenu
         TableViewOwner table = (TableViewOwner) getController();
 
         XmlElement columns =
-		((MailFrameMediator) getController()).getFolderOptionsController().getConfigNode(selectedFolder, "SortingOptions");
+		((MailFrameMediator) getController()).getFolderOptionsController().getConfigNode(selectedFolder, "ColumnOptions");
 
         Vector v = new Vector();
         for (int i = 0; i < columns.count(); i++) {
@@ -206,14 +206,14 @@ public class SortMessagesMenu
 
             createSubMenu();
 
-            XmlElement threadedview =
+            XmlElement xmlElement =
 			((MailFrameMediator) getController()).getFolderOptionsController().getConfigNode(
                     selectedFolder,
                     "SortingOptions");
                     
-            DefaultItem item = new DefaultItem(threadedview);
+            DefaultItem item = new DefaultItem(xmlElement);
             
-            String column = threadedview.getAttribute("column");
+            //String column = xmlElement.getAttribute("column");
             //String s = threadedview.getAttribute("order");
             boolean order = item.getBoolean("order"); 
         }

@@ -139,6 +139,9 @@ public class ThreadedViewAction
 
         FolderTreeNode[] selection =
             ((TreeSelectionChangedEvent) e).getSelected();
+            
+        if ( !( selection[0] instanceof Folder)) return;
+        
         if (selection.length == 1) {
             XmlElement threadedview =
 			((MailFrameMediator) getFrameMediator()).getFolderOptionsController().getConfigNode(

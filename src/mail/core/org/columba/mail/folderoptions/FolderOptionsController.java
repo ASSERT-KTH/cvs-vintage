@@ -225,5 +225,24 @@ public class FolderOptionsController {
 		}
 	}
 
-	
+	/**
+	 * Create default settings for this folder.
+	 * 
+	 * @param folder		selected folder
+	 */
+	public void createDefaultSettings(Folder folder) {
+		FolderItem item = folder.getFolderItem();
+		XmlElement parent = item.getElement("property");
+		
+		// use global settings
+		String[] ids= handler.getPluginIdList();
+
+		for (int i= 0; i < ids.length; i++) {
+			AbstractFolderOptionsPlugin plugin= getPlugin(ids[i]);
+			XmlElement child = plugin.createDefaultElement(false);
+			parent.addElement(child);
+		}
+
+	}
+
 }

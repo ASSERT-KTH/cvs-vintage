@@ -69,7 +69,7 @@ public class FolderOptionsAction extends AbstractColumbaAction
         FolderTreeNode folder = r[0].getFolder();
 
         // cast to Folder
-        new FolderOptionsDialog((Folder) folder);
+        new FolderOptionsDialog((Folder) folder, (AbstractMailFrameController) frameMediator);
     }
 
     public void selectionChanged(SelectionChangedEvent e) {

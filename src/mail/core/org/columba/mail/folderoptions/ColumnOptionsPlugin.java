@@ -47,7 +47,9 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 			"From",
 			"Date",
 			"Size",
-			"Spam" };
+			"Spam",
+			"To",
+			"Cc" };
 
 	/**
 	 * Constructor
