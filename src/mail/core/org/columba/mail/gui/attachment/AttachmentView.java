@@ -52,7 +52,6 @@ public class AttachmentView extends IconPanel {
         String contentType;
         String contentSubtype;
         String text = null;
-        StringBuffer tooltip = new StringBuffer();
         boolean output = false;
 
         removeAll();
@@ -82,6 +81,7 @@ public class AttachmentView extends IconPanel {
 
             //Get Tooltip for Icon
 
+            StringBuffer tooltip = new StringBuffer();
             tooltip.append("<html><body>");
             if (header.getFileName() != null) {
                 tooltip.append(header.getFileName());
