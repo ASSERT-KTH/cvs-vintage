@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationClass.java,v 1.4 2005/01/09 14:59:08 linus Exp $
+// $Id: PropPanelAssociationClass.java,v 1.5 2005/01/12 17:18:30 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,16 +87,24 @@ public class PropPanelAssociationClass extends PropPanelClassifier {
                 getGeneralizationScroll());
         addField(Translator.localize("label.specializations"),
                 getSpecializationScroll());
-
+        
+        JList assocEndList = new UMLLinkedList(
+                new UMLAssociationConnectionListModel());
+        assocEndScroll = new JScrollPane(assocEndList);
+        addField(Translator.localize("label.connections"),
+                assocEndScroll);
+        
         addSeperator();
 
         addField(Translator.localize("label.attributes"),
                 getAttributeScroll());
-        JList assocEndList = new UMLLinkedList(
-                new UMLAssociationConnectionListModel());
-        assocEndScroll = new JScrollPane(assocEndList);
-        addField(Translator.localize("label.association-ends"),
-                assocEndScroll);
+
+        JList connections = new UMLLinkedList(
+                new UMLClassifierAssociationEndListModel());
+        JScrollPane connectionsScroll = new JScrollPane(connections);
+        addField(Translator.localize("label.association-ends"), 
+                connectionsScroll);
+        
         addField(Translator.localize("label.operations"),
                 getOperationScroll());
         addField(Translator.localize("label.owned-elements"),
