@@ -156,7 +156,7 @@
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.core.main.Main"/>
 				<attribute name="Class-Path" value="lib/xalan.jar lib/jaxp.jar lib/crimson.jar lib/log4j.jar lib/junit.jar lib/jakarta-oro-2.0.6.jar lib/lucene-1.2.jar"/>
-				<attribute name="Sealed" value="true"/>
+				<attribute name="Sealed" value="false"/>
 			</manifest>
 		</jar>
 	</target>
@@ -310,8 +310,8 @@ else echo "cannot find columba.jar in `pwd`"; fi
         <target name="webstart" depends="jar">
          <signjar alias="${alias}" storepass="${storepass}" keypass="${keypass}">
           <fileset dir="${dest}">
-           <!--<include name="columba.jar"/>-->
-           <include name="**/*.jar"/>
+           <include name="columba.jar"/>
+           <include name="libs/*.jar"/>
           </fileset>
          </signjar>
         </target>
