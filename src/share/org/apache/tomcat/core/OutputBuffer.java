@@ -148,7 +148,7 @@ public final class OutputBuffer extends Writer
      *  @deprecated Used only in Ajp13Packet for a hack
      */
     public int getByteOff() {
-	return bb.getOffset();
+	return bb.getEnd();
     }
 
     /** Set the write position in the byte buffer

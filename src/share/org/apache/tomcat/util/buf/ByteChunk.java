@@ -210,7 +210,7 @@ public final class ByteChunk implements Cloneable, Serializable {
     }
 
     public int getOffset() {
-	return getEnd();
+	return getStart();
     }
 
     public void setOffset(int off) {
@@ -280,7 +280,7 @@ public final class ByteChunk implements Cloneable, Serializable {
     public void append( ByteChunk src )
 	throws IOException
     {
-	append( src.getBytes(), src.getOffset(), src.getLength());
+	append( src.getBytes(), src.getStart(), src.getLength());
     }
 
     /** Add data to the buffer
@@ -479,7 +479,7 @@ public final class ByteChunk implements Cloneable, Serializable {
     }
 
     public boolean equals( ByteChunk bb ) {
-	return equals( bb.getBytes(), bb.getOffset(), bb.getLength());
+	return equals( bb.getBytes(), bb.getStart(), bb.getLength());
     }
     
     public boolean equals( byte b2[], int off2, int len2) {
@@ -501,7 +501,7 @@ public final class ByteChunk implements Cloneable, Serializable {
     }
 
     public boolean equals( CharChunk cc ) {
-	return equals( cc.getChars(), cc.getOffset(), cc.getLength());
+	return equals( cc.getChars(), cc.getStart(), cc.getLength());
     }
     
     public boolean equals( char c2[], int off2, int len2) {
