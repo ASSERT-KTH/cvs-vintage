@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.24 2000/04/26 16:15:15 craigmcc Exp $
- * $Revision: 1.24 $
- * $Date: 2000/04/26 16:15:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.25 2000/05/21 06:51:52 costin Exp $
+ * $Revision: 1.25 $
+ * $Date: 2000/05/21 06:51:52 $
  *
  * ====================================================================
  *
@@ -148,11 +148,13 @@ public class ResponseImpl implements Response {
 	return started;
     }
 
+    static final Locale defaultLocale=new Locale(Constants.LOCALE_DEFAULT, "");
+    
     public void recycle() {
 	userCookies.removeAllElements(); // XXX reuse !!!
 	contentType = Constants.DEFAULT_CONTENT_TYPE;
 	contentLanguage = null;
-        locale = new Locale(Constants.LOCALE_DEFAULT, "");
+        locale = defaultLocale;
 	characterEncoding = Constants.DEFAULT_CHAR_ENCODING;
 	contentLength = -1;
 	status = 200;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.36 2000/05/12 19:36:49 costin Exp $
- * $Revision: 1.36 $
- * $Date: 2000/05/12 19:36:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.37 2000/05/21 06:51:52 costin Exp $
+ * $Revision: 1.37 $
+ * $Date: 2000/05/21 06:51:52 $
  *
  * ====================================================================
  *
@@ -367,6 +367,10 @@ public class RequestImpl  implements Request {
     // GS - return the jvm load balance route
     public String getJvmRoute() {
 	    return jvmRoute;
+    }
+
+    public void setJvmRoute(String jvmRoute) {
+	    this.jvmRoute=jvmRoute;
     }
 
     public String getRequestedSessionId() {

@@ -196,6 +196,7 @@ public interface Request  {
     // Multiple JVM support
     // GS, used by the load balancing layer
     public String getJvmRoute();
+    public void setJvmRoute(String route);
 
     // Will be set by session interceptors
     public String getRequestedSessionId() ;
