@@ -100,21 +100,21 @@ final class HttpSessionFacade implements HttpSession {
     /** Package-level method - accessible only by core
      */
     void setRealSession(ServerSession s) {
- 	realSession=s;
-	realSession.setFacade( this );
+        realSession=s;
+        realSession.setFacade( this );
      }
 
     /** Package-level method - accessible only by core
      */
     void recycle() {
-	//	realSession=null;
+        //      realSession=null;
     }
 
     // -------------------- public facade --------------------
 
     public String getId() {
-	checkValid();
-	return realSession.getId().toString();
+        checkValid();
+        return realSession.getId().toString();
     }
 
     /**
@@ -125,8 +125,8 @@ final class HttpSessionFacade implements HttpSession {
      *  invalidated session
      */
     public long getCreationTime() {
-	checkValid();
-	return realSession.getTimeStamp().getCreationTime();
+        checkValid();
+        return realSession.getTimeStamp().getCreationTime();
     }
     
     /**
@@ -136,12 +136,12 @@ final class HttpSessionFacade implements HttpSession {
      * @deprecated
      */
     public HttpSessionContext getSessionContext() {
-	return new SessionContextImpl();
+        return new SessionContextImpl();
     }
     
     public long getLastAccessedTime() {
-	checkValid();
-	return realSession.getTimeStamp().getLastAccessedTime();
+        checkValid();
+        return realSession.getTimeStamp().getLastAccessedTime();
     }
 
     /**
@@ -151,8 +151,8 @@ final class HttpSessionFacade implements HttpSession {
      *  an invalidated session
      */
     public void invalidate() {
-	checkValid();
- 	realSession.getTimeStamp().setValid( false );
+        checkValid();
+        realSession.getTimeStamp().setValid( false );
     }
 
     /**
@@ -166,33 +166,36 @@ final class HttpSessionFacade implements HttpSession {
      *  invalidated session
      */
     public boolean isNew() {
-	checkValid();
-	return realSession.getTimeStamp().isNew();
+        checkValid();
+        return realSession.getTimeStamp().isNew();
     }
     
     /**
      * @deprecated
      */
     public void putValue(String name, Object value) {
-	setAttribute(name, value);
+        setAttribute(name, value);
     }
 
     public void setAttribute(String name, Object value) {
-	checkValid();
-
-	// 	ServerSessionManager ssm=(ServerSessionManager)
-	// 	    realSession.getManager();
-	// Original code - it's up to session manager to decide
-	// what it can handle. 
-	// 	if (ssm.isDistributable() &&
-	// 	  !(value instanceof Serializable))
-	// 	    throw new IllegalArgumentException
-	// 		(sm.getString("standardSession.setAttribute.iae"));
-	
-	realSession.setAttribute( name, value );
-	if (value instanceof HttpSessionBindingListener)
-	    ((HttpSessionBindingListener) value).valueBound
-		(new HttpSessionBindingEvent( this, name));
+        checkValid();
+        Object oldValue;
+        //      ServerSessionManager ssm=(ServerSessionManager)
+        //          realSession.getManager();
+        // Original code - it's up to session manager to decide
+        // what it can handle.
+        //      if (ssm.isDistributable() &&
+        //        !(value instanceof Serializable))
+        //          throw new IllegalArgumentException
+        //              (sm.getString("standardSession.setAttribute.iae"));
+        oldValue=realSession.getAttribute( name) ;
+        if (oldValue!=null) {
+            removeAttribute(name);
+        }
+        if (value instanceof HttpSessionBindingListener)
+           ((HttpSessionBindingListener) value).valueBound
+                (new HttpSessionBindingEvent( this, name));
+        realSession.setAttribute( name, value );
 
     }
 
@@ -200,25 +203,25 @@ final class HttpSessionFacade implements HttpSession {
      * @deprecated
      */
     public Object getValue(String name) {
-	return getAttribute(name);
+        return getAttribute(name);
     }
 
     public Object getAttribute(String name) {
-	checkValid();
-	return realSession.getAttribute(name);
+        checkValid();
+        return realSession.getAttribute(name);
     }
-    
+
     /**
      * @deprecated
      */
     public String[] getValueNames() {
-	checkValid();
-	
-	Enumeration attrs = getAttributeNames();
-	String names[] = new String[realSession.getAttributeCount()];
-	for (int i = 0; i < names.length; i++)
-	    names[i] = (String)attrs.nextElement();
-	return names;
+        checkValid();
+
+        Enumeration attrs = getAttributeNames();
+        String names[] = new String[realSession.getAttributeCount()];
+        for (int i = 0; i < names.length; i++)
+            names[i] = (String)attrs.nextElement();
+        return names;
     }
 
     /**
@@ -229,15 +232,15 @@ final class HttpSessionFacade implements HttpSession {
      *  invalidated session
      */
     public Enumeration getAttributeNames() {
-	checkValid();
-	return realSession.getAttributeNames();
+        checkValid();
+        return realSession.getAttributeNames();
     }
 
     /**
      * @deprecated
      */
     public void removeValue(String name) {
-	removeAttribute(name);
+        removeAttribute(name);
     }
 
     /**
@@ -255,33 +258,33 @@ final class HttpSessionFacade implements HttpSession {
      *  invalidated session
      */
     public void removeAttribute(String name) {
-	checkValid();
-	Object object=realSession.getAttribute( name );
-	realSession.removeAttribute(name);
-	if (object instanceof HttpSessionBindingListener) {
-	    ((HttpSessionBindingListener) object).valueUnbound
-		(new HttpSessionBindingEvent( this, name));
-	}
+        checkValid();
+        Object object=realSession.getAttribute( name );
+        realSession.removeAttribute(name);
+        if (object instanceof HttpSessionBindingListener) {
+            ((HttpSessionBindingListener) object).valueUnbound
+                (new HttpSessionBindingEvent( this, name));
+        }
 
     }
 
     public void setMaxInactiveInterval(int interval) {
-	realSession.getTimeStamp().setMaxInactiveInterval( interval * 1000 );
+        realSession.getTimeStamp().setMaxInactiveInterval( interval * 1000 );
     }
 
     public int getMaxInactiveInterval() {
-	checkValid();
-	// We use long because it's better to do /1000 here than
-	// every time the internal code does expire
-	return (int)realSession.getTimeStamp().getMaxInactiveInterval()/1000;
+        checkValid();
+        // We use long because it's better to do /1000 here than
+        // every time the internal code does expire
+        return (int)realSession.getTimeStamp().getMaxInactiveInterval()/1000;
     }
 
     // duplicated code, private
     private void checkValid() {
-	if (!realSession.getTimeStamp().isValid()) {
-	    throw new IllegalStateException
-		(sm.getString("standardSession.getAttributeNames.ise"));
-	}
+        if (!realSession.getTimeStamp().isValid()) {
+            throw new IllegalStateException
+                (sm.getString("standardSession.getAttributeNames.ise"));
+        }
     }
 
 }
