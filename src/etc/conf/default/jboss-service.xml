@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.128 2005/02/22 19:09:24 telrod Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.129 2005/02/24 19:58:11 telrod Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -383,7 +383,7 @@
 
         <!-- Remember that if you do use more than one param on the uri, will have to include as a CDATA, -->
         <!-- otherwise, parser will complain. -->
-        <attribute name="InvokerLocator"><![CDATA[socket://localhost:4446/?datatype=invocation]]></attribute>
+        <attribute name="InvokerLocator"><![CDATA[socket://${jboss.bind.address}:4446/?datatype=invocation]]></attribute>
 
         <attribute name="Configuration">
            <!-- The following <invoker> element has been commented out since using the InvokerLocator above. -->
