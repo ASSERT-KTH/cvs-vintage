@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.314 2002/12/12 00:38:37 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.315 2002/12/13 00:45:43 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -12,6 +12,10 @@
 <a href="changes-rules.html">Rules for the changes document.</a>
 </p>
 
+<p>
+Last updated: $Id: changes.html,v 1.315 2002/12/13 00:45:43 jon Exp $
+</p>
+
 <table border="0" cellpadding="2" width="98%" bgcolor="white">
     <tr> 
         <td width="100%" bgcolor="#CCCC99"><strong><font color="#000033" face="Arial, Helvetica, sans-serif"> 
@@ -21,6 +25,12 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b13</h3>
             <ul>
+                <li>It is no longer possible for child issues to delete
+                    dependency relationships with parent issues. Only the 
+                    parent can do this delete operation. (JSS)</li>
+                <li>Hide the parent/child information for now because it is 
+                    confusing. It is possible to determine the relationship 
+                    by whether or not there is a select button for delete. (JSS)</li>
                 <li>The way issue dependencies are stored in the database has changed 
                     and is vastly improved over previous versions. The emails 
                     which are sent are better and the information which is stored
