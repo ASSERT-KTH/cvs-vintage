@@ -108,36 +108,36 @@ public class Tomcat extends Logger.Helper {
     }
 
     void setConnectorHelper( XmlMapper xh ) {
-	xh.addRule( "ContextManager/Connector",
-		    xh.objectCreate(null, "className"));
-	xh.addRule( "ContextManager/Connector",
-		    xh.setParent( "setServer", "java.lang.Object") );
-	xh.addRule( "ContextManager/Connector",
-		    xh.addChild( "addServerConnector",
-				 "org.apache.tomcat.core.ContextInterceptor") );
+// 	xh.addRule( "ContextManager/Connector",
+// 		    xh.objectCreate(null, "className"));
+// 	xh.addRule( "ContextManager/Connector",
+// 		    xh.setParent( "setServer", "java.lang.Object") );
+// 	xh.addRule( "ContextManager/Connector",
+// 		    xh.addChild( "addServerConnector",
+// 				 "org.apache.tomcat.core.ContextInterceptor") );
 
-	xh.addRule( "ContextManager/Connector/Parameter",
-		    xh.methodSetter("setProperty",2) );
-	xh.addRule( "ContextManager/Connector/Parameter",
-		    xh.methodParam(0, "name") );
-	xh.addRule( "ContextManager/Connector/Parameter",
-		    xh.methodParam(1, "value") );
+// 	xh.addRule( "ContextManager/Connector/Parameter",
+// 		    xh.methodSetter("setProperty",2) );
+// 	xh.addRule( "ContextManager/Connector/Parameter",
+// 		    xh.methodParam(0, "name") );
+// 	xh.addRule( "ContextManager/Connector/Parameter",
+// 		    xh.methodParam(1, "value") );
 
 	// Connector as ContextInterceptor - experimental
-	xh.addRule( "ContextManager/Connector1",
+	xh.addRule( "ContextManager/Connector",
 		    xh.objectCreate(null, "className"));
-	xh.addRule( "ContextManager/Connector1",
+	xh.addRule( "ContextManager/Connector",
 		    xh.setParent( "setContextManager",
 				  "org.apache.tomcat.core.ContextManager") );
-	xh.addRule( "ContextManager/Connector1",
+	xh.addRule( "ContextManager/Connector",
 		    xh.addChild( "addContextInterceptor",
 				 "org.apache.tomcat.core.ContextInterceptor"));
 
-	xh.addRule( "ContextManager/Connector1/Parameter",
+	xh.addRule( "ContextManager/Connector/Parameter",
 		    xh.methodSetter("setProperty",2) );
-	xh.addRule( "ContextManager/Connector1/Parameter",
+	xh.addRule( "ContextManager/Connector/Parameter",
 		    xh.methodParam(0, "name") );
-	xh.addRule( "ContextManager/Connector1/Parameter",
+	xh.addRule( "ContextManager/Connector/Parameter",
 		    xh.methodParam(1, "value") );
     }
 
