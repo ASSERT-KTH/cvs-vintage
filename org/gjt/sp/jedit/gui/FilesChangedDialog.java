@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * Files changed on disk dialog.
  *
  * @author Slava Pestov
- * @version $Id: FilesChangedDialog.java,v 1.2 2003/04/14 05:34:56 spestov Exp $
+ * @version $Id: FilesChangedDialog.java,v 1.3 2003/04/14 23:15:28 spestov Exp $
  */
 public class FilesChangedDialog extends EnhancedDialog
 {
@@ -88,7 +88,7 @@ public class FilesChangedDialog extends EnhancedDialog
 			}
 
 			if(addTo != null)
-				addTo.add(new DefaultMutableTreeNode(buffer.getPath()));
+				addTo.add(new DefaultMutableTreeNode(buffer));
 		}
 
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("",true);
@@ -100,6 +100,7 @@ public class FilesChangedDialog extends EnhancedDialog
 			root.add(changedDirty);
 
 		bufferTree = new JTree(new DefaultTreeModel(root));
+		bufferTree.setRootVisible(false);
 		bufferTree.setVisibleRowCount(10);
 		bufferTree.setCellRenderer(new Renderer());
 		bufferTree.getSelectionModel().addTreeSelectionListener(new TreeHandler());
@@ -201,9 +202,11 @@ public class FilesChangedDialog extends EnhancedDialog
 			super.getTreeCellRendererComponent(tree,value,
 				selected,expanded,leaf,row,hasFocus);
 
-			if (value instanceof String)
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+
+			if (node.getUserObject() instanceof String)
 				this.setFont(groupFont);
-			else if (value instanceof Buffer)
+			else
 				this.setFont(entryFont);
 
 			setIcon(null);

@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.23 2003/04/14 22:43:16 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.24 2003/04/14 23:15:26 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -281,7 +281,7 @@ public class JARClassLoader extends ClassLoader
 						path + "!actions.xml",
 						new BufferedReader(new InputStreamReader(
 						zipFile.getInputStream(entry))),
-						jar.getActions());
+						jar.getActionSet());
 				}
 				else if(name.equalsIgnoreCase("dockables.xml"))
 				{
@@ -376,7 +376,7 @@ public class JARClassLoader extends ClassLoader
 				return false;
 			}
 
-			jar.getActions().setLabel(jEdit.getProperty(
+			jar.getActionSet().setLabel(jEdit.getProperty(
 				"action-set.plugin",
 				new String[] { label }));
 			Log.log(Log.NOTICE,this,"Starting plugin " + label
