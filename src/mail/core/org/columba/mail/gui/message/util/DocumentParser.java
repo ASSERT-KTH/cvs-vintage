@@ -127,7 +127,7 @@ public class DocumentParser {
 		StringBuffer output = new StringBuffer(input);
 		int index = 0;
 
-		String lowerCaseInput = input.trim();
+		String lowerCaseInput = input.toLowerCase();
 
 		// Check for missing  <html> tag
 		if (lowerCaseInput.indexOf("<html>") == -1) {
@@ -145,6 +145,13 @@ public class DocumentParser {
 			output.append("</html>");
 		}
 
+		// remove characters after </html> tag
+		index = lowerCaseInput.indexOf("</html>");
+		if ( lowerCaseInput.length()>=index+7)
+		{
+			lowerCaseInput = lowerCaseInput.substring(0,index+7);
+		}
+		
 		return output.toString();
 	}
 }

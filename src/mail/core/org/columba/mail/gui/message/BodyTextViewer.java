@@ -51,6 +51,8 @@ public class BodyTextViewer extends JTextPane {
 		setEditorKit(htmlEditorKit);
 
 		parser = new DocumentParser();	
+		
+		setContentType("text/html");
 	}
 
 	
@@ -61,15 +63,36 @@ public class BodyTextViewer extends JTextPane {
 				
 				String validated = parser.validateHTMLString(bodyText);
 
+				/*
+				File tempFile = TempFileStore.createTempFileWithSuffix("html");
+				DiskIO.saveStringInFile(tempFile, validated);
+				
+				URL url = tempFile.toURL();
+				
+				setPage( url );
+				*/
+				
 				//htmlEditorKit.write(new StringReader(validated),getDocument(),0,validated.length());
 				//setText(validated);
 
-				getDocument().remove(0,getDocument().getLength()-1);
+				
+				
+				//getDocument().remove(0,getDocument().getLength()-1);
+				
+				
+				
 				
 				((HTMLDocument) getDocument()).getParser().parse(
 					new StringReader(validated),
 					((HTMLDocument) getDocument()).getReader(0),
 					true);
+				
+				
+				//htmlEditorKit.read(new StringReader(validated), getDocument(),0);
+				
+				//setText(validated);
+				//setText(bodyText);
+				
 				setCaretPosition(0);
 
 			} catch (Exception e) {
