@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.13 2001/08/09 07:59:53 jon Exp $
+    @version $Id: ScarabUserImpl.java,v 1.14 2001/08/28 02:16:42 dlr Exp $
 */
 public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 {    
@@ -187,10 +187,7 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
             criteria.add (ScarabUserImplPeer.getColumnName(User.CONFIRM_VALUE), User.CONFIRM_DATA);
             criteria.setSingleRecord(true);
             result = ScarabUserImplPeer.doSelect(criteria);
-            if (result.size() > 0)
-                return true;
-
-            return false;
+            return (result.size() > 0);
         }
         catch (Exception e)
         {
