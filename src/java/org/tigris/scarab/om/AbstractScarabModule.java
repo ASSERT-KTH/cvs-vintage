@@ -122,7 +122,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.62 2002/10/25 20:00:02 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.63 2002/11/06 23:21:13 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -802,7 +802,7 @@ public abstract class AbstractScarabModule
         for ( int i=0; i<allOptions.size(); i++ )
         {
             AttributeOption option = (AttributeOption)allOptions.get(i);
-            if (!moduleOptions.contains(option))
+            if (!moduleOptions.contains(option) && !option.getDeleted())
             {
                 availOptions.add(option);
             }
