@@ -1,4 +1,4 @@
-// $Id: java.g,v 1.4 2002/12/21 18:55:35 thn Exp $
+// $Id: java.g,v 1.5 2002/12/23 23:06:02 thn Exp $
 
 header {
 	package org.argouml.language.java.generator;
@@ -63,7 +63,7 @@ header {
  *
  * Version tracking now done with following ID:
  *
- * $Id: java.g,v 1.4 2002/12/21 18:55:35 thn Exp $
+ * $Id: java.g,v 1.5 2002/12/23 23:06:02 thn Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -85,7 +85,7 @@ options {
 	codeGenMakeSwitchThreshold = 2;  // Some optimizations
 	codeGenBitsetTestThreshold = 3;
 	defaultErrorHandler = false;     // Don't generate parser error handlers
-	buildAST = true;
+	buildAST = false;
 }
 
 tokens {
@@ -275,7 +275,7 @@ classDefinition[CodePiece preCode]
 		// it might implement some interfaces...
 		ic=implementsClause 
 		{codePiece.add(ic);
-		 cpc.add(new ClassCodePiece(codePiece, t2.getText()));}
+		 cpc.add(new ClassCodePiece(codePiece, t2.getText().toString()));}
 		// now parse the body of the class
 		classBlock[codePiece]
 	;
@@ -299,7 +299,7 @@ interfaceDefinition[CodePiece preCode]
 		// it might extend some other interfaces
 		ie=interfaceExtends 
 		{codePiece.add(ie);
-		 cpc.add(new InterfaceCodePiece(codePiece, t2.getText()));}
+		 cpc.add(new InterfaceCodePiece(codePiece, t2.getText().toString()));}
 		// now parse the body of the interface (looks like a class...)
 		classBlock[codePiece]
 	;
@@ -393,7 +393,7 @@ field
 				 cpc.add(new OperationCodePiece(
 						doccp,
 						cp, 
-						t1.getText()));
+						t1.getText().toString()));
 				}
 
 				// get the list of exceptions that this method is declared to throw
@@ -502,7 +502,7 @@ ctorHead[CompositeCodePiece doccp, CompositeCodePiece cp]
 		{cp.add(new SimpleCodePiece(t1));
 		 cp.add(pdl);
 		 cp.add(new SimpleCodePiece(t2));
-		 cpc.add(new OperationCodePiece(doccp, cp, t1.getText()));
+		 cpc.add(new OperationCodePiece(doccp, cp, t1.getText().toString()));
 		}
 
 		// get the list of exceptions that this method is declared to throw
