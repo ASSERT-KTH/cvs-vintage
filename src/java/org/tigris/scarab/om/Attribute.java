@@ -76,7 +76,7 @@ import org.tigris.scarab.util.ScarabException;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.35 2001/11/13 06:18:36 jmcnally Exp $
+  * @version $Id: Attribute.java,v 1.36 2001/11/14 00:44:10 elicia Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -329,7 +329,11 @@ public class Attribute
     private List getAllAttributeOptions()
         throws Exception
     {
-        return new ArrayList(super.getAttributeOptions());    
+        Criteria crit = new Criteria();
+        crit.addJoin(AttributeOptionPeer.OPTION_ID, ROptionOptionPeer.OPTION2_ID);
+        crit.add(AttributeOptionPeer.ATTRIBUTE_ID, this.getAttributeId());
+        crit.addAscendingOrderByColumn(ROptionOptionPeer.PREFERRED_ORDER);
+        return (List)AttributeOptionPeer.doSelect(crit);
     }
 
     /**
