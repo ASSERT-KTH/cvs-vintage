@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.69 2001/11/13 05:51:33 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.70 2001/11/13 21:09:54 jon Exp $ -->
 
 <database name="@DATABASE_NAME@">
 <!--
@@ -10,7 +10,7 @@
 -->
 <table name="SCARAB_ACTIVITY" idMethod="idbroker" javaName="Activity">
     <!--
-        PK. 
+        PK.
     -->
     <column name="ACTIVITY_ID" primaryKey="true" required="true" 
         type="INTEGER"/>
@@ -88,6 +88,18 @@
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
         <reference local="NEW_OPTION_ID" foreign="OPTION_ID"/>
     </foreign-key>
+    <index name="IX_ATTRIBUTE_ISSUE_ENDDATE">
+        <index-column name="ATTRIBUTE_ID"/>
+        <index-column name="ISSUE_ID"/>
+        <index-column name="END_DATE"/>
+    </index>
+    <index name="IX_ISSUE_TRANSACTION">
+        <index-column name="ISSUE_ID"/>
+        <index-column name="TRANSACTION_ID"/>
+    </index>
+    <index name="IX_TRANSACTION">
+        <index-column name="TRANSACTION_ID"/>
+    </index>
 </table>
 
 
@@ -266,8 +278,12 @@
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
+    <index name="IX_ISSUE_MODULE_PREFERRED_ORDER">
+        <index-column name="ISSUE_TYPE_ID"/>
+        <index-column name="MODULE_ID"/>
+        <index-column name="PREFERRED_ORDER"/>
+    </index>
 </table>
-
 
 <!--
     Mapping from attributes to groups.
@@ -345,8 +361,10 @@
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
+    <index name="IX_ATTRIBUTE">
+        <index-column name="ATTRIBUTE_ID"/>
+    </index>
 </table>
-
 
 <!--
     Possible types of dependency between options.
@@ -366,7 +384,6 @@
     <column name="RELATIONSHIP_NAME" javaName="Name" required="true" 
             type="VARCHAR" size="100"/>
 </table>
-
 
 <!--
     Attribute type is group of attributes that have the same representation
@@ -500,8 +517,15 @@
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
+    <index name="IX_TYPE_MODULE">
+        <index-column name="TYPE_ID"/>
+        <index-column name="MODULE_ID"/>
+    </index>
+    <index name="IX_COUNT_PREFIX">
+        <index-column name="ID_COUNT"/>
+        <index-column name="ID_PREFIX"/>
+    </index>
 </table>
-
 
 <table name="SCARAB_ISSUE_TYPE" idMethod="idbroker" javaName="IssueType">
     <!--
@@ -528,7 +552,6 @@
         <reference local="PARENT_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
 </table>
-
 
 <!--
     Mapping between modules and issue types.
@@ -656,6 +679,15 @@
     <foreign-key foreignTable="SCARAB_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
+    <index name="IX_DELETED_ISSUE_ATTRIBUTE">
+        <index-column name="DELETED"/>
+        <index-column name="ISSUE_ID"/>
+        <index-column name="ATTRIBUTE_ID"/>
+     </index>
+     <index name="IX_ISSUE_OPTION">
+        <index-column name="ISSUE_ID"/>
+        <index-column name="OPTION_ID"/>
+     </index>
 </table>
 
 <!--
@@ -809,9 +841,6 @@
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
 
-    <index name="IX_ACTIVE">
-        <index-column name="ACTIVE"/>
-    </index>
     <index name="IX_REQUIRED">
         <index-column name="REQUIRED"/>
     </index>
@@ -822,8 +851,6 @@
         <index-column name="QUICK_SEARCH"/>
     </index>
 </table>
-
-
 
 <!--
     Options that are applicable to issues of the particular module.
@@ -865,12 +892,7 @@
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
-
-    <index name="IX_ACTIVE">
-        <index-column name="ACTIVE"/>
-    </index>
 </table>
-
 
 <!--
     Sets up relations between options.
@@ -925,7 +947,6 @@
 <table name="SCARAB_R_MODULE_USER_ATTRIBUTE" idMethod="none" 
         javaName="RModuleUserAttribute">
     <!--
-
         Module.
     -->
     <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"></column>
@@ -961,9 +982,7 @@
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
-
 </table>
-
 
 <!--
     Transaction is a group of attribute modification that are performed 
@@ -1020,7 +1039,6 @@
             size="100"/>
 </table>
 
-
 <!--
     Vote for the certain value of the attribute of an issue.
 -->
@@ -1048,7 +1066,6 @@
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
-
 
 <!-- This table will hold dictionary index -->
 <table name="SCARAB_WORD" idMethod="idbroker" javaName="Word">
@@ -1091,6 +1108,7 @@
         <index-column name="OCCURENCES"/>
     </index>
 </table>
+
 <!--
     Dummy table for where the USER_ID lives. In most cases, this will be a
     foreign table outside of the scope of Scarab itself. For example, if you are
@@ -1138,7 +1156,6 @@
 -->
 <table name="SCARAB_USER_VOTE" idMethod="none" javaName="UserVote">
     <!--
-
         Module.
     -->
     <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER" />
@@ -1163,7 +1180,6 @@
     <foreign-key foreignTable="SCARAB_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
-
 </table>
 
 <!--
@@ -1171,7 +1187,6 @@
 -->
 <table name="SCARAB_ISSUE_VOTE" idMethod="none" javaName="IssueVote">
     <!--
-
         Module.
     -->
     <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER" />
@@ -1191,7 +1206,6 @@
     <foreign-key foreignTable="SCARAB_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
-
 </table>
 
 <!--
@@ -1255,7 +1269,6 @@
     <foreign-key foreignTable="SCARAB_FREQUENCY">
         <reference local="DEFAULT_SUBSCRIPTION_FREQUENCY_ID" foreign="FREQUENCY_ID"/>
     </foreign-key>
-
 </table>
 
 <!--
@@ -1264,7 +1277,6 @@
 <table name="SCARAB_R_QUERY_USER" idMethod="none" 
         javaName="RQueryUser">
     <!--
-
         Query.
     -->
     <column name="QUERY_ID" primaryKey="true" required="true" type="INTEGER"></column>
@@ -1296,9 +1308,7 @@
     <foreign-key foreignTable="SCARAB_FREQUENCY">
         <reference local="SUBSCRIPTION_FREQUENCY_ID" foreign="FREQUENCY_ID"/>
     </foreign-key>
-
 </table>
-
 
 <!--
     Frequencies of an event.
@@ -1314,7 +1324,6 @@
     -->
     <column name="FREQUENCY_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
 </table>
-
 
 <!--
     A saved user template for entering issues.
@@ -1359,7 +1368,6 @@
     -->
     <column name="SCOPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
 </table>
-
 
 <!--
     A saved report.
@@ -1408,6 +1416,5 @@
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
 </table>
-
 
 </database>
