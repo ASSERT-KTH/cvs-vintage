@@ -24,11 +24,10 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 // ENHANCEMENTS, OR MODIFICATIONS.
 
-
 // File: ArrowHead.java
 // Classes: ArrowHead
 // Original Author: abonner@ics.uci.edu
-// $Id: ArrowHead.java,v 1.8 1998/06/11 21:07:49 jrobbins Exp $
+// $Id: ArrowHead.java,v 1.9 1998/07/02 02:51:46 jrobbins Exp $
 
 package uci.gef;
 
