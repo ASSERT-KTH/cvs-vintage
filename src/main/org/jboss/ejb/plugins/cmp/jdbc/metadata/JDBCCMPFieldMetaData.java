@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -125,8 +125,8 @@ public final class JDBCCMPFieldMetaData {
       notNull = true;
       primaryKeyField = null;
       unknownPkField = true;
-      // here some default factory should be setup
-      keyGeneratorFactory = null;
+      // setup the default key generator factory
+      keyGeneratorFactory = "UUIDKeyGeneratorFactory";
    }
 
    /**
