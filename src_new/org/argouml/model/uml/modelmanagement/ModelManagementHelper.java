@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.36 2003/09/18 23:35:14 bobtarling Exp $
+// $Id: ModelManagementHelper.java,v 1.37 2003/11/10 12:35:46 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
@@ -53,8 +52,6 @@ import ru.novosoft.uml.model_management.MSubsystem;
  * @stereotype singleton
  */
 public class ModelManagementHelper {
-
-    private static Logger _cat = Logger.getLogger(ModelManagementHelper.class);
 
     /** Don't allow instantiation.
      */
@@ -128,7 +125,7 @@ public class ModelManagementHelper {
             Object o = it.next();
             if (o instanceof MNamespace) {
                 list.add(o);
-                list.addAll(getAllNamespaces((MNamespace) o));
+                list.addAll(getAllNamespaces(o));
             }
         }
         return list;
@@ -166,7 +163,7 @@ public class ModelManagementHelper {
         while (it.hasNext()) {
             Object o = it.next();
             if (o instanceof MNamespace) {
-                list.addAll(getAllModelElementsOfKind((MNamespace) o, kind));
+                list.addAll(getAllModelElementsOfKind(o, kind));
             }
             if (kind.isAssignableFrom(o.getClass())) {
                 list.add(o);
@@ -332,14 +329,14 @@ public class ModelManagementHelper {
                 || (((MModelElement) elem).getName() != null
                 && ((MModelElement) elem).getName().equals(e.getName()))))
             {
-                return (MModelElement) e;
+                return e;
             }
         }
 
         if (!canCreate)
             return null;
 
-        return CopyHelper.getHelper().copy((MModelElement) elem, ns);
+        return CopyHelper.getHelper().copy(elem, ns);
     }
 
     /**

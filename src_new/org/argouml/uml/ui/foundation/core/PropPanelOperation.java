@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.47 2003/10/26 16:40:03 alexb Exp $
+// $Id: PropPanelOperation.java,v 1.48 2003/11/10 12:35:01 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,7 +158,7 @@ public class PropPanelOperation extends PropPanelModelElement {
 								       mclass,
 								       "getOwnerScope",
 								       "setOwnerScope",
-								       (Class)ModelFacade.SCOPEKIND,
+								       ModelFacade.SCOPEKIND,
 								       ModelFacade.CLASSIFIER_SCOPEKIND,
 								       ModelFacade.INSTANCE_SCOPEKIND)));
         addField(Argo.localize("UMLMenu", "label.modifiers"), modPanel);
@@ -175,7 +175,7 @@ public class PropPanelOperation extends PropPanelModelElement {
 								 mclass,
 								 "getConcurrency",
 								 "setConcurrency",
-								 (Class)ModelFacade.CALLCONCURRENCYKIND,
+								 ModelFacade.CALLCONCURRENCYKIND,
 								 ModelFacade.SEQUENTIAL_CONCURRENCYKIND,
 								 null));
         group.add(sequential);
@@ -189,7 +189,7 @@ public class PropPanelOperation extends PropPanelModelElement {
 								 mclass,
 								 "getConcurrency",
 								 "setConcurrency",
-								 (Class)ModelFacade.CALLCONCURRENCYKIND,
+								 ModelFacade.CALLCONCURRENCYKIND,
 								 ModelFacade.GUARDED_CONCURRENCYKIND,
 								 null));
         group.add(synchd);
@@ -203,7 +203,7 @@ public class PropPanelOperation extends PropPanelModelElement {
 								 mclass,
 								 "getConcurrency",
 								 "setConcurrency",
-								 (Class)ModelFacade.CALLCONCURRENCYKIND,
+								 ModelFacade.CALLCONCURRENCYKIND,
 								 ModelFacade.CONCURRENT_CONCURRENCYKIND,
 								 null));
         group.add(concur);

@@ -1,4 +1,4 @@
-// $Id: UMLChangeAction.java,v 1.5 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLChangeAction.java,v 1.6 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.ui.*;
 import java.awt.event.*;
 
 

@@ -1,5 +1,5 @@
 
-// $Id: UmlHelper.java,v 1.15 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: UmlHelper.java,v 1.16 2003/11/10 12:35:45 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,7 +92,7 @@ public class UmlHelper {
 	    while (iterator.hasNext()) {
 	        Object o = iterator.next();
 	        if (o instanceof MBase) {
-	            addListenersToMBase((MBase) o);
+	            addListenersToMBase(o);
 	        }
 	    }
 	}
@@ -234,7 +234,7 @@ public class UmlHelper {
     public void deleteCollection(Collection col) {
         Iterator it = col.iterator();
         while (it.hasNext()) {
-            UmlFactory.getFactory().delete((MBase) it.next());
+            UmlFactory.getFactory().delete(it.next());
         }        
     }
     

@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.25 2003/09/29 17:41:20 jjones Exp $
+// $Id: FigClassifierRole.java,v 1.26 2003/11/10 12:35:04 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,6 @@ import org.tigris.gef.presentation.FigText;
 import org.tigris.gef.base.Selection;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 /**
  * <p>Class to display graphics for a UML classifier role in a  collaboration
@@ -269,7 +268,7 @@ public class FigClassifierRole extends FigNodeModelElement {
 
             // Set the text and recalculate its bounds
 
-            _stereo.setText(Notation.generateStereotype(this, (MStereotype)stereo));
+            _stereo.setText(Notation.generateStereotype(this, stereo));
             _stereo.calcBounds();
 
             bounds.height += _stereo.getBounds().height - oldHeight;

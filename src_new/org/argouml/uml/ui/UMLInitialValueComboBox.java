@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.29 2003/09/21 11:07:03 bobtarling Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.30 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,13 +24,9 @@
 
 package org.argouml.uml.ui;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.uml.*;
-import org.argouml.uml.generator.*;
-import org.argouml.application.api.*;
 
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.plaf.basic.*;
 import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.MElementEvent;
 
@@ -166,7 +162,6 @@ public class UMLInitialValueComboBox extends JComboBox
  */
     public void propertySet(final MElementEvent event) {
         String eventProp = event.getName();
-//        Argo.log.info("Event Property = " + eventProp);
         if (eventProp.equals("owner") || eventProp.equals("name")) {
             return;
         }

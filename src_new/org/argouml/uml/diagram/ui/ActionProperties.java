@@ -1,4 +1,4 @@
-// $Id: ActionProperties.java,v 1.1 2003/10/27 22:41:31 alexb Exp $
+// $Id: ActionProperties.java,v 1.2 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class ActionProperties extends UMLAction {
         super(Translator.localize("action.properties"), HAS_ICON);
         String localMnemonic = Translator.localize("action.properties.mnemonic");
         if (localMnemonic != null && localMnemonic.length() == 1) {
-            putValue(Action.MNEMONIC_KEY, new Integer((int) localMnemonic.charAt(0)));
+            putValue(Action.MNEMONIC_KEY, new Integer(localMnemonic.charAt(0)));
         }        
     }
 

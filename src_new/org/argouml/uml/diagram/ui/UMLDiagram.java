@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.40 2003/10/31 15:24:49 jjones Exp $
+// $Id: UMLDiagram.java,v 1.41 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -346,7 +346,6 @@ public abstract class UMLDiagram
      */
     public void setAsTarget() {
         Enumeration enum = elements();
-        UmlModelEventPump pump = UmlModelEventPump.getPump();
         while (enum.hasMoreElements()) {
             Fig fig = (Fig)enum.nextElement();
             if (org.argouml.model.ModelFacade.isAElementListener(fig)) {
@@ -370,7 +369,7 @@ public abstract class UMLDiagram
             Component c = toolBar.getComponent(i);
             if (c instanceof ToolButton) {
                 ToolButton tb = (ToolButton)c;
-                Action action = (Action)tb.getRealAction();
+                Action action = tb.getRealAction();
                 if (action instanceof RadioAction) {
                     action = ((RadioAction)action).getAction();
                 }
@@ -408,7 +407,7 @@ public abstract class UMLDiagram
             Component c = toolBar.getComponent(i);
             if (c instanceof ToolButton) {
                 ToolButton tb = (ToolButton)c;
-                Action action = (Action)tb.getRealAction();
+                Action action = tb.getRealAction();
                 if (action instanceof RadioAction) {
                     action = ((RadioAction)action).getAction();
                 }

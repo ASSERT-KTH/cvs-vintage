@@ -1,4 +1,4 @@
-// $Id: ActionAddNote.java,v 1.2 2003/11/05 12:58:38 mkl Exp $
+// $Id: ActionAddNote.java,v 1.3 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.ui.ArgoDiagram;
@@ -36,7 +35,6 @@ import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.static_structure.ui.FigComment;
 import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
-import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.presentation.Fig;

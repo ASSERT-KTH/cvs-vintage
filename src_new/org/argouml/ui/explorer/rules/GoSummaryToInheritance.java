@@ -1,4 +1,4 @@
-// $Id: GoSummaryToInheritance.java,v 1.1 2003/10/04 07:32:05 alexb Exp $
+// $Id: GoSummaryToInheritance.java,v 1.2 2003/11/10 12:33:14 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,14 +31,13 @@ import java.util.Iterator;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
-import org.argouml.ui.AbstractGoRule;
 
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  *
- * @author  alexb, $Author: alexb $
+ * @author  alexb, $Author: jhraigniac $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class GoSummaryToInheritance implements PerspectiveRule {

@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.84 2003/09/28 13:48:11 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.85 2003/11/10 12:35:01 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.84 2003/09/28 13:48:11 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.85 2003/11/10 12:35:01 jhraigniac Exp $
 
 
 
@@ -752,7 +752,7 @@ public class ParserDisplay extends Parser {
 		    || "\t".equals(token)
 		    || ",".equals(token))
 		{
-		    ; // Do nothing
+		    // Do nothing
 		} else if ("<<".equals(token)) {
 		    if (stereotype != null)
 			throw new ParseException("Operations cannot have two " +
@@ -2141,7 +2141,7 @@ public class ParserDisplay extends Parser {
 	    while (st.hasMoreTokens()) {
 		token = st.nextToken();
 		if (" ".equals(token) || "\t".equals(token)) {
-		    ; // Do nothing
+		    // Do nothing
 		} else if ("/".equals(token)) {
 		    hasSlash = true;
 		    hasColon = false;
@@ -2758,7 +2758,7 @@ public class ParserDisplay extends Parser {
 		swapRoles = true;
 
 	    if (compareMsgNumbers(mname, gname)) {
-		; // Do nothing
+		    // Do nothing
 	    } else if (isMsgNumberStartOf(gname, mname)) {
 		throw new ParseException("Cannot move a message into the " +
 					 "subtree rooted at self", 0);

@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorHelper.java,v 1.8 2003/09/08 20:11:54 bobtarling Exp $
+// $Id: CommonBehaviorHelper.java,v 1.9 2003/11/10 12:35:45 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class CommonBehaviorHelper {
     public MInstance getSource(Object link) {
         Collection con = ModelFacade.getConnections(link);
         if (con.isEmpty()) return null;
-        MLinkEnd le0 = (MLinkEnd) ((Object[]) con.toArray())[0];
+        MLinkEnd le0 = (MLinkEnd) (con.toArray())[0];
         return le0.getInstance();
     }
 
@@ -80,7 +80,7 @@ public class CommonBehaviorHelper {
     public MInstance getDestination(Object link) {
         Collection con = ModelFacade.getConnections(link);
         if (con.size() <= 1) return null;
-        MLinkEnd le0 = (MLinkEnd) ((Object[]) con.toArray())[1];
+        MLinkEnd le0 = (MLinkEnd) (con.toArray())[1];
         return le0.getInstance();
     }
 

@@ -1,4 +1,4 @@
-// $Id: CmdSetPreferredSize.java,v 1.10 2003/09/17 23:26:46 bobtarling Exp $
+// $Id: CmdSetPreferredSize.java,v 1.11 2003/11/10 12:33:14 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.ui.cmd;
 
-import java.awt.*;
 import java.util.Vector;
 import org.argouml.application.api.Argo;
 import org.argouml.uml.diagram.state.ui.FigCompositeState;
@@ -53,11 +52,6 @@ public class CmdSetPreferredSize extends Cmd {
     
     private int _mode;
 
-    private Object[] msgArgs = {
-	"preferred",
-	"minimum"
-    };
-	
     /** Constructor for the command.
      * @param mode one of the defined constants
      */

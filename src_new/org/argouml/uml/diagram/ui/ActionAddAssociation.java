@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociation.java,v 1.6 2003/10/31 15:24:49 jjones Exp $
+// $Id: ActionAddAssociation.java,v 1.7 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class ActionAddAssociation extends CmdSetMode {
      * @param name the action description
      */
     public ActionAddAssociation(Object aggregationKind, boolean unidirectional, String name) {
-        super(ModeCreatePolyEdge.class, "edgeClass", (Class)ModelFacade.ASSOCIATION, name);
+        super(ModeCreatePolyEdge.class, "edgeClass", ModelFacade.ASSOCIATION, name);
         _modeArgs.put("aggregation", aggregationKind);
         _modeArgs.put("unidirectional", new Boolean(unidirectional));
     }

@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.16 2003/09/29 17:41:10 jjones Exp $
+// $Id: FigObject.java,v 1.17 2003/11/10 12:35:00 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.16 2003/09/29 17:41:10 jjones Exp $
+// $Id: FigObject.java,v 1.17 2003/11/10 12:35:00 jhraigniac Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -44,7 +44,6 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
-import ru.novosoft.uml.behavior.common_behavior.MObject;
 
 /** Class to display graphics for a UML Object in a diagram. */
 
@@ -158,7 +157,7 @@ public class FigObject extends FigNodeModelElement {
 	    if (s.length() > 0 && (s.endsWith(":"))) {
 		s = s.substring(0, (s.length() - 1));
 	    }
-	    ParserDisplay.SINGLETON.parseObject((MObject)obj, s);
+	    ParserDisplay.SINGLETON.parseObject(obj, s);
 	}
     }
 

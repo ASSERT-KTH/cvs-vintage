@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.38 2003/10/31 15:24:52 jjones Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.39 2003/11/10 12:35:04 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,20 +64,20 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     // actions for toolbar
 
     protected static Action _actionClassifierRole =
-        new CmdCreateNode((Class)ModelFacade.CLASSIFIER_ROLE, "ClassifierRole");
+        new CmdCreateNode(ModelFacade.CLASSIFIER_ROLE, "ClassifierRole");
 
     protected static Action _actionAssoc =
         new CmdSetMode(
             ModeCreatePolyEdge.class,
             "edgeClass",
-            (Class)ModelFacade.ASSOCIATION_ROLE,
+            ModelFacade.ASSOCIATION_ROLE,
             "AssociationRole");
 
     protected static Action _actionGeneralize =
         new CmdSetMode(
             ModeCreatePolyEdge.class,
             "edgeClass",
-            (Class)ModelFacade.GENERALIZATION,
+            ModelFacade.GENERALIZATION,
             "Generalization");
 
     protected static Action _actionAssociation =
@@ -115,7 +115,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         new CmdSetMode(
             ModeCreatePolyEdge.class,
             "edgeClass",
-            (Class)ModelFacade.DEPENDENCY,
+            ModelFacade.DEPENDENCY,
             "Dependency");
 
     ////////////////////////////////////////////////////////////////

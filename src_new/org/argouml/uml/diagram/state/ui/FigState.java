@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.14 2003/09/13 22:06:06 alexb Exp $
+// $Id: FigState.java,v 1.15 2003/11/10 12:35:01 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.behavior.state_machines.MState;
 
 /**
  * The fig hierarchy should comply as much as possible to the hierarchy of the
@@ -190,7 +189,7 @@ public abstract class FigState extends FigStateVertex {
         Object state = getOwner();
         if (state == null)
             return;
-        String newText = Notation.generateStateBody(this, (MState) state);
+        String newText = Notation.generateStateBody(this, state);
         _internal.setText(newText);
 
         calcBounds();

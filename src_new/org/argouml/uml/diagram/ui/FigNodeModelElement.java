@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.84 2003/10/27 22:41:31 alexb Exp $
+// $Id: FigNodeModelElement.java,v 1.85 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,7 +101,6 @@ import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /** Abstract class to display diagram icons for UML ModelElements that
  *  look like nodes and that have editiable names and can be
@@ -604,8 +603,7 @@ public abstract class FigNodeModelElement
                 return;
             try {
                 ParserDisplay.SINGLETON.parseModelElement(
-							  (MModelElement)getOwner(),
-							  ft.getText().trim());
+							  getOwner(), ft.getText().trim());
                 ProjectBrowser.getInstance().getStatusBar().showStatus("");
                 updateNameText();
             } catch (ParseException pe) {

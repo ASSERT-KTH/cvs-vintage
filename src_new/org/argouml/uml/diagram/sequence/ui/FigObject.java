@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigObject.java,v 1.5 2003/11/02 17:39:08 kataka Exp $
+// $Id: FigObject.java,v 1.6 2003/11/10 12:35:01 jhraigniac Exp $
 package org.argouml.uml.diagram.sequence.ui;
 
 import java.awt.Color;
@@ -272,11 +272,11 @@ public class FigObject extends FigNodeModelElement implements MouseListener {
             int newW =
                 (_w == 0)
                     ? 0
-                    : (int) (((float)f.getWidth()) * ((float)w / (float)_w));
+                    : (int) (f.getWidth() * ((float)w / (float)_w));
             int newH =
                 (_h == 0)
                     ? 0
-                    : (int) (((float)f.getHeight()) * ((float)h / (float)_h));
+                    : (int) (f.getHeight() * ((float)h / (float)_h));
             f.setBounds(newX, newY, newW, newH);
         }
     }
@@ -299,7 +299,6 @@ public class FigObject extends FigNodeModelElement implements MouseListener {
      * @see org.tigris.gef.presentation.Fig#calcBounds()
      */
     public void calcBounds() {
-        Rectangle oldBounds = getBounds();
         Rectangle bounds = _outerBox.getBounds();
         bounds.add(_lifeLine.getBounds());
         _x = bounds.x;

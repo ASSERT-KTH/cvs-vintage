@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.15 2003/11/01 22:31:01 alexb Exp $
+// $Id: ActionSaveGraphics.java,v 1.16 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,6 @@ import org.tigris.gef.base.CmdSavePS;
 import org.tigris.gef.base.CmdSaveSVG;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.util.Util;
-import java.util.*;
 import java.io.*;
 import java.awt.Rectangle;
 import org.tigris.gef.base.*;
@@ -151,7 +150,7 @@ public class ActionSaveGraphics extends UMLAction {
 			      (extension.equals(FileFilters.SVGFilter._suffix))
 			      )) {
 			    // add the selected filter extension
-			    FileFilter filter = (FileFilter) chooser.getFileFilter();
+			    FileFilter filter = chooser.getFileFilter();
 			    extension = FileFilters.getSuffix(filter);  
 			    theFile =
 				new File(theFile.getParentFile(),

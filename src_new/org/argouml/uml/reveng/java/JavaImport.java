@@ -1,4 +1,4 @@
-// $Id: JavaImport.java,v 1.22 2003/06/30 21:59:34 linus Exp $
+// $Id: JavaImport.java,v 1.23 2003/11/10 12:35:02 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: JavaImport.java,v 1.22 2003/06/30 21:59:34 linus Exp $
+//$Id: JavaImport.java,v 1.23 2003/11/10 12:35:02 jhraigniac Exp $
 
 package org.argouml.uml.reveng.java;
 
+import org.apache.log4j.Logger;
 import org.argouml.kernel.*;
 import org.argouml.uml.reveng.*;
-import org.argouml.application.api.*;
 import org.argouml.util.FileFilters;
 import org.argouml.util.SuffixFilter;
 
@@ -38,13 +38,15 @@ import java.io.*;
  * This is the main class for Java reverse engineering. It's based
  * on the Antlr Java example.
  *
- * $Revision: 1.22 $
- * $Date: 2003/06/30 21:59:34 $
+ * $Revision: 1.23 $
+ * $Date: 2003/11/10 12:35:02 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
 public class JavaImport extends FileImportSupport {
 
+	/** logger */
+	private static Logger cat = Logger.getLogger(JavaImport.class);
     /**
      * This method parses 1 Java file.
      *
@@ -76,7 +78,7 @@ public class JavaImport extends FileImportSupport {
 
 	    // Print the name of the current file, so we can associate
 	    // exceptions to the file.
-	    Argo.log.info("Parsing " + f.getAbsolutePath());
+	    cat.info("Parsing " + f.getAbsolutePath());
 
 	    // start parsing at the compilationUnit rule
 	    parser.compilationUnit(modeller, lexer);

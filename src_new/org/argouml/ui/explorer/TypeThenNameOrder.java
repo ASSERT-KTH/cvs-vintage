@@ -1,4 +1,4 @@
-// $Id: TypeThenNameOrder.java,v 1.3 2003/10/05 19:08:24 alexb Exp $
+// $Id: TypeThenNameOrder.java,v 1.4 2003/11/10 12:33:14 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,12 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.ui.explorer;
-
-import java.util.*;
-
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import org.argouml.model.ModelFacade;
 
 /**
  * Sorts by user object type,

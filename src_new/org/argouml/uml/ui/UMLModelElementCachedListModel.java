@@ -1,4 +1,4 @@
-// $Id: UMLModelElementCachedListModel.java,v 1.15 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: UMLModelElementCachedListModel.java,v 1.16 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,7 @@
 
 package org.argouml.uml.ui;
 
-import javax.swing.*;
 import java.util.*;
-import java.awt.*;
-import java.lang.reflect.*;
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
@@ -222,7 +219,6 @@ abstract public class UMLModelElementCachedListModel extends UMLModelElementList
             collection = createCollection(items.size());
             Iterator iter = items.iterator();
             Object item;
-            int i = 0;
             while (iter.hasNext()) {
                 item = iter.next();
                 if (isProperClass(item)) {

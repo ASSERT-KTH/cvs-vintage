@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.26 2003/10/27 22:41:31 alexb Exp $
+// $Id: FigUseCase.java,v 1.27 2003/11/10 12:35:00 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.26 2003/10/27 22:41:31 alexb Exp $
+// $Id: FigUseCase.java,v 1.27 2003/11/10 12:35:00 jhraigniac Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -34,7 +34,6 @@ package org.argouml.uml.diagram.use_case.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.InputEvent;
@@ -45,8 +44,6 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
-
-import javax.swing.JMenu;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
@@ -73,7 +70,6 @@ import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.behavior.use_cases.MUseCase;
 
 /**
  * <p>A fig to display use cases on use case diagrams.</p>
@@ -424,19 +420,19 @@ public class FigUseCase extends FigNodeModelElement {
 						     "isAbstract",
 						     "isAbstract",
 						     "setAbstract",
-						     (MUseCase)useCase));
+						     useCase));
 
         modifierMenu.addCheckItem(new ActionModifier("Leaf",
 						     "isLeaf",
 						     "isLeaf",
 						     "setLeaf",
-						     (MUseCase)useCase));
+						     useCase));
 
         modifierMenu.addCheckItem(new ActionModifier("Root",
 						     "isRoot",
 						     "isRoot",
 						     "setRoot",
-						     (MUseCase)useCase));
+						     useCase));
 
         popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 2);
 
@@ -646,10 +642,10 @@ public class FigUseCase extends FigNodeModelElement {
         // at (x,y)
 
         double a;
-        double b = ((double) rectSize.height) / 2.0 + (double) vertPadding;
+        double b = rectSize.height / 2.0 + vertPadding;
 
-        double x = ((double) rectSize.width) / 2.0;
-        double y = ((double) rectSize.height) / 2.0;
+        double x = rectSize.width / 2.0;
+        double y = rectSize.height / 2.0;
 
         // Formula for a is described in the overall class description.
 
@@ -718,8 +714,7 @@ public class FigUseCase extends FigNodeModelElement {
 
             int currY = y + vPadding + nameSize.height + _SPACER;
             int sepLen =
-		2 * (int) (_calcX(((double) newW) / 2.0, ((double) newH) / 2.0,
-				  ((double) newH) / 2.0 - ((double) (currY - y))));
+		2 * (int) (_calcX(newW / 2.0, newH / 2.0, newH / 2.0 - (currY - y)));
 
             _epSep.setShape(x + (newW - sepLen) / 2,
 			    currY,

@@ -1,4 +1,4 @@
-// $Id: ActionEdgesDisplay.java,v 1.1 2003/10/27 22:41:31 alexb Exp $
+// $Id: ActionEdgesDisplay.java,v 1.2 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.uml.diagram.ui;
 
-import org.argouml.uml.diagram.static_structure.ui.*;
 import org.argouml.ui.*;
 import org.argouml.uml.ui.UMLAction;
 import org.tigris.gef.base.*;
@@ -36,7 +35,7 @@ import java.util.*;
 /** An action that makes all edges on the selected node visible/not visible
  *  on the diagram.
  *
- * <p>$Id: ActionEdgesDisplay.java,v 1.1 2003/10/27 22:41:31 alexb Exp $
+ * <p>$Id: ActionEdgesDisplay.java,v 1.2 2003/11/10 12:34:59 jhraigniac Exp $
  *
  * @author David Manura
  * @since 0.13.5

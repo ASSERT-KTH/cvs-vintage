@@ -1,4 +1,4 @@
-// $Id: UMLList.java,v 1.10 2003/10/22 12:52:13 bobtarling Exp $
+// $Id: UMLList.java,v 1.11 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,12 +23,9 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-import javax.swing.event.*;
 import javax.swing.*;
-import java.lang.reflect.*;
 import java.awt.event.*;
 import java.awt.*;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.argouml.ui.LookAndFeelMgr;
 
@@ -43,12 +40,10 @@ import ru.novosoft.uml.MElementEvent;
 public class UMLList extends JList implements UMLUserInterfaceComponent, MouseListener {
 
     private UMLModelElementListModel _umlListModel;
-    private boolean _navigate;
 
     public UMLList(UMLModelElementListModel listModel, boolean navigate) {
         super(listModel);
         _umlListModel = listModel;
-        _navigate = navigate;
         setFont(LookAndFeelMgr.getInstance().getSmallFont());
 
         if (navigate) {

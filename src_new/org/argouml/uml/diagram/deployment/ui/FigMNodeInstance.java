@@ -1,4 +1,4 @@
-// $Id: FigMNodeInstance.java,v 1.14 2003/09/08 20:11:52 bobtarling Exp $
+// $Id: FigMNodeInstance.java,v 1.15 2003/11/10 12:35:00 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigMNodeInstance.java
 // Classes: FigMNodeInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigMNodeInstance.java,v 1.14 2003/09/08 20:11:52 bobtarling Exp $
+// $Id: FigMNodeInstance.java,v 1.15 2003/11/10 12:35:00 jhraigniac Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -49,7 +49,6 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigCube;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 /** Class to display graphics for a UML NodeInstance in a diagram. */
 
@@ -163,7 +162,7 @@ public class FigMNodeInstance extends FigNodeModelElement {
             || ModelFacade.getName(stereo).length() == 0)
             _stereo.setText("");
         else {
-            _stereo.setText(Notation.generateStereotype(this, (MStereotype)stereo));
+            _stereo.setText(Notation.generateStereotype(this, stereo));
         }
     }
 

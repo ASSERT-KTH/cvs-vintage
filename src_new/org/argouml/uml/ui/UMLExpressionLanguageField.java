@@ -1,4 +1,4 @@
-// $Id: UMLExpressionLanguageField.java,v 1.6 2003/09/21 11:07:03 bobtarling Exp $
+// $Id: UMLExpressionLanguageField.java,v 1.7 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,10 +23,8 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-import java.text.*;
 import javax.swing.event.*;
 import javax.swing.*;
-import java.lang.reflect.*;
 import ru.novosoft.uml.MElementEvent;
 
 /**

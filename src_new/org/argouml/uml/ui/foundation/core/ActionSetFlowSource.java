@@ -1,4 +1,4 @@
-// $Id: ActionSetFlowSource.java,v 1.7 2003/10/15 20:11:47 linus Exp $
+// $Id: ActionSetFlowSource.java,v 1.8 2003/11/10 12:35:01 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
-import java.util.Collection;
 import java.util.Vector;
 
 import org.argouml.i18n.Translator;
@@ -68,7 +67,7 @@ public class ActionSetFlowSource extends UMLChangeAction {
                     if (source.getSelectedItem() != null) {
                         Vector sources = new Vector();
                         sources.add(source.getSelectedItem());
-                        ModelFacade.setSources(flow, (Collection) sources);
+                        ModelFacade.setSources(flow, sources);
                     }
                 }
             }

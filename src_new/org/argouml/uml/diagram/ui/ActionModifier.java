@@ -1,4 +1,4 @@
-// $Id: ActionModifier.java,v 1.1 2003/10/27 22:41:31 alexb Exp $
+// $Id: ActionModifier.java,v 1.2 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionModifier.java
 // Classes: ActionModifier
 // Original Author: Bob Tarling
-// $Id: ActionModifier.java,v 1.1 2003/10/27 22:41:31 alexb Exp $
+// $Id: ActionModifier.java,v 1.2 2003/11/10 12:34:59 jhraigniac Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use cases
@@ -34,11 +34,8 @@
 package org.argouml.uml.diagram.ui;
 
 import org.argouml.uml.ui.*;
-import org.tigris.gef.base.*;
-import org.tigris.gef.presentation.*;
 import java.awt.event.*;
 import java.beans.PropertyVetoException;
-import java.util.*;
 import org.argouml.model.ModelFacade;
 
 /**

@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.55 2003/10/27 22:41:31 alexb Exp $
+// $Id: FigInterface.java,v 1.56 2003/11/10 12:35:01 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,8 +36,6 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
-
-import javax.swing.JMenu;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
@@ -280,14 +278,11 @@ public class FigInterface extends FigNodeModelElement {
 				   null));
         modifierMenu.addCheckItem(
 		new ActionModifier("Abstract",
-				   "isAbstract", "isAbstract", "setAbstract",
-				   (MInterface)minterface));
+				   "isAbstract", "isAbstract", "setAbstract", minterface));
         modifierMenu.addCheckItem(
-		new ActionModifier("Leaf", "isLeaf", "isLeaf", "setLeaf",
-				   (MInterface)minterface));
+		new ActionModifier("Leaf", "isLeaf", "isLeaf", "setLeaf", minterface));
         modifierMenu.addCheckItem(
-		new ActionModifier("Root",
-				   "isRoot", "isRoot", "setRoot", (MInterface)minterface));
+		new ActionModifier("Root", "isRoot", "isRoot", "setRoot", minterface));
 
         popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 2);
         // end of block

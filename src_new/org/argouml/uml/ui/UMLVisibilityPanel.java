@@ -1,4 +1,4 @@
-// $Id: UMLVisibilityPanel.java,v 1.8 2003/10/04 18:14:41 d00mst Exp $
+// $Id: UMLVisibilityPanel.java,v 1.9 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ public class UMLVisibilityPanel extends JPanel {
 						      mclass,
 						      "getVisibility",
 						      "setVisibility",
-						      (Class)ModelFacade.VISIBILITYKIND,
+						      ModelFacade.VISIBILITYKIND,
 						      ModelFacade.PUBLIC_VISIBILITYKIND,
 						      null));
 	publicButton.setSelected(true);
@@ -64,7 +64,7 @@ public class UMLVisibilityPanel extends JPanel {
 						      mclass,
 						      "getVisibility",
 						      "setVisibility",
-						      (Class)ModelFacade.VISIBILITYKIND,
+						      ModelFacade.VISIBILITYKIND,
 						      ModelFacade.PROTECTED_VISIBILITYKIND,
 						      null));
 	add(protectedButton);
@@ -76,7 +76,7 @@ public class UMLVisibilityPanel extends JPanel {
 						      mclass,
 						      "getVisibility",
 						      "setVisibility",
-						      (Class)ModelFacade.VISIBILITYKIND,
+						      ModelFacade.VISIBILITYKIND,
 						      ModelFacade.PRIVATE_VISIBILITYKIND,
 						      null));
 	add(privateButton);

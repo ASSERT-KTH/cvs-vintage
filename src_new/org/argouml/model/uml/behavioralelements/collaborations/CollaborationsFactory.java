@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactory.java,v 1.23 2003/10/29 22:41:25 kataka Exp $
+// $Id: CollaborationsFactory.java,v 1.24 2003/11/10 12:35:45 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -385,7 +385,7 @@ public class CollaborationsFactory extends AbstractUmlModelFactory {
     public void deleteAssociationRole(MAssociationRole elem) {
         Iterator it = elem.getMessages().iterator();
         while (it.hasNext()) {
-            UmlFactory.getFactory().delete((MMessage)it.next());
+            UmlFactory.getFactory().delete(it.next());
         }
     }
 

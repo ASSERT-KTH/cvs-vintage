@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndTargetScopeCheckbox.java,v 1.5 2003/10/26 16:40:03 alexb Exp $
+// $Id: UMLAssociationEndTargetScopeCheckbox.java,v 1.6 2003/11/10 12:35:01 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndTargetScopeCheckbox.java,v 1.5 2003/10/26 16:40:03 alexb Exp $
+// $Id: UMLAssociationEndTargetScopeCheckbox.java,v 1.6 2003/11/10 12:35:01 jhraigniac Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLCheckBox2;
-
-import ru.novosoft.uml.foundation.data_types.MScopeKind;
 
 /**
  * 

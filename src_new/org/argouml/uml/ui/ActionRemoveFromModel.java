@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.33 2003/10/12 08:55:24 linus Exp $
+// $Id: ActionRemoveFromModel.java,v 1.34 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,7 +82,6 @@ public class ActionRemoveFromModel extends UMLChangeAction {
      * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
      */
     public boolean shouldBeEnabled() {
-        boolean enabled = false;
         super.shouldBeEnabled();
         int size = 0;
         try {
@@ -131,8 +130,6 @@ public class ActionRemoveFromModel extends UMLChangeAction {
         for (int i = 0; i < targets.length; i++) {
             target = targets[i];
             if (sureRemove(target)) {
-                // Argo.log.info("deleting "+target+"+
-                // "+(((MModelElement)target).getMElementListeners()).size());
                 // remove from the model
                 if (target instanceof Fig) {
                     target = ((Fig) target).getOwner();

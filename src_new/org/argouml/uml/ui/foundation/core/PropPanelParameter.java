@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.36 2003/10/26 16:40:03 alexb Exp $
+// $Id: PropPanelParameter.java,v 1.37 2003/11/10 12:35:01 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,19 +81,19 @@ public class PropPanelParameter extends PropPanelModelElement {
         JPanel kindPanel = new JPanel(new GridLayout2(0, 2, GridLayout2.ROWCOLPREFERRED));
         ButtonGroup kindGroup = new ButtonGroup();
 
-        UMLRadioButton inout = new UMLRadioButton("in/out", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", (Class)ModelFacade.PARAMETERDIRECTIONKIND, ModelFacade.INOUT_PARAMETERDIRECTIONKIND, null));
+        UMLRadioButton inout = new UMLRadioButton("in/out", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", ModelFacade.PARAMETERDIRECTIONKIND, ModelFacade.INOUT_PARAMETERDIRECTIONKIND, null));
         kindGroup.add(inout);
         kindPanel.add(inout);
 
-        UMLRadioButton in = new UMLRadioButton("in", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", (Class)ModelFacade.PARAMETERDIRECTIONKIND, ModelFacade.IN_PARAMETERDIRECTIONKIND, null));
+        UMLRadioButton in = new UMLRadioButton("in", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", ModelFacade.PARAMETERDIRECTIONKIND, ModelFacade.IN_PARAMETERDIRECTIONKIND, null));
         kindGroup.add(in);
         kindPanel.add(in);
 
-        UMLRadioButton out = new UMLRadioButton("out", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", (Class)ModelFacade.PARAMETERDIRECTIONKIND, ModelFacade.OUT_PARAMETERDIRECTIONKIND, null));
+        UMLRadioButton out = new UMLRadioButton("out", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", ModelFacade.PARAMETERDIRECTIONKIND, ModelFacade.OUT_PARAMETERDIRECTIONKIND, null));
         kindGroup.add(out);
         kindPanel.add(out);
 
-        UMLRadioButton ret = new UMLRadioButton("return", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", (Class)ModelFacade.PARAMETERDIRECTIONKIND, ModelFacade.RETURN_PARAMETERDIRECTIONKIND, null));
+        UMLRadioButton ret = new UMLRadioButton("return", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", ModelFacade.PARAMETERDIRECTIONKIND, ModelFacade.RETURN_PARAMETERDIRECTIONKIND, null));
         kindGroup.add(ret);
         kindPanel.add(ret);
 
@@ -107,7 +107,6 @@ public class PropPanelParameter extends PropPanelModelElement {
     }
 
     public Object getType() {
-        Object type = null;
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAParameter(target)) {
             return org.argouml.model.ModelFacade.getType(target);

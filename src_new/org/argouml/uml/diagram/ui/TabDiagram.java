@@ -1,5 +1,5 @@
 
-// $Id: TabDiagram.java,v 1.33 2003/11/03 16:20:08 jjones Exp $
+// $Id: TabDiagram.java,v 1.34 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.33 2003/11/03 16:20:08 jjones Exp $
+// $Id: TabDiagram.java,v 1.34 2003/11/10 12:34:59 jhraigniac Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -249,9 +249,9 @@ public class TabDiagram
     public void modeChange(ModeChangeEvent mce) {
         cat.debug("TabDiagram got mode change event");
         if (!Globals.getSticky() && Globals.mode() instanceof ModeSelect) {
-            if (_target instanceof UMLDiagram) {
+//            if (_target instanceof UMLDiagram) {
                 _target.deselectAllTools();
-            }
+//            }
         }
     }
 

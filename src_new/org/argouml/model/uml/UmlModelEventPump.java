@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.31 2003/09/22 18:58:40 bobtarling Exp $
+// $Id: UmlModelEventPump.java,v 1.32 2003/11/10 12:35:45 jhraigniac Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,8 +66,6 @@ import ru.novosoft.uml.MFactoryImpl;
  * @author jaap.branderhorst@xs4all.nl
  */
 public final class UmlModelEventPump implements MElementListener {
-
-    private Logger _cat = Logger.getLogger(UmlModelEventPump.class);
 
     public static final String REMOVE = "remove";
 
@@ -185,7 +183,7 @@ public final class UmlModelEventPump implements MElementListener {
         while (it.hasNext()) {
             MBase base = (MBase) it.next();
             for (int i = 0; i < keys.length; i++) {
-                _listenerMap.put(base, keys[i], (MElementListener) listener);
+                _listenerMap.put(base, keys[i], listener);
             }
         }
         // add the class to the 'interested classes list' so the listener is 
@@ -449,9 +447,7 @@ public final class UmlModelEventPump implements MElementListener {
 					  eventNames[i]);
             for (int j = 0; j < keys.length; j++) {
                 _listenerMap.remove(
-				    (MBase) modelElement,
-				    keys[j],
-				    (MElementListener) listener);
+				    modelElement, keys[j], (MElementListener) listener);
             }
         }
     }
@@ -503,9 +499,7 @@ public final class UmlModelEventPump implements MElementListener {
             _definition.getEventTypes(modelElement.getClass(), eventName);
         for (int j = 0; j < keys.length; j++) {
             _listenerMap.remove(
-				(MBase) modelElement,
-				keys[j],
-				(MElementListener) listener);
+				modelElement, keys[j], (MElementListener) listener);
         }
 
     }

@@ -1,4 +1,4 @@
-// $Id: UMLStimulusListModel.java,v 1.7 2003/09/21 14:11:12 bobtarling Exp $
+// $Id: UMLStimulusListModel.java,v 1.8 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui;
 import javax.swing.*;
 import ru.novosoft.uml.behavior.common_behavior.MObject;
 import java.util.*;
-import java.awt.*;
 import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
@@ -38,7 +37,6 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  */
 public class UMLStimulusListModel extends UMLModelElementListModel  {
 
-    private final static String _nullLabel = "(null)";
     // list of sent or received stimuli
     private String stimulusType;
 

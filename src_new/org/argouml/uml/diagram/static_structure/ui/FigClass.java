@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.79 2003/10/27 22:41:31 alexb Exp $
+// $Id: FigClass.java,v 1.80 2003/11/10 12:35:01 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,8 +42,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.swing.JMenu;
-
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
 import org.argouml.model.ModelFacade;
@@ -72,7 +70,6 @@ import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.foundation.core.MClass;
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 /**
  * <p>Class to display graphics for a UML Class in a diagram.</p>
@@ -358,17 +355,17 @@ public class FigClass extends FigNodeModelElement {
         modifierMenu.addCheckItem(
 		new ActionModifier("Abstract",
 				   "isAbstract", "isAbstract", "setAbstract",
-				   (MClass)mclass));
+				   mclass));
         modifierMenu.addCheckItem(
 		new ActionModifier("Leaf",
-				   "isLeaf", "isLeaf", "setLeaf", (MClass)mclass));
+				   "isLeaf", "isLeaf", "setLeaf", mclass));
         modifierMenu.addCheckItem(
 		new ActionModifier("Root",
-				   "isRoot", "isRoot", "setRoot", (MClass)mclass));
+				   "isRoot", "isRoot", "setRoot", mclass));
         modifierMenu.addCheckItem(
 		new ActionModifier("Active",
 				   "isActive", "isActive", "setActive",
-				   (MClass)mclass));
+				   mclass));
 
         popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 2);
         // end of block
@@ -815,7 +812,7 @@ public class FigClass extends FigNodeModelElement {
                 calcBounds();
             }
         } else {
-            _stereo.setText(Notation.generateStereotype(this, (MStereotype)stereo));
+            _stereo.setText(Notation.generateStereotype(this, stereo));
 
             if (!_stereo.isDisplayed()) {
                 _stereoLineBlinder.setDisplayed(true);

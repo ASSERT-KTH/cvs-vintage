@@ -1,4 +1,4 @@
-// $Id: LayoutedEdge.java,v 1.4 2003/06/30 18:00:31 linus Exp $
+// $Id: LayoutedEdge.java,v 1.5 2003/11/10 12:35:02 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,9 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.diagram.layout;
-
-import org.argouml.uml.diagram.ui.*;
-import org.tigris.gef.presentation.*;
 
 /**
  * This is a layouted edge in a diagram.

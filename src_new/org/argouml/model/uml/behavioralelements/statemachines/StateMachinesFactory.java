@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactory.java,v 1.25 2003/09/14 15:04:26 bobtarling Exp $
+// $Id: StateMachinesFactory.java,v 1.26 2003/11/10 12:35:46 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -595,12 +595,12 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
         Collection col = elem.getIncomings();
         Iterator it = col.iterator();
         while (it.hasNext()) {
-            UmlFactory.getFactory().delete((MTransition) it.next());
+            UmlFactory.getFactory().delete(it.next());
         }
         col = elem.getOutgoings();
         it = col.iterator();
         while (it.hasNext()) {
-            UmlFactory.getFactory().delete((MTransition) it.next());
+            UmlFactory.getFactory().delete(it.next());
         }
     }
     

@@ -1,4 +1,4 @@
-// $Id: LayoutHelper.java,v 1.4 2003/06/30 18:00:31 linus Exp $
+// $Id: LayoutHelper.java,v 1.5 2003/11/10 12:35:02 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ public class LayoutHelper {
 					    double xOff, double yOff)
     {
         double x = 0;
-        double y = 0;;
+        double y = 0;
         if (direction == NORTH || direction == NORTHEAST || 
             direction == NORTHWEST) { y = rect.getY(); }
         if (direction == SOUTH || direction == SOUTHWEST ||

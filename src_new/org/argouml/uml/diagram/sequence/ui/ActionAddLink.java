@@ -1,4 +1,4 @@
-// $Id: ActionAddLink.java,v 1.7 2003/10/31 15:24:49 jjones Exp $
+// $Id: ActionAddLink.java,v 1.8 2003/11/10 12:35:01 jhraigniac Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import org.tigris.gef.base.ModeCreatePolyEdge;
 
 public class ActionAddLink extends CmdSetMode {
     public ActionAddLink(Class actionClass, String name) {
-	super(ModeCreatePolyEdge.class, "edgeClass", (Class)ModelFacade.LINK, name);
+	super(ModeCreatePolyEdge.class, "edgeClass", ModelFacade.LINK, name);
 	_modeArgs.put("action", actionClass);
     }
 }

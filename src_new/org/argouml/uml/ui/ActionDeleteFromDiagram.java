@@ -1,4 +1,4 @@
-// $Id: ActionDeleteFromDiagram.java,v 1.13 2003/10/27 22:41:32 alexb Exp $
+// $Id: ActionDeleteFromDiagram.java,v 1.14 2003/11/10 12:35:00 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.util.Vector;
 
 import javax.swing.Action;
 
-import org.argouml.application.api.Argo;
+import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.tigris.gef.base.Editor;
@@ -47,7 +47,10 @@ public class ActionDeleteFromDiagram extends UMLChangeAction {
     ////////////////////////////////////////////////////////////////
     // static variables
 
-    public static ActionDeleteFromDiagram SINGLETON =
+    /** logger */
+    private static Logger cat = Logger.getLogger(Translator.class);
+
+	public static ActionDeleteFromDiagram SINGLETON =
         new ActionDeleteFromDiagram();
 
     ////////////////////////////////////////////////////////////////
@@ -57,7 +60,7 @@ public class ActionDeleteFromDiagram extends UMLChangeAction {
         super("action.remove-from-diagram");
         String localMnemonic = Translator.localize("action.remove-from-diagram.mnemonic");
         if (localMnemonic != null && localMnemonic.length() == 1) {
-            putValue(Action.MNEMONIC_KEY, new Integer((int) localMnemonic.charAt(0)));
+            putValue(Action.MNEMONIC_KEY, new Integer(localMnemonic.charAt(0)));
         }                
     }
 
@@ -88,8 +91,7 @@ public class ActionDeleteFromDiagram extends UMLChangeAction {
                 TargetManager.getInstance().removeHistoryElement(f);
             }
         } catch (Exception ex) {
-            Argo.log.error(
-                ex);
+            cat.error(ex);
         }
     }
 

@@ -1,4 +1,4 @@
-// $Id: UMLSpecializationListModel.java,v 1.13 2003/09/21 11:07:02 bobtarling Exp $
+// $Id: UMLSpecializationListModel.java,v 1.14 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,18 +36,12 @@ package org.argouml.uml.ui;
 
 import java.util.*;
 
-
-import javax.swing.*;
-
-import org.argouml.ui.*;
 import org.tigris.gef.graph.MutableGraphModel;
 import org.argouml.application.api.Argo;
-import org.argouml.kernel.*;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
-
 
 /**
  * <p>A concrete class to provide the list of model elements that are

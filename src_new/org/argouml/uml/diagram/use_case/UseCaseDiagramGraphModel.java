@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.37 2003/09/14 18:10:43 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.38 2003/11/10 12:35:02 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -408,8 +408,8 @@ public class UseCaseDiagramGraphModel
                 return false;
             }
 
-            end0 = ((Object[]) clients.toArray())[0];
-            end1 = ((Object[]) suppliers.toArray())[0];
+            end0 = (clients.toArray())[0];
+            end1 = (suppliers.toArray())[0];
         }
 
         // Both ends must be defined and nodes that are on the graph already.

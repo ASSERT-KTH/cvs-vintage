@@ -1,4 +1,4 @@
-// $Id: GoStateMachineToTop.java,v 1.1 2003/11/05 22:24:48 alexb Exp $
+// $Id: GoStateMachineToTop.java,v 1.2 2003/11/10 12:33:14 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 import org.argouml.model.ModelFacade;
-import org.argouml.ui.AbstractGoRule;
 
 public class GoStateMachineToTop implements PerspectiveRule {
 

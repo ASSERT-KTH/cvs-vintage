@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.8 2003/09/29 17:41:33 jjones Exp $
+// $Id: FigActionState.java,v 1.9 2003/11/10 12:35:02 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ package org.argouml.uml.diagram.activity.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.Vector;
 

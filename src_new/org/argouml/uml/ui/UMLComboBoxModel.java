@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel.java,v 1.27 2003/09/21 11:07:03 bobtarling Exp $
+// $Id: UMLComboBoxModel.java,v 1.28 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,21 +25,17 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.27 2003/09/21 11:07:03 bobtarling Exp $
+// $Id: UMLComboBoxModel.java,v 1.28 2003/11/10 12:34:59 jhraigniac Exp $
 
 package org.argouml.uml.ui;
 
-import org.argouml.ui.*;
 import org.argouml.uml.*;
-import org.argouml.kernel.*;
 import org.apache.log4j.Logger;
-import org.argouml.application.api.*;
 
 import java.lang.reflect.*;
 import java.awt.event.*;
 import java.util.*;
 
-import javax.swing.event.*;
 import javax.swing.*;
 import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.MElementEvent;
@@ -63,8 +59,11 @@ import ru.novosoft.uml.MElementEvent;
 
 public class UMLComboBoxModel extends AbstractListModel implements
     ComboBoxModel, UMLUserInterfaceComponent, ActionListener {
-    protected static Logger cat = 
-        Logger.getLogger(UMLComboBoxModel.class);
+
+    /** logger */
+    private static Logger cat = Logger.getLogger(UMLComboBoxModel.class);
+//    protected static Logger cat = 
+//        Logger.getLogger(UMLComboBoxModel.class);
         
 
 
@@ -590,7 +589,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
 
         if (model == null) {
         	// extra attempt
-            Argo.log.error(this.getClass().toString() + " targetChanged() - " +
+            cat.error(this.getClass().toString() + " targetChanged() - " +
                            "getModel() == null for " + 
                            target.getClass().toString());
             return;

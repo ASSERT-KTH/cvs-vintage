@@ -1,4 +1,4 @@
-// $Id: UMLMultiplicityComboBox.java,v 1.12 2003/09/21 11:07:02 bobtarling Exp $
+// $Id: UMLMultiplicityComboBox.java,v 1.13 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import org.argouml.model.uml.UmlFactory;
 import java.lang.reflect.*;
 import java.awt.event.*;
 
-import javax.swing.event.*;
 import javax.swing.*;
 import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.MElementEvent;

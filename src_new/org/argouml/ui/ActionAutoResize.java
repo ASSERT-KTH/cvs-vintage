@@ -1,4 +1,4 @@
-// $Id: ActionAutoResize.java,v 1.8 2003/09/15 06:54:39 linus Exp $
+// $Id: ActionAutoResize.java,v 1.9 2003/11/10 12:33:14 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.ui;
 
 import java.awt.event.ActionEvent;
-import org.argouml.application.api.Argo;
 import org.argouml.uml.ui.UMLAction;
 
 /** A class to keep track of the users desire to have his diagram nodes
@@ -39,8 +38,7 @@ public class ActionAutoResize extends UMLAction {
     private static boolean _autoResize = false;
   
     public ActionAutoResize() {
-        super(Argo.localize("action", "action.toggle-auto-resizing"), 
-              NO_ICON);
+        super("action.toggle-auto-resizing",  NO_ICON);
     }
 
     public void actionPerformed(ActionEvent ae) {

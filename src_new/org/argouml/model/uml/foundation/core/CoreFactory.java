@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.60 2003/11/07 19:40:02 d00mst Exp $
+// $Id: CoreFactory.java,v 1.61 2003/11/10 12:35:46 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -864,7 +864,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
 	MClassifier intType = (MClassifier)p.findType("int");
 	if (p.getModel() != intType.getNamespace()
 	    && !(ModelManagementHelper.getHelper()
-		 .getAllNamespaces((MModel)p.getModel())
+		 .getAllNamespaces(p.getModel())
 		 .contains(intType.getNamespace())))
 	{
 	    intType.setNamespace((MModel)p.getModel());
@@ -1164,8 +1164,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
 	    || !(child instanceof MGeneralizableElement)
 	    || !(parent instanceof MGeneralizableElement))
             return null;
-        Object gen = buildGeneralization((MGeneralizableElement) child,
-					 (MGeneralizableElement) parent);
+        Object gen = buildGeneralization(child, parent);
         if (gen != null)
             ((MGeneralization) gen).setName(name);
         return gen;
@@ -1322,7 +1321,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @return MOperation
      */
     public Object buildOperation(Object cls, String name) {
-        MOperation oper = buildOperation((MClassifier) cls);
+        MOperation oper = buildOperation(cls);
         if (oper != null)
             oper.setName(name);
         return oper;
@@ -1621,7 +1620,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
 	    Collection col = ((MClassifier) elem).getAssociationEnds();
 	    Iterator it = col.iterator();
 	    while (it.hasNext()) {
-		UmlFactory.getFactory().delete((MAssociationEnd) it.next());
+		UmlFactory.getFactory().delete(it.next());
 	    }
 	}
     }
@@ -1656,11 +1655,11 @@ public class CoreFactory extends AbstractUmlModelFactory {
     public void deleteGeneralizableElement(MGeneralizableElement elem) {
 	Iterator it = elem.getGeneralizations().iterator();
 	while (it.hasNext()) {
-	    UmlFactory.getFactory().delete((MGeneralization) it.next());
+	    UmlFactory.getFactory().delete(it.next());
 	}
 	it = elem.getSpecializations().iterator();
 	while (it.hasNext()) {
-	    UmlFactory.getFactory().delete((MGeneralization) it.next());
+	    UmlFactory.getFactory().delete(it.next());
 	}
     }
 
@@ -1723,7 +1722,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
 	ownedElements.addAll(elem.getOwnedElements());
 	Iterator it = ownedElements.iterator();
 	while (it.hasNext()) {
-	    UmlFactory.getFactory().delete((MModelElement) it.next());
+	    UmlFactory.getFactory().delete(it.next());
 	}
     }
 

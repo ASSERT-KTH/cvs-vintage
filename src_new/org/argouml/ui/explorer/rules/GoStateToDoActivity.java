@@ -1,4 +1,4 @@
-// $Id: GoStateToDoActivity.java,v 1.1 2003/10/04 07:32:05 alexb Exp $
+// $Id: GoStateToDoActivity.java,v 1.2 2003/11/10 12:33:14 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,15 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoStateToDoActivity.java,v 1.1 2003/10/04 07:32:05 alexb Exp $
+// $Id: GoStateToDoActivity.java,v 1.2 2003/11/10 12:33:14 jhraigniac Exp $
 
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
 import java.util.Vector;
 import org.argouml.model.ModelFacade;
-
-import org.argouml.ui.AbstractGoRule;
 
 /**
  * Go rule to navigate from a state to it's doactivity. Used in the package

@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.36 2003/10/31 15:24:50 jjones Exp $
+// $Id: UMLActivityDiagram.java,v 1.37 2003/11/10 12:35:02 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.36 2003/10/31 15:24:50 jjones Exp $
+// $Id: UMLActivityDiagram.java,v 1.37 2003/11/10 12:35:02 jhraigniac Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -62,7 +62,7 @@ public class UMLActivityDiagram extends UMLDiagram {
     // actions for toolbar
 
     protected static Action _actionState =
-        new CmdCreateNode((Class)ModelFacade.ACTION_STATE, "ActionState");
+        new CmdCreateNode(ModelFacade.ACTION_STATE, "ActionState");
 
     protected static Action _actionStartPseudoState;
     protected static Action _actionFinalPseudoState;
@@ -74,7 +74,7 @@ public class UMLActivityDiagram extends UMLDiagram {
         new CmdSetMode(
             ModeCreatePolyEdge.class,
             "edgeClass",
-            (Class)ModelFacade.TRANSITION,
+            ModelFacade.TRANSITION,
             "Transition");
 
     ////////////////////////////////////////////////////////////////
@@ -96,7 +96,7 @@ public class UMLActivityDiagram extends UMLDiagram {
                     "Initial");
 
             _actionFinalPseudoState =
-                new CmdCreateNode((Class)ModelFacade.FINALSTATE, "FinalState");
+                new CmdCreateNode(ModelFacade.FINALSTATE, "FinalState");
 
             _actionBranchPseudoState =
                 new ActionCreatePseudostate(

@@ -1,5 +1,5 @@
 
-// $Id: GoOperationToCollaborationDiagram.java,v 1.1 2003/10/04 07:32:05 alexb Exp $
+// $Id: GoOperationToCollaborationDiagram.java,v 1.2 2003/11/10 12:33:14 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import java.util.Vector;
 import org.argouml.model.ModelFacade;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.ui.AbstractGoRule;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 

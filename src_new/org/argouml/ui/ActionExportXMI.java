@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.4 2003/10/12 08:55:24 linus Exp $
+// $Id: ActionExportXMI.java,v 1.5 2003/11/10 12:33:14 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionExportXMI.java,v 1.4 2003/10/12 08:55:24 linus Exp $
+// $Id: ActionExportXMI.java,v 1.5 2003/11/10 12:33:14 jhraigniac Exp $
 package org.argouml.ui;
 
 import java.awt.event.ActionEvent;
@@ -53,7 +53,8 @@ import org.argouml.uml.ui.UMLAction;
  */
 public final class ActionExportXMI extends UMLAction implements PluggableMenu {
 
-    private Logger log = Logger.getLogger(this.getClass());
+    /** logger */
+    private static Logger cat = Logger.getLogger(ActionExportXMI.class);
 
     private static ActionExportXMI instance = new ActionExportXMI();
 
@@ -113,9 +114,9 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
      * @see org.argouml.application.api.ArgoModule#initializeModule()
      */
     public boolean initializeModule() {
-        Argo.log.info("+---------------------------------+");
-        Argo.log.info("| Export XMI plugin enabled!      |");
-        Argo.log.info("+---------------------------------+");
+        cat.info("+---------------------------------+");
+        cat.info("| Export XMI plugin enabled!      |");
+        cat.info("+---------------------------------+");
 
         return true;
     }
@@ -235,7 +236,7 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
 						       "optionpane.save-project-general-exception-title"),
 					       JOptionPane.ERROR_MESSAGE);
 			
-                        log.error(sMessage, ex);
+                        cat.error(sMessage, ex);
                     }
                 }
             }

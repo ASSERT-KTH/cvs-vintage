@@ -1,4 +1,4 @@
-// $Id: UMLGeneralizationListModel.java,v 1.16 2003/09/21 11:07:03 bobtarling Exp $
+// $Id: UMLGeneralizationListModel.java,v 1.17 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,14 +39,9 @@
 package org.argouml.uml.ui;
 
 import java.util.*;
-import java.awt.*;
 
-import javax.swing.*;
-
-import org.argouml.ui.*;
 import org.tigris.gef.graph.MutableGraphModel;
 import org.argouml.application.api.Argo;
-import org.argouml.kernel.*;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.model.uml.foundation.core.CoreHelper;

@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationRole.java,v 1.6 2003/10/31 15:24:49 jjones Exp $
+// $Id: ActionAddAssociationRole.java,v 1.7 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class ActionAddAssociationRole extends CmdSetMode {
                                     String name) {
         super(ModeCreatePolyEdge.class,
               "edgeClass",
-              (Class)ModelFacade.ASSOCIATION_ROLE,
+              ModelFacade.ASSOCIATION_ROLE,
               name);
         _modeArgs.put("aggregation", aggregationKind);
         _modeArgs.put("unidirectional", new Boolean(unidirectional));

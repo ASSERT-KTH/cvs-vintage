@@ -1,4 +1,4 @@
-// $Id: UMLUserInterfaceComponent.java,v 1.4 2003/06/30 19:23:20 linus Exp $
+// $Id: UMLUserInterfaceComponent.java,v 1.5 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 
 package org.argouml.uml.ui;
-import javax.swing.event.*;
 import ru.novosoft.uml.MElementListener;
 
 /**

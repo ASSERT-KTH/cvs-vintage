@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.55 2003/09/21 22:16:32 bobtarling Exp $
+// $Id: GeneratorDisplay.java,v 1.56 2003/11/10 12:35:01 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.55 2003/09/21 22:16:32 bobtarling Exp $
+// $Id: GeneratorDisplay.java,v 1.56 2003/11/10 12:35:01 jhraigniac Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -475,7 +475,7 @@ public class GeneratorDisplay extends Generator {
         MMessage m = (MMessage)message;
         MsgPtr ptr = new MsgPtr();
         int pos = recCountPredecessors(m, ptr) + 1;
-        return generateMessageNumber(m, (MMessage)ptr.message, pos);
+        return generateMessageNumber(m, ptr.message, pos);
     }
 
     private String generateMessageNumber(
@@ -493,7 +493,7 @@ public class GeneratorDisplay extends Generator {
 
         act = ModelFacade.getActivator(m);
         if (act != null)
-            mname = generateMessageNumber((MMessage)act);
+            mname = generateMessageNumber(act);
 
         if (pre != null) {
             c = ModelFacade.getMessages3(pre);
@@ -620,7 +620,7 @@ public class GeneratorDisplay extends Generator {
 
                 if (predecessors.length() > 0)
                     predecessors += ", ";
-                predecessors += generateMessageNumber((MMessage)msg, (MMessage)ptr2.message, mpn);
+                predecessors += generateMessageNumber(msg, ptr2.message, mpn);
                 precnt++;
             }
 
@@ -628,7 +628,7 @@ public class GeneratorDisplay extends Generator {
                 predecessors += " / ";
         }
 
-        number = generateMessageNumber(m, (MMessage)ptr.message, lpn);
+        number = generateMessageNumber(m, ptr.message, lpn);
 
         act = m.getAction();
         if (act != null) {

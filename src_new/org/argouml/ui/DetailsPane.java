@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.34 2003/09/19 21:28:42 d00mst Exp $
+// $Id: DetailsPane.java,v 1.35 2003/11/10 12:33:14 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ import org.argouml.util.ConfigLoader;
  * There are requests to have the cursor automatically
  * be set to the primary field.
  *
- * $Id: DetailsPane.java,v 1.34 2003/09/19 21:28:42 d00mst Exp $
+ * $Id: DetailsPane.java,v 1.35 2003/11/10 12:33:14 jhraigniac Exp $
  */
 public class DetailsPane
     extends JPanel
@@ -81,7 +81,9 @@ public class DetailsPane
 	       TargetListener
 {
 
-    protected static Logger cat = Logger.getLogger(DetailsPane.class);
+    /** logger */
+    private static Logger cat = Logger.getLogger(DetailsPane.class);
+
     ////////////////////////////////////////////////////////////////
     // constants
 
@@ -157,7 +159,7 @@ public class DetailsPane
      * registers listeners.
      */
     public DetailsPane(String pane, Orientation orientation) {
-        Argo.log.info("making DetailsPane(" + pane + ")");
+        cat.info("making DetailsPane(" + pane + ")");
 
         this.orientation = orientation;
         ConfigLoader.loadTabs(_tabPanels, pane, orientation);

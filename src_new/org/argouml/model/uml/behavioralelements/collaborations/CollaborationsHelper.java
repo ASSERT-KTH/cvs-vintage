@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelper.java,v 1.18 2003/09/14 18:10:45 bobtarling Exp $
+// $Id: CollaborationsHelper.java,v 1.19 2003/11/10 12:35:45 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -391,7 +391,7 @@ public class CollaborationsHelper {
         }
         it = bases.iterator();
         while (it.hasNext()) {
-            addBase(role, (MClassifier) it.next());
+            addBase(role, it.next());
         }
     }
     

@@ -1,4 +1,4 @@
-// $Id: FigComponent.java,v 1.20 2003/09/11 21:10:10 bobtarling Exp $
+// $Id: FigComponent.java,v 1.21 2003/11/10 12:35:00 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComponent.java
 // Classes: FigComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponent.java,v 1.20 2003/09/11 21:10:10 bobtarling Exp $
+// $Id: FigComponent.java,v 1.21 2003/11/10 12:35:00 jhraigniac Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -44,7 +44,6 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 /** Class to display graphics for a UML Component in a diagram. */
 
@@ -298,7 +297,7 @@ public class FigComponent extends FigNodeModelElement {
 	    || ModelFacade.getName(stereo).length() == 0)
 	    _stereo.setText("");
 	else {
-	    _stereo.setText(Notation.generateStereotype(this, (MStereotype)stereo));
+	    _stereo.setText(Notation.generateStereotype(this, stereo));
 	}
     }
 

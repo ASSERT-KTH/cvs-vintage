@@ -1,4 +1,4 @@
-// $Id: CrTooManyOper.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrTooManyOper.java,v 1.10 2003/11/10 12:35:00 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrTooManyOper.java
 // Classes: CrTooManyOper
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyOper.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrTooManyOper.java,v 1.10 2003/11/10 12:35:00 jhraigniac Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -65,7 +65,7 @@ public class CrTooManyOper extends CrUML {
 	for (Iterator iter = str.iterator(); iter.hasNext();) {
 	    if (ModelFacade.isABehavioralFeature(iter.next()))
 		n++;
-	};
+	}
 	if (n <= threshold) return NO_PROBLEM;
 	return PROBLEM_FOUND;
     }

@@ -1,4 +1,4 @@
-// $Id: ClassdiagramLayouter.java,v 1.18 2003/09/08 20:11:54 bobtarling Exp $
+// $Id: ClassdiagramLayouter.java,v 1.19 2003/11/10 12:35:00 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -458,7 +458,7 @@ public class ClassdiagramLayouter implements Layouter {
                         }
                         xOffset += ((downlinks.size() - 1) * getHGap());
                         bumperX =
-			    (int) (xOffset / 2) - (int) (currentWidth / 2);
+			    (int) (xOffset / 2) - (currentWidth / 2);
                     }
                     curNode.setLocation(
 			    new Point(Math.max(xPos + bumperX, 

@@ -1,4 +1,4 @@
-// $Id: GenerationPreferences.java,v 1.4 2003/06/30 21:59:33 linus Exp $
+// $Id: GenerationPreferences.java,v 1.5 2003/11/10 12:35:01 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,9 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.generator;
-
-import java.util.*;
-import java.io.*;
 
 /** Stores preference information entered by the user. */
 

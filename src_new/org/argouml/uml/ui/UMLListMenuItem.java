@@ -1,4 +1,4 @@
-// $Id: UMLListMenuItem.java,v 1.8 2003/09/21 11:07:03 bobtarling Exp $
+// $Id: UMLListMenuItem.java,v 1.9 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,14 +23,12 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-import javax.swing.event.*;
 import javax.swing.*;
 
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.*;
 import java.awt.event.*;
-import java.awt.*;
 
 /**
  *   This class extends JMenuItem to invoke a method upon selection.

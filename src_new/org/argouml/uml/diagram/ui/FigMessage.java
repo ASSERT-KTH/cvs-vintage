@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.19 2003/09/14 18:51:33 alexb Exp $
+// $Id: FigMessage.java,v 1.20 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,8 +46,6 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigPoly;
 import org.tigris.gef.presentation.FigText;
-
-import ru.novosoft.uml.behavior.collaborations.MMessage;
 
 /** Class to display graphics for a UML collaboration in a diagram. */
 
@@ -212,7 +210,7 @@ public class FigMessage extends FigNodeModelElement {
 	if (message != null && ft == _name) {
 	    String s = ft.getText();
 	    try {
-		ParserDisplay.SINGLETON.parseMessage((MMessage)message, s);
+		ParserDisplay.SINGLETON.parseMessage(message, s);
 		ProjectBrowser.getInstance().getStatusBar().showStatus("");
 	    } catch (ParseException pe) {
 		ProjectBrowser.getInstance().getStatusBar().showStatus("Error: "
@@ -290,7 +288,7 @@ public class FigMessage extends FigNodeModelElement {
     protected void updateNameText() {
         Object mes =  getOwner();
         if (mes == null) return;
-        _name.setText(Notation.generate(this, (MMessage)mes));
+        _name.setText(Notation.generate(this, mes));
     }
 
     /**

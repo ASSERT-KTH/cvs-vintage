@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.38 2003/10/27 22:41:31 alexb Exp $
+// $Id: FigPackage.java,v 1.39 2003/11/10 12:35:01 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,12 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.38 2003/10/27 22:41:31 alexb Exp $
+// $Id: FigPackage.java,v 1.39 2003/11/10 12:35:01 jhraigniac Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -56,8 +55,6 @@ import org.tigris.gef.base.Globals;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
-import ru.novosoft.uml.model_management.MPackage;
 
 /** Class to display graphics for a UML package in a class diagram. */
 
@@ -366,7 +363,7 @@ public class FigPackage extends FigNodeModelElement {
             }
         } else {
             /* we got stereotype */
-            _stereo.setText(Notation.generateStereotype(this, (MStereotype)stereo));
+            _stereo.setText(Notation.generateStereotype(this, stereo));
 
             if (!_showStereotype) {
                 _stereoLineBlinder.setDisplayed(false);
@@ -552,9 +549,9 @@ public class FigPackage extends FigNodeModelElement {
 						     "isAbstract",
 						     "isAbstract",
 						     "setAbstract",
-						     (MPackage)mpackage));
-        modifierMenu.addCheckItem(new ActionModifier("Leaf", "isLeaf", "isLeaf", "setLeaf", (MPackage)mpackage));
-        modifierMenu.addCheckItem(new ActionModifier("Root", "isRoot", "isRoot", "setRoot", (MPackage)mpackage));
+						     mpackage));
+        modifierMenu.addCheckItem(new ActionModifier("Leaf", "isLeaf", "isLeaf", "setLeaf", mpackage));
+        modifierMenu.addCheckItem(new ActionModifier("Root", "isRoot", "isRoot", "setRoot", mpackage));
 
         popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 2);
 

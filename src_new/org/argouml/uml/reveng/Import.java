@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.38 2003/11/08 12:03:48 alexb Exp $
+// $Id: Import.java,v 1.39 2003/11/10 12:35:00 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ import org.tigris.gef.base.Globals;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Id: Import.java,v 1.38 2003/11/08 12:03:48 alexb Exp $
+ * <p>$Id: Import.java,v 1.39 2003/11/10 12:35:00 jhraigniac Exp $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -110,10 +110,6 @@ public class Import {
     private JDialog dialog;
     
     private ImportStatusScreen iss;
-    
-    // log4j logging
-    private static Logger cat =
-	Logger.getLogger(org.argouml.uml.reveng.Import.class);
     
     /**
      * Unnecessary attribute
@@ -199,7 +195,7 @@ public class Import {
             Vector languages = new Vector();
             
             for (Enumeration keys = modules.keys(); keys.hasMoreElements();) {
-                languages.add((String) keys.nextElement());
+                languages.add(keys.nextElement());
             }
             JComboBox selectedLanguage = new JComboBox(languages);
             selectedLanguage.addActionListener(new ActionListener() 
@@ -384,6 +380,8 @@ public class Import {
      * ImportStatusScreen, in order to cancel long import runs.
      */
     class ImportRun implements Runnable {
+		/** logger */
+		private Logger cat = Logger.getLogger(ImportRun.class);
         
         Vector _filesLeft;
         
@@ -530,7 +528,7 @@ public class Import {
             ExplorerEventAdaptor.getInstance().structureChanged();
             pb.setEnabled(true);
             
-            Argo.log.info(_st);
+            cat.info(_st);
             pb.getStatusBar().showProgress(0);
             
         }

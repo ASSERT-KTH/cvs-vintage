@@ -1,4 +1,4 @@
-// $Id: ActionGenerateAll.java,v 1.14 2003/09/21 14:11:12 bobtarling Exp $
+// $Id: ActionGenerateAll.java,v 1.15 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,7 +103,7 @@ public class ActionGenerateAll extends UMLAction {
     public boolean shouldBeEnabled() {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	ArgoDiagram activeDiagram =
-	    ProjectManager.getManager().getCurrentProject().getActiveDiagram();;
+	    ProjectManager.getManager().getCurrentProject().getActiveDiagram();
 	return super.shouldBeEnabled()
 	    && (activeDiagram instanceof UMLClassDiagram);
     }

@@ -40,7 +40,7 @@ import antlr.collections.impl.BitSet;
  * 
  * <p>Version tracking now done with following cvs ID:
  *
- * <p>$Id: JavaRecognizer.java,v 1.20 2003/08/25 23:57:45 bobtarling Exp $
+ * <p>$Id: JavaRecognizer.java,v 1.21 2003/11/10 12:35:02 jhraigniac Exp $
  * 
  * --------- old notes: -------------------------------------------
  * <pre>
@@ -1700,7 +1700,7 @@ public JavaRecognizer(ParserSharedInputState state) {
 	}
 	
 	public final short  parameterModifier() throws RecognitionException, TokenStreamException {
-		short mods=0;;
+		short mods=0;
 		
 		
 		{
@@ -3242,7 +3242,7 @@ public JavaRecognizer(ParserSharedInputState state) {
 	}
 	
 	public final String  primaryExpression() throws RecognitionException, TokenStreamException {
-		String name = "UNHANDLED PRIMARY EXPRESSION";;
+		String name = "UNHANDLED PRIMARY EXPRESSION";
 		
 		Token  id = null;
 		

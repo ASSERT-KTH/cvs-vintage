@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.34 2003/09/13 22:06:05 alexb Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.35 2003/11/10 12:35:04 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -162,8 +162,8 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 	    Collection clients = ModelFacade.getClients(edge);
 	    Collection suppliers = ModelFacade.getSuppliers(edge);
 	    if (clients == null || suppliers == null) return false;
-	    end0 = ((Object[]) clients.toArray())[0];
-	    end1 = ((Object[]) suppliers.toArray())[0];
+	    end0 = (clients.toArray())[0];
+	    end1 = (suppliers.toArray())[0];
 	}
 	if (end0 == null || end1 == null) return false;
 	if (!_nodes.contains(end0)) return false;

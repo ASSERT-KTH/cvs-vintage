@@ -1,4 +1,4 @@
-// $Id: DiagramInfo.java,v 1.7 2003/10/22 12:52:14 bobtarling Exp $
+// $Id: DiagramInfo.java,v 1.8 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ package org.argouml.uml.diagram.ui;
 import java.awt.BorderLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;

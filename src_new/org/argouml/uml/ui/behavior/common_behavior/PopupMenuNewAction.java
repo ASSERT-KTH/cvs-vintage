@@ -1,4 +1,4 @@
-// $Id: PopupMenuNewAction.java,v 1.4 2003/10/12 08:55:24 linus Exp $
+// $Id: PopupMenuNewAction.java,v 1.5 2003/11/10 12:35:04 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.behavior.common_behavior;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 
-import org.argouml.application.api.Argo;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionRemoveModelElement;
 import org.argouml.uml.ui.UMLMutableLinkedList;

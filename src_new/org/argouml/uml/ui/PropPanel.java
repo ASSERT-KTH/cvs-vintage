@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.74 2003/10/22 12:52:13 bobtarling Exp $
+// $Id: PropPanel.java,v 1.75 2003/11/10 12:35:00 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.74 2003/10/22 12:52:13 bobtarling Exp $
+// $Id: PropPanel.java,v 1.75 2003/11/10 12:35:00 jhraigniac Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -61,7 +61,6 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 //
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.kernel.ProjectManager;
@@ -124,7 +123,6 @@ abstract public class PropPanel
      *   change.</p>
      */
 
-    private Vector _targetList = null;
     private JPanel center;
 
     protected JToolBar buttonPanel;
@@ -449,7 +447,7 @@ abstract public class PropPanel
     }
 
     public String formatElement(MModelElement element) {
-        return getProfile().formatElement(element, (MNamespace)getDisplayNamespace());
+        return getProfile().formatElement(element, getDisplayNamespace());
     }
 
     public String formatNamespace(MNamespace namespace) {

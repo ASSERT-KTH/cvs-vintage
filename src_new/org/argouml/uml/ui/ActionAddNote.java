@@ -1,4 +1,4 @@
-// $Id: ActionAddNote.java,v 1.17 2003/10/27 22:41:32 alexb Exp $
+// $Id: ActionAddNote.java,v 1.18 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -146,9 +146,8 @@ public class ActionAddNote extends UMLChangeAction {
     }
 
     public boolean shouldBeEnabled() {
-        ProjectBrowser pb = ProjectBrowser.getInstance();
         Object target = TargetManager.getInstance().getModelTarget();
-        ;
+
         if (ProjectManager.getManager().getCurrentProject().getActiveDiagram()
             == null)
             return false;

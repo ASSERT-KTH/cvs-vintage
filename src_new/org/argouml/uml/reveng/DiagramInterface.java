@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.19 2003/06/30 21:59:34 linus Exp $
+// $Id: DiagramInterface.java,v 1.20 2003/11/10 12:35:00 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,6 @@ import org.argouml.uml.diagram.static_structure.ui.FigPackage;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.LayerPerspective;
-import org.tigris.gef.presentation.Fig;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -139,7 +138,7 @@ public class DiagramInterface {
                 
                 currentGM.addNode(newPackage);
                 currentLayer.add(newPackageFig);
-                currentLayer.putInPosition((Fig) newPackageFig);
+                currentLayer.putInPosition(newPackageFig);
             }
         }
     }
@@ -245,7 +244,7 @@ public class DiagramInterface {
         if (currentGM.canAddNode(newClass)) {
             currentLayer.add( newClassFig);
             currentGM.addNode(newClass);
-            currentLayer.putInPosition( (Fig) newClassFig);
+            currentLayer.putInPosition(newClassFig);
             currentGM.addNodeRelatedEdges( newClass);
             
             newClassFig.setAttributeVisible(!minimise);
@@ -268,7 +267,7 @@ public class DiagramInterface {
         if (currentGM.canAddNode(newInterface)) {
             currentLayer.add( newInterfaceFig);
             currentGM.addNode(newInterface);
-            currentLayer.putInPosition( (Fig) newInterfaceFig);
+            currentLayer.putInPosition(newInterfaceFig);
             currentGM.addNodeRelatedEdges( newInterface);
             
             newInterfaceFig.setOperationVisible(!minimise);

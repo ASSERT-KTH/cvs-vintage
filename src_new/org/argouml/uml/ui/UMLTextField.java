@@ -1,4 +1,4 @@
-// $Id: UMLTextField.java,v 1.25 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLTextField.java,v 1.26 2003/11/10 12:34:59 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 // File: UMLTextField.java
 // Classes: UMLTextField
 // Original Author: not known
-// $Id: UMLTextField.java,v 1.25 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLTextField.java,v 1.26 2003/11/10 12:34:59 jhraigniac Exp $
 // 25 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the FigUseCase.
 // 3 May 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to mark the
@@ -63,8 +63,8 @@ public class UMLTextField
     extends JTextField
     implements DocumentListener, UMLUserInterfaceComponent, FocusListener {
 
-    protected final static Logger cat =
-        Logger.getLogger("org.argouml.uml.ui.UMLTextField");
+    /** logger */
+    private static Logger cat = Logger.getLogger(UMLTextField.class);
 
     private UMLUserInterfaceContainer _container;
     private UMLTextProperty _property;
@@ -125,7 +125,6 @@ public class UMLTextField
         // update();
         
         _target = _container.getTarget();
-        String oldText = getText();
         String newText = _property.getProperty(_container);
         TextSetter textSetter = new TextSetter(newText, this);
         SwingUtilities.invokeLater(textSetter);
@@ -134,16 +133,16 @@ public class UMLTextField
     public void targetReasserted() {
     }
     public void roleAdded(final MElementEvent p1) {
-        //        Argo.log.info("UMLTextField.roleAdded: event p1 happened...");
+        //        cat.info("UMLTextField.roleAdded: event p1 happened...");
     }
     public void recovered(final MElementEvent p1) {
-        //        Argo.log.info("UMLTextField.recovered: event p1 happened...");
+        //        cat.info("UMLTextField.recovered: event p1 happened...");
     }
     public void roleRemoved(final MElementEvent p1) {
-        //        Argo.log.info("UMLTextField.roleRemoved: event p1 happened...");        
+        //        cat.info("UMLTextField.roleRemoved: event p1 happened...");        
     }
     public void listRoleItemSet(final MElementEvent p1) {
-        //        Argo.log.info("UMLTextField.listRoleItemSet: event p1 happened...");        
+        //        cat.info("UMLTextField.listRoleItemSet: event p1 happened...");        
     }
     public void removed(final MElementEvent p1) {
     }
@@ -171,7 +170,7 @@ public class UMLTextField
             }
         }
         //        else if(_target instanceof MDataType)
-        //            Argo.log.info("UMLTextField.propertySet: else :Target = " + _target);
+        //            cat.info("UMLTextField.propertySet: else :Target = " + _target);
     }
     
     /**
@@ -280,7 +279,7 @@ public class UMLTextField
                     if (_target instanceof MAttribute) {
                         _classifier =
                             (MClassifier) ((MAttribute) _target).getOwner();
-                        //            Argo.log.info("UMLTextField.update()..._classifier = " + _classifier);
+                        //            cat.info("UMLTextField.update()..._classifier = " + _classifier);
                         if (_classifier == null) {
                             return;
                         }
@@ -304,7 +303,7 @@ public class UMLTextField
                         }
                         else
                             if (_target instanceof MCallEvent) {
-                                //            Argo.log.info("UMLTextField.update()...target = " + _target);
+                                //            cat.info("UMLTextField.update()...target = " + _target);
                             }
           */
             
@@ -313,7 +312,7 @@ public class UMLTextField
     public void changedUpdate(final DocumentEvent p1) {
         // never happens since UMLTextFields don't support non-plain documents
         // handleEvent();
-        //        Argo.log.info("UMLTextField.changedUpdate: DocumentEvent p1 " );       
+        //        cat.info("UMLTextField.changedUpdate: DocumentEvent p1 " );       
     }
     
     /**

@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.153 2003/11/05 12:56:59 mkl Exp $
+// $Id: ModelFacade.java,v 1.154 2003/11/10 12:35:46 jhraigniac Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4536,7 +4536,7 @@ public class ModelFacade {
             ((MAttributeLink)handle).setValue((MInstance)value);
         }
         if (handle instanceof MExtension) {
-            ((MExtension)handle).setValue((Object)value);
+            ((MExtension)handle).setValue(value);
         }
         if (handle instanceof MTaggedValue) {
             ((MTaggedValue)handle).setValue((String)value);
@@ -4926,7 +4926,7 @@ public class ModelFacade {
         Object target,
         Collection extensionPoints) {
         if (target instanceof MUseCase && extensionPoints instanceof List) {
-            ((MUseCase)target).setExtensionPoints((List)extensionPoints);
+            ((MUseCase)target).setExtensionPoints(extensionPoints);
             return;
         }
         throw new IllegalArgumentException(
