@@ -1,8 +1,8 @@
 #if ($data.User.hasLoggedIn())
     <div class="focus"><strong>$link.setPage("SelectModule.vm").setLabel("Select module")</strong></div>
 #else
-    <div><strong>$link.setPage("Login.vm").setLabel("Login")</div></strong>
-    <div><strong>$link.setPage("Register.vm").setLabel("Register")</div></strong>
+    <div><strong>$link.setPage("Login.vm").setLabel("Login")</strong></div>
+    <div><strong>$link.setPage("Register.vm").setLabel("Register")</strong></div>
 #end
 
 ## ARTIFACT TYPES
