@@ -30,10 +30,13 @@ $page.setTitle("Scarab Links")
  <a href="$link.setPage("admin,GlobalArtifactTypeShow.vm")">admin,GlobalArtifactTypeShow.vm</a>
 </li>
 <li>
+ <a href="$link.setPage("admin,GlobalAttributeShow.vm")">admin,GlobalAttributeShow.vm</a>
+</li>
+<li>
  <a href="$link.setPage("admin,ManageArtifactTypes.vm")">admin,ManageArtifactTypes.vm</a>
 </li>
 <li>
- <a href="$link.setPage("admin,GlobalAttributeShow.vm")">admin,GlobalAttributeShow.vm</a>
+ <a href="$link.setPage("admin,ManageModules.vm")">admin,ManageModules.vm</a>
 </li>
 <li>
  <a href="$link.setPage("FluxIndex.vm")">Flux</a>
