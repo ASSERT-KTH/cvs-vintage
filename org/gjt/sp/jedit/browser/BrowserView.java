@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.51 2002/12/18 22:05:44 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.52 2002/12/24 17:35:22 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -602,7 +602,7 @@ class BrowserView extends JPanel
 			return null;
 		} //}}}
 
-		//{{{ getToolTipLocation() method
+		/* //{{{ getToolTipLocation() method
 		public final Point getToolTipLocation(MouseEvent evt)
 		{
 			TreePath path = getPathForLocation(evt.getX(), evt.getY());
@@ -616,7 +616,7 @@ class BrowserView extends JPanel
 				}
 			}
 			return null;
-		} //}}}
+		} //}}} */
 
 		//{{{ processKeyEvent() method
 		public void processKeyEvent(KeyEvent evt)
@@ -699,13 +699,13 @@ class BrowserView extends JPanel
 		//{{{ processMouseEvent() method
 		protected void processMouseEvent(MouseEvent evt)
 		{
-			ToolTipManager ttm = ToolTipManager.sharedInstance();
+			//ToolTipManager ttm = ToolTipManager.sharedInstance();
 
 			TreePath path = getPathForLocation(evt.getX(),evt.getY());
 
 			switch(evt.getID())
 			{
-			//{{{ MOUSE_ENTERED...
+			/* //{{{ MOUSE_ENTERED...
 			case MouseEvent.MOUSE_ENTERED:
 				toolTipInitialDelay = ttm.getInitialDelay();
 				toolTipReshowDelay = ttm.getReshowDelay();
@@ -718,7 +718,7 @@ class BrowserView extends JPanel
 				ttm.setInitialDelay(toolTipInitialDelay);
 				ttm.setReshowDelay(toolTipReshowDelay);
 				super.processMouseEvent(evt);
-				break; //}}}
+				break; //}}} */
 			//{{{ MOUSE_CLICKED...
 			case MouseEvent.MOUSE_CLICKED:
 				if(path != null)

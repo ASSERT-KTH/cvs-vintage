@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * One instance of this class is created for each supported edit mode.
  *
  * @author Slava Pestov
- * @version $Id: Mode.java,v 1.6 2002/08/29 22:09:26 spestov Exp $
+ * @version $Id: Mode.java,v 1.7 2002/12/24 17:35:22 spestov Exp $
  */
 public class Mode
 {
@@ -271,7 +271,7 @@ public class Mode
 	 */
 	public String toString()
 	{
-		return getClass().getName() + "[" + getName() + "]";
+		return name;
 	} //}}}
 
 	//{{{ Private members

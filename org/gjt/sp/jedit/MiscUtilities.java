@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.28 2002/08/29 22:09:26 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.29 2002/12/24 17:35:22 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -501,7 +501,7 @@ loop:		for(int i = 0; i < str.length(); i++)
 			}
 			else
 			{
-				if(virtualPosition == column)
+				if(virtualPosition >= column)
 					return i;
 				else
 					++virtualPosition;

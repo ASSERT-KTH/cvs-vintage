@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.46 2002/06/18 06:56:00 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.47 2002/12/24 17:35:24 spestov Exp $
  */
 class ChunkCache
 {
@@ -213,24 +213,17 @@ class ChunkCache
 	{
 		for(int i = 0; i < lineInfo.length; i++)
 		{
-			if(lineInfo[i].physicalLine >= physicalLine)
+			LineInfo info = lineInfo[i];
+			if(!info.chunksValid)
+				break;
+
+			if(info.physicalLine >= physicalLine)
 			{
 				invalidateChunksFrom(i);
 				break;
 			}
 		}
 	} //}}}
-
-	void test()
-	{
-		long start = System.currentTimeMillis();
-		int lineCount = textArea.getBuffer().getLineCount();
-		for(int i = 0; i < lineCount; i++)
-		{
-			lineToChunkList(i,out);
-		}
-		System.err.println(System.currentTimeMillis() - start);
-	}
 
 	//{{{ lineToChunkList() method
 	void lineToChunkList(int physicalLine, ArrayList out)

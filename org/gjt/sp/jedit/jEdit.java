@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.92 2002/11/22 17:55:26 spestov Exp $
+ * @version $Id: jEdit.java,v 1.93 2002/12/24 17:35:22 spestov Exp $
  */
 public class jEdit
 {
@@ -296,7 +296,7 @@ public class jEdit
 			if(background)
 			{
 				background = false;
-				System.err.println("You cannot specify both the"
+				Log.log(Log.WARNING,jEdit.class,"You cannot specify both the"
 					+ " -background and -noserver switches");
 			}
 		} //}}}
@@ -313,8 +313,7 @@ public class jEdit
 		initUserProperties();
 		initPLAF();
 
-		if(OperatingSystem.hasJava14()
-			&& System.getProperty("jedit.nojava14") == null)
+		if(OperatingSystem.hasJava14())
 		{
 			try
 			{

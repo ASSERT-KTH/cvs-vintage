@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.105 2002/09/20 19:53:23 spestov Exp $
+ * @version $Id: Buffer.java,v 1.106 2002/12/24 17:35:22 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1326,8 +1326,9 @@ public class Buffer implements EBComponent
 	 */
 	public void beginCompoundEdit()
 	{
-		if(getFlag(TEMPORARY))
-			return;
+		// Why?
+		//if(getFlag(TEMPORARY))
+		//	return;
 
 		try
 		{
@@ -1350,8 +1351,9 @@ public class Buffer implements EBComponent
 	 */
 	public void endCompoundEdit()
 	{
-		if(getFlag(TEMPORARY))
-			return;
+		// Why?
+		//if(getFlag(TEMPORARY))
+		//	return;
 
 		try
 		{

@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001 Slava Pestov
+ * Copyright (C) 2001, 2002 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,6 +30,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.util.*;
+import org.gjt.sp.jedit.gui.RolloverButton;
 import org.gjt.sp.jedit.*;
 //}}}
 
@@ -37,7 +38,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Browser color editor.
  * @author Slava Pestov
- * @version $Id: BrowserColorsOptionPane.java,v 1.4 2002/08/02 17:31:58 spestov Exp $
+ * @version $Id: BrowserColorsOptionPane.java,v 1.5 2002/12/24 17:35:23 spestov Exp $
  */
 public class BrowserColorsOptionPane extends AbstractOptionPane
 {
@@ -70,16 +71,17 @@ public class BrowserColorsOptionPane extends AbstractOptionPane
 		add(BorderLayout.CENTER,scroller);
 
 		JPanel buttons = new JPanel();
+		buttons.setBorder(new EmptyBorder(3,0,0,0));
 		buttons.setLayout(new BoxLayout(buttons,BoxLayout.X_AXIS));
-		buttons.setBorder(new EmptyBorder(6,0,0,0));
-
-		buttons.add(Box.createGlue());
-		add = new JButton(jEdit.getProperty("options.browser.colors.add"));
-		add.addActionListener(new ActionHandler());
+		ActionHandler actionHandler = new ActionHandler();
+		add = new RolloverButton(GUIUtilities.loadIcon("Plus.png"));
+		add.setToolTipText(jEdit.getProperty("options.browser.colors.add"));
+		add.addActionListener(actionHandler);
 		buttons.add(add);
 		buttons.add(Box.createHorizontalStrut(6));
-		remove = new JButton(jEdit.getProperty("options.browser.colors.remove"));
-		remove.addActionListener(new ActionHandler());
+		remove = new RolloverButton(GUIUtilities.loadIcon("Minus.png"));
+		remove.setToolTipText(jEdit.getProperty("options.browser.colors.remove"));
+		remove.addActionListener(actionHandler);
 		buttons.add(remove);
 		buttons.add(Box.createGlue());
 

@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.1 2002/08/20 19:11:46 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.2 2002/12/24 17:35:22 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -80,7 +80,7 @@ public class BufferIORequest extends WorkRequest
 	public static final int INSERT = 3;
 
 	/**
-	 * Magic number used for auto-detecting Unicode and GZIP files.
+	 * Magic numbers used for auto-detecting Unicode and GZIP files.
 	 */
 	public static final int GZIP_MAGIC_1 = 0x1f;
 	public static final int GZIP_MAGIC_2 = 0x8b;
@@ -561,18 +561,18 @@ public class BufferIORequest extends WorkRequest
 				/* if the VFS supports renaming files, we first
 				 * save to #<filename>#save#, then rename that
 				 * to <filename>, so that if the save fails,
-				 * data will not be lost */
+				 * data will not be lost.
+				 *
+				 * as of 4.1pre7 we now call vfs.getTwoStageSaveName()
+				 * instead of constructing the path directly
+				 * since some VFS's might not allow # in filenames.
+				 */
 				String savePath;
 
 				boolean twoStageSave = (vfs.getCapabilities() & VFS.RENAME_CAP) != 0
 					&& jEdit.getBooleanProperty("twoStageSave");
 				if(twoStageSave)
-				{
-					savePath = MiscUtilities.constructPath(
-						vfs.getParentOfPath(path),
-						'#' + vfs.getFileName(path)
-						+ "#save#");
-				}
+					savePath = vfs.getTwoStageSaveName(path);
 				else
 					savePath = path;
 

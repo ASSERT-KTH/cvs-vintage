@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 /**
  * An interface representing a portion of the current selection.
  * @author Slava Pestov
- * @version $Id: Selection.java,v 1.9 2002/06/14 06:07:18 spestov Exp $
+ * @version $Id: Selection.java,v 1.10 2002/12/24 17:35:24 spestov Exp $
  * @since jEdit 3.2pre1
  */
 public abstract class Selection implements Cloneable
@@ -346,6 +346,9 @@ public abstract class Selection implements Cloneable
 				if(rectEnd == -1)
 					rectEnd = lineLen;
 
+				if(rectEnd < rectStart)
+					System.err.println(i + ":::" + start + ":" + end
+						+ " ==> " + rectStart + ":" + rectEnd);
 				buf.append(buffer.getText(lineStart + rectStart,
 					rectEnd - rectStart));
 

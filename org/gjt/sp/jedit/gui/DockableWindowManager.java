@@ -40,7 +40,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.42 2002/09/20 19:53:23 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.43 2002/12/24 17:35:23 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -791,36 +791,40 @@ public class DockableWindowManager extends JPanel
 		while(enum.hasMoreElements())
 		{
 			Entry entry = (Entry)enum.nextElement();
-			String position = entry.position;
-			String newPosition = jEdit.getProperty(entry.factory.name
-				+ ".dock-position");
-			if(newPosition != null /* ??? */
-				&& !newPosition.equals(position))
+
+			if(!view.isPlainView())
 			{
-				entry.position = newPosition;
-				if(entry.container != null)
+				String position = entry.position;
+				String newPosition = jEdit.getProperty(entry.factory.name
+					+ ".dock-position");
+				if(newPosition != null /* ??? */
+					&& !newPosition.equals(position))
 				{
-					entry.container.remove(entry);
-					entry.container = null;
-					entry.win = null;
-				}
+					entry.position = newPosition;
+					if(entry.container != null)
+					{
+						entry.container.remove(entry);
+						entry.container = null;
+						entry.win = null;
+					}
 
-				if(newPosition.equals(FLOATING))
-					/* do nothing */;
-				else
-				{
-					if(newPosition.equals(TOP))
-						entry.container = top;
-					else if(newPosition.equals(LEFT))
-						entry.container = left;
-					else if(newPosition.equals(BOTTOM))
-						entry.container = bottom;
-					else if(newPosition.equals(RIGHT))
-						entry.container = right;
+					if(newPosition.equals(FLOATING))
+						/* do nothing */;
 					else
-						throw new InternalError("Unknown position: " + newPosition);
+					{
+						if(newPosition.equals(TOP))
+							entry.container = top;
+						else if(newPosition.equals(LEFT))
+							entry.container = left;
+						else if(newPosition.equals(BOTTOM))
+							entry.container = bottom;
+						else if(newPosition.equals(RIGHT))
+							entry.container = right;
+						else
+							throw new InternalError("Unknown position: " + newPosition);
 
-					entry.container.register(entry);
+						entry.container.register(entry);
+					}
 				}
 			}
 

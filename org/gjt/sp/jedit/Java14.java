@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.10 2002/10/23 21:14:58 spestov Exp $
+ * @version $Id: Java14.java,v 1.11 2002/12/24 17:35:22 spestov Exp $
  */
 public class Java14
 {
@@ -138,11 +138,13 @@ public class Java14
 	//{{{ WheelScrollListener class
 	static class MouseWheelHandler implements MouseWheelListener
 	{
+		int dbg;
 		public void mouseWheelMoved(MouseWheelEvent e)
 		{
+			System.err.println((dbg++) + ": wheel mouse scrolled: "
+				+ e.getScrollAmount());
 			JEditTextArea textArea = (JEditTextArea)e.getSource();
 
-			int amt = e.getWheelRotation();
 			/****************************************************
 			 * move caret depending on pressed control-keys:
 			 * - Alt: move cursor, do not select
@@ -152,13 +154,18 @@ public class Java14
 			 * - <else>: scroll 3 lines
 			 ****************************************************/
 			if(e.isAltDown())
-				moveCaret(textArea,amt,e.isShiftDown() || e.isControlDown());
+			{
+				moveCaret(textArea,e.getWheelRotation(),
+					e.isShiftDown() || e.isControlDown());
+			}
 			else if(e.isShiftDown())
-				scrollPage(textArea,amt);
+				scrollPage(textArea,e.getWheelRotation());
 			else if(e.isControlDown())
-				scrollLine(textArea,amt);
+				scrollLine(textArea,e.getWheelRotation());
+			else if(e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL)
+				scrollLine(textArea,e.getUnitsToScroll());
 			else
-				scrollLine(textArea,amt * 3);
+				scrollLine(textArea,3 * e.getWheelRotation());
 		}
 
 		private void scrollLine(JEditTextArea textArea, int amt)
@@ -181,5 +188,5 @@ public class Java14
 			else
 				textArea.goToNextLine(select);
 		}
-	}
+	} //}}}
 }

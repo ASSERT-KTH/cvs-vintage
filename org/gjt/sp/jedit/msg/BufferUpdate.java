@@ -27,7 +27,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when a buffer-related change occurs.
  * @author Slava Pestov
- * @version $Id: BufferUpdate.java,v 1.7 2002/05/29 09:53:14 spestov Exp $
+ * @version $Id: BufferUpdate.java,v 1.8 2002/12/24 17:35:23 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -83,7 +83,7 @@ public class BufferUpdate extends EBMessage
 	public static final Object PROPERTIES_CHANGED = "PROPERTIES_CHANGED";
 
 	/**
-	 * Mode changed.
+	 * @deprecated No longer sent. Listen for PROPERTIES_CHANGED instead.
 	 */
 	public static final Object MODE_CHANGED = "MODE_CHANGED";
 	//}}}

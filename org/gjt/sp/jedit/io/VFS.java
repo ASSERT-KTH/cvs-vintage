@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * Swing UI calls directly.
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.18 2002/08/20 19:11:47 spestov Exp $
+ * @author $Id: VFS.java,v 1.19 2002/12/24 17:35:23 spestov Exp $
  */
 public abstract class VFS
 {
@@ -229,6 +229,24 @@ public abstract class VFS
 	public char getFileSeparator()
 	{
 		return '/';
+	} //}}}
+
+	//{{{ getTwoStageSaveName() method
+	/**
+	 * Returns a temporary file name based on the given path.
+	 *
+	 * By default jEdit first saves a file to <code>#<i>name</i>#save#</code>
+	 * and then renames it to the original file. However some virtual file
+	 * systems might not support the <code>#</code> character in filenames,
+	 * so this method permits the VFS to override this behavior.
+	 *
+	 * @param path The path name
+	 * @since jEdit 4.1pre7
+	 */
+	public String getTwoStageSaveName(String path)
+	{
+		return MiscUtilities.constructPath(getParentOfPath(path),
+			'#' + getFileName(path) + "#save#");
 	} //}}}
 
 	//{{{ reloadDirectory() method

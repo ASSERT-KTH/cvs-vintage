@@ -26,7 +26,7 @@ import org.gjt.sp.util.Log;
 /**
  * Contains operating system detection routines.
  * @author Slava Pestov
- * @version $Id: OperatingSystem.java,v 1.3 2002/05/29 11:19:57 spestov Exp $
+ * @version $Id: OperatingSystem.java,v 1.4 2002/12/24 17:35:22 spestov Exp $
  * @since jEdit 4.0pre4
  */
 public class OperatingSystem
@@ -158,7 +158,8 @@ public class OperatingSystem
 			}
 		}
 
-		if(System.getProperty("java.version").compareTo("1.4") >= 0)
+		if(System.getProperty("java.version").compareTo("1.4") >= 0
+			&& System.getProperty("jedit.nojava14") == null)
 			java14 = true;
 	} //}}}
 
