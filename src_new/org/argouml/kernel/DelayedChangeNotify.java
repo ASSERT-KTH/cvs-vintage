@@ -1,4 +1,4 @@
-// $Id: DelayedChangeNotify.java,v 1.3 2003/08/21 20:42:38 alexb Exp $
+// $Id: DelayedChangeNotify.java,v 1.4 2004/09/06 16:37:55 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,15 +31,24 @@ import java.beans.*;
  * the Kernel.
  */
 public class DelayedChangeNotify implements Runnable {
-    DelayedVChangeListener _listener;
-    PropertyChangeEvent _pce;
+    private DelayedVChangeListener listener;
+    private PropertyChangeEvent pce;
 
-    public DelayedChangeNotify(DelayedVChangeListener list,
-			       PropertyChangeEvent pce) {
-	_listener = list;
-	_pce = pce;
+    /**
+     * The constructor.
+     * 
+     * @param l the listener
+     * @param p the event
+     */
+    public DelayedChangeNotify(DelayedVChangeListener l,
+			       PropertyChangeEvent p) {
+	listener = l;
+	pce = p;
     }
   
-    public void run() { _listener.delayedVetoableChange(_pce); }
+    /**
+     * @see java.lang.Runnable#run()
+     */
+    public void run() { listener.delayedVetoableChange(pce); }
 
 } /* end class DelayedChangeNotify */

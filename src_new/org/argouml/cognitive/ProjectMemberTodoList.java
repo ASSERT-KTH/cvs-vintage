@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.11 2004/09/05 16:57:49 bobtarling Exp $
+// $Id: ProjectMemberTodoList.java,v 1.12 2004/09/06 16:37:56 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.log4j.Logger;
 
@@ -161,8 +160,11 @@ public class ProjectMemberTodoList extends ProjectMember {
     }
 
     /**
-     * @see org.argouml.kernel.ProjectMember#save(java.io.Writer)
-     * @throws InvalidArgumentException if no writer specified.
+     * 
+     * Throws InvalidArgumentException if no writer specified.
+     *
+     * @see org.argouml.kernel.ProjectMember#save(java.io.Writer, 
+     * java.lang.Integer)
      */
     public void save(Writer writer, Integer indent) throws SaveException {
         LOG.info("Saving todo list");
@@ -172,7 +174,8 @@ public class ProjectMemberTodoList extends ProjectMember {
                     "No writer specified to save todo list");
         }
         
-        OCLExpander expander = new OCLExpander(TemplateReader.readFile(TO_DO_TEE));
+        OCLExpander expander = 
+            new OCLExpander(TemplateReader.readFile(TO_DO_TEE));
 
         if (indent == null) {
             try {
@@ -188,7 +191,7 @@ public class ProjectMemberTodoList extends ProjectMember {
                 expander.expand(w, this, "", "");
                 w.close();
                 addXmlFileToWriter(
-                        (PrintWriter)writer,
+                        (PrintWriter) writer,
                         tempFile,
                         indent.intValue());
             } catch (ExpansionException e) {

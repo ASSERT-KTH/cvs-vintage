@@ -1,4 +1,4 @@
-// $Id: ArgoFilePersister.java,v 1.3 2004/09/05 16:57:48 bobtarling Exp $
+// $Id: ArgoFilePersister.java,v 1.4 2004/09/06 16:37:55 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class ArgoFilePersister extends AbstractFilePersister {
      * org.argouml.kernel.Project, java.io.File)
      */
     public void save(Project project, File file)
-            throws SaveException {
+        throws SaveException {
         
         project.setFile(file);
         project.setVersion(ArgoVersion.getVersion());
@@ -100,7 +100,8 @@ public class ArgoFilePersister extends AbstractFilePersister {
             FileOutputStream stream =
                 new FileOutputStream(file);
             writer =
-                new PrintWriter(new BufferedWriter(new OutputStreamWriter(stream, "UTF-8")));
+                new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+                        stream, "UTF-8")));
     
             expand(writer, project);
             writer.flush();
