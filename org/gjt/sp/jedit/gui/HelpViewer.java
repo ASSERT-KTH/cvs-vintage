@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * jEdit's HTML viewer. It uses a Swing JEditorPane to display the HTML,
  * and implements a URL history.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.9 2001/11/05 07:56:44 spestov Exp $
+ * @version $Id: HelpViewer.java,v 1.10 2001/11/10 10:56:14 spestov Exp $
  */
 public class HelpViewer extends JFrame implements EBComponent
 {
@@ -56,7 +56,7 @@ public class HelpViewer extends JFrame implements EBComponent
 	public HelpViewer(URL url)
 	{
 		this(url.toString());
-	}
+	} //}}}
 
 	//{{{ HelpViewer constructor
 	/**
@@ -120,6 +120,11 @@ public class HelpViewer extends JFrame implements EBComponent
 		toc.setRootVisible(false);
 		toc.setShowsRootHandles(true);
 
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+			nodes.get("jeditresource:/doc/users-guide/using-jedit-part.html");
+		if(node != null)
+			toc.expandPath(new TreePath(node.getPath()));
+
 		viewer = new JEditorPane();
 		viewer.setEditable(false);
 		viewer.addHyperlinkListener(new LinkHandler());
@@ -128,7 +133,6 @@ public class HelpViewer extends JFrame implements EBComponent
 		JSplitPane splitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 			new JScrollPane(toc),new JScrollPane(viewer));
 		splitter.setBorder(null);
-
 
 		getContentPane().add(BorderLayout.CENTER,splitter);
 
