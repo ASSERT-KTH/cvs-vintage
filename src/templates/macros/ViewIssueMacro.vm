@@ -1,7 +1,7 @@
 #macro (viewIssue $currentIssue $module)
 
 #set ($issueType = $scarabR.CurrentIssueType)
-<h2>$currentIssue.IssueType.Name ID: $currentIssue.UniqueId</h2>
+<h2>$currentIssue.IssueType.Name ID: <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId")">$currentIssue.UniqueId</a></h2>
 
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
