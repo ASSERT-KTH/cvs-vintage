@@ -47,6 +47,7 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.List;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.torque.om.NumberKey;
@@ -61,7 +62,7 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.4 2002/01/18 22:26:17 jon Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.5 2002/03/12 01:35:12 elicia Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
@@ -82,7 +83,7 @@ public class ScarabModuleTest extends BaseTestCase
     protected void runTest()
         throws Throwable
     {
-//        testGetParents();
+        testGetParents();
         testCreateNew();
     }
     
@@ -97,7 +98,7 @@ public class ScarabModuleTest extends BaseTestCase
             ModuleEntity me = (ModuleEntity) itr.next();
             System.out.println (me.getName());
         }
-//        assertEquals (map.size(), 10);  
+        System.out.println ("parents=" + parents.size());
     }
 
     private void testCreateNew() throws Exception
@@ -107,8 +108,67 @@ public class ScarabModuleTest extends BaseTestCase
         me.setRealName("New Module");
         me.setOwnerId(new NumberKey(1));
         me.setParentId(new NumberKey(1));
-//        me.setCode("NEWMOD");
         me.setDescription("This is the new module description");
         me.save();
+        testInitialData(me);
     }
+
+
+    private void testInitialData(ModuleEntity me) throws Exception
+    {
+        for (int j = 1;j<nbrDfltModules+1;j++)
+        {
+            ScarabModule module = (ScarabModule) me;
+            IssueType issueType = (IssueType)IssueTypePeer
+                .retrieveByPK(new NumberKey(Integer.toString(j)));
+            System.out.println("ISSUE TYPE = " + issueType.getName());
+            Issue issue = new Issue();
+            issue.setModule(me);
+            issue.setIssueType(issueType);
+            testGetAllAttributeValuesMap(issue);
+        }
+    }
+
+    private void testGetAllAttributeValuesMap(Issue issue) throws Exception
+    {
+        System.out.println ("testGetAllAttributeValuesMap()");
+        HashMap attrMap = issue.getAllAttributeValuesMap();
+        System.out.println ("getAllAttributeValuesMap().size(): " + attrMap.size());
+        int expectedSize = 11;
+        switch (Integer.parseInt(issue.getTypeId().toString()))
+        {
+            case 1: expectedSize = 11;break;
+            case 2: expectedSize = 11;break;
+            case 3: expectedSize = 10;break;
+            case 4: expectedSize = 10;break;
+            case 5: expectedSize = 8;break;
+            case 6: expectedSize = 8;break;
+            case 7: expectedSize = 8;break;
+            case 8: expectedSize = 8;break;
+            case 9: expectedSize = 8;break;
+            case 10: expectedSize = 8;
+        }
+        assertEquals (expectedSize, attrMap.size());
+        Iterator iter = attrMap.keySet().iterator();
+        while (iter.hasNext())
+        {
+            Attribute attr = ((AttributeValue)attrMap.get(iter.next())).getAttribute();
+            List attrOptions = attr.getAttributeOptions();
+            if (attr.isOptionAttribute())
+            {
+                switch (Integer.parseInt(attr.getAttributeId().toString()))
+                {
+                    case 3: expectedSize = 7;break;
+                    case 4: expectedSize = 8;break;
+                    case 5: expectedSize = 8;break;
+                    case 6: expectedSize = 52;break;
+                    case 7: expectedSize = 4;break;
+                    case 8: expectedSize = 4;break;
+                    case 9: expectedSize = 10;break;
+                    case 12: expectedSize = 3;break;
+                }
+            }
+        }
+    }
+
 }
