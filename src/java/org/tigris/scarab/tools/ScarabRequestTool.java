@@ -84,6 +84,11 @@ public class ScarabRequestTool implements ScarabRequestScope,
     private Attribute attribute = null;
 
     /**
+     * A Module object for use within the Scarab API.
+     */
+    private Module module = null;
+
+    /**
      * A AttributeOption object for use within the Scarab API.
      */
     private AttributeOption attributeOption = null;
@@ -124,30 +129,6 @@ public class ScarabRequestTool implements ScarabRequestScope,
             .get(ScarabConstants.INTAKE_TOOL);
     }
 
-    /**
-     * A Attribute object for use within the Scarab API.
-     */
-    public Attribute getAttribute()
-     throws Exception
-    {
-try{
-        if (attribute == null)
-        {
-            String attId = getIntakeTool()
-                .get("Attribute", IntakeTool.DEFAULT_KEY).get("Id").toString();
-            if ( attId == null || attId.length() == 0 )
-            {
-                attribute = new Attribute();
-            }
-            else 
-            {
-                attribute = Attribute.getInstance(new NumberKey(attId));
-            }
-        }        
-}catch(Exception e){e.printStackTrace();}
-        return attribute;
- 
-   }
 
     /**
      * A Attribute object for use within the Scarab API.
@@ -199,6 +180,74 @@ try{
             this.user = new ScarabUser();
         return this.user;
     }
+
+    /**
+     * A Attribute object for use within the Scarab API.
+     */
+    public Attribute getAttribute()
+     throws Exception
+    {
+try{
+        if (attribute == null)
+        {
+            String attId = getIntakeTool()
+                .get("Attribute", IntakeTool.DEFAULT_KEY).get("Id").toString();
+            if ( attId == null || attId.length() == 0 )
+            {
+                attribute = new Attribute();
+            }
+            else 
+            {
+                attribute = Attribute.getInstance(new NumberKey(attId));
+            }
+        }        
+}catch(Exception e){e.printStackTrace();}
+        return attribute;
+ 
+   }
+    /**
+     * A Module object for use within the Scarab API.
+     */
+    public void setModule(Module module)
+    {
+        this.module = module;
+    }
+
+    /**
+     * Get an Module object. 
+     *
+     * @return a <code>Module</code> value
+     */
+    public Module getModule()
+     throws Exception
+    {
+      try{
+            String modId = getIntakeTool()
+                .get("Module", IntakeTool.DEFAULT_KEY).get("Id").toString();
+            if ( modId == null || modId.length() == 0 )
+            {
+                module = new Module();
+            }
+            else 
+            {
+                module = Module.getInstance(new NumberKey(modId));
+            }
+      }catch(Exception e){e.printStackTrace();}
+        return module;
+ 
+   }
+
+    /**
+     * Get a specific module by key value.
+     *
+     * @param key a <code>String</code> value
+     * @return a <code>Module</code> value
+     */
+    public Module getModule(String key) throws Exception
+    {
+        return ModulePeer.retrieveByPK(new NumberKey(key));
+    }
+
 
     /**
      * A Issue object for use within the Scarab API.
@@ -262,16 +311,6 @@ try{
         return issue;
     }
 
-    /**
-     * Get a specific module by key value.
-     *
-     * @param key a <code>String</code> value
-     * @return a <code>Module</code> value
-     */
-    public Module getModule(String key) throws Exception
-    {
-        return ModulePeer.retrieveByPK(new NumberKey(key));
-    }
 
 
     // ****************** Recyclable implementation ************************
