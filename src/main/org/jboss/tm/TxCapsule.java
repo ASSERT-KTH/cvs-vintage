@@ -46,7 +46,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -126,11 +126,9 @@ class TxCapsule implements TimeoutTarget
             // We are in the second commit phase, and have decided
             // to commit, but now we get a timeout and should rollback.
             // So we end up with a mixed decision.
-            suspendedResourcesDone();
-            rollbackResources();
-            doAfterCompletion();
             gotHeuristic(null, XAException.XA_HEURMIX);
-            return;
+            status = Status.STATUS_MARKED_ROLLBACK;
+            return; // commit will fail
 
          case Status.STATUS_PREPARED:
             // This is bad:
