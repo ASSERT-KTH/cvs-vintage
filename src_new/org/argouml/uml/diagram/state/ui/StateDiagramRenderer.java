@@ -24,7 +24,7 @@
 // File: StateDiagramRenderer.java
 // Classes: StateDiagramRenderer
 // Original Author: ics125b spring 1998
-// $Id: StateDiagramRenderer.java,v 1.5 2002/10/20 21:11:17 linus Exp $
+// $Id: StateDiagramRenderer.java,v 1.6 2002/12/30 12:43:03 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -50,7 +50,7 @@ import org.argouml.uml.diagram.activity.ui.*;
  * <pre>
  *  UML Object          ---  Fig
  *  ---------------------------------------
- *  MState              ---  FigState
+ *  MState              ---  FigSimpleState
  *  MCompositeState     ---  FigCompositeState
  *  MActionState        ---  FigActionState
  *  MFinalState         ---  FigFinalState
@@ -82,7 +82,7 @@ public class StateDiagramRenderer implements GraphNodeRenderer, GraphEdgeRendere
             return new FigCompositeState(gm, node);
         }
         else if (node instanceof MState) {
-            return new FigState(gm, node);
+            return new FigSimpleState(gm, node);
         }
         else if (node instanceof MPseudostate) {
             MPseudostate pState = (MPseudostate) node;
