@@ -71,7 +71,7 @@ public class TableView extends TreeTable implements OptionsSerializer {
 			ex.printStackTrace();
 		}
 
-		getTree().setCellRenderer(new SubjectTreeRenderer());
+		getTree().setCellRenderer(new SubjectTreeRenderer(this));
 
 	}
 
@@ -99,6 +99,8 @@ public class TableView extends TreeTable implements OptionsSerializer {
 
 			// disable subject column renderer, use tree-cellrenderer instead          
 			tc.setCellRenderer(null);
+			
+			//tc.setCellEditor(new CustomTreeTableCellEditor());
 		} else {
 			TableColumn tc= null;
 			tc= getColumn("Subject");

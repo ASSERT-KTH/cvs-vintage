@@ -22,6 +22,18 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 
+/**
+ * Custom TableCellRenderer using a JTree.
+ * <p>
+ * Note, that we overwrite setBounds and paint, here to make sure
+ * that only the node of the currently painted table row is
+ * painted. 
+ * <p>
+ * The usual process is to get the cellrenderer component, setting
+ * its bounds and asking it to paint. 
+ *
+ * @author fdietz
+ */
 public class CustomTreeTableCellRenderer extends Tree
     implements TableCellRenderer {
     protected int rowToPaint;
@@ -31,7 +43,8 @@ public class CustomTreeTableCellRenderer extends Tree
         super();
         this.table = table;
     }
-
+	
+	
     // Move and resize the tree to the table position
     public void setBounds(int x, int y, int w, int h) {
         super.setBounds(x, 0, w, table.getHeight());
@@ -39,9 +52,12 @@ public class CustomTreeTableCellRenderer extends Tree
 
     // start painting at the rowToPaint
     public void paint(Graphics g) {
+    	
         g.translate(0, -rowToPaint * getRowHeight());
         super.paint(g);
+        
     }
+    
 
     public Component getTableCellRendererComponent(JTable table, Object value,
         boolean isSelected, boolean hasFocus, int row, int column) {

@@ -106,15 +106,9 @@ public abstract class AbstractColumbaAction extends AbstractAction
     }
 
     /**
-     * Sets whether the toolbar text should be visible or not.
-     *
      * @param showToolbarText
      */
     public void setShowToolBarText(boolean showToolbarText) {
-        if (this.showToolbarText != showToolbarText) {
-            Boolean oldValue = this.showToolbarText ? Boolean.TRUE : Boolean.FALSE;
-            this.showToolbarText = showToolbarText;
-            firePropertyChange("showToolBarText", oldValue, showToolbarText ? Boolean.TRUE : Boolean.FALSE);
-        }
+        this.showToolbarText = showToolbarText;
     }
 }

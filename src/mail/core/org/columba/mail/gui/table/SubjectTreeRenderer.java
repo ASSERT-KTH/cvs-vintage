@@ -15,35 +15,50 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.ColumbaHeader;
-
-import org.columba.ristretto.message.Flags;
-
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Rectangle;
 
-import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.JTree;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Flags;
+
+/**
+ * Renderer for the JTree in the JTable, which is responsible for
+ * displaying the Subject: headerfield.
+ * <p>
+ * I'm still not convinced which method to calculate the bounds
+ * of the table column is faster.<br> 
+ * The first one overwrites paint() and layout(), the other just
+ * overwrites setBounds() only, using the passed JTableColumn.
+ * Personally, I prefer the second version, because it should be
+ * much faster than calculating the column size, based on the 
+ * text and font settings.
+ * 
+ *
+ * @author fdietz
+ */
 public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 	private Font plainFont;
 	private Font boldFont;
 	private Font underlinedFont;
 
+	private JTable table;
+	private TableColumn tc;
+	
 	/**
 	 * @param table
 	 */
-	public SubjectTreeRenderer() {
+	public SubjectTreeRenderer(JTable table) {
 		super();
 
+		this.table = table;
+		
 		boldFont= UIManager.getFont("Label.font");
 		boldFont= boldFont.deriveFont(Font.BOLD);
 
@@ -51,7 +66,23 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 
 		underlinedFont= UIManager.getFont("Tree.font");
 		underlinedFont= underlinedFont.deriveFont(Font.ITALIC);
+
+		setOpaque(true);
+
+		setBackground(null);
+		setBackgroundNonSelectionColor(null);
 	}
+
+	
+	public void setBounds(int x, int y, int w, int h) {
+		if ( tc == null) {
+			tc = table.getColumn("Subject");
+			
+		}
+		
+		super.setBounds(x, y, tc.getWidth() - x, h);
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
@@ -64,8 +95,7 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 		boolean leaf,
 		int row,
 		boolean hasFocus) {
-			
-			
+
 		super.getTreeCellRendererComponent(
 			tree,
 			value,
@@ -74,8 +104,7 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 			leaf,
 			row,
 			hasFocus);
-		
-		
+
 		MessageNode messageNode= (MessageNode) value;
 
 		if (messageNode.getUserObject().equals("root")) {
@@ -131,27 +160,28 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 		return this;
 	}
 
+	/*
 	public void paint(Graphics g) {
 		Rectangle bounds= g.getClipBounds();
 		Font font= getFont();
 		FontMetrics fontMetrics= g.getFontMetrics(font);
-
+	
 		int textWidth= fontMetrics.stringWidth(getText());
-
+	
 		int iconOffset= 0;
-
+	
 		//int iconOffset = getHorizontalAlignment() + getIcon().getIconWidth() + 1;
-
+	
 		if ((bounds.x == 0) && (bounds.y == 0)) {
 			bounds.width -= iconOffset;
-
+	
 			String labelStr= layout(this, fontMetrics, getText(), bounds);
 			setText(labelStr);
 		}
-
+	
 		super.paint(g);
 	}
-
+	
 	private String layout(
 		JLabel label,
 		FontMetrics fontMetrics,
@@ -159,7 +189,7 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 		Rectangle viewR) {
 		Rectangle iconR= new Rectangle();
 		Rectangle textR= new Rectangle();
-
+	
 		return SwingUtilities.layoutCompoundLabel(
 			fontMetrics,
 			text,
@@ -173,5 +203,6 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 			textR,
 			0);
 	}
-
+	*/
+	
 }

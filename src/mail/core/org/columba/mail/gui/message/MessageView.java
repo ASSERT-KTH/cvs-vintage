@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkListener;
 
+import org.columba.core.gui.ClipboardManager;
 import org.columba.mail.gui.attachment.AttachmentView;
 import org.columba.mail.message.ColumbaHeader;
 

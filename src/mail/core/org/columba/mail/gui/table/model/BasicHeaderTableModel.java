@@ -30,7 +30,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-
 /**
  *
  *
@@ -50,177 +49,182 @@ import javax.swing.tree.TreePath;
  *
  */
 public class BasicHeaderTableModel extends AbstractTableModel {
-    /**
-     * list of column IDs
-     */
-    private List columns;
-    protected HeaderList headerList;
-    protected Tree tree;
+	/**
+	 * list of column IDs
+	 */
+	private List columns;
+	protected HeaderList headerList;
+	protected Tree tree;
 
-    /**
-     *
-    * We cache all <class>MessageNode</class> here.
-    *
-    * This is much faster than searching through the complete
-    * <class>HeaderList</class> all the time.
-    *
-    */
-    protected HashMap map;
-    protected MessageNode root;
-    private boolean enableThreadedView;
+	/**
+	 *
+	* We cache all <class>MessageNode</class> here.
+	*
+	* This is much faster than searching through the complete
+	* <class>HeaderList</class> all the time.
+	*
+	*/
+	protected HashMap map;
+	protected MessageNode root;
+	private boolean enableThreadedView;
 
-    public BasicHeaderTableModel() {
-        map = new HashMap();
+	public BasicHeaderTableModel() {
+		map= new HashMap();
 
-        columns = new Vector();
-    }
+		columns= new Vector();
+	}
 
-    public BasicHeaderTableModel(String[] c) {
-        columns = new Vector();
+	public BasicHeaderTableModel(String[] c) {
+		columns= new Vector();
 
-        // add array to vector
-        for (int i = 0; i < c.length; i++) {
-            columns.add(c[i]);
-        }
+		// add array to vector
+		for (int i= 0; i < c.length; i++) {
+			columns.add(c[i]);
+		}
 
-        map = new HashMap();
-    }
+		map= new HashMap();
+	}
 
-    /************************ getter/setter methods ****************************/
-    public void enableThreadedView(boolean b) {
-        enableThreadedView = b;
-    }
+	/************************ getter/setter methods ****************************/
+	public void enableThreadedView(boolean b) {
+		enableThreadedView= b;
+	}
 
-    public MessageNode getRootNode() {
-        return root;
-    }
+	public MessageNode getRootNode() {
+		return root;
+	}
 
-    public void setTree(Tree tree) {
-        this.tree = tree;
-        tree.setRootNode(new MessageNode(new ColumbaHeader(), "0"));
-    }
+	public void setTree(Tree tree) {
+		this.tree= tree;
+		tree.setRootNode(new MessageNode(new ColumbaHeader(), "0"));
+	}
 
-    public HeaderList getHeaderList() {
-        return headerList;
-    }
+	public HeaderList getHeaderList() {
+		return headerList;
+	}
 
-    public void setHeaderList(HeaderList list) {
-        headerList = list;
-    }
+	public void setHeaderList(HeaderList list) {
+		headerList= list;
+	}
 
-    public MessageNode getMessageNode(Object uid) {
-        return (MessageNode) map.get(uid);
-    }
+	public MessageNode getMessageNode(Object uid) {
+		return (MessageNode) map.get(uid);
+	}
 
-    /**
-             * @return
-             */
-    public Map getMap() {
-        return map;
-    }
+	/**
+	         * @return
+	         */
+	public Map getMap() {
+		return map;
+	}
 
-    public DefaultTreeModel getTreeModel() {
-        return (DefaultTreeModel) tree.getModel();
-    }
+	public DefaultTreeModel getTreeModel() {
+		return (DefaultTreeModel) tree.getModel();
+	}
 
-    /**
-     * @return
-     */
-    public Tree getTree() {
-        return tree;
-    }
+	/**
+	 * @return
+	 */
+	public Tree getTree() {
+		return tree;
+	}
 
-    /********************* AbstractTableModel implementation ********************/
-    public int getColumnCount() {
-        return columns.size();
-    }
+	/********************* AbstractTableModel implementation ********************/
+	public int getColumnCount() {
+		return columns.size();
+	}
 
-    public int getRowCount() {
-        if (tree != null) {
-            return tree.getRowCount();
-        } else {
-            return 0;
-        }
-    }
+	public int getRowCount() {
+		if (tree != null) {
+			return tree.getRowCount();
+		} else {
+			return 0;
+		}
+	}
 
-    public Object getValueAt(int row, int col) {
-        TreePath treePath = tree.getPathForRow(row);
+	public Object getValueAt(int row, int col) {
+		//if ( col == 0 ) return tree;
 
-        return (MessageNode) treePath.getLastPathComponent();
+		TreePath treePath= tree.getPathForRow(row);
 
-        //if ( col == 0 ) return tree;
-    }
+		return (MessageNode) treePath.getLastPathComponent();
 
-    public String getColumnName(int column) {
-        return (String) columns.get(column);
-    }
+	}
 
-    public int getColumnNumber(String name) {
+	public String getColumnName(int column) {
+		return (String) columns.get(column);
+	}
 
-        for (int i = 0; i < getColumnCount(); i++) {
-            if (name.equals(getColumnName(i))) {
-                return i;
-            }
-        }
+	public int getColumnNumber(String name) {
 
-        return -1;
-    }
+		for (int i= 0; i < getColumnCount(); i++) {
+			if (name.equals(getColumnName(i))) {
+				return i;
+			}
+		}
 
-    /**
-     * Get the class which is responsible for renderering
-     * this column.
-     * <p>
-     * If the threaded-view is enabled, return a custom
-     * tree cell renderer.
-     * <p>
-     * @see org.columba.mail.gui.table.TableView#enableThreadedView
-     */
-    public Class getColumnClass(int column) {
-        if (enableThreadedView) {
-            return CustomTreeTableCellRenderer.class;
-        } else {
-            return getValueAt(0, column).getClass();
-        }
-    }
+		return -1;
+	}
 
-    public boolean isCellEditable(int row, int col) {
-        String name = getColumnName(col);
+	/**
+	 * Get the class which is responsible for renderering
+	 * this column.
+	 * <p>
+	 * If the threaded-view is enabled, return a custom
+	 * tree cell renderer.
+	 * <p>
+	 * @see org.columba.mail.gui.table.TableView#enableThreadedView
+	 */
+	public Class getColumnClass(int column) {
+		if (enableThreadedView) {
+			if (getColumnName(column).equals("Subject"))
+				return CustomTreeTableCellRenderer.class;
+		}
 
-        if (name.equalsIgnoreCase("Subject")) {
-            return true;
-        }
+		return getValueAt(0, column).getClass();
 
-        return false;
-    }
+	}
 
-    /**
-     * Set column IDs
-     *
-     * @param c   array of column IDs
-     */
-    public void setColumns(String[] c) {
-        columns = new Vector();
+	public boolean isCellEditable(int row, int col) {
+		String name= getColumnName(col);
 
-        // add array to vector
-        for (int i = 0; i < c.length; i++) {
-            columns.add(c[i]);
-        }
-    }
+		
+		if (name.equalsIgnoreCase("Subject")) {
+		    return true;
+		}
+		
 
-    /**
-     * Add column to table model.
-     *
-     * @param c     new column ID
-     */
-    public void addColumn(String c) {
-        columns.add(c);
-    }
+		return false;
+	}
 
-    /**
-     * Clear column list.
-     *
-     */
-    public void clearColumns() {
-        columns.clear();
-    }
+	/**
+	 * Set column IDs
+	 *
+	 * @param c   array of column IDs
+	 */
+	public void setColumns(String[] c) {
+		columns= new Vector();
+
+		// add array to vector
+		for (int i= 0; i < c.length; i++) {
+			columns.add(c[i]);
+		}
+	}
+
+	/**
+	 * Add column to table model.
+	 *
+	 * @param c     new column ID
+	 */
+	public void addColumn(String c) {
+		columns.add(c);
+	}
+
+	/**
+	 * Clear column list.
+	 *
+	 */
+	public void clearColumns() {
+		columns.clear();
+	}
 }

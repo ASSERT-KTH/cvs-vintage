@@ -32,7 +32,8 @@ import org.columba.mail.config.AccountItem;
  *
  * @author fdietz
  */
-public abstract class AbstractMailCheckingAction extends AbstractColumbaAction {
+public abstract class AbstractMailCheckingAction
+	extends AbstractColumbaAction {
 
 	private final static int ONE_SECOND= 1000;
 
@@ -43,23 +44,30 @@ public abstract class AbstractMailCheckingAction extends AbstractColumbaAction {
 
 	private Timer timer;
 
-	public AbstractMailCheckingAction(
-		AccountItem accountItem) {
+	public AbstractMailCheckingAction(AccountItem accountItem) {
 		super(null, null);
 
 		this.accountItem= accountItem;
 
-		// generate label for menuitem
-		String name= accountItem.getName();
-		String address= accountItem.getIdentityItem().get("address");
-		String menuItemName = name + " (" + address + ")";
-		
-		putValue(AbstractColumbaAction.NAME, menuItemName);
-		
+		createName();
+
 		restartTimer();
 	}
 
+	private void createName() {
+		//	generate label for menuitem
+		String name= accountItem.getName();
+		String address= accountItem.getIdentityItem().get("address");
+		String menuItemName= name + " (" + address + ")";
+
+		putValue(AbstractColumbaAction.NAME, menuItemName);
+	}
+
 	public void restartTimer() {
+		
+		// recreate name of menuitem 
+		createName();
+		
 		DefaultItem item= null;
 		if (accountItem.isPopAccount()) {
 			XmlElement e= accountItem.getRoot().getElement("popserver");
@@ -86,17 +94,16 @@ public abstract class AbstractMailCheckingAction extends AbstractColumbaAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		Object source = arg0.getSource();
-		
-		if ( source.equals(timer)) {
+		Object source= arg0.getSource();
+
+		if (source.equals(timer)) {
 			// timer action
 			check();
-		} else
-		{
+		} else {
 			check();
 		}
 	}
-	
+
 	/**
 	 * Check for new messages.
 	 * <p>

@@ -174,6 +174,8 @@ public class SortMessagesMenu
     }
 
     private void updateState(String column, boolean ascending) {
+    	if (columnGroup ==null ) return;
+    	
         Enumeration enum = columnGroup.getElements();
 
         while (enum.hasMoreElements()) {

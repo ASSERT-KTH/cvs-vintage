@@ -21,12 +21,12 @@ import javax.swing.ImageIcon;
 
 
 /**
- * @author frd
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Imageloader using a content-type and subtype to determine
+ * the image name.
+ * <p>
+ * Automatically falls back to the default icon.
+ * 
+ * @author fdietz
  */
 public class AttachmentImageIconLoader {
     public static ImageIcon getImageIcon(String contentType,

@@ -16,8 +16,6 @@
 
 package org.columba.core.main;
 
-import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
@@ -44,10 +42,6 @@ public class MainInterface {
     
     /** Maintains references to all open frames */
     public static FrameModel frameModel;
-
-    /** Addressbook treemodel */
-    // TODO: move this to the addressbook component
-    public static AddressbookTreeModel addressbookTreeModel;
 
     /** Scheduler */
     public static DefaultProcessor processor;

@@ -16,28 +16,35 @@
 package org.columba.core.shutdown;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+import javax.swing.JProgressBar;
+import javax.swing.Timer;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Dialog shown while closing Columba.
+ * <p>
+ * Waits two seconds until it is visible.
  *
  * @author fdietz
  */
-public class ShutdownDialog extends JFrame {
+public class ShutdownDialog extends JFrame implements ActionListener{
 
 	protected static final String RESOURCE_PATH= "org.columba.core.i18n.dialog";
 
+	private JProgressBar progressBar;
+	private Timer timer;
+		
 	public ShutdownDialog() {
 		super(
 			GlobalResourceLoader.getString(
@@ -62,12 +69,14 @@ public class ShutdownDialog extends JFrame {
 		icon.setBorder(BorderFactory.createEmptyBorder(12, 12, 6, 12));
 		text.setBorder(BorderFactory.createEmptyBorder(0, 6, 12, 12));
 		
+		progressBar = new JProgressBar();
+		progressBar.setIndeterminate(true);
+		progressBar.setPreferredSize(new Dimension(250, 20));
+		
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-				
-		JPanel borderPanel = new JPanel();
-		borderPanel.setBorder(BorderFactory.createEmptyBorder(3,0,0,0));
-		bottomPanel.add( borderPanel, BorderLayout.EAST);
+		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0,12,12,12));
+		bottomPanel.add(progressBar, BorderLayout.CENTER);
+		
 		getContentPane().setLayout(new BorderLayout());
 
 		getContentPane().add(panel, BorderLayout.CENTER);
@@ -79,8 +88,26 @@ public class ShutdownDialog extends JFrame {
 		panel.add(text, BorderLayout.SOUTH);
 
 		pack();
-		//setSize(new Dimension(300, 50));
 
 		setLocationRelativeTo(null);
+		
+		// wait for 2 seconds until the dialog is openened
+		timer = new Timer(2*1000, this);
+		timer.start();
 	}
+	
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent arg0) {
+		setVisible(true);
+		timer.stop();
+	}
+	
+	public void close() {
+		timer.stop();
+		
+		if ( isVisible()) setVisible(false);
+	}
+
 }

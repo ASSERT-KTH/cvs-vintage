@@ -352,6 +352,8 @@ public class ConfigFrame implements ActionListener,
             // remove mail-checking stuff
 			MailInterface.mailCheckingManager.remove(item.getUid());
 			
+			// notify all observers
+			MailInterface.mailCheckingManager.update();
 
             removeButton.setEnabled(false);
             editButton.setEnabled(false);

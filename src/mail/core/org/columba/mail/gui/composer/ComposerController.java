@@ -15,10 +15,19 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.ContainerListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
-
+import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetManager;
@@ -27,25 +36,13 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.text.TextEditorController;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.AddressCollector;
-
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ContainerListener;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * @author frd
@@ -125,7 +122,7 @@ public class ComposerController
 		AddressCollector.clear();
 
 		HeaderItemList list=
-			((Folder) MainInterface.addressbookTreeModel.getFolder(101))
+			((Folder) AddressbookInterface.addressbookTreeModel.getFolder(101))
 				.getHeaderItemList();
 
 		for (int i= 0; i < list.count(); i++) {
@@ -141,7 +138,7 @@ public class ComposerController
 		}
 
 		list=
-			((Folder) MainInterface.addressbookTreeModel.getFolder(102))
+			((Folder) AddressbookInterface.addressbookTreeModel.getFolder(102))
 				.getHeaderItemList();
 
 		for (int i= 0; i < list.count(); i++) {

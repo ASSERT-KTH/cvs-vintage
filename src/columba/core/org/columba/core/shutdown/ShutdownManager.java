@@ -135,8 +135,7 @@ public class ShutdownManager {
                     }
                 }
 
-                Component dialog = createShutdownDialog();
-                dialog.setVisible(true);
+                ShutdownDialog dialog = (ShutdownDialog) openShutdownDialog();
 
                 Iterator iterator = list.iterator();
                 Runnable plugin;
@@ -153,7 +152,7 @@ public class ShutdownManager {
                 //we don't need to check for running commands here because there aren't
                 //any, shutdown plugins only use this thread
 
-                dialog.setVisible(false);
+                dialog.close();
             }
         }, "ShutdownManager");
         setShutdownHook(true);
@@ -206,7 +205,7 @@ public class ShutdownManager {
     /**
      * Returns a component notifying the user of the shutdown procedure.
      */
-    protected Component createShutdownDialog() {
+    protected Component openShutdownDialog() {
         JFrame dialog = new ShutdownDialog();
         
         return dialog;

@@ -19,6 +19,7 @@ import org.columba.addressbook.config.AdapterNode;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.gui.tree.util.AddressbookTreeCellRenderer;
+import org.columba.addressbook.main.AddressbookInterface;
 
 import org.columba.core.main.MainInterface;
 
@@ -46,7 +47,7 @@ public class TreeView implements TreeSelectionListener {
         root = generateTree();
 
         //model = new AddressbookTreeModel( AddressbookConfig.get("tree").getElement("/tree") );
-        model = MainInterface.addressbookTreeModel;
+        model = AddressbookInterface.addressbookTreeModel;
 
         tree = new JTree(model);
 

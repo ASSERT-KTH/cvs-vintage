@@ -79,6 +79,8 @@ public class ComposeMessageAction
 		} else {
 			if (url.getProtocol().equalsIgnoreCase("mailto")) {
 				setEnabled(true);
+			} else {
+				setEnabled(false);
 			}
 		}
 	}

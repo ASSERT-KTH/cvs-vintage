@@ -38,6 +38,10 @@ public class AddressbookInterface {
     public TaskManager taskManager;
     public AddressbookActionListener actionListener;
 
+	/** Addressbook treemodel */
+	// TODO: move this to the addressbook component
+	public static AddressbookTreeModel addressbookTreeModel;
+
     public AddressbookInterface() {
     }
 }

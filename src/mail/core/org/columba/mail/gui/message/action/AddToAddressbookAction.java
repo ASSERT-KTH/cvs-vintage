@@ -22,6 +22,7 @@ import java.util.Observer;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
@@ -69,8 +70,7 @@ public class AddToAddressbookAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		SelectAddressbookFolderDialog dialog=
-			MainInterface
-				.addressbookTreeModel
+			AddressbookInterface.addressbookTreeModel
 				.getSelectAddressbookFolderDialog();
 
 		org.columba.addressbook.folder.Folder selectedFolder=
@@ -107,6 +107,8 @@ public class AddToAddressbookAction
 		} else {
 			if (url.getProtocol().equalsIgnoreCase("mailto")) {
 				setEnabled(true);
+			} else {
+				setEnabled(false);
 			}
 		}
 	}

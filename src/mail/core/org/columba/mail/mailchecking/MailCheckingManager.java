@@ -17,6 +17,7 @@ package org.columba.mail.mailchecking;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
 import java.util.Vector;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -34,12 +35,14 @@ import org.columba.mail.config.MailConfig;
  *
  * @author fdietz
  */
-public class MailCheckingManager {
+public class MailCheckingManager extends Observable{
 
 	private List list;
+ 
 
 	public MailCheckingManager() {
-
+		super();
+		
 		list= new Vector();
 
 		// get list of all accounts
@@ -132,4 +135,15 @@ public class MailCheckingManager {
 			action.check();
 		}
 	}
+	
+	/**
+	 * Notify all observers.
+	 *
+	 */
+	public void update() {
+		setChanged();
+		
+		notifyObservers();
+	}
+	
 }

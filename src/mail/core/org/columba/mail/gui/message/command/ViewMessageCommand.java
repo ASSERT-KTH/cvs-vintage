@@ -31,6 +31,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.Folder;
@@ -97,7 +98,7 @@ public class ViewMessageCommand extends FolderCommand {
 		commandType = Command.NORMAL_OPERATION;
 	}
 
-	protected void decryptEncryptedPart(MimePart encryptedMultipart)
+	protected void decryptEncryptedPart(PGPItem pgpItem, MimePart encryptedMultipart)
 		throws Exception {
 		encryptedMessage = true;
 
@@ -112,13 +113,6 @@ public class ViewMessageCommand extends FolderCommand {
 			srcFolder.getMimePartBodyStream(
 				uid,
 				encryptedMultipart.getChild(1).getAddress());
-
-		// Get the mailaddress and use it as the id
-		Address toAddress = new BasicHeader(header.getHeader()).getTo()[0];
-
-		PGPItem pgpItem = new PGPItem(new XmlElement());
-		//MailConfig.getAccountList().getPGPItem(toAddress.getMailAddress());
-		pgpItem.set("id", toAddress.getMailAddress());
 
 		// decrypt string
 		// getting controller Instance
@@ -222,11 +216,11 @@ public class ViewMessageCommand extends FolderCommand {
 				signedMultipart.getChild(1).getAddress());
 
 		// Get the mailaddress and use it as the id
-		Address toAddress = new BasicHeader(header.getHeader()).getTo()[0];
+		Address fromAddress = new BasicHeader(header.getHeader()).getFrom();
 
 		PGPItem pgpItem = new PGPItem(new XmlElement());
 		//MailConfig.getAccountList().getPGPItem(toAddress.getMailAddress());
-		pgpItem.set("id", toAddress.getMailAddress());
+		pgpItem.set("id", fromAddress.getMailAddress());
 
 		// Set the digest-algorithm from content-paramater micalg, cut of "pgp-"
 		pgpItem.setDigestAlgorithm(
@@ -367,7 +361,22 @@ public class ViewMessageCommand extends FolderCommand {
 		}
 
 		if (firstPartMimeType.getSubtype().equals("encrypted")) {
-			decryptEncryptedPart(mimePartTree.getRootMimeNode());
+		    Integer accountuid = (Integer)header.getAttributes().get("columba.accountuid");
+		    AccountItem item = MailConfig.getAccountList().uidGet(accountuid.intValue());
+		    PGPItem pgpitem;
+		    if( item != null ) {
+		        pgpitem = item.getPGPItem();
+		        if( pgpitem.get("id").equals("")) {
+		            pgpitem.set("id", item.getIdentityItem().get("address"));
+		        }
+		    } else {
+		        pgpitem = new PGPItem(new XmlElement(""));
+		        // fall back to first to address
+		        pgpitem.set("id", new BasicHeader(header.getHeader()).getTo()[0].getMailAddress());
+		    }
+		    
+
+		    decryptEncryptedPart(pgpitem, mimePartTree.getRootMimeNode());
 		} 
 		
 		

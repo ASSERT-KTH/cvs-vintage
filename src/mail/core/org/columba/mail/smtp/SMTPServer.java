@@ -512,4 +512,10 @@ public class SMTPServer {
         }
         return "localhost";
     }
+    
+    public String getName() {
+        SmtpItem smtpItem = accountItem.getSmtpItem();
+        String host = smtpItem.get("host");
+        return host;
+    }
 }

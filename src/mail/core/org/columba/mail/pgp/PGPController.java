@@ -312,32 +312,40 @@ public class PGPController {
         return utils[GPG].getStreamResult();
     }
 
-    /**
-     * Checks with a test string if the test String can be signed. The user is ask for his passphrase until the passphrase is ok or
-     * the user cancels the dialog. If the user cancels the dialog a PGPException with the error string from the pgp tool is thrown.
-     * This method returned normal only if the user give the right passphrase-
-     * @param item PGPItem used for signing the test string
-     * @exception PGPException if the user cancels the passphrase dialog or the pgp tool has errors and returns with exit code != 0.
-     */
-    private void checkPassphrase(PGPItem item) throws PGPException {
-        String testStr = "test";
-        int exitVal = -1;
+	/**
+	 * Checks with a test string if the test String can be signed. The user is ask for his passphrase until the passphrase is ok or
+	 * the user cancels the dialog. If the user cancels the dialog a PGPException with the error string from the pgp tool is thrown.
+	 * This method returned normal only if the user give the right passphrase-
+	 * @param item PGPItem used for signing the test string
+	 * @exception PGPException if the user cancels the passphrase dialog or the pgp tool has errors and returns with exit code != 0.
+	 */
+	private void checkPassphrase(PGPItem item) throws PGPException {
+		String testStr= "test";
+		int exitVal= -1;
 
-        // loop until signing was sucessful or the user cancels the passphrase dialog
-        while ((exitVal != 0) && (this.getPassphrase(item) == true)) {
-            try {
-                exitVal = utils[GPG].sign(item,
-                        new ByteArrayInputStream(testStr.getBytes()));
-            } catch (Exception e) {
-                throw new PGPException(utils[GPG].parse(
-                        utils[GPG].getErrorString()));
+		// loop until signing was sucessful or the user cancels the passphrase dialog
+		while ((exitVal != 0) && (this.getPassphrase(item) == true)) {
+			try {
+				exitVal=
+					utils[GPG].sign(
+						item,
+						new ByteArrayInputStream(testStr.getBytes()));
+			} catch (Exception e) {
+				throw new PGPException(
+					utils[GPG].parse(utils[GPG].getErrorString()));
+			}
+
+			if( exitVal != 0 ) {
+                // Clear a wrong passphrase
+                passwordMap.remove(item.get("id"));
             }
-        }
+		}
 
-        if (exitVal != 0) {
-            throw new PGPException(utils[GPG].parse(utils[GPG].getErrorString()));
-        }
-    }
+		if (exitVal != 0) {
+			throw new PGPException(
+				utils[GPG].parse(utils[GPG].getErrorString()));
+		}
+	}
 
     /**
      * signs an message and gives the signed message string back to the application. This method call the GPG-Util to sign

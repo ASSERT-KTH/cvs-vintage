@@ -6,8 +6,8 @@
  */
 package org.columba.addressbook.gui.table;
 
+import org.columba.addressbook.gui.action.ActionRepository;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
-
 
 /**
  * @author frd
@@ -16,31 +16,35 @@ import org.columba.addressbook.gui.frame.AddressbookFrameController;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class TableController {
-    TableView view;
-    AddressbookFrameController frameController;
+	TableView view;
+	AddressbookFrameController frameController;
 
-    /**
-     *
-     */
-    public TableController(AddressbookFrameController frameController) {
-        super();
+	/**
+	 *
+	 */
+	public TableController(AddressbookFrameController frameController) {
+		super();
 
-        this.frameController = frameController;
+		this.frameController= frameController;
 
-        view = new TableView(frameController);
-    }
+		view= new TableView(frameController);
 
-    /**
-     * @return AddressbookFrameController
-     */
-    public AddressbookFrameController getFrameController() {
-        return frameController;
-    }
+		view.getTableView().getSelectionModel().addListSelectionListener(
+			ActionRepository.getInstance());
+	}
 
-    /**
-     * @return TableView
-     */
-    public TableView getView() {
-        return view;
-    }
+	/**
+	 * @return AddressbookFrameController
+	 */
+	public AddressbookFrameController getFrameController() {
+		return frameController;
+	}
+
+	/**
+	 * @return TableView
+	 */
+	public TableView getView() {
+		return view;
+	}
+
 }

@@ -16,6 +16,7 @@
 package org.columba.mail.gui.composer.action;
 
 import org.columba.addressbook.gui.SelectAddressDialog;
+import org.columba.addressbook.main.AddressbookInterface;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.util.ImageLoader;
@@ -65,7 +66,7 @@ public class AddressbookAction extends AbstractColumbaAction {
         SelectAddressDialog dialog = new SelectAddressDialog(composerController.getView(),
                 composerController.getHeaderController().getHeaderItemLists());
 
-        org.columba.addressbook.folder.Folder folder = (org.columba.addressbook.folder.Folder) MainInterface.addressbookTreeModel.getFolder(101);
+        org.columba.addressbook.folder.Folder folder = (org.columba.addressbook.folder.Folder) AddressbookInterface.addressbookTreeModel.getFolder(101);
         dialog.setHeaderList(folder.getHeaderItemList());
 
         dialog.setVisible(true);

@@ -17,6 +17,7 @@ package org.columba.mail.gui.util;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+import org.columba.addressbook.main.AddressbookInterface;
 
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
@@ -109,7 +110,7 @@ public class URLController implements ActionListener {
     }
 
     public void contact(String address) {
-        SelectAddressbookFolderDialog dialog = MainInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
+        SelectAddressbookFolderDialog dialog = AddressbookInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
 
         org.columba.addressbook.folder.Folder selectedFolder = dialog.getSelectedFolder();
 

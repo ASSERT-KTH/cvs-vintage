@@ -44,6 +44,7 @@ import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.gui.util.AddressbookDNDListView;
 import org.columba.addressbook.gui.util.AddressbookListModel;
+import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.main.MainInterface;
@@ -358,8 +359,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 			}
 		} else if (command.equals("CHOOSE")) { //$NON-NLS-1$
 			SelectAddressbookFolderDialog dialog=
-				MainInterface
-					.addressbookTreeModel
+				AddressbookInterface.addressbookTreeModel
 					.getSelectAddressbookFolderDialog();
 
 			Folder selectedFolder= dialog.getSelectedFolder();

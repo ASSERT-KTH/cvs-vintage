@@ -15,49 +15,64 @@
 //All Rights Reserved.
 package org.columba.mail.mailchecking;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
+public class FetchMessageSubMenu extends IMenu implements Observer {
+	//private POP3ServerCollection popServer;
 
-public class FetchMessageSubMenu extends IMenu  {
-    //private POP3ServerCollection popServer;
-  
+	/**
+	 *
+	 */
+	public FetchMessageSubMenu(FrameMediator controller) {
+		super(
+			controller,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_file_checkmessage"));
 
-    /**
-     *
-     */
-    public FetchMessageSubMenu(FrameMediator controller) {
-        super(controller,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_file_checkmessage"));
-
-		/*
-        popServer = MailInterface.popServerCollection;
-        popServer.addModelListener(this);
-		*/
 		
+
+		createMenu();
+
+		// register interest on account changes
+		MailInterface.mailCheckingManager.addObserver(this);
+	}
+
+	protected void createMenu() {
 		
-        createMenu();
-    }
-
-  
-
-    protected void createMenu() {
-		MailCheckingManager mailCheckingManager = MailInterface.mailCheckingManager;
-		AbstractColumbaAction[] actions = mailCheckingManager.getActions();
-		for ( int i=0; i<actions.length; i++) {
+		// remove all items
+		removeAll();
+		
+		MailCheckingManager mailCheckingManager=
+			MailInterface.mailCheckingManager;
+		AbstractColumbaAction[] actions= mailCheckingManager.getActions();
+		for (int i= 0; i < actions.length; i++) {
 			add(actions[i]);
 		}
-		
-		/*
-        ListIterator it = popServer.getServerIterator();
 
-        while (it.hasNext()) {
-            add(((POP3ServerController) it.next()).getCheckAction());
-        }
-        */
-    }
+	}
+
+	/**
+	 * Listening for account changes here.
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable observable, Object arg1) {
+
+		System.out.println("update menu...");
+		
+		// recreate menu
+
+		createMenu();
+
+	}
+
 }

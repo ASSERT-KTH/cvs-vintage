@@ -57,7 +57,7 @@ public class AddressbookMain extends DefaultMain {
      * @see org.columba.core.main.DefaultMain#initGui()
      */
     public void initGui() {
-        MainInterface.addressbookTreeModel = new AddressbookTreeModel(AddressbookConfig.get(
+        AddressbookInterface.addressbookTreeModel = new AddressbookTreeModel(AddressbookConfig.get(
                     "tree").getElement("/tree"));
 
         /*

@@ -235,7 +235,8 @@ public class AccountDialog implements ActionListener {
             
             // restart timer 
             MailInterface.mailCheckingManager.restartTimer(accountItem.getUid());
-            
+            // notify all observers
+            MailInterface.mailCheckingManager.update();
 
             dialog.setVisible(false);
         } else if (action.equals("CANCEL")) //$NON-NLS-1$

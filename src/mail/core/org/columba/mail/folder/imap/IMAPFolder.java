@@ -256,7 +256,7 @@ public class IMAPFolder extends RemoteFolder {
      * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.core.command.WorkerStatusController)
      */
     public HeaderList getHeaderList() throws Exception {
-        if (headerList == null) {
+        //if (headerList == null) {
 
             headerList = cache.getHeaderList();
 
@@ -305,7 +305,7 @@ public class IMAPFolder extends RemoteFolder {
 
             // clear statusbar message
             getObservable().clearMessage();
-        }
+        //}
 
         return headerList;
     }
@@ -622,7 +622,7 @@ public class IMAPFolder extends RemoteFolder {
 
             case MarkMessageCommand.MARK_AS_EXPUNGED :
                 {
-                    if (flags.getSeen()) {
+                    if (!flags.getSeen()) {
                         getMessageFolderInfo().decUnseen();
                     }
 
@@ -727,6 +727,7 @@ public class IMAPFolder extends RemoteFolder {
                     ColumbaLogger.log.info(
                         "moving message with UID " + uid + " to trash");
 
+					/*
                     if (flags.getRecent()) {
                         getMessageFolderInfo().decRecent();
                     }
@@ -734,9 +735,11 @@ public class IMAPFolder extends RemoteFolder {
                     if (!flags.getSeen()) {
                         getMessageFolderInfo().decUnseen();
                     }
+                    */
 
                     getMessageFolderInfo().decExists();
-
+					
+					
                     // remove message
                     headerList.remove(uid);
                 }
@@ -1061,7 +1064,7 @@ public class IMAPFolder extends RemoteFolder {
     public void setAttribute(Object uid, String key, Object value)
         throws Exception {
         // get header with UID
-        ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
+        ColumbaHeader header = (ColumbaHeader) cache.getHeaderList().get(uid);
 
         header.getAttributes().put(key, value);
 

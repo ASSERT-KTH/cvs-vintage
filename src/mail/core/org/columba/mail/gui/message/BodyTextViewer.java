@@ -15,30 +15,31 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.gui.util.FontProperties;
-import org.columba.core.io.DiskIO;
-import org.columba.core.io.TempFileStore;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.message.util.DocumentParser;
-import org.columba.mail.parser.text.HtmlParser;
-
 import java.awt.Font;
 import java.awt.Insets;
-
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
-
+import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URL;
-
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+
+import org.columba.core.gui.util.FontProperties;
+import org.columba.core.io.DiskIO;
+import org.columba.core.io.TempFileStore;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.gui.message.util.DocumentParser;
+import org.columba.mail.parser.text.HtmlParser;
 
 
 /**
@@ -70,6 +71,8 @@ public class BodyTextViewer extends JTextPane implements Observer {
 
     // overwrite look and feel font settings
     private boolean overwrite;
+    
+    private String body; 
 
     public BodyTextViewer() {
         setMargin(new Insets(5, 5, 5, 5));
@@ -156,6 +159,8 @@ public class BodyTextViewer extends JTextPane implements Observer {
     public void setBodyText(String bodyText, boolean html) {
         if (html) {
             try {
+                body = HtmlParser.htmlToText(bodyText);
+                
                 // this is a HTML message
                 // try to fix broken html-strings
                 String validated = HtmlParser.validateHTMLString(bodyText);
@@ -190,6 +195,8 @@ public class BodyTextViewer extends JTextPane implements Observer {
             }
         } else {
             // this is a text/plain message
+            body=bodyText;
+            
             try {
                 // substitute special characters like:
                 //  <,>,&,\t,\n		
@@ -260,4 +267,27 @@ public class BodyTextViewer extends JTextPane implements Observer {
 
         initStyleSheet();
     }
+    /**
+     * @see javax.swing.text.JTextComponent#copy()
+     */
+    public void copy() {
+        int start = this.getSelectionStart();
+        int stop = this.getSelectionEnd();
+        
+        StringWriter htmlSelection = new StringWriter();
+        try {
+            htmlEditorKit.write(htmlSelection, getDocument(), start, stop-start);
+            Clipboard clipboard = getToolkit().getSystemClipboard();
+            
+            // Conversion of html text to plain
+            //TODO: make a DataFlavor that can handle HTML text
+            StringSelection selection = new StringSelection( HtmlParser.htmlToText(htmlSelection.toString()));
+            clipboard.setContents(selection, selection);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -142,7 +142,7 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
             NotifyDialog d = new NotifyDialog();
 
             //show neat error message here
-            d.showDialog(e);
+            d.showDialog(MailResourceLoader.getString("dialog", "error", "mailimport"));
         }
     }
 

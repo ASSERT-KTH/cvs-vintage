@@ -12,13 +12,15 @@ public class Tree extends JTree {
     public Tree() {
         super();
 
-        setEditable(true);
+        //setEditable(true);
 
         setRootVisible(false);
 
         setShowsRootHandles(true);
+        
+		//putClientProperty("JTree.lineStyle", "None");
 
-        //setCellRenderer(new CustomTreeCellRenderer());
+        setCellRenderer(new CustomTreeCellRenderer());
     }
 
     public void setRootNode(DefaultMutableTreeNode root) {
