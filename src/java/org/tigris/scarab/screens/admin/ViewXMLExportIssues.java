@@ -61,12 +61,13 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.screens.Default;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueManager;
+import org.tigris.scarab.util.xmlissues.ImportIssues;
 
 /**
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.17 2003/07/25 17:33:42 thierrylach Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.18 2003/07/28 20:23:28 dlr Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
@@ -185,6 +186,7 @@ public class ViewXMLExportIssues extends Default
                 String key = (String) keys.next();
                 vc.put(key, context.get(key));
             }
+            vc.put("dtdURI", ImportIssues.SYSTEM_DTD_URI);
             TurbineVelocity.handleRequest
                 (vc, "macros/XMLExportIssuesMacro.vm",
                  data.getResponse().getOutputStream());
