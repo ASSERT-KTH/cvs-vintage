@@ -60,6 +60,7 @@ import java.lang.*;
 import java.net.*;
 import java.text.*;
 import java.util.*;
+import java.util.jar.*;
 import java.util.zip.*;
 import java.security.*;
 
@@ -107,6 +108,56 @@ public class DependClassLoader12 extends DependClassLoader {
 	// 	PermissionCollection perms=Policy.getPolicy().getPermissions(cs);
 	// 	ProtectionDomain pd=new ProtectionDomain( cs,perms);
 	// 	System.out.println("XXX " + name + ": " + cs + "\n" + perms );
-	return defineClass(name, data, s, end, (ProtectionDomain)pd);
+        int idx = name.lastIndexOf(".");
+        String pkgname = idx != -1 ? name.substring(0, idx) : null;
+        if ( pkgname != null ) {
+          Package p = getPackage(pkgname);
+          if ( p == null ) {
+            if ( "jar".equals(res.getProtocol()) ) {
+              try {
+                JarURLConnection juconn = 
+                          (JarURLConnection)res.openConnection();
+                Manifest mf = juconn.getManifest();
+		if(mf == null) // Jar may not be Java2
+		   throw new IOException("No Manifest");
+                Attributes main = mf.getMainAttributes();
+                Attributes pkg = mf.getAttributes(
+                  pkgname.replace('.', '/').concat("/")
+                );
+                boolean sealed = Boolean.getBoolean(
+                  getAttribute(Attributes.Name.SEALED, main, pkg)
+                );
+                definePackage(
+                  pkgname, 
+                  getAttribute(Attributes.Name.SPECIFICATION_TITLE, main, pkg),
+                  getAttribute(Attributes.Name.SPECIFICATION_VERSION, main, pkg),
+                  getAttribute(Attributes.Name.SPECIFICATION_VENDOR, main, pkg),
+                  getAttribute(Attributes.Name.IMPLEMENTATION_TITLE, main, pkg),
+                  getAttribute(Attributes.Name.IMPLEMENTATION_VERSION, main, pkg),
+                  getAttribute(Attributes.Name.IMPLEMENTATION_VENDOR, main, pkg),
+                  sealed ? res : null
+                );
+              } catch ( IOException e ) {
+                definePackage(pkgname, null, null, null, null, null, null, null);
+              }
+            } else {
+              definePackage(pkgname, null, null, null, null, null, null, null);
+            }
+          }
+        }
+ 	return defineClass(name, data, s, end, (ProtectionDomain)pd);
     }
+    
+    private String getAttribute(Attributes.Name key, Attributes main, Attributes pkg)
+    {
+      String value = null;
+      if ( pkg != null ) {
+        value = (String)pkg.get(key);
+      }
+      if ( value == null ) {
+        value = (String)main.get(key);
+      }
+      return value;
+     }
+
 }
