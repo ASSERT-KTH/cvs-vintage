@@ -24,6 +24,8 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 
+import org.columba.core.command.WorkerStatusController;
+
 public class QuotedPrintableEncoder extends Encoder {
 
 	private byte[] special;
@@ -110,8 +112,16 @@ public class QuotedPrintableEncoder extends Encoder {
 		return output.toString();
 	}
 
-	public void encode( InputStream in, OutputStream out, int workerStatusController ) throws IOException
+	//public void encode( InputStream in, OutputStream out, int workerStatusController ) throws IOException
+	public void encode( InputStream in, OutputStream out, WorkerStatusController workerStatusController ) throws IOException
 	{
+		/*
+		 * *20030526, karlpeder* fixing bug #734173 by:
+		 * 1) Changed method, new signature is one really needed
+		 * 2) Added progress display
+		 * 3) Flushing bufferedOut before leaving the method.
+		 */
+
 		BufferedInputStream bufferedIn = new BufferedInputStream( in );
 		BufferedOutputStream bufferedOut = new BufferedOutputStream( out );
 
@@ -122,6 +132,7 @@ public class QuotedPrintableEncoder extends Encoder {
 		int read = bufferedIn.read( inBytes );
 		int lineLength = 0;
 		
+		int progressCounter = read;
 
 		while( read > 0 ) {
 			if (((inBytes[0] >= 33) && (inBytes[0] <= 60))
@@ -159,8 +170,15 @@ public class QuotedPrintableEncoder extends Encoder {
 			}
 			
 			read = bufferedIn.read( inBytes );
+
+			progressCounter += read;
+			if( progressCounter > 1024 ) {
+				progressCounter %= 1024;
+				workerStatusController.incProgressBarValue();
+			}
 		}
 
+		bufferedOut.flush();	// ensure everything gets written to output
 		
 	}
 

@@ -434,7 +434,7 @@ public class OutgoingServerPanel
 		authenticationComboBox = new JComboBox();
 		authenticationComboBox.addItem("PLAIN");
 		authenticationComboBox.addItem("LOGIN");
-		authenticationComboBox.addItem("POP before SMTP");
+		if( accountItem.isPopAccount() ) authenticationComboBox.addItem("POP before SMTP");
 		authenticationComboBox.addActionListener(this);
 		authenticationLabel.setLabelFor(authenticationComboBox);
 

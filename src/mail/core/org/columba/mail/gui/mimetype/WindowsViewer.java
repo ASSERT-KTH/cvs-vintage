@@ -98,15 +98,24 @@ public class WindowsViewer extends AbstractViewer {
 				proc = rt.exec(cmd);
 			} else if (OSInfo.isWin2K() || OSInfo.isWinXP()){
 				// this includes Windows XP
-				String[] cmd = new String[3];
+				
+				/*
+				 * *20030526, karlpeder* fixing bug #739277 by:
+				 * Changing cmd line from "cmd.exe /C ..." to "cmd.exe /C start ..."
+				 * So program execution is not blocked until viewer terminates.
+				 * NB: WinNT, Win95, Win98, WinME not considered (not able to try it out)
+				 */
+				
+				String[] cmd = new String[4]; //new String[3];
 				cmd[0] = "cmd.exe";
 				cmd[1] = "/C";
-				cmd[2] =
+				cmd[2] = "start";
+				cmd[3] = //cmd[2] =
 					filename.charAt(0) + "\"" + filename.substring(1) + "\"";
 
 				Runtime rt = Runtime.getRuntime();
-				System.out.println(
-					"Executing " + cmd[0] + " " + cmd[1] + " " + cmd[2]);
+				System.out.println("Executing " + 
+						cmd[0] + " " + cmd[1] + " " + cmd[2] + " " + cmd[3]);
 				proc = rt.exec(cmd);
 			}
                         

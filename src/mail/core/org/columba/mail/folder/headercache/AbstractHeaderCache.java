@@ -46,7 +46,7 @@ public abstract class AbstractHeaderCache {
 
 	protected File headerFile;
 
-	private boolean headerCacheAlreadyLoaded;
+	private boolean headerCacheLoaded;
 
 	protected LocalFolder folder;
 	private static HashMap instanceMutexMap = new HashMap(71);
@@ -69,7 +69,7 @@ public abstract class AbstractHeaderCache {
 
 		headerList = new HeaderList();
 
-		headerCacheAlreadyLoaded = false;
+		headerCacheLoaded = false;
 	}
 
 	/** Take a mutex for the header-cache path associated with this object.
@@ -90,8 +90,8 @@ public abstract class AbstractHeaderCache {
 		return new ColumbaHeader();
 	}
 
-	public boolean isHeaderCacheAlreadyLoaded() {
-		return headerCacheAlreadyLoaded;
+	public boolean isHeaderCacheLoaded() {
+		return headerCacheLoaded;
 	}
 
 	public boolean exists(Object uid) throws Exception {
@@ -131,21 +131,21 @@ public abstract class AbstractHeaderCache {
 		boolean needToRelease = false;
 		// if there exists a ".header" cache-file
 		//  try to load the cache	
-		if (headerCacheAlreadyLoaded == false) {
+		if (!headerCacheLoaded) {
 			try {
 				// prevent multiple workers from creating or modifying a header cache and its disk file
 				needToRelease = takeMutex();
-				if (headerCacheAlreadyLoaded) { // if another thread already loaded it
+				if (headerCacheLoaded) { // if another thread already loaded it
 					return headerList;
 				}
 				if (headerFile.exists()) {
 					load(worker);
-					headerCacheAlreadyLoaded = true;
+					headerCacheLoaded = true;
 				} else {
 					headerList =
 						folder.getDataStorageInstance().recreateHeaderList(
 							worker);
-					headerCacheAlreadyLoaded = true;
+					headerCacheLoaded = true;
 				}
 			} catch (Exception ex) { // Infinite Loop Danger if we retry
 				System.out.println(
@@ -157,7 +157,7 @@ public abstract class AbstractHeaderCache {
 				//headerList =
 				//	folder.getDataStorageInstance().recreateHeaderList(worker);
 
-				//headerCacheAlreadyLoaded = true;
+				//headerCacheLoaded = true;
 
 			} finally {
 				if (needToRelease) {
@@ -182,21 +182,22 @@ public abstract class AbstractHeaderCache {
 		ObjectInputStream ois = new ObjectInputStream(istream);
 
 		int capacity = ois.readInt();
-		ColumbaLogger.log.info("capacity=" + capacity);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("capacity=" + capacity);
+                }
 		boolean needToRelease = false;
 		int mcount = folder.getDataStorageInstance().getMessageCount();
 		if (capacity != mcount) {
-			// messagebox headercache-file is corrupted
-			ColumbaLogger.log.info(
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.info(
 				"need to recreateHeaderList() because capacity="
-					+ capacity
-					+ "  getMessageCount()="
-					+ mcount);
+					+ capacity + " and getMessageCount()=" + mcount);
+                        }
 			try {
 				// prevent multiple workers from creating or modifying a header cache and its disk file
 				needToRelease = takeMutex();
 				// recheck condition in case another thread did the work
-				if (headerCacheAlreadyLoaded == false) {
+				if (!headerCacheLoaded) {
 					headerList =
 						folder.getDataStorageInstance().recreateHeaderList(
 							worker);
@@ -256,7 +257,7 @@ public abstract class AbstractHeaderCache {
 			ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
 		}
 		folder.setNextMessageUid(nextUid);
-
+                worker.setDisplayText(null);
 		// close stream
 		ois.close();
 	}
@@ -264,7 +265,7 @@ public abstract class AbstractHeaderCache {
 	public void save(WorkerStatusController worker) throws Exception {
 
 		// we didn't load any header to save
-		if (isHeaderCacheAlreadyLoaded() == false)
+		if (!isHeaderCacheLoaded())
 			return;
 
 		if (MainInterface.DEBUG) {

@@ -17,12 +17,10 @@ package org.columba.mail.gui.message;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.text.JTextComponent;
 
 import org.columba.core.gui.util.CScrollPane;
 import org.columba.mail.message.HeaderInterface;
@@ -32,7 +30,6 @@ public class MessageView extends CScrollPane {
 	public static final int VIEWER_HTML = 1;
 	public static final int VIEWER_SIMPLE = 0;
 
-	private DocumentViewerInterface[] list;
 	//private HtmlViewer debug;
 
 	protected MouseListener listener;
@@ -48,52 +45,26 @@ public class MessageView extends CScrollPane {
 
 	protected MessageController messageController;
 
-	public MessageView(MessageController c) {
+	public MessageView(MessageController controller) {
 		super();
-		this.messageController = c;
+		this.messageController = controller;
 
 		getViewport().setBackground(Color.white);
 
 		panel = new MessagePanel();
-		//panel = new JPanel();
 		panel.setLayout(new BorderLayout());
-
+		
 		setViewportView(panel);
 
 		active = VIEWER_SIMPLE;
-
-		//setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
+		
 		hv = new HeaderViewer();
-		bodyTextViewer = new BodyTextViewer();
-
 		panel.add(hv, BorderLayout.NORTH);
 		
-		JPanel centerPanel = new JPanel();
-		centerPanel.setLayout( new BorderLayout() );
-		centerPanel.add(bodyTextViewer, BorderLayout.CENTER);
-
-		JPanel attachmentPanel = new JPanel();
-		attachmentPanel.setLayout( new BorderLayout() );
-		attachmentPanel.add( c.getMailFrameController().attachmentController.getView(), BorderLayout.CENTER);
+		bodyTextViewer = new BodyTextViewer();	
+		panel.add(bodyTextViewer, BorderLayout.CENTER);
 	
-		centerPanel.add( attachmentPanel, BorderLayout.SOUTH);
-		
-		panel.add(
-			centerPanel,
-			BorderLayout.CENTER);
-
-	}
-
-	protected void adjustSize() {
-
-		Dimension d = getPreferredSize();
-
-		Dimension d2 = hv.getPreferredSize();
-		d2.width = d.width;
-
-		hv.setPreferredSize(d2);
-
+		panel.add( controller.getMailFrameController().attachmentController.getView(), BorderLayout.SOUTH);		
 	}
 
 	public void addHyperlinkListener(HyperlinkListener l) {
@@ -106,57 +77,18 @@ public class MessageView extends CScrollPane {
 		bodyTextViewer.addMouseListener(l);
 	}
 
-	protected void switchViewer(boolean html) {
-		if (html) {
-			if (active == VIEWER_HTML) {
-				// do nothing
-			} else {
-				active = VIEWER_HTML;
-				panel.removeAll();
-				panel.add(hv, BorderLayout.NORTH);
-				panel.add((JTextComponent) list[active], BorderLayout.CENTER);
-				panel.validate();
-
-				adjustSize();
-			}
-		} else {
-			if (active == VIEWER_SIMPLE) {
-				// do nothing
-			} else {
-				active = VIEWER_SIMPLE;
-				panel.removeAll();
-				panel.add(hv, BorderLayout.NORTH);
-				panel.add((JTextComponent) list[active], BorderLayout.CENTER);
-				panel.validate();
-				adjustSize();
-			}
-		}
-	}
-
 	public void setDoc(
 		HeaderInterface header,
 		String str,
 		boolean html,
 		boolean hasAttachments)
 		throws Exception {
-		//switchViewer( html );
 
 		if (header != null)
 			hv.setHeader(header, hasAttachments);
 
-		//list[active].setDoc( str );
 		bodyTextViewer.setBodyText(str, html);
 
-	}
-
-	public void setPopupListener(MouseListener l) {
-		listener = l;
-
-		for (int i = 0; i < list.length; i++) {
-			JTextComponent c = (JTextComponent) list[i];
-			if (c != null)
-				c.addMouseListener(l);
-		}
 	}
 
 }

@@ -41,8 +41,6 @@ public class AttachmentView extends IconPanel {
 	public AttachmentView(AttachmentModel model) {
 		super();
 		this.model = model;
-
-		//setPreferredSize( new Dimension(100,100) );
 	}
 
 	public AttachmentModel getModel() {
@@ -75,12 +73,7 @@ public class AttachmentView extends IconPanel {
 
 			if (mp.getHeader().getFileName() != null) {
 				text =
-					mp.getHeader().getFileName()
-						+ " ("
-						+ contentType
-						+ "/"
-						+ contentSubtype
-						+ ")";
+					mp.getHeader().getFileName();
 			} else {
 				text = contentType + "/" + contentSubtype;
 			}

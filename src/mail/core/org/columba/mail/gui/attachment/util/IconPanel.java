@@ -17,6 +17,7 @@ package org.columba.mail.gui.attachment.util;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -36,9 +37,12 @@ public class IconPanel extends JPanel implements MouseInputListener {
 	Vector selection;
 	ArrayList selectionListener;
 	Action doubleClickAction;
+	Dimension preferredIconSize;
+	OneSizeLabelFactory labelFactory;
 
 	public IconPanel() {
-		super(new FlowLayout(FlowLayout.LEFT, 20, 5));
+		super();		
+		setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
 
 		setOpaque(true);
 		setBackground(UIManager.getColor("List.background"));
@@ -49,8 +53,29 @@ public class IconPanel extends JPanel implements MouseInputListener {
 		count = 0;
 		selection = new Vector();
 		selectionListener = new ArrayList();
-
+		
+		labelFactory = new OneSizeLabelFactory(150 );	
 	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.Component#getPreferredSize()
+	 */
+	public Dimension getPreferredSize() {
+		Dimension dim = new Dimension(super.getWidth(), 0);
+		if( dim == null || preferredIconSize == null) return dim;
+		int componentWidth = preferredIconSize.width + 20;
+		
+		int iconsperline = dim.width / componentWidth;
+		if( iconsperline == 0) iconsperline = 1;
+		
+		int lines =  count / iconsperline;			
+		if(  count % iconsperline != 0) lines++;
+		
+		dim.height = (preferredIconSize.height + 5 ) * lines;
+		
+		return dim;
+	}
+
 
 	public void updateUI() {
 		super.updateUI();
@@ -66,7 +91,9 @@ public class IconPanel extends JPanel implements MouseInputListener {
 	}
 
 	public void add(Icon image, String text) {
-		addItem(new ClickableIcon(image, text, count));
+		ClickableIcon icon = new ClickableIcon(labelFactory, image, text, count);
+		preferredIconSize = icon.getPreferredSize();
+		addItem(icon);
 		count++;
 
 		revalidate();
@@ -79,6 +106,7 @@ public class IconPanel extends JPanel implements MouseInputListener {
 		count = 0;
 
 		selection.removeAllElements();
+		labelFactory.reset();
 
 		revalidate();
 		repaint();
@@ -124,7 +152,7 @@ public class IconPanel extends JPanel implements MouseInputListener {
 
 		clicked = getComponentAt(pos);
 
-		if (clicked.getClass().isInstance(new ClickableIcon(null, null, 0))) {
+		if (clicked instanceof ClickableIcon) {
 			aktIcon = (ClickableIcon) clicked;
 
 			switch (mode) {
@@ -248,19 +276,19 @@ class ClickableIcon extends JComponent {
 	private JLabel icon;
 	private JLabel label;
 
-	public ClickableIcon(Icon image, String text, int index) {
+	public ClickableIcon(OneSizeLabelFactory factory, Icon image, String text, int index) {
 		selectionForeground = UIManager.getColor("List.selectionForeground");
 		selectionBackground = UIManager.getColor("List.selectionBackground");
 		foreground = UIManager.getColor("List.foreground");
 		background = UIManager.getColor("List.background");
 
-		//setLayout( new GridLayout(2,1) );
 		setLayout(new BorderLayout());
 
-		label = new JLabel(text);
+		label = factory.getNewLabel(text);
 		label.setOpaque(true);
 		label.setBackground(background);
 		label.setForeground(foreground);
+		label.setHorizontalAlignment(JLabel.CENTER);			
 
 		icon = new JLabel(image);
 		icon.setOpaque(true);
@@ -296,3 +324,4 @@ class ClickableIcon extends JComponent {
 	}
 
 }
+

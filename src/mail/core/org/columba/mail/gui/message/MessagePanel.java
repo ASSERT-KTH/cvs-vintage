@@ -50,7 +50,7 @@ public class MessagePanel extends JPanel implements Scrollable {
 	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
 		Font textFont = Config.getOptionsConfig().getGuiItem().getTextFont();
 		
-		return textFont.getSize() * 5;
+		return textFont.getSize() * 3;
 	}
 
 	/**

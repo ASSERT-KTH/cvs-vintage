@@ -124,6 +124,12 @@ public class QuotedPrintableDecoder extends Decoder {
 			read = bufferedIn.read(inBytes);
 		}
 		
+		/*
+		 * *20030524, karlpeder* Flushing buffer to ensure everything gets
+		 * to the output (related to bug #734173)
+		 */
+		bufferedOut.flush();
+
 		in.close();
 		out.close();
     }

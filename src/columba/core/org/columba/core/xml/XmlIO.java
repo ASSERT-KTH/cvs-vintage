@@ -16,11 +16,13 @@
 
 package org.columba.core.xml;
 
+import java.io.BufferedWriter;
 import java.io.CharArrayWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -30,8 +32,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.io.DiskIO;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -225,8 +225,8 @@ public class XmlIO extends DefaultHandler {
 	// Writer interface
 	//
 	public void write(OutputStream out) throws IOException {
-		PrintWriter PW = new PrintWriter(out);
-		PW.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		BufferedWriter PW = new BufferedWriter(new OutputStreamWriter(out,"UTF-8"));
+		PW.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 		if (rootElement.subElements.size() > 0) {
 			for (int i = 0; i < rootElement.subElements.size(); i++) {
 				_writeSubNode(
@@ -254,33 +254,34 @@ public class XmlIO extends DefaultHandler {
 		return orig;
 	}
 
-	private void _writeSubNode(PrintWriter out, XmlElement element, int indent)
+	private void _writeSubNode(Writer out, XmlElement element, int indent)
 		throws IOException {
 		_writeSpace(out, indent);
-		out.print("<" + element.getName());
+		out.write("<" );
+		out.write(element.getName());
 		for (Enumeration e = element.getAttributeNames();
 			e.hasMoreElements();
 			) {
 			String K = (String) e.nextElement();
-			out.print(" " + K + "=\"" + _escapeText(element.getAttribute(K))
+			out.write(" " + K + "=\"" + _escapeText(element.getAttribute(K))
                       + "\"");
 		}
 
-		out.print(">");
+		out.write(">");
 
 		String data = element.getData();
 
 		if (data != null && !data.equals("")) {
 			if (data.length() > maxOneLineData) {
-				out.println("");
+				out.write("\n");
 				_writeSpace(out, indent + writeIndent);
 			}
-			out.print(_escapeText(data));
+			out.write(_escapeText(data));
 		}
 		Vector subElements = element.getElements();
 
 		if (subElements.size() > 0) {
-			out.println("");
+			out.write("\n");
 			for (int i = 0; i < subElements.size(); i++) {
 				_writeSubNode(
 					out,
@@ -290,16 +291,16 @@ public class XmlIO extends DefaultHandler {
 			_writeSpace(out, indent);
 		}
 		if (data.length() > maxOneLineData) {
-			out.println("");
+			out.write("\n");
 			_writeSpace(out, indent);
 		}
-		out.println("</" + _escapeText(element.getName()) + ">");
+		out.write("</" + _escapeText(element.getName()) + ">\n");
 	}
 
-	private void _writeSpace(PrintWriter out, int numSpaces)
+	private void _writeSpace(Writer out, int numSpaces)
 		throws IOException {
 		for (int i = 0; i < numSpaces; i++)
-			out.print(" ");
+			out.write(" ");
 	}
 
 } // End class XmlIO
