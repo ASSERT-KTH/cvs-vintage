@@ -88,7 +88,7 @@ import org.tigris.scarab.util.export.ExportFormat;
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.18 2003/05/23 09:39:20 dlr Exp $
+ * @version $Id: ConfigureReport.java,v 1.19 2003/06/04 22:16:43 dlr Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -685,7 +685,12 @@ public class ConfigureReport
         int level = params.getInt("heading", -1);
                     
         String name = params.getString("groupname_new");
-        if (name == null || name.length() == 0) 
+        if (name != null)
+        {
+            name = name.trim();
+        }
+
+        if (name == null || name.length() == 0)
         {
             scarabR.setAlertMessage(l10n.get("InvalidGroupName"));
         }
