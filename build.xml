@@ -139,6 +139,7 @@
     <!-- Root context -->
     <mkdir dir="${tomcat.build}/webapps/ROOT"/>
     <copydir src="src/webpages" dest="${tomcat.build}/webapps/ROOT"/>
+    <copydir src="src/doc" dest="${tomcat.build}/webapps/ROOT/doc"/>
     <javac srcdir="src/webpages/WEB-INF/classes"
            optimize="${optimize}"
            destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes"
