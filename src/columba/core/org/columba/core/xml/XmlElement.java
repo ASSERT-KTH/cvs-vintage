@@ -128,7 +128,7 @@ public class XmlElement extends Observable {
 	 * 
 	 * @param name		name of key
 	 * @param value		new attribute value
-	 * @return			new attribute value
+	 * @return			old attribute value
 	 * 
 	 */
 	public Object addAttribute(String name, String value) {
@@ -549,5 +549,61 @@ public class XmlElement extends Observable {
 		setChanged();
 		super.notifyObservers();
 	}
+	
+	/**
+	 * Returns true if the specified objects are equal.
+	 * They are equal if they are both null OR if the <code>equals()</code> method
+	 * return true. (<code>obj1.equals(obj2)</code>).
+	 * @param obj1 first object to compare with.
+	 * @param obj2 second object to compare with.
+	 * @return true if they represent the same object; false if one of them is null or the
+	 * <code>equals()</code> method returns false.
+	 */
+	private boolean equals( Object obj1, Object obj2 ) {
+		boolean equal = false;
+		
+		if ((obj1 == null) && (obj2 == null)) {
+			equal = true;
+		} else if ((obj1 != null) && (obj2 != null)) {
+			equal = obj1.equals(obj2);
+		}
+		return equal;
+	}
 
+	/** {@inheritDoc} */
+	public boolean equals(Object obj) {
+		boolean equal = false;
+		
+		if ( (obj != null) && (obj instanceof XmlElement) ) {
+			XmlElement other = (XmlElement) obj;
+			
+			if (equals(attributes, other.attributes) &&
+				equals(data, other.data) &&
+				equals(name, other.name) &&
+				equals(subElements, other.subElements))
+			{
+				equal = true;
+			}
+		}		
+		return equal;
+	}
+
+	/** {@inheritDoc} */
+	public int hashCode() {		
+		//Hashcode value should be buffered.
+		int hashCode = 23;
+		if (attributes != null) {
+			hashCode += attributes.hashCode() * 13;
+		}
+		if (data!= null) {
+			hashCode += data.hashCode() * 17;
+		}
+		if (name != null) {
+			hashCode += name.hashCode() * 29;
+		}
+		if (subElements != null) {
+			hashCode += subElements.hashCode() * 57;
+		}
+		return hashCode;
+	}
 } // END public class XmlElement
