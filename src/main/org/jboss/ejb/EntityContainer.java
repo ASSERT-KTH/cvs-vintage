@@ -62,7 +62,7 @@ import org.jboss.metadata.EntityMetaData;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.66 $
+* @version $Revision: 1.67 $
 *
 * <p><b>Revisions:</b>
 *
@@ -295,49 +295,55 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-      
-      // Acquire classes from CL
-      if (metaData.getHome() != null)
-         homeInterface = classLoader.loadClass(metaData.getHome());
-      if (metaData.getRemote() != null)
-         remoteInterface = classLoader.loadClass(metaData.getRemote());
-      
-      // Call default init
-      super.create();
-      
-      // Map the bean methods
-      setupBeanMapping();
-      
-      // Map the home methods
-      setupHomeMapping();
-      
-      // Map the interfaces to Long
-      setupMarshalledInvocationMapping();
-      
-      // Initialize pool
-      instancePool.create();
-      
-      // Init container invoker
-      if (containerInvoker != null)
-         containerInvoker.create();
-      
-      // Init instance cache
-      instanceCache.create();
-      
-      // Init persistence
-      persistenceManager.create();
-      
-      // Initialize the interceptor by calling the chain
-      Interceptor in = interceptor;
-      while (in != null)
+
+      try
       {
-         in.setContainer(this);
-         in.create();
-         in = in.getNext();
+         // Acquire classes from CL
+         if (metaData.getHome() != null)
+            homeInterface = classLoader.loadClass(metaData.getHome());
+         if (metaData.getRemote() != null)
+            remoteInterface = classLoader.loadClass(metaData.getRemote());
+
+         // Call default init
+         super.create();
+
+         // Map the bean methods
+         setupBeanMapping();
+
+         // Map the home methods
+         setupHomeMapping();
+
+         // Map the interfaces to Long
+         setupMarshalledInvocationMapping();
+
+         // Initialize pool
+         instancePool.create();
+
+         // Init container invoker
+         if (containerInvoker != null)
+            containerInvoker.create();
+
+         // Init instance cache
+         instanceCache.create();
+
+         // Init persistence
+         persistenceManager.create();
+
+         // Initialize the interceptor by calling the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.setContainer(this);
+            in.create();
+            in = in.getNext();
+         }
+         readOnly = ((EntityMetaData)metaData).isReadOnly();
       }
-      readOnly = ((EntityMetaData)metaData).isReadOnly();
-      // Reset classloader
-      Thread.currentThread().setContextClassLoader(oldCl);
+      finally
+      {
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
    }
    
    public void start() throws Exception
@@ -345,67 +351,77 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-      
-      // Call default start
-      super.start();
-      
-      // Start container invoker
-      if (containerInvoker != null)
-         containerInvoker.start();
-      
-      // Start instance cache
-      instanceCache.start();
-      
-      // Start persistence
-      persistenceManager.start();
-      
-      // Start the instance pool
-      instancePool.start();
-      
-      // Start all interceptors in the chain
-      Interceptor in = interceptor;
-      while (in != null)
+
+      try
       {
-         in.start();
-         in = in.getNext();
+         // Call default start
+         super.start();
+
+         // Start container invoker
+         if (containerInvoker != null)
+            containerInvoker.start();
+
+         // Start instance cache
+         instanceCache.start();
+
+         // Start persistence
+         persistenceManager.start();
+
+         // Start the instance pool
+         instancePool.start();
+
+         // Start all interceptors in the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.start();
+            in = in.getNext();
+         }
       }
-      
-      // Reset classloader
-      Thread.currentThread().setContextClassLoader(oldCl);
+      finally
+      {
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
    }
-   
+
    public void stop()
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-      
-      // Call default stop
-      super.stop();
-      
-      // Stop container invoker
-      if (containerInvoker != null)
-         containerInvoker.stop();
-      
-      // Stop instance cache
-      instanceCache.stop();
-      
-      // Stop persistence
-      persistenceManager.stop();
-      
-      // Stop the instance pool
-      instancePool.stop();
-      
-      // Stop all interceptors in the chain
-      Interceptor in = interceptor;
-      while (in != null)
+
+      try
       {
-         in.stop();
-         in = in.getNext();
+         // Call default stop
+         super.stop();
+
+         // Stop container invoker
+         if (containerInvoker != null)
+            containerInvoker.stop();
+
+         // Stop instance cache
+         instanceCache.stop();
+
+         // Stop persistence
+         persistenceManager.stop();
+
+         // Stop the instance pool
+         instancePool.stop();
+
+         // Stop all interceptors in the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.stop();
+            in = in.getNext();
+         }      
       }
-      
-      // Reset classloader
-      Thread.currentThread().setContextClassLoader(oldCl);
+      finally
+      {
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
    }
    
    public void destroy()
@@ -413,35 +429,40 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-      
-      // Call default destroy
-      super.destroy();
-      
-      // Destroy container invoker
-      if (containerInvoker != null)
-         containerInvoker.destroy();
-      
-      // Destroy instance cache
-      instanceCache.destroy();
-      
-      // Destroy persistence
-      persistenceManager.destroy();
-      
-      // Destroy the pool
-      instancePool.destroy();
-      
-      // Destroy all the interceptors in the chain
-      Interceptor in = interceptor;
-      while (in != null)
+
+      try
       {
-         in.destroy();
-         in = in.getNext();
+         // Call default destroy
+         super.destroy();
+
+         // Destroy container invoker
+         if (containerInvoker != null)
+            containerInvoker.destroy();
+
+         // Destroy instance cache
+         instanceCache.destroy();
+
+         // Destroy persistence
+         persistenceManager.destroy();
+
+         // Destroy the pool
+         instancePool.destroy();
+
+         // Destroy all the interceptors in the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.destroy();
+            in = in.getNext();
+         }
       }
-      
-      // Reset classloader
-      Thread.currentThread().setContextClassLoader(oldCl);
+      finally
+      {
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
    }
-   
+
    public Object invokeHome(Invocation mi) throws Exception
    {
       

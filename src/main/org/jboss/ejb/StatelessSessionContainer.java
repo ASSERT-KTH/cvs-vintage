@@ -32,7 +32,7 @@ import org.jboss.invocation.MarshalledInvocation;
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
-* @version $Revision: 1.32 $
+* @version $Revision: 1.33 $
 * <p><b>2001219 marc fleury</b>
 * <ul>
 * <li> move to the new invocation layer and Invocation object
@@ -147,43 +147,47 @@ implements ContainerInvokerContainer, InstancePoolContainer
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-      
-      // Acquire classes from CL
-      if (metaData.getHome() != null)
-         homeInterface = classLoader.loadClass(metaData.getHome());
-      if (metaData.getRemote() != null)
-         remoteInterface = classLoader.loadClass(metaData.getRemote());
-      
-      // Call default init
-      super.create();
-      
-      // Map the bean methods
-      setupBeanMapping();
-      
-      // Map the home methods
-      setupHomeMapping();
-      
-      // Map the interfaces to Long
-      setupMarshalledInvocationMapping();
-      
-      // Initialize pool
-      instancePool.create();
-      
-      // Init container invoker
-      if (containerInvoker != null)
-         containerInvoker.create();
-      
-      // Initialize the interceptor by calling the chain
-      Interceptor in = interceptor;
-      while (in != null)
+
+      try
       {
-         in.setContainer(this);
-         in.create();
-         in = in.getNext();
+         // Acquire classes from CL
+         if (metaData.getHome() != null)
+            homeInterface = classLoader.loadClass(metaData.getHome());
+         if (metaData.getRemote() != null)
+            remoteInterface = classLoader.loadClass(metaData.getRemote());
+         // Call default init
+         super.create();
+
+         // Map the bean methods
+         setupBeanMapping();
+
+         // Map the home methods
+         setupHomeMapping();
+
+         // Map the interfaces to Long
+         setupMarshalledInvocationMapping();
+
+         // Initialize pool
+         instancePool.create();
+
+         // Init container invoker
+         if (containerInvoker != null)
+            containerInvoker.create();
+
+         // Initialize the interceptor by calling the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.setContainer(this);
+            in.create();
+            in = in.getNext();
+         }
       }
-      
-      // Reset classloader
-      Thread.currentThread().setContextClassLoader(oldCl);
+      finally
+      {
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
    }
    
    public void start() throws Exception
@@ -191,27 +195,32 @@ implements ContainerInvokerContainer, InstancePoolContainer
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-      
-      // Call default start
-      super.start();
-      
-      // Start container invoker
-      if (containerInvoker != null)
-         containerInvoker.start();
-      
-      // Start the instance pool
-      instancePool.start();
-      
-      // Start all interceptors in the chain
-      Interceptor in = interceptor;
-      while (in != null)
+
+      try
       {
-         in.start();
-         in = in.getNext();
+         // Call default start
+         super.start();
+
+         // Start container invoker
+         if (containerInvoker != null)
+            containerInvoker.start();
+
+         // Start the instance pool
+         instancePool.start();
+
+         // Start all interceptors in the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.start();
+            in = in.getNext();
+         }
       }
-      
-      // Reset classloader
-      Thread.currentThread().setContextClassLoader(oldCl);
+      finally
+      {
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
    }
    
    public void stop()
@@ -219,27 +228,32 @@ implements ContainerInvokerContainer, InstancePoolContainer
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-      
-      // Call default stop
-      super.stop();
-      
-      // Stop container invoker
-      if (containerInvoker != null)
-         containerInvoker.stop();
-      
-      // Stop the instance pool
-      instancePool.stop();
-      
-      // Stop all interceptors in the chain
-      Interceptor in = interceptor;
-      while (in != null)
+
+      try
       {
-         in.stop();
-         in = in.getNext();
+         // Call default stop
+         super.stop();
+
+         // Stop container invoker
+         if (containerInvoker != null)
+            containerInvoker.stop();
+
+         // Stop the instance pool
+         instancePool.stop();
+
+         // Stop all interceptors in the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.stop();
+            in = in.getNext();
+         }
       }
-      
-      // Reset classloader
-      Thread.currentThread().setContextClassLoader(oldCl);
+      finally
+      {
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
    }
    
    public void destroy()
@@ -247,27 +261,32 @@ implements ContainerInvokerContainer, InstancePoolContainer
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-      
-      // Call default destroy
-      super.destroy();
-      
-      // Destroy container invoker
-      if (containerInvoker != null)
-         containerInvoker.destroy();
-      
-      // Destroy the pool
-      instancePool.destroy();
-      
-      // Destroy all the interceptors in the chain
-      Interceptor in = interceptor;
-      while (in != null)
+
+      try
       {
-         in.destroy();
-         in = in.getNext();
+         // Call default destroy
+         super.destroy();
+
+         // Destroy container invoker
+         if (containerInvoker != null)
+            containerInvoker.destroy();
+
+         // Destroy the pool
+         instancePool.destroy();
+
+         // Destroy all the interceptors in the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.destroy();
+            in = in.getNext();
+         }
       }
-      
-      // Reset classloader
-      Thread.currentThread().setContextClassLoader(oldCl);
+      finally
+      {
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
    }
    
    public Object invokeHome(Invocation mi) throws Exception
@@ -282,7 +301,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    * on the particular instance
    */
    public Object invoke(Invocation mi)
-   throws Exception
+      throws Exception
    {
       
       // Invoke through interceptors
@@ -295,7 +314,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    * No-op.
    */
    public void remove(Invocation mi)
-   throws RemoteException, RemoveException
+      throws RemoteException, RemoveException
    {
       //TODO
    }
@@ -304,7 +323,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    * @return    Always null
    */
    public Handle getHandle(Invocation mi)
-   throws RemoteException
+      throws RemoteException
    {
       // TODO
       return null;
@@ -314,14 +333,14 @@ implements ContainerInvokerContainer, InstancePoolContainer
    * @return    Always null
    */
    public Object getPrimaryKey(Invocation mi)
-   throws RemoteException
+      throws RemoteException
    {
       // TODO
       return null;
    }
    
    public EJBHome getEJBHome(Invocation mi)
-   throws RemoteException
+      throws RemoteException
    {
       if (containerInvoker == null)
          throw new IllegalStateException();
@@ -333,7 +352,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    * @return    Always false
    */
    public boolean isIdentical(Invocation mi)
-   throws RemoteException
+      throws RemoteException
    {
       return false; // TODO
    }
@@ -348,7 +367,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    // EJBLocalHome implementation
    
    public EJBLocalObject createLocalHome()
-   throws CreateException
+      throws CreateException
    {
       if (localContainerInvoker == null)
          throw new IllegalStateException();
@@ -366,7 +385,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    // EJBHome implementation ----------------------------------------
    
    public EJBObject createHome()
-   throws RemoteException, CreateException
+      throws RemoteException, CreateException
    {
       if (containerInvoker == null)
          throw new IllegalStateException();
@@ -379,7 +398,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    * No-op.
    */
    public void removeHome(Handle handle)
-   throws RemoteException, RemoveException
+      throws RemoteException, RemoveException
    {
       // TODO
    }
@@ -388,7 +407,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    * No-op.
    */
    public void removeHome(Object primaryKey)
-   throws RemoteException, RemoveException
+      throws RemoteException, RemoveException
    {
       // TODO
    }
@@ -397,7 +416,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    * @return    Always null.
    */
    public EJBMetaData getEJBMetaDataHome()
-   throws RemoteException
+      throws RemoteException
    {
       // TODO
       return null;
@@ -407,7 +426,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    * @return    Always null.
    */
    public HomeHandle getHomeHandleHome()
-   throws RemoteException
+      throws RemoteException
    {
       // TODO
       return null;
@@ -416,7 +435,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    // Protected  ----------------------------------------------------
    
    protected void setupHomeMapping()
-   throws NoSuchMethodException
+      throws NoSuchMethodException
    {
       boolean debug = log.isDebugEnabled();
 
@@ -449,7 +468,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    }
 
    private void setUpBeanMappingImpl( Map map, Method[] m, String declaringClass )
-   throws NoSuchMethodException
+      throws NoSuchMethodException
    {
       boolean debug = log.isDebugEnabled();
 
@@ -479,7 +498,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    }
 
    protected void setupBeanMapping()
-   throws NoSuchMethodException
+      throws NoSuchMethodException
    {
       Map map = new HashMap();
       
@@ -541,7 +560,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    * This is the last step before invocation - all interceptors are done
    */
    class ContainerInterceptor
-   implements Interceptor
+      implements Interceptor
    {
       public void setContainer(Container con) {}
       
@@ -649,4 +668,3 @@ implements ContainerInvokerContainer, InstancePoolContainer
       }
    }
 }
-

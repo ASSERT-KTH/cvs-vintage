@@ -34,7 +34,7 @@ import org.jboss.ejb.EnterpriseContext;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class MessageDrivenContainer
     extends Container
@@ -149,11 +149,12 @@ public class MessageDrivenContainer
 
     public void create() throws Exception
     {
-        try {
-            // Associate thread with classloader
-            ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(getClassLoader());
+         // Associate thread with classloader
+         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+         Thread.currentThread().setContextClassLoader(getClassLoader());
 
+        try
+        {
             // Call default init
             super.create();
 
@@ -168,18 +169,23 @@ public class MessageDrivenContainer
 
             // Initialize the interceptor by calling the chain
             Interceptor in = interceptor;
-            while (in != null) {
+            while (in != null)
+            {
                 in.setContainer(this);
                 in.create();
                 in = in.getNext();
             }
 
-            // Reset classloader
-            Thread.currentThread().setContextClassLoader(oldCl);
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             log.error("Serious error in init: ", e);
             throw e;
+        }
+        finally
+        {
+            // Reset classloader
+            Thread.currentThread().setContextClassLoader(oldCl);
         }
     }
 
@@ -190,24 +196,29 @@ public class MessageDrivenContainer
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(getClassLoader());
 
-        // Call default start
-        super.start();
-
-        // Start container invoker
-        containerInvoker.start();
-        // Start the instance pool
-        instancePool.start();
-
-        // Start all interceptors in the chain
-        Interceptor in = interceptor;
-        while (in != null)
+        try
         {
-           in.start();
-           in = in.getNext();
-        }
+           // Call default start
+           super.start();
 
-        // Reset classloader
-        Thread.currentThread().setContextClassLoader(oldCl);
+           // Start container invoker
+           containerInvoker.start();
+           // Start the instance pool
+           instancePool.start();
+
+           // Start all interceptors in the chain
+           Interceptor in = interceptor;
+           while (in != null)
+           {
+              in.start();
+              in = in.getNext();
+           }
+        }
+        finally
+        {
+           // Reset classloader
+           Thread.currentThread().setContextClassLoader(oldCl);
+        }
     }
 
     public void stop()
@@ -216,25 +227,30 @@ public class MessageDrivenContainer
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(getClassLoader());
 
-        // Call default stop
-        super.stop();
-
-        // Stop container invoker
-        containerInvoker.stop();
-
-        // Stop the instance pool
-        instancePool.stop();
-
-        // Stop all interceptors in the chain
-        Interceptor in = interceptor;
-        while (in != null)
+        try
         {
-           in.stop();
-           in = in.getNext();
-        }
+           // Call default stop
+           super.stop();
 
-        // Reset classloader
-        Thread.currentThread().setContextClassLoader(oldCl);
+           // Stop container invoker
+           containerInvoker.stop();
+
+           // Stop the instance pool
+           instancePool.stop();
+
+           // Stop all interceptors in the chain
+           Interceptor in = interceptor;
+           while (in != null)
+           {
+              in.stop();
+              in = in.getNext();
+           }
+        }
+        finally
+        {
+           // Reset classloader
+           Thread.currentThread().setContextClassLoader(oldCl);
+        }
     }
 
     public void destroy()
@@ -243,25 +259,30 @@ public class MessageDrivenContainer
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(getClassLoader());
 
-        // Call default destroy
-        super.destroy();
-
-        // Destroy container invoker
-        containerInvoker.destroy();
-
-        // Destroy the pool
-        instancePool.destroy();
-
-        // Destroy all the interceptors in the chain
-        Interceptor in = interceptor;
-        while (in != null)
+        try
         {
-           in.destroy();
-           in = in.getNext();
-        }
+           // Call default destroy
+           super.destroy();
 
-        // Reset classloader
-        Thread.currentThread().setContextClassLoader(oldCl);
+           // Destroy container invoker
+           containerInvoker.destroy();
+
+           // Destroy the pool
+           instancePool.destroy();
+
+           // Destroy all the interceptors in the chain
+           Interceptor in = interceptor;
+           while (in != null)
+           {
+              in.destroy();
+              in = in.getNext();
+           }
+        }
+        finally
+        {
+           // Reset classloader
+           Thread.currentThread().setContextClassLoader(oldCl);
+        }
     }
 
 
