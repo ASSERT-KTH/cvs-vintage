@@ -28,7 +28,7 @@ import org.jboss.system.ServerConfig;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.62 $
+ * @version $Revision: 1.63 $
  */
 public class Main
    implements Runnable
@@ -220,4 +220,13 @@ public class Main
       ThreadGroup threads = new ThreadGroup("jboss");
       new Thread(threads, new Main(args), "jboss-main").start();
    }
+
+   /**
+    * This method is here so that if JBoss is running under
+    * Alexandria (An NT Service Installer), Alexandria can shutdown 
+    * the system down correctly.
+    */
+   public static void systemExit(String argv[]) {
+      System.exit(0);
+   }      
 }
