@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss.jcml,v 1.60 2001/08/16 18:15:56 user57 Exp $ -->
+<!-- $Id: jboss.jcml,v 1.61 2001/08/26 22:50:00 user57 Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -586,8 +586,8 @@
       JCA:service=RARDeployer
     </attribute>
     <attribute name="URLs">
-      ../deploy,
-      ../deploy/lib
+      ../deploy/lib,
+      ../deploy
     </attribute>
     <attribute name="Timeout">
       3000
