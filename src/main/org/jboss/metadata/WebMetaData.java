@@ -32,7 +32,7 @@ import java.util.Set;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class WebMetaData extends MetaData
 {
@@ -363,7 +363,7 @@ public class WebMetaData extends MetaData
       {
          Element serviceRef = (Element) iterator.next();
          ServiceRefMetaData refMetaData = new ServiceRefMetaData(resourceCl);
-         refMetaData.importClientXml(serviceRef);
+         refMetaData.importStandardXml(serviceRef);
          serviceReferences.put(refMetaData.getServiceRefName(), refMetaData);
       }
 

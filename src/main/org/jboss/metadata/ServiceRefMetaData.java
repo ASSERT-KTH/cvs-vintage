@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.6 2004/05/05 16:38:36 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.7 2004/05/06 16:14:11 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Document;
@@ -24,35 +24,34 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 /** The metdata data from service-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class ServiceRefMetaData
 {
    /** The ClassLoader to load additional resources */
    private ClassLoader localCl;
 
-   /** The service-ref/service-ref-name element */
+   // The required <service-ref-name> element
    private String serviceRefName;
-   /** The service-ref/service-interface element */
+   // The required <service-interface> element
    private String serviceInterface;
-   /** The service-ref/wsdl-file element */
+   // The optional <wsdl-file> element
    private String wsdlFile;
-   /** The service-ref/jaxrpc-mapping-file element */
+   // The optional <jaxrpc-mapping-file> element
    private String jaxrpcMappingFile;
-   /** The service-ref/service-qname element */
+   // The optional <service-qname> element
    private QName serviceQName;
-   /** The service-ref/port-component-ref/service-endpoint-interface element */
-   private String serviceEndpointInterface;
-   /** The service-ref/port-component-ref/port-component-link element */
-   private String portComponentLink;
-   /** The HashMap<HandlerMetaData> service-ref/handler element(s) */
-   private HashMap handlers = new HashMap();
+   // The optional <port-component-ref> elements
+   private ArrayList portComponentRefs = new ArrayList();
+   // The optional <handler> elements
+   private ArrayList handlers = new ArrayList();
 
-   /** The URL of the actual WSDL to use */
+   // The URL of the actual WSDL to use
    private URL wsdlOverride;
 
    // derived properties
@@ -71,27 +70,23 @@ public class ServiceRefMetaData
       this.localCl = localCl;
    }
 
-   /**
-    * @return HashMap<HandlerMetaData>
-    */
-   public HashMap getHandlers()
-   {
-      return handlers;
-   }
-
    public String getJaxrpcMappingFile()
    {
       return jaxrpcMappingFile;
    }
 
-   public String getPortComponentLink()
+   public PortComponentRefMetaData[] getPortComponentRefs()
    {
-      return portComponentLink;
+      PortComponentRefMetaData[] array = new PortComponentRefMetaData[portComponentRefs.size()];
+      portComponentRefs.toArray(array);
+      return array;
    }
 
-   public String getServiceEndpointInterface()
+   public ServiceRefHandlerMetaData[] getHandlers()
    {
-      return serviceEndpointInterface;
+      ServiceRefHandlerMetaData[] array = new ServiceRefHandlerMetaData[handlers.size()];
+      handlers.toArray(array);
+      return array;
    }
 
    public String getServiceInterface()
@@ -181,7 +176,7 @@ public class ServiceRefMetaData
       return wsdlDefinition;
    }
 
-   public void importClientXml(Element element)
+   public void importStandardXml(Element element)
            throws DeploymentException
    {
       serviceRefName = MetaData.getUniqueChildContent(element, "service-ref-name");
@@ -194,21 +189,24 @@ public class ServiceRefMetaData
 
       serviceQName = QNameBuilder.buildQName(element, MetaData.getOptionalChildContent(element, "service-qname"));
 
-      Element portComponentRef = MetaData.getOptionalChild(element, "port-component-ref");
-      if (portComponentRef != null)
+      // Parse the port-component-ref elements
+      Iterator iterator = MetaData.getChildrenByTagName(element, "port-component-ref");
+      while (iterator.hasNext())
       {
-         serviceEndpointInterface = MetaData.getUniqueChildContent(portComponentRef, "service-endpoint-interface");
-         portComponentLink = MetaData.getOptionalChildContent(portComponentRef, "port-component-link");
+         Element pcrefElement = (Element) iterator.next();
+         PortComponentRefMetaData pcrefMetaData = new PortComponentRefMetaData();
+         pcrefMetaData.importStandardXml(pcrefElement);
+         portComponentRefs.add(pcrefMetaData);
       }
 
       // Parse the handler elements
-      Iterator iterator = MetaData.getChildrenByTagName(element, "handler");
+      iterator = MetaData.getChildrenByTagName(element, "handler");
       while (iterator.hasNext())
       {
-         Element handler = (Element) iterator.next();
-         HandlerMetaData handlerMetaData = new HandlerMetaData();
-         handlerMetaData.importClientXml(handler);
-         handlers.put(handlerMetaData.getHandlerName(), handlerMetaData);
+         Element handlerElement = (Element) iterator.next();
+         ServiceRefHandlerMetaData handlerMetaData = new ServiceRefHandlerMetaData();
+         handlerMetaData.importStandardXml(handlerElement);
+         handlers.add(handlerMetaData);
       }
    }
 

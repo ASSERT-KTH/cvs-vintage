@@ -31,7 +31,7 @@ import java.util.*;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.63 $
+ * @version $Revision: 1.64 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -656,7 +656,7 @@ public abstract class BeanMetaData
       {
          Element serviceRef = (Element) iterator.next();
          ServiceRefMetaData refMetaData = new ServiceRefMetaData(application.getResourceCl());
-         refMetaData.importClientXml(serviceRef);
+         refMetaData.importStandardXml(serviceRef);
          serviceReferences.put(refMetaData.getServiceRefName(), refMetaData);
       }
 

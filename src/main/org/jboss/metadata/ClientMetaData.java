@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ClientMetaData.java,v 1.8 2004/05/04 08:51:48 tdiesler Exp $
+// $Id: ClientMetaData.java,v 1.9 2004/05/06 16:14:11 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Element;
@@ -19,7 +19,7 @@ import java.util.Iterator;
  * 
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class ClientMetaData
 {
@@ -150,7 +150,7 @@ public class ClientMetaData
       {
          Element serviceRef = (Element) iterator.next();
          ServiceRefMetaData refMetaData = new ServiceRefMetaData(resourceCl);
-         refMetaData.importClientXml(serviceRef);
+         refMetaData.importStandardXml(serviceRef);
          serviceReferences.put(refMetaData.getServiceRefName(), refMetaData);
       }
 
