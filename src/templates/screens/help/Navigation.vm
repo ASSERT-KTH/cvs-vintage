@@ -37,7 +37,7 @@
     </ul>
   </div>
   <h3> Navigating Scarab</h3>
-  <p>The Scarab interface is organized to allow access to all parts of the functionality 
+  <p>The Scarab interface is organized to allow access to all major parts functionality 
     from anywhere in the application. Each of the action screens provides relevant 
     information along with links to access further details as needed. A unified 
     and consistent interface will allow you to easily recognize the types of information 
@@ -78,7 +78,10 @@
   <li><strong>Checkboxes:</strong> used as a means of selecting list items. on many screens 
     checked items can be modified as a group.</li>
 </ul>
-<div class="docs" id="introduction"> 
+<div class="docs" id="introduction"> In many cases, helpful information is included 
+  directly on the screens to help clarify unusual operations. Error messages are 
+  provided in line to help identify where the error occurred and specific means 
+  for remedy. 
   <h3><a name="forms"></a>Entry forms</h3>
   <p>Entry forms are easy to use. Default data points are indicated with * (astricks) 
     beside the field title. Often you will find textual guidelines within the 
