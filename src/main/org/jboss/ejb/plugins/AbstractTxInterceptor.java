@@ -25,7 +25,7 @@ import org.jboss.logging.Logger;
  *  A common superclass for the transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 abstract class AbstractTxInterceptor
    extends AbstractInterceptor
@@ -124,23 +124,30 @@ abstract class AbstractTxInterceptor
             ex.detail = e;
             throw ex;
         } catch (RemoteException e) {
-            try {
-                mi.getTransaction().setRollbackOnly();
-            } catch (SystemException ex) {
-                Logger.exception(ex);
-            } catch (IllegalStateException ex) {
-                Logger.exception(ex);
-            }
-            RemoteException ex;
-            if (newTx) {
-                if (e instanceof NoSuchObjectException)
+           if (mi.getTransaction() != null)
+           {
+              try {
+                 mi.getTransaction().setRollbackOnly();
+              } catch (SystemException ex) {
+                 Logger.exception(ex);
+              } catch (IllegalStateException ex) {
+                 Logger.exception(ex);
+              }
+              RemoteException ex;
+              if (newTx) {
+                 if (e instanceof NoSuchObjectException)
                     throw e; // Do not wrap this.
-                // OSH: Should this be wrapped?
-                ex = new ServerException(e.getMessage());
-            } else
-                ex = new TransactionRolledbackException(e.getMessage());
-            ex.detail = e;
-            throw ex;
+                 // OSH: Should this be wrapped?
+                 ex = new ServerException(e.getMessage());
+              } else
+                 ex = new TransactionRolledbackException(e.getMessage());
+              ex.detail = e;
+              throw ex;
+           }
+           else
+           {
+              throw e;
+           }
         } catch (Error e) {
             if (mi.getTransaction() != null) {
                 try {
