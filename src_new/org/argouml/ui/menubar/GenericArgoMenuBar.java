@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.44 2003/11/25 10:58:17 jhraigniac Exp $
+// $Id: GenericArgoMenuBar.java,v 1.45 2003/12/17 01:25:27 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -414,12 +414,15 @@ public class GenericArgoMenuBar extends JMenuBar
             _file.add(ActionSaveConfiguration.SINGLETON);
         setMnemonic(saveConfiguration, "Save Configuration");
         _file.addSeparator();
+
+        // add last recently used list _before_ exit menu
+        _lruList = new LastRecentlyUsedMenuList( _file);
+
+        // and exit menu entry starting with separator
+        _file.addSeparator();
         JMenuItem exitItem = _file.add(ActionExit.SINGLETON);
         setMnemonic(exitItem, "Exit");
         setAccelerator(exitItem, altF4);
-
-        // add last recently used list
-        _lruList = new LastRecentlyUsedMenuList( _file);
 
 	// ------------------------------------- Edit Menu
 		

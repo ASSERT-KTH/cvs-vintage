@@ -1,4 +1,4 @@
-// $Id: ActionReopenProject.java,v 1.2 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: ActionReopenProject.java,v 1.3 2003/12/17 01:25:27 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,19 +43,29 @@ import java.text.MessageFormat;
 
 public class ActionReopenProject extends UMLAction {
 
+    String _filename;
+    
     ////////////////////////////////////////////////////////////////
     // constructors
 
     /**
      * Constructor.
      */
-    public ActionReopenProject() {
-        super("action.reopen-project");
+    public ActionReopenProject( String filename) {
+         super("action.reopen-project");
+         _filename = filename;
     }
 
     ////////////////////////////////////////////////////////////////
     // main methods
 
+    /**
+     * returns the filename for comparing during menu creation
+     */
+    public String getFilename() {
+        return _filename;
+    }
+    
     /** 
      * Performs the save and reload of a project.
      *
@@ -64,10 +74,7 @@ public class ActionReopenProject extends UMLAction {
      * project
      */
     public void actionPerformed(ActionEvent e) {
-        String filename;
-        JMenuItem item;
-        item = (JMenuItem) e.getSource();
-        filename = item.getText();
+
         
         // actually copy from ActionOpenProject, there should be a better way
         ProjectBrowser pb = ProjectBrowser.getInstance();
@@ -108,7 +115,7 @@ public class ActionReopenProject extends UMLAction {
         
         // load of the new project
         // just reuse of the ActionOpen object
-        File toOpen = new File(filename);
+        File toOpen = new File(_filename);;
         
         try {
             ActionOpenProject openProjectHandler = ActionOpenProject.SINGLETON;
