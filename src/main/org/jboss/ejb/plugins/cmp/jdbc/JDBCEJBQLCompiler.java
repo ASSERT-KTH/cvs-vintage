@@ -84,7 +84,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -726,6 +726,16 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       buf.append(" ");
       buf.append(alias);
       leftJoins(path.getPath(), buf);
+
+      // add the relation-table
+      JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
+      if(cmrField.getRelationMetaData().isTableMappingStyle()) {
+         String relationTableAlias = getRelationTableAlias(path.getPath());
+         buf.append(", ");
+         buf.append(cmrField.getRelationMetaData().getTableName());
+         buf.append(" ");
+         buf.append(relationTableAlias);
+      }
 
       return buf;
    }
