@@ -1,4 +1,4 @@
-// $Id: AbstractUmlModelFactory.java,v 1.24 2004/08/08 12:43:09 mvw Exp $
+// $Id: AbstractUmlModelFactory.java,v 1.25 2004/12/12 19:30:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.model.uml;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.UUIDManager;
 
@@ -78,13 +79,13 @@ public abstract class AbstractUmlModelFactory {
      */
     public void addListenersToModelElement(Object handle) {
         if (ModelFacade.isABase(handle)) {
-            Object base = handle;
             UmlModelEventPump pump = UmlModelEventPump.getPump();
             
-            ((MBase) base).addMElementListener(pump);
+            ((MBase) handle).addMElementListener(pump);
             pump.addModelEventListener(ExplorerNSUMLEventAdaptor.getInstance(),
-				       base);
-            pump.addModelEventListener(UmlModelListener.getInstance(), base);
+                    handle);
+            
+            UmlModelListener.getInstance().newElement(handle);
         }
     }
 }
