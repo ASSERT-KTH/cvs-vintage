@@ -61,7 +61,7 @@ import org.xml.sax.SAXException;
  * @author    <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author    <a href="mailtod_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.7 $ <p>
+ * @version   $Revision: 1.8 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -93,8 +93,10 @@ public class ServiceDeployer
        extends ServiceMBeanSupport
        implements ServiceDeployerMBean
 {
-
+   private static final String SERVICE_CONTROLLER_NAME = "JBOSS-SYSTEM:spine=ServiceController";
    // Attributes --------------------------------------------------------
+
+   private ObjectName serviceControllerName;
 
    // each url can spawn a series of MLet classloaders that are specific to it and cycled
    private Map urlToClassLoadersSetMap;
@@ -529,8 +531,6 @@ public class ServiceDeployer
                      return deployedMBeans;
                   }
 
-                  //log.debug("adding URLClassLoader for url archive " + dependency);
-                  //URLClassLoader cl1 = new URLClassLoader(new URL[]{dependency});
                   if (!isDeployed(dependencyString))
                   {
                      log.debug("recursively deploying " + dependency);
@@ -566,44 +566,17 @@ public class ServiceDeployer
          {
    
             Element mbean = (Element)nl.item(i);
-   
-            try
-            {
-               log.debug("deploying with ServiceController mbean " + mbean);
-               ObjectName service = (ObjectName)server.invoke(
-                     new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+            log.debug("deploying with ServiceController mbean " + mbean);
+            ObjectName service = (ObjectName)invoke(getServiceControllerName(),
                      "deploy",
                      new Object[]{mbean},
                      new String[]{"org.w3c.dom.Element"});
-   
-               // marcf: I don't think we should keep track and undeploy...
-               //david jencks what do you mean by this???
+            // marcf: I don't think we should keep track and undeploy...
+            //david jencks what do you mean by this???
+            if (service != null)
+            {
                services.add(service);
                deployedMBeans.add(service);
-            }
-            catch (MBeanException mbe)
-            {
-               log.error("Mbean exception while creating mbean", mbe.getTargetException());
-            }
-            catch (RuntimeMBeanException rbe)
-            {
-               log.error("Runtime Mbean exception while creating mbean", rbe.getTargetException());
-            }
-            catch (MalformedObjectNameException mone)
-            {
-               log.error("MalformedObjectNameException  while creating mbean", mone);
-            }
-            catch (ReflectionException re)
-            {
-               log.error("ReflectionException while creating mbean", re);
-            }
-            catch (InstanceNotFoundException re)
-            {
-               log.error("InstanceNotFoundException while creating mbean", re);
-            }
-            catch (Exception e)
-            {
-               log.error("Exception while creating mbean", e);
             }
          }
    
@@ -611,78 +584,22 @@ public class ServiceDeployer
          for (Iterator it = services.iterator(); it.hasNext(); )
          {
             ObjectName service = (ObjectName)it.next();
-   
-            try
-            {
-               server.invoke(
-                     new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+            invoke(getServiceControllerName(),
                      "init",
                      new Object[]{service},
                      new String[]{"javax.management.ObjectName"});
-            }
-            catch (MBeanException mbe)
-            {
-               log.error("Mbean exception while creating mbean", mbe.getTargetException());
-            }
-            catch (RuntimeMBeanException rbe)
-            {
-               log.error("Runtime Mbean exception while creating mbean", rbe.getTargetException());
-            }
-            catch (MalformedObjectNameException mone)
-            {
-               log.error("MalformedObjectNameException  while creating mbean", mone);
-            }
-            catch (ReflectionException re)
-            {
-               log.error("ReflectionException while creating mbean", re);
-            }
-            catch (InstanceNotFoundException re)
-            {
-               log.error("InstanceNotFoundException while creating mbean", re);
-            }
-            catch (Exception e)
-            {
-               log.error("Exception while creating mbean", e);
-            }
+   
          }
    
          //iterate through services and start.
          for (Iterator it = services.iterator(); it.hasNext(); )
          {
             ObjectName service = (ObjectName)it.next();
-   
-            try
-            {
-               server.invoke(
-                     new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+            invoke(getServiceControllerName(),
                      "start",
                      new Object[]{service},
                      new String[]{"javax.management.ObjectName"});
-            }
-            catch (MBeanException mbe)
-            {
-               log.error("Mbean exception while creating mbean", mbe.getTargetException());
-            }
-            catch (RuntimeMBeanException rbe)
-            {
-               log.error("Runtime Mbean exception while creating mbean", rbe.getTargetException());
-            }
-            catch (MalformedObjectNameException mone)
-            {
-               log.error("MalformedObjectNameException  while creating mbean", mone);
-            }
-            catch (ReflectionException re)
-            {
-               log.error("ReflectionException while creating mbean", re);
-            }
-            catch (InstanceNotFoundException re)
-            {
-               log.error("InstanceNotFoundException while creating mbean", re);
-            }
-            catch (Exception e)
-            {
-               log.error("Exception while creating mbean", e);
-            }
+   
          }
 
       }// if document != null
@@ -738,38 +655,22 @@ public class ServiceDeployer
          for (Iterator iterator = services.iterator(); iterator.hasNext(); )
          {
             ObjectName name = (ObjectName)iterator.next();
-
-            try
-            {
-               server.invoke(
-                     new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+            invoke(getServiceControllerName(),
                      "stop",
                      new Object[]{name},
                      new String[]{"javax.management.ObjectName"});
-            }
-            catch (Exception e)
-            {
-               log.error("exception stopping mbean " + name, e);
-            }
+
          }
 
          //destroy services
          for (Iterator iterator = services.iterator(); iterator.hasNext(); )
          {
             ObjectName name = (ObjectName)iterator.next();
-
-            try
-            {
-               server.invoke(
-                     new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+            invoke(getServiceControllerName(),
                      "destroy",
                      new Object[]{name},
                      new String[]{"javax.management.ObjectName"});
-            }
-            catch (Exception e)
-            {
-               log.error("exception stopping mbean " + name, e);
-            }
+
          }
 
          Iterator iterator = services.iterator();
@@ -777,18 +678,10 @@ public class ServiceDeployer
          {
             ObjectName name = (ObjectName)iterator.next();
             log.debug("undeploying mbean " + name);
-            try
-            {
-               server.invoke(
-                     new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+            invoke(getServiceControllerName(),
                      "undeploy",
                      new Object[]{name},
                      new String[]{"javax.management.ObjectName"});
-            }
-            catch (Exception e)
-            {
-               log.error("problem undeploying mbean " + name, e);
-            }
          }
       }
 
@@ -1043,6 +936,55 @@ public class ServiceDeployer
          ("Depends element must have a value.");
       }
       return new ObjectName(name);
+   }
+
+
+   /* Calls server.invoke, unwraps exceptions, and returns 1 if 
+    * invoke succeeded and 0 if invoke failed (for ease in counting)
+    */
+   private Object invoke(ObjectName name, String method, Object[] args, String[] sig) 
+   {
+      try
+      {
+         return server.invoke(name, method, args, sig);
+      }
+      catch (MBeanException mbe)
+      {
+         log.error("Mbean exception while executing " + method + " on " + args, mbe.getTargetException());
+      }
+      catch (RuntimeMBeanException rbe)
+      {
+         log.error("Runtime Mbean exception while executing " + method + " on " + args, rbe.getTargetException());
+      }
+      catch (ReflectionException re)
+      {
+         log.error("ReflectionException while executing " + method + " on " + args, re);
+      }
+      catch (InstanceNotFoundException re)
+      {
+         log.error("InstanceNotFoundException while executing " + method + " on " + args, re);
+      }
+      catch (Exception e)
+      {
+         log.error("Exception while executing " + method + " on " + args, e);
+      }
+      return null;
+   }
+
+   private ObjectName getServiceControllerName() throws DeploymentException
+   {
+      if (serviceControllerName == null)
+      {
+         try
+         {
+            serviceControllerName = new ObjectName(SERVICE_CONTROLLER_NAME);
+         }
+         catch(MalformedObjectNameException mone)
+         {
+            throw new DeploymentException("Can't construct service controller object name!!" + mone);
+         }
+      }
+      return serviceControllerName;
    }
 
 }
