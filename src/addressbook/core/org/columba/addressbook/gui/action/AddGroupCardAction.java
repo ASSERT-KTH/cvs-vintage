@@ -34,7 +34,12 @@ public class AddGroupCardAction extends FrameAction {
 		// tooltip text
 		setTooltipText(
 				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_file_addgroup"));
+					"menu", "mainframe", "menu_file_addgroup_tooltip"));
+					
+		setToolBarText(
+						AddressbookResourceLoader.getString(
+							"menu", "mainframe", "menu_file_addgroup_toolbar"));
+		enableToolBarText(true);
 		
 		// action command
 		setActionCommand("ADDGROUP");

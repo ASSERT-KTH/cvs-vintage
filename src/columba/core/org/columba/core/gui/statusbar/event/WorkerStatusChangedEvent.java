@@ -28,6 +28,13 @@ public class WorkerStatusChangedEvent {
 	private Object oldValue;
 	private Object newValue;
 
+	private int timeStamp;
+	
+	public WorkerStatusChangedEvent( int timeStamp)
+	{
+		this.timeStamp = timeStamp;
+	}
+	
 	public int getType() {
 		return type;
 	}
@@ -50,6 +57,13 @@ public class WorkerStatusChangedEvent {
 
 	public void setOldValue(Object oldValue) {
 		this.oldValue = oldValue;
+	}
+
+	/**
+	 * @return Returns the timeStamp.
+	 */
+	public int getTimeStamp() {
+		return timeStamp;
 	}
 
 }

@@ -35,12 +35,14 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 
 /**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:
- * @author
- * @version 1.0
+ * Animated image showing background activity.
+ * <p>
+ * Can be found in the toolbar in the right topmost corner of Columba.
+ * <p>
+ * ImageSequenceTimer actually only listens for {@link WorkerListChangeEvent}
+ * and starts/stops as appropriate.
+ * 
+ * @author fdietz
  */
 public class ImageSequenceTimer
 	extends ToolbarButton
@@ -72,27 +74,30 @@ public class ImageSequenceTimer
 		setRequestFocusEnabled(false);
 		init();
 
+		// register interested on changes in the running worker list
 		MainInterface.processor.getTaskManager().addWorkerListChangeListener(
 			this);
 
 	}
 
+	/**
+	 * Its an element of the toolbar, and therefor can't 
+	 * have the focus.
+	 */
 	public boolean isFocusTraversable() {
 		return isRequestFocusEnabled();
 	}
 
+	/**
+	 * Initialize the image array, using single frame images.
+	 *
+	 */
 	protected void initDefault() {
 		frameCount = 60;
 		frameNumber = 1;
 
 		imageWidth = 36;
 		imageHeight = 36;
-
-		//setPreferredSize(new Dimension(imageWidth, imageHeight));
-		/*
-		setMinimumSize(new Dimension(width, height));
-		*/
-		//setMaximumSize(new Dimension(imageWidth, imageHeight));
 
 		images = new ImageIcon[frameCount];
 
@@ -122,6 +127,10 @@ public class ImageSequenceTimer
 		//String pulsator = item.getPulsator();
 		String pulsator = "default";
 
+		// we always use the default initialization
+		// -> Note: all the code in the else case is not used
+		// ->       I just left it in to be able to easily re-enable
+		// ->       themeing support of the throbber
 		if (pulsator.toLowerCase().equals("default"))
 			initDefault();
 		else {
@@ -207,6 +216,9 @@ public class ImageSequenceTimer
 		setIcon(restImage);
 	}
 
+	/**
+	 * Listen for timer actionevents and update the image
+	 */
 	public void actionPerformed(ActionEvent ev) {
 		String action = ev.getActionCommand();
 
@@ -219,10 +231,9 @@ public class ImageSequenceTimer
 
 	}
 
-	/* (non-Javadoc)
-		 * @see org.columba.core.gui.statusbar.event.WorkerListChangeListener#workerListChanged(org.columba.core.gui.statusbar.event.WorkerListChangedEvent)
-		 */
 	public void workerListChanged(WorkerListChangedEvent e) {
+		// just the animation, if there are more than zero
+		// workers running
 		if (e.getNewValue() != 0)
 			start();
 		else

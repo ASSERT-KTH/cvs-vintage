@@ -126,4 +126,11 @@ public class StatusObservableImpl implements StatusObservable, ProgressObserver 
 		if( worker != null) worker.setProgressBarValue( value );
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.core.command.StatusObservable#clearMessage()
+	 */
+	public void clearMessage() {
+		worker.setDisplayText("");
+	}
+
 }

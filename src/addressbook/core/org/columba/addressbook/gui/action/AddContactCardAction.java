@@ -34,7 +34,12 @@ public class AddContactCardAction extends FrameAction {
 		// tooltip text
 		setTooltipText(
 				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_file_addcontact"));
+					"menu", "mainframe", "menu_file_addcontact_tooltip"));
+					
+		setToolBarText(
+						AddressbookResourceLoader.getString(
+							"menu", "mainframe", "menu_file_addcontact_toolbar"));
+		enableToolBarText(true);
 		
 		// action command
 		setActionCommand("ADDCONTACT");

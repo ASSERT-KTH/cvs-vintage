@@ -253,6 +253,9 @@ public class IMAPFolder extends RemoteFolder {
 
 		updateFlags(flags);
 
+		// clear statusbar message
+		getObservable().clearMessage();
+		
 		return headerList;
 	}
 

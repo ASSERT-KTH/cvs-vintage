@@ -102,10 +102,30 @@ public class FetchNewMessagesCommand extends Command {
 				newMessagesUIDList,
 				worker);
 
+			// logout cleanly
 			logout();
+
+			// display downloaded message count in statusbar
+			if (newMessageCount == 0)
+				log(
+					MailResourceLoader.getString(
+						"statusbar",
+						"message",
+						"no_new_messages"));
+			else
+				log(
+					MessageFormat.format(
+						MailResourceLoader.getString(
+							"statusbar",
+							"message",
+							"fetched_count"),
+						new Object[] { new Integer(newMessageCount)}));
 
 		} catch (CommandCancelledException e) {
 			server.forceLogout();
+
+			// clear statusbar message
+			server.getObservable().clearMessage();
 		} catch (IOException e) {
 			String name = e.getClass().getName();
 			JOptionPane.showMessageDialog(
@@ -113,9 +133,14 @@ public class FetchNewMessagesCommand extends Command {
 				e.getLocalizedMessage(),
 				name.substring(name.lastIndexOf(".")),
 				JOptionPane.ERROR_MESSAGE);
+
+			// clear statusbar message
+			server.getObservable().clearMessage();
 		} finally {
 			// always enable the menuitem again 
 			r[0].getPOP3ServerController().enableActions(true);
+			
+			
 		}
 	}
 
@@ -144,7 +169,7 @@ public class FetchNewMessagesCommand extends Command {
 					+ " isn't on the server.");
 			return;
 		}
-		
+
 		message.getHeaderInterface().set(
 			"columba.size",
 			new Integer(Math.round(size / 1024)));

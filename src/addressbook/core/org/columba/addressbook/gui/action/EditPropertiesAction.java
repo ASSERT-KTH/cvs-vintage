@@ -38,7 +38,12 @@ public class EditPropertiesAction extends FrameAction {
 		// tooltip text
 		setTooltipText(
 				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_file_properties"));
+					"menu", "mainframe", "menu_file_properties_tooltip"));
+					
+		setToolBarText(
+						AddressbookResourceLoader.getString(
+							"menu", "mainframe", "menu_file_properties_toolbar"));
+		enableToolBarText(true);
 					
 		// action command
 		setActionCommand("PROPERTIES");

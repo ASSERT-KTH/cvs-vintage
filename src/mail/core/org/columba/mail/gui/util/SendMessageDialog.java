@@ -1,0 +1,176 @@
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
+//
+//All Rights Reserved.
+package org.columba.mail.gui.util;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+
+import org.columba.core.command.Worker;
+import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
+import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.ImageLoader;
+
+/**
+ * Dialog shows progress while sending message.
+ * <p>
+ * Additionally offers the possibility to cancel the operation.
+ * <p>
+ * This is the first example of watching the progress for a specific
+ * worker, using the timestamp attribute, which is created by
+ * {@link DefaultProcessor} when executing the {@link Command}.
+ * 
+ * @author fdietz
+ */
+public class SendMessageDialog
+	extends JDialog
+	implements WorkerStatusChangeListener, ActionListener {
+
+	private JProgressBar progressBar;
+	private JButton cancelButton;
+	private JLabel label;
+
+	
+	private Worker worker;
+
+	/**
+	 * @param arg0
+	 * @throws java.awt.HeadlessException
+	 */
+	public SendMessageDialog(Worker worker) throws HeadlessException {
+		super(new JFrame(), false);
+
+		setTitle("Sending message...");
+		
+		setWorker(worker);
+		
+		initComponents();
+		layoutComponents();
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
+	}
+
+	protected void initComponents() {
+		label = new JLabel("Sending message...");
+		label.setIcon( ImageLoader.getSmallImageIcon("sending.png"));
+		
+		progressBar = new JProgressBar();
+		progressBar.setPreferredSize( new Dimension(300,20) );
+		
+		cancelButton = new ButtonWithMnemonic("&Cancel");
+		cancelButton.setActionCommand("CANCEL");
+		cancelButton.addActionListener(this);
+
+	}
+
+	protected void layoutComponents() {
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+		panel.setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
+		
+		getContentPane().add(panel);
+		
+		JPanel top = new JPanel();
+		top.setBorder(BorderFactory.createEmptyBorder(0,12,6,0));
+		top.setLayout( new BorderLayout() );
+		top.add(label, BorderLayout.WEST);
+		
+		panel.add(top, BorderLayout.NORTH);
+
+		panel.add(progressBar, BorderLayout.CENTER);
+
+		JPanel bottom = new JPanel();
+		bottom.setBorder(BorderFactory.createEmptyBorder(12,0,0,0));
+		bottom.add(cancelButton);
+		
+		panel.add(bottom, BorderLayout.SOUTH);
+
+	}
+
+	/** ********************** WorkerStatusListener ************************** */
+
+	public void workerStatusChanged(WorkerStatusChangedEvent e) {
+		int ts = e.getTimeStamp();
+
+		// only update if timestamp is equal
+		if (worker.getTimeStamp() == ts) {
+			switch (e.getType()) {
+
+				case WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED :
+
+					label.setText((String) e.getNewValue());
+					break;
+
+				case WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED :
+					{
+						progressBar.setMaximum(
+							((Integer) e.getNewValue()).intValue());
+
+						break;
+					}
+				case WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED :
+					progressBar.setValue(
+						((Integer) e.getNewValue()).intValue());
+					break;
+
+				case WorkerStatusChangedEvent.FINISHED :
+					setVisible(false);
+
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent arg0) {
+
+		if (arg0.equals("CANCEL")) {
+			// send cancel event to worker
+			worker.cancel();
+		}
+
+	}
+
+	/**
+	 * @param worker
+	 *            The worker to set.
+	 */
+	public void setWorker(Worker worker) {
+		this.worker = worker;
+
+		worker.addWorkerStatusChangeListener(this);
+	}
+
+	
+}

@@ -39,5 +39,6 @@ public interface StatusObservable {
 	public void cancel( boolean b );
 	
 	public void setMessage(String string);
+	public void clearMessage();
 	
 }

@@ -32,7 +32,12 @@ public class RemoveCardAction extends FrameAction {
 		// tooltip text
 		setTooltipText(
 				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_file_remove"));
+					"menu", "mainframe", "menu_file_remove_tooltip"));
+					
+		setToolBarText(
+						AddressbookResourceLoader.getString(
+							"menu", "mainframe", "menu_file_remove_toolbar"));
+		enableToolBarText(true);
 		
 		// action command
 		setActionCommand("REMOVE");

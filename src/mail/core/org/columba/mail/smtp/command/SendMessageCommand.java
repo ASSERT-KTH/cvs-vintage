@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.smtp.command;
@@ -30,6 +32,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
+import org.columba.mail.gui.util.SendMessageDialog;
 import org.columba.mail.pgp.CancelledException;
 import org.columba.mail.pgp.PGPException;
 import org.columba.mail.smtp.SMTPServer;
@@ -37,17 +40,22 @@ import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.smtp.SMTPException;
 
 /**
- * @author fdietz
- *
- * This command is started when the user sends the message
- * after creating it in the composer window.
  * 
+ * This command is started when the user sends the message after creating it in
+ * the composer window.
+ * <p>
+ * After closing the compser window, it will open a little dialog showing
+ * the progress of sending the message.
+ * <p>
+ * If the user cancelles sending, the composer window will be opened again.
  * 
+ * @author fdietz 
  */
 public class SendMessageCommand extends FolderCommand {
 
 	/**
 	 * Constructor for SendMessageCommand.
+	 * 
 	 * @param frameController
 	 * @param references
 	 */
@@ -59,19 +67,25 @@ public class SendMessageCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
+
 		ComposerCommandReference[] r =
 			(ComposerCommandReference[]) getReferences();
 
-		//		display status message
+		//	display status message
 		worker.setDisplayText(
 			MailResourceLoader.getString(
 				"statusbar",
 				"message",
-				"send_message"));
+				"send_message_compose"));
 
 		// get composer controller
-		// -> get all the account information from the controller 
+		// -> get all the account information from the controller
 		ComposerController composerController = r[0].getComposerController();
+
+		// close composer view
+		composerController.getView().setVisible(false);
+
+		new SendMessageDialog(worker);
 
 		AccountItem item =
 			((ComposerModel) composerController.getModel()).getAccountItem();
@@ -84,6 +98,7 @@ public class SendMessageCommand extends FolderCommand {
 		// get the SendableMessage object
 		SendableMessage message = null;
 		try {
+			// compose the message suitable for sending
 			message =
 				new MessageComposer(
 					((ComposerModel) composerController.getModel())).compose(
@@ -91,14 +106,27 @@ public class SendMessageCommand extends FolderCommand {
 		} catch (PGPException e1) {
 			if (e1 instanceof CancelledException) {
 				// user cancelled sending operation
-				
+
+				// open composer view
+				composerController.getView().setVisible(true);
+				composerController.getView().requestFocus();
 				return;
 			} else {
 				JOptionPane.showMessageDialog(null, e1.getMessage());
-				
+				//	open composer view
+				composerController.getView().setVisible(true);
+				composerController.getView().requestFocus();
 				return;
 			}
 		}
+
+		// display status message
+		worker.setDisplayText(
+			MailResourceLoader.getString(
+				"statusbar",
+				"message",
+				"send_message_connect"));
+
 		// open connection
 		SMTPServer server = new SMTPServer(item);
 		boolean open = server.openConnection();
@@ -107,8 +135,17 @@ public class SendMessageCommand extends FolderCommand {
 		 ((StatusObservableImpl) server.getObservable()).setWorker(worker);
 
 		if (open) {
+			// successfully connected and autenthenticated to SMTP server
 
 			try {
+
+				// display status message
+				worker.setDisplayText(
+					MailResourceLoader.getString(
+						"statusbar",
+						"message",
+						"send_message"));
+
 				// send message
 				server.sendMessage(message, worker);
 
@@ -128,18 +165,46 @@ public class SendMessageCommand extends FolderCommand {
 
 				MainInterface.processor.addOp(c);
 
+				//	display status message
+				worker.setDisplayText(
+					MailResourceLoader.getString(
+						"statusbar",
+						"message",
+						"send_message_closing"));
+
 				// close connection to server
 				server.closeConnection();
+
+				// display status message
+				worker.setDisplayText(
+					MailResourceLoader.getString(
+						"statusbar",
+						"message",
+						"send_message_success"));
 			} catch (SMTPException e) {
 				JOptionPane.showMessageDialog(
 					null,
 					e.getMessage(),
 					"Error while sending",
 					JOptionPane.ERROR_MESSAGE);
+
+				// open composer view
+				composerController.getView().setVisible(true);
+				composerController.getView().requestFocus();
 			} catch (Exception e) {
 				e.printStackTrace();
+				// open composer view
+				composerController.getView().setVisible(true);
+				composerController.getView().requestFocus();
 			}
 
+		} else {
+			// open == false
+			// -> user cancelled sending 
+
+			// open composer view
+			composerController.getView().setVisible(true);
+			composerController.getView().requestFocus();
 		}
 
 	}

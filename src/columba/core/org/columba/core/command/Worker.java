@@ -26,6 +26,16 @@ import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.SwingWorker;
 
+/**
+ * Worker additionally sends status information updates to the {@link TaskManager}.
+ * <p>
+ * This updates get displayed in the StatusBar.
+ * <p>
+ * Note that {@link Command} objects get {@link Worker} objects only
+ * when executed.
+ * 
+ * @author fdietz
+ */
 public class Worker extends SwingWorker implements WorkerStatusController {
 	protected Command op;
 	protected int operationMode;
@@ -88,7 +98,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 			if (!cancelled() && (operationMode == Command.FIRST_EXECUTION))
 				boss.getUndoManager().addToUndo(op);
 		} catch (CommandCancelledException e) {
-                        ColumbaLogger.log.debug("Command cancelled");
+						ColumbaLogger.log.debug("Command cancelled");
 		} catch (Exception e) {
 			// Must create a ExceptionProcessor
 			e.printStackTrace();
@@ -124,7 +134,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
 	public void unregister() {
 		taskManager.unregister(threadVar);
-		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent();
+		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
 		e.setType(WorkerStatusChangedEvent.FINISHED);
 		fireWorkerStatusChanged(e);
 		workerStatusChangeListeners.clear();
@@ -134,7 +144,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	}
 
 	public void setProgressBarMaximum(int max) {
-		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent();
+		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
 		e.setType(WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED);
 		e.setOldValue(new Integer(progressBarMax));
 
@@ -145,7 +155,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	}
 
 	public void setProgressBarValue(int value) {
-		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent();
+		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
 		e.setType(WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED);
 		e.setOldValue(new Integer(progressBarValue));
 
@@ -168,7 +178,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	}
 
 	public void setDisplayText(String displayText) {
-		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent();
+		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
 		e.setType(WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED);
 		e.setOldValue(displayText);
 
