@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.48 2002/09/26 20:34:38 jon Exp $
+$Id: README.txt,v 1.49 2002/10/07 21:12:49 thierrylach Exp $
 
 Welcome to Scarab!
 
@@ -335,13 +335,16 @@ NOTE: If you get a 'Server configuration denies access to data source'
       for 'localhost'. One way to get around this is to use IP addresses
       in both the MySQL ACL as well as in the JDBC url.
 
+      At least one person has reported that using '127.0.0.1' instead of 'localhost'
+      resolved a 'Server configuration denies access to data source' connection issue.
+
       In order to setup the right permissions in MySQL, you may wish to
       try executing this command on a Unix command line (it has been
       reported to work for one person):
 
         echo "GRANT ALL ON scarab.* to ''@localhost" | mysql mysql
       
-      Here is a couple links to also help you solve the permissions
+      Here are a couple of links to also help you solve the permissions
       problem:
       
       <http://www.mysql.com/documentation/mysql/bychapter/
@@ -349,10 +352,13 @@ NOTE: If you get a 'Server configuration denies access to data source'
 
       <http://sourceforge.net/docman/display_doc.php?docid=8968&group_id=15923>
 
+NOTE: Sometimes it may be useful to use "ant create-db" rather than "create-db.sh"
+      to diagnose connection issues since ant uses jdbc and the same URL
+      that Scarab does while running.
+      
 NOTE: We realize that the Win32 script is not as good as the Unix
       script. Contributions to improve the script are appreciated.
 
-      
 -------------------------------------------------------------------------
 | R U N N I N G  T H E  S A N D B O X                                   |
 -------------------------------------------------------------------------
