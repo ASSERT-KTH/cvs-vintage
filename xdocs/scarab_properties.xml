@@ -67,7 +67,7 @@
        in your customized custom.properties
        The file custom.properties will never be overridden during an upgrade.
     
-     $Id: scarab_properties.xml,v 1.9 2005/01/11 22:55:02 dabbous Exp $
+     $Id: scarab_properties.xml,v 1.10 2005/01/12 01:08:41 dabbous Exp $
     
      Structure of this file
      ----------------------
@@ -1020,7 +1020,7 @@
   <section name="TORQUE">
     <property>
       <name>torque.project</name>
-      <default>${project}</default>
+      <default>scarab</default>
       <comment/>
       <type>Build</type>
        <customization modification="optional">advanced</customization>
