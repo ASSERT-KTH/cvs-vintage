@@ -26,19 +26,19 @@
 
 <div class="functnbar">
 #if (!$createNew)
-    <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+    <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />&#160;
 #end
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>
 
 #asterisk()
 
-<h3>Global attribute information</h3>
+<h3>$l10n.GlobalAttributeInfo</h3>
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
-  <th>Input type</th>
+  <th>$l10n.InputType</th>
   <td>
     <select name="$attgroup.TypeId.Key" size="1">
     #foreach ( $atype in $attribute.AllAttributeTypes )
@@ -49,14 +49,14 @@
     </select>
   </td>
  <tr>
-  <th>* Name</th>
+  <th>* $l10n.Name</th>
   <td>
     <input type="text" name="$attgroup.Name.Key" value="$!attgroup.Name" />
     #fieldErrorMsg($attgroup.Name "")
   </td>
  </tr>
  <tr>
-  <th>* Description</th>
+  <th>* $l10n.Description</th>
   <td>
     <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attgroup.Description</textarea>
     #fieldErrorMsg($attgroup.Description "")
@@ -64,11 +64,11 @@
  </tr>
   #if ($attribute.CreatedDate)
  <tr>
-  <th>Created by</th>
+  <th>$l10n.CreatedBy</th>
   <td>#attributeCreatedBy($attribute)</td>
  </tr>
  <tr>
-  <th>Creation date</th>
+  <th>$l10n.CreationDate</th>
   <td>
     $format.getDate($scarabR.DateFormat, $attribute.CreatedDate)
   </td>
@@ -77,7 +77,7 @@
 </tr>
 #if (!$createNew)
  <tr>
-  <th>Deleted</th>
+  <th>$l10n.Deleted</th>
   <td>#booleanCheckbox ($attgroup.Deleted)
  </tr>
 #end
@@ -85,7 +85,7 @@
 </div>
 
 <div class="functnbar3">
-   <input type="submit" value="Save"  name="eventSubmit_doSaveattributedata" />
+   <input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveattributedata" />
 </div>
 
 
@@ -97,14 +97,14 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 #if ($maxNum > 0)
- <th>Deleted</th>
+ <th>$l10n.Deleted</th>
 #else
  <th>&#160;</th>
 #end
- <th>Parent attribute option</th>
- <th>Attribute option</th>
- <th>Preferred order</th>
- <th>Weight</th>
+ <th>$l10n.ParentAttributeOption</th>
+ <th>$l10n.AttributeOption</th>
+ <th>$l10n.PreferredOrder</th>
+ <th>$l10n.Weight</th>
 </tr>
 #foreach ($pcao in $pcaos)
     #set ($pcaoGroup = $intake.ParentChildAttributeOption.mapTo($pcao))
@@ -115,7 +115,7 @@
      #if ($pcao.ParentId.toString().equals("0"))
         <option selected="selected" value="0">Root</option>
      #else
-        <option value="0">Root</option>
+        <option value="0">$l10n.Root</option>
      #end
      #foreach ($parentAttrOption in $attribute.ParentChildAttributeOptions)
        #if (! $parentAttrOption.Name.equals($pcao.Name) )
@@ -142,10 +142,10 @@
 #set ($newPCAOGroup = $intake.ParentChildAttributeOption.mapTo($newPCAO))
     #set ($number = $maxNum + 1)
     #indexedRows($number)
-     <td>New</td>
+     <td>$l10n.New</td>
      <td>
      <select name="$newPCAOGroup.ParentId.Key">
-     <option value="0">Root</option>
+     <option value="0">$l10n.Root</option>
      #foreach ($parentAttrOption in $attribute.ParentChildAttributeOptions)
          #set ($pcaoGroupTemp = $intake.ParentChildAttributeOption.mapTo($parentAttrOption))
          <option value="$pcaoGroupTemp.OptionId">$pcaoGroupTemp.Name</option>
@@ -174,24 +174,20 @@
 </table>
 
 <div class="functnbar3">
-<input type="submit" value="Save"  name="eventSubmit_doSaveoptions" />&#160;
-<input type="submit" value="Add new"  name="eventSubmit_doSaveoptions" />&#160;
-<input type="submit" value="Delete selected"  name="eventSubmit_doSaveoptions" />&#160;
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveoptions" />&#160;
+<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doSaveoptions" />&#160;
+<input type="submit" value="$l10n.DeleteSelected"  name="eventSubmit_doSaveoptions" />&#160;
 </div>
 
-<p><small>Please note: Once created, Attribute options cannot be deleted
-from the database. They can only be marked as deleted and will always
-show up in the list above (but will not show up in the application
-itself). Therefore, please use caution when creating new Attribute
-Options because you can quickly end up with a mess.</small></p>
+<p><small>$l10n.AttributeOptionCannotBeDeleted</small></p>
 
 #end
 
 <div class="functnbar2">
 #if (!$createNew)
-    <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+    <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />&#160;
 #end
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>
 
 $intake.declareGroups()

@@ -5,7 +5,7 @@
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
-<td><a href="$link.setPage("admin,GlobalAttributeShow.vm")" title="#">Global attributes</a></td>
+<td><a href="$link.setPage("admin,GlobalAttributeShow.vm")" title="#">$l10n.GlobalAttributes</a></td>
 <th>Global user attributes</th>
 </tr>
 </table>
@@ -52,21 +52,21 @@
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<h3>Global user attributes</h3>
+<h3>$l10n.GlobalUserAttributes</h3>
 
 #if ($userAttrs.isEmpty())
-<p class="alert">Click the Create new button to create a new global user attribute.</p>
+<p class="alert">$l10n.CreateNewUserAttribute</p>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">Select</th>
-<th>#sort("name" "Name")</th>
-<th>#sort("desc" "Description")</th>
-<th>Email action</th>
-<th>Base permission</th>
-<th>#sort("user" "Author")</th>
-<th>#sort("date" "Creation date")</th>
-<th>Deleted?</th>
+<th nowrap="nowrap">$l10n.Select</th>
+<th>#sort("name" "$l10n.Name")</th>
+<th>#sort("desc" "$l10n.Description")</th>
+<th>$l10n.EmailAction</th>
+<th>$l10n.BasePermission</th>
+<th>#sort("user" "$l10n.Author")</th>
+<th>#sort("date" "$l10n.CreationDate")</th>
+<th>$l10n.Deleted</th>
 </tr>
        
 #foreach ($attr in $userAttrs)
@@ -78,10 +78,10 @@
   <td>
     #fieldErrorMsg($attgroup.Action "")
     <select name="$attgroup.Action.Key" size="1">
-    <option value="">Select...</option>
-    <option value="none" #if ($attgroup.Action.Value.equals("none")) selected="selected" #end>None</option>
-    <option value="to" #if ($attgroup.Action.Value.equals("to")) selected="selected" #end>To:</option>
-    <option value="cc" #if ($attgroup.Action.Value.equals("cc")) selected="selected" #end>CC:</option>
+    <option value="">$l10n.Select ...</option>
+    <option value="none" #if ($attgroup.Action.Value.equals("none")) selected="selected" #end>$l10n.None</option>
+    <option value="to" #if ($attgroup.Action.Value.equals("to")) selected="selected" #end>$l10n.To</option>
+    <option value="cc" #if ($attgroup.Action.Value.equals("cc")) selected="selected" #end>$l10n.CC</option>
     </select>
   </td>
   <td>
@@ -106,11 +106,11 @@
 
 <div class="functnbar3">
 #if (!$userAttrs.isEmpty())
-<input type="submit" value="Save"  name="eventSubmit_doSave" />&#160;
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSave" />&#160;
 #end
-<input type="submit" value="Create new"  name="eventSubmit_doCreatenew" />&#160;
+<input type="submit" value="$l10n.CreateNew"  name="eventSubmit_doCreatenew" />&#160;
 #if (!$userAttrs.isEmpty())
-<input type="submit" value="Copy selected"  name="eventSubmit_doCopy" />&#160;
+<input type="submit" value="$l10n.CopySelected"  name="eventSubmit_doCopy" />&#160;
 #end
 </div>
 

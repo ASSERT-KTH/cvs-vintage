@@ -42,14 +42,14 @@
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<h3>Issue types</h3>
+<h3>$l10n.IssueTypes</h3>
 
 #if ($allIssueTypes.isEmpty())
-<p>Click "Add new" to add a new global issue type.</p>
+<p>$l10n.ClickAddNewToAddGlobalIssueType</p>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th width="70">Select</th>
+<th width="70">$l10n.Select</th>
 <th>#sort ("name" "Type")</th>
 <th>#sort ("desc" "Description")</th>
 </tr>
@@ -65,10 +65,10 @@
 #end
 
 <div class="functnbar3">
-<input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
 #if (!$allIssueTypes.isEmpty())
-<input type="submit" value="Copy selected" name="eventSubmit_doCopy" />&#160;
-<input type="submit" value="Delete selected" name="eventSubmit_doDelete" />
+<input type="submit" value="$l10n.CopySelected" name="eventSubmit_doCopy" />&#160;
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDelete" />
 #end
 </div>
 

@@ -1,7 +1,7 @@
 <div id="globalattributeshow" class="app">
 
 <p>
-This page is for selecting an Attribute to edit which is defined in a global scale.
+$l10n.PageForSelectingAttributes
 </p>
 
 ## SORTING
@@ -51,10 +51,10 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
 <th>
-Global attributes
+$l10n.GlobalAttributes
 </th>
 
-<td><a href="$link.setPage("admin,GlobalUserAttributes.vm")">Global user attributes</a></td>
+<td><a href="$link.setPage("admin,GlobalUserAttributes.vm")">$l10n.GlobalUserAttributes</a></td>
 
 </tr>
 </table>
@@ -64,20 +64,20 @@ Global attributes
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<h3>Global Attributes</h3>
+<h3>$l10n.GlobalAttributes</h3>
 
 #if ($allAttributes.isEmpty())
-<p class="alert">Click the Create new button to create a new global attribute.</p>
+<p class="alert">$l10n.ClickCreateNew</p>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>Select</th>
+<th>$l10n.Select</th>
 <th>#sort ("name" "Name")</th>
 <th>#sort ("desc" "Description")</th>
 <th>#sort("type" "Input type")</th>
 <th>#sort ("user" "Author")</th>
 <th>#sort("date" "Creation date")</th>
-<th>Deleted?</th>
+<th>$l10n.Deleted</th>
 </tr>
 
 #foreach( $attribute in $allAttributes )
@@ -122,9 +122,9 @@ Global attributes
 #end
 
 <div class="functnbar3">
-<input type="submit" value="Create new"  name="eventSubmit_doCreatenew" />&#160;
+<input type="submit" value="$l10n.CreateNew"  name="eventSubmit_doCreatenew" />&#160;
 #if (!$allAttributes.isEmpty())
-<input type="submit" value="Copy selected" name="eventSubmit_doCopy" />&#160;
+<input type="submit" value="$l10n.CopySelected" name="eventSubmit_doCopy" />&#160;
 #end
 </div>
 
