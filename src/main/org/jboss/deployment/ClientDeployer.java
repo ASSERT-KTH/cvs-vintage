@@ -8,7 +8,6 @@ import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.naming.Util;
-import org.jboss.webservice.WebServiceClientDeployer;
 import org.jboss.webservice.WebServiceClientHandler;
 import org.w3c.dom.Element;
 
@@ -24,11 +23,12 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 
-/** An XMBean resource implementation of a deployer for j2ee application
- * client jars 
- * 
+/**
+ * An XMBean resource implementation of a deployer for j2ee application
+ * client jars
+ *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class ClientDeployer extends SubDeployerSupport
 {
@@ -48,7 +48,8 @@ public class ClientDeployer extends SubDeployerSupport
       super.stopService();
    }
 
-   /** This method looks to the deployment for a META-INF/application-client.xml
+   /**
+    * This method looks to the deployment for a META-INF/application-client.xml
     * descriptor to identify a j2ee client jar.
     *
     * @param di The deployment info instance for the jar
@@ -58,7 +59,7 @@ public class ClientDeployer extends SubDeployerSupport
    {
       // To be accepted the deployment's root name must end in jar
       String urlStr = di.url.getFile();
-      if( !urlStr.endsWith("jar") && !urlStr.endsWith("jar/") )
+      if (!urlStr.endsWith("jar") && !urlStr.endsWith("jar/"))
       {
          return false;
       }
@@ -70,11 +71,11 @@ public class ClientDeployer extends SubDeployerSupport
          URL dd = di.localCl.findResource("META-INF/application-client.xml");
          if (dd != null)
          {
-            log.debug("Found a META-INF/application-client.xml file, di: "+di);
+            log.debug("Found a META-INF/application-client.xml file, di: " + di);
             accepts = true;
          }
       }
-      catch( Exception ignore )
+      catch (Exception ignore)
       {
       }
 
@@ -84,7 +85,7 @@ public class ClientDeployer extends SubDeployerSupport
    /**
     * Sub-classes should override this method to provide
     * custom 'create' logic.
-    *
+    * <p/>
     * This method issues a JMX notification of type SubDeployer.CREATE_NOTIFICATION.
     */
    public void create(DeploymentInfo di) throws DeploymentException
@@ -92,7 +93,9 @@ public class ClientDeployer extends SubDeployerSupport
       super.create(di);
    }
 
-   /** Parse the application-client.xml and jboss-client.xml descriptors.
+   /**
+    * Parse the application-client.xml and jboss-client.xml descriptors.
+    *
     * @param di the application client jar deployment info
     */
    public void start(DeploymentInfo di) throws DeploymentException
@@ -153,7 +156,7 @@ public class ClientDeployer extends SubDeployerSupport
    /**
     * Sub-classes should override this method to provide
     * custom 'stop' logic.
-    *
+    * <p/>
     * This method issues a JMX notification of type SubDeployer.START_NOTIFICATION.
     */
    public void stop(DeploymentInfo di) throws DeploymentException
@@ -164,7 +167,7 @@ public class ClientDeployer extends SubDeployerSupport
    /**
     * Sub-classes should override this method to provide
     * custom 'destroy' logic.
-    *
+    * <p/>
     * This method issues a JMX notification of type SubDeployer.DESTROY_NOTIFICATION.
     */
    public void destroy(DeploymentInfo di) throws DeploymentException
@@ -177,7 +180,7 @@ public class ClientDeployer extends SubDeployerSupport
          InitialContext iniCtx = new InitialContext();
          Util.unbind(iniCtx, appClientName);
       }
-      catch(NamingException e)
+      catch (NamingException e)
       {
          throw new DeploymentException("Failed to remove client ENC", e);
       }
@@ -191,38 +194,38 @@ public class ClientDeployer extends SubDeployerSupport
       String appClientName = metaData.getJndiName();
       InitialContext iniCtx = new InitialContext();
       Context envCtx = Util.createSubcontext(iniCtx, appClientName);
-      log.debug("Creating client ENC binding under: "+appClientName);
+      log.debug("Creating client ENC binding under: " + appClientName);
       // Bind environment properties
       Iterator enum = metaData.getEnvironmentEntries().iterator();
-      while(enum.hasNext())
+      while (enum.hasNext())
       {
-         EnvEntryMetaData entry = (EnvEntryMetaData)enum.next();
-         log.debug("Binding env-entry: "+entry.getName()+" of type: "+
-            entry.getType()+" to value:"+entry.getValue());
+         EnvEntryMetaData entry = (EnvEntryMetaData) enum.next();
+         log.debug("Binding env-entry: " + entry.getName() + " of type: " +
+            entry.getType() + " to value:" + entry.getValue());
          EnvEntryMetaData.bindEnvEntry(envCtx, entry);
       }
 
       // Bind EJB references
       HashMap ejbRefs = metaData.getEjbReferences();
       enum = ejbRefs.values().iterator();
-      while(enum.hasNext())
+      while (enum.hasNext())
       {
-         EjbRefMetaData ref = (EjbRefMetaData)enum.next();
-         log.debug("Binding an EJBReference "+ref.getName());
+         EjbRefMetaData ref = (EjbRefMetaData) enum.next();
+         log.debug("Binding an EJBReference " + ref.getName());
 
          if (ref.getLink() != null)
          {
             // Internal link
             String linkName = ref.getLink();
             String jndiName = EjbUtil.findEjbLink(server, di, linkName);
-            log.debug("Binding "+ref.getName()+" to ejb-link: "+linkName+" -> "+jndiName);
-            if( jndiName == null )
+            log.debug("Binding " + ref.getName() + " to ejb-link: " + linkName + " -> " + jndiName);
+            if (jndiName == null)
             {
-               String msg = "Failed to resolve ejb-link: "+linkName
-                  +" make by ejb-name: "+ref.getName();
+               String msg = "Failed to resolve ejb-link: " + linkName
+                  + " make by ejb-name: " + ref.getName();
                throw new DeploymentException(msg);
             }
-            log.debug("Link resolved to:"+jndiName);
+            log.debug("Link resolved to:" + jndiName);
             Util.bind(envCtx, ref.getName(), new LinkRef(jndiName));
          }
          else
@@ -230,11 +233,11 @@ public class ClientDeployer extends SubDeployerSupport
             // Bind the bean level ejb-ref/jndi-name
             if (ref.getJndiName() == null)
             {
-               throw new DeploymentException("ejb-ref " + ref.getName()+
-                   ", expected either ejb-link in ejb-jar.xml " +
-                   "or jndi-name in jboss.xml");
+               throw new DeploymentException("ejb-ref " + ref.getName() +
+                  ", expected either ejb-link in ejb-jar.xml " +
+                  "or jndi-name in jboss.xml");
             }
-            log.debug("Binding "+ref.getName()+" to : "+ref.getJndiName());
+            log.debug("Binding " + ref.getName() + " to : " + ref.getJndiName());
             Util.bind(envCtx, ref.getName(), new LinkRef(ref.getJndiName()));
          }
       }
@@ -246,22 +249,33 @@ public class ClientDeployer extends SubDeployerSupport
       // Bind resource references
       HashMap resRefs = metaData.getResourceReferences();
       enum = resRefs.values().iterator();
-      while(enum.hasNext())
+      while (enum.hasNext())
       {
-         ResourceRefMetaData ref = (ResourceRefMetaData)enum.next();
+         ResourceRefMetaData ref = (ResourceRefMetaData) enum.next();
          String refName = ref.getRefName();
          String jndiName = ref.getJndiName();
 
          if (ref.getType().equals("java.net.URL"))
          {
             // URL bindings
-            log.debug("Binding URL: "+ refName +" to JDNI as: " + jndiName);
-            Util.bind(envCtx, refName, new URL(jndiName));
+            String resURL = ref.getResURL();
+            if (resURL != null)
+            {
+               log.debug("Binding '" + refName + "' to URL: " + resURL);
+               URL url = new URL(resURL);
+               Util.bind(envCtx, refName, url);
+            }
+            else
+            {
+               log.debug("Linking '" + refName + "' to URL: " + resURL);
+               LinkRef urlLink = new LinkRef(jndiName);
+               Util.bind(envCtx, refName, urlLink);
+            }
          }
          else
          {
             // A resource link
-            log.debug("Binding resource: "+refName+" to JDNI as: " +jndiName);
+            log.debug("Binding resource: " + refName + " to JDNI as: " + jndiName);
             Util.bind(envCtx, refName, new LinkRef(jndiName));
          }
       }
@@ -269,14 +283,14 @@ public class ClientDeployer extends SubDeployerSupport
       // Bind resource env references
       HashMap envRefs = metaData.getResourceEnvReferences();
       enum = envRefs.values().iterator();
-      while( enum.hasNext() )
+      while (enum.hasNext())
       {
          ResourceEnvRefMetaData resRef = (ResourceEnvRefMetaData) enum.next();
          String encName = resRef.getRefName();
          String jndiName = resRef.getJndiName();
          // Should validate the type...
          log.debug("Binding env resource: " + encName +
-                  " to JDNI as: " +jndiName);
+            " to JDNI as: " + jndiName);
          Util.bind(envCtx, encName, new LinkRef(jndiName));
       }
    }

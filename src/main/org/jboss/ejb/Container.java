@@ -85,7 +85,7 @@ import java.security.PrivilegedActionException;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.161 $
+ * @version $Revision: 1.162 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -1127,12 +1127,13 @@ public abstract class Container
 
             String resourceName = ref.getResourceName();
             String finalName = application.getResourceByName(resourceName);
+            String resType = ref.getType();
             // If there was no resource-manager specified then an immeadiate
             // jndi-name or res-url name should have been given
             if (finalName == null)
                finalName = ref.getJndiName();
 
-            if (finalName == null)
+            if (finalName == null && resType.equals("java.net.URL") == false)
             {
                // the application assembler did not provide a resource manager
                // if the type is javax.sql.Datasoure use the default one
@@ -1168,15 +1169,33 @@ public abstract class Container
                }
             }
 
-            if (ref.getType().equals("java.net.URL"))
+            if (resType.equals("java.net.URL"))
             {
                // URL bindings
-               if (debug)
+               if( ref.getResURL() != null )
                {
+                  // The URL string was given by the res-url
                   log.debug("Binding URL: " + ref.getRefName() +
-                          " to JDNI ENC as: " + finalName);
+                          " to JDNI ENC as: " + ref.getResURL());
+                  URL resURL = new URL(ref.getResURL());
+                  Util.bind(envCtx, ref.getRefName(), resURL);
                }
-               Util.bind(envCtx, ref.getRefName(), new URL(finalName));
+               else
+               {
+                  log.debug("Binding URL: " + ref.getRefName() + " to: " + finalName);
+                  Object bind = null;
+                  if( ref.getJndiName() != null )
+                  {
+                     // Was the url given as a jndi-name reference to link to it
+                     bind = new LinkRef(finalName);
+                  }
+                  else
+                  {
+                     // The url string was given via a resource-name mapping
+                     bind = new URL(finalName);
+                  }
+                  Util.bind(envCtx, ref.getRefName(), bind);
+               }
             }
             else
             {

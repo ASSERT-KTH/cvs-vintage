@@ -142,7 +142,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.19 $
+@version $Revision: 1.20 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -578,9 +578,19 @@ public abstract class AbstractWebDeployer
          {
              try
              {
-                 log.debug("Binding '"+refName+"' to URL: "+jndiName);
-                 URL url = new URL(jndiName);
-                 Util.bind(envCtx, refName, url);
+                String resURL = ref.getResURL();
+                 if( ref.getResURL() != null )
+                 {
+                   log.debug("Binding '"+refName+"' to URL: "+resURL);
+                   URL url = new URL(resURL);
+                   Util.bind(envCtx, refName, url);
+                 }
+                 else
+                 {
+                    log.debug("Linking '"+refName+"' to URL: "+resURL);
+                    LinkRef urlLink = new LinkRef(jndiName);
+                    Util.bind(envCtx, refName, urlLink);
+                 }
              }
              catch(MalformedURLException e)
              {
