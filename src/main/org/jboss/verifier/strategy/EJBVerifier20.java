@@ -18,7 +18,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.29 2003/03/28 18:33:34 lqd Exp $
+ * $Id: EJBVerifier20.java,v 1.30 2003/04/03 04:42:02 lqd Exp $
  */
 
 
@@ -43,7 +43,7 @@ import org.jboss.verifier.factory.DefaultEventFactory;
  *
  * @author  Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  * @since   JDK 1.3
  */
 public class EJBVerifier20
@@ -2410,15 +2410,34 @@ public class EJBVerifier20
          // in the PK class or any of its superclasses
          if( !definesEquals(cls) )
          {
-            log.warn( "The PK Class " + cls.getName() + " or any of its " +
-               "superclasses does not override the equals(Object other) " +
-               "method." );
+            if( cmp )
+            {
+               fireSpecViolationEvent( entity, new Section("10.6.13.c") );
+            }
+            else
+            {
+               fireSpecViolationEvent(entity, new Section("12.2.12.b"));
+            }
+            log.warn( "EJB '" + entity.getEjbName() + "': The PK Class " +
+               cls.getName() + " or any of its superclasses does not " +
+               "override the equals(Object other) method" );
+            status = false;
          }
 
          if( !definesHashCode(cls) )
          {
-            log.warn( "The PK Class " + cls.getName() + " or any of its " +
-               "superclasses does not override the hashCode() method." );
+            if( cmp )
+            {
+               fireSpecViolationEvent( entity, new Section("10.6.13.d") );
+            }
+            else
+            {
+               fireSpecViolationEvent(entity, new Section("12.2.12.c"));
+            }
+            log.warn( "EJB '" + entity.getEjbName() + "': The PK Class " +
+               cls.getName() + " or any of its superclasses does not " +
+               "override the hashCode() method" );
+            status = false;
          }
 
          // This is a check for some interesting implementation of
