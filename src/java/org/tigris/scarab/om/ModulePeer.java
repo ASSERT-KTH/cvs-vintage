@@ -28,5 +28,10 @@ import org.tigris.scarab.om.map.*;
 public class ModulePeer 
     extends org.tigris.scarab.om.BaseModulePeer
 {
+    public static Class getOMClass()
+        throws Exception
+    {
+        return Class.forName("org.tigris.scarab.om.Module");
+    }
 }
 
