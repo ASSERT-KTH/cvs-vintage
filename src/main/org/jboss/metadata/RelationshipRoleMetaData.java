@@ -14,7 +14,7 @@ import org.jboss.deployment.DeploymentException;
  * file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class RelationshipRoleMetaData extends MetaData {
    // one is one
@@ -127,11 +127,11 @@ public class RelationshipRoleMetaData extends MetaData {
    
    public void importEjbJarXml (Element element) throws DeploymentException {
       // ejb-relationship-role-name?
-      relationshipRoleName = 
+      relationshipRoleName =
             getOptionalChildContent(element, "ejb-relationship-role-name");
-      
+
       // multiplicity
-      String multiplicityString = 
+      String multiplicityString =
             getUniqueChildContent(element, "multiplicity");
       if("One".equals(multiplicityString)) {
          multiplicity = ONE;
@@ -142,36 +142,42 @@ public class RelationshipRoleMetaData extends MetaData {
                "or 'Many' but is " + multiplicityString + "; this is case " +
                "sensitive");
       }
-      
-      // cascade-delete? 
+
+      // cascade-delete?
       if(getOptionalChild(element, "cascade-delete") != null) {
          cascadeDelete = true;
       }
-      
+
       // relationship-role-source
-      Element relationshipRoleSourceElement = 
+      Element relationshipRoleSourceElement =
             getUniqueChild(element, "relationship-role-source");
-      entityName = 
+      entityName =
             getUniqueChildContent(relationshipRoleSourceElement, "ejb-name");
-      
+
       // cmr-field?
       Element cmrFieldElement = getOptionalChild(element, "cmr-field");
       if(cmrFieldElement != null) {
          // cmr-field-name
-         cmrFieldName = 
+         cmrFieldName =
                getUniqueChildContent(cmrFieldElement, "cmr-field-name");
-         
+
          // cmr-field-type?
          cmrFieldType =
                getOptionalChildContent(cmrFieldElement, "cmr-field-type");
          if(cmrFieldType != null &&
-               !cmrFieldType.equals("java.util.Collection") && 
+               !cmrFieldType.equals("java.util.Collection") &&
                !cmrFieldType.equals("java.util.Set")) {
 
             throw new DeploymentException("cmr-field-type should be " +
-                  "java.util.Collection or java.util.Set but is " + 
+                  "java.util.Collection or java.util.Set but is " +
                   cmrFieldType);
          }
+      }
+
+      // JBossCMP needs ejb-relationship-role-name if jbosscmp-jdbc.xml is used to map relationships
+      if(relationshipRoleName == null)
+      {
+         relationshipRoleName = entityName + (cmrFieldName == null ? "" : "_" + cmrFieldName);
       }
    }
 }

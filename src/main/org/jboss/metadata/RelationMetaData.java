@@ -16,7 +16,7 @@ import org.jboss.deployment.DeploymentException;
  * file's relationships elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class RelationMetaData extends MetaData {
    /** Name of the relation. Loaded from the ejb-relation-name element. */
@@ -105,7 +105,13 @@ public class RelationMetaData extends MetaData {
          throw new DeploymentException("Expected only 2 ejb-relationship-" +
                "role but found more then 2");
       }
-      
+
+      // JBossCMP needs ejb-relation-name if jbosscmp-jdbc.xml is used to map relationships.
+      if(relationName == null)
+      {
+         relationName = left.getRelationshipRoleName() + "-" + right.getRelationshipRoleName();
+      }
+
       // assure that the left role and right role do not have the same name
       String leftName = left.getRelationshipRoleName();
       String rightName = right.getRelationshipRoleName();
