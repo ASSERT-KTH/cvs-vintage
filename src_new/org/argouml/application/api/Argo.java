@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.13 2002/12/22 00:22:50 linus Exp $
+// $Id: Argo.java,v 1.14 2002/12/27 16:59:58 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -272,7 +272,11 @@ public class Argo
 	    ConsoleAppender.SYSTEM_OUT));
 
 	// Add the throwable renderer
-	((Hierarchy) cat.getRootLogger().getHierarchy()).getRendererMap().put(Throwable.class, tr);
+	LoggerRepository lr = cat.getRootLogger().getLoggerRepository();
+	if (!(lr instanceof Hierarchy))
+	    throw new IllegalArgumentException("LoggerRepository "
+					       + "is not a Hierarchy");
+	((Hierarchy)lr).getRendererMap().put(Throwable.class, tr);
 
 	if (System.getProperty(ARGO_CONSOLE_SUPPRESS) != null) {
 	    cat.getRoot().getLoggerRepository().setThreshold(Level.OFF);
