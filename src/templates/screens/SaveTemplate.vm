@@ -1,39 +1,40 @@
         
 #set ($action = $link.setPage("SaveTemplate.vm").setAction("TemplateList").addPathInfo("nextTemplate", "TemplateList.vm"))
-#set ($template = $scarabR.IssueTemplate)
-#set ($templateGroup = $intake.IssueTemplate.mapTo($template)) 
-#set ($user = $data.User)
 #set ($module = $scarabR.CurrentModule)
-#set ($templateString = $data.Parameters.getString("templateString"))
+#set ( $issueId = $data.Parameters.getString("issue_id"))
 
+#if ($issueId)
+   #set ($issue = $scarabR.Issue)
+#else
+   #set ($issue = $data.User.getReportingIssue($module))
+#end
 
-#set ($templateString = "blah")
-
+#set ($templateInfo = $scarabR.IssueTemplateInfo)
+#set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo)) 
+#set ($issueGroup = $intake.Issue.mapTo($issue)) 
 <form method="post" action="$action" >
-<input type="hidden" name="$templateGroup.Value.Key" value="$templateString" />
+#if ($issueId) <input type="hidden" name="issue_id" value="$issueId"> #end
 
-
-#if ($templateString)
-
-<p class="functnbar"><input type="submit" value="save/submit" name="eventSubmit_doSavetemplate" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel"  /></p>
 
 <h3>Save Template</h3>
-        <div class="axial">
+<div class="axial">
     <table border="1" cellspacing="2" cellpadding="3">
        <tr>
             <th>template name:</th>
-            <td><input type="text" size="25" value="" name="$templateGroup.Name.Key"/></td>
+            <td>
+             #fieldErrorMsg($templateGroup.Name "")
+            <input type="text" size="25" value="$!templateGroup.Name" name="$templateGroup.Name.Key"/></td>
        </tr>
             
        <tr>
             <th>template descr:</th>
-            <td><textarea rows="4" cols="40" name="$templateGroup.Description.Key"></textarea></td>
+            <td><textarea rows="4" cols="40" name="$templateGroup.Description.Key">$!templateGroup.Description</textarea></td>
        </tr>
             
        <tr>
          <th width="120">Availability:</th>
 
-         <td>#templateTypeSelectBox ($template)
+         <td>#templateTypeSelectBox ($issue)
          </td>
         
        </tr>
@@ -41,14 +42,88 @@
        <tr>
          <th width="120">location:</th>
          <td>current project '$module.Name'</td>
-         <input type = "hidden" name="$templateGroup.ModuleId.Key" value = "$module.ModuleId">
+         <input type = "hidden" name="$issueGroup.ModuleId.Key" value = "$module.ModuleId">
        </tr>
-    </table>
-        </div>
-        
-<p class="functnbar"><input type="submit" value="save/submit" name="eventSubmit_doSavetemplate" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel"  /></p>
 
-#else
-   There are no templates to save. Please <a href="">enter a template</a>/
+#if ($issueId)
+       <tr>
+          <th>template author:</th>
+             #set ($createdUser = $issue.CreatedUser)
+          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+       </tr>
 #end
+   </table>
+</div>
+                
 
+<h3>Completed Attributes in "Enter Issue" template</h3>
+<br>
+<div id="tabs">
+        <table cellpadding="3" cellspacing="0" border="0">
+        <tr>
+        <th><small>1:</small> Summary info</th>
+        <td><small>2:</small> Duplicate check</td>
+        <td><small>3:</small> <a href="#" title="view verbose information">Verbose info</a></td>
+        </tr>
+        </table>
+</div>
+
+<h3>Input your issue</h3>
+
+<div class="axial">
+        <table width="100%" cellspacing="2" cellpadding="3" border="1">
+                                                
+#set ($attrValues = $issue.ModuleAttributeValuesMap)
+#set ( $group = $intake.AttributeValue.mapTo($attrValue) ) 
+
+#foreach ( $attKey in $attrValues.sequence() )
+  #set ( $attVal = $attrValues.get($attKey) )
+
+    <tr>
+        <th>
+     #if ( $attVal.Attribute.AttributeType.ValidationKey )
+        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
+     #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+        #set ( $field = "OptionId" )
+     #elseif ($attVal.Attribute.AttributeType.Name == "string" )
+        #set ( $field = "Value" )
+     #end
+     #if ( $attVal.isRequired() )
+        *
+     #end
+     $attVal.Attribute.Name: 
+    </th>
+    <td>
+    #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
+
+          #userSelectBox ($attVal "")
+
+    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+ 
+         #attrValueLeafSelect ($attVal $field "")
+
+    #else
+        #attrValueErrorMsg( $attVal "Value" )
+
+        #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
+
+            <textarea name= "$attrInput.Value.Key" class="text" cols="40"
+               rows="4">$!attrInput.Value</textarea>
+        #else
+
+           <input name= "$attrInput.Value.Key"
+                value="$!attrInput.Value" size="45" type="text" class="text" />
+        #end
+
+    #end
+    </td>
+   </tr>
+#end
+</table>
+
+</div>
+
+
+<p class="functnbar"><input type="submit" value="save details" name="eventSubmit_doSubmit" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel"  />&#160;<input type="submit" value="clear form" class="button" /></p> 
+$intake.declareGroups()
+</form>

@@ -25,9 +25,9 @@ $page.setTitle("Admin Approval")
 
          <th><a href="#" title="sort">submitted by:</a></th>
          
-         <th><a href="#" title="sort">project:</a></th>
+        ## <th><a href="#" title="sort">project:</a></th>
          
-         <th><a href="#" title="sort">user role:</a></th>
+        ## <th><a href="#" title="sort">user role:</a></th>
 
          <th><a href="#" title="sort">name:</a></th>
 
@@ -51,7 +51,6 @@ $page.setTitle("Admin Approval")
          <td>query</td>
 
         #set ($createdUser = $scarabR.getUser($query.UserId))
-        #set ($module = $scarabR.getModule($query.ModuleId.toString()))
        <input type = "hidden" name="query_user_$query.QueryId" value = "$createdUser.UserId">
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
 
@@ -87,28 +86,28 @@ $page.setTitle("Admin Approval")
          #else 
             <tr class="b">
          #end
-         <td><input type="checkbox" name="template_id_$template.IssueTemplateId" /></td>
+         <td><input type="checkbox" name="template_id_$template.IssueId" /></td>
 
          <td>$format.getDate($scarabG.DateFormat, $template.CreatedDate)</td>
 
          <td>enter issue template</td>
 
-        #set ($createdUser = $scarabR.getUser($template.UserId))
-        #set ($module = $scarabR.getModule($template.ModuleId.toString()))
-       <input type = "hidden" name="template_user_$template.IssueTemplateId" value = "$createdUser.UserId">
+        #set ($createdUser = $template.CreatedBy)
+       <input type = "hidden" name="template_user_$template.IssueId" value = "$createdUser.UserId">
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
 
-         <td>$module.Name</td>
+         ##<td>$template.Module.Name</td>
 
-         <td>role X</td>
+         ##<td>role X</td>
 
-         <td><a href="#">$template.Name</a></td>
+         #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm"))
+         <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
          
-         <td>#if ($template.Description) $template.Description #else &nbsp; #end</td>
+         <td>#if ($template.TemplateInfo.Description) $template.TemplateInfo.Description #else &nbsp; #end</td>
          
-         <td> <textarea rows="2" cols="20" name="template_comment_$template.IssueTemplateId"></textarea></td>
+         <td> <textarea rows="2" cols="20" name="template_comment_$template.IssueId"></textarea></td>
          
-         <td><select name="template_action_$template.IssueTemplateId">
+         <td><select name="template_action_$template.IssueId">
                 <option>no action</option>
                 <option>comment only</option>
                 <option>approve</option>

@@ -21,9 +21,11 @@
 
 <form method="post" action="$action" >
 
-#if ($user.UserId)
-        <p class="functnbar"><input type="submit" value="create new" name="eventSubmit_doNewtemplate" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
-#end        
+<p class="functnbar">
+   #if ($user.UserId)
+        <input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>
+   #end
+      &#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
 
 <h3>Enter Issue Templates</h3>
 
@@ -38,18 +40,19 @@
         <th><a href="#" title="sort">initiated by</a></th>
         </tr>
         
-#foreach ( $template in $module.getPrivateIssueTemplates($user) )
+#foreach ( $template in $module.getPrivateTemplates($user) )
 
          #rows ()
-        <td><input type="checkbox" name="delete_$template.IssueTemplateId"/></td>
-        <td><a href="#">$template.Name</a></td>
-        <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
-        <td><a href="$template.getExecuteLink($link.toString())">$template.IssueTemplateType.Name</a>
-           #if (!$template.Approved)
+        <td><input type="checkbox" name="delete_$template.IssueId"/></td>
+    #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm"))
+        <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
+        <td>#if($template.TemplateInfo.Description)  $template.TemplateInfo.Description #else &nbsp; #end</td>
+        <td>$template.IssueType.Name
+           #if (!$template.TemplateInfo.Approved)
              (until approved)
            #end
         </td>
-        #set ($createdUser = $scarabR.getUser($template.UserId.toString()) )
+        #set ($createdUser = $template.CreatedBy)
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
         </tr>
 #end
@@ -57,15 +60,26 @@
 #foreach ( $template in $module.GlobalTemplates )
 
          #rows ()
+      #if ($security.hasPermission("Item | Delete", $module))
+        <td><input type="checkbox" name="delete_$template.IssueId"/></td>
+      #else
         <td>&nbsp;</td>
-        <td><a href="#">$template.Name</a></td>
-        <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
-        <td><a href="$template.getExecuteLink($link.toString())">$template.IssueTemplateType.Name</a>
-           #if (!$template.Approved)
+      #end
+        <td>
+          #if ($security.hasPermission("Item | Delete", $module))
+            #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm"))
+            <a href="$editLink">$template.TemplateInfo.Name </a>
+          #else
+            $template.TemplateInfo.Name 
+          #end
+        </td>
+        <td>#if($template.TemplateInfo.Description)  $template.TemplateInfo.Description #else &nbsp; #end</td>
+        <td>$template.IssueType.Name
+           #if (!$template.TemplateInfo.Approved)
              (until approved)
            #end
         </td>
-        #set ($createdUser = $scarabR.getUser($template.UserId.toString()) )
+        #set ($createdUser = $template.CreatedBy)
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
         </tr>
 #end
@@ -74,7 +88,8 @@
  ##       <p>&#171; previous | 1 of 1 | next &#187;</p>
 
    #if ($user.UserId)
-        <p class="functnbar"><input type="submit" value="create new" name="eventSubmit_doNewtemplate" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+        <p class="functnbar"><input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>
    #end
+      &#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
 #end
     </div>

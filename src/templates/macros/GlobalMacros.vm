@@ -2,7 +2,6 @@
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
     #set ( $attr = $attrValue.Attribute )
     #set ( $module = $attrValue.Issue.ScarabModule )
-
 <select name="$attrInput.get($optionFieldName).Key" 
 								#if($size.length())size="$size"#end>
 				#if ($size.length() == 0)
@@ -142,6 +141,7 @@ value="false" />
 #end
 
 #macro (queryTypeSelectBox $query)
+    #set ( $queryGroup = $intake.Query.mapTo($query) ) 
          <select name="$queryGroup.TypeId.Key">
           #foreach ($type in $query.getAllQueryTypes() )
           <option value = "$type.QueryTypeId" #if( $type.QueryTypeId.equals("$query.TypeId")) selected="selected" #end >
@@ -152,10 +152,11 @@ value="false" />
 #end
 
 
-#macro (templateTypeSelectBox $template)
-         <select name="$templateGroup.TypeId.Key">
-          #foreach ($type in $template.getAllTemplateTypes() )
-          <option value = "$type.TemplateTypeId" #if( $type.TemplateTypeId.equals("template.TypeId")) selected="selected" #end >
+#macro (templateTypeSelectBox $issue)
+    #set ( $group = $intake.Issue.mapTo($issue) ) 
+         <select name="$group.TypeId.Key">
+          #foreach ($type in $issue.getTemplateTypes() )
+          <option value = "$type.IssueTypeId" #if( $type.IssueTypeId.equals("$issue.TypeId")) selected="selected" #end >
            $type.Name
           </option>
            #end
