@@ -123,7 +123,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.64 2002/11/15 01:08:59 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.65 2002/12/03 20:58:59 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1318,9 +1318,6 @@ public abstract class AbstractScarabModule
                          Criteria.NOT_EQUAL);
             }
             
-            // this method calls getRModuleAttributesThisModuleOnly
-            // which adds some additional criteria (and a join to the 
-            // ATTRIBUTE table)
             rmas = RModuleAttributePeer.doSelect(crit); 
             getMethodResult().put(rmas, this, GET_R_MODULE_ATTRIBUTES, 
                 issueType, activeBool, attributeType);
