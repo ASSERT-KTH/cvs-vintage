@@ -19,6 +19,8 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.KeyStroke;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
@@ -53,6 +55,9 @@ public class ToggleDraftFlagAction extends AbstractColumbaAction implements
         putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("drafts-16.png"));
         putValue(LARGE_ICON, ImageLoader.getImageIcon("drafts-16.png"));
 
+//      shortcut key
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('d'));
+        
         setEnabled(false);
 
         ((MailFrameMediator) frameMediator)

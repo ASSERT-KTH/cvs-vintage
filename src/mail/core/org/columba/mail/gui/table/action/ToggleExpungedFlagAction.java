@@ -19,6 +19,8 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.KeyStroke;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
@@ -54,6 +56,9 @@ public class ToggleExpungedFlagAction extends AbstractColumbaAction implements
                 .getSmallImageIcon("stock_delete-16.png"));
         putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete-16.png"));
 
+//      shortcut key
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('e'));
+        
         setEnabled(false);
 
         ((MailFrameMediator) frameMediator)

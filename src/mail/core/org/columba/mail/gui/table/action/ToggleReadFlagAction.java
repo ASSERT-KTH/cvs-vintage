@@ -57,9 +57,8 @@ public class ToggleReadFlagAction extends AbstractColumbaAction implements
         putValue(LARGE_ICON, ImageLoader.getImageIcon("mail-read.png"));
 
         // shortcut key
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_K,
-                ActionEvent.CTRL_MASK));
-
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('r'));
+        
         setEnabled(false);
 
         ((MailFrameMediator) frameMediator)

@@ -19,6 +19,8 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.KeyStroke;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
@@ -53,6 +55,9 @@ public class ToggleSpamFlagAction extends AbstractColumbaAction implements
         putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("spam-16.png"));
         putValue(LARGE_ICON, ImageLoader.getImageIcon("spam-24.png"));
 
+//      shortcut key
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('s'));
+        
         setEnabled(false);
 
         ((MailFrameMediator) frameMediator)

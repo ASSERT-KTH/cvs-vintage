@@ -19,6 +19,8 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.KeyStroke;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
@@ -53,6 +55,9 @@ public class ToggleAnsweredFlagAction extends AbstractColumbaAction implements
       putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("reply_small.png"));
       putValue(LARGE_ICON, ImageLoader.getImageIcon("reply_small.png"));
 
+//    shortcut key
+      putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('a'));
+      
       setEnabled(false);
 
       ((MailFrameMediator) frameMediator)
