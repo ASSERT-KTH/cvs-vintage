@@ -70,7 +70,7 @@
 #foreach ($attr in $userAttrs)
   #set ($attgroup = $intake.Attribute.mapTo($attr))
   #indexedRows($velocityCount)
-  <td><input type="checkbox" name="action_$attr.AttributeId"></td>
+  <td><input type="checkbox" name="action_$attr.AttributeId" /></td>
   <td>#strikeS($attr)$link.setPage("admin,UserAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").addPathInfo("$scarabG.Constant.LAST_TEMPLATE", "admin,GlobalUserAttributes.vm").setLabel("$attr.Name")#strikeE($attr)</td>
   <td>#strikeS($attr)$attr.Description#strikeE($attr)</td>
   <td>

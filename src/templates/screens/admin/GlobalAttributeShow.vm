@@ -98,7 +98,7 @@ $l10n.GlobalAttributes
     #indexedRows($velocityCount)
     #set ($attType = $attribute.AttributeType)
 
-  <td><input type="checkbox" name="action_$attribute.AttributeId"></td>
+  <td><input type="checkbox" name="action_$attribute.AttributeId" /></td>
   <td>#strikeS($attribute)$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").addPathInfo("pagenum", $pageNum).setLabel("$attribute.Name")#strikeE($attribute)</td>
   <td>#strikeS($attribute)#if ($attribute.Description) $attribute.Description #else &nbsp; #end#strikeE($attribute)</td>
   <td>

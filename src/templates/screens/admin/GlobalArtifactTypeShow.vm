@@ -49,7 +49,7 @@
 #foreach ($issueType in $nondeletedIssueTypes)
     #set ($group = $intake.IssueType.mapTo($issueType))
 #indexedRows($velocityCount)
-<td><input type="checkbox" name="action_$issueType.IssueTypeId"></td>
+<td><input type="checkbox" name="action_$issueType.IssueTypeId" /></td>
 <td><a href="$link.setPage("admin,GlobalArtifactTypeEdit.vm").setPathInfo("issuetypeid", "$issueType.IssueTypeId")">$issueType.Name</a>
 </td>
 <td>#booleanCheckbox($group.Locked)</td>
@@ -84,7 +84,7 @@
 
 #foreach ($issueType in $deletedIssueTypes)
 #indexedRows($velocityCount)
-<td><input type="checkbox" name="action_$issueType.IssueTypeId"></td>
+<td><input type="checkbox" name="action_$issueType.IssueTypeId" /></td>
 <td><a href="$link.setPage("admin,GlobalArtifactTypeEdit.vm").setPathInfo("issuetypeid", "$issueType.IssueTypeId")">$issueType.Name</a>
 </td>
  </tr>
@@ -95,8 +95,6 @@
 <input type="submit" value="$l10n.UndeleteSelected" name="eventSubmit_doUndelete"/>
 </div>
 #end
-
-</div>       
 
 $intake.declareGroups()
 

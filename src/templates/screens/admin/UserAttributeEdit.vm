@@ -53,11 +53,11 @@
 </tr>
 #if (!$attribute.isNew())
 <tr>
-  <th width="120">$l10n.CreationDate</th> <td class="b">$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</th>
+  <th width="120">$l10n.CreationDate</th> <td class="b">$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
 </tr>
  <tr>
   <th>$l10n.Deleted</th>
-  <td>#booleanCheckbox ($attgroup.Deleted)
+  <td>#booleanCheckbox ($attgroup.Deleted)</td>
  </tr>
 #end
 </table>
@@ -75,7 +75,6 @@
    		<option value="none" #if ($attgroup.Action.Value.equals("none")) selected="selected" #end>$l10n.None</option>
    		<option value="to" #if ($attgroup.Action.Value.equals("to")) selected="selected" #end>$l10n.To</option>
         <option value="cc" #if ($attgroup.Action.Value.equals("cc")) selected="selected" #end>$l10n.CC</option>
-        </select>
  </select></td>
 </tr>
 

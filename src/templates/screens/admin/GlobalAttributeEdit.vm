@@ -81,11 +81,10 @@
   </td>
  </tr>
   #end
-</tr>
 #if (!$createNew)
  <tr>
   <th>$l10n.Deleted</th>
-  <td>#booleanCheckbox ($attgroup.Deleted)
+  <td>#booleanCheckbox ($attgroup.Deleted)</td>
  </tr>
 #end
 </table>
