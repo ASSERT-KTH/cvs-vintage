@@ -173,9 +173,9 @@
 		<entry>No, there is a default for JRMP based on the registry</entry>
 	      </row>
 	      <row>
-		<entry>carol.jvm.jrmp. server.portnumber</entry>
-		<entry>'jrmp port number'</entry>
-		<entry>All jndi properties needed for XXX name service configuration. This is equivalent to put 'property-name'='property-value' in the jndi.properties file</entry>
+		<entry>carol.jvm.rmi. server.port</entry>
+		<entry>'rmi port number'</entry>
+		<entry>Set the port number for exporting object thru Jeremie, 0 means random open port number</entry>
 		<entry>No, there is a default for JRMP (0)</entry>
 	      </row>
 	      <row>
@@ -278,6 +278,12 @@
 		<entry>'JEREMIE carol Name Service class name'</entry>
 		<entry>JEREMIE implementation of the Carol name service</entry>
 		<entry>No, there is a default for JEREMIE based on the jeremie registry</entry>
+	      </row>
+	      <row>
+		<entry>carol.jvm.rmi. server.port</entry>
+		<entry>'rmi port number'</entry>
+		<entry>Set the port number for exporting object thru Jeremie, 0 means random open port number</entry>
+		<entry>No, there is a default for JEREMIE (0)</entry>
 	      </row>
 	    </tbody>
 	  </tgroup>
