@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.90 2005/03/05 08:53:29 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.91 2005/03/08 19:24:10 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -618,24 +618,24 @@ public abstract class FigEdgeModelElement
      * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
      */
     public void setOwner(Object newOwner) {
+        Object oldOwner = getOwner();
         super.setOwner(newOwner);
-        if (newOwner != null) {
-            Object oldOwner = getOwner();
-
+        if (oldOwner != null) {
             if (Model.getFacade().isAModelElement(oldOwner)) {
                 Model.getPump().removeModelEventListener(this, oldOwner);
             }
+        }
+        if (newOwner != null) {
             if (Model.getFacade().isAModelElement(newOwner)) {
                 Model.getPump().addModelEventListener(this, oldOwner);
-
+                
                 if (UUIDHelper.getInstance().getUUID(newOwner) == null) {
                     Model.getCoreHelper().setUUID(newOwner,
-					UUIDHelper.getInstance().getNewUUID());
-		}
+                            UUIDHelper.getInstance().getNewUUID());
+                }
             }
-            modelChanged(null);
         }
-
+        modelChanged(null);
     }
 
     /**
