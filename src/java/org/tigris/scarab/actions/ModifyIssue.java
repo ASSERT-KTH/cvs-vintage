@@ -113,7 +113,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.121 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: ModifyIssue.java,v 1.122 2002/09/23 20:10:35 jmcnally Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -155,8 +155,8 @@ public class ModifyIssue extends BaseModifyIssue
         commentField.setRequired(true);
         if (commentGroup == null || !commentField.isValid())
         {
-            commentField.setMessage(l10n.get(
-                "ExplanatoryCommentRequiredToModifyAttributes"));
+            commentField.setMessage(
+                "ExplanatoryCommentRequiredToModifyAttributes");
         }
 
         // Set any other required flags

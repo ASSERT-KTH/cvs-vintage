@@ -69,7 +69,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.19 2002/09/18 20:30:13 elicia Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.20 2002/09/23 20:10:35 jmcnally Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -103,7 +103,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
                 {
                     getScarabRequestTool(context).setAlertMessage(
                         l10n.get("ChangesResultDuplicateNames"));
-                    field.setMessage(l10n.get("Duplicate"));
+                    field.setMessage("Duplicate");
                 }
             }
          }
