@@ -114,7 +114,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.21 2002/01/31 22:16:28 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.22 2002/02/01 00:46:08 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -304,14 +304,13 @@ public abstract class AbstractScarabModule
     }
 
     /**
-     * Wrapper method to perform the proper cast to the BaseModule method
-     * of the same name. FIXME: find a better way
+     * Set this module's immediate parent module
      */
     public abstract void setParent(ModuleEntity v) 
         throws Exception;
 
     /**
-     * Cast the getScarabModuleRelatedByParentId() to a ModuleEntity
+     * Get this module's immediate parent module
      */
     public abstract ModuleEntity getParent() 
         throws Exception;
