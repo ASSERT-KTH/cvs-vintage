@@ -33,7 +33,6 @@ import org.gjt.sp.jedit.buffer.IndentFoldHandler;
 import org.gjt.sp.jedit.syntax.*;
 import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.Debug;
-import org.gjt.sp.jedit.OperatingSystem;
 import org.gjt.sp.util.Log;
 //}}}
 
@@ -50,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.90 2003/10/26 05:50:41 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.91 2003/11/18 20:51:58 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {

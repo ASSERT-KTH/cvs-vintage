@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.20 2003/11/16 19:24:11 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.21 2003/11/18 20:51:57 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -139,6 +139,8 @@ public class BufferIORequest extends WorkRequest
 		case INSERT:
 			insert();
 			break;
+		default:
+			throw new InternalError();
 		}
 	} //}}}
 

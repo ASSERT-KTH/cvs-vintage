@@ -25,7 +25,6 @@ package org.gjt.sp.jedit.buffer;
 //{{{ Imports
 import javax.swing.text.*;
 import org.gjt.sp.jedit.syntax.*;
-import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.Debug;
 import org.gjt.sp.util.IntegerArray;
 import org.gjt.sp.util.Log;
@@ -39,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: LineManager.java,v 1.3 2003/06/17 08:45:43 spestov Exp $
+ * @version $Id: LineManager.java,v 1.4 2003/11/18 20:51:57 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class LineManager

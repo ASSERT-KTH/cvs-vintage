@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
  * directly.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.34 2003/09/08 04:44:10 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.35 2003/11/18 20:51:57 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
@@ -121,7 +121,7 @@ public class PositionManager
 		} //}}}
 
 		//{{{ finalize() method
-		public void finalize()
+		protected void finalize()
 		{
 			synchronized(PositionManager.this)
 			{

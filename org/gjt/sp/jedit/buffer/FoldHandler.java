@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * See {@link org.gjt.sp.jedit.ServiceManager} for details.
  *
  * @author Slava Pestov
- * @version $Id: FoldHandler.java,v 1.13 2003/08/22 16:42:57 spestov Exp $
+ * @version $Id: FoldHandler.java,v 1.14 2003/11/18 20:51:57 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public abstract class FoldHandler
@@ -90,6 +90,12 @@ public abstract class FoldHandler
 			return false;
 		else
 			return getClass() == o.getClass();
+	} //}}}
+
+	//{{{ hashCode() method
+	public int hashCode()
+	{
+		return getClass().hashCode();
 	} //}}}
 
 	//{{{ registerFoldHandler() method

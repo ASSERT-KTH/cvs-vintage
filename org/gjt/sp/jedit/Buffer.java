@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.206 2003/11/16 22:54:36 spestov Exp $
+ * @version $Id: Buffer.java,v 1.207 2003/11/18 20:51:57 spestov Exp $
  */
 public class Buffer
 {
@@ -123,22 +123,6 @@ public class Buffer
 	//}}}
 
 	//{{{ Input/output methods
-
-	//{{{ showInsertFileDialog() method
-	/**
-	 * Displays the 'insert file' dialog box and inserts the selected file
-	 * into the buffer.
-	 * @param view The view
-	 * @since jEdit 2.7pre2
-	 */
-	public void showInsertFileDialog(View view)
-	{
-		String[] files = GUIUtilities.showVFSFileDialog(view,null,
-			VFSBrowser.OPEN_DIALOG,false);
-
-		if(files != null)
-			insertFile(view,files[0]);
-	} //}}}
 
 	//{{{ reload() method
 	/**

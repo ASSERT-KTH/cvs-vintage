@@ -68,7 +68,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.66 2003/11/16 19:24:11 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.67 2003/11/18 20:51:57 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -136,6 +136,16 @@ public class MiscUtilities
 		// 2 aug 2003: OS/2 Java has a broken getCanonicalPath()
 		if(OperatingSystem.isOS2())
 			return path;
+		// 18 nov 2003: calling this on a drive letter on Windows causes
+		// drive access
+		if(OperatingSystem.isDOSDerived())
+		{
+			if(path.length() == 2 || path.length() == 3)
+			{
+				if(path.charAt(1) == ':')
+					return path;
+			}
+		}
 		try
 		{
 			return new File(path).getCanonicalPath();

@@ -24,7 +24,6 @@ package org.gjt.sp.jedit.textarea;
 
 //{{{ Imports
 import java.awt.*;
-import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.TextUtilities;
 //}}}
 
@@ -34,7 +33,7 @@ import org.gjt.sp.jedit.TextUtilities;
  * for matching XML tags.
  *
  * @author Slava Pestov
- * @version $Id: StructureMatcher.java,v 1.5 2003/09/21 18:51:27 spestov Exp $
+ * @version $Id: StructureMatcher.java,v 1.6 2003/11/18 20:51:58 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public interface StructureMatcher
