@@ -337,8 +337,8 @@ public class Request {
 	if( ! methodMB.equalsIgnoreCase("POST") )
 	    return;
 	String contentType= getContentType();
-	if (contentType == null &&
-            contentType.startsWith("application/x-www-form-urlencoded")) {
+	if (contentType == null ||
+            ! contentType.startsWith("application/x-www-form-urlencoded")) {
 	    return;
 	}
 
