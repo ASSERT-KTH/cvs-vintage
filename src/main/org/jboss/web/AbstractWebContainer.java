@@ -160,7 +160,7 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.56 $
+@version $Revision: 1.57 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -208,11 +208,6 @@ public abstract class AbstractWebContainer
    public synchronized boolean init(DeploymentInfo di) 
       throws DeploymentException 
    {
-      if( super.init(di) == false )
-      {
-         return false;
-      }
-
       log.debug("Begin init");
       try 
       {
