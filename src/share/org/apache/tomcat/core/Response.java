@@ -345,22 +345,31 @@ public class Response {
     /** Signal that we're done with the headers, and body will follow.
      *  Any implementation needs to notify ContextManager, to allow
      *  interceptors to fix headers.
+     *  Note: This can be called during an included request.
      */
     public void notifyEndHeaders() throws IOException {
 	commited=true;
 
 	// let CM notify interceptors and give a chance to fix
 	// the headers
-	if(request.getContext() != null && ! included ) {
+	if(request.getContext() != null ) {
 	    // call before body hooks
 	    ContextManager cm=request.getContext().getContextManager();
 
 	    BaseInterceptor reqI[]= request.getContainer().
 		getInterceptors(Container.H_beforeBody);
 
+	    // Since this can occur during an include, temporarily
+	    // force included false and use top level request.
+	    boolean saveIncluded = included;
+	    included=false;
+
 	    for( int i=0; i< reqI.length; i++ ) {
-		reqI[i].beforeBody( request, this );
+		reqI[i].beforeBody( request.getTop(), this );
 	    }
+
+	    // restore included state
+	    included = saveIncluded;
 	}
 	
 	// No action.. 
