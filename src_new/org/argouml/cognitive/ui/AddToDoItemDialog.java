@@ -1,4 +1,4 @@
-// $Id: AddToDoItemDialog.java,v 1.21 2003/12/09 14:46:30 mkl Exp $
+// $Id: AddToDoItemDialog.java,v 1.22 2003/12/13 10:25:49 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,6 +104,8 @@ public class AddToDoItemDialog extends ArgoDialog {
         panel.add(offenderLabel);
         panel.add(_offenderList);
         
+        _description.setLineWrap(true);  //MVW - Issue 2422
+        _description.setWrapStyleWord(true);   //MVW - Issue 2422
         _description.setText(Translator.localize("label.enter-todo-item") + "\n");
         JScrollPane descriptionScroller = new JScrollPane(_description);
         descriptionScroller.setPreferredSize(_description.getPreferredSize());
