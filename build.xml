@@ -424,10 +424,10 @@
 
   <!-- ==================== Build the internal test app ==================== -->
   <target name="sanity-test" >
-    <mkdir dir="${tomcat.build}/lib/test"/>
-    <mkdir dir="${tomcat.build}/lib/test/Golden"/>
+    <mkdir dir="${tomcat.home}/lib/test"/>
+    <mkdir dir="${tomcat.home}/lib/test/Golden"/>
     <copydir src="src/tests/share/tests/jsp/Golden" 
-      dest="${tomcat.build}/lib/test/Golden"/>
+      dest="${tomcat.home}/lib/test/Golden"/>
 
       <!-- Test application -->
     <mkdir dir="${tomcat.build}/webapps/test"/>
@@ -436,6 +436,7 @@
       optimize="${optimize}"
       destdir="${tomcat.build}/webapps/test/WEB-INF/classes"
       classpath="${tomcat.build}/classes;${servlet.jar}"/>
+    <copydir src="${tomcat.build}/webapps/test" dest="${tomcat.home}/webapps/test"/>
 
     <jar   jarfile="${tomcat.home}/webapps/test.war"
       basedir="${tomcat.home}/webapps/test"
