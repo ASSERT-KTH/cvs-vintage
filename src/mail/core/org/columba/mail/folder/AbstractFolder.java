@@ -48,7 +48,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
     protected FolderItem node;
 
     // locking mechanism
-    protected Lock myLock;
+    protected Lock myLock = new Lock();
 
     protected EventListenerList listenerList = new EventListenerList();
     
@@ -62,24 +62,15 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
 
         setNode(new FolderItem(defaultElement));
         setName(name);
-
-        myLock = new Lock();
     }
 
     public AbstractFolder() {
         super();
-
-        myLock = new Lock();
     }
 
     public AbstractFolder(FolderItem node) {
         super();
-
-        if (node != null) {
-            setNode(node);
-        }
-
-        myLock = new Lock();
+        setNode(node);
     }
 
     /**
