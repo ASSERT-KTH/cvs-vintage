@@ -1,4 +1,4 @@
-// $Id: ActionGotoDiagram.java,v 1.3 2004/10/18 17:24:22 mvw Exp $
+// $Id: ActionGotoDiagram.java,v 1.5 2004/10/25 19:24:51 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,18 +24,12 @@
 
 package org.argouml.ui.cmd;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-
-import javax.swing.JPanel;
 
 import org.argouml.application.api.CommandLineInterface;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.ui.ArgoDialog;
-import org.argouml.ui.ProjectBrowser;
-import org.argouml.ui.TabResults;
+import org.argouml.ui.GotoDialog;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLAction;
 import org.tigris.gef.base.Diagram;
@@ -43,61 +37,28 @@ import org.tigris.gef.base.Diagram;
 ////////////////////////////////////////////////////////////////
 // items on view menu
 
+/**
+ * This Action will display a dialogbox listing all diagrams.
+ * Doubleclicking on any listed diagram selects it.
+ *
+ */
 public class ActionGotoDiagram 
 	extends UMLAction 
 	implements CommandLineInterface {
 
+    /**
+     * The constructor.
+     */
     public ActionGotoDiagram() { super("action.goto-diagram", NO_ICON); }
 
+    
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-	ProjectBrowser pb = ProjectBrowser.getInstance();
-	Project p = ProjectManager.getManager().getCurrentProject();
-
-	final TabResults allDiagrams = new TabResults(false); // no related
-	allDiagrams.setResults(p.getDiagrams(), p.getDiagrams());
-
-	// TabResults has really large preferred height, so divide in
-	// half to reduce size of dialog which will be sized based on
-	// this preferred size.
-	allDiagrams.
-	    setPreferredSize(new Dimension(
-	            allDiagrams.getPreferredSize().width,
-		    allDiagrams.getPreferredSize().height / 2));
-	allDiagrams.selectResult(0);
-
-	//TODO: class TearOffHostFrame and TearOffManager.
-	//idea: pop-up on tab that lists docking locations, new window.
-	ArgoDialog f =
-	    new ArgoDialog(pb, Translator.localize("dialog.gotodiagram.title"),
-			   ArgoDialog.OK_CANCEL_OPTION, false) {
-		public void actionPerformed(ActionEvent e) {
-		    if (e.getSource() == getOkButton()) {
-			allDiagrams.doDoubleClick();
-		    }
-		    else {
-			super.actionPerformed(e);
-		    }
-		}
-
-		protected void nameButtons() {
-		    super.nameButtons();
-		    nameButton(getOkButton(), "button.go-to-selection");
-		    nameButton(getCancelButton(), "button.close");
-		}
-	    };
-	JPanel mainPanel = new JPanel(new BorderLayout());
-	//JTabbedPane tabs = new JTabbedPane();
-	//mainPanel.add(tabs, BorderLayout.CENTER);
-	//tabs.addTab("All Diagrams", allDiagrams);
-	mainPanel.add(allDiagrams, BorderLayout.CENTER);
-	f.setContent(mainPanel);
-	//TODO: tabs for class, state, usecase, help
-	f.setVisible(true);
+        new GotoDialog().setVisible(true);
     }
-
+    
     /**
      * @see org.argouml.application.api.CommandLineInterface#doCommand(java.lang.String)
      */
