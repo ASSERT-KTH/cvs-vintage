@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.38 2004/08/01 16:28:26 mvw Exp $
+// $Id: FigUseCase.java,v 1.39 2004/08/01 18:00:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -722,7 +722,7 @@ public class FigUseCase extends FigNodeModelElement {
             // now we assume that extension points are the width of the overall
             // text rectangle (true unless the name is wider than any EP).
 
-            getUpdatedSize(epVec,
+            updateFigGroupSize(epVec,
                     	   x + ((newW - textSize.width) / 2),
                     	   currY,
                     	   textSize.width,

@@ -1,4 +1,4 @@
-// $Id: FigMNodeInstance.java,v 1.21 2004/08/01 16:28:25 mvw Exp $
+// $Id: FigMNodeInstance.java,v 1.22 2004/08/01 18:00:56 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -241,7 +241,7 @@ public class FigMNodeInstance extends FigNodeModelElement {
             }
         }
 
-        if (_readyToEdit) {
+        if (isReadyToEdit()) {
             if (nameStr == "" && baseStr == "") {
                 getNameFig().setText("");
 	    } else {

@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.17 2004/02/28 12:29:42 linus Exp $
+// $Id: FigObject.java,v 1.18 2004/08/01 18:00:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -175,8 +175,8 @@ public class FigObject extends FigNodeModelElement implements MouseListener {
 				     "Dialog",
 				     12,
 				     false));
-        _stereo.setAllowsTab(false);
-        _stereo.setEditable(false);
+        getStereotypeFigText().setAllowsTab(false);
+        getStereotypeFigText().setEditable(false);
         getStereotypeFig().setFilled(false);
         getStereotypeFig().setLineWidth(0);
         setNameFig(new FigText(DEFAULT_WIDTH / 2,
@@ -252,7 +252,7 @@ public class FigObject extends FigNodeModelElement implements MouseListener {
      */
     protected void updateStereotypeText() {
         super.updateStereotypeText();
-        center(_stereo);
+        center(getStereotypeFigText());
     }
 
     private void center(FigText figText) {

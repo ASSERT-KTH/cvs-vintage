@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.22 2004/08/01 16:28:26 mvw Exp $
+// $Id: FigObject.java,v 1.23 2004/08/01 18:00:56 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.22 2004/08/01 16:28:26 mvw Exp $
+// $Id: FigObject.java,v 1.23 2004/08/01 18:00:56 mvw Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -256,15 +256,15 @@ public class FigObject extends FigNodeModelElement {
 	    }
 	}
 
-	if (encloser != _encloser) {
-	    if (_encloser instanceof FigNodeModelElement) {
-		((FigNodeModelElement) _encloser).removeEnclosedFig(this);
+	if (encloser != getEncloser()) {
+	    if (getEncloser() instanceof FigNodeModelElement) {
+		((FigNodeModelElement) getEncloser()).removeEnclosedFig(this);
             }
 	    if (encloser instanceof FigNodeModelElement) {
 		((FigNodeModelElement) encloser).addEnclosedFig(this);
             }
 	}
-        _encloser = encloser;
+        setEncloser(encloser);
     }
 
     static final long serialVersionUID = -185736690375678962L;
@@ -293,7 +293,7 @@ public class FigObject extends FigNodeModelElement {
 		    ", "  + ModelFacade.getName(bases.elementAt(i));
 	}
 
-	if (_readyToEdit) {
+	if (isReadyToEdit()) {
 	    if ( nameStr == "" && baseString == "") {
 		getNameFig().setText("");
 	    } else {

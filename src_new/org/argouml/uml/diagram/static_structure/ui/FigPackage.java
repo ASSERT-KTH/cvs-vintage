@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.47 2004/08/01 16:28:26 mvw Exp $
+// $Id: FigPackage.java,v 1.48 2004/08/01 18:00:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -107,10 +107,10 @@ public class FigPackage extends FigNodeModelElement {
         // lines. Initially not set to be displayed, but this will be changed
         // when we try to render it, if we find we have a stereotype.
 
-        _stereo.setExpandOnly(true);
+        getStereotypeFigText().setExpandOnly(true);
         getStereotypeFig().setFilled(true);
         getStereotypeFig().setLineWidth(1);
-        _stereo.setEditable(false);
+        getStereotypeFigText().setEditable(false);
         getStereotypeFig().setHeight(STEREOHEIGHT + 1);
         getStereotypeFig().setVisible(false);
 
@@ -352,7 +352,7 @@ public class FigPackage extends FigNodeModelElement {
             aSize.height = 21;
         }
 
-        int minWidth = Math.max(0, w + 1 + _shadowSize);
+        int minWidth = Math.max(0, w + 1 + getShadowSize());
         if (aSize.width < minWidth) {
             aSize.width = minWidth;
         }

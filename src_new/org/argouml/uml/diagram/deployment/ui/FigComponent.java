@@ -1,4 +1,4 @@
-// $Id: FigComponent.java,v 1.28 2004/08/01 16:28:25 mvw Exp $
+// $Id: FigComponent.java,v 1.29 2004/08/01 18:00:56 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComponent.java
 // Classes: FigComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponent.java,v 1.28 2004/08/01 16:28:25 mvw Exp $
+// $Id: FigComponent.java,v 1.29 2004/08/01 18:00:56 mvw Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -252,7 +252,7 @@ public class FigComponent extends FigNodeModelElement {
 		if (getEnclosingFig() instanceof FigNodeModelElement)
 		    ((FigNodeModelElement)
 		     getEnclosingFig()).getEnclosedFigs().removeElement(this);
-		_encloser = null;
+		setEncloser(null);
 	    }
 	/*
 
