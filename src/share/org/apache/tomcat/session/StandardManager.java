@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.5 2000/05/12 06:15:24 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/05/12 06:15:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.6 2000/05/12 15:26:40 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/05/12 15:26:40 $
  *
  * ====================================================================
  *
@@ -103,27 +103,11 @@ import org.apache.tomcat.core.*;
  * </ul>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.5 $ $Date: 2000/05/12 06:15:24 $
+ * @author costin@eng.sun.com
+ * @version $Revision: 1.6 $ $Date: 2000/05/12 15:26:40 $
  */
-
 public final class StandardManager implements Runnable, SessionManager {
-    public StandardManager() {
-	try {
-	    start();
-	} catch( Exception ex ) {
-	}
-    }
-
     // ----------------------------------------------------- Instance Variables
-
-    Context ctx;
-
-    /**
-     * The Container with which this Manager is associated.
-     */
-    protected Container container;
-
-
     /**
      * The distributable flag for Sessions created by this Manager.  If this
      * flag is set to <code>true</code>, any user attributes added to a
@@ -131,25 +115,16 @@ public final class StandardManager implements Runnable, SessionManager {
      */
     protected boolean distributable;
 
-
-    /**
-     * The descriptive information string for this implementation.
-     */
-    private static final String info = "ManagerBase/1.0";
-
-
     /**
      * The default maximum inactive interval for Sessions created by
      * this Manager.
      */
     protected int maxInactiveInterval = 60;
 
-
     /**
      * The set of previously recycled Sessions for this Manager.
      */
     protected Vector recycled = new Vector();
-
 
     /**
      * The set of currently active Sessions for this Manager, keyed by
@@ -157,45 +132,50 @@ public final class StandardManager implements Runnable, SessionManager {
      */
     protected Hashtable sessions = new Hashtable();
 
+    /**
+     * The interval (in seconds) between checks for expired sessions.
+     */
+    private int checkInterval = 60;
+
+    /**
+     * The maximum number of active Sessions allowed, or -1 for no limit.
+     */
+    protected int maxActiveSessions = -1;
+
+    /**
+     * The string manager for this package.
+     */
+    private static StringManager sm =
+        StringManager.getManager("org.apache.tomcat.session");
+
+    /**
+     * The background thread.
+     */
+    private Thread thread = null;
+
+    /**
+     * The background thread completion semaphore.
+     */
+    private boolean threadDone = false;
+
+    /**
+     * Name to register for the background thread.
+     */
+    private String threadName = "StandardManager";
+
+    // ------------------------------------------------------------- Constructor
+
+    public StandardManager() {
+    }
 
     // ------------------------------------------------------------- Properties
-
-    public void setContext( Context ctx ) {
-	this.ctx=ctx;
-    }
-
-    /**
-     * Return the Container with which this Manager is associated.
-     */
-    public Container getContainer() {
-
-	return (this.container);
-
-    }
-
-
-    /**
-     * Set the Container with which this Manager is associated.
-     *
-     * @param container The newly associated Container
-     */
-    public void setContainer(Container container) {
-
-	this.container = container;
-
-    }
-
-
     /**
      * Return the distributable flag for the sessions supported by
      * this Manager.
      */
     public boolean getDistributable() {
-
 	return (this.distributable);
-
     }
-
 
     /**
      * Set the distributable flag for the sessions supported by this
@@ -205,34 +185,16 @@ public final class StandardManager implements Runnable, SessionManager {
      * @param distributable The new distributable flag
      */
     public void setDistributable(boolean distributable) {
-
 	this.distributable = distributable;
-
     }
-
-
-    /**
-     * Return descriptive information about this Manager implementation and
-     * the corresponding version number, in the format
-     * <code>&lt;description&gt;/&lt;version&gt;</code>.
-     */
-    public String getInfo() {
-
-	return (this.info);
-
-    }
-
 
     /**
      * Return the default maximum inactive interval (in seconds)
      * for Sessions created by this Manager.
      */
     public int getMaxInactiveInterval() {
-
 	return (this.maxInactiveInterval);
-
     }
-
 
     /**
      * Set the default maximum inactive interval (in seconds)
@@ -241,64 +203,7 @@ public final class StandardManager implements Runnable, SessionManager {
      * @param interval The new default value
      */
     public void setMaxInactiveInterval(int interval) {
-
 	this.maxInactiveInterval = interval;
-
-    }
-
-
-    // --------------------------------------------------------- Public Methods
-
-    /**
-     * Mark the specified session's last accessed time.  This should be
-     * called for each request by a RequestInterceptor.
-     *
-     * @param session The session to be marked
-     */
-    public void accessed( HttpSession session ) {
-	if( session == null) return;
-	if (session instanceof StandardSession)
-	    ((StandardSession) session).access();
-    }
-
-
-    /**
-     * Return the active Session, associated with this Manager, with the
-     * specified session id (if any); otherwise return <code>null</code>.
-     *
-     * @param id The session id for the session to be returned
-     *
-     * @exception ClassNotFoundException if a deserialization error occurs
-     *  while processing this request
-     * @exception IllegalStateException if a new session cannot be
-     *  instantiated for any reason
-     * @exception IOException if an input/output error occurs while
-     *  processing this request
-     */
-    public HttpSession findSession(String id) {
-	
-	if (id == null)
-	    return (null);
-	return ((HttpSession) sessions.get(id));
-    }
-
-    /**
-     * Remove all sessions because our associated Context is being shut down.
-     *
-     * @param ctx The context that is being shut down
-     */
-    public void removeSessions() {
-
-	// XXX XXX a manager may be shared by multiple
-	// contexts, we just want to remove the sessions of ctx!
-	// The manager will still run after that ( i.e. keep database
-	// connection open
-	try {
-	    stop();
-	} catch (TomcatException e) {
-	    throw new IllegalStateException("" + e);
-	}
-
     }
 
     /**
@@ -318,13 +223,81 @@ public final class StandardManager implements Runnable, SessionManager {
         }
     }
 
-    
+    /**
+     * Return the check interval (in seconds) for this Manager.
+     */
+    public int getCheckInterval() {
+	return (this.checkInterval);
+    }
+
+    /**
+     * Set the check interval (in seconds) for this Manager.
+     *
+     * @param checkInterval The new check interval
+     */
+    public void setCheckInterval(int checkInterval) {
+	this.checkInterval = checkInterval;
+    }
+
+    /**
+     * Return the maximum number of active Sessions allowed, or -1 for
+     * no limit.
+     */
+    public int getMaxActiveSessions() {
+	return (this.maxActiveSessions);
+    }
+
+    /**
+     * Set the maximum number of actives Sessions allowed, or -1 for
+     * no limit.
+     *
+     * @param max The new maximum number of sessions
+     */
+    public void setMaxActiveSessions(int max) {
+	this.maxActiveSessions = max;
+    }
+
+    // --------------------------------------------------------- Public Methods
+
+    /**
+     * Mark the specified session's last accessed time.  This should be
+     * called for each request by a RequestInterceptor.
+     *
+     * @param session The session to be marked
+     */
+    public void access( HttpSession session ) {
+	((StandardSession) session).access();
+    }
+
+    /** Notify that the servlet that acccessed the session is done
+     */
+    public void release( HttpSession session ) {
+    }
+
+    /**
+     * Return the active Session, associated with this Manager, with the
+     * specified session id (if any); otherwise return <code>null</code>.
+     *
+     * @param id The session id for the session to be returned
+     *
+     * @exception ClassNotFoundException if a deserialization error occurs
+     *  while processing this request
+     * @exception IllegalStateException if a new session cannot be
+     *  instantiated for any reason
+     * @exception IOException if an input/output error occurs while
+     *  processing this request
+     */
+    public HttpSession findSession(String id) {
+	if (id == null)
+	    return (null);
+	return ((HttpSession) sessions.get(id));
+    }
+
     /**
      * Return the set of active Sessions associated with this Manager.
      * If this Manager has no active Sessions, a zero-length array is returned.
      */
     public HttpSession[] findSessions() {
-
 	synchronized (sessions) {
 	    Vector keys = new Vector();
 	    Enumeration ids = sessions.keys();
@@ -339,155 +312,7 @@ public final class StandardManager implements Runnable, SessionManager {
 	    }
 	    return (results);
 	}
-
     }
-
-
-    // -------------------------------------------------------- Package Methods
-
-
-    /**
-     * Add this Session to the set of active Sessions for this Manager.
-     *
-     * @param session Session to be added
-     */
-    void add(StandardSession session) {
-
-	sessions.put(session.getId(), session);
-
-    }
-
-
-    /**
-     * Add this Session to the recycle collection for this Manager.
-     *
-     * @param session Session to be recycled
-     */
-    void recycle(StandardSession session) {
-
-	recycled.addElement(session);
-
-    }
-
-
-    /**
-     * Remove this Session from the active Sessions for this Manager.
-     *
-     * @param session Session to be removed
-     */
-    void remove(StandardSession session) {
-
-	sessions.remove(session.getId());
-
-    }
-
-
-
-    // ----------------------------------------------------- Instance Variables
-
-
-    /**
-     * The interval (in seconds) between checks for expired sessions.
-     */
-    private int checkInterval = 60;
-
-
-    /**
-     * Has this component been configured yet?
-     */
-    private boolean configured = false;
-
-
-
-    /**
-     * The maximum number of active Sessions allowed, or -1 for no limit.
-     */
-    protected int maxActiveSessions = -1;
-
-
-    /**
-     * The string manager for this package.
-     */
-    private StringManager sm =
-        StringManager.getManager("org.apache.tomcat.session");
-
-
-    /**
-     * Has this component been started yet?
-     */
-    private boolean started = false;
-
-
-    /**
-     * The background thread.
-     */
-    private Thread thread = null;
-
-
-    /**
-     * The background thread completion semaphore.
-     */
-    private boolean threadDone = false;
-
-
-    /**
-     * Name to register for the background thread.
-     */
-    private String threadName = "StandardManager";
-
-
-    // ------------------------------------------------------------- Properties
-
-
-    /**
-     * Return the check interval (in seconds) for this Manager.
-     */
-    public int getCheckInterval() {
-
-	return (this.checkInterval);
-
-    }
-
-
-    /**
-     * Set the check interval (in seconds) for this Manager.
-     *
-     * @param checkInterval The new check interval
-     */
-    public void setCheckInterval(int checkInterval) {
-
-	this.checkInterval = checkInterval;
-
-    }
-
-
-
-    /**
-     * Return the maximum number of active Sessions allowed, or -1 for
-     * no limit.
-     */
-    public int getMaxActiveSessions() {
-
-	return (this.maxActiveSessions);
-
-    }
-
-
-    /**
-     * Set the maximum number of actives Sessions allowed, or -1 for
-     * no limit.
-     *
-     * @param max The new maximum number of sessions
-     */
-    public void setMaxActiveSessions(int max) {
-
-	this.maxActiveSessions = max;
-
-    }
-
-
-    // --------------------------------------------------------- Public Methods
-
 
     /**
      * Construct and return a new session object, based on the default
@@ -499,7 +324,7 @@ public final class StandardManager implements Runnable, SessionManager {
      * @exception IllegalStateException if a new session cannot be
      *  instantiated for any reason
      */
-    public HttpSession createSession() {
+    public HttpSession getNewSession() {
 
 	if ((maxActiveSessions >= 0) &&
 	  (sessions.size() >= maxActiveSessions))
@@ -538,23 +363,10 @@ public final class StandardManager implements Runnable, SessionManager {
      *  configured (if required for this component)
      * @exception IllegalStateException if this component has already been
      *  started
-     * @exception TomcatException if this component detects a fatal error
-     *  that prevents this component from being used
      */
-    public void start() throws TomcatException {
-
-	// Validate and update our current component state
-	if (!configured)
-	    throw new TomcatException
-		(sm.getString("standardManager.notConfigured"));
-	if (started)
-	    throw new TomcatException
-		(sm.getString("standardManager.alreadyStarted"));
-	started = true;
-
+    public void start() {
 	// Start the background reaper thread
 	threadStart();
-
     }
 
 
@@ -566,17 +378,8 @@ public final class StandardManager implements Runnable, SessionManager {
      * @exception IllegalStateException if this component has not been started
      * @exception IllegalStateException if this component has already
      *  been stopped
-     * @exception TomcatException if this component detects a fatal error
-     *  that needs to be reported
      */
-    public void stop() throws TomcatException {
-
-	// Validate and update our current component state
-	if (!started)
-	    throw new TomcatException
-		(sm.getString("standardManager.notStarted"));
-	started = false;
-
+    public void stop() {
 	// Stop the background reaper thread
 	threadStop();
 
@@ -589,6 +392,34 @@ public final class StandardManager implements Runnable, SessionManager {
 	    session.expire();
 	}
 
+    }
+    // -------------------------------------------------------- Package Methods
+
+    /**
+     * Add this Session to the set of active Sessions for this Manager.
+     *
+     * @param session Session to be added
+     */
+    void add(StandardSession session) {
+	sessions.put(session.getId(), session);
+    }
+
+    /**
+     * Add this Session to the recycle collection for this Manager.
+     *
+     * @param session Session to be recycled
+     */
+    void recycle(StandardSession session) {
+	recycled.addElement(session);
+    }
+
+    /**
+     * Remove this Session from the active Sessions for this Manager.
+     *
+     * @param session Session to be removed
+     */
+    void remove(StandardSession session) {
+	sessions.remove(session.getId());
     }
 
 

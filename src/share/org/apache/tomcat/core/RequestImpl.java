@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.34 2000/05/12 06:15:23 costin Exp $
- * $Revision: 1.34 $
- * $Date: 2000/05/12 06:15:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.35 2000/05/12 15:26:39 costin Exp $
+ * $Revision: 1.35 $
+ * $Date: 2000/05/12 15:26:39 $
  *
  * ====================================================================
  *
@@ -441,7 +441,7 @@ public class RequestImpl  implements Request {
 	    return null;
 
 	// no session exists, create flag
-	serverSession =sM.createSession( );
+	serverSession =sM.getNewSession( );
 	reqSessionId = serverSession.getId();
 
 	// XXX XXX will be changed - post-request Interceptors

@@ -74,29 +74,30 @@ import javax.servlet.http.*;
  */
 public interface SessionManager {
 
-    public void setContext( Context ctx );
+    /* XXX The manager should try to reuse the session objects and avoid
+     * allocating. The session can be "released" by Manager via timeout
+     * or invalidate. 
+     *
+     * This is not easy right now - the session may expire while the servlet
+     * is running in extreme cases - like very long transactions - and we may
+     * end up with another user's session.
+     *
+     *  The fix will be to check if the id is still the same on each operation
+     * on facade, or to maintain a useCount. We provide release if the manager
+     * wants this.
+     */
     
     /**
-     * Construct and return a new session object, based on the default
+     * Return a new session object, based on the default
      * settings specified by this Manager's properties.  The session
      * id will be assigned by this method, and available via the getId()
      * method of the returned session.  If a new session cannot be created
      * for any reason, return <code>null</code>.
      *
-     * @param ctx The session will be created for the specified context
      * @exception IllegalStateException if a new session cannot be
      *  instantiated for any reason
      */
-    public HttpSession createSession();
-
-
-    /** Will mark the session lastAccess time.
-     *  Will be called for each request that has a valid sessionId
-     *
-     */
-    public void accessed(HttpSession s);
-    //  we can pass only Request, as it contains both, but it's better to
-    // show explicitely what this method uses.
+    public HttpSession getNewSession();
 
 
     /**
@@ -114,19 +115,53 @@ public interface SessionManager {
     public HttpSession findSession(String id);
 
 
-    /** Used by context when stoped, need to remove all sessions used by that context
+    /** Will mark the session lastAccess time.
+     *  Will be called for each request that has a valid sessionId
+     *   and a session.
+     *
+     *  Tomcat guarantees the session is the one created by the manager
+     * and not null.
      */
-    public void removeSessions();
-
+    public void access(HttpSession s);
+    
+    /**
+     *  Will be called when the servlet that used this session is out.
+     *  A session shouldn't timeout while a servlet is still executing.
+     *
+     *  Tomcat guarantees the session is the one created by the manager
+     * and not null.
+     */
+    public void release(HttpSession s);
+    
+    /* -------------------- Manager attributes - from web.xml -------------------- */
+    /* The manager will be initialized in server.xml via setters ( or whatever mechanism
+       it supports ), but it has to take web.xml informations from the context
+    */
+      
     /**
      * Used by context to configure the session manager's inactivity timeout.
      *
      * The SessionManager may have some default session time out, the
      * Context on the other hand has it's timeout set by the deployment
-     * descriptor (web.xml). This method lets the Context conforgure the
+     * descriptor (web.xml). This method lets the Context configure the
      * session manager according to this value.
      *
      * @param minutes The session inactivity timeout in minutes.
      */
     public void setSessionTimeOut(int minutes);
+
+    /** Pass the distributable info from Web.xml
+     */
+    public void setDistributable(boolean b);
+
+    // -------------------- Control manager livecycle
+
+    /** Start managing the sessions. Called after everything is set up to allow
+     *  the manager to allocate the resources it needs
+     */
+    public void start();
+
+    /** Release all resources. Called when the context was stoped.
+     */
+    public void stop();
 }

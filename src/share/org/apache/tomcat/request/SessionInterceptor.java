@@ -196,7 +196,7 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	    SessionManager sM = ctx.getSessionManager();    
 	    HttpSession sess= sM.findSession( sessionId );
 	    if(null != sess) {
-		sM.accessed( sess );
+		sM.access( sess );
 		request.setRequestedSessionId(sessionId);
 		request.setSession( sess );
 		if( debug>0 ) cm.log(" Final session id " + sessionId );
@@ -205,7 +205,16 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	}
 	return null;
     }
-  
+
+    public int postService(  Request rrequest, Response response ) {
+	Context ctx=rrequest.getContext();
+	if( ctx==null ) return 0;
+	SessionManager sm=ctx.getSessionManager();
+	HttpSession sess=rrequest.getSession(false);
+	if( sess == null ) return 0;
+	sm.release( sess );
+	return 0;
+    }
 
     public int beforeBody( Request rrequest, Response response ) {
     	String reqSessionId = response.getSessionId();
@@ -245,15 +254,35 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
     	return 0;
     }
 
+    /** Init session management stuff for this context
+     */
+    public void contextInit(Context ctx) throws TomcatException {
+	// Defaults !!
+	if( ctx.getSessionManager() == null ) {
+	    SessionManager sm=new org.apache.tomcat.session.StandardManager();
+	    ctx.setSessionManager(sm);
+	}
 
+	SessionManager sm=ctx.getSessionManager();
+	try {
+	    sm.start();
+	} catch(IllegalStateException ex ) {
+	    throw new TomcatException( ex );
+	}
+    }
+    
     /** Notification of context shutdown
      */
     public void contextShutdown( Context ctx )
 	throws TomcatException
     {
 	if( ctx.getDebug() > 0 ) ctx.log("Removing sessions from " + ctx );
-	ctx.getSessionManager().removeSessions();
+	SessionManager sm=ctx.getSessionManager();
+	try {
+	    sm.stop();
+	} catch(IllegalStateException ex ) {
+	    throw new TomcatException( ex );
+	}
     }
-
 
 }

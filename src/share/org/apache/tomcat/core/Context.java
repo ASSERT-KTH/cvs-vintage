@@ -394,6 +394,9 @@ public class Context {
 
     public void setDistributable(boolean isDistributable) {
         this.isDistributable = isDistributable;
+	if(null != sessionManager) {
+	    sessionManager.setDistributable( isDistributable );
+	}
     }
 
 
@@ -623,6 +626,7 @@ public class Context {
     	sessionManager= manager;
         if(null != sessionManager) {
             sessionManager.setSessionTimeOut(sessionTimeOut);
+	    sessionManager.setDistributable( isDistributable );
         }
     }
 

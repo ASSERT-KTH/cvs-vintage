@@ -159,13 +159,6 @@ public class DefaultCMSetter extends BaseInterceptor {
 	ctx.setAttribute(Constants.ATTRIB_WORKDIR , ctx.getWorkDir());
 
 	// Set default session manager if none set
-	if( ctx.getSessionManager() == null ) {
-	    SessionManager sm=new org.apache.tomcat.session.StandardManager();
-	    sm.setContext(ctx);
-	    ctx.setSessionManager(sm);
-	}
-	//  Alternative: org.apache.tomcat.session.ServerSessionManager.getManager();
-
 	ServletWrapper authWrapper=new ServletWrapper();
 	authWrapper.setContext( ctx );
 	authWrapper.setServletName( "tomcat.authServlet");
