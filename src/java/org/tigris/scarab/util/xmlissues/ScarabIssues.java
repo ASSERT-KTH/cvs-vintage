@@ -46,8 +46,9 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,7 +84,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * inValidationMode set to false will do actual insert of the xml issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.41 2003/07/26 03:18:34 dlr Exp $
+ * @version $Id: ScarabIssues.java,v 1.42 2003/07/26 05:23:15 dlr Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -119,9 +120,15 @@ public class ScarabIssues implements java.io.Serializable
 
     private static Attribute nullAttribute = null;
 
-    /** We default to be in validation mode. insert only happens after validation has happened. */
+    /**
+     * We default to be in validation mode.  Insert only occurs
+     * post-validation.
+     */
     private static boolean inValidationMode = true;
-    private List importErrors = null;
+
+    private Object parseContext = null;
+    private Collection importErrors = null;
+
     private List importUsers = null;
 
     // current file attachment handling code has a security bug that can allow a user
@@ -178,16 +185,16 @@ public class ScarabIssues implements java.io.Serializable
     }
     
     /**
-     * Return list of import errors if any.
+     * Returns any errors which occurred during import.
      * 
      * Has funny name.  If we named it 'getImportErrors', because its public,
      * betwixt errors trying to find the corresponding 'setImportErrors'.
      *
-     * @return List of import errors if any.
+     * @return Import errors, if any.
      */
     public List doGetImportErrors()
     {
-        return importErrors;
+        return (List) importErrors;
     }
 
     public void setImportType(String value)
@@ -259,7 +266,7 @@ public class ScarabIssues implements java.io.Serializable
                         ScarabConstants.DEFAULT_BUNDLE_NAME,
                         getLocale(),
                         "CouldNotLocateUsername", userStr);
-                    importErrors.add(error);
+                    addImportError(error);
                 }
             }
         }
@@ -278,7 +285,8 @@ public class ScarabIssues implements java.io.Serializable
                 String parent = (String)issueXMLMap.get(dependency.getParent());
                 if (parent == null || child == null)
                 {
-                    LOG.debug("Could not find issues: parent: " + parent + " child: " + child);
+                    LOG.debug("Could not find issues for parent '" + parent +
+                              "' and child '" + child + '\'');
                     continue;
                 }
                 try
@@ -295,7 +303,7 @@ public class ScarabIssues implements java.io.Serializable
                         ScarabConstants.DEFAULT_BUNDLE_NAME,
                         getLocale(),
                         "CouldNotLocateParentDepend", parent);
-                    importErrors.add(error);
+                    addImportError(error);
                 }
                 try
                 {
@@ -311,7 +319,7 @@ public class ScarabIssues implements java.io.Serializable
                         ScarabConstants.DEFAULT_BUNDLE_NAME,
                         getLocale(),
                         "CouldNotLocateChildDepend", child);
-                    importErrors.add(error);
+                    addImportError(error);
                 }
             }
         }
@@ -415,7 +423,7 @@ public class ScarabIssues implements java.io.Serializable
             if (inValidationMode)
             {
                 importUsers = new ArrayList();
-                importErrors = new ArrayList();
+                parseContext = module.getCode() + issue.getId();
                 doIssueValidateEvent(getModule(), getIssue());
             }
             else
@@ -427,6 +435,10 @@ public class ScarabIssues implements java.io.Serializable
         {
             e.printStackTrace();
             throw e;
+        }
+        finally
+        {
+            parseContext = null;
         }
     }
 
@@ -465,7 +477,7 @@ public class ScarabIssues implements java.io.Serializable
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
                 getLocale(),
                 "CouldNotFindModule", args);
-            importErrors.add(error);
+            addImportError(error);
         }
 
         // Check for the existance of the issue type.
@@ -484,7 +496,7 @@ public class ScarabIssues implements java.io.Serializable
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
                 getLocale(),
                 "CouldNotFindIssueType", issue.getArtifactType());
-            importErrors.add(error);
+            addImportError(error);
         }
 
         List moduleAttributeList = null;
@@ -526,7 +538,7 @@ public class ScarabIssues implements java.io.Serializable
                     ScarabConstants.DEFAULT_BUNDLE_NAME,
                     getLocale(),
                     "CouldNotFindActivitySetType", activitySet.getType());
-                importErrors.add(error);
+                addImportError(error);
             }
     
             List activities = activitySet.getActivities();
@@ -575,7 +587,7 @@ public class ScarabIssues implements java.io.Serializable
                     (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                      "CouldNotFindFileAttachment",
                      activityAttachment.getFilename());
-                importErrors.add(error);
+                addImportError(error);
             }
 
             String attachCreatedBy = activityAttachment.getCreatedBy();
@@ -601,7 +613,7 @@ public class ScarabIssues implements java.io.Serializable
             String error = Localization.format
                 (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                  "CouldNotFindGlobalAttribute", activityAttribute);
-            importErrors.add(error);
+            addImportError(error);
         }
 
         if (attributeOM != null)
@@ -633,7 +645,7 @@ public class ScarabIssues implements java.io.Serializable
                     String error = Localization.format
                         (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                          "CouldNotFindRModuleAttribute", activityAttribute);
-                    importErrors.add(error);
+                    addImportError(error);
                 }
                 else if (activity.getNewOption() != null)
                 {
@@ -656,7 +668,7 @@ public class ScarabIssues implements java.io.Serializable
                         String error = Localization.format
                             (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                              "CouldNotFindAttributeOption", args);
-                        importErrors.add(error);
+                        addImportError(error);
                     }
                     // check for module options
                     try
@@ -678,7 +690,7 @@ public class ScarabIssues implements java.io.Serializable
                              getLocale(),
                              "CouldNotFindModuleAttributeOption",
                              args);
-                        importErrors.add(error);
+                        addImportError(error);
                     }
                 }
                 else if (activity.getOldOption() != null)
@@ -699,7 +711,7 @@ public class ScarabIssues implements java.io.Serializable
                             (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                              "CouldNotFindAttributeOption",
                              activity.getOldOption());
-                        importErrors.add(error);
+                        addImportError(error);
                     }
                     // check for module options
                     try
@@ -719,7 +731,7 @@ public class ScarabIssues implements java.io.Serializable
                         String error = Localization.format
                             (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                              "CouldNotFindModuleAttributeOption", args);
-                        importErrors.add(error);
+                        addImportError(error);
                     }
                 }
             }
@@ -1306,5 +1318,29 @@ public class ScarabIssues implements java.io.Serializable
     private Locale getLocale()
     {
         return ScarabConstants.DEFAULT_LOCALE;
+    }
+
+    /**
+     * TODO: Calling code should push contextual information onto an
+     * instance field stack and use the top of that stack to help
+     * identify exactly where the error occurred, empowering users to
+     * resolve any data formatting problems.
+     *
+     * @param error The error, something which will
+     * <code>toString()</code> nicely.
+     */
+    private void addImportError(Object error)
+    {
+        if (importErrors == null)
+        {
+            importErrors = new ArrayList();
+        }
+        if (parseContext != null)
+        {
+            // Format error as an object which toString()'s nicely
+            // using any applicable contextual state.
+            error = '[' + parseContext.toString() + "] " + error;
+        }
+        importErrors.add(error);
     }
 }
