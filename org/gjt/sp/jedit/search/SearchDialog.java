@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.15 2002/02/08 02:37:17 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.16 2002/02/08 03:40:47 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -304,6 +304,7 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 	public void dispose()
 	{
 		EditBus.removeFromBus(this);
+		viewHash.remove(view);
 		super.dispose();
 	} //}}}
 
