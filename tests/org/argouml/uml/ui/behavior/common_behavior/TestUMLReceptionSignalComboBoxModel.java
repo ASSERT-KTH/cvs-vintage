@@ -1,4 +1,4 @@
-// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.6 2003/04/29 19:03:33 kataka Exp $
+// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.7 2003/05/04 07:35:12 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,8 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFactory;
 import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
+import org.argouml.ui.targetmanager.TargetEvent;
+
 import ru.novosoft.uml.MFactoryImpl;
 import ru.novosoft.uml.behavior.common_behavior.MReception;
 import ru.novosoft.uml.behavior.common_behavior.MSignal;
@@ -76,7 +78,7 @@ public class TestUMLReceptionSignalComboBoxModel extends TestCase {
             m.addOwnedElement(signals[i]);
         }      
         model = new UMLReceptionSignalComboBoxModel();
-        model.targetChanged(elem);
+        model.targetSet(new TargetEvent(this, "set", new Object[0], new Object[] {elem}));
     }
 
     /**

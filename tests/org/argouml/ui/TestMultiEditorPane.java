@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TestMultiEditorPane.java,v 1.3 2003/04/29 19:03:32 kataka Exp $
+// $Id: TestMultiEditorPane.java,v 1.4 2003/05/04 07:35:11 kataka Exp $
 package org.argouml.ui;
 
 import org.argouml.application.security.ArgoSecurityManager;
@@ -61,8 +61,7 @@ public class TestMultiEditorPane extends TestCase {
      public void testConstruction() {
          try {
             MultiEditorPane pane = new MultiEditorPane();
-             assertNotNull(pane);
-             assertNull(pane.getTarget());
+             assertNotNull(pane);             
              assertEquals(pane.getComponents().length, 1);
          } catch (Exception ex) {
              // on a headless system (without display) this will crash
