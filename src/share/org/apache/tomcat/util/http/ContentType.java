@@ -76,9 +76,6 @@ import java.text.*;
  * @author costin@eng.sun.com
  */
 public class ContentType {
-    protected static StringManager sm =
-        StringManager.getManager("org.apache.tomcat.resources");
-	
 
     // Basically return everything after ";charset="
     // If no charset specified, use the HTTP default (ASCII) character set.
@@ -90,12 +87,11 @@ public class ContentType {
         if (semi == -1) {
             return null;
         }
-        String afterSemi = type.substring(semi + 1);
-        int charsetLocation = afterSemi.indexOf("charset=");
+        int charsetLocation = type.indexOf("charset=", semi);
         if (charsetLocation == -1) {
             return null;
         }
-        String afterCharset = afterSemi.substring(charsetLocation + 8);
+        String afterCharset = type.substring(charsetLocation + 8);
         String encoding = afterCharset.trim();
         return encoding;
     }

@@ -79,8 +79,10 @@ public class GTest  {
     String description="No description";
 
     static PrintWriter defaultOutput=new PrintWriter(System.out);
+    static String defaultOutType="text";
+    
     PrintWriter out=defaultOutput;
-    String outType="text";
+    String outType=defaultOutType;
     boolean failureOnly=false;
     
     public GTest() {
@@ -94,6 +96,10 @@ public class GTest  {
 
     public static void setDefaultWriter( PrintWriter pw ) {
 	defaultOutput=pw;
+    }
+
+    public static void setDefaultOutput( String s ) {
+	defaultOutType=s;
     }
 
     /** text, xml, html

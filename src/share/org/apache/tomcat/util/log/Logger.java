@@ -219,6 +219,7 @@ public abstract class Logger {
     private static Object emptyObjectArray[]=new Object[0];
 
     private static void printThrowable(PrintWriter w, Throwable t, String rootcause, int depth ) {
+
 	if (t != null) {
 	    // XXX XXX XXX Something seems wrong - DOS, permissions. Need to
 	    // check.

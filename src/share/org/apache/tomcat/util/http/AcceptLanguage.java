@@ -76,9 +76,7 @@ import java.text.*;
  * @author costin@eng.sun.com
  */
 public class AcceptLanguage {
-    protected static StringManager sm =
-        StringManager.getManager("org.apache.tomcat.resources");
-    
+
     public static Locale getLocale(String acceptLanguage) {
 	if( acceptLanguage == null ) return Locale.getDefault();
 

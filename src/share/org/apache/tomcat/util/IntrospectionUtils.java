@@ -135,12 +135,17 @@ public final class IntrospectionUtils {
     }
 
 
+    public static String guessHome(String systemProperty, String jarName) {
+	return guessHome( systemProperty, jarName, null);
+    }
+    
     /** Guess a product home by analyzing the class path.
      *  It works for product using the pattern: lib/executable.jar
      *  or if executable.jar is included in classpath by a shell
      *  script. ( java -jar also works )
      */
-    public static String guessHome(String systemProperty, String jarName) {
+    public static String guessHome(String systemProperty, String jarName,
+				   String classFile) {
 	String h=null;
 	
 	if( systemProperty != null )
@@ -167,6 +172,20 @@ public final class IntrospectionUtils {
 		    return h;
 		} catch( Exception ex ) {
 		    ex.printStackTrace();
+		}
+	    } else  {
+		String fname=path + ( path.endsWith("/") ?"":"/" ) + classFile;
+		if( new File( fname ).exists()) {
+		    try {
+			File f=new File( path );
+			File f1=new File ( h, "..");
+			h = f1.getCanonicalPath();
+			if( systemProperty != null )
+			    System.getProperties().put( systemProperty, h );
+			return h;
+		    } catch( Exception ex ) {
+			ex.printStackTrace();
+		    }
 		}
 	    }
 	}
