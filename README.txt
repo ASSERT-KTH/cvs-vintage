@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.2 2000/12/18 18:45:05 jon Exp $
+$Id: README.txt,v 1.3 2000/12/20 03:42:53 jon Exp $
 
 Welcome to Scarab!
 
@@ -86,6 +86,13 @@ cd target
 Then, in your web browser, go to:
 
 <http://localhost:8080/scarab/servlet/scarab>
+
+Please note: There will be a very long (up to a minute) delay for the first 
+request to return a response. This is due to the way that Tomcat 4.0 is 
+generating the session id. The Random Number Generator (RNG) takes forever to 
+seed itself. After the RNG has seeded itself, further requests should be quite 
+fast. We are working with the Tomcat team on providing an alternative way to 
+have a not so secure RNG for development purposes that loads very quickly.
 
 
 -------------------------------------------------------------------------
