@@ -8,11 +8,11 @@ $link in modules which you are not currently associated.
 #end
 
 #if ($currentModule)
-<h3>Currently selected module</h3>
+<h3>$l10n.CurrentModule</h3>
 <table cellpadding="3" cellspacing="2" border="1" width="100%">
 <tr>
-    <th>Name</th>
-    <th>Description</th>
+    <th>$l10n.Name</th>
+    <th>$l10n.Description</th>
 </tr>
 <tr>
     <td>
@@ -38,8 +38,8 @@ $link in modules which you are not currently associated.
 #if ($userModules.size() > 0)
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
-    <th>Name</th>
-    <th>Description</th>
+    <th>$l10n.Name</th>
+    <th>$l10n.Description</th>
 </tr>
 
 #foreach ($module in $userModules)
@@ -57,9 +57,7 @@ $module.Description
 
 #else
 <p class="alert">
-Sorry, you do not have access to select any other modules. Please
-$link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").setLabel("Login") with an account that
-has permissions to select a Module.
+$l10n.YouCannotAccessModules $link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").setLabel("Login") $l10n.YouCannotAccessModules2 
 </p>
 #end
 

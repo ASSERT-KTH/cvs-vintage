@@ -47,8 +47,7 @@
 
 #if ($allTemplates.size() < 1)
 <p class="alert">
-There are no stored templates, click the Create new button to create
-a new template.
+$l10n.NoTemplates
 </p>
 #else
   

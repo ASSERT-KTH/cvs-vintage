@@ -14,22 +14,22 @@
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($searchString = $data.Parameters.getString("searchString" , ""))
 
-<h3>Users</h3>
+<h3>$l10n.Users</h3>
 
 <div class="functnbar">
-  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
+  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />&#160; 
 </div>
 
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th>Filter string</th>
+   <th>$l10n.FilterString</th>
    <td><input type="text" name="searchString" />&nbsp;
      <select name="searchField" >
-      <option value="First Name">First Name</option>
-      <option value="Last Name">Last Name</option>
-      <option value="Email">Email</option>
-     </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="filter" /></td>
+      <option value="First Name">$l10n.FirstName</option>
+      <option value="Last Name">$l10n.LastName</option>
+      <option value="Email">$l10n.Email</option>
+     </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="$l10n.Filter" /></td>
   </tr>
 </table>
 </div>
@@ -38,7 +38,7 @@
 #if ($searchString && $searchString.length() > 0)
    #set ($searchResults = $scarabR.UserSearchResults) 
    #if ( $searchResults.isEmpty())
-      <p class="alert">No users match your criteria. Displaying full user list.</p>
+      <p class="alert">$l10n.NoUserMatch</p>
       #set ($searchResults = $module.getUsers($module.getUserPermissions($issueType)))
    #end
 #else
@@ -64,7 +64,7 @@
 </table>  
 
 <div class="functnbar3">
- <input type="submit" name="eventSubmit_doCancel" value="Add selected to assignee list" />
+ <input type="submit" name="eventSubmit_doCancel" value="$l10n.AddSelectedAssignee" />
 </div>
 
 <div class="functnbar2">

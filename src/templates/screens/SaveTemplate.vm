@@ -32,30 +32,30 @@
 
 #asterisk()
 
-<h3>Template information</h3>
+<h3>$l10n.TemplateInfo</h3>
 
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
 <tr>
-  <th>* Name</th>
+  <th>* $l10n.Name</th>
   <td>
   <input type="text" size="25" value="$!templateGroup.Name" name="$templateGroup.Name.Key" />
   #fieldErrorMsg($templateGroup.Name "")
   </td>
 </tr>
 <tr>
-  <th>Description</th>
+  <th>$l10n.Description</th>
   <td>
   #textAreaMedium("$templateGroup.Description.Key" $templateGroup.Description)
   </td>
 </tr>
 <tr>
-  <th width="120">Availability</th>
+  <th width="120">$l10n.Availability</th>
   <td>#templateTypeSelectBox ($templateInfo)</td>
 </tr>
 #if ($templateId)
 <tr>
-  <th>Created by</th>
+  <th>$l10n.CreatedBy</th>
   #set ($createdUser = $currentTemplate.CreatedBy)
   <td>
   #if ($createdUser)
@@ -75,7 +75,7 @@
     </div>
 #end
 
-<h3>Template Attributes</h3>
+<h3>$l10n.TemplateAttributes</h3>
 
 #set ($attrValues = $currentTemplate.ModuleAttributeValuesMap)
 #foreach ($attrgroup in $module.getAttributeGroups($issueType))

@@ -9,8 +9,7 @@
 #set ($attrValues = $search.ModuleAttributeValuesMap)
 
 #if ($searchTextAttributes.isEmpty() && $searchValues.isEmpty())
-    <p class="alert">The project owner has not defined simple search 
-        attributes, so the Advanced Query form is being shown.</p> 
+    <p class="alert">$l10n.NoSimpleSearch</p> 
     $renderer.render("screens", "AdvancedQuery.vm")
 #else
 
@@ -24,7 +23,7 @@
 </p>
 
 #if (!$searchTextAttributes.isEmpty())
-<h3>Text search</h3>
+<h3>$l10n.TextSearch</h3>
 
 <div class="axial">
   <table border="0" cellspacing="2" cellpadding="3">
@@ -40,7 +39,7 @@
     #end
     <select name="$searchGroup.TextScope.Key" size="5" multiple="multiple">
     #if ($searchTextAttributes.size() > 4)
-      <option value="$search.ALL_TEXT"#selected($selected)>Search all</option>
+      <option value="$search.ALL_TEXT"#selected($selected)>$l10n.SearchAll</option>
       #set ($selected = false)
     #end
 
@@ -60,7 +59,7 @@
   </tr>
 
   <tr>
-   <th width="120">Enter search string</th>
+   <th width="120">$l10n.EnterString</th>
    <td>#textAreaSmall("$searchGroup.SearchWords.Key" $searchGroup.SearchWords)
    </td>
   </tr>
@@ -69,7 +68,7 @@
 #end
 
 #if (!$searchValues.isEmpty())
-<h3>Multiple/single choice search</h3>
+<h3>$l10n.MultiChoiceSearch</h3>
  <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
 #foreach ($attVal in $searchValues)
@@ -91,7 +90,7 @@
 #end
 
 ## FIXME: use intake
-<h3>Results display options</h3>
+<h3>$l10n.ResultDisplayOptions</h3>
         
 <div class="axial">
 <table  cellpadding="3" cellspacing="2" border="1">
@@ -106,13 +105,13 @@
       </select>
         &#160;
       <select name="sortPolarity">
-        <option value="asc">ascending</option>
-        <option value="desc">descending</option>
+        <option value="asc">$l10n.Ascending</option>
+        <option value="desc">$l10n.Descending</option>
       </select>
     </td>
   </tr>
   <tr>
-   <th>Issues per page</th>
+   <th>$l10n.IssuesPerPage</th>
    <td>
    <input type="hidden" name="pageNum" value="1" />
    <input type="radio" name="resultsPerPage" value="25" checked="checked" />25 
