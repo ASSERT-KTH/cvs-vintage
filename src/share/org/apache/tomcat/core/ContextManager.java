@@ -71,7 +71,6 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import org.apache.tomcat.service.PoolTcpConnector;
 
 //import java.security.*;
 
@@ -976,8 +975,9 @@ public class ContextManager implements LogAware{
 	*/
 	if( t instanceof IllegalStateException ) {
 	    ctx.log("IllegalStateException in " + req, t);
-	} else if( t instanceof org.apache.jasper.JasperException ) {
-	    ctx.log("JasperException in " + req, t);
+	    // Nothing special in jasper exception treatement, no deps
+	    //} else if( t instanceof org.apache.jasper.JasperException ) {
+	    // 	    ctx.log("JasperException in " + req, t);
 	} else if( t instanceof IOException ) {
 	    if( ((IOException)t).getMessage().equals("Broken pipe"))
 	    {
