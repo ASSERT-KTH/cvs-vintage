@@ -80,7 +80,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.39 2003/07/11 23:57:40 dlr Exp $
+ * @version $Id: Register.java,v 1.40 2003/07/12 05:33:22 dlr Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -342,6 +342,7 @@ public class Register extends ScarabTemplateAction
 
             if (register == null)
             {
+                // This is often triggered by self-host issue SCB825.
                 scarabR.setAlertMessage(l10n.get("RegisterGroupIsNullError"));
                 String msg = "Register group is null: user="
                     + (user != null && user instanceof ScarabUser ?
