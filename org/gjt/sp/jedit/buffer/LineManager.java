@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: LineManager.java,v 1.1 2003/06/16 05:52:23 spestov Exp $
+ * @version $Id: LineManager.java,v 1.2 2003/06/16 05:57:56 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class LineManager
@@ -215,9 +215,6 @@ public class LineManager
 			lineInfo[i] = (short)(1 << SCREEN_LINES_SHIFT);
 
 		lineContext = new TokenMarker.LineContext[lineCount];
-
-		for(int i = 0; i < positionCount; i++)
-			positions[i].offset = 0;
 	} //}}}
 
 	//{{{ contentInserted() method
