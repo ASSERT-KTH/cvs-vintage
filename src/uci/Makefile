@@ -19,36 +19,32 @@
 # File: uci/Makefile
 # makefile for the uci shared code directory
 # original author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.1 1998/01/26 22:19:17 jrobbins Exp $
+# $Id: Makefile,v 1.2 1998/02/11 22:35:11 jrobbins Exp $
 
 include Makefile.config
 
-all: gen classes
+all: classes
 
 gen:
 	cd util; make gen; cd ..
-	cd graphedit; make gen; cd ..
+	cd gef; make gen; cd ..
 	cd ui; make gen; cd ..
-	cd graphedit/contrib; make gen; cd ../..
-	cd graphedit/demo; make gen; cd ../..
+	cd gef/demo; make gen; cd ../..
 
 classes:
 	cd util; make classes; cd ..
-	cd graphedit; make classes; cd ..
+	cd gef; make classes; cd ..
 	cd ui; make classes; cd ..
-	cd graphedit/contrib; make classes; cd ../..
-	cd graphedit/demo; make classes; cd ../..
+	cd gef/demo; make classes; cd ../..
 
 clean:
 	cd util; make clean; cd ..
 	cd ui; make clean; cd ..
-	cd graphedit; make clean; cd ..
-	cd graphedit/contrib; make clean; cd ../..
-	cd graphedit/demo; make clean; cd ../..
+	cd gef; make clean; cd ..
+	cd gef/demo; make clean; cd ../..
 
 javadocs:
-	$(JAVADOC) uci.graphedit uci.ui uci.util uci.graphedit.demo uci.graphedit.contrib
-
+	$(JAVADOC) uci.gef uci.ui uci.util uci.gef.demo 
 checkout:
 	cd util; co RCS/* ; cd ..
-	cd graphedit; co RCS/* ; cd ..
+	cd gef; co RCS/* ; cd ..
