@@ -15,251 +15,291 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.columba.core.io.DiskIO;
-import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.io.*;
 import org.columba.core.util.StreamThread;
 import org.columba.mail.config.PGPItem;
 
+/**
+ * Default class that implements methods which handles pgp functions like singing, encrypting, verify and decrypting.
+ * For each pgp tool like gpg a derived class should be extend this class and implementing all abstract methods. Methods
+ * of the instantiated class (inclusive this class) are called normally from the PGPController.
+ * @author tstich, waffel
+ *
+ */
 public abstract class DefaultUtil {
-  protected StreamThread outputStream = null;
-  protected StreamThread errorStream = null;
+	protected StreamThread outputStream = null;
+	protected StreamThread errorStream = null;
 
-  protected File outputFile;
-  protected File inputFile;
+	protected String outputString;
 
-  protected String outputString;
+	/** Executes the given command and the returnes the connected process.
+	 * @param cmd Command to be executed
+	 * @return Process which is connected with the executed command
+	 * @throws Exception if the command cannot be executed. @see Runtime.getRuntime().exec(String[])
+	 */
+	protected Process executeCommand(String[] cmd) throws Exception {
+		Process p = Runtime.getRuntime().exec(cmd);
+		return p;
+	}
 
-  protected Process executeCommand(String cmd) throws Exception {
-    Process p = Runtime.getRuntime().exec(cmd);
+	protected abstract String parse(String str);
 
-    return p;
-  }
+	
+	/** Returnes the error string which is created from the execution of a extern process. Only if the extern execution
+	 * tool like gpg creates a error string on system.error the method is returning a error string. Else the error string
+	 * is empty. Before it should be checked, if the exitValue from the executeion process is not 0.
+	 * @return Returnes the error string which is created from the execution of a extern process. 
+	 */
+	public String getErrorString() {
+		String str = parse(errorStream.getBuffer());
+		return str;
+	}
 
-  protected abstract String parse(String str);
+	// TODO delete this after ritretto replacement
+	public String getOutputString() {
+		String str = outputStream.getBuffer();
+		return str;
+	}
+	/**
+	 * Returns the result of a operation like singing, encrypting and so on.
+	 * @return the result of one of the oprations like signing, encrypting and so on.
+	 * @deprecated this is deprecated since the new ristretto-implementation which use Streams instead of Strings. 
+	 * Use getStreamResult()
+	 * TODO delete this after ritretto replacement
+	 */
+	public String getResult() {
+		return this.outputString;
+	}
 
-  // error gets parsed
-  public String getErrorString() {
-    String str = parse(errorStream.getBuffer());
-    return str;
-  }
+	/**
+	 * Returns the Restult of a operation like sign, encryypt, verify and so on as a InputStream from which the result can be 
+	 * read. 
+	* @return the Restult of a operation like sign, encryypt, verify and so on as a InputStream from which the result can be 
+	 * read.
+	*/
+	public InputStream getStreamResult() {
+		return new ByteArrayInputStream(this.outputString.getBytes());
+	}
 
-  public String getOutputString() {
-    String str = outputStream.getBuffer();
-    return str;
-  }
+	/**
+	 * Returns the Command-line for a tool like gpg for the given type of operation like ENCRYPT, SIGN and so on.
+	* @param type for which type the commandline should be returned
+	* @return a String Array which holds all necessary command line argument for the instancieated tool, like gpg.
+	*/
+	protected abstract String[] getRawCommandString(int type);
 
-  public String getResult() {
-    return this.outputString;
-  }
+	/**
+	 * Returns the command-line that should be given for the pgp-tool, like gpg. In the command-line all items in
+	 * % chatacters are replaced with the source from item, if there is a item entry with the id in the % characters. If there
+	 * is not a entry found the value is replaced with a null-entry. The returned command line is executed by a 
+	 * Runtime-Process with the given command - line. The command-line is expanded with the item-entry "path" which
+	 * holds the path to the pgp-tool. For example /usr/bin/pgp. 
+	 * @param type Type for which the command-line should be returned. For example PGPController.ENCRYPT_ACTION
+	 * @param item Item which holds all necessary datas for the command - line. For example the entry path MUST be
+	 * given.
+	 * @return The command - line that should be executed by a Runtime - Process.
+	 */
+	protected String[] getCommandString(int type, PGPItem item) {
+		String[] rawCommand = getRawCommandString(type);
+		List commandList = new ArrayList();
+		commandList.add(item.get("path"));
+		for (int i = 0; i < rawCommand.length; i++) {
+			StringBuffer command = new StringBuffer();
+			String rawArg = rawCommand[i];
+			int varStartIndex = rawArg.indexOf("%");
+			int varEndIndex = -1;
+			String varName;
 
-  protected abstract String getRawCommandString(int type);
+			while (varStartIndex != -1) {
+				command.append(
+					rawArg.substring(varEndIndex + 1, varStartIndex));
+				varEndIndex = rawArg.indexOf("%", varStartIndex + 1);
 
-  protected String getCommandString(int type, PGPItem item) {
-    String rawCmd = getRawCommandString(type);
-    StringBuffer command = new StringBuffer(item.get("path"));
-    command.append(" ");
+				varName = rawArg.substring(varStartIndex + 1, varEndIndex);
 
-    int varStartIndex = rawCmd.indexOf("%");
-    int varEndIndex = -1;
-    String varName;
+				command.append(getValue(varName, item));
 
-    while (varStartIndex != -1) {
-      command.append(rawCmd.substring(varEndIndex + 1, varStartIndex));
-      varEndIndex = rawCmd.indexOf("%", varStartIndex + 1);
+				varStartIndex = rawArg.indexOf("%", varEndIndex + 1);
+			}
 
-      varName = rawCmd.substring(varStartIndex + 1, varEndIndex);
+			command.append(rawArg.substring(varEndIndex + 1));
+			commandList.add(command.toString());
+		}
+		return (String[]) commandList.toArray(new String[0]);
+	}
 
-      command.append(getValue(varName, item));
+	/**
+	 * Replace the given name with the entry in the given PGPItem
+	 * @param name The name that should be replaced
+	 * @param item The item which should hold the entry for the given name
+	 * @return The entry for the given name or null, if no entry is found.
+	 */
+	private String getValue(String name, PGPItem item) {
 
-      varStartIndex = rawCmd.indexOf("%", varEndIndex + 1);
-    }
+		if (name.equals("user")) {
+			return item.get("id");
+		}
+		if (name.equals("recipients")) {
+			return item.get("recipients");
+		}
 
-    command.append(rawCmd.substring(varEndIndex + 1));
+		return null;
+	}
 
-    return command.toString();
-  }
+	// TODO should be implemented. Yet it not works!
+	public int verify(String pgpMessage, String signatureString, PGPItem item)
+		throws Exception {
+		int exitVal = -1;
 
-  private String getValue(String name, PGPItem item) {
+		//inputFile = createTempFile(signatureString);
+		Process p =
+			executeCommand(getCommandString(PGPController.VERIFY_ACTION, item));
+		errorStream = new StreamThread(p.getErrorStream(), "ERROR");
+		outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
 
-    if (name.equals("user")) {
-      return item.get("id");
-    }
-    if (name.equals("input_file")) {
-      return inputFile.toString();
-    }
-    if (name.equals("output_file")) {
-      return outputFile.toString();
-    }
+		p.getOutputStream().write(pgpMessage.getBytes());
+		p.getOutputStream().close();
 
-    return null;
-  }
+		errorStream.start();
+		outputStream.start();
 
-  protected void sendToStdin(Process p, String outStr) throws Exception {
-    p.getOutputStream().write(outStr.getBytes());
-    p.getOutputStream().write(10);
-    //p.getOutputStream().close();
-    //out.println(outStr);
-    //out.flush();
-    //out.close();
-  }
+		exitVal = p.waitFor();
 
-  /*
-    public int decrypt( String path, String pgpMessage, String passphrase ) throws Exception
-    {
-        int exitVal = -1;
-  
-        Process p = executeCommand( getCommandString(PGPController.DECRYPT_ACTION) );
-  
-        errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-        outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
-  
-        sendPassphrase( p, passphrase );
-  
-        errorStream.start();
-        outputStream.start();
-  
-        exitVal = p.waitFor();
-  
-        System.out.println("exitvalue: "+ exitVal );
-  
-        // wait for stream threads to die
-        outputStream.join();
-        errorStream.join();
-  
-        return exitVal;
-    }
-  */
-  public int verify(String pgpMessage, String signatureString, PGPItem item) throws Exception {
-    int exitVal = -1;
+		// wait for stream threads to die
+		outputStream.join();
+		errorStream.join();
+		System.out.println("ExitVal: " + exitVal);
+		return exitVal;
+	}
 
-	inputFile = createTempFile(signatureString);
-    Process p = executeCommand(getCommandString(PGPController.VERIFY_ACTION, item));
-    errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-    outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
+	/**
+	 * Signes a given message. The tool to be used for singing is defined in the PGPItem. There should be also userID and 
+	 * passphrase stored in the PGPItem. It returns the exit Value from the process that is executed the command. The
+	 * command to be executed self is defined in the instantiated class, for example GnuPGUtil. The result is stored in
+	 * a intern Buffer and should be get with #getStreamResult().
+	 * @param item PGPItem which holds necessary datas
+	 * @param pgpMessage The message to be signed
+	 * @return the exit value from the process that executes the whole singing command.
+	 * @throws Exception If the process cannot execute the command. 
+	 */
+	public int sign(PGPItem item, InputStream pgpMessage) throws Exception {
+		int exitVal = -1;
+		Process p =
+			executeCommand(getCommandString(PGPController.SIGN_ACTION, item));
+		errorStream = new StreamThread(p.getErrorStream(), "ERROR");
+		outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
+		// output from gpg
 
-	p.getOutputStream().write(pgpMessage.getBytes());
-	p.getOutputStream().close();
+		p.getOutputStream().write(item.getPassphrase().getBytes());
+		p.getOutputStream().write(
+			System.getProperty("line.separator").getBytes());
+		// send return after passphrase
+		//write the pgpMessage out
+		StreamTools.streamCopy(pgpMessage, p.getOutputStream(), 8000);
+		p.getOutputStream().close();
 
-    errorStream.start();
-    outputStream.start();
+		errorStream.start();
+		outputStream.start();
 
-    exitVal = p.waitFor();
+		exitVal = p.waitFor();
+		// wait for stream threads to die
+		outputStream.join();
+		errorStream.join();
 
-    // wait for stream threads to die
-    outputStream.join();
-    errorStream.join();
-	System.out.println("ExitVal: "+exitVal);
-    return exitVal;
-  }
+		this.outputString = outputStream.getBuffer();
 
-  private File createTempFile(String contents) {
-    try {
-      File tempFile1 = File.createTempFile("columba" + System.currentTimeMillis(), null);
-      tempFile1.deleteOnExit();
-      DiskIO.saveStringInFile(tempFile1, contents);
+		return exitVal;
 
-      return tempFile1;
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+	}
 
-    return null;
-  }
+	/**
+	 * Signes a given message. The tool to be used for singing is defined in the PGPItem. There should be also userID and 
+	 * passphrase stored in the PGPItem. It returns the exit Value from the process that is executed the command. The
+	 * command to be executed self is defined in the instantiated class, for example GnuPGUtil. The result is strored in a
+	 * intern Buffer. Use #getResult() to get the signed data. 
+	 * @param item PGPItem which holds necessary data
+	 * @param input The message to be signed
+	 * @return the exit value from the process that executes the whole singing command.
+	 * @throws Exception If the process cannot execute the command. 
+	 * @deprecated this is deprecated since the new ristretto-implementation which use Streams instead of Strings. 
+	 * Use sign(PGPItem item, InputStream message)
+	 */
+	public int sign(PGPItem item, String input) throws Exception {
+		int exitVal = -1;
 
-  public int sign(PGPItem item, String input) throws Exception {
-    int exitVal = -1;
+		System.out.println(input);
 
-    System.out.println(input);
-    // first we must parsing the input and replace all lineendings to <CR><LF>
-    // see RFC 3156 Page 4
-    //String convInput = convertMessageToCRLF(input);
-    // save the input to File
-    // TODO: this is only for debug, change this if the stuff is working to the only sendStdIn() Method
-    //this.inputFile = createTempFile(convInput);
-    //System.out.println("inputfilename: " + this.inputFile.getName());
+		Process p =
+			executeCommand(getCommandString(PGPController.SIGN_ACTION, item));
+		errorStream = new StreamThread(p.getErrorStream(), "ERROR");
+		outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
+		// output from gpg
 
-    Process p = executeCommand(getCommandString(PGPController.SIGN_ACTION, item));
-    errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-    outputStream = new StreamThread(p.getInputStream(), "OUTPUT"); // output from gpg
+		p.getOutputStream().write(item.getPassphrase().getBytes());
+		p.getOutputStream().write(
+			System.getProperty("line.separator").getBytes());
+		// send return after passphrase
 
-    p.getOutputStream().write(item.getPassphrase().getBytes());
-    p.getOutputStream().write(System.getProperty("line.separator").getBytes()); // send return after passphrase
+		p.getOutputStream().write(input.getBytes());
+		//p.getOutputStream().write(convInput.getBytes());
+		p.getOutputStream().close();
 
-	p.getOutputStream().write(input.getBytes());
-    p.getOutputStream().close();
+		errorStream.start();
+		outputStream.start();
 
+		exitVal = p.waitFor();
 
-    errorStream.start();
-    outputStream.start();
+		// wait for stream threads to die
+		outputStream.join();
+		errorStream.join();
 
-    exitVal = p.waitFor();
+		this.outputString = outputStream.getBuffer();
 
-    // wait for stream threads to die
-    outputStream.join();
-    errorStream.join();
+		return exitVal;
+	}
 
-    outputString = outputStream.getBuffer();
-	/*
-    outputString ="";
-    FileReader fr = new FileReader("/tmp/columba.sig");
-    BufferedReader in = new BufferedReader(fr);
-    String line;
-    while ((line = in.readLine()) != null) {
-      outputString += line + "\n";
-    }
-    */
-    // delete sig-file
-    //DiskIO.deleteFile("/tmp/columba.sig");
-    return exitVal;
-  }
+	/**
+	 * Encrypting of a given message. The tool to be used for encrypting is defined in the PGPItem. There should be also 
+	 * userID, passphrase and recipients stored in the PGPItem. The recipients must be given as String seperated by spaces.
+	 * It returns the exit Value from the process that is executed the command. The command to be executed self is defined 
+	 * in the instantiated class, for example GnuPGUtil. The result is strored in a intern Buffer. Use #getResult() to get the 
+	 * encrypted data. 
+	 * @param item PGPItem which holds necessary data
+	 * @param message The message to be encrypt
+	 * @return the exit value from the process that executes the whole singing command.
+	 * @throws Exception If the process cannot execute the command. 
+	 */
+	public int encrypt(PGPItem item, InputStream message) throws Exception {
+		int exitVal = -1;
 
-  /*
-    public int encrypt( String path, String pgpMessage, String passphrase, boolean signValue,  Vector recipient, String id ) throws Exception
-    {
-        int exitVal = -1;
-  
-        Process p = executeCommand( getCommandString(PGPController.ENCRYPT_ACTION) );
-  
-        errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-        outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
-  
-        if ( signValue == true )
-        {
-            sendPassphrase( p, passphrase );
-        }
-  
-        errorStream.start();
-        outputStream.start();
-  
-        exitVal = p.waitFor();
-  
-        System.out.println("exitvalue: "+ exitVal );
-  
-        // wait for stream threads to die
-        outputStream.join();
-        errorStream.join();
-  
-        return exitVal;
-    }
-  */
+		Process p =
+			executeCommand(
+				getCommandString(PGPController.ENCRYPT_ACTION, item));
+		errorStream = new StreamThread(p.getErrorStream(), "ERROR");
+		outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
 
-  private String convertMessageToCRLF(String message) throws Exception {
-    StringReader strReader = new StringReader(message);
-    BufferedReader br = new BufferedReader(strReader);
-    String readLine;
-    StringBuffer retMessage = new StringBuffer();
-    while ((readLine = br.readLine()) != null) {
-      retMessage.append(readLine);
-      retMessage.append("\r\n");
-    }
-    retMessage.append("\r\n");
-    ColumbaLogger.log.debug(retMessage.toString());
-    return retMessage.toString();
-  }
+		StreamTools.streamCopy(message, p.getOutputStream(), 8000);
+		p.getOutputStream().write(
+			System.getProperty("line.separator").getBytes());
+		p.getOutputStream().close();
+
+		errorStream.start();
+		outputStream.start();
+
+		exitVal = p.waitFor();
+
+		// wait for stream threads to die
+		outputStream.join();
+		errorStream.join();
+
+		this.outputString = outputStream.getBuffer();
+
+		return exitVal;
+	}
 
 }

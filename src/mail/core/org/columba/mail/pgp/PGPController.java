@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
+import java.io.InputStream;
+
 import javax.swing.JOptionPane;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -38,10 +40,12 @@ public class PGPController {
 	private String id;
 	private int exitVal;
 
+	private boolean save = false;
+
 	private static PGPController myInstance;
 
 	/**
-	 * here are the utils, which you can sign, verify, encrypt and decrypt messages
+	 * here are the utils, from which you can sign, verify, encrypt and decrypt messages
 	 * at the moment there are only one tool - gpg, the gnu pgp programm which
 	 * comes with an commandline tool to do things with your pgp key
 	 * @see DefaultUtil
@@ -74,18 +78,12 @@ public class PGPController {
 	/**
 	 * gives the return value from the pgp-program back. This can used for
 	 * controlling errors when signing ... messages
-	 * @return int exitValue, 0 means all ok, all other exit vlaues identifys errors
+	 * @return int exitValue, 0 means all ok, all other exit vlaues identifying errors
 	 */
 	public int getReturnValue() {
 		return exitVal;
 	}
 
-	/**
-	 * Method sign.
-	 * @param pgpMessage
-	 * @param item
-	 * @return String
-	 */
 	/*
 	public String decrypt(String pgpMessage, PGPItem item) {
 		DefaultUtil util;
@@ -177,74 +175,8 @@ public class PGPController {
 		}
 		return exitVal;
 	}
+
 	/*
-	public String verify(
-		String pgpMessage,
-		String signatureString,
-		PGPItem item) {
-		//System.out.println("message file:\n"+ pgpMessage );
-		//System.out.println("signature file:\n"+ signatureString );
-	
-		exitVal = -1;
-	
-		type = item.getType();
-		path = item.getPath();
-		id = item.getId();
-	
-		File outputFile;
-	
-		String passphrase = item.getPassphrase();
-		boolean save = false;
-	
-		if ((passphrase.length() == 0)) {
-			PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
-			//dialog.showDialog( id, false );
-	
-			if (dialog.success()) {
-				passphrase =
-					new String(
-						dialog.getPassword(),
-						0,
-						dialog.getPassword().length);
-	
-				save = dialog.getSave();
-	
-			} else {
-				return new String("");
-			}
-		}
-	
-		try {
-	
-			util = load(type);
-	
-			exitVal =
-				util.verify(path, pgpMessage, signatureString, passphrase);
-	
-			System.out.println("exitvalue: " + exitVal);
-	
-		} catch (Exception ex) {
-			ex.printStackTrace();
-	
-			JOptionPane.showMessageDialog(
-				MainInterface.mainFrame,
-				util.getErrorString());
-		}
-	
-		if (exitVal > 0) {
-			// error
-			String errorString = util.errorStream.getBuffer();
-	
-			JOptionPane.showMessageDialog(
-				MainInterface.mainFrame,
-				util.getErrorString());
-		}
-	
-		if (save == false)
-			item.clearPassphrase();
-	
-		return util.getOutputString();
-	}
 	
 	public String encrypt(
 		String pgpMessage,
@@ -350,23 +282,78 @@ public class PGPController {
 	}
 	
 	*/
+	/** 
+	 * Encryptes a given message  and returnes the encrypted Stream. The given pgp-item should have a entry with
+	 * all recipients seperated via space. The entry is called recipients. If an error occurse the error result is
+     * shown to the user via a dialog.
+	 * @param message The message to be encrypt
+	 * @param item the item which holds information like path to pgp-tool and recipients for which the message should be
+     * encrypted.
+	 * @return the encrypted message if all is ok, else an empty input-stream
+	 * TODO better using the exception mechanism instead of showing th user a dialog from this component.
+	 */
+	public InputStream encrypt(InputStream message, PGPItem item) {
+		int exitVal = -1;
+		try {
+			exitVal = utils[GPG].encrypt(item, message);
+			checkError(exitVal, item);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
+		}
+		return utils[GPG].getStreamResult();
+	}
 
 	/**
-	 * signs an message and gives the signed message string back to the
-	 * application. This method call the GPG-Util to sign the message. If no
-	 * passphrase is given, an empty String is returned. If the passphrase String
+	 * signs an message and gives the signed message as an InputStream back to the application. This method call the 
+	 * GPG-Util to sign the message. if the passphrase is currently not stored in the PGPItem the user is called for
+	 * a new passphrase. If the user dosn't give a passphrase (he cancel the dialog) the method returns null.
+	 * The Util (in this case GPG is called to sign the message with the user-id. The exit-value from the sign-process is
+	 * stored in the global exit value. In the case, that the exit-value is 2 then the error-message from the gpg-program is 
+	 * printed to the user in an dialog. The value null is then returned. 
+	 * If the value is equal to 1 null is returned. If an exception occurrs, the exception-message is shown to the
+	 * user in a dialog and null is returned.
+	 * @param pgpMessage the message that is to signed
+	 * @param item the item wich holds the userid for the pgp key. Eventual the passphrase is also stored in the item. Then
+	 * stored passphrase is used.
+	 * @return The signed message as an InputStream. Null, when
+	 * an error occurse or the exit-value is not equal to 0 from the whole gpg-util is returned.
+	 */
+	public InputStream sign(InputStream pgpMessage, PGPItem item) {
+		exitVal = -1;
+		path = item.get("path");
+		id = item.get("id");
+
+		this.getPassphrase(item);
+		try {
+			exitVal = utils[GPG].sign(item, pgpMessage);
+			checkError(exitVal, item);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
+		}
+		if (save == false) {
+			item.clearPassphrase();
+		}
+		return utils[GPG].getStreamResult();
+	}
+
+	/**
+	 * signs an message and gives the signed message string back to the application. This method call the GPG-Util to sign 
+	 * the message. If no passphrase is given, an empty String is returned. If the passphrase String
 	 * has an length > 0, a new Passphrase-Dialog is opend and asked the user for
 	 * input the password for his key. The Util (in this case GPG is called to
 	 * sign the message with the user-id. The exit-value from the sign-process is
 	 * stored in the global exit value. In the case, that the exit-value is 2 then
 	 * the error-message from the gpg-program is printed to the user in an dialog.
 	 * The value null is then returned. If the value is equal to 1 null is
-	 * returned. If an exception occurring, the exception-message is shown to the
+	 * returned. If an exception occurrs, the exception-message is shown to the
 	 * user in dialog and null is returned
 	 * @param pgpMessage the message that is to signed
 	 * @param item the item wich holds the passphrase (the userid for the pgp key)
 	 * @return String the signed message with the sign string inside. Null, when
 	 * an error or an exit-value not equal 0 from the whole gpg-util is returned
+	 * @deprecated After ristretto is used in columba only Streams instead of Strings supported. Use 
+	 * sign(InputStream message, PGPItem item). 
 	 */
 	public String sign(String pgpMessage, PGPItem item) {
 		exitVal = -1;
@@ -375,8 +362,37 @@ public class PGPController {
 		path = item.get("path");
 		id = item.get("id");
 
+		if (!this.getPassphrase(item)) {
+			return null;
+		}
+
+		try {
+			ColumbaLogger.log.debug("pgpmessage: !!" + pgpMessage + "!!");
+			exitVal = utils[GPG].sign(item, pgpMessage);
+			if (!checkError(exitVal, item)) {
+				return null;
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
+			if (save == false)
+				item.clearPassphrase();
+			return null;
+		}
+
+		//        }
+
+		if (save == false)
+			item.clearPassphrase();
+		ColumbaLogger.log.debug(utils[GPG].getResult());
+		return utils[GPG].getResult();
+	}
+
+	private boolean getPassphrase(PGPItem item) {
 		String passphrase = item.getPassphrase();
 		boolean save = false;
+		boolean ret = false;
 
 		if (passphrase.length() == 0) {
 			PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
@@ -390,47 +406,19 @@ public class PGPController {
 						dialog.getPassword().length);
 				item.setPassphrase(passphrase);
 				save = dialog.getSave();
-			} else {
-				return new String("");
+				ret = true;
 			}
 		}
+		return ret;
+	}
 
-		try {
-			ColumbaLogger.log.debug("pgpmessage: !!" + pgpMessage + "!!");
-			exitVal = utils[GPG].sign(item, pgpMessage);
-
-			if (exitVal == 2) {
-				JOptionPane.showMessageDialog(
-					null,
-					utils[GPG].getErrorString());
-				if (save == false)
-					item.clearPassphrase();
-
-				return null;
-			} else if (exitVal == 1) {
-
-				if (save == false)
-					item.clearPassphrase();
-				return null;
-			}
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-
+	private boolean checkError(int exitVal, PGPItem item) {
+		boolean ret = true;
+		if (exitVal == 2) {
 			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
-
-			if (save == false)
-				item.clearPassphrase();
-
-			return null;
+			ret = false;
 		}
-
-		//        }
-
-		if (save == false)
-			item.clearPassphrase();
-		ColumbaLogger.log.debug(utils[GPG].getResult());
-		return utils[GPG].getResult();
+		return ret;
 	}
 
 }
