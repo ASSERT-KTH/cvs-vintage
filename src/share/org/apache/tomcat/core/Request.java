@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.9 1999/12/29 04:54:15 bergsten Exp $
- * $Revision: 1.9 $
- * $Date: 1999/12/29 04:54:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.10 2000/01/04 02:53:06 rubys Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/01/04 02:53:06 $
  *
  * ====================================================================
  *
@@ -474,7 +474,7 @@ public class Request  {
 
         try {
             this.parameters = HttpUtils.parseQueryString(queryString);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             this.parameters.clear();
         }
     }
@@ -508,7 +508,7 @@ public class Request  {
         Hashtable newParameters = null;
         try {
             newParameters = HttpUtils.parseQueryString(queryString);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return;
         }
 

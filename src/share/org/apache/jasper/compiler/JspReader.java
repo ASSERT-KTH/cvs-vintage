@@ -161,7 +161,7 @@ public class JspReader {
                 
                 try {
                     reader = new InputStreamReader(in);
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
                     throw new FileNotFoundException(fileName + ": "+ ex.getMessage());
                 }
             }

@@ -190,7 +190,7 @@ public class Context {
 
         try {
 	    f = new File(workDir);
-	} catch (Exception e) {
+	} catch (Throwable e) {
 	}
 
 	setWorkDir(f, isWorkDirPersistent);
