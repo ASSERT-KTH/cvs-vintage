@@ -17,6 +17,7 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.BeanMetaData;
+import org.jboss.tm.TxUtils;
 
 /**
  *  This interceptor handles transactions for CMT beans.
@@ -27,7 +28,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- *  @version $Revision: 1.36 $
+ *  @version $Revision: 1.37 $
  */
 public  class TxInterceptorCMT extends AbstractInterceptor
 {
@@ -45,7 +46,9 @@ public  class TxInterceptorCMT extends AbstractInterceptor
     */
    public InvocationResponse invoke(Invocation invocation) throws Exception
    {
-      Transaction oldTransaction = invocation.getTransaction();
+      TransactionManager tm = getContainer().getTransactionManager();
+      Transaction oldTransaction = tm.getTransaction();
+      boolean repeatable = TxUtils.isCompleted(oldTransaction);
       for (int i = 0; i < MAX_RETRIES; i++)
       {
          try
@@ -58,7 +61,7 @@ public  class TxInterceptorCMT extends AbstractInterceptor
             if (deadlock != null)
             {
                if (!deadlock.retryable() ||
-                   oldTransaction != null ||
+                   !repeatable ||
                    i + 1 >= MAX_RETRIES)
                {
                   throw deadlock;
