@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.40 2002/04/02 19:36:41 user57 Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.41 2002/04/03 08:35:31 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -22,9 +22,27 @@
   <!-- Deployment Scanning                                                  -->
   <!-- ==================================================================== -->
 
+  <!-- Uncomment to enable caching of deployment units
+  <mbean code="org.jboss.deployment.cache.FileDeploymentStore"
+	 name="jboss.deployment:type=DeploymentStore,flavor=File">
+    <attribute name="DirectoryName">data/deployment-cache</attribute>
+  </mbean>
+
+  <mbean code="org.jboss.deployment.cache.DeploymentCache"
+	 name="jboss.deployment:type=DeploymentCache">
+    <depends optional-attribute-name="Deployer">jboss.system:service=MainDeployer</depends>
+    <depends optional-attribute-name="Store">jboss.deployment:type=DeploymentStore,flavor=File</depends>
+  </mbean>
+  -->
+
   <mbean code="org.jboss.deployment.scanner.URLDeploymentScanner"
 	 name="jboss.deployment:type=DeploymentScanner,flavor=URL">
+
+    <!-- Uncomment (and comment/remove version below) to enable usage of the DeploymentCache
+    <depends optional-attribute-name="Deployer">jboss.deployment:type=DeploymentCache</depends>
+    -->
     <depends optional-attribute-name="Deployer">jboss.system:service=MainDeployer</depends>
+
     <attribute name="ScanPeriod">5000</attribute>
 
     <!-- 
