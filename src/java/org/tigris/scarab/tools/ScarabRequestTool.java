@@ -222,6 +222,19 @@ try{
     }
 
     /**
+     * Get a new SearchIssue object. 
+     *
+     * @return a <code>Issue</code> value
+     */
+    public Issue getSearch()
+        throws Exception
+    {
+        SearchIssue search = new SearchIssue();
+        search.setModule(((ScarabUser)getUser()).getCurrentModule());
+        return search;
+    }
+
+    /**
      * The id may be a primary key or an issue id.
      *
      * @param key a <code>String</code> value

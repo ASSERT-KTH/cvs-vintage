@@ -47,12 +47,26 @@ package org.tigris.scarab.attribute;
  */ 
 
 import org.apache.turbine.util.RunData;
+import org.apache.turbine.util.db.pool.DBConnection;
+import org.tigris.scarab.util.word.Vocabulary;
+
 /**
  *  Description of the Class
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.2 $ $Date: 2001/02/23 03:11:32 $
+ * @version $Revision: 1.3 $ $Date: 2001/04/30 03:55:29 $
  */
 public class StringAttribute extends FreeFormAttribute
 {
+    /**
+     * Saves the StringAttribute and related objects in persistent
+     * storage.  This method calls the parent save method and then
+     * indexes the text value for searching.
+     */
+    public void save(DBConnection dbCon)
+        throws Exception
+    {
+        super.save(dbCon);
+        Vocabulary.index(this);
+    }    
 }

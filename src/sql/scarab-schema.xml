@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.10 2001/04/19 06:28:52 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.11 2001/04/30 03:55:30 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -582,7 +582,12 @@
         Flag, which marks this attribute as being useful for deduping.
     -->
     <column name="DEDUPE" required="false" type="BOOLEANINT" 
-        default="0" size="1"></column>
+        default="0" size="1"/>
+    <!--
+        Flag, which marks this attribute as being eligible for quick search.
+    -->
+    <column name="QUICK_SEARCH" required="false" type="BOOLEANINT" 
+        default="0" size="1"/>
 
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
@@ -771,15 +776,19 @@
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
+
+
 <!-- This table will hold dictionary index -->
 <table name="SCARAB_WORD" idMethod="idbroker" javaName="Word">
     <!-- Uinique identifier -->
     <column name="WORD_ID" primaryKey="true" required="true" type="INTEGER"/>
     <!-- the word itself should be lowercased (?) -->
     <column name="WORD" required="true" type="VARCHAR" size="50"/>
-    <!-- word's rating. The less frequent word has the higher rating. For now rating = 100000 / (total number of occurences) -->
+    <!-- word's rating. The less frequent word has the higher rating. For 
+         now rating = 100000 / (total number of occurences) -->
     <column name="RATING" required="true" type="INTEGER"/>
-    <!-- set to one to ignore the word when indexing. this should be 1 for words like "is", "it", "on" etc...-->
+    <!-- set to one to ignore the word when indexing. this should be 1 for 
+         words like "is", "it", "on" etc...-->
     <column name="IGNORED" default="0" type="BOOLEANINT"/>
     <index name="IX_IGNORED">
         <index-column name="IGNORED"/>
@@ -789,18 +798,21 @@
     </unique>
 </table>
 
-<!-- This table holds info on words' ocurrences in issues -->
-<table name="SCARAB_R_ISSUE_WORD" idMethod="none" javaName="RIssueWord">
-    <!-- Isuue -->
+<!-- This table holds info on words' ocurrences in attribute values -->
+<table name="SCARAB_R_ATTRIBUTE_VALUE_WORD" idMethod="none" javaName="RIssueWord">
+    <!-- AttributeValue (Issue and Attribute) -->
     <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" 
+            type="INTEGER"/>
     <!-- Word -->
     <column name="WORD_ID" primaryKey="true" required="true" type="INTEGER"/>
     <!-- Number of ocuurences of the word in this issue. increases relevance.-->
     <column name="OCCURENCES" required="true" type="INTEGER"/>
     <!-- position of the first word's ocuurence in the issue. The smaller it is the higher is relevance. -->
     <column name="POSITION" required="true" type="INTEGER"/>
-    <foreign-key foreignTable="SCARAB_ISSUE">
+    <foreign-key foreignTable="SCARAB_ISSUE_ATTRIBUTE_VALUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
+        <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_WORD">
         <reference local="WORD_ID" foreign="WORD_ID"/>

@@ -1,0 +1,37 @@
+
+      <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
+        <TR>
+          <TD  BGCOLOR="#999999" COLSPAN="2">POSSIBLE ISSUE MATCHES</TD>
+        </TR>
+
+        <TR>
+          <TD>Issue ID#</TD>
+          <TD>Issue Summary</TD>
+        </TR>
+
+#foreach ($issue in $issueList)
+
+    #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $issue.UniqueId).setPage("IssueView.vm").toString() )
+
+
+        <TR>
+          <TD>
+            <a href="$issueLink">$issue.UniqueId</a>
+
+          </TD>
+          <TD>
+
+        $issue.ModuleAttributeValuesMap.get("SUMMARY").Value
+
+          </TD>
+        </TR>
+
+
+        <TR>
+          <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc">
+                <SPACER TYPE="block" HEIGHT="1"></TD>
+        </TR>			
+
+#end
+
+      </TABLE>

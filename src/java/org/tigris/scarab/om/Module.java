@@ -87,6 +87,20 @@ public class Module
     }
 
     /**
+     * Array of Attributes used for quick search.
+     *
+     * @return an <code>Attribute[]</code> value
+     */
+    public Attribute[] getQuickSearchAttributes()
+        throws Exception
+    {
+        Criteria crit = new Criteria(3)
+            .add(RModuleAttributePeer.QUICK_SEARCH, true)        
+            .add(RModuleAttributePeer.ACTIVE, true);        
+        return getAttributes(crit);
+    }
+
+    /**
      * gets a list of all of the Attributes.
      */
     public Attribute[] getAllAttributes()

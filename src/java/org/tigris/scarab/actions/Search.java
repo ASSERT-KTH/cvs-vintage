@@ -68,97 +68,62 @@ import org.apache.turbine.om.*;
 import org.tigris.scarab.om.BaseScarabObject;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserPeer;
-import org.tigris.scarab.om.SearchIssue;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.SearchIssue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.*;
+import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.word.Vocabulary;
 
 /**
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.12 2001/04/30 03:55:29 jmcnally Exp $
+    @version $Id: Search.java,v 1.1 2001/04/30 03:55:29 jmcnally Exp $
 */
-public class ReportIssue extends VelocityAction
+public class Search extends VelocityAction
 {
-    public void doSubmitattributes( RunData data, Context context )
+    public void doIssueIdFind( RunData data, Context context )
         throws Exception
     {
-        //until we get the user and module set through normal application
-        BaseScarabObject.tempWorkAround(data,context);
+        // the IssueView page takes a string id, nothing
+    }
 
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
-        
-        // Summary is always required (because we are going to search on it.)
-        ScarabUser user = (ScarabUser)data.getUser();
-        Issue issue = user.getReportingIssue();
-        AttributeValue aval = (AttributeValue)issue
-            .getModuleAttributeValuesMap().get("SUMMARY");
-        Group group = intake.get("AttributeValue", aval.getQueryKey());
-        Field summary = group.get("Value");
-        summary.setRequired(true);
-
-        // set any other required flags
-        Criteria crit = new Criteria(3)
-            .add(RModuleAttributePeer.ACTIVE, true)        
-            .add(RModuleAttributePeer.REQUIRED, true);        
-        Attribute[] requiredAttributes = issue.getModule().getAttributes(crit);
-        Iterator iter = issue.getModuleAttributeValuesMap()
-            .values().iterator();
-        while ( iter.hasNext() ) 
-        {
-            aval = (AttributeValue)iter.next();
-            
-            group = intake.get("AttributeValue", aval.getQueryKey(), false);
-            if ( group != null ) 
-            {            
-                Field field = null;
-                if ( aval instanceof OptionAttribute ) 
-                {
-                    field = group.get("OptionId");
-                }
-                else 
-                {
-                    field = group.get("Value");
-                }
-                
-                for ( int j=requiredAttributes.length-1; j>=0; j-- ) 
-                {
-                    if ( aval.getAttribute().getPrimaryKey().equals(
-                         requiredAttributes[j].getPrimaryKey() )) 
-                    {
-                        field.setRequired(true);
-                        break;
-                    }                    
-                }
-            }
-        }
-        
-        if ( intake.isAllValid() ) 
-        {
-            SearchIssue search = new SearchIssue();
-            search.setSearchWords(summary.toString());
-
-            search.setModule(user.getCurrentModule());
-            Iterator i = search.getModuleAttributeValuesMap()
+    /*
+            Iterator i = issue.getModuleAttributeValuesMap()
                 .values().iterator();
             while (i.hasNext()) 
             {
                 aval = (AttributeValue)i.next();
-                group = intake.get("AttributeValue", aval.getQueryKey(),false);
+                group = intake.get("AttributeValue", aval.getQueryKey());
                 if ( group != null ) 
                 {
                     group.setProperties(aval);
-                }
+                }                
             }
             
-            List matchingIssues = search.getMatchingIssues(25);
+            // search for duplicate issues based on summary
+            Vocabulary voc = new Vocabulary(summary.toString());
+            issue.setVocabulary(voc);
+            BigDecimal[] matchingIssueIds = voc.getRelatedIssues();
+            // do not show more than 25 dupe guesses.
+            int matchingIssuesCount = matchingIssueIds.length;
+            if (matchingIssuesCount>25)
+                matchingIssuesCount=25;
+            //looks like we have to fetch them one by one to keep the order
+            Vector matchingIssues = new Vector(matchingIssuesCount);
+
+            for (int i=0; i<matchingIssuesCount; i++)
+            {
+                matchingIssues
+                    .add(IssuePeer
+                        .retrieveByPK(new NumberKey(matchingIssueIds[i])));
+            }
 
             String template = null;
             if ( matchingIssues.size() > 0 )
@@ -172,57 +137,57 @@ public class ReportIssue extends VelocityAction
             }
             setTemplate(data, template);
         }
-    }
+        */
 
-    public void doEnterissue( RunData data, Context context )
+    public void doSearch( RunData data, Context context )
         throws Exception
     {
         //until we get the user and module set through normal application
         BaseScarabObject.tempWorkAround(data,context);
-
+        
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
 
-        // Summary is always required.
         ScarabUser user = (ScarabUser)data.getUser();
-        Issue issue = user.getReportingIssue();
-        AttributeValue aval = (AttributeValue)issue
-            .getModuleAttributeValuesMap().get("SUMMARY");
-        Group group = intake.get("AttributeValue", aval.getQueryKey());
-        Field summary = group.get("Value");
-        summary.setRequired(true);
 
         if ( intake.isAllValid() ) 
         {
-            Iterator i = issue.getModuleAttributeValuesMap()
+            ScarabRequestTool scarab = (ScarabRequestTool)context
+                .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+
+            SearchIssue search = new SearchIssue();
+            Group group = intake.get("SearchIssue", 
+                                     scarab.getSearch().getQueryKey() );
+            group.setProperties(search);
+
+            search.setModule(user.getCurrentModule());
+            Iterator i = search.getModuleAttributeValuesMap()
                 .values().iterator();
             while (i.hasNext()) 
             {
-                aval = (AttributeValue)i.next();
-                group = intake.get("AttributeValue", aval.getQueryKey(),false);
+                AttributeValue aval = (AttributeValue)i.next();
+                group = intake.get("AttributeValue", aval.getQueryKey());
                 if ( group != null ) 
                 {
                     group.setProperties(aval);
                 }                
             }
             
-            if ( issue.containsMinimumAttributeValues() ) 
+            List matchingIssues = search.getMatchingIssues(25);
+            if ( matchingIssues.size() > 0 )
             {
-                issue.save();
-
+                context.put("issueList", matchingIssues);
+                
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, 
-                               "entry,Wizard3.vm");
+                               "IssueList.vm");
                 setTemplate(data, template);            
             }
-            else 
+            else
             {
-                // this would be an application or hacking error
-            }
-            
-            
+                data.setMessage("No matching issues.");
+            }            
         }
-
     }
 
     public void doAddvote( RunData data, Context context ) 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
-<!-- <!DOCTYPE input-data SYSTEM
-          "http://jakarta.apache.org/turbine/dtd/intake.dtd"> -->
+<!DOCTYPE input-data SYSTEM
+          "http://jakarta.apache.org/turbine/dtd/intake.dtd">
 
 <!-- PUBLIC "-//Apache//Apache-Turbine-Intake Application Data//EN" --> 
 
@@ -82,6 +82,10 @@
         </field>
         <field name="FederatedId" key="fid" type="String"/> 
         <field name="Deleted" key="del" type="boolean" />
+</group>
+<group name="SearchIssue" key="search" mapToObject="om.SearchIssue">
+        <field name="SearchWords" key="sw" type="String"/>
+        <field name="TextScope" key="ts" type="NumberKey" multiValued="true"/>
 </group>
 <group name="Module" key="mod" mapToObject="om.Module">
         <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">

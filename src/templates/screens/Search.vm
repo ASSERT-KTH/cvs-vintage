@@ -1,58 +1,146 @@
-  <FORM METHOD="post" NAME="SearchForm" action="">
-  <input type="hidden" name="action" value="Search">
-<!-- search -->
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
- <tr>
-  <td colspan="6" width="100%" class="Header" bgcolor="#999999">SEARCH FOR ISSUES</td>
- </tr>
- <tr>
-  <td colspan="6" width="100%" class="SectionHeader" bgcolor="#CCCCCC">Quick Search</td>
- </tr>
- <tr>
-  <td class="InputHeader">Free text:<br>
-  <input name="summary" value="$summary" size="15" type="text">
-  </td>
-  <td class="InputHeader">Fields:<br>
-  <select name="fields">
-  <option selected value="">Category</option>
-  <option value="">Option2</option>
-  <option value="">Option3</option>
-  </select>
-  </td>
-  <td class="InputHeader">Component:<br>
-  <select name="components">
-  <option selected value="">Type</option>
-  <option value="">Option2</option>
-  <option value="">Option3</option>
-  </select>
-  </td>
-  <td class="InputHeader">Platform:<br>
-  <select name="platforms">
-  <option selected value="">All</option>
-  <option value="">DEC</option>
-  <option value="">HP</option>
-  <option value="">Mac</option>
-  <option value="">PC</option>
-  <option value="">SGI</option>
-  <option value="">Sun</option>
-  <option value="">Other</option>
-  </select>
-  </td>
-  <td class="InputHeader">Issue ID:<br>
-  <input name="issueID" value="$issueID" size="10" type="text">
-  </td>
-  <td>
-  <input type="submit" name="eventSubmit_doSearch" value="Search">
-  </form>
-  </td>
- </tr>
- <tr>
-  <td colspan="6">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-     <tr><td bgcolor="#CCCCCC" height="1"><spacer height="1" type="block"></td></tr>
-	</table>
-  </td>
- </tr>
-</table> 
+#set ($user = $scarabR.User)
+#set ($module = $user.CurrentModule)
+
+<table>
+<tr>
+<td>
+
+<form action="$link.setPage("IssueView.vm")" method="get">
+ Issue# <input type="text" name="id" size="8" maxlength="255">
+        <input type="submit" name="Submit" value="Find">
 </form>
+
+</td>
+</tr>
+
+
+<TR>
+<TD COLSPAN="3">
+    Search for existing issues 
+        (go to <A HREF="advancedsearch.html">advanced search</A>)
+</TD>
+</TR>
+
+<TR>
+<TD COLSPAN="3">
+    <TABLE BORDER="1" WIDTH="100%">
+    <TR>
+    <TD WIDTH="64%">
+
+        <form action="$link.setPage("Search.vm")" method="get">
+        <input type="hidden" name="nextTemplate" value="IssueList.vm"></input>
+        <input type="hidden" name="action" value="Search"></input>
+
+#set ( $search = $scarabR.Search )
+#set ( $searchGroup = $intake.SearchIssue.mapTo($search) )
+#set ( $searchTextAttributes = $search.QuickSearchTextAttributes )
+#set ( $searchValues = $search.QuickSearchOptionAttributeValues )
+
+#if ($searchTextAttributes.size() != 0)
+    ## default to first attribute if none was selected previously
+    #if ( $searchGroup.TextScope.isSet() )
+        #set ($selectedIds = $searchGroup.TextScope.Value)
+        #set ($selected = "")
+    #else
+        #set ($selected = " selected")
+    #end
+
+    ##actionErrorMsg
+    <select name="$searchGroup.TextScope.Key" size="5" multiple>        
+
+    #if ($searchTextAttributes.size() != 1)
+        <option value="$search.ALL_TEXT"$selected>Search All</option>
+    #end
+
+    #foreach ( $att in $searchTextAttributes )
+        #if ($selectedIds)
+            #foreach ( $id in $selectedIds )  
+                #if ($id == $att.PrimaryKey)
+                    #set ($selected = " selected")
+                #end
+            #end
+        #end
+
+        <option value="$att.QueryKey"$selected>$att.Name</option>
+
+        #set ($selected = "")
+    #end
+
+    </select>
+
+    <input type="text" name="$searchGroup.SearchWords.Key" size="36"
+        value="$searchGroup.SearchWords"><br>
+#end
+
+<br>
+#foreach ( $attVal in $searchValues )
+
+     ##set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
+     #if ( $attVal.Attribute.AttributeType.ValidationKey )
+        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
+     #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+        #set ( $field = "OptionId" )
+     #end
+
+    $attVal.Attribute.Name:
+
+    <font color="red">
+        #attrValueErrorMsg ( $attVal $field )
+    </font>
+    <br>
+    #attrValueHierarchySelect ($attVal $field "")
+
+<br><br>
+#end
+
+        <input type="submit" name="eventSubmit_doSearch" 
+                value="Search">
+        $intake.declareGroups()
+        </form>
+
+        <A HREF="advancedsearch.html">advanced search</A>
+    </TD>
+                                        
+    <TD WIDTH="36%">
+        <TABLE BORDER="0" WIDTH="100%">
+
+        <TR>
+            <TD VALIGN="TOP" COLSPAN="2">My Saved Searches [M2]:</TD>
+        </TR>
+
+        <TR>
+            <TD WIDTH="66%" VALIGN="TOP">
+                <OL>           
+                     <LI><A HREF="query.html">Search one</A>
+                     <LI><A HREF="query.html">Search two</A>
+                     <LI><A HREF="query.html">Search three</A>
+                     <LI><A HREF="query.html">Add new</A>
+               </OL>
+            </TD>
+                                                                
+            <TD WIDTH="34%" VALIGN="TOP">
+                <A HREF="query.html">edit</A> | 
+                <A HREF="query.html">delete<BR>
+                                     edit</A> | 
+                <A HREF="query.html">delete<BR>
+                                     edit</A> | 
+                <A HREF="query.html">delete</A>
+            </TD>
+        </TR>
+        </table>                     
+
+    </td>
+    </tr>
+    </table>
+
+</td>
+</tr>
+</table>
 <!-- end search -->
+
+
+
+
+
+
+
