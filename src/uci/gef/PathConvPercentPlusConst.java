@@ -27,7 +27,7 @@
 // File: PathConvPercentPlusConst.java
 // Classes: PathConvPercentPlusConst
 // Original Author: abonner@ics.uci.edu
-// $Id: PathConvPercentPlusConst.java,v 1.4 1998/07/02 02:52:57 jrobbins Exp $
+// $Id: PathConvPercentPlusConst.java,v 1.5 1998/07/02 21:41:40 jrobbins Exp $
 
 package uci.gef;
 
@@ -54,7 +54,7 @@ public class PathConvPercentPlusConst extends PathConv {
 
   public void stuffPoint(Point res) {
     int figLength = _pathFigure.getPerimeterLength();
-    if (figLength < 10) { res.setLocation(_pathFigure.getLocation()); return; }
+    if (figLength < 10) { res.setLocation(_pathFigure.center()); return; }
     int pointToGet = ((figLength * percent) / 100) + _delta;
 
     if (pointToGet < 0) pointToGet = 0;
