@@ -32,7 +32,7 @@ public class MarkMessageAsHamAction
 		super(frameController, "Mark Message as Ham");
 
 		// tooltip text
-		setTooltipText("Mark selected messages as Ham");
+		putValue(SHORT_DESCRIPTION, "Mark selected messages as Ham");
 
 		setEnabled(false);
 		(

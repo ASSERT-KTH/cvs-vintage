@@ -50,7 +50,7 @@ public class RemoveAddressFromWhiteListAction
 		super(frameController, "Remove Address from Whitelist");
 
 		// tooltip text
-		setTooltipText("Remove Address from Whitelist");
+		putValue(SHORT_DESCRIPTION, "Remove Address from Whitelist");
 
 		setEnabled(false);
 		(

@@ -45,17 +45,15 @@ public class BounceAction extends FrameAction implements SelectionListener {
 				"mainframe",
 				"menu_message_bounce"));
 
-
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_bounce_tooltip"));
-
-		setMnemonic('B');
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString("menu", "mainframe", "menu_message_bounce_tooltip")
+				.replaceAll("&", ""));
 
 		// we must see if the Key not alrady used
-		setAcceleratorKey(
+		putValue(
+			ACCELERATOR_KEY,
 			KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK));
 
 		setEnabled(false);

@@ -32,8 +32,7 @@ public class AnalyzeFolderAction
 		super(frameController, "Analyze Folder");
 
 		// tooltip text
-		setTooltipText("Analyze all messages of selected Folder");
-
+		putValue(SHORT_DESCRIPTION, "Analyze all messages of selected Folder");
 
 		setEnabled(false);
 		(

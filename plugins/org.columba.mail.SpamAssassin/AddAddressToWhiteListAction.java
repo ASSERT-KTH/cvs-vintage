@@ -50,9 +50,8 @@ public class AddAddressToWhiteListAction
 		super(frameController, "Add Address to Whitelist");
 
 		//	tooltip text
-		setTooltipText("Add Address to Whitelist");
+		putValue(SHORT_DESCRIPTION, "Add Address to Whitelist");
 
-		
 		setEnabled(false);
 		(
 			(

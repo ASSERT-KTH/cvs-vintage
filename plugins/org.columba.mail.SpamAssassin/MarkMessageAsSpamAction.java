@@ -32,7 +32,7 @@ public class MarkMessageAsSpamAction
 		super(frameController, "Mark Message as Spam");
 
 		// tooltip text
-		setTooltipText("Mark selected messages as Spam");
+		putValue(SHORT_DESCRIPTION, "Mark selected messages as Spam");
 
 		setEnabled(false);
 		(

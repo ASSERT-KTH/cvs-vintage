@@ -26,8 +26,7 @@ public class HelloWorldAction extends FrameAction {
 	public HelloWorldAction(FrameMediator controller) {
 		super(controller, "Hello, World!");
 
-		setTooltipText("Show me this tooltip, please");
-
+		putValue(SHORT_DESCRIPTION, "Show me this tooltip, please");
 	}
 
 	/* (non-Javadoc)

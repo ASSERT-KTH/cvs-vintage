@@ -32,8 +32,7 @@ public class AnalyzeMessageAction
 		super(frameController, "Analyze Messages");
 
 		// tooltip text
-		setTooltipText("Analyze selected messages");
-
+		putValue(SHORT_DESCRIPTION, "Analyze selected messages");
 
 		setEnabled(false);
 		(

@@ -51,7 +51,7 @@ public class AddAddressToBlackListAction
 		super(frameController, "Add Address to Blacklist");
 
 		// tooltip text
-		setTooltipText("Add Address to Blacklist");
+		putValue(SHORT_DESCRIPTION, "Add Address to Blacklist");
 		
 		setEnabled(false);
 		(
