@@ -31,7 +31,7 @@ import javax.transaction.xa.XAException;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 class TransactionImpl
    implements Transaction
@@ -42,11 +42,12 @@ class TransactionImpl
 
    // Constructors --------------------------------------------------
 
-   TransactionImpl(TxCapsule txCapsule, Xid xid)
+   TransactionImpl(TxCapsule txCapsule, XidImpl xid)
    {
       this.txCapsule = txCapsule;
       this.xid = xid;
-      globalId = new GlobalId(xid);
+      globalId = new GlobalId(xid.hashCode(),
+                              xid.getInternalGlobalTransactionId());
    }
 
    // Public --------------------------------------------------------
@@ -166,7 +167,7 @@ class TransactionImpl
    // Package protected ---------------------------------------------
 
    /** The ID of this transaction. */
-   Xid xid;
+   XidImpl xid;
 
    /**
     *  Setter for property done.

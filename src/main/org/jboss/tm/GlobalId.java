@@ -16,9 +16,9 @@ import javax.transaction.xa.Xid;
  *
  *  @see XidImpl
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
-class GlobalId
+public class GlobalId
    implements java.io.Serializable
 {
    // Constants -----------------------------------------------------
@@ -43,23 +43,17 @@ class GlobalId
    // Constructors --------------------------------------------------
 
    /**
-    *  Create a new instance.
+    *  Create a new instance. This constructor is public <em>only</em>
+    *  to get around a class loader problem; it should be package-private.
     */
-   GlobalId(Xid xid)
+   public GlobalId(int hash, byte[] globalId)
    {
-      if (xid.getFormatId() != XidImpl.JBOSS_FORMAT_ID)
-        throw new IllegalArgumentException("Bad transaction format id");
-
-      hash = xid.hashCode();
-      if (xid instanceof XidImpl)
-        globalId = ((XidImpl)xid).getInternalGlobalTransactionId();
-      else
-        globalId = xid.getGlobalTransactionId();
+      this.hash = hash;
+      this.globalId = globalId;
    }
 
-   // Public --------------------------------------------------------
 
-   // Xid implementation --------------------------------------------
+   // Public --------------------------------------------------------
 
    /**
     *  Compare for equality.
