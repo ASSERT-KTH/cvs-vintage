@@ -427,7 +427,9 @@ public final class ServletHandler extends Handler {
     }
 
     // Overrides the default handler
-    public void service ( Request req, Response res ) {
+    public void service ( Request req, Response res )
+	throws Exception
+    {
 	if( state!=STATE_READY ) {
 	    if( state!= STATE_DISABLED ) {
 		init();
@@ -497,8 +499,8 @@ public final class ServletHandler extends Handler {
 	    } else {
 		servlet.service(reqF, resF);
 	    }
-	// catch just UnavailableException, so we can set a timer if needed
-	// other exceptions will be thrown
+	    // catch just UnavailableException, so we can set a timer if needed
+	    // other exceptions will be thrown
 	} catch ( UnavailableException ex ) {
 	    // if new exception, save and set timer if necessary
 	    if ( res.getErrorException() != ex ) {
@@ -524,6 +526,7 @@ public final class ServletHandler extends Handler {
 	    handleServiceError( req, res, ex );
 	    return;
 	}
+	
 	// clear any error exception since none were thrown
 	res.setErrorException(null);
 	res.setErrorURI(null);
@@ -566,9 +569,13 @@ public final class ServletHandler extends Handler {
     }
 
     protected void handleServiceError( Request req, Response res, Throwable t )
+	throws Exception
     {
 	// if in included, defer handling to higher level
-	if (res.isIncluded()) return;
+	if (res.isIncluded()) {
+	    throw (Exception)t;
+	}
+	// only for top-level servlets
 	handleError( req, res, t );
     }
 
