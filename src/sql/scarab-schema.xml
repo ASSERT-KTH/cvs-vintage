@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.99 2002/05/21 21:54:17 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.100 2002/05/21 22:12:22 jon Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -1168,7 +1168,7 @@
 
     <column name="QUERY_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
-        Person.
+        Person who created the query.
     -->
     <column name="USER_ID" required="true" type="INTEGER"></column>
     <!--
@@ -1206,6 +1206,16 @@
         Default subscription frequency.
     -->
     <column name="SUBSCRIPTION_FREQUENCY_ID" required="false" type="INTEGER" />
+    <!--
+        Whether or not this query should show up on the homepage.
+    -->
+    <column name="HOME_PAGE" javaName="HomePage" required="false"
+            default="0" size="1" type="BOOLEANINT"></column>
+    <!--
+        The order in which the user wants to see the queries in the home page
+    -->
+    <column name="PREFERRED_ORDER" javaName="Order" required="false"
+            default="0" type="INTEGER"></column>
 
     <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
@@ -1234,7 +1244,7 @@
     -->
     <column name="QUERY_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
-        Person.
+        Person subscribed to a query (might not be the person who created it).
     -->
     <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
@@ -1251,11 +1261,6 @@
     -->
     <column name="ISDEFAULT" required="false" type="BOOLEANINT" 
             default="0" size="1"></column>
-    <!--
-        The order in which the user wants to see the queries in the home page
-    -->
-    <column name="PREFERRED_ORDER" javaName="Order" required="false"
-            default="-1" type="INTEGER"></column>
 
     <foreign-key foreignTable="SCARAB_QUERY">
         <reference local="QUERY_ID" foreign="QUERY_ID"/>
