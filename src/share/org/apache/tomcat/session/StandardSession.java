@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.9 2000/05/15 18:17:06 jon Exp $
- * $Revision: 1.9 $
- * $Date: 2000/05/15 18:17:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.10 2000/05/15 20:58:49 jon Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/05/15 20:58:49 $
  *
  * ====================================================================
  *
@@ -92,7 +92,8 @@ import org.apache.tomcat.util.StringManager;
  * HttpSession view of this instance back to a Session view.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.9 $ $Date: 2000/05/15 18:17:06 $
+ * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
+ * @version $Revision: 1.10 $ $Date: 2000/05/15 20:58:49 $
  */
 
 final class StandardSession
@@ -752,10 +753,13 @@ final class StandardSession
 
 	// Deserialize the attribute count and attribute values
 	int n = ((Integer) stream.readObject()).intValue();
+	if (attributes == null)
+		attributes = new Hashtable();
 	for (int i = 0; i < n; i++) {
 	    String name = (String) stream.readObject();
 	    Object value = (Object) stream.readObject();
-	    attributes.put(name, value);
+		if (name != null)
+		    attributes.put(name, value);
 	}
 
     }
