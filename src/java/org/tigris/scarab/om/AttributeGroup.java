@@ -49,12 +49,15 @@ package org.tigris.scarab.om;
 
 
 import java.util.List;
+import java.util.LinkedList;
+import java.util.Iterator;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
@@ -69,6 +72,13 @@ public  class AttributeGroup
     extends org.tigris.scarab.om.BaseAttributeGroup
     implements Persistent
 {
+    // the following Strings are method names that are used in caching results
+    private static final String GET_ATTRIBUTES = 
+        "getAttributes";
+    private static final String GET_HIGHEST_ORDERED_ATTRIBUTE = 
+        "getHighestOrderedAttribute";
+    private static final String GET_R_ATTRIBUTE_ATTRGROUP = 
+        "getRAttributeAttributeGroup";
 
     /**
      * Throws UnsupportedOperationException.  Use
@@ -133,31 +143,67 @@ public  class AttributeGroup
     public List getAttributes()
         throws Exception
     {
-        Criteria crit = new Criteria()
-            .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId())
-            .addJoin(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, 
-                                                  AttributePeer.ATTRIBUTE_ID)
-            .add(AttributePeer.ATTRIBUTE_TYPE_ID, 
-                 AttributeTypePeer.USER_TYPE_KEY, Criteria.NOT_EQUAL)
-            .addAscendingOrderByColumn(RAttributeAttributeGroupPeer
-                                       .PREFERRED_ORDER);
-        return AttributePeer.doSelect(crit);
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_ATTRIBUTES); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria()
+                .add(RAttributeAttributeGroupPeer.GROUP_ID, 
+                     getAttributeGroupId())
+                .addJoin(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, 
+                         AttributePeer.ATTRIBUTE_ID)
+                .add(AttributePeer.ATTRIBUTE_TYPE_ID, 
+                     AttributeTypePeer.USER_TYPE_KEY, Criteria.NOT_EQUAL)
+                .addAscendingOrderByColumn(RAttributeAttributeGroupPeer
+                                           .PREFERRED_ORDER);
+            List raags = RAttributeAttributeGroupPeer.doSelect(crit);
+            result = new LinkedList();
+            Iterator i = raags.iterator();
+            while (i.hasNext()) 
+            {
+                ObjectKey id = ((RAttributeAttributeGroup)i.next())
+                    .getAttributeId();
+                result.add(Attribute.getInstance(id));
+            }
+            ScarabCache.put(result, this, GET_ATTRIBUTES);
+        }
+        else 
+        {
+            result = (List)obj;
+        }
+        return result;
     }
+
 
     /**
      * Returns order of the attribute in this group with highest sequence #
+     * FIXME: this method includes all attributes, while getAttributes 
+     * excludes user attributes.  Need to explain or fix differences.
      */
     public int getHighestOrderedAttribute()
         throws Exception
     {
-        Criteria crit = new Criteria()
-            .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId())
-            .addAscendingOrderByColumn(RAttributeAttributeGroupPeer
-                                       .PREFERRED_ORDER);
-        List raags = RAttributeAttributeGroupPeer.doSelect(crit); 
-        return ((RAttributeAttributeGroup)raags.get(raags.size()-1)).getOrder();
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_HIGHEST_ORDERED_ATTRIBUTE); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria()
+                .add(RAttributeAttributeGroupPeer.GROUP_ID, 
+                     getAttributeGroupId())
+                .addAscendingOrderByColumn(RAttributeAttributeGroupPeer
+                                           .PREFERRED_ORDER);
+            result = RAttributeAttributeGroupPeer.doSelect(crit); 
+            ScarabCache.put(result, this, GET_HIGHEST_ORDERED_ATTRIBUTE);
+        }
+        else 
+        {
+            result = (List)obj;
+        }
+        return ((RAttributeAttributeGroup)result.get(result.size()-1))
+            .getOrder();
     }
-        
+
+
     /**
      * Retrieves R_ATTRIBUTE_ATTRIBUTEGROUP mapping object for this group
      * And the given attribute.
@@ -166,15 +212,27 @@ public  class AttributeGroup
         (Attribute attribute)
         throws Exception
     {
-        RAttributeAttributeGroup ras = null;
-        Criteria crit = new Criteria()
-            .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId())
-            .add(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, 
-                 attribute.getAttributeId());
-        
-         ras = (RAttributeAttributeGroup)RAttributeAttributeGroupPeer
-                                         .doSelect(crit).get(0);
-         return ras;
+        RAttributeAttributeGroup result = null;
+        Object obj = ScarabCache.get(this, GET_R_ATTRIBUTE_ATTRGROUP, 
+                                     attribute); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria()
+                .add(RAttributeAttributeGroupPeer.GROUP_ID, 
+                     getAttributeGroupId())
+                .add(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, 
+                     attribute.getAttributeId());
+            
+            result = (RAttributeAttributeGroup)RAttributeAttributeGroupPeer
+                .doSelect(crit).get(0);
+            ScarabCache.put(result, this, GET_R_ATTRIBUTE_ATTRGROUP, 
+                            attribute);
+        }
+        else 
+        {
+            result = (RAttributeAttributeGroup)obj;
+        }
+        return result;
     }
 
     public RAttributeAttributeGroup addRAttributeAttributeGroup( Attribute attribute )

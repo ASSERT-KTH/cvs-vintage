@@ -66,6 +66,7 @@ import org.apache.fulcrum.cache.GlobalCacheService;
 import org.apache.fulcrum.TurbineServices;
 
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.services.cache.ScarabCache;
 
 /** 
   * This class represents the SCARAB_R_OPTION_OPTION table.
@@ -76,7 +77,7 @@ import org.tigris.scarab.util.ScarabException;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.38 2002/01/18 22:26:07 jon Exp $
+  * @version $Id: Attribute.java,v 1.39 2002/02/17 19:10:14 jmcnally Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -84,6 +85,21 @@ public class Attribute
 {
     private static final String className = "Attribute";
     
+    // the following Strings are method names that are used in caching results
+    private static final String ATTRIBUTE = 
+        className;
+    private static final String GET_INSTANCE = 
+        "getInstance";
+    private static final String GET_ALL_ATTRIBUTE_TYPES = 
+        "getAllAttributeTypes";
+    private static final String GET_ALL_ATTRIBUTES = 
+        "getAllAttributes";
+    private static final String GET_ALL_ATTRIBUTE_OPTIONS = 
+        "getAllAttributeOptions";
+    private static final String GET_ORDERED_ROPTIONOPTION_LIST = 
+        "getOrderedROptionOptionList";
+
+
     private static final String SELECT_ONE = "select-one";
     
     private List orderedROptionOptionList = null;
@@ -158,6 +174,7 @@ public class Attribute
         return getInstance((ObjectKey)new NumberKey(id));
     }
 
+
     /**
      * Return an instance based on the passed in 
      * attribute name as a String. It will return 
@@ -170,13 +187,22 @@ public class Attribute
     public static Attribute getInstance(String attributeName)
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.add (AttributePeer.ATTRIBUTE_NAME, attributeName);
-        List attributes = (List) AttributePeer.doSelect(crit);
         Attribute result = null;
-        if (attributes.size() > 0)
+        Object obj = ScarabCache.get(ATTRIBUTE, GET_INSTANCE, attributeName); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add (AttributePeer.ATTRIBUTE_NAME, attributeName);
+            List attributes = (List) AttributePeer.doSelect(crit);
+            if (attributes.size() > 0)
+            {
+                result = (Attribute) attributes.get(0);
+                ScarabCache.put(result, ATTRIBUTE, GET_INSTANCE, attributeName);
+            } 
+        }
+        else 
         {
-            result = (Attribute) attributes.get(0);
+            result = (Attribute)obj;
         }
         return result;
     }
@@ -210,6 +236,7 @@ public class Attribute
         setParentChildAttributeOptions(null);
     }
 
+
     /**
      * Little method to return a List of all Attribute Type's.
      * It is here for convenience with regards to needing this
@@ -218,8 +245,20 @@ public class Attribute
     public static List getAllAttributeTypes()
         throws Exception
     {
-        return AttributeTypePeer.doSelect(new Criteria());
+        List result = null;
+        Object obj = ScarabCache.get(ATTRIBUTE, GET_ALL_ATTRIBUTE_TYPES); 
+        if ( obj == null ) 
+        {        
+            result = AttributeTypePeer.doSelect(new Criteria());
+            ScarabCache.put(result, ATTRIBUTE, GET_ALL_ATTRIBUTE_TYPES);
+        }
+        else 
+        {
+            result = (List)obj;
+        }
+        return result;
     }
+
 
     /**
      * get a list of all of the Attributes in the database
@@ -227,7 +266,18 @@ public class Attribute
     public static List getAllAttributes()
         throws Exception
     {
-        return AttributePeer.doSelect(new Criteria());
+        List result = null;
+        Object obj = ScarabCache.get(ATTRIBUTE, GET_ALL_ATTRIBUTES); 
+        if ( obj == null ) 
+        {        
+            result = AttributePeer.doSelect(new Criteria());
+            ScarabCache.put(result, ATTRIBUTE, GET_ALL_ATTRIBUTES);
+        }
+        else 
+        {
+            result = (List)obj;
+        }
+        return result;
     }
 
     public boolean isOptionAttribute()
@@ -338,17 +388,30 @@ public class Attribute
         return getAttributeOption(new NumberKey(optionID));
     }
 
+
     /**
      * Used internally to get a list of Attribute Options
      */
     private List getAllAttributeOptions()
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.addJoin(AttributeOptionPeer.OPTION_ID, ROptionOptionPeer.OPTION2_ID);
-        crit.add(AttributeOptionPeer.ATTRIBUTE_ID, this.getAttributeId());
-        crit.addAscendingOrderByColumn(ROptionOptionPeer.PREFERRED_ORDER);
-        return (List)AttributeOptionPeer.doSelect(crit);
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_ALL_ATTRIBUTE_OPTIONS); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.addJoin(AttributeOptionPeer.OPTION_ID, 
+                         ROptionOptionPeer.OPTION2_ID);
+            crit.add(AttributeOptionPeer.ATTRIBUTE_ID, this.getAttributeId());
+            crit.addAscendingOrderByColumn(ROptionOptionPeer.PREFERRED_ORDER);
+            result = AttributeOptionPeer.doSelect(crit);
+            ScarabCache.put(result, this, GET_ALL_ATTRIBUTE_OPTIONS);
+        }
+        else 
+        {
+            result = (List)obj;
+        }
+        return result;
     }
 
     /**
@@ -404,6 +467,7 @@ public class Attribute
         orderedROptionOptionList = value;
     }
 
+
     /**
      * Creates an ordered List of ROptionOption which are
      * children within this Attribute. The list is ordered according 
@@ -414,15 +478,28 @@ public class Attribute
     public List getOrderedROptionOptionList()
         throws Exception
     {
-        if (orderedROptionOptionList == null)
-        {
-            Criteria crit = new Criteria();
-            crit.addJoin(AttributeOptionPeer.OPTION_ID, ROptionOptionPeer.OPTION2_ID);
-            crit.add(AttributeOptionPeer.ATTRIBUTE_ID, this.getAttributeId());
-            crit.addAscendingOrderByColumn(ROptionOptionPeer.PREFERRED_ORDER);
-            orderedROptionOptionList = ROptionOptionPeer.doSelect(crit);
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_ORDERED_ROPTIONOPTION_LIST); 
+        if ( obj == null ) 
+        {        
+            if (orderedROptionOptionList == null)
+            {
+                Criteria crit = new Criteria();
+                crit.addJoin(AttributeOptionPeer.OPTION_ID, 
+                             ROptionOptionPeer.OPTION2_ID);
+                crit.add(AttributeOptionPeer.ATTRIBUTE_ID, getAttributeId());
+                crit.addAscendingOrderByColumn(
+                    ROptionOptionPeer.PREFERRED_ORDER);
+                orderedROptionOptionList = ROptionOptionPeer.doSelect(crit);
+            }
+            result = orderedROptionOptionList;
+            ScarabCache.put(result, this, GET_ORDERED_ROPTIONOPTION_LIST);
         }
-        return orderedROptionOptionList;
+        else 
+        {
+            result = (List)obj;
+        }
+        return result;
     }
 
     /**
