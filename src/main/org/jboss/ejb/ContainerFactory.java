@@ -66,7 +66,7 @@ import org.jboss.verifier.event.VerificationListener;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *
-*   @version $Revision: 1.24 $
+*   @version $Revision: 1.25 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -426,6 +426,7 @@ public class ContainerFactory
 
 							// Make sure this bean knows the configuration he is using
 							bean.setConfigurationName(DEFAULT_ENTITY_BMP_CONFIGURATION);
+
 						}
 						else
 						{
@@ -434,6 +435,7 @@ public class ContainerFactory
 
 							// Make sure this bean knows the configuration he is using
 							bean.setConfigurationName(DEFAULT_ENTITY_CMP_CONFIGURATION);
+						
 						}
 					}
 
@@ -446,9 +448,24 @@ public class ContainerFactory
 					// Set instance pool
 					container.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
 
-					// Set persistence manager
-					container.setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
-
+					// Set persistence manager 
+					if (((jBossEntity) bean).getPersistenceType().equals("Bean")) {
+						
+						//Should be BMPPersistenceManager
+						container.setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
+				 	}
+					else {
+						
+						// CMP takes a manager and a store
+						org.jboss.ejb.plugins.CMPPersistenceManager persistenceManager = new org.jboss.ejb.plugins.CMPPersistenceManager();
+					    
+						//Load the store from configuration
+						persistenceManager.setPersistenceStore((EntityPersistenceStore)cl.loadClass(conf.getPersistenceManager()).newInstance());
+				
+						// Set the manager on the container
+						container.setPersistenceManager(persistenceManager);
+					}
+					
 					// Create interceptors
 					container.addInterceptor(new LogInterceptor());
 					container.addInterceptor(new SecurityInterceptor());
