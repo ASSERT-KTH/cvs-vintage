@@ -77,6 +77,7 @@ import org.apache.jasper.compiler.Compiler;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.facade.*;
 
+import org.apache.tomcat.util.compat.Jdk11Compat;
 /**
  * Plug in the JSP engine (a.k.a Jasper)!
  * Tomcat uses a "built-in" mapping for jsps ( *.jsp -> jsp ). "jsp"
@@ -389,7 +390,6 @@ public class JspInterceptor extends BaseInterceptor {
 	if( "jsp".equals( wrapper.getName())) {
 	    // if it's an extension mapped file, construct and map a handler
 	    jspFile=req.servletPath().toString();
-	    
 	    // extension mapped jsp - define a new handler,
 	    // add the exact mapping to avoid future overhead
 	    handler= mapJspPage( req.getContext(), jspFile );
@@ -608,6 +608,9 @@ final class JasperLiaison {
 		log.log( "Update class Name " + mangler.getServletClassName());
 	    handler.setServletClassName( mangler.getServletClassName() );
 
+	    // May be called from include, we need to set the context class loader
+	    // for jaxp1.1 to work using the container class loader
+	    ClassLoader savedContextCL= containerCCL( req.getClass().getClassLoader());
 	    
 	    try {
 		Options options=new JasperOptionsImpl(args); 
@@ -622,6 +625,7 @@ final class JasperLiaison {
 		if(debug>0)log.log( "Generated " +
 				    mangler.getClassFileName() );
             } catch ( java.io.FileNotFoundException fnfex ){
+		containerCCL( savedContextCL );
 		return 404;
 	    } catch( Exception ex ) {
 		if( ctx!=null )
@@ -631,14 +635,25 @@ final class JasperLiaison {
 		handler.setErrorException(ex);
 		handler.setState(Handler.STATE_DISABLED);
 		// until the jsp cahnges, when it'll be enabled again
+		containerCCL( savedContextCL );
 		return 500;
 	    }
 
+	    containerCCL( savedContextCL );
+	    
 	    dep.setExpired( false );
 	    
 	}
 
 	return 0;
+    }
+
+    static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
+    
+    ClassLoader containerCCL( ClassLoader cl ) {
+	ClassLoader orig= jdk11Compat.getContextClassLoader();
+	jdk11Compat.setContextClassLoader( cl );
+	return orig;
     }
 
     /** Convert the .jsp file to a java file, then compile it to class
