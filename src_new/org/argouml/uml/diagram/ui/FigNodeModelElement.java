@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.80 2003/10/03 23:16:08 d00mst Exp $
+// $Id: FigNodeModelElement.java,v 1.81 2003/10/07 19:23:44 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -343,10 +343,10 @@ public abstract class FigNodeModelElement
             }
         }
 	if (encloser != _encloser) {
-	    if (_encloser instanceof FigGroup)
-		((FigGroup) _encloser).removeFig(this);
-	    if (encloser instanceof FigGroup)
-		((FigGroup) encloser).addFig(this);
+	    if (_encloser instanceof FigNodeModelElement)
+		((FigNodeModelElement) _encloser)._enclosedFigs.remove(this);
+	    if (encloser instanceof FigNodeModelElement)
+		((FigNodeModelElement) encloser)._enclosedFigs.add(this);
 	}
         _encloser = encloser;
     }
