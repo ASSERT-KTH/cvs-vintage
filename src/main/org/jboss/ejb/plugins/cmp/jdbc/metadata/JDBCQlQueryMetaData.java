@@ -8,13 +8,12 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.lang.reflect.Method;
 import org.jboss.metadata.QueryMetaData;
-import org.w3c.dom.Element;
 
 /**
  * Immutable class which contains information about an EJB QL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
    /**
@@ -56,12 +55,9 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
     * Constructs a JDBCQlQueryMetaData with data from the jdbcQueryMetaData
     * and additional data from the xml element
     * @param queryMetaData the metadata about this query
-    * @param queryElement the ejb-ql element which contains additional
-    *    information about this query
     */
    public JDBCQlQueryMetaData(
          JDBCQlQueryMetaData jdbcQueryMetaData,
-         Element queryElement,
          Method method,
          JDBCReadAheadMetaData readAhead) {
       

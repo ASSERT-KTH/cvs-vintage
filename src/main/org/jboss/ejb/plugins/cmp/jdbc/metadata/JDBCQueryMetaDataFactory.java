@@ -24,7 +24,7 @@ import org.jboss.metadata.QueryMetaData;
  * on the query specifiection type.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCQueryMetaDataFactory {
    private JDBCEntityMetaData entity;
@@ -103,12 +103,10 @@ public class JDBCQueryMetaDataFactory {
                readAhead);
       }
 
-      // EJB-QL
-      Element ejbQl = MetaData.getOptionalChild(queryElement, "ejb-ql");
-      if(ejbQl != null) {
+      // EJB-QL: default
+      if(jdbcQueryMetaData instanceof JDBCQlQueryMetaData) {
          return new JDBCQlQueryMetaData(
                (JDBCQlQueryMetaData)jdbcQueryMetaData,
-               ejbQl,
                method,
                readAhead);
       }
