@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  *  @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -255,13 +255,12 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 				tmpClass = tmpField.getType();
 			}
 			catch (NoSuchFieldException e) {
-				// Log.getLog().warning("!!! Deployment Failure !!!");
                 // We have a nested Field
                 try{
                    return ValueObjectHelper.getNestedFieldType(ejbClass,name);
                 }
                 catch (NoSuchMethodException ne){
-                    Log.getLog().warning("A nested field does not have a get method" + ne);
+                    Log.getLog().warning("Nested field "+fieldName+" does not have a get method on "+ejbClass.getName());
                     return null;
                 }
 			}
@@ -367,6 +366,7 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 				StringTokenizer st = new StringTokenizer(name, ".");
 				while(st.hasMoreTokens()) {
 					fieldName = st.nextToken();
+                    if (currentObject == null) return null;
                     try{
     					currentField = currentObject.getClass().getField(fieldName);
     					currentObject = currentField.get(currentObject);
