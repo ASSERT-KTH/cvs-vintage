@@ -234,7 +234,7 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
         for (int i = 0; i < parent.getChildCount(); i++) {
             MessageNode child = (MessageNode) parent.getChildAt(i);
 
-            if (((ColumbaHeader) child.getHeader()).getFlags().getRecent()) {
+            if (((ColumbaHeader) child.getHeader()).getFlags().getSeen()==false) {
                 // recent found
                 LOG.info("found recent message");
 
