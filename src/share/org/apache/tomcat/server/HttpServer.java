@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.6 2000/01/08 23:04:47 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/01/08 23:04:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.7 2000/01/08 23:24:58 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/01/08 23:24:58 $
  *
  * ====================================================================
  *
@@ -152,7 +152,7 @@ public class HttpServer {
     
     Properties props;
     private StringManager sm =
-        StringManager.getManager(Constants.Package);
+        StringManager.getManager("org.apache.tomcat.server");
 
     private String hostname = "";
     private String serverHeader = null;
@@ -233,18 +233,6 @@ public class HttpServer {
 	    contextM.setServerInfo(
 	        contextM.getDefaultContext().getEngineHeader());
 	}
-	
-
-	props = new Properties();
-	getProperties(props, Constants.Property.Name);
-	// XXX make serverHeader a property of ContextM !
-	/*
-	 * Whoever modifies this needs to check this modification is
-	 * ok with the code in com.jsp.runtime.ServletEngine or talk
-	 * to akv before you check it in. 
-	 */
-        serverHeader = props.getProperty(Constants.Property.ServerHeader,
-					 Constants.Property.ServerHeader);
     }
 
 
@@ -415,6 +403,9 @@ public class HttpServer {
      */
 
     public String getServerHeader() {
+	// XXX XXX Ugly, but we want to remove the properties stuff
+	// which is worse
+	if(serverHeader==null) serverHeader="Tomcat Web Server 3.0";
         return serverHeader;
     }
 
@@ -551,71 +542,6 @@ public class HttpServer {
 	}
     }
 
-    /**
-     * Load the specified Properties from the specified file.
-     *
-     * @param props Properties to be loaded
-     * @param propertyFileName Name of the file from which properties
-     *  should be loaded
-     * @return The updated properties object
-     */
-    private Properties getProperties(Properties props, String propertyFileName) {
-        try {
-	    InputStream is=this.getClass().getResourceAsStream(propertyFileName);
-	    if( is==null ) return props;
-	    props.load(is);
-	} catch (IOException ioe) {
-	}
-
-	return props;
-    }
-
-    /** If no connector is added, will use a connector.properties file to "guess"
-	what connector to use based on vhost/port. IF none found, use the default,
-	which is the old HttpServer/EndpointManager
-    */
-    private ServerConnector findDefaultConnector( Properties def, String host, int port ) {
-	// first, try "connector.properties" in CLASSPATH
-	Properties props=new Properties( def );
-	getProperties(props, CONNECTOR_PROP );
-
-	String key = "connector." + host + "." + port + ".";
-	
-	String classN=props.getProperty( key + "class" ); // XXX constant, XML
-	
-	System.out.println("Setting up " + ((classN==null)?"HttpServer":classN) + " for " + host  + ":" + port );
-	if(classN != null ) {
-	    ServerConnector conn=null;
-
-	    try {
-		Class c=Class.forName( classN );
-		conn=(ServerConnector)c.newInstance();
-	    } catch(Exception ex) {
-		ex.printStackTrace();
-		//		return new HttpServerConnector();
-		return new HttpAdapter();
-	    }
-	    
-	    if( conn != null ) {
-		// set all the connector.x properties to the connector
-		int off=key.length();
-		Enumeration e=props.keys();
-		while( e.hasMoreElements() ) {
-		    String n=(String)e.nextElement();
-		    if( n.startsWith( key )) {
-			String pn=n.substring( off );
-			conn.setProperty( pn, props.getProperty( n ) );
-			//System.out.println("Set " + pn + " = " + props.getProperty(n ));
-		    }
-		}
-		return conn;
-	    }
-	}
-	// default 
-	// 	HttpServerConnector con=new HttpServerConnector();
-	return new HttpAdapter();
-    }
-
     /** Called before starting the connector
      */
     private void initConnector() {
@@ -623,7 +549,7 @@ public class HttpServer {
 	    // find a connector for the vhost:port combination
 	    // Use props and CONNECTOR_PROP to load configuration info
 	    // default is HttpServerConnector
-	    addConnector( findDefaultConnector(props, getHostName(), getPort()) );
+	    addConnector(  new HttpAdapter() );
 	}
 	for( int i=0; i<connector_count; i++ ) {
 	    connector[i].setAttribute(SERVER, this);
