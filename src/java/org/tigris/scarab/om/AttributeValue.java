@@ -60,6 +60,7 @@ import java.sql.Connection;
 import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Module;
 
@@ -69,7 +70,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.85 2003/01/16 22:44:38 jmcnally Exp $
+ * @version $Id: AttributeValue.java,v 1.86 2003/01/24 20:00:46 jmcnally Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -336,11 +337,25 @@ Leaving here so that John can remove or fix.
     {
         try
         {
-            return getAttribute().getName();
+            String s = '{' + super.toString() + ": " + getAttribute().getName();
+            if (getOptionId() != null) 
+            {
+                s += " optionId=" + getOptionId();  
+            }
+            if (getUserId() != null) 
+            {
+                s += " userId=" + getUserId();  
+            }
+            if (getValue() != null) 
+            {
+                s += " value=" + getValue();  
+            }
+            
+            return s + '}';
         }
         catch (Exception e)
         {
-            return "";
+            return super.toString();
         }
     }
 
@@ -503,7 +518,26 @@ Leaving here so that John can remove or fix.
     public NumberKey[] getOptionIds()
         throws Exception
     {
-        throw new ScarabException("not implemented");
+        List optionIds = new ArrayList();
+        if (getOptionId() != null) 
+        {
+            optionIds.add(getOptionId());
+        }
+        AttributeValue chainedAV = getChainedValue();
+        while (chainedAV != null) 
+        {
+            if (chainedAV.getOptionId() != null) 
+            {
+                optionIds.add(chainedAV.getOptionId());
+            }
+            chainedAV = chainedAV.getChainedValue();
+        }
+        if (Log.get().isDebugEnabled()) 
+        {
+            Log.get().debug(this + " optionIds: " + optionIds);
+        }
+        
+        return (NumberKey[])optionIds.toArray(new NumberKey[optionIds.size()]);
     }
 
     public void setOptionIds(NumberKey[] ids)

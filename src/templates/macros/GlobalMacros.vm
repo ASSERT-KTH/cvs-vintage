@@ -115,9 +115,7 @@
 
 <select name="$attrInput.get($optionFieldName).Key"
 #if($size.length() != 0)size="$size"#end #if($multiple)multiple="multiple"#end>
-  #if ($size.length() == 0)
   <option value="">$l10n.Choose</option>
-  #end
   #foreach ($option in $module.getOptionTree($attr, $scarabR.CurrentIssueType))
     #set ($selected = false)
     #if ($values && $values.toString().length() > 0)
@@ -570,7 +568,8 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #end
 
 
-#macro (userList $module $issueType $userAttrs)
+#macro (userList $mitList)
+#set ($userAttrs = $mitList.getCommonUserAttributes())
 
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn","username"))
@@ -597,10 +596,10 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
    #set ($searchResults = $scarabR.UserSearchResults) 
    #if ( $searchResults.isEmpty())
       <p class="alert">$l10n.NoUsersMatch</p>
-      #set ($searchResults = $scarabR.getUsers($module, $issueType))
+      #set ($searchResults = $mitList.PotentialAssignees)
    #end
 #else
-      #set ($searchResults = $scarabR.getUsers($module, $issueType))
+      #set ($searchResults = $mitList.PotentialAssignees)
 #end
 
 ## PAGINATION
@@ -628,7 +627,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
     <td>$user.Name</td>
     <td><select name="user_attr_$user.UserId">
      #foreach ($userAttr in $userAttrs)
-      #if ($user.hasPermission($userAttr.Permission, $module))
+      #if ($user.hasPermission($userAttr.Permission, $mitList.Modules))
        <option value="$userAttr.AttributeId">$userAttr.Name</option>
       #end
      #end
@@ -661,3 +660,77 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 <input type="hidden" name="resultsPerPage" value="$resultsPerPage" />
 
 #end
+
+
+## ---------------------------------------------------------------------------
+## Date related macros
+## ---------------------------------------------------------------------------
+
+#macro(selectDay $defaultDay)
+ #foreach ($i in [1..31])
+  <option value="$i"#if("$defaultDay" == "$i") selected="selected"#end>$i</option>
+ #end
+#end
+
+#macro(selectHour $defaultHour)
+ #foreach ($i in [0..23])
+  <option value="$i"#if("$defaultHour" == "$i") selected="selected"#end>$i:00</option>
+ #end
+#end
+
+#macro(printMonth $i $name $defaultMonth)
+ <option value="$i"#if( $defaultMonth == $i ) selected="selected"#end>$name</option>
+#end
+
+#macro(selectMonth $defaultMonth) 
+ #printMonth(1 $l10n.January $defaultMonth)
+ #printMonth(2 $l10n.February $defaultMonth)
+ #printMonth(3 $l10n.March $defaultMonth)
+ #printMonth(4 $l10n.April $defaultMonth)
+ #printMonth(5 $l10n.May $defaultMonth)
+ #printMonth(6 $l10n.June $defaultMonth)
+ #printMonth(7 $l10n.July $defaultMonth)
+ #printMonth(8 $l10n.August $defaultMonth)
+ #printMonth(9 $l10n.September $defaultMonth)
+ #printMonth(10 $l10n.October $defaultMonth)
+ #printMonth(11 $l10n.November $defaultMonth)
+ #printMonth(12 $l10n.December $defaultMonth)
+#end
+
+#macro(selectYear $currentYear $defaultYear)
+ #set ($minYear = 2001)
+ #set ($maxYear = $currentYear + 1)
+ #selectYear2($minYear $maxYear $defaultYear)
+#end
+
+#macro(selectYear2 $minYear $maxYear $defaultYear)
+ #foreach ($year in [$minYear..$maxYear])
+   <option value="$year"
+     #if("$defaultYear" == "$year")selected="selected"#end
+   >$year</option>
+ #end
+#end
+
+#* -------------------------------------------------------------------------
+Prints out a date entry form.
+------------------------------------------------------------------------- *#
+#macro(dateEntry $yearField $currentYear $selectedYear $monthField $selectedMonth $dayField $selectedDay $hourField $selectedHour)
+ <select name="$yearField">
+  $currentYear $selectedYear
+  #selectYear($currentYear $selectedYear)
+ </select> $l10n.YearMark
+ &nbsp;
+ <select name="$monthField">
+  #selectMonth($selectedMonth)
+ </select> $l10n.MonthMark
+ &nbsp;
+ <select name="$dayField">
+  #selectDay($selectedDay)
+ </select> $l10n.DayMark
+ &nbsp;-&nbsp;
+ <select name="$hourField">
+  #selectHour($selectedHour)
+ </select> $l10n.TimeMark
+#end
+
+## ---------------------------------------------------------------------------

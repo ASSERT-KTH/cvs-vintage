@@ -63,7 +63,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.13 2003/01/13 21:17:53 jmcnally Exp $
+ * @version $Id: MITList.java,v 1.14 2003/01/24 20:00:47 jmcnally Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -440,28 +440,92 @@ public  class MITList
     public List getCommonUserAttributes()
         throws Exception
     {
-        if (size() < 2) 
+        List attributes = null;
+        if (isSingleModuleIssueType()) 
         {
-            throw new IllegalStateException("method should not be called on" +
-                " a list of one or less items.");
+            attributes = getModule().getUserAttributes(getIssueType());
         }
-        
-        List matchingAttributes = new ArrayList();
-        MITListItem item = getFirstItem();
-        List rmas = getModule(item)
-            .getRModuleAttributes(getIssueType(item), true, Module.USER);
-        Iterator i = rmas.iterator();
-        while (i.hasNext()) 
+        else 
         {
-            RModuleAttribute rma = (RModuleAttribute)i.next();
-            Attribute att = rma.getAttribute();
-            if ( rma.getActive() && isCommon(att)) 
+            List matchingAttributes = new ArrayList();
+            MITListItem item = getFirstItem();
+            List rmas = getModule(item)
+                .getRModuleAttributes(getIssueType(item), true, Module.USER);
+            Iterator i = rmas.iterator();
+            while (i.hasNext()) 
             {
-                matchingAttributes.add(att);   
+                RModuleAttribute rma = (RModuleAttribute)i.next();
+                Attribute att = rma.getAttribute();
+                if ( rma.getActive() && isCommon(att)) 
+                {
+                    matchingAttributes.add(att);   
+                }            
+            }
+            attributes = matchingAttributes;
+        }
+        return attributes;
+    }
+
+
+    /**
+     * potential assignee must have at least one of the permissions
+     * for the user attributes in all the modules.
+     */
+    public List getPotentialAssignees()
+        throws Exception
+    {
+        List users = new ArrayList();
+        List perms = getUserAttributePermissions();
+        if (isSingleModule()) 
+        {
+            ScarabUser[] userArray = getModule().getUsers(perms);
+            for (int i=0;i<userArray.length; i++)
+            {
+                users.add(userArray[i]);
             }            
         }
-        return matchingAttributes;
+        else 
+        {
+            MITListItem item = getFirstItem();
+            ScarabUser[] userArray = getModule(item).getUsers(perms);
+            List modules = getModules();
+            for (int i=0;i<userArray.length; i++)
+            {
+                boolean validUser = false;
+                ScarabUser user = userArray[i];
+                for (Iterator j=perms.iterator(); j.hasNext() && !validUser;) 
+                {                    
+                    validUser = user.hasPermission((String)j.next(), modules); 
+                }
+                if (validUser) 
+                {
+                    users.add(user);       
+                }
+            }            
+        }
+        return users;
     }
+
+    /**
+     * gets a list of permissions associated with the User Attributes
+     * that are active for this Module.
+     */
+    public List getUserAttributePermissions()
+        throws Exception
+    {
+        List userAttrs = getCommonUserAttributes();
+        List permissions = new ArrayList();
+        for (int i = 0; i < userAttrs.size(); i++)
+        {
+            String permission = ((Attribute)userAttrs.get(i)).getPermission();
+            if (!permissions.contains(permission))
+            {
+                permissions.add(permission);
+            }
+        }
+        return permissions;
+    }
+
 
     public List getCommonRModuleUserAttributes()
         throws Exception
@@ -730,6 +794,29 @@ public  class MITList
             }
         }
         return ids;
+    }
+
+    public List getModules()
+        throws TorqueException
+    {
+        if (size() < 1) 
+        {
+            throw new IllegalStateException("method should not be called on" +
+                " an empty list.");
+        }
+
+        List items = getExpandedMITListItems();
+        ArrayList modules = new ArrayList(items.size());
+        Iterator i = items.iterator();
+        while (i.hasNext()) 
+        {
+            Module m = ((MITListItem)i.next()).getModule();
+            if (!modules.contains(m)) 
+            {
+                modules.add(m);
+            }
+        }
+        return modules;
     }
 
     public List getIssueTypeIds()

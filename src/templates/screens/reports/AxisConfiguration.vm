@@ -1,0 +1,159 @@
+#set ($report = $scarabR.Report)
+#set ($reportDefn = $report.ReportDefinition)
+#set ($axisIndex = $data.Parameters.getInt("axis"))
+#set ($isRow = ($axisIndex == 0))
+#if ($isRow)
+  #set ($rowCol = "Row")
+#else
+  #set ($rowCol = "Column")
+#end
+
+<div class="app" id="div2-4-1-step1">
+<div id="apphead"><h2>Report builder</h2></div>
+
+<div class="tabs">
+  <table cellpadding="3" cellspacing="0" border="0">
+    <tr>
+      <td><a href="$link.setPage("reports,Info.vm")" title="builder1_info">$l10n.ReportInformation</a></td>
+#if ($isRow)
+      <th>$l10n.RowContent</th>
+      <td><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "1")" title="builder1_col">$l10n.ColumnContent</a></td>
+#else
+      <td><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "0")" title="builder1_row">$l10n.RowContent</a></td>
+      <th>$l10n.ColumnContent</th>
+#end
+    </tr>
+  </table>
+</div>
+
+
+#if ($reportDefn.ReportAxisList.size() > 0)
+<div class="colbar"><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "$axisIndex").addPathInfo("action", "ConfigureReport").addPathInfo("eventSubmit_doSwapRowCol", "foo")">$l10n.SwapRowCol</a></div>
+#end
+
+<form method="get" action="$link.setPage("reports,AxisConfiguration.vm")">
+<input type="hidden" name="action" value="ConfigureReport"/>
+<input type="hidden" name="axis" value="$axisIndex"/>
+
+#set ($headingIndex = $data.Parameters.getInt("heading", -1))
+#set ($headings = $reportDefn.getAxis($axisIndex).ReportHeadings)
+#set ($singleHeading = $headings && $headings.size() == 1)
+#set ($multiHeading = $headings && $headings.size() > 1)
+
+
+#if ($report.isReadyForCalculation() || $singleHeading)
+<div class="functnbar">
+  #if ($report.isReadyForCalculation())
+    <input type="submit" value="$l10n.RecalculateOutput" 
+      name="eventSubmit_doGenerateReport" />
+  #end
+  #if ($singleHeading)
+    <input type="submit" name="eventSubmit_doAddHeading" 
+        value="$l10n.AddNewHeading">
+  #end
+</div>
+#end						
+
+
+## don't show the headings section if the axis is Dates 
+##if (($singleHeading && $headings.get(0).calculateType() != 2) || $multiHeading)
+#if ($multiHeading)
+  #if ($headingIndex == -1)
+    #set ($headingIndex = 0)
+  #end
+  <h3>$l10n.get("${rowCol}Headings")</h3>
+  <div>
+    <table width="100%" cellpadding="3" cellspacing="2" border="1">		
+      <tr>
+    #if ($multiHeading)
+        <th>$l10n.Select</th>
+        <th>Heading Level</th>
+    #end
+        <th>$l10n.HeadingSummary</th>
+      </tr>
+  #foreach ($heading in $headings)
+    #set ($index = $velocityCount - 1)
+    #if ($headingIndex == $index)
+      #set ($selectedHeading = $heading)
+    #end
+    #indexedRows($velocityCount)
+    #if ($multiHeading)
+      <td>
+        <input type="radio" name="heading" value="$index" 
+          #if ($headingIndex == $index)checked="checked"#end />
+      </td>
+      <td>$velocityCount</td>
+    #end
+      <td>
+    #if ($reportDefn.displayHeading($heading))
+       $reportDefn.displayHeading($heading)
+    #else
+       $l10n.NewHeading
+    #end
+      </td>
+    </tr>
+  #end
+  </table>
+  <div>
+#end
+
+#if ($multiHeading)
+  <div class="functnbar2">
+    <input type="submit" name="eventSubmit_doSelectHeading" 
+        value="$l10n.EditSelectedHeading">
+    <input type="submit" name="eventSubmit_doRemoveHeading" 
+        value="$l10n.RemoveSelectedHeading">
+    <input type="submit" name="eventSubmit_doAddHeading" 
+        value="$l10n.AddNewHeading">
+  </div>
+#elseif ($singleHeading)
+    #set ($headingIndex = 0)
+    <input type="hidden" name="heading" value="0" />
+    #set ($selectedHeading = $headings.get(0))
+#end
+			
+<h3>$l10n.get("${rowCol}Criteria")</h3>	  
+		
+<div class="axial">
+  <table width="100%" cellpadding="3" cellspacing="2" border="1">			
+    <tr>
+      <th width="120">select content type</th>
+      <td>
+#if ($selectedHeading && $selectedHeading.size() > 0)
+  #set ($selectedType = $selectedHeading.calculateType())
+#end
+#if (!$selectedType)
+  #set ($selectedType = $data.Parameters.getInt("headingtype", 0))
+#end
+
+        <select name="headingtype">
+          <option value="0" #if ($selectedType == 0)selected="selected"#end>Attribute(s) / option(s)</option>
+          <option value="1" #if ($selectedType == 1)selected="selected"#end>Users (by user attribute)</option>
+  #if (!$headings || $singleHeading)
+          <option value="2" #if ($selectedType == 2)selected="selected"#end>Date(s) / date range(s)</option>
+  #end
+        </select>
+        &nbsp;<input type="submit" name="eventSubmit_doSettype" value="go">
+      </td>
+    </tr>
+  </table>
+</div>
+
+#if ($selectedType == 0)
+  #if ($selectedHeading.ReportGroups)
+    $renderer.render("reports", "EditGroups.vm")
+  #end
+    $renderer.render("reports", "SelectOptions.vm")
+#elseif ($selectedType == 1)
+  $renderer.render("reports", "SelectUsers.vm")
+#elseif ($selectedType == 2)
+  $renderer.render("reports", "SelectDates.vm")
+#end
+
+$intake.declareGroups()
+</form>
+</div>
+
+#if ($data.Parameters.getString($scarabG.Constant.DEBUG))
+<p><pre>$report.ReportDefinition.toXmlString()</pre></p>
+#end

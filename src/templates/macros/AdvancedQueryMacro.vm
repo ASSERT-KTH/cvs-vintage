@@ -8,31 +8,12 @@
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
 #set ($attrValues = $search.CommonAttributeValuesMap)
 #set ($user = $data.User)
-		
-<h3>$l10n.SelectedIssueTypes</h3>
-<div class="colbar">
-#if ($user.CurrentMITList)
-  #set ($list = $user.CurrentMITList)
-  #if ($list.isModifiable())
-    #foreach ($item in $list.ExpandedMITListItems)
-      <div>$item.Module.Name $item.IssueType.Name</div>
-    #end
-  #else
-    <div>$list.Name</div>
-  #end
-#else
-  <div>$scarabR.CurrentModule.Name $scarabR.CurrentRModuleIssueType.DisplayName</div>
-#end
-</div>
+
 ## we only show the edit link, if we are editing a saved query.
 ## It is easier to have the user use the back button if they are just creating
 ## a new query, otherwise we need to keep track of a lot of info. 
-#if ($user.CurrentMITList.isModifiable() && $queryId)
-    <div class="functnbar3">
-    <input type="submit" value="$l10n.EditList" 
-        name="eventSubmit_doRedirecttocrossmodulequery" />
-    </div>
-#end
+#set ($showButton = ($user.CurrentMITList.isModifiable() && $queryId))
+#showMITList($l10n.SelectedIssueTypes $user $showButton)
 
 <h3>$l10n.IssueIDQuery</h3>
 <div class="axial">
@@ -389,7 +370,6 @@ from:&#160;<input type="text" size="20"
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #set ($attr = $attrValue.Attribute)
 #set ($values = $attrInput.get($optionFieldName).Value)
-
 <select name="$attrInput.get($optionFieldName).Key"
 #if($size.length() != 0)size="$size"#end #if($multiple)multiple="multiple"#end>
   #if ($size.length() == 0)

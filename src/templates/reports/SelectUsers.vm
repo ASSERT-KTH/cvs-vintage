@@ -1,0 +1,62 @@
+#set ($mitList = $scarabR.Report.MITList)
+#set ($userAttrs = $mitList.CommonUserAttributes)
+<p>
+  <a href="#add">Click here</a> to add users to this reports row content
+</p>
+
+<h3>Selected users</h3>
+
+#if (!$selectedHeading)
+    <p class="alert">$l10n.NoneAssigned.</p>
+#else
+		
+    <table width="100%" border="1" cellspacing="2" cellpadding="3">
+      <tr>
+		<th nowrap="nowrap">$l10n.Select</th>
+		<th>$l10n.Username</th>
+		<th>$l10n.FullName</th>
+		<th>$l10n.Association</th>
+      </tr>
+#foreach ($userAttribute in $selectedHeading.ReportUserAttributes)
+  #set ($attrId = $userAttribute.AttributeId)
+  #set ($userId = $userAttribute.UserId)
+  #set ($user = $scarabR.getUser($userId))
+    #indexedRows($velocityCount)
+    <td>
+      <input type="checkbox" name="select_user" value="$userId" />
+      <input type="hidden" name="old_attr_$userId" value="$attrId" />
+    </td>
+    <td><a href="mailto:$user.Email">$user.UserName</a></td>
+    <td><strong>$!user.Name</strong></td>
+    <td><select name="asso_user_{$userId}">
+     #foreach ($selectUserAttr in $userAttrs)
+      #if ($user.hasPermission($selectUserAttr.Permission, $mitList.Modules))
+        #set ($selected = false)
+        #if ($attrId.toString().equals($selectUserAttr.AttributeId.toString())) 
+            #set ($selected = true)
+        #end
+        <option value="$selectUserAttr.AttributeId" #selected($selected)>$selectUserAttr.Name</option>
+      #end
+     #end
+       </select></td>
+    </tr>
+#end
+
+   </table>  
+
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doRemoveusers" value="$l10n.RemoveSelected" />
+ <input type="submit" name="eventSubmit_doUpdateusers" value="$l10n.UpdateSelected" />
+</div>
+  #end
+
+#if ($report.isReadyForCalculation())
+<div class="functnbar2"><input type="submit" value="$l10n.RecalculateOutput" 
+    name="eventSubmit_doGenerateReport" /></div>
+#end						
+
+#userList($mitList)
+
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doAddusers" value="$l10n.AddAssignee" />
+</div>

@@ -65,9 +65,7 @@ import org.apache.torque.util.Criteria;
 import org.apache.torque.om.NumberKey;
 import org.apache.commons.util.GenerateUniqueId;
 
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.ScarabException;
@@ -83,7 +81,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.87 2002/11/05 19:45:40 elicia Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.88 2003/01/24 20:00:47 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -644,25 +642,25 @@ public class ScarabUserImpl
     /**
      * @see org.tigris.scarab.om.ScarabUser#getCurrentReport(String)
      */
-    public Report getCurrentReport(String key)
+    public ReportBridge getCurrentReport(String key)
         throws Exception
     {
         return internalUser.getCurrentReport(key);
     }
     
     /**
-     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(Report)
+     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(ReportBridge)
      */
-    public String setCurrentReport(Report report)
+    public String setCurrentReport(ReportBridge report)
         throws ScarabException
     {
         return internalUser.setCurrentReport(report);
     }
     
     /**
-     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(String, Report)
+     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(String, ReportBridge)
      */
-    public void setCurrentReport(String key, Report report)
+    public void setCurrentReport(String key, ReportBridge report)
     {
         internalUser.setCurrentReport(key, report);
     }

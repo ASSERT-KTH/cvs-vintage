@@ -47,6 +47,7 @@ package org.tigris.scarab.tools;
  */ 
 
 import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -97,7 +98,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.49 2002/11/05 22:24:39 elicia Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.50 2003/01/24 20:02:40 jmcnally Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -608,5 +609,31 @@ public class ScarabGlobalTool implements ScarabGlobalScope
             }   
         }
         return result;
+    }
+
+    public int getCALENDAR_YEAR_FIELD()
+    {
+        return Calendar.YEAR;
+    }
+
+    public int getCALENDAR_MONTH_FIELD()
+    {
+        return Calendar.MONTH;
+    }
+
+    public int getCALENDAR_DAY_FIELD()
+    {
+        return Calendar.DAY_OF_MONTH;
+    }
+
+    public int getCALENDAR_HOUR_FIELD()
+    {
+        return Calendar.HOUR_OF_DAY;
+    }
+
+    public Date addApproxOneHour(Date date)
+    { 
+        date.setTime(date.getTime() + 3599999);
+        return date;
     }
 }

@@ -1,0 +1,99 @@
+#set ($report = $scarabR.Report)
+#set ($reportDefn = $report.ReportDefinition)
+#set ($intakeReport = $intake.Report.mapTo($report))
+#set ($search = $scarabR.Search)
+#set ($intakeSearch = $intake.IssueSearch.mapTo($search))
+
+<div class="app" id="div2-4-1-step1">
+<div id="apphead"><h2>Report builder</h2></div>
+
+<div class="tabs">
+  <table cellpadding="3" cellspacing="0" border="0">
+    <tr>
+      <td><a href="$link.setPage("reports,Info.vm")" title="builder1_info">$l10n.ReportInformation</a></td>
+      <th>$l10n.ConfineDataset</th>
+      <td><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "0")" title="builder1_row">$l10n.RowContent</a></td>
+      <td><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "1")" title="builder1_col">$l10n.ColumnContent</a></td>
+    ##  <td><a href="$link.setPage("reports,Report_1.vm")" title="builder1_info">$l10n.Report</a></td>
+    </tr>
+  </table>
+</div>
+
+<form method="get" action="$link.setPage("reports,Info.vm")">
+<input type="hidden" name="action" value="ConfigureReport"/>
+
+$data.User.setCurrentMITList($report.getMITList());
+#showMITList($l10n.MITListReportHeading $data.User true)
+
+#if ($report.isReadyForCalculation())
+<div class="functnbar"><input type="submit" value="$l10n.RecalculateOutput" 
+    name="eventSubmit_doGenerateReport" /></div>
+#end						
+
+#*
+<h3>$l10n.ConfineIssueRangeForReport</h3>
+<div class="axial">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+<tr>
+<th width="120">
+    $l10n.IssueIDRange
+    #fieldErrorMsg($intakeSearch.MinId "")
+    #fieldErrorMsg($intakeSearch.MaxId "")
+</th>
+<td>
+from:&#160;<input type="text" size="20"
+    name="$intakeSearch.MinId.Key" value="$intakeSearch.MinId" />
+&#160;&#160;to:&#160;<input type="text" size="20"
+    name="$intakeSearch.MaxId.Key" value="$intakeSearch.MaxId" />
+</td>
+</tr>
+<tr>
+<th width="120">
+    $l10n.CreationDateRange
+</th>
+<td>
+    #fieldErrorMsg($intakeSearch.MinDate "")
+    #fieldErrorMsg($intakeSearch.MaxDate "")
+from:&#160;<input type="text" size="20"
+    name="$intakeSearch.MinDate.Key" value="$intakeSearch.MinDate.toString()" />
+&#160;&#160;to:&#160;<input type="text" size="20"
+    name="$intakeSearch.MaxDate.Key" value="$intakeSearch.MaxDate.toString()" />
+<p><small>$l10n.DateEg</small></p>
+</td>
+</tr>
+</table>
+</div>
+*#
+
+<h3>$l10n.DefaultReportDate</h3>
+<div class="axial">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+<tr>
+  <th width="120">$l10n.ReportDate</th>
+  <td>
+    <div>
+      <input type="radio" name="def_date" value="now" 
+         #if(!$report.DefaultDate)checked="checked"#end /> Time at which report is generated
+    </div>
+<div><input type="radio" name="def_date" value="fixed" 
+         #if($report.DefaultDate)checked="checked"#end />&nbsp;
+#dateEntry("def_yr" 2002 $calendar.get($scarabG.CALENDAR_YEAR_FIELD) "def_month" $selectedMonth "def_day" $calendar.get($scarabG.CALENDAR_DAY_FIELD) "def_hr" $calendar.get($scarabG.CALENDAR_HOUR_FIELD))</div>
+  </td>
+</tr>
+</table>
+</div>
+
+<div class="functnbar3">
+  <input type="submit" value="$l10n.Save" name="eventSubmit_doConfineDataset" />
+</div>
+
+#if ($report.isReadyForCalculation())
+<div class="functnbar2"><input type="submit" value="$l10n.RecalculateOutput" 
+    name="eventSubmit_doGenerateReport" /></div>
+#end						
+
+$intake.declareGroups()
+</form>
+</div>
+
+<pre>$reportDefn.toXmlString()</pre>

@@ -1,0 +1,195 @@
+#set ($report = $scarabR.Report)
+#set ($reportDefn = $report.ReportDefinition)
+#set ($axisIndex = $data.Parameters.getInt("axis"))
+#set ($isRow = ($axisIndex == 0))
+#if ($isRow)
+  #set ($rowCol = "Row")
+#else
+  #set ($rowCol = "Column")
+#end
+
+<div class="app" id="div2-4-1-step1">
+<div id="apphead"><h2>Report builder</h2></div>
+
+<div class="tabs">
+  <table cellpadding="3" cellspacing="0" border="0">
+    <tr>
+      <td><a href="$link.setPage("reports,Info.vm")" title="builder1_info">$l10n.ReportInformation</a></td>
+#if ($isRow)
+      <th>$l10n.RowContent</th>
+      <td><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "1")" title="builder1_col">$l10n.ColumnContent</a></td>
+#else
+      <td><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "0")" title="builder1_row">$l10n.RowContent</a></td>
+      <th>$l10n.ColumnContent</th>
+#end
+    </tr>
+  </table>
+</div>
+
+<form method="get" action="$link.setPage("reports,EditGroups.vm")">
+<input type="hidden" name="action" value="ConfigureReport"/>
+<input type="hidden" name="axis" value="$axisIndex"/>
+
+#if ($report.isReadyForCalculation())
+<div class="functnbar"><input type="submit" value="$l10n.RecalculateOutput" 
+    name="eventSubmit_doGenerateReport" /></div>
+#end						
+
+#set ($headingIndex = $data.Parameters.getInt("heading", -1))
+#set ($headings = $reportDefn.getAxis($axisIndex).ReportHeadings)
+#set ($selectedHeading = $headings.get($headingIndex))
+<input type="hidden" name="heading" value="$headingIndex" />
+
+#set ($multiHeading = $headings && $headings.size() > 1)
+#if ($multiHeading)
+  <h3>$l10n.Headings</h3>
+  <div>
+    <table width="100%" cellpadding="3" cellspacing="2" border="1">		
+      <tr>
+        <th>$l10n.Selected</th>
+        <th>$l10n.HeadingSummary</th>
+      </tr>
+  #foreach ($heading in $headings)
+    #set ($index = $velocityCount - 1)
+    #indexedRows($velocityCount)
+      <td>#if ($headingIndex == $index)*#end$velocityCount</td>
+      <td>
+       $reportDefn.displayHeading($heading)
+      </td>
+    </tr>
+  #end
+  </table>
+#end
+
+
+<h3>$l10n.GroupRelatedData</h3>
+
+<p>$l10n.Grouping</p>
+
+<p>$l10n.GroupingEg</p>
+
+<div class="functnbar">
+  <input type="submit" name="eventSubmit_doAddgroup" value="$l10n.AddNew" />&#160;
+ #if ($reportGroupsSize > 0)
+  <input type="submit" name="eventSubmit_doChangeGroupName" value="$l10n.ChangeGroupName" />&#160;
+  <input type="submit" name="eventSubmit_doDeleteGroup" value="$l10n.DeleteSelected" />
+ #end
+</div>
+
+#set ($reportGroupsSize = 0)
+#set ($reportGroups = $selectedHeading.ReportGroups)
+#set ($reportGroupsSize = $reportGroups.size())
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+ <tr>
+ #if ($reportGroupsSize > 0)
+  <th nowrap="nowrap">&#160;</th>
+ #end
+  <th>$l10n.GroupNumber</th>
+  <th>$l10n.GroupName</th>
+ </tr>
+
+#set ($finalCount = 1)
+
+#foreach ($group in $reportGroups)
+ #set ($index = $velocityCount - 1)
+ #indexedRows($velocityCount)
+ <td><input type="checkbox" name="selectgroup" value="$index" /></td>
+ <td>Group $velocityCount</td>
+ <td><input type="text" value="$!data.Parameters.getString("groupname_$index", $group.Name)"
+          name="groupname_$index" /></td>
+ </tr>
+ #set ($finalCount = $velocityCount + 1)
+#end
+
+<tr>
+ #if ($reportGroupsSize > 0)
+  <td>&#160;</td>
+ #end  
+  <td>Group $finalCount (new)</td>
+  <td><input type="text" value="$!data.Parameters.getString("groupname_new")"
+          name="groupname_new"" /></td>
+ </tr>
+</table>
+
+<div class="functnbar2">
+  <input type="submit" name="eventSubmit_doAddGroup" value="$l10n.AddNew" />&#160;
+ #if ($reportGroupsSize > 0)
+  <input type="submit" name="eventSubmit_doEditGroupName" value="$l10n.ChangeGroupName" />&#160;
+  <input type="submit" name="eventSubmit_doDeleteGroup" value="$l10n.DeleteSelected" />
+ #end
+</div>
+
+#if ($reportGroupsSize > 0)
+ #if ($selectedHeading.calculateType() == 0)
+ <h3>$l10n.GroupingOptions</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+ <tr>
+  <th>$l10n.GroupName</th>
+  <th>$l10n.Attribute</th>
+  <th>$l10n.Option</th>
+ </tr>
+    #foreach ($attOption in $selectedHeading.retrieveGroupedAttributes())
+      #indexedRows($velocityCount)
+      <td>
+       <select name="option_$attOption.OptionId">
+        #set ($selectedOption = $data.Parameters.getString("option_$attOption.OptionId", ""))
+        #foreach ($group in $reportGroups)
+          #set ($selectedGroup = false)
+          #foreach ($option in $group.ReportOptionAttributes)
+            #if ($option.equals($attOption))
+                #set ($selectedGroup = true)
+            #end
+          #end
+          <option #if($selectedGroup)selected="selected"#end
+              value="$group.Name">$group.Name</option>
+        #end
+       </select>
+      </td>
+      <td>$reportDefn.displayAttribute($attOption)</td>
+      <td>$reportDefn.displayOption($attOption)</td>
+    </tr>
+    #end
+ </table>
+ #else
+ <h3>$l10n.GroupingUsers</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+ <tr>
+  <th>$l10n.GroupName</th>
+  <th>$l10n.Attribute</th>
+  <th>$l10n.User</th>
+ </tr>
+    #foreach ($attUser in $selectedHeading.retrieveGroupedAttributes())
+      #indexedRows($velocityCount)
+      <td>
+       <select name="att_$attUser.AttributeId_user_$attUser.UserId">
+        #set ($selectedUser = $data.Parameters.getString("att_$attUser.AttributeId_user_$attUser.UserId", ""))
+        #foreach ($group in $reportGroups)
+          #set ($selectedGroup = false)
+          #foreach ($user in $group.ReportUserAttributes)
+            #if ($user.equals($attUser))
+                #set ($selectedGroup = true)
+            #end
+          #end
+          <user #if($selectedGroup)selected="selected"#end
+              value="$group.Name">$group.Name</user>
+        #end
+       </select>
+      </td>
+      <td>$reportDefn.displayAttribute($attUser)</td>
+      <td>$reportDefn.displayUser($attUser)</td>
+    </tr>
+    #end
+ </table>
+ #end
+
+<div class="functnbar2">
+  <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveGroups" />&#160;
+</div>
+#end
+
+</form>
+</div>
+
+#if ($data.Parameters.getString($scarabG.Constant.DEBUG))
+<p><pre>$report.ReportDefinition.toXmlString()</pre></p>
+#end

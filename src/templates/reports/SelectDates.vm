@@ -1,0 +1,55 @@
+<h3>$l10n.format("SelectDatesHeader", $axisIndex)</h3>	 	  
+		
+
+<table border="1" cellspacing="2" cellpadding="3" width="100%">
+<tr>
+<th>&nbsp;</th>
+<th>$rowCol</th>
+<th>$l10n.DateTime</th>
+<th>Type</th>
+</tr>
+
+#set ($finalCount = 1)
+#set ($calendar = $scarabR.Calendar)
+#if ($headingIndex >= 0)
+ #set ($reportDates = $reportDefn.getAxis($axisIndex).getHeading($headingIndex).ReportDates)
+ #foreach ($reportDate in $reportDates)
+  $calendar.setTime($reportDate.dateValue())
+  #set ($selectedMonth = $calendar.get($scarabG.CALENDAR_MONTH_FIELD) + 1)
+  #indexedRows($velocityCount)
+    <td><input type="checkbox" name="selectdate" value="$velocityCount"/></td>
+    <td>$rowCol $velocityCount</td>
+#* showing dates as unmodifiable since there is not a button to handle it
+    <td>#dateEntry("y_$velocityCount" 2002 $calendar.get($scarabG.CALENDAR_YEAR_FIELD) "m_$velocityCount" $selectedMonth "d_$velocityCount" $calendar.get($scarabG.CALENDAR_DAY_FIELD) "h_$velocityCount" $calendar.get($scarabG.CALENDAR_HOUR_FIELD))</td>
+*#
+    <td>$format.getDate('yyyy MMMM dd - HH:mm', $reportDate.dateValue())
+    <td>$l10n.SingleDateTime</td>
+  </tr>
+  #set ($finalCount = $velocityCount + 1)
+ #end
+#end
+
+  $calendar.setTime($scarabG.addApproxOneHour($scarabG.Now))
+  #set ($selectedMonth = $calendar.get($scarabG.CALENDAR_MONTH_FIELD) + 1)
+  #indexedRows($finalCount)
+    <td>&nbsp;</td>
+    <td>$rowCol $finalCount</td>
+    <td>#dateEntry("y_$finalCount" 2002 $calendar.get($scarabG.CALENDAR_YEAR_FIELD) "m_$finalCount" $selectedMonth "d_$finalCount" $calendar.get($scarabG.CALENDAR_DAY_FIELD) "h_$finalCount" $calendar.get($scarabG.CALENDAR_HOUR_FIELD))
+    <td>$l10n.SingleDateTime</td>
+  </tr>
+</table>
+ 
+<div class="functnbar3">
+  <input type="submit" value="$l10n.AddSingleDateTime"
+      name="eventSubmit_doAdddate" />&#160;
+  ## <input type="submit" value="Add date/time range" />&nbsp;
+  <input type="submit" value="$l10n.DeleteSelected"
+      name="eventSubmit_doDeletedate" />
+</div>
+
+#if ($report.isReadyForCalculation())
+  <div class="functnbar2"><input type="submit" value="$l10n.RecalculateOutput" 
+      name="eventSubmit_doGenerateReport" /></div>
+#end
+
+</div>

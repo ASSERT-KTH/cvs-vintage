@@ -47,6 +47,8 @@ package org.tigris.scarab.tools;
  */ 
 
 import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,7 +113,7 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
-import org.tigris.scarab.om.Report;
+import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.om.ReportManager;
 import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.ActivitySetTypePeer;
@@ -230,7 +232,7 @@ public class ScarabRequestTool
     /**
      * A ReportGenerator
      */
-    private Report reportGenerator = null;
+    private ReportBridge reportGenerator = null;
     
     private int nbrPages = 0;
     private int prevPage = 0;
@@ -2030,7 +2032,7 @@ try{
     /**
      * a report helper class
      */
-    public Report getReport()
+    public ReportBridge getReport()
         throws Exception
     {
         if ( reportGenerator == null ) 
@@ -2060,8 +2062,8 @@ try{
             }
             else 
             {
-                reportGenerator = 
-                    ReportManager.getInstance(new NumberKey(id), false);
+                reportGenerator = new ReportBridge(
+                    ReportManager.getInstance(new NumberKey(id), false));
                 key = ((ScarabUser)data.getUser())
                     .setCurrentReport(reportGenerator);
                 data.getParameters()
@@ -2070,25 +2072,36 @@ try{
                     .add(ScarabConstants.CURRENT_REPORT, key);
             }
         }
-        
+
         return reportGenerator;
     }
 
-    private Report getNewReport()
+    private ReportBridge getNewReport()
         throws Exception
     {
-        Report report  = new Report();
-        report.setModule(getCurrentModule());
-        report.setGeneratedBy((ScarabUser)data.getUser());
-        report.setIssueType(getCurrentIssueType());
+        ScarabUser user = (ScarabUser)data.getUser();
+        org.tigris.scarab.om.Report om  = new org.tigris.scarab.om.Report();
+        ReportBridge report = new ReportBridge(om);
+        report.setGeneratedBy(user);
 
+        MITList mitList = user.getCurrentMITList();
+        if (mitList == null) 
+        {
+            report.setModule(getCurrentModule());
+            report.setIssueType(getCurrentIssueType());
+        }
+        else 
+        {
+            report.setMITList(mitList);
+        }
+        
         String key = ((ScarabUser)data.getUser()).setCurrentReport(report);
         data.getParameters().add(ScarabConstants.CURRENT_REPORT, key);
 
         return report;
     }
 
-    public void setReport(Report report)
+    public void setReport(ReportBridge report)
     {
         this.reportGenerator = report;
     }
@@ -2116,6 +2129,7 @@ try{
     }
     */
 
+
     /**
      * Return all users for module and issue type.
      */
@@ -2135,7 +2149,7 @@ try{
     /**
      * Return all users for current module and issue type.
      */
-    public List getUsers( ) throws Exception
+    public List getUsers() throws Exception
     {
         Module module = getCurrentModule();  
         IssueType issueType = getCurrentIssueType();  
@@ -2368,6 +2382,22 @@ try{
     }
 
     /**
+     * This is used to get the format for a date in the 
+     * Locale sent by the browser.
+     */
+    public Calendar getCalendar()
+    {
+        Locale locale = Localization.getLocale(data.getRequest());
+        Calendar cal = Calendar
+            .getInstance(locale);
+        if (timezone != null) 
+        {
+            cal.setTimeZone(timezone);
+        }
+        return cal;
+    }
+
+    /**
      * Determine if the user currently interacting with the scarab
      * application has a permission within the user's currently
      * selected module.
@@ -2557,6 +2587,13 @@ try{
         return true;
     }
 
+    public MITList getMITList(List issues)
+        throws Exception
+    {
+        return MITListManager
+            .getInstanceFromIssueList(issues, (ScarabUser)data.getUser());
+    }
+
     /**
      * Gets a list of Attributes or the user type that are in common
      * between the issues in the given list.
@@ -2577,17 +2614,7 @@ try{
         }
         else 
         {
-            MITList mitList = MITListManager
-                .getInstanceFromIssueList(issues, (ScarabUser)data.getUser());
-            if (mitList.isSingleModuleIssueType()) 
-            {
-                attributes = mitList.getModule()
-                    .getUserAttributes(mitList.getIssueType());
-            }
-            else 
-            {
-                attributes = mitList.getCommonUserAttributes();
-            }    
+            attributes = getMITList(issues).getCommonUserAttributes();
         }
         
         return attributes;

@@ -8,8 +8,8 @@
   #end
   </select>
  #else
-  personal
-  <input type="hidden" name="$reportGroup.ScopeId.Key" value="$reportGroup.ScopeId" />
+  $l10n.Personal
+  <input type="hidden" name="$reportGroup.ScopeId.Key" value="1" />
  #end
 #end
 
@@ -37,61 +37,87 @@
 #end
 #end
 
+#macro (reportLabel $model $cellLabel)
+  #if ($model.isReportDate($cellLabel))
+      $format.getDate('yyyy MMM dd - HH:mm', $cellLabel.dateValue())
+  #elseif ($model.isOption($cellLabel))
+      $model.displayAttribute($cellLabel):$model.displayOption($cellLabel)
+  #elseif ($model.isOptionGroup($cellLabel))
+      $cellLabel.Name
+  #elseif ($model.isAttributeAndUser($cellLabel))
+      $model.displayAttribute($cellLabel):$model.displayUser($cellLabel)
+  #elseif ($model.isUser($cellLabel))
+      Author:$cellLabel.UserName
+  #end
+#end
 
-## the rowspan and colspan stuff below will not work as written.  We must
-## track which cells to skip.  For now assume rowspan and colspan are always 1.
 #macro ( reportTable $model $issueType )
 
-    #set ($maxRow = $model.RowCount)
-    #set ($maxColumn = $model.ColumnCount)
+#set ($maxRow = $model.RowCount - 1)
+#set ($maxColumn = $model.ColumnCount - 1)
+
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
+#set ($multiplier = 1)
+#foreach ($columnHeadingLevel in $model.ColumnHeadings)
+   #set ($level = $velocityCount - 1)
+ <tr>
+   #foreach ($foo in [1..$model.RowHeadings.size()])
+     <th>&nbsp;</th>
+   #end
+   #foreach ($foo in [1..$multiplier])
+   #foreach ($indexPlusOne in [1..$columnHeadingLevel.size()])
+     #set ($index = $indexPlusOne - 1)
+     #set ($columnHeading = $columnHeadingLevel.get($index))
+     <th colspan="$model.getColspan($level)">
+       #reportLabel($model $columnHeading)
+     </th>
+   #end
+   #end
+   #set ($multiplier = $multiplier * $columnHeadingLevel.size())   
+ </tr>
+#end
+
 #foreach ($rowIndex in [0..$maxRow])
  <tr>
-        #foreach ($columnIndex in [0..$maxColumn])
-            #set ($cell = $model.getValueAt($rowIndex, $columnIndex))
-            #if ($model.isHeading($cell))
-                #if (!$cell.Label)
-                    #set ($label = " ")
-                #else
-                    #set ($cellLabel = $cell.Label)
-                    #if ($model.isDate($cellLabel))
-                        #set ($label = "date $format.getDate('MM/dd/yyyy HH:mm', $cellLabel)")
-                    #elseif ($cellLabel.isOption($cellLabel.subLabel1))
-                        #set ($label = "$cellLabel.SubLabel1.getRModuleAttribute($issueType).DisplayValue:$cellLabel.SubLabel1.DisplayValue")
-                    #elseif ($cellLabel.isOptionGroup($cellLabel.subLabel1))
-                        #set ($label = "$cellLabel.SubLabel1.DisplayValue")
-                    #elseif ($cellLabel.isAttributeAndUser($cellLabel.subLabel1))
-                        #set ($label = "$cellLabel.SubLabel1.RModuleAttribute.DisplayValue:$cellLabel.SubLabel1.User.UserName")
-                    #elseif ($cellLabel.isUser($cellLabel.subLabel1))
-                        #set ($label = "Author:$cellLabel.SubLabel1.UserName")
-                    #end
-                    #if ($cellLabel.SubLabels.size() == 2)
-                        #if ($cellLabel.isOptionGroup($cellLabel.SubLabel2))
-                            #set ($label = "$label $cellLabel.SubLabel2.DisplayValue")
-                        #elseif ($cellLabel.isOption($cellLabel.SubLabel2))
-                            #set ($label = "$label $cellLabel.SubLabel2.getRModuleAttribute($issueType).DisplayValue:$cellLabel.SubLabel2.DisplayValue")
-                        #end
-                    #end
-                #end
-                #if ($model.isColumnHeading($cell))
-              <th#if ($cell.Colspan > 1) colspan="$cell.Colspan"#end>
-                    #if ($label == " ")&nbsp;#else$label#end</th>
-                #else
-              <td#if ($cell.Rowspan > 1) rowspan="$cell.Rowspan"#end>
-                    <strong>#if ($label == " ")&nbsp;#else$label#end</strong></td>
-                #end
-            #else
-                <td>
-                #if ($model.isDate($cell))
-                    $format.getDate('MM/dd/yyyy HH:mm', $cell)
-                #elseif (!$cell)
-                    &nbsp;foo1
-                #else
-                    $cell
-                #end
-                </td>
-            #end
+
+  #foreach ($rowHeadingLevel in $model.RowHeadings)
+    #set ($level = $velocityCount - 1)
+    #set ($rowspan = $model.getRowspan($level))
+    #set ($prevLevel = $level - 1)
+    #set ($prevRowspan = 0)
+    #if ($prevLevel >= 0)
+       #set ($prevRowspan = $model.getRowspan($prevLevel))
+    #end
+    #if (($rowIndex % $rowspan) == 0)
+#*
+      #set ($multiplier = 1)
+      #foreach ($rowHeadingLevel2 in $model.RowHeadings)
+        #set ($level2 = $velocityCount - 1)
+        #if ($level2 > $level)
+          #set ($multiplier = $multiplier * $rowHeadingLevel2.size())   
         #end
+      #end
+      #set ($index = $rowIndex/$multiplier)
+      #if ($level > 0)
+          #set ($index = $index % $rowspan)
+      #end
+*#
+    #set ($curHeading = $model.RowHeadings.get($level))
+    #set ($index = ($rowIndex / $rowspan) % $curHeading.size())
+     <th rowspan="$rowspan">#reportLabel($model $curHeading.get($index) )</th>
+    #end
+  #end
+
+   #foreach ($columnIndex in [0..$maxColumn])
+     #set ($cell = $model.getValueAt($rowIndex, $columnIndex))
+     <td>
+     #if ($model.isDate($cell))
+        $format.getDate('MM/dd/yyyy HH:mm', $cell)
+     #else
+        $cell
+     #end
+     </td>
+   #end
  </tr>
 #end
 </table>

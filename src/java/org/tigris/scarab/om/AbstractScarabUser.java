@@ -60,8 +60,7 @@ import org.apache.torque.util.Criteria;
 import org.apache.torque.om.BaseObject;
 import org.apache.torque.om.NumberKey;
 
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -73,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.61 2003/01/13 21:17:51 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.62 2003/01/24 20:00:46 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -105,13 +104,13 @@ public abstract class AbstractScarabUser
     private Map issueMap;
 
     /** 
-     * counter used as part of a key to store an Report the user is 
+     * counter used as part of a key to store an ReportBridge the user is 
      * currently editing
      */
     private int reportCount = 0;
 
     /** 
-     * Map to store <code>Report</code>'s the user is  currently entering 
+     * Map to store <code>ReportBridge</code>'s the user is  currently entering 
      */
     private Map reportMap;
 
@@ -570,16 +569,16 @@ public abstract class AbstractScarabUser
     /**
      * @see org.tigris.scarab.om.ScarabUser#getCurrentReport(String)
      */
-    public Report getCurrentReport(String key)
+    public ReportBridge getCurrentReport(String key)
     {
-        return (Report)reportMap.get(key);
+        return (ReportBridge)reportMap.get(key);
     }
 
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(Report)
+     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(ReportBridge)
      */
-    public String setCurrentReport(Report report)
+    public String setCurrentReport(ReportBridge report)
         throws ScarabException
     {
         String key = null;
@@ -597,9 +596,9 @@ public abstract class AbstractScarabUser
 
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(String, Report)
+     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(String, ReportBridge)
      */
-    public void setCurrentReport(String key, Report report)
+    public void setCurrentReport(String key, ReportBridge report)
     {
         if ( report == null ) 
         {
@@ -1064,8 +1063,9 @@ public abstract class AbstractScarabUser
         {
             MITList mitList = getCurrentMITList(getGenThreadKey());
             if (mitList == null) 
-            {
+            {                
                 mitList = MITListManager.getInstance();
+                Log.get().debug("mitList was null, setting to a new mitList " + mitList);
                 setCurrentMITList(mitList);
             }
 
@@ -1139,6 +1139,8 @@ public abstract class AbstractScarabUser
     }
     private MITList getCurrentMITList(Object key)
     {
+        Log.get().debug("Getting mitlist for key " + key);
+        
         return (MITList)mitListMap.get(key);
     }
 
@@ -1190,7 +1192,8 @@ public abstract class AbstractScarabUser
                 Log.get().error("Nonfatal error clearing old MIT lists.  "
                                 + "This could be a memory leak.", e);
             }
-
+            Log.get().debug("Set mitList for key " + key + " to " + list);
+            
             mitListMap.put(key, list);
         }
     }

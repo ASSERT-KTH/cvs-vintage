@@ -95,6 +95,7 @@ import org.tigris.scarab.om.MITListItem;
 import org.tigris.scarab.om.RModuleUserAttribute;
 
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.StringAttribute;
 
@@ -339,11 +340,9 @@ public class IssueSearch
     {
         SequencedHashMap result = null;
 
-        List attributes = null;
-        //HashMap siaValuesMap = null;
+        List attributes = mitList.getCommonAttributes();
+        HashMap siaValuesMap = getAttributeValuesMap();
 
-        attributes = mitList.getCommonAttributes();
-        //siaValuesMap = getAttributeValuesMap();
         if (attributes != null) 
         {
             result = new SequencedHashMap((int)(1.25*attributes.size() + 1));
@@ -352,19 +351,17 @@ public class IssueSearch
             {
                 Attribute attribute = (Attribute)i.next();
                 String key = attribute.getName().toUpperCase();
-                /*
-                  if ( siaValuesMap.containsKey(key) ) 
-                  {
-                  result.put( key, siaValuesMap.get(key) );
-                  }
-                  else 
-                  {
-                */
-                AttributeValue aval = AttributeValue
-                    .getNewInstance(attribute, this);
-                addAttributeValue(aval);
-                result.put(key, aval);
-                //}
+                if ( siaValuesMap.containsKey(key) ) 
+                {
+                    result.put( key, siaValuesMap.get(key) );
+                }
+                else 
+                {
+                    AttributeValue aval = AttributeValue
+                        .getNewInstance(attribute, this);
+                    addAttributeValue(aval);
+                    result.put(key, aval);
+                }
             }
         }
         return result;
@@ -1939,9 +1936,10 @@ public class IssueSearch
         }
         // add pk sort so that rows can be combined easily
         sb.append(',').append(IssuePeer.ISSUE_ID).append(" ASC");
-        
+        String sql = sb.toString();
+        Log.get("org.apache.torque").debug(sql);
         // return a List of QueryResult objects
-        return buildQueryResults(BasePeer.executeQuery(sb.toString()), 
+        return buildQueryResults(BasePeer.executeQuery(sql), 
                                  sortAttrPos, valueListSize);
     }
 
@@ -2011,7 +2009,7 @@ public class IssueSearch
             sb.insert(sql.indexOf(FROM), selectColumns.toString());
             sql = sb.toString();
         }
-
+        Log.get("org.apache.torque").debug(sql);
         // return a List of QueryResult objects
         return buildQueryResults(BasePeer.executeQuery(sql), 
                                  NO_ATTRIBUTE_SORT, valueListSize);

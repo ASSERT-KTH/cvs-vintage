@@ -7,6 +7,9 @@ import java.util.HashMap;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
+import org.apache.torque.om.ComboKey;
+import org.apache.torque.om.SimpleKey;
+import org.apache.torque.om.NumberKey;
 
 /** 
  * This class manages RModuleAttribute objects.  
@@ -38,6 +41,18 @@ public class RModuleAttributeManager
             .get(RModuleAttributePeer.MODULE_ID);
         notifyListeners(listeners, oldOm, om);
         return oldOm;
+    }
+
+    public static final RModuleAttribute getInstance(Integer moduleId,  
+        Integer attributeId, Integer issueTypeId)
+        throws TorqueException
+    {
+        SimpleKey[] keys = {
+            new NumberKey(moduleId.toString()), 
+            new NumberKey(attributeId.toString()), 
+            new NumberKey(issueTypeId.toString())
+        };
+        return getInstance( new ComboKey(keys) );
     }
 }
 

@@ -73,7 +73,7 @@ import org.tigris.scarab.om.MITListManager;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.5 2002/11/19 16:24:33 jmcnally Exp $
+ * @version $Id: FreshenUserValve.java,v 1.6 2003/01/24 20:01:40 jmcnally Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -91,6 +91,11 @@ public class FreshenUserValve
         xmitScreens.put("EditQuery.vm", null);
         xmitScreens.put("ConfigureIssueList.vm", null);
         xmitScreens.put("EditXModuleList.vm", null);
+        xmitScreens.put("reports,Info.vm", null);
+        xmitScreens.put("reports,ConfineDataset.vm", null);
+        xmitScreens.put("reports,XModuleList.vm", null);
+        xmitScreens.put("reports,AxisConfiguration.vm", null);
+        xmitScreens.put("reports,Report_1.vm", null);
     }
 
     /**
@@ -128,6 +133,7 @@ public class FreshenUserValve
         if (removeMitKey != null 
             || !xmitScreens.containsKey(data.getTarget()) )
         {
+            Log.get().debug("xmit list set to null");
             user.setCurrentMITList(null);
         }
 

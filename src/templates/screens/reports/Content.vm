@@ -1,0 +1,274 @@
+#set ($report = $scarabR.Report)
+#set ($reportDefn = $report.ReportDefinition)
+
+<div class="app" id="div2-4-1-step1">
+<div id="apphead"><h2>$l10n.ReportBuilder</h2></div>
+
+<div class="tabs">
+  <table cellpadding="3" cellspacing="0" border="0">
+    <tr>
+      <td><a href="$link.setPage("reports,Info.vm")" title="builder1_info">$l10n.ReportInformation</a></td>
+      <th>$l10n.Content</th>
+    </tr>
+  </table>
+</div>
+
+#if ($reportDefn.ReportAxisList.size() > 0)
+<div class="colbar"><a href="$link.setPage("reports,Content.vm").addPathInfo("action", "ConfigureReport").addPathInfo("eventSubmit_doSwapRowCol", "foo")">$l10n.SwapRowCol</a></div>
+#end
+
+#if ($report.isReadyForCalculation())
+<form method="get" action="$link.setPage("reports,Content.vm")">
+  <input type="hidden" name="action" value="ConfigureReport"/>
+  <div class="functnbar"><input type="submit" value="$l10n.RecalculateOutput"
+      name="eventSubmit_doGenerateReport" /></div>
+</form>
+#end
+
+#foreach ($axisIndex in [0..2])
+
+#set ($isRow = ($axisIndex == 0))
+#if ($isRow)
+  #set ($rowCol = "Row")
+#else
+  #set ($rowCol = "Column")
+#end
+
+##set ($headingIndex = $data.Parameters.getInt("heading", -1))
+#set ($headings = $reportDefn.getAxis($axisIndex).ReportHeadings)
+#set ($singleHeading = $headings && $headings.size() == 1)
+#set ($multiHeading = $headings && $headings.size() > 1)
+
+<form method="get" action="$link.setPage("reports,Content.vm")">
+<input type="hidden" name="action" value="ConfigureReport"/>
+<input type="hidden" name="axis" value="$axisIndex"/>
+
+<h3>$l10n.get("${rowCol}Headings")</h3>
+
+<div class="axial">
+  <table width="100%" cellpadding="3" cellspacing="2" border="1">
+  	<tr>
+
+  	<th width="120">Content type</th>
+  	<td>
+        <select name="headingtype">
+          <option value="0">Attribute(s)/option(s)</option>
+          <option value="1" selected="selected">Users (by user attribute)</option>
+          </select>
+        &nbsp;<input type="submit" name="#" value="Refresh">
+
+    </td>
+    </tr>
+  </table>
+</div>
+
+
+<div class="colbar"><div class="infomark"><strong>Note:</strong> Grouping items appear as a single heading bearing the selected group name</div></div>
+    <table width="100%" cellpadding="3" cellspacing="2" border="1">		
+      <tr>
+        <th>Select</th>
+
+        <th>Group</th>
+      <th>Username</th>
+    </tr>
+    <tr class="a">
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>
+        <select name="#">
+        <option value="0">No group selected</option>
+
+        <option value="1">QA</option>
+        <option value="2">Operations</option>
+        </select>
+      </td>
+      <td><a href="#">jsmith</a></td>
+    </tr>
+    
+    <tr class="b">
+
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>
+        <select name="#">
+        <option value="0">No group selected</option>
+        <option value="1" selected="selected">QA</option>
+        <option value="2">Operations</option>
+        </select>
+
+      </td>
+      <td><a href="#">sjones</a></td>
+    </tr>
+    
+    <tr class="a">
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>
+        <select name="#">
+        <option value="0">No group selected</option>
+
+        <option value="1" selected="selected">QA</option>
+        <option value="2">Operations</option>
+        </select>
+      </td>
+      <td><a href="#">jdoe</a></td>
+    </tr>
+    
+    <tr class="b">
+
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>
+        <select name="#">
+        <option value="0">No group selected</option>
+        <option value="1">QA</option>
+        <option value="2" selected="selected">Operations</option>
+        </select>
+
+      </td>
+      <td><a href="#">ndrew</a></td>
+    </tr>
+    
+    <tr class="a">
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>
+        <select name="#">
+        <option value="0">No group selected</option>
+
+        <option value="1">QA</option>
+        <option value="2" selected="selected">Operations</option>
+        </select>
+      </td>
+      <td><a href="#">jstar</a></td>
+    </tr>
+    
+    </table>
+
+  <div class="functnbar3"> 
+    <input type="submit" name="#" value="Add new heading">
+  	<input type="submit" name="#" value="Delete selected heading">
+  	<input type="submit" name="#" value="Add/Remove X-axis group">
+  </div>
+					
+<h3>Y-axis content: Column headings</h3>
+
+<div class="axial">
+  <table width="100%" cellpadding="3" cellspacing="2" border="1">			
+    <tr>
+
+      <th width="120">Content type</th>
+      <td>
+        <select name="headingtype">
+        <option value="0" selected="selected">Attribute(s)/option(s)</option>
+        <option value="1" >Users (by user attribute)</option>
+        <option value="1" >Date(s)</option>
+        </select>
+
+        &nbsp;<input type="submit" name="#" value="Refresh">
+      </td>
+    </tr>
+
+  </table>
+</div>
+
+
+<div class="colbar"><div class="infomark"><strong>Note:</strong> Each heading in this list appears as a column or row heading in this report's output. Each item in each heading appears as a new row or column (depending on whether the Y-axis has been set to be either row or column).
+<p>Grouping items appear as a single heading bearing the selected group name</p></div></div>
+
+    <table width="100%" cellpadding="3" cellspacing="2" border="1">		
+      <tr>
+        <th>Select</th>
+        <th>Heading Level</th>
+        <th>Group</th>
+      <th>Summary</th>
+    </tr>
+
+    <tr class="a">
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>1</td>
+      <td>
+        <select name="#">
+        <option value="0">No group selected</option>
+        <option value="1" selected="selected">Open</option>
+
+        </select>
+      </td>
+      <td><a href="#">Status: New</a></td>
+    </tr>
+    
+    <tr class="b">
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>1</td>
+      <td>
+
+        <select name="#">
+        <option value="0">No group selected</option>
+        <option value="1" selected="selected">Open</option>
+        </select>
+      </td>
+      <td><a href="#">Status: Assigned</a></td>
+    </tr>
+
+    
+     <tr class="a">
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>1</td>
+      <td>
+        <select name="#">
+        <option value="0">No group selected</option>
+        <option value="1">Open</option>
+
+        </select>
+      </td>
+      <td><a href="#">Status: Closed</a></td>
+    </tr>
+    
+   <tr class="b">
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>2</td>
+      <td>
+
+        <select name="#">
+        <option value="0" selected="selected">No group selected</option>
+        <option value="1">Open</option>
+        </select>
+      </td>
+      <td><a href="#">Priority: 1</a></td>
+    </tr>
+
+     
+    <tr class="a">
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>2</td>
+      <td>
+        <select name="#">
+        <option value="0" selected="selected">No group selected</option>
+        <option value="1">Open</option>
+
+        </select>
+      </td>
+      <td><a href="#">Priority: 2</a></td>
+    </tr>
+    
+    <tr class="b">
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>2</td>
+      <td>
+
+        <select name="#">
+        <option value="0" selected="selected">No group selected</option>
+        <option value="1">Open</option>
+        </select>
+      </td>
+      <td><a href="#">Priority: 3</a></td>
+    </tr>
+
+    
+    </table>
+
+  <div class="functnbar3"> 
+    <input type="submit" name="#" value="Add new heading">
+  	<input type="submit" name="#" value="Delete selected heading">
+  	<input type="submit" name="#" value="Add/Remove Y-axis group">
+  </div>
+</form>
+</div>
+
+<div class="functnbar2"><input type="submit" value="View updated report output"  name="eventSubmit_doGenerateReport" /></div>
+

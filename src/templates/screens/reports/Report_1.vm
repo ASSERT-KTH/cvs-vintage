@@ -1,9 +1,41 @@
 #set ($report = $scarabR.Report)
+#set ($reportDefn = $report.ReportDefinition)
 
 <div class="app" id="div2-4-1-a-output">
 
-<form method="get" action="$link.setPage("reports,Step1.vm")">
-<input type="hidden" name="action" value="GenerateReport" />
+<div class="tabs">
+  <table cellpadding="3" cellspacing="0" border="0">
+    <tr>
+      <td><a href="$link.setPage("reports,Info.vm")" title="Dataset">$l10n.ReportInformation</a></td>
+      <td><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "0")" title="builder1_row">$l10n.RowContent</a></td>
+      <td><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "1")" title="builder1_col">$l10n.ColumnContent</a></td>
+     ## <th>$l10n.Report</th>
+    </tr>
+  </table>
+</div>
+
+$data.User.setCurrentMITList($report.getMITList())
+#showMITList($l10n.MITListReportHeading $data.User false)
+
+<div class="axial">
+<table border="1" cellspacing="2" cellpadding="3">
+  <tr>
+    <th width="120">$l10n.DateGenerated</th>
+	<td>         
+      $format.getNow("yyyy MMMM dd hh:mm a")
+	</td>
+  </tr>
+
+  #if ($report.GeneratedBy.Name)
+  <tr>
+	<th>$l10n.GeneratedBy</th>
+	<td>
+      <a href="mailto:$!report.GeneratedBy.Email">$report.GeneratedBy.Name</a>
+    </td>
+  </tr>
+  #end
+</table>
+</div>
 
 <h3>
 #if ($report.Name)
@@ -13,38 +45,30 @@ $l10n.Report
 #end
 </h3>
 
-<div>
- <strong>$l10n.Module$l10n.Colon</strong> $report.Module.Name
-</div>
-<div>
- <strong>$l10n.DateGenerated</strong> $format.getNow("MM/dd/yyyy hh:mm a")
-</div>
-<div>
- <strong>$l10n.GeneratedBy</strong> $!report.GeneratedBy.Name
-</div>
-
-#if ($report.Description)
-<div>
- <strong>$l10n.Description$l10n.Colon</strong> $report.Description
-</div>
+#if ($reportDefn.ReportAxisList.size() > 0)
+<div class="colbar"><a href="$link.setPage("reports,Report_1.vm").addPathInfo("action", "ConfigureReport").addPathInfo("eventSubmit_doSwapRowCol", "foo")">$l10n.SwapRowCol</a></div>
 #end
 
-#if ($report.Type == 0)
 <div>
- <strong>$l10n.ReportDate</strong> $report.GeneratedDate
-</div>
-#end
-
-<p>
+## note: it is preferable to pass the object, instead of the method reference,
+## to the macro.  If the method reference is used as the argument to the macro 
+## and the model is referenced many times within the macro,
+## a new model will be created each time.
 #set ($reportModel = $report.Model)
 #set ($reportIssueType = $report.IssueType)
 #reportTable($reportModel $reportIssueType)
-</p>
-
-<div class="functnbar2">
-  <input type="submit" value="$l10n.Save" name="eventSubmit_doSavereport" />
 </div>
 
-$intake.declareGroups()
+<form method="get" action="$link.setPage("reports,Report_1.vm")">
+<input type="hidden" name="action" value="GenerateReport" />
+
+<div class="functnbar3">
+  <input type="submit" value="$l10n.SaveReport" name="eventSubmit_doSavereport" />
+</div>
+
 </form>
 </div>
+
+#if ($data.Parameters.getString($scarabG.Constant.DEBUG))
+<p><pre>$report.ReportDefinition.toXmlString()</pre></p>
+#end

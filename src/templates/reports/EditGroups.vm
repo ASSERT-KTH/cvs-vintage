@@ -1,0 +1,126 @@
+<h3>$l10n.GroupRelatedData</h3>
+
+<p>$l10n.Grouping</p>
+
+<p>$l10n.GroupingEg</p>
+
+<div class="functnbar">
+  <input type="submit" name="eventSubmit_doAddgroup" value="$l10n.AddNew" />&#160;
+ #if ($reportGroupsSize > 0)
+  <input type="submit" name="eventSubmit_doChangeGroupName" value="$l10n.ChangeGroupName" />&#160;
+  <input type="submit" name="eventSubmit_doDeleteGroup" value="$l10n.DeleteSelected" />
+ #end
+</div>
+
+#set ($reportGroupsSize = 0)
+#set ($reportGroups = $selectedHeading.ReportGroups)
+$selectedHeading $reportGroups
+#set ($reportGroupsSize = $reportGroups.size())
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+ <tr>
+ #if ($reportGroupsSize > 0)
+  <th nowrap="nowrap">&#160;</th>
+ #end
+  <th>$l10n.GroupNumber</th>
+  <th>$l10n.GroupName</th>
+ </tr>
+
+#set ($finalCount = 1)
+
+#foreach ($group in $reportGroups)
+ #set ($index = $velocityCount - 1)
+ #indexedRows($velocityCount)
+ <td><input type="checkbox" name="selectgroup" value="$index" /></td>
+ <td>Group $velocityCount</td>
+ <td><input type="text" value="$!data.Parameters.getString("groupname_$index", $group.Name)"
+          name="groupname_$index" /></td>
+ </tr>
+ #set ($finalCount = $velocityCount + 1)
+#end
+
+<tr>
+ #if ($reportGroupsSize > 0)
+  <td>&#160;</td>
+ #end  
+  <td>Group $finalCount (new)</td>
+  <td><input type="text" value="$!data.Parameters.getString("groupname_new")"
+          name="groupname_new"" /></td>
+ </tr>
+</table>
+
+<div class="functnbar2">
+  <input type="submit" name="eventSubmit_doAddGroup" value="$l10n.AddNew" />&#160;
+ #if ($reportGroupsSize > 0)
+  <input type="submit" name="eventSubmit_doEditGroupName" value="$l10n.ChangeGroupName" />&#160;
+  <input type="submit" name="eventSubmit_doDeleteGroup" value="$l10n.DeleteSelected" />
+ #end
+</div>
+
+#if ($reportGroupsSize > 0)
+ #if ($selectedHeading.calculateType() == 0)
+ <h3>$l10n.GroupingOptions</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+ <tr>
+  <th>$l10n.GroupName</th>
+  <th>$l10n.Attribute</th>
+  <th>$l10n.Option</th>
+ </tr>
+    #foreach ($attOption in $selectedHeading.retrieveGroupedAttributes())
+      #indexedRows($velocityCount)
+      <td>
+       <select name="option_$attOption.OptionId">
+        #set ($selectedOption = $data.Parameters.getString("option_$attOption.OptionId", ""))
+        #foreach ($group in $reportGroups)
+          #set ($selectedGroup = false)
+          #foreach ($option in $group.ReportOptionAttributes)
+            #if ($option.equals($attOption))
+                #set ($selectedGroup = true)
+            #end
+          #end
+          <option #if($selectedGroup)selected="selected"#end
+              value="$group.Name">$group.Name</option>
+        #end
+       </select>
+      </td>
+      <td>$reportDefn.displayAttribute($attOption)</td>
+      <td>$reportDefn.displayOption($attOption)</td>
+    </tr>
+    #end
+ </table>
+ #else
+ <h3>$l10n.GroupingUsers</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+ <tr>
+  <th>$l10n.GroupName</th>
+  <th>$l10n.Attribute</th>
+  <th>$l10n.User</th>
+ </tr>
+    #foreach ($attUser in $selectedHeading.retrieveGroupedAttributes())
+      #indexedRows($velocityCount)
+      <td>
+       <select name="att_$attUser.AttributeId_user_$attUser.UserId">
+        #set ($selectedUser = $data.Parameters.getString("att_$attUser.AttributeId_user_$attUser.UserId", ""))
+        #foreach ($group in $reportGroups)
+          #set ($selectedGroup = false)
+          #foreach ($user in $group.ReportUserAttributes)
+            #if ($user.equals($attUser))
+                #set ($selectedGroup = true)
+            #end
+          #end
+          <user #if($selectedGroup)selected="selected"#end
+              value="$group.Name">$group.Name</user>
+        #end
+       </select>
+      </td>
+      <td>$reportDefn.displayAttribute($attUser)</td>
+      <td>$reportDefn.displayUser($attUser)</td>
+    </tr>
+    #end
+ </table>
+ #end
+
+<div class="functnbar2">
+  <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveGroups" />&#160;
+</div>
+#end
+
