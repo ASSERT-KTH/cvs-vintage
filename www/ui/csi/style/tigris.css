@@ -1,6 +1,8 @@
 
 
-/* contains rules unsuitable for Netscape 4.x; simpler rules are in ns4_only.css. see <http://style.tigris.org/> */
+/* $Id: tigris.css,v 1.2 2002/09/05 01:42:59 braino Exp $
+
+contains rules unsuitable for Netscape 4.x; simpler rules are in ns4_only.css. see <http://style.tigris.org/> */
 
 /* colors, backgrounds, borders, link indication */ 
 
@@ -45,11 +47,12 @@ body #banner td a, .app h3 a, .app h4 a,  {
 table, th, td {
  border: none
  } 
-.mtb {
- border-top: solid 1px #ddd;
- }
 div.colbar {
- background: #bbb;
+ border-right: 1px dashed #666;
+ border-left: 1px dashed #666;
+ border-top: 1px dashed #666;
+ border-bottom: 1px dashed #666;
+ background: #fff;
  }
 #banner {
  border-top: 1px solid #369;
@@ -362,9 +365,16 @@ body.docs div.docs {
 #alerterrormessage { 
  padding-left: 100px;
  }
-.functnbar, .functnbar2, .functnbar3 {
+.functnbar, .functnbar2 {
  padding: 5px;
  margin: .67em 2px;
+ }
+.functnbar3 {
+ padding: 5px;
+ margin-left: .2em;
+ margin-right: .2em;
+ margin-bottom: 1.5em;
+ margin-top: .2em;
  }
 #topmodule {
  margin: -4px -4px 0 -4px
@@ -440,5 +450,7 @@ dd {
 #mytools, #projecttools, #admintools {
  margin: -4px 0 6px -4px;
  padding: 6px;
+ border-right: 1px solid #aaa;
+ border-bottom: 1px solid #aaa;
  }
 
