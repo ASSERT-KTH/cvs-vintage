@@ -13,17 +13,10 @@ $page.setTitle("Artifact Type Select")
 #if ($issueTypes.isEmpty())
 
 <div class="functnbar">
-    <table cellpadding="4" cellspacing="0" border="1">
-    <tr>
-    <td class="firstchild">
-       <div>General functions</div>
     #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-    </td>
-    </tr>
-    </table>
 </div>
 
 <h3>Artifact Types</h3>
@@ -32,38 +25,20 @@ $page.setTitle("Artifact Type Select")
     There are no more artifact types to add to this module.</strong></p>
 
 <div class="functnbar2">
-    <table cellpadding="4" cellspacing="0" border="1">
-    <tr>
-    <td class="firstchild">
-       <div>General functions</div>
     #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-    </td>
-    </tr>
-    </table>
 </div>
 
 #else
 
 <div class="functnbar">
-    <table cellpadding="4" cellspacing="0" border="1">
-    <tr>
-    <td class="firstchild">
-    <div>Select items to:</div>
     <input type="submit" value="Add Artifact Type" name="eventSubmit_doSelectissueType" />
-    </td>
-    
-    <td>
-    <div>General functions:</div>
     #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-    </td>
-    </tr>
-    </table>
 </div>
         
 <h3>Artifact Types</h3>
@@ -88,22 +63,11 @@ $page.setTitle("Artifact Type Select")
 </table>
 
 <div class="functnbar2">
-    <table cellpadding="4" cellspacing="0" border="1">
-    <tr>
-    <td class="firstchild">
-    <div>Select items to:</div>
     <input type="submit" value="Add Artifact Type" name="eventSubmit_doSelectissueType" />
-    </td>
-    
-    <td>
-    <div>General functions:</div>
     #if ($canEditDomain)
        <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-    </td>
-    </tr>
-    </table>
 </div>
         
 #end

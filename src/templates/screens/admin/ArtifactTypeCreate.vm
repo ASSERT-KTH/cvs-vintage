@@ -6,17 +6,8 @@ $page.setTitle("Create artifact type")
 
 #macro (ArtifactTypeCreateBar $var)
 <div class="functnbar">
-  <table cellpadding="4" cellspacing="0" border="1">
-  <tr>
-    <td class="firstchild">
       <input type="submit" value="Create" name="eventSubmit_doCreatenew" />&#160;
       <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />&#160;
-    </td>
-    <td>
-      &#160;<input type="submit" value="Back" name="eventSubmit_doBack"  />
-    </td>
-  </tr>
-  </table>
 </div>
 #end
 
