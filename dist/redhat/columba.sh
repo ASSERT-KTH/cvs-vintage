@@ -1,3 +1,3 @@
 #!/bin/sh
 cd /opt/columba
-java $@ -jar columba.jar
+java -jar columba.jar $@
