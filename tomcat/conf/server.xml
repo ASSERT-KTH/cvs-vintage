@@ -1,6 +1,6 @@
-<Server port="8036" shutdown="SHUTDOWN" debug="0">
+<Server port="8035" shutdown="SHUTDOWN" debug="0">
 	<Service name="Tomcat-Standalone">
-		<Connector className="org.apache.coyote.tomcat4.CoyoteConnector" port="9090" minProcessors="5" maxProcessors="75" enableLookups="true"
+		<Connector className="org.apache.coyote.tomcat4.CoyoteConnector" port="8080" minProcessors="5" maxProcessors="75" enableLookups="true"
 			redirectPort="8443" acceptCount="10" debug="0" connectionTimeout="60000" compression="off"/>
 		<Engine name="Standalone" defaultHost="localhost" debug="0">
 			<Logger className="org.apache.catalina.logger.FileLogger" prefix="catalina_log." suffix=".txt" timestamp="true"/>
