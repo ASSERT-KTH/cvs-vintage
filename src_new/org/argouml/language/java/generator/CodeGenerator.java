@@ -1,5 +1,4 @@
-
-// $Id: CodeGenerator.java,v 1.13 2003/09/06 00:53:58 bobtarling Exp $
+// $Id: CodeGenerator.java,v 1.14 2003/09/06 01:00:39 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +40,6 @@ import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClass;
-import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MInterface;
 import ru.novosoft.uml.foundation.core.MOperation;
 import ru.novosoft.uml.foundation.core.MFeature;

@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.6 2003/09/06 00:53:58 bobtarling Exp $
+// $Id: ParseState.java,v 1.7 2003/09/06 01:00:39 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,10 +32,6 @@ package org.argouml.language.java.generator;
 
 import java.util.Vector;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MFeature;
-import ru.novosoft.uml.foundation.core.MNamespace;
-
 /**
    This class handles information during the replacement of code
    pieces. One parse state for each classifier handled.

@@ -1,4 +1,4 @@
-// $Id: PropPanelExtensionPoint.java,v 1.23 2003/09/05 22:35:20 bobtarling Exp $
+// $Id: PropPanelExtensionPoint.java,v 1.24 2003/09/06 01:00:39 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,9 +42,6 @@ import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
-
-import ru.novosoft.uml.behavior.use_cases.MUseCase;
-
 
 /**
  * <p>Builds the property panel for an extension point.</p>

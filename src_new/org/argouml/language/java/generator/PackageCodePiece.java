@@ -1,5 +1,4 @@
-
-// $Id: PackageCodePiece.java,v 1.9 2003/09/06 00:53:58 bobtarling Exp $
+// $Id: PackageCodePiece.java,v 1.10 2003/09/06 01:00:39 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,8 +34,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.util.Stack;
 import org.argouml.model.ModelFacade;
-
-import ru.novosoft.uml.foundation.core.MNamespace;
 
 /**
    This code piece represents a package declaration.

@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.52 2003/09/05 22:35:21 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.53 2003/09/06 01:00:40 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,10 +58,6 @@ import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
 import ru.novosoft.uml.foundation.data_types.MAggregationKind;
-import ru.novosoft.uml.foundation.data_types.MOrderingKind;
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
-
-
 public class FigAssociation extends FigEdgeModelElement {
     
    
