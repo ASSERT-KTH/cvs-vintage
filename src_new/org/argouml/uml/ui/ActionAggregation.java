@@ -1,4 +1,4 @@
-// $Id: ActionAggregation.java,v 1.5 2003/09/21 15:23:22 bobtarling Exp $
+// $Id: ActionAggregation.java,v 1.6 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,6 @@ import org.tigris.gef.presentation.*;
 import java.awt.event.*;
 import java.util.*;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.foundation.data_types.MAggregationKind;
-
 
 public class ActionAggregation extends UMLAction {
     String str = "";

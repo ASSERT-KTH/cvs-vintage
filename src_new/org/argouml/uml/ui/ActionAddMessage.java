@@ -1,4 +1,4 @@
-// $Id: ActionAddMessage.java,v 1.18 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: ActionAddMessage.java,v 1.19 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,6 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.graph.GraphNodeRenderer;
 import org.tigris.gef.presentation.FigNode;
 
-import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 /** Action to add a message.
  *  @stereotype singleton
  */
@@ -65,7 +64,7 @@ public class ActionAddMessage extends UMLChangeAction {
     	if (!(ModelFacade.isAAssociationRole(target))
 	    && ModelFacade.isACollaboration(ModelFacade.getNamespace(target)))
 	    return;
-    	Object/*MAssociationRole*/ ar = (MAssociationRole) target;
+    	Object/*MAssociationRole*/ ar = target;
         this.addMessage(ar);
         super.actionPerformed(ae);
     }

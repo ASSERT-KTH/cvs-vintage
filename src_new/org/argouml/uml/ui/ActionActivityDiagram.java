@@ -1,4 +1,4 @@
-// $Id: ActionActivityDiagram.java,v 1.25 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: ActionActivityDiagram.java,v 1.26 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,6 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.foundation.core.MNamespace;
-
-
 /** Action to trigger creation of a new activity diagram.
  *  @stereotype singleton
  */
@@ -55,11 +51,11 @@ public class ActionActivityDiagram extends ActionStateDiagram {
     public UMLDiagram createDiagram(Object ns) {
         Object target = TargetManager.getInstance().getModelTarget();
         Object/*MActivityGraph*/ graph =
-	    ActivityGraphsFactory.getFactory().buildActivityGraph((MModelElement) target);
+	    ActivityGraphsFactory.getFactory().buildActivityGraph(target);
         if (org.argouml.model.ModelFacade.isABehavioralFeature(target)) {
             ns = ModelFacade.getNamespace(target);
         }
-        UMLActivityDiagram d = new UMLActivityDiagram((MNamespace) ns, graph);
+        UMLActivityDiagram d = new UMLActivityDiagram(ns, graph);
         return d;
     }
 

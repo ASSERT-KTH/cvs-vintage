@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.23 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: ActionAddAttribute.java,v 1.24 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,6 @@ import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 
-import ru.novosoft.uml.foundation.core.MClassifier;
-
 /** Action to add an attribute to a classifier.
  *  @stereotype singleton
  */
@@ -60,7 +58,7 @@ public class ActionAddAttribute extends UMLChangeAction {
 	Project p = ProjectManager.getManager().getCurrentProject();
 	Object target = TargetManager.getInstance().getModelTarget();
 	if (!(org.argouml.model.ModelFacade.isAClassifier(target))) return;
-	Object/*MClassifier*/ cls = (MClassifier) target;
+	Object/*MClassifier*/ cls = target;
 	Object/*MAttribute*/ attr = UmlFactory.getFactory().getCore().buildAttribute(cls);
 	TargetManager.getInstance().setTarget(attr);
 	super.actionPerformed(ae);

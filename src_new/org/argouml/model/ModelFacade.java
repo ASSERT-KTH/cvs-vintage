@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.144 2003/09/21 22:16:33 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.145 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -268,6 +268,13 @@ public class ModelFacade {
     public static final Object BOOLEAN_EXPRESSION = MBooleanExpression.class;
     public static final Object GUARD = MGuard.class;
 
+    public static final Object ADD_ONLY_CHANGEABLEKIND = 
+        MChangeableKind.ADD_ONLY;
+    public static final Object CHANGEABLE_CHANGEABLEKIND = 
+        MChangeableKind.CHANGEABLE;
+    public static final Object FROZEN_CHANGEABLEKIND = 
+        MChangeableKind.FROZEN;
+    
     public static final Object CONCURRENT_CONCURRENCYKIND = 
         MCallConcurrencyKind.CONCURRENT;
     
@@ -1853,16 +1860,23 @@ public class ModelFacade {
      * @param o operation.
      * @return the concurrency.
      */
-    public static short getConcurrency(Object o) {
+    public static Object getConcurrency(Object o) {
         if (o != null && o instanceof MOperation) {
-            return ((MOperation) o).getConcurrency()
-                == MCallConcurrencyKind.GUARDED
-                ? GUARDED
-                : SEQUENTIAL;
+            return ((MOperation) o).getConcurrency();
         }
         throw new IllegalArgumentException("Unrecognized object " + o);
     }
 
+//    public static short getConcurrency(Object o) {
+//        if (o != null && o instanceof MOperation) {
+//            return ((MOperation) o).getConcurrency()
+//                == MCallConcurrencyKind.GUARDED
+//                ? GUARDED
+//                : SEQUENTIAL;
+//        }
+//        throw new IllegalArgumentException("Unrecognized object " + o);
+//    }
+//
     /** The list of connections to an association or link.
      *
      * @param handle to the association or link

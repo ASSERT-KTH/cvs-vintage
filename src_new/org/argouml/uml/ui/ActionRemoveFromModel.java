@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.31 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: ActionRemoveFromModel.java,v 1.32 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,9 +42,6 @@ import org.tigris.gef.base.Diagram;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.presentation.Fig;
-
-import ru.novosoft.uml.foundation.core.MModelElement;
-
 
 /**
  * Action for removing (moving to trash) objects from the model. Objects can be:
@@ -183,7 +180,7 @@ public class ActionRemoveFromModel extends UMLChangeAction {
         // integrated.
         boolean sure = false;
         if (org.argouml.model.ModelFacade.isAModelElement(target)) {
-            sure = sureRemove((MModelElement) target);
+            sure = sureRemoveModelElement(target);
         } else if (target instanceof UMLDiagram) {
             // lets see if this diagram has some figs on it
             UMLDiagram diagram = (UMLDiagram) target;
@@ -215,7 +212,7 @@ public class ActionRemoveFromModel extends UMLChangeAction {
         } else if (target instanceof Fig) {
             // we can delete figs like figrects now too
             if (ModelFacade.isAModelElement(((Fig) target).getOwner())) {
-                sure = sureRemove((MModelElement) ((Fig) target).getOwner());
+                sure = sureRemoveModelElement(((Fig) target).getOwner());
             } else
                 sure = true;
         }
@@ -229,7 +226,7 @@ public class ActionRemoveFromModel extends UMLChangeAction {
      * @param me
      * @return boolean
      */
-    public static boolean sureRemove(MModelElement me) {
+    public static boolean sureRemoveModelElement(Object/*MModelElement*/ me) {
         ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p = ProjectManager.getManager().getCurrentProject();
 

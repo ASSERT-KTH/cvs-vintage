@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.15 2003/09/08 20:11:53 bobtarling Exp $
+// $Id: ProjectMemberModel.java,v 1.16 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import org.argouml.kernel.ProjectMember;
 import org.argouml.xml.xmi.XMIParser;
 import org.argouml.model.ModelFacade;
 
-import ru.novosoft.uml.model_management.MModel;
 import ru.novosoft.uml.xmi.IncompleteXMIException;
 import ru.novosoft.uml.xmi.XMIWriter;
 import ru.novosoft.uml.model_management.MModel;

@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.76 2003/09/04 20:18:14 thierrylach Exp $
+// $Id: Modeller.java,v 1.77 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -622,7 +622,7 @@ public class Modeller
 	setVisibility(mOperation, modifiers);
 	if ((modifiers & JavaRecognizer.ACC_SYNCHRONIZED) > 0) {
 	    ModelFacade.setConcurrency(mOperation, ModelFacade.GUARDED);
-	} else if (ModelFacade.getConcurrency(mOperation) == ModelFacade.GUARDED) {
+	} else if (ModelFacade.getConcurrency(mOperation) == ModelFacade.GUARDED_CONCURRENCYKIND) {
 	    ModelFacade.setConcurrency(mOperation, ModelFacade.SEQUENTIAL);
 	}
 

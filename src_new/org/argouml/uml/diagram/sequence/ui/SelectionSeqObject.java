@@ -1,4 +1,4 @@
-// $Id: SelectionSeqObject.java,v 1.16 2003/09/21 14:11:13 bobtarling Exp $
+// $Id: SelectionSeqObject.java,v 1.17 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.FigPoly;
 import org.tigris.gef.presentation.Handle;
-import ru.novosoft.uml.behavior.common_behavior.MLinkEnd;
+
 public class SelectionSeqObject extends SelectionWButtons  {
     protected static Logger cat = 
         Logger.getLogger(SelectionSeqObject.class);
@@ -271,10 +271,10 @@ public class SelectionSeqObject extends SelectionWButtons  {
 	Collection liEnds = ModelFacade.getConnections(link);
 	if (liEnds.size() != 2 ) return;
 	Iterator iter = liEnds.iterator();
-	MLinkEnd le1 = (MLinkEnd) iter.next();
-	MLinkEnd le2 = (MLinkEnd) iter.next();
-	Object objSrc = /*(MObject)*/ le1.getInstance();
-	Object objDst = /*(MObject)*/ le2.getInstance();
+	Object/*MLinkEnd*/ le1 = iter.next();
+	Object/*MLinkEnd*/ le2 = iter.next();
+	Object objSrc = /*(MObject)*/ ModelFacade.getInstance(le1);
+	Object objDst = /*(MObject)*/ ModelFacade.getInstance(le2);
 
 	FigSeqObject figObjSrc = (FigSeqObject) lay.presentationFor(objSrc);
 	FigSeqObject figObjDst = (FigSeqObject) lay.presentationFor(objDst);

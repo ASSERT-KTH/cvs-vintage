@@ -1,4 +1,4 @@
-// $Id: AbstractActionAddModelElement.java,v 1.8 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.9 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionAddModelElement.java,v 1.8 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.9 2003/09/22 18:58:41 bobtarling Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -32,8 +32,6 @@ import javax.swing.JOptionPane;
 
 import org.argouml.application.api.Argo;
 import org.argouml.ui.ProjectBrowser;
-
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * Abstract action that is the parent to all add actions that add the
@@ -56,8 +54,8 @@ public abstract class AbstractActionAddModelElement extends UMLChangeAction {
      * Returns the target.
      * @return MModelElement
      */
-    public MModelElement getTarget() {
-        return (MModelElement)_target;
+    protected Object/*MModelElement*/ getTarget() {
+        return _target;
     }
 
     /**

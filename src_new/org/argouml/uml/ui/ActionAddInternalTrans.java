@@ -1,4 +1,4 @@
-// $Id: ActionAddInternalTrans.java,v 1.7 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: ActionAddInternalTrans.java,v 1.8 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,16 +28,13 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.ui.targetmanager.TargetManager;
 
-import ru.novosoft.uml.behavior.state_machines.MState;
-
-
 class ActionAddInternalTrans extends UMLChangeAction {
     public ActionAddInternalTrans() { super("action.add-internal-transition"); }
 
     public void actionPerformed(ActionEvent ae) {
 	Object target = TargetManager.getInstance().getModelTarget();
 	if (!(org.argouml.model.ModelFacade.isAState(target))) return;
-	Object/*MState*/ st = (MState) target;
+	Object/*MState*/ st = target;
 	super.actionPerformed(ae);
     }
     public boolean shouldBeEnabled() {

@@ -1,4 +1,4 @@
-// $Id: PredicateFind.java,v 1.5 2003/09/08 20:11:53 bobtarling Exp $
+// $Id: PredicateFind.java,v 1.6 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import org.tigris.gef.base.Diagram;
 
 import org.tigris.gef.util.Predicate;
 import org.tigris.gef.util.PredicateTrue;
-import ru.novosoft.uml.model_management.MModel;
 
 public class PredicateFind implements Predicate {
 
@@ -57,8 +56,8 @@ public class PredicateFind implements Predicate {
 	return res;
     }
 
-    public boolean matchPackage(MModel m) {
-	boolean res = _packageName.predicate(m.getName());
+    public boolean matchPackage(Object/*MModel*/ m) {
+	boolean res = _packageName.predicate(ModelFacade.getName(m));
 	return res;
     }
 

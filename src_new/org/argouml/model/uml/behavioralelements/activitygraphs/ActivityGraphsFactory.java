@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsFactory.java,v 1.12 2003/06/30 18:00:19 linus Exp $
+// $Id: ActivityGraphsFactory.java,v 1.13 2003/09/22 18:58:42 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -147,7 +147,8 @@ public class ActivityGraphsFactory extends AbstractUmlModelFactory {
      * @param context
      * @return MActivityGraph
      */
-    public MActivityGraph buildActivityGraph(MModelElement context) {
+    public MActivityGraph buildActivityGraph(Object/*MModelElement*/ theContext) {
+        MModelElement context = (MModelElement)theContext;
     	if (context != null
 	    && (context instanceof MBehavioralFeature
 		|| context instanceof MClassifier

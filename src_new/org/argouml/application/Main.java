@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.84 2003/09/21 13:16:11 alexb Exp $
+// $Id: Main.java,v 1.85 2003/09/22 18:58:42 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,6 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.Actions;
 import org.argouml.ui.LookAndFeelMgr;
-import org.argouml.ui.NavigatorPane;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
 import org.argouml.ui.targetmanager.TargetManager;

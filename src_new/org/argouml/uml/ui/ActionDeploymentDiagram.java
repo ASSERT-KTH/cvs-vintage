@@ -1,4 +1,4 @@
-// $Id: ActionDeploymentDiagram.java,v 1.16 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: ActionDeploymentDiagram.java,v 1.17 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,13 +23,11 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
+
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-
-import ru.novosoft.uml.foundation.core.MNamespace;
-
 
 /** Action to trigger creation of a deployment diagram.
  *  @stereotype singleton
@@ -66,8 +64,7 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
 					       "The argument " + handle
 					       + "is not a namespace.");
         }
-        Object/*MNamespace*/ ns = (MNamespace) handle;
-        return new UMLDeploymentDiagram(ns);
+        return new UMLDeploymentDiagram(handle);
     }
 
     /**
@@ -84,7 +81,7 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
 					       "The argument " + handle
 					       + "is not a namespace.");
         }
-        Object/*MNamespace*/ ns = (MNamespace) handle;
+        Object/*MNamespace*/ ns = handle;
         // may only occur as child of the model or in a package
         return (
 		ns == ProjectManager.getManager().getCurrentProject().getModel()

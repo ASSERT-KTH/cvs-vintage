@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.36 2003/09/20 13:10:45 bobtarling Exp $
+// $Id: Notation.java,v 1.37 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.36 2003/09/20 13:10:45 bobtarling Exp $
+// $Id: Notation.java,v 1.37 2003/09/22 18:58:41 bobtarling Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -383,8 +383,8 @@ public final class Notation implements PropertyChangeListener {
         return SINGLETON.generateClassifier(Notation.getNotation(ctx), cls);
     }
     public static String generateStereotype(
-        NotationContext ctx,
-        Object/*MStereotype*/ s) {
+            NotationContext ctx,
+            Object/*MStereotype*/ s) {
         return SINGLETON.generateStereotype(Notation.getNotation(ctx), s);
     }
     public static String generateTaggedValue(
@@ -507,7 +507,7 @@ public final class Notation implements PropertyChangeListener {
             return "";
 
         //added to support association roles
-        if (org.argouml.model.ModelFacade.isAAssociationRole(o)) {
+        if (ModelFacade.isAAssociationRole(o)) {
             return SINGLETON.generateAssociationRole(nn, (MAssociationRole) o);
         }
 

@@ -1,4 +1,4 @@
-// $Id: ActionAddExtensionPoint.java,v 1.8 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.9 2003/09/22 18:58:41 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionAddExtensionPoint.java
 // Classes: ActionAddExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: ActionAddExtensionPoint.java,v 1.8 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.9 2003/09/22 18:58:41 bobtarling Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // the display of extension points.
@@ -37,9 +37,6 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
-
-import ru.novosoft.uml.behavior.use_cases.MUseCase;
-
 
 /**
  * <p>A class to implement the addition of extension points to use cases.</p>
@@ -138,7 +135,7 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
         // invoke the superclass action method.
 
 	Object/*MExtensionPoint*/ ep =
-            UmlFactory.getFactory().getUseCases().buildExtensionPoint((MUseCase) target);
+            UmlFactory.getFactory().getUseCases().buildExtensionPoint(/*(MUseCase)*/target);
 
         TargetManager.getInstance().setTarget(ep);
 	super.actionPerformed(ae);
