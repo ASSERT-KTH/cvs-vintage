@@ -46,7 +46,7 @@ public class UMLNamespaceProperty extends UMLTextProperty  {
             value = container.formatNamespace(ns);
         }
         return value;
-    }
+    }        /**     * Hack to circumvent problems with the validating property. This method never     * validates.     * @see org.argouml.uml.ui.UMLTextProperty#setProperty(UMLUserInterfaceContainer, String, boolean)     * @author jaap.branderhorst@xs4all.nl     */    public void setProperty(UMLUserInterfaceContainer container,String newValue, boolean validating) {        setProperty(container, newValue);    }
     
     public void targetChanged() {
     }
