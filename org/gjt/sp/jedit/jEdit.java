@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.215 2004/02/22 21:01:39 spestov Exp $
+ * @version $Id: jEdit.java,v 1.216 2004/02/22 21:04:50 spestov Exp $
  */
 public class jEdit
 {
@@ -3173,7 +3173,9 @@ public class jEdit
 	//{{{ fontStyleToString() method
 	private static String fontStyleToString(int style)
 	{
-		if(style == Font.BOLD)
+		if(style == 0)
+			return "PLAIN";
+		else if(style == Font.BOLD)
 			return "BOLD";
 		else if(style == Font.ITALIC)
 			return "ITALIC";
