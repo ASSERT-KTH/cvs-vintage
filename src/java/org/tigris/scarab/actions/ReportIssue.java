@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.103 2002/01/25 00:47:14 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.104 2002/01/25 02:54:49 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -541,6 +541,8 @@ public class ReportIssue extends RequireLoginFirstAction
                 }
                 data.getParameters().setString("intake-grp", "issue"); 
                 data.getParameters().setString("id",issue.getUniqueId().toString());
+                // remove the group so that the form data doesn't show up again
+                intake.remove(group);
             }
         }
         else

@@ -142,9 +142,9 @@
 <h3>Related links</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
-     <th> &#160; </th>
+     <th>&#160;</th>
      <th>Link</th>
-     <th>Link Description</th>
+     <th>Link description</th>
    </tr>
    #foreach ($url in $currentIssue.Urls)
     #indexedRows($velocityCount)
@@ -366,66 +366,102 @@
 #end
 
 ## ATTACHMENT
-#set ($attachments = $currentIssue.ExistingAttachments)
-<h3>Attachment</h3>
-<div>
-    <table width="100%" cellpadding="3" cellspacing="2" border="1">
-       #set ($atch = $scarabR.Attachment)
-       #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
-       #set ($intakeAttachment = $intake.Attachment.setKey("fileKey"))
-       #if($attachments.size()>0)
-           <tr>
-           <th> &nbsp; </th>
-           <th>File Name</th>
-           <th>File Description</th>
-           </tr>
-       #end 
-       #foreach ($file in $currentIssue.ExistingAttachments)
-           #indexedRows($velocityCount)
-           #if ($file.TypeId.toString().equals("1"))
-               <tr>
-                  <td>
-                    #if ($canEdit)
-                        <input type="checkbox" name="file_delete_$file.AttachmentId" />
-                    #else
-                        &#160;
-                    #end
-                  </td>
-                  <td><a href="$data.Request.ContextPath/$file.FilePath" 
-                    onClick="fileWindow=window.open('',
-                    'filewindow','resizable=yes,menubar=yes,scrollbars=yes,height=450,width=700')" 
-                    target="filewindow">$file.FileName</a> 
-                  </td>
-                  <td>$file.Name</td>
-                </tr>
-            #end
-       #end
-       #if ($canEdit)
-            <tr>
-               <th>Add attachment</th>
-               <td>
-                <input type="file" name="$intakeAttachment.File.Key" size="45"
-                value="$!intakeAttachment.File.Value.FileName" />
-               </td>
-            </tr>
-            <tr>
-               <th>Attachment description</th>
-               <td>
-                #textAreaMedium("$intakeAttachment.Name.Key" "")
-                #fieldErrorMsg($intakeAttachment.Name "")
-               </td>
-            </tr>
-       #end
-    </table>
-</div>
-<div class="functnbar3">
-    #if ($canEdit)
-        <input type="submit" value="Add file" name="eventSubmit_doSubmitfile"  />&#160;
-        <input type="submit" value="Delete file" name="eventSubmit_doDeletefile"  />&#160;
-    #end
-</div>
-    
+#set ($atch = $scarabR.Attachment)
+#set ($intakeAttachment = $intake.Attachment.mapTo($atch))
+#set ($intakeAttachment = $intake.Attachment.setKey("fileKey"))
+#set ($attachments = $currentIssue.Attachments)
+#if ($attachments.size() > 0)
+<h3>Attachments</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     <th>&#160;</th>
+     <th>Attachment name</th>
+     <th>Attachment description</th>
+     <th>Attachment type</th>
+   </tr>
+   #foreach ($file in $currentIssue.ExistingAttachments)
+     #indexedRows($velocityCount)
+     #if ($file.TypeId.toString().equals("1"))
+       <td>
+         #if ($canEdit)
+           <input type="checkbox" name="file_delete_$file.AttachmentId" />
+         #end
+       </td>
+       <td><a href="$data.Request.ContextPath/$file.FilePath" 
+         onClick="fileWindow=window.open('',
+         'filewindow','resizable=yes,menubar=yes,scrollbars=yes,height=450,width=700')" 
+         target="filewindow">$file.FileName</a> 
+       </td>
+       <td>$file.Name</td>
+       <td>$file.MimeType</td>
+     </tr>
+     #end
+   #end
+ </table>
 
+#if ($canEdit)
+<div class="functnbar3">
+  <input type="submit" value="Delete attachment" name="eventSubmit_doDeletefile"  />
+</div>
+#end
+
+#end
+
+#if ($canEdit)
+<h4>Add Attachment</h4>
+
+<div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+    <tr>
+      <th>Attachment path</th>
+      <td>
+       <input type="file" name="$intakeAttachment.File.Key" size="45"
+            value="$!intakeAttachment.File.Value.FileName" />
+       <p><small>Click Browse and select a file. If you do not see a Browse
+       button, your browser does not support file uploads. Windows
+       users, set Files of Type: to be All Files (*.*) to get a
+       complete file listing. The File field cannot be used to
+       rename files.</small></p>
+      </td>
+    </tr>
+    <tr>
+       <th>Attachment description</th>
+       <td>
+        #textAreaMedium("$intakeAttachment.Name.Key" "$intakeAttachment.Name")
+        #fieldErrorMsg($intakeAttachment.Name "")
+       </td>
+    </tr>
+    <tr>
+      <th>Attachment type</th>
+      <td>
+        <select name="$intakeAttachment.MimeTypeA.Key" class="select">
+        #if ($intakeAttachment.MimeTypeA)
+          #set ($mimeA = $intakeAttachment.MimeTypeA.toString())
+        #end
+          <option value="" #if (!$mimeA || $mimeA.length() == 0)selected="selected"#end>Select...</option>
+          <option value="text/plain" #if ($mimeA == "text/plain"))selected="selected"#end>Patch file (text/plain, diffs)</option>
+          <option value="text/plain" #if ($mimeA == "text/plain")selected="selected"#end>Plain text (text/plain)</option> 
+          <option value="text/html" #if ($mimeA == "text/html")selected="selected"#end>HTML source (text/html)</option> 
+          <option value="image/gif" #if ($mimeA == "image/gif")selected="selected"#end>GIF Image (image/gif)</option> 
+          <option value="image/jpeg" #if ($mimeA == "image/jpeg")selected="selected"#end>JPEG Image (image/jpeg)</option> 
+          <option value="image/png" #if ($mimeA == "image/png")selected="selected"#end>PNG Image (image/png)</option> 
+          <option value="application/octet-stream" #if ($mimeA == "application/octet-stream")selected="selected"#end>Binary file (application/octet-stream)</option>        
+        </select>
+        <p><small>Other (enter mime type:&#160;
+        <input type="text" name="$intakeAttachment.MimeTypeB.Key" 
+                          value="$intakeAttachment.MimeTypeB" />)</small></p>
+        #fieldErrorMsg($intakeAttachment.MimeTypeA "")
+      </td>
+    </tr>
+</table>
+</div>
+
+<div class="functnbar3">
+  <input type="submit" value="Add attachment" name="eventSubmit_doSubmitfile"  />
+</div>
+#end
+
+    
 ## ISSUE HISTORY
 #set ($activity = $scarabG.reverse($currentIssue.getActivity(true)))
 #if (!$fullHistory.equals("true"))
