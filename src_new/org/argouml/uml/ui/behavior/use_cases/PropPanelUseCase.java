@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.2 2000/09/21 05:48:49 carnold Exp $
+// $Id: PropPanelUseCase.java,v 1.3 2000/11/17 16:23:37 carnold Exp $
 
 package org.argouml.uml.ui.behavior.use_cases;
 
@@ -129,4 +129,13 @@ public class PropPanelUseCase extends PropPanel {
     
   }
   
+
+    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
+        return baseClass.equals("UseCase") ||
+            baseClass.equals("Classifier") ||
+            baseClass.equals("GeneralizableElement") ||
+            baseClass.equals("Namespace");
+    }
+  
+
 } /* end class PropPanelUseCase */

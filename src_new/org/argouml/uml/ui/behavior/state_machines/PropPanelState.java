@@ -26,7 +26,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelState.java,v 1.3 2000/09/29 07:43:25 carnold Exp $
+// $Id: PropPanelState.java,v 1.4 2000/11/17 16:23:36 carnold Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -77,6 +77,11 @@ public class PropPanelState extends PropPanel {
         }
         return machine;
     }
+
+    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
+        return baseClass.equals("State");
+    }
+  
 
 
 } /* end class PropPanelState */

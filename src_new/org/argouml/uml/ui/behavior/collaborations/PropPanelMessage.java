@@ -26,7 +26,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.2 2000/09/21 05:48:48 carnold Exp $
+// $Id: PropPanelMessage.java,v 1.3 2000/11/17 16:23:36 carnold Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 import ru.novosoft.uml.foundation.core.*;
@@ -42,13 +42,13 @@ public class PropPanelMessage extends PropPanel {
 
   ////////////////////////////////////////////////////////////////
   // constants
-  
+
 
   ////////////////////////////////////////////////////////////////
   // contructors
   public PropPanelMessage() {
     super("Message Properties",2);
-    
+
     Class mclass = MMessage.class;
 
     addCaption(new JLabel("Name:"),0,0,0);
@@ -63,18 +63,23 @@ public class PropPanelMessage extends PropPanel {
     namespaceList.setBackground(getBackground());
     namespaceList.setForeground(Color.blue);
     addField(namespaceList,2,0,0);
-        
-    
+
+
     addCaption(new JLabel("Predecessor:"),0,1,0);
     addField(new JComboBox(),0,1,0);
-    
+
     addCaption(new JLabel("Activator:"),1,1,0);
     addField(new JComboBox(),1,1,0);
-    
+
     addCaption(new JLabel("Action:"),2,1,1);
     addField(new JComboBox(),2,1,0);
 
   }
+
+    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
+        return baseClass.equals("Message");
+    }
+
 
 
 } /* end class PropPanelMessage */

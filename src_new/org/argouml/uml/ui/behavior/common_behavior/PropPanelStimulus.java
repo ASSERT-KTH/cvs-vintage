@@ -26,7 +26,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.1 2000/09/29 16:02:27 boger Exp $
+// $Id: PropPanelStimulus.java,v 1.2 2000/11/17 16:23:36 carnold Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -66,4 +66,10 @@ public class PropPanelStimulus extends PropPanel {
     addField(new JComboBox(),0,1,0);
 
   }
+
+    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
+        return baseClass.equals("Stimulus");
+    }
+  
+
 }

@@ -22,67 +22,67 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-import org.argouml.uml.*;
+import javax.swing.event.*;
 import javax.swing.*;
+import java.lang.reflect.*;
 import ru.novosoft.uml.*;
 import java.awt.event.*;
+import java.awt.*;
 import ru.novosoft.uml.foundation.core.*;
 
-public class UMLInitialValueComboBox extends JComboBox implements ActionListener, UMLUserInterfaceComponent {
+public class UMLComboBox extends JComboBox implements UMLUserInterfaceComponent {
 
-    private UMLUserInterfaceContainer _container;
+    private UMLComboBoxModel _model;
 
-    /** Creates new BooleanChangeListener */
-    public UMLInitialValueComboBox(UMLUserInterfaceContainer container) {
-        super();
-        _container = container;
-        addActionListener(this);
-        addItem("null");
+    public UMLComboBox(UMLComboBoxModel model) {
+        super(model);
+        _model = model;
+         addActionListener(_model);
     }
 
+    public void setModel(ComboBoxModel newModel) {
+        ComboBoxModel oldModel = getModel();
+        if(oldModel != null) {
+            if(oldModel instanceof ActionListener) {
+                removeActionListener((ActionListener) oldModel);
+            }
+        }
+        if(newModel instanceof ActionListener) {
+            addActionListener((ActionListener) newModel);
+        }
+        super.setModel(newModel);
+    }
+
+
     public void targetChanged() {
-        update();
+        _model.targetChanged();
     }
 
     public void targetReasserted() {
     }
 
-    public void roleAdded(final MElementEvent p1) {
+    public void roleAdded(final MElementEvent event) {
+        _model.roleAdded(event);
     }
-    public void recovered(final MElementEvent p1) {
+
+    public void recovered(final MElementEvent event) {
+        _model.recovered(event);
     }
-    public void roleRemoved(final MElementEvent p1) {
+
+    public void roleRemoved(final MElementEvent event) {
+        _model.roleRemoved(event);
     }
-    public void listRoleItemSet(final MElementEvent p1) {
+
+    public void listRoleItemSet(final MElementEvent event) {
+        _model.listRoleItemSet(event);
     }
-    public void removed(final MElementEvent p1) {
+
+    public void removed(final MElementEvent event) {
+        _model.removed(event);
     }
     public void propertySet(final MElementEvent event) {
-        String eventProp = event.getName();
-        if(eventProp == null) {
-            if(eventProp.equals("initialValue")) {
-                update();
-            }
-            else {
-                if(eventProp.equals("type")) {
-                    updateDefaults();
-                }
-            }
-        }
+        _model.propertySet(event);
     }
 
-    private void update() {
-    }
 
-    private void updateDefaults() {
-        Object target = _container.getTarget();
-        if(target instanceof MAttribute) {
-            Profile profile = _container.getProfile();
-//            setModel(new DefaultComboBoxModel(profile.getInitialValues(((MAttribute) target).getType())));
-        }
-    }
-
-    public void actionPerformed(final ActionEvent event) {
-        Object selected = getSelectedItem();
-    }
 }

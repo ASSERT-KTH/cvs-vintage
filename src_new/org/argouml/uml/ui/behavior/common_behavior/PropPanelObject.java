@@ -24,7 +24,7 @@
 // File: PropPanelObject.java
 // Classes: PropPanelObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelObject.java,v 1.2 2000/09/21 05:48:48 carnold Exp $
+// $Id: PropPanelObject.java,v 1.3 2000/11/17 16:23:36 carnold Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -32,4 +32,10 @@ public class PropPanelObject extends PropPanelInstance {
     public PropPanelObject() {
         super();
     }
+
+    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
+        return baseClass.equals("Object");
+    }
+  
+
 }

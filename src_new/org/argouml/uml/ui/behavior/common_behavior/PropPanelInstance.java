@@ -26,7 +26,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.2 2000/09/21 05:48:48 carnold Exp $
+// $Id: PropPanelInstance.java,v 1.3 2000/11/17 16:23:36 carnold Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 import java.awt.*;
@@ -46,22 +46,22 @@ public class PropPanelInstance extends PropPanel {
     super("Instance Properties",2);
 
     Class mclass = MInstance.class;
-    
+
     addCaption(new JLabel("Name:"),0,0,0);
     addField(new UMLTextField(this,new UMLTextProperty(mclass,"name","getName","setName")),0,0,0);
 
-    
+
     addCaption(new JLabel("Stereotype:"),1,0,0);
     JComboBox stereotypeBox = new UMLStereotypeComboBox(this);
     addField(stereotypeBox,1,0,0);
-    
+
 
     addCaption(new JLabel("Namespace:"),2,0,1);
     JList namespaceList = new UMLList(new UMLNamespaceListModel(this),true);
     namespaceList.setBackground(getBackground());
     namespaceList.setForeground(Color.blue);
     addField(namespaceList,5,0,0);
-    
+
     addCaption(new JLabel("Arguments:"),0,1,0);
     addCaption(new JLabel("Receives:"),1,1,0);
     addCaption(new JLabel("Sends:"),2,1,0);
@@ -69,9 +69,12 @@ public class PropPanelInstance extends PropPanel {
     addCaption(new JLabel("Links:"),4,1,1);
   }
 
-  
-  
-} /* end class PropPanelComponentInstance */
+    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
+        return baseClass.equals("Instance");
+    }
+
+
+} /* end class PropPanelInstance */
 
 
 

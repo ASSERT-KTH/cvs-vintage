@@ -26,7 +26,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.2 2000/09/21 05:48:47 carnold Exp $
+// $Id: PropPanelActionState.java,v 1.3 2000/11/17 16:23:35 carnold Exp $
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
@@ -54,7 +54,7 @@ public class PropPanelActionState extends PropPanel {
   // contructors
   public PropPanelActionState() {
     super("Action State Properties",2);
-    
+
     Class mclass = MActionState.class;
 
     addCaption(new JLabel("Name:"),0,0,0);
@@ -69,21 +69,25 @@ public class PropPanelActionState extends PropPanel {
     namespaceList.setBackground(getBackground());
     namespaceList.setForeground(Color.blue);
     addField(namespaceList,2,0,0);
-        
+
     addCaption(new JLabel("Modifiers:"),3,0,1);
-    
+
     JPanel modifiersPanel = new JPanel(new GridLayout(0,2));
     modifiersPanel.add(new UMLCheckBox("dynamic",this,new UMLReflectionBooleanProperty("isDynamic",mclass,"isDynamic","setDynamic")));
     addField(modifiersPanel,3,0,0);
-    
+
     //
     //  TODO: replace JComboBoxes with action combos
     //
     addCaption(new JLabel("Entry"),0,1,0);
     addCaption(new JLabel("Exit"),1,1,0);
     addCaption(new JLabel("Transition"),2,1,1);
-    
+
   }
 
-} /* end class PropPanelActoinState */
+  protected boolean isAcceptibleBaseMetaClass(String baseClass) {
+    return baseClass.equals("ActionState");
+  }
+
+} /* end class PropPanelActionState */
 
