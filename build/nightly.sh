@@ -14,6 +14,7 @@ SCARAB=".."
 DIR=`pwd`
 CVSUPDATE=1
 MYSQL=/usr/local/mysql/bin
+DEPBUILD=0
 
 ## Environment variables
 JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home"
@@ -49,6 +50,7 @@ echo "Removing Torque and Turbine from ${SCARAB}/lib..."
 rm -rf ${SCARAB}/lib/turbine*.jar
 rm -rf ${SCARAB}/lib/torque*.zip
 
+if [ ${DEPBUILD} -gt 0 ] ; then
 cd ${DIR}
 if [ -d ${TURBINE}/bin ] ; then
     echo "Removing Turbine ${TURBINE}/bin directory..."
@@ -57,7 +59,9 @@ if [ -d ${TURBINE}/bin ] ; then
 else
     echo "Turbine bin directory does not exist..."    
 fi
+fi
 
+if [ ${DEPBUILD} -gt 0 ] ; then
 cd ${DIR}
 if [ -d ${TORQUE}/bin ] ; then
     echo "Removing Torque ${TORQUE}/bin directory..."
@@ -66,9 +70,11 @@ if [ -d ${TORQUE}/bin ] ; then
 else
     echo "Torque bin directory does not exist..."    
 fi
+fi
 
 ## Update things from CVS
 if [ ${CVSUPDATE} -gt 0 ] ; then
+if [ ${DEPBUILD} -gt 0 ] ; then
     echo "Updating Torque From CVS Start..."
     date
     cd ${DIR}; cd ${TORQUE}
@@ -82,7 +88,7 @@ if [ ${CVSUPDATE} -gt 0 ] ; then
     cvs update
     echo "Updating Turbine From CVS Finish..."
     date
-
+fi
     echo "Updating Scarab From CVS Start..."
     date
     cd ${DIR}; cd ${SCARAB}
@@ -93,13 +99,16 @@ else
     echo "Skipping CVS update..."
 fi
 
+if [ ${DEPBUILD} -gt 0 ] ; then
 # remove after the cvs update
 cd ${DIR}
 echo "Removing Torque and Turbine from ${SCARAB}/lib again..."
 rm -rf ${SCARAB}/lib/turbine*.jar
 rm -rf ${SCARAB}/lib/torque*.zip
+fi
 
 ## Build things now
+if [ ${DEPBUILD} -gt 0 ] ; then
 echo "Building Torque Start..."
 cd ${DIR}; cd ${TORQUE}/build
 ant dist
@@ -109,10 +118,13 @@ echo "Building Turbine Start..."
 cd ${DIR}; cd ${TURBINE}/build
 ant jar
 echo "Building Turbine Finish..."
+fi
 
 echo "Building Scarab Start..."
 cd ${DIR}; cd ${SCARAB}/build
+if [ ${DEPBUILD} -gt 0 ] ; then
 ant upgrade-torque-turbine
+fi
 ant
 echo "Building Scarab Finish..."
 
