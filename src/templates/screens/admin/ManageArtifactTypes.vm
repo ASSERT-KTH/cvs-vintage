@@ -44,19 +44,18 @@
 #end
 
 
-
 <h3>Issue types</h3>
 
 #if ($rmits.isEmpty())
    <p><strong class="alert">There are no issue types in this module.</strong></p>
 <div class="functnbar3">
-<input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate"/>&#160;
+<input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate"/>
 </div>
 #else
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th></th>
+<th>Select</th>
 <th>#sort ("name" "Name")</th>
 <th>Active</th>
 <th>Show in left hand nav</th>
@@ -81,7 +80,6 @@
   </td>
   </tr>
 #end
-
 </table>
 
 <div class="functnbar3">
@@ -94,11 +92,9 @@
 
 #end
 
-
 #if ($paginated)
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
-
 
 $intake.declareGroups()
 </form>

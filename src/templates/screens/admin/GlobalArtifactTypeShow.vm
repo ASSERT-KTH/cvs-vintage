@@ -44,9 +44,12 @@
 
 <h3>Issue types</h3>
 
+#if ($allIssueTypes.isEmpty())
+<p>Click "Add new" to add a new global issue type.</p>
+#else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>Select</th>
+<th width="70">Select</th>
 <th>#sort ("name" "Type")</th>
 <th>#sort ("desc" "Description")</th>
 </tr>
@@ -59,11 +62,14 @@
 </tr>
 #end
 </table>
+#end
 
 <div class="functnbar3">
 <input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
+#if (!$allIssueTypes.isEmpty())
 <input type="submit" value="Copy selected" name="eventSubmit_doCopy" />&#160;
 <input type="submit" value="Delete selected" name="eventSubmit_doDelete" />
+#end
 </div>
 
 #if ($paginated)
