@@ -14,6 +14,7 @@ import java.rmi.RemoteException;
 import java.rmi.ServerError;
 import java.rmi.ServerException;
 import java.rmi.AccessException;
+import java.security.GeneralSecurityException;
 
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchEntityException;
@@ -38,7 +39,7 @@ import org.jboss.tm.JBossTransactionRolledbackLocalException;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */
 public class LogInterceptor extends AbstractInterceptor
 {
@@ -356,9 +357,9 @@ public class LogInterceptor extends AbstractInterceptor
          security related ejb or rmi exceptions to allow users to identitify
          them more easily.
       */
-      if (e instanceof SecurityException)
+      if (e instanceof SecurityException || e instanceof GeneralSecurityException)
       {
-         SecurityException runtimeException = (SecurityException)e;
+         Exception runtimeException = (Exception)e;
          log.debug("SecurityException in method: " + invocation.getMethod() + ":", runtimeException);
          if (isLocal)
          {
