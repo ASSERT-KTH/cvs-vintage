@@ -18,6 +18,8 @@ import javax.ejb.DuplicateKeyException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 
+import org.apache.log4j.Category;
+
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
@@ -37,7 +39,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceStore
@@ -63,9 +65,8 @@ public class JAWSPersistenceManager
 
    JPMActivateEntityCommand activateEntityCommand;
    JPMPassivateEntityCommand passivateEntityCommand;
-   
 
-   Log log = Log.createLog("JAWS");
+   Log log = Log.createLog(this.getClass().getName());
 
    // EntityPersistenceStore implementation -------------------------
 
