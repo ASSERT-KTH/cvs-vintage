@@ -68,6 +68,7 @@ import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.modules.server.*;
+import org.apache.tomcat.util.IntrospectionUtils;
 import org.apache.tomcat.util.log.Log;
 import org.xml.sax.*;
 
@@ -110,6 +111,7 @@ public class ContextXmlReader extends BaseInterceptor {
 	// use the same tags for context-local modules
 	addTagRules(cm, xh);
 	setContextRules( xh );
+        setPropertiesRules( cm, xh );
 	setBackward( xh );
 
 	// load the config file(s)
@@ -144,7 +146,58 @@ public class ContextXmlReader extends BaseInterceptor {
 
     // -------------------- Xml reading details --------------------
 
-    // rules for reading teh context config
+    static class ContextPropertySource
+        implements IntrospectionUtils.PropertySource
+    {
+        ContextManager cm;
+        Context ctx=null;
+	
+        ContextPropertySource( ContextManager cm ) {
+            this.cm=cm;
+        }
+
+        public void setContext(Context ctx) {
+            this.ctx=ctx;
+        }
+	
+        public String getProperty( String key ) {
+            // XXX add other "predefined" properties
+            String s=null;
+            if( ctx != null )
+                s=ctx.getProperty( key );              
+            if( s == null )
+                s=cm.getProperty( key );
+            if( s == null )
+        	s=System.getProperty( key );
+            return s;
+        }
+    }
+
+    public static void setPropertiesRules( ContextManager cm, XmlMapper xh )
+	throws TomcatException
+    {
+	ContextPropertySource propS=new ContextPropertySource( cm );
+	xh.setPropertySource( propS );
+	
+	xh.addRule( "Context/Property", new XmlAction() {
+		public void start(SaxContext ctx ) throws Exception {
+		    AttributeList attributes = ctx.getCurrentAttributes();
+		    String name=attributes.getValue("name");
+		    String value=attributes.getValue("value");
+		    if( name==null || value==null ) return;
+		    XmlMapper xm=ctx.getMapper();
+		    
+		    Context context=(Context)ctx.currentObject();
+		    // replace ${foo} in value
+		    value=xm.replaceProperties( value );
+		    if( context.getDebug() > 0 )
+			context.log("Setting " + name + "=" + value);
+		    context.setProperty( name, value );
+		}
+	    });
+    }
+
+    // rules for reading the context config
     public static void setContextRules( XmlMapper xh ) {
 	// Default host
 	xh.addRule( "Context",
@@ -172,9 +225,23 @@ public class ContextXmlReader extends BaseInterceptor {
 		}
 	    });
 
+        xh.addRule( "Context", new XmlAction() {
+                public void start( SaxContext xctx) throws Exception {
+                    Context tcCtx=(Context)xctx.currentObject();
+                    XmlMapper xm=xctx.getMapper();
+                    ContextPropertySource propS = (ContextPropertySource)xm.getPropertySource();
+                    if( propS != null )
+                        propS.setContext(tcCtx);
+                }
+            });
+
 	xh.addRule( "Context", new XmlAction() {
 		public void end( SaxContext xctx) throws Exception {
 		    Context tcCtx=(Context)xctx.currentObject();
+                    XmlMapper xm=xctx.getMapper();
+                    ContextPropertySource propS = (ContextPropertySource)xm.getPropertySource();
+                    if( propS != null )
+                        propS.setContext(null);
 		    String host=(String)xctx.getVariable("current_host");
 		    String address=(String)xctx.getVariable("current_address");
 		    Vector aliases=(Vector)xctx.getVariable( "host_aliases" );
@@ -199,7 +266,7 @@ public class ContextXmlReader extends BaseInterceptor {
 		    xh.addChild("addContext",
 				"org.apache.tomcat.core.Context") );
     }
-    
+
     // -------------------- Backward compatibility -------------------- 
 
     // Read old configuration formats
