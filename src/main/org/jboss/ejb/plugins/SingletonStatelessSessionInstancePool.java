@@ -21,18 +21,17 @@ import org.jboss.ejb.DeploymentException;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
-import org.jboss.logging.Logger;
 import org.jboss.management.j2ee.CountStatistic;
 
 
 /**
- *	Singleton pool for session beans. This lets you have
+ *  Singleton pool for session beans. This lets you have
  * singletons in EJB!
- *      
- *	@see <related>
- *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *	@version $Revision: 1.11 $
- *      
+ *
+ *  @see <related>
+ *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *  @version $Revision: 1.12 $
+ *
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
  * <ul>
@@ -43,14 +42,14 @@ public class SingletonStatelessSessionInstancePool
    implements InstancePool, XmlLoadable
 {
    // Constants -----------------------------------------------------
-    
+
    // Attributes ----------------------------------------------------
    Container con;
-   
+
    EnterpriseContext ctx;
    boolean inUse = false;
    boolean isSynchronized = true;
-   
+
    /** Counter of all the Bean instantiated within the Pool **/
    protected CountStatistic mInstantiate = new CountStatistic( "Instantiation", "", "Beans instantiated in Pool" );
    /** Counter of all the Bean destroyed within the Pool **/
@@ -59,16 +58,16 @@ public class SingletonStatelessSessionInstancePool
    protected CountStatistic mReadyBean = new CountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
 
    // Static --------------------------------------------------------
-   
+
    // Constructors --------------------------------------------------
-   
+
    // Public --------------------------------------------------------
 
    /**
     *   Set the callback to the container. This is for initialization.
     *   The pool may extract the configuration from the container.
     *
-    * @param   c  
+    * @param   c
     */
    public void setContainer(Container c)
    {
@@ -79,12 +78,12 @@ public class SingletonStatelessSessionInstancePool
       throws Exception
    {
    }
-   
+
    public void start()
       throws Exception
    {
    }
-   
+
    public void stop()
    {
    }
@@ -92,12 +91,12 @@ public class SingletonStatelessSessionInstancePool
    public void destroy()
    {
    }
-   
+
    /**
     *   Get the singleton instance
     *
     * @return     Context /w instance
-    * @exception   RemoteException  
+    * @exception   RemoteException
     */
    public synchronized EnterpriseContext get()
       throws Exception
@@ -107,7 +106,7 @@ public class SingletonStatelessSessionInstancePool
       {
          try { this.wait(); } catch (InterruptedException e) {}
       }
-      
+
       // Create if not already created (or it has been discarded)
       if (ctx == null)
       {
@@ -127,12 +126,12 @@ public class SingletonStatelessSessionInstancePool
       {
          mReadyBean.remove();
       }
-      
+
       // Lock and return instance
       inUse = true;
       return ctx;
    }
-   
+
    /**
     *   Return an instance after invocation.
     *
@@ -140,7 +139,7 @@ public class SingletonStatelessSessionInstancePool
     *   a) Done with finder method
     *   b) Just removed
     *
-    * @param   ctx  
+    * @param   ctx
     */
    public synchronized void free(EnterpriseContext ctx)
    {
@@ -149,7 +148,7 @@ public class SingletonStatelessSessionInstancePool
       this.notifyAll();
       mReadyBean.add();
    }
-   
+
    public void discard(EnterpriseContext ctx)
    {
       // Throw away
@@ -162,12 +161,12 @@ public class SingletonStatelessSessionInstancePool
       {
          // DEBUG Logger.exception(e);
       }
-      
+
       // Notify waiters
       inUse = false;
       this.notifyAll();
    }
-   
+
    public Map retrieveStatistic()
    {
       Map lStatistics = new HashMap();
@@ -182,23 +181,23 @@ public class SingletonStatelessSessionInstancePool
       mDestroy.reset();
       mReadyBean.reset();
    }
-   
+
    // Z implementation ----------------------------------------------
-   
+
     // XmlLoadable implementation
-	public void importXml(Element element) throws DeploymentException {
-		isSynchronized = Boolean.valueOf(MetaData.getElementContent(MetaData.getUniqueChild(element, "Synchronized"))).booleanValue();
-	}
-	
-   // Package protected ---------------------------------------------
+    public void importXml(Element element) throws DeploymentException {
+        isSynchronized = Boolean.valueOf(MetaData.getElementContent(MetaData.getUniqueChild(element, "Synchronized"))).booleanValue();
+    }
     
+   // Package protected ---------------------------------------------
+
    // Protected -----------------------------------------------------
    protected EnterpriseContext create(Object instance, Container con)
       throws Exception
    {
       return new StatelessSessionEnterpriseContext(instance, con);
    }
-    
+
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------

@@ -32,6 +32,7 @@ import javax.transaction.HeuristicRollbackException;
 
 import org.jboss.tm.TransactionPropagationContextFactory;
 
+//this needs to be replaced with the log4j logging TODO
 import org.jboss.logging.Logger;
 
 import org.jboss.tm.usertx.interfaces.UserTransactionSession;
@@ -209,7 +210,7 @@ public class UserTransactionSessionImpl
 
       tx.setRollbackOnly();
    }
-   
+
    /**
     *  Return status of the transaction.
     *

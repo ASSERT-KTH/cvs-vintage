@@ -19,13 +19,15 @@ import javax.ejb.NoSuchEntityException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.MethodInvocation;
+
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 /**
  *  A common superclass for the transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 abstract class AbstractTxInterceptor
    extends AbstractInterceptor

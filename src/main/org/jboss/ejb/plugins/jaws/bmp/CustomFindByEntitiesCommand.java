@@ -16,7 +16,10 @@ import java.util.ArrayList;
 import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
+
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
+
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.util.FinderResults;
@@ -30,7 +33,7 @@ import org.jboss.util.FinderResults;
  *
  * @see org.jboss.ejb.plugins.jaws.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class CustomFindByEntitiesCommand
    implements JPMFindEntitiesCommand
@@ -87,12 +90,12 @@ public class CustomFindByEntitiesCommand
          throw new FinderException("Illegal arguments for finder implementation:"+finderImplMethod.getName());
       } catch (ExceptionInInitializerError e5) {
          throw new FinderException("Unable to initialize finder implementation:"+finderImplMethod.getName());
-		} catch (InvocationTargetException e) {
-			Throwable target  = e.getTargetException();
-			if(target instanceof Exception) {
-				throw (Exception)target;
-			}
-			throw new FinderException("Unable to initialize finder implementation: " + finderImplMethod.getName());
-		}
+        } catch (InvocationTargetException e) {
+            Throwable target  = e.getTargetException();
+            if(target instanceof Exception) {
+                throw (Exception)target;
+            }
+            throw new FinderException("Unable to initialize finder implementation: " + finderImplMethod.getName());
+        }
    }
 }

@@ -24,30 +24,31 @@ import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
 
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 /**
  * The container for <em>stateless</em> session beans.
- *   
+ *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class StatelessSessionContainer
    extends Container
    implements ContainerInvokerContainer, InstancePoolContainer
 {
    // Constants -----------------------------------------------------
-    
+
    // Attributes ----------------------------------------------------
 
    /** This is the Home interface class */
    protected Class homeInterface;
- 
+
    /** This is the Remote interface class */
    protected Class remoteInterface;
-    
+
    /**
     * These are the mappings between the home interface methods and the
     * container methods.
@@ -69,44 +70,44 @@ public class StatelessSessionContainer
    protected Interceptor interceptor;
    // Static --------------------------------------------------------
    // Constructors --------------------------------------------------
-    
+
    // Public --------------------------------------------------------
-   
-   public void setContainerInvoker(ContainerInvoker ci) 
-   { 
+
+   public void setContainerInvoker(ContainerInvoker ci)
+   {
       if (ci == null)
          throw new IllegalArgumentException("Null invoker");
-        
-      this.containerInvoker = ci; 
+
+      this.containerInvoker = ci;
       ci.setContainer(this);
    }
-    
-   public ContainerInvoker getContainerInvoker() 
-   { 
-      return containerInvoker; 
+
+   public ContainerInvoker getContainerInvoker()
+   {
+      return containerInvoker;
    }
-    
+
    public LocalContainerInvoker getLocalContainerInvoker()
    {
       return localContainerInvoker;
-   }      
-    
-   public void setInstancePool(InstancePool ip) 
-   { 
+   }
+
+   public void setInstancePool(InstancePool ip)
+   {
       if (ip == null)
          throw new IllegalArgumentException("Null pool");
-            
-      this.instancePool = ip; 
+
+      this.instancePool = ip;
       ip.setContainer(this);
    }
 
-   public InstancePool getInstancePool() 
-   { 
-      return instancePool; 
+   public InstancePool getInstancePool()
+   {
+      return instancePool;
    }
-    
-   public void addInterceptor(Interceptor in) 
-   { 
+
+   public void addInterceptor(Interceptor in)
+   {
       if (interceptor == null)
       {
          interceptor = in;
@@ -117,27 +118,27 @@ public class StatelessSessionContainer
          {
             current = current.getNext();
          }
-             
+
          current.setNext(in);
       }
    }
-    
-   public Interceptor getInterceptor() 
-   { 
-      return interceptor; 
+
+   public Interceptor getInterceptor()
+   {
+      return interceptor;
    }
-    
+
    public Class getHomeClass()
    {
       return homeInterface;
    }
-    
+
    public Class getRemoteClass()
    {
       return remoteInterface;
    }
-    
-    
+
+
    // Container implementation --------------------------------------
 
    public void init() throws Exception
@@ -145,29 +146,29 @@ public class StatelessSessionContainer
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-        
+
       // Acquire classes from CL
       if (metaData.getHome() != null)
          homeInterface = classLoader.loadClass(metaData.getHome());
       if (metaData.getRemote() != null)
          remoteInterface = classLoader.loadClass(metaData.getRemote());
-        
+
       // Call default init
       super.init();
-        
+
       // Map the bean methods
       setupBeanMapping();
-        
+
       // Map the home methods
       setupHomeMapping();
 
-      // Initialize pool 
+      // Initialize pool
       instancePool.init();
-        
+
       // Init container invoker
       if (containerInvoker != null)
-         containerInvoker.init();        
-        
+         containerInvoker.init();
+
       // Initialize the interceptor by calling the chain
       Interceptor in = interceptor;
       while (in != null)
@@ -176,102 +177,102 @@ public class StatelessSessionContainer
          in.init();
          in = in.getNext();
       }
-        
-      // Reset classloader  
+
+      // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
    }
-    
+
    public void start() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-        
+
       // Call default start
       super.start();
-        
+
       // Start container invoker
       if (containerInvoker != null)
          containerInvoker.start();
-        
+
       // Start the instance pool
       instancePool.start();
-        
-      // Start all interceptors in the chain      
+
+      // Start all interceptors in the chain
       Interceptor in = interceptor;
       while (in != null)
       {
          in.start();
          in = in.getNext();
       }
-        
+
       // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
    }
-    
+
    public void stop()
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-        
+
       // Call default stop
       super.stop();
-        
+
       // Stop container invoker
       if (containerInvoker != null)
          containerInvoker.stop();
-        
+
       // Stop the instance pool
       instancePool.stop();
-        
-      // Stop all interceptors in the chain       
+
+      // Stop all interceptors in the chain
       Interceptor in = interceptor;
       while (in != null)
       {
          in.stop();
          in = in.getNext();
       }
-        
+
       // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
    }
-    
+
    public void destroy()
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-        
+
       // Call default destroy
       super.destroy();
-        
+
       // Destroy container invoker
       if (containerInvoker != null)
          containerInvoker.destroy();
-        
+
       // Destroy the pool
       instancePool.destroy();
-        
-      // Destroy all the interceptors in the chain        
+
+      // Destroy all the interceptors in the chain
       Interceptor in = interceptor;
       while (in != null)
       {
          in.destroy();
          in = in.getNext();
       }
-        
+
       // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
    }
-    
+
    public Object invokeHome(MethodInvocation mi) throws Exception
    {
       return getInterceptor().invokeHome(mi);
    }
-    
+
    /**
-    * This method does invocation interpositioning of tx and security, 
+    * This method does invocation interpositioning of tx and security,
     * retrieves the instance from an object table, and invokes the method
     * on the particular instance
     */
@@ -281,7 +282,7 @@ public class StatelessSessionContainer
       // Invoke through interceptors
       return getInterceptor().invoke(mi);
    }
-    
+
    // EJBObject implementation --------------------------------------
 
    /**
@@ -302,7 +303,7 @@ public class StatelessSessionContainer
       // TODO
       return null;
    }
-    
+
    /**
     * @return    Always null
     */
@@ -312,13 +313,13 @@ public class StatelessSessionContainer
       // TODO
       return null;
    }
-    
+
    public EJBHome getEJBHome(MethodInvocation mi)
       throws RemoteException
    {
       if (containerInvoker == null)
          throw new IllegalStateException();
-       
+
       return containerInvoker.getEJBHome();
    }
 
@@ -332,14 +333,14 @@ public class StatelessSessionContainer
    }
 
    // EJBLocalObject implementation
-    
+
    public EJBLocalHome getEJBLocalHome(MethodInvocation mi)
    {
       return localContainerInvoker.getEJBLocalHome();
    }
-    
+
    // EJBLocalHome implementation
-   
+
    public EJBLocalObject createLocalHome()
       throws CreateException
    {
@@ -355,19 +356,19 @@ public class StatelessSessionContainer
    {
       // todo
    }
-    
+
    // EJBHome implementation ----------------------------------------
-   
+
    public EJBObject createHome()
       throws RemoteException, CreateException
    {
       if (containerInvoker == null)
          throw new IllegalStateException();
-       
+
       Object obj = containerInvoker.getStatelessSessionEJBObject();
       return (EJBObject)obj;
    }
-    
+
    /**
     * No-op.
     */
@@ -376,7 +377,7 @@ public class StatelessSessionContainer
    {
       // TODO
    }
-    
+
    /**
     * No-op.
     */
@@ -385,7 +386,7 @@ public class StatelessSessionContainer
    {
       // TODO
    }
-    
+
    /**
     * @return    Always null.
     */
@@ -395,24 +396,24 @@ public class StatelessSessionContainer
       // TODO
       return null;
    }
-    
+
    /**
     * @return    Always null.
     */
    public HomeHandle getHomeHandleHome()
-      throws RemoteException   
+      throws RemoteException
    {
       // TODO
       return null;
    }
-    
+
    // Protected  ----------------------------------------------------
-   
+
    protected void setupHomeMapping()
       throws NoSuchMethodException
    {
       Map map = new HashMap();
-        
+
       if (homeInterface != null)
       {
          Method[] m = homeInterface.getMethods();
@@ -433,10 +434,10 @@ public class StatelessSessionContainer
             map.put(m[i], getClass().getMethod(m[i].getName()+"LocalHome", m[i].getParameterTypes()));
          }
       }
-        
+
       homeMapping = map;
    }
-    
+
    private void setUpBeanMappingImpl( Map map, Method[] m, String declaringClass )
       throws NoSuchMethodException
    {
@@ -463,12 +464,12 @@ public class StatelessSessionContainer
          }
       }
    }
-    
+
    protected void setupBeanMapping()
       throws NoSuchMethodException
    {
       Map map = new HashMap();
-        
+
       if (remoteInterface != null)
       {
          Method[] m = remoteInterface.getMethods();
@@ -479,15 +480,15 @@ public class StatelessSessionContainer
          Method[] m = localInterface.getMethods();
          setUpBeanMappingImpl( map, m, "javax.ejb.EJBLocalObject" );
       }
-        
+
       beanMapping = map;
    }
-    
+
    Interceptor createContainerInterceptor()
    {
       return new ContainerInterceptor();
    }
-    
+
    /**
     * This is the last step before invocation - all interceptors are done
     */
@@ -495,11 +496,11 @@ public class StatelessSessionContainer
       implements Interceptor
    {
       public void setContainer(Container con) {}
-        
+
       public void setNext(Interceptor interceptor) {}
-      
+
       public Interceptor getNext() { return null; }
-      
+
       public void init() {}
 
       public void start() {}
@@ -507,7 +508,7 @@ public class StatelessSessionContainer
       public void stop() {}
 
       public void destroy() {}
-        
+
       public Object invokeHome(MethodInvocation mi)
          throws Exception
       {
@@ -519,7 +520,7 @@ public class StatelessSessionContainer
          {
             // Throw this as a bean exception...(?)
             throw new EJBException(e);
-         } catch (InvocationTargetException e) 
+         } catch (InvocationTargetException e)
          {
             Throwable ex = e.getTargetException();
             if (ex instanceof EJBException)
@@ -532,27 +533,27 @@ public class StatelessSessionContainer
                throw (Error)ex;
          }
       }
-        
+
       public Object invoke(MethodInvocation mi)
          throws Exception
       {
          //wire the transaction on the context, this is how the instance remember the tx
          if (mi.getEnterpriseContext().getTransaction() == null) mi.getEnterpriseContext().setTransaction(mi.getTransaction());
-			 
+            
          // Get method and instance to invoke upon
          Method m = (Method)beanMapping.get(mi.getMethod());
-            
+
          //If we have a method that needs to be done by the container (EJBObject methods)
-         if (m.getDeclaringClass().equals(StatelessSessionContainer.class)) 
+         if (m.getDeclaringClass().equals(StatelessSessionContainer.class))
          {
-            try 
+            try
             {
                return m.invoke(StatelessSessionContainer.this, new Object[] { mi });
             } catch (IllegalAccessException e)
             {
                // Throw this as a bean exception...(?)
                throw new EJBException(e);
-            } catch (InvocationTargetException e) 
+            } catch (InvocationTargetException e)
             {
                Throwable ex = e.getTargetException();
                if (ex instanceof EJBException)
@@ -565,16 +566,16 @@ public class StatelessSessionContainer
                   throw (Error)ex;
             }
          } else // we have a method that needs to be done by a bean instance
-         {    
+         {
             // Invoke and handle exceptions
-            try 
+            try
             {
                return m.invoke(mi.getEnterpriseContext().getInstance(), mi.getArguments());
             } catch (IllegalAccessException e)
             {
                // Throw this as a bean exception...(?)
                throw new EJBException(e);
-            } catch (InvocationTargetException e) 
+            } catch (InvocationTargetException e)
             {
                Throwable ex = e.getTargetException();
                if (ex instanceof EJBException)

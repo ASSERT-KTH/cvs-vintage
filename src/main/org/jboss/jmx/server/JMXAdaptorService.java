@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
+
 package org.jboss.jmx.server;
 
 import java.io.File;
@@ -27,66 +27,65 @@ import javax.management.ReflectionException;
 import javax.management.MBeanServer;
 import javax.naming.InitialContext;
 
-import org.jboss.logging.Log;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
- *   <description> 
- *      
+ *   <description>
+ *
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class JMXAdaptorService
    extends ServiceMBeanSupport
    implements JMXAdaptorServiceMBean
 {
    // Constants -----------------------------------------------------
-	public static String JNDI_NAME = "jmx";
-    
+    public static String JNDI_NAME = "jmx";
+
    // Attributes ----------------------------------------------------
-	MBeanServer server;
-	JMXAdaptorImpl adaptor;
-   
+    MBeanServer server;
+    JMXAdaptorImpl adaptor;
+
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
-   
+
    // Public --------------------------------------------------------
    public ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
-		this.server = server;
+        this.server = server;
       return new ObjectName(OBJECT_NAME);
    }
-   
+
    public String getName()
    {
       return "JMX RMI Adaptor";
-	}
-   
+    }
+
    // Protected -----------------------------------------------------
    protected void initService()
       throws Exception
    {
-   	adaptor = new JMXAdaptorImpl(server);
+    adaptor = new JMXAdaptorImpl(server);
    }
-	
+    
    protected void startService()
       throws Exception
    {
-		new InitialContext().bind(JNDI_NAME, adaptor);
+        new InitialContext().bind(JNDI_NAME, adaptor);
    }
-   
+
    protected void stopService()
    {
-		try
-		{
-			new InitialContext().unbind(JNDI_NAME);
-		} catch (Exception e)
-		{
-			log.exception(e);
-		}
+        try
+        {
+            new InitialContext().unbind(JNDI_NAME);
+        } catch (Exception e)
+        {
+            log.exception(e);
+        }
    }
 }
 

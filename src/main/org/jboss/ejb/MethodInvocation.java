@@ -11,7 +11,6 @@ import java.lang.reflect.Method;
 import java.security.Principal;
 import javax.transaction.Transaction;
 
-import org.jboss.logging.Logger;
 
 /**
  *  MethodInvocation
@@ -22,7 +21,7 @@ import org.jboss.logging.Logger;
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 public class MethodInvocation
 {
@@ -45,7 +44,7 @@ public class MethodInvocation
     *  @param args
     *    The arguments for this invocation.
     *  @param tx
-    *    The transaction of this invocation. 
+    *    The transaction of this invocation.
     *  @param identity
     *    The security identity to use in this invocation.
     *  @param credential
@@ -79,7 +78,7 @@ public class MethodInvocation
     */
    public Method getMethod()
    {
-      return m;   
+      return m;
    }
 
    /**
@@ -92,16 +91,16 @@ public class MethodInvocation
 
    /**
     *  This method sets the transaction associated with the method.
-    *  Note that this doesn't mean that the transaction is associated 
-    *  with the thread.  In fact this is the only place it exists until 
-    *  the TxInterceptor logic.  Notably it might be the case that the 
+    *  Note that this doesn't mean that the transaction is associated
+    *  with the thread.  In fact this is the only place it exists until
+    *  the TxInterceptor logic.  Notably it might be the case that the
     *  tx associated here is different than the one on the target instance.
     */
    public void setTransaction(Transaction tx)
    {
-        
+
 //DEBUG     Logger.debug("Setting a transaction on Method invocation"+hashCode()+" "+m.getName()+" with "+tx);
-        
+
       this.tx = tx;
    }
 
@@ -189,7 +188,7 @@ public class MethodInvocation
    // Protected -----------------------------------------------------
 
    // Private -------------------------------------------------------
- 
+
    /**
     *  The internal ID of the enterprise bean who is the target
     *  of this invocation.

@@ -21,6 +21,7 @@ import javax.ejb.MessageDrivenBean;
 import javax.ejb.SessionContext;
 import javax.ejb.EJBException;
 
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 import org.jboss.metadata.MetaData;
@@ -29,40 +30,40 @@ import org.jboss.metadata.MessageDrivenMetaData;
 /**
  * Context for message driven beans, based on Stateless.
  * FIXME - not yet verified agains spec!!!
- *      
+ *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class MessageDrivenEnterpriseContext
    extends EnterpriseContext
 {
    // Constants -----------------------------------------------------
-    
+
    // Attributes ----------------------------------------------------
 
    //EJBObject ejbObject;
    MessageDrivenContext ctx;
-   
+
    // Static --------------------------------------------------------
-   
+
    // Constructors --------------------------------------------------
-   
+
    public MessageDrivenEnterpriseContext(Object instance, Container con)
       throws Exception
    {
       super(instance, con);
       ctx = new MessageDrivenContextImpl();
-	  
+    
       ((MessageDrivenBean)instance).setMessageDrivenContext(ctx);
-      
+
       try
       {
          Method ejbCreate = instance.getClass().getMethod("ejbCreate",
                                                           new Class[0]);
          ejbCreate.invoke(instance, new Object[0]);
-      } catch (InvocationTargetException e) 
+      } catch (InvocationTargetException e)
       {
          Throwable ex = e.getTargetException();
          if (ex instanceof EJBException)
@@ -70,31 +71,31 @@ public class MessageDrivenEnterpriseContext
          else if (ex instanceof RuntimeException)
             // Transform runtime exception into what a bean *should*
             // have thrown
-            throw new EJBException((Exception)ex); 
+            throw new EJBException((Exception)ex);
          else if (ex instanceof Exception)
             throw (Exception)ex;
          else
             throw (Error)ex;
       }
    }
-   
+
    // Public --------------------------------------------------------
 
    // FIXME
    // Here we have some problems. If we are to use the Stateless stuff,
    // should we inherit from StatelessSessionEnterpriseContext or what?
 
-   public void setEJBObject(EJBObject eo) { 
+   public void setEJBObject(EJBObject eo) {
       throw new Error("Not applicatable for MessageDrivenContext");
       //NOOP
-      //ejbObject = eo; 
+      //ejbObject = eo;
    }
-   
-   public EJBObject getEJBObject() { 
+
+   public EJBObject getEJBObject() {
       throw new Error("Not applicatable for MessageDrivenContext");
-      //return ejbObject; 
+      //return ejbObject;
    }
-   
+
    // This is used at least in The pool, created there even!!!
    // and in interceptors, ugh
    public SessionContext getSessionContext() {
@@ -105,52 +106,52 @@ public class MessageDrivenEnterpriseContext
    public MessageDrivenContext getMessageDrivenContext() {
       return ctx;
    }
-    
+
    // EnterpriseContext overrides -----------------------------------
-   
+
    public void discard() throws RemoteException
    {
       ((MessageDrivenBean)instance).ejbRemove();
    }
-   
+
    public EJBContext getEJBContext()
    {
       return ctx;
    }
-   
+
    // Package protected ---------------------------------------------
-    
+
    // Protected -----------------------------------------------------
-    
+
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------
-   
+
    protected class MessageDrivenContextImpl
       extends EJBContextImpl
       implements MessageDrivenContext
    {
-      public EJBHome getEJBHome() 
-      { 
+      public EJBHome getEJBHome()
+      {
          Logger.log("MessageDriven bean is not allowed to call getEJBHome");
          throw new IllegalStateException("Not valid for MessageDriven beans");
       }
 
-      public boolean isCallerInRole(String id) 
-      { 
+      public boolean isCallerInRole(String id)
+      {
          Logger.log("MessageDriven bean is not allowed to call isCallerInRole");
          throw new IllegalStateException("Not valid for MessageDriven beans");
       }
 
 
-      public Principal getCallerPrincipal() 
-      { 
+      public Principal getCallerPrincipal()
+      {
          Logger.log("MessageDriven bean is not allowed to call getCallerPrincipal()");
          throw new IllegalStateException("Not valid for MessageDriven beans");
       }
 
-      public boolean getRollbackOnly() 
-      { 
+      public boolean getRollbackOnly()
+      {
          if (((MessageDrivenMetaData)con.getBeanMetaData()).getMethodTransactionType() != MetaData.TX_REQUIRED) {
             // NO transaction
             Logger.log("MessageDriven bean is not allowed to call getRollbackOnly with this transaction settings");
@@ -159,9 +160,9 @@ public class MessageDrivenEnterpriseContext
             return super.getRollbackOnly();
          }
       }
-       
-      public void setRollbackOnly() 
-      { 
+
+      public void setRollbackOnly()
+      {
          if (((MessageDrivenMetaData)con.getBeanMetaData()).getMethodTransactionType() != MetaData.TX_REQUIRED) {
             // NO transaction
             Logger.log("MessageDriven bean is not allowed to call setRollbackOnly with this transaction settings");

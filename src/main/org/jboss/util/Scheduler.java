@@ -32,7 +32,6 @@ import javax.naming.NameNotFoundException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
-import org.jboss.logging.Log;
 import org.jboss.naming.NonSerializableFactory;
 import org.jboss.system.ServiceMBeanSupport;
 
@@ -565,50 +564,50 @@ public class Scheduler
    // Helper methods to bind/unbind the Management class
    // -------------------------------------------------------------------------
 
-	private void bind( Scheduler pScheduler )
+    private void bind( Scheduler pScheduler )
       throws
          NamingException
    {
-		Context lContext = new InitialContext();
-		String lJNDIName = getJNDIName();
+        Context lContext = new InitialContext();
+        String lJNDIName = getJNDIName();
 
-		// Ah ! JBoss Server isn't serializable, so we use a helper class
-		NonSerializableFactory.bind( lJNDIName, pScheduler );
+        // Ah ! JBoss Server isn't serializable, so we use a helper class
+        NonSerializableFactory.bind( lJNDIName, pScheduler );
 
       //AS Don't ask me what I am doing here
-		Name lName = lContext.getNameParser("").parse( lJNDIName );
-		while( lName.size() > 1 ) {
-			String lContextName = lName.get( 0 );
-			try {
-				lContext = (Context) lContext.lookup(lContextName);
-			}
-			catch( NameNotFoundException e )	{
-				lContext = lContext.createSubcontext(lContextName);
-			}
-			lName = lName.getSuffix( 1 );
-		}
+        Name lName = lContext.getNameParser("").parse( lJNDIName );
+        while( lName.size() > 1 ) {
+            String lContextName = lName.get( 0 );
+            try {
+                lContext = (Context) lContext.lookup(lContextName);
+            }
+            catch( NameNotFoundException e )    {
+                lContext = lContext.createSubcontext(lContextName);
+            }
+            lName = lName.getSuffix( 1 );
+        }
 
-		// The helper class NonSerializableFactory uses address type nns, we go on to
-		// use the helper class to bind the javax.mail.Session object in JNDI
-		StringRefAddr lAddress = new StringRefAddr( "nns", lJNDIName );
-		Reference lReference = new Reference(
+        // The helper class NonSerializableFactory uses address type nns, we go on to
+        // use the helper class to bind the javax.mail.Session object in JNDI
+        StringRefAddr lAddress = new StringRefAddr( "nns", lJNDIName );
+        Reference lReference = new Reference(
          Scheduler.class.getName(),
          lAddress,
          NonSerializableFactory.class.getName(),
          null
       );
-		lContext.bind( lName.get( 0 ), lReference );
+        lContext.bind( lName.get( 0 ), lReference );
 
-		log.log( "JBoss Scheduler Service '" + getJNDIName() + "' bound to " + lJNDIName );
-	}
+        log.log( "JBoss Scheduler Service '" + getJNDIName() + "' bound to " + lJNDIName );
+    }
 
-	private void unbind() throws NamingException {
+    private void unbind() throws NamingException {
       String lJNDIName = getJNDIName();
 
       new InitialContext().unbind( lJNDIName );
       NonSerializableFactory.unbind( lJNDIName );
       log.log("JBoss Scheduler service '" + lJNDIName + "' removed from JNDI" );
-	}
+    }
 
    // -------------------------------------------------------------------------
    // Inner Classes

@@ -4,22 +4,21 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
+
 package org.jboss.web;
 
 import java.util.Stack;
-import org.jboss.logging.Logger;
 
 /**
  *  A simple thread pool.
- *      
+ *
  *  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 public class ThreadPool
 {
    // Constants -----------------------------------------------------
-    
+
    // Attributes ----------------------------------------------------
 
    /**
@@ -42,7 +41,7 @@ public class ThreadPool
    public ThreadPool()
    {
    }
- 
+
    // Public --------------------------------------------------------
 
    /**
@@ -79,7 +78,7 @@ public class ThreadPool
       if (pool.size() < maxSize)
          pool.push(w);
       else
-         w.die();	
+         w.die();   
    }
 
    // Inner classes -------------------------------------------------
@@ -145,7 +144,7 @@ public class ThreadPool
                // Clear work
                work = null;
             }
-				
+                
             // Return to pool of cached idle threads
             returnWorker(this);
 
@@ -157,8 +156,8 @@ public class ThreadPool
                   } catch (InterruptedException e) {
                      // Ignore
                   }
-               } 
-            } 
+               }
+            }
          }
       }
 

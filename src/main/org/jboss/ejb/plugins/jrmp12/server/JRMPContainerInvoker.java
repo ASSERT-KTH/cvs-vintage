@@ -27,16 +27,18 @@ import org.jboss.ejb.plugins.jrmp12.interfaces.HomeProxy;
 import org.jboss.ejb.plugins.jrmp12.interfaces.StatelessSessionProxy;
 import org.jboss.ejb.plugins.jrmp12.interfaces.StatefulSessionProxy;
 import org.jboss.ejb.plugins.jrmp12.interfaces.EntityProxy;
+
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 
 /**
- *	<description> 
- *      
- *	@see <related>
- *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *  <description>
+ *
+ *  @see <related>
+ *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 public final class JRMPContainerInvoker
    implements ContainerInvoker
@@ -46,24 +48,24 @@ public final class JRMPContainerInvoker
 
    Container container;
    org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker ci; // Parent invoker
-   
+
    public JRMPContainerInvoker(org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker ci)
    {
       this.ci = ci;
    }
-   
+
    public void setContainer(Container con)
    {
       this.container = con;
    }
-   
+
    public void init()
    {
       // Create EJBHome object
       // We add the Handle methods to the Home
       Class handleClass;
-      try 
-      { 
+      try
+      {
          handleClass = Class.forName("javax.ejb.Handle");
       } catch (Exception e)
       {
@@ -75,7 +77,7 @@ public final class JRMPContainerInvoker
          new HomeProxy(ci.getJndiName(), ci.getEJBMetaData(), ci, ci.isOptimized()));
 
       // Create stateless session object
-      // Same instance is used for all objects      
+      // Same instance is used for all objects
       if (!(container.getBeanMetaData() instanceof EntityMetaData) &&
           ((SessionMetaData)container.getBeanMetaData()).isStateless())
       {
@@ -83,7 +85,7 @@ public final class JRMPContainerInvoker
             new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() } ,
             new StatelessSessionProxy(ci.getJndiName(), ci, ci.isOptimized()));
       }
-      
+
       Logger.debug("JRMP 1.2.2 CI initialized");
    }
 
@@ -104,7 +106,7 @@ public final class JRMPContainerInvoker
       // Ignore, never called
       return null;
    }
-   
+
    public EJBHome getEJBHome()
    {
       return home;
@@ -130,7 +132,7 @@ public final class JRMPContainerInvoker
    }
 
    public Collection getEntityCollection(Collection ids)
-   {                                                          
+   {
       ArrayList list = new ArrayList(ids.size());
       Iterator idEnum = ids.iterator();
       while(idEnum.hasNext())

@@ -28,7 +28,6 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.logging.Logger;
 
 import org.jboss.management.j2ee.CountStatistic;
 import org.jboss.management.j2ee.TimeStatistic;
@@ -40,7 +39,7 @@ import org.jboss.management.j2ee.TimeStatistic;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*  @version $Revision: 1.29 $
+*  @version $Revision: 1.30 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -111,14 +110,14 @@ implements EntityPersistenceManager
 
    }
 
- 	/**
-	* Returns a new instance of the bean class or a subclass of the bean class.
-	* 
-	* @return the new instance
-	*/
-	public Object createBeanClassInstance() throws Exception {
-		return con.getBeanClass().newInstance();
-	}
+    /**
+    * Returns a new instance of the bean class or a subclass of the bean class.
+    *
+    * @return the new instance
+    */
+    public Object createBeanClassInstance() throws Exception {
+        return con.getBeanClass().newInstance();
+    }
 
    private void createMethodCache( Method[] methods )
       throws NoSuchMethodException
@@ -160,7 +159,7 @@ implements EntityPersistenceManager
       try {
          Method createMethod = (Method)createMethods.get(m);
          Method postCreateMethod = (Method)postCreateMethods.get(m);
-   
+
          Object id = null;
          try
          {
@@ -202,23 +201,23 @@ implements EntityPersistenceManager
                throw (Error)e;
             }
          }
-   
+
          // set the id
          ctx.setId(id);
-   
+
          // Create a new CacheKey
          Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey( id );
-   
+
          // Give it to the context
          ctx.setCacheKey(cacheKey);
-   
+
          // Create EJBObject
            // Create EJBObject
         if (con.getContainerInvoker() != null)
          ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
         if (con.getLocalHomeClass() != null)
          ctx.setEJBLocalObject(con.getLocalContainerInvoker().getEntityEJBLocalObject(cacheKey));
-   
+
          try
          {
             postCreateMethod.invoke(ctx.getInstance(), args);
@@ -523,7 +522,7 @@ implements EntityPersistenceManager
       mLoad.reset();
       mStore.reset();
    }
-   
+
    // Z implementation ----------------------------------------------
 
    // Package protected ---------------------------------------------
@@ -561,12 +560,12 @@ implements EntityPersistenceManager
       {
          result = callMethod.invoke(ctx.getInstance(), args);
       } catch (IllegalAccessException e)
-		{
-			// Throw this as a bean exception...(?)
-			throw new EJBException(e);
+        {
+            // Throw this as a bean exception...(?)
+            throw new EJBException(e);
       } catch (InvocationTargetException ite)
-		{
-			Throwable e = ite.getTargetException();
+        {
+            Throwable e = ite.getTargetException();
          if (e instanceof FinderException)
          {
             // Rethrow exception

@@ -21,20 +21,21 @@ import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
 
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 /**
  * MessageDrivenContainer, based on the StatelessSessionContainer.
  *
  * @see StatelessSessionContainer
- * 
+ *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class MessageDrivenContainer
     extends Container
@@ -63,7 +64,7 @@ public class MessageDrivenContainer
     // Constructors --------------------------------------------------
 
     // Public --------------------------------------------------------
-    
+
     public void setContainerInvoker(ContainerInvoker ci)
     {
         if (ci == null)
@@ -77,7 +78,7 @@ public class MessageDrivenContainer
     {
         return containerInvoker;
     }
-    
+
     public LocalContainerInvoker getLocalContainerInvoker()
     {
         return localContainerInvoker;
@@ -146,7 +147,7 @@ public class MessageDrivenContainer
     }
 
     // Container implementation - overridden here ----------------------
-    
+
     public void init() throws Exception
     {
         try {
@@ -178,7 +179,7 @@ public class MessageDrivenContainer
             Thread.currentThread().setContextClassLoader(oldCl);
         }
         catch (Exception e) {
-	        Logger.error("Serious error in init: " + e);
+            Logger.error("Serious error in init: " + e);
             Logger.exception(e);
             throw e;
         }
@@ -287,7 +288,7 @@ public class MessageDrivenContainer
 
 
     // EJBHome implementation ----------------------------------------
-    
+
     public EJBObject createHome()
         throws java.rmi.RemoteException, CreateException
     {
@@ -329,21 +330,21 @@ public class MessageDrivenContainer
         throws NoSuchMethodException
     {
         Map map = new HashMap();
-        
+
         //
         // Here we should have a way of looking up wich message class
         // the MessageDriven bean implements, by doing this we might
         // be able to use other MOM systems, aka XmlBlaser. TODO!
         //
-        
+
         String msgInterface = "javax.jms.MessageListener";
         String msgMethod = "onMessage";
         String msgArgument = "javax.jms.Message";
-        
+
         // Get the method
         Class msgInterfaceClass = null;
         Class argumentClass = null;
-        
+
         try {
             msgInterfaceClass = Class.forName(msgInterface);
             argumentClass = Class.forName(msgArgument);
@@ -352,7 +353,7 @@ public class MessageDrivenContainer
             // Hackish
             throw new NoSuchMethodException("Could not get the classes for message interface" + msgInterface + ": " + ex);
         }
-        
+
         Method m = msgInterfaceClass.getMethod(msgMethod, new Class[] {argumentClass});
         // Implemented by bean
         map.put(m, beanClass.getMethod(m.getName(), m.getParameterTypes()));
@@ -407,7 +408,7 @@ public class MessageDrivenContainer
             {
                 // Invoke and handle exceptions
                 try {
-            	    return m.invoke(mi.getEnterpriseContext().getInstance(),
+                    return m.invoke(mi.getEnterpriseContext().getInstance(),
                                     mi.getArguments());
                 }
                 catch (IllegalAccessException e) {

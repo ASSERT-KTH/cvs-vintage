@@ -27,8 +27,6 @@ import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
 
-// TODO
-import org.jboss.logging.Logger;
 
 /**
  * <description>
@@ -38,7 +36,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:menonv@cpw.co.uk">Vinay Menon</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  *
  *      Revisions:
  *      20010621 Bill Burke: made read-ahead defaultable in standardjboss.xml and jaws.xml

@@ -14,13 +14,14 @@ import javax.ejb.EJBHome;
 import javax.ejb.Handle;
 import javax.ejb.EJBObject;
 
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 /**
  * ???
  *
  * @author Unknown
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class ProxyProxy
    implements Serializable, EJBObject

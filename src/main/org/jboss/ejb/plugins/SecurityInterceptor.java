@@ -16,7 +16,10 @@ import javax.naming.InitialContext;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.MethodInvocation;
+
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
+
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityIdentityMetaData;
 import org.jboss.security.AnybodyPrincipal;
@@ -30,27 +33,27 @@ is enforced. This is where the caller identity propagation is controlled as well
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.21 $
+@version $Revision: 1.22 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
     /**
      * @clientCardinality 0..1
-     * @supplierCardinality 1 
+     * @supplierCardinality 1
      */
     protected Container container;
 
     /**
      * @supplierCardinality 0..1
      * @supplierQualifier authentication
-     * @clientCardinality 1..* 
+     * @clientCardinality 1..*
      */
     protected EJBSecurityManager securityManager;
 
     /**
      * @supplierCardinality 0..1
      * @clientCardinality 1..*
-     * @supplierQualifier identity mapping 
+     * @supplierQualifier identity mapping
      */
     protected RealmMapping realmMapping;
     protected Principal runAsRole;
@@ -184,7 +187,7 @@ public class SecurityInterceptor extends AbstractInterceptor
             SecurityException e = new SecurityException(msg);
             throw new RemoteException("checkSecurityAssociation", e);
         }
- 
+
         /* See if there is a runAs role associated with this thread. If there
             is, this is the security role against which the assigned method
             permissions must be checked.

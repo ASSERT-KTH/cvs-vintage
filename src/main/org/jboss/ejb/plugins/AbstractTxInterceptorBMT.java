@@ -23,6 +23,8 @@ import javax.naming.spi.ObjectFactory;
 
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.MethodInvocation;
+
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 
@@ -30,7 +32,7 @@ import org.jboss.logging.Logger;
  *  A common superclass for the BMT transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 abstract class AbstractTxInterceptorBMT
    extends AbstractTxInterceptor

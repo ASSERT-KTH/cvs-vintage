@@ -17,7 +17,10 @@ import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
+
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
+
 import org.jboss.metadata.BeanMetaData;
 
 import org.jboss.util.FinderResults;
@@ -31,57 +34,57 @@ import org.jboss.util.FinderResults;
  *
  * @see org.jboss.ejb.plugins.cmp.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class CustomFindByEntitiesCommand implements FindEntitiesCommand {
-	// Attributes ----------------------------------------------------
+    // Attributes ----------------------------------------------------
 
-	/**
-	 *  method that implements the finder
-	 */
-	protected Method finderImplMethod;
-	
-	// Constructors --------------------------------------------------
-	
-	/** 
-	 * Constructs a command which can handle multiple entity finders 
-	 * that are BMP implemented.
-	 * @param finderMethod the EJB finder method implementation
-	 */
-	public CustomFindByEntitiesCommand(Method finderMethod) {
-		finderImplMethod = finderMethod;
+    /**
+     *  method that implements the finder
+     */
+    protected Method finderImplMethod;
+    
+    // Constructors --------------------------------------------------
+    
+    /**
+     * Constructs a command which can handle multiple entity finders
+     * that are BMP implemented.
+     * @param finderMethod the EJB finder method implementation
+     */
+    public CustomFindByEntitiesCommand(Method finderMethod) {
+        finderImplMethod = finderMethod;
 
-		Logger.debug("Finder: Custom finder " + finderMethod.getName());	      	
-	}
-	
-	// FindEntitiesCommand implementation -------------------------
+        Logger.debug("Finder: Custom finder " + finderMethod.getName());            
+    }
+    
+    // FindEntitiesCommand implementation -------------------------
 
-	public FinderResults execute(Method finderMethod,
-			Object[] args,
-			EntityEnterpriseContext ctx)
-		throws Exception
-	{
-		try {
-			// invoke implementation method on ejb instance
-			Object result = finderImplMethod.invoke(ctx.getInstance(), args);
+    public FinderResults execute(Method finderMethod,
+            Object[] args,
+            EntityEnterpriseContext ctx)
+        throws Exception
+    {
+        try {
+            // invoke implementation method on ejb instance
+            Object result = finderImplMethod.invoke(ctx.getInstance(), args);
 
-			// if expected return type is Collection, return as is
-			// if expected return type is not Collection, wrap result in Collection
-			if(!(result instanceof Collection)) {
-				result = Collections.singleton(result);
-			}
-			return new FinderResults((Collection)result, null, null, null);
-		} catch (IllegalAccessException e) {
-			throw new FinderException("Unable to access finder implementation: " + finderImplMethod.getName());
-		} catch (IllegalArgumentException e) {
-			throw new FinderException("Illegal arguments for finder implementation: " + finderImplMethod.getName());
-		} catch (InvocationTargetException e) {
-			Throwable target  = e.getTargetException();
-			if(target instanceof Exception) {
-				throw (Exception)target;
-			}
-			throw new FinderException("Unable to initialize finder implementation: " + finderImplMethod.getName());
-		}
-	}
+            // if expected return type is Collection, return as is
+            // if expected return type is not Collection, wrap result in Collection
+            if(!(result instanceof Collection)) {
+                result = Collections.singleton(result);
+            }
+            return new FinderResults((Collection)result, null, null, null);
+        } catch (IllegalAccessException e) {
+            throw new FinderException("Unable to access finder implementation: " + finderImplMethod.getName());
+        } catch (IllegalArgumentException e) {
+            throw new FinderException("Illegal arguments for finder implementation: " + finderImplMethod.getName());
+        } catch (InvocationTargetException e) {
+            Throwable target  = e.getTargetException();
+            if(target instanceof Exception) {
+                throw (Exception)target;
+            }
+            throw new FinderException("Unable to initialize finder implementation: " + finderImplMethod.getName());
+        }
+    }
 
 }

@@ -25,6 +25,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import org.jboss.ejb.DeploymentException;
+
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 /**
@@ -37,7 +39,7 @@ import org.jboss.logging.Logger;
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
  *   @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.19 $
+ *   @version $Revision: 1.20 $
  *
  *   Revisions:
  *   20010620 Bill Burke: Print an error message when failing to load standardjboss.xml
@@ -45,15 +47,15 @@ import org.jboss.logging.Logger;
  *                        syntax error.
  */
 public class XmlFileLoader {
-   	// Constants -----------------------------------------------------
+    // Constants -----------------------------------------------------
 
-   	// Attributes ----------------------------------------------------
+    // Attributes ----------------------------------------------------
     private static boolean defaultValidateDTDs = false;
-	private ClassLoader classLoader;
-	private ApplicationMetaData metaData;
+    private ClassLoader classLoader;
+    private ApplicationMetaData metaData;
     private boolean validateDTDs;
 
-	// Static --------------------------------------------------------
+    // Static --------------------------------------------------------
     public static boolean getDefaultValidateDTDs()
     {
         return defaultValidateDTDs;
@@ -63,36 +65,36 @@ public class XmlFileLoader {
         defaultValidateDTDs = validate;
     }
 
-	// Constructors --------------------------------------------------
-   	public XmlFileLoader()
+    // Constructors --------------------------------------------------
+    public XmlFileLoader()
     {
         this(defaultValidateDTDs);
-	}
+    }
     public XmlFileLoader(boolean validateDTDs)
     {
         this.validateDTDs = validateDTDs;
     }
 
-	// Public --------------------------------------------------------
-	public ApplicationMetaData getMetaData() {
-		return metaData;
+    // Public --------------------------------------------------------
+    public ApplicationMetaData getMetaData() {
+        return metaData;
     }
 
    /**
    Set the class loader
    @param ClassLoader cl - class loader
    */
-	public void setClassLoader(ClassLoader cl) {
-		classLoader = cl;
-	}
+    public void setClassLoader(ClassLoader cl) {
+        classLoader = cl;
+    }
 
    /**
    Gets the class loader
    @return ClassLoader - the class loader
    */
    public ClassLoader getClassLoader() {
-		return classLoader;
-	}
+        return classLoader;
+    }
 
    /** Get the flag indicating that ejb-jar.dtd, jboss.dtd &
     jboss-web.dtd conforming documents should be validated
@@ -111,80 +113,80 @@ public class XmlFileLoader {
        this.validateDTDs = validate;
    }
 
-	/**
-	* load()
-	*
-	* This method creates the ApplicationMetaData.
-	* The configuration files are found in the classLoader.
-	* The default jboss.xml and jaws.xml files are always read first, then we override
-	* the defaults if the user provides them
-	*
-	*/
-   	public ApplicationMetaData load() throws Exception {
-      	// create the metadata
-		metaData = new ApplicationMetaData();
+    /**
+    * load()
+    *
+    * This method creates the ApplicationMetaData.
+    * The configuration files are found in the classLoader.
+    * The default jboss.xml and jaws.xml files are always read first, then we override
+    * the defaults if the user provides them
+    *
+    */
+    public ApplicationMetaData load() throws Exception {
+        // create the metadata
+        metaData = new ApplicationMetaData();
 
-		// Load ejb-jar.xml
+        // Load ejb-jar.xml
 
-		// we can always find the files in the classloader
-		URL ejbjarUrl = getClassLoader().getResource("META-INF/ejb-jar.xml");
+        // we can always find the files in the classloader
+        URL ejbjarUrl = getClassLoader().getResource("META-INF/ejb-jar.xml");
 
-		if (ejbjarUrl == null) {
-			throw new DeploymentException("no ejb-jar.xml found");
-		}
+        if (ejbjarUrl == null) {
+            throw new DeploymentException("no ejb-jar.xml found");
+        }
 
-		Document ejbjarDocument = getDocumentFromURL(ejbjarUrl);
+        Document ejbjarDocument = getDocumentFromURL(ejbjarUrl);
 
-		// the url may be used to report errors
-		metaData.setUrl(ejbjarUrl);
-		metaData.importEjbJarXml(ejbjarDocument.getDocumentElement());
+        // the url may be used to report errors
+        metaData.setUrl(ejbjarUrl);
+        metaData.importEjbJarXml(ejbjarDocument.getDocumentElement());
 
         // Load jbossdefault.xml from the default classLoader
         // we always load defaults first
         // we use the context classloader, because this guy has to know where
         // this file is
-		URL defaultJbossUrl = Thread.currentThread().getContextClassLoader().getResource("standardjboss.xml");
+        URL defaultJbossUrl = Thread.currentThread().getContextClassLoader().getResource("standardjboss.xml");
 
-		if (defaultJbossUrl == null) {
-			throw new DeploymentException("no standardjboss.xml found");
-		}
+        if (defaultJbossUrl == null) {
+            throw new DeploymentException("no standardjboss.xml found");
+        }
 
-		Document defaultJbossDocument = null;
+        Document defaultJbossDocument = null;
 
-		try
-		{
-		    defaultJbossDocument = getDocumentFromURL(defaultJbossUrl);
-		    
-		    metaData.setUrl(defaultJbossUrl);
-		    metaData.importJbossXml(defaultJbossDocument.getDocumentElement());
-		}
-		catch (Exception ex)
-		{
-		    Logger.error("failed to load standardjboss.xml.  There could be a syntax error.");
-		    throw ex;
-		}
-		// Load jboss.xml
-		// if this file is provided, then we override the defaults
-		try
-		{
-		    URL jbossUrl = getClassLoader().getResource("META-INF/jboss.xml");
-		    
-		    if (jbossUrl != null) {
-			//			Logger.debug(jbossUrl.toString() + " found. Overriding defaults");
-			Document jbossDocument = getDocumentFromURL(jbossUrl);
-			
-			metaData.setUrl(jbossUrl);
-			metaData.importJbossXml(jbossDocument.getDocumentElement());
-		    }
-		}
-		catch (Exception ex)
-		{
-		    Logger.error("failed to load jboss.xml.  There could be a syntax error.");
-		    throw ex;
-		}
+        try
+        {
+            defaultJbossDocument = getDocumentFromURL(defaultJbossUrl);
+        
+            metaData.setUrl(defaultJbossUrl);
+            metaData.importJbossXml(defaultJbossDocument.getDocumentElement());
+        }
+        catch (Exception ex)
+        {
+            Logger.error("failed to load standardjboss.xml.  There could be a syntax error.");
+            throw ex;
+        }
+        // Load jboss.xml
+        // if this file is provided, then we override the defaults
+        try
+        {
+            URL jbossUrl = getClassLoader().getResource("META-INF/jboss.xml");
+        
+            if (jbossUrl != null) {
+            //          Logger.debug(jbossUrl.toString() + " found. Overriding defaults");
+            Document jbossDocument = getDocumentFromURL(jbossUrl);
+            
+            metaData.setUrl(jbossUrl);
+            metaData.importJbossXml(jbossDocument.getDocumentElement());
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.error("failed to load jboss.xml.  There could be a syntax error.");
+            throw ex;
+        }
 
-		return metaData;
-	}
+        return metaData;
+    }
 
     /** Invokes getDocument(url, defaultValidateDTDs)
      */
@@ -228,9 +230,9 @@ public class XmlFileLoader {
     only for error reporting.
     @return Document
     */
-    public Document getDocument(InputStream is, String inPath) throws DeploymentException 
+    public Document getDocument(InputStream is, String inPath) throws DeploymentException
     {
-        try 
+        try
         {
             DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
             // Enable DTD validation based on our validateDTDs flag
@@ -263,8 +265,8 @@ public class XmlFileLoader {
 
     // Private -------------------------------------------------------
 
-	// Inner classes -------------------------------------------------
-	/**
+    // Inner classes -------------------------------------------------
+    /**
     * Local entity resolver to handle J2EE DTDs. With this a http connection
     * to sun is not needed during deployment.
     * Function boolean hadDTD() is here to avoid validation errors in
@@ -272,12 +274,12 @@ public class XmlFileLoader {
     * @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
     * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
     **/
-	private static class LocalResolver implements EntityResolver
+    private static class LocalResolver implements EntityResolver
     {
         private Hashtable dtds = new Hashtable();
         private boolean hasDTD = false;
 
-		public LocalResolver() {
+        public LocalResolver() {
             registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN", "ejb-jar.dtd");
             registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN", "ejb-jar_2_0.dtd");
             registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN", "application_1_2.dtd");
@@ -287,7 +289,7 @@ public class XmlFileLoader {
             registerDTD("-//JBoss//DTD JAWS 3.0//EN", "jaws_3_0.dtd");
             registerDTD("-//JBoss//DTD JBOSS//EN","jboss.dtd");
             registerDTD("-//JBoss//DTD JBOSS 2.4//EN","jboss_2_4.dtd");
-		}
+        }
 
         /**
         Registers available DTDs
@@ -323,7 +325,7 @@ public class XmlFileLoader {
                 }
             }
             return null;
-		}
+        }
 
       /**
       Returns the boolean value to inform id DTD was found in the XML file or not
@@ -334,10 +336,10 @@ public class XmlFileLoader {
           return hasDTD;
       }
 
-	}
+    }
 
     /** Local error handler for entity resolver to DocumentBuilder parser.
-    Error is printed to output just if DTD was detected in the XML file. 
+    Error is printed to output just if DTD was detected in the XML file.
     If DTD was not found in XML file it is assumed that the EJB builder
     doesn't want to use DTD validation. Validation may have been enabled via
     validateDTDs flag so we look to the hasDTD() function in the LocalResolver
@@ -356,7 +358,7 @@ public class XmlFileLoader {
             this.localResolver = localResolver;
         }
 
-        public void error(SAXParseException exception) 
+        public void error(SAXParseException exception)
         {
             if ( localResolver.hasDTD() )
             {
@@ -369,7 +371,7 @@ public class XmlFileLoader {
                                  );
             }//end if
         }
-        public void fatalError(SAXParseException exception) 
+        public void fatalError(SAXParseException exception)
         {
             if ( localResolver.hasDTD() )
             {
@@ -382,7 +384,7 @@ public class XmlFileLoader {
                                 );
             }//end if
         }
-        public void warning(SAXParseException exception) 
+        public void warning(SAXParseException exception)
         {
             if ( localResolver.hasDTD() )
             {

@@ -15,22 +15,21 @@ import javax.ejb.Handle;
 import javax.ejb.EJBObject;
 import javax.naming.InitialContext;
 
-import org.jboss.logging.Logger;
 
 /**
  * An EJB stateful session bean handle.
- *      
+ *
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:marc.fleury@telkel.com>Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class StatefulHandleImpl
     extends AbstractHandle
     implements Handle
 {
     // Constants -----------------------------------------------------
-    
+
     /** Serial Version Identifier. */
     private static final long serialVersionUID = -2592509632957623102L;
 
@@ -49,14 +48,14 @@ public class StatefulHandleImpl
         catch (Exception e) {
             e.printStackTrace();
             throw new ExceptionInInitializerError(e);
-        }   
+        }
     }
-    
+
     // Attributes ----------------------------------------------------
 
     /** The identity of the bean. */
     protected final Object id;
-   
+
     // Constructors --------------------------------------------------
 
     /**
@@ -75,7 +74,7 @@ public class StatefulHandleImpl
         super(handle, name);
         this.id = id;
     }
-   
+
     // Public --------------------------------------------------------
 
     /**
@@ -97,20 +96,20 @@ public class StatefulHandleImpl
             finally {
                 ctx.close();
             }
-            
+
             // Create a new MethodInvocation for distribution
             //System.out.println("I am about to invoke and getEJBOBject is "+getEJBObjectMethod.getName() +" My ID is "+id);
             RemoteMethodInvocation rmi =
                 new RemoteMethodInvocation(null,
                                            GET_EJB_OBJECT,
                                            new Object[] { id });
-             
+
             // MF FIXME: WE DEFINITLY NEED THE SECURITY ON SUCH A CALL...
             // We also need a pointer to the TM...:(
-          
+
             // Set the transaction context
             //rmi.setTransaction(tm != null? tm.getTransaction() : null);
-             
+
             // Set the security stuff
             // MF fixme this will need to use "thread local" and therefore same construct as above
             // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
@@ -118,7 +117,7 @@ public class StatefulHandleImpl
             // is the credential thread local? (don't think so... but...)
             //rmi.setPrincipal( getPrincipal() );
             // rmi.setCredential( getCredential() );
-          
+
             // Invoke on the remote server, enforce marshalling
             MarshalledObject mo = new MarshalledObject(rmi);
             return (EJBObject)container.invokeHome(mo).get();
@@ -129,9 +128,9 @@ public class StatefulHandleImpl
     }
 
     // Package protected ---------------------------------------------
-    
+
     // Protected -----------------------------------------------------
-    
+
     // Private -------------------------------------------------------
 
     // Inner classes -------------------------------------------------

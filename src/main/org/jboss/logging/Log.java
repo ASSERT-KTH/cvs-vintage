@@ -16,10 +16,10 @@ import javax.management.*;
 import org.apache.log4j.NDC;
 
 /** The legacy JBoss logging framework base class.
- * @deprecated, As of JBoss 2.3, replaced by the org.apache.log4j framework
+ * @deprecated, As of JBoss 2.3, replaced by the org.apache.log4j framework. TODO Example of how to use log4j
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public abstract class Log
 {
@@ -41,17 +41,17 @@ public abstract class Log
 
    static ThreadLocal currentLog = new InheritableThreadLocal()
    {
-   		// Child threads should get same stack, but only a copy of it
-   		public Object childValue(Object obj)
-   		{
-			if (obj != null)
-				return ((Stack)obj).clone();
-			else
-				return null;
-   		}
+        // Child threads should get same stack, but only a copy of it
+        public Object childValue(Object obj)
+        {
+            if (obj != null)
+                return ((Stack)obj).clone();
+            else
+                return null;
+        }
    };
 
-	 protected static Log defaultLog;
+     protected static Log defaultLog;
 
    public static void setLog(Log log)
    {
@@ -83,33 +83,33 @@ public abstract class Log
    public static Log getLog()
    {
       Stack s = (Stack)currentLog.get();
-			if( s == null ) {
-				if( defaultLog == null ) {
-					defaultLog = createLog( "Default" );
-				}
-				return defaultLog;
-			}
-			else {
-				return (Log)s.peek();
-			}
+            if( s == null ) {
+                if( defaultLog == null ) {
+                    defaultLog = createLog( "Default" );
+                }
+                return defaultLog;
+            }
+            else {
+                return (Log)s.peek();
+            }
    }
 
-	 public static Log createLog( Object pSource ) {
-		 Log lReturn;
-		try {
+     public static Log createLog( Object pSource ) {
+         Log lReturn;
+        try {
             final String logClass = System.getProperty("JBOSS_LOG_CLASS", "org.jboss.logging.LogToCategory");
 
-			Class lLog = Thread.currentThread().getContextClassLoader().loadClass( logClass );
-//AS			Class lLog = Class.forName( "org.jboss.logging.DefaultLog" );
-			lReturn = (Log) lLog.getConstructor( new Class[] { Object.class } ).newInstance(
-				new Object[] { pSource }
-			);
-		}
-		catch( Exception e ) {
-			lReturn = new Log.NoLog( pSource );
-		}
-		return lReturn;
-	 }
+            Class lLog = Thread.currentThread().getContextClassLoader().loadClass( logClass );
+//AS            Class lLog = Class.forName( "org.jboss.logging.DefaultLog" );
+            lReturn = (Log) lLog.getConstructor( new Class[] { Object.class } ).newInstance(
+                new Object[] { pSource }
+            );
+        }
+        catch( Exception e ) {
+            lReturn = new Log.NoLog( pSource );
+        }
+        return lReturn;
+     }
 
    // Constructors --------------------------------------------------
    public Log()
@@ -194,18 +194,18 @@ public abstract class Log
       return count++;
    }
 
-	 public static class NoLog extends Log {
-		 public NoLog() {
-			 super();
-		 }
-		 public NoLog( Object pSource ) {
-			 super( pSource );
-		 }
-		 public Log getDefault() {
-			 return new NoLog();
-		 }
-		 public synchronized void log( String pType, String pMessage ) {
-		 }
-	 }
+     public static class NoLog extends Log {
+         public NoLog() {
+             super();
+         }
+         public NoLog( Object pSource ) {
+             super( pSource );
+         }
+         public Log getDefault() {
+             return new NoLog();
+         }
+         public synchronized void log( String pType, String pMessage ) {
+         }
+     }
 }
 

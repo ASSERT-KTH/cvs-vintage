@@ -6,6 +6,7 @@
 */
 package org.jboss.util.timeout;
 
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 
@@ -20,9 +21,9 @@ import org.jboss.logging.Logger;
  *  timeout is saved to be reused for another timeout. This means that if
  *  no timeouts are fired, this class will eventually operate without
  *  allocating anything on the heap.
- *   
+ *
  *  @author <a href="osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 public class TimeoutFactory {
 
@@ -64,7 +65,7 @@ public class TimeoutFactory {
     static final int DONE    = -1; // done, may be finalized or reused
     static final int TIMEOUT = -2; // target being called
     static final int CWAIT   = -3; // target being called and cancel waiting
-                   
+
     int index; // index in queue, or one of constants above.
     long time; // time to fire
     TimeoutTarget target; // target to fire at
@@ -80,7 +81,7 @@ public class TimeoutFactory {
    */
   private static class TimeoutWorker extends Thread {
     private TimeoutImpl work;
- 
+
     /**
      *  Create a new instance.
      *
@@ -90,7 +91,7 @@ public class TimeoutFactory {
       this.work = work;
       setDaemon(false);
     }
- 
+
     /**
      *  Override to fire the timeout.
      */
@@ -168,7 +169,7 @@ public class TimeoutFactory {
    *
    *  The invariant may be temporarily broken while executing synchronized
    *  on <code>this</code> instance, but is always reestablished before
-   *  leaving the synchronized code. 
+   *  leaving the synchronized code.
    *
    *  The node at index <code>1</code> is always the first node to timeout,
    *  as can be deduced from the invariant.
@@ -562,4 +563,4 @@ public class TimeoutFactory {
   }
 
 }
- 
+

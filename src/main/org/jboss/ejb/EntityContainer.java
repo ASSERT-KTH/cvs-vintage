@@ -29,7 +29,6 @@ import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 import javax.transaction.Transaction;
 
-import org.jboss.logging.Logger;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.util.SerializableEnumeration;
 
@@ -37,17 +36,17 @@ import javax.management.j2ee.CountStatistic;
 
 /**
  * This is a Container for EntityBeans (both BMP and CMP).
- *   
+ *
  * @see Container
  * @see EntityEnterpriseContext
- *   
+ *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.53 $
+ * @version $Revision: 1.54 $
  *
  * <p><b>Revisions:</b>
  *
@@ -78,7 +77,7 @@ public class EntityContainer
 
    /** This is the Remote interface class. */
    protected Class remoteInterface;
-   
+
    /**
     * These are the mappings between the home interface methods and the
     * container methods.
@@ -90,7 +89,7 @@ public class EntityContainer
     * bean methods.
     */
    protected Map beanMapping;
-   
+
    /** This is the container invoker for this container */
    protected ContainerInvoker containerInvoker;
 
@@ -144,10 +143,10 @@ public class EntityContainer
       // If there is no transaction, there is nothing to synchronize.
       try
       {
-         if(tx != null) 
+         if(tx != null)
          {
             EntityEnterpriseContext[] entities = globalTxEntityMap.getEntities(tx);
-            for (int i = 0; i < entities.length; i++) 
+            for (int i = 0; i < entities.length; i++)
             {
                EntityEnterpriseContext ctx = entities[i];
                EntityContainer container = (EntityContainer)ctx.getContainer();
@@ -160,9 +159,9 @@ public class EntityContainer
          throw new EJBException(ex);
       }
    }
-   
+
    // Public --------------------------------------------------------
-   
+
    public void setContainerInvoker(ContainerInvoker ci)
    {
       if (ci == null)
@@ -176,11 +175,11 @@ public class EntityContainer
    {
       return containerInvoker;
    }
-   
+
    public LocalContainerInvoker getLocalContainerInvoker()
    {
       return localContainerInvoker;
-   }     
+   }
 
    public void setInstancePool(InstancePool ip)
    {
@@ -262,15 +261,15 @@ public class EntityContainer
    {
       return remoteInterface;
    }
- 
+
    /**
     * Returns a new instance of the bean class or a subclass of the bean class.
     * If this is 1.x cmp, simply return a new instance of the bean class.
     * If this is 2.x cmp, return a subclass that provides an implementation
     * of the abstract accessors.
-    * 
+    *
     * @see java.lang.Class#newInstance
-    * 
+    *
     * @return   The new instance.
     */
    public Object createBeanClassInstance() throws Exception {
@@ -278,7 +277,7 @@ public class EntityContainer
    }
 
    // Container implementation --------------------------------------
-   
+
    public void init() throws Exception
    {
       // Associate thread with classloader
@@ -329,7 +328,7 @@ public class EntityContainer
             isModified = null; // Has to have "boolean" as return type!
       }
       catch (NoSuchMethodException ignored) {}
-      
+
 
       // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
@@ -456,13 +455,13 @@ public class EntityContainer
       // synchronize entities with the datastore before the bean is removed
       // this will write queued updates so datastore will be consistent before removal
       synchronizeEntitiesWithinTransaction(mi.getTransaction());
-		
+        
       // Get the persistence manager to do the dirty work
       getPersistenceManager().removeEntity((EntityEnterpriseContext)mi.getEnterpriseContext());
 
       // We signify "removed" with a null id
       // There is no need to synchronize on the context since all the threads reaching here have
-      // gone through the InstanceInterceptor so the instance is locked and we only have one thread 
+      // gone through the InstanceInterceptor so the instance is locked and we only have one thread
       // the case of reentrant threads is unclear (would you want to delete an instance in reentrancy)
       mi.getEnterpriseContext().setId(null);
       removeCount++;
@@ -523,7 +522,7 @@ public class EntityContainer
    {
       throw new Error("Not Yet Implemented");
    }
-    
+
    /**
     * Local home interface implementation
     */
@@ -538,7 +537,7 @@ public class EntityContainer
       createCount++;
       return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBLocalObject();
    }
-   
+
    public Object findLocal(MethodInvocation mi)
       throws Exception
    {
@@ -547,7 +546,7 @@ public class EntityContainer
        * when an ejbFind<METHOD> is called.
        */
       synchronizeEntitiesWithinTransaction(mi.getTransaction());
-		
+        
       // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getLocalClass()))
       {
@@ -584,7 +583,7 @@ public class EntityContainer
          return (EJBLocalObject)localContainerInvoker.getEntityEJBLocalObject(id);
       }
    }
-   
+
    // Home interface implementation ---------------------------------
 
    /**
@@ -593,13 +592,13 @@ public class EntityContainer
     * found.
     */
    public Object find(MethodInvocation mi) throws Exception
-   {		
+   {        
       /**
        * As per the spec 9.6.4, entities must be synchronized with the datastore
        * when an ejbFind<METHOD> is called.
        */
       synchronizeEntitiesWithinTransaction(mi.getTransaction());
-		
+        
       // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getRemoteClass()))
       {
@@ -654,7 +653,7 @@ public class EntityContainer
             Boolean modified = (Boolean) isModified.invoke(ctx.getInstance(), args);
             dirty = modified.booleanValue();
          }
-   
+
          // Store entity
          if (dirty)
          {
@@ -662,7 +661,7 @@ public class EntityContainer
          }
       }
    }
- 
+
    /**
     * This method takes care of the wiring of the "EJBObject" trio
     * (target, context, proxy).  It delegates to the persistence manager.
@@ -716,7 +715,7 @@ public class EntityContainer
       throw new Error("Not yet implemented");
    }
 
-	// StatisticsProvider implementation ------------------------------------
+    // StatisticsProvider implementation ------------------------------------
   public Map retrieveStatistic()
   {
     // Loop through all Interceptors and add statistics
@@ -732,7 +731,7 @@ public class EntityContainer
   }
 
    // Private -------------------------------------------------------
-   
+
    private void setupHomeMappingImpl( Map map,
                                       Method[] m,
                                       String finderName,
@@ -768,7 +767,7 @@ public class EntityContainer
          }
       }
    }
-   
+
    protected void setupHomeMapping()
       throws DeploymentException
    {
@@ -826,7 +825,7 @@ public class EntityContainer
       // We are done keep the home map
       homeMapping = map;
    }
-   
+
    private void setupBeanMappingImpl( Map map, Method[] m, String intfName )
       throws DeploymentException
    {
@@ -877,11 +876,11 @@ public class EntityContainer
    {
       return new ContainerInterceptor();
    }
-   
+
    // Inner classes -------------------------------------------------
 
    // This is the last step before invocation - all interceptors are done
-   
+
    class ContainerInterceptor
       implements Interceptor
    {
@@ -892,7 +891,7 @@ public class EntityContainer
       public void setNext(Interceptor interceptor)
       {
       }
-      
+
       public Interceptor getNext()
       {
          return null;
@@ -901,15 +900,15 @@ public class EntityContainer
       public void init()
       {
       }
-      
+
       public void start()
       {
       }
-      
+
       public void stop()
       {
       }
-      
+
       public void destroy()
       {
       }

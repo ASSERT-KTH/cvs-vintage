@@ -16,6 +16,8 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionRequiredException;
 
 import org.jboss.ejb.MethodInvocation;
+
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 import org.jboss.metadata.MetaData;
@@ -29,7 +31,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  */
 public class TxInterceptorCMT
     extends AbstractTxInterceptor
@@ -116,12 +118,12 @@ public class TxInterceptorCMT
         Transaction oldTransaction = mi.getTransaction();
         // New transaction is the new transaction this might start
         Transaction newTransaction = null;
- 
+
         //DEBUG       Logger.debug("Current transaction in MI is "+mi.getTransaction());
         //DEBUG Logger.debug("Current method "+mi.getMethod());
-        byte transType = getTransactionMethod(mi.getMethod(), remoteInvocation); 
+        byte transType = getTransactionMethod(mi.getMethod(), remoteInvocation);
         // printMethod(mi.getMethod(), transType);
- 
+
         // Thread arriving must be clean (jboss doesn't set the thread
         // previously). However optimized calls come with associated
         // thread for example. We suspend the thread association here, and
@@ -133,28 +135,28 @@ public class TxInterceptorCMT
             case MetaData.TX_NOT_SUPPORTED:
                 // Do not set a transaction on the thread even if in MI, just run
                 return invokeNext(remoteInvocation, mi, false);
- 
+
             case MetaData.TX_REQUIRED:
                 if (oldTransaction == null) { // No tx running
                     // Create tx
                     tm.begin();
- 
+
                     // get the tx
                     newTransaction = tm.getTransaction();
- 
+
                     // Let the method invocation know
                     mi.setTransaction(newTransaction);
                 } else { // We have a tx propagated
                     // Associate it with the thread
                     tm.resume(oldTransaction);
                 }
- 
+
                 // Continue invocation
                 try {
                     return invokeNext(remoteInvocation, mi, newTransaction != null);
                 } finally {
 //DEBUG                Logger.debug("TxInterceptorCMT: In finally");
- 
+
                     // Only do something if we started the transaction
                     if (newTransaction != null) {
                         // Marked rollback
@@ -169,7 +171,7 @@ public class TxInterceptorCMT
                             newTransaction.commit();
 //DEBUG                        Logger.debug("TxInterceptorCMT:after commit");
                         }
- 
+
                         // reassociate the oldTransaction with the methodInvocation (even null)
                         mi.setTransaction(oldTransaction);
                     } else {
@@ -182,24 +184,24 @@ public class TxInterceptorCMT
                 {
                     // Associate old transaction (may be null) with the thread
                     tm.resume(oldTransaction);
- 
+
                     try {
                         return invokeNext(remoteInvocation, mi, false);
                     } finally {
                         tm.suspend();
                     }
- 
+
                     // Even on error we don't do anything with the tx, we didn't start it
                 }
- 
+
             case MetaData.TX_REQUIRES_NEW:
                 {
                     // Always begin a transaction
                     tm.begin();
- 
+
                     // get it
                     newTransaction = tm.getTransaction();
- 
+
                     // Set it on the method invocation
                     mi.setTransaction(newTransaction);
                     // Continue invocation
@@ -207,7 +209,7 @@ public class TxInterceptorCMT
                         return invokeNext(remoteInvocation, mi, true);
                     } finally {
                         // We started the transaction for sure so we commit or roll back
- 
+
                         if (newTransaction.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
                             newTransaction.rollback();
                         } else {
@@ -217,7 +219,7 @@ public class TxInterceptorCMT
                             // b) app. exception was thrown
                             newTransaction.commit();
                         }
- 
+
                         // set the old transaction back on the method invocation                        mi.setTransaction(oldTransaction);
                     }
                 }
@@ -231,19 +233,19 @@ public class TxInterceptorCMT
                 } finally {
                     tm.suspend();
                 }
- 
+
             case MetaData.TX_NEVER:
                 if (oldTransaction != null) // Transaction = bad!
                     throw new RemoteException("Transaction not allowed");
                 return invokeNext(remoteInvocation, mi, false);
         }
- 
+
         } finally { // OSH FIXME: Indentation
             // IN case we had a Tx associated with the thread reassociate
             if (threadTx != null)
                 tm.resume(threadTx);
         }
- 
+
         return null;
     }
 

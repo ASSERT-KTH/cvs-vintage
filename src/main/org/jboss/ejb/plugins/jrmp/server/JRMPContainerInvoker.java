@@ -48,6 +48,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
 
 import org.jboss.security.SecurityAssociation;
 
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 import org.jboss.ejb.DeploymentException;
@@ -68,7 +69,7 @@ import org.w3c.dom.Element;
  *  @author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- *  @version $Revision: 1.41 $
+ *  @version $Revision: 1.42 $
  */
 public class JRMPContainerInvoker
    extends RemoteServer
@@ -102,7 +103,7 @@ public class JRMPContainerInvoker
 
    protected Map beanMethodInvokerMap;
    protected Map homeMethodInvokerMap;
-   
+
    protected ContainerInvoker ciDelegate; // Delegate depending on JDK version
 
    // Static --------------------------------------------------------
@@ -116,7 +117,7 @@ public class JRMPContainerInvoker
    public void setOptimized(boolean optimize)
    {
       this.optimize = optimize;
-      //DEBUG		Logger.debug("Container Invoker optimize set to '"+optimize+"'");
+      //DEBUG       Logger.debug("Container Invoker optimize set to '"+optimize+"'");
    }
 
    public boolean isOptimized()
@@ -124,7 +125,7 @@ public class JRMPContainerInvoker
       //DEBUG  Logger.debug("Optimize in action: '"+optimize+"'");
       return optimize;
    }
-   
+
    public String getJndiName()
    {
       return jndiName;
@@ -147,7 +148,7 @@ public class JRMPContainerInvoker
       // Get the transaction propagation context factory
       // and the transaction propagation context importer
       tpcFactory = (TransactionPropagationContextFactory)ctx.lookup("java:/TransactionPropagationContextExporter");
-      tpcImporter = (TransactionPropagationContextImporter)ctx.lookup("java:/TransactionPropagationContextImporter");        
+      tpcImporter = (TransactionPropagationContextImporter)ctx.lookup("java:/TransactionPropagationContextImporter");
 
       // Set the transaction manager and transaction propagation
       // context factory of the GenericProxy class
@@ -159,12 +160,12 @@ public class JRMPContainerInvoker
       beanMethodInvokerMap = new HashMap();
       for (int i = 0; i < methods.length; i++)
          beanMethodInvokerMap.put(new Long(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
-      
+
       methods = ((ContainerInvokerContainer)container).getHomeClass().getMethods();
       homeMethodInvokerMap = new HashMap();
       for (int i = 0; i < methods.length; i++)
          homeMethodInvokerMap.put(new Long(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
-         
+
       try {
          // Get the getEJBObjectMethod
          Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
@@ -231,7 +232,7 @@ public class JRMPContainerInvoker
                new HomeHandleImpl(jndiName));
          }
       }
-      
+
       ciDelegate.init();
    }
 
@@ -289,7 +290,7 @@ public class JRMPContainerInvoker
    public void destroy()
    {
    }
-   
+
    // ContainerInvoker implementation -------------------------------
    public EJBMetaData getEJBMetaData()
    {
@@ -341,7 +342,7 @@ public class JRMPContainerInvoker
          rmi.setMethodMap(homeMethodInvokerMap);
 
          return new MarshalledObject(container.invokeHome(new MethodInvocation(null, rmi.getMethod(), rmi.getArguments(),
-            importTPC(rmi.getTransactionPropagationContext()), 
+            importTPC(rmi.getTransactionPropagationContext()),
             rmi.getPrincipal(), rmi.getCredential() )));
       } finally {
          Thread.currentThread().setContextClassLoader(oldCl);
@@ -362,7 +363,7 @@ public class JRMPContainerInvoker
          rmi.setMethodMap(beanMethodInvokerMap);
 
          return new MarshalledObject(container.invoke(new MethodInvocation(rmi.getId(), rmi.getMethod(), rmi.getArguments(),
-            importTPC(rmi.getTransactionPropagationContext()), 
+            importTPC(rmi.getTransactionPropagationContext()),
             rmi.getPrincipal(), rmi.getCredential() )));
       } finally {
          Thread.currentThread().setContextClassLoader(oldCl);
@@ -418,7 +419,7 @@ public class JRMPContainerInvoker
    {
       // Check if this call really can be optimized
       // If parent of callers classloader is != parent of our classloader -> not optimizable!
-      //	   if (Thread.currentThread().getContextClassLoader().getParent() != container.getClassLoader().getParent())
+      //       if (Thread.currentThread().getContextClassLoader().getParent() != container.getClassLoader().getParent())
       if (!m.getDeclaringClass().isAssignableFrom(((ContainerInvokerContainer)container).getRemoteClass())) {
          RemoteMethodInvocation rmi = new RemoteMethodInvocation(id, m, args);
 

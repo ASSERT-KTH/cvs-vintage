@@ -60,6 +60,7 @@ import org.jboss.tm.TransactionPropagationContextFactory;
 
 import org.jboss.security.SecurityAssociation;
 
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 import org.jboss.ejb.DeploymentException;
@@ -86,7 +87,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
 
    protected Map beanMethodInvokerMap;
    protected Map homeMethodInvokerMap;
-   
+
    // Static --------------------------------------------------------
 
    private static TransactionPropagationContextFactory tpcFactory;
@@ -95,7 +96,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
 
    // Public --------------------------------------------------------
 
-   
+
    public String getJndiName()
    {
       return jndiName;
@@ -112,7 +113,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
    {
       if (((ContainerInvokerContainer)container).getLocalClass() == null)
          return;
-      
+
       Context ctx = new InitialContext();
 
       jndiName = container.getBeanMetaData().getJndiName();
@@ -126,7 +127,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
       beanMethodInvokerMap = new HashMap();
       for (int i = 0; i < methods.length; i++)
          beanMethodInvokerMap.put(new Long(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
-      
+
       methods = ((ContainerInvokerContainer)container).getLocalHomeClass().getMethods();
       homeMethodInvokerMap = new HashMap();
       for (int i = 0; i < methods.length; i++)
@@ -136,44 +137,44 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
    public void start()
       throws Exception
    {
-		Class localHome = ((ContainerInvokerContainer)container).getLocalHomeClass();
-	   if(localHome == null) {
-			Logger.debug(container.getBeanMetaData().getEjbName() + " cannot be Bound, doesn't have local home.");
-			return;
-		}
-		
-		InitialContext context = new InitialContext();
-		String jndiName = container.getBeanMetaData().getLocalJndiName();
-		String beanName = container.getBeanMetaData().getEjbName();
-		
-		// unique key name
-		String uniqueKey = Long.toString( (new java.util.Date()).getTime() );
+        Class localHome = ((ContainerInvokerContainer)container).getLocalHomeClass();
+       if(localHome == null) {
+            Logger.debug(container.getBeanMetaData().getEjbName() + " cannot be Bound, doesn't have local home.");
+            return;
+        }
+        
+        InitialContext context = new InitialContext();
+        String jndiName = container.getBeanMetaData().getLocalJndiName();
+        String beanName = container.getBeanMetaData().getEjbName();
+        
+        // unique key name
+        String uniqueKey = Long.toString( (new java.util.Date()).getTime() );
 
-		// setup local home object factory, which is used for non-serializable objects such as local home
-		
-		// create link from unique name to application and container
-		LocalHomeObjectFactory.rebind( uniqueKey + jndiName, container.getApplication(), container);
-		
-		// address used to lookup referance in LocalHomeObjectFactory
-		StringRefAddr refAddr = new StringRefAddr("nns", uniqueKey + jndiName );
-		
-		// create a jndi referance to LocalHomeObjectFactory 
-		Reference jndiRef = new Reference(container.getBeanMetaData().getLocalHome(),
-			refAddr, LocalHomeObjectFactory.class.getName(), null );
-			
-		// bind that referance to my name
-		rebind(context, jndiName, jndiRef);
+        // setup local home object factory, which is used for non-serializable objects such as local home
+        
+        // create link from unique name to application and container
+        LocalHomeObjectFactory.rebind( uniqueKey + jndiName, container.getApplication(), container);
+        
+        // address used to lookup referance in LocalHomeObjectFactory
+        StringRefAddr refAddr = new StringRefAddr("nns", uniqueKey + jndiName );
+        
+        // create a jndi referance to LocalHomeObjectFactory
+        Reference jndiRef = new Reference(container.getBeanMetaData().getLocalHome(),
+            refAddr, LocalHomeObjectFactory.class.getName(), null );
+            
+        // bind that referance to my name
+        rebind(context, jndiName, jndiRef);
 
-		Logger.debug("Bound Local " + beanName + " to " + jndiName);
+        Logger.debug("Bound Local " + beanName + " to " + jndiName);
    }
 
    public void stop()
    {
-		Class localHome = ((ContainerInvokerContainer)container).getLocalHomeClass();
-	   if(localHome == null) {
-			return;
-		}
-		
+        Class localHome = ((ContainerInvokerContainer)container).getLocalHomeClass();
+       if(localHome == null) {
+            return;
+        }
+        
       try {
          InitialContext ctx = new InitialContext();
          ctx.unbind(container.getBeanMetaData().getLocalJndiName());
@@ -185,13 +186,13 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
    public void destroy()
    {
    }
-     
-   
+
+
    // ContainerInvoker implementation -------------------------------
    public EJBLocalHome getEJBLocalHome()
    {
       ContainerInvokerContainer cic = (ContainerInvokerContainer) container;
-      return (EJBLocalHome) Proxy.newProxyInstance( 
+      return (EJBLocalHome) Proxy.newProxyInstance(
          cic.getLocalHomeClass().getClassLoader(),
          new Class[]{cic.getLocalHomeClass()}, new HomeProxy() );
    }
@@ -199,7 +200,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
    public EJBLocalObject getStatelessSessionEJBLocalObject()
    {
       ContainerInvokerContainer cic = (ContainerInvokerContainer) container;
-      return (EJBLocalObject) Proxy.newProxyInstance( 
+      return (EJBLocalObject) Proxy.newProxyInstance(
          cic.getLocalClass().getClassLoader(),
          new Class[]{cic.getLocalClass()}, new StatelessSessionProxy() );
    }
@@ -207,7 +208,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
    public EJBLocalObject getStatefulSessionEJBLocalObject(Object id)
    {
       ContainerInvokerContainer cic = (ContainerInvokerContainer) container;
-      return (EJBLocalObject) Proxy.newProxyInstance( 
+      return (EJBLocalObject) Proxy.newProxyInstance(
          cic.getLocalClass().getClassLoader(),
          new Class[]{cic.getLocalClass()}, new StatefulSessionProxy(id) );
    }
@@ -215,7 +216,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
    public EJBLocalObject getEntityEJBLocalObject(Object id)
    {
       ContainerInvokerContainer cic = (ContainerInvokerContainer) container;
-      return (EJBLocalObject) Proxy.newProxyInstance( 
+      return (EJBLocalObject) Proxy.newProxyInstance(
          cic.getLocalClass().getClassLoader(),
          new Class[]{cic.getLocalClass()}, new EntityProxy(id ) );
    }
@@ -243,7 +244,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
 
       try
       {
-         return container.invokeHome(new MethodInvocation(null, m, args, 
+         return container.invokeHome(new MethodInvocation(null, m, args,
             getTransaction(), getPrincipal(), getCredential()));
       }
       catch (AccessException ae)
@@ -295,7 +296,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
       return (transactionManager == null) ? null : transactionManager.getTransaction();
    }
 
-   
+
    /**
     *  Invoke a local interface method.
     */
@@ -308,7 +309,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
 
       try
       {
-         return container.invoke(new MethodInvocation(id, m, args, getTransaction(), 
+         return container.invoke(new MethodInvocation(id, m, args, getTransaction(),
             getPrincipal(), getCredential()));
       }
       catch (AccessException ae)
@@ -332,10 +333,10 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   
-	/**
-	 * Rebinds the object into the jndi context are the specified name.
-	 */
+
+    /**
+     * Rebinds the object into the jndi context are the specified name.
+     */
    protected void rebind(Context ctx, String name, Object val)
       throws NamingException
    {
@@ -354,7 +355,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
 
       ctx.rebind(n.get(0), val);
    }
-    
+
    class HomeProxy extends LocalHomeProxy
       implements InvocationHandler
    {
@@ -362,7 +363,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
        {
            return jndiName;
        }
-       
+
        protected Object getId()
        {
            return jndiName;
@@ -375,11 +376,11 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
        {
           if (args == null)
               args = EMPTY_ARGS;
-          
+
           Object retValue = super.invoke( proxy, m, args );
           if (retValue != null)
              return retValue;
-          
+
         else if (m.equals(REMOVE_BY_PRIMARY_KEY)) {
             // The trick is simple we trick the container in believe it
             // is a remove() on the instance
@@ -395,29 +396,29 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
        }
    }
 
-   class EntityProxy extends LocalProxy 
+   class EntityProxy extends LocalProxy
       implements InvocationHandler
    {
       CacheKey cacheKey;
-      
+
       EntityProxy( Object id )
       {
          if (!(id instanceof CacheKey))
             id = new CacheKey( id );
          cacheKey = (CacheKey) id;
       }
-      
+
        protected String getJndiName()
        {
            return jndiName;
        }
-       
+
        protected Object getId()
        {
            return cacheKey.getId();
        }
-      
-      
+
+
       public final Object invoke(final Object proxy,
                                final Method m,
                                Object[] args)
@@ -425,7 +426,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
        {
           if (args == null)
               args = EMPTY_ARGS;
-          
+
           Object retValue = super.invoke( proxy, m, args );
           if (retValue != null)
              return retValue;
@@ -435,14 +436,14 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
                cacheKey, m, args);
           }
        }
-      
+
     }
-   
-   class StatefulSessionProxy extends LocalProxy 
+
+   class StatefulSessionProxy extends LocalProxy
       implements InvocationHandler
    {
       Object id;
-      
+
       StatefulSessionProxy( Object id )
       {
          this.id = id;
@@ -452,12 +453,12 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
        {
            return jndiName;
        }
-       
+
        protected Object getId()
        {
            return id;
-       }  
-      
+       }
+
       public final Object invoke(final Object proxy,
                                final Method m,
                                Object[] args)
@@ -465,7 +466,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
        {
           if (args == null)
               args = EMPTY_ARGS;
-          
+
           Object retValue = super.invoke( proxy, m, args );
           if (retValue != null)
              return retValue;
@@ -476,21 +477,21 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
           }
        }
    }
-   
-   class StatelessSessionProxy extends LocalProxy 
+
+   class StatelessSessionProxy extends LocalProxy
       implements InvocationHandler
    {
        protected String getJndiName()
        {
            return jndiName;
        }
-       
+
        protected Object getId()
        {
            return jndiName;
        }
-      
-      
+
+
       public final Object invoke(final Object proxy,
                                final Method m,
                                Object[] args)
@@ -498,7 +499,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
      {
         if (args == null)
            args = EMPTY_ARGS;
-          
+
        // Implement local methods
        if (m.equals(TO_STRING)) {
                return jndiName + ":Stateless";
@@ -512,13 +513,13 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
                return new Integer(this.hashCode());
        }
        else if (m.equals(GET_PRIMARY_KEY)) {
-               // MF FIXME 
+               // MF FIXME
                // The spec says that SSB PrimaryKeys should not be returned and the call should throw an exception
                // However we need to expose the field *somehow* so we can check for "isIdentical"
                // For now we use a non-spec compliant implementation and just return the key as is
                // See jboss1.0 for the PKHolder and the hack to be spec-compliant and yet solve the problem
 
-               // This should be the following call 
+               // This should be the following call
                //throw new RemoteException("Session Beans do not expose their keys, RTFS");
 
                // This is how it can be solved with a PKHolder (extends RemoteException)
@@ -532,11 +533,11 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
         else if (m.equals(GET_EJB_HOME)) {
          throw new UnsupportedOperationException();
         }
-		else if (m.equals(IS_IDENTICAL)) {
-			// All stateless beans are identical within a home,
-			// if the names are equal we are equal
+        else if (m.equals(IS_IDENTICAL)) {
+            // All stateless beans are identical within a home,
+            // if the names are equal we are equal
             return isIdentical(args[0], jndiName);
-		}
+        }
           // If not taken care of, go on and call the container
           else {
               return BaseLocalContainerInvoker.this.invoke(

@@ -14,30 +14,30 @@ import java.util.*;
 import javax.management.*;
 
 /**
- * @deprecated, As of JBoss 2.3, replaced by the org.apache.log4j framework
+ * @deprecated, As of JBoss 2.3, replaced by the org.apache.log4j framework. TODO Example of how to use log4j
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class Logger
    extends NotificationBroadcasterSupport
    implements LoggerMBean, MBeanRegistration, NotificationBroadcaster, Runnable
 {
    // Constants -----------------------------------------------------
-    
+
    // Attributes ----------------------------------------------------
    long sequence = 0;
    Date now = new Date();
-	
-	boolean running = true;
-   
+    
+    boolean running = true;
+
    ArrayList notificationListeners = new ArrayList();
-   
+
    // Static --------------------------------------------------------
    static Logger logger;
-   
+
    public static Logger getLogger() { return logger; }
-   
+
    public static void log(String type, String message)
    {
       Log l = (Log)Log.getLog();
@@ -61,7 +61,7 @@ public class Logger
       Log l = (Log)Log.getLog();
       l.warning(message);
    }
-	
+    
    public static void debug(String message)
    {
       Log l = (Log)Log.getLog();
@@ -73,75 +73,75 @@ public class Logger
       Log l = (Log)Log.getLog();
       l.debug(exception);
    }
-   
-   public static void error(String message) 
+
+   public static void error(String message)
    {
-	  Log l = (Log) Log.getLog();
-	  l.error(message);
+      Log l = (Log) Log.getLog();
+      l.error(message);
   }
-  
-  
-   public static void error(Throwable exception) 
+
+
+   public static void error(Throwable exception)
    {
-	  Log l = (Log) Log.getLog();
-	  l.error(exception.toString());
+      Log l = (Log) Log.getLog();
+      l.error(exception.toString());
   }
-   
+
    // Constructors --------------------------------------------------
    public Logger()
    {
       logger = this;
-		
-		Thread runner = new Thread(this, "Log time updater");
-		runner.setDaemon(true);
-		runner.start();
+        
+        Thread runner = new Thread(this, "Log time updater");
+        runner.setDaemon(true);
+        runner.start();
    }
-   
+
    // Public --------------------------------------------------------
    public synchronized void fireNotification(String type, Object source, String message)
    {
        //AS FIXME Just a hack (now.getTime())
-	   Notification n = new Notification(type, this, sequence++, now.getTime(), message);
+       Notification n = new Notification(type, this, sequence++, now.getTime(), message);
       n.setUserData(source);
-    
+
       sendNotification(n);
    }
-   
+
    // MBeanRegistration implementation ------------------------------
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
       return name == null ? new ObjectName("JBOSS-SYSTEM:spine=Log") : name;
    }
-   
-   public void postRegister(java.lang.Boolean registrationDone) 
+
+   public void postRegister(java.lang.Boolean registrationDone)
    {
    }
-   
+
    public void preDeregister()
-      throws java.lang.Exception 
+      throws java.lang.Exception
    {}
-   
-   public void postDeregister() 
-	{
-		running = false;
-	}
+
+   public void postDeregister()
+    {
+        running = false;
+    }
 
    // Runnable implementation ---------------------------------------
-	public void run()
-	{
-		while (running)
-		{
-			now.setTime(System.currentTimeMillis());
-		
-			try
-			{
-				Thread.sleep(5*1000);
-			} catch (InterruptedException e)
-			{
-				// Ignore
-			}
-		}
-	}
+    public void run()
+    {
+        while (running)
+        {
+            now.setTime(System.currentTimeMillis());
+        
+            try
+            {
+                Thread.sleep(5*1000);
+            } catch (InterruptedException e)
+            {
+                // Ignore
+            }
+        }
+    }
 }
 

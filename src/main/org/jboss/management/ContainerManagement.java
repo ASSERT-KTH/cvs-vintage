@@ -52,8 +52,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.XmlFileLoader;
-import org.jboss.logging.Logger;
-                                                        
+
 /**
 *   A ContainerMgt is used as the long arm of a deployed EJB's container.
 *
@@ -61,7 +60,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *
-*   @version $Revision: 1.5 $
+*   @version $Revision: 1.6 $
 */
 public class ContainerManagement
   extends org.jboss.system.ServiceMBeanSupport
@@ -79,17 +78,17 @@ public class ContainerManagement
    public ContainerManagement( Container pContainer ) {
       setContainer( pContainer );
    }
-   
+
    // Public --------------------------------------------------------
 
    private void setContainer( Container pContainer ) {
       mContainer = pContainer;
    }
-   
+
    public Container getContainer() {
       return mContainer;
    }
-   
+
    /**
    * Implements the abstract <code>getObjectName()</code> method in superclass
    * to return this service's name.
@@ -106,7 +105,7 @@ public class ContainerManagement
       mName = name;
       return name;
    }
-   
+
    /**
    * Implements the abstract <code>getName()</code> method in superclass to
    * return the name of this object.
@@ -116,19 +115,19 @@ public class ContainerManagement
    public String getName() {
       return "Container Management Proxy";
    }
-   
+
    /**
    * Implements the template method in superclass. This method stops all the
    * applications in this server.
    */
    public void stopService() {
    }
-   
+
    /**
    * Implements the template method in superclass. This method destroys all
    * the applications in this server and clears the deployments list.
    */
    public void destroyService() {
    }
-   
+
 }

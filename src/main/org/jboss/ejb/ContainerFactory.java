@@ -31,8 +31,11 @@ import org.jboss.ejb.plugins.AbstractInstanceCache;
 import org.jboss.ejb.plugins.SecurityProxyInterceptor;
 import org.jboss.ejb.plugins.StatefulSessionInstancePool;
 import org.jboss.ejb.BeanLockManager;
+
+// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Log;
 import org.jboss.logging.Logger;
+
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SessionMetaData;
@@ -68,7 +71,7 @@ import org.jboss.web.WebServiceMBean;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.91 $
+* @version $Revision: 1.92 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport

@@ -22,8 +22,8 @@ import org.jboss.metadata.EjbRefMetaData;
 
 import java.util.*;
 
+//TODO replace logging with log4j stuff
 import org.jboss.logging.Log;
-import org.jboss.logging.Logger;
 
 /**
  * This class holds all the information jaws needs to know about a CMP field.
@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:david_jencks@earthlink.net">David Jencks</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  * Revison:
  * 20010621 danch: merged patch from David Jenks - null constraint on columns.
