@@ -58,9 +58,6 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 
 	private JCheckBox attachsignatureCheckBox;
 	private JTextArea attachsignatureTextArea;
-	private JButton okButton;
-	private JButton cancelButton;
-	private JButton helpButton;
 
 	private IdentityItem identityItem;
 	private AccountItem accountItem;

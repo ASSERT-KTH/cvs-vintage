@@ -59,9 +59,6 @@ public class IncomingServerPanel
 	private JTextField portTextField;
 	private JLabel typeLabel;
 	private JComboBox typeComboBox;
-	private JButton okButton;
-	private JButton cancelButton;
-	private JButton helpButton;
 	private JCheckBox storePasswordCheckBox;
 	private JCheckBox secureCheckBox;
 

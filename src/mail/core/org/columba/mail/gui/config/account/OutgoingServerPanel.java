@@ -55,10 +55,6 @@ public class OutgoingServerPanel
 	extends DefaultPanel
 	implements ActionListener {
 
-	private JButton okButton;
-	private JButton cancelButton;
-	private JButton helpButton;
-
 	private JLabel hostLabel;
 	private JTextField hostTextField;
 	private JLabel portLabel;
