@@ -1,5 +1,19 @@
+<!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
+    "http://collabnet.com/dtds/collabnet_transitional_10.dtd">
+
+<html>
+ <head>
+  <title>$page.Title</title>
+  <link rel="stylesheet" type="text/css" href="/scarab/main0.css"/>
+ </head>
+
+<body>
+
 $navigation.setTemplate("/ScarabTop.vm")
 
 $screen_placeholder
 
 $navigation.setTemplate("/ScarabBottom.vm")
+
+</body>
+</html>
