@@ -731,7 +731,7 @@ public class IMAPFolder extends RemoteFolder {
     /**
      * @see org.columba.mail.folder.Folder#getSearchEngineInstance()
      */
-    public DefaultSearchEngine getSearchEngineInstance() {
+    public DefaultSearchEngine getSearchEngine() {
         if (searchEngine == null) {
             searchEngine = new DefaultSearchEngine(this);
             searchEngine.setNonDefaultEngine(new IMAPQueryEngine(this));
