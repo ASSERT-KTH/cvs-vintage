@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.15 2001/08/31 04:13:12 costin Exp $
- * $Revision: 1.15 $
- * $Date: 2001/08/31 04:13:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.16 2001/12/07 04:40:06 billbarker Exp $
+ * $Revision: 1.16 $
+ * $Date: 2001/12/07 04:40:06 $
  *
  * ====================================================================
  *
@@ -191,6 +191,10 @@ public class PoolTcpEndpoint { // implements Endpoint {
 	    this.factory=factory;
     }
 
+   ServerSocketFactory getServerSocketFactory() {
+ 	    return factory;
+   }
+
     public void setConnectionHandler( TcpConnectionHandler handler ) {
     	this.handler=handler;
     }
@@ -311,7 +315,12 @@ public class PoolTcpEndpoint { // implements Endpoint {
     	try {
     	    if (running) {
 		if(null!= serverSocket) {
-		    accepted = serverSocket.accept();
+                     if(factory==null){
+ 		        accepted = serverSocket.accept();
+ 		    }
+ 		    else {
+ 		        accepted = factory.acceptSocket(serverSocket);
+ 		    }
 		    if(!running) {
 			if(null != accepted) {
 			    accepted.close();  // rude, but unlikely!
@@ -462,6 +471,10 @@ class TcpWorkerThread implements ThreadPoolRunnable {
 		endpoint.tp.runIt(this);
 		
 		try {
+ 		    if(endpoint.getServerSocketFactory()!=null) {
+ 			endpoint.getServerSocketFactory().handshake(s);
+ 		    }
+ 
 		    if( usePool ) {
 			con=(TcpConnection)connectionCache.get();
 			if( con == null ) 
@@ -475,6 +488,8 @@ class TcpWorkerThread implements ThreadPoolRunnable {
 		    con.setSocket(s);
 		    endpoint.setSocketOptions( s );
 		    endpoint.getConnectionHandler().processConnection(con, perThrData);
+ 		} catch (IOException e){
+ 		    endpoint.log("Handshake failed",e,Log.ERROR);
                 } finally {
                     con.recycle();
                     if( usePool && con != null ) connectionCache.put(con);

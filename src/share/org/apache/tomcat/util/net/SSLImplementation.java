@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/DefaultServerSocketFactory.java,v 1.2 2001/12/07 04:40:06 billbarker Exp $
- * $Revision: 1.2 $
- * $Date: 2001/12/07 04:40:06 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -66,51 +62,56 @@ package org.apache.tomcat.util.net;
 import java.io.*;
 import java.net.*;
 
-/**
- * Default server socket factory. Doesn't do much except give us
- * plain ol' server sockets.
- *
- * @author db@eng.sun.com
- * @author Harish Prabandham
- */
+/* SSLImplementation:
 
-// Default implementation of server sockets.
+   Abstract factory and base class for all SSL implementations.
 
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-class DefaultServerSocketFactory extends ServerSocketFactory {
+   @author EKR
+*/
+abstract public class SSLImplementation {
+    // The default implementations in our search path
+    private static final String PureTLSImplementationClass=
+	"org.apache.tomcat.util.net.PureTLSImplementation";
+    private static final String JSSEImplementationClass=
+	"org.apache.tomcat.util.net.JSSEImplementation";
+    
+    private static final String[] implementations=
+    {
+	PureTLSImplementationClass,
+	JSSEImplementationClass
+    };
 
-    DefaultServerSocketFactory () {
-        /* NOTHING */
+    public static SSLImplementation getInstance() throws ClassNotFoundException
+    {
+	for(int i=0;i<implementations.length;i++){
+	    try {
+		SSLImplementation impl=
+		    getInstance(implementations[i]);
+		return impl;
+	    } catch (Exception e) {
+		// Ignore 
+	    }
+	}
+
+	// If we can't instantiate any of these
+	throw new ClassNotFoundException("Can't find any SSL implementation");
     }
 
-    public ServerSocket createSocket (int port)
-    throws IOException {
-        return  new ServerSocket (port);
+    public static SSLImplementation getInstance(String className)
+	throws ClassNotFoundException
+    {
+	if(className==null) return getInstance();
+
+	try {
+	    Class clazz=Class.forName(className);
+	    return (SSLImplementation)clazz.newInstance();
+	} catch (Exception e){
+	    throw new ClassNotFoundException("Error loading SSL Implementation "
+				      +className+ " :" +e.toString());
+	}
     }
 
-    public ServerSocket createSocket (int port, int backlog)
-    throws IOException {
-        return new ServerSocket (port, backlog);
-    }
-
-    public ServerSocket createSocket (int port, int backlog,
-        InetAddress ifAddress)
-    throws IOException {
-        return new ServerSocket (port, backlog, ifAddress);
-    }
- 
-    public Socket acceptSocket(ServerSocket socket)
- 	throws IOException {
- 	return socket.accept();
-    }
- 
-    public void handshake(Socket sock)
- 	throws IOException {
- 	; // NOOP
-    }
- 	    
-        
- }
+    abstract public String getImplementationName();
+    abstract public ServerSocketFactory getServerSocketFactory();
+    abstract public SSLSupport getSSLSupport(Socket sock);
+}    

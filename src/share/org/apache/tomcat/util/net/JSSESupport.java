@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/DefaultServerSocketFactory.java,v 1.2 2001/12/07 04:40:06 billbarker Exp $
- * $Revision: 1.2 $
- * $Date: 2001/12/07 04:40:06 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -65,52 +61,70 @@ package org.apache.tomcat.util.net;
 
 import java.io.*;
 import java.net.*;
+import java.util.Vector;
+import java.security.cert.CertificateFactory;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+import java.security.cert.CertificateFactory;
+import javax.security.cert.X509Certificate;
 
-/**
- * Default server socket factory. Doesn't do much except give us
- * plain ol' server sockets.
- *
- * @author db@eng.sun.com
- * @author Harish Prabandham
- */
+/* JSSESupport
 
-// Default implementation of server sockets.
+   Concrete implementation class for JSSE
+   Support classes.
 
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-class DefaultServerSocketFactory extends ServerSocketFactory {
+   This will only work with JDK 1.2 and up since it
+   depends on JDK 1.2's certificate support
 
-    DefaultServerSocketFactory () {
-        /* NOTHING */
+   @author EKR
+
+   Parts cribbed from JSSECertCompat	   
+*/
+
+class JSSESupport implements SSLSupport {
+    private SSLSocket ssl;
+
+    JSSESupport(SSLSocket sock){
+	ssl=sock;
     }
 
-    public ServerSocket createSocket (int port)
-    throws IOException {
-        return  new ServerSocket (port);
+    public String getCipherSuite() throws IOException {
+	return "Unknown";
     }
 
-    public ServerSocket createSocket (int port, int backlog)
-    throws IOException {
-        return new ServerSocket (port, backlog);
-    }
+    public java.security.cert.Certificate[] getPeerCertificateChain()
+    throws IOException
+    {
+        // Look up the current SSLSession
+        SSLSession session = ssl.getSession();
+        if (session == null)
+            return null;
 
-    public ServerSocket createSocket (int port, int backlog,
-        InetAddress ifAddress)
-    throws IOException {
-        return new ServerSocket (port, backlog, ifAddress);
+        // Convert JSSE's certificate format to the ones we need
+        X509Certificate jsseCerts[] = null;
+        java.security.cert.X509Certificate x509Certs[] = null;
+        try {
+            jsseCerts = session.getPeerCertificateChain();
+            if (jsseCerts == null)
+                jsseCerts = new X509Certificate[0];
+            x509Certs =
+              new java.security.cert.X509Certificate[jsseCerts.length];
+            for (int i = 0; i < x509Certs.length; i++) {
+                byte buffer[] = jsseCerts[i].getEncoded();
+                CertificateFactory cf =
+                  CertificateFactory.getInstance("X.509");
+                ByteArrayInputStream stream =
+                  new ByteArrayInputStream(buffer);
+                x509Certs[i] = (java.security.cert.X509Certificate)
+                  cf.generateCertificate(stream);
+            }
+        } catch (Throwable t) {
+            return null;
+        }
+
+        if ((x509Certs == null) || (x509Certs.length < 1))
+            return null;
+
+        return x509Certs;
     }
- 
-    public Socket acceptSocket(ServerSocket socket)
- 	throws IOException {
- 	return socket.accept();
-    }
- 
-    public void handshake(Socket sock)
- 	throws IOException {
- 	; // NOOP
-    }
- 	    
-        
- }
+}

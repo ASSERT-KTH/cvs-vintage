@@ -67,6 +67,7 @@ import java.security.Security;
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.HandshakeCompletedListener;
 import javax.net.ssl.HandshakeCompletedEvent;
@@ -86,8 +87,9 @@ import javax.net.ssl.HandshakeCompletedEvent;
  * @author Harish Prabandham
  * @author Costin Manolache
  * @author Stefan Freyr Stefansson
+ * @author EKR -- renamed to JSSESocketFactory
  */
-public class SSLSocketFactory
+public class JSSESocketFactory
     extends org.apache.tomcat.util.net.ServerSocketFactory
 {
     private String keystoreType;
@@ -106,7 +108,7 @@ public class SSLSocketFactory
     static String defaultKeyPass="changeit";
 
     
-    public SSLSocketFactory () {
+    public JSSESocketFactory () {
     }
 
     public ServerSocket createSocket (int port)
@@ -210,6 +212,16 @@ public class SSLSocketFactory
 	}
     }
 
+    public Socket acceptSocket(ServerSocket socket)
+	throws IOException
+    {
+	try {
+	    return socket.accept();
+	} catch (SSLException e){
+	  throw new SocketException("SSL handshake error" + e.toString());
+	}
+    }
+     
     /** Set server socket properties ( accepted cipher suites, etc)
      */
     private void initServerSocket(ServerSocket ssocket) {
@@ -249,5 +261,9 @@ public class SSLSocketFactory
 	}
     }
 
-    
+    public void handshake(Socket sock)
+	 throws IOException
+    {
+	((SSLSocket)sock).startHandshake();
+    }
 }

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/DefaultServerSocketFactory.java,v 1.2 2001/12/07 04:40:06 billbarker Exp $
- * $Revision: 1.2 $
- * $Date: 2001/12/07 04:40:06 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -59,58 +55,36 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 package org.apache.tomcat.util.net;
 
 import java.io.*;
 import java.net.*;
 
-/**
- * Default server socket factory. Doesn't do much except give us
- * plain ol' server sockets.
+import COM.claymoresystems.ptls.*;
+import COM.claymoresystems.cert.*;
+import COM.claymoresystems.sslg.*;
+
+/*
+ * PureTLSSocket.java
  *
- * @author db@eng.sun.com
- * @author Harish Prabandham
+ * Wraps COM.claymoresystems.ptls.SSLSocket
+ *
+ * This class translates PureTLS's interfaces into those
+ * expected by Tomcat
+ *
+ * @author Eric Rescorla
+ *
  */
 
-// Default implementation of server sockets.
-
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-class DefaultServerSocketFactory extends ServerSocketFactory {
-
-    DefaultServerSocketFactory () {
-        /* NOTHING */
+public class PureTLSSocket extends COM.claymoresystems.ptls.SSLSocket
+{
+    // The only constructor we need here is the no-arg
+    // constructor since this class is only used with
+    // implAccept
+    public PureTLSSocket() throws IOException {
+	super();
     }
-
-    public ServerSocket createSocket (int port)
-    throws IOException {
-        return  new ServerSocket (port);
-    }
-
-    public ServerSocket createSocket (int port, int backlog)
-    throws IOException {
-        return new ServerSocket (port, backlog);
-    }
-
-    public ServerSocket createSocket (int port, int backlog,
-        InetAddress ifAddress)
-    throws IOException {
-        return new ServerSocket (port, backlog, ifAddress);
-    }
+}
  
-    public Socket acceptSocket(ServerSocket socket)
- 	throws IOException {
- 	return socket.accept();
-    }
- 
-    public void handshake(Socket sock)
- 	throws IOException {
- 	; // NOOP
-    }
- 	    
-        
- }

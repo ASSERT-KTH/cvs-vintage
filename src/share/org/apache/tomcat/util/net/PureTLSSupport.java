@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/DefaultServerSocketFactory.java,v 1.2 2001/12/07 04:40:06 billbarker Exp $
- * $Revision: 1.2 $
- * $Date: 2001/12/07 04:40:06 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -65,52 +61,67 @@ package org.apache.tomcat.util.net;
 
 import java.io.*;
 import java.net.*;
+import java.util.Vector;
+import java.security.cert.CertificateFactory;
 
-/**
- * Default server socket factory. Doesn't do much except give us
- * plain ol' server sockets.
- *
- * @author db@eng.sun.com
- * @author Harish Prabandham
- */
+import COM.claymoresystems.sslg.*;
+import COM.claymoresystems.ptls.*;
+import COM.claymoresystems.cert.*;
 
-// Default implementation of server sockets.
 
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-class DefaultServerSocketFactory extends ServerSocketFactory {
+/* PureTLSSupport
 
-    DefaultServerSocketFactory () {
-        /* NOTHING */
+   Concrete implementation class for PureTLS
+   Support classes.
+
+   This will only work with JDK 1.2 and up since it
+   depends on JDK 1.2's certificate support
+
+   @author EKR
+*/
+
+class PureTLSSupport implements SSLSupport {
+    private SSLSocket ssl;
+
+    PureTLSSupport(SSLSocket sock){
+	ssl=sock;
     }
 
-    public ServerSocket createSocket (int port)
-    throws IOException {
-        return  new ServerSocket (port);
+    public String getCipherSuite() throws IOException {
+	int cs=ssl.getCipherSuite();
+	return SSLPolicyInt.getCipherSuiteName(cs);
     }
 
-    public ServerSocket createSocket (int port, int backlog)
-    throws IOException {
-        return new ServerSocket (port, backlog);
-    }
+    public java.security.cert.Certificate[] getPeerCertificateChain()
+	throws IOException
+    {
+	Vector v=ssl.getCertificateChain();
 
-    public ServerSocket createSocket (int port, int backlog,
-        InetAddress ifAddress)
-    throws IOException {
-        return new ServerSocket (port, backlog, ifAddress);
+	if(v==null)
+	    return null;
+	
+	java.security.cert.X509Certificate[] chain=
+            new java.security.cert.X509Certificate[v.size()];
+
+	try {
+	  for(int i=1;i<=v.size();i++){
+	    // PureTLS provides cert chains with the peer
+	    // cert last but the Servlet 2.3 spec (S 4.7) requires
+	    // the opposite order so we reverse the chain as we go
+	    byte buffer[]=((X509Cert)v.elementAt(
+		 v.size()-i)).getDER();
+	    
+	    CertificateFactory cf =
+	      CertificateFactory.getInstance("X.509");
+	    ByteArrayInputStream stream =
+	      new ByteArrayInputStream(buffer);
+	    
+	    chain[i]=(java.security.cert.X509Certificate)
+	      cf.generateCertificate(stream);
+	  }
+	} catch (java.security.cert.CertificateException e) {
+	    throw new IOException("JDK's broken cert handling can't parse this certificate (which PureTLS likes");
+	}
+	return chain;
     }
- 
-    public Socket acceptSocket(ServerSocket socket)
- 	throws IOException {
- 	return socket.accept();
-    }
- 
-    public void handshake(Socket sock)
- 	throws IOException {
- 	; // NOOP
-    }
- 	    
-        
- }
+}

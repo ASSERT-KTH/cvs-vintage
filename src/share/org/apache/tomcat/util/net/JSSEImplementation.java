@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/DefaultServerSocketFactory.java,v 1.2 2001/12/07 04:40:06 billbarker Exp $
- * $Revision: 1.2 $
- * $Date: 2001/12/07 04:40:06 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -65,52 +61,37 @@ package org.apache.tomcat.util.net;
 
 import java.io.*;
 import java.net.*;
+import javax.net.ssl.SSLSocket;
 
-/**
- * Default server socket factory. Doesn't do much except give us
- * plain ol' server sockets.
- *
- * @author db@eng.sun.com
- * @author Harish Prabandham
- */
+/* JSSEImplementation:
 
-// Default implementation of server sockets.
+   Concrete implementation class for JSSE
 
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-class DefaultServerSocketFactory extends ServerSocketFactory {
-
-    DefaultServerSocketFactory () {
-        /* NOTHING */
+   @author EKR
+*/
+	
+class JSSEImplementation extends SSLImplementation
+{
+    JSSEImplementation() throws ClassNotFoundException {
+	// Check to see if JSSE is floating around somewhere
+	Class.forName("javax.net.ssl.SSLServerSocketFactory");
     }
 
-    public ServerSocket createSocket (int port)
-    throws IOException {
-        return  new ServerSocket (port);
+
+    public String getImplementationName(){
+      return "JSSE";
+    }
+      
+    public ServerSocketFactory getServerSocketFactory()
+    {
+	return new JSSESocketFactory();
+    } 
+
+    public SSLSupport getSSLSupport(Socket s)
+    {
+	return new JSSESupport((SSLSocket)s);
     }
 
-    public ServerSocket createSocket (int port, int backlog)
-    throws IOException {
-        return new ServerSocket (port, backlog);
-    }
 
-    public ServerSocket createSocket (int port, int backlog,
-        InetAddress ifAddress)
-    throws IOException {
-        return new ServerSocket (port, backlog, ifAddress);
-    }
- 
-    public Socket acceptSocket(ServerSocket socket)
- 	throws IOException {
- 	return socket.accept();
-    }
- 
-    public void handshake(Socket sock)
- 	throws IOException {
- 	; // NOOP
-    }
- 	    
-        
- }
+
+}

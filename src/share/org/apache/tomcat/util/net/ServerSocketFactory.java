@@ -191,5 +191,23 @@ public abstract class ServerSocketFactory implements Cloneable {
 
     public void initSocket( Socket s ) {
     }
+ 
+     /**
+       Wrapper function for accept(). This allows us to trap and
+       translate exceptions if necessary
+ 
+       @exception IOException;
+     */ 
+     public abstract Socket acceptSocket(ServerSocket socket)
+ 	throws IOException;
+ 
+     /**
+       Extra function to initiate the handshake. Sometimes necessary
+       for SSL
+ 
+       @exception IOException;
+     */ 
+     public abstract void handshake(Socket sock)
+ 	throws IOException;
 }
 

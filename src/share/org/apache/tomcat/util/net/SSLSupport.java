@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/DefaultServerSocketFactory.java,v 1.2 2001/12/07 04:40:06 billbarker Exp $
- * $Revision: 1.2 $
- * $Date: 2001/12/07 04:40:06 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -66,51 +62,30 @@ package org.apache.tomcat.util.net;
 import java.io.*;
 import java.net.*;
 
-/**
- * Default server socket factory. Doesn't do much except give us
- * plain ol' server sockets.
- *
- * @author db@eng.sun.com
- * @author Harish Prabandham
- */
+/* SSLSupport
 
-// Default implementation of server sockets.
+   Interface for SSL-specific functions
 
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-class DefaultServerSocketFactory extends ServerSocketFactory {
+   @author EKR
+*/
 
-    DefaultServerSocketFactory () {
-        /* NOTHING */
-    }
+public interface SSLSupport {
+    public String getCipherSuite() throws IOException;
+    public java.security.cert.Certificate[] getPeerCertificateChain()
+	throws IOException;
 
-    public ServerSocket createSocket (int port)
-    throws IOException {
-        return  new ServerSocket (port);
-    }
-
-    public ServerSocket createSocket (int port, int backlog)
-    throws IOException {
-        return new ServerSocket (port, backlog);
-    }
-
-    public ServerSocket createSocket (int port, int backlog,
-        InetAddress ifAddress)
-    throws IOException {
-        return new ServerSocket (port, backlog, ifAddress);
-    }
- 
-    public Socket acceptSocket(ServerSocket socket)
- 	throws IOException {
- 	return socket.accept();
-    }
- 
-    public void handshake(Socket sock)
- 	throws IOException {
- 	; // NOOP
-    }
- 	    
-        
- }
+    /**
+     * Get the keysize.
+     *
+     * What we're supposed to put here is ill-defined by the
+     * Servlet spec (S 4.7 again). There are at least 4 potential
+     * values that might go here:
+     *
+     * (a) The size of the encryption key
+     * (b) The size of the MAC key
+     * (c) The size of the key-exchange key
+     * (d) The size of the signature key used by the server
+     *
+     * Unfortunately, all of these values are nonsensical.
+     **/
+}
