@@ -28,7 +28,7 @@
 // File: LayerPerspective.java
 // Classes: LayerPerspective
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerPerspective.java,v 1.11 1998/12/14 17:53:21 jrobbins Exp $
+// $Id: LayerPerspective.java,v 1.12 1999/02/06 03:05:48 jrobbins Exp $
 
 package uci.gef;
 
@@ -181,7 +181,8 @@ public class LayerPerspective extends LayerDiagram implements GraphListener {
       if (!shouldShow(edge)) { System.out.println("edge rejected"); return; }
       FigEdge newFigEdge = _edgeRenderer.getFigEdgeFor(_gm, this, edge);
       if (newFigEdge != null) {
-	insertAt(newFigEdge, 0);
+	add(newFigEdge);
+	//insertAt(newFigEdge, 0);
 	newFigEdge.computeRoute();
 	//newFigEdge.reorder(CmdReorder.SEND_TO_BACK, this);
 	newFigEdge.endTrans();

@@ -27,7 +27,7 @@
 // File: CrDisambigStateName.java
 // Classes: CrDisambigStateName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigStateName.java,v 1.3 1998/11/03 21:30:03 jrobbins Exp $
+// $Id: CrDisambigStateName.java,v 1.4 1999/02/06 03:06:32 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -70,6 +70,7 @@ public class CrDisambigStateName extends CrUML {
     ElementOwnership oe = s.getElementOwnership();
     if (oe == null) return NO_PROBLEM;
     Namespace ns = oe.getNamespace();
+    if (ns == null) return NO_PROBLEM;
     Vector oes = ns.getOwnedElement();
     if (oes == null) return NO_PROBLEM;
     java.util.Enumeration enum = oes.elements();

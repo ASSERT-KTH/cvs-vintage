@@ -27,7 +27,7 @@
 // File: FigText.java
 // Classes: FigText
 // Original Author: ics125 spring 1996
-// $Id: FigText.java,v 1.17 1999/01/01 00:16:11 jrobbins Exp $
+// $Id: FigText.java,v 1.18 1999/02/06 03:05:44 jrobbins Exp $
 
 package uci.gef;
 
@@ -388,7 +388,10 @@ public class FigText extends Fig implements KeyListener, MouseListener {
       case JUSTIFY_RIGHT: chunkX = _x + _w  - chunkW; break;
       }
       if (curLine.equals("\n")  || curLine.equals("\r")) chunkY += chunkH;
-      else g.drawString(curLine, chunkX, chunkY);
+      else {
+        if (_underline) g.drawLine(chunkX, chunkY + 1, chunkX + chunkW, chunkY + 1);
+	g.drawString(curLine, chunkX, chunkY);
+      }
     }
   }
 

@@ -28,7 +28,7 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.13 1998/11/03 21:29:55 jrobbins Exp $
+// $Id: ChildGenUML.java,v 1.14 1999/02/06 03:06:29 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -98,6 +98,7 @@ public class ChildGenUML implements ChildGenerator {
       IAssociation asc = (IAssociation) o;
       Vector assocEnds = asc.getConnection();
       if (assocEnds != null) return assocEnds.elements();
+      //needs-more-work: AssociationRole
     }
 
 

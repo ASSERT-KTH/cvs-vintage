@@ -27,7 +27,7 @@
 // File: CrMultipleAgg.java
 // Classes: CrMultipleAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleAgg.java,v 1.9 1998/11/03 21:30:29 jrobbins Exp $
+// $Id: CrMultipleAgg.java,v 1.10 1999/02/06 03:06:36 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -36,6 +36,7 @@ import uci.argo.kernel.*;
 import uci.util.*;
 import uci.uml.Foundation.Core.*;
 import uci.uml.Foundation.Data_Types.*;
+import uci.uml.Behavioral_Elements.Collaborations.*;
 
 /** Well-formedness rule [2] for Associations. See page 27 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
@@ -59,6 +60,8 @@ public class CrMultipleAgg extends CrUML {
     if (!(dm instanceof IAssociation)) return NO_PROBLEM;
     IAssociation asc = (IAssociation) dm;
     Vector conns = asc.getConnection();
+    if (asc instanceof AssociationRole)
+      conns = ((AssociationRole)asc).getAssociationEndRole();
     int aggCount = 0;
     java.util.Enumeration enum = conns.elements();
     while (enum.hasMoreElements()) {

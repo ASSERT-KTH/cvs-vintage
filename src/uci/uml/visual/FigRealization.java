@@ -27,7 +27,7 @@
 // File: FigRealization.java
 // Classes: FigRealization
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigRealization.java,v 1.6 1999/01/01 00:16:38 jrobbins Exp $
+// $Id: FigRealization.java,v 1.7 1999/02/06 03:07:55 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -65,24 +65,9 @@ public class FigRealization extends FigEdgeModelElement {
     _fig.setDashed(true);
   }
 
-  public void dispose() {
-    Realization r = (Realization) getOwner();
-    if (r == null) return;
-    Classifier sup = r.getSupertype();
-    Classifier sub = r.getSubtype();
-    try {
-      sup.removeRealization(r);
-      sub.removeSpecification(r);
-    }
-    catch (PropertyVetoException pve) {
-      System.out.println("could not remove Realization");
-    }
-    super.dispose();
-  }
-
 
   protected boolean canEdit(Fig f) { return false; }
-  
+
   /** This is called aftern any part of the UML ModelElement has
    *  changed. This method automatically updates the name FigText.
    *  Subclasses should override and update other parts. */
@@ -90,8 +75,6 @@ public class FigRealization extends FigEdgeModelElement {
     // do not set _name
     updateStereotypeText();
   }
-
-  
 
 } /* end class FigRealization */
 

@@ -27,7 +27,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.7 1998/11/03 21:32:31 jrobbins Exp $
+// $Id: UMLStateDiagram.java,v 1.8 1999/02/06 03:08:06 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -62,6 +62,9 @@ public class UMLStateDiagram extends UMLDiagram {
   protected static Action _actionState =
   new CmdCreateNode(State.class, "State");
 
+  protected static Action _actionCompositeState =
+  new CmdCreateNode(CompositeState.class, "CompositeState");
+
   // start state, end state, forks, joins, etc.
   protected static Action _actionStartPseudoState =
   new ActionCreatePseudostate(PseudostateKind.INITIAL, "Initial");
@@ -77,6 +80,9 @@ public class UMLStateDiagram extends UMLDiagram {
 
   protected static Action _actionJoinPseudoState =
   new ActionCreatePseudostate(PseudostateKind.JOIN, "Join");
+
+  protected static Action _actionHistoryPseudoState =
+  new ActionCreatePseudostate(PseudostateKind.SHALLOW_HISTORY, "History");
 
 
   protected static Action _actionTransition =
@@ -153,12 +159,16 @@ public class UMLStateDiagram extends UMLDiagram {
     _toolBar.addSeparator();
 
     _toolBar.add(_actionState);
+    _toolBar.add(_actionCompositeState);
     _toolBar.add(_actionTransition);
+    _toolBar.addSeparator();
+
     _toolBar.add(_actionStartPseudoState);
     _toolBar.add(_actionFinalPseudoState);
     _toolBar.add(_actionBranchPseudoState);
     _toolBar.add(_actionForkPseudoState);
     _toolBar.add(_actionJoinPseudoState);
+    _toolBar.add(_actionHistoryPseudoState);
     _toolBar.addSeparator();
 
     _toolBar.add(Actions.InternalTransition);

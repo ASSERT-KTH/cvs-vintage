@@ -27,7 +27,7 @@
 // File: CrNWayAgg.java
 // Classes: CrNWayAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNWayAgg.java,v 1.12 1998/11/03 21:30:30 jrobbins Exp $
+// $Id: CrNWayAgg.java,v 1.13 1999/02/06 03:06:37 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -36,6 +36,7 @@ import uci.argo.kernel.*;
 import uci.util.*;
 import uci.uml.Foundation.Core.*;
 import uci.uml.Foundation.Data_Types.*;
+import uci.uml.Behavioral_Elements.Collaborations.*;
 
 /** Well-formedness rule [3] for Associations. See page 27 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
@@ -60,6 +61,8 @@ public class CrNWayAgg extends CrUML {
     if (!(dm instanceof IAssociation)) return NO_PROBLEM;
     IAssociation asc = (IAssociation) dm;
     Vector conns = asc.getConnection();
+    if (asc instanceof AssociationRole)
+      conns = ((AssociationRole)asc).getAssociationEndRole();
     if (conns == null || conns.size() <= 2) return NO_PROBLEM;
     int aggCount = 0;
     java.util.Enumeration enum = conns.elements();

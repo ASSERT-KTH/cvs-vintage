@@ -27,7 +27,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.9 1998/12/14 17:53:32 jrobbins Exp $
+// $Id: ClassDiagramRenderer.java,v 1.10 1999/02/06 03:07:27 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -84,7 +84,6 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
       Classifier toCls = (Classifier) toEnd.getType();
       FigNode fromFN = (FigNode) lay.presentationFor(fromCls);
       FigNode toFN = (FigNode) lay.presentationFor(toCls);
-      System.out.println("seting sopurce and dest");
       ascFig.setSourcePortFig(fromFN);
       ascFig.setSourceFigNode(fromFN);
       ascFig.setDestPortFig(toFN);

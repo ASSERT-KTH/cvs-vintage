@@ -27,7 +27,7 @@
 // File: FigLink.java
 // Classes: FigLink
 // Original Author: your email address here
-// $Id: FigLink.java,v 1.7 1999/01/01 00:16:34 jrobbins Exp $
+// $Id: FigLink.java,v 1.8 1999/02/06 03:07:50 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -56,20 +56,6 @@ public class FigLink extends FigEdgeModelElement {
 
   // needs-more-work: should edit something...
   protected boolean canEdit(Fig f) { return false; }
-
-  public void dispose() {
-    Link l = (Link) getOwner();
-    if (l == null) return;
-//     try {
-//       // needs-more-work: remove from Instances
-//       l.setLinkEnd(new Vector());
-//     }
-//     catch (PropertyVetoException pve) {
-//       System.out.println("could not remove Link");
-//     }
-    super.dispose();
-  }
-
 
 
 } /* end class FigLink */

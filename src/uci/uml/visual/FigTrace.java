@@ -27,7 +27,7 @@
 // File: FigTrace.java
 // Classes: FigTrace
 // Original Author: your email address here
-// $Id: FigTrace.java,v 1.4 1999/01/01 00:16:39 jrobbins Exp $
+// $Id: FigTrace.java,v 1.5 1999/02/06 03:07:57 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -55,15 +55,6 @@ public class FigTrace extends FigEdgeLine {
     this();
     setOwner(edge);
   }
-
-  public void dispose() {
-    if (!(getOwner() instanceof Element)) return;
-    Element elmt = (Element) getOwner();
-    Project p = ProjectBrowser.TheInstance.getProject();
-    p.moveToTrash(elmt);
-    super.dispose();
-  }
-
 
   static final long serialVersionUID = -2094146244090391544L;
 

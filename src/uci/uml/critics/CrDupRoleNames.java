@@ -27,7 +27,7 @@
 // File: CrDupRoleNames.java
 // Classes: CrDupRoleNames
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupRoleNames.java,v 1.9 1998/11/03 21:30:05 jrobbins Exp $
+// $Id: CrDupRoleNames.java,v 1.10 1999/02/06 03:06:33 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -36,6 +36,7 @@ import uci.argo.kernel.*;
 import uci.util.*;
 import uci.uml.Foundation.Core.*;
 import uci.uml.Foundation.Data_Types.*;
+import uci.uml.Behavioral_Elements.Collaborations.*;
 
 /** Well-formedness rule [1] for Associations. See page 27 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
@@ -58,6 +59,8 @@ public class CrDupRoleNames extends CrUML {
     if (!(dm instanceof IAssociation)) return NO_PROBLEM;
     IAssociation asc = (IAssociation) dm;
     Vector conns = asc.getConnection();
+    if (dm instanceof AssociationRole)
+      conns = ((AssociationRole)asc).getAssociationEndRole();
     Vector namesSeen = new Vector();
     java.util.Enumeration enum = conns.elements();
     while (enum.hasMoreElements()) {

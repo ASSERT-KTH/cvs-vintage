@@ -27,7 +27,7 @@
 // File: FigNote.java
 // Classes: FigNote
 // Original Author: your email address here
-// $Id: FigNote.java,v 1.7 1999/01/01 00:16:36 jrobbins Exp $
+// $Id: FigNote.java,v 1.8 1999/02/06 03:07:53 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -110,16 +110,6 @@ public class FigNote extends FigNodeModelElement {
     firePropChange("bounds", oldBounds, getBounds());
     updateEdges();
   }
-
-  public void dispose() {
-    if (!(getOwner() instanceof Element)) return;
-    Element elmt = (Element) getOwner();
-    Project p = ProjectBrowser.TheInstance.getProject();
-    p.moveToTrash(elmt);
-    super.dispose();
-  }
-
-
 
 
 } /* end class FigNote */

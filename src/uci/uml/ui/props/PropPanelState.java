@@ -27,7 +27,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelState.java,v 1.1 1998/10/20 00:30:45 jrobbins Exp $
+// $Id: PropPanelState.java,v 1.2 1999/02/06 03:07:22 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -122,7 +122,7 @@ implements DocumentListener, ItemListener {
 
     SpacerPanel spacer1 = new SpacerPanel();
     c.gridx = 0;
-    c.gridy = 5;
+    c.gridy = 11;
     c.weighty = 1.0;
     gb.setConstraints(spacer1, c);
     add(spacer1);
@@ -142,7 +142,7 @@ implements DocumentListener, ItemListener {
     add(_internalLabel);
 
     c.gridy = 1;
-    c.gridheight = 5;
+    c.gridheight = GridBagConstraints.REMAINDER;
     c.weightx = 0.0;
     c.weighty = 0.0;
     JScrollPane scroll =

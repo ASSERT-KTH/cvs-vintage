@@ -27,7 +27,7 @@
 // File: FigGeneralization.java
 // Classes: FigGeneralization
 // Original Author: abonner@ics.uci.edu
-// $Id: FigGeneralization.java,v 1.12 1999/01/01 00:16:31 jrobbins Exp $
+// $Id: FigGeneralization.java,v 1.13 1999/02/06 03:07:43 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -57,21 +57,6 @@ public class FigGeneralization extends FigEdgeModelElement {
   public FigGeneralization(Object edge) {
     this();
     setOwner(edge);
-  }
-
-  public void dispose() {
-    Generalization g = (Generalization) getOwner();
-    if (g == null) return;
-    GeneralizableElement sup = g.getSupertype();
-    GeneralizableElement sub = g.getSubtype();
-    try {
-      sup.removeSpecialization(g);
-      sub.removeGeneralization(g);
-    }
-    catch (PropertyVetoException pve) {
-      System.out.println("could not remove Generalization");
-    }
-    super.dispose();
   }
 
   protected boolean canEdit(Fig f) { return false; }

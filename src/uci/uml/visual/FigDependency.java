@@ -27,7 +27,7 @@
 // File: FigDependency.java
 // Classes: FigDependency
 // Original Author: ics 125b course, spring 1998
-// $Id: FigDependency.java,v 1.8 1999/01/01 00:16:29 jrobbins Exp $
+// $Id: FigDependency.java,v 1.9 1999/02/06 03:07:38 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -66,20 +66,6 @@ public class FigDependency extends FigEdgeModelElement {
   }
 
   protected boolean canEdit(Fig f) { return false; }
-
-
-  public void dispose() {
-    if (!(getOwner() instanceof Dependency)) return;
-    Dependency dep = (Dependency) getOwner();
-    try {
-      dep.setSupplier(null);
-      dep.setClient(null);
-    }
-    catch (PropertyVetoException pve) {
-      System.out.println("could not remove Dependency");
-    }
-    super.dispose();
-  }
 
   ////////////////////////////////////////////////////////////////
   // event handlers

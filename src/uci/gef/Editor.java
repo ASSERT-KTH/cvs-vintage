@@ -27,7 +27,7 @@
 // File: Editor.java
 // Classes: Editor
 // Original Author: ics125 spring 1996
-// $Id: Editor.java,v 1.21 1999/01/01 00:16:06 jrobbins Exp $
+// $Id: Editor.java,v 1.22 1999/02/06 03:05:38 jrobbins Exp $
 
 package uci.gef;
 
@@ -277,7 +277,7 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
   }
 
   ////////////////////////////////////////////////////////////////
-  // methods related to adding, removing, and accessing DiagramElemnts
+  // methods related to adding, removing, and accessing Figs
   // shown in the editor
 
   /** Returns a collection of all Figs in the layer currently being edited. */

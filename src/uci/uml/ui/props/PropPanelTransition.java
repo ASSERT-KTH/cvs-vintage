@@ -27,7 +27,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.1 1998/10/20 00:30:45 jrobbins Exp $
+// $Id: PropPanelTransition.java,v 1.2 1999/02/06 03:07:23 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -55,8 +55,7 @@ import uci.uml.ui.*;
  *  the user to edit the properties of the selected UML model
  *  element. */
 
-public class PropPanelTransition extends PropPanel
-implements DocumentListener, ItemListener {
+public class PropPanelTransition extends PropPanelTwoEnds {
 
   ////////////////////////////////////////////////////////////////
   // constants
@@ -135,6 +134,29 @@ implements DocumentListener, ItemListener {
     _effectField.setText(GeneratorDisplay.Generate(tt.getEffect()));
   }
 
+  public String getSourceLabel() {
+    if (!(_target instanceof Transition)) return "non Transition";
+    return "Source:";
+  }
+  public String getSourceValue() {
+    if (!(_target instanceof Transition)) return "non Transition";
+    Transition g = (Transition) _target;
+    StateVertex src = g.getSource();
+    if (src == null) return "null";
+    return src.getName().getBody();
+  }
+  public String getDestLabel() {
+    if (!(_target instanceof Transition)) return "non Transition";
+    return "Target:";
+  }
+  public String getDestValue() {
+    if (!(_target instanceof Transition)) return "non Transition";
+    Transition g = (Transition) _target;
+    StateVertex tar = g.getTarget();
+    if (tar == null) return "null";
+    return tar.getName().getBody();
+  }
+  
 
   public void setTargetTrigger() {
     Transition t = (Transition) _target;

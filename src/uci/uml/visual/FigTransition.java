@@ -27,7 +27,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.8 1999/01/01 00:16:39 jrobbins Exp $
+// $Id: FigTransition.java,v 1.9 1999/02/06 03:07:58 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -76,7 +76,7 @@ public class FigTransition extends FigEdgeModelElement {
       null : newTrans.getEffect();
 
     Transition t = (Transition) getOwner();
-
+    if (t == null) return;
     try {
       t.setName(newName);
       t.setTrigger(newTrigger);
@@ -98,24 +98,6 @@ public class FigTransition extends FigEdgeModelElement {
     String nameStr = GeneratorDisplay.Generate(me);
     _name.setText(nameStr);
   }
-
-  public void dispose() {
-    //System.out.println("disposing FigTransition");
-    if (!(getOwner() instanceof Element)) return;
-    Transition tr = (Transition) getOwner();
-    if (tr == null) return;
-    try {
-      StateMachine sm = tr.getStateMachine();
-      if (sm != null) sm.removeTransition(tr);
-      tr.setStateMachine(null);
-      tr.setSource(null);
-      tr.setTarget(null);
-    }
-    catch (PropertyVetoException pve) { }
-    super.dispose();
-  }
-
-
 
 } /* end class FigTransition */
 

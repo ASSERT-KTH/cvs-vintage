@@ -27,7 +27,7 @@
 // File: FigInstance.java
 // Classes: FigInstance
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigInstance.java,v 1.8 1999/01/01 00:16:32 jrobbins Exp $
+// $Id: FigInstance.java,v 1.9 1999/02/06 03:07:46 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -91,6 +91,8 @@ public class FigInstance extends FigNodeModelElement {
     this();
     setOwner(node);
   }
+
+  public String placeString() { return "new Instance"; }
 
   public Object clone() {
     FigInstance figClone = (FigInstance) super.clone();
