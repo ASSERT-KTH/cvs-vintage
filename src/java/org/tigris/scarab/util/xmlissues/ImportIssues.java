@@ -81,9 +81,8 @@ import org.tigris.scarab.om.Module;
  * This is a bean'ish object which allows one to set values for importing 
  * issues, and then run the actual import. 
  *
- * Amenable to the ant task wrapper {@link AntTaskWrapper AntTaskWrapper} or
- * you can pass an explicit file for explicit import if turbine is already 
- * up and running.
+ * Amenable to the ant task wrapper or you can pass an explicit file for 
+ * explicit import if turbine is already up and running.
  * 
  * <p>The way the ant task wrapper works is simple: call all the appropriate
  * set methods to define the properties. Then you will need to call the init()
@@ -91,7 +90,7 @@ import org.tigris.scarab.om.Module;
  * initialized, there is no need to call the init() method.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.13 2003/04/02 17:17:24 dlr Exp $
+ * @version $Id: ImportIssues.java,v 1.14 2003/04/03 18:02:29 jon Exp $
  */
 public class ImportIssues
 {
@@ -259,7 +258,7 @@ public class ImportIssues
      * Run an import.
      *
      * Assumes we're up and running inside of turbine.  Awkwardly duplicates 
-     * {@link import(File) import} but duplication is so we can do the reget of
+     * {@link #runImport(File) import} but duplication is so we can do the reget of
      * the input stream; FileInput "manages" backing up the Upload for us on the
      * second get of the input stream (It creates new ByteArrayInputStream 
      * w/ the src being a byte array of the file its kept in memory or in 
@@ -281,7 +280,7 @@ public class ImportIssues
      * Run an import.
      *
      * Assumes we're up and running inside of turbine.  Awkwardly duplicates 
-     * {@link import(File) import} but duplication is so we can do the reget of
+     * {@link #runImport(File) import} but duplication is so we can do the reget of
      * the input stream; FileInput "manages" backing up the Upload for us on the
      * second get of the input stream (It creates new ByteArrayInputStream 
      * w/ the src being a byte array of the file its kept in memory or in 
