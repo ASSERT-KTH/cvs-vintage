@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.51 2001/12/07 22:30:55 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.52 2001/12/10 01:01:10 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -183,10 +183,14 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         IssueType issueType = getIssueType(data);
         IssueType templateType = 
             scarabR.getIssueType(issueType.getTemplateId().toString());
+        Attribute attribute = scarabR.getAttribute();
  
-        if (intake.isAllValid())
+        if (attribute.getAttributeId() == null)
+        { 
+            data.setMessage("Please select an attrubute.");
+        }
+        else
         {        
-            Attribute attribute = scarabR.getAttribute();
             AttributeGroup attGroup = scarabR.getAttributeGroup();
 
             // add module-attribute groupings
@@ -587,6 +591,9 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                 rmoGroup.setProperties(rmo);
                 rmo.save();
             }
+            String nextTemplate = data.getParameters()
+                .getString(ScarabConstants.NEXT_TEMPLATE);
+            setTarget(data, nextTemplate);            
         } 
     }
 

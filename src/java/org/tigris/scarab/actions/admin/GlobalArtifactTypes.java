@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.4 2001/10/19 01:46:27 jon Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.5 2001/12/10 01:01:09 elicia Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -77,10 +77,12 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
+System.out.println("hi");
         List issueTypes = IssueTypePeer.getAllIssueTypes(true);
 
         if ( intake.isAllValid() )
         {
+System.out.println("val8d");
             for (int i=0; i<issueTypes.size(); i++)
             {
                 IssueType issueType = (IssueType)issueTypes.get(i);
@@ -116,15 +118,6 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
         setTarget(data, nextTemplate);
     }
     
-    /**
-     * This manages clicking the Add Attribute button.
-     * FIXME: this should be done with a form variable
-     */
-    public void doGotocreatepage( RunData data, TemplateContext context ) 
-        throws Exception
-    {
-        setTarget(data, "admin,ArtifactTypeCreate.vm");            
-    }
 
     /**
      * This manages clicking the cancel button

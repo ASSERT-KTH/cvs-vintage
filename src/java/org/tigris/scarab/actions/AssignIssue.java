@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.19 2001/12/06 00:35:42 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.20 2001/12/10 01:01:09 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -249,7 +249,7 @@ public class AssignIssue extends RequireLoginFirstAction
         Group group = intake.get("Attachment", 
                                      attachment.getQueryKey(), false);
         Field note = group.get("DataAsString");
-        //note.setRequired(true);
+        note.setRequired(true);
 
         // new assignee list (may contain previously assigned users)
         String[] newUsernames = 
