@@ -2,49 +2,56 @@
         "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
 <html>
 <head>
-	<title>Scarab version numbering</title>
+<title>Scarab versioning strategy</title>
 </head>
+
 <body>
 
-	<h2>Scarab version numbering</h2>
+<h2>Scarab version numbering</h2>
 
-<p>
-Previously scarab has been using version numbering like 1.0b1, 1.0b12, etc.,
-to mean a progression towards a 1.0 release.  We are going to switch to a 
-MAJOR.MINOR.PATCH numbering scheme which is followed by the Subversion tigris 
-project, and which is detailed in the 
-<a href="http://apr.apache.org/versioning.html">
-Apache Portable Runtime project</a>.  The APR document does not cover
-changes to data storage and is primarily concerned with API stability.
-</p>
+<p>Originally, Scarab used version labeling like 1.0b1, 1.0b12, etc.,
+to mean a progression towards a 1.0 release.  We've since changed to
+the MAJOR.MINOR.PATCH numbering scheme (also followed by the <a
+href="http://subversion.tigris.org/">Subversion</a> project), which is
+<a href="http://apr.apache.org/versioning.html">detailed</a> by the
+Apache Portable Runtime (APR) project.  The APR document does not
+cover changes to data storage, and is primarily concerned with API
+stability.  Both labeling schemes are leading towards the same goal,
+the release of Scarab 1.0 final.</p>
 
-<p>
-As the APR document leaves the 0.x.y versioning somewhat undefined, some 
-clarifications are in order. 
+<p>As the APR document leaves the 0.x.y versioning somewhat undefined
+(being past that stage), some clarifications are in order.
+
 <ol>
-<li>There is no change in policy between the
-1.0b15 release and 0.15.1.  The old informal policy that the API can change but
-users of the application via the web interface should be able to update the
-scarab version and have some form of data migration path via an 
-sql upgrade script, ant task, or in worst case manual instructions is still
-in place.  Though it must be kept in mind that this is an open source project
-and time constraints can lead to situations like where Oracle 8i support was
-broken abruptly.  There are no guarantees.</li>
-<li>Any release following a change in database schema or other data 
-storage requires an increase in the MINOR version number.</li>
+  <li>There is no change in policy between the 1.0b15 release and
+    0.15.1.  The old informal policy that the API can change but users
+    of the application (via the web interface) should be able to
+    update their Scarab version and have some form of data migration
+    path via an SQL upgrade script, Ant task, or (in the worst case)
+    manual instructions, is still in place.  Please keep in mind that
+    this is an open source project, and time constraints can lead to
+    situations like where Oracle 8i support was broken abruptly. There
+    are no guarantees.</li>
+
+  <li>Any release following a change in database schema or other data 
+    storage requires an increase in the MINOR version number.</li>
 </ol>
+
 </p>
 
-<p>
-This change of versioning is partly to avoid a situation where we are have
-version numbers like 1.0b56.  Scarab's APIs still have a bit of work to go before we will want to release a 1.0 version of the project and a clearly defined
-API is the biggest obstacle remaining for such a release.  This is going to 
-become a priority of the CollabNet developers on the project fairly soon, i.e. June 2003, but could take some time to complete.
-</p>
+<p>This change of versioning is partly to avoid a situation where we
+are have version numbers like 1.0b56.  Scarab's APIs are evolving at a
+more rapid rate than is desirable for final release of a version 1.0.
+A clearly defined API and a comprehensive functional specification are
+the biggest obstacles between Scarab and such a release.  These tasks
+are going to become a priority of the CollabNet developers on the
+project fairly soon, i.e. June 2003, but could take some time to
+complete.</p>
 
-<p>It is anticipated that this change in versioning will lead to many more 
-patch level releases that will fix bugs, so it should be beneficial to users.
-</p>
+<p>It is anticipated that this change in versioning will lead to many
+more patch level releases that will fix bugs, so it should be
+beneficial to users.</p>
 
 </body>
+
 </html>
