@@ -3,13 +3,16 @@
 #set ( $currentIssue = $scarabR.getIssue($currentIssueId) )
 #if ($currentIssue)
     #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
+#set ($user = $scarabR.User)
 
 #if ($data.Message)
     <font color="red">$data.Message</font>
 #end
 
+
 <form name="IssueForm" method="post" action="$action" >
 <input type="hidden" name="id" value="$currentIssue.IssueId">
+<input type="hidden" name="user_id" value="$user.UserId">
 #set($attVal =  $attrValues.get("DESCRIPTION"))
 #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
  
@@ -44,7 +47,6 @@
         #set ( $field = "Value" )  
   #end
 
-#if ($attVal.Value )
          <tr>
           <td width="120" class="a">
              <strong>$attVal.Attribute.Name:</strong>
@@ -72,7 +74,6 @@
           </td>
          </tr>
   #end
-#end
 
          <tr>
            <td colspan="2">Please add a comment to explain your change(s):
@@ -340,12 +341,15 @@
               $activity.Transaction.CreatedDate
             #end
           </td>
-      #if ($activity.Attribute.AttributeType.Name == "string" )
+      #if ( $activity.Attribute.AttributeType.Name.equals("long-string") || $activity.Attribute.AttributeType.Name.equals("string") )
           <td width="120">changed $activity.Attribute.Name</td>
       #else
-          <td width="120">changed $activity.Attribute.Name from $activity.OldAttributeOption.Name to $activity.NewAttributeOption.Name</td>
+          <td width="120">changed $activity.Attribute.Name 
+          #if (!$activity.OldValue.equals(""))
+            from $activity.OldAttributeOption.Name
+          #end
+            to $activity.NewAttributeOption.Name</td>
       #end
-
           <td>$activity.Attachment.DataAsString</td>
          </tr>
        #end
