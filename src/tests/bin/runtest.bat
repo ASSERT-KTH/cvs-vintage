@@ -1,5 +1,5 @@
 @echo off
-rem $Id: runtest.bat,v 1.2 1999/10/15 22:16:50 costin Exp $
+rem $Id: runtest.bat,v 1.3 1999/10/15 22:55:48 mode Exp $
 rem Startup batch file for servlet runner.
 
 rem This batch file written and tested under Windows NT
@@ -8,13 +8,28 @@ rem Improvements to this file are welcome
 set host=localhost
 set port=8080
 set test=testlist.txt
+set topDir=..\..\..
+set toolsDir=%topDir%\jakarta-tools
+set miscJars=%toolsDir%\projectx-tr2.jar
+set sysJars=%JAVA_HOME%\lib\tools.jar
 
 set cp=%CLASSPATH%
 
-set CLASSPATH=classes;lib\moo.jar
+set CLASSPATH=classes;lib\moo.jar;%miscJars%;%sysJars%
 
 set TOMCAT_HOME=..
-%TOMCAT_HOME%\tomcatEnv.bat
+set TOM_CLASSPATH=%TOMCAT_HOME%\webserver.jar;%TOM_CLASSPATH%
+set TOM_CLASSPATH=%TOMCAT_HOME%\servlet.jar;%TOM_CLASSPATH%
+set TOM_CLASSPATH=%TOMCAT_HOME%\jasper.jar;%TOM_CLASSPATH%
+set TOM_CLASSPATH=%TOMCAT_HOME%\xml.jar;%TOM_CLASSPATH%
+set TOM_CLASSPATH=%TOMCAT_HOME%\webpages\WEB-INF\classes\jsp\beans;%TOM_CLASSPATH%
+set TOM_CLASSPATH=%TOMCAT_HOME%\classes;%TOM_CLASSPATH%
+
+set TOM_CLASSPATH=%JAVA_HOME%\lib\tools.jar;%TOM_CLASSPATH%
+
+
+set TOM_PREV_CLASSPATH=%CLASSPATH%
+set CLASSPATH=%TOM_CLASSPATH%;%CLASSPATH%
 
 if "%cp%" == "" goto next
 
