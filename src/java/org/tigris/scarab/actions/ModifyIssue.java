@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.76 2002/02/14 22:27:08 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.77 2002/02/21 19:59:46 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -189,8 +189,8 @@ public class ModifyIssue extends RequireLoginFirstAction
             attachment.save();
 
             // Set the attribute values entered 
-            HashMap avMap = issue.getAllAttributeValuesMap();
-            Iterator iter2 = avMap.keySet().iterator();
+            SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
+            Iterator iter2 = avMap.iterator();
 
             // Save transaction record
             Transaction transaction = new Transaction();
@@ -237,7 +237,8 @@ public class ModifyIssue extends RequireLoginFirstAction
                         oldValue = aval.getValue();
                     }
 
-                    if (!newValue.equals("") && !oldValue.equals(newValue))
+                    if (!newValue.equals("") && 
+                        (oldValue == null  || !oldValue.equals(newValue)))
                     {
                         aval.startTransaction(transaction);
                         group.setProperties(aval);
@@ -247,15 +248,12 @@ public class ModifyIssue extends RequireLoginFirstAction
             }
             intake.removeAll();
             sendEmail(transaction, issue, DEFAULT_MSG, context, data);
+            data.setMessage("Your changes have been saved.");
         } 
         else
         {
             data.setMessage(ERROR_MESSAGE);
         }
-
-        String template = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE);
-        setTarget(data, template);            
     }
 
     
