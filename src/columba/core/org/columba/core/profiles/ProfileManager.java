@@ -81,13 +81,14 @@ public class ProfileManager {
 		} else {
 			location = new File(System.getProperty("user.home"), ".columba");
 		}
-		
+
 		// create directory, if it doesn't already exist
 		DiskIO.ensureDirectory(location);
 
 		profilesConfig = new File(location, "profiles.xml");
 
 	}
+
 	/**
 	 * Get instance of class
 	 * 
@@ -109,16 +110,24 @@ public class ProfileManager {
 	 * @return return profile if available. Otherwise, return null
 	 */
 	public Profile getProfileForName(String name) {
-		for (int i = 0; i < profiles.count(); i++) {
 
-			XmlElement profile = profiles.getElement(i);
-			String n = profile.getAttribute("name");
-			if (name.equals(n)) {
-				location = new File(profile.getAttribute("location"));
-				return new Profile(n, location);
-			}
-		}
-		return null;
+		XmlElement profile = getXmlElementForName(name);
+		String n = profile.getAttribute("name");
+
+		location = new File(profile.getAttribute("location"));
+		return new Profile(n, location);
+
+	}
+
+	/**
+	 * Remove profile xml-element from "profiles.xml"
+	 * 
+	 * @param name		name of profile
+	 */
+	protected void removeProfileXmlElement(String name) {
+		XmlElement child = getXmlElementForName(name);
+		child.removeFromParent();
+
 	}
 
 	protected XmlElement getXmlElementForName(String name) {
@@ -230,19 +239,20 @@ public class ProfileManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Check if user should always be prompted for a profile on startup.
 	 * 
-	 * @return	true, if user should be always asked. False, otherwise.
+	 * @return true, if user should be always asked. False, otherwise.
 	 */
 	public boolean isAlwaysAsk() {
 		String s = profiles.getAttribute("dont_ask");
 		if (s == null)
 			s = "false";
-		
-		if ( s.equals("true")) return false;
-		
+
+		if (s.equals("true"))
+			return false;
+
 		return true;
 	}
 
@@ -263,12 +273,12 @@ public class ProfileManager {
 			String selected = profiles.getAttribute("selected");
 			Profile p = getProfileForName(selected);
 
-			if ( p == null) {
+			if (p == null) {
 				// fall back to default profile
-			
+
 				p = new Profile("Default", location);
 			}
-			
+
 			return p;
 		}
 
@@ -370,10 +380,48 @@ public class ProfileManager {
 		} catch (MalformedURLException mue) {
 		}
 	}
+
 	/**
 	 * @return Returns the currentProfile.
 	 */
 	public Profile getCurrentProfile() {
 		return currentProfile;
+	}
+
+	/**
+	 * Remove all Columba-config files and skip everything else
+	 * <p>
+	 * This way a user could use his Windows directory as config-folder and
+	 * wouldn't risk to loose files when deleting his profile.
+	 * 
+	 * @param profile
+	 *            name of profile
+	 */
+	public void removeProfile(String profile) {
+		Profile p = getProfileForName(profile);
+
+		String[] folders = new String[] { "mail", "addressbook", "chat", "log" };
+		String[] files = new String[] { "options.xml", "external_tools.xml" };
+
+		File location = p.getLocation();
+
+		// delete all directories
+		for (int i = 0; i < folders.length; i++) {
+			//	delete directory recursivly
+			DiskIO.deleteDirectory(new File(location, folders[i]));
+		}
+
+		// delete all files
+		for (int i = 0; i < files.length; i++) {
+			new File(files[i]).delete();
+		}
+
+		// if config-folder is really empty
+		// -> delete folder
+		if (location.listFiles().length == 0)
+			location.delete();
+		
+		// remove profile xml-element
+		removeProfileXmlElement(profile);
 	}
 }

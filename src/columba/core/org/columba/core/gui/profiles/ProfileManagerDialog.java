@@ -18,14 +18,37 @@
 
 package org.columba.core.gui.profiles;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -35,7 +58,6 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DoubleClickListener;
 import org.columba.core.help.HelpManager;
-import org.columba.core.io.DiskIO;
 import org.columba.core.profiles.Profile;
 import org.columba.core.profiles.ProfileManager;
 import org.columba.core.util.GlobalResourceLoader;
@@ -340,9 +362,9 @@ implements ActionListener, ListSelectionListener {
                         return;
                     }
                     
-                    File location = p.getLocation();
-                    // delete directory recursivly
-                    DiskIO.deleteDirectory(location);
+                    ProfileManager.getInstance().removeProfile(selection);
+                    model.removeElement(selection);
+                    
                 }
             }
         } else if (action.equals("IMPORT")) {
