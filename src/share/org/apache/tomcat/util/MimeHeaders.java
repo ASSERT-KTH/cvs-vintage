@@ -89,6 +89,25 @@ import java.text.*;
  * of string values).
  */
 
+/* Headers are first parsed and stored in the order they are
+   received. This is based on the fact that most servlets will not
+   directly access all headers, and most headers are single-valued.
+   ( the alternative - a hash or similar data structure - will add
+   an overhead that is not needed in most cases )
+   
+   Apache seems to be using a similar method for storing and manipulating
+   headers.
+       
+   Future enhancements:
+   - hash the headers the first time a header is requested ( i.e. if the
+   servlet needs direct access to headers).
+   - scan "common" values ( length, cookies, etc ) during the parse
+   ( addHeader hook )
+   
+*/
+    
+
+
 /**
  *  Memory-efficient repository for Mime Headers. When the object is recycled, it
  *  will keep the allocated headers[] and all the MimeHeaderField - no GC is generated.
@@ -170,6 +189,24 @@ public class MimeHeaders {
 	return n >= 0 && n < count ? headers[n].getValue() : null;
     }
 
+    /** Find the index of a header with the given name.
+     */
+    public int findHeader( String name, int starting ) {
+	// We can use a hash - but it's not clear how much
+	// benefit you can get - there is an  overhead 
+	// and the number of headers is small (4-5 ?)
+	// Another problem is that we'll pay the overhead
+	// of constructing the hashtable
+
+	// A custom search tree may be better
+        for (int i = starting; i < count; i++) {
+	    if (headers[i].getName().equalsIgnoreCase(name)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
     // -------------------- --------------------
 
     /**
