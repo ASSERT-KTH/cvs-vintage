@@ -41,7 +41,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -243,14 +243,6 @@ public class MessageDrivenContainer
          // Call default start
          super.startService();
 
-         // Start container invoker
-         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext();)
-         {
-            String invokerBinding = (String) it.next();
-            EJBProxyFactory ci = (EJBProxyFactory) proxyFactories.get(invokerBinding);
-            ci.start();
-         }
-
          // Start the instance pool
          instancePool.start();
 
@@ -260,6 +252,14 @@ public class MessageDrivenContainer
          {
             in.start();
             in = in.getNext();
+         }
+
+         // Start container invoker
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext();)
+         {
+            String invokerBinding = (String) it.next();
+            EJBProxyFactory ci = (EJBProxyFactory) proxyFactories.get(invokerBinding);
+            ci.start();
          }
       }
       finally
