@@ -63,8 +63,10 @@ package org.apache.tomcat.request;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
+import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.*;
+import java.io.*;
 
 // XXX maybe it's a good idea to use a different model for adding secuirty
 // constraints - we use Container now because we want to generalize all
@@ -343,6 +345,26 @@ class BasicAuthHandler extends Handler {
 	res.setStatus( 401 );
 	res.setHeader( "WWW-Authenticate",
 		       "Basic realm=\"" + realm + "\"");
+        // return some content to prevent error 500
+	// and notify the user they are not authorized if BasicAuth fails
+        res.setContentType("text/html");        // ISO-8859-1 default  
+
+        StringBuffer buf = new StringBuffer();
+ 
+        buf.append("<html><head><title>Not Authorized</title></head>");
+        buf.append("<body>Not Authorized</body></html>");
+        String body = buf.toString(); 
+        res.setContentLength(buf.length());
+ 
+        if( res.isUsingStream() ) {
+            ServletOutputStream out = res.getOutputStream(); 
+            out.print(body);
+            out.flush();   
+        } else {
+            PrintWriter out = res.getWriter();
+            out.print(body);
+            out.flush();
+        }
     }
 }
 
