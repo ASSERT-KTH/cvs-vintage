@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/Attic/DefaultRealmConnector.java,v 1.1 1999/10/17 00:34:46 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/17 00:34:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/Attic/DefaultRealmConnector.java,v 1.2 1999/10/30 01:41:36 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/30 01:41:36 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ import org.apache.tomcat.core.Context;
  * no container-managed authentication or access control are desired.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 1999/10/17 00:34:46 $
+ * @version $Revision: 1.2 $ $Date: 1999/10/30 01:41:36 $
  */
 
 public final class DefaultRealmConnector
@@ -108,6 +108,28 @@ public final class DefaultRealmConnector
      *  has been called, or after <code>stop()</code> has been called
      */
     public Principal authenticate(String username, String credentials) {
+
+	if (context == null) {
+	    // XXX Internationalization
+	    throw new IllegalStateException("DefaultRealmConnector:  " +
+					    "Not started");
+	}
+	return (null);
+
+    }
+
+
+    /**
+     * Returns the Principal associated with the specified username and
+     * credentials, if there is one, or <code>null</code> otherwise.
+     *
+     * @param username Username of the Principal to look up
+     * @param credentials Credentials to use in authenticating this username
+     *
+     * @exception IllegalStateException if called before <code>start()</code>
+     *  has been called, or after <code>stop()</code> has been called
+     */
+    public Principal authenticate(String username, byte[] credentials) {
 
 	if (context == null) {
 	    // XXX Internationalization
