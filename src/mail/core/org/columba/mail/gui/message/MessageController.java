@@ -23,9 +23,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.AttributeSet;
@@ -37,6 +40,7 @@ import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.Config;
+import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -64,7 +68,9 @@ public class MessageController
 		MessageSelectionListener,
 		HyperlinkListener,
 		MouseListener,
-		CharsetListener {
+		CharsetListener,
+		FocusOwner,
+		CaretListener {
 
 	private Folder folder;
 	private Object uid;
@@ -106,12 +112,14 @@ public class MessageController
 
 		Font mainFont = Config.getOptionsConfig().getGuiItem().getMainFont();
 
-		
+		MainInterface.focusManager.registerComponent(this);
+
+		view.bodyTextViewer.addCaretListener(this);
 
 	}
 
 	public void messageSelectionChanged(Object[] newUidList) {
-		
+
 	}
 
 	public MessageActionListener getActionListener() {
@@ -119,7 +127,6 @@ public class MessageController
 	}
 
 	public MessageView getView() {
-
 
 		return view;
 	}
@@ -220,10 +227,8 @@ public class MessageController
 
 	}
 
-	
-
 	public void hyperlinkUpdate(HyperlinkEvent e) {
-		
+
 	}
 
 	public void mousePressed(MouseEvent event) {
@@ -245,10 +250,10 @@ public class MessageController
 	}
 
 	public void mouseClicked(MouseEvent event) {
-		
+
 		if (!SwingUtilities.isLeftMouseButton(event))
 			return;
-		
+
 		URL url = extractURL(event);
 		if (url == null)
 			return;
@@ -257,10 +262,8 @@ public class MessageController
 			c.compose(url.getFile());
 		else
 			c.open(url);
-			
-	}
 
-	
+	}
 
 	protected URL extractURL(MouseEvent event) {
 		JEditorPane pane = (JEditorPane) event.getSource();
@@ -269,7 +272,7 @@ public class MessageController
 		Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
 		AttributeSet a = e.getAttributes();
 		AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
-		
+
 		if (anchor == null)
 			return null;
 
@@ -284,21 +287,19 @@ public class MessageController
 
 	protected void processPopup(MouseEvent event) {
 		URL url = extractURL(event);
-		if (url == null)
-		{
+		if (url == null) {
 			// no URL, this means opening the default context menu
 			// with actions like reply/forward/delete/etc.
-			
+
 			// TODO: open table-view contextmenu here
 			// -> problem: actions listen for table-selection events
 			// ->          not message selection
-			
+
 			/*
 			getPopupMenu().show((JEditorPane)event.getSource(), event.getX(), event.getY());
 			*/
 			return;
 		}
-			
 
 		// open context-menu with open/open with actions
 		URLController c = new URLController();
@@ -329,4 +330,138 @@ public class MessageController
 					.getTableSelection()));
 	}
 
+	/******************* FocusOwner interface ***********************/
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#copy()
+	 */
+	public void copy() {
+		view.bodyTextViewer.copy();
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#cut()
+	 */
+	public void cut() {
+		// not supported
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#delete()
+	 */
+	public void delete() {
+		// not supported
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+	 */
+	public JComponent getComponent() {
+		return view.bodyTextViewer;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+	 */
+	public boolean isCopyActionEnabled() {
+		if (view.bodyTextViewer.getSelectedText() == null)
+			return false;
+
+		if (view.bodyTextViewer.getSelectedText().length() > 0)
+			return true;
+
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+	 */
+	public boolean isCutActionEnabled() {
+		// action not support
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+	 */
+	public boolean isDeleteActionEnabled() {
+		// action not supported
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+	 */
+	public boolean isPasteActionEnabled() {
+		// action not supported
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+	 */
+	public boolean isRedoActionEnabled() {
+		// action not supported
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+	 */
+	public boolean isSelectAllActionEnabled() {
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+	 */
+	public boolean isUndoActionEnabled() {
+		// action not supported
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#paste()
+	 */
+	public void paste() {
+		// action not supported
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#redo()
+	 */
+	public void redo() {
+		// action not supported
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+	 */
+	public void selectAll() {
+		view.bodyTextViewer.selectAll();
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#undo()
+	 */
+	public void undo() {
+		// TODO Auto-generated method stub
+
+	}
+
+	/************************** CaretUpdateListener interface *****************/
+
+	/* (non-Javadoc)
+	 * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
+	 */
+	public void caretUpdate(CaretEvent arg0) {
+		MainInterface.focusManager.updateActions();
+
+	}
 }

@@ -92,6 +92,7 @@ public class FocusManager implements FocusListener {
 
 		c.getComponent().addFocusListener(this);
 	}
+	
 
 	/**
 	 * Get current focus owner
