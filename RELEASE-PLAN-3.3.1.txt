@@ -22,19 +22,15 @@ Tomcat 3.3.1 Beta 1 Release:
 
 	Issue  Description 
         1      Must be able to compile and run under JDK 1.1.8
+               FIXED
         2      Address Cactus failures running with Tomcat 3.3
+               Tried but not 100% successful yet.
+
+
+        Bugs to investigate & fix or resolve/leave as LATER:
+        6234   checkError method of Servlet's PrintWriter is unreliable
 
  
-        Bugs to investigate & fix or resolve/leave as LATER:
-        4600  Tomcat 3.3 redirect behavior differs from Tomcat 3.2
-              (try to make 301 or 302 configurable)
-
-        4416  URI En/Decoding not working
-              (investigate and fix if feasible)
-
-        5958  Wrong mod_jk.conf for path pattern
-
-
         Addressed
         1657  hyphen character '-' in tag name results in "Invalid expression"
               (port fix from Tomcat 4.x Jasper)
@@ -46,6 +42,14 @@ Tomcat 3.3.1 Beta 1 Release:
 
         4382  Starting up twice prevents stopping
               (implement suggested fix)
+              Resolved as FIXED
+
+        4416  URI En/Decoding not working
+              (investigate and fix if feasible)
+              Deal with later, resolution TBD.
+
+        4600  Tomcat 3.3 redirect behavior differs from Tomcat 3.2
+              (try to make 301 or 302 configurable)
               Resolved as FIXED
 
         4923  getRealPath().exists() yields security exception
@@ -65,6 +69,9 @@ Tomcat 3.3.1 Beta 1 Release:
         5722  Forward to a page that have no extension displays a blank page
               (try to fix to do something better than display a blank page)
               Resolved as WORKSFORME
+
+        5958  Wrong mod_jk.conf for path pattern
+              Resolved as FIXED
 
         6004  Cannot configure keystoreType
               Resolved as FIXED
