@@ -200,8 +200,12 @@ public final class Servlet22Interceptor
 	    Vector removed=null; // lazy 
 	    Enumeration e = sess.getAttributeNames();
 	    ClassLoader clSave = jdk11Compat.getContextClassLoader();
-	    jdk11Compat.setContextClassLoader(sess.getContext().
-					      getClassLoader());
+	    ClassLoader cxCL = sess.getContext().getClassLoader();
+	    if( clSave != cxCL ) {
+		jdk11Compat.setContextClassLoader(cxCL);
+	    } else {
+		clSave = null;
+	    }
 	    // announce all values with listener that we'll remove them
 	    while( e.hasMoreElements() )   {
 		String key = (String) e.nextElement();
