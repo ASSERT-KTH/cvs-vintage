@@ -81,8 +81,7 @@
 <td>Please enter a reason for the changes made above before saving.
    #fieldErrorMsg($attCommentGroup.DataAsString "")
    
-   <p><#textAreaMedium() name="$attCommentGroup.DataAsString.Key"
-           >$!attCommentGroup.DataAsString.Value</textarea></p>
+   <p>#textAreaMedium("$attCommentGroup.DataAsString.Key" $attCommentGroup.DataAsString.Value)
    <input type="hidden" name="$attCommentGroup.Name.Key" value="comment" />
 </td>
 </tr>
@@ -316,7 +315,7 @@
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
      <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&nbsp;|&nbsp;<a href="mailto:$commentUser.Email">$commentUser.FirstName $commentUser.LastName</a></h4>
     #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
-     <P>   <#textAreaLarge() name="edit_comment_$comment.AttachmentId">$comment.DataAsString</textarea>
+      <P>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.DataAsString)
     #else
         $comment.DataAsString
     #end
@@ -328,7 +327,7 @@
      <tr>
        <td>
           #set ($commentGroup = $intake.Attachment.setKey("commentKey"))
-          <#textAreaLarge() name ="$commentGroup.DataAsString.Key"></textarea>
+          #textAreaLarge("$commentGroup.DataAsString.Key" "")
           #fieldErrorMsg($commentGroup.DataAsString "")
           <input type="hidden" name="$commentGroup.Name.Key" value="comment" />
        </td>
