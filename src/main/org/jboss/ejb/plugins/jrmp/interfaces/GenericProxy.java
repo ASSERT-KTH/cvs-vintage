@@ -38,8 +38,15 @@ import org.jboss.security.SecurityAssociation;
  * 
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a> *  
- *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.14 $
+ * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.15 $
+ *
+ * <p><b>Revisions:</b><br>
+ * <p><b>2001/10/16: billb</b>
+ * <ol>
+ *   <li>if proxy serialized more than once, container would be null and proxy wouldn't work
+ * </ol>
  */
 public abstract class GenericProxy
    implements Externalizable
@@ -196,7 +203,7 @@ public abstract class GenericProxy
        throws IOException
    {
         out.writeUTF(name);
-        out.writeObject(isLocal() ? container : null);
+        out.writeObject(container);
         out.writeLong(containerStartup);
         out.writeBoolean(optimize);
         out.writeObject(initialContextHandle);
