@@ -88,6 +88,7 @@
     <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attgroup.Description</textarea>
   </td>
  </tr>
+#if (!$createNew)
   #if ($attribute.CreatedDate)
  <tr>
   <th>$l10n.CreatedBy</th>
@@ -100,7 +101,6 @@
   </td>
  </tr>
   #end
-#if (!$createNew)
  <tr>
   <th>$l10n.Deleted</th>
   <td>#booleanCheckbox ($attgroup.Deleted)</td>
