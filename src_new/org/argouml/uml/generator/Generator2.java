@@ -1,4 +1,4 @@
-// $Id: Generator2.java,v 1.8 2005/01/30 20:48:35 linus Exp $
+// $Id: Generator2.java,v 1.9 2005/02/02 21:18:10 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -237,6 +237,11 @@ public abstract class Generator2
      * @see NotationProvider2#generateState(Object)
      */
     public abstract String generateState(Object m);
+
+    /**
+     * @see NotationProvider2#generateSubmachine(Object)
+     */
+    public abstract String generateSubmachine(Object m);
 
     /**
      * @see NotationProvider2#generateTransition(Object)

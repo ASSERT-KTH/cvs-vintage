@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.22 2005/01/30 20:48:13 linus Exp $
+// $Id: GeneratorPHP4.java,v 1.23 2005/02/02 21:18:13 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,6 +144,23 @@ public class GeneratorPHP4
         }
 
         return "generateExtensionPoint(MExtensionPoint modelElement)";
+    }
+
+    /**
+     * @see org.argouml.application.api.NotationProvider2#generateSubmachine(java.lang.Object)
+     */
+    public String generateSubmachine(Object m) {
+        Object c = Model.getFacade().getSubmachine(m);
+        if (c == null) {
+            return "include / ";
+        }
+        if (Model.getFacade().getName(c) == null) {
+            return "include / ";
+        }
+        if (Model.getFacade().getName(c).length() == 0) {
+            return "include / ";
+        }
+        return ("include / " + generateName(Model.getFacade().getName(c)));
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: MetaTypesImpl.java,v 1.1 2005/01/29 20:08:22 linus Exp $
+// $Id: MetaTypesImpl.java,v 1.2 2005/02/02 21:18:09 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,17 +52,7 @@ import ru.novosoft.uml.behavior.common_behavior.MSendAction;
 import ru.novosoft.uml.behavior.common_behavior.MSignal;
 import ru.novosoft.uml.behavior.common_behavior.MStimulus;
 import ru.novosoft.uml.behavior.common_behavior.MTerminateAction;
-import ru.novosoft.uml.behavior.state_machines.MCompositeState;
-import ru.novosoft.uml.behavior.state_machines.MEvent;
-import ru.novosoft.uml.behavior.state_machines.MFinalState;
-import ru.novosoft.uml.behavior.state_machines.MGuard;
-import ru.novosoft.uml.behavior.state_machines.MPseudostate;
-import ru.novosoft.uml.behavior.state_machines.MState;
-import ru.novosoft.uml.behavior.state_machines.MStateImpl;
-import ru.novosoft.uml.behavior.state_machines.MStateMachine;
-import ru.novosoft.uml.behavior.state_machines.MStateVertex;
-import ru.novosoft.uml.behavior.state_machines.MSynchState;
-import ru.novosoft.uml.behavior.state_machines.MTransition;
+import ru.novosoft.uml.behavior.state_machines.*;
 import ru.novosoft.uml.behavior.use_cases.MActor;
 import ru.novosoft.uml.behavior.use_cases.MExtend;
 import ru.novosoft.uml.behavior.use_cases.MInclude;
@@ -584,10 +574,24 @@ public final class MetaTypesImpl implements MetaTypes {
     }
 
     /**
+     * @return Returns the StubState.
+     */
+    public Object getStubState() {
+        return MStubState.class;
+    }
+
+    /**
      * @return Returns the SubactivityState.
      */
     public Object getSubactivityState() {
         return MSubactivityState.class;
+    }
+
+    /**
+     * @return Returns the SubmachineState.
+     */
+    public Object getSubmachineState() {
+        return MSubmachineState.class;
     }
 
     /**

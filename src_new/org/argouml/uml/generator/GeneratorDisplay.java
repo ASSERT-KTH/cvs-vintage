@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.83 2005/01/30 20:48:35 linus Exp $
+// $Id: GeneratorDisplay.java,v 1.84 2005/02/02 21:18:10 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -992,6 +992,23 @@ public class GeneratorDisplay extends Generator2 {
      */
     public String generateState(Object m) {
         return Model.getFacade().getName(m);
+    }
+
+    /**
+     * @see org.argouml.application.api.NotationProvider2#generateSubmachine(java.lang.Object)
+     */
+    public String generateSubmachine(Object m) {
+        Object c = Model.getFacade().getSubmachine(m);
+        if (c == null) {
+            return "include / ";
+        }
+        if (Model.getFacade().getName(c) == null) {
+            return "include / ";
+        }
+        if (Model.getFacade().getName(c).length() == 0) {
+            return "include / ";
+        }
+        return ("include / " + generateName(Model.getFacade().getName(c)));
     }
 
     /**

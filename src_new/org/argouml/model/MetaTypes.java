@@ -1,4 +1,4 @@
-// $Id: MetaTypes.java,v 1.1 2005/01/29 20:08:29 linus Exp $
+// $Id: MetaTypes.java,v 1.2 2005/02/02 21:18:10 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -368,9 +368,19 @@ public interface MetaTypes {
     Object getStimulus();
 
     /**
+     * @return Returns the StubState.
+     */
+    Object getStubState();
+
+    /**
      * @return Returns the SubactivityState.
      */
     Object getSubactivityState();
+
+    /**
+     * @return Returns the SubmachineState.
+     */
+    Object getSubmachineState();
 
     /**
      * @return Returns the Subsystem.

@@ -1,4 +1,4 @@
-// $Id: StateDiagramRenderer.java,v 1.29 2005/01/30 20:48:12 linus Exp $
+// $Id: StateDiagramRenderer.java,v 1.30 2005/02/02 21:18:08 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,11 +79,15 @@ public class StateDiagramRenderer extends UmlDiagramRenderer {
      * java.lang.Object, java.util.Map)
      */
     public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node,
-            Map styleAttributes) {
+                                 Map styleAttributes) {
         if (Model.getFacade().isAActionState(node)) {
             return new FigActionState(gm, node);
         } else if (Model.getFacade().isAFinalState(node)) {
             return new FigFinalState(gm, node);
+        } else if (Model.getFacade().isAStubState(node)) {
+            return new FigStubState(gm, node);
+        } else if (Model.getFacade().isASubmachineState(node)) {
+            return new FigSubmachineState(gm, node);
         } else if (Model.getFacade().isACompositeState(node)) {
             return new FigCompositeState(gm, node);
         } else if (Model.getFacade().isASynchState(node)) {

@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.55 2005/01/30 20:48:33 linus Exp $
+// $Id: Notation.java,v 1.56 2005/02/02 21:18:11 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -291,6 +291,11 @@ public final class Notation implements PropertyChangeListener {
     private static String generateState(NotationName notation,
 					  Object/*MState*/ m) {
         return getProvider(notation).generateState(m);
+    }
+
+    private static String generateSubmachine(NotationName notation,
+                      Object/*MSubmachineState*/ m) {
+        return getProvider(notation).generateSubmachine(m);
     }
 
     private static String generateObjectFlowState(NotationName notation,
@@ -700,7 +705,6 @@ public final class Notation implements PropertyChangeListener {
         if (o == null) {
             return "";
 	}
-
         //added to support association roles
         if (Model.getFacade().isAAssociationRole(o)) {
             return generateAssociationRole(nn, o);
@@ -713,6 +717,9 @@ public final class Notation implements PropertyChangeListener {
 
         if (Model.getFacade().isAOperation(o)) {
             return generateOperation(nn, o, false);
+	}
+        if (Model.getFacade().isASubmachineState(o)) {
+            return generateSubmachine(nn, o);
 	}
         if (Model.getFacade().isAAttribute(o)) {
             return generateAttribute(nn, o, false);
@@ -784,7 +791,6 @@ public final class Notation implements PropertyChangeListener {
         if (Model.getFacade().isAModelElement(o)) {
             return generateName(nn, Model.getFacade().getName(o));
 	}
-
         return o.toString();
     }
 

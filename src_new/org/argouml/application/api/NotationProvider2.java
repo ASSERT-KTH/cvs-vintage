@@ -1,4 +1,4 @@
-// $Id: NotationProvider2.java,v 1.9 2004/12/28 13:23:08 linus Exp $
+// $Id: NotationProvider2.java,v 1.10 2005/02/02 21:18:12 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -179,6 +179,14 @@ public interface NotationProvider2 {
      * @return The String representation of the object.
      */
     String generateStateBody(Object stt);
+
+    /**
+     * Generate the String representation for a Submachine.
+     *
+     * @param m Object to generate representation for.
+     * @return The String representation of the object.
+     */
+    String generateSubmachine(Object m);
 
     /**
      * Generate the String representation for a Transition.

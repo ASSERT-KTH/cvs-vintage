@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.72 2005/01/30 20:48:12 linus Exp $
+// $Id: UMLStateDiagram.java,v 1.73 2005/02/02 21:18:08 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,8 +60,10 @@ public class UMLStateDiagram extends UMLDiagram {
     ////////////////
     // actions for toolbar
 
+    private Action actionStubState;
     private Action actionState;
     private Action actionSynchState;
+    private Action actionSubmachineState;
     private Action actionCompositeState;
     private Action actionStartPseudoState;
     private Action actionFinalPseudoState;
@@ -244,6 +246,8 @@ public class UMLStateDiagram extends UMLDiagram {
 	    getActionCompositeState(),
 	    getActionTransition(),
 	    getActionSynchState(),
+        getActionSubmachineState(),
+        getActionStubState(),
 	    null,
 	    getActionStartPseudoState(),
 	    getActionFinalPseudoState(),
@@ -408,6 +412,34 @@ public class UMLStateDiagram extends UMLDiagram {
                                 "SynchState"));
         }
         return actionSynchState;
+    }
+
+    /**
+     * @return Returns the actionSubmachineState.
+     */
+    protected Action getActionSubmachineState() {
+        if (actionSubmachineState == null) {
+            actionSubmachineState =
+                    new RadioAction(
+                            new CmdCreateNode(
+                                    Model.getMetaTypes().getSubmachineState(),
+                                    "SubmachineState"));
+        }
+        return actionSubmachineState;
+    }
+
+    /**
+     * @return Returns the actionSubmachineState.
+     */
+    protected Action getActionStubState() {
+        if (actionStubState == null) {
+            actionStubState =
+                    new RadioAction(
+                            new CmdCreateNode(
+                                    Model.getMetaTypes().getStubState(),
+                                    "StubState"));
+        }
+        return actionStubState;
     }
 
     /**

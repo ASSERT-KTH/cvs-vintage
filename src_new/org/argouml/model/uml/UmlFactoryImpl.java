@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.24 2005/01/31 20:54:36 linus Exp $
+// $Id: UmlFactoryImpl.java,v 1.25 2005/02/02 21:18:09 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -451,6 +451,10 @@ class UmlFactoryImpl
         } else if (elementType
                 == nsmodel.getMetaTypes().getSubactivityState()) {
             return getActivityGraphs().createSubactivityState();
+        } else if (elementType == nsmodel.getMetaTypes().getStubState()) {
+            return getStateMachines().createStubState();
+        } else if (elementType == nsmodel.getMetaTypes().getSubmachineState()) {
+            return getStateMachines().createSubmachineState();
         } else if (elementType == nsmodel.getMetaTypes().getCompositeState()) {
             return getStateMachines().createCompositeState();
         } else if (elementType == nsmodel.getMetaTypes().getSynchState()) {

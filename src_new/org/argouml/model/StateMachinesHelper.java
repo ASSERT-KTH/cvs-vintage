@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.7 2005/01/30 20:47:58 linus Exp $
+// $Id: StateMachinesHelper.java,v 1.8 2005/02/02 21:18:10 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -299,4 +299,27 @@ public interface StateMachinesHelper {
      * @param value Object (MTimeExpression)
      */
     void setWhen(Object handle, Object value);
+
+    /**
+     * Returns the path of a state vertex.
+     * @param o the StateVertex
+     * @return String
+     */
+    String getPath(Object o);
+
+    /**
+     * Returns a state contained into container. path is the whole pathname
+     * of the state we are looking for.
+     * @param path the path the state
+     * @param container of the state
+     * @return Object
+     */
+    public Object getStatebyName(String path, Object container);
+
+    /**
+     * Sets the Referenced State of a StubState.
+     * @param o Stub State
+     * @param referenced state
+     */
+    public void setReferenceState(Object o, String referenced);
 }

@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.31 2005/01/30 20:48:33 linus Exp $
+// $Id: GeneratorCSharp.java,v 1.32 2005/02/02 21:18:10 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -288,6 +288,23 @@ public class GeneratorCSharp extends Generator2
 	return null;
     }
 
+    /**
+     * @see org.argouml.application.api.NotationProvider2#generateSubmachine(java.lang.Object)
+     */
+    public String generateSubmachine(Object m) {
+        Object c = Model.getFacade().getSubmachine(m);
+        if (c == null) {
+            return "include / ";
+        }
+        if (Model.getFacade().getName(c) == null) {
+            return "include / ";
+        }
+        if (Model.getFacade().getName(c).length() == 0) {
+            return "include / ";
+        }
+        return ("include / " + generateName(Model.getFacade().getName(c)));
+    }
+    
     /**
      * @see org.argouml.application.api.NotationProvider2#generateObjectFlowState(java.lang.Object)
      */
