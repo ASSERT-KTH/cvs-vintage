@@ -7,7 +7,7 @@
 	<property name="build" value="build"/>
 	<property name="user.name" value="The columba Team"/>
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
-	<property name="version" value="0.9.10"/>
+	<property name="version" value="0.9.11-cvs"/>
 	<property name="dest" value="../columba-${version}"/>
 
 	<!-- definition of the task to check the style of the java-code -->
