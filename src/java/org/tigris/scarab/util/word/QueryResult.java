@@ -53,204 +53,226 @@ import org.apache.torque.TorqueException;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.RModuleIssueType;
 
-    public class QueryResult
+/**
+ * This class is created by the IssueSearch object to contain a single result.
+ * It represents a row on the IssueList.vm screen.  It is mostly
+ * a data structure with some additional functionality to format a 
+ * multivalued attribute as CSV. 
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ */
+public class QueryResult
+{
+    /** the search that created this QueryResult */
+    private final IssueSearch search;
+    private String issueId;
+    private String idPrefix;
+    private String idCount;
+    private String uniqueId;
+    private List attributeValues;
+    private Integer moduleId;
+    private Integer issueTypeId;
+
+    /**
+     * Ctor. Should only be called by an IssueSearch.
+     *
+     * @param search the <code>IssueSearch</code> that created this result
+     */
+    QueryResult(IssueSearch search)
     {
-        /** the search that created this QueryResult */
-        private final IssueSearch search;
-
-        QueryResult(IssueSearch search)
-        {
-            this.search = search;
-        }
-
-        String issueId;
-
-        /**
-         * Get the IssueId value.
-         * @return the IssueId value.
-         */
-        public String getIssueId()
-        {
-            return issueId;
-        }
-
-        /**
-         * Set the IssueId value.
-         * @param newIssueId The new IssueId value.
-         */
-        public void setIssueId(String newIssueId)
-        {
-            this.issueId = newIssueId;
-        }
-
-        String idPrefix;
-
-        /**
-         * Get the IdPrefix value.
-         * @return the IdPrefix value.
-         */
-        public String getIdPrefix()
-        {
-            return idPrefix;
-        }
-
-        /**
-         * Set the IdPrefix value.
-         * @param newIdPrefix The new IdPrefix value.
-         */
-        public void setIdPrefix(String newIdPrefix)
-        {
-            this.idPrefix = newIdPrefix;
-        }
-
-        String idCount;
-
-        /**
-         * Get the IdCount value.
-         * @return the IdCount value.
-         */
-        public String getIdCount()
-        {
-            return idCount;
-        }
-
-        /**
-         * Set the IdCount value.
-         * @param newIdCount The new IdCount value.
-         */
-        public void setIdCount(String newIdCount)
-        {
-            this.idCount = newIdCount;
-        }
-
-        private String uniqueId;
-        public String getUniqueId()
-        {
-            if (uniqueId == null) 
-            {
-                uniqueId = getIdPrefix() + getIdCount();
-            }
-            
-            return uniqueId;
-        }
-
-        List attributeValues;
-
-        /**
-         * Get the AttributeValues value.
-         * @return the AttributeValues value.
-         */
-        public List getAttributeValues()
-        {
-            return attributeValues;
-        }
-
-        /**
-         * Get the AttributeValues value.
-         * @return the AttributeValues value.
-         */
-        public List getAttributeValuesAsCSV()
-        {
-            List result = null;
-            if (attributeValues != null) 
-            {
-                result = new ArrayList(attributeValues.size());
-                for (Iterator i = attributeValues.iterator(); i.hasNext();) 
-                {
-                    String csv = null;
-                    List multiVal = (List)i.next();
-                    if (multiVal.size() == 1) 
-                    {
-                        csv = (String)multiVal.get(0);    
-                        if (csv == null) 
-                        {
-                            csv = "";
-                        }
-                    }
-                    else 
-                    {
-                        StringBuffer sb = new StringBuffer();
-                        boolean addComma = false;
-                        for (Iterator j = multiVal.iterator(); j.hasNext();) 
-                        {
-                            if (addComma) 
-                            {
-                                sb.append(", ");
-                            }
-                            else 
-                            {
-                                addComma = true;
-                            }
-                            
-                            sb.append(j.next().toString());
-                        }
-                        csv = sb.toString();
-                    }
-                    result.add(csv);
-                }
-            }
-            
-            return result;
-        }
-
-        /**
-         * Set the AttributeValues value.
-         * @param newAttributeValues The new AttributeValues value.
-         */
-        public void setAttributeValues(List newAttributeValues)
-        {
-            this.attributeValues = newAttributeValues;
-        }
-        
-        Integer moduleId;
-
-        /**
-         * Get the ModuleId value.
-         * @return the ModuleId value.
-         */
-        public Integer getModuleId()
-        {
-            return moduleId;
-        }
-
-        /**
-         * Set the ModuleId value.
-         * @param newModuleId The new ModuleId value.
-         */
-        public void setModuleId(Integer newModuleId)
-        {
-            this.moduleId = newModuleId;
-        }
-
-        public Module getModule()
-            throws TorqueException
-        {
-            return search.getModule(moduleId);
-        }
-
-        Integer issueTypeId;
-
-        /**
-         * Get the IssueTypeId value.
-         * @return the IssueTypeId value.
-         */
-        public Integer getIssueTypeId()
-        {
-            return issueTypeId;
-        }
-
-        /**
-         * Set the IssueTypeId value.
-         * @param newIssueTypeId The new IssueTypeId value.
-         */
-        public void setIssueTypeId(Integer newIssueTypeId)
-        {
-            this.issueTypeId = newIssueTypeId;
-        }
-
-        public RModuleIssueType getRModuleIssueType()
-            throws TorqueException
-        {
-            return search.getRModuleIssueType(moduleId, issueTypeId);
-        }
+        this.search = search;
     }
+
+    /**
+     * Get the IssueId value.
+     * @return the IssueId value.
+     */
+    public final String getIssueId()
+    {
+        return issueId;
+    }
+
+    /**
+     * Set the IssueId value.
+     * @param newIssueId The new IssueId value.
+     */
+    public final void setIssueId(String newIssueId)
+    {
+        this.issueId = newIssueId;
+    }
+
+    /**
+     * Get the IdPrefix value.
+     * @return the IdPrefix value.
+     */
+    public final String getIdPrefix()
+    {
+        return idPrefix;
+    }
+
+    /**
+     * Set the IdPrefix value.
+     * @param newIdPrefix The new IdPrefix value.
+     */
+    public final void setIdPrefix(String newIdPrefix)
+    {
+        this.idPrefix = newIdPrefix;
+    }
+
+    /**
+     * Get the IdCount value.
+     * @return the IdCount value.
+     */
+    public final String getIdCount()
+    {
+        return idCount;
+    }
+
+    /**
+     * Set the IdCount value.
+     * @param newIdCount The new IdCount value.
+     */
+    public final void setIdCount(String newIdCount)
+    {
+        this.idCount = newIdCount;
+    }
+
+
+    /**
+     * Combines getIdPrefix() and getIdCount()
+     */
+    public final String getUniqueId()
+    {
+        if (uniqueId == null) 
+        {
+            uniqueId = getIdPrefix() + getIdCount();
+        }
+            
+        return uniqueId;
+    }
+
+    /**
+     * Get the AttributeValues value.
+     * @return the AttributeValues value.
+     */
+    public final List getAttributeValues()
+    {
+        return attributeValues;
+    }
+
+    /**
+     * Get the AttributeValues value.
+     * @return the AttributeValues value.
+     */
+    public final List getAttributeValuesAsCSV()
+    {
+        List result = null;
+        if (attributeValues != null) 
+        {
+            result = new ArrayList(attributeValues.size());
+            for (Iterator i = attributeValues.iterator(); i.hasNext();) 
+            {
+                String csv = null;
+                List multiVal = (List)i.next();
+                if (multiVal.size() == 1) 
+                {
+                    csv = (String)multiVal.get(0);    
+                    if (csv == null) 
+                    {
+                        csv = "";
+                    }
+                }
+                else 
+                {
+                    StringBuffer sb = new StringBuffer();
+                    boolean addComma = false;
+                    for (Iterator j = multiVal.iterator(); j.hasNext();) 
+                    {
+                        if (addComma) 
+                        {
+                            sb.append(", ");
+                        }
+                        else 
+                        {
+                            addComma = true;
+                        }
+                            
+                        sb.append(j.next().toString());
+                    }
+                    csv = sb.toString();
+                }
+                result.add(csv);
+            }
+        }
+            
+        return result;
+    }
+
+    /**
+     * Set the AttributeValues value.
+     * @param newAttributeValues The new AttributeValues value.
+     */
+    public final void setAttributeValues(List newAttributeValues)
+    {
+        this.attributeValues = newAttributeValues;
+    }
+        
+
+    /**
+     * Get the ModuleId value.
+     * @return the ModuleId value.
+     */
+    public final Integer getModuleId()
+    {
+        return moduleId;
+    }
+
+    /**
+     * Set the ModuleId value.
+     * @param newModuleId The new ModuleId value.
+     */
+    public final void setModuleId(Integer newModuleId)
+    {
+        this.moduleId = newModuleId;
+    }
+
+    /**
+     * Get the <code>Module</code> related thru getModuleId().  This method
+     * provides caching so that multiple QueryResult objects in the same 
+     * resultset save db hits.
+     */
+    public final Module getModule()
+        throws TorqueException
+    {
+        return search.getModule(moduleId);
+    }
+
+    /**
+     * Get the IssueTypeId value.
+     * @return the IssueTypeId value.
+     */
+    public final Integer getIssueTypeId()
+    {
+        return issueTypeId;
+    }
+
+    /**
+     * Set the IssueTypeId value.
+     * @param newIssueTypeId The new IssueTypeId value.
+     */
+    public final void setIssueTypeId(Integer newIssueTypeId)
+    {
+        this.issueTypeId = newIssueTypeId;
+    }
+
+    /**
+     * Get the <code>RModuleIssueType</code> related thru getModuleId() and 
+     * getIssueTypeId().  This method provides caching so that multiple 
+     * QueryResult objects in the same resultset save db hits.
+     */
+    public final RModuleIssueType getRModuleIssueType()
+        throws TorqueException
+    {
+        return search.getRModuleIssueType(moduleId, issueTypeId);
+    }
+}
