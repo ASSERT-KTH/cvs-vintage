@@ -92,6 +92,9 @@ public class UpAction extends JAbstractAction {
 		if (node_ok) {
 			// select it
 			tableController.setSelected(prevUids);
+			
+			int row = tableController.getView().getSelectedRow();
+			tableController.getView().scrollRectToVisible(tableController.getView().getCellRect(row,0,false));
 					
 			FolderCommandReference[] refNew = new FolderCommandReference[1]; 
 			refNew[0] = new FolderCommandReference( ref.getFolder(), prevUids); 
