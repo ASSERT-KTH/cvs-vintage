@@ -16,41 +16,50 @@
 //
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
+
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.filter.FilterCriteria;
+
+
 /**
  * @author fdietz
  *  
  */
 public class SizeFilterTest extends AbstractFilterTestCase {
-	/**
-	 * @param arg0
-	 */
-	public SizeFilterTest(String arg0) {
-		super(arg0);
-	}
-	public void testSizeFilter() throws Exception {
-		// add message to folder
-		Object uid = addMessage();
-		// size
-		// -> @see org.columba.mail.folder.cache.CachedHeaderfields for a
-		// -> complete
-		// -> list of possible attributes
-		getSourceFolder().setAttribute(uid, "columba.size", new Integer(33));
-		// !!! Size = 12
-		// create filter configuration
-		// -> check if <Subject> <contains> pattern <test>
-		FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-		criteria.setType("Size");
-		criteria.setPattern("12");
-		criteria.setCriteria("bigger");
-		// create filter
-		SizeFilter filter = new SizeFilter();
-		// init configuration
-		filter.setUp(criteria);
-		// execute filter
-		boolean result = filter.process(getSourceFolder(), uid);
-		assertEquals("filter result", true, result);
-		
-	}
+    /**
+ * @param arg0
+ */
+    public SizeFilterTest(String arg0) {
+        super(arg0);
+    }
+
+    public void testSizeFilter() throws Exception {
+        // add message to folder
+        Object uid = addMessage();
+
+        // size
+        // -> @see org.columba.mail.folder.cache.CachedHeaderfields for a
+        // -> complete
+        // -> list of possible attributes
+        getSourceFolder().setAttribute(uid, "columba.size", new Integer(33));
+
+        // !!! Size = 12
+        // create filter configuration
+        // -> check if <Subject> <contains> pattern <test>
+        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
+        criteria.setType("Size");
+        criteria.setPattern("12");
+        criteria.setCriteria("bigger");
+
+        // create filter
+        SizeFilter filter = new SizeFilter();
+
+        // init configuration
+        filter.setUp(criteria);
+
+        // execute filter
+        boolean result = filter.process(getSourceFolder(), uid);
+        assertEquals("filter result", true, result);
+    }
 }

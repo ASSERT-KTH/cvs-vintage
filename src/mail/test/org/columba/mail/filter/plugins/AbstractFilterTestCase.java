@@ -16,11 +16,16 @@
 //
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
-import java.io.ByteArrayInputStream;
-import java.io.File;
+
 import junit.framework.TestCase;
+
 import org.columba.mail.folder.FolderTestHelper;
 import org.columba.mail.folder.mh.CachedMHFolder;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+
+
 /**
  * Base class for all filter tests.
  * <p>
@@ -30,62 +35,71 @@ import org.columba.mail.folder.mh.CachedMHFolder;
  *  
  */
 public class AbstractFilterTestCase extends TestCase {
-	protected CachedMHFolder sourceFolder;
-	/**
-	 * Constructor for AbstractFilterTest.
-	 * 
-	 * @param arg0
-	 */
-	public AbstractFilterTestCase(String arg0) {
-		super(arg0);
-	}
-	/**
-	 * @return Returns the folder.
-	 */
-	public CachedMHFolder getSourceFolder() {
-		return sourceFolder;
-	}
-	/**
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		//		 create MH folder
-		// -> use homeDirectory as top-level folder
-		// -> this has to be an absolute path
-		sourceFolder = new CachedMHFolder("test", "CachedMHFolder",
-				FolderTestHelper.homeDirectory + "/folders/");
-		
-	}
-	
-	/**
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		File f = sourceFolder.getDirectoryFile();
-		// delete all mails in folder
-		File[] list = f.listFiles();
-		for (int i = 0; i < list.length; i++) {
-			list[i].delete();
-		}
-		// delete folder
-		f.delete();
-	}
-	/**
-	 * Add message to test folder.
-	 * 
-	 * @throws Exception
-	 */
-	public Object addMessage() throws Exception {
-		// add message "0.eml" as inputstream to folder
-		String input = FolderTestHelper.getString(0);
-		System.out.println("input=" + input);
-		// create stream from string
-		ByteArrayInputStream inputStream = FolderTestHelper
-				.getByteArrayInputStream(input);
-		// add stream to folder
-		Object uid = getSourceFolder().addMessage(inputStream);
-		// close stream
-		inputStream.close();
-		return uid;
-	}
+    protected CachedMHFolder sourceFolder;
+
+    /**
+ * Constructor for AbstractFilterTest.
+ * 
+ * @param arg0
+ */
+    public AbstractFilterTestCase(String arg0) {
+        super(arg0);
+    }
+
+    /**
+ * @return Returns the folder.
+ */
+    public CachedMHFolder getSourceFolder() {
+        return sourceFolder;
+    }
+
+    /**
+ * @see TestCase#setUp()
+ */
+    protected void setUp() throws Exception {
+        //		 create MH folder
+        // -> use homeDirectory as top-level folder
+        // -> this has to be an absolute path
+        sourceFolder = new CachedMHFolder("test", "CachedMHFolder",
+                FolderTestHelper.homeDirectory + "/folders/");
+    }
+
+    /**
+ * @see TestCase#tearDown()
+ */
+    protected void tearDown() throws Exception {
+        File f = sourceFolder.getDirectoryFile();
+
+        // delete all mails in folder
+        File[] list = f.listFiles();
+
+        for (int i = 0; i < list.length; i++) {
+            list[i].delete();
+        }
+
+        // delete folder
+        f.delete();
+    }
+
+    /**
+ * Add message to test folder.
+ * 
+ * @throws Exception
+ */
+    public Object addMessage() throws Exception {
+        // add message "0.eml" as inputstream to folder
+        String input = FolderTestHelper.getString(0);
+        System.out.println("input=" + input);
+
+        // create stream from string
+        ByteArrayInputStream inputStream = FolderTestHelper.getByteArrayInputStream(input);
+
+        // add stream to folder
+        Object uid = getSourceFolder().addMessage(inputStream);
+
+        // close stream
+        inputStream.close();
+
+        return uid;
+    }
 }

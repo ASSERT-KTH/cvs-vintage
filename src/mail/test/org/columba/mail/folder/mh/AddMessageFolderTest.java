@@ -16,84 +16,92 @@
 //
 //All Rights Reserved.
 package org.columba.mail.folder.mh;
+
+import org.columba.mail.folder.FolderTestHelper;
+
+import org.columba.ristretto.message.MessageFolderInfo;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.columba.mail.folder.FolderTestHelper;
-import org.columba.ristretto.message.MessageFolderInfo;
+
 /**
  * Add message to folder testcase.
  * 
  * @author fdietz
  */
 public class AddMessageFolderTest extends AbstractFolderTest {
-	/**
-	 * Constructor for CachedMHFolderTest.
-	 * 
-	 * @param arg0
-	 */
-	public AddMessageFolderTest(String arg0) {
-		super(arg0);
-	}
-	/**
-	 * Add a message as InputStream to MHCachedFolder.
-	 * <p>
-	 * Check if message in folder is identical.
-	 * <p>
-	 * Check if total message count of folder was incremented correctly.
-	 * 
-	 * @throws Exception
-	 */
-	public void testAddMessage() throws Exception {
-		// add message "0.eml" as inputstream to folder
-		String input = FolderTestHelper.getString(0);
-		System.out.println("input=" + input);
-		// create stream from string
-		ByteArrayInputStream inputStream = FolderTestHelper
-				.getByteArrayInputStream(input);
-		// add stream to folder
-		Object uid = getSourceFolder().addMessage(inputStream);
-		
-		// get inputstream of this message from folder
-		InputStream outputStream = sourceFolder.getMessageSourceStream(uid);
-		// create string from inputstream
-		String output = FolderTestHelper.getStringFromInputStream(outputStream);
-		// compare both messages
-		assertEquals(input, output);
-		MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
-		assertEquals("one message should be in this folder", 1, info
-				.getExists());
-		// close streams
-		inputStream.close();
-		outputStream.close();
-	}
-	/**
-	 * Check if MailFolderInfo is properly set based on message attributes.
-	 * <p>
-	 */
-	public void testAddAttributesTest() throws Exception {
-		//		 add message "0.eml" as inputstream to folder
-		String input = FolderTestHelper.getString(0);
-		System.out.println("input=" + input);
-		// create stream from string
-		ByteArrayInputStream inputStream = FolderTestHelper
-				.getByteArrayInputStream(input);
-		
-		
-		// add stream to folder
-		Object uid = getSourceFolder().addMessage(inputStream);
-		
-		getSourceFolder().setAttribute(uid, "columba.flags.seen", "true");
-		
-		MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
-		
-		assertEquals("one message should be in this folder", 1, info
-				.getExists());
-		assertEquals("Number of unseen messages in folder", 1, info.getUnseen());
-		assertEquals("Number of seen messages in folder", 0, info.getExists()-info.getUnseen());
-		
-		// close streams
-		inputStream.close();
-		
-	}
+    /**
+ * Constructor for CachedMHFolderTest.
+ * 
+ * @param arg0
+ */
+    public AddMessageFolderTest(String arg0) {
+        super(arg0);
+    }
+
+    /**
+ * Add a message as InputStream to MHCachedFolder.
+ * <p>
+ * Check if message in folder is identical.
+ * <p>
+ * Check if total message count of folder was incremented correctly.
+ * 
+ * @throws Exception
+ */
+    public void testAddMessage() throws Exception {
+        // add message "0.eml" as inputstream to folder
+        String input = FolderTestHelper.getString(0);
+        System.out.println("input=" + input);
+
+        // create stream from string
+        ByteArrayInputStream inputStream = FolderTestHelper.getByteArrayInputStream(input);
+
+        // add stream to folder
+        Object uid = getSourceFolder().addMessage(inputStream);
+
+        // get inputstream of this message from folder
+        InputStream outputStream = sourceFolder.getMessageSourceStream(uid);
+
+        // create string from inputstream
+        String output = FolderTestHelper.getStringFromInputStream(outputStream);
+
+        // compare both messages
+        assertEquals(input, output);
+
+        MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
+        assertEquals("one message should be in this folder", 1, info.getExists());
+
+        // close streams
+        inputStream.close();
+        outputStream.close();
+    }
+
+    /**
+ * Check if MailFolderInfo is properly set based on message attributes.
+ * <p>
+ */
+    public void testAddAttributesTest() throws Exception {
+        //		 add message "0.eml" as inputstream to folder
+        String input = FolderTestHelper.getString(0);
+        System.out.println("input=" + input);
+
+        // create stream from string
+        ByteArrayInputStream inputStream = FolderTestHelper.getByteArrayInputStream(input);
+
+        // add stream to folder
+        Object uid = getSourceFolder().addMessage(inputStream);
+
+        getSourceFolder().setAttribute(uid, "columba.flags.seen", "true");
+
+        MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
+
+        assertEquals("one message should be in this folder", 1, info.getExists());
+        assertEquals("Number of unseen messages in folder", 1, info.getUnseen());
+        assertEquals("Number of seen messages in folder", 0,
+            info.getExists() - info.getUnseen());
+
+        // close streams
+        inputStream.close();
+    }
 }

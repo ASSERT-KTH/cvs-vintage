@@ -15,9 +15,9 @@ import org.columba.core.xml.XmlElement;
  */
 public class FilterListTest extends TestCase {
     /**
-     * Test to add filters to the list.
-     * The method should be able to handle nulls as well.
-     */
+ * Test to add filters to the list.
+ * The method should be able to handle nulls as well.
+ */
     public void testAdd() {
         FilterList filterList = new FilterList(new XmlElement());
         filterList.add(createNamedFilter("ONE"));
@@ -32,8 +32,8 @@ public class FilterListTest extends TestCase {
     }
 
     /**
-     * Test to remove filters from the list.
-     */
+ * Test to remove filters from the list.
+ */
     public void testRemoveFilter() {
         FilterList filterList = new FilterList(new XmlElement());
         Filter filterTwo = createNamedFilter("TWO");
@@ -52,9 +52,9 @@ public class FilterListTest extends TestCase {
     }
 
     /**
-     * Test the count() method.
-     *
-     */
+ * Test the count() method.
+ *
+ */
     public void testCount() {
         FilterList filterList = new FilterList(new XmlElement());
         assertEquals("Expected an empty filter list", 0, filterList.count());
@@ -66,8 +66,8 @@ public class FilterListTest extends TestCase {
     }
 
     /**
-     * Test for Filter#get(int)
-     */
+ * Test for Filter#get(int)
+ */
     public void testGetint() {
         FilterList filterList = new FilterList(new XmlElement());
         Filter filterOne = createNamedFilter("ONE");
@@ -85,8 +85,8 @@ public class FilterListTest extends TestCase {
     }
 
     /**
-     * Test for insert(Filter, int) method.
-     */
+ * Test for insert(Filter, int) method.
+ */
     public void testInsert() {
         FilterList filterList = new FilterList(new XmlElement());
         Filter filterOne = createNamedFilter("ONE");
@@ -111,8 +111,8 @@ public class FilterListTest extends TestCase {
     }
 
     /**
-     * Test to move up a filter in the list.
-     */
+ * Test to move up a filter in the list.
+ */
     public void testMoveUp() {
         FilterList filterList = new FilterList(new XmlElement());
         Filter filterOne = createNamedFilter("ONE");
@@ -139,8 +139,8 @@ public class FilterListTest extends TestCase {
     }
 
     /**
-     * Test to move down a filter in the list.
-     */
+ * Test to move down a filter in the list.
+ */
     public void testMoveDown() {
         FilterList filterList = new FilterList(new XmlElement());
         Filter filterOne = createNamedFilter("ONE");
@@ -167,8 +167,8 @@ public class FilterListTest extends TestCase {
     }
 
     /**
-     * Test for indexOf() method.
-     */
+ * Test for indexOf() method.
+ */
     public void testIndexOf() {
         FilterList filterList = new FilterList(new XmlElement());
         Filter filterOne = createNamedFilter("ONE");
@@ -191,10 +191,10 @@ public class FilterListTest extends TestCase {
     }
 
     /**
-     * Returns an empty filter with a specified name.
-     * @param name the name of the filter.
-     * @return a <code>Filter</code> with the specified name.
-     */
+ * Returns an empty filter with a specified name.
+ * @param name the name of the filter.
+ * @return a <code>Filter</code> with the specified name.
+ */
     private Filter createNamedFilter(String name) {
         Filter filter = FilterList.createEmptyFilter();
         filter.setName(name);
@@ -203,11 +203,11 @@ public class FilterListTest extends TestCase {
     }
 
     /**
-     * Asserts that the filters are the same.
-     * @param msg the message to output if the assertion fails.
-     * @param expected the expected filter.
-     * @param actual the actual filter.
-     */
+ * Asserts that the filters are the same.
+ * @param msg the message to output if the assertion fails.
+ * @param expected the expected filter.
+ * @param actual the actual filter.
+ */
     private void assertEquals(String msg, Filter expected, Filter actual) {
         assertEquals(msg, expected.getName(), actual.getName());
     }

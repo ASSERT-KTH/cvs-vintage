@@ -24,9 +24,9 @@ public class PGPControllerTest extends TestCase {
     XmlElement xmle;
 
     /**
-     * Constructor for PGPControllerTest.
-     * @param arg0
-     */
+ * Constructor for PGPControllerTest.
+ * @param arg0
+ */
     public PGPControllerTest(String arg0) {
         super(arg0);
         xmle = new XmlElement();
@@ -55,8 +55,8 @@ public class PGPControllerTest extends TestCase {
     }
 
     /**
-    * We can only test this, if verify is ok! What we test is, if the given testMessage is correct signed
-    */
+* We can only test this, if verify is ok! What we test is, if the given testMessage is correct signed
+*/
     public void testSign() throws Exception {
         String testData = "eine Testmessage";
         InputStream testDataStream = new ByteArrayInputStream(testData.getBytes(

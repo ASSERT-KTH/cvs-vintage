@@ -31,9 +31,9 @@ import junit.framework.TestCase;
  */
 public class SubjectTest extends TestCase {
     /**
-     * Check if "Re: " is correctly prepended
-     *
-     */
+ * Check if "Re: " is correctly prepended
+ *
+ */
     public void testReply() {
         String s = "Subject";
 
@@ -43,9 +43,9 @@ public class SubjectTest extends TestCase {
     }
 
     /**
-     * Check if "Fwd: " is correctly prepended
-     *
-     */
+ * Check if "Fwd: " is correctly prepended
+ *
+ */
     public void testForward() {
         String s = "Subject";
 
@@ -55,9 +55,9 @@ public class SubjectTest extends TestCase {
     }
 
     /**
-     * Check if "Re: " is only prepended if not already found in string
-     *
-     */
+ * Check if "Re: " is only prepended if not already found in string
+ *
+ */
     public void testReply2() {
         String s = "Re: Subject";
 
@@ -67,9 +67,9 @@ public class SubjectTest extends TestCase {
     }
 
     /**
-     * Check if "Fwd: " is only prepended if not already found in string
-     *
-     */
+ * Check if "Fwd: " is only prepended if not already found in string
+ *
+ */
     public void testForward2() {
         String s = "Fwd: Subject";
 
@@ -79,10 +79,10 @@ public class SubjectTest extends TestCase {
     }
 
     /**
-     * Check if "Re:" is only prepended if not already found in string
-     * <p>
-     * Note, the missing space
-     */
+ * Check if "Re:" is only prepended if not already found in string
+ * <p>
+ * Note, the missing space
+ */
     public void testReply3() {
         String s = "Re:Subject";
 
@@ -92,11 +92,11 @@ public class SubjectTest extends TestCase {
     }
 
     /**
-     * Check if "Fwd:" is only prepended if not already found in string
-     * <p>
-     * Note, the missing space
-     *
-     */
+ * Check if "Fwd:" is only prepended if not already found in string
+ * <p>
+ * Note, the missing space
+ *
+ */
     public void testForward3() {
         String s = "Fwd:Subject";
 
@@ -106,9 +106,9 @@ public class SubjectTest extends TestCase {
     }
 
     /**
-     * Test if string is matched correctly.
-     *
-     */
+ * Test if string is matched correctly.
+ *
+ */
     public void testAlreadyInString() {
         String s = "Test: Hallo";
 
@@ -118,44 +118,52 @@ public class SubjectTest extends TestCase {
     }
 
     /**
-     * Test for adding the "Re" when replying to mailing list messages.
-     */
+ * Test for adding the "Re" when replying to mailing list messages.
+ */
     public void testMailingListReplies() {
         String s = "[columba.devel] a subject";
         String result = MessageBuilderHelper.createReplySubject(s);
-        assertEquals("The \"Re:\" was not added to the subject", "Re: [columba.devel] a subject", result);
-        
+        assertEquals("The \"Re:\" was not added to the subject",
+            "Re: [columba.devel] a subject", result);
+
         s = "Re:[columba-devel]test-subject";
         result = MessageBuilderHelper.createReplySubject(s);
-        assertEquals("The \"Re:\" was added to the subject", "Re:[columba-devel]test-subject", result);
+        assertEquals("The \"Re:\" was added to the subject",
+            "Re:[columba-devel]test-subject", result);
 
         s = "[columba-devel] Re:] Test";
         result = MessageBuilderHelper.createReplySubject(s);
-        assertEquals("The \"Re:\" was added to the subject", "[columba-devel] Re:] Test", result);
-        
+        assertEquals("The \"Re:\" was added to the subject",
+            "[columba-devel] Re:] Test", result);
+
         s = "[columba-devel] Re: Re: re: Re: Test";
         result = MessageBuilderHelper.createReplySubject(s);
-        assertEquals("The \"Re:\" was added to the subject", "[columba-devel] Re: Re: re: Re: Test", result);
+        assertEquals("The \"Re:\" was added to the subject",
+            "[columba-devel] Re: Re: re: Re: Test", result);
     }
 
     /**
-     * Test for adding the "fwd" when forwarding messages from a mailing list.
-     */
+ * Test for adding the "fwd" when forwarding messages from a mailing list.
+ */
     public void testMailingListForwards() {
         String s = "[columba.devel] a subject";
         String result = MessageBuilderHelper.createForwardSubject(s);
-        assertEquals("The \"Fwd:\" was not added to the subject", "Fwd: [columba.devel] a subject", result);
-        
+        assertEquals("The \"Fwd:\" was not added to the subject",
+            "Fwd: [columba.devel] a subject", result);
+
         s = "Fwd:[columba-devel]test-subject";
         result = MessageBuilderHelper.createForwardSubject(s);
-        assertEquals("The \"Fwd:\" was added to the subject", "Fwd:[columba-devel]test-subject", result);
+        assertEquals("The \"Fwd:\" was added to the subject",
+            "Fwd:[columba-devel]test-subject", result);
 
         s = "[columba-devel] Fwd:] Test";
         result = MessageBuilderHelper.createForwardSubject(s);
-        assertEquals("The \"Fwd:\" was added to the subject", "[columba-devel] Fwd:] Test", result);
-        
+        assertEquals("The \"Fwd:\" was added to the subject",
+            "[columba-devel] Fwd:] Test", result);
+
         s = "[columba-devel] Fwd: Re: re: Re: Test";
         result = MessageBuilderHelper.createForwardSubject(s);
-        assertEquals("The \"Fwd:\" was added to the subject", "[columba-devel] Fwd: Re: re: Re: Test", result);
+        assertEquals("The \"Fwd:\" was added to the subject",
+            "[columba-devel] Fwd: Re: re: Re: Test", result);
     }
 }

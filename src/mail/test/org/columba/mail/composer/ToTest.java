@@ -29,9 +29,9 @@ import org.columba.ristretto.message.Header;
  */
 public class ToTest extends TestCase {
     /**
-     * Check if Reply-To: headerfield is used as default
-     *
-     */
+ * Check if Reply-To: headerfield is used as default
+ *
+ */
     public void testReplyTo() {
         String s = "donald@mail.com";
         Header header = new Header();
@@ -44,10 +44,10 @@ public class ToTest extends TestCase {
     }
 
     /**
-     * Check if method is falling back to From: headerfield, if Reply-To:
-     * headerfield is not available
-     *
-     */
+ * Check if method is falling back to From: headerfield, if Reply-To:
+ * headerfield is not available
+ *
+ */
     public void testReplyTo2() {
         String s = "donald.duck@mail.com";
         Header header = new Header();
@@ -59,10 +59,10 @@ public class ToTest extends TestCase {
     }
 
     /**
-     * Test it Reply-To: or From: headerfield and
-     * all To: and Cc: headerfields are concatenated correctly
-     *
-     */
+ * Test it Reply-To: or From: headerfield and
+ * all To: and Cc: headerfields are concatenated correctly
+ *
+ */
     public void testReplyToAll() {
         String s = "donald@mail.com";
         Header header = new Header();
@@ -79,11 +79,11 @@ public class ToTest extends TestCase {
     }
 
     /**
-     *
-     * Check if method is falling back to X-BeenThere:, to Reply-To or From: headerfield,
-     * if not available
-     *
-     */
+ *
+ * Check if method is falling back to X-BeenThere:, to Reply-To or From: headerfield,
+ * if not available
+ *
+ */
     public void testReplyToMailinglist() {
         // TODO: implement test
     }

@@ -15,8 +15,8 @@ import org.columba.core.xml.XmlElement;
  */
 public class AccountItemTest extends TestCase {
     /*
-     * Test for int hashCode().
-     */
+ * Test for int hashCode().
+ */
     public void testHashCode() {
         // first account item
         XmlElement xml = new XmlElement("account");
@@ -83,8 +83,8 @@ public class AccountItemTest extends TestCase {
     }
 
     /*
-     * Test for boolean equals(Object)
-     */
+ * Test for boolean equals(Object)
+ */
     public void testEqualsObject() {
         // first account item
         XmlElement xml = new XmlElement("account");
