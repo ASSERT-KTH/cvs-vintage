@@ -1,4 +1,4 @@
-// $Id: UMLObjectFlowStateClassifierComboBoxModel.java,v 1.3 2004/11/01 19:55:52 mvw Exp $
+// $Id: UMLObjectFlowStateClassifierComboBoxModel.java,v 1.4 2004/11/30 19:37:20 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
 /**
- * A model for a namespace combo box,
+ * A model for the classifier of an ObjectFlowState.
  *
  * @since Oct 10, 2002
  * @author jaap.branderhorst@xs4all.nl, alexb
