@@ -54,7 +54,7 @@
  * Author:      Bernard Bernstein <bernard@corp.talkcity.com>                *
  * Updated:     March 1999 Jean-Luc Rochat <jlrochat@jnix.com>               *
  * Description: solved part of fail-over problems & LB improvments           *
- * Version:     $Revision: 1.1 $
+ * Version:     $Revision: 1.2 $
  *****************************************************************************/
 
 #include "jserv.h"
@@ -126,6 +126,7 @@ get_cookie(char *name, request_rec *r)
 
   cname = ap_pstrcat(r->pool, cname, "=", NULL);
   if ((cookie = ap_table_get(r->headers_in, "Cookie")) != NULL)
+      /* ap_log_rerror(APLOG_MARK, APLOG_ALERT, r, "COOKIE: %s", cookie );	   */
     if ((value = strstr(cookie, cname)) != NULL) {
       char *cookiebuf, *cookieend;
       value += strlen(cname);
@@ -396,7 +397,23 @@ static int balance_handler(jserv_config *cfg, jserv_request *req,
     /* *** another process (watchdog process)                              */
     /* *** we just try to read in the mmap'ed file                         */
 
-#ifndef WIN32
+    /* In tomcat CVS was: ifndef WIN32. Aparently fixed in jserv. */
+#if 0
+    /*
+     * We never want to do keep the current server because in the following
+     * scenario balancing will completely fail, overloading the first machine
+     * that is responding; we use simple round-robin instead like in the
+     * Win32 case.
+     *
+     * We have 10 jserv machines js1-10, and js1-5 are marked down, js6-10
+     * are ok. 50% of the requests will go to the down machines, and each
+     * one will try to find a working jserv, and ending up using js6. So
+     * we end up with a load distribution:
+     *
+     *  js6 js7 js8 js9 js10
+     *  60% 10% 10% 10% 10%
+     */
+
     if (req->mount->curr != req->mount->hosturls) {
       if (jserv_isdead(cfg, req->mount->hosturls)) {
         /*keep the current target */

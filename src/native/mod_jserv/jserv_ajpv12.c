@@ -57,13 +57,31 @@
  * Description: ajpv1.2 protocol, used to call local or remote jserv hosts   *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
  * Author:      Michal Mosiewicz <mimo@interdata.pl>                         *
- * Version:     $Revision: 1.1 $                                             *
+ * Version:     $Revision: 1.2 $                                             *
  *****************************************************************************/
 #include "jserv.h"
 
 /*****************************************************************************
  * Code for ajpv12 protocol                                                   *
  *****************************************************************************/
+
+/* copy + paste from src/main/http_main.c" */
+#ifdef _OSD_POSIX
+#define MAX_SECS_TO_LINGER 30
+static void sock_enable_linger(jserv_config *cfg, int s)
+{
+    struct linger li;
+
+    li.l_onoff = 1;
+    li.l_linger = MAX_SECS_TO_LINGER;
+
+    if (setsockopt(s, SOL_SOCKET, SO_LINGER,
+                   (char *) &li, sizeof(struct linger)) < 0) {
+        jserv_error(JSERV_LOG_INFO,cfg,"ajp12:setsockopt: (SO_LINGER)");
+        /* not a fatal error */
+    }
+}
+#endif
 
 /* ========================================================================= */
 /* Open a socket to JServ host */
@@ -114,6 +132,8 @@ static int ajpv12_open(jserv_config *cfg, pool *p, unsigned long address,
                     "can not connect to host",
                     inet_ntoa(addr.sin_addr),
                     port);
+        if (sock != -1)
+            ap_pclosesocket(p, sock);
         return -1;
     }
 #ifdef TCP_NODELAY
@@ -122,6 +142,11 @@ static int ajpv12_open(jserv_config *cfg, pool *p, unsigned long address,
         setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *)&set, 
         sizeof(set));
     }
+#endif
+
+#ifdef _OSD_POSIX
+    /* otherwise the shutdown signal is not received */
+    sock_enable_linger(cfg, sock);
 #endif
 
     /* Return the socket number */
@@ -662,7 +687,7 @@ static int ajpv12_handler(jserv_config *cfg, jserv_request *req,
 
 
     /* Flush buffers and kill our writing timeout */
-    ap_kill_timeout(r);
+    ap_kill_timeout(r); /* This isn't in jserv CVS */
 
 
     /* If there is a request entity, send it */
@@ -770,8 +795,12 @@ static int ajpv12_function(jserv_config *cfg, int function, char *data) {
     }
 
     /* Send the function request */
+#ifdef WIN32
+    ret = send( sock, signal, 2, 0 );
+#else
     ret = write( sock, signal, 2);
-
+#endif
+    
     if (ret!=2) {
         jserv_error(JSERV_LOG_EMERG,cfg,"ajp12: cannot send function");
         ap_destroy_pool(p);

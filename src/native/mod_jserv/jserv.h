@@ -56,7 +56,7 @@
 /*****************************************************************************
  * Description: Apache JServ global include file                             *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
- * Version:     $Revision: 1.1 $                                            *
+ * Version:     $Revision: 1.2 $                                            *
  *****************************************************************************/
 #ifndef __JSERV_H__
 #define __JSERV_H__
@@ -238,7 +238,7 @@ struct jserv_host {
  *                                                                           *
  *****************************************************************************/
 
-#define NB_MAX_JSERVS  25
+#define NB_MAX_JSERVS  256
 
 #define DOWN '-'
 #define SHUTDOWN_IMMEDIATE 'X'

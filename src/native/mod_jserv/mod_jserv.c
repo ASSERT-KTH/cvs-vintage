@@ -58,7 +58,7 @@
  *              It provides a common entry point for protocols and runs      * 
  *              configuration, initialization and request tasks.             *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
- * Version:     $Revision: 1.1 $                                             *
+ * Version:     $Revision: 1.2 $                                             *
  *****************************************************************************/
 #include "jserv.h"
 
@@ -444,6 +444,33 @@ static void *jserv_server_config_merge(pool *p, void *vbase, void *voverride) {
         }
 #endif
     }
+    /*A&M changes made to export env vars defined in virtual host (like
+https) */
+    cfg->envvars = base->envvars;
+
+    if (!ap_is_empty_table(override->envvars)) {
+        int i;
+        array_header *hdr_arr;
+        table_entry *elts;
+
+        hdr_arr = ap_table_elts(override->envvars);
+        elts = (table_entry *) hdr_arr->elts;
+
+        for (i = 0; i < hdr_arr->nelts; ++i) {
+            if (!elts[i].key) continue;
+            if (!elts[i].val) continue;
+
+            ap_table_add(cfg->envvars, ap_pstrdup(p,elts[i].key),
+ap_pstrdup(p,elts[i].val));
+
+            /* A&M
+            jserv_error(JSERV_LOG_INFO,cfg,"ajp12: added env var %s %s
+",elts[i].key, elts[i].val);
+            */
+        }
+    }
+
+    /* end changes made by us */
 
     /* Fill mount defaults */
     jserv_mount_config_default(p, cfg);
@@ -1033,7 +1060,11 @@ static const char *jserv_cfg_mount(cmd_parms *cmd, void *dummy, char *value1,
         const char *ret;
 
         /* Get the secret key file contents and length */
-        ret=jserv_readfile(cmd->pool, value3, JSERV_TRUE, &mnt->secret,
+       mnt->secretfile=ap_pstrdup(p,value3);
+
+        /* Get the secret key file contents and length */
+        ret=jserv_readfile(cmd->pool, mnt->secretfile, JSERV_TRUE, 
+                          &mnt->secret,
                            &mnt->secretsize);
 
         /* If ret is not null, an error occourred and ret points to message */
