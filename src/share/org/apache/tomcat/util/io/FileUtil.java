@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.3 2001/03/02 04:11:37 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2001/03/02 04:11:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.4 2001/04/22 05:38:17 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2001/04/22 05:38:17 $
  *
  * ====================================================================
  *
@@ -406,6 +406,31 @@ public class FileUtil {
 	}
 
     }
+
+    public static void clearDir(File dir) {
+        String[] files = dir.list();
+
+        if (files != null) {
+	    for (int i = 0; i < files.length; i++) {
+	        File f = new File(dir, files[i]);
+
+	        if (f.isDirectory()) {
+		    clearDir(f);
+	        }
+
+	        try {
+	            f.delete();
+	        } catch (Exception e) {
+	        }
+	    }
+
+	    try {
+	        dir.delete();
+	    } catch (Exception e) {
+	    }
+        }
+    }
+
 
 
 }
