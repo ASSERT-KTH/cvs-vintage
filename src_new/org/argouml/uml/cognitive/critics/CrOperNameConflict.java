@@ -1,4 +1,4 @@
-// $Id: CrOperNameConflict.java,v 1.7 2003/02/02 12:39:27 kataka Exp $
+// $Id: CrOperNameConflict.java,v 1.8 2003/06/19 06:51:08 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -215,8 +215,8 @@ public class CrOperNameConflict extends CrUML {
 
 	// Check that the parameter lists match.
 
-	Iterator params1 = ModelFacade.getParameters(op1);
-	Iterator params2 = ModelFacade.getParameters(op2);
+	Iterator params1 = ModelFacade.getParameters(op1).iterator();
+	Iterator params2 = ModelFacade.getParameters(op2).iterator();
 
 	while (params1.hasNext() 
 	       && params2.hasNext()) {
