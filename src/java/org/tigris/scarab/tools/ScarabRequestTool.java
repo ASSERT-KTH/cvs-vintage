@@ -1307,7 +1307,8 @@ try{
                    .addJoin(TransactionPeer.TRANSACTION_ID, 
                                 ActivityPeer.TRANSACTION_ID)
                    .addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID)
-                   .add(TransactionPeer.TYPE_ID, TransactionTypePeer.CREATE_ISSUE__PK)
+                   .add(TransactionPeer.TYPE_ID, 
+                        TransactionTypePeer.CREATE_ISSUE__PK)
                    .add(TransactionPeer.CREATED_BY, userId);
 
                // If attribute is "committed by", search for creating user
@@ -1344,7 +1345,7 @@ try{
                    if (createdIdList.size() > 0)
                    {
                        cCreated = attrCrit.getNewCriterion(IssuePeer.ISSUE_ID, 
-                                                           createdIdList, Criteria.IN); 
+                                           createdIdList, Criteria.IN); 
                    }
                    if (attrIdList.size() > 0)
                    {
@@ -1353,8 +1354,8 @@ try{
                    }
                    if (cCreated != null && cAttr != null)
                    {
-                       cAttr.and(cCreated);
-                       tempCrit.add(cAttr);
+                       cAttr.or(cCreated);
+                       tempCrit.and(cAttr);
                    }
                    else if (cCreated != null)
                    {
