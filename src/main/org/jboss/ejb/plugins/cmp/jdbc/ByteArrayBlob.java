@@ -26,7 +26,7 @@ import java.sql.Blob;
  * field of type SQL <code>BLOB</code>.
  * 
  * @author <a href="mailto:amccullo@sourceforge.new">Andrew McCulloch</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ByteArrayBlob implements Blob
 {
@@ -137,26 +137,25 @@ public class ByteArrayBlob implements Blob
       }
    }
 
-// The setters added in JDK 1.4 are here for compilation only
-
    public OutputStream setBinaryStream(long pos)
       throws SQLException
    {
-      return null;
+      throw new UnsupportedOperationException("ByteArrayBlob is immutable");
    }
    public int setBytes(long pos, byte[] bytes)
       throws SQLException
    {
-      return 0;
+      throw new UnsupportedOperationException("ByteArrayBlob is immutable");
    }
    public int setBytes(long pos, byte[] bytes, int offset, int length)
       throws SQLException
    {
-      return 0;
+      throw new UnsupportedOperationException("ByteArrayBlob is immutable");
    }
    public void truncate(long length)
       throws SQLException
    {
+      throw new UnsupportedOperationException("ByteArrayBlob is immutable");
    }
 }
 
