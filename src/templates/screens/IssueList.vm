@@ -118,11 +118,19 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
      #end
   </th>
 
+#if (!$mitlist)
+   #set ($module = $scarabR.CurrentRModuleIssueType.Module)
+   #set ($issueType = $scarabR.CurrentRModuleIssueType.IssueType)
+#end
 
 ## ISSUE ATTRIBUTE VALUES
 #set ($rmuas = $scarabR.RModuleUserAttributes)
 #foreach ($rmua in $rmuas)
  #set ($userAttribute = $rmua.Attribute)
+ #set ($value = $userAttribute.Name)
+ #if (!$mitlist)
+   #set ($value = $module.getRModuleAttribute($userAttribute, $issueType).DisplayValue)
+ #end
  <th>
      #if ($sortColumn.equals($userAttribute.AttributeId.toString()))
         #if ($sortPolarity.equals("desc"))
@@ -134,11 +142,11 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
            #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$userAttribute.AttributeId"))
            <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #end
-        $userAttribute.Name
+        $value
      #else
         #prepIssueListPageLink()
         #set ($sortLink = $link.setPage("IssueList.vm").setPathInfo("sortColumn", "$userAttribute.AttributeId").setPathInfo("sortPolarity", "$sortPolarity"))
-        <a href="$sortLink">$userAttribute.Name</a>
+        <a href="$sortLink">$value</a>
      #end
   </th>
 #end
