@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.73 2002/06/15 10:41:49 spestov Exp $
+ * @version $Id: jEdit.java,v 1.74 2002/06/17 10:51:30 spestov Exp $
  */
 public class jEdit
 {
@@ -1975,12 +1975,13 @@ public class jEdit
 		addViewToList(newView);
 		EditBus.send(new ViewUpdate(newView,ViewUpdate.CREATED));
 
-
 		newView.show();
 
 		// show tip of the day
 		if(newView == viewsFirst)
 		{
+			newView.getTextArea().requestFocus();
+
 			// Don't show the welcome message if jEdit was started
 			// with the -nosettings switch
 			if(settingsDirectory != null && getBooleanProperty("firstTime"))
@@ -2047,6 +2048,8 @@ public class jEdit
 		// show tip of the day
 		if(newView == viewsFirst)
 		{
+			newView.getTextArea().requestFocus();
+
 			// Don't show the welcome message if jEdit was started
 			// with the -nosettings switch
 			if(settingsDirectory != null && getBooleanProperty("firstTime"))
