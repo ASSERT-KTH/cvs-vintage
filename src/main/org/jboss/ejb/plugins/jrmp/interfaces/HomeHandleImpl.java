@@ -11,6 +11,7 @@ import java.rmi.ServerException;
 import javax.ejb.HomeHandle;
 import javax.ejb.EJBHome;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.lang.reflect.Method;
 
 
@@ -19,7 +20,7 @@ import java.lang.reflect.Method;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class HomeHandleImpl
    implements HomeHandle
@@ -43,14 +44,16 @@ public class HomeHandleImpl
    public EJBHome getEJBHome()
       throws RemoteException
    {
-      try
-      {
-         return (EJBHome) new InitialContext().lookup(name);
+		try {
+        
+			return (EJBHome) new InitialContext().lookup(name);
          
-       } catch (Exception e)
-      {
-         throw new ServerException("Could not get EJBHome", e);
-      }
+      	} 
+		catch (NamingException e) {
+			
+			e.printStackTrace();
+         	throw new RemoteException("Could not get EJBHome");
+      	} 
    }
 
    // Package protected ---------------------------------------------
