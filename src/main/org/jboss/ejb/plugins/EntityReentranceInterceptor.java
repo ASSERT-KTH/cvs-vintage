@@ -29,7 +29,7 @@ import org.jboss.ejb.plugins.lock.Entrancy;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class EntityReentranceInterceptor
    extends AbstractInterceptor
@@ -48,8 +48,11 @@ public class EntityReentranceInterceptor
    public void setContainer(Container container)
    {
       this.container = (EntityContainer)container;
-      EntityMetaData meta = (EntityMetaData)container.getBeanMetaData();
-      reentrant = meta.isReentrant();
+      if( container != null )
+      {
+         EntityMetaData meta = (EntityMetaData)container.getBeanMetaData();
+         reentrant = meta.isReentrant();
+      }
    }
  
    public Object invoke(Invocation mi)
