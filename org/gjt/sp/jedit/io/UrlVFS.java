@@ -28,7 +28,7 @@ import org.gjt.sp.util.Log;
 /**
  * URL VFS.
  * @author Slava Pestov
- * @version $Id: UrlVFS.java,v 1.1 2001/09/02 05:38:17 spestov Exp $
+ * @version $Id: UrlVFS.java,v 1.2 2001/11/26 06:56:42 spestov Exp $
  */
 public class UrlVFS extends VFS
 {
@@ -48,11 +48,6 @@ public class UrlVFS extends VFS
 			return parent + path;
 		else
 			return parent + '/' + path;
-	}
-
-	public String getParentOfPath(String path)
-	{
-		return MiscUtilities.getParentOfPath(path);
 	}
 
 	public InputStream _createInputStream(Object session,
