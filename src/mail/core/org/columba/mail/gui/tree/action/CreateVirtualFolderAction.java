@@ -63,7 +63,7 @@ public class CreateVirtualFolderAction extends AbstractColumbaAction
 
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_V,
-				ActionEvent.ALT_MASK));
+				ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 
 		setEnabled(false);
 

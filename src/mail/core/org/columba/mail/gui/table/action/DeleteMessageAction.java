@@ -70,7 +70,7 @@ public class DeleteMessageAction extends AbstractColumbaAction
 
         // shortcut key
         putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
+            KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
 
         // disable toolbar text
         setShowToolBarText(false);

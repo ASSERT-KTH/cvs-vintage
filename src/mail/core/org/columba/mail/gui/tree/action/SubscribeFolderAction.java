@@ -61,7 +61,7 @@ public class SubscribeFolderAction extends AbstractColumbaAction
 
         // shortcut key
         putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
+            KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 
         setEnabled(false);
 

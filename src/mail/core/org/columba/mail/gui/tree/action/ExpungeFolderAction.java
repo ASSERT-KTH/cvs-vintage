@@ -56,7 +56,7 @@ public class ExpungeFolderAction extends AbstractColumbaAction
 
         // shortcut key
         putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.ALT_MASK));
+            KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 
         setEnabled(false);
 

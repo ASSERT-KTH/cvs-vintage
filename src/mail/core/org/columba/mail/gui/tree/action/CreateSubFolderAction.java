@@ -57,7 +57,7 @@ public class CreateSubFolderAction extends AbstractColumbaAction
 
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N,
-				ActionEvent.ALT_MASK));
+				ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 
 		setEnabled(false);
 
