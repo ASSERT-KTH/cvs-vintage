@@ -84,12 +84,12 @@
 #end
 #end
 
-#macro (attrValueHierarchySelect $attrValue $optionFieldName $size)
+#macro (attrValueHierarchySelect $attrValue $optionFieldName $size $multiple)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #set ($attr = $attrValue.Attribute)
 #set ($module = $attrValue.Issue.Module)
 <select name="$attrInput.get($optionFieldName).Key"
-      #if($size.length() != 1)size="$size"#end>
+#if($size.length() != 0)size="$size"#end #if($multiple)multiple="multiple"#end>
   #if ($size.length() == 0)
   <option value="">Choose...</option>
   #end
