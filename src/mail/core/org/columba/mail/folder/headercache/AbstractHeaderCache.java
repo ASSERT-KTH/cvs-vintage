@@ -99,10 +99,10 @@ public abstract class AbstractHeaderCache {
      * @throws Exception
      */
     public void remove(Object uid) throws Exception {
-        ColumbaLogger.log.debug("trying to remove message UID=" + uid);
+        ColumbaLogger.log.info("trying to remove message UID=" + uid);
 
         if (headerList.containsKey(uid)) {
-            ColumbaLogger.log.debug("remove UID=" + uid);
+            ColumbaLogger.log.info("remove UID=" + uid);
 
             headerList.remove(uid);
         }

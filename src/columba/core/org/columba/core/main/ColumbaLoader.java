@@ -103,7 +103,7 @@ public class ColumbaLoader implements Runnable {
                 }
 
                 if (MainInterface.DEBUG) {
-                    ColumbaLogger.log.debug(
+                    ColumbaLogger.log.info(
                         "passing to running Columba session:\n" +
                         arguments.toString());
                 }

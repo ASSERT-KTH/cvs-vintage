@@ -120,7 +120,7 @@ public class CheckForNewMessagesCommand extends FolderCommand {
                 /*
                 String file = item.get("sound_file");
 
-                ColumbaLogger.log.info("playing sound file=" + file);
+                ColumbaLogger.log.fine("playing sound file=" + file);
 
                 if (file.equalsIgnoreCase("default")) {
                   PlaySound.play("newmail.wav");

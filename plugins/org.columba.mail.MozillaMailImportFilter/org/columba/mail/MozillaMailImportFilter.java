@@ -120,7 +120,7 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 
 		for (int i = 0; i < list.length; i++) {
 			File file = list[i];
-			ColumbaLogger.log.info("mailbox=" + file.getPath());
+			ColumbaLogger.log.fine("mailbox=" + file.getPath());
 
 			if (file == null)
 				continue;
@@ -167,7 +167,7 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 				}
 			}
 
-			ColumbaLogger.log.info(
+			ColumbaLogger.log.fine(
 				"found mailbox="
 					+ file.getPath()
 					+ " - importing to folder="

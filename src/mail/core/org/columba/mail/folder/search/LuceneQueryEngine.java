@@ -233,7 +233,7 @@ public class LuceneQueryEngine implements QueryEngine, TaskInterface {
 
                 while (token != null) {
                     String pattern = "*" + token.termText() + "*";
-                    ColumbaLogger.log.debug("Field = \"" + field +
+                    ColumbaLogger.log.info("Field = \"" + field +
                         "\" Text = \"" + pattern + "\"");
                     termQuery.add(new WildcardQuery(new Term(field, pattern)),
                         true, false);
@@ -410,7 +410,7 @@ public class LuceneQueryEngine implements QueryEngine, TaskInterface {
         IndexReader ramReader = getRAMReader();
         IndexReader fileReader = getFileReader();
 
-        ColumbaLogger.log.debug("Lucene: Merging RAMIndex to FileIndex");
+        ColumbaLogger.log.info("Lucene: Merging RAMIndex to FileIndex");
 
         /*
         Document doc;
@@ -511,7 +511,7 @@ public class LuceneQueryEngine implements QueryEngine, TaskInterface {
      * @see org.columba.mail.folder.search.AbstractSearchEngine#sync(org.columba.mail.folder.DataStorageInterface, org.columba.core.command.WorkerStatusController)
      */
     public void sync() throws Exception {
-        //ColumbaLogger.log.error("Lucene Index inconsistent - recreation forced");
+        //ColumbaLogger.log.severe("Lucene Index inconsistent - recreation forced");
         DataStorageInterface ds = ((LocalFolder) folder).getDataStorageInstance();
         HeaderList hl = ((LocalFolder) folder).getHeaderList();
 
@@ -557,7 +557,7 @@ public class LuceneQueryEngine implements QueryEngine, TaskInterface {
             writer.optimize();
             writer.close();
         } catch (Exception e) {
-            ColumbaLogger.log.error("Creation of Lucene Index failed :" +
+            ColumbaLogger.log.severe("Creation of Lucene Index failed :" +
                 e.getLocalizedMessage());
 
             //show neat error dialog here

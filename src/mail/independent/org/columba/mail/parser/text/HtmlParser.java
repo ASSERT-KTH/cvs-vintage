@@ -1,7 +1,3 @@
-/*
- * Created on 23-06-2003
- */
-
 //The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the 
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
@@ -17,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.parser.text;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -266,8 +263,7 @@ public class HtmlParser {
                 sb.append('\n');
             }
         } catch (Exception e) {
-            ColumbaLogger.log.error("Error restoring special characters", e);
-
+            ColumbaLogger.log.severe("Error restoring special characters: " + e.getMessage());
             return null; // error
         }
 
@@ -444,7 +440,7 @@ public class HtmlParser {
                 sb.append("<br>\n");
             }
         } catch (Exception e) {
-            ColumbaLogger.log.error("Error substituting special characters", e);
+            ColumbaLogger.log.severe("Error substituting special characters: " + e.getMessage());
 
             return null; // error
         }
@@ -550,8 +546,7 @@ public class HtmlParser {
                 }
             }
         } catch (Exception e) {
-            ColumbaLogger.log.error("Error substituting special characters", e);
-
+            ColumbaLogger.log.severe("Error substituting special characters: " + e.getMessage());
             return null; // error
         }
 
@@ -632,7 +627,7 @@ public class HtmlParser {
             return substituteEmailAddress(s);
         }
 
-        ColumbaLogger.log.debug("Source:\n" + s);
+        ColumbaLogger.log.info("Source:\n" + s);
 
         // initialisation
         Matcher noLinkMatcher = emailPattern.matcher(s);
@@ -685,7 +680,7 @@ public class HtmlParser {
 
         // return result
         String result = buf.toString();
-        ColumbaLogger.log.debug("Result:\n" + result);
+        ColumbaLogger.log.info("Result:\n" + result);
 
         return result;
     }
@@ -737,7 +732,7 @@ public class HtmlParser {
             return substituteURL(s);
         }
 
-        ColumbaLogger.log.debug("Source:\n" + s);
+        ColumbaLogger.log.info("Source:\n" + s);
 
         // initialisation
         Matcher noLinkMatcher = urlPattern.matcher(s);
@@ -789,7 +784,7 @@ public class HtmlParser {
 
         // return result
         String result = buf.toString();
-        ColumbaLogger.log.debug("Result:\n" + result);
+        ColumbaLogger.log.info("Result:\n" + result);
 
         return result;
     }

@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -39,7 +40,6 @@ import javax.swing.text.ChangedCharSetException;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import javax.swing.text.html.HTML;
-
 
 /**
  * Controller part of controller-view frame work for composing html messages
@@ -343,12 +343,12 @@ public class HtmlEditorController extends AbstractEditorController
             try {
                 loadHtmlIntoView(text, true);
             } catch (IOException e) {
-                ColumbaLogger.log.error("Error setting view content. " +
-                    "Even after ignore charset spec.", e);
+                ColumbaLogger.log.severe("Error setting view content, " +
+                    "even after ignore charset spec: " + e.getMessage());
             }
         } catch (IOException e) {
             // other IOExceptions than ChangedCharsetException
-            ColumbaLogger.log.error("Error setting view content", e);
+            ColumbaLogger.log.severe("Error setting view content: " + e.getMessage());
         }
     }
 
@@ -388,8 +388,7 @@ public class HtmlEditorController extends AbstractEditorController
             EditorKit kit = view.getEditorKit();
             kit.read(r, doc, 0); // this can throw a ChangedCharsetException
         } catch (BadLocationException e) {
-            ColumbaLogger.log.error("Error deleting old view content", e);
-
+            ColumbaLogger.log.severe("Error deleting old view content: " + e.getMessage());
             return;
         }
     }

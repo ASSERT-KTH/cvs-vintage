@@ -73,7 +73,7 @@ public class ThreadedViewAction extends CheckBoxAction
     }
 
     public void tableChanged(TableModelChangedEvent e) {
-        ColumbaLogger.log.info("event=" + e);
+        ColumbaLogger.log.fine("event=" + e);
 
         if (e.getEventType() == TableModelChangedEvent.UPDATE) {
             FolderCommandReference[] r = (FolderCommandReference[]) ((AbstractMailFrameController) frameMediator).getTreeSelection();

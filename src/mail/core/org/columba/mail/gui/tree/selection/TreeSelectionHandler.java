@@ -85,11 +85,11 @@ public class TreeSelectionHandler extends SelectionHandler
                 FolderTreeNode folder = (FolderTreeNode) e.getPaths()[i].getLastPathComponent();
 
                 if (e.isAddedPath(i)) {
-                    ColumbaLogger.log.debug("Folder added to Selection= " +
+                    ColumbaLogger.log.info("Folder added to Selection= " +
                         folder.getName());
                     selectedFolders.add(folder);
                 } else {
-                    ColumbaLogger.log.debug("Folder removed from Selection= " +
+                    ColumbaLogger.log.info("Folder removed from Selection= " +
                         folder.getName());
                     selectedFolders.remove(folder);
                 }

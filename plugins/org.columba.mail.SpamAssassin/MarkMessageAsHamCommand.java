@@ -104,23 +104,23 @@ public class MarkMessageAsHamCommand extends FolderCommand {
 
         IPCHelper ipcHelper = new IPCHelper();
 
-        ColumbaLogger.log.debug("creating process..");
+        ColumbaLogger.log.info("creating process..");
         ipcHelper.executeCommand(ExternalToolsHelper.getSALearn() +
             " --no-rebuild --ham --single");
 
-        ColumbaLogger.log.debug("sending to stdin..");
+        ColumbaLogger.log.info("sending to stdin..");
 
         ipcHelper.send(rawMessageSource);
 
         int exitVal = ipcHelper.waitFor();
 
-        ColumbaLogger.log.debug("exitcode=" + exitVal);
+        ColumbaLogger.log.info("exitcode=" + exitVal);
 
-        ColumbaLogger.log.debug("retrieving output..");
+        ColumbaLogger.log.info("retrieving output..");
 
         String result = ipcHelper.getOutputString();
 
-        ColumbaLogger.log.debug("output=" + result);
+        ColumbaLogger.log.info("output=" + result);
 
         ipcHelper.waitForThreads();
 

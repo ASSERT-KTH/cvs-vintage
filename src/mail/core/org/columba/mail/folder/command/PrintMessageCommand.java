@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -73,7 +74,6 @@ import java.text.DateFormat;
 
 import java.util.Date;
 import java.util.List;
-
 
 /**
  * Print the selected message.
@@ -192,7 +192,7 @@ public class PrintMessageCommand extends FolderCommand {
         // Print each message
         for (int j = 0; j < uids.length; j++) {
             Object uid = uids[j];
-            ColumbaLogger.log.debug("Printing UID=" + uid);
+            ColumbaLogger.log.info("Printing UID=" + uid);
 
             ColumbaMessage message = new ColumbaMessage();
             Header header = srcFolder.getHeaderFields(uids[j], getHeaderKeys());
@@ -354,14 +354,14 @@ public class PrintMessageCommand extends FolderCommand {
         // no configuration available, create default config
         if (printer == null) {
             // create new local xml treenode
-            ColumbaLogger.log.debug(
+            ColumbaLogger.log.info(
                 "printer config node not found - creating new");
             printer = new XmlElement("printer");
             printer.addAttribute("allow_scaling", "true");
 
             // add to options if possible (so it will be saved)
             if (options != null) {
-                ColumbaLogger.log.debug("storing new printer config node");
+                ColumbaLogger.log.info("storing new printer config node");
                 options.addElement(printer);
             }
         }
@@ -403,11 +403,11 @@ public class PrintMessageCommand extends FolderCommand {
 
             return htmlBody;
         } catch (MalformedURLException e) {
-            ColumbaLogger.log.error("Error loading html for print", e);
+            ColumbaLogger.log.severe("Error loading html for print: " + e.getMessage());
 
             return null;
         } catch (IOException e) {
-            ColumbaLogger.log.error("Error loading html for print", e);
+            ColumbaLogger.log.severe("Error loading html for print: " + e.getMessage());
 
             return null;
         }
@@ -459,7 +459,7 @@ public class PrintMessageCommand extends FolderCommand {
 
             bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
         } else {
-            ColumbaLogger.log.debug("No charset specified " +
+            ColumbaLogger.log.info("No charset specified " +
                 "- no decoding will be performed");
         }
 

@@ -156,7 +156,7 @@ public class GlobalResourceLoader {
         }
 
         if (langpack.exists() && langpack.isFile()) {
-            ColumbaLogger.log.info("Creating new i18n class loader for " +
+            ColumbaLogger.log.fine("Creating new i18n class loader for " +
                 langpack.getPath());
 
             try {
@@ -165,7 +165,7 @@ public class GlobalResourceLoader {
             }
              //does not occur
         } else {
-            ColumbaLogger.log.error("No language pack found for " +
+            ColumbaLogger.log.severe("No language pack found for " +
                 Locale.getDefault().toString());
 
             // we can't use SystemClassLoader here, because that
@@ -239,7 +239,7 @@ public class GlobalResourceLoader {
         try {
             return globalBundle.getString(sID);
         } catch (MissingResourceException mre) {
-            ColumbaLogger.log.error("'" + sID + "' in '" + sBundlePath +
+            ColumbaLogger.log.severe("'" + sID + "' in '" + sBundlePath +
                 "' could not be found.");
 
             /*
@@ -286,7 +286,7 @@ public class GlobalResourceLoader {
 
     public static void reload() {
         initClassLoader();
-        ColumbaLogger.log.info("Reloading cached resource bundles for locale " +
+        ColumbaLogger.log.fine("Reloading cached resource bundles for locale " +
             Locale.getDefault().toString());
 
         try {

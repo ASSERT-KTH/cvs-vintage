@@ -57,7 +57,7 @@ public class FetchSubFolderListCommand extends FolderCommand {
      * @see org.columba.core.command.Command#execute(Worker)
      */
     public void execute(Worker worker) throws Exception {
-        ColumbaLogger.log.debug("reference=" +
+        ColumbaLogger.log.info("reference=" +
             getReferences(Command.UNDOABLE_OPERATION));
 
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences(Command.FIRST_EXECUTION);

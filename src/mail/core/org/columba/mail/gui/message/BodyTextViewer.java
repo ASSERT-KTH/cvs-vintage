@@ -159,7 +159,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
                 // this is a HTML message
                 // try to fix broken html-strings
                 String validated = HtmlParser.validateHTMLString(bodyText);
-                ColumbaLogger.log.debug("validated bodytext:\n" + validated);
+                ColumbaLogger.log.info("validated bodytext:\n" + validated);
 
                 // create temporary file
                 File tempFile = TempFileStore.createTempFileWithSuffix("html");
@@ -212,7 +212,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
                 // encapsulate bodytext in html-code
                 r = transformToHTML(new StringBuffer(r));
 
-                ColumbaLogger.log.debug("validated bodytext:\n" + r);
+                ColumbaLogger.log.info("validated bodytext:\n" + r);
 
                 // display bodytext
                 setText(r);
@@ -220,7 +220,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
                 //		setup base url in order to be able to display images
                 // in html-component
                 URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-                ColumbaLogger.log.debug(baseUrl.toString());
+                ColumbaLogger.log.info(baseUrl.toString());
                 ((HTMLDocument) getDocument()).setBase(baseUrl);
             } catch (Exception ex) {
                 ex.printStackTrace();

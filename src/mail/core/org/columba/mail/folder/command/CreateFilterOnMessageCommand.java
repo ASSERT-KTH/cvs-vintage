@@ -107,7 +107,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
         Object[] uids = r[0].getUids(); // uid for messages to save
 
         if (uids.length == 0) {
-            ColumbaLogger.log.info(
+            ColumbaLogger.log.fine(
                 "No filter created since no message was selected");
 
             return; // no message selected.
@@ -125,7 +125,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
         String headerValue = (String) header.get(filterType);
 
         if (headerValue == null) {
-            ColumbaLogger.log.error("Error getting " + filterType +
+            ColumbaLogger.log.severe("Error getting " + filterType +
                 " header. No filter created");
 
             return;

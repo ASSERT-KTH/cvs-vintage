@@ -136,27 +136,27 @@ public class XmlIO extends DefaultHandler {
 
             saxParser.parse(input, this);
         } catch (javax.xml.parsers.ParserConfigurationException ex) {
-            ColumbaLogger.log.error(
+            ColumbaLogger.log.severe(
                 "XML config error while attempting to read from the input stream \n'" +
                 input + "'");
-            ColumbaLogger.log.error(ex.toString());
+            ColumbaLogger.log.severe(ex.toString());
             ex.printStackTrace();
 
             return (false);
         } catch (SAXException ex) {
             // Error
-            ColumbaLogger.log.error(
+            ColumbaLogger.log.severe(
                 "XML parse error while attempting to read from the input stream \n'" +
                 input + "'");
-            ColumbaLogger.log.error(ex.toString());
+            ColumbaLogger.log.severe(ex.toString());
             ex.printStackTrace();
 
             return (false);
         } catch (IOException ex) {
-            ColumbaLogger.log.error(
+            ColumbaLogger.log.severe(
                 "I/O error while attempting to read from the input stream \n'" +
                 input + "'");
-            ColumbaLogger.log.error(ex.toString());
+            ColumbaLogger.log.severe(ex.toString());
             ex.printStackTrace();
 
             return (false);
@@ -186,27 +186,27 @@ public class XmlIO extends DefaultHandler {
 
             saxParser.parse(inputURL.toString(), this);
         } catch (javax.xml.parsers.ParserConfigurationException ex) {
-            ColumbaLogger.log.error(
+            ColumbaLogger.log.severe(
                 "XML config error while attempting to read XML file \n'" +
                 inputURL + "'");
-            ColumbaLogger.log.error(ex.toString());
+            ColumbaLogger.log.severe(ex.toString());
             ex.printStackTrace();
 
             return (false);
         } catch (SAXException ex) {
             // Error
-            ColumbaLogger.log.error(
+            ColumbaLogger.log.severe(
                 "XML parse error while attempting to read XML file \n'" +
                 inputURL + "'");
-            ColumbaLogger.log.error(ex.toString());
+            ColumbaLogger.log.severe(ex.toString());
             ex.printStackTrace();
 
             return (false);
         } catch (IOException ex) {
-            ColumbaLogger.log.error(
+            ColumbaLogger.log.severe(
                 "I/O error while attempting to read XML file \n'" + inputURL +
                 "'");
-            ColumbaLogger.log.error(ex.toString());
+            ColumbaLogger.log.severe(ex.toString());
             ex.printStackTrace();
 
             return (false);
@@ -254,8 +254,8 @@ public class XmlIO extends DefaultHandler {
                 }
             }
         } catch (java.lang.NullPointerException ex) {
-            ColumbaLogger.log.error("Null!!!");
-            ColumbaLogger.log.error(ex.toString());
+            ColumbaLogger.log.severe("Null!!!");
+            ColumbaLogger.log.severe(ex.toString());
             ex.printStackTrace();
         }
     }

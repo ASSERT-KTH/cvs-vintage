@@ -150,7 +150,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
                                                     .getTableItem();
 
         if (MainInterface.DEBUG) {
-            ColumbaLogger.log.info("save table column config");
+            ColumbaLogger.log.fine("save table column config");
         }
 
         getTableModelSorter().saveConfig();
@@ -166,14 +166,14 @@ public class TableController implements FocusOwner, ListSelectionListener {
             }
 
             String c = v.get("name");
-            ColumbaLogger.log.debug("name=" + c);
+            ColumbaLogger.log.info("name=" + c);
 
             TableColumn tc = getView().getColumn(c);
 
             v.set("size", tc.getWidth());
 
             if (MainInterface.DEBUG) {
-                ColumbaLogger.log.debug("size" + tc.getWidth());
+                ColumbaLogger.log.info("size" + tc.getWidth());
             }
 
             try {
@@ -241,7 +241,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
         // folder in which the update occurs
         FolderTreeNode folder = event.getSrcFolder();
 
-        ColumbaLogger.log.debug("source folder=" + folder.getName());
+        ColumbaLogger.log.info("source folder=" + folder.getName());
 
         // get current selection
         FolderCommandReference[] r = (FolderCommandReference[]) mailFrameController.getSelectionManager()
@@ -250,7 +250,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
         // its always possible that no folder is currenlty selected
         if (srcFolder != null) {
-            ColumbaLogger.log.debug("selected folder=" + srcFolder.getName());
+            ColumbaLogger.log.info("selected folder=" + srcFolder.getName());
         }
 
         // make tree visible

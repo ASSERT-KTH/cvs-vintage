@@ -212,7 +212,7 @@ public class POP3Store {
             try {
                 //		try to re-use already instanciated class
                 if (filterCache.containsKey(type) == true) {
-                    ColumbaLogger.log.debug("re-using cached instanciation =" +
+                    ColumbaLogger.log.info("re-using cached instanciation =" +
                         type);
                     filter = (AbstractPOP3PreProcessingFilter) filterCache.get(type);
                 } else {
@@ -226,7 +226,7 @@ public class POP3Store {
             if (filter != null) {
                 // Filter was loaded correctly
                 //  -> apply filter --> modify messagesource
-                ColumbaLogger.log.debug("applying pop3 filter..");
+                ColumbaLogger.log.info("applying pop3 filter..");
 
                 if (filter != null) {
                     filterCache.put(type, filter);
@@ -234,7 +234,7 @@ public class POP3Store {
 
                 rawString = filter.modify(rawString);
 
-                ColumbaLogger.log.debug("rawString=" + rawString);
+                ColumbaLogger.log.info("rawString=" + rawString);
             }
         }
 
@@ -342,7 +342,7 @@ public class POP3Store {
                     protocol.switchToSSL();
 
                     usingSSL = true;
-                    ColumbaLogger.log.debug("Switched to SSL");
+                    ColumbaLogger.log.info("Switched to SSL");
                 } catch (IOException e) {
                     Object[] options = new String[] {
                             MailResourceLoader.getString("", "global", "ok").replaceAll("&",""),
@@ -456,7 +456,7 @@ public class POP3Store {
                 state = STATE_NONAUTHENTICATE;
             }
 
-            ColumbaLogger.log.debug("login=" + login);
+            ColumbaLogger.log.info("login=" + login);
         }
 
         popItem.set("save_password", save);

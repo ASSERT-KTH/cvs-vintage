@@ -63,7 +63,7 @@ public class FrameModel {
             XmlElement view = viewList.getElement(i);
             String id = view.getAttribute("id");
 
-            ColumbaLogger.log.debug("id=" + id);
+            ColumbaLogger.log.info("id=" + id);
 
             // create frame controller for this view...
             FrameMediator c = createFrameController(id, new ViewItem(view));
@@ -78,7 +78,7 @@ public class FrameModel {
          * opened as default.
          */
         if (activeFrameCtrls.size() == 0) {
-            ColumbaLogger.log.debug(
+            ColumbaLogger.log.info(
                 "No views specified - opening mail view as default");
             openView("ThreePaneMail");
         }

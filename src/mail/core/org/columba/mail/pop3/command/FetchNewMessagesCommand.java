@@ -133,7 +133,7 @@ public class FetchNewMessagesCommand extends Command {
         ColumbaMessage message = server.getMessage(serverUID);
 
         if (message == null) {
-            ColumbaLogger.log.error("Message with UID=" + serverUID +
+            ColumbaLogger.log.severe("Message with UID=" + serverUID +
                 " isn't on the server.");
 
             return;
@@ -167,7 +167,7 @@ public class FetchNewMessagesCommand extends Command {
 
     public void downloadNewMessages(List newMessagesUIDList, Worker worker)
         throws Exception {
-        ColumbaLogger.log.info("need to fetch " + newMessagesUIDList.size() +
+        ColumbaLogger.log.fine("need to fetch " + newMessagesUIDList.size() +
             " messages.");
 
         int totalSize = calculateTotalSize(newMessagesUIDList);
@@ -181,7 +181,7 @@ public class FetchNewMessagesCommand extends Command {
             // which UID should be downloaded next
             Object serverUID = newMessagesUIDList.get(i);
 
-            ColumbaLogger.log.info("fetch message with UID=" + serverUID);
+            ColumbaLogger.log.fine("fetch message with UID=" + serverUID);
 
             log(MessageFormat.format(MailResourceLoader.getString("statusbar",
                         "message", "fetch_messages"),
@@ -197,7 +197,7 @@ public class FetchNewMessagesCommand extends Command {
 
                 // if message-size is bigger skip download of this message
                 if (size > maxSize) {
-                    ColumbaLogger.log.info(
+                    ColumbaLogger.log.fine(
                         "skipping download of message, too big");
 
                     continue;
@@ -221,7 +221,7 @@ public class FetchNewMessagesCommand extends Command {
                 // delete message with <index>==index from server
                 server.deleteMessage(serverUID);
 
-                ColumbaLogger.log.info("deleted message with uid=" + serverUID);
+                ColumbaLogger.log.fine("deleted message with uid=" + serverUID);
             }
         }
     }
@@ -230,7 +230,7 @@ public class FetchNewMessagesCommand extends Command {
         log(MailResourceLoader.getString("statusbar", "message",
                 "fetch_uid_list"));
 
-        ColumbaLogger.log.info(
+        ColumbaLogger.log.fine(
             "synchronize local UID-list with remote UID-list");
 
         // synchronize local UID-list with server 		
@@ -242,7 +242,7 @@ public class FetchNewMessagesCommand extends Command {
     public void logout() throws Exception {
         server.logout();
 
-        ColumbaLogger.log.info("logout");
+        ColumbaLogger.log.fine("logout");
 
         log(MailResourceLoader.getString("statusbar", "message", "logout"));
 

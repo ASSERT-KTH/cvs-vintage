@@ -65,7 +65,7 @@ public class SaveMessageSourceAsAction extends AbstractColumbaAction
     public void actionPerformed(ActionEvent evt) {
         FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 
-        ColumbaLogger.log.debug("Save Message Source As... called");
+        ColumbaLogger.log.info("Save Message Source As... called");
 
         SaveMessageSourceAsCommand c = new SaveMessageSourceAsCommand(r);
 

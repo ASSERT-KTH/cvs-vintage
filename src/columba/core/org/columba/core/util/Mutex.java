@@ -39,7 +39,7 @@ public class Mutex {
 
         while (mutex) {
             try {
-                //ColumbaLogger.log.debug("thread " + Thread.currentThread().getName() + " waiting for " + name + " held by thread " + lockingThreadName);
+                //ColumbaLogger.log.info("thread " + Thread.currentThread().getName() + " waiting for " + name + " held by thread " + lockingThreadName);
                 wait();
             } catch (InterruptedException e) {
                 if (Thread.currentThread().isInterrupted()) {
@@ -56,7 +56,7 @@ public class Mutex {
         mutex = true;
         lockingThreadName = Thread.currentThread().getName();
 
-        //ColumbaLogger.log.debug("thread " + lockingThreadName + " now has mutex " + name);
+        //ColumbaLogger.log.info("thread " + lockingThreadName + " now has mutex " + name);
         return true;
     }
 
@@ -65,7 +65,7 @@ public class Mutex {
             mutex = false;
             lockingThreadName = null;
 
-            //ColumbaLogger.log.debug("thread " + lockingThreadName + " now has mutex " + name);
+            //ColumbaLogger.log.info("thread " + lockingThreadName + " now has mutex " + name);
             notifyAll();
         } else {
             String msg = "";
@@ -74,7 +74,7 @@ public class Mutex {
                 msg = " held by thread " + lockingThreadName;
             }
 
-            //ColumbaLogger.log.debug("thread " + Thread.currentThread().getName() + " tried to release unheld mutex " + name + msg);
+            //ColumbaLogger.log.info("thread " + Thread.currentThread().getName() + " tried to release unheld mutex " + name + msg);
         }
     }
 

@@ -16,6 +16,7 @@
 //
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
+
 package org.columba.mail.gui.composer.html;
 
 import org.columba.core.config.Config;
@@ -49,7 +50,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.HTML;
-
 
 /**
  * View part of controller-view frame work for composing html messages
@@ -345,7 +345,7 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer {
         }
 
         if (!supported) {
-            ColumbaLogger.log.error("Alignment not set - alignment=" + align +
+            ColumbaLogger.log.severe("Alignment not set - alignment=" + align +
                 " not supported");
 
             return;
@@ -370,13 +370,13 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer {
     public void setParagraphFormat(HTML.Tag formatTag) {
         // Is the requested format supported?
         if (formatTag == null) {
-            ColumbaLogger.log.error("Format not set - formatTag = null");
+            ColumbaLogger.log.severe("Format not set - formatTag = null");
 
             return;
         }
 
         if (!supportedFormats.contains(formatTag)) {
-            ColumbaLogger.log.error("Format not set - <" + formatTag +
+            ColumbaLogger.log.severe("Format not set - <" + formatTag +
                 "> not supported");
 
             return;
@@ -401,9 +401,9 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer {
             htmlKit.insertHTML(htmlDoc, caretPos, "<br>", 0, 0, HTML.Tag.BR);
             this.setCaretPosition(caretPos + 1);
         } catch (BadLocationException e) {
-            ColumbaLogger.log.error("Error inserting br tag", e);
+            ColumbaLogger.log.severe("Error inserting br tag: " + e.getMessage());
         } catch (IOException e) {
-            ColumbaLogger.log.error("Error inserting br tag", e);
+            ColumbaLogger.log.severe("Error inserting br tag: " + e.getMessage());
         }
     }
 

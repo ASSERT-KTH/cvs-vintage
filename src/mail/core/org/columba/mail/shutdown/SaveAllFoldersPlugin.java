@@ -57,7 +57,7 @@ public class SaveAllFoldersPlugin implements TaskInterface {
             FolderCommandReference[] r = new FolderCommandReference[1];
             r[0] = new FolderCommandReference(child);
 
-            ColumbaLogger.log.debug("saving folder: " + child.getName());
+            ColumbaLogger.log.info("saving folder: " + child.getName());
 
             MainInterface.processor.addOp(new SaveFolderConfigurationCommand(r));
 

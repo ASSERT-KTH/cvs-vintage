@@ -59,19 +59,19 @@ public class LearnSpamCommand extends FolderCommand {
 
         String path = srcFolder.getDirectoryFile().getAbsolutePath();
 
-        ColumbaLogger.log.debug("creating process..");
+        ColumbaLogger.log.info("creating process..");
         ipcHelper.executeCommand(ExternalToolsHelper.getSALearn() +
             " --spam --dir " + path);
 
         int exitCode = ipcHelper.waitFor();
-        ColumbaLogger.log.debug("exitcode=" + exitCode);
+        ColumbaLogger.log.info("exitcode=" + exitCode);
 
         String output = ipcHelper.getOutputString();
-        ColumbaLogger.log.debug("retrieving output: " + output);
+        ColumbaLogger.log.info("retrieving output: " + output);
 
         worker.setDisplayText("SpamAssassin: " + output);
 
-        ColumbaLogger.log.debug("wait for threads to join..");
+        ColumbaLogger.log.info("wait for threads to join..");
         ipcHelper.waitForThreads();
     }
 }

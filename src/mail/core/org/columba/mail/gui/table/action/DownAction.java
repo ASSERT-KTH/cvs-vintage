@@ -53,21 +53,21 @@ public class DownAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent arg0) {
-        ColumbaLogger.log.debug("action down performed");
+        ColumbaLogger.log.info("action down performed");
 
         // getting last selection
         FolderCommandReference[] r = frameController.getTableSelection();
         FolderCommandReference ref = r[0];
-        ColumbaLogger.log.debug("folderCommandRef: " + ref);
+        ColumbaLogger.log.info("folderCommandRef: " + ref);
 
         // getting current uid
         Object[] uids = ref.getUids();
-        ColumbaLogger.log.debug("curr uids: " + uids);
+        ColumbaLogger.log.info("curr uids: " + uids);
 
         // getting current node (under the selection)
         DefaultMutableTreeNode currNode = tableController.getView()
                                                          .getMessagNode(uids[0]);
-        ColumbaLogger.log.debug("currNode: " + currNode);
+        ColumbaLogger.log.info("currNode: " + currNode);
 
         // getting next node
         DefaultMutableTreeNode nextNode = currNode.getNextNode();
@@ -77,12 +77,12 @@ public class DownAction extends AbstractColumbaAction {
             return;
         }
 
-        ColumbaLogger.log.debug("nextNode: " + nextNode);
+        ColumbaLogger.log.info("nextNode: " + nextNode);
 
         // getting from the next node the uid
         Object[] nextUids = new Object[1];
         nextUids[0] = ((MessageNode) nextNode).getUid();
-        ColumbaLogger.log.debug("prevUids: " + nextUids);
+        ColumbaLogger.log.info("prevUids: " + nextUids);
 
         // and set this to the actual ref
         ref.setUids(nextUids);

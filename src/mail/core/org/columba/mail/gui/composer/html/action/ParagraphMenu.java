@@ -232,7 +232,7 @@ public class ParagraphMenu extends IMenu implements Observer, ActionListener,
      * @see java.awt.event.ContainerListener#componentAdded(java.awt.event.ContainerEvent)
      */
     public void componentAdded(ContainerEvent e) {
-        ColumbaLogger.log.debug(
+        ColumbaLogger.log.info(
             "Re-registering as observer on editor controller");
         ((ComposerController) getController()).getEditorController()
          .addObserver(this);

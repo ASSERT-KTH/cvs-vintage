@@ -99,7 +99,7 @@ public class PluginManager {
             return null;
         }
 
-        ColumbaLogger.log.info("registering plugin: " + folder);
+        ColumbaLogger.log.fine("registering plugin: " + folder);
 
         // load plugin.xml file
         // skip if it doesn't exist
@@ -139,10 +139,10 @@ public class PluginManager {
             jarFiles.put(id, new File(folder, jar));
         }
 
-        ColumbaLogger.log.debug("id: " + id);
+        ColumbaLogger.log.info("id: " + id);
 
-        //ColumbaLogger.log.debug("type: " + type);
-        ColumbaLogger.log.debug("jar: " + jar);
+        //ColumbaLogger.log.info("type: " + type);
+        ColumbaLogger.log.info("jar: " + jar);
 
         XmlElement extension;
         String extensionPoint;
@@ -164,11 +164,11 @@ public class PluginManager {
                         File file = null;
                         file = folder;
 
-                        ColumbaLogger.log.info("debug: " + file.toString());
+                        ColumbaLogger.log.fine("debug: " + file.toString());
 
                         handler.addExtension(id, extension);
                     } catch (Exception ex) {
-                        ColumbaLogger.log.error(ex.getMessage());
+                        ColumbaLogger.log.severe(ex.getMessage());
                     }
                 }
             }
@@ -220,7 +220,7 @@ public class PluginManager {
         if (pluginHandlers.containsKey(id)) {
             return (AbstractPluginHandler) pluginHandlers.get(id);
         } else {
-            ColumbaLogger.log.error("PluginHandler not found: " + id);
+            ColumbaLogger.log.severe("PluginHandler not found: " + id);
 
             throw new PluginHandlerNotFoundException(id);
         }
@@ -261,7 +261,7 @@ public class PluginManager {
             }
 
             if (infoFile.exists()) {
-                ColumbaLogger.log.debug("infofile-URL=" + infoFile.toURL());
+                ColumbaLogger.log.info("infofile-URL=" + infoFile.toURL());
 
                 return infoFile.toURL();
             }

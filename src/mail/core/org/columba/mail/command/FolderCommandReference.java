@@ -125,13 +125,13 @@ public class FolderCommandReference extends DefaultCommandReference {
     }
 
     public boolean tryToGetLock(Object locker) {
-        //ColumbaLogger.log.debug("try to get lock on: "+folder.getName() );
+        //ColumbaLogger.log.info("try to get lock on: "+folder.getName() );
         //Lock result = folder.tryToGetLock();
         return folder.tryToGetLock(locker);
     }
 
     public void releaseLock(Object locker) {
-        //ColumbaLogger.log.debug("releasing lock: "+folder.getName() );
+        //ColumbaLogger.log.info("releasing lock: "+folder.getName() );
         folder.releaseLock(locker);
     }
 

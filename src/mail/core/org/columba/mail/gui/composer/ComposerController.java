@@ -246,7 +246,7 @@ public class ComposerController extends AbstractFrameController
         // *20030917, karlpeder* If ContainerListeners are waiting to be
         // added, add them now.
         if (containerListenerBuffer != null) {
-            ColumbaLogger.log.debug("Adding ContainerListeners from buffer");
+            ColumbaLogger.log.info("Adding ContainerListeners from buffer");
 
             Iterator ite = containerListenerBuffer.iterator();
 
@@ -464,11 +464,11 @@ public class ComposerController extends AbstractFrameController
      */
     private void switchEditor(boolean html) {
         if (composerModel.isHtml()) {
-            ColumbaLogger.log.info("Switching to html editor");
+            ColumbaLogger.log.fine("Switching to html editor");
             editorController.deleteObservers(); // clean up
             editorController = new HtmlEditorController(this);
         } else {
-            ColumbaLogger.log.info("Switching to text editor");
+            ColumbaLogger.log.fine("Switching to text editor");
             editorController.deleteObservers(); // clean up
             editorController = new TextEditorController(this);
         }
@@ -514,7 +514,7 @@ public class ComposerController extends AbstractFrameController
 
     /* *20030831, karlpeder* Using method on super class instead
     public void close() {
-                ColumbaLogger.log.info("closing ComposerController");
+                ColumbaLogger.log.fine("closing ComposerController");
             view.saveWindowPosition();
             view.setVisible(false);
     }
@@ -559,10 +559,10 @@ public class ComposerController extends AbstractFrameController
                 String newBody;
 
                 if (html) {
-                    ColumbaLogger.log.info("Converting body text to html");
+                    ColumbaLogger.log.fine("Converting body text to html");
                     newBody = HtmlParser.textToHtml(oldBody, "", null);
                 } else {
-                    ColumbaLogger.log.info("Converting body text to text");
+                    ColumbaLogger.log.fine("Converting body text to text");
                     newBody = HtmlParser.htmlToText(oldBody);
                 }
 

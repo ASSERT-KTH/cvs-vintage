@@ -88,7 +88,7 @@ public class ToolBar extends JToolBar {
                     addSeparator();
                 }
             } catch (Exception e) {
-                ColumbaLogger.log.debug("toolbar-button=" +
+                ColumbaLogger.log.info("toolbar-button=" +
                     ((String) buttonElement.getAttribute("action")));
 
                 e.printStackTrace();

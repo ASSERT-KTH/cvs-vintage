@@ -129,7 +129,7 @@ public class TreeController implements TreeWillExpandListener {
 
     /******************** TreeWillExpand Interface *******************************/
     public void treeWillExpand(TreeExpansionEvent e) throws ExpandVetoException {
-        ColumbaLogger.log.debug("treeWillExpand=" + e.getPath().toString());
+        ColumbaLogger.log.info("treeWillExpand=" + e.getPath().toString());
 
         FolderTreeNode treeNode = (FolderTreeNode) e.getPath()
                                                     .getLastPathComponent();

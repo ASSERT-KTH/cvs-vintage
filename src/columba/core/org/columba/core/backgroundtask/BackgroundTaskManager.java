@@ -66,7 +66,7 @@ public class BackgroundTaskManager implements ActionListener {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent event) {
-        ColumbaLogger.log.debug("is their any task running?");
+        ColumbaLogger.log.info("is their any task running?");
 
         // test if a task is already running 
         EventQueue queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
@@ -74,7 +74,7 @@ public class BackgroundTaskManager implements ActionListener {
         if ((queue.peekEvent() == null) &&
                 (MainInterface.processor.getTaskManager().count() == 0)) {
             // no java task running -> start background tasks
-            ColumbaLogger.log.info("starting background tasks...");
+            ColumbaLogger.log.fine("starting background tasks...");
             runTasks();
         }
     }

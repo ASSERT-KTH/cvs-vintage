@@ -338,7 +338,7 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
             //Config.save();
             setVisible(false);
         } else if (action.equals("ADD")) {
-            ColumbaLogger.log.debug("add");
+            ColumbaLogger.log.info("add");
 
             ChooseFilterDialog d = new ChooseFilterDialog(this);
 
@@ -348,7 +348,7 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
 
             String id = d.getSelection();
 
-            ColumbaLogger.log.debug("selected id=" + id);
+            ColumbaLogger.log.info("selected id=" + id);
 
             XmlElement filter = filterList.addSubElement(
                     "pop3preprocessingfilter");

@@ -26,14 +26,14 @@ import org.columba.core.logging.ColumbaLogger;
  */
 public class LoggingFacade {
     public static void logInfo(String infoMessage) {
-        ColumbaLogger.log.info(infoMessage);
+        ColumbaLogger.log.fine(infoMessage);
     }
 
     public static void logDebug(String debugMessage) {
-        ColumbaLogger.log.debug(debugMessage);
+        ColumbaLogger.log.info(debugMessage);
     }
 
     public static void logError(String errorMessage) {
-        ColumbaLogger.log.error(errorMessage);
+        ColumbaLogger.log.severe(errorMessage);
     }
 }

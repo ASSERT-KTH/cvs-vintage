@@ -143,7 +143,7 @@ public class HeaderController implements TableModelListener, DropTargetListener,
                 //			try {
                 //				
                 //				HeaderItem item = (HeaderItem) v.get(i);
-                ColumbaLogger.log.debug("item=" + item.toString());
+                ColumbaLogger.log.info("item=" + item.toString());
 
                 String field = (String) item.get("field");
 

@@ -264,7 +264,7 @@ public class cHTMLPart extends cPrintObject {
         mPane.validate(); // ensure contents is layed out properly
 
         if (!mScaleAllowed) {
-            ColumbaLogger.log.debug("Scaling not active - returning scale=1.0");
+            ColumbaLogger.log.info("Scaling not active - returning scale=1.0");
 
             return 1.0;
         } else {
@@ -278,7 +278,7 @@ public class cHTMLPart extends cPrintObject {
                 scale = 1.0; // do not scale up, i.e. no scale factor above 1.0
             }
 
-            ColumbaLogger.log.debug("Returning scale=" + scale);
+            ColumbaLogger.log.info("Returning scale=" + scale);
 
             return scale;
         }

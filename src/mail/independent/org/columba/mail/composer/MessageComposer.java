@@ -552,7 +552,7 @@ public class MessageComposer {
                 next = in.read();
         }
         message.setStringSource(composedMessage.toString());
-        ColumbaLogger.log.debug("Message:\n" + composedMessage.toString());
+        ColumbaLogger.log.info("Message:\n" + composedMessage.toString());
         */
         message.setSourceStream(in);
 

@@ -42,7 +42,7 @@ public class StreamThread extends Thread {
             String line = null;
 
             while ((line = br.readLine()) != null) {
-                ColumbaLogger.log.debug(type + ">" + line);
+                ColumbaLogger.log.info(type + ">" + line);
                 buf.append(line + "\n");
             }
         } catch (IOException ioe) {

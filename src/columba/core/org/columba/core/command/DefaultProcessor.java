@@ -88,7 +88,7 @@ public class DefaultProcessor extends Thread {
      * @param operationMode the mode in wich the command should be processed
      */
     synchronized void addOp(final Command op, final int operationMode) {
-        //ColumbaLogger.log.debug( "Adding Operation..." );
+        //ColumbaLogger.log.info( "Adding Operation..." );
         boolean needToRelease = false;
 
         try {
@@ -120,7 +120,7 @@ public class DefaultProcessor extends Thread {
             }
         }
 
-        //ColumbaLogger.log.debug( "Operation added" );
+        //ColumbaLogger.log.info( "Operation added" );
         notify();
     }
 
@@ -241,7 +241,7 @@ public class DefaultProcessor extends Thread {
 
         isBusy = true;
 
-        //ColumbaLogger.log.debug( "Operator woke up" );
+        //ColumbaLogger.log.info( "Operator woke up" );
     }
 
     /**
@@ -257,20 +257,20 @@ public class DefaultProcessor extends Thread {
             while ((opItem = getNextOpItem()) == null)
                 waitForNotify();
 
-            //ColumbaLogger.log.debug( "Processing new Operation" );
+            //ColumbaLogger.log.info( "Processing new Operation" );
             while ((worker = getWorker()) == null)
                 waitForNotify();
 
-            //ColumbaLogger.log.debug( "Found Worker for new Operation" );
+            //ColumbaLogger.log.info( "Found Worker for new Operation" );
             worker.process(opItem.getOperation(), opItem.getOperationMode(), timeStamp++);
 
-            //ColumbaLogger.log.debug( "Worker initilized" );
+            //ColumbaLogger.log.info( "Worker initilized" );
             worker.register(taskManager);
 
-            //ColumbaLogger.log.debug( "Starting Worker" );
+            //ColumbaLogger.log.info( "Starting Worker" );
             worker.start();
 
-            //ColumbaLogger.log.debug( "New Operation started..." );
+            //ColumbaLogger.log.info( "New Operation started..." );
         }
     }
 

@@ -105,7 +105,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 
         pluginMap = new HashMap();
 
-        ColumbaLogger.log.debug("initialising plugin-handler: " + id);
+        ColumbaLogger.log.info("initialising plugin-handler: " + id);
     }
 
     /**
@@ -144,11 +144,11 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
      */
     public Object getPlugin(String name, Object[] args)
         throws Exception {
-        ColumbaLogger.log.debug("name=" + name);
-        ColumbaLogger.log.debug("arguments=" + args);
+        ColumbaLogger.log.info("name=" + name);
+        ColumbaLogger.log.info("arguments=" + args);
 
         String className = getPluginClassName(name, "class");
-        ColumbaLogger.log.debug("class=" + className);
+        ColumbaLogger.log.info("class=" + className);
 
         if (className == null) {
             if (MainInterface.DEBUG) {
@@ -342,7 +342,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
     }
 
     public boolean exists(String id) {
-        ColumbaLogger.log.debug("id=" + id);
+        ColumbaLogger.log.info("id=" + id);
 
         String[] list = getPluginIdList();
 
@@ -358,8 +358,8 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
             else
                     searchId = plugin;
             */
-            ColumbaLogger.log.debug(" - plugin id=" + plugin);
-            ColumbaLogger.log.debug(" - search id=" + searchId);
+            ColumbaLogger.log.info(" - plugin id=" + plugin);
+            ColumbaLogger.log.info(" - search id=" + searchId);
 
             if (searchId.equals(id)) {
                 return true;

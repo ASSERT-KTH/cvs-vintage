@@ -267,13 +267,13 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
      * all treenode manipulation is passed to the corresponding XmlElement
      */
     public void append(FolderTreeNode child) {
-        ColumbaLogger.log.debug("child=" + child);
+        ColumbaLogger.log.info("child=" + child);
 
         // remove child from parent
         child.removeFromParent();
 
         // do the same for the XmlElement node
-        ColumbaLogger.log.debug("xmlelement=" +
+        ColumbaLogger.log.info("xmlelement=" +
             child.getFolderItem().getRoot().getName());
 
         child.getFolderItem().getRoot().removeFromParent();

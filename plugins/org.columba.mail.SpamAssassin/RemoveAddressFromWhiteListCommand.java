@@ -80,7 +80,7 @@ public class RemoveAddressFromWhiteListCommand extends FolderCommand {
                 int exitVal = -1;
 
                 try {
-                    ColumbaLogger.log.debug("creating process..");
+                    ColumbaLogger.log.info("creating process..");
 
                     String cmd = "spamassassin -a --remove-addr-from-whitelist=\"" +
                         sender + "\"";
@@ -88,7 +88,7 @@ public class RemoveAddressFromWhiteListCommand extends FolderCommand {
 
                     exitVal = ipcHelper.waitFor();
 
-                    ColumbaLogger.log.debug("exitcode=" + exitVal);
+                    ColumbaLogger.log.info("exitcode=" + exitVal);
 
                     ipcHelper.waitForThreads();
                 } catch (Exception ex) {

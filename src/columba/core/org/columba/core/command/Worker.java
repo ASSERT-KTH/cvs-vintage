@@ -98,7 +98,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
                 boss.getUndoManager().addToUndo(op);
             }
         } catch (CommandCancelledException e) {
-            ColumbaLogger.log.debug("Command cancelled");
+            ColumbaLogger.log.info("Command cancelled");
         } catch (Exception e) {
             // Must create a ExceptionProcessor
             e.printStackTrace();

@@ -87,7 +87,7 @@ public class HeaderViewer extends JTextPane {
         // setup base url in order to be able to display images
         // in html-component
         URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-        ColumbaLogger.log.debug(baseUrl.toString());
+        ColumbaLogger.log.info(baseUrl.toString());
         ((HTMLDocument) getDocument()).setBase(baseUrl);
 
         // add headerfields which are about to show up

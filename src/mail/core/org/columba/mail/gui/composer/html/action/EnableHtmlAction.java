@@ -65,7 +65,7 @@ public class EnableHtmlAction extends CheckBoxAction implements ActionListener,
          */
         super.setCheckBoxMenuItem(checkBoxMenuItem);
 
-        ColumbaLogger.log.debug(
+        ColumbaLogger.log.info(
             "Initializing selected state of EnableHtmlAction");
 
         // enable/disable menuitem, based on configuration text/html state

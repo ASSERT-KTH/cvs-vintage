@@ -16,10 +16,9 @@
 
 package org.columba.core.logging;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import org.columba.ristretto.log.RistrettoLoggerInterface;
-
 
 /**
  * @author frd
@@ -38,27 +37,27 @@ public class ColumbaRistrettoLogger implements RistrettoLoggerInterface {
              * @see org.columba.ristretto.log.RistrettoLoggerInterface#debug(java.lang.String)
              */
     public void debug(String message) {
-        log.debug(message);
+        log.info(message);
     }
 
     /* (non-Javadoc)
      * @see org.columba.ristretto.log.RistrettoLoggerInterface#error(java.lang.String)
      */
     public void error(String message) {
-        log.error(message);
+        log.severe(message);
     }
 
     /* (non-Javadoc)
      * @see org.columba.ristretto.log.RistrettoLoggerInterface#info(java.lang.String)
      */
     public void info(String message) {
-        log.info(message);
+        log.fine(message);
     }
 
     /* (non-Javadoc)
      * @see org.columba.ristretto.log.RistrettoLoggerInterface#warn(java.lang.String)
      */
     public void warn(String message) {
-        log.warn(message);
+        log.warning(message);
     }
 }

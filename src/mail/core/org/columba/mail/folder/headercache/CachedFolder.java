@@ -152,14 +152,14 @@ public abstract class CachedFolder extends LocalFolder {
 
             // if message with uid doesn't exist -> skip
             if (exists(uid) == false) {
-                ColumbaLogger.log.debug("uid " + uid + " doesn't exist");
+                ColumbaLogger.log.info("uid " + uid + " doesn't exist");
 
                 continue;
             }
 
             if (getFlags(uid).getExpunged()) {
                 // move message to trash if marked as expunged
-                ColumbaLogger.log.debug("removing uid=" + uid);
+                ColumbaLogger.log.info("removing uid=" + uid);
 
                 // remove message
                 removeMessage(uid);

@@ -137,7 +137,7 @@ public class TableView extends TreeTable {
 
             TableColumn tc = null;
 
-            //ColumbaLogger.log.debug("name=" + name);
+            //ColumbaLogger.log.info("name=" + name);
             try {
                 tc = getColumn(name);
             } catch (Exception ex) {
@@ -232,7 +232,7 @@ public class TableView extends TreeTable {
         TableCellRenderer header, int size, boolean lockSize, int position) {
         TableColumn tc = null;
 
-        //ColumbaLogger.log.debug("name=" + name);
+        //ColumbaLogger.log.info("name=" + name);
         try {
             tc = getColumn(name);
         } catch (Exception ex) {
@@ -256,7 +256,7 @@ public class TableView extends TreeTable {
             tc.setMaxWidth(size);
             tc.setMinWidth(size);
         } else {
-            //ColumbaLogger.log.debug("setting size =" + size);
+            //ColumbaLogger.log.info("setting size =" + size);
             tc.setPreferredWidth(size);
         }
 

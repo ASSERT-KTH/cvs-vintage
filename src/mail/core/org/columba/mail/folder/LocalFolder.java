@@ -181,7 +181,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         // apply UID for message
         message.setUID(newUid);
 
-        ColumbaLogger.log.debug("new UID=" + newUid);
+        ColumbaLogger.log.info("new UID=" + newUid);
 
         // get message source
         String source = message.getStringSource();
@@ -256,7 +256,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         if (aktMessage != null) {
             if (aktMessage.getUID().equals(uid)) {
                 // this message is already cached
-                //ColumbaLogger.log.info("using already cached message..");
+                //ColumbaLogger.log.fine("using already cached message..");
                 return (ColumbaMessage) aktMessage;
 
                 //return (AbstractMessage) aktMessage.clone();

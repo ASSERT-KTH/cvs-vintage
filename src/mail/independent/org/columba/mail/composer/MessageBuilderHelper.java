@@ -367,8 +367,8 @@ public class MessageBuilderHelper {
              * buf.append(bodyText.substring(pos, end)); buf.append(quoteEnd);
              * buf.append(bodyText.substring(end));
              *
-             * ColumbaLogger.log.debug("Source:\n" + bodyText);
-             * ColumbaLogger.log.debug("Result:\n" + buf.toString());
+             * ColumbaLogger.log.info("Source:\n" + bodyText);
+             * ColumbaLogger.log.info("Result:\n" + buf.toString());
              *
              * quotedBodyText = buf.toString();
              */

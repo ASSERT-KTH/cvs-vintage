@@ -1,8 +1,3 @@
-/*
- * SaveMessageBodyAsCommand.java
- * Created 2003-06-11
- */
-
 //The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the 
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
@@ -18,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -68,7 +64,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
-
 
 /**
  * This class is used to save a message to file either as
@@ -124,7 +119,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
         // save each message
         for (int j = 0; j < uids.length; j++) {
             Object uid = uids[j];
-            ColumbaLogger.log.debug("Saving UID=" + uid);
+            ColumbaLogger.log.info("Saving UID=" + uid);
 
             // get headers, body part and attachment for message
             ColumbaHeader header = srcFolder.getMessageHeader(uid);
@@ -213,7 +208,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
                     // store whether all headers should be incl.
                     boolean incl = inclHeaders.isSelected();
                     storeInclAllHeadersOption(incl);
-                    ColumbaLogger.log.debug("Incl. all headers: " + incl);
+                    ColumbaLogger.log.info("Incl. all headers: " + incl);
 
                     // save message
                     if (filter.getExtension().equals(htmlFilter.getExtension())) {
@@ -430,7 +425,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
                 // mark quotings with special font
                 body = DocumentParser.markQuotings(body);
             } catch (Exception e) {
-                ColumbaLogger.log.error("Error parsing body", e);
+                ColumbaLogger.log.severe("Error parsing body: " + e.getMessage());
                 body = "<em>Error parsing body!!!</em>";
             }
 
@@ -453,10 +448,10 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
         // save message
         try {
             DiskIO.saveStringInFile(file, msg);
-            ColumbaLogger.log.info("Html msg saved as " +
+            ColumbaLogger.log.fine("Html msg saved as " +
                 file.getAbsolutePath());
         } catch (IOException ioe) {
-            ColumbaLogger.log.error("Error saving message to file", ioe);
+            ColumbaLogger.log.severe("Error saving message to file: " + ioe.getMessage());
         }
     }
 
@@ -505,7 +500,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
                 val = HtmlParser.substituteURL(val);
                 val = HtmlParser.substituteEmailAddress(val);
             } catch (Exception e) {
-                ColumbaLogger.log.error("Error parsing header value", e);
+                ColumbaLogger.log.severe("Error parsing header value: " + e.getMessage());
             }
 
             buf.append("<tr><td style=\"" + csskey + "\">");
@@ -580,7 +575,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 
         // save message
         DiskIO.saveStringInFile(file, msg);
-        ColumbaLogger.log.info("Text msg saved as " + file.getAbsolutePath());
+        ColumbaLogger.log.fine("Text msg saved as " + file.getAbsolutePath());
     }
 
     /**

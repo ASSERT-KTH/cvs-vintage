@@ -69,7 +69,7 @@ public class POP3ServerController implements ActionListener {
                 accountItem.getName() + " (" +
                 accountItem.getIdentityItem().get("address") + ")") {
                     public void actionPerformed(ActionEvent e) {
-                        ColumbaLogger.log.info("not yet implemented");
+                        ColumbaLogger.log.fine("not yet implemented");
                     }
                 };
         manageAction.setEnabled(false);

@@ -53,29 +53,29 @@ public class UpAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent arg0) {
-        ColumbaLogger.log.debug("action up performed");
+        ColumbaLogger.log.info("action up performed");
 
         // getting last selection
         FolderCommandReference[] r = frameController.getTableSelection();
         FolderCommandReference ref = r[0];
-        ColumbaLogger.log.debug("folderCommandRef: " + ref);
+        ColumbaLogger.log.info("folderCommandRef: " + ref);
 
         // getting current uid
         Object[] uids = ref.getUids();
-        ColumbaLogger.log.debug("curr uids: " + uids);
+        ColumbaLogger.log.info("curr uids: " + uids);
         try {
             // getting current node (under the selection)
             DefaultMutableTreeNode currNode = tableController.getView()
                                                              .getMessagNode(uids[0]);
-            ColumbaLogger.log.debug("currNode: " + currNode);
+            ColumbaLogger.log.info("currNode: " + currNode);
         
             // getting prev node
             DefaultMutableTreeNode prevNode = currNode.getPreviousNode();
-            ColumbaLogger.log.debug("prevNode: " + prevNode);
+            ColumbaLogger.log.info("prevNode: " + prevNode);
         
             Object[] prevUids = new Object[1];
             prevUids[0] = ((MessageNode) prevNode).getUid();
-            ColumbaLogger.log.debug("prevUids: " + prevUids);
+            ColumbaLogger.log.info("prevUids: " + prevUids);
             ref.setUids(prevUids);
         
             // check if the node is not null

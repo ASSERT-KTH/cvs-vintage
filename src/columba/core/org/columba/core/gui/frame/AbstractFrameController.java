@@ -189,7 +189,7 @@ public abstract class AbstractFrameController implements FrameMediator {
      * "unregistered" correctly
      */
     public void close() {
-        ColumbaLogger.log.info("Closing FrameController: " +
+        ColumbaLogger.log.fine("Closing FrameController: " +
             this.getClass().getName());
         view.saveWindowPosition(); // ask view to store current pos and size
         view.setVisible(false);

@@ -105,7 +105,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
      * @throws Exception
      */
     public void load() throws Exception {
-        ColumbaLogger.log.info("loading header-cache=" + headerFile);
+        ColumbaLogger.log.fine("loading header-cache=" + headerFile);
 
         try {
             reader = new ObjectReader(headerFile);
@@ -116,12 +116,12 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
         }
 
         int capacity = ((Integer) reader.readObject()).intValue();
-        ColumbaLogger.log.info("capacity=" + capacity);
+        ColumbaLogger.log.fine("capacity=" + capacity);
 
         boolean needToRelease = false;
 
         if (needToSync(capacity)) {
-            ColumbaLogger.log.info(
+            ColumbaLogger.log.fine(
                 "need to recreateHeaderList() because capacity is not matching");
 
             throw new FolderInconsistentException();
@@ -189,7 +189,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
         }
 
         nextUid++;
-        ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
+        ColumbaLogger.log.info("next UID for new messages =" + nextUid);
         ((LocalFolder) folder).setNextMessageUid(nextUid);
 
         reader.close();
@@ -217,7 +217,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
             return;
         }
 
-        ColumbaLogger.log.info("saving header-cache=" + headerFile);
+        ColumbaLogger.log.fine("saving header-cache=" + headerFile);
 
         // this has to called only if the uid becomes higher than Integer
         // allows
@@ -232,7 +232,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
         // write total number of headers to file
         int count = headerList.count();
-        ColumbaLogger.log.info("capacity=" + count);
+        ColumbaLogger.log.fine("capacity=" + count);
         writer.writeObject(new Integer(count));
 
         // write keys of user specified headerfields in file
@@ -354,7 +354,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
-                ColumbaLogger.log.error("Error syncing HeaderCache :" +
+                ColumbaLogger.log.severe("Error syncing HeaderCache :" +
                     ex.getLocalizedMessage());
             }
 

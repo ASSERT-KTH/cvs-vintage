@@ -54,7 +54,7 @@ public class AttachmentSelectionHandler extends SelectionHandler
      * @see org.columba.core.gui.selection.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
      */
     public void setSelection(DefaultCommandReference[] selection) {
-        ColumbaLogger.log.error("Not yet implemented!");
+        ColumbaLogger.log.severe("Not yet implemented!");
     }
 
     public void setMessage(Folder folder, Object messageUid) {

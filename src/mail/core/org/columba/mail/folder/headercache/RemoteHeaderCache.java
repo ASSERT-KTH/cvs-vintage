@@ -56,7 +56,7 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
     }
 
     public void load() throws Exception {
-        ColumbaLogger.log.info("loading header-cache=" + headerFile);
+        ColumbaLogger.log.fine("loading header-cache=" + headerFile);
         headerList = new HeaderList();
 
         try {
@@ -69,7 +69,7 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 
         int capacity = ((Integer) reader.readObject()).intValue();
 
-        ColumbaLogger.log.info("capacity=" + capacity);
+        ColumbaLogger.log.fine("capacity=" + capacity);
 
         int additionalHeaderfieldsCount = ((Integer) reader.readObject()).intValue();
 
@@ -126,7 +126,7 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
             return;
         }
 
-        ColumbaLogger.log.info("saving header-cache=" + headerFile);
+        ColumbaLogger.log.fine("saving header-cache=" + headerFile);
 
         try {
             writer = new ObjectWriter(headerFile);

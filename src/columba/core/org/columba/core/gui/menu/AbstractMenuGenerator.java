@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.menu;
 
 import org.columba.core.action.CheckBoxAction;
@@ -32,7 +33,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.JMenu;
-
 
 /**
  * @author frd
@@ -198,7 +198,7 @@ public abstract class AbstractMenuGenerator {
                             ". This probably means that the class wasn't found. Compile the plugin to create it.");
 
                         if (MainInterface.DEBUG) {
-                            ColumbaLogger.log.error(e + ": " +
+                            ColumbaLogger.log.severe(e.getMessage() + ": " +
                                 next.getAttribute("action"));
                             e.printStackTrace();
                         }
@@ -221,7 +221,7 @@ public abstract class AbstractMenuGenerator {
                             lastWasSeparator = false;
                         }
                     } catch (Exception e) {
-                        ColumbaLogger.log.error(e + " - " +
+                        ColumbaLogger.log.severe(e.getMessage() + " - " +
                             next.getAttribute("checkboxaction"));
                         e.printStackTrace();
                     }
@@ -238,7 +238,7 @@ public abstract class AbstractMenuGenerator {
                         lastWasSeparator = false;
                     } catch (Exception e) {
                         e.printStackTrace();
-                        ColumbaLogger.log.error(e);
+                        ColumbaLogger.log.severe(e.getMessage());
                     }
                 }
             } else if (name.equals("separator")) {

@@ -59,7 +59,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
     }
 
     public void load() throws Exception {
-        ColumbaLogger.log.info("loading header-cache=" + headerFile);
+        ColumbaLogger.log.fine("loading header-cache=" + headerFile);
         headerList = new HeaderList();
 
         try {
@@ -71,7 +71,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
         }
 
         int capacity = ((Integer) reader.readObject()).intValue();
-        ColumbaLogger.log.info("capacity=" + capacity);
+        ColumbaLogger.log.fine("capacity=" + capacity);
 
         if (getObservable() != null) {
             getObservable().setMessage(MailResourceLoader.getString(
@@ -106,7 +106,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
             return;
         }
 
-        ColumbaLogger.log.info("saving header-cache=" + headerFile);
+        ColumbaLogger.log.fine("saving header-cache=" + headerFile);
 
         try {
             writer = new ObjectWriter(headerFile);

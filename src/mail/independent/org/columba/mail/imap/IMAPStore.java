@@ -406,7 +406,7 @@ public class IMAPStore {
         // make sure we are already logged in
         ensureLoginState();
 
-        ColumbaLogger.log.info("selecting path=" + path);
+        ColumbaLogger.log.fine("selecting path=" + path);
 
         try {
             printStatusMessage(MessageFormat.format(
@@ -424,7 +424,7 @@ public class IMAPStore {
 
             messageFolderInfo = MessageFolderInfoParser.parse(responses);
 
-            ColumbaLogger.log.info("exists:" + messageFolderInfo.getExists());
+            ColumbaLogger.log.fine("exists:" + messageFolderInfo.getExists());
 
             state = STATE_SELECTED;
             selectedFolderPath = path;
@@ -1223,7 +1223,7 @@ public class IMAPStore {
 
                 //MessageSet set = new MessageSet(list.toArray());
                 String flagsString = parseVariant(variant);
-                ColumbaLogger.log.debug("flags=" + flagsString);
+                ColumbaLogger.log.info("flags=" + flagsString);
 
                 // unset flags command
                 if (variant >= 4) {

@@ -47,7 +47,7 @@ public class ViewMessageAction extends AbstractColumbaAction {
 
         if (uids.length == 1) {
             if (oldUid == uids[0]) {
-                ColumbaLogger.log.debug(
+                ColumbaLogger.log.info(
                     "this message was already selected, don't fire any event");
 
                 return;

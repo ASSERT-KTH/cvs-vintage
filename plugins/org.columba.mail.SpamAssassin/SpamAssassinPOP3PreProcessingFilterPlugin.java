@@ -41,19 +41,19 @@ public class SpamAssassinPOP3PreProcessingFilterPlugin
         int exitVal = -1;
 
         try {
-            ColumbaLogger.log.debug("creating process..");
+            ColumbaLogger.log.info("creating process..");
 
             ipcHelper.executeCommand(cmd);
 
-            ColumbaLogger.log.debug("sending to stdin..");
+            ColumbaLogger.log.info("sending to stdin..");
 
             ipcHelper.send(rawString);
 
             exitVal = ipcHelper.waitFor();
 
-            ColumbaLogger.log.debug("exitcode=" + exitVal);
+            ColumbaLogger.log.info("exitcode=" + exitVal);
 
-            ColumbaLogger.log.debug("retrieving output..");
+            ColumbaLogger.log.info("retrieving output..");
             result = ipcHelper.getOutputString();
 
             ipcHelper.waitForThreads();

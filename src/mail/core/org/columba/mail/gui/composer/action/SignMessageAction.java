@@ -57,7 +57,7 @@ public class SignMessageAction extends CheckBoxAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        ColumbaLogger.log.debug("start signing...");
+        ColumbaLogger.log.info("start signing...");
 
         //ComposerModel model = (ComposerModel) ((ComposerController)getFrameController()).getModel();
         this.composerController.getModel().setSignMessage(getCheckBoxMenuItem()
@@ -73,7 +73,7 @@ public class SignMessageAction extends CheckBoxAction {
     public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem) {
         /** idea from kpeder ... i don't know why we must use this deprecated method */
         super.setCheckBoxMenuItem(checkBoxMenuItem);
-        ColumbaLogger.log.debug(
+        ColumbaLogger.log.info(
             "Initializing selected state of AlwaysSignAction");
 
         PGPItem item = this.composerController.getModel().getAccountItem()

@@ -53,7 +53,7 @@ public class PluginFinder {
         if (programFolder.exists()) {
             programList = programFolder.listFiles();
         } else {
-            ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
+            ColumbaLogger.log.fine("Folder \"plugins\" doesn't exist.");
         }
 
         File configFolder = new File(ConfigPath.configDirectory, "plugins");
@@ -62,12 +62,12 @@ public class PluginFinder {
             configFolder.mkdir();
         }
 
-        ColumbaLogger.log.debug("config-folder path=" + configFolder.getPath());
+        ColumbaLogger.log.info("config-folder path=" + configFolder.getPath());
 
         if (configFolder.exists()) {
             configList = configFolder.listFiles();
         } else {
-            ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
+            ColumbaLogger.log.fine("Folder \"plugins\" doesn't exist.");
         }
 
         if ((programList != null) && (configList != null)) {

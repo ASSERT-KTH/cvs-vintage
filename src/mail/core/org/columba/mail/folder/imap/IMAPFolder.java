@@ -200,7 +200,7 @@ public class IMAPFolder extends RemoteFolder {
      */
     public boolean renameFolder(String name) throws Exception {
         String oldPath = getImapPath();
-        ColumbaLogger.log.debug("old path=" + oldPath);
+        ColumbaLogger.log.info("old path=" + oldPath);
 
         String newPath = null;
 
@@ -209,7 +209,7 @@ public class IMAPFolder extends RemoteFolder {
         }
 
         newPath += (getStore().getDelimiter() + name);
-        ColumbaLogger.log.debug("new path=" + newPath);
+        ColumbaLogger.log.info("new path=" + newPath);
 
         boolean result = getStore().renameFolder(oldPath, newPath);
 
@@ -694,7 +694,7 @@ public class IMAPFolder extends RemoteFolder {
 
                 if (getFlags(uid).getExpunged()) {
                     // move message to trash
-                    ColumbaLogger.log.debug("moving message with UID " + uid +
+                    ColumbaLogger.log.info("moving message with UID " + uid +
                         " to trash");
 
                     // remove message

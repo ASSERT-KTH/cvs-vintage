@@ -66,7 +66,7 @@ public class Main {
             }
 
             if (MainInterface.DEBUG) {
-                ColumbaLogger.log.debug(
+                ColumbaLogger.log.info(
                     "trying to pass arguments to a running Columba session:\n" +
                     buf.toString());
             }
@@ -94,9 +94,6 @@ public class Main {
 
         StartUpFrame frame = new StartUpFrame();
         frame.setVisible(true);
-
-        // enable logging 
-        new ColumbaLogger();
 
         // initialize configuration backend
         new Config();

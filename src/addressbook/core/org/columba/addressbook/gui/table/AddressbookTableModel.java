@@ -91,7 +91,7 @@ public class AddressbookTableModel extends AbstractTableModel {
     }
 
     public void addItem(HeaderItem item) throws Exception {
-        ColumbaLogger.log.debug("item=" + item.toString());
+        ColumbaLogger.log.info("item=" + item.toString());
 
         int count = 0;
 
@@ -149,7 +149,7 @@ public class AddressbookTableModel extends AbstractTableModel {
 
     public void setHeaderList(HeaderItemList list) {
         if (list == null) {
-            ColumbaLogger.log.debug("list == null");
+            ColumbaLogger.log.info("list == null");
             rows = new HeaderItemList();
 
             fireTableDataChanged();
@@ -157,7 +157,7 @@ public class AddressbookTableModel extends AbstractTableModel {
             return;
         }
 
-        ColumbaLogger.log.debug("list size=" + list.count());
+        ColumbaLogger.log.info("list size=" + list.count());
 
         List clone = (Vector) ((Vector) list.getVector()).clone();
         rows = new HeaderItemList(clone);

@@ -91,13 +91,13 @@ public class MHDataStorage implements DataStorageInterface {
         // delete the file containing the message in the file system			
         if (!file.delete()) {
             // Could not delete the file - possibly someone has a lock on it
-            ColumbaLogger.log.warn("Could not delete " +
+            ColumbaLogger.log.warning("Could not delete " +
                 file.getAbsolutePath() + ". Will try to delete it on exit");
 
             // ... delete it when Columba exists instead
             file.deleteOnExit();
         } else {
-            ColumbaLogger.log.debug(file.getAbsolutePath() +
+            ColumbaLogger.log.info(file.getAbsolutePath() +
                 " deleted successfully");
         }
     }

@@ -54,7 +54,7 @@ public class OptionsXmlConfig extends DefaultXmlConfig {
         String version = root.getAttribute("version");
 
         if (initialVersionWasApplied) {
-            ColumbaLogger.log.info("converting configuration to new version...");
+            ColumbaLogger.log.fine("converting configuration to new version...");
 
             XmlElement viewlist = root.getElement("/options/gui/viewlist");
 

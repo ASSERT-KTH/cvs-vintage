@@ -108,7 +108,7 @@ public class ComposerModel {
     }
 
     public void setTo(String s) {
-        ColumbaLogger.log.debug("to-headerfield:" + s);
+        ColumbaLogger.log.info("to-headerfield:" + s);
 
         if (s == null) {
             return;

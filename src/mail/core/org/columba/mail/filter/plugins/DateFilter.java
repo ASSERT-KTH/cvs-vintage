@@ -81,7 +81,7 @@ public class DateFilter extends AbstractFilter {
         Date d = (Date) folder.getAttribute(uid, "columba.date");
 
         if (d == null) {
-            ColumbaLogger.log.error("field date not found");
+            ColumbaLogger.log.severe("field date not found");
 
             return false;
         }

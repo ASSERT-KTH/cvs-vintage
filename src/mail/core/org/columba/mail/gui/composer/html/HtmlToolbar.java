@@ -268,7 +268,7 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
                 int selectedIndex = paragraphComboBox.getSelectedIndex();
                 HTML.Tag tag = ParagraphMenu.STYLE_TAGS[selectedIndex];
 
-                ColumbaLogger.log.info("Setting paragraph format to: " +
+                ColumbaLogger.log.fine("Setting paragraph format to: " +
                     tag.toString());
 
                 ctrl.setParagraphFormat(tag);
@@ -288,7 +288,7 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
      * @see java.awt.event.ContainerListener#componentAdded(java.awt.event.ContainerEvent)
      */
     public void componentAdded(ContainerEvent e) {
-        ColumbaLogger.log.debug(
+        ColumbaLogger.log.info(
             "Re-registering as observer on editor controller");
         controller.getEditorController().addObserver(this);
     }

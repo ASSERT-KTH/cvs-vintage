@@ -101,7 +101,7 @@ public class CopyMessageCommand extends FolderCommand {
             // setting lastSelection for srcFolder to null
             srcFolder.setLastSelection(null);
 
-            ColumbaLogger.log.debug("src=" + srcFolder + " dest=" + destFolder);
+            ColumbaLogger.log.info("src=" + srcFolder + " dest=" + destFolder);
 
             // update status message
             worker.setDisplayText(MessageFormat.format(

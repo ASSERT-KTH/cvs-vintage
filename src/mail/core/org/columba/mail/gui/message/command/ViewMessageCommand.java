@@ -152,7 +152,7 @@ public class ViewMessageCommand extends FolderCommand {
 			// TODO should be removed if we only use Streams!
 			String decryptedBodyPart =
 				StreamUtils.readInString(decryptedStream).toString();
-			ColumbaLogger.log.debug(decryptedBodyPart);
+			ColumbaLogger.log.info(decryptedBodyPart);
 
 			// construct new Message from decrypted string
 			ColumbaMessage message;
@@ -346,7 +346,7 @@ public class ViewMessageCommand extends FolderCommand {
 		MimeType firstPartMimeType =
 			mimePartTree.getRootMimeNode().getHeader().getMimeType();
 		String contentType = (String) header.get("Content-Type");
-		ColumbaLogger.log.debug("contentType=" + contentType);
+		ColumbaLogger.log.info("contentType=" + contentType);
 
 		if (firstPartMimeType.getSubtype().equals("signed")) {
 			verifySignedPart(mimePartTree.getRootMimeNode());

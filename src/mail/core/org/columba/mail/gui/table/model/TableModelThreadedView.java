@@ -421,7 +421,7 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
 
             if (((ColumbaHeader) child.getHeader()).getFlags().getRecent()) {
                 // recent found
-                ColumbaLogger.log.debug("found recent message");
+                ColumbaLogger.log.info("found recent message");
 
                 return true;
             } else {

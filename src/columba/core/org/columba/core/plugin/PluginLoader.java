@@ -61,7 +61,7 @@ public class PluginLoader {
         }
 
         if (MainInterface.DEBUG) {
-            ColumbaLogger.log.debug("loading.. " + className);
+            ColumbaLogger.log.info("loading.. " + className);
         }
 
         if (type.equals("java") || type.equals("jar")) {
@@ -98,7 +98,7 @@ public class PluginLoader {
                 url[i] = (URL) urlList.get(i);
             }
 
-            ColumbaLogger.log.debug("url=" + newURL);
+            ColumbaLogger.log.info("url=" + newURL);
 
             return new ExternalClassLoader(url).instanciate(className, args);
         }

@@ -13,35 +13,40 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.logging;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import java.io.IOException;
+
+import java.util.logging.*;
 
 import org.columba.core.config.Config;
 import org.columba.core.main.MainInterface;
 
 import org.columba.ristretto.log.RistrettoLogger;
 
-
 /**
- * A wrapper class for log4j. This class initialized and configures
- * a log4j logger. Depending on the debug flag (--debug command line
+ * Depending on the debug flag (--debug command line
  * option reflected in MainInterface.DEBUG) the logger will either
- * show all debug messages (debug, info, warn, error) or nothing.
+ * show all debug messages or just severe errors.
  */
 public class ColumbaLogger {
     public static Logger log;
 
     static {
         log = Logger.getLogger("org.columba");
-        PropertyConfigurator.configure(Config.getLoggingPropertyFile().toString());
-
+        log.setUseParentHandlers(false);
+        try {
+            FileHandler handler = new FileHandler("log/columba.log", false);
+            handler.setFormatter(new SimpleFormatter());
+            log.addHandler(handler);
+        } catch(IOException ioe) {
+            log.severe(ioe.getMessage());
+        }
         if (MainInterface.DEBUG) {
-            log.setLevel(Level.DEBUG);
+            log.setLevel(Level.ALL);
         } else {
-            log.setLevel(Level.OFF);
+            log.setLevel(Level.SEVERE);
         }
 
         RistrettoLogger.setDebugEnabled(MainInterface.DEBUG);

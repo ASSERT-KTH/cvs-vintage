@@ -93,7 +93,7 @@ public class POP3ServerCollection //implements ActionListener
         POP3ServerController server;
 
         if (index == -1) {
-            ColumbaLogger.log.error("could not find popserver");
+            ColumbaLogger.log.severe("could not find popserver");
 
             return;
         } else {

@@ -1,7 +1,3 @@
-/*
- * SaveMessageBodyAsCommand.java Created 2003-06-21
- */
-
 //The contents of this file are subject to the Mozilla Public License Version
 // 1.1
 //(the "License"); you may not use this file except in compliance with the
@@ -19,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -110,7 +107,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
         Object[] uids = r[0].getUids(); // uid for messages to save
 
         if (uids.length == 0) {
-            ColumbaLogger.log.info(
+            ColumbaLogger.log.fine(
                 "No virtual folder created since no message was selected");
 
             return; // no message selected.
@@ -128,7 +125,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
         String headerValue = (String) header.get(vfolderType);
 
         if (headerValue == null) {
-            ColumbaLogger.log.error("Error getting " + vfolderType +
+            ColumbaLogger.log.severe("Error getting " + vfolderType +
                 " header. No virtual folder created");
 
             return;
@@ -163,8 +160,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
             vfolder = (VirtualFolder) FolderFactory.getInstance().createChild(parent,
                     folderName, "VirtualFolder");
         } catch (Exception e) {
-            ColumbaLogger.log.error("Error creating new virtual folder", e);
-
+            ColumbaLogger.log.severe("Error creating new virtual folder: " + e.getMessage());
             return null;
         }
 

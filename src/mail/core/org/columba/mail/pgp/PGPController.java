@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.pgp;
 
 import org.columba.core.io.StreamUtils;
@@ -137,7 +138,7 @@ public class PGPController {
             myInstance = new PGPController();
         }
 
-        ColumbaLogger.log.debug(myInstance.toString());
+        ColumbaLogger.log.info(myInstance.toString());
 
         return myInstance;
     }
@@ -175,7 +176,7 @@ public class PGPController {
 
         try {
             exitVal = utils[GPG].decrypt(item, cryptMessage);
-            ColumbaLogger.log.debug("exitVal=" + exitVal);
+            ColumbaLogger.log.info("exitVal=" + exitVal);
 
             error = utils[GPG].parse(utils[GPG].getErrorString());
         } catch (Exception e) {
@@ -249,7 +250,7 @@ public class PGPController {
             this.createTempFileFromStream(pgpStream);
 
             exitVal = utils[GPG].encrypt(item, this.getTempInputStream());
-            ColumbaLogger.log.debug("exitVal=" + exitVal);
+            ColumbaLogger.log.info("exitVal=" + exitVal);
 
             error = utils[GPG].parse(utils[GPG].getErrorString());
         } catch (Exception e) {
@@ -288,23 +289,23 @@ public class PGPController {
         exitVal = -1;
 
         String error = null;
-        ColumbaLogger.log.debug("signing called");
+        ColumbaLogger.log.info("signing called");
         this.checkPassphrase(item);
 
         try {
             exitVal = utils[GPG].sign(item, pgpStream);
-            ColumbaLogger.log.debug("exitVal=" + exitVal);
+            ColumbaLogger.log.info("exitVal=" + exitVal);
 
             error = utils[GPG].parse(utils[GPG].getErrorString());
         } catch (Exception e) {
-            ColumbaLogger.log.error(e);
+            ColumbaLogger.log.severe(e.getMessage());
             throw new PGPException(error);
         }
 
         pgpMessage = new String(error);
 
         if (exitVal != 0) {
-            ColumbaLogger.log.error(error);
+            ColumbaLogger.log.severe(error);
             throw new PGPException(error);
         }
 
@@ -369,7 +370,7 @@ public class PGPController {
         }
 
         try {
-            ColumbaLogger.log.debug("pgpmessage: !!" + pgpMessage + "!!");
+            ColumbaLogger.log.info("pgpmessage: !!" + pgpMessage + "!!");
             exitVal = utils[GPG].sign(item, pgpMessage);
 
             if (!checkError(exitVal, item)) {
@@ -390,7 +391,7 @@ public class PGPController {
             item.clearPassphrase();
         }
 
-        ColumbaLogger.log.debug(utils[GPG].getResult());
+        ColumbaLogger.log.info(utils[GPG].getResult());
 
         return utils[GPG].getResult();
     }

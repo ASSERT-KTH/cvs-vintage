@@ -72,7 +72,7 @@ public class OutboxFolder extends CachedMHFolder {
         if (aktMessage != null) {
             if (aktMessage.getUID().equals(uid)) {
                 // this message is already cached
-                ColumbaLogger.log.info("using already cached message..");
+                ColumbaLogger.log.fine("using already cached message..");
 
                 return aktMessage;
             }

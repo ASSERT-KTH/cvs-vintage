@@ -109,7 +109,7 @@ public class MoveMessageCommand extends CopyMessageCommand {
 
             uids = r[i].getUids();
 
-            ColumbaLogger.log.debug("src=" + srcFolder + " dest=" + destFolder);
+            ColumbaLogger.log.info("src=" + srcFolder + " dest=" + destFolder);
 
             // update status message
             worker.setDisplayText("Moving messages to " + destFolder.getName() +

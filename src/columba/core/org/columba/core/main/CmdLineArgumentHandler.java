@@ -30,7 +30,7 @@ public class CmdLineArgumentHandler {
     public CmdLineArgumentHandler(String[] args) {
         ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
         cmdLineParser.initCmdLine(args);
-        ColumbaLogger.log.debug("cmdLineArgumentHandler");
+        ColumbaLogger.log.info("cmdLineArgumentHandler");
 
         String mailURL = cmdLineParser.getMailurlOption();
 
@@ -48,13 +48,13 @@ public class CmdLineArgumentHandler {
         }
 
         if (MainInterface.DEBUG) {
-            ColumbaLogger.log.debug("Option Debug: " +
+            ColumbaLogger.log.info("Option Debug: " +
                 cmdLineParser.getComposerOption());
-            ColumbaLogger.log.debug("Option subject: " +
+            ColumbaLogger.log.info("Option subject: " +
                 cmdLineParser.getSubjectOption());
-            ColumbaLogger.log.debug("Option composer: " +
+            ColumbaLogger.log.info("Option composer: " +
                 cmdLineParser.getComposerOption());
-            ColumbaLogger.log.debug("Option mailurl: " +
+            ColumbaLogger.log.info("Option mailurl: " +
                 cmdLineParser.getMailurlOption());
         }
 

@@ -70,7 +70,7 @@ public class ShutdownManager {
         //		increase "waiting time" (when should we open the dialog the next time)
         currentDelay = currentDelay * 2;
 
-        ColumbaLogger.log.debug("current delay=" + currentDelay);
+        ColumbaLogger.log.info("current delay=" + currentDelay);
 
         //		start delayed timer
         delayedTimer = new Timer(currentDelay,
@@ -137,7 +137,7 @@ public class ShutdownManager {
         // timer with 1 second delay
         // exit if no task is running anymore
         if (MainInterface.processor.getTaskManager().count() == 0) {
-            ColumbaLogger.log.debug("one second timer exited Columba");
+            ColumbaLogger.log.info("one second timer exited Columba");
 
             // save xml configuration 
             new SaveConfigPlugin().run();

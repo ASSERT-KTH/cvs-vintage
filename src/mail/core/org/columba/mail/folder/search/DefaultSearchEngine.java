@@ -76,7 +76,7 @@ public class DefaultSearchEngine {
             return (AbstractFilter) filterCache.get(type);
         }
 
-        ColumbaLogger.log.debug("loading new instance =" + type);
+        ColumbaLogger.log.info("loading new instance =" + type);
 
         AbstractFilter instance = null;
 

@@ -97,7 +97,7 @@ public class TempFolder extends Folder {
 
             if (getFlags(uid).getExpunged()) {
                 // move message to trash
-                ColumbaLogger.log.info("moving message with UID " + uid +
+                ColumbaLogger.log.fine("moving message with UID " + uid +
                     " to trash");
 
                 // remove message
@@ -121,7 +121,7 @@ public class TempFolder extends Folder {
     public Object addMessage(ColumbaMessage message) throws Exception {
         Object newUid = generateNextUid();
 
-        ColumbaLogger.log.debug("new UID=" + newUid);
+        ColumbaLogger.log.info("new UID=" + newUid);
 
         ColumbaHeader h = (ColumbaHeader) ((ColumbaHeader) message.getHeader());
 
@@ -291,7 +291,7 @@ public class TempFolder extends Folder {
 
         Object newUid = generateNextUid();
 
-        ColumbaLogger.log.debug("new UID=" + newUid);
+        ColumbaLogger.log.info("new UID=" + newUid);
 
         ColumbaHeader h = new ColumbaHeader(message.getHeader());
         if( attributes != null ) {

@@ -142,7 +142,7 @@ public class ItalicFormatAction extends CheckBoxAction implements Observer,
      * @see java.awt.event.ContainerListener#componentAdded(java.awt.event.ContainerEvent)
      */
     public void componentAdded(ContainerEvent e) {
-        ColumbaLogger.log.debug(
+        ColumbaLogger.log.info(
             "Re-registering as observer on editor controller");
         ((ComposerController) getFrameMediator()).getEditorController()
          .addObserver(this);

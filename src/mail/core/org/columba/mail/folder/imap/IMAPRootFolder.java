@@ -161,16 +161,16 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener,
             ListInfo info,
             String subchild)
             throws Exception {
-            ColumbaLogger.log.debug("creating folder=" + subchild);
+            ColumbaLogger.log.info("creating folder=" + subchild);
 
-            ColumbaLogger.log.debug("info.getName()=" + info.getName());
-            ColumbaLogger.log.debug("info.getLastName()=" + info.getLastName());
+            ColumbaLogger.log.info("info.getName()=" + info.getName());
+            ColumbaLogger.log.info("info.getLastName()=" + info.getLastName());
 
             if (subchild.equals(info.getLastName())) {
 
                     // this is just a parent-folder we need to
                     // create in order to create a child-folder
-                    ColumbaLogger.log.debug("creating immediate folder=" + subchild);
+                    ColumbaLogger.log.info("creating immediate folder=" + subchild);
 
                     return folder.addFolder(subchild, "IMAPFolder");
 
@@ -178,7 +178,7 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener,
 
                     // this folder is associated with ListInfo
                     // pass parameters to folderinfo
-                    ColumbaLogger.log.debug("create final folder" + subchild);
+                    ColumbaLogger.log.info("create final folder" + subchild);
 
                     IMAPFolder imapFolder =
                             (IMAPFolder) folder.addFolder(subchild, "IMAPFolder");
@@ -201,7 +201,7 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener,
 
     protected void syncFolder(FolderTreeNode parent, String name, ListInfo info)
         throws Exception {
-        ColumbaLogger.log.debug("creating folder=" + name);
+        ColumbaLogger.log.info("creating folder=" + name);
 
         if ((name.indexOf(store.getDelimiter()) != -1) &&
                 (name.indexOf(store.getDelimiter()) != (name.length() - 1))) {
@@ -341,7 +341,7 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener,
             if (listInfo != null) {
                 for (int i = 0; i < listInfo.length; i++) {
                     ListInfo info = listInfo[i];
-                    ColumbaLogger.log.debug("delimiter=" +
+                    ColumbaLogger.log.info("delimiter=" +
                         getStore().getDelimiter());
 
                     String folderPath = info.getName();
@@ -807,7 +807,7 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener,
      * @see org.columba.mail.folder.Folder#save()
      */
     public void save() throws Exception {
-        ColumbaLogger.log.debug("Logout from IMAPServer " + getName());
+        ColumbaLogger.log.info("Logout from IMAPServer " + getName());
 
         if (ShutdownManager.getMode() == ShutdownManager.SHUTDOWN) {
             getStore().logout();
