@@ -1,10 +1,13 @@
 package org.columba.mail.gui.message;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Rectangle;
 
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
+
+import org.columba.core.config.Config;
 
 /**
  * @author timo
@@ -27,7 +30,9 @@ public class MessagePanel extends JPanel implements Scrollable {
 	 * @see javax.swing.Scrollable#getScrollableUnitIncrement(java.awt.Rectangle, int, int)
 	 */
 	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
-		return this.getHeight() / 20;
+		Font textFont = Config.getOptionsConfig().getGuiItem().getTextFont();
+		
+		return textFont.getSize() * 5;
 	}
 
 	/**
@@ -37,7 +42,9 @@ public class MessagePanel extends JPanel implements Scrollable {
 		Rectangle arg0,
 		int arg1,
 		int arg2) {
-		return this.getHeight() / 10;
+			Font textFont = Config.getOptionsConfig().getGuiItem().getTextFont();
+		
+			return textFont.getSize() * 10;
 	}
 
 	/**
