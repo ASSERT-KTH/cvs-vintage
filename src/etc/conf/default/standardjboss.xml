@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.90 2005/01/07 00:06:14 reverbel Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.91 2005/02/01 08:17:34 telrod Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -15,8 +15,8 @@
   <invoker-proxy-bindings>
 
     <invoker-proxy-binding>
-      <name>entity-rmi-invoker</name>
-      <invoker-mbean>jboss:service=invoker,type=jrmp</invoker-mbean>
+      <name>entity-unified-invoker</name>
+      <invoker-mbean>jboss:service=invoker,type=unified</invoker-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -77,8 +77,8 @@
     </invoker-proxy-binding>
 
     <invoker-proxy-binding>
-      <name>stateless-rmi-invoker</name>
-      <invoker-mbean>jboss:service=invoker,type=jrmp</invoker-mbean>
+      <name>stateless-unified-invoker</name>
+      <invoker-mbean>jboss:service=invoker,type=unified</invoker-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -125,8 +125,8 @@
     </invoker-proxy-binding>
 
     <invoker-proxy-binding>
-      <name>stateful-rmi-invoker</name>
-      <invoker-mbean>jboss:service=invoker,type=jrmp</invoker-mbean>
+      <name>stateful-unified-invoker</name>
+      <invoker-mbean>jboss:service=invoker,type=unified</invoker-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -252,7 +252,7 @@
       </proxy-factory-config>
     </invoker-proxy-binding>
     -->
-    
+
     <invoker-proxy-binding>
       <name>singleton-message-driven-bean</name>
       <invoker-mbean>default</invoker-mbean>
@@ -365,7 +365,7 @@
     <container-configuration>
       <container-name>Standard CMP 2.x EntityBean</container-name>
       <call-logging>false</call-logging>
-      <invoker-proxy-binding-name>entity-rmi-invoker</invoker-proxy-binding-name>
+      <invoker-proxy-binding-name>entity-unified-invoker</invoker-proxy-binding-name>
       <sync-on-commit-only>false</sync-on-commit-only>
       <insert-after-ejb-post-create>false</insert-after-ejb-post-create>
       <call-ejb-store-on-clean>true</call-ejb-store-on-clean>
@@ -414,7 +414,7 @@
       -->
       <container-name>cmp2.x jdbc2 pm</container-name>
       <call-logging>false</call-logging>
-      <invoker-proxy-binding-name>entity-rmi-invoker</invoker-proxy-binding-name>
+      <invoker-proxy-binding-name>entity-unified-invoker</invoker-proxy-binding-name>
       <sync-on-commit-only>false</sync-on-commit-only>
       <insert-after-ejb-post-create>true</insert-after-ejb-post-create>
       <call-ejb-store-on-clean>true</call-ejb-store-on-clean>
@@ -431,9 +431,9 @@
          <interceptor>org.jboss.ejb.plugins.cmp.jdbc2.RelationInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-      <instance-cache>org.jboss.ejb.plugins.PerTxEntityInstanceCache</instance-cache> 
+      <instance-cache>org.jboss.ejb.plugins.PerTxEntityInstanceCache</instance-cache>
       <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc2.JDBCStoreManager2</persistence-manager>
-      <locking-policy>org.jboss.ejb.plugins.lock.NoLock</locking-policy> 
+      <locking-policy>org.jboss.ejb.plugins.lock.NoLock</locking-policy>
       <container-cache-conf>
          <cache-policy-conf>
             <min-capacity>500</min-capacity>
@@ -500,7 +500,7 @@
     <container-configuration>
       <container-name>Standard CMP 2.x EntityBean with cache invalidation</container-name>
       <call-logging>false</call-logging>
-      <invoker-proxy-binding-name>entity-rmi-invoker</invoker-proxy-binding-name>
+      <invoker-proxy-binding-name>entity-unified-invoker</invoker-proxy-binding-name>
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
@@ -543,7 +543,7 @@
     <container-configuration>
       <container-name>Instance Per Transaction CMP 2.x EntityBean</container-name>
       <call-logging>false</call-logging>
-      <invoker-proxy-binding-name>entity-rmi-invoker</invoker-proxy-binding-name>
+      <invoker-proxy-binding-name>entity-unified-invoker</invoker-proxy-binding-name>
       <sync-on-commit-only>false</sync-on-commit-only>
       <insert-after-ejb-post-create>false</insert-after-ejb-post-create>
       <container-interceptors>
@@ -575,7 +575,7 @@
     <container-configuration>
       <container-name>Standard CMP EntityBean</container-name>
       <call-logging>false</call-logging>
-      <invoker-proxy-binding-name>entity-rmi-invoker</invoker-proxy-binding-name>
+      <invoker-proxy-binding-name>entity-unified-invoker</invoker-proxy-binding-name>
       <sync-on-commit-only>false</sync-on-commit-only>
       <insert-after-ejb-post-create>false</insert-after-ejb-post-create>
       <container-interceptors>
@@ -662,7 +662,7 @@
     <container-configuration>
       <container-name>Instance Per Transaction CMP EntityBean</container-name>
       <call-logging>false</call-logging>
-      <invoker-proxy-binding-name>entity-rmi-invoker</invoker-proxy-binding-name>
+      <invoker-proxy-binding-name>entity-unified-invoker</invoker-proxy-binding-name>
       <sync-on-commit-only>false</sync-on-commit-only>
       <insert-after-ejb-post-create>false</insert-after-ejb-post-create>
       <container-interceptors>
@@ -693,7 +693,7 @@
     <container-configuration>
       <container-name>Standard Stateless SessionBean</container-name>
       <call-logging>false</call-logging>
-      <invoker-proxy-binding-name>stateless-rmi-invoker</invoker-proxy-binding-name>
+      <invoker-proxy-binding-name>stateless-unified-invoker</invoker-proxy-binding-name>
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
@@ -755,7 +755,7 @@
     <container-configuration>
       <container-name>Standard Stateful SessionBean</container-name>
       <call-logging>false</call-logging>
-      <invoker-proxy-binding-name>stateful-rmi-invoker</invoker-proxy-binding-name>
+      <invoker-proxy-binding-name>stateful-unified-invoker</invoker-proxy-binding-name>
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
@@ -841,7 +841,7 @@
     <container-configuration>
       <container-name>Standard BMP EntityBean</container-name>
       <call-logging>false</call-logging>
-      <invoker-proxy-binding-name>entity-rmi-invoker</invoker-proxy-binding-name>
+      <invoker-proxy-binding-name>entity-unified-invoker</invoker-proxy-binding-name>
       <sync-on-commit-only>false</sync-on-commit-only>
       <insert-after-ejb-post-create>false</insert-after-ejb-post-create>
       <container-interceptors>
@@ -928,7 +928,7 @@
     <container-configuration>
       <container-name>Instance Per Transaction BMP EntityBean</container-name>
       <call-logging>false</call-logging>
-      <invoker-proxy-binding-name>entity-rmi-invoker</invoker-proxy-binding-name>
+      <invoker-proxy-binding-name>entity-unified-invoker</invoker-proxy-binding-name>
       <sync-on-commit-only>false</sync-on-commit-only>
       <insert-after-ejb-post-create>false</insert-after-ejb-post-create>
       <container-interceptors>

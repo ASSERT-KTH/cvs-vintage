@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.123 2005/01/12 02:17:03 patriot1burke Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.124 2005/02/01 08:16:58 telrod Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -36,17 +36,17 @@
 
    <!-- ==================================================================== -->
    <!-- XMBean Persistence                                                   -->
-   <!-- ==================================================================== -->   
+   <!-- ==================================================================== -->
    <mbean code="org.jboss.system.pm.AttributePersistenceService"
       name="jboss:service=AttributePersistenceService"
       xmbean-dd="resource:xmdesc/AttributePersistenceService-xmbean.xml">
       <!-- the AttributePersistenceService is persistent, itself -->
-           
+
       <!--
       <attribute name="AttributePersistenceManagerClass">org.jboss.system.pm.XMLAttributePersistenceManager</attribute>
       <attribute name="AttributePersistenceManagerConfig">
          <data-directory>data/xmbean-attrs</data-directory>
-      </attribute>      
+      </attribute>
       <attribute name="ApmDestroyOnServiceStop">false</attribute>
       <attribute name="VersionTag"></attribute>
       -->
@@ -277,7 +277,7 @@
       <depends>
          <mbean code="org.jboss.invocation.jrmp.server.JRMPProxyFactory"
             name="jboss:service=proxyFactory,target=ClientUserTransactionFactory">
-            <attribute name="InvokerName">jboss:service=invoker,type=jrmp</attribute>
+            <attribute name="InvokerName">jboss:service=invoker,type=unified</attribute>
             <attribute name="TargetName">jboss:service=ClientUserTransaction</attribute>
             <attribute name="JndiName">UserTransactionSessionFactory</attribute>
             <attribute name="ExportedInterface">org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory</attribute>
@@ -287,13 +287,13 @@
                   <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
                </interceptors>
             </attribute>
-            <depends>jboss:service=invoker,type=jrmp</depends>
+            <depends>jboss:service=invoker,type=unified</depends>
          </mbean>
       </depends>
       <depends optional-attribute-name="TxProxyName">
          <mbean code="org.jboss.invocation.jrmp.server.JRMPProxyFactory"
             name="jboss:service=proxyFactory,target=ClientUserTransaction">
-            <attribute name="InvokerName">jboss:service=invoker,type=jrmp</attribute>
+            <attribute name="InvokerName">jboss:service=invoker,type=unified</attribute>
             <attribute name="TargetName">jboss:service=ClientUserTransaction</attribute>
             <attribute name="JndiName"></attribute>
             <attribute name="ExportedInterface">org.jboss.tm.usertx.interfaces.UserTransactionSession</attribute>
@@ -303,7 +303,7 @@
                   <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
                </interceptors>
             </attribute>
-            <depends>jboss:service=invoker,type=jrmp</depends>
+            <depends>jboss:service=invoker,type=unified</depends>
          </mbean>
       </depends>
    </mbean>
@@ -311,6 +311,13 @@
    <!-- ==================================================================== -->
    <!-- Invokers to the JMX node                                             -->
    <!-- ==================================================================== -->
+
+   <!-- Unified invoker (based on remoting) -->
+   <mbean code="org.jboss.invocation.unified.server.UnifiedInvoker"
+      name="jboss:service=invoker,type=unified">
+      <depends>jboss:service=TransactionManager</depends>
+      <depends>jboss.remoting:service=Connector,transport=socket</depends>
+   </mbean>
 
    <!-- RMI/JRMP invoker -->
    <mbean code="org.jboss.invocation.jrmp.server.JRMPInvoker"
@@ -346,6 +353,41 @@
 
       <depends optional-attribute-name="TransactionManagerService">jboss:service=TransactionManager</depends>
    </mbean>
+
+   <!-- ==================================================================== -->
+   <!-- Remoting services 						                                   -->
+   <!-- ==================================================================== -->
+
+    <mbean code="org.jboss.remoting.network.NetworkRegistry"
+           name="jboss.remoting:service=NetworkRegistry"/>
+
+    <mbean code="org.jboss.remoting.transport.Connector"
+           xmbean-dd="org/jboss/remoting/transport/Connector.xml"
+           name="jboss.remoting:service=Connector,transport=socket"
+           display-name="Socket transport Connector">
+
+        <attribute name="InvokerLocator"><![CDATA[socket://localhost:4446/?datatype=invocation]]></attribute>
+
+        <attribute name="Configuration">
+            <handlers>
+                <handler subsystem="invoker">jboss:service=invoker,type=unified</handler>
+            </handlers>
+        </attribute>
+	<depends>jboss.remoting:service=NetworkRegistry</depends>
+    </mbean>
+
+    <mbean code="org.jboss.remoting.detection.multicast.MulticastDetector"
+           name="jboss.remoting:service=Detector,transport=multicast">
+        <!-- you can specifically bind the detector to a specific IP address here
+        <attribute name="BindAddress">localhost</attribute>
+        -->
+        <attribute name="Port">5555</attribute>
+    </mbean>
+
+    <mbean code="org.jboss.remoting.ClientInvokerAdapter"
+           xmbean-dd="org/jboss/remoting/ClientInvokerAdapter.xml"
+           name="jboss.remoting:service=InterceptorAdapter">
+    </mbean>
 
    <!-- ==================================================================== -->
    <!-- Monitoring and Management                                            -->

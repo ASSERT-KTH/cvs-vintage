@@ -24,7 +24,7 @@ import org.jboss.util.Strings;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  *
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/10/16: billb</b>
@@ -39,7 +39,7 @@ public class EntityMetaData
    public final static int CMP_VERSION_1 = 1;
    public final static int CMP_VERSION_2 = 2;
    public static final String DEFAULT_ENTITY_INVOKER_PROXY_BINDING =
-      "entity-rmi-invoker";
+      "entity-unified-invoker";
    public static final String DEFAULT_CLUSTERED_ENTITY_INVOKER_PROXY_BINDING =
       "clustered-entity-rmi-invoker";
 
@@ -54,7 +54,7 @@ public class EntityMetaData
    private ArrayList queries = new ArrayList();
    private boolean readOnly = false;
    private boolean doDistCachInvalidations = false;
-   private CacheInvalidationConfigMetaData cacheInvalidConfig = null; 
+   private CacheInvalidationConfigMetaData cacheInvalidConfig = null;
 
    // Static --------------------------------------------------------
    private static Logger log = Logger.getLogger( EntityMetaData.class );
@@ -164,12 +164,12 @@ public class EntityMetaData
          }
       }
    }
-   
+
    public boolean doDistributedCacheInvalidations ()
    {
       return this.doDistCachInvalidations ;
    }
-   
+
    public CacheInvalidationConfigMetaData getDistributedCacheInvalidationConfig ()
    {
       return this.cacheInvalidConfig ;
@@ -362,7 +362,7 @@ public class EntityMetaData
          this.cacheInvalidConfig.importJbossXml(cacheInvalidConfigElement);
       }
 
-      
+
    }
 
    // Package protected ---------------------------------------------

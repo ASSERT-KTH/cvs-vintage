@@ -16,23 +16,23 @@ import java.util.HashMap;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Scott.Stark@jboss.org
  *   @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- *   @version $Revision: 1.26 $
+ *   @version $Revision: 1.27 $
  */
 public class SessionMetaData extends BeanMetaData
 {
    // Constants -----------------------------------------------------
-   public static final String DEFAULT_STATEFUL_INVOKER = "stateful-rmi-invoker";
+   public static final String DEFAULT_STATEFUL_INVOKER = "stateful-unified-invoker";
    public static final String DEFAULT_CLUSTERED_STATEFUL_INVOKER = "clustered-stateful-rmi-invoker";
-   public static final String DEFAULT_STATELESS_INVOKER = "stateless-rmi-invoker";
+   public static final String DEFAULT_STATELESS_INVOKER = "stateless-unified-invoker";
    public static final String DEFAULT_CLUSTERED_STATELESS_INVOKER = "clustered-stateless-rmi-invoker";
    public static final String DEFAULT_WEBSERVICE_INVOKER = "session-webservice-invoker";
-    
+
    // Attributes ----------------------------------------------------
    /** whether it is a stateful or stateless bean */
    private boolean stateful;
 
    // Static --------------------------------------------------------
-    
+
    // Constructors --------------------------------------------------
    public SessionMetaData(ApplicationMetaData app)
    {
@@ -109,8 +109,8 @@ public class SessionMetaData extends BeanMetaData
    public void importEjbJarXml(Element element) throws DeploymentException
    {
       super.importEjbJarXml(element);
-		
-      // set the session type 
+
+      // set the session type
       String sessionType = getElementContent(getUniqueChild(element, "session-type"));
       if (sessionType.equals("Stateful"))
       {
@@ -124,7 +124,7 @@ public class SessionMetaData extends BeanMetaData
       {
          throw new DeploymentException("session type should be 'Stateful' or 'Stateless'");
       }
-			
+
       // set the transaction type
       String transactionType = getElementContent(getUniqueChild(element, "transaction-type"));
       if (transactionType.equals("Bean"))
