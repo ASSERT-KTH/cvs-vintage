@@ -34,7 +34,7 @@ import org.jnp.interfaces.NamingContext;
  @see javax.naming.spi.InitialContextFactory
 
  @author Scott.Stark@jboss.org
- @version $Revision: 1.7 $
+ @version $Revision: 1.8 $
  */
 public class HttpNamingContextFactory
    implements InitialContextFactory, ObjectFactory
@@ -109,6 +109,7 @@ public class HttpNamingContextFactory
 
       HttpURLConnection conn = (HttpURLConnection) providerURL.openConnection();
       Util.configureHttpsHostVerifier(conn);
+      Util.configureSSLSocketFactory(conn);
       int length = conn.getContentLength();
       String type = conn.getContentType();
       if( log.isTraceEnabled() )
