@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.149 2003/02/07 00:37:35 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.150 2003/02/13 02:14:06 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -107,14 +107,11 @@ public class ModifyIssue extends BaseModifyIssue
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = null;
-        try
+        Issue issue = scarabR.getIssue(false);
+        if (issue == null)
         {
-            issue = getIssueFromRequest(data.getParameters());
-        }
-        catch (ScarabException se)
-        {
-            scarabR.setAlertMessage(se.getMessage());
+            // no need to set the message here as
+            // it is done in scarabR.getIssue()
             return;
         }
         ScarabUser user = (ScarabUser)data.getUser();
@@ -272,14 +269,11 @@ public class ModifyIssue extends BaseModifyIssue
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = null;
-        try
+        Issue issue = scarabR.getIssue(false);
+        if (issue == null)
         {
-            issue = getIssueFromRequest(data.getParameters());
-        }
-        catch (ScarabException se)
-        {
-            scarabR.setAlertMessage(se.getMessage());
+            // no need to set the message here as
+            // it is done in scarabR.getIssue()
             return;
         }
 
@@ -379,14 +373,11 @@ public class ModifyIssue extends BaseModifyIssue
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = null;
-        try
+        Issue issue = scarabR.getIssue(false);
+        if (issue == null)
         {
-            issue = getIssueFromRequest(data.getParameters());
-        }
-        catch (ScarabException se)
-        {
-            scarabR.setAlertMessage(se.getMessage());
+            // no need to set the message here as
+            // it is done in scarabR.getIssue()
             return;
         }
         ScarabUser user = (ScarabUser)data.getUser();
@@ -440,14 +431,11 @@ public class ModifyIssue extends BaseModifyIssue
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = null;
-        try
+        Issue issue = scarabR.getIssue(false);
+        if (issue == null)
         {
-            issue = getIssueFromRequest(data.getParameters());
-        }
-        catch (ScarabException se)
-        {
-            scarabR.setAlertMessage(se.getMessage());
+            // no need to set the message here as
+            // it is done in scarabR.getIssue()
             return;
         }
         ScarabUser user = (ScarabUser)data.getUser();
@@ -608,14 +596,11 @@ public class ModifyIssue extends BaseModifyIssue
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = null;
-        try
+        Issue issue = scarabR.getIssue(false);
+        if (issue == null)
         {
-            issue = getIssueFromRequest(data.getParameters());
-        }
-        catch (ScarabException se)
-        {
-            scarabR.setAlertMessage(se.getMessage());
+            // no need to set the message here as
+            // it is done in scarabR.getIssue()
             return;
         }
 
@@ -665,14 +650,11 @@ public class ModifyIssue extends BaseModifyIssue
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = null;
-        try
+        Issue issue = scarabR.getIssue(false);
+        if (issue == null)
         {
-            issue = getIssueFromRequest(data.getParameters());
-        }
-        catch (ScarabException se)
-        {
-            scarabR.setAlertMessage(se.getMessage());
+            // no need to set the message here as
+            // it is done in scarabR.getIssue()
             return;
         }
 
@@ -723,14 +705,11 @@ public class ModifyIssue extends BaseModifyIssue
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = null;
-        try
+        Issue issue = scarabR.getIssue(false);
+        if (issue == null)
         {
-            issue = getIssueFromRequest(data.getParameters());
-        }
-        catch (ScarabException se)
-        {
-            scarabR.setAlertMessage(se.getMessage());
+            // no need to set the message here as
+            // it is done in scarabR.getIssue()
             return;
         }
 
@@ -803,14 +782,11 @@ public class ModifyIssue extends BaseModifyIssue
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = null;
-        try
+        Issue issue = scarabR.getIssue(false);
+        if (issue == null)
         {
-            issue = getIssueFromRequest(data.getParameters());
-        }
-        catch (ScarabException se)
-        {
-            scarabR.setAlertMessage(se.getMessage());
+            // no need to set the message here as
+            // it is done in scarabR.getIssue()
             return;
         }
 
@@ -1050,20 +1026,20 @@ public class ModifyIssue extends BaseModifyIssue
         intake.removeAll();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = null;
-        try
+        Issue issue = scarabR.getIssue(false);
+        if (issue == null)
         {
-            issue = getIssueFromRequest(data.getParameters());
-        }
-        catch (ScarabException se)
-        {
-            scarabR.setAlertMessage(se.getMessage());
+            // no need to set the message here as
+            // it is done in scarabR.getIssue()
             return;
         }
         ScarabUser user = (ScarabUser)data.getUser();
         if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
                                issue.getModule()))
         {
+            // call it issue_ids because AssignIssue can be used to
+            // assign to multiple issues at the same time. however, this
+            // ui interface just sets one id.
             data.getParameters().add("issue_ids", issue.getUniqueId());
             scarabR.resetAssociatedUsers();
             setTarget(data, "AssignIssue.vm");

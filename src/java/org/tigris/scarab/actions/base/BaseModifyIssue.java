@@ -69,26 +69,10 @@ import org.tigris.scarab.util.ScarabException;
  * for collisions between different changes.
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: BaseModifyIssue.java,v 1.6 2003/02/03 19:12:21 jmcnally Exp $
+ * @version $Id: BaseModifyIssue.java,v 1.7 2003/02/13 02:14:06 jon Exp $
  */
 public class BaseModifyIssue extends RequireLoginFirstAction
 {
-    protected Issue getIssueFromRequest(ParameterParser pp)
-        throws ScarabException
-    {
-        String id = pp.getString("id");
-        if (id == null || id.length() == 0)
-        {
-            throw new ScarabException("Could not locate issue.");
-        }
-        Issue issue = IssueManager.getIssueById(id);
-        if (issue == null)
-        {
-            throw new ScarabException("Could not locate issue: " + id);
-        }
-        return issue;
-    }
-
     protected boolean isCollision(RunData data, TemplateContext context)
         throws Exception
     {
