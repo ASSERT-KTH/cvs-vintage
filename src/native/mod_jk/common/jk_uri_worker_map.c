@@ -65,7 +65,7 @@
  * servlet container.                                                      *
  *                                                                         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.7 $                                               *
+ * Version:     $Revision: 1.8 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -317,6 +317,7 @@ int uri_worker_map_open(jk_uri_worker_map_t *uw_map,
 
         if(!rc) {
             jk_close_pool(&uw_map->p);
+            jk_close_pool(&uw_map->tp);
         }
     }
     
