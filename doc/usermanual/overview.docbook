@@ -260,7 +260,7 @@
 	</para>
 	<sect3>
 	  <title>CAROL RMI JRMP interceptors API</title>
-	  <para>Implementing JRMP interceptors is very easy. A server interceptor only need to implements the <classname>JServerRequestInterceptor</classname> interface and use the  <classname>JServerRequestInfo</classname> interface to propagate a <classname>JServiceContext</classname>. On the client side this is the same concept with  <classname>JClientRequestInterceptor</classname> interface and <classname>JClientRequestInfo</classname> interface. For propagation, a CAROL propagation context need only to be a Serializable (or Externalizable) object and to implements the interface <classname>JServiceContext</classname>.<para>
+	  <para>Implementing JRMP interceptors is very easy. A server interceptor only need to implements the <classname>JServerRequestInterceptor</classname> interface and use the  <classname>JServerRequestInfo</classname> interface to propagate a <classname>JServiceContext</classname>. On the client side this is the same concept with  <classname>JClientRequestInterceptor</classname> interface and <classname>JClientRequestInfo</classname> interface. For propagation, a CAROL propagation context need only to be a Serializable (or Externalizable) object and to implements the interface <classname>JServiceContext</classname>.</para>
 	</sect3>
 	<sect3>
 	  <title>CAROL RMI JRMP Client interceptor</title>
