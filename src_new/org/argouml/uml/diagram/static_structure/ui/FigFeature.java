@@ -1,4 +1,4 @@
-// $Id: FigFeature.java,v 1.6 2004/01/03 00:20:34 bobtarling Exp $
+// $Id: FigFeature.java,v 1.7 2004/08/04 19:25:20 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,7 @@ public class FigFeature extends CompartmentFigText {
          * @see org.tigris.gef.base.Selection#dragHandle(int, int,
          * int, int, org.tigris.gef.presentation.Handle)
          */
-        public void dragHandle(int mx, int my, int an_x, int an_y, Handle h) {
+        public void dragHandle(int mx, int my, int anX, int anY, Handle h) {
         }
 
         /**
@@ -80,7 +80,7 @@ public class FigFeature extends CompartmentFigText {
                 if (fig instanceof FigClass) {
                     FigClass classFig = (FigClass) fig;
                     FigGroup group = (FigGroup) getGroup();
-                    // TODO in future version of GEF call getFigs returning array
+                // TODO: in future version of GEF call getFigs returning array
                     Object[] figs = group.getFigs(null).toArray();
                     for (int i = 1; i < figs.length; i++) {
 			// the first element is no attr or oper
@@ -108,11 +108,11 @@ public class FigFeature extends CompartmentFigText {
 
     /**
     * Constructor for FigFeature.
-    * @param x
-    * @param y
-    * @param w
-    * @param h
-    * @param aFig
+    * @param x x
+    * @param y x
+    * @param w w 
+    * @param h h
+    * @param aFig the fig
     */
     public FigFeature(int x, int y, int w, int h, Fig aFig) {
         super(x, y, w, h, aFig);
