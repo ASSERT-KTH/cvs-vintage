@@ -178,7 +178,7 @@
   </mbean>
 
   <!-- The PersistenceManager is used to store messages to disk. -->
-  <mbean code="org.jbossmq.pm.rollinglogged.PersistenceManager" name="JBossMQ:service=PersistenceManager">
+  <mbean code="org.jbossmq.pm.file.PersistenceManager" name="JBossMQ:service=PersistenceManager">
     <attribute name="DataDirectory">../../db/jbossmq/</attribute>
   </mbean>
 
