@@ -76,7 +76,7 @@ import org.jboss.mx.util.ObjectNameConverter;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.134 $
+ * @version $Revision: 1.135 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -316,7 +316,7 @@ public abstract class Container
       // TODO: define a default factory in the meta data or 
       //       even better, let the return over the original transport
       //       plugin the transport layer for the generated proxy
-      if (factory == null)
+      if (factory == null && remoteInterface != null)
       {
          Iterator i = proxyFactories.values().iterator();
          if (i.hasNext())
