@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.42 2004/08/03 01:25:44 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.43 2004/08/03 17:08:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,9 @@ import org.argouml.uml.diagram.UMLMutableGraphSupport;
 public class UseCaseDiagramGraphModel
         extends UMLMutableGraphSupport
         implements VetoableChangeListener {
-	
+    
+    private static final Logger LOG = 
+        Logger.getLogger(UseCaseDiagramGraphModel.class);	
     /**
      * The "home" UML model of this diagram, not all ModelElements in
      * this graph are in the home model, but if they are added and
@@ -236,7 +238,7 @@ public class UseCaseDiagramGraphModel
 
         // Don't know what to do otherwise
 
-        cat.debug(this.getClass().toString() + ": getSourcePort("
+        LOG.debug(this.getClass().toString() + ": getSourcePort("
 		  + edge.toString() + ") - can't handle");
 
         return null;
@@ -270,7 +272,7 @@ public class UseCaseDiagramGraphModel
 
         // Don't know what to do otherwise
 
-        cat.debug(this.getClass().toString() + ": getDestPort("
+        LOG.debug(this.getClass().toString() + ": getDestPort("
 		  + edge.toString() + ") - can't handle");
 
         return null;
@@ -431,7 +433,7 @@ public class UseCaseDiagramGraphModel
      */
     public void addNode(Object node) {
 
-        cat.debug("adding usecase node!!");
+        LOG.debug("adding usecase node!!");
 
         // Give up if we are already on the graph. This is a bit inconistent
         // with canAddNode above.
@@ -461,7 +463,7 @@ public class UseCaseDiagramGraphModel
 	     || (ModelFacade.isAUseCase(node)))
 	    && (ModelFacade.getNamespace(node) == null)) {
 	    // end NEW CODE
-            cat.debug("setting namespace " + _model
+	    LOG.debug("setting namespace " + _model
 		      + " to element " + node);
             ModelFacade.addOwnedElement(_model, /*(MModelElement)*/ node);
         }
@@ -487,7 +489,7 @@ public class UseCaseDiagramGraphModel
      * @param edge  The edge to be added to the graph.
      */
     public void addEdge(Object edge) {
-        cat.debug("adding class edge!!!!!!");
+        LOG.debug("adding class edge!!!!!!");
         if (!canAddEdge(edge)) return;
 
         // Add the element and place it in the namespace of the model
@@ -685,7 +687,7 @@ public class UseCaseDiagramGraphModel
 
             if (oldOwned.contains(eo)) {
 
-                cat.debug("model removed " + me);
+                LOG.debug("model removed " + me);
 
                 // Remove a node
 
@@ -709,7 +711,7 @@ public class UseCaseDiagramGraphModel
 
             // Something was added - nothing for us to worry about
             else {
-                cat.debug("model added " + me);
+                LOG.debug("model added " + me);
             }
         }
     }

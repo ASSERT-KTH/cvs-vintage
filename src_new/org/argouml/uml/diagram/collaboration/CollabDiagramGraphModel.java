@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.37 2004/08/03 01:25:45 bobtarling Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.38 2004/08/03 17:09:17 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,7 +114,7 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 	if (ModelFacade.isARelationship(edge)) {
 	    return CoreHelper.getHelper().getSource(/*(MRelationship)*/ edge);
 	}
-	cat.debug("TODO getSourcePort");
+	LOG.debug("TODO getSourcePort");
 	return null;
     }
 
@@ -123,7 +123,7 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 	if (ModelFacade.isARelationship(edge)) {
 	    return CoreHelper.getHelper().getDestination(/*(MRelationship)*/ edge);
 	}
-	cat.debug("TODO getDestPort");
+	LOG.debug("TODO getDestPort");
 	return null;
     }
 
@@ -179,7 +179,7 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 
     /** Add the given node to the graph, if valid. */
     public void addNode(Object node) {
-	cat.debug("adding MClassifierRole node!!");
+	LOG.debug("adding MClassifierRole node!!");
 	if (!canAddNode(node)) return;
 	_nodes.addElement(node);
 	// TODO: assumes public, user pref for default visibility?
@@ -193,7 +193,7 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 
     /** Add the given edge to the graph, if valid. */
     public void addEdge(Object edge) {
-        cat.debug("adding class edge!!!!!!");
+        LOG.debug("adding class edge!!!!!!");
         if (!canAddEdge(edge)) return;
         _edges.addElement(edge);
         // TODO: assumes public
@@ -270,13 +270,13 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 	    Object eo = /*(MElementImport)*/ pce.getNewValue();
 	    Object me = ModelFacade.getModelElement(eo);
 	    if (oldOwned.contains(eo)) {
-		cat.debug("model removed " + me);
+		LOG.debug("model removed " + me);
 		if (ModelFacade.isAClassifier(me)) removeNode(me);
 		if (ModelFacade.isAMessage(me)) removeNode(me);
 		if (ModelFacade.isAAssociation(me)) removeEdge(me);
 	    }
 	    else {
-		cat.debug("model added " + me);
+		LOG.debug("model added " + me);
 	    }
 	}
     }

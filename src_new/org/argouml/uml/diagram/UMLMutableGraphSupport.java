@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.9 2004/07/25 15:21:03 kataka Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.10 2004/08/03 17:09:39 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
     /**
      * @deprecated by Linus Tolke as of 0.16. Will be private.
      */
-    protected static Logger cat =
+    private static final Logger LOG =
 	Logger.getLogger(UMLMutableGraphSupport.class);
     
     /** contains all the nodes in the graphmodel/diagram. */    
@@ -176,14 +176,14 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
         }
         
         if (connection == null) {
-            cat.debug("Cannot make a " + edgeClass.getName()
+            LOG.debug("Cannot make a " + edgeClass.getName()
 		      + " between a " + fromPort.getClass().getName()
 		      + " and a " + toPort.getClass().getName());
             return null;
         }
         
         addEdge(connection);
-        cat.debug("Connection type" + edgeClass.getName()
+        LOG.debug("Connection type" + edgeClass.getName()
 		  + " made between a " + fromPort.getClass().getName()
 		  + " and a " + toPort.getClass().getName());
         return connection;
