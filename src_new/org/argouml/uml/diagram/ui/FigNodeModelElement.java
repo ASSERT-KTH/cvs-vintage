@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.96 2004/01/20 01:26:08 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.97 2004/01/27 20:39:35 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -183,6 +183,9 @@ public abstract class FigNodeModelElement
     ////////////////////////////////////////////////////////////////
     // instance variables
 
+    /**
+     * @deprecated 0.15.3 visibility will change use getter/setter
+     */
     protected FigRect _bigPort;
     /**
      * @deprecated 0.15.3 visibility will change use getter/setter
@@ -196,6 +199,9 @@ public abstract class FigNodeModelElement
     protected Fig _encloser = null;
     protected boolean _readyToEdit = true;
     protected boolean suppressCalcBounds = false;
+    /**
+     * @deprecated 0.15.3 visibility will change use getter/setter
+     */
     public int _shadowSize =
         Configuration.getInteger(Notation.KEY_DEFAULT_SHADOW_WIDTH, 1);
     private ItemUID _id;
@@ -646,7 +652,7 @@ public abstract class FigNodeModelElement
      *  initiate direct text editing. */
     public void mouseClicked(MouseEvent me) {
         if (!_readyToEdit) {
-            if (org.argouml.model.ModelFacade.isAModelElement(getOwner())) {
+            if (ModelFacade.isAModelElement(getOwner())) {
                 ModelFacade.setName(getOwner(),"");
                 _readyToEdit = true;
             } else {
@@ -680,7 +686,7 @@ public abstract class FigNodeModelElement
 
     public void keyPressed(KeyEvent ke) {
         if (!_readyToEdit) {
-            if (org.argouml.model.ModelFacade.isAModelElement(getOwner())) {
+            if (ModelFacade.isAModelElement(getOwner())) {
                 ModelFacade.setName(getOwner(),"");
                 _readyToEdit = true;
             } else {
