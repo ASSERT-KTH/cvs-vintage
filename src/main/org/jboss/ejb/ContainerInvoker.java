@@ -13,7 +13,6 @@ import javax.ejb.EJBMetaData;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.naming.Name;
-import org.jboss.util.FastKey;
 
 /**
  *	This is an interface for Container plugins. Implementations of this
@@ -30,7 +29,7 @@ import org.jboss.util.FastKey;
  *	@see Container
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public interface ContainerInvoker
    extends ContainerPlugin
