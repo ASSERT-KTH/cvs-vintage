@@ -53,7 +53,7 @@ import org.apache.turbine.Log;
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.8 2002/01/18 22:26:14 jon Exp $
+ * @version $Id: SearchFactory.java,v 1.9 2002/01/23 10:05:19 dlr Exp $
  */
 public class SearchFactory
 {
@@ -62,7 +62,7 @@ public class SearchFactory
     static
     {
         String className = Turbine.getConfiguration()
-            .getString(SearchIndex.CLASSNAME);
+            .getString(SearchIndex.CLASS_NAME);
         Class si = null;
         try
         {
@@ -70,8 +70,8 @@ public class SearchFactory
         }
         catch (Exception e)
         {
-            Log.warn("An indexer and search engine has not been specified\n"
-                     + "so text will not be searchable.");
+            Log.warn("An indexer and search engine has not been specified: "
+                     + "Text will not be searchable");
         }
         searchIndex = si;
     }
@@ -79,6 +79,11 @@ public class SearchFactory
     public static SearchIndex getInstance()
         throws InstantiationException, IllegalAccessException
     {
-        return (SearchIndex)searchIndex.newInstance();
+        SearchIndex si = null;
+        if (searchIndex != null)
+        {
+            si = (SearchIndex) searchIndex.newInstance();
+        }
+        return si;
     }
 }
