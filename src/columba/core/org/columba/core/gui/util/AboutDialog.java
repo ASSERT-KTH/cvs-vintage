@@ -13,35 +13,27 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.util;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
+import javax.swing.*;
+
+import org.columba.core.util.GlobalResourceLoader;
 
 import org.columba.mail.gui.util.AddressLabel;
 import org.columba.mail.gui.util.URLLabel;
 
-public class AboutDialog implements ActionListener
-{
+public class AboutDialog implements ActionListener {
+    
+    public static final String CMD_CLOSE = "CLOSE";
+    
     private JDialog dialog;
     private boolean bool = false;
 
@@ -120,13 +112,13 @@ public class AboutDialog implements ActionListener
 	JPanel buttonPanel = new JPanel(new BorderLayout(0,0));
 	buttonPanel.setBorder(BorderFactory.createEmptyBorder(17,12,11,11));
 	//LOCALIZE
-	JButton closeButton = new JButton("Close");
-	closeButton.setActionCommand("CLOSE");
+	JButton closeButton = new JButton(GlobalResourceLoader.getString("global", "global", "close"));
+	closeButton.setActionCommand(CMD_CLOSE);
 	closeButton.addActionListener(this);
 	buttonPanel.add(closeButton,BorderLayout.EAST);
 	contentPane.add(buttonPanel,BorderLayout.SOUTH);
-	dialog.getRootPane().setDefaultButton( closeButton );
-	dialog.getRootPane().registerKeyboardAction(this,"CLOSE",KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),JComponent.WHEN_IN_FOCUSED_WINDOW);
+	dialog.getRootPane().setDefaultButton(closeButton);
+	dialog.getRootPane().registerKeyboardAction(this,CMD_CLOSE,KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),JComponent.WHEN_IN_FOCUSED_WINDOW);
         dialog.pack();
 	dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
@@ -134,7 +126,7 @@ public class AboutDialog implements ActionListener
 
     public void actionPerformed(ActionEvent e)
     {
-	if(e.getActionCommand().equals("CLOSE")){
+	if(CMD_CLOSE.equals(e.getActionCommand())){
 	    bool=true;
 	    dialog.dispose();
 	}
@@ -143,6 +135,5 @@ public class AboutDialog implements ActionListener
     public boolean success()
     {
         return bool;
-
     }
 }
