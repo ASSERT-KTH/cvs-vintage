@@ -17,7 +17,6 @@ package org.columba.mail.gui.composer;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -27,12 +26,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.FrameView;
+import org.columba.core.gui.ToolBar;
+import org.columba.core.gui.menu.Menu;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -79,7 +77,7 @@ public class ComposerView extends FrameView {
 	
 	public void init()
 	{
-		//super.init();
+		super.init();
 		Container contentPane;
 		
 		contentPane = getContentPane();
@@ -191,16 +189,32 @@ public class ComposerView extends FrameView {
 		
 		contentPane.add(mainSplitPane, BorderLayout.CENTER);
 		
+		/*
 		JLabel statusBar = new JLabel(MailResourceLoader.getString("dialog","composer","statusbar_label")); //$NON-NLS-1$
 		Border border = BorderFactory.createEtchedBorder(1);
 		Border margin = new EmptyBorder(2, 0, 2, 0);
 		statusBar.setBorder(new CompoundBorder(margin, border));
 
 		contentPane.add(statusBar, BorderLayout.SOUTH);
+		*/
 		pack();
 		
-		setSize( new Dimension(580,640) );
+		//setSize( new Dimension(580,640) );
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
+	 */
+	protected Menu createMenu(FrameController controller) {
+		return new Menu("org/columba/mail/action/composer_menu.xml", controller);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
+	 */
+	protected ToolBar createToolbar(FrameController controller) {
+		return new ToolBar("org/columba/mail/action/composer_toolbar.xml", controller);
+	}
+
 }

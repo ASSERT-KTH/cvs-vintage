@@ -27,6 +27,7 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.FrameView;
 import org.columba.core.gui.ToolBar;
+import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.HeaderView;
@@ -88,7 +89,6 @@ public class MailFrameView extends FrameView {
 		this.filterToolbar = filterToolbar;
 
 		
-		menu.extendMenuFromFile("org/columba/mail/action/menu.xml");
 		//this.statusBar = statusBar;
 
 		mainSplitPane = new JSplitPane();
@@ -135,8 +135,6 @@ public class MailFrameView extends FrameView {
 
 		if (item.getBoolean("toolbars", "show_folderinfo") == true)
 			ToolbarPane.add(folderInfoPanel);
-
-		getContentPane().add(ToolbarPane, BorderLayout.NORTH);
 
 		int count = MailConfig.getAccountList().count();
 
@@ -218,5 +216,22 @@ public class MailFrameView extends FrameView {
 	}
 
 	
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
+	 */
+	protected Menu createMenu(FrameController controller) {
+		Menu menu = new Menu("org/columba/core/action/menu.xml",controller);
+		menu.extendMenuFromFile("org/columba/mail/action/menu.xml");
+
+		return menu;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
+	 */
+	protected ToolBar createToolbar(FrameController controller) {
+		return new ToolBar("org/columba/mail/action/main_toolbar.xml", controller);
+	}
 
 }

@@ -65,6 +65,8 @@ public class HeaderController
 
 		dropTarget = new DropTarget(view.getTable(), this);
 		dropTarget2 = new DropTarget(view, this);
+		
+		appendRow();
 	}
 
 	public boolean checkState() {

@@ -94,7 +94,7 @@ public class MailFrameModel extends MultiViewFrameModel {
 		}
 
 	}
-
+/*
 	public void updatePop3Menu() {
 		for (Enumeration e = controllers.keys(); e.hasMoreElements();) {
 			String key = (String) e.nextElement();
@@ -104,7 +104,7 @@ public class MailFrameModel extends MultiViewFrameModel {
 			frame.getMenu().updatePopServerMenu();
 		}
 	}
-
+*/
 	/**
 	 * @return ComposerModel
 	 */
