@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.154 2004/02/25 18:08:10 tdiesler Exp $ -->
+<!-- $Id: build.xml,v 1.155 2004/03/15 16:28:02 loubyansky Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -267,6 +267,7 @@
         <include name="org/jboss/ejb/plugins/AbstractInstancePool.java"/>
         <include name="org/jboss/ejb/plugins/EntityInstanceCache.java"/>
         <include name="org/jboss/ejb/plugins/StatefulSessionFilePersistenceManager.java"/>
+        <include name="org/jboss/ejb/plugins/keygenerator/hilo/HiLoKeyGeneratorFactory.java"/>
         <include name="org/jboss/ejb/plugins/cmp/jdbc/SQLExceptionProcessor.java"/>
         <include name="org/jboss/ejb/plugins/jms/JMSContainerInvoker.java"/>
         <include name="org/jboss/ejb/timer/AbstractTimerSource.java"/>
@@ -459,6 +460,8 @@
         <include name="org/jboss/ejb/CacheKey.class"/>
         <include name="org/jboss/ejb/ListCacheKey.class"/>
         <include name="org/jboss/ejb/plugins/cmp/jdbc/Mapper.class"/>
+        <include name="org/jboss/ejb/plugins/keygenerator/KeyGenerator.class"/>
+        <include name="org/jboss/ejb/plugins/keygenerator/KeyGeneratorFactory.class"/>
         <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
         <include name="org/jboss/monitor/client/*.class"/>
         <include name="org/jboss/naming/LinkRefPair.class"/>
@@ -540,6 +543,9 @@
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
+      </fileset>
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/ejb/plugins/keygenerator/hilo/**"/>
       </fileset>
       <fileset dir="${build.resources}/uuid-key-generator">
         <include name="**/*"/>
