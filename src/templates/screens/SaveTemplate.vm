@@ -33,7 +33,7 @@
 #end
 
 #if (!$module.hasAttributes($issueType))
-<p class="infomark"><em>$l10n.NoAttributesForTemplate</em></p>
+<p class="warningmark"><strong>$l10n.NoAttributesForTemplate</strong></p>
 #else
 
 #if ($templateId)
