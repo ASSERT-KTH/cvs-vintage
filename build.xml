@@ -1,7 +1,9 @@
 <project name="Tomcat" default="main" basedir=".">
 
   <target name="init">
-    <property name="ant.home" value="../jakarta-ant"/>
+    <!-- Ant.home is set automatically by ant. If you set it here it will not
+         work  -->
+    <!-- property name="ant.home" value="../jakarta-ant" / -->
     <property name="build.compiler" value="classic"/>
     <property name="tomcat.build" value="../build/tomcat"/>
     <property name="tomcat.home" value="../dist/tomcat"/>
