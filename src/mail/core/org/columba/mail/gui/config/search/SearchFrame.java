@@ -324,7 +324,15 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 			int uid =
 				destFolder.getFolderItem().getInteger("property", "source_uid");
+			
 			Folder f = (Folder) MainInterface.treeModel.getFolder(uid);
+			// If f==null because of deleted Folder fallback to Inbox
+			if( f == null) {
+				uid = 101;
+				destFolder.getFolderItem().set("property","source_uid",uid);
+				f= (Folder) MainInterface.treeModel.getFolder(uid);
+			} 
+			
 			String treePath = f.getTreePath();
 
 			selectButton.setText(treePath);
