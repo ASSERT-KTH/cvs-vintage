@@ -1,7 +1,7 @@
-package org.tigris.scarab.om;
+package org.tigris.scarab.services.module;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2001 Collab.Net.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -45,50 +45,37 @@ package org.tigris.scarab.om;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */ 
+import java.util.Vector;
 
-// JDK
-import java.math.*;
-import java.util.*;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModulePeer;
 
-// Scarab
+import org.apache.turbine.om.ObjectKey;
+import org.apache.turbine.om.security.User;
+import org.apache.turbine.services.TurbineServices;
+import org.apache.turbine.services.security.TurbineSecurity;
+import org.apache.turbine.util.StringUtils;
+import org.apache.turbine.util.RunData;
+import org.apache.turbine.util.db.Criteria;
 
-// Turbine
-import org.apache.turbine.om.security.*;
-import org.apache.turbine.om.*;
-import org.apache.turbine.util.*;
-import org.apache.turbine.util.db.*;
-import org.apache.turbine.util.template.*;
-import org.apache.turbine.services.security.*;
-
-/**
-    This class contains code for dealing with Modules.
-
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModuleManager.java,v 1.9 2001/05/01 00:03:37 jmcnally Exp $
-*/
-public class ModuleManager
+public abstract class ModuleManager
 {
-    public static final String USER_SELECTED_MODULE = "scarab.user.selected.module";
-    public static final String CURRENT_PROJECT = "cur_project_id";
-    public static final String PROJECT_CHANGE_BOX = "project_change_box";
-    
-    public ModuleManager()
+    /**
+     * Retrieves an implementation of ModuleService, base on the settings in
+     * TurbineResources.
+     *
+     * @return an implementation of ModuleService.
+    public static ModuleService getService()
     {
+        return (ModuleService)TurbineServices.getInstance().
+            getService(ModuleService.SERVICE_NAME);    
     }
 
-    /* *
-        This is a utility method to quickly get the list of modules associated
-        to a user.
-    * /
-    public static Vector getProjects(ObjectKey visitorid)
-        throws Exception
+    public static ModuleEntity getNewModuleEntity()
     {
-        Criteria crit = new Criteria();
-        crit.addJoin (ModulePeer.MODULE_ID, RModuleUserPeer.MODULE_ID);
-        crit.add (RModuleUserPeer.USER_ID, visitorid);
-        return ModulePeer.doSelect(crit);
+        getService().getNewModuleEntity();
     }
-    */
+     */
 
     /**
         gets a single project
@@ -111,58 +98,7 @@ public class ModuleManager
         }
         return project;    
     }
-    
-    /* *
-        This method will pull all of the projects associated to a user
-        out of the database and then format them into a SelectorBox which
-        you can just stick into the context.
-        <p>
-        It will attempt to get the visitorid from data.getUser(). If the visitorid
-        does not exist, it will return null.
-        <p>
-        It will attempt to get the USER_SELECTED_MODULE from data.getUser().getTemp()
-        in order to auto mark the "selected" option.
-    * /
-    public static SelectorBox getProjectsBox(RunData data, int size)
-        throws Exception
-    {
-        ObjectKey visitorid = ((org.apache.turbine.om.security.TurbineUser)
-                         data.getUser()).getPrimaryKey();
-        if (visitorid == null)
-            return null;
-        
-        String selectedModule = data.getParameters()
-            .getString(CURRENT_PROJECT, "1");
 
-        // get a list of the projects associated to the user.
-        Vector result = getProjects(visitorid);
-        Object[] names = new Object[result.size()];
-        Object[] values = new Object[result.size()];
-        boolean[] selected = new boolean[result.size()];
-        int i = 0;
-        // build up the Object[]'s
-        for (Enumeration e = result.elements();e.hasMoreElements(); )
-        {
-            Module sm = (Module) e.nextElement();
-            names[i] = sm.getPrimaryKey();
-            values[i] = sm.getName();
-
-            if (selectedModule != null
-                && sm.getPrimaryKey().equals(selectedModule) )
-            {
-                selected[i++] = true;
-            }
-            else 
-            {
-                selected[i++] = false;       
-            }
-        }
-        // store the first project as the "default" project
-        if ( selectedModule == null && names.length > 0 )
-            data.getParameters().add(CURRENT_PROJECT, (String)names[0]);
-        return new SelectorBox(PROJECT_CHANGE_BOX, names, values, size, selected);
-    }
-    */
     /**
         give me a list of components that match the parent project id
     */
@@ -173,6 +109,7 @@ public class ModuleManager
         crit.add (ModulePeer.PARENT_ID, parent_project_id);
         return ModulePeer.doSelect(crit);
     }
+    
     /**
         create a new ScarabModule based on form input.
         
@@ -210,12 +147,15 @@ public class ModuleManager
             if (project_qacontact == null )
                 throw new Exception ("Could not find a registered user for the project qa contact!");
 
+/*
             sm.setOwnerId((NumberKey)((ScarabUser)project_owner).getPrimaryKey() );
             sm.setQaContactId((NumberKey)((ScarabUser)
                                 project_qacontact).getPrimaryKey() );
+*/
         }
         return sm;
     }
+
     /**
         returns an empty module
     */
@@ -242,31 +182,5 @@ public class ModuleManager
             throw new Exception ("Project: " + module.getName() + 
             " already exists. Please choose another name!" );        
     }
-    
-    /* *
-        create a new project. it will throw an exception with the
-        error message in it which you can catch.
-    * /
-    public static void createNewProject(RunData data)
-        throws Exception
-    {
-        // get a populated ScarabModule and do validation
-        Module module = getModule(data, true);
-        
-        // check to see if we have a duplicate name!
-        checkForDuplicateProject(module);
-        
-        // create the new module
-        ModulePeer.doInsert(module);
-
-        // you are related to a new project
-        Criteria crit = new Criteria(4)
-            .add (RModuleUserPeer.MODULE_ID, module.getPrimaryKey())
-            .add (RModuleUserPeer.USER_ID, 
-                  ((org.apache.turbine.om.security.TurbineUser)
-                   data.getUser()).getPrimaryKey());
-        RModuleUserPeer.doInsert(crit);
-    }
-    */
 
 }

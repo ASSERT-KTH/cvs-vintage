@@ -59,13 +59,14 @@ import org.apache.turbine.util.*;
 import org.tigris.scarab.om.*;
 import org.tigris.scarab.screens.base.*;
 import org.tigris.scarab.util.*;
+import org.tigris.scarab.services.module.ModuleManager;
 
 /**
     This class is responsible for building the Context up
     for Scarab system.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabContextLoginFirst.java,v 1.4 2001/04/04 18:01:25 jmcnally Exp $
+    @version $Id: ScarabContextLoginFirst.java,v 1.5 2001/05/14 21:43:55 jon Exp $
 */
 public abstract class ScarabContextLoginFirst extends RequireLoginFirst
 {
@@ -82,9 +83,7 @@ public abstract class ScarabContextLoginFirst extends RequireLoginFirst
     protected void doBuildTemplate( RunData data )
         throws Exception
     {
-        cur_project_id = data.getParameters().getInt(ModuleManager.CURRENT_PROJECT, 1);
-        Context context = getContext(data);
-        context.put ("ModuleManager", new ModuleManager());
+        cur_project_id = data.getParameters().getInt(ScarabConstants.CURRENT_PROJECT, 1);
         super.doBuildTemplate(data);
     }
 }

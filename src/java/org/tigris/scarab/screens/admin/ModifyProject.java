@@ -59,13 +59,14 @@ import org.apache.turbine.om.*;
 // Scarab Stuff
 import org.tigris.scarab.om.*;
 import org.tigris.scarab.screens.base.*;
+import org.tigris.scarab.services.module.ModuleManager;
 
 /**
     This class is responsible for building the Context up
     for the admin,ModifyProject Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyProject.java,v 1.4 2001/03/03 00:07:12 jmcnally Exp $
+    @version $Id: ModifyProject.java,v 1.5 2001/05/14 21:43:55 jon Exp $
 */
 public class ModifyProject extends ScarabContextLoginFirst
 {
