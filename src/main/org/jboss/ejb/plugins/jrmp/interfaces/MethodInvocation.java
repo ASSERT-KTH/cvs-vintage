@@ -19,7 +19,7 @@ import java.util.HashMap;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class MethodInvocation
    implements java.io.Serializable
@@ -34,6 +34,11 @@ public class MethodInvocation
    
    // Static --------------------------------------------------------
    static HashMap clazzMap = new HashMap();
+	
+   static HashMap invokers = new HashMap(); // Prevent DGC
+   public static ContainerRemote getLocal(String jndiName) { return (ContainerRemote)invokers.get(jndiName); }
+   public static void addLocal(String jndiName, ContainerRemote invoker) { invokers.put(jndiName, invoker); }
+   public static void removeLocal(String jndiName) { invokers.remove(jndiName); }
    
    // Constructors --------------------------------------------------
    public MethodInvocation(Method m, Object[] args)

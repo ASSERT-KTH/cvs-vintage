@@ -18,30 +18,24 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.4 $
+ *      @version $Revision: 1.5 $
  */
 public abstract class StatefulSessionProxy
-   implements java.io.Serializable
+   extends GenericProxy
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   protected String name;
-   protected ContainerRemote container;
    protected Object id;
-   protected long containerStartup = ContainerRemote.startup;
-   
-   protected boolean optimize = false;
    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
    public StatefulSessionProxy(String name, ContainerRemote container, Object id, boolean optimize)
    {
-      this.name = name;
-      this.container = container;
+		super(name, container, optimize);
+		
       this.id = id;
-      this.optimize = optimize;
    }
    
    // Public --------------------------------------------------------
@@ -72,24 +66,7 @@ public abstract class StatefulSessionProxy
    // Protected -----------------------------------------------------
     
    // Private -------------------------------------------------------
-   private void readObject(java.io.ObjectInputStream in)
-      throws java.io.IOException, ClassNotFoundException
-   {
-      in.defaultReadObject();
-      
-      if (containerStartup == ContainerRemote.startup)
-      {
-         // VM-local optimization
-         container = MethodInvocation.getLocal(name);;
-      }
-      
-   }
-
-   private boolean isLocal()
-   {
-      return containerStartup == ContainerRemote.startup;
-   }
-
+	
    // Inner classes -------------------------------------------------
 }
 

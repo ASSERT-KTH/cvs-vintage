@@ -6,16 +6,6 @@
  */
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
-/*
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.rmi.server.RemoteObject;
-import javax.naming.Reference;
-import javax.naming.BinaryRefAddr;
-import javax.naming.Referenceable;
-import javax.naming.Name;
-import java.lang.reflect.Proxy;
-*/
 import java.io.IOException;
 import java.rmi.MarshalledObject;
 import java.lang.reflect.Method;
@@ -29,20 +19,15 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.4 $
+ *      @version $Revision: 1.5 $
  */
 public abstract class EntityProxy
-   implements java.io.Serializable
+   extends GenericProxy
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   protected String name;
-   protected ContainerRemote container;
    protected Object id;
-   protected long containerStartup = ContainerRemote.startup;
-   
-   protected boolean optimize = false;
    
    // Static --------------------------------------------------------
    static Method getPrimaryKey;
@@ -69,10 +54,9 @@ public abstract class EntityProxy
    // Constructors --------------------------------------------------
    public EntityProxy(String name, ContainerRemote container, Object id, boolean optimize)
    {
-      this.name = name;
-      this.container = container;
+		super(name, container, optimize);
+
       this.id = id;
-      this.optimize = optimize;
    }
    
    // Public --------------------------------------------------------
@@ -125,23 +109,7 @@ public abstract class EntityProxy
    // Protected -----------------------------------------------------
     
    // Private -------------------------------------------------------
-   private void readObject(java.io.ObjectInputStream in)
-      throws IOException, ClassNotFoundException
-   {
-      in.defaultReadObject();
-      
-      if (isLocal())
-      {
-         // VM-local optimization; still follows RMI-semantics though
-         container = MethodInvocation.getLocal(name);
-      }
-      
-   }
-   
-   private boolean isLocal()
-   {
-      return containerStartup == ContainerRemote.startup;
-   }
+
    // Inner classes -------------------------------------------------
 }
 
