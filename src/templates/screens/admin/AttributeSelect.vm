@@ -2,7 +2,8 @@ $page.setTitle("Select global attribute")
 #set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
 #macro (AttributeSelectBar $val)
 <div class="functnbar$val">
-#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($scarabR.CurrentIssueType))
+#set ($editIssueType = $scarabR.getIssueType($data.Parameters.getString("issuetypeid")))
+#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($editIssueType))
 <table cellpadding="4" cellspacing="0" border="1">
 #if ($attributes.size() == 0)
 <tr>

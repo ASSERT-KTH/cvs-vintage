@@ -16,7 +16,8 @@ $page.setTitle("Add global attribute option to attribute '$attribute.Name'")
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ModuleAttributeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 
-#set ($availOptions = $scarabR.CurrentModule.getAvailableAttributeOptions($attribute, $scarabR.CurrentIssueType))
+#set ($editIssueType = $scarabR.getIssueType($data.Parameters.getString("issuetypeid")))
+#set ($availOptions = $scarabR.CurrentModule.getAvailableAttributeOptions($attribute, $editIssueType))
 
 #if ($availOptions.size() == 0)
 

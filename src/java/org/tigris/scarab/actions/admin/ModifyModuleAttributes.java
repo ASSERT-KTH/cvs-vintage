@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.45 2001/11/20 00:55:34 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.46 2001/11/21 04:51:07 jmcnally Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -597,7 +597,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         if ( intake.isAllValid())
         {
             ModuleEntity me = scarabR.getCurrentModule();
-            IssueType issueType = scarabR.getCurrentIssueType();
+            IssueType issueType = getIssueType(data);
             List rmos = me.getRModuleOptions(attribute, issueType);
             for (int i=rmos.size()-1; i>=0; i--) 
             {
