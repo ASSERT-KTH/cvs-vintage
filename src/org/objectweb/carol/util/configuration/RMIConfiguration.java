@@ -69,6 +69,11 @@ public class RMIConfiguration {
     private int port = 0;
 
     /**
+     * Interceptor prefix for System configuration
+     */
+    private String interPref = null;
+
+    /**
      * extra system properties
      */
     private Properties jndiProperties = null;
@@ -105,7 +110,7 @@ public class RMIConfiguration {
 	}	
 	
 	//interceptors simplifications	
-	String interPref  = carolProperties.getProperty(CarolDefaultValues.CAROL_PREFIX + "." + name +"."+
+	interPref  = carolProperties.getProperty(CarolDefaultValues.CAROL_PREFIX + "." + name +"."+
 						      CarolDefaultValues.INTERCEPTOR_PKGS_PREFIX);
 	String interValues = carolProperties.getProperty(CarolDefaultValues.CAROL_PREFIX + "." + name +"."+
 						      CarolDefaultValues.INTERCEPTOR_VALUES_PREFIX);
@@ -174,6 +179,13 @@ public class RMIConfiguration {
      */
     public String getNameService() {
 	return nameServiceName;
+    }
+
+    /**
+     * @return the interceptor prefix, "" if there is no prefix
+     */
+    public String getInterceptorPrefix() {
+	return interPref;
     }
        
     /**

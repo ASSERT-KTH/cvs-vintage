@@ -634,4 +634,23 @@ public class CarolConfiguration {
 	return protocols;
     }
 
+    /**
+     * Add interceptors facility for protocols
+     * @param String protocol name
+     * @param String Interceptor Intializer class name  
+     */
+    public static void addInterceptors(String protocolName, String interceptorInitializer) throws RMIConfigurationException {
+	RMIConfiguration rc = getRMIConfiguration(protocolName);
+	if (rc!=null) {
+	    String pref=rc.getInterceptorPrefix();
+	    if (pref!=null) {
+		System.setProperty(pref+"."+interceptorInitializer,"");
+		if (TraceCarol.isDebugCarol()) {
+		    TraceCarol.debugCarol("Add Initializer for " +  protocolName + ": " +pref+"."+interceptorInitializer);
+		}
+	    }
+	}
+    }
+     
+
 }
