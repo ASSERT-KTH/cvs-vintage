@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
@@ -56,8 +58,10 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.LocalRootFolder;
+import org.columba.mail.folder.imap.IMAPFolder;
+import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.util.CArrowImage;
 import org.columba.mail.gui.tree.util.CTransferableTreePath;
@@ -65,7 +69,7 @@ import org.columba.mail.main.MailInterface;
 
 /**
  * @author frd
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -77,14 +81,15 @@ public class DndTree
 
 	// Fields...
 	private TreePath _pathSource; // The path being dragged
-	private BufferedImage _imgGhost; // The 'drag image' 
+	private BufferedImage _imgGhost; // The 'drag image'
 	private Point _ptOffset = new Point();
 	// Where, in the drag image, the mouse was clicked
 
 	AbstractMailFrameController frameController;
 
 	// Constructors...
-	public DndTree() // Use the default JTree constructor so that we get a sample TreeModel built for us
+	public DndTree() // Use the default JTree constructor so that we get a
+	// sample TreeModel built for us
 	{
 
 		putClientProperty("JTree.lineStyle", "Angled"); // I like this look
@@ -133,7 +138,22 @@ public class DndTree
 		if (isRootPath(path))
 			return; // Ignore user trying to drag the root node
 
-		// Work out the offset of the drag point from the TreePath bounding rectangle origin
+		// this is a hack in order to allow local
+		// folders *only* to be dragged
+		FolderTreeNode source =
+			(FolderTreeNode) path.getLastPathComponent();
+
+		if (source instanceof IMAPFolder)
+			return;
+
+		if (source instanceof IMAPRootFolder)
+			return;
+
+		if (source instanceof LocalRootFolder)
+			return;
+
+		// Work out the offset of the drag point from the TreePath bounding
+		// rectangle origin
 		Rectangle raPath = getPathBounds(path);
 		_ptOffset.setLocation(
 			ptDragOrigin.x - raPath.x,
@@ -144,11 +164,11 @@ public class DndTree
 			(JLabel) getCellRenderer().getTreeCellRendererComponent(this,
 			// tree
 		path.getLastPathComponent(), // value
-		false, // isSelected	(dont want a colored background)
+		false, // isSelected (dont want a colored background)
 		isExpanded(path), // isExpanded
 		getModel().isLeaf(path.getLastPathComponent()), // isLeaf
-		0, // row			(not important for rendering)
-		false // hasFocus		(dont want a focus rectangle)
+		0, // row (not important for rendering)
+		false // hasFocus (dont want a focus rectangle)
 	);
 		lbl.setSize((int) raPath.getWidth(), (int) raPath.getHeight());
 		// <-- The layout manager would normally do this
@@ -166,8 +186,10 @@ public class DndTree
 		// Make the image ghostlike
 		lbl.paint(g2);
 
-		// Now paint a gradient UNDER the ghosted JLabel text (but not under the icon if any)
-		// Note: this will need tweaking if your icon is not positioned to the left of the text
+		// Now paint a gradient UNDER the ghosted JLabel text (but not under
+		// the icon if any)
+		// Note: this will need tweaking if your icon is not positioned to the
+		// left of the text
 		Icon icon = lbl.getIcon();
 		int nStartOfText =
 			(icon == null) ? 0 : icon.getIconWidth() + lbl.getIconTextGap();
@@ -193,7 +215,8 @@ public class DndTree
 		// Wrap the path being transferred into a Transferable object
 		Transferable transferable = new CTransferableTreePath(path);
 
-		// Remember the path being dragged (because if it is being moved, we will have to delete it later)
+		// Remember the path being dragged (because if it is being moved, we
+		// will have to delete it later)
 		_pathSource = path;
 
 		// We pass our drag image just in case it IS supported by the platform
@@ -213,13 +236,14 @@ public class DndTree
 		if (e.getDropSuccess()) {
 			int nAction = e.getDropAction();
 			if (nAction == DnDConstants.ACTION_MOVE) {
-				// The dragged item (_pathSource) has been inserted at the target selected by the user.
+				// The dragged item (_pathSource) has been inserted at the
+				// target selected by the user.
 				// Now it is time to delete it from its original location.
 				System.out.println(
 					"REMOVING: " + _pathSource.getLastPathComponent());
 
 				// .
-				// .. ask your TreeModel to delete the node 
+				// .. ask your TreeModel to delete the node
 				// .
 
 				_pathSource = null;
@@ -252,7 +276,8 @@ public class DndTree
 					SystemColor.controlShadow.getBlue(),
 					64);
 
-			// Set up a hover timer, so that a node will be automatically expanded or collapsed
+			// Set up a hover timer, so that a node will be automatically
+			// expanded or collapsed
 			// if the user lingers on it for more than a short time
 			_timerHover = new Timer(1000, new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -284,15 +309,17 @@ public class DndTree
 		}
 
 		/**
-		* This is where the ghost image is drawn
-		*/
+		 * This is where the ghost image is drawn
+		 */
 		public void dragOver(DropTargetDragEvent e) {
-			// Even if the mouse is not moving, this method is still invoked 10 times per second
+			// Even if the mouse is not moving, this method is still invoked 10
+			// times per second
 			Point pt = e.getLocation();
 			if (pt.equals(_ptLast))
 				return;
 
-			// Try to determine whether the user is flicking the cursor right or left
+			// Try to determine whether the user is flicking the cursor right
+			// or left
 			int nDeltaLeftRight = pt.x - _ptLast.x;
 			if ((_nLeftRight > 0 && nDeltaLeftRight < 0)
 				|| (_nLeftRight < 0 && nDeltaLeftRight > 0))
@@ -303,7 +330,8 @@ public class DndTree
 
 			Graphics2D g2 = (Graphics2D) getGraphics();
 
-			// If a drag image is not supported by the platform, then draw my own drag image
+			// If a drag image is not supported by the platform, then draw my
+			// own drag image
 			if (!DragSource.isDragImageSupported()) {
 				paintImmediately(_raGhost.getBounds());
 				// Rub out the last ghost image and cue line
@@ -333,7 +361,8 @@ public class DndTree
 				_timerHover.restart();
 			}
 
-			// In any case draw (over the ghost image if necessary) a cue line indicating where a drop will occur
+			// In any case draw (over the ghost image if necessary) a cue line
+			// indicating where a drop will occur
 			Rectangle raPath = getPathBounds(path);
 			_raCueLine.setRect(
 				0,
@@ -367,13 +396,11 @@ public class DndTree
 			// And include the cue line in the area to be rubbed out next time
 			_raGhost = _raGhost.createUnion(_raCueLine);
 
-			/*				
-						 // Do this if you want to prohibit dropping onto the drag source
-						 if (path.equals(_pathSource))			
-							 e.rejectDrag();
-						 else
-							 e.acceptDrag(e.getDropAction());	
-			*/
+			/*
+			 * // Do this if you want to prohibit dropping onto the drag source
+			 * if (path.equals(_pathSource)) e.rejectDrag(); else
+			 * e.acceptDrag(e.getDropAction());
+			 */
 		}
 
 		public void dropActionChanged(DropTargetDragEvent e) {
@@ -384,11 +411,13 @@ public class DndTree
 		}
 
 		public void drop(DropTargetDropEvent e) {
-			
-			if ( e.getSource() instanceof JTable ) return;
-			
+
+			if (e.getSource() instanceof JTable)
+				return;
+
 			_timerHover.stop();
-			// Prevent hover timer from doing an unwanted expandPath or collapsePath
+			// Prevent hover timer from doing an unwanted expandPath or
+			// collapsePath
 
 			if (!isDropAcceptable(e)) {
 				e.rejectDrop();
@@ -402,9 +431,8 @@ public class DndTree
 			DataFlavor[] flavors = transferable.getTransferDataFlavors();
 			for (int i = 0; i < flavors.length; i++) {
 				DataFlavor flavor = flavors[i];
-				 if (
-					flavor.isMimeTypeEqual(
-						DataFlavor.javaJVMLocalObjectMimeType)) {
+				if (flavor
+					.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType)) {
 					try {
 						Point pt = e.getLocation();
 						TreePath pathTarget =
@@ -423,6 +451,7 @@ public class DndTree
 							(FolderTreeNode) dest.getParent();
 						FolderTreeNode source =
 							(FolderTreeNode) pathSource.getLastPathComponent();
+
 						FolderTreeNode sourceParent =
 							(FolderTreeNode) source.getParent();
 						if (isExpanded(pathTarget)) {
@@ -449,24 +478,31 @@ public class DndTree
 						}
 
 						// .
-						// .. Add your code here to ask your TreeModel to copy the node and act on the mouse gestures...
+						// .. Add your code here to ask your TreeModel to copy
+						// the node and act on the mouse gestures...
 						// .
 
 						// For example:
 
-						// If pathTarget is an expanded BRANCH, 
-						// 		then insert source UNDER it (before the first child if any)
-						// If pathTarget is a collapsed BRANCH (or a LEAF), 
+						// If pathTarget is an expanded BRANCH,
+						// 		then insert source UNDER it (before the first child
+						// if any)
+						// If pathTarget is a collapsed BRANCH (or a LEAF),
 						//		then insert source AFTER it
 						// 		Note: a leaf node is always marked as collapsed
 						// You ask the model to do the copying...
-						// ...and you supply the copyNode method in the model as well of course.
+						// ...and you supply the copyNode method in the model
+						// as well of course.
 						//						 if (_nShift == 0)
-						//							 pathNewChild = model.copyNode(pathSource, pathTarget, isExpanded(pathTarget)); 
-						//						 else if (_nShift > 0)	// The mouse is being flicked to the right (so move the node right)
-						//							 pathNewChild = model.copyNodeRight(pathSource, pathTarget); 
-						//						 else					// The mouse is being flicked to the left (so move the node left)
-						//							 pathNewChild = model.copyNodeLeft(pathSource); 
+						//							 pathNewChild = model.copyNode(pathSource,
+						// pathTarget, isExpanded(pathTarget));
+						//						 else if (_nShift > 0) // The mouse is being flicked
+						// to the right (so move the node right)
+						//							 pathNewChild = model.copyNodeRight(pathSource,
+						// pathTarget);
+						//						 else // The mouse is being flicked to the left (so
+						// move the node left)
+						//							 pathNewChild = model.copyNodeLeft(pathSource);
 
 						if (pathNewChild != null)
 							setSelectionPath(pathNewChild);
@@ -493,30 +529,26 @@ public class DndTree
 			if ((e.getDropAction() & DnDConstants.ACTION_COPY_OR_MOVE) == 0)
 				return false;
 
-			// Only accept this particular flavor	
+			// Only accept this particular flavor
 			if (!e
 				.isDataFlavorSupported(CTransferableTreePath.TREEPATH_FLAVOR))
 				return false;
 
-			/*				
-						 // Do this if you want to prohibit dropping onto the drag source...
-						 Point pt = e.getLocation();
-						 TreePath path = getClosestPathForLocation(pt.x, pt.y);
-						 if (path.equals(_pathSource))			
-							 return false;
-			
-			*/
+			/*
+			 * // Do this if you want to prohibit dropping onto the drag
+			 * source... Point pt = e.getLocation(); TreePath path =
+			 * getClosestPathForLocation(pt.x, pt.y); if
+			 * (path.equals(_pathSource)) return false;
+			 *  
+			 */
 
-			/*				
-						 // Do this if you want to select the best flavor on offer...
-						 DataFlavor[] flavors = e.getCurrentDataFlavors();
-						 for (int i = 0; i < flavors.length; i++ )
-						 {
-							 DataFlavor flavor = flavors[i];
-							 if (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
-								 return true;
-						 }
-			*/
+			/*
+			 * // Do this if you want to select the best flavor on offer...
+			 * DataFlavor[] flavors = e.getCurrentDataFlavors(); for (int i = 0;
+			 * i < flavors.length; i++ ) { DataFlavor flavor = flavors[i]; if
+			 * (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
+			 * return true; }
+			 */
 			return true;
 		}
 
@@ -525,29 +557,25 @@ public class DndTree
 			if ((e.getDropAction() & DnDConstants.ACTION_COPY_OR_MOVE) == 0)
 				return false;
 
-			// Only accept this particular flavor	
+			// Only accept this particular flavor
 			if (!e
 				.isDataFlavorSupported(CTransferableTreePath.TREEPATH_FLAVOR))
 				return false;
 
-			/*				
-						 // Do this if you want to prohibit dropping onto the drag source...
-						 Point pt = e.getLocation();
-						 TreePath path = getClosestPathForLocation(pt.x, pt.y);
-						 if (path.equals(_pathSource))			
-							 return false;
-			*/
+			/*
+			 * // Do this if you want to prohibit dropping onto the drag
+			 * source... Point pt = e.getLocation(); TreePath path =
+			 * getClosestPathForLocation(pt.x, pt.y); if
+			 * (path.equals(_pathSource)) return false;
+			 */
 
-			/*				
-						 // Do this if you want to select the best flavor on offer...
-						 DataFlavor[] flavors = e.getCurrentDataFlavors();
-						 for (int i = 0; i < flavors.length; i++ )
-						 {
-							 DataFlavor flavor = flavors[i];
-							 if (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
-								 return true;
-						 }
-			*/
+			/*
+			 * // Do this if you want to select the best flavor on offer...
+			 * DataFlavor[] flavors = e.getCurrentDataFlavors(); for (int i = 0;
+			 * i < flavors.length; i++ ) { DataFlavor flavor = flavors[i]; if
+			 * (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
+			 * return true; }
+			 */
 			return true;
 		}
 
@@ -557,8 +585,8 @@ public class DndTree
 	//	The following code was borrowed from the book:
 	//		 Java Swing
 	//		 By Robert Eckstein, Marc Loy & Dave Wood
-	//		 Paperback - 1221 pages 1 Ed edition (September 1998) 
-	//		 O'Reilly & Associates; ISBN: 156592455X 
+	//		 Paperback - 1221 pages 1 Ed edition (September 1998)
+	//		 O'Reilly & Associates; ISBN: 156592455X
 	//
 	//	The relevant chapter of which can be found at:
 	//		 http://www.oreilly.com/catalog/jswing/chapter/dnd.beta.pdf
@@ -606,20 +634,15 @@ public class DndTree
 				+ raOuter.x
 				+ AUTOSCROLL_MARGIN);
 	}
-	/*	
-		 // Use this method if you want to see the boundaries of the
-		 // autoscroll active region. Toss it out, otherwise.
-		 public void paintComponent(Graphics g) 
-		 {
-			 super.paintComponent(g);
-			 Rectangle raOuter = getBounds();
-			 Rectangle raInner = getParent().getBounds();
-			 g.setColor(Color.red);
-			 g.drawRect(-raOuter.x + 12, -raOuter.y + 12,
-				 raInner.width - 24, raInner.height - 24);
-		 }
-		
-	*/
+	/*
+	 * // Use this method if you want to see the boundaries of the //
+	 * autoscroll active region. Toss it out, otherwise. public void
+	 * paintComponent(Graphics g) { super.paintComponent(g); Rectangle raOuter =
+	 * getBounds(); Rectangle raInner = getParent().getBounds();
+	 * g.setColor(Color.red); g.drawRect(-raOuter.x + 12, -raOuter.y + 12,
+	 * raInner.width - 24, raInner.height - 24); }
+	 *  
+	 */
 
 	//	TreeModelListener interface...
 	public void treeNodesChanged(TreeModelEvent e) {
