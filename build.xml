@@ -28,7 +28,7 @@
 
   <property name="ant.home" value="../jakarta-ant" />
   <property name="j2ee.home" value="../j2ee/build/unix"/>
-  <property name="jaxp" value="../jaxp1.0.1" />
+  <property name="jaxp" value="../jaxp-1.0.1" />
 
   <!-- ========== Hack for building 2.2 and 2.3 versions ========== -->
   <!-- both servlet-2.2.jar and servlet-2.3.jar are checked in
