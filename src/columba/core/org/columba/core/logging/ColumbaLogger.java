@@ -112,9 +112,12 @@ public final class ColumbaLogger {
             String logConfigFile = System.getProperty("java.util.logging.config.file");
             if (logConfigFile == null) {
 
-                // create logging file in users config-folder
-                File loggingFile = new File(MainInterface.config.getConfigDirectory(), "columba.log");
-
+                // create logging file in "<users config-folder>/log"
+                File file = new File(MainInterface.config.getConfigDirectory(), "log");
+                if ( !file.exists()) file.mkdir();
+                
+                File loggingFile = new File(file, "columba.log");
+                
                 // Setup file logging
                 try {
                     Handler handler = new FileHandler(loggingFile.getPath(), false);
