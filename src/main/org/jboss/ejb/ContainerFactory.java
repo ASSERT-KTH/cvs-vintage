@@ -81,19 +81,19 @@ import org.jboss.web.WebServiceMBean;
 *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 *
-*   @version $Revision: 1.79 $
+*   @version $Revision: 1.80 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
   implements ContainerFactoryMBean
   {
-  // Constants -----------------------------------------------------
-  public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
-  public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";
-  public static String DEFAULT_ENTITY_BMP_CONFIGURATION = "Default BMP EntityBean";
-  public static String DEFAULT_ENTITY_CMP_CONFIGURATION = "Default CMP EntityBean";
-  public static String DEFAULT_MESSAGEDRIVEN_CONFIGURATION = "Default MesageDriven Bean";
-  // Constants uses with container interceptor configurations
+   // Constants -----------------------------------------------------
+   public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
+   public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";
+   public static String DEFAULT_ENTITY_BMP_CONFIGURATION = "Default BMP EntityBean";
+   public static String DEFAULT_ENTITY_CMP_CONFIGURATION = "Default CMP EntityBean";
+   public static String DEFAULT_MESSAGEDRIVEN_CONFIGURATION = "Default MesageDriven Bean";
+   // Constants uses with container interceptor configurations
     public static final int BMT = 1;
     public static final int CMT = 2;
     public static final int ANY = 3;
@@ -815,7 +815,9 @@ public class ContainerFactory
                 of transType
             */
             String transAttr = ielement.getAttribute("transaction");
-            if( transAttr.length() == 0 || transAttr.equalsIgnoreCase(transTypeString) )
+            if( transAttr == null || transAttr.length() == 0 )
+               transAttr = ANY_VALUE;
+            if( transAttr.equalsIgnoreCase(ANY_VALUE) || transAttr.equalsIgnoreCase(transTypeString) )
             {   // The transaction type matches the container bean trans type, check the metricsEnabled
                 String metricsAttr = ielement.getAttribute("metricsEnabled");
                 boolean metricsInterceptor = metricsAttr.equalsIgnoreCase("true");
