@@ -33,7 +33,7 @@
 #fieldErrorMsg($intakeList.Name "")
 </p>
 <p><small>
-Entering a previously saved list's name will overwrite the old list.
+$l10n.EnteringListWillOverwrite
 </small></p>
 
 <div class="functnbar3">
@@ -42,7 +42,7 @@ Entering a previously saved list's name will overwrite the old list.
 
 #else
 
-Editing a previously saved list is not implemented.
+$l01n.EnteringPreviouslySaved
 
 #end
 

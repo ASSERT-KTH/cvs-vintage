@@ -39,7 +39,7 @@
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
 <th nowrap="nowrap" width="8%"></th>
-<th>Name</th>
+<th>$l10n.Name</th>
 </tr>
 
 #foreach ($option in $availOptions)

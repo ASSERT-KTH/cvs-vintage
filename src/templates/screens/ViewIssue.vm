@@ -42,14 +42,14 @@
 
 #if ($tab.equals("all"))
     #initializeTabLink()
-    <div align="right"><small><a href="$tabLink.addPathInfo("tab", "1")">View as tabs</a></small></div>
+    <div align="right"><small><a href="$tabLink.addPathInfo("tab", "1")">$l10n.ViewAsTabs</a></small></div>
     #if ($data.User.hasMostRecentQuery() && $prevNextList)
         #navigate()
     #end
 #elseif (!$multiple.equals("true"))
 
 #initializeTabLink()
-<div align="right"><small><a href="$tabLink.addPathInfo("tab", "all")">View as single screen</a></small></div>
+<div align="right"><small><a href="$tabLink.addPathInfo("tab", "all")">$l10n.ViewAsSingleScreen</a></small></div>
 #if ($data.User.hasMostRecentQuery() && $prevNextList)
     #navigate()
 #end
@@ -82,7 +82,7 @@
 <td><a href="$tabLink.addPathInfo("tab", "4")">$l10n.AttachmentsDependenciesURLs</a></td>
 #end
 #if ($tab.equals("5"))
-<th>History</th>
+<th>$l10n.History</th>
 #else
 #initializeTabLink()
 <td><a href="$tabLink.addPathInfo("tab", "5")">$l10n.History</a></td>

@@ -6,7 +6,7 @@
 <th>&nbsp;</th>
 <th>$rowCol</th>
 <th>$l10n.DateTime</th>
-<th>Type</th>
+<th>$l10n.Type</th>
 </tr>
 
 #set ($finalCount = 1)

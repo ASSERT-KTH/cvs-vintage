@@ -78,7 +78,7 @@
 
 #if (!$currentQuery.RQueryUsers.isEmpty())
 
-<h3>Current subscriber list</h3>
+<h3>$l10n.CurrentSubscriberList</h3>
 
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>

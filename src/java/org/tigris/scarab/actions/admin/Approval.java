@@ -82,14 +82,10 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.35 2003/04/15 16:01:44 jmcnally Exp $
+ * @version $Id: Approval.java,v 1.36 2003/04/21 18:07:06 elicia Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
-    private static final String EMAIL_ERROR = "Your changes were saved, " +
-                                "but could not send notification email due " + 
-                                "to a sendmail error.";
-
     private static final String REJECT = "reject";
     private static final String APPROVE = "approve";
 

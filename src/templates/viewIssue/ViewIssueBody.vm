@@ -25,7 +25,7 @@
 
 #asterisk()
 #if ($rmit.Active.toString().equals("false"))
-<div class="colbar">This issue is read-only because its issue type has been marked as no longer active.</div>
+<div class="colbar">$l10n.IssueReadOnly</div>
 #end
 
 ## PRIMARY INFO

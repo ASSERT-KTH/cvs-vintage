@@ -6,7 +6,7 @@
 #set ($intakeSearch = $intake.IssueSearch.mapTo($search))
 
 <div class="app" id="div2-4-1-step1">
-<div id="apphead"><h2>Report builder</h2></div>
+<div id="apphead"><h2>$l10n.ReportBuilder</h2></div>
 
 <div class="tabs">
   <table cellpadding="3" cellspacing="0" border="0">
@@ -48,9 +48,9 @@ $data.User.setCurrentMITList($report.getMITList());
     #fieldErrorMsg($intakeSearch.MaxId "")
 </th>
 <td>
-from:&#160;<input type="text" size="20"
+$l10n.From&#160;<input type="text" size="20"
     name="$intakeSearch.MinId.Key" value="$intakeSearch.MinId" />
-&#160;&#160;to:&#160;<input type="text" size="20"
+&#160;&#160;$l10n.To:&#160;<input type="text" size="20"
     name="$intakeSearch.MaxId.Key" value="$intakeSearch.MaxId" />
 </td>
 </tr>
@@ -61,9 +61,9 @@ from:&#160;<input type="text" size="20"
 <td>
     #fieldErrorMsg($intakeSearch.MinDate "")
     #fieldErrorMsg($intakeSearch.MaxDate "")
-from:&#160;<input type="text" size="20"
+$l10n.From&#160;<input type="text" size="20"
     name="$intakeSearch.MinDate.Key" value="$intakeSearch.MinDate.toString()" />
-&#160;&#160;to:&#160;<input type="text" size="20"
+&#160;&#160;$l10n.To:&#160;<input type="text" size="20"
     name="$intakeSearch.MaxDate.Key" value="$intakeSearch.MaxDate.toString()" />
 <p><small>$l10n.DateEg</small></p>
 </td>

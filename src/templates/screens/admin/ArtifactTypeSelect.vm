@@ -19,7 +19,7 @@
 
 #if ($issueTypes.isEmpty())
 
-<h3>Issue types</h3>
+<h3>$l10n.IssueTypes</h3>
 
 <p><em>$l10n.NoIssueTypes</em></p>
 

@@ -73,7 +73,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 #end
 
 #* Commenting out for now, later will implement as part of User Prefs
-<h3>l10n.IssueViewDisplayOptions</h3>
+<h3>$l10n.IssueViewDisplayOptions</h3>
 
 <div class="axial">
 <table border="1" cellspacing="2" cellpadding="3">
