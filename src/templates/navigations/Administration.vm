@@ -38,10 +38,10 @@
     $renderer.render("navigations", "ModuleAdmin.vm")
     </div>
   #else
-    #if ($allowMM && ! $allowMAT)
-      <div>$link.setPage("admin,ManageModules.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</div>
-    #else
+    #if ($allowMAT && ! $allowMM)
       <div>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</div>
+    #else
+      <div>$link.setPage("admin,ManageModules.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</div>
     #end
   #end
 #end
