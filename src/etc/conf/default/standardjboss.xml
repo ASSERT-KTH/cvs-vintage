@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.73 2004/04/10 00:39:49 ejort Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.74 2004/04/13 10:09:58 tdiesler Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -238,6 +238,7 @@
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
@@ -282,6 +283,7 @@
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
@@ -323,6 +325,7 @@
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
@@ -367,6 +370,7 @@
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
@@ -410,6 +414,7 @@
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
@@ -453,6 +458,7 @@
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
@@ -495,6 +501,7 @@
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
@@ -544,6 +551,7 @@
         <interceptor transaction="Bean">org.jboss.ejb.plugins.StatelessSessionInstanceInterceptor</interceptor>
         <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
         <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
@@ -573,6 +581,7 @@
         <interceptor transaction="Bean">org.jboss.ejb.plugins.StatelessSessionInstanceInterceptor</interceptor>
         <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
         <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
@@ -681,6 +690,7 @@
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
@@ -724,6 +734,7 @@
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
@@ -766,6 +777,7 @@
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
@@ -813,6 +825,7 @@
         <interceptor transaction="Bean">org.jboss.ejb.plugins.MessageDrivenInstanceInterceptor</interceptor>
         <interceptor transaction="Bean">org.jboss.ejb.plugins.MessageDrivenTxInterceptorBMT</interceptor>
         <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.MessageDrivenInstancePool</instance-pool>
@@ -837,6 +850,7 @@
         <!-- BMT -->
         <interceptor transaction="Bean">org.jboss.ejb.plugins.MessageDrivenInstanceInterceptor</interceptor>
         <interceptor transaction="Bean">org.jboss.ejb.plugins.MessageDrivenTxInterceptorBMT</interceptor>
+        <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.MessageDrivenInstancePool</instance-pool>
