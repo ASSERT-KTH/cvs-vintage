@@ -2,7 +2,7 @@
 <!DOCTYPE connector PUBLIC 
           "-//Sun Microsystems, Inc.//DTD Connector 1.0//EN" 
           "http://java.sun.com/dtd/connector_1_0.dtd">
-<!-- $Id: ra.xml,v 1.4 2001/08/16 23:57:48 user57 Exp $ -->
+<!-- $Id: ra.xml,v 1.5 2001/09/27 13:26:22 pra Exp $ -->
 
 <connector>
    <display-name>JMS Adapter</display-name>
@@ -21,6 +21,23 @@
 	 <config-property-name>JmsProviderAdapterJNDI</config-property-name>
 	 <config-property-type>java.lang.String</config-property-type>
 	 <config-property-value>java:DefaultJMSProvider</config-property-value>
+      </config-property>
+       <config-property>
+	 <config-property-name>SessionDefaultType</config-property-name>
+	 <config-property-type>java.lang.String</config-property-type>
+	 <config-property-value>javax.jms.Topic</config-property-value>
+      </config-property>
+<!-- JBoss need these to be declared here, otherwise it will not find any
+overridden values in jms-service.xml -->
+      <config-property>
+	 <config-property-name>UserName</config-property-name>
+	 <config-property-type>java.lang.String</config-property-type>
+	 <config-property-value></config-property-value>
+      </config-property>
+      <config-property>
+	 <config-property-name>Password</config-property-name>
+	 <config-property-type>java.lang.String</config-property-type>
+	 <config-property-value></config-property-value>
       </config-property>
       <authentication-mechanism>
 	 <authentication-mechanism-type>BasicPassword</authentication-mechanism-type>
