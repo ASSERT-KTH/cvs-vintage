@@ -305,7 +305,8 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 				DiskIO.saveStringInFile(inputFile, bodyText);
 				// get URL of file
 				url = inputFile.toURL();
-
+				setPage(url);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -418,11 +419,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		if (htmlMessage) {
-			// use asynchronous loading method setPage to display
-			// URL correctly
-			setPage(url);
-		} else {
+		if (!htmlMessage) {
 			// display bodytext
 			setText(body);
 		}
