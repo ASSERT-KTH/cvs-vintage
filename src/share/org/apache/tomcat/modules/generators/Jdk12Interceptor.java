@@ -82,6 +82,13 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
 	fixJDKContextClassLoader(ctx);
     }
 
+    public int preInitCheck( Request req, Handler sw )
+	throws TomcatException
+    {
+	fixJDKContextClassLoader(ctx);
+	return 0;
+    }
+
     /** Servlet Destroy  notification
      */
     public void preServletDestroy( Context ctx, Handler sw )
@@ -102,6 +109,12 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
 	jdk11Compat.setContextClassLoader(this.getClass().getClassLoader());
     }
     
+    public int postInitCheck( Request req, Handler sw )
+	throws TomcatException
+    {
+	jdk11Compat.setContextClassLoader(this.getClass().getClassLoader());
+	return 0;
+    }
     /** Called before service method is invoked. 
      */
     public int preService(Request request, Response response) {
