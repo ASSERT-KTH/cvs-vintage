@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.59 2001/10/18 00:34:40 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.60 2001/10/23 17:04:04 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -102,7 +102,7 @@ public class ReportIssue extends RequireLoginFirstAction
         try
         {
             // set any required flags
-            setRequiredFlags(issue, intake, issueType);
+            setRequiredFlags(issue, intake);
         }
         catch (Exception e)
         {
@@ -113,7 +113,7 @@ public class ReportIssue extends RequireLoginFirstAction
         if ( intake.isAllValid() ) 
         {
             // set the values entered so far
-            setAttributeValues(issue, intake, issueType);
+            setAttributeValues(issue, intake);
 
             // check for duplicates, if there are none skip the dedupe page
             searchAndSetTemplate(data, context, 0, "entry,Wizard3.vm");
@@ -154,11 +154,10 @@ public class ReportIssue extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         //ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = scarabR.getReportingIssue();
-        IssueType issueType = scarabR.getCurrentIssueType();
 
         // search on the option attributes and keywords
         IssueSearch search = new IssueSearch(issue);                
-        List matchingIssues = search.getMatchingIssues(25, issueType);
+        List matchingIssues = search.getMatchingIssues(25);
                 
         // set the template to dedupe unless none exist, then skip
         // to final entry screen
@@ -189,8 +188,7 @@ public class ReportIssue extends RequireLoginFirstAction
      * @param intake an <code>IntakeTool</code> value
      * @exception Exception if an error occurs
      */
-    private void setRequiredFlags(Issue issue, IntakeTool intake, 
-                                  IssueType issueType)
+    private void setRequiredFlags(Issue issue, IntakeTool intake)
         throws Exception
     {
         if (issue == null)
@@ -198,9 +196,10 @@ public class ReportIssue extends RequireLoginFirstAction
             throw new Exception ("The Issue is not valid any longer. " + 
                 "Please try again.");
         }
+        IssueType issueType = issue.getIssueType();
         Attribute[] requiredAttributes = issue.getModule()
             .getRequiredAttributes(issueType);
-        SequencedHashtable avMap = issue.getModuleAttributeValuesMap(issueType); 
+        SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
         Iterator iter = avMap.iterator();
         while ( iter.hasNext() ) 
         {
@@ -247,10 +246,10 @@ public class ReportIssue extends RequireLoginFirstAction
      * issue's attribute values.
      * @exception Exception pass thru
      */
-    private void setAttributeValues(Issue issue, IntakeTool intake, IssueType issueType)
+    private void setAttributeValues(Issue issue, IntakeTool intake)
         throws Exception
     {
-        SequencedHashtable avMap = issue.getModuleAttributeValuesMap(issueType);
+        SequencedHashtable avMap = issue.getModuleAttributeValuesMap();
         Iterator i = avMap.iterator();
         while (i.hasNext()) 
         {
@@ -273,16 +272,16 @@ public class ReportIssue extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Issue issue = scarabR.getReportingIssue();
-        IssueType issueType = scarabR.getIssueType();
+        IssueType issueType = issue.getIssueType();
         ScarabUser user = (ScarabUser)data.getUser();
 
         // set any required flags
-        setRequiredFlags(issue, intake, issueType);
+        setRequiredFlags(issue, intake);
 
         if (intake.isAllValid())
         {
-            setAttributeValues(issue, intake, issueType);
-            if (issue.containsMinimumAttributeValues(issueType))
+            setAttributeValues(issue, intake);
+            if (issue.containsMinimumAttributeValues())
             {
                 // Save transaction record
                 Transaction transaction = new Transaction();
@@ -291,15 +290,13 @@ public class ReportIssue extends RequireLoginFirstAction
 
                 // enter the values into the transaction
                 SequencedHashtable avMap = 
-                    issue.getModuleAttributeValuesMap(issueType); 
+                    issue.getModuleAttributeValuesMap(); 
                 Iterator i = avMap.iterator();
                 while (i.hasNext()) 
                 {
                     AttributeValue aval = (AttributeValue)avMap.get(i.next());
                     aval.startTransaction(transaction);
                 }
-                
-                issue.setTypeId(scarabR.getCurrentIssueType().getIssueTypeId());
                 issue.save();
 
                 // save the attachment

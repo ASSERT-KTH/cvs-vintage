@@ -95,7 +95,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.43 2001/10/20 00:51:04 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.44 2001/10/23 17:04:04 jmcnally Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -132,7 +132,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         AttributeValue aval = null;
         Group group = null;
 
-        SequencedHashtable modMap = issue.getModuleAttributeValuesMap(issueType);
+        SequencedHashtable modMap = issue.getModuleAttributeValuesMap();
         Iterator iter = modMap.iterator();
         while ( iter.hasNext() ) 
         {
@@ -174,7 +174,7 @@ public class ModifyIssue extends RequireLoginFirstAction
             attachment.save();
 
             // Set the attribute values entered 
-            HashMap avMap = issue.getAllAttributeValuesMap(issueType);
+            HashMap avMap = issue.getAllAttributeValuesMap();
             Iterator iter2 = avMap.keySet().iterator();
 
             // Save transaction record

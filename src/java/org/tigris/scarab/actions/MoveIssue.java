@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.12 2001/10/16 21:42:22 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.13 2001/10/23 17:04:04 jmcnally Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -192,10 +192,9 @@ public class MoveIssue extends RequireLoginFirstAction
             // Save transaction record
             transaction.create(TransactionTypePeer.CREATE_ISSUE__PK,
                                user, null);
-            newIssue = Issue.getInstance();
-            newIssue.setModuleId(new NumberKey(newModuleId));
+            newModule = ModuleManager.getInstance(new NumberKey(newModuleId));
+            newIssue = newModule.getNewIssue(issue.getIssueType());
             newIssue.save();
-            newModule = newIssue.getModule();
 
             // Copy over attributes
             for (int i=0;i<matchingAttributes.size();i++)

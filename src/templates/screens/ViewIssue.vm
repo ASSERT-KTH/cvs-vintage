@@ -26,7 +26,7 @@ You are viewing an issue in a different Module than is currently selected.
 
 #if ($currentIssue)
 
- #set ($attrValues = $currentIssue.getModuleAttributeValuesMap($scarabR.CurrentIssueType))
+ #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
  <form method="post" action="$link.setPage("ViewIssue.vm").setAction("ModifyIssue")">
    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
 

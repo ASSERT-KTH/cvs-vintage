@@ -3,8 +3,7 @@ $page.setTitle("Enter issue")
 <div id="wizard1" class="app">
 
 #set ($issue = $scarabR.ReportingIssue)
-#set ($issueType = $scarabR.CurrentIssueType)
-#set ($attrValues = $issue.getModuleAttributeValuesMap($issueType))
+#set ($attrValues = $issue.ModuleAttributeValuesMap)
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
 
@@ -66,7 +65,7 @@ $page.setTitle("Enter issue")
 <table cellpadding="3" cellspacing="2" border="0">
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
-  #if ($attVal.isDedupeAttribute($issueType))
+  #if ($attVal.isDedupeAttribute())
   <tr>
    <th>
      #if ( $attVal.Attribute.AttributeType.ValidationKey )

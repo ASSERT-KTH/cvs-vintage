@@ -2,13 +2,13 @@ $page.setTitle("Enter issue")
 
 #set ($issue = $scarabR.ReportingIssue)
 #set ($action = $link.setPage("entry,Wizard3.vm").setAction("ReportIssue").toString())
-#set ($attrValues = $issue.getModuleAttributeValuesMap($scarabR.CurrentIssueType))
+#set ($attrValues = $issue.ModuleAttributeValuesMap)
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
 #set ($templateId = $data.Parameters.getString("templateId"))
 #set ($template = $scarabR.getIssue($templateId))
-#set ($templAttrValues = $template.getModuleAttributeValuesMap($scarabR.CurrentIssueType))
+#set ($templAttrValues = $template.ModuleAttributeValuesMap)
 
 <div class="app" id="div2-1-0">
 

@@ -83,7 +83,7 @@ $page.setTitle("Issue template")
 
 <div class="axial">
  <table cellspacing="2" cellpadding="3" border="0">
-#set ($attrValues = $issue.getModuleAttributeValuesMap($scarabR.CurrentIssueType))
+#set ($attrValues = $issue.ModuleAttributeValuesMap)
 #set ($group = $intake.AttributeValue.mapTo($attrValue))
 #foreach ($attKey in $attrValues.sequence())
   #set ($attVal = $attrValues.get($attKey))

@@ -91,14 +91,31 @@ public class Issue
     extends BaseIssue
     implements Persistent
 {
+    /**
+     * new issues are created only when the issuetype and module are known
+     * Or by the Peer when retrieving from db
+     */
+    Issue()
+    {
+    }
+
+    protected Issue(ModuleEntity module, IssueType issueType)
+        throws Exception
+    {
+        this();
+        setModule(module);
+        setIssueType(issueType);
+    }
 
     /**
      * Gets an issue associated to a ModuleEntity
      */
-    public static Issue getInstance()
+    public static Issue getNewInstance(ModuleEntity module, 
+                                       IssueType issueType)
         throws Exception
     {
-        return new Issue();
+        Issue issue = new Issue(module, issueType);
+        return issue;
     }
 
     /**
@@ -305,13 +322,14 @@ public class Issue
      * not been set for the issue are included.  The values are ordered
      * according to the module's preference
      */
-    public SequencedHashtable getModuleAttributeValuesMap(IssueType issueType) throws Exception
+    public SequencedHashtable getModuleAttributeValuesMap() 
+        throws Exception
     {
         SequencedHashtable map = null; 
         Attribute[] attributes = null;
         HashMap siaValuesMap = null;
 
-        attributes = getModule().getActiveAttributes(issueType);
+        attributes = getModule().getActiveAttributes(getIssueType());
         siaValuesMap = getAttributeValuesMap();
 
         map = new SequencedHashtable( (int)(1.25*attributes.length + 1) );
@@ -371,11 +389,12 @@ public class Issue
      * AttributeValues that are set for this Issue in the order
      * that is preferred for this module
      */
-    public AttributeValue[] getOrderedAttributeValues(IssueType issueType)
+    public AttributeValue[] getOrderedAttributeValues()
         throws Exception
     {        
         Map values = getAttributeValuesMap();
-        Attribute[] attributes = getModule().getActiveAttributes(issueType);
+        Attribute[] attributes = getModule()
+            .getActiveAttributes(getIssueType());
 
         return orderAttributeValues(values, attributes);
     }
@@ -436,9 +455,10 @@ public class Issue
      * Empty AttributeValues that are relevant for the module, but have 
      * not been set for the issue are included.
      */
-    public HashMap getAllAttributeValuesMap(IssueType issueType) throws Exception
+    public HashMap getAllAttributeValuesMap() 
+        throws Exception
     {
-        Map moduleAtts = getModuleAttributeValuesMap(issueType);
+        Map moduleAtts = getModuleAttributeValuesMap();
         Map issueAtts = getAttributeValuesMap();
         HashMap allValuesMap = new HashMap( (int)(1.25*(moduleAtts.size() + 
                                             issueAtts.size())+1) );
@@ -455,13 +475,14 @@ public class Issue
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean containsMinimumAttributeValues(IssueType issueType)
+    public boolean containsMinimumAttributeValues()
         throws Exception
     {
-        Attribute[] attributes = getModule().getRequiredAttributes(issueType);
+        Attribute[] attributes = getModule()
+            .getRequiredAttributes(getIssueType());
 
         boolean result = true;
-        SequencedHashtable avMap = getModuleAttributeValuesMap(issueType);
+        SequencedHashtable avMap = getModuleAttributeValuesMap();
         Iterator i = avMap.iterator();
         while (i.hasNext()) 
         {

@@ -100,7 +100,7 @@ $page.setTitle("Queue list")
  #set ($userAttribute = $rmua.Attribute)
   <td>
   #set ($value = "")
-  #set ($value = $issue.getModuleAttributeValuesMap($scarabR.CurrentIssueType).get($userAttribute.Name.toString().toUpperCase()).Value)
+  #set ($value = $issue.ModuleAttributeValuesMap.get($userAttribute.Name.toString().toUpperCase()).Value)
   #if (!$value.equals(""))
    $value
   #else

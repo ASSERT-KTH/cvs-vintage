@@ -829,40 +829,29 @@ try{
     {
         if (issue == null)
         {
+            String issueId = null;
             Group issueGroup = getIntakeTool()
                 .get("Issue", IntakeTool.DEFAULT_KEY, false);
             if ( issueGroup != null ) 
             {            
-                String issueId =  issueGroup.get("Id").toString();
-                if ( issueId == null || issueId.length() == 0 )
-                {
-                    issue = getCurrentModule()
-                            .getNewIssue(getCurrentIssueType());
-                }
-                else 
-                {
-                    issue = IssuePeer
-                        .retrieveByPK(new NumberKey(issueId));
-                }
+                issueId =  issueGroup.get("Id").toString();
             }
             else if ( data.getParameters().getString("issue_id") != null ) 
             {                
-                String issueId = data.getParameters().getString("issue_id");
-                if ( issueId.length() == 0 )
-                {
-                    issue = new Issue();
-                }
-                else 
-                {
-                    issue = IssuePeer
-                        .retrieveByPK(new NumberKey(issueId));
-                }
+                issueId = data.getParameters().getString("issue_id");
+            }
+
+            if ( issueId == null || issueId.length() == 0 )
+            {
+                issue = getCurrentModule()
+                    .getNewIssue(getCurrentIssueType());
             }
             else 
             {
-                issue = new Issue();
+                issue = IssuePeer
+                    .retrieveByPK(new NumberKey(issueId));
             }
-        }        
+        }
         return issue;
     }
 
@@ -954,13 +943,7 @@ try{
     public IssueSearch getSearch()
         throws Exception
     {
-        IssueSearch search = new IssueSearch();
-        if (getCurrentModule() == null)
-        {
-            throw new Exception ("SRT:getSearch() current module is null");
-        }
-        search.setModule(getCurrentModule());
-        return search;
+        return new IssueSearch(getCurrentModule(), getCurrentIssueType());
     }
 
     public Intake getConditionalIntake(String parameter)
@@ -983,17 +966,16 @@ try{
         return intake;
     }
 
-    public List getCurrentSearchResults(IssueType issueType)
+    public List getCurrentSearchResults()
         throws Exception
     {
         Intake intake = getConditionalIntake(ScarabConstants.CURRENT_QUERY);
         
-        IssueSearch search = new IssueSearch();
+        IssueSearch search = getSearch();
         Group searchGroup = intake.get("SearchIssue", 
                                        getSearch().getQueryKey() );
         searchGroup.setProperties(search);
-        search.setModule(getCurrentModule());
-        SequencedHashtable avMap = search.getModuleAttributeValuesMap(issueType);
+        SequencedHashtable avMap = search.getModuleAttributeValuesMap();
         Iterator i = avMap.iterator();
         while (i.hasNext()) 
         {
@@ -1005,7 +987,7 @@ try{
             }                
         }
         
-        return search.getMatchingIssues(issueType);
+        return search.getMatchingIssues();
     }
 
     /**
@@ -1096,7 +1078,7 @@ try{
     {
         if ( issueList == null ) 
         {
-            issueList = getCurrentSearchResults(getCurrentIssueType());
+            issueList = getCurrentSearchResults();
         }
         return issueList;
     }

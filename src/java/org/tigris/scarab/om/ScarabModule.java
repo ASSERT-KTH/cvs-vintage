@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.53 2001/10/23 01:28:45 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.54 2001/10/23 17:04:04 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -275,9 +275,7 @@ public class ScarabModule
     public Issue getNewIssue(IssueType issueType)
         throws Exception
     {
-        Issue issue = Issue.getInstance();
-        issue.setModule( this );
-        issue.setIssueType( issueType );
+        Issue issue = Issue.getNewInstance(this, issueType);
         issue.setDeleted(false);
         return issue;
     }

@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.13 2001/10/23 02:24:51 elicia Exp $
+    @version $Id: TemplateList.java,v 1.14 2001/10/23 17:04:04 jmcnally Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -99,21 +99,9 @@ public class TemplateList extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);        
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-        Issue issue = null;
+        Issue issue = scarabR.getIssue();
 
-        String id = data.getParameters().getString("issue_id");
-        //if there is an issue id, this is an edit; otherwise create new issue
-        if (id == null)
-        {
-            issue = scarabR.getCurrentModule().getNewIssue(scarabR.getCurrentIssueType());
-        } 
-        else
-        {
-            issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
-        }
-
-        SequencedHashtable avMap = issue.getModuleAttributeValuesMap
-                                   (scarabR.getCurrentIssueType());
+        SequencedHashtable avMap = issue.getModuleAttributeValuesMap();
         AttributeValue aval = null;
         Group group = null;
         
