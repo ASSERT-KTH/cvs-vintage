@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.144 2002/12/29 19:41:03 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.145 2003/01/04 03:52:02 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -763,14 +763,31 @@ public class ModifyIssue extends BaseModifyIssue
      *  Modifies the dependency type between the current issue
      *  And its parent or child issue.
      */
-    public void doUpdatedependencies (RunData data, TemplateContext context)
+    public void doDeletedependencies(RunData data, TemplateContext context)
         throws Exception
-    {                          
+    {
+        doUpdatedependencies(data, context, true);
+    }
+
+    public void doUpdatedependencies(RunData data, TemplateContext context)
+        throws Exception
+    {
+        doUpdatedependencies(data, context, false);
+    }
+
+    /**
+     *  Modifies the dependency type between the current issue
+     *  And its parent or child issue.
+     */
+    private void doUpdatedependencies(RunData data, TemplateContext context,
+                                     boolean doDelete)
+        throws Exception
+    {
         if (isCollision(data, context)) 
         {
             return;
         }
-        
+
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IntakeTool intake = getIntakeTool(context);
@@ -802,7 +819,7 @@ public class ModifyIssue extends BaseModifyIssue
 
             ActivitySet activitySet = null;
             List dependencies = issue.getAllDependencies();            
-            for (int i=0; i< dependencies.size(); i++)
+            for (int i=0; i < dependencies.size(); i++)
             {
                 Depend oldDepend = (Depend)dependencies.get(i);
                 Depend newDepend = DependManager.getInstance();
@@ -819,7 +836,7 @@ public class ModifyIssue extends BaseModifyIssue
                 newDepend.setDescription(reasonForChange);
 
                 // make the changes
-                if (newDepend.getDeleted() == true)
+                if (doDelete && newDepend.getDeleted() == true)
                 {
                     try
                     {
@@ -841,6 +858,12 @@ public class ModifyIssue extends BaseModifyIssue
                 }
                 else if (! oldDependType.equals(newDependType))
                 {
+                    // need to do this because newDepend could have the deleted
+                    // flag set to true if someone selected it as well as 
+                    // clicked the save changes button. this is why we have the 
+                    // doDeleted flag as well...issue.doChange will only do the
+                    // change if the deleted flag is false...so force it...
+                    newDepend.setDeleted(false);
                     // make the changes
                     activitySet = 
                         issue.doChangeDependencyType(activitySet, oldDepend, newDepend,
