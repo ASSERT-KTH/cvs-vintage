@@ -420,7 +420,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
 	public void save(WorkerStatusController worker) throws Exception {
 
-		ColumbaLogger.log.info("saveing header-cache=" + headerFile);
+		ColumbaLogger.log.info("saving header-cache=" + headerFile);
 		
 		FileOutputStream istream = new FileOutputStream(headerFile.getPath());
 		ObjectOutputStream p = new ObjectOutputStream(istream);
