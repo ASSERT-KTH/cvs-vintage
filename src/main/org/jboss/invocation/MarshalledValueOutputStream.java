@@ -21,7 +21,7 @@ import java.rmi.server.RemoteStub;
  * proxy annotations are used.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class MarshalledValueOutputStream
    extends ObjectOutputStream
@@ -61,7 +61,14 @@ public class MarshalledValueOutputStream
       if( (obj instanceof Remote) && !(obj instanceof RemoteStub) )
       {
          Remote remote = (Remote) obj;
-         obj = RemoteObject.toStub(remote);
+         try
+         {
+            obj = RemoteObject.toStub(remote);
+         }
+         catch(IOException ignore)
+         {
+            // Let the Serialization layer try with the orignal obj
+         }
       }
       return obj;
    }
