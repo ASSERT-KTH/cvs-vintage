@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.17 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: PropPanelReception.java,v 1.18 2003/09/20 13:10:45 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,9 +39,6 @@ import org.argouml.uml.ui.UMLTextArea;
 import org.argouml.uml.ui.UMLTextProperty;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
-
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * @author Jaap
@@ -85,7 +82,7 @@ public class PropPanelReception extends PropPanelModelElement {
      * @param element
      * @return boolean
      */
-    public boolean isAcceptibleClassifier(MModelElement element) {
+    public boolean isAcceptibleClassifier(Object/*MModelElement*/ element) {
         return (ModelFacade.isAClassifier(element) && !(ModelFacade.isADataType(element)));
     }
 
@@ -105,7 +102,7 @@ public class PropPanelReception extends PropPanelModelElement {
      * Sets the owner of the reception. Necessary for the MClassifierComboBox.
      * @param owner
      */
-    public void setOwner(MClassifier owner) {
+    public void setOwner(Object/*MClassifier*/ owner) {
         Object target = getTarget();
         if (ModelFacade.isAReception(target)) {
             Object rec = /*(MReception)*/ target;

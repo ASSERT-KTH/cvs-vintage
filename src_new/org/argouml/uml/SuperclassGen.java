@@ -1,4 +1,4 @@
-// $Id: SuperclassGen.java,v 1.4 2003/08/30 22:04:19 alexb Exp $
+// $Id: SuperclassGen.java,v 1.5 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,12 +28,9 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
+import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.ChildGenerator;
 import ru.novosoft.uml.foundation.core.MGeneralizableElement;
-import ru.novosoft.uml.foundation.core.MGeneralization;
-
-
-
 /** Utility class to generate the children of a class.  In this case
  *  the "children" of a class are it's base classes. */
 
@@ -42,13 +39,13 @@ public class SuperclassGen implements ChildGenerator {
     public Enumeration gen(Object o) {
 	Vector res = new Vector();
 
-	MGeneralizableElement ge = (MGeneralizableElement) o;
-	Collection gens = ge.getGeneralizations();
+	Object/*MGeneralizableElement*/ ge = (MGeneralizableElement) o;
+	Collection gens = ModelFacade.getGeneralizations(ge);
 	if (gens == null) return res.elements();
 	Iterator enum = gens.iterator();
 	while (enum.hasNext()) {
-	    MGeneralization g = (MGeneralization) enum.next();
-	    res.add(g.getParent());
+	    Object/*MGeneralization*/ g = enum.next();
+	    res.add(ModelFacade.getParent(g));
 	}
 	return res.elements();
     }

@@ -1,4 +1,4 @@
-// $Id: ColumnDescriptor.java,v 1.35 2003/09/08 20:11:53 bobtarling Exp $
+// $Id: ColumnDescriptor.java,v 1.36 2003/09/20 13:10:45 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -258,7 +258,7 @@ class ColumnStereotype extends ColumnDescriptor {
 	if (!(ModelFacade.isAModelElement(target))) return;
 	if (!(value instanceof String)) return;
 	String stereoName = (String) value;
-	MStereotype s =
+	Object/*MStereotype*/ s =
 	    UmlFactory.getFactory().getExtensionMechanisms()
 	    .buildStereotype(target,
 			     stereoName,
@@ -919,7 +919,7 @@ class ColumnReturn extends ColumnDescriptor {
     public Object getValueFor(Object target) {
 	if (!(ModelFacade.isAOperation(target))) return "";
 	Object operation = /*(MOperation)*/ target;
-	MParameter returnParameter = UmlHelper.getHelper().getCore().getReturnParameter(operation);
+	Object/*MParameter*/ returnParameter = UmlHelper.getHelper().getCore().getReturnParameter(operation);
 	if (returnParameter != null && ModelFacade.getType(returnParameter) != null) {
 	    Object returnType = ModelFacade.getType(returnParameter);
 	    GeneratorDisplay gd = GeneratorDisplay.getInstance();

@@ -1,4 +1,4 @@
-// $Id: ActionModifier.java,v 1.7 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: ActionModifier.java,v 1.8 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionModifier.java
 // Classes: ActionModifier
 // Original Author: Bob Tarling
-// $Id: ActionModifier.java,v 1.7 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: ActionModifier.java,v 1.8 2003/09/20 13:10:44 bobtarling Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use cases
@@ -45,6 +45,8 @@ import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.extension_mechanisms.*;
 import ru.novosoft.uml.*;
 import ru.novosoft.uml.behavior.use_cases.*;
+import ru.novosoft.uml.foundation.core.MClass;
+import ru.novosoft.uml.foundation.core.MInterface;
 
 /**
  * <p>A class to perform the action of changing value of the modifiers on a
@@ -237,8 +239,8 @@ public class ActionModifier extends UMLAction {
                           String propertyName,
 			  String getMethod,
 			  String setMethod,
-			  Object/*MPackage*/ mpackage,
-			  Object/*Class*/ enumClass,
+			  MPackage mpackage,
+			  Class enumClass,
 			  Object trueValue,
 			  Object falseValue) {
 	super(name, NO_ICON);
@@ -274,7 +276,7 @@ public class ActionModifier extends UMLAction {
      */ 
 
     public ActionModifier(String name, String propertyName, String getMethod,
-                          String setMethod, Object/*MUseCase*/ museCase) { 
+                          String setMethod, MUseCase museCase) { 
         super(name, NO_ICON);
         this.object = museCase;
         _property   = new UMLReflectionBooleanProperty(propertyName,
@@ -310,7 +312,7 @@ public class ActionModifier extends UMLAction {
      */
 
     public ActionModifier(String name, String propertyName, String getMethod,
-                          String setMethod, Object/*MUseCase*/ museCase, Class enumClass,
+                          String setMethod, MUseCase museCase, Class enumClass,
                           Object trueValue, Object falseValue) {
         super(name, NO_ICON);
         this.object = museCase;

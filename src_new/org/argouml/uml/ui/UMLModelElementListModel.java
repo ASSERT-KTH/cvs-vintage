@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel.java,v 1.24 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLModelElementListModel.java,v 1.25 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -371,14 +371,10 @@ abstract public class UMLModelElementListModel
      *  @deprecated 
      *  @param modelElement model element to display
      */
-    public void navigateTo(MModelElement modelElement) {
+    public void navigateTo(Object/*MModelElement*/ modelElement) {
         TargetManager.getInstance().setTarget(modelElement);
     }
     
-    public void navigateTo(Object modelElement) {
-        navigateTo((MModelElement) modelElement);
-    }
-
     /**
      *   This method is called in response to selecting "Open" from
      *   a context (pop-up) menu on this list.

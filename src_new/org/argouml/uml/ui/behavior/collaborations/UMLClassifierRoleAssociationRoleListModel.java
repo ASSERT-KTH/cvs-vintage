@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.9 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.10 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,8 +39,6 @@ import org.argouml.uml.ui.UMLUserInterfaceContainer;
 import org.tigris.gef.graph.MutableGraphModel;
 
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
-import ru.novosoft.uml.foundation.core.MModelElement;
-
 /**
  * Binary relation list model for associationsroles between classifierroles
  * 
@@ -101,7 +99,7 @@ public class UMLClassifierRoleAssociationRoleListModel
     protected void connect(
 			   MutableGraphModel gm,
 			   Object/*MModelElement*/ from,
-			   MModelElement to) {
+			   Object/*MModelElement*/ to) {
 	gm.connect(from, to, MAssociationRole.class);
     }
 
@@ -110,7 +108,7 @@ public class UMLClassifierRoleAssociationRoleListModel
      * org.argouml.uml.ui.UMLBinaryRelationListModel#build(MModelElement,
      * MModelElement)
      */
-    protected void build(Object/*MModelElement*/ from, MModelElement to) {
+    protected void build(Object/*MModelElement*/ from, Object/*MModelElement*/ to) {
 	if (from != null && to != null && ModelFacade.isAClassifierRole(from) && ModelFacade.isAClassifierRole(to)) { 
 	    CollaborationsFactory.getFactory().buildAssociationRole(from, to);
 	}

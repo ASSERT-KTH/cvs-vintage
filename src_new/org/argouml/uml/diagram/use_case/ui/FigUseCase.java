@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.22 2003/09/14 13:03:28 bobtarling Exp $
+// $Id: FigUseCase.java,v 1.23 2003/09/20 13:10:45 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.22 2003/09/14 13:03:28 bobtarling Exp $
+// $Id: FigUseCase.java,v 1.23 2003/09/20 13:10:45 bobtarling Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -73,6 +73,8 @@ import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.behavior.use_cases.MUseCase;
+
 /**
  * <p>A fig to display use cases on use case diagrams.</p>
  *
@@ -422,19 +424,19 @@ public class FigUseCase extends FigNodeModelElement {
 						     "isAbstract",
 						     "isAbstract",
 						     "setAbstract",
-						     useCase));
+						     (MUseCase)useCase));
 
         modifierMenu.addCheckItem(new ActionModifier("Leaf",
 						     "isLeaf",
 						     "isLeaf",
 						     "setLeaf",
-						     useCase));
+						     (MUseCase)useCase));
 
         modifierMenu.addCheckItem(new ActionModifier("Root",
 						     "isRoot",
 						     "isRoot",
 						     "setRoot",
-						     useCase));
+						     (MUseCase)useCase));
 
         popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 1);
 

@@ -1,4 +1,4 @@
-// $Id: UMLTransitionTargetListModel.java,v 1.4 2003/09/06 02:18:38 bobtarling Exp $
+// $Id: UMLTransitionTargetListModel.java,v 1.5 2003/09/20 13:10:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ package org.argouml.uml.ui.behavior.state_machines;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
-import ru.novosoft.uml.MBase;
 /**
  * @since Dec 15, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -54,7 +53,7 @@ public class UMLTransitionTargetListModel extends UMLModelElementListModel2 {
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
-    protected boolean isValidElement(MBase element) {
+    protected boolean isValidElement(Object/*MBase*/ element) {
         return element == ModelFacade.getTarget(getTarget());
     }
 

@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel.java,v 1.25 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLComboBoxModel.java,v 1.26 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.25 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLComboBoxModel.java,v 1.26 2003/09/20 13:10:44 bobtarling Exp $
 
 package org.argouml.uml.ui;
 
@@ -758,7 +758,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
      *                      has an acceptable type).
      */
 
-    public void updateElement(MModelElement addedElement) {
+    public void updateElement(Object/*MModelElement*/ addedElement) {
 
         // Nothing to do if the element is not of the right type.
 
@@ -769,7 +769,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
         // Double check that it doesn't have an entry already. Loop until we
         // find it.
 
-        String   addedName = addedElement.getName();
+        String   addedName = ModelFacade.getName(addedElement);
         boolean  inSet     = false;
         Iterator iter      = _set.iterator();
                  
@@ -815,7 +815,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
      *                        set (if it is currently there).
      */
 
-    public void deleteElement(MModelElement removedElement) {
+    public void deleteElement(Object/*MModelElement*/ removedElement) {
 
         // Nothing to do if the element is not of the right type.
 

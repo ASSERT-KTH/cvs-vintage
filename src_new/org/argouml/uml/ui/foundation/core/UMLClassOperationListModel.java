@@ -1,4 +1,4 @@
-// $Id: UMLClassOperationListModel.java,v 1.3 2003/06/30 18:00:38 linus Exp $
+// $Id: UMLClassOperationListModel.java,v 1.4 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,10 +27,8 @@ package org.argouml.uml.ui.foundation.core;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 import org.argouml.model.ModelFacade;
 
-import ru.novosoft.uml.MBase;
-
 /**
- *  $Revision: 1.3 $
+ *  $Revision: 1.4 $
  *
  * @author jaap.branderhorst@xs4all.nl, alexb
  * @since Mar 22, 2003
@@ -57,7 +55,7 @@ public class UMLClassOperationListModel extends UMLModelElementListModel2 {
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
-    protected boolean isValidElement(MBase element) {
+    protected boolean isValidElement(Object/*MBase*/ element) {
         return (ModelFacade.getOperations(getTarget()).contains(element));
     }
 

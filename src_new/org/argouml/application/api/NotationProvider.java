@@ -1,4 +1,4 @@
-// $Id: NotationProvider.java,v 1.10 2003/08/30 13:58:02 bobtarling Exp $
+// $Id: NotationProvider.java,v 1.11 2003/09/20 13:10:45 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: NotationProvider.java
 // Interfaces: NotationProvider
 // Original Author: Thierry Lach
-// $Id: NotationProvider.java,v 1.10 2003/08/30 13:58:02 bobtarling Exp $
+// $Id: NotationProvider.java,v 1.11 2003/09/20 13:10:45 bobtarling Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -33,8 +33,6 @@
 
 package org.argouml.application.api;
 
-// import org.argouml.application.events.*;
-//import org.argouml.language.*;
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 import ru.novosoft.uml.behavior.collaborations.MMessage;
 import ru.novosoft.uml.behavior.state_machines.MGuard;
@@ -43,6 +41,8 @@ import ru.novosoft.uml.behavior.state_machines.MTransition;
 import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
+// import org.argouml.application.events.*;
+//import org.argouml.language.*;
 import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MOperation;
@@ -124,4 +124,3 @@ public interface NotationProvider {
     // public void parseNodeInstance(MNodeInstance noi, String s);
     // public void parseComponentInstance(MComponentInstance coi, String s);
 }
-

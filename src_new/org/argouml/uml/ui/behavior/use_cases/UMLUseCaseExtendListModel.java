@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseExtendListModel.java,v 1.6 2003/09/01 14:02:49 bobtarling Exp $
+// $Id: UMLUseCaseExtendListModel.java,v 1.7 2003/09/20 13:10:43 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ package org.argouml.uml.ui.behavior.use_cases;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
-import ru.novosoft.uml.MBase;
 /**
  * A model that shows the extend relationships for some usecase
  * @since Oct 7, 2002
@@ -54,7 +53,7 @@ public class UMLUseCaseExtendListModel extends UMLModelElementListModel2 {
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
-    protected boolean isValidElement(MBase o) {
+    protected boolean isValidElement(Object/*MBase*/ o) {
         return ModelFacade.getExtends(getTarget()).contains(o);
     }
 

@@ -1,4 +1,4 @@
-// $Id: UMLModelElementSupplierDependencyListModel.java,v 1.8 2003/08/30 13:23:41 bobtarling Exp $
+// $Id: UMLModelElementSupplierDependencyListModel.java,v 1.9 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,6 @@ package org.argouml.uml.ui.foundation.core;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
-import ru.novosoft.uml.MBase;
-
 /**
  * @since Oct 12, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -56,7 +54,7 @@ public class UMLModelElementSupplierDependencyListModel
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
-    protected boolean isValidElement(MBase o) {
+    protected boolean isValidElement(Object/*MBase*/ o) {
         return ModelFacade.isADependency(o) && ModelFacade.getSupplierDependencies(getTarget()).contains(o);
     }
 

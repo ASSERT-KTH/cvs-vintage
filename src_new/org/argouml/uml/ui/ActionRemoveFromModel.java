@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.30 2003/09/01 17:56:35 bobtarling Exp $
+// $Id: ActionRemoveFromModel.java,v 1.31 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -214,7 +214,7 @@ public class ActionRemoveFromModel extends UMLChangeAction {
             }
         } else if (target instanceof Fig) {
             // we can delete figs like figrects now too
-            if (org.argouml.model.ModelFacade.isAModelElement(((Fig) target).getOwner())) {
+            if (ModelFacade.isAModelElement(((Fig) target).getOwner())) {
                 sure = sureRemove((MModelElement) ((Fig) target).getOwner());
             } else
                 sure = true;
@@ -245,7 +245,7 @@ public class ActionRemoveFromModel extends UMLChangeAction {
             doAsk = true;
         }
 
-        Collection beh = me.getBehaviors();
+        Collection beh = ModelFacade.getBehaviors(me);
         if (beh != null && beh.size() > 0) {
             confirmStr
                 += Argo.localize(
@@ -258,7 +258,7 @@ public class ActionRemoveFromModel extends UMLChangeAction {
             return true;
         }
 
-        String name = me.getName();
+        String name = ModelFacade.getName(me);
         if (name == null || name.equals("")) {
             name =
                 Argo.localize(

@@ -1,4 +1,4 @@
-// $Id: CopyHelper.java,v 1.4 2003/09/04 20:11:48 thierrylach Exp $
+// $Id: CopyHelper.java,v 1.5 2003/09/20 13:10:47 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CopyHelper.java,v 1.4 2003/09/04 20:11:48 thierrylach Exp $
+// $Id: CopyHelper.java,v 1.5 2003/09/20 13:10:47 bobtarling Exp $
 
 package org.argouml.model.uml;
 
@@ -156,8 +156,10 @@ public final class CopyHelper {
      * @return a copy of element, or null.
      * @throw NullPointerException if element is null.
      */
-    public MModelElement copy(MModelElement element, MNamespace ns) {
+    public Object/*MModelElement*/ copy(Object/*MModelElement*/ anelement, Object/*MNamespace*/ ans) {
 	// Don't explicitly check if element is null
+        MModelElement element = (MModelElement) anelement;
+        MNamespace ns = (MNamespace) ans;
 	CopyFunction f =
 	    (CopyFunction) copyfunctions.get(element.getClass());
 	if (f == null) {

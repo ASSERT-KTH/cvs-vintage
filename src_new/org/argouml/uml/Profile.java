@@ -1,4 +1,4 @@
-// $Id: Profile.java,v 1.8 2003/08/30 22:04:19 alexb Exp $
+// $Id: Profile.java,v 1.9 2003/09/20 13:10:45 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,6 @@
 package org.argouml.uml;
 
 import java.util.Iterator;
-import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.model_management.MModel;
-
 /**
  *   This abstract class captures the configurable behavior of Argo.
  *
@@ -42,7 +39,7 @@ abstract public class Profile {
      *    @param namespace context namespace (may be null).
      *    @return a string representing the model element
      */
-    abstract public String formatElement(MModelElement element,
+    abstract public String formatElement(Object/*MModelElement*/ element,
 					 Object namespace);
     /**
      *   This method produces a string the represents the collection
@@ -53,5 +50,5 @@ abstract public class Profile {
      */
     abstract public String formatCollection(Iterator iter,
 					    Object namespace);
-    abstract public MModel getProfileModel();
+    abstract public Object/*MModel*/ getProfileModel();
 }

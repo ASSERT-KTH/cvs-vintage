@@ -1,4 +1,4 @@
-// $Id: PropPanelInstance.java,v 1.23 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: PropPanelInstance.java,v 1.24 2003/09/20 13:10:45 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.23 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: PropPanelInstance.java,v 1.24 2003/09/20 13:10:45 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -48,8 +48,6 @@ import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.behavior.common_behavior.MInstance;
 import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MModelElement;
-
 /**
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -85,7 +83,7 @@ public class PropPanelInstance extends PropPanelModelElement {
     }
 
 
-    public boolean isAcceptibleClassifier(MModelElement classifier) {
+    public boolean isAcceptibleClassifier(Object/*MModelElement*/ classifier) {
         return org.argouml.model.ModelFacade.isAClassifier(classifier);
     }
 
@@ -109,7 +107,7 @@ public class PropPanelInstance extends PropPanelModelElement {
         return classifier;
     }
 
-    public void setClassifier(MClassifier element) {
+    public void setClassifier(Object/*MClassifier*/ element) {
         Object target = getTarget();
 
         if (org.argouml.model.ModelFacade.isAInstance(target)) {

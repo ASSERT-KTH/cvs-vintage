@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.33 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.34 2003/09/20 13:10:45 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.33 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.34 2003/09/20 13:10:45 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -50,10 +50,7 @@ import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.behavior.common_behavior.MInstance;
 import ru.novosoft.uml.behavior.common_behavior.MStimulus;
-import ru.novosoft.uml.foundation.core.MAssociation;
-import ru.novosoft.uml.foundation.core.MModelElement;
 /**
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -119,7 +116,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
         return sender;
     }
 
-    public void setSender(MInstance element) {
+    public void setSender(Object/*MInstance*/ element) {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAStimulus(target)) {
             ModelFacade.setSender(target, element);
@@ -136,14 +133,14 @@ public class PropPanelStimulus extends PropPanelModelElement {
         return receiver;
     }
 
-    public void setReceiver(MInstance element) {
+    public void setReceiver(Object/*MInstance*/ element) {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAStimulus(target)) {
             ModelFacade.setReceiver(target, element);
         }
     }
 
-    public boolean isAcceptibleAssociation(MModelElement classifier) {
+    public boolean isAcceptibleAssociation(Object/*MModelElement*/ classifier) {
         return org.argouml.model.ModelFacade.isAAssociation(classifier);
     }
 
@@ -159,7 +156,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
         return association;
     }
 
-    public void setAssociation(MAssociation element) {
+    public void setAssociation(Object/*MAssociation*/ element) {
         Object target = getTarget();
         if (ModelFacade.isAStimulus(target)) {
             Object stimulus = /*(MStimulus)*/ target;

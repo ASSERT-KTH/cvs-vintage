@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.25 2003/09/13 11:00:10 bobtarling Exp $
+// $Id: UMLSequenceDiagram.java,v 1.26 2003/09/20 13:10:43 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.25 2003/09/13 11:00:10 bobtarling Exp $
+// $Id: UMLSequenceDiagram.java,v 1.26 2003/09/20 13:10:43 bobtarling Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -52,8 +52,6 @@ import ru.novosoft.uml.behavior.common_behavior.MDestroyAction;
 import ru.novosoft.uml.behavior.common_behavior.MObject;
 import ru.novosoft.uml.behavior.common_behavior.MReturnAction;
 import ru.novosoft.uml.behavior.common_behavior.MSendAction;
-import ru.novosoft.uml.foundation.core.MNamespace;
-
 public class UMLSequenceDiagram extends UMLDiagram {
     protected static Logger cat =
         Logger.getLogger(UMLSequenceDiagram.class);
@@ -91,7 +89,7 @@ public class UMLSequenceDiagram extends UMLDiagram {
         }
     }
 
-    public UMLSequenceDiagram(MNamespace m) {
+    public UMLSequenceDiagram(Object/*MNamespace*/ m) {
         this();
         setNamespace(m);
     }

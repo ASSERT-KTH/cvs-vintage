@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.12 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.13 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHel
 import org.argouml.uml.ui.UMLModelElementListModel2;
 import org.tigris.gef.presentation.Fig;
 
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MElementEvent;
 /**
  * @since Oct 4, 2002
@@ -132,7 +131,7 @@ public class UMLClassifierRoleAvailableFeaturesListModel
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
-    protected boolean isValidElement(MBase element) {
+    protected boolean isValidElement(Object/*MBase*/ element) {
         return false;
     }
 

@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.22 2003/09/19 21:28:42 d00mst Exp $
+// $Id: TargetManager.java,v 1.23 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@ package org.argouml.ui.targetmanager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;

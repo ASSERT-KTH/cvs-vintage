@@ -1,4 +1,4 @@
-// $Id: UMLEventParameterListModel.java,v 1.4 2003/06/29 23:50:12 linus Exp $
+// $Id: UMLEventParameterListModel.java,v 1.5 2003/09/20 13:10:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.behavior.state_machines;
 
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.state_machines.MEvent;
 
 /**
@@ -56,7 +55,7 @@ public class UMLEventParameterListModel extends UMLModelElementListModel2 {
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
-    protected boolean isValidElement(MBase element) {
+    protected boolean isValidElement(Object/*MBase*/ element) {
         return ((MEvent) getTarget()).getParameters().contains(element);
     }
 

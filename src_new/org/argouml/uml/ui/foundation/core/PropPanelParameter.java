@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.33 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: PropPanelParameter.java,v 1.34 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,6 @@ import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MOperation;
 import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
@@ -123,14 +122,14 @@ public class PropPanelParameter extends PropPanelModelElement {
         return null;
     }
 
-    public void setType(MClassifier type) {
+    public void setType(Object/*MClassifier*/ type) {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAParameter(target)) {
             ModelFacade.setType(target, type);
         }
     }
 
-    public boolean isAcceptibleType(MModelElement type) {
+    public boolean isAcceptibleType(Object/*MModelElement*/ type) {
 	return org.argouml.model.ModelFacade.isAClassifier(type);
     }
 
@@ -173,7 +172,7 @@ public class PropPanelParameter extends PropPanelModelElement {
         }
     }
 
-    public void addDataType(MModelElement element) {
+    public void addDataType(Object/*MModelElement*/ element) {
         addDataType();
     }
 

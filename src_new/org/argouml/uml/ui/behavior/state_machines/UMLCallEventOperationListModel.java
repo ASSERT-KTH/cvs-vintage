@@ -1,4 +1,4 @@
-// $Id: UMLCallEventOperationListModel.java,v 1.4 2003/09/01 21:49:21 bobtarling Exp $
+// $Id: UMLCallEventOperationListModel.java,v 1.5 2003/09/20 13:10:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ package org.argouml.uml.ui.behavior.state_machines;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
-import ru.novosoft.uml.MBase;
 /**
  * List model for the operation with a callevent. Might be replaced by a 
  * comboboxmodel in the future.
@@ -58,7 +57,7 @@ public class UMLCallEventOperationListModel extends UMLModelElementListModel2 {
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
-    protected boolean isValidElement(MBase element) {
+    protected boolean isValidElement(Object/*MBase*/ element) {
         return element == ModelFacade.getOperation(getTarget());
     }
 

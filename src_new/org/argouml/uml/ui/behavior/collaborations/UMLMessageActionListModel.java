@@ -1,4 +1,4 @@
-// $Id: UMLMessageActionListModel.java,v 1.7 2003/09/01 00:59:51 bobtarling Exp $
+// $Id: UMLMessageActionListModel.java,v 1.8 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ package org.argouml.uml.ui.behavior.collaborations;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
-import ru.novosoft.uml.MBase;
 /**
  * @since Oct 3, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -55,7 +54,7 @@ public class UMLMessageActionListModel extends UMLModelElementListModel2 {
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
-    protected boolean isValidElement(MBase elem) {        
+    protected boolean isValidElement(Object/*MBase*/ elem) {        
         return ModelFacade.isAAction(elem) && 
             ModelFacade.getAction(getTarget()) == elem;
     }

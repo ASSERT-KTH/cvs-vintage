@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.74 2003/09/14 14:08:07 alexb Exp $
+// $Id: FigClass.java,v 1.75 2003/09/20 13:10:46 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.74 2003/09/14 14:08:07 alexb Exp $
+// $Id: FigClass.java,v 1.75 2003/09/20 13:10:46 bobtarling Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -76,6 +76,7 @@ import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 /**
@@ -353,24 +354,24 @@ public class FigClass extends FigNodeModelElement {
 		new ActionModifier("Public",
 				   "visibility", "getVisibility",
 				   "setVisibility",
-				   mclass,
+				   (MClass)mclass,
 				   (Class)ModelFacade.VISIBILITYKIND,
 				   ModelFacade.PUBLIC_VISIBILITYKIND,
 				   null));
         modifierMenu.addCheckItem(
 		new ActionModifier("Abstract",
 				   "isAbstract", "isAbstract", "setAbstract",
-				   mclass));
+				   (MClass)mclass));
         modifierMenu.addCheckItem(
 		new ActionModifier("Leaf",
-				   "isLeaf", "isLeaf", "setLeaf", mclass));
+				   "isLeaf", "isLeaf", "setLeaf", (MClass)mclass));
         modifierMenu.addCheckItem(
 		new ActionModifier("Root",
-				   "isRoot", "isRoot", "setRoot", mclass));
+				   "isRoot", "isRoot", "setRoot", (MClass)mclass));
         modifierMenu.addCheckItem(
 		new ActionModifier("Active",
 				   "isActive", "isActive", "setActive",
-				   mclass));
+				   (MClass)mclass));
 
         popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 1);
         // end of block

@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleBaseListModel.java,v 1.9 2003/08/30 15:10:33 bobtarling Exp $
+// $Id: UMLClassifierRoleBaseListModel.java,v 1.10 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.behavior.collaborations;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
-import ru.novosoft.uml.MBase;
 /**
  * Shows the bases belonging to some classifierrole.
  * @since Oct 3, 2002
@@ -53,7 +52,7 @@ public class UMLClassifierRoleBaseListModel extends UMLModelElementListModel2 {
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
-    protected boolean isValidElement(MBase elem) {
+    protected boolean isValidElement(Object/*MBase*/ elem) {
         return ModelFacade.isAClassifier(elem) &&
              ModelFacade.getBases(getTarget()).contains(elem);
     }

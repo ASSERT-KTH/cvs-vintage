@@ -1,4 +1,4 @@
-// $Id: UMLAssociationLinkListModel.java,v 1.5 2003/09/01 17:56:34 bobtarling Exp $
+// $Id: UMLAssociationLinkListModel.java,v 1.6 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationLinkListModel.java,v 1.5 2003/09/01 17:56:34 bobtarling Exp $
+// $Id: UMLAssociationLinkListModel.java,v 1.6 2003/09/20 13:10:44 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
-
-import ru.novosoft.uml.MBase;
 
 /**
  * 
@@ -56,7 +54,7 @@ public class UMLAssociationLinkListModel extends UMLModelElementListModel2 {
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
-    protected boolean isValidElement(MBase o) {  
+    protected boolean isValidElement(Object/*MBase*/ o) {  
         return org.argouml.model.ModelFacade.isALink(o) && ModelFacade.getLinks(getTarget()).contains(o);
     }
 

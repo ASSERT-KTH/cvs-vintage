@@ -1,4 +1,4 @@
-// $Id: UMLIncludeListModel.java,v 1.11 2003/09/14 18:10:43 bobtarling Exp $
+// $Id: UMLIncludeListModel.java,v 1.12 2003/09/20 13:10:43 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -222,7 +222,7 @@ public class UMLIncludeListModel extends UMLModelElementListModel  {
      * @return an object (typically a string) representing the element.
      */
 
-    public Object formatElement(MModelElement element) {
+    public Object formatElement(Object/*MModelElement*/ element) {
 
         Object value = _nullLabel;
 
@@ -521,5 +521,4 @@ public class UMLIncludeListModel extends UMLModelElementListModel  {
 
 
 } /* End of class UMLIncludeListModel */
-
 

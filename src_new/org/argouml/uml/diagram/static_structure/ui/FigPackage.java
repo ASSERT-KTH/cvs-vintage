@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.33 2003/09/14 12:26:19 bobtarling Exp $
+// $Id: FigPackage.java,v 1.34 2003/09/20 13:10:46 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.33 2003/09/14 12:26:19 bobtarling Exp $
+// $Id: FigPackage.java,v 1.34 2003/09/20 13:10:46 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -56,6 +56,7 @@ import org.tigris.gef.base.Globals;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
+import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 /** Class to display graphics for a UML package in a class diagram. */
@@ -599,17 +600,13 @@ public class FigPackage extends FigNodeModelElement {
 
         ArgoJMenu modifierMenu = new ArgoJMenu("Modifiers");
 
-        modifierMenu.addCheckItem(
-				  new ActionModifier(
-						     "Abstract",
+        modifierMenu.addCheckItem(new ActionModifier("Abstract",
 						     "isAbstract",
 						     "isAbstract",
 						     "setAbstract",
-						     mclass));
-        modifierMenu.addCheckItem(
-				  new ActionModifier("Leaf", "isLeaf", "isLeaf", "setLeaf", mclass));
-        modifierMenu.addCheckItem(
-				  new ActionModifier("Root", "isRoot", "isRoot", "setRoot", mclass));
+						     (MClass)mclass));
+        modifierMenu.addCheckItem(new ActionModifier("Leaf", "isLeaf", "isLeaf", "setLeaf", (MClass)mclass));
+        modifierMenu.addCheckItem(new ActionModifier("Root", "isRoot", "isRoot", "setRoot", (MClass)mclass));
 
         popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 1);
 

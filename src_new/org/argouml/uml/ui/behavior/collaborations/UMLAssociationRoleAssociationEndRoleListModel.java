@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleAssociationEndRoleListModel.java,v 1.9 2003/09/01 11:51:07 bobtarling Exp $
+// $Id: UMLAssociationRoleAssociationEndRoleListModel.java,v 1.10 2003/09/20 13:10:44 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,6 @@ package org.argouml.uml.ui.behavior.collaborations;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
-import ru.novosoft.uml.MBase;
-
 /**
  * List model that shows the AssociationEndRoles belonging to some 
  * AssociationRole. 
@@ -56,7 +54,7 @@ public class UMLAssociationRoleAssociationEndRoleListModel
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
-    protected boolean isValidElement(MBase o) {
+    protected boolean isValidElement(Object/*MBase*/ o) {
         return org.argouml.model.ModelFacade.isAAssociationEndRole(o) && ModelFacade.getConnections(getTarget()).contains(o);
     }
 
