@@ -120,6 +120,18 @@
     </javac>
 
     <rmic base="${build.classes.dir}"
+          classname="org.jboss.tm.usertx.server.UserTransactionSessionFactoryImpl"
+          stubVersion="1.2">
+            <classpath refid="classpath"/>
+    </rmic>
+ 
+    <rmic base="${build.classes.dir}"
+          classname="org.jboss.tm.usertx.server.UserTransactionSessionImpl"
+          stubVersion="1.2">
+            <classpath refid="classpath"/>
+    </rmic>
+
+    <rmic base="${build.classes.dir}"
           classname="org.jboss.jmx.server.JMXAdaptorImpl"
           stubVersion="1.2">
             <classpath refid="classpath"/>
@@ -220,6 +232,9 @@
         <include name="org/jboss/monitor/client/*.class" />
         <include name="org/jboss/tm/TransactionPropagationContextFactory.class" />
         <include name="org/jboss/tm/GlobalId.class" />
+        <include name="org/jboss/tm/usertx/client/*.class" />
+        <include name="org/jboss/tm/usertx/interfaces/*.class" />
+        <include name="org/jboss/tm/usertx/server/*Stub.class" />
         <include name="org/jboss/util/SerializableEnumeration.class" />
     </jar>
 
