@@ -6,6 +6,8 @@
 */
 package org.jboss.util;
 
+
+import org.jboss.ejb.CacheKey;
 /**
 *   FastKey
 * 
@@ -16,21 +18,18 @@ package org.jboss.util;
 *   
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.6 $
+*   @version $Revision: 1.7 $
 */
 public class FastKey
-    implements java.io.Externalizable
+	extends CacheKey
+	implements java.io.Externalizable
 {
     // Constants -----------------------------------------------------
     
     // Attributes ----------------------------------------------------
-    
-    // The fastKey that identifies the association between EJBObject and context
-    public Long fastKey;
-    
-    // The id that the instance holding this fastKey is supposed to represent (DB)
-    public Object id;
-    
+  
+  	protected Long fastKey;
+	
     // Static --------------------------------------------------------  
     
     // The seed for the fastKey id
@@ -42,20 +41,22 @@ public class FastKey
     
     // Constructors --------------------------------------------------
     
-    public FastKey() {
-        // For externalization    
-    }
-    
-    public FastKey(Object id) {
-        
-        fastKey = nextFastKey();
-        
-        this.id = id;
-    }
-    
-    
+	public FastKey() {
+		
+		// For externalization only 		
+	}
+	
+	public FastKey(Object id) {
+		super(id);
+		// The FastKey is based on a counter
+		this.fastKey = nextFastKey();
+	}
     // Public --------------------------------------------------------
     
+	public Object getPrimaryKey() {
+		
+		return id;
+	}
     
     
     // Z implementation ----------------------------------------------
