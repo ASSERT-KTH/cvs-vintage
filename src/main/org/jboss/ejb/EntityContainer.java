@@ -35,7 +35,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.24 $
+*   @version $Revision: 1.25 $
 */
 public class EntityContainer
 extends Container
@@ -306,21 +306,21 @@ implements ContainerInvokerContainer, InstancePoolContainer
     throws Exception
     {
         
-		Logger.log("invokeHome");
-		try { return getInterceptor().invokeHome(mi); }
-		catch (Exception e) {e.printStackTrace(); throw e;}
-		
-	//	return getInterceptor().invokeHome(mi);
-		
+       Logger.log("invokeHome");
+       try { return getInterceptor().invokeHome(mi); }
+       catch (Exception e) {e.printStackTrace(); throw e;}
+       
+    //	return getInterceptor().invokeHome(mi);
+       
     }
     
     public Object invoke(MethodInvocation mi)
     throws Exception
     {
-		try { return getInterceptor().invoke(mi); }
-		catch (Exception e) {e.printStackTrace();throw e;}
-		
-		
+       try { return getInterceptor().invoke(mi); }
+       catch (Exception e) {e.printStackTrace();throw e;}
+       
+       
         // Invoke through interceptors
      //   return getInterceptor().invoke(mi);
     }
@@ -335,7 +335,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
         // We signify "removed" with a null id
         mi.getEnterpriseContext().setId(null);
     }
-    
+	
     /**
     * MF FIXME these are implemented on the client
     */                                  
@@ -367,6 +367,10 @@ implements ContainerInvokerContainer, InstancePoolContainer
         // TODO - should also check type
     }
     
+    /**
+	 * MF FIXME these are implemented on the client
+	 */
+	
     
     // Home interface implementation ---------------------------------
     
@@ -387,8 +391,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
             // Iterator finder
             Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
             
-			// Get the EJBObjects with that
-			Collection ec = containerInvoker.getEntityCollection(c);
+         // Get the EJBObjects with that
+         Collection ec = containerInvoker.getEntityCollection(c);
             
             // BMP entity finder methods are allowed to return java.util.Enumeration.
             // We need a serializable Enumeration, so we can't use Collections.enumeration()
@@ -408,8 +412,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
             
             // Single entity finder
             Object id = getPersistenceManager().findEntity(mi.getMethod(), 
-                	mi.getArguments(), 
-                	(EntityEnterpriseContext)mi.getEnterpriseContext());    
+                    mi.getArguments(), 
+                    (EntityEnterpriseContext)mi.getEnterpriseContext());    
             
             //create the EJBObject
             return (EJBObject)containerInvoker.getEntityEJBObject(id);
@@ -424,18 +428,18 @@ implements ContainerInvokerContainer, InstancePoolContainer
     *
     */
     
-	public EJBObject createHome(MethodInvocation mi)
-	throws java.rmi.RemoteException, CreateException
-	{
-		
-		// The persistence manager takes care of the wiring and creating the EJBObject
-		getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(), 
-			(EntityEnterpriseContext) mi.getEnterpriseContext());
-			
-		// The context implicitely carries the EJBObject 
-		return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
-	}
-	
+    public EJBObject createHome(MethodInvocation mi)
+    throws java.rmi.RemoteException, CreateException
+    {
+       
+       // The persistence manager takes care of the wiring and creating the EJBObject
+       getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(), 
+         (EntityEnterpriseContext) mi.getEnterpriseContext());
+         
+       // The context implicitely carries the EJBObject 
+       return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
+    }
+    
     /**
     * A method for the getEJBObject from the handle
     * 
@@ -450,9 +454,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
     
     
     // EJBHome implementation ----------------------------------------
-    
-    // MF The following are implemented on the client
-    
+	
+	
     public void removeHome(MethodInvocation mi)
     throws java.rmi.RemoteException, RemoveException
     {
@@ -471,6 +474,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
         // TODO
         throw new Error("Not yet implemented");
     }
+    
     
     // Private -------------------------------------------------------
     protected void setupHomeMapping()
@@ -621,6 +625,9 @@ implements ContainerInvokerContainer, InstancePoolContainer
                 } 
             } else
             {
+                //wire the transaction on the context, this is how the instance remember the tx
+                if (mi.getEnterpriseContext().getTransaction() == null) mi.getEnterpriseContext().setTransaction(mi.getTransaction());
+                
                 // Invoke and handle exceptions
                 try
                 {
