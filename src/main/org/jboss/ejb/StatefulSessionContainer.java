@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.rmi.RemoteException;
+import java.rmi.NoSuchObjectException;
 
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
@@ -30,11 +31,12 @@ import org.jboss.invocation.MarshalledInvocation;
 /**
  * The container for <em>stateful</em> session beans.
  *
+ * @version <tt>$Revision: 1.49 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.48 $
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  *
  * <p><b>Revisions</b>
  * <p><b>20010704</b>
@@ -124,9 +126,9 @@ public class StatefulSessionContainer
       if (interceptor == null)
       {
          interceptor = in;
-      } else
+      }
+      else
       {
-         
          Interceptor current = interceptor;
          while ( current.getNext() != null)
          {
@@ -376,6 +378,11 @@ public class StatefulSessionContainer
       // 7.6 EJB2.0, it is illegal to remove a bean while in a transaction
       // if (((EnterpriseContext) mi.getEnterpriseContext()).getTransaction() != null)
       // throw new RemoveException("StatefulSession bean in transaction, cannot remove (EJB2.0 7.6)");
+
+      // if the session is removed already then let the user know they have a problem
+      if (((EnterpriseContext) mi.getEnterpriseContext()).getId() == null) {
+         throw new RemoveException("SFSB has been removed already");
+      }
       
       // Remove from storage
       getPersistenceManager().removeSession((StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
@@ -412,6 +419,7 @@ public class StatefulSessionContainer
       if (ci == null) {
          throw new IllegalStateException();
       }
+      
       return (EJBHome) ci.getEJBHome();
    }
    
@@ -424,11 +432,84 @@ public class StatefulSessionContainer
    }
    
    // Home interface implementation ---------------------------------
+
+   private void createSession(final Method m,
+                              final Object[] args,
+                              final StatefulSessionEnterpriseContext ctx)
+      throws Exception
+   {
+      boolean debug = log.isDebugEnabled();
+      
+      // Create a new ID and set it
+      Object id = getPersistenceManager().createId(ctx);
+      if (debug) {
+         log.debug("Created new session ID: " + id);
+      }
+      ctx.setId(id);
+        
+      // Invoke ejbCreate()
+      try
+      {
+         Method createMethod = getBeanClass().getMethod("ejbCreate", m.getParameterTypes());
+         if (debug) {
+            log.debug("Using create method for session: " + createMethod);
+         }
+         
+         createMethod.invoke(ctx.getInstance(), args);
+      }
+      catch (IllegalAccessException e)
+      {
+         ctx.setId(null);
+         
+         throw new EJBException(e);
+      }
+      catch (InvocationTargetException e)
+      {
+         ctx.setId(null);
+            
+         Throwable t = e.getTargetException();
+         if (t instanceof RuntimeException)
+         {
+            if (t instanceof EJBException)
+               throw (EJBException)t;
+            // Wrap runtime exceptions
+            throw new EJBException((Exception)t);
+         }
+         else if (t instanceof Exception)
+         {
+            // Remote, Create, or custom app. exception
+            throw (Exception)t;
+         }
+         else if (t instanceof Error)
+         {
+            throw (Error)t;
+         }
+         else {
+            throw new org.jboss.util.UnexpectedThrowable(t);
+         }
+      }
+
+      // call back to the PM to let it know that ejbCreate has been called with success
+      getPersistenceManager().createdSession(ctx);
+
+      // Insert in cache
+      getInstanceCache().insert(ctx);
+
+      // Create EJBObject
+      if (getProxyFactory() != null)
+         ctx.setEJBObject((EJBObject)getProxyFactory().getStatefulSessionEJBObject(id));
+      
+      // Create EJBLocalObject
+      if (getLocalHomeClass() != null)
+         ctx.setEJBLocalObject(getLocalProxyFactory().getStatefulSessionEJBLocalObject(id));
+   }
    
    public EJBObject createHome(Invocation mi)
       throws Exception
    {
-      getPersistenceManager().createSession(mi.getMethod(), mi.getArguments(), (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
+      createSession(mi.getMethod(), mi.getArguments(),
+                    (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
+      
       return ((StatefulSessionEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
    }
    
@@ -451,9 +532,11 @@ public class StatefulSessionContainer
    }
    
    public EJBLocalObject createLocalHome(Invocation mi)
-   throws Exception
+      throws Exception
    {
-      getPersistenceManager().createSession(mi.getMethod(), mi.getArguments(), (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
+      createSession(mi.getMethod(), mi.getArguments(),
+                    (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
+      
       return ((StatefulSessionEnterpriseContext)mi.getEnterpriseContext()).getEJBLocalObject();
    }
    
