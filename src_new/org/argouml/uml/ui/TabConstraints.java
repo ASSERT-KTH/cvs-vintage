@@ -1,4 +1,4 @@
-// $Id: TabConstraints.java,v 1.33 2003/09/22 21:36:26 bobtarling Exp $
+// $Id: TabConstraints.java,v 1.34 2003/09/22 22:34:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ import tudresden.ocl.parser.node.TName;
 /**
   * Tab for OCL constraint editing.
   *
-  * <p>$Id: TabConstraints.java,v 1.33 2003/09/22 21:36:26 bobtarling Exp $
+  * <p>$Id: TabConstraints.java,v 1.34 2003/09/22 22:34:13 bobtarling Exp $
   *
   * @author v1.0: Falk Finger
   * @author v2.0: Steffen Zschaler
@@ -417,7 +417,7 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
                     } else {
                         mcOld = UmlFactory.getFactory().getCore().createConstraint();
                         ModelFacade.setName(mcOld, ModelFacade.getName(m_mcConstraint));
-                        ModelFacade.setBody(mcOld, UmlFactory.getFactory().getDataTypes().createBooleanExpression("OCL",ModelFacade.getBody(ModelFacade.getBody(m_mcConstraint))));
+                        ModelFacade.setBody(mcOld, UmlFactory.getFactory().getDataTypes().createBooleanExpression("OCL",(String)ModelFacade.getBody(ModelFacade.getBody(m_mcConstraint))));
                         ModelFacade.setBody(m_mcConstraint,UmlFactory.getFactory().getDataTypes().createBooleanExpression("OCL",sData));
                     }
 
@@ -460,7 +460,7 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
                                           .getDataTypes()
                                           .createBooleanExpression(
                                                        "OCL",
-                                                       ModelFacade.getBody(constraintBody)));
+                                                       (String)ModelFacade.getBody(constraintBody)));
 
                     ModelFacade.setName(m_mcConstraint, sName);
 
