@@ -18,7 +18,7 @@ import org.jboss.deployment.DeploymentException;
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  *   @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- *   @version $Revision: 1.14 $
+ *   @version $Revision: 1.15 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -222,11 +222,6 @@ public class EntityMetaData extends BeanMetaData {
       if (readOnlyString != null)
       {
 	 readOnly = Boolean.valueOf(readOnlyString).booleanValue();
-	 System.out.println("!!!!!!!!read-only set to " + readOnly);
-      }
-      else
-      {
-	 System.out.println("!!!!!!!!read-only element NOT found");
       }
    }
 
