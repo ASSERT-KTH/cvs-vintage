@@ -445,7 +445,7 @@
         <required-message>intake_FieldRequired</required-message>
     </field>
     <field name="File" key="d" type="FileItem">
-        <rule name="maxLength" value="@FILE_UPLOAD_MAX_SIZE@">intake_MaxFileUploadSizeExceeded</rule>
+        <rule name="maxLength" value="157286400">intake_MaxFileUploadSizeExceeded</rule>
         <required-message>intake_NoFile</required-message>
     </field>
     <!-- two different fields are used because there is an 'other' field -->
@@ -558,7 +558,5 @@
            <rule name="required" value="true">intake_NameMustHaveValue</rule>
         </field>
 </group>
-
-@INTAKE_OPTIONAL_GROUPS@
 
 </input-data>

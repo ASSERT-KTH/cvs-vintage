@@ -1,0 +1,82 @@
+<!ELEMENT active ( #PCDATA ) >
+
+<!ELEMENT attribute-group-preferred-order ( #PCDATA ) >
+
+<!ELEMENT child-option ( #PCDATA ) >
+
+<!ELEMENT code ( #PCDATA ) >
+
+<!ELEMENT comments ( #PCDATA ) >
+
+<!ELEMENT created-date ( #PCDATA ) >
+<!ATTLIST created-date format CDATA #FIXED "yyyy-MM-dd HH:mm:ss" >
+
+<!ELEMENT dedupe ( #PCDATA ) >
+
+<!ELEMENT default-text-flag ( #PCDATA ) >
+
+<!ELEMENT deleted ( #PCDATA ) >
+
+<!ELEMENT description ( #PCDATA ) >
+
+<!ELEMENT display ( #PCDATA ) >
+
+<!ELEMENT display-description ( #PCDATA ) >
+
+<!ELEMENT display-name ( #PCDATA ) >
+
+<!ELEMENT domain ( #PCDATA ) >
+
+<!ELEMENT email ( #PCDATA ) >
+
+<!ELEMENT firstname ( #PCDATA ) >
+
+<!ELEMENT global-attribute ( name, type, description, created-date, global-attribute-option* ) >
+
+<!ELEMENT global-attribute-option ( name, deleted, child-option, weight, preferred-order ) >
+
+<!ELEMENT global-issue-type ( name, description, template ) >
+
+<!ELEMENT history ( #PCDATA ) >
+
+<!ELEMENT lastname ( #PCDATA ) >
+
+<!ELEMENT module ( name, owner-id, description, url, domain, code, user*, module-issue-type* ) >
+<!ATTLIST module id NMTOKEN #REQUIRED >
+<!ATTLIST module parent NMTOKEN #REQUIRED >
+
+<!ELEMENT module-attribute ( name, attribute-group-preferred-order, display-name, active, required, module-preferred-order, quick-search, default-text-flag, module-attribute-option* ) >
+
+<!ELEMENT module-attribute-group ( name, description, active, dedupe, preferred-order, module-attribute* ) >
+
+<!ELEMENT module-attribute-option ( display, active, preferred-order, weight ) >
+
+<!ELEMENT module-issue-type ( name, active, display, preferred-order, dedupe, history, comments, display-name, display-description, module-attribute-group+ ) >
+
+<!ELEMENT module-preferred-order ( #PCDATA ) >
+
+<!ELEMENT name ( #PCDATA ) >
+
+<!ELEMENT owner-id ( #PCDATA ) >
+
+<!ELEMENT preferred-order ( #PCDATA ) >
+
+<!ELEMENT quick-search ( #PCDATA ) >
+
+<!ELEMENT required ( #PCDATA ) >
+
+<!ELEMENT role ( #PCDATA ) >
+
+<!ELEMENT scarab ( global-attribute | global-issue-type | module )* >
+
+<!ELEMENT template ( #PCDATA ) >
+
+<!ELEMENT type ( #PCDATA ) >
+
+<!ELEMENT url ( #PCDATA ) >
+
+<!ELEMENT user ( firstname, lastname, email, username, role+ ) >
+
+<!ELEMENT username ( #PCDATA ) >
+
+<!ELEMENT weight ( #PCDATA ) >

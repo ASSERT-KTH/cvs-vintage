@@ -1,0 +1,134 @@
+# For more information about Internet media types,
+# please read RFC 2045, 2046, 2047, 2048, and 2077.  The Internet media type
+# registry is at <ftp://ftp.iana.org/in-notes/iana/assignments/media-types/>.
+
+# MIME type			Extension
+application/mac-binhex40	hqx
+application/mac-compactpro	cpt
+application/msword		doc
+application/octet-stream	bin dms lha lzh exe class
+application/oda			oda
+application/pdf			pdf
+application/rtf			rtf
+application/vnd.mif		mif
+application/vnd.ms-excel    xls
+application/vnd.ms-powerpoint	ppt
+application/vnd.ms-project  mpp
+application/vnd.sun.xml.writer sxw
+application/vnd.sun.xml.writer.template stw
+application/vnd.sun.xml.writer.global sxg
+application/vnd.sun.xml.calc sxc
+application/vnd.sun.xml.calc.template stc
+application/vnd.sun.xml.impress sxi
+application/vnd.sun.xml.impress.template sti
+application/vnd.sun.xml.draw sxd
+application/vnd.sun.xml.draw.template std
+application/vnd.sun.xml.math sxm
+application/vnd.stardivision.writer sdw vor
+application/vnd.stardivision.writer-global sgl
+application/vnd.stardivision.calc sdc
+application/vnd.stardivision.impress sdd sdp
+application/vnd.stardivision.draw sda
+application/vnd.stardivision.math smf
+application/vnd.wap.slc		slc
+application/vnd.wap.sic		sic
+application/vnd.wap.wmlc	wmlc
+application/vnd.wap.wmlscriptc	wmlsc
+application/x-bcpio		bcpio
+application/x-bzip2		bz2
+application/x-cdlink		vcd
+application/x-chess-pgn		pgn
+application/x-cpio		cpio
+application/x-csh		csh
+application/x-director		dcr dir dxr
+application/x-dvi		dvi
+application/x-futuresplash	spl
+application/x-gtar		gtar
+application/x-gzip		gz tgz
+application/x-hdf		hdf
+application/x-javascript	js
+application/x-kword		kwd kwt
+application/x-kspread		ksp
+application/x-kpresenter	kpr kpt
+application/x-kchart		chrt
+application/x-killustrator	kil
+application/x-koan		skp skd skt skm
+application/x-latex		latex
+application/x-netcdf		nc cdf
+application/x-rpm		rpm
+application/x-sh		sh
+application/x-shar		shar
+application/x-shockwave-flash	swf
+application/x-stuffit		sit
+application/x-sv4cpio		sv4cpio
+application/x-sv4crc		sv4crc
+application/x-tar		tar
+application/x-tcl		tcl
+application/x-tex		tex
+application/x-texinfo		texinfo texi
+application/x-troff		t tr roff
+application/x-troff-man		man
+application/x-troff-me		me
+application/x-troff-ms		ms
+application/x-ustar		ustar
+application/zip			zip
+audio/midi			mid midi kar
+audio/mpeg			mpga mp2 mp3
+audio/x-realaudio		ra
+chemical/x-pdb			pdb xyz
+image/gif			gif
+image/ief			ief
+image/jpeg			jpeg jpg jpe
+image/png			png
+image/tiff			tiff tif
+image/vnd.wap.wbmp		wbmp
+image/x-cmu-raster		ras
+image/x-portable-anymap		pnm
+image/x-portable-bitmap		pbm
+image/x-portable-graymap	pgm
+image/x-portable-pixmap		ppm
+image/x-rgb			rgb
+image/x-xbitmap			xbm
+image/x-xpixmap			xpm
+image/x-xwindowdump		xwd
+model/iges			igs iges
+model/mesh			msh mesh silo
+model/vrml			wrl vrml
+text/css			css
+text/html			html htm
+text/plain			asc txt patch
+text/richtext			rtx
+text/rtf			rtf
+text/sgml			sgml sgm
+text/tab-separated-values	tsv
+text/vnd.wap.sl			sl
+text/vnd.wap.si			si
+text/vnd.wap.wml		wml
+text/vnd.wap.wmlscript		wmls
+text/x-setext			etx
+text/xml			xml
+video/mpeg			mpeg mpg mpe
+video/quicktime			qt mov
+video/x-msvideo			avi
+video/x-sgi-movie		movie
+x-conference/x-cooltalk		ice
+audio/x-pn-realaudio rmm ram
+audio/vnd.rn-realaudio ra
+application/smil smi smil
+text/vnd.rn-realtext rt
+video/vnd.rn-realvideo rv
+image/vnd.rn-realflash rf swf
+application/x-shockwave-flash2-preview rf swf
+application/sdp sdp
+application/x-sdp sdp
+application/vnd.rn-realmedia rm
+image/vnd.rn-realpix rp
+audio/wav wav
+audio/x-wav wav
+audio/x-pn-wav wav
+audio/x-pn-windows-acm wav
+audio/basic au
+audio/x-pn-au au
+audio/aiff aiff af
+audio/x-aiff aiff af
+audio/x-pn-aiff aiff af

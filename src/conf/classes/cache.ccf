@@ -1,0 +1,84 @@
+# DEFAULT CACHE REGION  
+# sets the default aux value for any non configured caches
+jcs.default=
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=1000
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+# this is copied from example, not sure of its utility
+# SYSTEM CACHE
+# should be defined for the storage of group attribute list
+jcs.system.groupIdCache=
+jcs.system.groupIdCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.system.groupIdCache.cacheattributes.MaxObjects=1000
+jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+# CACHE REGIONS AVAILABLE 
+# Regions preconfigured for caching
+
+jcs.region.org_tigris_scarab_om_UserPreference=
+jcs.region.org_tigris_scarab_om_UserPreference.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_UserPreference.cacheattributes.MaxObjects=200
+jcs.region.org_tigris_scarab_om_UserPreference.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_ScarabUser=
+jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes.MaxObjects=1000
+jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_Module=
+jcs.region.org_tigris_scarab_om_Module.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_Module.cacheattributes.MaxObjects=1000
+jcs.region.org_tigris_scarab_om_Module.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_Attribute=
+jcs.region.org_tigris_scarab_om_Attribute.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_Attribute.cacheattributes.MaxObjects=400
+jcs.region.org_tigris_scarab_om_Attribute.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_AttributeOption=
+jcs.region.org_tigris_scarab_om_AttributeOption.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_AttributeOption.cacheattributes.MaxObjects=2000
+jcs.region.org_tigris_scarab_om_AttributeOption.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_AttributeType=
+jcs.region.org_tigris_scarab_om_AttributeType.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_AttributeType.cacheattributes.MaxObjects=100
+jcs.region.org_tigris_scarab_om_AttributeType.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_AttributeClass=
+jcs.region.org_tigris_scarab_om_AttributeClass.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_AttributeClass.cacheattributes.MaxObjects=100
+jcs.region.org_tigris_scarab_om_AttributeClass.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_AttributeValue=
+jcs.region.org_tigris_scarab_om_AttributeValue.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_AttributeValue.cacheattributes.MaxObjects=5000
+jcs.region.org_tigris_scarab_om_AttributeValue.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_AttributeGroup=
+jcs.region.org_tigris_scarab_om_AttributeGroup.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_AttributeGroup.cacheattributes.MaxObjects=2000
+jcs.region.org_tigris_scarab_om_AttributeGroup.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_Issue=
+jcs.region.org_tigris_scarab_om_Issue.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_Issue.cacheattributes.MaxObjects=500
+jcs.region.org_tigris_scarab_om_Issue.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_RModuleIssueType=
+jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes.MaxObjects=1000
+jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_IssueType=
+jcs.region.org_tigris_scarab_om_IssueType.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_IssueType.cacheattributes.MaxObjects=100
+jcs.region.org_tigris_scarab_om_IssueType.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_Query=
+jcs.region.org_tigris_scarab_om_Query.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_Query.cacheattributes.MaxObjects=800
+jcs.region.org_tigris_scarab_om_Query.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+@JCS_CACHE_PROPERTIES@
