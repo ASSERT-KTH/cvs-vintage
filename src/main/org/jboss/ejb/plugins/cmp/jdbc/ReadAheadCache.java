@@ -34,7 +34,7 @@ import java.util.Map;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public final class ReadAheadCache
 {
@@ -318,6 +318,8 @@ public final class ReadAheadCache
          return false;
       }
 
+      boolean cleanReadAhead = manager.getMetaData().isCleanReadAheadOnLoad();
+
       // iterate over the keys in the preloaded map
       Iterator iter = preloadDataMap.entrySet().iterator();
       while(iter.hasNext())
@@ -334,8 +336,11 @@ public final class ReadAheadCache
             throw new IllegalStateException("Preloaded value not found");
          }
 
-         // remove this value from the preload cache as it is about to be loaded
-         iter.remove();
+         if(cleanReadAhead)
+         {
+            // remove this value from the preload cache as it is about to be loaded
+            iter.remove();
+         }
 
          // check for null value standin
          if(value == NULL_VALUE)
@@ -412,8 +417,12 @@ public final class ReadAheadCache
          }
       }
 
-      // remove all preload data map as all of the data has been loaded
-      manager.removeEntityTxData(new PreloadKey(ctx.getId()));
+      if(cleanReadAhead)
+      {
+         // remove all preload data map as all of the data has been loaded
+         manager.removeEntityTxData(new PreloadKey(ctx.getId()));
+      }
+
       return true;
    }
 

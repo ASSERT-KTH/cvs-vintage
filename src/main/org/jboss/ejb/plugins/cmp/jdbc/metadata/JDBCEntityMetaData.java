@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
  *
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  */
 public final class JDBCEntityMetaData
 {
@@ -185,6 +185,12 @@ public final class JDBCEntityMetaData
     * The read ahead meta data
     */
    private final JDBCReadAheadMetaData readAhead;
+
+   /**
+    * clean-read-ahead-on-load
+    * Previously, read ahead cache was cleaned after loading.
+    */
+   private final boolean cleanReadAheadOnLoad;
 
    /**
     * The maximum number of read ahead lists that can be tracked for this
@@ -391,6 +397,7 @@ public final class JDBCEntityMetaData
       // by the relation meta data
 
       readAhead = JDBCReadAheadMetaData.DEFAULT;
+      cleanReadAheadOnLoad = false;
       entityCommand = null;
       optimisticLocking = null;
       audit = null;
@@ -758,6 +765,25 @@ public final class JDBCEntityMetaData
       else
       {
          readAhead = defaultValues.readAhead;
+      }
+
+      String value = MetaData.getOptionalChildContent(element, "clean-read-ahead-on-load");
+      if("true".equalsIgnoreCase(value))
+      {
+         cleanReadAheadOnLoad = true;
+      }
+      else if("false".equalsIgnoreCase(value))
+      {
+         cleanReadAheadOnLoad = false;
+      }
+      else if(value == null)
+      {
+         cleanReadAheadOnLoad = defaultValues.cleanReadAheadOnLoad;
+      }
+      else
+      {
+         throw new DeploymentException("Failed to deploy " + entityName +
+            ": allowed values for clean-read-ahead-on-load are true and false but got " + value);
       }
 
       // optimistic locking group
@@ -1317,6 +1343,11 @@ public final class JDBCEntityMetaData
    public Class getQLCompiler()
    {
       return qlCompiler;
+   }
+
+   public boolean isCleanReadAheadOnLoad()
+   {
+      return cleanReadAheadOnLoad;
    }
    
    /**
