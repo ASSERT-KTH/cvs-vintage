@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.10 2000/03/31 19:43:52 mandar Exp $
- * $Revision: 1.10 $
- * $Date: 2000/03/31 19:43:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.11 2000/04/05 18:49:27 akv Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/04/05 18:49:27 $
  *
  * ====================================================================
  * 
@@ -133,6 +133,7 @@ public class JspUtil {
     {
 	XmlDocument tld;
 	XmlDocumentBuilder builder = new XmlDocumentBuilder();
+	builder.setIgnoringLexicalInfo(true);
 	
         com.sun.xml.parser.ValidatingParser 
             parser = new com.sun.xml.parser.ValidatingParser(true);
