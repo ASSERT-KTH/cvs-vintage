@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.327 2002/12/26 21:31:46 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.328 2002/12/28 23:55:37 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -13,7 +13,7 @@
 </p>
 
 <p>
-Last updated: $Id: changes.html,v 1.327 2002/12/26 21:31:46 elicia Exp $
+Last updated: $Id: changes.html,v 1.328 2002/12/28 23:55:37 jon Exp $
 </p>
 
 <table border="0" cellpadding="2" width="98%" bgcolor="white">
@@ -25,6 +25,11 @@ Last updated: $Id: changes.html,v 1.327 2002/12/26 21:31:46 elicia Exp $
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b13</h3>
             <ul>
+                <li>The build system now only copies the appropriate database
+                    .jar file into WEB-INF/lib and also separates out the definition
+                    of the various databases into their own .properties files which
+                    can and should be overridden in your own build.properties.
+                    See #<a href="http://issues.whichever.com/issues/id/SCB242">SCB242</a>. (JSS)</li>
                 <li>The update search index screen now uses a background
                     thread and a page refresh to do its work so that 
                     browser/server timeouts don't affect the process. (JSS)</li>
@@ -124,6 +129,9 @@ Last updated: $Id: changes.html,v 1.327 2002/12/26 21:31:46 elicia Exp $
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Fixes since 1.0b13</h3>
             <ul>
+                <li>The AssignIssue emails now use the email/ModifyIssue.vm template
+                    and code to provide a more consistent interface for issue modification
+                    notices. (JSS)</li>
                 <li>Fixed the note entry process on Wizard2.vm to actually work properly. (JSS)</li>
                 <li>Clean up the ui on the Wizard2.vm template. (JSS)</li>
                 <li>create-db.sh - changes the script to accept --name instead of --DB_NAME (JSS)</li>
