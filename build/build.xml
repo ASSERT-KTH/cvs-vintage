@@ -95,12 +95,14 @@
                 <include name="scarab.sh"/>
             </fileset>
         </copy>
-        <!-- no need to have two copies of this checked into CVS -->
+        <!-- 
+        torque and fulcrum use xerces-2.x while tomcat is still 1.4.x
         <copy todir="${build.dir}/common/lib" filtering="no">
              <fileset dir="${lib.dir}">
                  <include name="**/xerces*.jar"/>
              </fileset>
         </copy>
+        -->
         <!-- no need to have two copies of this checked into CVS -->
         <copy todir="${build.dir}/server/lib" filtering="no">
              <fileset dir="${lib.dir}">
