@@ -343,7 +343,7 @@ public class MailMenu extends JMenuBar {
 		    cbMenuItem.setActionCommand("USE_ADVANCEDVIEWER");
 		    if ( MainInterface.mainFrameWindowItem.getAdvancedViewer()  ) cbMenuItem.setSelected( true );
 		    menu.add( cbMenuItem );
-		
+
 		    menu.addSeparator();
 		*/
 
@@ -805,9 +805,9 @@ public class MailMenu extends JMenuBar {
 		utilitiesMenu.setActionCommand("UTILITIES");
 		add(utilitiesMenu);
 
-		
+
 		subMenu =
-			new JMenu(GlobalResourceLoader.getString("menu","mainframe", "menu_message_filteronmessage"));
+			new JMenu(MailResourceLoader.getString("menu","mainframe", "menu_message_filteronmessage"));
 		menuItem =
 			new CMenuItem(
 				frameController.tableController.getActionListener().filterSubjectAction);
@@ -823,11 +823,11 @@ public class MailMenu extends JMenuBar {
 		frameController.tableController.getActionListener().filterToAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
-		
+
 		utilitiesMenu.add(subMenu);
-		
+
 		subMenu =
-			new JMenu(GlobalResourceLoader.getString("menu","mainframe", "menu_message_vfolderonmessage"));
+			new JMenu(MailResourceLoader.getString("menu","mainframe", "menu_message_vfolderonmessage"));
 		menuItem =
 			new CMenuItem(
 		frameController.tableController.getActionListener().vFolderSubjectAction);
@@ -843,11 +843,11 @@ public class MailMenu extends JMenuBar {
 		frameController.tableController.getActionListener().vFolderToAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
-		
+
 		utilitiesMenu.add(subMenu);
-		
+
 		utilitiesMenu.addSeparator();
-		
+
 
 		menuItem =
 			new CMenuItem(
@@ -986,34 +986,34 @@ public class MailMenu extends JMenuBar {
 		/*
 		CMenuItem menuItem = new CMenuItem( action );
 		menuItem.addMouseListener(handler);
-		
+
 		for ( int i=0; i<getMenuCount(); i++ )
 		{
 			JMenu menu = (JMenu) getComponent(i);
-		
+
 			if ( menu.getActionCommand().equalsIgnoreCase(id) )
 			{
 				// found the right menu
-				
+
 				menu.add(menuItem);
-			}	
+			}
 		}
 		*/
 	}
 
 	public void addMenuSeparator(String id) {
-		/*	
-		
+		/*
+
 		for ( int i=0; i<getMenuCount(); i++ )
 		{
 			JMenu menu = (JMenu) getComponent(i);
-		
+
 			if ( menu.getActionCommand().equalsIgnoreCase(id) )
 			{
 				// found the right menu
-				
+
 				menu.addSeparator();
-			}	
+			}
 		}
 		*/
 	}
@@ -1023,18 +1023,18 @@ public class MailMenu extends JMenuBar {
 		/*
 		HeaderTableItem v =
 			MailConfig.getMainFrameOptionsConfig().getHeaderTableItem();
-		
+
 		sortSubMenu.removeAll();
-		
+
 		ButtonGroup group = new ButtonGroup();
 		JRadioButtonMenuItem menuItem;
 		String c;
-		
+
 		for (int i = 0; i < v.count(); i++) {
 			c = (String) v.getName(i);
-		
+
 			boolean enabled = v.getEnabled(i);
-		
+
 			if (enabled == true) {
 				String str = null;
 				try {
@@ -1045,7 +1045,7 @@ public class MailMenu extends JMenuBar {
 					System.out.println("exeption: " + ex.getMessage());
 					str = c;
 				}
-		
+
 				menuItem = new JRadioButtonMenuItem(str);
 				menuItem.setActionCommand(c);
 				menuItem.addActionListener(
@@ -1059,25 +1059,25 @@ public class MailMenu extends JMenuBar {
 							.getTableModelSorter()
 							.getSortingColumn()))
 					menuItem.setSelected(true);
-		
+
 				//menuItem.addActionListener( new FrameActionListener( mainInterface ));
-		
+
 				sortSubMenu.add(menuItem);
 				group.add(menuItem);
 			}
-		
+
 		}
-		
+
 		menuItem = new JRadioButtonMenuItem("In Order Received");
 		menuItem.addActionListener(
 			MainInterface.headerTableViewer.getHeaderItemActionListener());
 		sortSubMenu.add(menuItem);
 		group.add(menuItem);
-		
+
 		sortSubMenu.addSeparator();
-		
+
 		group = new ButtonGroup();
-		
+
 		menuItem = new JRadioButtonMenuItem("Ascending");
 		menuItem.addActionListener(
 			MainInterface.headerTableViewer.getHeaderItemActionListener());
@@ -1087,7 +1087,7 @@ public class MailMenu extends JMenuBar {
 			.getSortingOrder()
 			== true)
 			menuItem.setSelected(true);
-		
+
 		sortSubMenu.add(menuItem);
 		group.add(menuItem);
 		menuItem = new JRadioButtonMenuItem("Descending");
