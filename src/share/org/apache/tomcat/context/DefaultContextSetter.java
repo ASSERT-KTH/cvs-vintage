@@ -83,10 +83,7 @@ public class DefaultContextSetter {
     // sets: engineHeader, requestSecurityProvider, workDir, sessionManager, classPath, libPath
     public int handleContextInit(Context ctx) {
 	setEngineHeader( ctx );
-	if( ctx.getRequestSecurityProvider() == null ) 
-	    ctx.setRequestSecurityProvider(DefaultRequestSecurityProvider.
-					   getInstance());
-	
+
 	if( ctx.getWorkDir() == null)
 	    setWorkDir(ctx);
 	

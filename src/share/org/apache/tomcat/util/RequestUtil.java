@@ -351,4 +351,91 @@ public class RequestUtil {
         return encoding;
     }
 
+    public static Enumeration getLocales(HttpServletRequest req) {
+	String acceptLanguage = req.getHeader("Accept-Language");
+	// Short circuit with an empty enumeration if null header
+        if (acceptLanguage == null) {
+            Vector def = new Vector();
+            def.addElement(Locale.getDefault());
+            return def.elements();
+        }
+
+        Hashtable languages = new Hashtable();
+
+        StringTokenizer languageTokenizer =
+            new StringTokenizer(acceptLanguage, ",");
+
+        while (languageTokenizer.hasMoreTokens()) {
+            String language = languageTokenizer.nextToken().trim();
+            int qValueIndex = language.indexOf(';');
+            int qIndex = language.indexOf('q');
+            int equalIndex = language.indexOf('=');
+            Double qValue = new Double(1);
+
+            if (qValueIndex > -1 &&
+                qValueIndex < qIndex &&
+                qIndex < equalIndex) {
+	        String qValueStr = language.substring(qValueIndex + 1);
+
+                language = language.substring(0, qValueIndex);
+                qValueStr = qValueStr.trim().toLowerCase();
+                qValueIndex = qValueStr.indexOf('=');
+                qValue = new Double(0);
+
+                if (qValueStr.startsWith("q") &&
+                    qValueIndex > -1) {
+                    qValueStr = qValueStr.substring(qValueIndex + 1);
+
+                    try {
+                        qValue = new Double(qValueStr.trim());
+                    } catch (NumberFormatException nfe) {
+                    }
+                }
+            }
+
+	    // XXX
+	    // may need to handle "*" at some point in time
+
+	    if (! language.equals("*")) {
+	        String key = qValue.toString();
+		Vector v = (Vector)((languages.containsKey(key)) ?
+		    languages.get(key) : new Vector());
+
+		v.addElement(language);
+		languages.put(key, v);
+	    }
+        }
+
+        if (languages.size() == 0) {
+            Vector v = new Vector();
+
+            v.addElement(org.apache.tomcat.core.Constants.LOCALE_DEFAULT);
+            languages.put("1.0", v);
+        }
+
+        Vector l = new Vector();
+        Enumeration e = languages.keys();
+
+        while (e.hasMoreElements()) {
+            String key = (String)e.nextElement();
+            Vector v = (Vector)languages.get(key);
+            Enumeration le = v.elements();
+
+            while (le.hasMoreElements()) {
+	        String language = (String)le.nextElement();
+		String country = "";
+		int countryIndex = language.indexOf("-");
+
+		if (countryIndex > -1) {
+		    country = language.substring(countryIndex + 1).trim();
+		    language = language.substring(0, countryIndex).trim();
+		}
+
+                l.addElement(new Locale(language, country));
+            }
+        }
+
+        return l.elements();
+    }
+
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.8 2000/01/11 02:06:54 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/01/11 02:06:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.9 2000/01/11 20:43:02 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/01/11 20:43:02 $
  *
  * ====================================================================
  *
@@ -91,7 +91,7 @@ public class Response {
     protected String characterEncoding = Constants.CharacterEncoding.Default;
     protected int contentLength = -1;
     protected int status = 200;
-    private Locale locale = new Locale(Constants.Locale.Default, "");
+    private Locale locale = new Locale(Constants.LOCALE_DEFAULT, "");
 
     protected MimeHeaders headers = new MimeHeaders();
     protected BufferedServletOutputStream out;
@@ -160,7 +160,7 @@ public class Response {
 	userCookies.removeAllElements();
 	systemCookies.removeAllElements();
 	contentType = Constants.ContentType.Default;
-        locale = new Locale(Constants.Locale.Default, "");
+        locale = new Locale(Constants.LOCALE_DEFAULT, "");
 	characterEncoding = Constants.CharacterEncoding.Default;
 	contentLength = -1;
 	status = 200;
@@ -298,7 +298,7 @@ public class Response {
         //
 	userCookies.removeAllElements();  // keep system (session) cookies
 	contentType = Constants.ContentType.Default;
-        locale = new Locale(Constants.Locale.Default, "");
+        locale = new Locale(Constants.LOCALE_DEFAULT, "");
 	characterEncoding = Constants.CharacterEncoding.Default;
 	contentLength = -1;
 	status = 200;

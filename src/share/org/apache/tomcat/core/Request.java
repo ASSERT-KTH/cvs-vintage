@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.15 2000/01/09 22:32:42 costin Exp $
- * $Revision: 1.15 $
- * $Date: 2000/01/09 22:32:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.16 2000/01/11 20:43:02 costin Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/01/11 20:43:02 $
  *
  * ====================================================================
  *
@@ -67,6 +67,7 @@ package org.apache.tomcat.core;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
+import java.security.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -117,6 +118,8 @@ public class Request  {
     // Session
     // set by interceptors - the session id
     protected String reqSessionId;
+    boolean sessionIdFromCookie=true;
+    boolean sessionIdFromURL=false;
     // cache- avoid calling SessionManager for each getSession()
     protected HttpSession serverSession;
 
@@ -290,14 +293,108 @@ public class Request  {
 	// can be null!! -
 	return contentType;
     }
+    
+    String getPathTranslated() {
+        String pathTranslated = null;
+	String pathInfo = getPathInfo();
+
+	if (pathInfo != null) {
+            if (pathInfo.equals("")) {
+                pathInfo = "/";
+            }
+
+    	    try {
+                URL url = 
+		    context.getResource(pathInfo);
+
+                if (url != null &&
+                    url.getProtocol().equals("file")) {
+                    pathTranslated = FileUtil.patch(url.getFile());
+                }
+            } catch (MalformedURLException e) {
+            }
+        }
+	
+	// XXX
+	// resolve this against the context
+
+        return pathTranslated;
+    }
 
 
     public String getPathInfo() {
         return pathInfo;
     }
 
-    public String getRemoteUser() {
-        return remoteUser;
+    String getRemoteUser() {
+	// Using the Servlet 2.2 semantics ...
+	//  return request.getRemoteUser();
+	java.security.Principal p = getUserPrincipal();
+
+	if (p != null) {
+	    return p.getName();
+	}
+
+	return null;
+
+        //return remoteUser;
+    }
+
+    boolean isSecure() {
+	if( context.getRequestSecurityProvider() == null )
+	    return false;
+	return context.getRequestSecurityProvider().isSecure(context, getFacade());
+    }
+    
+    RequestDispatcher getRequestDispatcher(String path) {
+        if (path == null) {
+	    String msg = sm.getString("hsrf.dispatcher.iae", path);
+	    throw new IllegalArgumentException(msg);
+	}
+
+	if (! path.startsWith("/")) {
+	    String lookupPath = getLookupPath();
+
+            // Cut off the last slash and everything beyond
+	    int index = lookupPath.lastIndexOf("/");
+	    lookupPath = lookupPath.substring(0, index);
+
+            // Deal with .. by chopping dirs off the lookup path
+	    while (path.startsWith("../")) { 
+		if (lookupPath.length() > 0) {
+		    index = lookupPath.lastIndexOf("/");
+		    lookupPath = lookupPath.substring(0, index);
+		} 
+                else {
+                    // More ..'s than dirs, return null
+                    return null;
+                }
+
+		index = path.indexOf("../") + 3;
+		path = path.substring(index);
+	    }
+
+	    path = lookupPath + "/" + path;
+	}
+
+	RequestDispatcher requestDispatcher =
+	    context.getFacade().getRequestDispatcher(path);
+
+        return requestDispatcher;
+    }
+
+
+    
+    Principal getUserPrincipal() {
+	if( context.getRequestSecurityProvider() == null )
+	    return null;
+	return context.getRequestSecurityProvider().getUserPrincipal(context, getFacade());
+    }
+
+    boolean isUserInRole(String role) {
+	if( context.getRequestSecurityProvider() == null )
+	    return false;
+	return context.getRequestSecurityProvider().isUserInRole(context, getFacade(), role);
     }
 
 
@@ -335,6 +432,15 @@ public class Request  {
     public Response getResponse() {
 	return response;
     }
+
+    boolean isRequestedSessionIdFromCookie() {
+	return sessionIdFromCookie;
+    }
+
+    boolean isRequestedSessionIdFromURL() {
+	return sessionIdFromURL;
+    }
+
     
     public void setContext(Context context) {
 	this.context = context;
@@ -435,6 +541,18 @@ public class Request  {
 	response.addSystemCookie(cookie);
 
 	return serverSession;
+    }
+
+    boolean isRequestedSessionIdValid() {
+	// so here we just assume that if we have a session it's,
+	// all good, else not.
+	HttpSession session = (HttpSession)getSession(false);
+
+	if (session != null) {
+	    return true;
+	} else {
+	    return false;
+	}
     }
 
     // -------------------- LookupResult 
@@ -552,39 +670,6 @@ public class Request  {
 //         this.scheme = scheme;
 //     }
 
-
-    /**
-     * Adds a query string to the existing set of parameters.
-     * The additional parameters represented by the query string will be
-     * merged with the existing parameters.
-     * Used by the RequestDispatcherImpl to add query string parameters
-     * to the request.
-     *
-     * @param inQueryString URLEncoded parameters to add
-     */
-    public void addQueryString(String inQueryString) {
-        // if query string is null, do nothing
-        if ((inQueryString == null) || (inQueryString.trim().length() <= 0))
-            return;
-
-        // add query string to existing string
-        if ((queryString == null) || (queryString.trim().length() <= 0))
-            queryString = inQueryString;
-        else
-            queryString = inQueryString + "&" + queryString;
-
-        // process parameters
-        Hashtable newParameters = null;
-        try {
-            newParameters = HttpUtils.parseQueryString(queryString);
-        } catch (Throwable e) {
-            return;
-        }
-
-        // merge new parameters with existing parameters
-        if (newParameters != null)
-            parameters = RequestUtil.mergeParameters(newParameters, parameters);
-    }
 
     /**
      * Replaces the query string without processing the parameters.

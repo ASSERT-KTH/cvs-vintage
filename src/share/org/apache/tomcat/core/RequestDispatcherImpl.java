@@ -90,7 +90,8 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     public void forward(ServletRequest request, ServletResponse response)
-    throws ServletException, IOException {
+	throws ServletException, IOException
+    {
 	HttpServletRequestFacade reqFacade =
 	    (HttpServletRequestFacade)request;
 	HttpServletResponseFacade resFacade =
@@ -100,12 +101,10 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
 	if (realResponse.isStarted()) {
             String msg = sm.getString("rdi.forward.ise");
-
 	    throw new IllegalStateException(msg);
         }
 
 	// Pre-pend the context name to give appearance of real request
-
 	urlPath = context.getPath() + urlPath;
 
 	// XXX Need to clean up - what's the diff between the lookupResult
@@ -258,4 +257,30 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     boolean isValid() {
         return (this.lookupResult != null);
     }
+
+    /**
+     * Adds a query string to the existing set of parameters.
+     * The additional parameters represented by the query string will be
+     * merged with the existing parameters.
+     * Used by the RequestDispatcherImpl to add query string parameters
+     * to the request.
+     *
+     * @param inQueryString URLEncoded parameters to add
+     */
+    public void addQueryString(Request req, String inQueryString) {
+        // if query string is null, do nothing
+        if ((inQueryString == null) || (inQueryString.trim().length() <= 0))
+            return;
+
+	String queryString=req.getQueryString();
+        // add query string to existing string
+        if ((queryString == null) || (queryString.trim().length() <= 0))
+            queryString = inQueryString;
+        else
+            queryString = inQueryString + "&" + queryString;
+
+	req.setQueryString( queryString );
+    }
+
+
 }

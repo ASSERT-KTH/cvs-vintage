@@ -89,6 +89,8 @@ public class Constants {
     public static final int RequestURIMatchRecursion = 5;
     public static final String WORK_DIR = "work";
 
+    public static final String LOCALE_DEFAULT="en";
+    
     public static class Context {
         public static final String WebInfDir = "WEB-INF";
         public static final String WARInfDir = "META-INF";
@@ -145,10 +147,6 @@ public class Constants {
             "org.apache.tomcat.servlet.resolved";
     }
 
-    public static class Locale {
-        public static final String Default = "en";
-    }
-
     public static class ContentType {
         public static final String Default = "text/plain";
         public static final String HTML = "text/html";
@@ -159,7 +157,4 @@ public class Constants {
         public static final String Default = "8859_1";
     }
 
-    public static class Header {
-        public static final String AcceptLanguage = "Accept-Language";
-    }
 }

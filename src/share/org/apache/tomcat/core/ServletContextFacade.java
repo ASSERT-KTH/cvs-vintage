@@ -77,12 +77,8 @@ import javax.servlet.*;
  * @author James Todd [gonzo@eng.sun.com]
  * @author Harish Prabandham
  */
-
-public class ServletContextFacade
-implements ServletContext {
-
-    private StringManager sm =
-        StringManager.getManager(Constants.Package);
+public class ServletContextFacade implements ServletContext {
+    private StringManager sm = StringManager.getManager("org.apache.tomcat.core");
     private ContextManager contextM;
     private Context context;
 
@@ -95,13 +91,12 @@ implements ServletContext {
      * The one package level hole through the facade for use by
      * the default servlet and invoker servlet
      */
-
     public Context getRealContext() {
+	// XXX call security !
 	return context;
     }
     
     public Object getAttribute(String name) {
-	Object o = context.getAttribute(name);
         return context.getAttribute(name);
     }
 
@@ -118,21 +113,7 @@ implements ServletContext {
     } 
     
     public ServletContext getContext(String path) {
-
-        // XXX
-        // we need to check to see if the servlet should have
-        // this sort of visibility into the inner workings of
-        // the server. For now, we aren't running secure, so
-        // it's no big deal, but later on, we'll want to throttle
-        // access to contexts through this method
-
-	if (! path.startsWith("/")) {
-            String msg = sm.getString("sfcacade.context.iae", path);
-
-	    throw new IllegalArgumentException(msg);
-	}
-
-        return contextM.getContextByPath(path).getFacade();
+        return context.getContext(path).getFacade();
     }
 
     public int getMajorVersion() {
@@ -148,149 +129,24 @@ implements ServletContext {
     }
 
     public String getRealPath(String path) {
-        String realPath = null;
-
-        path = normPath(path);
-
-        try {
-            URL url = getResource(path);
-
-            if (url != null) {
-                if (url.getProtocol().equalsIgnoreCase("war")) {
-		    if (context.isWARExpanded()) {
-		        String spec = url.getFile();
-
-			if (spec.startsWith("/")) {
-			    spec = spec.substring(1);
-			}
-
-			int separator = spec.indexOf('!');
-			URL warURL = null;
-
-			if (separator > -1) {
-			    warURL = new URL(spec.substring(0, separator++));
-			}
-
-			if (warURL.getProtocol().equalsIgnoreCase("file")) {
-			    String s = context.getWorkDir() +"/" +
-			        Constants.Context.WARExpandDir + path;
-			    File f = new File(s);
-			    String absPath = f.getAbsolutePath();
- 
-			    // take care of File.getAbsolutePath()
-			    // troubles on jdk1.1.x/win
-
-			    realPath = FileUtil.patch(absPath);
-			} else if (url.getProtocol().equalsIgnoreCase("http")) {
-			    // XXX
-			    // need to support http docBase'd context
-			}
-		    } else {
-                        realPath = url.toString();
-		    }
-		} else if (url.getProtocol().equalsIgnoreCase("http")) {
-                    // XXX
-                    // need to support http docBase'd context
-                } else if (url.getProtocol().equalsIgnoreCase("file")) {
-		    // take care of File.getAbsolutePath() troubles on
-		    // jdk1.1.x/win
-
-	            realPath = FileUtil.patch(url.getFile());
-                }
-
-	    }
-        } catch (Exception e) {
-        }
-
-	return realPath;
+	return context.getRealPath( path );
     }
 
     public InputStream getResourceAsStream(String path) {
         InputStream is = null;
-
         try {
             URL url = getResource(path);
             URLConnection con = url.openConnection();
-
             con.connect();
-
             is = con.getInputStream();
         } catch (MalformedURLException e) {
         } catch (IOException e) {
         }
-
 	return is;
     }
 
-    public URL getResource(String path)
-    throws MalformedURLException {
-        URL url = null;
-
-        if (path == null) {
-            String msg = sm.getString("scfacade.getresource.npe");
-
-            throw new NullPointerException(msg);
-        } else if (! path.equals("") &&
-	    ! path.startsWith("/")) {
-	    String msg = sm.getString("scfacade.getresource.iae", path);
-
-	    throw new IllegalArgumentException(msg);
-	}
-
-	// XXX
-	// this could use a once over - after war perhaps
-
-
-	
-        URL docBase = context.getDocumentBase();
-
-	Request lr = new Request();
-	lr.setLookupPath( path );
-	lr.setContext( getRealContext() );
-	getRealContext().getContextManager().internalRequestParsing(lr);
-
-	String mappedPath = path;
-
-	if (lr != null &&
-	    lr.getMappedPath() != null &&
-	    lr.getMappedPath().trim().length() > 0) {
-	    mappedPath = lr.getMappedPath();
-	}
-
-	if (path.equals("")) {
-	    url = docBase;
-	} else if (docBase.getProtocol().equalsIgnoreCase("war")) {
-	    if (context.isWARExpanded()) {
-		File f = new File(context.getWARDir().toString());
-		String absPath = f.getAbsolutePath();
-
-		// take care of File.getAbsolutePath() troubles
-		// on jdk1.1.x/win
-
-		absPath = FileUtil.patch(absPath);
-
-                if (! absPath.startsWith("/")) {
-                    absPath = "/" + absPath;
-                }
-
-		url = new URL("file://localhost" + absPath + "/" +
-		    mappedPath);
-	    } else {
-                String documentBase = context.getDocumentBase().toString();
-
-                if (documentBase.endsWith("/")) {
-                    documentBase = documentBase.substring(0,
-                        documentBase.length() - 1);
-                }
-
-                url = new URL(documentBase + "!" + mappedPath);
-	    }
-	} else {
-            url = new URL(docBase.getProtocol(), docBase.getHost(),
-                docBase.getPort(), docBase.getFile() + mappedPath);
-        }
-
-        return url;
+    public URL getResource(String path)	throws MalformedURLException {
+	return context.getResource( path );
     }
 
     public RequestDispatcher getRequestDispatcher(String path) {
@@ -312,7 +168,6 @@ implements ServletContext {
     public RequestDispatcher getNamedDispatcher(String name) {
         if (name == null) {
 	    String msg = sm.getString("scfacade.dispatcher.iae2", name);
-
 	    throw new IllegalArgumentException(msg);
 	}
 
@@ -329,10 +184,7 @@ implements ServletContext {
     }
 
     public void log(String msg) {
-        // Can't get this anymore - Harish. A stop-gap arrangement.
-	// context.getLogModule().log(msg);
-	
-	System.err.println(msg);
+	context.log( msg );
     }
 
     public String getInitParameter(String name) {
@@ -344,11 +196,7 @@ implements ServletContext {
     }
 
     public void log(String msg, Throwable t) {
-        // Can't get this anymore - Harish. A stop-gap arrangement.
-        // context.getLogModule().log(msg, t);
-
-	System.err.println(msg);
-	t.printStackTrace(System.err);
+	context.log(msg, t);
     }
 
     /**
@@ -356,7 +204,6 @@ implements ServletContext {
      * @deprecated This method is deprecated in the
      *             javax.servlet.ServletContext interface
      */
-
     public void log(Exception e, String msg) {
         log(msg, e);
     }
@@ -366,17 +213,16 @@ implements ServletContext {
      * @deprecated This method is deprecated in the
      *             javax.servlet.ServletContext interface
      */
-    
     public Servlet getServlet(String name) throws ServletException {
         return null;
     }
+
     /**
      * This method has been deprecated in the public api and always
      * return an empty enumeration.
      *
      * @deprecated
      */
-
     public Enumeration getServlets() {
 	// silly hack to get an empty enumeration
 	Vector v = new Vector();
@@ -389,27 +235,10 @@ implements ServletContext {
      *
      * @deprecated
      */
-
     public Enumeration getServletNames() {
 	// silly hack to get an empty enumeration
 	Vector v = new Vector();
 	return v.elements();
     }
 
-    private String normPath(String path) {
-        int i = -1;
- 
-        while ((i = path.indexOf('\\')) > -1) {
-            String a = path.substring(0, i);
-            String b = "";
- 
-            if (i < path.length() - 1) {
-                b = path.substring(i + 1);
-            } 
- 
-            path = a + "/" + b;
-        }
- 
-        return path;
-    }
 }

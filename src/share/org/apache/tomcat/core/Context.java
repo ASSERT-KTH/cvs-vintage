@@ -229,7 +229,163 @@ public class Context {
 	return this.rsProvider;
     }
 
+    public URL getResource(String path)	throws MalformedURLException {
+        URL url = null;
 
+        if (path == null) {
+            String msg = sm.getString("scfacade.getresource.npe");
+
+            throw new NullPointerException(msg);
+        } else if (! path.equals("") &&
+	    ! path.startsWith("/")) {
+	    String msg = sm.getString("scfacade.getresource.iae", path);
+
+	    throw new IllegalArgumentException(msg);
+	}
+
+	// XXX
+	// this could use a once over - after war perhaps
+        URL docBase = getDocumentBase();
+
+	Request lr = new Request();
+	lr.setLookupPath( path );
+	lr.setContext( this );
+	getContextManager().internalRequestParsing(lr);
+
+	String mappedPath = path;
+
+	if (lr != null &&
+	    lr.getMappedPath() != null &&
+	    lr.getMappedPath().trim().length() > 0) {
+	    mappedPath = lr.getMappedPath();
+	}
+
+	if (path.equals("")) {
+	    url = docBase;
+	} else if (docBase.getProtocol().equalsIgnoreCase("war")) {
+	    if (isWARExpanded()) {
+		File f = new File(getWARDir().toString());
+		String absPath = f.getAbsolutePath();
+
+		// take care of File.getAbsolutePath() troubles
+		// on jdk1.1.x/win
+
+		absPath = FileUtil.patch(absPath);
+
+                if (! absPath.startsWith("/")) {
+                    absPath = "/" + absPath;
+                }
+
+		url = new URL("file://localhost" + absPath + "/" +
+		    mappedPath);
+	    } else {
+                String documentBase = getDocumentBase().toString();
+
+                if (documentBase.endsWith("/")) {
+                    documentBase = documentBase.substring(0,
+                        documentBase.length() - 1);
+                }
+
+                url = new URL(documentBase + "!" + mappedPath);
+	    }
+	} else {
+            url = new URL(docBase.getProtocol(), docBase.getHost(),
+                docBase.getPort(), docBase.getFile() + mappedPath);
+        }
+
+        return url;
+    }
+
+    Context getContext(String path) {
+	if (! path.startsWith("/")) {
+            String msg = sm.getString("sfcacade.context.iae", path);
+	    throw new IllegalArgumentException(msg);
+	}
+        return server.getContextByPath(path);
+    }
+
+    public void log(String msg, Throwable t) {
+	System.err.println(msg);
+	t.printStackTrace(System.err);
+    }
+
+    void log(String msg) {
+        // Can't get this anymore - Harish. A stop-gap arrangement.
+	// context.getLogModule().log(msg);
+	
+	System.err.println(msg);
+    }
+
+    
+    String getRealPath( String path) {
+        String realPath = null;
+
+	int i = -1;
+ 
+	// norm path
+        while ((i = path.indexOf('\\')) > -1) {
+            String a = path.substring(0, i);
+            String b = "";
+ 
+            if (i < path.length() - 1) {
+                b = path.substring(i + 1);
+            } 
+ 
+            path = a + "/" + b;
+        }
+ 
+        try {
+            URL url = getResource(path);
+	    
+            if (url != null) {
+                if (url.getProtocol().equalsIgnoreCase("war")) {
+		    if (isWARExpanded()) {
+		        String spec = url.getFile();
+			
+			if (spec.startsWith("/")) {
+			    spec = spec.substring(1);
+			}
+
+			int separator = spec.indexOf('!');
+			URL warURL = null;
+
+			if (separator > -1) {
+			    warURL = new URL(spec.substring(0, separator++));
+			}
+
+			if (warURL.getProtocol().equalsIgnoreCase("file")) {
+			    String s = getWorkDir() +"/" +
+			        Constants.Context.WARExpandDir + path;
+			    File f = new File(s);
+			    String absPath = f.getAbsolutePath();
+ 
+			    // take care of File.getAbsolutePath()
+			    // troubles on jdk1.1.x/win
+
+			    realPath = FileUtil.patch(absPath);
+			} else if (url.getProtocol().equalsIgnoreCase("http")) {
+			    // XXX
+			    // need to support http docBase'd context
+			}
+		    } else {
+                        realPath = url.toString();
+		    }
+		} else if (url.getProtocol().equalsIgnoreCase("http")) {
+                    // XXX
+                    // need to support http docBase'd context
+                } else if (url.getProtocol().equalsIgnoreCase("file")) {
+		    // take care of File.getAbsolutePath() troubles on
+		    // jdk1.1.x/win
+
+	            realPath = FileUtil.patch(url.getFile());
+                }
+
+	    }
+        } catch (Exception e) {
+        }
+
+	return realPath;
+    }
 
     public File getWARDir() {
         return this.warDir;
@@ -271,7 +427,6 @@ public class Context {
      * <BR> b.postInvoke(...)
      * <BR> a.postInvoke(...)
      */
-
     public void addInitInterceptor(LifecycleInterceptor interceptor) {
 	initInterceptors.addElement(interceptor);
     }
@@ -291,7 +446,6 @@ public class Context {
      * <BR> b.postInvoke(...)
      * <BR> a.postInvoke(...)
      */
-
     public void addDestroyInterceptor(LifecycleInterceptor interceptor) {
 	destroyInterceptors.addElement(interceptor);
     }
@@ -311,7 +465,6 @@ public class Context {
      * <BR> b.postInvoke(...)
      * <BR> a.postInvoke(...)
      */
-
     public void addServiceInterceptor(ServiceInterceptor interceptor) {
 	serviceInterceptors.addElement(interceptor);
     }
@@ -336,7 +489,6 @@ public class Context {
      * <p>This method may only be called once and must be called
      * before any requests are handled by this context.
      */
-    
     public synchronized void init() {
 	if (this.initialized) {
 	    String msg = sm.getString("context.init.alreadyinit");

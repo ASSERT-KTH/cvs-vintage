@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.4 2000/01/07 19:14:11 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/01/07 19:14:11 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.5 2000/01/11 20:43:02 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/01/11 20:43:02 $
  *
  * ====================================================================
  *
@@ -80,21 +80,23 @@ import javax.servlet.http.*;
  * @author James Todd [gonzo@eng.sun.com]
  * @author Harish Prabandham
  */
+public class HttpServletRequestFacade implements HttpServletRequest {
 
-public class HttpServletRequestFacade
-implements HttpServletRequest {
-
-    private StringManager sm =
-        StringManager.getManager(Constants.Package);
+    private StringManager sm = StringManager.getManager(Constants.Package);
     private Request request;
+
     private boolean usingStream = false;
     private boolean usingReader = false;
-    
+
     public Request getRealRequest() {
+	// XXX In JDK1.2, call a security class to see if the code has
+	// the right permission !!!
 	return request;
     }
     
     public HttpServletRequestFacade(Request request) {
+	// XXX In JDK1.2, call a security class to see if the code has
+	// the right permission !!!
         this.request = request;
     }
 
@@ -132,14 +134,6 @@ implements HttpServletRequest {
 
     public Cookie[] getCookies() {
 	return request.getCookies();
-	// 	Vector cookies = request.getCookies();
-	// 	Cookie[] cookieArray = new Cookie[cookies.size()];
-	
-	// 	for (int i = 0; i < cookies.size(); i ++) {
-	// 	    cookieArray[i] = (Cookie)cookies.elementAt(i);    
-	// 	}
-	
-	//         return cookieArray;
     }
 
     public long getDateHeader(String name) {
@@ -161,12 +155,10 @@ implements HttpServletRequest {
     public ServletInputStream getInputStream() throws IOException {
 	if (usingReader) {
 	    String msg = sm.getString("reqfac.getinstream.ise");
-
 	    throw new IllegalStateException(msg);
 	}
 
 	usingStream = true;
-
 	return request.getInputStream();
     }
 
@@ -200,30 +192,7 @@ implements HttpServletRequest {
     }
 
     public String getPathTranslated() {
-        String pathTranslated = null;
-	String pathInfo = getPathInfo();
-
-	if (pathInfo != null) {
-            if (pathInfo.equals("")) {
-                pathInfo = "/";
-            }
-
-    	    try {
-                URL url = 
-		    request.getContext().getFacade().getResource(pathInfo);
-
-                if (url != null &&
-                    url.getProtocol().equals("file")) {
-                    pathTranslated = FileUtil.patch(url.getFile());
-                }
-            } catch (MalformedURLException e) {
-            }
-        }
-	
-	// XXX
-	// resolve this against the context
-
-        return pathTranslated;
+        return request.getPathTranslated();
     }
     
     public String getProtocol() {
@@ -235,15 +204,7 @@ implements HttpServletRequest {
     }
 
     public String getRemoteUser() {
-	// Using the Servlet 2.2 semantics ...
-	//  return request.getRemoteUser();
-	java.security.Principal p = getUserPrincipal();
-
-	if (p != null) {
-	    return p.getName();
-	}
-
-	return null;
+	return request.getRemoteUser();
     }
 
     public String getScheme() {
@@ -266,20 +227,13 @@ implements HttpServletRequest {
         return request.getSession(create);
     }
 
-    // XXX XXX is it used ?? (costin)
-    //     public ServerSession getServerSession(boolean create) {
-    //         return request.getServerSession(create);
-    //     }
-
     public BufferedReader getReader() throws IOException {
 	if (usingStream) {
 	    String msg = sm.getString("reqfac.getreader.ise");
-
 	    throw new IllegalStateException(msg);
 	}
 
 	usingReader = true;
-
 	return request.getReader();
     }
     
@@ -299,52 +253,12 @@ implements HttpServletRequest {
         return request.getRequestURI();
     }
 
-    private Context getContext() {
-	return getRealRequest().getContext();
-    }
-
     public RequestDispatcher getRequestDispatcher(String path) {
-        if (path == null) {
-	    String msg = sm.getString("hsrf.dispatcher.iae", path);
-
-	    throw new IllegalArgumentException(msg);
-	}
-
-	if (! path.startsWith("/")) {
-	    String lookupPath = request.getLookupPath();
-
-            // Cut off the last slash and everything beyond
-	    int index = lookupPath.lastIndexOf("/");
-	    lookupPath = lookupPath.substring(0, index);
-
-            // Deal with .. by chopping dirs off the lookup path
-	    while (path.startsWith("../")) { 
-		if (lookupPath.length() > 0) {
-		    index = lookupPath.lastIndexOf("/");
-		    lookupPath = lookupPath.substring(0, index);
-		} 
-                else {
-                    // More ..'s than dirs, return null
-                    return null;
-                }
-
-		index = path.indexOf("../") + 3;
-		path = path.substring(index);
-	    }
-
-	    path = lookupPath + "/" + path;
-	}
-
-	RequestDispatcher requestDispatcher =
-	    getContext().getFacade().getRequestDispatcher(path);
-
-        return requestDispatcher;
+	return request.getRequestDispatcher(path);
     }
 
     public boolean isSecure() {
-	Context ctx = getContext();
-
-	return ctx.getRequestSecurityProvider().isSecure(ctx, this);
+	return request.isSecure();
     }
 
     public Locale getLocale() {
@@ -352,25 +266,19 @@ implements HttpServletRequest {
     }
 
     public Enumeration getLocales() {
-        String acceptLanguage = getHeader(Constants.Header.AcceptLanguage);
-
-        return getLocales(acceptLanguage);
+        return RequestUtil.getLocales(this);
     }
 
     public String getContextPath() {
-        return getContext().getPath();
+        return request.getContext().getPath();
     }
 
     public boolean isUserInRole(String role) {
-	Context ctx = getContext();
-
-	return ctx.getRequestSecurityProvider().isUserInRole(ctx, this, role);
+	return request.isUserInRole(role);
     }
 
     public Principal getUserPrincipal() {
-	Context ctx = getContext();
-
-	return ctx.getRequestSecurityProvider().getUserPrincipal(ctx, this);
+	return request.getUserPrincipal();
     }
 
     public String getServletPath() {
@@ -380,126 +288,27 @@ implements HttpServletRequest {
     /**
      * @deprecated
      */
-    
     public String getRealPath(String name) {
-        return request.getContext().getFacade().getRealPath(name);
+        return request.getContext().getRealPath(name);
     }
 
     public boolean isRequestedSessionIdValid() {
-	// so here we just assume that if we have a session it's,
-	// all good, else not.
-	HttpSession session = (HttpSession)getSession(false);
-
-	if (session != null) {
-	    return true;
-	} else {
-	    return false;
-	}
+	return request.isRequestedSessionIdValid();
     }
 
     public boolean isRequestedSessionIdFromCookie() {
-        // XXX
-	// yes, this is always true for now as cookies
-	// are all we use....
-	return true;
+	return request.isRequestedSessionIdFromCookie();
     }
 
     /**
      * @deprecated
      */
-    
     public boolean isRequestedSessionIdFromUrl() {
 	return isRequestedSessionIdFromURL();
     }
 
     public boolean isRequestedSessionIdFromURL() {
-        // XXX
-        return false;
+	return request.isRequestedSessionIdFromURL();
     }
 
-    private Enumeration getLocales(String acceptLanguage) {
-        // Short circuit with an empty enumeration if null header
-        if (acceptLanguage == null) {
-            Vector def = new Vector();
-            def.addElement(Locale.getDefault());
-            return def.elements();
-        }
-
-        Hashtable languages = new Hashtable();
-
-        StringTokenizer languageTokenizer =
-            new StringTokenizer(acceptLanguage, ",");
-
-        while (languageTokenizer.hasMoreTokens()) {
-            String language = languageTokenizer.nextToken().trim();
-            int qValueIndex = language.indexOf(';');
-            int qIndex = language.indexOf('q');
-            int equalIndex = language.indexOf('=');
-            Double qValue = new Double(1);
-
-            if (qValueIndex > -1 &&
-                qValueIndex < qIndex &&
-                qIndex < equalIndex) {
-	        String qValueStr = language.substring(qValueIndex + 1);
-
-                language = language.substring(0, qValueIndex);
-                qValueStr = qValueStr.trim().toLowerCase();
-                qValueIndex = qValueStr.indexOf('=');
-                qValue = new Double(0);
-
-                if (qValueStr.startsWith("q") &&
-                    qValueIndex > -1) {
-                    qValueStr = qValueStr.substring(qValueIndex + 1);
-
-                    try {
-                        qValue = new Double(qValueStr.trim());
-                    } catch (NumberFormatException nfe) {
-                    }
-                }
-            }
-
-	    // XXX
-	    // may need to handle "*" at some point in time
-
-	    if (! language.equals("*")) {
-	        String key = qValue.toString();
-		Vector v = (Vector)((languages.containsKey(key)) ?
-		    languages.get(key) : new Vector());
-
-		v.addElement(language);
-		languages.put(key, v);
-	    }
-        }
-
-        if (languages.size() == 0) {
-            Vector v = new Vector();
-
-            v.addElement(Constants.Locale.Default);
-            languages.put("1.0", v);
-        }
-
-        Vector l = new Vector();
-        Enumeration e = languages.keys();
-
-        while (e.hasMoreElements()) {
-            String key = (String)e.nextElement();
-            Vector v = (Vector)languages.get(key);
-            Enumeration le = v.elements();
-
-            while (le.hasMoreElements()) {
-	        String language = (String)le.nextElement();
-		String country = "";
-		int countryIndex = language.indexOf("-");
-
-		if (countryIndex > -1) {
-		    country = language.substring(countryIndex + 1).trim();
-		    language = language.substring(0, countryIndex).trim();
-		}
-
-                l.addElement(new Locale(language, country));
-            }
-        }
-
-        return l.elements();
-    }
 }
