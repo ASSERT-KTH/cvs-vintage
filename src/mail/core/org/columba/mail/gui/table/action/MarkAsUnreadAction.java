@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.action;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -29,12 +30,12 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
-
 
 /**
  * @author frd
@@ -47,8 +48,10 @@ public class MarkAsUnreadAction extends AbstractColumbaAction implements Selecti
      * @param frameMediator
      */
     public MarkAsUnreadAction(FrameMediator frameMediator) {
-        // TODO: i18n missing here
-        super(frameMediator, "As Unread");
+        super(frameMediator, MailResourceLoader.getString(
+                "menu",
+                "mainframe",
+                "menu_message_markasunread"));
         putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("mail-new.png"));
         putValue(LARGE_ICON, ImageLoader.getImageIcon("mail-new.png"));
 
