@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.305 2003/06/09 17:03:34 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.306 2003/06/09 18:48:53 dlr Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1212,7 +1212,12 @@ public class Issue
             .addJoin(AttributeValuePeer.ATTRIBUTE_ID,
                      AttributePeer.ATTRIBUTE_ID)
             .add(AttributePeer.ACTION, action)
-            .add(AttributeValuePeer.DELETED, 0);
+            .add(RModuleAttributePeer.MODULE_ID, getModuleId())
+            .add(RModuleAttributePeer.ISSUE_TYPE_ID, getTypeId())
+            .add(AttributeValuePeer.DELETED, 0)
+            .add(RModuleAttributePeer.ACTIVE, true)
+            .addJoin(RModuleAttributePeer.ATTRIBUTE_ID,
+                     AttributeValuePeer.ATTRIBUTE_ID);
         List userAttVals = AttributeValuePeer.doSelect(crit);
         for (Iterator i = userAttVals.iterator(); i.hasNext(); )
         {
