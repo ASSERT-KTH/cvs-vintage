@@ -218,7 +218,7 @@
 <h3>Comments</h3>
   #foreach ($comment in $comments)
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
-     <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&#160;|&#160;<a href="mailto:$commentUser.Email">$!commentUser.Name</a></h4>
+     <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&#160;|&#160;Added by: <a href="mailto:$commentUser.Email">$!commentUser.Name</a></h4>
     #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
       <P>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.DataAsString)
     #else
