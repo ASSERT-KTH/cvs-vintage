@@ -27,7 +27,7 @@
 project=scarab
 
 # -------------------------------------------------------------------
-# 
+#
 #  T A R G E T  D A T A B A S E
 #
 # -------------------------------------------------------------------
@@ -39,6 +39,7 @@ project=scarab
 # mysql
 # oracle
 # postgresql
+# mssql
 #
 # Default: none
 # -------------------------------------------------------------------
@@ -46,27 +47,33 @@ project=scarab
 database=mysql
 
 # -------------------------------------------------------------------
-# 
+#
 #  O B J E C T  M O D E L  I N F O R M A T I O N
 #
 # -------------------------------------------------------------------
 # These settings will allow you to customize the way your
 # Peer-based object model is created.
 # -------------------------------------------------------------------
-# addSaveMethod=true, adds tracking code to determine how to save an
-# object
-# set complexObjectModel=true to generate an om with collection
-# support
+# addSaveMethod=true adds tracking code to determine how to save objects
+#
+# addGetByNameMethod=true adds methods to get fields by name/position
+#
+# complexObjectModel=true generates an om with collection support
+#
+# addTimeStamp=true puts time stamps in generated files
 # -------------------------------------------------------------------
+
+targetPackage=org.tigris.scarab.om
+basePrefix=Base
+addSaveMethod=true
+secureSaveMethod=false
+addGetByNameMethod=true
+complexObjectModel=true
+addTimeStamp=false
 
 extend=TurbineMapBuilder
 mapname=TurbineMap
 suffix=MapBuilder
-targetPackage=org.tigris.scarab.om
-addSaveMethod=true
-addGetByNameMethod=true
-complexObjectModel=true
-basePrefix=Base
 
 # -------------------------------------------------------------------
 # 
@@ -84,22 +91,13 @@ databaseDriver = org.gjt.mm.mysql.Driver
 databaseUser = user
 databasePassword = password
 
+# Tells JDBC task that javaName attribute for the tables and columns
+# should be made same as SQL name.
+sameJavaName=false
+
 # -------------------------------------------------------------------
 # You should NOT have to edit anything below here.
 # -------------------------------------------------------------------
-
-# -------------------------------------------------------------------
-# 
-#  C O N F I G U R A T I O N  D I R E C T O R Y
-#
-# -------------------------------------------------------------------
-# This is the directory that Torque looks in the find
-# its torque.props file.
-#
-# Default: none
-# -------------------------------------------------------------------
-
-configDir=./config
 
 # -------------------------------------------------------------------
 # 
@@ -117,8 +115,6 @@ templatePath = templates
 
 SQLControlTemplate = sql/base/Control.vm
 OMControlTemplate = om/Control.vm
-IntakeControlTemplate = intake/Control.vm
-ServiceControlTemplate = service/Control.vm
 idTableControlTemplate = sql/id-table/Control.vm
 DataDTDControlTemplate = data/Control.vm
 DataDumpControlTemplate = data/dump/Control.vm
@@ -130,7 +126,7 @@ DataSQLControlTemplate = sql/load/Control.vm
 #
 # -------------------------------------------------------------------
 
-outputDirectory=../../../../../../src/
+outputDirectory=../../../../../../src
 
 # -------------------------------------------------------------------
 # 
