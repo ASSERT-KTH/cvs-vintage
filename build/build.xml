@@ -2,7 +2,7 @@
 
 <!-- Build file for Scarab -->
 
-<project name="Scarab" default="deploy" basedir=".">
+<project name="Scarab" default="compile" basedir=".">
 
     <!-- Allow the user to have multiple configuration files and
          specify them using -Dconfiguration.file=filename 
@@ -312,47 +312,6 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Check to see if SQL related stuff is up to date                    -->
-    <!-- ================================================================== -->
-    <target name="schema-check">
-        <echo message="checking: ${build.sql.scarab}/${scarab.database.type}/${project}.sql"/>
-        <uptodate property="schema.uptodate"
-                  targetfile="${build.sql.scarab}/${scarab.database.type}/${project}.sql">
-            <srcfiles dir="${src.schema.dir}" includes="turbine-schema.xml"/>
-            <srcfiles dir="${src.schema.dir}" includes="id-table-schema.xml"/>
-            <srcfiles dir="${src.schema.dir}" includes="${project}-schema.xml"/>
-            <srcfiles dir="${user.home}" includes="scarab.build.properties"/>
-            <srcfiles dir="${user.home}" includes="build.properties"/>
-            <srcfiles dir="${basedir}" includes="${configuration.file}"/>
-        </uptodate>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Generate SQL from Torque for all databases                         -->
-    <!-- ================================================================== -->
-    <target name="sql-all" depends="schema-check" description="Generate SQL DDL for all databases"
-            unless="schema.uptodate">
-        <antcall target="sql-specific-db">
-            <param name="generatesql.database.type" value="mysql"/>
-        </antcall>
-        <antcall target="sql-specific-db">
-            <param name="generatesql.database.type" value="mssql"/>
-        </antcall>
-        <antcall target="sql-specific-db">
-            <param name="generatesql.database.type" value="oracle"/>
-        </antcall>
-        <antcall target="sql-specific-db">
-            <param name="generatesql.database.type" value="db2"/>
-        </antcall>
-        <antcall target="sql-specific-db">
-            <param name="generatesql.database.type" value="hypersonic"/>
-        </antcall>
-        <antcall target="sql-specific-db">
-            <param name="generatesql.database.type" value="postgresql"/>
-        </antcall>
-    </target>
-    
-    <!-- ================================================================== -->
     <!-- Generate SQL from Torque for a specified database type. Set the    -->
     <!-- generatesql.database.type property when calling this target to     -->
     <!-- specify the required database type.                                -->
@@ -465,24 +424,6 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Test to make sure the database connection works                    -->
-    <!-- ================================================================== -->
-    <target name="test-db-connection" depends="sql-current-db">
-        <echo message="Connecting to ${scarab.database.type} at ${scarab.database.url}"/>
-        <sql
-            driver="${scarab.database.jdbc.driver}"
-            url="${scarab.database.url}"
-            userid="${scarab.database.username}"
-            password="${scarab.database.password}">
-            <classpath refid="classpath"/>
-        CREATE TABLE scarab_test (
-          scarab_test integer
-        );
-        drop table scarab_test;
-        </sql>
-    </target>
-
-    <!-- ================================================================== -->
     <!-- Create database if not bypassed in "db-type-check"                 -->
     <!-- ================================================================== -->
     <target name="create-db-schema" depends="db-type-check,prepare,sql-current-db" 
@@ -592,148 +533,6 @@
     <!-- ================================================================== -->
     <target name="create-db" depends="load-seed-data"/>
 
-    <!-- ================================================================== -->
-    <!-- Create database if not bypassed in "db-type-check"                 -->
-    <!-- ================================================================== -->
-    <target name="create-test-db-schema" depends="db-type-check,sql-current-db,prepare" 
-            if="auto.create.db">
-
-        <copy file="${src.sql.dir}/create-${scarab.database.type}-db.sql" 
-              todir="${build.src.scarab}"
-              filtering="true" overwrite="true"/>
-        <echo message="Connecting to ${scarab.database.type} at ${scarab.database.admin.url}"/>
-        <sql
-            driver="${scarab.database.jdbc.driver}"
-            url="${scarab.test.database.url}"
-            userid="${scarab.test.database.username}"
-            password="${scarab.test.database.password}">
-            <classpath refid="classpath"/>
-            <transaction 
-                src="${build.src.scarab}/create-${scarab.database.type}-db.sql"/>
-        </sql>
-
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Load test default data                                             -->
-    <!-- ================================================================== -->
-    <target name="load-test-default-data" depends="create-test-db-schema, prepare">
-
-        <!-- Oracle does not have any type of conditional execution    -->
-        <!-- of "drop table".  So when running the table creation,     -->
-        <!-- it fails when dropping a table.  Rather than setting the  -->
-        <!-- onerror of the actual creation class to "continue", this  -->
-        <!-- pre-creates dummy tables (ignoring any errors if the      -->
-        <!-- tables already exist) so that they can be dropped.        -->
-        <sql
-            rdbms="oracle"
-            onerror="continue"
-            driver="${scarab.database.jdbc.driver}"
-            url="${scarab.test.database.url}"
-            userid="${scarab.test.database.username}"
-            password="${scarab.test.database.password}">
-            <classpath refid="classpath"/>
-            <transaction 
-                src="${build.sql.scarab}/prepare-oracle-dummy-tables.sql"/>
-        </sql>
-
-
-        <echo message=
-            "Connecting to ${scarab.database.type} at ${scarab.test.database.url}"/>
-        <sql
-            driver="${scarab.database.jdbc.driver}"
-            url="${scarab.test.database.url}"
-            userid="${scarab.test.database.username}"
-            password="${scarab.test.database.password}">
-            <classpath refid="classpath"/>
-            <transaction src="${build.sql.scarab}/standard-${scarab.database.type}-init.sql"/>
-
-            <transaction src="${build.sql.scarab}/${scarab.database.type}/turbine.sql"/>
-            <transaction src="${build.sql.scarab}/${scarab.database.type}/${project}.sql"/>
-            <transaction src="${build.sql.scarab}/${scarab.database.type}/id-table.sql"/>
-            <transaction src="${build.sql.scarab}/turbine-id-table-init.sql"/>
-            <transaction src="${build.sql.scarab}/${project}-id-table-init.sql"/>
-            <transaction src="${build.sql.scarab}/${project}-required-data.sql"/>
-            <transaction src="${build.sql.scarab}/${project}-default-data.sql"/>
-            <transaction src="${build.sql.scarab}/${project}-security.sql"/>
-        </sql>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Load test seed data                                                -->
-    <!-- ================================================================== -->
-    <target name="load-test-seed-data" depends="load-test-default-data">
-        <sql
-            driver="${scarab.database.jdbc.driver}"
-            url="${scarab.test.database.url}"
-            userid="${scarab.test.database.username}"
-            password="${scarab.test.database.password}">
-            <classpath refid="classpath"/>
-            <transaction src="${build.sql.scarab}/standard-${scarab.database.type}-init.sql"/>
-      <transaction src="${build.sql.scarab}/${project}-sample-data.sql"/>
-        </sql>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Create test DB from Torque                                              -->
-    <!-- ================================================================== -->
-    <target name="create-test-db" depends="load-test-seed-data"/>
-
-    <!-- ================================================================== -->
-    <!-- Generate Data DTD from Torque                                      -->
-    <!-- ================================================================== -->
-    <target name="datadtd-check">
-        <echo message="checking: ${src.sql.dir}/${project}-data.dtd"/>
-        <uptodate property="datadtd.uptodate"
-            targetfile="${src.sql.dir}/${project}-data.dtd">
-            <srcfiles dir="${src.schema.dir}" includes="scarab-schema.xml"/>
-        </uptodate>
-    </target>
-
-    <target name="datadtd" depends="datadtd-check,compile"
-            unless="datadtd.uptodate">
-        <copy file="${src.schema.dir}/${project}-schema.xml"
-              todir="${torque.dir.scarab}/schema"/>
-        <copy file="${src.conf.dir}/torque.props"
-              overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
-        <ant antfile="build-torque.xml"
-             target="datadtd" inheritAll="false">
-            <property name="torque.home" value="${torque.dir.scarab}"/>
-            <property name="databaseName" value="default"/>
-            <property name="lib.dir" value="${build.project.webinf.lib}"/>
-            <property name="build.properties" value="${torque.dir.scarab}/build.properties"/>
-        </ant>
-
-        <echo message="${src.java.dir.scarab}/${project}-data.dtd"/>
-        <echo message="${src.sql.dir}/${project}-data.dtd"/>
-
-        <copy file="${src.dir}/conf/classes/org/tigris/scarab/scarab.dtd"
-            tofile="${src.sql.dir}/${project}-data.dtd"/>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Generate SQL from data XML                                         -->
-    <!-- ================================================================== -->
-    <target name="datasql" depends="prepare,datadtd,compile">
-        <copy file="${src.schema.dir}/${project}-schema.xml"
-            todir="${torque.dir.scarab}/schema"/>
-        <copy file="${src.schema.dir}/${project}-data.xml"
-            todir="${torque.dir.scarab}/schema"/>
-        <copy file="${src.schema.dir}/${project}-data.dtd"
-            todir="${torque.dir.scarab}/schema"/>
-        <copy file="${src.conf.dir}/torque.props" overwrite="true"
-            tofile="${torque.dir.scarab}/build.properties"
-      filtering="true"/>
-        <ant antfile="build-torque.xml"
-            target="datasql" inheritAll="false">
-            <property name="torque.home" value="${torque.dir.scarab}"/>
-            <property name="lib.dir" value="${build.project.webinf.lib}"/>
-            <property name="build.properties" value="${torque.dir.scarab}/build.properties"/>
-        </ant>
-        <move file="${src.java.dir.scarab}/${project}-data.sql"
-            tofile="${src.sql.dir}/${project}-data.sql"/>
-    </target>
-
     <target name="check-ant-version">
       <condition property="can.compile">
         <contains string="${ant.version}" substring="1.5."/>
@@ -778,17 +577,6 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Deploys Scarab into the bundled Tomcat                             -->
-    <!-- ================================================================== -->
-    <target name="deploy" depends="compile">
-        <copy todir="${tomcat.dir}/webapps" filtering="no">
-            <fileset dir="${build.dir}">
-                <include name="scarab/**"/>
-            </fileset>
-        </copy>
-    </target>
-    
-    <!-- ================================================================== -->
     <!-- Cleans up the build directory                                      -->
     <!-- ================================================================== -->
     <target name="clean" depends="prepare-build-dir, remove-generation">
@@ -818,69 +606,6 @@
         </delete>
     </target>
 
-    <!-- ================================================================== -->
-    <!-- Package (creates a .zip and .tar.gz)                               -->
-    <!-- ================================================================== -->
-    <target name="package" depends="package-zip,package-tgz">
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Packages the distribution with ZIP                                 -->
-    <!-- ================================================================== -->
-    <target name="package-zip" depends="dist">
-        <delete file="../${final.name}.zip" quiet="true" />
-        <zip zipfile="../${final.name}.zip" 
-             basedir="../" includes="**/${final.name}/**"/>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Packages the distribution with TAR-GZIP                            -->
-    <!-- ================================================================== -->
-    <target name="package-tgz" depends="dist">
-        <delete file="../${final.name}.tar" quiet="true"/>
-        <delete file="../${final.name}.tar.gz" quiet="true" />
-        <tar longfile="gnu" tarfile="../${final.name}.tar" 
-             basedir="../" includes="**/${final.name}/**"/>
-        <gzip zipfile="../${final.name}.tar.gz" 
-                  src="../${final.name}.tar"/>
-        <delete file="../${final.name}.tar"/>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Creates the Binary distribution directory                          -->
-    <!-- ================================================================== -->
-    <target name="dist">
-        <delete dir="${final.dir}" quiet="true" />
-        <mkdir dir="${final.dir}"/>
-
-        <copy todir="${final.dir}" preservelastmodified="true"
-              includeEmptyDirs="false">
-            <fileset dir="../">
-                <exclude name="**/build/nightly.sh"/>
-                <exclude name="**/build/run-tests*"/>
-                <exclude name="**/build/velocity.log*"/>
-                <exclude name="**/lib/jakarta-turbine-*.gz"/>
-                <exclude name="**/src/sql/${scarab.database.type}-scarab.sql"/>
-                <exclude name="**/src/sql/report.scarab.sql.generation"/>
-                <exclude name="**/src/sql/project-schema.sql"/>
-                <exclude name="**/src/sql/sqldb.map"/>
-                <exclude name="**/src/sql/id-table-schema.sql"/>
-                <exclude name="**/src/sql/*.DM1"/>
-                <exclude name="**/src/sql/*.jpg"/>
-                <exclude name="**/src/sql/schema-design-notes.txt"/>
-                <exclude name="**/src/sql/sql_questions.txt"/>
-                <exclude name="**/src/test/**"/>
-                <exclude name="**/target/**"/>
-                <exclude name="**/www/**"/>
-            </fileset>
-            <fileset dir="../">
-              <include name="www/repository/**"/>
-            </fileset>
-        </copy>     
-
-    </target>
-
-   
 
     <!-- ================================================================== -->
     <!-- Create a war file                                                  -->
@@ -907,80 +632,6 @@
 <!-- ============================================================= -->
 
 
-
-    <!-- ================================================================== -->
-    <!-- Creates the Torque documentation                                   -->
-    <!-- ================================================================== -->
-    <target name="datadoc" depends="sql-current-db">
-        <mkdir dir="${torquedoc.destdir}"/>
-
-        <antcall target="torque-copy-all-schema" />
-
-        <ant antfile="build-torque.xml"
-           target="doc">
-            <property name="torque.home" value="${torque.dir.scarab}"/>
-            <property name="lib.dir" value="${build.project.webinf}/lib"/>
-            <property name="build.properties"
-                      value="${torque.dir.scarab}/build.properties"/> 
-            <property name="torque.doc.dir"
-                      value="${torquedoc.destdir}"/> 
-        </ant>
-    </target>
-    
-
-    <!-- ================================================================== -->
-    <!-- Dump data from DB into xml                                         -->
-    <!-- ================================================================== -->
-    <target name="datadump" depends="sql-current-db,compile">
-        <ant antfile="build-torque.xml"
-            target="datadump">
-            <property name="torque.home" value="${torque.dir.scarab}"/>
-            <property name="lib.dir" value="${build.project.webinf}/lib"/>
-            <property name="build.properties"
-                      value="${torque.dir.scarab}/build.properties"/> 
-            <property name="torque.output.dir" value="${src.sql.dir}"/> 
-            <property name="torque.database.driver"
-                value="${scarab.database.jdbc.driver}"/>
-            <property name="torque.database.url"
-                value="${scarab.database.url}"/>
-            <property name="torque.database.user"
-                value="${scarab.database.username}"/>
-            <property name="torque.database.password"
-                value="${scarab.database.password}"/>
-        </ant>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Generates an Html description of the DB schema                     -->
-    <!-- This should be integrated with torque, so effort to integrate      -->
-    <!-- into the build has not been done                                   -->
-    <!-- ================================================================== -->
-    <target name="html-schema">
-        <echo message="This task expects you to have xalan-j_2_3_1 binary
-                       distribution located at ${lib.repo}/xalan-j_2_3_1"/>
-        <java classname="org.apache.xalan.xslt.Process" fork="yes"
-              args="-XSL ${src.dir}/dtd/XMLSchemaToHTML.xsl 
-                    -IN  ${src.schema.dir}/scarab-schema.xml 
-                    -OUT ${src.sql.dir}/scarab-schema.html">
-           <!-- it seems ant is treating these as jvmarg ??
-           <arg value="-XSL ${src.dir}/dtd/XMLSchemaToHTML.xsl"/>
-           <arg value="-IN  ${src.sql.dir}/scarab-schema.xml"/>
-           <arg value="-OUT ${src.sql.dir}/scarab-schema.html"/>
-           -->
-           <classpath>
-               <fileset dir="${lib.repo}/xalan-j_2_3_1/bin">
-                   <include name="xalan.jar"/>
-                   <include name="xml-apis.jar"/>
-                   <include name="xercesImpl.jar"/>
-               </fileset>
-           </classpath>
-        </java>
-
-        <copy file="${src.sql.dir}/scarab-schema.html"
-            tofile="${www.dir}/generated-scarab-schema.html"/>
-
-    </target>
-
     <!-- Remove any torque *.generation files.  This forces torque to rebuild. -->
     <target name="remove-generation">
         <delete file="${src.sql.dir}/report.scarab.sql.generation"/>
@@ -989,111 +640,4 @@
         <!-- delete file="${torque.dir.scarab}/report.scarab.om.generation"/-->
     </target>
 
-    <!-- ================================================================== -->
-    <!-- Complete buld of all components (for testing changes to build.xml) -->
-    <!-- ================================================================== -->
-    <target name="test-complete-build">
-        <antcall target="clean"/>
-        <antcall target="compile"/>
-        <antcall target="datadtd"/>
-        <antcall target="datadoc"/>
-        <antcall target="war"/>
-        <antcall target="dist"/>
-    </target>
-    
-    <!-- ================================================================== -->
-    <!--    Task to migrate build properties from b18 to b19.               -->
-    <!--                                                                    -->
-    <!--    WARNING! This will overwrite the following files:               -->
-    <!--                                                                    -->
-    <!--      src/conf/conf/CustomSettings.properties                       -->
-    <!--      src/conf/conf/intake.xml                                      -->
-    <!--      src/webapp/WEB-INF/web.xml                                    -->
-    <!--      tomcat/conf/server.xml                                        -->
-    <!-- ================================================================== -->
-    <target name="migrate-b18-b19"
-            description="Migrates b18 properties to the equivalents for b19">
-        <!-- Copy the tomcat configuration to the required place -->
-        <filter token="TOMCAT_HTTP_PORT" value="${scarab.tomcat.http.port}"/>
-        <filter token="TOMCAT_SHUTDOWN_PORT" value="${scarab.tomcat.shutdown.port}"/>
-        <filter token="TOMCAT_PROXY_NAME" value="${scarab.tomcat.proxy.name}"/>
-        <filter token="TOMCAT_PROXY_PORT" value="${scarab.tomcat.proxy.port}"/>
-        <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
-        <filter token="SCARAB_WEBAPP_RELOADABLE" value="${scarab.webapp.reloadable}"/>
-        <filter token="SCARAB_WEBAPP_CHECK_INTERVAL" value="${scarab.webapp.checkInterval}"/>
-        
-        <copy file="server.xml.tmpl"
-              tofile="${tomcat.dir}/conf/server.xml"
-              filtering="yes"
-              overwrite="yes"/>
-        
-        <!-- Copy the webapp configuration to the required place -->
-        <filter token="SCARAB_WELCOME_FILE" value="${scarab.welcome.file}"/>
-        
-        <copy file="web.xml.tmpl"
-              tofile="${src.webinf.dir}/web.xml"
-              filtering="yes"
-              overwrite="yes"/>
-        
-        <!-- Copy the intake service configuration to the required place -->
-        <filter token="FILE_UPLOAD_MAX_SIZE" value="${scarab.file.max.size}"/>
-        
-        <copy file="intake.xml.tmpl"
-              tofile="${src.conf.dir}/conf/intake.xml"
-              filtering="yes"
-              overwrite="yes"/>
-        
-        <!-- Compile the migration task -->        
-        <mkdir dir="${migration.dest.dir}"/>
-        <javac srcdir="${src.dir}/migration"
-               destdir="${migration.dest.dir}"
-               excludes="**/package.html,torque/**">
-            <classpath refid="classpath"/>
-        </javac>
-
-        <!-- Configure the migration task -->
-        <path id="migration-cp">
-            <pathelement location="${migration.dest.dir}"/>
-        </path>
-
-        <taskdef name="b18-b19" 
-                 classname="org.tigris.scarab.migration.b18b19.MigrateProperties">
-            <classpath refid="migration-cp"/>
-        </taskdef>
-
-        <!-- Run the migration task -->
-        <b18-b19 output="${src.conf.dir}/conf/CustomSettings.properties"/>
-    </target>
-
-    <target name="migrate-b15-b16" depends="prepare">
-        <path id="migration-cp">
-          <path refid="classpath"/>
-          <pathelement location="${migration.dest.dir}"/>
-        </path>
-
-        <mkdir dir="${migration.dest.dir}"/>
-        <javac srcdir="${src.dir}/migration"
-            destdir="${migration.dest.dir}"
-            excludes="**/package.html,torque/**"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}">
-
-            <classpath refid="classpath"/>
-        </javac>
-
-      <taskdef name="b15b16-1" 
-       classname="org.tigris.scarab.migration.b15b16.DB_1_MoveIssueCreateInfo">
-       <classpath refid="migration-cp"/>
-      </taskdef>
-
-        <b15b16-1
-            driver="${scarab.database.jdbc.driver}"
-            url="${scarab.database.url}"
-            userid="${scarab.database.admin.username}"
-            password="${scarab.database.admin.password}">
-            <classpath refid="migration-cp"/>
-        </b15b16-1>
-
-    </target>
 </project>
