@@ -61,7 +61,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -415,6 +415,11 @@ public class JDBCStoreManager implements EntityPersistenceStore
       readAheadCache = null;
       queryManager.clear();
       queryManager = null;
+      //Remove proxy from proxy map so UnifiedClassloader may be released
+      if (createBeanClassInstanceCommand != null) 
+      {
+         createBeanClassInstanceCommand.destroy();
+      } // end of if ()
    }
 
    //

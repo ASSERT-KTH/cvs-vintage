@@ -14,7 +14,7 @@ import org.jboss.util.NestedRuntimeException;
 /**
  * A factory for creating proxy objects.
  *      
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  * @author Unknown
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -52,5 +52,11 @@ public class Proxy
          throw new NestedRuntimeException("Failed to create new proxy target", e);
       }
    }
+
+   public static void forgetProxyForClass(Class clazz)
+   {
+      Proxies.forgetProxyForClass(clazz);
+   }
+
 }
 

@@ -21,7 +21,7 @@ import java.util.Hashtable;
  * Routines for converting between strongly-typed interfaces and
  * generic InvocationHandler objects.
  *
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  * @author Unknown
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -230,6 +230,11 @@ public final class Proxies
    {
       return Impl.getImpl(targetTypes).copyMethods();
    }
+
+   public static void forgetProxyForClass(Class clazz)
+   {
+      Impl.forgetProxyForClass(clazz);
+   }
    
    /**
     * ???
@@ -306,6 +311,24 @@ public final class Proxies
          return impl;
       }
       
+      /**
+       * The <code>forgetProxyForClass</code> method removes the impl from the 
+       * class-impl map.  This releases the UnifiedClassloader used to load the 
+       * class we are constructing the proxy for.
+       *
+       * This may not work if the original class[] contained many classes, but
+       * seems OK with one class + Serializable, which is what is used by the cmp2
+       * engine.  At present the cmp2 engine is the only caller of this method 
+       * (through Proxy).
+       *
+       * @param clazz a <code>Class</code> value
+       */
+      static synchronized void forgetProxyForClass(Class clazz)
+      {
+         impls.remove(clazz);
+      }
+
+
       // do the arrays have the same elements?
       // (duplication and reordering are ignored)
       static boolean sameTypes(Class tt1[], Class tt2[])

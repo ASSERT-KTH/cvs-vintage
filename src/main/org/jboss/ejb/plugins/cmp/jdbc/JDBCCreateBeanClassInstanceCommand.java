@@ -24,7 +24,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  * <FIX-ME>should not generat a subclass for ejb 1.1</FIX-ME>
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
  
 public class JDBCCreateBeanClassInstanceCommand {
@@ -57,6 +57,11 @@ public class JDBCCreateBeanClassInstanceCommand {
       
       // now create one to make sure everything is cool
       execute();
+   }
+
+   public void destroy()
+   {
+      Proxy.forgetProxyForClass(beanClass);
    }
    
    public Object execute() throws Exception
