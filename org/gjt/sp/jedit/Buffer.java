@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.214 2004/03/28 00:07:26 spestov Exp $
+ * @version $Id: Buffer.java,v 1.215 2004/05/24 19:18:32 spestov Exp $
  */
 public class Buffer
 {
@@ -135,7 +135,7 @@ public class Buffer
 	{
 		if(getFlag(DIRTY))
 		{
-			String[] args = { name };
+			String[] args = { path };
 			int result = GUIUtilities.confirm(view,"changedreload",
 				args,JOptionPane.YES_NO_OPTION,
 				JOptionPane.WARNING_MESSAGE);

@@ -68,7 +68,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.72 2004/03/28 00:07:26 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.73 2004/05/24 19:18:32 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -810,7 +810,10 @@ loop:		for(int i = 0; i < str.length(); i++)
 				buf.append(".*");
 				break;
 			case '|':
-				buf.append("\\|");
+				if(backslash)
+					buf.append("\\|");
+				else
+					buf.append('|');
 				break;
 			case '{':
 				buf.append('(');
