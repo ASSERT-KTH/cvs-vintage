@@ -1,4 +1,4 @@
-// $Id: ActionNewPseudoState.java,v 1.6 2004/11/01 19:55:04 mvw Exp $
+// $Id: ActionNewPseudoState.java,v 1.7 2004/12/04 13:50:10 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.StateMachinesFactory;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
 /**
@@ -38,14 +40,26 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
  */
 public class ActionNewPseudoState extends AbstractActionNewModelElement {
 
-    private static ActionNewPseudoState singleton = new ActionNewPseudoState();
+    private Object kind; 
     
     /**
      * Constructor for ActionNewPseudoState.
      */
-    protected ActionNewPseudoState() {
+    public ActionNewPseudoState() {
         super();
         putValue(Action.NAME, Translator.localize("button.new-pseudostate"));
+    }
+    
+    /**
+     * The constructor.
+     * 
+     * @param k the pseudostate kind
+     * @param n the to be localized name for the pseudostate kind
+     */
+    public ActionNewPseudoState(Object k, String n) {
+        this();
+        kind = k;
+        putValue(Action.NAME, Translator.localize(n));
     }
 
     /**
@@ -53,15 +67,11 @@ public class ActionNewPseudoState extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        StateMachinesFactory.getFactory().buildPseudoState(getTarget());
+        Object target = TargetManager.getInstance().getModelTarget();
+        Object ps = 
+            StateMachinesFactory.getFactory().buildPseudoState(target);
+        if (kind != null) {
+            ModelFacade.setKind(ps, kind);
+        }
     }
-
-    /**
-     * @return Returns the singleton.
-     */
-    public static ActionNewPseudoState getSingleton() {
-        return singleton;
-    }
-    
-
 }

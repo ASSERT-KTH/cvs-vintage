@@ -1,4 +1,4 @@
-// $Id: PropPanelCompositeState.java,v 1.21 2004/12/03 18:55:08 mvw Exp $
+// $Id: PropPanelCompositeState.java,v 1.22 2004/12/04 13:50:10 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,12 +90,11 @@ public class PropPanelCompositeState extends PropPanelState {
 
         addField(Translator.localize("label.subvertex"), 
                 new JScrollPane(subverticesList));
-
     }
 
     /**
      * Initialize the panel with its specific fields, in casu 
-     * the substate vertex list
+     * the substate vertex list.
      */
     protected void initialize() {
 	subverticesList = new UMLCompositeStateSubvertexList(

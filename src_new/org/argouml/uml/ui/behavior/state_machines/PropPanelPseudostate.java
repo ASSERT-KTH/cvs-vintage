@@ -1,4 +1,4 @@
-// $Id: PropPanelPseudostate.java,v 1.28 2004/10/14 05:48:19 linus Exp $
+// $Id: PropPanelPseudostate.java,v 1.29 2004/12/04 13:50:10 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,26 +75,33 @@ public class PropPanelPseudostate extends PropPanelStateVertex {
         if (ModelFacade.isAPseudostate(o)) {
             Object kind = ModelFacade.getPseudostateKind(o);
             if (ModelFacade.equalsPseudostateKind(kind,
-                    ModelFacade.FORK_PSEUDOSTATEKIND))
-                    getTitleLabel().setText("Fork State");
+                ModelFacade.FORK_PSEUDOSTATEKIND))
+                getTitleLabel().setText(
+                    Translator.localize("label.pseudostate.fork"));
             if (ModelFacade.equalsPseudostateKind(kind,
-                    ModelFacade.JOIN_PSEUDOSTATEKIND))
-                    getTitleLabel().setText("Join State");
+                ModelFacade.JOIN_PSEUDOSTATEKIND))
+                getTitleLabel().setText(
+                    Translator.localize("label.pseudostate.join"));
             if (ModelFacade.equalsPseudostateKind(kind,
-                    ModelFacade.BRANCH_PSEUDOSTATEKIND))
-                    getTitleLabel().setText("Choice State");
+                ModelFacade.BRANCH_PSEUDOSTATEKIND))
+                getTitleLabel().setText(
+                    Translator.localize("label.pseudostate.choice"));
             if (ModelFacade.equalsPseudostateKind(kind,
-                    ModelFacade.DEEPHISTORY_PSEUDOSTATEKIND))
-                    getTitleLabel().setText("Deep History State");
+                ModelFacade.DEEPHISTORY_PSEUDOSTATEKIND))
+                getTitleLabel().setText(
+                    Translator.localize("label.pseudostate.deephistory"));
             if (ModelFacade.equalsPseudostateKind(kind,
-                    ModelFacade.SHALLOWHISTORY_PSEUDOSTATEKIND))
-                    getTitleLabel().setText("Shallow History State");
+                ModelFacade.SHALLOWHISTORY_PSEUDOSTATEKIND))
+                getTitleLabel().setText(
+                    Translator.localize("label.pseudostate.shallowhistory"));
             if (ModelFacade.equalsPseudostateKind(kind,
-                    ModelFacade.INITIAL_PSEUDOSTATEKIND))
-                    getTitleLabel().setText("Initial State");
+                ModelFacade.INITIAL_PSEUDOSTATEKIND))
+                getTitleLabel().setText(
+                    Translator.localize("label.pseudostate.initial"));
             if (ModelFacade.equalsPseudostateKind(kind,
-                    ModelFacade.JUNCTION_PSEUDOSTATEKIND))
-                    getTitleLabel().setText("Junction State");
+                ModelFacade.JUNCTION_PSEUDOSTATEKIND))
+                getTitleLabel().setText(
+                    Translator.localize("label.pseudostate.junction"));
         }
 
     }
