@@ -185,12 +185,7 @@
              directory.  -->
 
         <!-- Tomcat Root Context -->
-        <!--
-          <Context path="" docBase="ROOT" debug="0"/>
-        -->
-
-        <Context path="/@SCARAB_CONTEXT@" docBase="scarab" reloadable="true" 
-                 debug="0">
+        <Context path="" docBase="@SCARAB_CONTEXT@" debug="0">
            <Logger className="org.apache.catalina.logger.FileLogger"
                      prefix="@SCARAB_CONTEXT@_log." suffix=".txt"
                   timestamp="true"/>
