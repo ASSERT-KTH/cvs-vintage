@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.35 2001/06/13 21:28:28 mmanders Exp $
+/* $Id: Main.java,v 1.36 2001/07/16 01:09:07 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -109,7 +109,7 @@ import org.apache.tomcat.util.compat.Jdk11Compat;
 	@author Costin Manolache
 	@author Ignacio J. Ortega
 	@author Mel Martinez mmartinez@g1440.com
-	@version $Revision: 1.35 $ $Date: 2001/06/13 21:28:28 $
+	@version $Revision: 1.36 $ $Date: 2001/07/16 01:09:07 $
  */
 public class Main{
 
@@ -274,6 +274,7 @@ public class Main{
             ClassLoader serverCl=
                     jdk11Compat.newClassLoaderInstance(serverClassPath ,
 						       commonCl);
+	    jdk11Compat.setContextClassLoader( serverCl );
 
 	    // Create the webapps class loader --------------------
             Vector appsJars = new Vector();
