@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.42 2001/12/06 02:16:10 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.43 2001/12/08 04:40:46 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -493,6 +493,7 @@
     <!-- Build jboss-boot.jar -->
     <jar jarfile="${build.lib}/jboss-boot.jar">
       <fileset dir="${build.classes}">
+        <include name="org/jboss/system/BootstrapLogger.class"/>
         <include name="org/jboss/system/URLClassLoader.class"/>
         <include name="org/jboss/system/URLClassLoaderMBean.class"/>
         <include name="org/jboss/system/MBeanClassLoader.class"/>
