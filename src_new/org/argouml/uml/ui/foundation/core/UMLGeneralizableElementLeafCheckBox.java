@@ -1,4 +1,4 @@
-// $Id: UMLGeneralizableElementLeafCheckBox.java,v 1.4 2003/09/06 01:43:56 bobtarling Exp $
+// $Id: UMLGeneralizableElementLeafCheckBox.java,v 1.5 2003/11/25 11:38:55 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,8 @@
 package org.argouml.uml.ui.foundation.core;
 
 
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.application.api.Argo;
 import org.argouml.uml.ui.UMLCheckBox2;
 
 /**
@@ -43,7 +43,7 @@ public class UMLGeneralizableElementLeafCheckBox extends UMLCheckBox2 {
      * @param propertySetName
      */
     public UMLGeneralizableElementLeafCheckBox() {
-        super(Argo.localize("UMLMenu", "label.leaf"), ActionSetGeneralizableElementLeaf.SINGLETON, "isLeaf");
+        super(Translator.localize("UMLMenu", "label.leaf"), ActionSetGeneralizableElementLeaf.SINGLETON, "isLeaf");
     }
 
     /**

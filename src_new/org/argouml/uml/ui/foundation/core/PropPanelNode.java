@@ -1,4 +1,4 @@
-// $Id: PropPanelNode.java,v 1.24 2003/09/08 00:36:41 bobtarling Exp $
+// $Id: PropPanelNode.java,v 1.25 2003/11/25 11:38:55 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: PropPanelNode.java
 // Classes: PropPanelNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNode.java,v 1.24 2003/09/08 00:36:41 bobtarling Exp $
+// $Id: PropPanelNode.java,v 1.25 2003/11/25 11:38:55 jhraigniac Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -45,7 +45,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 import org.argouml.uml.ui.PropPanelButton;
@@ -69,19 +69,19 @@ public class PropPanelNode extends PropPanelClassifier {
 
         Class mclass = (Class) ModelFacade.NODE;
 
-        addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
+        addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
 
         addField("Generalizations:", getGeneralizationScroll());
 
-        addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
 
         JPanel modifiersPanel = new JPanel(new GridLayout(0, 3));
-        modifiersPanel.add(new UMLCheckBox(Argo.localize("UMLMenu", "checkbox.abstract-lc"), this, new UMLReflectionBooleanProperty("isAbstract", mclass, "isAbstract", "setAbstract")));
-        modifiersPanel.add(new UMLCheckBox(Argo.localize("UMLMenu", "checkbox.final-lc"), this, new UMLReflectionBooleanProperty("isLeaf", mclass, "isLeaf", "setLeaf")));
+        modifiersPanel.add(new UMLCheckBox(Translator.localize("UMLMenu", "checkbox.abstract-lc"), this, new UMLReflectionBooleanProperty("isAbstract", mclass, "isAbstract", "setAbstract")));
+        modifiersPanel.add(new UMLCheckBox(Translator.localize("UMLMenu", "checkbox.final-lc"), this, new UMLReflectionBooleanProperty("isLeaf", mclass, "isLeaf", "setLeaf")));
         modifiersPanel.add(new UMLCheckBox(localize("root"), this, new UMLReflectionBooleanProperty("isRoot", mclass, "isRoot", "setRoot")));
-        addField(Argo.localize("UMLMenu", "label.modifiers"), modifiersPanel);
+        addField(Translator.localize("UMLMenu", "label.modifiers"), modifiersPanel);
 
-        addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
+        addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
         addField("Specializations:", getSpecializationScroll());
 
@@ -89,9 +89,9 @@ public class PropPanelNode extends PropPanelClassifier {
 
         JList compList = new UMLList(new UMLReflectionListModel(this, "component", true, "getResidents", "setResidents", null, null), true);
         compList.setForeground(Color.blue);
-        addField(Argo.localize("UMLMenu", "label.components"), new JScrollPane(compList));
+        addField(Translator.localize("UMLMenu", "label.components"), new JScrollPane(compList));
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateUp", null);
+        new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
         new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete node"), "removeElement", null);
     }
 

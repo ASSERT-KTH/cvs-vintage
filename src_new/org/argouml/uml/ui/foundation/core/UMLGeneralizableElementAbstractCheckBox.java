@@ -1,4 +1,4 @@
-// $Id: UMLGeneralizableElementAbstractCheckBox.java,v 1.3 2003/09/06 01:43:56 bobtarling Exp $
+// $Id: UMLGeneralizableElementAbstractCheckBox.java,v 1.4 2003/11/25 11:38:55 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,11 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLGeneralizableElementAbstractCheckBox.java,v 1.3 2003/09/06 01:43:56 bobtarling Exp $
+// $Id: UMLGeneralizableElementAbstractCheckBox.java,v 1.4 2003/11/25 11:38:55 jhraigniac Exp $
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.application.api.Argo;
 import org.argouml.uml.ui.UMLCheckBox2;
 
 /**
@@ -43,7 +43,7 @@ public class UMLGeneralizableElementAbstractCheckBox extends UMLCheckBox2 {
      * @param propertySetName
      */
     public UMLGeneralizableElementAbstractCheckBox() {
-        super(Argo.localize("UMLMenu", "label.abstract"), ActionSetGeneralizableElementAbstract.SINGLETON, "isAbstract");
+        super(Translator.localize("UMLMenu", "label.abstract"), ActionSetGeneralizableElementAbstract.SINGLETON, "isAbstract");
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndAggregationRadioButtonPanel.java,v 1.4 2003/10/26 16:40:03 alexb Exp $
+// $Id: UMLAssociationEndAggregationRadioButtonPanel.java,v 1.5 2003/11/25 11:38:55 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndAggregationRadioButtonPanel.java,v 1.4 2003/10/26 16:40:03 alexb Exp $
+// $Id: UMLAssociationEndAggregationRadioButtonPanel.java,v 1.5 2003/11/25 11:38:55 jhraigniac Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
@@ -42,9 +42,9 @@ public class UMLAssociationEndAggregationRadioButtonPanel extends UMLRadioButton
     private static Map labelTextsAndActionCommands = new HashMap();
 
     static {
-        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.aggregationkind-aggregate"), ActionSetAssociationEndAggregation.AGGREGATE_COMMAND);
-        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.aggregationkind-composite"), ActionSetAssociationEndAggregation.COMPOSITE_COMMAND);
-        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.aggregationkind-none"), ActionSetAssociationEndAggregation.NONE_COMMAND);
+        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", "label.aggregationkind-aggregate"), ActionSetAssociationEndAggregation.AGGREGATE_COMMAND);
+        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", "label.aggregationkind-composite"), ActionSetAssociationEndAggregation.COMPOSITE_COMMAND);
+        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", "label.aggregationkind-none"), ActionSetAssociationEndAggregation.NONE_COMMAND);
     }
 
     /**

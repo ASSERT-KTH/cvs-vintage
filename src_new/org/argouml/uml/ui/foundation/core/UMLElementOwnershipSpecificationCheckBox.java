@@ -1,4 +1,4 @@
-// $Id: UMLElementOwnershipSpecificationCheckBox.java,v 1.7 2003/09/06 01:43:56 bobtarling Exp $
+// $Id: UMLElementOwnershipSpecificationCheckBox.java,v 1.8 2003/11/25 11:38:55 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,8 @@
 // $header$
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.application.api.Argo;
 import org.argouml.uml.ui.UMLCheckBox2;
 
 /**
@@ -42,7 +42,7 @@ public class UMLElementOwnershipSpecificationCheckBox extends UMLCheckBox2 {
      * @param a
      */
     public UMLElementOwnershipSpecificationCheckBox() {
-        super(Argo.localize("UMLMenu", "label.specialization"), 
+        super(Translator.localize("UMLMenu", "label.specialization"), 
             ActionSetElementOwnershipSpecification.SINGLETON, 
             "isSpecification");
     }

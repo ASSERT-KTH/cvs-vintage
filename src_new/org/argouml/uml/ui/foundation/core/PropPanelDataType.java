@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.34 2003/10/26 16:40:03 alexb Exp $
+// $Id: PropPanelDataType.java,v 1.35 2003/11/25 11:38:55 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import java.util.Iterator;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
@@ -57,30 +57,30 @@ public class PropPanelDataType extends PropPanelClassifier {
 
         Class mclass = (Class)ModelFacade.DATATYPE;
 
-        addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
-        addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
-        addField(Argo.localize("UMLMenu", "label.modifiers"), _modifiersPanel);
+        addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
+        addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
+        addField(Translator.localize("UMLMenu", "label.modifiers"), _modifiersPanel);
 
         addSeperator();
 
         addField("Generalizations:", getGeneralizationScroll());
         addField("Specializations:", getSpecializationScroll());
-        addField(Argo.localize("UMLMenu", "label.dependency"), getSupplierDependencyScroll());
+        addField(Translator.localize("UMLMenu", "label.dependency"), getSupplierDependencyScroll());
 
         addSeperator();
 
-        addField(Argo.localize("UMLMenu", "label.operations"), getFeatureScroll());
+        addField(Translator.localize("UMLMenu", "label.operations"), getFeatureScroll());
 
         JList attrList = new UMLList(new UMLAttributesListModel(this, "feature", true), true);
         attrList.setForeground(Color.blue);
         attrList.setVisibleRowCount(1);
         JScrollPane attrScroll = new JScrollPane(attrList);
-        addField(Argo.localize("UMLMenu", "label.literals"), attrScroll);
+        addField(Translator.localize("UMLMenu", "label.literals"), attrScroll);
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-        new PropPanelButton(this, buttonPanel, _dataTypeIcon, Argo.localize("UMLMenu", "button.add-datatype"), "newDataType", null);
-        new PropPanelButton(this, buttonPanel, _addAttrIcon, Argo.localize("UMLMenu", "button.add-enumeration-literal"), "addAttribute", null);
+        new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
+        new PropPanelButton(this, buttonPanel, _dataTypeIcon, Translator.localize("UMLMenu", "button.add-datatype"), "newDataType", null);
+        new PropPanelButton(this, buttonPanel, _addAttrIcon, Translator.localize("UMLMenu", "button.add-enumeration-literal"), "addAttribute", null);
         new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete datatype"), "removeElement", null);
     }
 

@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndOrderingCheckBox.java,v 1.5 2003/10/26 16:40:03 alexb Exp $
+// $Id: UMLAssociationEndOrderingCheckBox.java,v 1.6 2003/11/25 11:38:55 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,10 +22,10 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndOrderingCheckBox.java,v 1.5 2003/10/26 16:40:03 alexb Exp $
+// $Id: UMLAssociationEndOrderingCheckBox.java,v 1.6 2003/11/25 11:38:55 jhraigniac Exp $
 package org.argouml.uml.ui.foundation.core;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLCheckBox2;
 
@@ -44,7 +44,7 @@ public class UMLAssociationEndOrderingCheckBox extends UMLCheckBox2 {
      * @param propertySetName
      */
     public UMLAssociationEndOrderingCheckBox() {
-        super(Argo.localize("UMLMenu", "label.ordering"), ActionSetAssociationEndOrdering.SINGLETON, "ordering");
+        super(Translator.localize("UMLMenu", "label.ordering"), ActionSetAssociationEndOrdering.SINGLETON, "ordering");
     }
 
     /**

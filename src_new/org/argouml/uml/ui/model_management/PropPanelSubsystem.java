@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.8 2003/10/26 16:40:03 alexb Exp $
+// $Id: PropPanelSubsystem.java,v 1.9 2003/11/25 11:38:55 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,9 +24,10 @@
 
 package org.argouml.uml.ui.model_management;
 
-import org.argouml.application.api.*;
+import org.argouml.application.api.PluggablePropertyPanel;
 import org.argouml.util.ConfigLoader;
 import org.argouml.application.ArgoVersion;
+import org.argouml.i18n.Translator;
 import org.argouml.model.uml.*;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.*;
@@ -51,9 +52,9 @@ public class PropPanelSubsystem extends PropPanelPackage
     public PropPanelSubsystem() {
         super("Subsystem", ConfigLoader.getTabPropsOrientation());
 
-        addField(Argo.localize("UMLMenu", "label.available-features"), getFeatureScroll());
+        addField(Translator.localize("UMLMenu", "label.available-features"), getFeatureScroll());
 
-        new PropPanelButton(this, buttonPanel, _addOpIcon, Argo.localize("UMLMenu", "button.add-operation"), "addOperation", null);
+        new PropPanelButton(this, buttonPanel, _addOpIcon, Translator.localize("UMLMenu", "button.add-operation"), "addOperation", null);
     
     }
 

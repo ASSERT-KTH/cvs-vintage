@@ -1,4 +1,4 @@
-// $Id: PropPanelStructuralFeature.java,v 1.5 2003/06/29 23:50:17 linus Exp $
+// $Id: PropPanelStructuralFeature.java,v 1.6 2003/11/25 11:38:55 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,10 +22,10 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: PropPanelStructuralFeature.java,v 1.5 2003/06/29 23:50:17 linus Exp $
+// $Id: PropPanelStructuralFeature.java,v 1.6 2003/11/25 11:38:55 jhraigniac Exp $
 package org.argouml.uml.ui.foundation.core;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.swingext.Orientation;
 import org.argouml.uml.ui.UMLCheckBox2;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -100,7 +100,7 @@ public class PropPanelStructuralFeature extends PropPanelFeature {
      */
     public UMLRadioButtonPanel getChangeabilityRadioButtonPanel() {
         if (_changeabilityRadioButtonPanel == null) {
-            _changeabilityRadioButtonPanel = new UMLStructuralFeatureChangeabilityRadioButtonPanel(Argo.localize("UMLMenu", "label.changeability"), true);
+            _changeabilityRadioButtonPanel = new UMLStructuralFeatureChangeabilityRadioButtonPanel(Translator.localize("UMLMenu", "label.changeability"), true);
         }
 	return _changeabilityRadioButtonPanel;        
     }

@@ -1,4 +1,4 @@
-// $Id: UMLCompositeStateConcurentCheckBox.java,v 1.4 2003/09/06 01:43:56 bobtarling Exp $
+// $Id: UMLCompositeStateConcurentCheckBox.java,v 1.5 2003/11/25 11:38:55 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,8 @@
 // $header$
 package org.argouml.uml.ui.behavior.state_machines;
 
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.application.api.Argo;
 import org.argouml.uml.ui.UMLCheckBox2;
 
 /**
@@ -43,7 +43,7 @@ public class UMLCompositeStateConcurentCheckBox extends UMLCheckBox2 {
      * @param propertySetName
      */
     public UMLCompositeStateConcurentCheckBox() {
-         super(Argo.localize("UMLMenu", "label.concurrent"), 
+         super(Translator.localize("UMLMenu", "label.concurrent"), 
             ActionSetCompositeStateConcurrent.SINGLETON, 
             "isConcurent");
     }
