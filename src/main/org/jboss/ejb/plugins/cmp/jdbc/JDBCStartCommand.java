@@ -44,7 +44,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  */
 public final class JDBCStartCommand
 {
@@ -323,6 +323,8 @@ public final class JDBCStartCommand
       sql.append(action);
       sql.append(sqlEnd);
 
+      log.warn("Altering table " + tableName + " " + action + " field " + fieldName);
+
       // suspend the current transaction
       TransactionManager tm = manager.getContainer().getTransactionManager();
       Transaction oldTransaction;
@@ -358,7 +360,7 @@ public final class JDBCStartCommand
       }
       catch(Exception e)
       {
-         log.debug("Could not alter table " + tableName);
+         log.error("Could not alter table " + tableName);
          throw new DeploymentException("Error while alter table " + tableName + " " + sql, e);
       }
       finally
