@@ -19,7 +19,7 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("QueryList.vm")">Stored Query List</a></li>
 <li><a href="$link.setPage("SaveTemplate.vm")">Create Enter Issue Template</a></li>
 <li><a href="$link.setPage("TemplateList.vm")">Enter Issue Template List</a></li>
-<li><a href="$link.setPage("reports,Step1.vm")">Reports (not working)</a></li>
+<li><a href="$link.setPage("reports,Step1.vm")">Reports</a></li>
 <li><a href="$link.setPage("Approval.vm")">Approval.vm</a></li>
 <li><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", 1)">ViewIssue.vm?id=1</a></li>
 </ul>

@@ -133,7 +133,6 @@
 #end
 #end
 
-Cat1=$report.Axis1Category Cat2=$report.Axis2Category
 #if ($template != "reports,Step3_1a.vm"  && $template != "reports,Step3_2a")
 #if ($report.Axis1Category >= 0)
     <input type="hidden" name="$ir.Axis1Category.Key"
@@ -146,7 +145,6 @@ Cat1=$report.Axis1Category Cat2=$report.Axis2Category
 #end
 
 #if ($template != "reports,Step3_1b.vm"  && $template != "reports,Step3_2b")
-template = $template
 #if ($report.Axis1Keys)
     #foreach ($ao in $report.Axis1Keys)
     <input type="hidden" name="$ir.Axis1Keys.Key"
