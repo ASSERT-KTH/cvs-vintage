@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.55 2001/10/08 05:06:03 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.56 2001/10/10 01:26:31 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -303,7 +303,7 @@ public class ReportIssue extends RequireLoginFirstAction
 
                 // set the template to the user selected value
                 String template = data.getParameters()
-                    .getString(ScarabConstants.NEXT_TEMPLATE, "IssueView.vm");
+                    .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue.vm");
                 if (template != null && template.equals("AssignIssue.vm"))
                 {
                     data.getParameters().add("intake-grp", "issue"); 
