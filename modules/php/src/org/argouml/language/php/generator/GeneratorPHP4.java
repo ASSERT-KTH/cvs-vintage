@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.6 2004/06/07 03:40:02 kscr Exp $
+// $Id: GeneratorPHP4.java,v 1.7 2004/06/24 06:28:40 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1123,13 +1123,13 @@ public class GeneratorPHP4
             if (sDefault != null) {
             	sDefault = sDefault.trim();
                 if (sDefault.length() > 0) {
-                	if (sDefault == "0") {
-                		return sReturn + "false";
-                	} else if (sDefault == "false") {
-                		return sReturn + "false";
-                	} else {
-                		return sReturn + "true";
-                	}
+		    if (sDefault == "0") {
+			return sReturn + "false";
+		    } else if (sDefault == "false") {
+			return sReturn + "false";
+		    } else {
+			return sReturn + "true";
+		    }
                 } else {
                 	return sReturn + "false";
                 }

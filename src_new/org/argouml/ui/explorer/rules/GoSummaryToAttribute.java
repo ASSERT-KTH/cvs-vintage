@@ -1,4 +1,4 @@
-// $Id: GoSummaryToAttribute.java,v 1.8 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoSummaryToAttribute.java,v 1.9 2004/06/24 06:25:41 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,12 +33,10 @@ import org.argouml.model.ModelFacade;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.8 $
- *
- * @author  alexb, $Author: d00mst $
+ * @author  alexb, d00mst
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
-public class GoSummaryToAttribute extends AbstractPerspectiveRule{
+public class GoSummaryToAttribute extends AbstractPerspectiveRule {
 
     public String getRuleName() {
 	return "Summary->Attribute";
@@ -46,7 +44,8 @@ public class GoSummaryToAttribute extends AbstractPerspectiveRule{
 
     public Collection getChildren(Object parent) {
 	if (parent instanceof AttributesNode) {
-	    return ModelFacade.getAttributes(((AttributesNode) parent).getParent());
+	    return ModelFacade.getAttributes(((AttributesNode) parent)
+					     .getParent());
 	}
 	return null;
     }

@@ -1,5 +1,5 @@
-// $Id: CrConflictingComposites.java,v 1.8 2003/09/01 00:59:53 bobtarling Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: CrConflictingComposites.java,v 1.9 2004/06/24 06:25:41 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -25,7 +25,7 @@
 // File: CrConflictingComposites.java
 // Classes: CrConflictingComposites
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConflictingComposites.java,v 1.8 2003/09/01 00:59:53 bobtarling Exp $
+// $Id: CrConflictingComposites.java,v 1.9 2004/06/24 06:25:41 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -58,13 +58,16 @@ public class CrConflictingComposites extends CrUML {
 	while (enum.hasNext()) {
             Object myEnd = enum.next();
 	    if (UmlHelper.getHelper().getCore()
-                .equalsAggregationKind(myEnd,"composite"))
+                .equalsAggregationKind(myEnd, "composite")) {
 		continue;
-	    if (ModelFacade.getLower(myEnd) == 0) continue;
+	    }
+	    if (ModelFacade.getLower(myEnd) == 0) {
+		continue;
+	    }
 	    Object asc = ModelFacade.getAssociation(myEnd);
-	    if (asc != null &&
-                UmlHelper.getHelper().getCore().hasCompositeEnd(asc)){
-                    compositeCount++;
+	    if (asc != null
+		&& UmlHelper.getHelper().getCore().hasCompositeEnd(asc)) {
+		compositeCount++;
             }
 	}
 	if (compositeCount > 1) return PROBLEM_FOUND;

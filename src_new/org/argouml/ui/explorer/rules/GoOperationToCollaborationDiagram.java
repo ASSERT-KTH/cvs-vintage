@@ -1,4 +1,4 @@
-// $Id: GoOperationToCollaborationDiagram.java,v 1.6 2004/05/02 13:20:24 mvw Exp $
+// $Id: GoOperationToCollaborationDiagram.java,v 1.7 2004/06/24 06:25:40 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,7 @@ public class GoOperationToCollaborationDiagram extends AbstractPerspectiveRule {
      */
     public Collection getChildren(Object parent) {
         if (ModelFacade.isAOperation(parent)) {
-            Object operation = parent;//MOperation
+            Object operation = parent; //MOperation
             Collection col = ModelFacade.getCollaborations(operation);
             Vector ret = new Vector();
             Project p = ProjectManager.getManager().getCurrentProject();
@@ -55,8 +55,9 @@ public class GoOperationToCollaborationDiagram extends AbstractPerspectiveRule {
             Iterator it = diagrams.iterator();
             while (it.hasNext()) {
                 ArgoDiagram diagram = (ArgoDiagram) it.next();
-                if (diagram instanceof UMLCollaborationDiagram &&
-                    col.contains(((UMLCollaborationDiagram) diagram).getNamespace())) {
+                if (diagram instanceof UMLCollaborationDiagram
+		    && col.contains(((UMLCollaborationDiagram) diagram)
+				    .getNamespace())) {
                     ret.add(diagram);
                 }
                 

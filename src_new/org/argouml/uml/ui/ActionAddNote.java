@@ -1,4 +1,4 @@
-// $Id: ActionAddNote.java,v 1.20 2004/01/28 07:17:48 linus Exp $
+// $Id: ActionAddNote.java,v 1.21 2004/06/24 06:25:45 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,9 +61,11 @@ public class ActionAddNote extends UMLChangeAction {
      */
     public void updateEnabled(Object target) {
         boolean enabled = super.shouldBeEnabled();
-        if (target == null || ProjectManager.getManager().getCurrentProject().getActiveDiagram()
-            == null)
+        if (target == null
+	    || (ProjectManager.getManager().getCurrentProject()
+		.getActiveDiagram()) == null) {
             enabled = false;
+	}
         if (ModelFacade.isAModelElement(target)
             && !ModelFacade.isAComment(target)
             && (ProjectManager.getManager().getCurrentProject()
@@ -86,10 +88,12 @@ public class ActionAddNote extends UMLChangeAction {
     public void actionPerformed(ActionEvent ae) {
         Object target = TargetManager.getInstance().getModelTarget();
 
-        if (target == null || !(org.argouml.model.ModelFacade.isAModelElement(target)))
+        if (target == null || !(ModelFacade.isAModelElement(target))) {
             return;
+	}
         Object/*MModelElement*/ elem = target;
-        Object/*MComment*/ comment = CoreFactory.getFactory().buildComment(elem);
+        Object/*MComment*/ comment =
+	    CoreFactory.getFactory().buildComment(elem);
 
         // calculate the position of the comment
         ArgoDiagram diagram =
@@ -154,11 +158,8 @@ public class ActionAddNote extends UMLChangeAction {
         return super.shouldBeEnabled()
             && (org.argouml.model.ModelFacade.isAModelElement(target))
             && (!(org.argouml.model.ModelFacade.isAComment(target)))
-            && (ProjectManager
-                .getManager()
-                .getCurrentProject()
-                .getActiveDiagram()
-                .presentationFor(target)
-                instanceof FigNode);
+            && (ProjectManager.getManager().getCurrentProject()
+                .getActiveDiagram().presentationFor(target)
+		instanceof FigNode);
     }
 } /* end class ActionAddNote */

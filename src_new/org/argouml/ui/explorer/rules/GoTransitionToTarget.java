@@ -1,4 +1,4 @@
-// $Id: GoTransitionToTarget.java,v 1.4 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoTransitionToTarget.java,v 1.5 2004/06/24 06:25:41 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import java.util.Set;
 
 import org.argouml.model.ModelFacade;
 
-public class GoTransitionToTarget extends AbstractPerspectiveRule{
+public class GoTransitionToTarget extends AbstractPerspectiveRule {
 
     public String getRuleName() { return "Transition->Target State"; }
 

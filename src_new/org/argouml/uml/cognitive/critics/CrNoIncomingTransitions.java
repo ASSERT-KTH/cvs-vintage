@@ -1,5 +1,5 @@
-// $Id: CrNoIncomingTransitions.java,v 1.12 2003/09/13 18:16:33 alexb Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: CrNoIncomingTransitions.java,v 1.13 2004/06/24 06:25:41 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -25,7 +25,7 @@
 // File: CrNoIncomingTransitions.java
 // Classes: CrNoIncomingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoIncomingTransitions.java,v 1.12 2003/09/13 18:16:33 alexb Exp $
+// $Id: CrNoIncomingTransitions.java,v 1.13 2004/06/24 06:25:41 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -56,8 +56,8 @@ public class CrNoIncomingTransitions extends CrUML {
 	boolean needsIncoming = incoming == null || incoming.size() == 0;
 	if (ModelFacade.isAPseudostate(sv)) {
 	    if (ModelFacade.getKind(sv)
-                    .equals(ModelFacade.INITIAL_PSEUDOSTATEKIND)){
-                        needsIncoming = false;
+                    .equals(ModelFacade.INITIAL_PSEUDOSTATEKIND)) {
+		needsIncoming = false;
             }
 	}
 

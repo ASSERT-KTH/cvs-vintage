@@ -1,4 +1,4 @@
-// $Id: GoStateToEntry.java,v 1.4 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoStateToEntry.java,v 1.5 2004/06/24 06:25:40 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,13 +36,14 @@ import org.argouml.model.ModelFacade;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Dec 25, 2002
  */
-public class GoStateToEntry extends AbstractPerspectiveRule{
+public class GoStateToEntry extends AbstractPerspectiveRule {
     
     /**
      * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-        if (ModelFacade.isAState(parent) && ModelFacade.getEntry(parent) != null) {
+        if (ModelFacade.isAState(parent)
+	        && ModelFacade.getEntry(parent) != null) {
             Vector children = new Vector();
             children.add(ModelFacade.getEntry(parent));
             return children;

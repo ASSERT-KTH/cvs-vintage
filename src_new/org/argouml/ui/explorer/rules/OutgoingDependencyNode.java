@@ -1,4 +1,4 @@
-// $Id: OutgoingDependencyNode.java,v 1.2 2004/06/22 13:24:40 d00mst Exp $
+// $Id: OutgoingDependencyNode.java,v 1.3 2004/06/24 06:25:41 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,13 +30,14 @@ import org.argouml.ui.explorer.WeakExplorerNode;
  * This class is a support class for The Navigation panel Go Rules.
  * Don't confuse it with anything to do with GEF nodes or the like.
  *
- * $Revision: 1.2 $
- *
- * @author  alexb, $Author: d00mst $
+ * @author  alexb, d00mst
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class OutgoingDependencyNode implements WeakExplorerNode {
 
+    /**
+     * @deprecated by Linus Tolke as of 0.16. Will be private.
+     */
     Object parent;
 
     /** Creates a new instance of AssociationsNode */

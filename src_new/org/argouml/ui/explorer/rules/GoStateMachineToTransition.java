@@ -1,4 +1,4 @@
-// $Id: GoStateMachineToTransition.java,v 1.5 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoStateMachineToTransition.java,v 1.6 2004/06/24 06:25:40 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.argouml.model.ModelFacade;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class GoStateMachineToTransition extends AbstractPerspectiveRule{
+public class GoStateMachineToTransition extends AbstractPerspectiveRule {
 
     public String getRuleName() { return "Statemachine->Transition"; }
 

@@ -1,4 +1,4 @@
-// $Id: GoNamespaceToClassifierAndPackage.java,v 1.5 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoNamespaceToClassifierAndPackage.java,v 1.6 2004/06/24 06:25:40 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,8 @@ import org.argouml.model.ModelFacade;
  *
  * @since 0.15.2
  */
-public class GoNamespaceToClassifierAndPackage extends AbstractPerspectiveRule{
+public class GoNamespaceToClassifierAndPackage
+    extends AbstractPerspectiveRule {
 
     public String getRuleName() {
         return "Namespace->Classifer or Package";
@@ -53,9 +54,9 @@ public class GoNamespaceToClassifierAndPackage extends AbstractPerspectiveRule{
 
         while (elements.hasNext()) {
             Object element = elements.next();
-            if (ModelFacade.isAPackage(element) ||
-                ModelFacade.isAClassifier(element)) {
-                    result.add(element);
+            if (ModelFacade.isAPackage(element)
+		    || ModelFacade.isAClassifier(element)) {
+		result.add(element);
             }
         }
 

@@ -1,4 +1,4 @@
-// $Id: GoProjectToDiagram.java,v 1.6 2004/05/02 13:20:24 mvw Exp $
+// $Id: GoProjectToDiagram.java,v 1.7 2004/06/24 06:25:40 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.util.Set;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 
-public class GoProjectToDiagram extends AbstractPerspectiveRule{
+public class GoProjectToDiagram extends AbstractPerspectiveRule {
 
     public String getRuleName() {
 	return Translator.localize ("Tree", "misc.project.diagram");

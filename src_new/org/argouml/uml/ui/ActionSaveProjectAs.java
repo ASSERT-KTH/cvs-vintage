@@ -1,5 +1,5 @@
-// $Id: ActionSaveProjectAs.java,v 1.21 2004/01/03 14:35:37 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ActionSaveProjectAs.java,v 1.22 2004/06/24 06:25:45 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -95,7 +95,7 @@ public class ActionSaveProjectAs extends ActionSaveProject {
         }
 
         String sChooserTitle =
-        Translator.localize("Actions", "filechooser.save-as-project");
+	    Translator.localize("Actions", "filechooser.save-as-project");
         chooser.setDialogTitle(sChooserTitle + " " + p.getName());
         chooser.setFileFilter(FileFilters.CompressedFileFilter);
 

@@ -1,5 +1,5 @@
-// $Id: ModelTableModel.java,v 1.4 2004/04/26 19:49:50 thn Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ModelTableModel.java,v 1.5 2004/06/24 06:28:40 linus Exp $
+// Copyright (c) 1996-2002, 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -75,19 +75,23 @@ public class ModelTableModel extends DefaultTableModel implements Runnable {
 	Object diagramNs = ((org.argouml.uml.diagram.ui.UMLDiagram) activeDiagram).getNamespace();
 	if (diagramNs == null) return;
 	if (diagramNs instanceof MNamespace) {
-		MNamespace ns = (MNamespace)diagramNs;
-		while (ns.getNamespace() != null) ns = ns.getNamespace();
-		Collection elems = ModelManagementHelper.getHelper().getAllModelElementsOfKind(ns, MClassifier.class);
-		//Project p = ProjectManager.getManager().getCurrentProject();
-		//Collection elems = ModelManagementHelper.getHelper().getAllModelElementsOfKind(MClassifier.class);
-		Iterator iter = elems.iterator();
-		while (iter.hasNext()) {
-			Object c = iter.next();
-			Object[] rowdata = getCodeRelevantClassifierData((MClassifier) c);
-			if (rowdata != null) {
-			addRow(rowdata);
-			}
+	    MNamespace ns = (MNamespace) diagramNs;
+	    while (ns.getNamespace() != null) {
+		ns = ns.getNamespace();
+	    }
+	    Collection elems =
+		ModelManagementHelper.getHelper()
+		    .getAllModelElementsOfKind(ns, MClassifier.class);
+	    //Project p = ProjectManager.getManager().getCurrentProject();
+	    //Collection elems = ModelManagementHelper.getHelper().getAllModelElementsOfKind(MClassifier.class);
+	    Iterator iter = elems.iterator();
+	    while (iter.hasNext()) {
+		Object c = iter.next();
+		Object[] rowdata = getCodeRelevantClassifierData((MClassifier) c);
+		if (rowdata != null) {
+		    addRow(rowdata);
 		}
+	    }
 	}
     }
 

@@ -1,5 +1,5 @@
-// $Id: GoProjectToCollaboration.java,v 1.5 2004/04/22 21:43:21 d00mst Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: GoProjectToCollaboration.java,v 1.6 2004/06/24 06:25:40 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -34,7 +34,7 @@ import org.argouml.kernel.Project;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.model.ModelFacade;
 
-public class GoProjectToCollaboration extends AbstractPerspectiveRule{
+public class GoProjectToCollaboration extends AbstractPerspectiveRule {
 
     public String getRuleName() { return "Project->Collaboration"; }
 
@@ -45,7 +45,7 @@ public class GoProjectToCollaboration extends AbstractPerspectiveRule{
 	    while (it.hasNext()) {
 		col.addAll(ModelManagementHelper.getHelper()
 			   .getAllModelElementsOfKind(it.next(),
-				(Class)ModelFacade.COLLABORATION));
+				(Class) ModelFacade.COLLABORATION));
 	    }
 	}
 	return col;

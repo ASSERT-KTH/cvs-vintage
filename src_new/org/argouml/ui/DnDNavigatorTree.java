@@ -1,4 +1,4 @@
-// $Id: DnDNavigatorTree.java,v 1.12 2004/06/23 07:02:44 linus Exp $
+// $Id: DnDNavigatorTree.java,v 1.13 2004/06/24 06:25:40 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ import org.argouml.ui.explorer.ExplorerTree;
  *
  * @deprecated in 0.15.3 replaced with DnDExplorerTree in explorer package.
  *
- * <p>$Id: DnDNavigatorTree.java,v 1.12 2004/06/23 07:02:44 linus Exp $
+ * <p>$Id: DnDNavigatorTree.java,v 1.13 2004/06/24 06:25:40 linus Exp $
  *
  * @author  alexb
  * @since Created on 16 April 2003
@@ -94,7 +94,9 @@ public class DnDNavigatorTree extends ExplorerTree
     }
     
     /**
-     * recognises the start of the drag
+     * Recognizes the start of the drag.
+     *
+     * @param dragGestureEvent The event.
      */
     public void dragGestureRecognized(DragGestureEvent dragGestureEvent) {
         
@@ -197,7 +199,7 @@ public class DnDNavigatorTree extends ExplorerTree
 				    msg,
 				    "Error Dialog", 
 				    JOptionPane.ERROR_MESSAGE
-				    );
+			    );
 			}
 		    });
                     // reset the cursor.

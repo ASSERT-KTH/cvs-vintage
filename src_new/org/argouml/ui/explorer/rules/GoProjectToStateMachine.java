@@ -1,4 +1,4 @@
-// $Id: GoProjectToStateMachine.java,v 1.6 2004/05/02 13:20:24 mvw Exp $
+// $Id: GoProjectToStateMachine.java,v 1.7 2004/06/24 06:25:40 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import org.argouml.kernel.Project;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.model.ModelFacade;
 
-public class GoProjectToStateMachine extends AbstractPerspectiveRule{
+public class GoProjectToStateMachine extends AbstractPerspectiveRule {
 
     public String getRuleName() { return "Project->Statemachine"; }
 
@@ -44,7 +44,7 @@ public class GoProjectToStateMachine extends AbstractPerspectiveRule{
 	    while (it.hasNext()) {
 		col.addAll(ModelManagementHelper.getHelper()
 			   .getAllModelElementsOfKind(it.next(),
-					(Class)ModelFacade.STATEMACHINE));
+					(Class) ModelFacade.STATEMACHINE));
 	    }
 	}
 	return col;
