@@ -18,7 +18,7 @@
  * along with the jEdit program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: Toggle_ReadOnly.bsh,v 1.1 2003/11/12 00:24:11 spestov Exp $
+ * $Id: Toggle_ReadOnly.bsh,v 1.2 2003/12/22 04:14:54 spestov Exp $
  */
 
 
@@ -78,12 +78,8 @@ ToggleReadOnly(view);
 <listitem>
 	<para><filename>Toggle_ReadOnly.bsh</filename></para>
 	<abstract><para>
-	Toggles a local file's read-only flag.
+	Toggles a local file's read-only flag. Uses platform-specific commands, so it only works on Windows, Unix and MacOS X.
 	</para></abstract>
-	<para>
-	Toggles the Read-Only flag for the current Buffer's file, and
-	updates the Buffer's Read-Only flag.  Only works for local files.
-	</para>
 </listitem>
 
 */

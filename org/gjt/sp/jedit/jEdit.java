@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.204 2003/12/10 20:13:06 spestov Exp $
+ * @version $Id: jEdit.java,v 1.205 2003/12/22 04:14:54 spestov Exp $
  */
 public class jEdit
 {
@@ -2776,6 +2776,7 @@ public class jEdit
 			+ " at line number <line>");
 		System.out.println("	--: End of options");
 		System.out.println("	-background: Run in background mode");
+		System.out.println("	-nobackground: Disable background mode (default)");
 		System.out.println("	-gui: Only if running in background mode; open initial view (default)");
 		System.out.println("	-nogui: Only if running in background mode; don't open initial view");
 		System.out.println("	-log=<level>: Log messages with level equal to or higher than this to");
@@ -2796,8 +2797,8 @@ public class jEdit
 		System.out.println("	-nosettings: Don't load user-specific settings");
 		System.out.println("	-startupscripts: Run startup scripts (default)");
 		System.out.println("	-nostartupscripts: Don't run startup scripts");
-		System.out.println("	-version: Print jEdit version and exit");
 		System.out.println("	-usage: Print this message and exit");
+		System.out.println("	-version: Print jEdit version and exit");
 		System.out.println();
 		System.out.println("Report bugs to Slava Pestov <slava@jedit.org>.");
 	} //}}}

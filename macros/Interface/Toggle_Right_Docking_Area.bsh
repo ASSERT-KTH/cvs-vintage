@@ -5,7 +5,7 @@
  *
  * Copyright (C) 2003 Ollie Rutherfurd <oliver@rutherfurd.net>
  *
- * $Id: Toggle_Right_Docking_Area.bsh,v 1.1 2003/10/26 20:57:28 spestov Exp $
+ * $Id: Toggle_Right_Docking_Area.bsh,v 1.2 2003/12/22 04:14:54 spestov Exp $
  */
 
 toggleRightDockingArea()
@@ -27,7 +27,7 @@ toggleRightDockingArea();
 <listitem>
 	<para><filename>Toggle_Right_Docking_Area.bsh</filename></para>
 	<abstract><para>
-		Expands or collapses the tight docking area, 
+		Expands or collapses the right docking area, 
 		depending on it's current state.
 	</para></abstract>
 </listitem>

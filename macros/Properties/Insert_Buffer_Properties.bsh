@@ -22,7 +22,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: Insert_Buffer_Properties.bsh,v 1.2 2003/11/15 21:09:20 spestov Exp $
+ * $Id: Insert_Buffer_Properties.bsh,v 1.3 2003/12/22 04:14:54 spestov Exp $
  */
 
 import java.awt.BorderLayout;
@@ -232,12 +232,11 @@ BufferLocalPropertiesDialog(view);
 <listitem>
 	<para><filename>Insert_Buffer_Properties.bsh</filename></para>
 	<abstract><para>
-	GUI for inserting Buffer Local properties into the current Buffer.
+	Inserts buffer-local properties into the current buffer.
 	</para></abstract>
 	<para>
-	A macro that provides a GUI for inserting Buffer Local properties 
-	for the current buffer into the current buffer.  If the buffer's 
-	mode as a line comment defined, or comment start and end properties
+	If the buffer's 
+	mode has a line comment defined, or comment start and end
 	defined, the inserted properties will be commented out.
 	</para>
 </listitem>
