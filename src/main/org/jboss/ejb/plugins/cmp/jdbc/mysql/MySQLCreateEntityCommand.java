@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class MySQLCreateEntityCommand
    extends JDBCCreateEntityCommand
@@ -168,7 +168,8 @@ public class MySQLCreateEntityCommand
 
          // execute statement
          rowsAffected = ps.executeUpdate();
-
+/* FIXME: this is temporarily commented!!!
+          it won't work w/o it. but HEAD isn't compiled.
          if( entity.isKeyDbGenerated() ) {
 
             // cast to the wrapped statement
@@ -196,6 +197,7 @@ public class MySQLCreateEntityCommand
                break;
             }
          }
+*/
       } catch(Exception e) {
          log.error("Could not create entity", e);
          throw new CreateException("Could not create entity:" + e);
