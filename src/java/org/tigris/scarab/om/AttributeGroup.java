@@ -552,10 +552,13 @@ public  class AttributeGroup
                     { 
                         // global attributeGroup; remove issuetype-option maps
                         List rios = issueType.getRIssueTypeOptions(attribute);
-                        for (int i = 0; i<rios.size();i++)
+                        if (rios != null)
                         {
-                            RIssueTypeOption rio = (RIssueTypeOption)rios.get(i);
-                            rio.delete(user, module);
+                            for (int i = 0; i<rios.size();i++)
+                            {
+                                ((RIssueTypeOption) rios.get(i))
+                                    .delete(user, module);
+                            }
                         }
                     }
                     else

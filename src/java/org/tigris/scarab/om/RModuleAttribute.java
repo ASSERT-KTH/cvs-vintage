@@ -68,7 +68,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleAttribute relationship.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleAttribute.java,v 1.38 2003/04/18 23:06:09 elicia Exp $
+ * @version $Id: RModuleAttribute.java,v 1.39 2003/05/23 08:38:51 dlr Exp $
  */
 public class RModuleAttribute 
     extends BaseRModuleAttribute
@@ -224,16 +224,20 @@ public class RModuleAttribute
                     List optionList = module.getRModuleOptions(attr, 
                                       IssueTypePeer.retrieveByPK(getIssueTypeId()), 
                                       false);
-                    ArrayList optionIdList = new ArrayList(optionList.size());
-                    for (int i =0; i<optionList.size(); i++)
-                    { 
-                        optionIdList.add(((RModuleOption)optionList.get(i)).getOptionId());
-                    }
-                    if (optionIdList != null && optionIdList.size() > 0)
+                    if (optionList != null && !optionList.isEmpty())
                     {
+                        ArrayList optionIdList =
+                            new ArrayList(optionList.size());
+                        for (int i = 0; i < optionList.size(); i++)
+                        { 
+                            optionIdList.add(((RModuleOption)
+                                              optionList.get(i))
+                                             .getOptionId());
+                        }
                         Criteria c2 = new Criteria()
                             .add(RModuleOptionPeer.MODULE_ID, getModuleId())
-                            .add(RModuleOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
+                            .add(RModuleOptionPeer.ISSUE_TYPE_ID,
+                                 getIssueTypeId())
                             .addIn(RModuleOptionPeer.OPTION_ID, optionIdList);
                         RModuleOptionPeer.doDelete(c2);
                     }
