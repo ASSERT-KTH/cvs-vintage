@@ -20,29 +20,29 @@
 <h3>$l10n.Attributes</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
-  <th>$l10n.ShowHide</th>
   <th>$l10n.AttributeName</th>
   <th>$l10n.ColumnSequence</th>
  </tr>
 
  #foreach ($attribute in $attributes)
-  #set ($checked = false)
   #set ($userAttribute = $user.getRModuleUserAttribute($attribute))
-
-  #set ($order = 1)
+  #set ($order = 0)
   #foreach ($moduleUserAttribute in $scarabR.RModuleUserAttributes)
    #if ($attribute.Name.equals($moduleUserAttribute.Attribute.Name))
-    #set ($checked = true)
     #set ($order = $moduleUserAttribute.Order)
    #end
   #end
 
   <tr class="a">
-   <td><input type="checkbox"#checked($checked) 
-        name="attid" value="$attribute.AttributeId" /></td>
    <td>$attribute.Name</td>
    <td>
-    #numericSelect ("attorder" 1 $maxNum $order 1)
+      <input type="hidden"  name="attid" value="$attribute.AttributeId" />
+      <select name="attorder" size="1">
+          <option value="hidden">$l10n.NotShown</option>
+        #foreach ($i in [1..$maxNum])
+          <option value="$i" #if($i==$order)selected="selected"#end>$i</option>
+        #end
+      </select>
    </td>
   </tr>
  #end

@@ -73,7 +73,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * This class is responsible for the user configuration of the issue list.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ConfigureIssueList.java,v 1.31 2002/11/01 00:58:16 jon Exp $
+ * @version $Id: ConfigureIssueList.java,v 1.32 2002/12/02 16:45:43 jmcnally Exp $
  */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -86,16 +86,12 @@ public class ConfigureIssueList extends RequireLoginFirstAction
         // Add user's new selection of attributes
         ParameterParser params = data.getParameters();
         String[] ids = params.getStrings("attid");
-        if (ids == null || ids.length == 0) 
+        String[] orders = params.getStrings("attorder");
+        List attributes = new ArrayList(ids.length);
+        final Map orderMap = new HashMap();            
+        for (int i =0; i<ids.length; i++)
         {
-            scarabR.setAlertMessage(l10n.get("MustSelectAtLeastOneAttribute"));
-        }
-        else
-        {
-            String[] orders = params.getStrings("attorder");
-            final Map orderMap = new HashMap();
-            List attributes = new ArrayList(ids.length);
-            for (int i =0; i<ids.length; i++)
+            if (!orders[i].equals("hidden")) 
             {
                 Attribute attribute = AttributeManager
                     .getInstance(new NumberKey(ids[i]));
@@ -103,6 +99,14 @@ public class ConfigureIssueList extends RequireLoginFirstAction
                 Integer order = new Integer(orders[i]);
                 orderMap.put(attribute, order);
             }
+        }
+
+        if (attributes.isEmpty())
+        {
+            scarabR.setAlertMessage(l10n.get("MustSelectAtLeastOneAttribute"));
+        }
+        else
+        {
             Comparator c = new Comparator()
                 {
                     public int compare(Object o1, Object o2)
