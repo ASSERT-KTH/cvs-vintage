@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.111 2005/01/09 14:58:01 linus Exp $
+// $Id: Main.java,v 1.112 2005/01/16 02:06:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -284,7 +284,14 @@ public class Main {
         Project p = null;
 
         if (urlToOpen != null) {
-            new ActionOpenProject().loadProject(urlToOpen);
+            String filename = urlToOpen.getFile();
+            File file = new File(filename);
+            System.err.println("The url of the file to open is " + urlToOpen);
+            System.err.println("The filename is " + filename);
+            System.err.println("The file is " + file);
+            System.err.println("File.exists = " + file.exists());
+            
+            new ActionOpenProject().loadProject(file);
         }
         p = ProjectManager.getManager().getCurrentProject();
 

@@ -1,4 +1,4 @@
-// $Id: TestZargoFilePersister.java,v 1.5 2005/01/15 16:41:03 bobtarling Exp $
+// $Id: TestZargoFilePersister.java,v 1.6 2005/01/16 02:06:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ public class TestZargoFilePersister extends TestCase {
             throws OpenException {
         URL url = TestZargoFilePersister.class.getResource(filename);
         ZargoFilePersister persister = new ZargoFilePersister();
-        Project p = persister.doLoad(url, null, null);
+        Project p = persister.doLoad(new File(url.getFile()), null, null);
         assertTrue("Load Status for " + filename + ".",
                LastLoadInfo.getInstance().getLastLoadStatus());
         return p;

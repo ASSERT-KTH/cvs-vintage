@@ -1,4 +1,4 @@
-// $Id: CheckMain.java,v 1.4 2005/01/05 15:39:19 bobtarling Exp $
+// $Id: CheckMain.java,v 1.5 2005/01/16 02:06:41 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.util;
 
 import java.io.File;
 import java.net.URL;
-import java.net.MalformedURLException;
 
 import junit.framework.Assert;
 
@@ -61,28 +60,23 @@ public final class CheckMain {
      * @param filename The name to search for.
      * @return The URL.
      */
-    public static URL getTestModel(String filename) {
-	// This works when running the test from within Eclipse.
-	// Appearantly Eclipse runs the tests using a classloader that
-	// has the tests Folder among the URL:s.
+    public static File getTestModel(String filename) {
+        // This works when running the test from within Eclipse.
+        // Apparantly Eclipse runs the tests using a classloader that
+        // has the tests Folder among the URL:s.
         URL url = CheckMain.class.getClassLoader().getResource(filename);
-	if (url != null) {
-	    return url;
-	}
-
-	// We have the path provided from the build script.
-	String dir = System.getProperty("argouml.tests.dir");
-	if (dir != null) {
-	    try {
-		return new File(dir, filename).toURL();
-	    } catch (MalformedURLException e) {
-		// A problem detected.
-		e.printStackTrace();
-	    }
-	}
-
-	Assert.fail("Could not locate the model " + filename);
-	return null;
+        if (url != null) {
+            return new File(url.getFile());
+        }
+        
+        // We have the path provided from the build script.
+        String dir = System.getProperty("argouml.tests.dir");
+        if (dir != null) {
+            return new File(dir, filename);
+        }
+        
+        Assert.fail("Could not locate the model " + filename);
+        return null;
     }
 }
 

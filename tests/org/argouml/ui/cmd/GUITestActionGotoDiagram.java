@@ -1,4 +1,4 @@
-// $Id: GUITestActionGotoDiagram.java,v 1.3 2005/01/09 21:10:42 linus Exp $
+// $Id: GUITestActionGotoDiagram.java,v 1.4 2005/01/16 02:06:40 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,13 +50,13 @@ public class GUITestActionGotoDiagram extends TestCase {
      * Test dumping a named diagram from a project with contents.
      */
     public void testProjectWithContents() {
-        URL url =
+        File file =
 	    CheckMain.getTestModel("testmodels/GUITestPropertyPanels.zargo");
 
         CheckMain.callMain(new String[] {
             "-nosplash",
             "-command",
-            "org.argouml.uml.ui.ActionOpenProject=" + url,
+            "org.argouml.uml.ui.ActionOpenProject=" + file.toString(),
             "-command",
             "org.argouml.uml.ui.ActionSaveGraphics=" + OUTPUT_FILE1,
             "-command",

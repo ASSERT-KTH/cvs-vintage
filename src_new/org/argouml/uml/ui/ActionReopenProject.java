@@ -1,4 +1,4 @@
-// $Id: ActionReopenProject.java,v 1.12 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionReopenProject.java,v 1.13 2005/01/16 02:06:42 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,13 +78,8 @@ public class ActionReopenProject extends ActionFileOperations {
         if (!askConfirmationAndSave()) return;
 
         File toOpen = new File(filename);;
-        try {
-            // load of the new project
-            // just reuse of the ActionOpen object
-            loadProject(toOpen.toURL());
-        }
-        catch (java.net.MalformedURLException ex) {
-            LOG.error("got an URLException in ActionReopenProject", ex);
-        }
+        // load of the new project
+        // just reuse of the ActionOpen object
+        loadProject(toOpen);
     }
 }

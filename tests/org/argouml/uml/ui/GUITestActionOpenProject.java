@@ -1,4 +1,4 @@
-// $Id: GUITestActionOpenProject.java,v 1.5 2005/01/09 21:10:39 linus Exp $
+// $Id: GUITestActionOpenProject.java,v 1.6 2005/01/16 02:06:40 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.ui;
 
+import java.io.File;
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -45,26 +46,16 @@ public class GUITestActionOpenProject extends TestCase {
     }
 
     /**
-     * Test an incorrect URL.
-     */
-    public void testMalformedURL() {
-        CheckMain.callMain(new String[] {
-            "-nosplash",
-            "-command",
-            "org.argouml.uml.ui.ActionOpenProject=GGG",
-        });
-    }
-
-    /**
      * Test an empty project.
      */
     public void testEmptyProject() {
-        URL url = CheckMain.getTestModel("testmodels/EmptyProject0161.zargo");
+        File file
+            = CheckMain.getTestModel("testmodels/EmptyProject0161.zargo");
 
         CheckMain.callMain(new String[] {
             "-nosplash",
             "-command",
-            "org.argouml.uml.ui.ActionOpenProject=" + url,
+            "org.argouml.uml.ui.ActionOpenProject=" + file.getAbsolutePath(),
         });
 
         assertEquals("EmptyProject0161",
@@ -75,13 +66,13 @@ public class GUITestActionOpenProject extends TestCase {
      * Test a project with contents.
      */
     public void testProjectWithContents() {
-        URL url =
-	    CheckMain.getTestModel("testmodels/GUITestPropertyPanels.zargo");
+        File file =
+            CheckMain.getTestModel("testmodels/GUITestPropertyPanels.zargo");
 
         CheckMain.callMain(new String[] {
             "-nosplash",
             "-command",
-            "org.argouml.uml.ui.ActionOpenProject=" + url,
+            "org.argouml.uml.ui.ActionOpenProject=" + file.getAbsolutePath(),
         });
 
         assertEquals("GUITestPropertyPanels",

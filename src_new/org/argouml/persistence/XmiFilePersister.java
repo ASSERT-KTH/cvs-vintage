@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.13 2005/01/15 16:41:03 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.14 2005/01/16 02:06:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.URL;
 
 import javax.swing.JProgressBar;
 import javax.swing.text.JTextComponent;
@@ -174,17 +173,17 @@ public class XmiFilePersister extends AbstractFilePersister {
      * throwing an exception or by having the
      * ArgoParser.SINGLETON.getLastLoadStatus() set to not true.
      *
-     * @param url The URL to load the project from.
+     * @param file The file to load the project from.
      * @return The newly loaded project.
      * @throws OpenException if the file can not be opened
      *
-     * @see org.argouml.persistence.ProjectFilePersister#doLoad(java.net.URL,
+     * @see org.argouml.persistence.ProjectFilePersister#doLoad(java.io.File,
      *  javax.swing.JProgressBar, javax.swing.text.JTextComponent)
      */
-    public Project doLoad(URL url, JProgressBar progressBar, JTextComponent prorgessText) throws OpenException {
+    public Project doLoad(File file, JProgressBar progressBar, JTextComponent prorgessText) throws OpenException {
         try {
             Project p = new Project();
-            XMIParser.getSingleton().readModels(p, url);
+            XMIParser.getSingleton().readModels(p, file.toURL());
             Object model = XMIParser.getSingleton().getCurModel();
             Model.getUmlHelper().addListenersToModel(model);
             p.setUUIDRefs(XMIParser.getSingleton().getUUIDRefs());
