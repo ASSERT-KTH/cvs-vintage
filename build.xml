@@ -79,6 +79,8 @@
 				<include name="run_source.sh"/>
 				<include name="run_source_jdk13.bat"/>
 				<include name="run_source_jdk13.sh"/>
+				<include name="native/**"/>
+				<include name="plugins/**"/>
 				<exclude name="build.xml"/>
 				<exclude name="ant.dtd"/>
 				<exclude name="lib/checkstyle-all-2.1.jar"/>
@@ -147,9 +149,13 @@
 			<exclude name="run_source_jdk13.sh"/>
 			<exclude name="**/*.zip"/>
 			<exclude name="docs/**"/>
+			<exclude name="libs/**"/>
+			<exclude name="plugins/**"/>
+			<exclude name="lib/**"/>
+			<exclude name="native/**"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.core.main.Main"/>
-				<attribute name="Class-Path" value="lib/xalan.jar lib/jaxp.jar lib/crimson.jar lib/log4j.jar lib/jython.jar lib/junit.jar lib/jakarta-oro-2.0.6.jar"/>
+				<attribute name="Class-Path" value="lib/xalan.jar lib/jaxp.jar lib/crimson.jar lib/log4j.jar lib/junit.jar lib/jakarta-oro-2.0.6.jar lib/lucene-1.2.jar"/>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
 		</jar>
@@ -165,32 +171,104 @@ else echo "cannot find columba.jar in `pwd`"; fi
 		<echo message="at the moment there are no dynamic runscripts required"/>
 	</target>
 
-
-	<!-- create an release zip file, contains the jar file and README, LICENSE, CHANGES, AUTHORS -->
+	<!-- convert line-endings -->
+	<target name="linefeeds-win32">
+	<fixcrlf srcdir="${dest}"
+       eol="crlf"
+       includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.bat, run_source.bat, run_source_jdk13.bat"
+  	/>
+  	</target>
+  	
+  	<!-- convert line-endings -->
+	<target name="linefeeds-unix">
+	<fixcrlf srcdir="${dest}"
+       eol="lf"
+       includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.sh, run_source.sh, run_source_jdk13.sh"
+  	/>
+  	</target>
+  
+	<!-- create an release zip file for linux and unix flavors, contains the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an binary release -->
-	<target name="zip-bin" depends="jar,run-script">
-		<echo message="the zipfile is going to ${dest}/columba-${version}-bin.zip "/> 
-		<zip zipfile="${dest}/columba-${version}-bin.zip" update="true">
-			<zipfileset dir="${dest}" prefix="columba-${version}-bin">
+	<target name="zip-bin-unix" depends="jar,run-script, linefeeds-unix">
+		<echo message="the zipfile is going to ${dest}/columba-unix-${version}-bin.zip "/> 
+		<zip zipfile="${dest}/columba-unix-${version}-bin.zip" update="true">
+			<zipfileset dir="${dest}" prefix="columba-unix-${version}-bin">
+				<include name="README"/>
+				<include name="AUTHORS"/>
+				<include name="LICENSE"/>
+				<include name="CHANGES"/>
+				<include name="RUN"/>
+				<include name="run.sh"/>
+				<include name="columba.jar"/>
+				<include name="**/*.jar"/>
+				<include name="plugins/**/*.py"/>
+				<include name="plugins/**/*.jar"/>
+				<include name="plugins/**/plugin.xml"/>
+				<exclude name="classes/**"/>
+			</zipfileset>
+		</zip>
+	</target>
+	
+	<!-- create an release zip file for windows flavors, contains the jar file and README, LICENSE, CHANGES, AUTHORS -->
+	<!-- this task is for an binary release -->
+	<target name="zip-bin-win32" depends="jar,run-script, linefeeds-win32">
+		<echo message="the zipfile are going to ${dest}/columba-win32-${version}-bin.zip "/> 
+		<zip zipfile="${dest}/columba-win32-${version}-bin.zip" update="true">
+			<zipfileset dir="${dest}" prefix="columba-win32-${version}-bin">
 				<include name="README"/>
 				<include name="AUTHORS"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
 				<include name="RUN"/>
 				<include name="run.bat"/>
-				<include name="run.sh"/>
 				<include name="columba.jar"/>
 				<include name="**/*.jar"/>
-				<!-- include name="ext/csWillySpell.jar" -->
+				<include name="plugins/**/*.py"/>
+				<include name="plugins/**/*.jar"/>
+				<include name="plugins/**/plugin.xml"/>	
+				<exclude name="classes/**"/>			
+			</zipfileset>
+			<zipfileset dir="${dest}" includes="native/win32/windows_maximize/bin/WindowMaximizer.dll" fullpath="columba-win32-${version}-bin/WindowMaximizer.dll"/>
+			<zipfileset dir="${dest}" includes="native/win32/launcher/bin/columba.exe" fullpath="columba-win32-${version}-bin/columba.exe"/>
+		</zip>
+	</target>
+	
+	<!-- create an source zip file for linux and unix flavors, contain all sources and README, LICENSE, CHANGES, AUTHORS -->
+	<!-- this task is for an source release -->
+	<target name="zip-source-unix" depends="init,run-script,linefeeds-unix">
+		<echo message="the zipfile is going to ${dest}/columba-${version}-src.zip "/> 
+		<zip zipfile="${dest}/columba-unix-${version}-src.zip" update="true">
+			<zipfileset dir="${src}" prefix="columba-unix-${version}-src">
+				<include name="**/*.java"/>
+				<include name="**/*.jar"/>
+				<include name="**/*.xml"/>
+				<include name="**/*.dtd"/>
+				<include name="**/*.gif"/>
+				<include name="**/*.jpeg"/>
+				<include name="**/*.png"/>
+				<include name="**/*.wav"/>
+				<include name="**/*.properties"/>
+				<include name="README"/>
+				<include name="LICENSE"/>
+				<include name="CHANGES"/>
+				<include name="AUTHORS"/>				
+				<include name="run_source.sh"/>				
+				<include name="run_source_jdk13.sh"/>
+				<include name="plugins/**/*.py"/>
+				<include name="plugins/**/*.java"/>
+				<include name="plugins/**/*.xml"/>
+				<exclude name="plugins/**/*.jar"/>
+				<exclude name="classes/**"/>
 			</zipfileset>
 		</zip>
 	</target>
-	<!-- create an source zip file, contain all sources and README, LICENSE, CHANGES, AUTHORS -->
+	
+	<!-- create an source zip file for windows flavors, contain all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an source release -->
-	<target name="zip-source" depends="init,run-script">
-		<echo message="the zipfile is going to ${dest}/columba-${version}-src.zip "/> 
-		<zip zipfile="${dest}/columba-${version}-src.zip" update="true">
-			<zipfileset dir="${src}" prefix="columba-${version}-src">
+	<target name="zip-source-win32" depends="init,run-script,linefeeds-win32">
+		<echo message="the zipfile are going to ${dest}/columba-${version}-src.zip "/> 
+		<zip zipfile="${dest}/columba-win32-${version}-src.zip" update="true">
+			<zipfileset dir="${src}" prefix="columba-win32-${version}-src">
 				<include name="**/*.java"/>
 				<include name="**/*.jar"/>
 				<include name="**/*.xml"/>
@@ -204,23 +282,23 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
 				<include name="AUTHORS"/>
-				<include name="run_source.bat"/>
-				<include name="run_source.sh"/>
-				<include name="run_source_jdk13.bat"/>
-				<include name="run_source_jdk13.sh"/>
+				<include name="run_source.bat"/>			
+				<include name="run_source_jdk13.bat"/>				
+				<include name="plugins/**/*.py"/>
+				<include name="plugins/**/*.java"/>
+				<include name="plugins/**/*.xml"/>
+				<exclude name="plugins/**/*.jar"/>
+				<exclude name="classes/**"/>
 			</zipfileset>
-			<!--zipfileset dir="${dest}" prefix="columba-${version}-src" -->
-				<!-- include name="run.sh"/-->
-			<!-- /zipfileset-->
 		</zip>
 	</target>
 
 	<!-- this target creates two zip-files, one for binary release and one for the source stuff -->
-	<target name="zip" depends="zip-bin,zip-source"/>
+	<target name="zip" depends="zip-bin-unix,zip-bin-win32,zip-source-unix,zip-source-win32"/>
 
 	<!-- this target creates two zip-files, one for binary release and one for the source stuff -->
 	<!-- this is also the release target ;-0 -->
-	<target name="release" depends="zip-bin,zip-source"/>
+	<target name="release" depends="zip-bin-unix,zip-bin-win32,zip-source-unix,zip-source-win32"/>
 
 	<!-- only for build the class-files -->
 	<target name="build" depends="compile"/>
