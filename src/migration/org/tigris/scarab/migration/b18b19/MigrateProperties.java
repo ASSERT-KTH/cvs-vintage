@@ -1,0 +1,244 @@
+/* ================================================================
+ * Copyright (c) 2004 CollabNet.  All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ * 
+ * 3. The end-user documentation included with the redistribution, if
+ * any, must include the following acknowlegement: "This product includes
+ * software developed by Collab.Net <http://www.Collab.Net/>."
+ * Alternately, this acknowlegement may appear in the software itself, if
+ * and wherever such third-party acknowlegements normally appear.
+ * 
+ * 4. The hosted project names must not be used to endorse or promote
+ * products derived from this software without prior written
+ * permission. For written permission, please contact info@collab.net.
+ * 
+ * 5. Products derived from this software may not use the "Tigris" or 
+ * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
+ * prior written permission of Collab.Net.
+ * 
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL COLLAB.NET OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * ====================================================================
+ * 
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of Collab.Net.
+ */
+package org.tigris.scarab.migration.b18b19;
+
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+
+public class MigrateProperties extends Task
+{
+    private static Map propertyMap = new LinkedHashMap(120);
+    
+    static
+    {
+        synchronized(propertyMap)
+        {
+            if (propertyMap.size() == 0)
+            {
+                // Scarab.properties
+                propertyMap.put("scarab.site.name", "scarab.site.name");
+                propertyMap.put("scarab.http.domain", "scarab.http.domain");
+                propertyMap.put("scarab.http.scheme", "scarab.http.scheme");
+                propertyMap.put("scarab.http.scriptname", "scarab.http.scriptname");
+                propertyMap.put("scarab.http.port", "scarab.http.port");
+                propertyMap.put("scarab.automatic.role.approval", "scarab.automatic.role.approval");
+                propertyMap.put("scarab.email.encoding", "scarab.email.encoding");
+                propertyMap.put("scarab.email.default.fromName", "scarab.email.default.fromName");
+                propertyMap.put("scarab.email.default.fromAddress", "scarab.email.default.fromAddress");
+                propertyMap.put("scarab.register.email.checkValidA", "scarab.register.email.checkValidA");
+                propertyMap.put("scarab.register.email.badEmails", "scarab.register.email.badEmails");
+                propertyMap.put("scarab.email.register.fromName", "scarab.email.register.fromName");
+                propertyMap.put("scarab.email.register.fromAddress", "scarab.email.register.fromAddress");
+                propertyMap.put("scarab.email.forgotpassword.fromName", "scarab.email.forgotpassword.fromName");
+                propertyMap.put("scarab.email.forgotpassword.fromAddress", "scarab.email.forgotpassword.fromAddress");
+                propertyMap.put("scarab.attachments.path", "scarab.attachments.repository");
+                propertyMap.put("searchindex.path", "scarab.lucene.index.path");
+                propertyMap.put("services.TorqueService.classname", "scarab.torque.service");
+                propertyMap.put("services.DatabaseInitializer.classname", "scarab.dbinit.service");
+                propertyMap.put("torque.managed_class.org.tigris.scarab.om.Module.manager", "scarab.module.service");
+                propertyMap.put("torque.managed_class.org.tigris.scarab.om.ScarabUser.manager", "scarab.user.service");
+                propertyMap.put("scarab.dataexport.encoding", "scarab.dataexport.encoding");
+                
+                // TurbineResources.properties
+                propertyMap.put("turbine.mode", "scarab.mode");
+                propertyMap.put("template.homepage", "scarab.homepage");
+                propertyMap.put("session.timeout", "scarab.session.timeout");
+                propertyMap.put("system.mail.host", "scarab.system.mail.host");
+                propertyMap.put("services.LocalizationService.locale.default.language", "scarab.locale.default.language");
+                propertyMap.put("services.LocalizationService.locale.default.country", "scarab.locale.default.country");
+                propertyMap.put("services.UploadService.repository", "scarab.file.upload.path");
+                propertyMap.put("services.UploadService.size.max", "scarab.file.max.size");
+                propertyMap.put("scarab.http.scheme", "scarab.template.cache");
+                propertyMap.put("resolver.cache.template", "scarab.template.cache");
+                propertyMap.put("resolver.cache.module", "scarab.template.cache");
+                propertyMap.put("services.VelocityService.file.resource.loader.cache", "scarab.template.cache");
+                propertyMap.put("services.EmailService.file.resource.loader.cache", "scarab.template.cache");
+                propertyMap.put("services.VelocityService.file.resource.loader.path", "template.path+/templates");
+                propertyMap.put("services.EmailService.file.resource.loader.path", "template.path+/templates");
+                propertyMap.put("module.packages", "scarab.module.packages");
+                
+                propertyMap.put("services.LocalizationService.classname", "scarab.localization.service");
+                propertyMap.put("torque.manager.useCache", "scarab.torque.manager.cache");
+                propertyMap.put("action.sessionvalidator", "scarab.sessionvalidator");
+                propertyMap.put("pipeline.default.descriptor", "scarab.default.pipeline.descriptor");
+                propertyMap.put("exceptionHandler.default", "scarab.request.error.handler");
+                propertyMap.put("services.PullService.tool.request.link", "scarab.pull.link");
+                propertyMap.put("services.PullService.tool.request.staticLink", "scarab.pull.staticlink");
+                propertyMap.put("services.SecurityService.user.manager", "scarab.security.user.manager");
+                propertyMap.put("services.IntakeService.serialize.path", "scarab.intake.serialize.file");
+                
+                propertyMap.put("log4j.category.default", "scarab.log.level.turbine+, turbine");
+                propertyMap.put("log4j.category.org.tigris.scarab", "scarab.log.level.scarab+, scarab");
+                propertyMap.put("log4j.appender.scarab.file", "scarab.log.file.scarab");
+                propertyMap.put("log4j.appender.scarab.layout.conversionPattern", "scarab.log.pattern");
+                propertyMap.put("log4j.appender.scarab.append", "scarab.log.append.scarab");
+                propertyMap.put("log4j.category.org.tigris.scarab.util.xmlissues", "scarab.log.level.scarabxmlimport+, scarabxmlimport");
+                propertyMap.put("log4j.appender.scarabxmlimport.file", "scarab.log.file.scarabxmlimport");
+                propertyMap.put("log4j.appender.scarabxmlimport.layout.conversionPattern", "scarab.log.pattern");
+                propertyMap.put("log4j.appender.scarabxmlimport.append", "scarab.log.append.scarabxmlimport");
+                propertyMap.put("log4j.category.org.apache.turbine", "scarab.log.level.turbine+, turbine");
+                propertyMap.put("log4j.appender.turbine.file", "scarab.log.file.turbine");
+                propertyMap.put("log4j.appender.turbine.layout.conversionPattern", "scarab.log.pattern");
+                propertyMap.put("log4j.appender.turbine.append", "scarab.log.append.turbine");
+                propertyMap.put("log4j.category.org.apache.torque", "scarab.log.level.torque+, torque");
+                propertyMap.put("log4j.appender.torque.file", "scarab.log.file.torque");
+                propertyMap.put("log4j.appender.torque.layout.conversionPattern", "scarab.log.pattern");
+                propertyMap.put("log4j.appender.torque.append", "scarab.log.append.torque");
+                propertyMap.put("log4j.category.org.apache.fulcrum", "scarab.log.level.fulcrum+, services");
+                propertyMap.put("log4j.appender.services.file", "scarab.log.file.fulcrum");
+                propertyMap.put("log4j.appender.services.layout.conversionPattern", "scarab.log.pattern");
+                propertyMap.put("log4j.appender.services.append", "scarab.log.append.fulcrum");
+                propertyMap.put("log4j.category.org.apache.stratum", "scarab.log.level.stratum+, stratum");
+                propertyMap.put("log4j.appender.stratum.file", "scarab.log.file.stratum");
+                propertyMap.put("log4j.appender.stratum.layout.conversionPattern", "scarab.log.pattern");
+                propertyMap.put("log4j.appender.stratum.append", "scarab.log.append.stratum");
+                propertyMap.put("log4j.category.org.apache.jcs", "scarab.log.level.jcs+, jcs");
+                propertyMap.put("log4j.appender.jcs.file", "scarab.log.file.jcs");
+                propertyMap.put("log4j.appender.jcs.layout.conversionPattern", "scarab.log.pattern");
+                propertyMap.put("log4j.appender.jcs.append", "scarab.log.append.jcs");
+                propertyMap.put("log4j.category.org.apache.fulcrum.db", "scarab.log.level.torque+, torque");
+                propertyMap.put("log4j.category.org.apache.commons", "scarab.log.level.turbine+, turbine");
+                propertyMap.put("log4j.category.org.apache.commons.beanutils", "scarab.log.level.beanutils+, turbine");
+                propertyMap.put("log4j.category.org.apache.velocity", "scarab.log.level.velocity+, velocity");
+                propertyMap.put("log4j.appender.velocity.file", "scarab.log.file.velocity");
+                propertyMap.put("log4j.appender.velocity.layout.conversionPattern", "scarab.log.pattern");
+                propertyMap.put("log4j.appender.velocity.append", "scarab.log.append.velocity");
+            }
+        }
+    }
+    
+    private String outputFile = "CustomSettings.properties";
+    
+    public void execute() throws BuildException
+    {
+        PrintWriter writer = null;
+        try
+        {
+            //
+            // Open the output file for writing.
+            //
+            writer = new PrintWriter(
+                         new BufferedOutputStream(
+                             new FileOutputStream(this.outputFile)));
+            
+            //
+            // Now iterate through each property in the map, check whether it
+            // exists within the ant properties, and if so add it to the output
+            // file.
+            //
+            for (Iterator iter = propertyMap.entrySet().iterator();
+                          iter.hasNext();)
+            {
+                Map.Entry entry = (Map.Entry) iter.next();
+                String outProperty = (String) entry.getKey();
+                
+                //
+                // Work out the name of the ant property associated with
+                // this output property. The value from the map may contain
+                // a '+' character which separates the ant property name
+                // from the string that should be appended to its value
+                // when it is written to the output file.
+                //
+                String inProperty = (String) entry.getValue();
+                String appendString = "";
+                int splitPos = inProperty.indexOf('+');
+                if (splitPos >= 0)
+                {
+                    appendString = inProperty.substring(splitPos + 1);
+                    inProperty = inProperty.substring(0, splitPos);
+                }
+                
+                String antPropertyValue = getProject().getProperty(inProperty);
+                if (antPropertyValue != null)
+                {
+                    //
+                    // The ant property may contain a '=' character due
+                    // to the way the property has been set up to work
+                    // with filtered copies. In these cases, only the
+                    // part of the value after the '=' needs to be written
+                    // to the output file.
+                    //
+                    splitPos = antPropertyValue.indexOf('=');
+                    if (splitPos >= 0)
+                    {
+                        antPropertyValue =
+                            antPropertyValue.substring(splitPos + 1);
+                    }
+                    
+                    //
+                    // Now we have all the information we need, so write the
+                    // property to the output file.
+                    //
+                    writer.println(outProperty + '='
+                                   + antPropertyValue
+                                   + appendString);
+                }
+            }
+        }
+        catch (IOException ex)
+        {
+            throw new BuildException(ex);
+        }
+        finally
+        {
+            writer.close();
+        }
+    }
+    
+    public void setOutput(String filename)
+    {
+        this.outputFile = filename;
+    }
+}

@@ -47,6 +47,9 @@
     <property name="extensions.templates.dir" value="${extensions.dir}/usermods/templates"/>
     <property name="extensions.conf.dir" value="${extensions.dir}/usermods/conf"/>
 
+    <property name="migration.dest.dir" value="${build.dir}/migration/classes"/>
+    <property name="tomcat.dir" value="../tomcat"/>
+
     <!-- Build classpath -->
     <path id="classpath">
         <fileset dir="${lib.dir}">
@@ -767,7 +770,7 @@
             </fileset>
         </delete>
         <delete quiet="true">
-            <fileset dir="../tomcat/logs">
+            <fileset dir="${tomcat.dir}/logs">
                 <include name="*log*.txt"/>
             </fileset>
         </delete>
@@ -949,12 +952,76 @@
         <antcall target="war"/>
         <antcall target="dist"/>
     </target>
+    
+    <!-- ================================================================== -->
+    <!--    Task to migrate build properties from b18 to b19.               -->
+    <!--                                                                    -->
+    <!--    WARNING! This will overwrite the following files:               -->
+    <!--                                                                    -->
+    <!--      src/conf/conf/CustomSettings.properties                       -->
+    <!--      src/conf/conf/intake.xml                                      -->
+    <!--      src/webapp/WEB-INF/web.xml                                    -->
+    <!--      tomcat/conf/server.xml                                        -->
+    <!-- ================================================================== -->
+    <target name="migrate-b18-b19"
+            description="Migrates b18 properties to the equivalents for b19">
+        <!-- Copy the tomcat configuration to the required place -->
+        <filter token="TOMCAT_HTTP_PORT" value="${scarab.tomcat.http.port}"/>
+        <filter token="TOMCAT_SHUTDOWN_PORT" value="${scarab.tomcat.shutdown.port}"/>
+        <filter token="TOMCAT_PROXY_NAME" value="${scarab.tomcat.proxy.name}"/>
+        <filter token="TOMCAT_PROXY_PORT" value="${scarab.tomcat.proxy.port}"/>
+        <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
+        <filter token="SCARAB_WEBAPP_RELOADABLE" value="${scarab.webapp.reloadable}"/>
+        <filter token="SCARAB_WEBAPP_CHECK_INTERVAL" value="${scarab.webapp.checkInterval}"/>
+        
+        <copy file="server.xml.tmpl"
+              tofile="${tomcat.dir}/conf/server.xml"
+              filtering="yes"
+              overwrite="yes"/>
+        
+        <!-- Copy the webapp configuration to the required place -->
+        <filter token="SCARAB_WELCOME_FILE" value="${scarab.welcome.file}"/>
+        
+        <copy file="web.xml.tmpl"
+              tofile="${src.webinf.dir}/web.xml"
+              filtering="yes"
+              overwrite="yes"/>
+        
+        <!-- Copy the intake service configuration to the required place -->
+        <filter token="FILE_UPLOAD_MAX_SIZE" value="${scarab.file.max.size}"/>
+        
+        <copy file="intake.xml.tmpl"
+              tofile="${src.conf.dir}/conf/intake.xml"
+              filtering="yes"
+              overwrite="yes"/>
+        
+        <!-- Compile the migration task -->        
+        <mkdir dir="${migration.dest.dir}"/>
+        <javac srcdir="${src.dir}/migration"
+               destdir="${migration.dest.dir}"
+               excludes="**/package.html,torque/**"
+               debug="${debug}"
+               deprecation="${deprecation}"
+               optimize="${optimize}">
+            <classpath refid="classpath"/>
+        </javac>
+
+        <!-- Configure the migration task -->
+        <path id="migration-cp">
+            <path refid="classpath"/>
+            <pathelement location="${migration.dest.dir}"/>
+        </path>
+
+        <taskdef name="b18-b19" 
+                 classname="org.tigris.scarab.migration.b18b19.MigrateProperties">
+            <classpath refid="migration-cp"/>
+        </taskdef>
+
+        <!-- Run the migration task -->
+        <b18-b19 output="${src.conf.dir}/conf/CustomSettings.properties"/>
+    </target>
 
     <target name="migrate-b15-b16" depends="prepare">
-
-        <property name="migration.dest.dir" 
-            value="${build.dir}/migration/classes"/> 
-
         <path id="migration-cp">
           <path refid="classpath"/>
           <pathelement location="${migration.dest.dir}"/>

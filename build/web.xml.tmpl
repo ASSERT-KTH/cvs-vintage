@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2.2.dtd">
+
+<web-app>
+    <servlet>
+        <servlet-name>
+           @SCARAB_CONTEXT@
+        </servlet-name>
+        <servlet-class>
+            org.apache.turbine.Turbine
+        </servlet-class>
+
+        <init-param>
+            <param-name>properties</param-name>
+            <!-- This is relative to our Context's docBase -->
+            <param-value>
+                /WEB-INF/conf/TurbineResources.properties
+            </param-value>
+        </init-param>
+	
+        <!-- Load this servlet at server startup time -->
+        <load-on-startup/>
+
+    </servlet>
+<!--
+    <servlet>
+        <servlet-name>
+           ant
+        </servlet-name>
+        <servlet-class>
+            org.tigris.scarab.util.AntServlet
+        </servlet-class>
+        <init-param>
+            <param-name>build_command</param-name>
+            <param-value>
+                /usr/local/ant/bin/ant -buildfile
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>build_file</param-name>
+            <param-value>
+                /Users/jon/checkout/scarab/build/build.xml
+            </param-value>
+        </init-param>
+    </servlet>
+-->
+    <servlet>
+        <servlet-name>AxisServlet</servlet-name>
+        <display-name>Apache-Axis Servlet</display-name>
+        <servlet-class>org.apache.axis.transport.http.AxisServlet</servlet-class>
+    </servlet>
+  <servlet>
+    <servlet-name>AdminServlet</servlet-name>
+    <display-name>Axis Admin Servlet</display-name>
+    <servlet-class>
+        org.apache.axis.transport.http.AdminServlet
+    </servlet-class>
+    <load-on-startup>100</load-on-startup>
+  </servlet>
+
+
+    <servlet-mapping>
+        <servlet-name>@SCARAB_CONTEXT@</servlet-name>
+        <url-pattern>/s/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>@SCARAB_CONTEXT@</servlet-name>
+        <url-pattern>/issue/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>@SCARAB_CONTEXT@</servlet-name>
+        <url-pattern>/issues/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>@SCARAB_CONTEXT@</servlet-name>
+        <url-pattern>/servlet/@SCARAB_CONTEXT@/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>@SCARAB_CONTEXT@</servlet-name>
+        <url-pattern>/servlets/@SCARAB_CONTEXT@/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>/servlet/AxisServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>*.jws</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>/services/*</url-pattern>
+    </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AdminServlet</servlet-name>
+    <url-pattern>/servlet/AdminServlet</url-pattern>
+  </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>@SCARAB_WELCOME_FILE@</welcome-file>
+    </welcome-file-list>
+ 
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>templates</web-resource-name>
+            <url-pattern>/templates/*</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>logs</web-resource-name>
+            <url-pattern>/logs/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>Templates</realm-name>
+    </login-config>
+    <security-role>
+        <description>This is the administrator role.</description>
+        <role-name>admin</role-name>
+    </security-role>
+</web-app>

@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+
+<!--
+<!DOCTYPE input-data SYSTEM
+          "http://jakarta.apache.org/turbine/dtd/intake.dtd">
+-->
+
+
+<!-- ==================================================================== -->
+<!--                                                                      -->
+<!--                P R O J E C T  I N P U T S                            -->
+<!--                                                                      -->
+<!-- ==================================================================== -->
+
+<input-data basePackage="org.tigris.scarab.">
+<group name="Attribute" key="att" mapToObject="om.Attribute">
+        <field name="Id" key="id" type="NumberKey" mapToProperty="PrimaryKey">
+           <rule name="mask" value="[0-9]+">Invalid Id</rule>
+           <required-message>intake_NoAttributeWasSelected</required-message>
+        </field>
+        <field name="TypeId" key="typeid" type="int">
+            <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+        </field>
+        <field name="Name" key="name" type="String">
+            <rule name="minLength" value="1">intake_AttributeNameNotAllowedEmpty</rule>
+            <rule name="maxLength" value="255">intake_AttributeNameMustBeLessThan255Characters</rule>
+        </field>
+        <field name="Description" key="desc" type="String"> 
+            <rule name="minLength" value="1">intake_AttributeDescriptionNotAllowedEmpty</rule>
+            <rule name="maxLength" value="255">intake_AttributeDescriptionMustBeLessThan255Characters</rule>
+        </field>
+        <field name="Permission" key="perm" type="String"> 
+            <rule name="minLength" value="1">intake_PermissionNotAllowedEmpty</rule>
+            <rule name="maxLength" value="255">intake_PermissionMustBeLessThan255Characters</rule>
+        </field>
+        <field name="Action" key="act" type="String"> 
+            <rule name="minLength" value="1">intake_ActionNotAllowedEmpty</rule>
+            <rule name="maxLength" value="255">intake_ActionMustBeLessThan255Characters</rule>
+        </field>
+        <field name="Deleted" key="del" type="boolean" />
+</group>
+
+<group name="AttributeOption" key="atto" mapToObject="om.AttributeOption">
+        <field name="OptionId" key="aoid" type="NumberKey" mapToProperty="PrimaryKey">
+           <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+           <required-message>intake_NoAttributeOptionSelected</required-message>
+        </field>
+        <field name="AttributeId" key="attid" type="int">
+           <rule name="mask" value="[0-9]+">intake_PleaseSelectValidChoice</rule>
+        </field>
+<!--        
+        <field name="ParentIds" key="parentid" type="String">
+           <rule name="mask" value="[0-9|,]+">intake_InvalidOptionIds</rule>
+        </field>
+-->
+        <field name="Name" key="name" type="String">
+            <rule name="minLength" value="1">intake_OptionNameNotAllowedEmpty</rule>
+            <rule name="maxLength" value="255">intake_OptionNameMustBeLessThan255Characters</rule>
+        </field>
+        <field name="NewName" key="newname" type="String"
+               mapToProperty="Name">
+            <rule name="maxLength" value="255">intake_OptionNameMustBeLessThan255Characters</rule>
+        </field>
+        <field name="Deleted" key="del" type="boolean"/>
+</group>
+
+<!-- Combination of AttributeOption and ROptionOption primarily for the GlobalAttributeEdit.vm page -->
+<group name="ParentChildAttributeOption" key="pcao" mapToObject="om.ParentChildAttributeOption">
+        <field name="OptionId" key="oid" type="int">
+           <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+           <required-message>intake_NoAttributeOptionSelected</required-message>
+        </field>
+        <field name="AttributeId" key="attid" type="int">
+           <rule name="mask" value="[0-9]+">intake_PleaseSelectValidChoice</rule>
+        </field>
+        <field name="ParentId" key="parentid" type="int">
+           <rule name="mask" value="[0-9|,]+">intake_InvalidOptionId</rule>
+        </field>
+        <field name="Name" key="name" type="String">
+            <rule name="minLength" value="1">intake_OptionNameNotAllowedEmpty</rule>
+            <rule name="maxLength" value="255">intake_OptionNameMustBeLessThan255Characters</rule>
+        </field>
+        <field name="PreferredOrder" key="order" type="int">
+           <rule name="mask" value="[0-9]+">intake_PleaseSelectValidChoice</rule>
+        </field>
+        <field name="Weight" key="weight" type="int">
+           <rule name="mask" value="[0-9]+">intake_PleaseSelectValidChoice</rule>
+        </field>
+        <field name="NewName" key="newname" type="String"
+               mapToProperty="Name">
+            <rule name="maxLength" value="255">intake_OptionNameMustBeLessThan255Characters</rule>
+        </field>
+        <field name="Deleted" key="del" type="boolean"/>
+</group>
+
+<group name="IssueType" key="itype" mapToObject="om.IssueType">
+        <field name="IssueTypeId" key="itypeid" type="int">
+           <rule name="mask" value="^$|[0-9]+">intake_PleaseSelectValidChoice</rule>
+        </field>
+        <field name="Name" key="name" type="String">
+            <rule name="required" value="true">intake_IssueTypeNameNotAllowedEmpty</rule>
+            <rule name="mask" value="\S">intake_IssueTypeNameNotAllowedEmpty</rule>
+            <rule name="maxLength" value="100">intake_IssueTypeNameMustBeLessThan100Characters</rule>    
+        </field>
+        <field name="Description" key="desc" type="String">
+            <rule name="maxLength" value="255">intake_IssueTypeDescriptionMustBeLessThan255Characters</rule>    
+        </field>
+        <field name="Template" key="tem" type="boolean" mapToProperty=""/>
+        <field name="Deleted" key="del" type="boolean"/>
+        <field name="Dedupe" key="dup" type="boolean"/>
+        <field name="Locked" key="loc" type="boolean"/>
+        <field name="Isdefault" key="def" type="boolean"/>
+</group>
+
+<group name="AttributeType" key="attt" mapToObject="om.AttributeType">
+        <field name="AttributeTypeId" key="atttid" type="int">
+           <rule name="mask" value="^$|[0-9]+">intake_PleaseSelectValidChoice</rule>
+        </field>
+        <field name="Name" key="name" type="String">
+            <rule name="maxLength" value="255">intake_AttributeTypeNameMustBeLessThan255Characters</rule>
+        </field>
+</group>
+
+<group name="AttributeGroup" key="attg" mapToObject="om.AttributeGroup">
+        <field name="AttributeGroupId" key="attgid" type="int">
+           <rule name="mask" value="^$|[0-9]+">intake_PleaseSelectValidChoice</rule>
+        </field>
+        <field name="Name" key="name" type="String">
+            <rule name="required" value="true">intake_AttributeGroupNameNotAllowedEmpty</rule>
+            <rule name="mask" value="\S">intake_AttributeGroupNameNotAllowedEmpty</rule>
+            <rule name="maxLength" value="255">intake_AttributeGroupNameMustBeLessThan255Characters</rule>    
+        </field>
+        <field name="Description" key="desc" type="String">
+            <rule name="maxLength" value="255">intake_AttributeGroupDescriptionMustBeLessThan255Characters</rule>
+        </field>
+        <field name="Active" key="act" type="boolean"/>
+        <field name="Order" key="order" type="int" mapToProperty="Order">
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+</group>
+
+<group name="RAttributeAttributeGroup" key="raag" mapToObject="om.RAttributeAttributeGroup">
+        <field name="Order" key="order" type="int" mapToProperty="Order">
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+</group>
+
+<group name="RModuleAttribute" key="rma" mapToObject="om.RModuleAttribute">
+        <field name="AttributeId" key="attid" type="int">
+           <rule name="mask" value="^$|[0-9]+">intake_PleaseSelectValidChoice</rule>
+        </field>
+        <field name="DisplayValue" key="name" type="String">
+            <rule name="maxLength" value="255"/>
+        </field>
+        <field name="Active" key="active" type="boolean"/>
+        <field name="Required" key="req" type="boolean"/>
+        <field name="QuickSearch" key="qs" type="boolean"/>
+        <field name="IsDefaultText" key="dt" type="boolean"/>
+        <field name="Order" key="order" type="int" 
+                mapToProperty="Order">
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+</group>
+
+<group name="RIssueTypeAttribute" key="ria" mapToObject="om.RIssueTypeAttribute">
+        <field name="AttributeId" key="attid" type="int">
+           <rule name="mask" value="^$|[0-9]+">intake_PleaseSelectValidChoice</rule>
+        </field>
+        <field name="Active" key="active" type="boolean"/>
+        <field name="Required" key="req" type="boolean"/>
+        <field name="QuickSearch" key="qs" type="boolean"/>
+        <field name="IsDefaultText" key="dt" type="boolean"/>
+        <field name="Locked" key="loc" type="boolean"/>
+        <field name="Order" key="order" type="int" 
+                mapToProperty="Order">
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+</group>
+
+<group name="RQueryUser" key="rqu" mapToObject="om.RQueryUser">
+        <field name="Subscribed" key="sub" type="boolean" mapToProperty="IsSubscribed" />
+        <field name="Frequency" key="freq" type="int" 
+             mapToProperty="SubscriptionFrequency">
+             <required-message>intake_SelectOption</required-message>
+             <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+        </field>
+</group>
+
+<group name="RModuleOption" key="rmo" mapToObject="om.RModuleOption">
+        <field name="DisplayValue" key="name" type="String">
+            <rule name="maxLength" value="255"/>
+        </field>
+        <field name="Active" key="active" type="boolean"/>
+        <field name="Order" key="order" type="int" 
+                mapToProperty="Order">
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+        <field name="Weight" key="weight" type="int" 
+                mapToProperty="Weight">
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+</group>
+
+<group name="RIssueTypeOption" key="rio" mapToObject="om.RIssueTypeOption">
+        <field name="Active" key="active" type="boolean"/>
+        <field name="Order" key="order" type="int" 
+                mapToProperty="Order">
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+        <field name="Locked" key="loc" type="boolean"/>
+        <field name="Weight" key="weight" type="int" 
+                mapToProperty="Weight">
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+</group>
+
+<group name="RModuleIssueType" key="rmit" mapToObject="om.RModuleIssueType">
+        <field name="Display" key="dis" type="boolean"/>
+        <field name="Active" key="act" type="boolean"/>
+        <field name="Order" key="order" type="int" 
+                mapToProperty="Order">
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+        <field name="History" key="hist" type="int" >
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+        <field name="Comments" key="com" type="int" >
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+        <field name="Dedupe" key="dedupe" type="boolean"/>
+        <field name="DisplayName" key="name" type="String">
+        <rule name="maxLength" value="255">DisplayNameMustBeLessThan256Characters</rule>
+        </field>
+        <field name="DisplayDesc" key="desc" type="String" mapToProperty="DisplayDescription">
+        <rule name="maxLength" value="255">DisplayDescriptionMustBeLessThan256Characters</rule>
+        </field>
+</group>
+
+<group name="RModuleUserAttribute" key="rmua" mapToObject="om.RModuleUserAttribute">
+        <field name="Order" key="order" type="int" >
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+</group>
+
+<group name="AttributeValue" key="attv" 
+            mapToObject="om.AttributeValue">
+        <field name="Id" key="id" type="NumberKey" mapToProperty="PrimaryKey">
+           <rule name="mask" value="([0-9]|:)+">intake_BadIdMessage</rule>
+        </field>
+        <field name="AttributeId" key="attid" type="int"/>
+        <field name="OptionId" key="optionid" type="int">
+           <rule name="mask" value="[0-9]+">intake_PleaseSelectValidChoice</rule>
+           <required-message>intake_ModuleRequiresOptionForAttribute</required-message>
+        </field>
+        <field name="OptionIds" key="optids" type="int" multiValued="true"/>
+        <field name="UserId" key="visid" type="int">
+           <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+        </field>
+        <field name="NumericValue" key="num" type="int" />
+        <field name="UserIds" key="visids" type="int" multiValued="true"/>
+        <field name="Value" key="val" type="String">
+           <rule name="mask" value="^$|\S">intake_ModuleRequiresDataForAttribute</rule>
+           <rule name="maxLength" value="5000">intake_LengthMustBeLessThan5000CharactersUAttachmentOrComment</rule>
+           <required-message>intake_ModuleRequiresDataForAttribute</required-message>
+        </field>
+        <field name="Url" key="url" type="String" mapToProperty="Value">
+            <rule name="maxLength" value="255">intake_UrlLengthCannotBeGreaterThan255</rule>
+            <rule name="mask" value="^$|http.+">intake_EnterUrlStartingWithHttp</rule>
+           <required-message>intake_ModuleRequiresValidUrl</required-message>
+        </field>
+        <field name="Deleted" key="del" type="boolean" />
+<!--
+        <field name="Order" key="order" type="int" 
+               mapToProperty="NumericValue">
+           <rule name="maxValue" value="99">intake_EnterValueLessThan100</rule>
+           <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
+        </field>
+-->
+</group>
+
+<group name="Issue" key="issue" mapToObject="om.Issue">
+        <field name="Id" key="id" type="String" mapToProperty="UniqueId">
+        </field>
+        <field name="Ids" key="ids" type="long"
+               mapToProperty="" multiValued="true">
+           <rule name="mask" value="[0-9]+">intake_BadIdsMessage</rule>
+        </field>
+        <field name="ModuleId" key="modid" type="int">
+            <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+        </field>
+        <field name="TypeId" key="iti" type="int" >
+            <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+        </field>
+        <field name="FederatedId" key="fid" type="String"/> 
+        <field name="Deleted" key="del" type="boolean" />
+</group>
+
+<group name="SearchIssue" key="search" mapToObject="util.word.IssueSearch">
+        <field name="SearchWords" key="sw" type="String">
+        </field>
+        <field name="TextScope" key="ts" type="int" multiValued="true">
+        </field>
+        <field name="CommentQuery" key="cq" type="String">
+        </field>
+        <field name="MinId" key="lid" type="String">
+           <rule name="mask" value="^[0-9]{1,9}$|^[A-Za-z]{0,4}[0-9]{1,9}$">intake_InvalidIssueId</rule>
+        </field>
+        <field name="MaxId" key="hid" type="String">
+           <rule name="mask" value="^[0-9]{1,9}$|^[A-Za-z]{0,4}[0-9]{1,9}$">intake_InvalidIssueId</rule>
+        </field>
+        <field name="MinDate" key="ld" type="String">
+        </field>
+        <field name="MaxDate" key="hd" type="String">
+        </field>
+        <field name="StateChangeAttributeId" key="scai" type="int"/>
+        <field name="StateChangeFromOptionId" key="scfoi" type="int"/>
+        <field name="StateChangeToOptionId" key="sctoi" type="int"/>
+        <field name="StateChangeFromDate" key="scfd" type="String">
+            <rule name="mask" 
+                value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">intake_InvalidFromDate</rule>
+        </field>
+        <field name="StateChangeToDate" key="sctd" type="String">
+            <rule name="mask" 
+                value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">intake_InvalidToDate</rule>
+        </field>
+        <field name="SortAttributeId" key="sai" type="int"/>
+        <field name="SortPolarity" key="sp" type="String"/>
+        <field name="NullUser" key="nu" type="boolean"  mapToProperty=""/>
+        <field name="NullUserAttr" key="nua" type="String"  mapToProperty=""/>
+</group>
+
+<group name="Module" key="mod" mapToObject="om.ScarabModule">
+        <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
+           <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+        </field>
+        <!-- this is not Name because Name is the Group Name, 
+             not the Module Name -->
+        <field name="RealName" key="name" type="String">
+            <rule name="maxLength" value="255"/>
+            <rule name="required" value="true">intake_NameMayNotBeBlank</rule>
+        </field>
+        <field name="Description" key="desc" type="String">
+            <rule name="maxLength" value="1024"/>
+        </field>
+        <field name="Code" key="code" type="String">
+            <rule name="mask" value="^[:alpha:]+$">intake_CodeMustBeAlpha</rule>
+            <rule name="maxLength" value="4"/>
+        </field>
+        <!--
+        <field name="Url" key="url" type="String">
+            <rule name="maxLength" value="255"/>
+        </field>
+        -->
+        <field name="ArchiveEmail" key="email" type="String">
+            <rule name="maxLength" value="99"/>
+        </field>
+        <field name="ParentId" key="parentid" type="int">
+           <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+        </field>
+        <field name="OwnerId" key="ownerid" type="int">
+           <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+        </field>
+        <field name="Deleted" key="del" type="boolean" />
+</group>
+
+<group name="Login" key="login">
+    <field name="Username" key="u" type="String">
+        <rule name="required" value="true">intake_EnterUsername</rule>
+    </field>
+    <field name="Password" key="p" type="String">
+        <rule name="required" value="true">intake_EnterPassword</rule>
+    </field>
+</group>
+
+<group name="ForgotPassword" key="fgtpwd">
+    <field name="Username" key="u" type="String">
+        <rule name="required" value="true">intake_EnterUsername</rule>
+    </field>
+</group>
+
+<group name="EditPermission" key="editpermission">
+    <field name="PermissionName" key="r" type="String">
+        <rule name="required" value="true">intake_EnterPermissionName</rule>
+    </field>
+</group>
+
+<group name="EditRole" key="editrole">
+    <field name="RoleName" key="r" type="String">
+        <rule name="required" value="true">intake_EnterRoleName</rule>
+    </field>
+</group>
+
+<group name="Register" key="register" mapToObject="om.ScarabUserImpl">
+    <field name="FirstName" key="fn" type="String">
+        <rule name="required" value="true">intake_EnterFirstName</rule>
+    </field>
+    <field name="LastName" key="ln" type="String">
+        <rule name="required" value="true">intake_EnterLastName</rule>
+    </field>
+    <field name="Email" key="e" type="String">
+        <rule name="required" value="true">intake_EnterEmailValidAddress</rule>
+        <rule name="mask" value=".+@.+\..+">intake_EnterEmailValidAddress</rule>
+        <rule name="maxLength" value="99">intake_EmailAddressRequiredLessThan100Characters</rule>
+    </field>
+    <field name="UserName" key="u" type="String">
+        <rule name="required" value="true">intake_EnterUsername</rule>
+        <rule name="maxLength" value="99">intake_UsernameRequiredLessThan100Characters</rule>
+    </field>
+    <field name="OldPassword" key="op" type="String" mapToProperty="">
+        <rule name="required" value="true">intake_EnterPassword</rule>
+    </field>
+    <field name="Password" key="p" type="String">
+        <rule name="required" value="true">intake_EnterPassword</rule>
+    </field>
+    <field name="PasswordConfirm" key="pc" type="String" mapToProperty="">
+        <rule name="required" value="true">intake_EnterConfirmationPassword</rule>
+    </field>
+    <field name="Confirm" key="c" type="String" mapToProperty="">
+        <rule name="required" value="true">intake_EnterValidConfirmationCode</rule>
+    </field>
+</group>
+
+<group name="Attachment" key="atch" mapToObject="om.Attachment">
+        <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
+           <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+        </field>
+    <field name="Name" key="n" type="String">
+        <rule name="maxLength" value="255">intake_NameMustBeLessThan256Characters</rule>
+        <required-message>intake_FieldRequired</required-message>
+    </field>
+    <field name="Data" key="das" type="String">
+        <rule name="maxLength" value="8388607">intake_DescriptionMustBeLessThan8MB</rule>
+        <required-message>intake_FieldRequired</required-message>
+    </field>
+    <field name="File" key="d" type="FileItem">
+        <rule name="maxLength" value="@FILE_UPLOAD_MAX_SIZE@">intake_MaxFileUploadSizeExceeded</rule>
+        <required-message>intake_NoFile</required-message>
+    </field>
+    <!-- two different fields are used because there is an 'other' field -->
+    <field name="MimeTypeA" key="mta" type="String" mapToProperty="">
+        <rule name="maxLength" value="255">intake_MimeTypeLengthMustBeLessThan256Characters</rule>
+        <required-message>intake_SpecifyMimeType</required-message>
+    </field>
+    <field name="MimeTypeB" key="mtb" type="String" mapToProperty="">
+        <rule name="maxLength" value="255">intake_MimeTypeLengthMustBeLessThan256Characters</rule>
+    </field>
+</group>
+
+<group name="Depend" key="dep" mapToObject="om.Depend">
+    <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
+        <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+    </field>
+    <field name="ObservedId" key="odi" type="long" >
+        <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+    </field>
+    <field name="ObserverUniqueId" key="ori" type="String" >
+        <required-message>Please enter an id.</required-message>
+        <rule name="maxLength" value="255">intake_BadIdMessage</rule>
+    </field>
+    <field name="TypeId" key="dti" type="int" >
+        <rule name="mask" value="[1-9]+">intake_BadIdMessage</rule>
+    </field>
+    <field name="Description" key="d" type="String">
+        <rule name="maxLength" value="255">intake_DescriptionMustBeLessThan256Characters</rule>
+    </field>
+    <field name="Deleted" key="del" type="boolean" />
+</group>
+
+<group name="Query" key="query" mapToObject="om.Query">
+    <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
+        <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+    </field>
+    <field name="Name" key="n" type="String">
+        <required-message>intake_EnterNameForQuery</required-message>
+        <rule name="mask" value="\S">intake_EnterNameForQuery</rule>
+        <rule name="maxLength" value="255">intake_NameMustBeLessThan256Characters</rule>
+    </field>
+    <field name="Description" key="d" type="String">
+        <rule name="maxLength" value="255">intake_DescriptionMustBeLessThan256Characters</rule>
+    </field>
+    <field name="Value" key="v" type="String" />
+    <field name="ScopeId" key="sco" type="int" >
+        <required-message>intake_SelectOption</required-message>
+        <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+    </field>
+    <field name="ModuleId" key="mi" type="int" >
+        <required-message>intake_IfSelectedModuleLevelQueryMustSelectModule</required-message>
+        <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+    </field>
+</group>
+
+<group name="IssueTemplateInfo" key="iti" mapToObject="om.IssueTemplateInfo">
+    <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
+        <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+    </field>
+    <field name="Name" key="n" type="String">
+        <rule name="required" value="true">intake_EnterNameForTemplate</rule>
+        <rule name="mask" value="\S">intake_EnterNameForTemplate</rule>
+        <rule name="maxLength" value="255">intake_NameMustBeLessThan256Characters</rule>
+    </field>
+    <field name="Description" key="d" type="String">
+        <rule name="maxLength" value="255">intake_DescriptionMustBeLessThan256Characters</rule>
+    </field>
+    <field name="ScopeId" key="tti" type="int" >
+        <required-message>intake_SelectOption</required-message>
+        <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+    </field>
+    <field name="ModuleId" key="mi" type="int" mapToProperty="">
+        <required-message>intake_IfSelectedModuleLevelQueryMustSelectModule</required-message>
+        <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+    </field>
+</group>
+
+<group name="Report" key="rep" mapToObject="reports.ReportBridge">
+        <field name="Name" key="name" type="String">
+            <rule name="maxLength" value="255">intake_NameMustBeLessThan256Characters</rule>
+        </field>
+        <field name="Description" key="desc" type="String"> 
+            <rule name="maxLength" value="255">intake_DescriptionMustBeLessThan256Characters</rule>
+        </field>
+        <field name="Format" key="format" type="String">
+        </field>
+        <field name="ScopeId" key="scp" type="int"/>
+        <field name="DefaultDate" key="dd" type="DateString">
+           <rule name="format1" value="MM/dd/yy HH:mm"/>
+           <rule name="format2" value="MM/dd/yy"/>
+           <rule name="flexible" value="true"/>
+        </field>
+        <field name="Deleted" key="del" type="boolean" />
+</group>
+
+<group name="MoveIssue" key="mv">
+    <field name="Action" key="rb" type="String">
+        <rule name="validValues" value="copy|move">intake_ActionMustBeMoveOrCopy</rule>
+    </field>
+    <field name="ModuleId" key="modId" type="int">
+        <rule name="mask" value="[0-9]+">intake_SelectModuleFromList</rule>
+    </field>
+    <field name="IssueTypeId" key="itId" type="int">
+        <rule name="mask" value="[0-9]+">intake_SelectIssueTypeFromList</rule>
+    </field>
+</group>
+
+<group name="MITList" key="mitl" mapToObject="om.MITList">
+        <field name="Name" key="name" type="String" >
+           <rule name="required" value="true">intake_NameMustHaveValue</rule>
+        </field>
+</group>
+
+@INTAKE_OPTIONAL_GROUPS@
+
+</input-data>

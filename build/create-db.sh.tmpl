@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh.tmpl,v 1.1 2004/03/13 15:54:24 pledbrook Exp $
+# $Id: create-db.sh.tmpl,v 1.2 2004/04/03 22:30:24 pledbrook Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -17,7 +17,7 @@ DB_NAME='@DB_NAME@'
 DB_HOST='@DB_HOST@'
 DB_PORT='@DB_PORT@'
 LOAD_ORDER="LoadOrder.lst"
-POPULATION_SCRIPT_DIR="${PATHNAME}/../../target/scarab/WEB-INF/sql"
+POPULATION_SCRIPT_DIR="${PATHNAME}/../../target/@SCARAB_CONTEXT@/WEB-INF/sql"
 
 # execute the settings file
 if [ -f "${POPULATION_SCRIPT_DIR}/${DB_SETTINGS}" ] ; then
