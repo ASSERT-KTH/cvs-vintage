@@ -15,7 +15,7 @@
 #if (!$module.UnapprovedQueries.isEmpty() || !$module.UnapprovedTemplates.isEmpty())
 
  <div class="functnbar">
-   <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
+   <input type="submit" value="$l10n.Submit" name="eventSubmit_doSubmit" />&#160; 
  </div>
 
  <h3>$l10n.OpenSubmissions</h3>
@@ -89,14 +89,14 @@
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th width="120">$l10n.Comments (sent to selected submittees)</th>
+   <th width="120">$l10n.Comments ($l10n.SentToSelected)</th>
    <td>#textAreaMedium("global_comment" "")</td>
   </tr>
  </table>
 </div>
 
 <div class="functnbar2">
-  <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
+  <input type="submit" value="$l10n.Submit" name="eventSubmit_doSubmit" />&#160; 
   <input type="submit" value="$l10n.ClearForm" />
 </div>
 
