@@ -339,6 +339,12 @@
     </field>
 </group>
 
+<group name="XMLExportSelect" key="xmlexportselect">
+    <field name="FederatedIds" key="fids" type="String">
+        <rule name="required" value="true">Please enter an issue, or a range of issues.</rule>
+    </field>
+</group>
+
 <group name="Register" key="register" mapToObject="om.ScarabUserImpl">
     <field name="FirstName" key="fn" type="String">
         <rule name="required" value="true">Please enter a first name</rule>
