@@ -779,19 +779,31 @@ try{
                 .getString(ScarabConstants.REPORTING_ISSUE);
             if ( key == null ) 
             {
-                // get new issue
-                reportingIssue = getCurrentModule().getNewIssue(getCurrentIssueType());
-                key = ((ScarabUser)data.getUser())
-                    .setReportingIssue(reportingIssue);
-                data.getParameters().add(ScarabConstants.REPORTING_ISSUE, key);
+                getNewReportingIssue();
             }
             else 
             {
                 reportingIssue = ((ScarabUser)data.getUser())
                     .getReportingIssue(key);
+
+                // if reportingIssue is still null, the parameter must have
+                // been stale, just get a new issue
+                if ( reportingIssue == null ) 
+                {
+                    getNewReportingIssue();                    
+                }
             }
         }
         return reportingIssue;
+    }
+
+    private void getNewReportingIssue()
+        throws Exception
+    {
+        reportingIssue = getCurrentModule().getNewIssue(getCurrentIssueType());
+        String key = ((ScarabUser)data.getUser())
+            .setReportingIssue(reportingIssue);
+        data.getParameters().add(ScarabConstants.REPORTING_ISSUE, key);
     }
 
     public void setReportingIssue(Issue issue)
