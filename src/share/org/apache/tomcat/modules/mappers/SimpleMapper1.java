@@ -62,10 +62,9 @@ package org.apache.tomcat.modules.mappers;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.buf.MessageBytes;
 import org.apache.tomcat.util.io.FileUtil;
-//import org.apache.tomcat.util.PrefixMapper;
 import org.apache.tomcat.util.collections.*;
 import java.util.*;
-
+import java.io.*;
 /**
  *  This class will set up the data structures used by a simple patern matching
  *  alghoritm and use it to extract the path components from the request URI.
@@ -100,8 +99,11 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     // Property for the PrefixMapper - cache the mapping results
     boolean mapCacheEnabled=false;
     
+    
     public SimpleMapper1() {
 	map=new PrefixMapper();
+	ignoreCase= (File.separatorChar  == '\\');
+	map.setIgnoreCase( ignoreCase );
     }
 
     /* -------------------- Support functions -------------------- */
@@ -111,6 +113,17 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     public void setMapCache( boolean v ) {
 	mapCacheEnabled = v;
 	map.setMapCache( v );
+    }
+
+    // -------------------- Ingore case --------------------
+    boolean ignoreCase=false;
+
+    /** Use case insensitive match, for windows and
+	similar platforms
+    */
+    public void setIgnoreCase( boolean b ) {
+	ignoreCase=b;
+	map.setIgnoreCase( b );
     }
 
     /* -------------------- Initialization -------------------- */
@@ -209,7 +222,10 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 		defC.setNote( ctExtMapNote, eM );
 	    }
 	    // add it to the Container local maps
-	    eM.put( path.substring( 1 ), ct );
+	    if( ignoreCase )
+		eM.put( path.substring( 1 ).toLowerCase() , ct );
+	    else
+		eM.put( path.substring( 1 ), ct );
 	    if(debug>0)
 		log( "SM: extension map " + ctxP + "/" +
 		     path + " " + ct + " " );
@@ -359,6 +375,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	if( extM==null ) return null;
 
 	// Find the container associated with that extension
+	if( ignoreCase ) extension=extension.toLowerCase();
 	Container container= (Container)extM.get(extension);
 
 	if (container == null)
@@ -460,7 +477,7 @@ class PrefixMapper  {
     // mappers ( extending this one for example ) using 1.2 collections
     // TreeMap mapCache;
     boolean mapCacheEnabled=false;
-
+    boolean ignoreCase=false;
     
     public PrefixMapper() {
 	prefixMappedServlets=new SimpleHashtable();
@@ -472,6 +489,10 @@ class PrefixMapper  {
 	mapCacheEnabled=v;
     }
 
+    public void setIgnoreCase( boolean b ) {
+	ignoreCase=b;
+    }
+    
     /** Remove all mappings matching path
      */
     public void removeAllMappings( String host, Context ctx ) {
@@ -523,17 +544,24 @@ class PrefixMapper  {
     /**
      */
     public void addMapping( String host, String path, Object target ) {
-	if( host == null )
-	    prefixMappedServlets.put( path, target);
-	else {
+	if( host == null ) {
+	    if( ignoreCase )
+		prefixMappedServlets.put( path.toLowerCase(), target);
+	    else
+		prefixMappedServlets.put( path, target);
+	} else {
 	    host=host.toLowerCase();
 	    PrefixMapper vmap=(PrefixMapper)vhostMaps.get( host );
 	    if( vmap == null ) {
 		vmap=new PrefixMapper();
-		vhostMaps.put( host, vmap );
+		vmap.setIgnoreCase( ignoreCase );
+		    vhostMaps.put( host, vmap );
 		vmap.setMapCache( mapCacheEnabled );
 	    }
-	    vmap.addMapping( path, target );
+	    if( ignoreCase ) 
+		vmap.addMapping( path.toLowerCase(), target );
+	    else
+		vmap.addMapping( path, target );
 	}
     }
 
@@ -549,7 +577,10 @@ class PrefixMapper  {
 		vmap=new PrefixMapper();
 		vhostMaps.put( host, vmap );
 	    }
-	    vmap.addExactMapping( path, target );
+	    if( ignoreCase ) 
+		vmap.addExactMapping( path.toLowerCase(), target );
+	    else
+		vmap.addExactMapping( path, target );
 	}
     }
     
@@ -577,7 +608,7 @@ class PrefixMapper  {
 	
 	if( myMap==null ) myMap = this; // default server
 
-	
+	if( ignoreCase ) path=path.toLowerCase();
 	container=myMap.exactMappedServlets.get( path );
 	if( container != null ) return container; // and we're done!
 
