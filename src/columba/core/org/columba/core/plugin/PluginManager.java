@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.plugin;
 
 import java.io.File;
@@ -36,7 +37,6 @@ public class PluginManager {
 	File[] pluginFolders;
 	String[] ids;
 	XmlElement[] elements;
-
 	Hashtable plugins;
 
 	/**
@@ -44,15 +44,12 @@ public class PluginManager {
 	 */
 	public PluginManager() {
 		super();
-
 		plugins = new Hashtable(10);
-
 	}
 
 	public void initPlugins() {
 		pluginFolders = PluginFinder.searchPlugins();
-		if (pluginFolders == null)
-			return;
+		if (pluginFolders == null) return;
 		ids = new String[pluginFolders.length];
 		elements = new XmlElement[pluginFolders.length];
 
@@ -66,14 +63,12 @@ public class PluginManager {
 			ColumbaLogger.log.info("registering plugin: " + folder);
 
 			File xmlFile = new File(folder, "plugin.xml");
-			if (xmlFile == null)
-				continue;
+			if (xmlFile == null) continue;
 
 			XmlIO config = new XmlIO();
 			try {
 				config.setURL(xmlFile.toURL());
-			} catch (MalformedURLException mue) {
-			}
+			} catch (MalformedURLException mue) {}
 			config.load();
 
 			XmlElement element = config.getRoot().getElement("/plugin");
@@ -139,10 +134,9 @@ public class PluginManager {
 
 	public AbstractPluginHandler getHandler(String id)
 		throws PluginHandlerNotFoundException {
-		if (plugins.containsKey(id))
+		if (plugins.containsKey(id)) {
 			return (AbstractPluginHandler) plugins.get(id);
-		else
-		{
+                } else {
 			ColumbaLogger.log.error("PluginHandler not found: "+id);
 
 			throw new PluginHandlerNotFoundException(id);
@@ -154,38 +148,37 @@ public class PluginManager {
 		return (XmlElement) plugins.get(id);
 	}
 	*/
+        
 	protected int getIndex(String id) {
 		for (int i = 0; i < ids.length; i++) {
 			if (ids[i].equals(id))
 				return i;
 		}
-
 		return -1;
 	}
 
 	public File getPluginDir(String id) {
-      if(getIndex(id) >= 0 && getIndex(id) < pluginFolders.length){
-		return pluginFolders[getIndex(id)];
-      }else{
-        return (File)null;
-      }
+                if(getIndex(id) >= 0 && getIndex(id) < pluginFolders.length) {
+                        return pluginFolders[getIndex(id)];
+                } else {
+                        return null;
+                }
 	}
 
 	public XmlElement getPluginElement(String id) {
-      if(getIndex(id) >= 0 && getIndex(id) < elements.length){
-		return elements[getIndex(id)];
-      }else{
-        return (XmlElement)null;
-      }
+                if(getIndex(id) >= 0 && getIndex(id) < elements.length) {
+                        return elements[getIndex(id)];
+                } else {
+                    return null;
+                }
 	}
 
 	public String getPluginType(String id) {
-      if(getIndex(id) >= 0 && getIndex(id) < elements.length){
-        XmlElement runtime = elements[getIndex(id)].getElement("runtime");
-        return runtime.getAttribute("type");
-      }else{
-        return (String)null;
-      }
+                if(getIndex(id) >= 0 && getIndex(id) < elements.length) {
+                        XmlElement runtime = elements[getIndex(id)].getElement("runtime");
+                        return runtime.getAttribute("type");
+                } else {
+                        return null;
+                }
 	}
-
 }
