@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public final class JDBCTypeMappingMetaData
 {
@@ -40,22 +40,27 @@ public final class JDBCTypeMappingMetaData
    public static final String LENGTH = "length";
    public static final String LOCATE = "locate";
    public static final String ABS = "abs";
+   public static final String MOD = "mod";
    public static final String SQRT = "sqrt";
    public static final String COUNT = "count";
 
+   public static JDBCFunctionMappingMetaData COUNT_FUNC;
    public static JDBCFunctionMappingMetaData MAX_FUNC;
    public static JDBCFunctionMappingMetaData MIN_FUNC;
    public static JDBCFunctionMappingMetaData AVG_FUNC;
    public static JDBCFunctionMappingMetaData SUM_FUNC;
+   public static JDBCFunctionMappingMetaData MOD_FUNC;
 
    static
    {
       try
       {
-         MAX_FUNC = new JDBCFunctionMappingMetaData("max", "max(?1)");
-         MIN_FUNC = new JDBCFunctionMappingMetaData("min", "min(?1)");
-         AVG_FUNC = new JDBCFunctionMappingMetaData("avg", "avg(?1)");
-         SUM_FUNC = new JDBCFunctionMappingMetaData("sum", "sum(?1)");
+         COUNT_FUNC = new JDBCFunctionMappingMetaData("count", "count(?1 ?2)");
+         MAX_FUNC = new JDBCFunctionMappingMetaData("max", "max(?1 ?2)");
+         MIN_FUNC = new JDBCFunctionMappingMetaData("min", "min(?1 ?2)");
+         AVG_FUNC = new JDBCFunctionMappingMetaData("avg", "avg(?1 ?2)");
+         SUM_FUNC = new JDBCFunctionMappingMetaData("sum", "sum(?1 ?2)");
+         MOD_FUNC = new JDBCFunctionMappingMetaData("mod", "mod(?1, ?2)");
       }
       catch(DeploymentException e)
       {

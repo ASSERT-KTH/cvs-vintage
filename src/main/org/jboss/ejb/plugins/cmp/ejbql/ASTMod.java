@@ -9,21 +9,21 @@ package org.jboss.ejb.plugins.cmp.ejbql;
 
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.sql.ResultSet;
 
 /**
- * This abstract syntax node represents AVG function.
+ * This abstract syntax node represents an ABS function.
  *
+ * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.1 $
  */
-public final class ASTAvg
-   extends AggregateFunction
+public final class ASTMod
+   extends SimpleNode
    implements SelectFunction
 {
-   public ASTAvg(int id)
+   public ASTMod(int id)
    {
       super(id);
    }
@@ -34,10 +34,14 @@ public final class ASTAvg
       return visitor.visit(this, data);
    }
 
-   // SelectFunction implementation
-
+   /**
+    * Reads results.
+    * @param rs  the result set to read from.
+    * @return  the result of the function
+    * @throws SQLException
+    */
    public Object readResult(ResultSet rs) throws SQLException
    {
-      return JDBCUtil.DOUBLE_READER.getFirst(rs, Double.class);
+      return JDBCUtil.LONG_READER.getFirst(rs, Long.class);
    }
 }

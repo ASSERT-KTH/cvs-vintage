@@ -30,7 +30,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public final class SQLUtil
 {
@@ -70,6 +70,7 @@ public final class SQLUtil
    public static final String LENGTH = "LENGTH";
    public static final String LOCATE = "LOCATE";
    public static final String ABS = "ABS";
+   public static final String MOD = "MOD";
    public static final String SQRT = "SQRT";
    public static final String COUNT = "COUNT";
    public static final String MAX = "MAX";

@@ -17,10 +17,10 @@ import java.sql.SQLException;
  * This abstract syntax node represents a count function.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class ASTCount
-   extends SimpleNode
+   extends AggregateFunction
    implements SelectFunction
 {
    public ASTCount(int id)

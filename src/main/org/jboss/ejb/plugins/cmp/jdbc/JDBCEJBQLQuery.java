@@ -18,7 +18,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class JDBCEJBQLQuery extends JDBCAbstractQueryCommand
 {
@@ -69,9 +69,13 @@ public final class JDBCEJBQLQuery extends JDBCAbstractQueryCommand
             setOnFindCMRList(compiler.getLeftJoinCMRList());
          }
       }
-      else
+      else if(compiler.isSelectField())
       {
          setSelectField(compiler.getSelectField());
+      }
+      else
+      {
+         setSelectFunction(compiler.getSelectFunction(), manager);
       }
 
       // get the parameter order

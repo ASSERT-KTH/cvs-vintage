@@ -47,7 +47,7 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JBossQLParser {
    private Catalog catalog;
@@ -658,15 +658,12 @@ void FunctionsReturningNumerics() #void :
    (
       <SQRT> <LPAREN> ArithmeticExpression() <RPAREN>
    ) #Sqrt
-////////////////////// New or changed elements /////////////////////////////
-/* Not implemented yet
 |
    (
       <MOD> <LPAREN>
          ArithmeticExpression() <COMMA>
          ArithmeticExpression() <RPAREN>
    ) #Mod
-*/
 |
    (
       <COUNT> <LPAREN> SingleValuedPath() <RPAREN>
@@ -968,8 +965,6 @@ TOKEN_MGR_DECLS :
 |  < UNKNOWN: "UNKNOWN" >
 |  < WHERE: "WHERE" >
 |  < MEMBER: "MEMBER" >
-
-////////////////////// New or changed elements /////////////////////////////
 |  < ASC: "ASC" >
 |  < BY: "BY" >
 |  < DESC: "DESC" >
@@ -978,7 +973,7 @@ TOKEN_MGR_DECLS :
 |  < OFFSET: "OFFSET" >
 |  < ORDER: "ORDER" >
 |  < UCASE: "UCASE" >
-////////////////////////////////////////////////////////////////////////////
+|  < MOD: "MOD" >
 }
 
 <DEFAULT> TOKEN : /* SEPARATORS */

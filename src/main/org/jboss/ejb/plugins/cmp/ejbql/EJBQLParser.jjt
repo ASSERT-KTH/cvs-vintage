@@ -45,7 +45,8 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  * This class parses EJB-QL into an abstract syntax tree.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
+ * @version $Revision: 1.4 $
  */                            
 public class EJBQLParser {
    private Catalog catalog;
@@ -69,7 +70,11 @@ public class EJBQLParser {
       if(fromBeginIndex < 0) {
          throw new ParseException("FROM not found");
       }
+
       int fromEndIndex = lowerCase.indexOf("where");
+      if(fromEndIndex < 0) {
+         fromEndIndex = lowerCase.indexOf("order by");
+      }
       if(fromEndIndex < 0) {
          fromEndIndex = ejbql.length();
       }
@@ -127,8 +132,22 @@ PARSER_END(EJBQLParser)
 ASTEJBQL EJBQL() #EJBQL :
 {}
 {
-   SelectClause() FromKeyword() [WhereClause()] <EOF>
+   SelectClause() FromKeyword() [WhereClause()] [OrderByClause()] <EOF>
    { return jjtThis; }
+}
+
+ASTOrderBy OrderByClause() #OrderBy :
+{}
+{
+   <ORDER> <BY> OrderByPathExpression() ( <COMMA> OrderByPathExpression() ) *
+   { return jjtThis; }
+}
+
+void OrderByPathExpression() #OrderByPath :
+{}
+{
+   ( NumericValuedPath() | StringValuedPath() | DatetimeValuedPath() )
+      [<ASC> | <DESC> { jjtThis.ascending=false; } ]
 }
 
 void FromKeyword() #From :
@@ -187,9 +206,15 @@ ASTSelect SelectClause() #Select :
       <SELECT> [<DISTINCT> { jjtThis.distinct=true; }] 
       ( 
          <OBJECT> <LPAREN> IdentificationVariable() <RPAREN> |
-         SingleValuedPath() 
+         SelectExpression()
       )
    ) { return jjtThis; }
+}
+
+void SelectExpression() #void :
+{}
+{
+   SingleValuedPath() | AggregateSelectExpression()
 }
 
 ASTWhere WhereClause() #Where :
@@ -290,21 +315,32 @@ void BetweenExpression() #Between :
 void InExpression() #In :
 {}
 {
-   StringValuedPath() [<NOT> { jjtThis.not=true; } ] <IN> 
-      <LPAREN> StringLiteral() ( <COMMA> StringLiteral() )* <RPAREN>
+   (StringExpression() [<NOT> { jjtThis.not=true; } ] <IN>
+      <LPAREN> StringExpression() ( <COMMA> StringExpression() )* <RPAREN>)
+|
+   (ArithmeticPrimary() [<NOT> { jjtThis.not=true; } ] <IN>
+      <LPAREN>  ArithmeticPrimary() ( <COMMA> ArithmeticPrimary() )* <RPAREN>)
 }
 
 void LikeExpression() #Like :
 {}
 {
    StringValuedPath() [<NOT> { jjtThis.not=true; } ] <LIKE>
-      StringLiteral() [<ESCAPE> StringLiteral()]
+      StringExpression() [<ESCAPE> (StringLiteral() | NumericValuedParameter())]
 }
 
 void NullComparisonExpression() #NullComparison :
 {}
 {
-   SingleValuedPath() <IS> [<NOT> { jjtThis.not=true; } ] <NULL>
+   (
+      SingleValuedPath() |
+      NumericValuedParameter() |
+      EntityValuedParameter() |
+      StringValuedParameter() |
+      DatetimeValuedParameter() |
+      BooleanValuedParameter()
+   )
+   <IS> [<NOT> { jjtThis.not=true; } ] <NULL>
 }
 
 void EmptyCollectionComparisonExpression() #IsEmpty :
@@ -538,6 +574,10 @@ void FunctionsReturningNumerics() #void :
    (
       <SQRT> <LPAREN> ArithmeticExpression() <RPAREN>
    ) #Sqrt
+|
+   (
+      <MOD> <LPAREN> ArithmeticExpression() <COMMA> ArithmeticExpression() <RPAREN>
+   ) #Mod
 }
 
 Token CollectionValuedPath() #Path :
@@ -703,6 +743,34 @@ void BooleanLiteral() #BooleanLiteral :
    <TRUE> { jjtThis.value=true; } | <FALSE> { jjtThis.value=false; } 
 }
 
+void AggregateSelectExpression() #void:
+{}
+{
+   (
+      <AVG> <LPAREN> [<DISTINCT> {jjtThis.distinct="DISTINCT";}] SingleValuedPath() <RPAREN>
+   ) #Avg
+|
+   (
+      <MAX> <LPAREN> [<DISTINCT> {jjtThis.distinct="DISTINCT";}] SingleValuedPath() <RPAREN>
+   ) #Max
+|
+   (
+      <MIN> <LPAREN> [<DISTINCT> {jjtThis.distinct="DISTINCT";}] SingleValuedPath() <RPAREN>
+   ) #Min
+|
+   (
+      <SUM> <LPAREN> [<DISTINCT> {jjtThis.distinct="DISTINCT";}] SingleValuedPath() <RPAREN>
+   ) #Sum
+|
+   (
+      <COUNT> <LPAREN> [<DISTINCT> {jjtThis.distinct="DISTINCT";}]
+      (
+         SingleValuedPath() | EntityBeanValue()
+      )
+      <RPAREN>
+   ) #Count
+}
+
 /////////////////////////
 //  Tokens
 /////////////////////////
@@ -812,6 +880,19 @@ TOKEN_MGR_DECLS :
 |  < UNKNOWN: "UNKNOWN" >
 |  < WHERE: "WHERE" >
 |  < MEMBER: "MEMBER" >
+
+// EJB QL 2.1 tokens
+
+|  < ORDER: "ORDER" >
+|  < BY: "BY" >
+|  < ASC: "ASC" >
+|  < DESC: "DESC" >
+|  < COUNT: "COUNT" >
+|  < MAX: "MAX" >
+|  < MIN: "MIN" >
+|  < AVG: "AVG" >
+|  < SUM: "SUM" >
+|  < MOD: "MOD" >
 }
 
 <DEFAULT> TOKEN : /* SEPARATORS */

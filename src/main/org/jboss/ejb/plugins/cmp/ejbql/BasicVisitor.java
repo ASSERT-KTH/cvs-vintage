@@ -15,7 +15,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
  * extensions translate just a few elements of the tree.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class BasicVisitor implements JBossQLParserVisitor
 {
@@ -412,6 +412,17 @@ public class BasicVisitor implements JBossQLParserVisitor
       StringBuffer buf = (StringBuffer)data;
       buf.append(SQLUtil.ABS).append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
+      buf.append(')');
+      return data;
+   }
+
+   public Object visit(ASTMod node, Object data)
+   {
+      StringBuffer buf = (StringBuffer)data;
+      buf.append(SQLUtil.MOD).append('(');
+      node.jjtGetChild(0).jjtAccept(this, data);
+      buf.append(SQLUtil.COMMA);
+      node.jjtGetChild(1).jjtAccept(this, data);
       buf.append(')');
       return data;
    }

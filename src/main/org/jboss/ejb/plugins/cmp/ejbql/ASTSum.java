@@ -17,10 +17,10 @@ import java.sql.SQLException;
  * This abstract syntax node represents SUM function.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class ASTSum
-   extends SimpleNode
+   extends AggregateFunction
    implements SelectFunction
 {
    public ASTSum(int id)

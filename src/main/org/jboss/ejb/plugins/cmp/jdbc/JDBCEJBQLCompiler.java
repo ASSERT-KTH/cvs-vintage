@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collections;
 
 import org.jboss.ejb.plugins.cmp.ejbql.ASTAbs;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTAbstractSchema;
@@ -58,6 +57,7 @@ import org.jboss.ejb.plugins.cmp.ejbql.ASTMin;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTAvg;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTSum;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTWhereConditionalTerm;
+import org.jboss.ejb.plugins.cmp.ejbql.ASTMod;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
@@ -73,7 +73,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  *
  * TODO: collecting join paths needs rewrite
  */
@@ -376,7 +376,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          ASTPath toPath = (ASTPath)toNode;
          addJoinPath(toPath);
          toAlias = aliasManager.getAlias(toPath.getPath());
-         toEntity = (JDBCEntityBridge) toPath.getEntity();
+         toEntity = (JDBCEntityBridge)toPath.getEntity();
 
          // can only compare like kind entities
          if(!fromEntity.equals(toEntity))
@@ -658,8 +658,8 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          return;
       }
 
-      JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge) path.getCMRField(i);
-      JDBCEntityBridge entity = (JDBCEntityBridge) path.getEntity(i);
+      JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField(i);
+      JDBCEntityBridge entity = (JDBCEntityBridge)path.getEntity(i);
 
       buf.append(SQLUtil.COMMA)
          .append(entity.getTableName())
@@ -830,10 +830,10 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       declaredPaths.add(path.getPath());
 
       // get the entity at the end of this path
-      JDBCEntityBridge entity = (JDBCEntityBridge) path.getEntity();
+      JDBCEntityBridge entity = (JDBCEntityBridge)path.getEntity();
 
       // second arg is the identifier
-      ASTIdentifier id = (ASTIdentifier) node.jjtGetChild(1);
+      ASTIdentifier id = (ASTIdentifier)node.jjtGetChild(1);
 
       // get the alias
       String alias = aliasManager.getAlias(id.identifier);
@@ -957,14 +957,28 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          path = getPathFromChildren(child0);
 
          if(path == null)
-            throw new IllegalStateException(
-               "The function in SELECT clause does not contain a path expression.");
+            throw new IllegalStateException("The function in SELECT clause does not contain a path expression.");
 
-         JDBCCMPFieldBridge selectField = (JDBCCMPFieldBridge)path.getCMPField();
-         setTypeFactory(selectField.getManager().getJDBCTypeFactory());
-         selectManager = selectField.getManager();
+         if(path.isCMPField())
+         {
+            JDBCCMPFieldBridge selectField = (JDBCCMPFieldBridge)path.getCMPField();
+            selectManager = selectField.getManager();
+         }
+         else if(path.isCMRField())
+         {
+            JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
+            selectManager = cmrField.getEntity().getManager();
+            addJoinPath(path);
+         }
+         else
+         {
+            final JDBCEntityBridge entity = (JDBCEntityBridge)path.getEntity();
+            selectManager = entity.getManager();
+            addJoinPath(path);
+         }
+
+         setTypeFactory(selectManager.getJDBCTypeFactory());
          selectObject = child0;
-
          child0.jjtAccept(this, buf);
       }
 
@@ -981,6 +995,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
    public Object visit(ASTNullComparison node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
+      //
+      // TODO: add support for input parameter, not only for single-valued path
+      //
       ASTPath path = (ASTPath)node.jjtGetChild(0);
 
       if(path.isCMRField())
@@ -1038,7 +1055,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       StringBuffer buf = (StringBuffer)data;
 
       // setup compare to vars first, so we can compre types in from vars
-      ASTPath toPath = (ASTPath) node.jjtGetChild(1);
+      ASTPath toPath = (ASTPath)node.jjtGetChild(1);
 
       JDBCCMRFieldBridge toCMRField = (JDBCCMRFieldBridge)toPath.getCMRField();
 
@@ -1358,6 +1375,20 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
    }
 
    /** Type-mapping function translation */
+   public Object visit(ASTMod node, Object data)
+   {
+      StringBuffer buf = (StringBuffer)data;
+      //JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.MOD);
+      JDBCFunctionMappingMetaData function = JDBCTypeMappingMetaData.MOD_FUNC;
+      Object[] args = new Object[]{
+         new NodeStringWrapper(node.jjtGetChild(0)),
+         new NodeStringWrapper(node.jjtGetChild(1)),
+      };
+      function.getFunctionSql(args, buf);
+      return buf;
+   }
+
+   /** Type-mapping function translation */
    public Object visit(ASTSqrt node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1372,17 +1403,37 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
    public Object visit(ASTCount node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
-      JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.COUNT);
-      Object[] args = new Object[]{
-         new NodeStringWrapper(node.jjtGetChild(0))
-      };
-      return function.getFunctionSql(args, buf);
+
+      Object args[];
+      final ASTPath cntPath = (ASTPath)node.jjtGetChild(0);
+      if(cntPath.isCMPField())
+      {
+         args = new Object[]{node.distinct, new NodeStringWrapper(cntPath)};
+      }
+      else
+      {
+         JDBCEntityBridge entity = (JDBCEntityBridge)cntPath.getEntity();
+         final JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+         if(pkFields.length > 1)
+         {
+            throw new IllegalStateException("COUNT(entity) is not allowed for entity beans with composite primary key.");
+         }
+
+         final String alias = aliasManager.getAlias(cntPath.getPath());
+         StringBuffer keyColumn = new StringBuffer(20);
+         SQLUtil.getColumnNamesClause(pkFields[0], alias, keyColumn);
+
+         args = new Object[]{node.distinct, keyColumn.toString()};
+      }
+
+      return JDBCTypeMappingMetaData.COUNT_FUNC.getFunctionSql(args, buf);
    }
 
    public Object visit(ASTMax node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
       Object[] args = new Object[]{
+         node.distinct,
          new NodeStringWrapper(node.jjtGetChild(0))
       };
       return JDBCTypeMappingMetaData.MAX_FUNC.getFunctionSql(args, buf);
@@ -1392,6 +1443,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
    {
       StringBuffer buf = (StringBuffer)data;
       Object[] args = new Object[]{
+         node.distinct,
          new NodeStringWrapper(node.jjtGetChild(0))
       };
       return JDBCTypeMappingMetaData.MIN_FUNC.getFunctionSql(args, buf);
@@ -1401,7 +1453,8 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
    {
       StringBuffer buf = (StringBuffer)data;
       Object[] args = new Object[]{
-         new NodeStringWrapper(node.jjtGetChild(0))
+         node.distinct,
+         new NodeStringWrapper(node.jjtGetChild(0)),
       };
       return JDBCTypeMappingMetaData.AVG_FUNC.getFunctionSql(args, buf);
    }
@@ -1410,6 +1463,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
    {
       StringBuffer buf = (StringBuffer)data;
       Object[] args = new Object[]{
+         node.distinct,
          new NodeStringWrapper(node.jjtGetChild(0))
       };
       return JDBCTypeMappingMetaData.SUM_FUNC.getFunctionSql(args, buf);
