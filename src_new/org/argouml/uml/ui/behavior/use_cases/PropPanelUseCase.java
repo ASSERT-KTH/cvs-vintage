@@ -1,4 +1,4 @@
-// $Id: PropPanelUseCase.java,v 1.52 2004/11/01 19:55:07 mvw Exp $
+// $Id: PropPanelUseCase.java,v 1.53 2004/11/11 14:27:17 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,12 +65,8 @@ public class PropPanelUseCase extends PropPanelClassifier {
     	addField(Translator.localize("label.namespace"), 
                 getNamespaceComboBox());
 
-	
-	// Modifiers - an abstract use case does not really make any sense
-        getModifiersPanel().remove(0);
         add(getModifiersPanel());
         
-
 	JList extensionPoints = new UMLMutableLinkedList(
             new UMLUseCaseExtensionPointListModel(), null, 
             ActionNewUseCaseExtensionPoint.SINGLETON);
