@@ -475,7 +475,7 @@ public class SimpleClassLoader extends ClassLoader {
                 try {
                     ZipFile zf = new ZipFile(file.getAbsolutePath());
                     ZipEntry ze = zf.getEntry(name);
-		    //if( debug > 0 ) log( "Searching " + file + " " + name );
+		    zf.close();
 					
                     if (ze != null) {
 			r.zipEntry=ze;
