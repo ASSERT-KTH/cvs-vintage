@@ -164,6 +164,9 @@ public class StartTomcat {
 	    loadConfigFile(xh,f,cm);
 	}
 	
+	cm.init(); // set up contexts, call engineInit callback
+	// after engineInit all paths are set
+
 	// by now, we should know where the log file is
 	String path = cm.getLogger().getPath();
 	if (path == null)
@@ -172,7 +175,6 @@ public class StartTomcat {
 	    path = new File(path).getAbsolutePath();
 	System.out.println(sm.getString("tomcat.start", new Object[] { path }));
 	
-	cm.init(); // set up contexts
 	loghelper.log(ContextManager.TOMCAT_NAME + " " +
 		      ContextManager.TOMCAT_VERSION);
 	return cm;
