@@ -25,7 +25,7 @@ import javax.swing.text.Segment;
 /**
  * An abstract interface for matching strings.
  * @author Slava Pestov
- * @version $Id: SearchMatcher.java,v 1.5 2002/03/14 10:20:20 spestov Exp $
+ * @version $Id: SearchMatcher.java,v 1.6 2002/03/15 04:11:37 spestov Exp $
  */
 public interface SearchMatcher
 {
@@ -52,5 +52,5 @@ public interface SearchMatcher
 	 * @param text The text
 	 * @return The changed string
 	 */
-	String substitute(String text) throws Throwable;
+	String substitute(String text) throws Exception;
 }
