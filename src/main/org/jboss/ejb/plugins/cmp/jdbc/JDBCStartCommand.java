@@ -44,7 +44,8 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.43 $
+ * @author <a href="joachim@cabsoft.be">Joachim Van der Auwera</a>
+ * @version $Revision: 1.44 $
  */
 public final class JDBCStartCommand
 {
@@ -94,6 +95,7 @@ public final class JDBCStartCommand
             ArrayList oldNames = oldColumns.getColumnNames();
             ArrayList oldTypes = oldColumns.getTypeNames();
             ArrayList oldSizes = oldColumns.getColumnSizes();
+            SQLUtil.OldIndexes oldIndexes = null;
             ArrayList newNames = new ArrayList();
             JDBCFieldBridge fields[] = entity.getTableFields();
             String tableName=entity.getTableName();
@@ -147,6 +149,18 @@ public final class JDBCStartCommand
                      }
                   }
                }
+
+               // see if we have to add an index for the field
+               if ( field.isIndexed() )
+               {
+                     if ( oldIndexes == null )
+                     {
+                        oldIndexes = SQLUtil.getOldIndexes(entity.getTableName(), entity.getDataSource());
+                     }
+                     if ( !hasIndex( oldIndexes, field ) )
+                        createCMPIndex( entity.getDataSource(), field );
+
+               }
             } // for  int i;
 
             // delete old columns
@@ -162,36 +176,19 @@ public final class JDBCStartCommand
 
          }
       }
-      // Create table if necessary
-      if(!entity.getTableExists())
+      else // (tableExisted is false)
       {
+         // Create table if necessary
          if(entityMetaData.getCreateTable())
          {
             DataSource dataSource = entity.getDataSource();
             createTable(dataSource, entity.getTableName(), getEntityCreateTableSQL(dataSource));
 
-            // create indices only if table did not yet exist.
-            if(!tableExisted)
-            {
-               createCMPIndices(dataSource);
-            }
-            else
-            {
-               if(log.isDebugEnabled())
-                  log.debug("Indices for table " + entity.getTableName() + "not created as table existed");
-            }
-
+            // create indices
+            createCMPIndices(dataSource);
 
             // issue extra (user-defined) sql for table
-            if(!tableExisted)
-            {
-               issuePostCreateSQL(dataSource, entity.getTablePostCreateCmd(), entity.getTableName());
-            }
-            else
-            {
-               log.debug("Did not issue user-defined SQL for existing table " + entity.getTableName());
-            }
-
+            issuePostCreateSQL(dataSource, entity.getTablePostCreateCmd(), entity.getTableName());
          }
          else
          {
@@ -313,6 +310,54 @@ public final class JDBCStartCommand
             }
          }
       }
+   }
+
+   /**
+    * Check whether a required index already exists on a table
+    * @param oldIndexes list of existing indexes
+    * @param field field for we test the existence of an index
+    * @return
+    */
+   private boolean hasIndex(SQLUtil.OldIndexes oldIndexes, JDBCFieldBridge field)
+   {
+      JDBCType jdbcType = field.getJDBCType();
+      String[] columns= jdbcType.getColumnNames();
+      ArrayList idxNames = oldIndexes.getIndexNames();
+      ArrayList idxColumns = oldIndexes.getColumnNames();
+      ArrayList idxAscDesc = oldIndexes.getColumnAscDesc();
+
+      // search for for column in index
+      int colIndex=-1;
+      for ( int i = 0 ;  i < idxColumns.size() ; i++ )
+      {
+         // only match ascending columns
+         if ( idxAscDesc.get( i ).equals( "A" ) )
+         {
+            String name =  columns[ 0 ];
+            String testCol = (String)idxColumns.get( i );
+            if ( testCol.equalsIgnoreCase( name ) )
+            {
+               // first column matches, now check the others
+               String idxName = (String)idxNames.get( i );
+               int j = 1;
+               for ( ; j < columns.length ; j++ )
+               {
+                  name = columns[ j ];
+                  testCol = (String)idxColumns.get( i + j );
+                  String testName = (String)idxNames.get( i + j );
+                  if ( ! ( testName.equals( idxName )
+                           && testCol.equalsIgnoreCase( name )
+                           && idxAscDesc.get( i + j ).equals( "A" ) ) )
+                  {
+                     break;
+                  }
+               }
+               // if they all matched -> found
+               if ( j == columns.length ) return true;
+            }
+         }
+      }
+      return false;
    }
 
    private void alterTable(DataSource dataSource, String action, String tableName, String fieldName, String sqlEnd)
@@ -667,8 +712,6 @@ public final class JDBCStartCommand
    private void createCMPIndices(DataSource dataSource)
       throws DeploymentException
    {
-      StringBuffer sql;
-
       // Only create indices on CMP fields
       JDBCCMPFieldBridge[] cmpFields = entity.getTableFields();
       for(int i = 0; i < cmpFields.length; ++i)
@@ -676,24 +719,37 @@ public final class JDBCStartCommand
          JDBCFieldBridge field = cmpFields[i];
          boolean isIndexed = field.isIndexed();
 
-         if(isIndexed)
+         if (isIndexed)
          {
-            log.debug("Creating index for field " + field.getFieldName());
-            sql = new StringBuffer();
-            sql.append(SQLUtil.CREATE_INDEX);
-            sql.append(entity.getTableName() + IDX_POSTFIX + idxCount);// index name
-            sql.append(SQLUtil.ON);
-            sql.append(entity.getTableName() + " (");
-            SQLUtil.getColumnNamesClause(field, sql);
-            sql.append(")");
-
-            createIndex(dataSource,
-               entity.getTableName(),
-               entity.getTableName() + IDX_POSTFIX + idxCount,
-               sql.toString());
-            idxCount++;
+            createCMPIndex(dataSource, field);
          }
       }
+   }
+
+   /**
+    * Create indix for one specific field
+    * @param dataSource
+    * @param field to create index for
+    * @throws DeploymentException
+    */
+   private void createCMPIndex(DataSource dataSource, JDBCFieldBridge field)
+      throws DeploymentException
+   {
+      StringBuffer sql;
+      log.debug("Creating index for field " + field.getFieldName());
+      sql = new StringBuffer();
+      sql.append(SQLUtil.CREATE_INDEX);
+      sql.append(entity.getTableName() + IDX_POSTFIX + idxCount);// index name
+      sql.append(SQLUtil.ON);
+      sql.append(entity.getTableName() + " (");
+      SQLUtil.getColumnNamesClause(field, sql);
+      sql.append(")");
+
+      createIndex(dataSource,
+         entity.getTableName(),
+         entity.getTableName() + IDX_POSTFIX + idxCount,
+         sql.toString());
+      idxCount++;
    }
 
    private void createCMRIndex(DataSource dataSource, JDBCCMRFieldBridge field)

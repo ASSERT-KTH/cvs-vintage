@@ -30,7 +30,8 @@ import java.util.Vector;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.23 $
+ * @author <a href="joachim@cabsoft.be">Joachim Van der Auwera</a>
+ * @version $Revision: 1.24 $
  */
 public final class SQLUtil
 {
@@ -1027,6 +1028,60 @@ public final class SQLUtil
       }
    }
 
+   public static OldIndexes getOldIndexes(String tableName, DataSource dataSource)
+      throws DeploymentException
+   {
+      Connection con = null;
+      ResultSet rs = null;
+      ArrayList indexNames = new ArrayList();
+      ArrayList columnNames = new ArrayList();
+      ArrayList ascDesc = new ArrayList();
+      try
+      {
+         con = dataSource.getConnection();
+
+         // (a j2ee spec compatible jdbc driver has to fully
+         // implement the DatabaseMetaData)
+         DatabaseMetaData dmd = con.getMetaData();
+         String catalog = con.getCatalog();
+         String schema = null;
+         String quote = dmd.getIdentifierQuoteString();
+         if (tableName.startsWith(quote))
+         {
+            if (tableName.endsWith(quote) == false)
+            {
+               throw new DeploymentException("Mismatched quote in table name: " + tableName);
+            }
+            int quoteLength = quote.length();
+            tableName = tableName.substring(quoteLength, tableName.length() - quoteLength);
+         }
+         if (dmd.storesLowerCaseIdentifiers())
+            tableName = tableName.toLowerCase();
+         else if (dmd.storesUpperCaseIdentifiers())
+            tableName = tableName.toUpperCase();
+         rs = dmd.getIndexInfo(catalog, schema, tableName, false, false);
+         while (rs.next())
+         {
+            indexNames.add(rs.getString("INDEX_NAME"));
+            columnNames.add(rs.getString("COLUMN_NAME"));
+            ascDesc.add(rs.getString("ASC_OR_DESC"));
+         }
+         return new OldIndexes(indexNames, columnNames, ascDesc);
+
+      }
+      catch (SQLException e)
+      {
+         // This should not happen. A J2EE compatiable JDBC driver is
+         // required fully support metadata.
+         throw new DeploymentException("Error while geting column names", e);
+      }
+      finally
+      {
+         JDBCUtil.safeClose(rs);
+         JDBCUtil.safeClose(con);
+      }
+   }
+
    private static JDBCType getJDBCType(JDBCFieldBridge field)
    {
       JDBCType type = field.getJDBCType();
@@ -1096,7 +1151,39 @@ public final class SQLUtil
       public ArrayList getColumnSizes()
       {
          return columnSizes;
+      }
    }
+
+   /**
+    * utility class to store the information returned by getOldColumns()
+    */
+   public static class OldIndexes
+   {
+      private ArrayList indexNames;
+      private ArrayList columnNames;
+      private ArrayList columnAscDesc;
+
+      private OldIndexes(ArrayList in, ArrayList cn, ArrayList ad)
+      {
+         indexNames = in;
+         columnNames = cn;
+         columnAscDesc = ad;
+      }
+
+      public ArrayList getColumnNames()
+      {
+         return columnNames;
+      }
+
+      public ArrayList getIndexNames()
+      {
+         return indexNames;
+      }
+
+      public ArrayList getColumnAscDesc()
+      {
+         return columnAscDesc;
+      }
    }
 
 }
