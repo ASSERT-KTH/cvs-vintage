@@ -30,7 +30,7 @@ import org.gjt.sp.util.Log;
  * Manages persistence of open buffers and views across jEdit sessions.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: PerspectiveManager.java,v 1.3 2003/03/29 20:29:31 spestov Exp $
+ * @version $Id: PerspectiveManager.java,v 1.4 2003/04/14 05:28:11 spestov Exp $
  */
 public class PerspectiveManager
 {
@@ -119,6 +119,19 @@ public class PerspectiveManager
 			View[] views = jEdit.getViews();
 			for(int i = 0; i < views.length; i++)
 			{
+				View view = views[i];
+				// ensures that active view is saved last,
+				// ie created last on next load, ie in front
+				// on next load
+				if(view == jEdit.getActiveView()
+					&& i != views.length - 1)
+				{
+					View last = views[views.length - 1];
+					views[i] = last;
+					views[views.length - 1] = view;
+					view = last;
+				}
+
 				View.ViewConfig config = views[i].getViewConfig();
 				out.write("<VIEW PLAIN=\"");
 				out.write(config.plainView ? "TRUE" : "FALSE");
