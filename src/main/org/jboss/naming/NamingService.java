@@ -30,9 +30,9 @@ import org.jboss.system.ServiceMBeanSupport;
  * A JBoss service that starts the jnp JNDI server.
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -123,6 +123,12 @@ public class NamingService
       throws ClassNotFoundException, InstantiationException, IllegalAccessException
    {
       naming.setServerSocketFactory(factoryClassName);
+   }
+
+   public void setJNPServerSocketFactory(String factoryClassName)
+      throws ClassNotFoundException, InstantiationException, IllegalAccessException
+   {
+      naming.setJNPServerSocketFactory(factoryClassName);
    }
 
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
