@@ -9,7 +9,7 @@
             indent="yes"/>
 
 <!-- ********************************************************************
-     $Id: xtdocbook.xsl,v 1.1 2001/05/19 08:08:18 kunle Exp $
+     $Id: xtdocbook.xsl,v 1.2 2001/05/19 09:12:10 kunle Exp $
      ********************************************************************
 
      This file is part of the XSL DocBook Stylesheet distribution.
