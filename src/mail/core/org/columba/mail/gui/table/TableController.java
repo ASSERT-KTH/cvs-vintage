@@ -15,13 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import javax.swing.JComponent;
-import javax.swing.JPopupMenu;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumn;
-import javax.swing.tree.TreePath;
-
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.HeaderItem;
 import org.columba.core.config.OptionsSerializer;
@@ -31,6 +24,7 @@ import org.columba.core.gui.util.treetable.Tree;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.MailConfig;
@@ -55,6 +49,13 @@ import org.columba.mail.gui.table.model.TableModelThreadedView;
 import org.columba.mail.gui.table.model.TableModelUpdateManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.message.HeaderList;
+
+import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumn;
+import javax.swing.tree.TreePath;
 
 
 /**
@@ -100,14 +101,10 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
         view = new TableView(headerTableModel);
 
-        
         /*
         XmlElement tableElement = MailConfig.get("options").getElement("/options/gui/table");
         getMailFrameController().getFolderOptionsController().load();
         */
-        
-        
-        
         headerTableModel.setTree((Tree) view.getTree());
 
         headerTableMouseListener = new HeaderTableMouseListener(this);
@@ -126,7 +123,6 @@ public class TableController implements FocusOwner, ListSelectionListener {
         /*
         getTableModelSorter().loadConfig(getView());
         */
-        
         // MouseListener sorts table when clicking on a column header
         new TableHeaderMouseListener(getView(), getTableModelSorter());
 
@@ -162,6 +158,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
      *  - appearance
      * of every column
      */
+
     /*
     public void saveColumnConfig() {
         TableItem tableItem = (TableItem) MailConfig.getMainFrameOptionsConfig()
@@ -203,7 +200,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
         }
     }
     */
-    
+
     /**
      * return the Model which contains a HeaderList
      */
@@ -346,115 +343,26 @@ public class TableController implements FocusOwner, ListSelectionListener {
         return markAsReadTimer;
     }
 
-   
-
-    /* (non-Javadoc)
-             * @see org.columba.mail.gui.frame.ViewHeaderListInterface#showHeaderList(org.columba.mail.folder.Folder, org.columba.mail.message.HeaderList)
-             */
+    /**
+     * @see org.columba.mail.gui.frame.ViewHeaderListInterface#showHeaderList(org.columba.mail.folder.Folder, org.columba.mail.message.HeaderList)
+     */
     public void showHeaderList(Folder folder, HeaderList headerList)
         throws Exception {
         // save previously selected folder options
         if (previouslySelectedFolder != null) {
-            //saveCurrentState(previouslySelectedFolder);
             getMailFrameController().getFolderOptionsController().save(previouslySelectedFolder);
-            
         }
 
+        // load options of newly selected folder
         getMailFrameController().getFolderOptionsController().load(folder);
-                
+
         // send an update notification to the table model
         TableModelChangedEvent ev = new TableModelChangedEvent(TableModelChangedEvent.SET,
                 folder, headerList);
         tableChanged(ev);
 
-
+        // remember previously selected folder
         previouslySelectedFolder = folder;
-
-        // TODO: make selection available as plugin, too
-         
-        boolean ascending = getTableModelSorter().getSortingOrder();
-        int row = getView().getTree().getRowCount();
-
-        // row count == 0 --> empty table
-        if (row == 0) {
-            return;
-        }
-
-        getView().clearSelection();
-
-        // if the last selection for the current folder is null, then we show the
-        // first/last message in the table and scroll to it.
-        if (folder.getLastSelection() == null) {
-            // changing the selection to the first/last row based on ascending state
-            Object uid = null;
-
-            if (ascending == true) {
-                uid = view.selectLastRow();
-            } else {
-                uid = view.selectFirstRow();
-            }
-
-            // no messages in this folder
-            if (uid == null) {
-                return;
-            }
-
-            Object[] uids = new Object[1];
-            uids[0] = uid;
-
-            FolderCommandReference[] refNew = new FolderCommandReference[1];
-            refNew[0] = new FolderCommandReference(folder, uids);
-
-            // view the message under the new node
-            MainInterface.processor.addOp(new ViewMessageCommand(
-                    mailFrameController, refNew));
-        } else {
-            // if a lastSelection for this folder is set
-            // getting the last selected uid
-            Object[] lastSelUids = new Object[1];
-            lastSelUids[0] = folder.getLastSelection();
-
-            // no messages in this folder
-            if (lastSelUids[0] == null) {
-                return;
-            }
-
-            // this message doesn't exit in this folder anymore
-            if (getHeaderTableModel().getMessageNode(lastSelUids[0]) == null) {
-                Object uid = null;
-
-                if (ascending == true) {
-                    uid = view.selectLastRow();
-                } else {
-                    uid = view.selectFirstRow();
-                }
-
-                // no messages in this folder
-                if (uid == null) {
-                    return;
-                }
-
-                // link to the new uid
-                lastSelUids[0] = uid;
-            }
-
-            // selecting the message
-            setSelected(lastSelUids);
-
-            int selRow = getView().getSelectedRow();
-
-            // scroll to the position of the selection
-            getView().scrollRectToVisible(getView().getCellRect(selRow, 0, false));
-            getView().requestFocus();
-
-            // create command reference
-            FolderCommandReference[] refNew = new FolderCommandReference[1];
-            refNew[0] = new FolderCommandReference(folder, lastSelUids);
-
-            // view the message under the new node
-            MainInterface.processor.addOp(new ViewMessageCommand(
-                    mailFrameController, refNew));
-        }
     }
 
     /************* implement getter/setter methods *********************/
@@ -627,6 +535,4 @@ public class TableController implements FocusOwner, ListSelectionListener {
     public void valueChanged(ListSelectionEvent arg0) {
         MainInterface.focusManager.updateActions();
     }
-
-   
 }
