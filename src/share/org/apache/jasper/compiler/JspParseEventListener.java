@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.8 2000/02/23 02:23:44 mandar Exp $
- * $Revision: 1.8 $
- * $Date: 2000/02/23 02:23:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.9 2000/02/23 19:53:25 rubys Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/02/23 19:53:25 $
  *
  * ====================================================================
  * 
@@ -855,7 +855,6 @@ public class JspParseEventListener extends BaseJspListener {
 			       TagInfo ti)
 	throws JasperException
     {
-	// FIXME: null's
         Generator gen
             = new GeneratorWrapper(new TagBeginGenerator(prefix, shortTagName, attrs,
 							 tli, ti),
@@ -870,7 +869,6 @@ public class JspParseEventListener extends BaseJspListener {
                              TagLibraryInfoImpl tli, TagInfo ti)
 	throws JasperException
     {
-	// FIXME: null's
         Generator gen
             = new GeneratorWrapper(new TagEndGenerator(prefix, shortTagName, attrs, tli, ti),
                                    start, stop);
