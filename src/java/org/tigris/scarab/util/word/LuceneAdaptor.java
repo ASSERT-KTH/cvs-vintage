@@ -61,10 +61,13 @@ import org.apache.commons.util.StringStack;
 // Scarab classes
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Attachment;
+import org.tigris.scarab.util.ScarabException;
 
 import com.lucene.document.Document;
 import com.lucene.document.Field;
 import com.lucene.index.IndexWriter;
+import com.lucene.index.IndexReader;
+import com.lucene.index.Term;
 import com.lucene.analysis.standard.StandardAnalyzer;
 import com.lucene.queryParser.QueryParser;
 import com.lucene.search.Query;
@@ -75,7 +78,7 @@ import com.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdaptor.java,v 1.8 2001/08/10 23:54:20 jmcnally Exp $
+ * @version $Id: LuceneAdaptor.java,v 1.9 2001/08/15 06:17:13 jmcnally Exp $
  */
 public class LuceneAdaptor 
     implements SearchIndex
@@ -208,6 +211,7 @@ public class LuceneAdaptor
             for ( int i=0; i<hits.length(); i++) 
             {
                 deduper.add( hits.doc(i).get(ISSUE_ID) );
+System.out.println("retrieving valId: " + hits.doc(i).get(VALUE_ID) );
             }
             
             issueIds = new NumberKey[deduper.size()];
@@ -232,12 +236,64 @@ public class LuceneAdaptor
     public void index(AttributeValue attributeValue)
         throws Exception
     {
+        String valId = attributeValue.getValueId().toString();
+
+        // make sure any old data stored for this attribute value is deleted.
+        IndexReader reader = IndexReader.open(path);
+
+           
+        Term term = new Term(VALUE_ID, valId);
+        int deletedDocs = 0;
+        try
+        {
+            deletedDocs = reader.delete(term);
+        }
+        catch (NullPointerException npe)
+        {
+            /* Lucene is throwing npe in reader.delete, so have to explicitely
+               search.  Not sure if the npe will be thrown in the 
+               case where the attribute has previously been indexed, so
+               test whether the npe is harmful.
+            */
+            IndexSearcher is = new IndexSearcher(path); 
+            Query q = QueryParser.parse("+" + VALUE_ID + ":" + valId, TEXT, 
+                                        new StandardAnalyzer());
+            Hits hits = is.search(q);
+            if ( hits.length() > 0) 
+            {
+                String mesg = "An error in Lucene prevented removing " + 
+                    "stale data for AttributeValue with ID=" + valId;
+                System.out.println(mesg);
+                throw new ScarabException(mesg, npe);
+            }
+        }
+        if ( deletedDocs > 1 ) 
+        {
+            throw new ScarabException("Multiple AttributeValues in Lucene" +
+                                      "index with same ValueId: " + valId);
+        }
+        reader.close();
+        /*
+        System.out.println("deleting valId: " + valId );
+        IndexSearcher is = new IndexSearcher(path); 
+        Hits hits = is.search( "+" + VALUE_ID + ":" + valId);
+        System.out.println("deleting previous: " + hits.length() );
+        if ( hits.length() > 1) 
+        {
+            throw new ScarabException("Multiple AttributeValues in Lucene" +
+                                      "index with same ValueId: " + valId);
+        }
+        Document doc = hits.doc(0);
+        */
+
         Document doc = new Document();
+        Field valueId = Field.Keyword(VALUE_ID, valId);
         Field issueId = Field.UnIndexed(ISSUE_ID, 
             attributeValue.getIssueId().toString());
         Field attributeId = Field.Keyword(ATTRIBUTE_ID, 
             attributeValue.getAttributeId().toString());
         Field text = Field.UnStored(TEXT, attributeValue.getValue());
+        doc.add(valueId);
         doc.add(issueId);
         doc.add(attributeId);
         doc.add(text);
@@ -255,14 +311,27 @@ public class LuceneAdaptor
     public void index(Attachment attachment)
         throws Exception
     {
+        String attId = attachment.getAttachmentId().toString();
+
+        // make sure any old data stored for this attribute value is deleted.
+        IndexReader reader = IndexReader.open(path);
+        Term term = new Term(ATTACHMENT_ID, attId);
+        if ( reader.delete(term) > 1 ) 
+        {
+            throw new ScarabException("Multiple Attachments in Lucene" +
+                                      "index with same Id: " + attId);
+        }
+        
         Document doc = new Document();
+        Field attachmentId = Field.Keyword(ATTACHMENT_ID, attId);
         Field issueId = Field.UnIndexed(ISSUE_ID, 
             attachment.getIssueId().toString());
-        Field attachmentId = Field.Keyword(ATTACHMENT_ID, 
-            attachment.getAttachmentId().toString());
+        Field typeId = Field.UnIndexed(ATTACHMENT_TYPE_ID, 
+            attachment.getTypeId().toString());
         Field text = Field.UnStored(TEXT, attachment.getDataAsString());
-        doc.add(issueId);
         doc.add(attachmentId);
+        doc.add(issueId);
+        doc.add(typeId);
         doc.add(text);
 
         IndexWriter indexer = 
