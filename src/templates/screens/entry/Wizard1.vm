@@ -2,16 +2,16 @@
 $page.setTitle("Enter New Issue")
 
 #set ( $action = $link.setPage("entry,Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm") )
-#set ($user = $data.User)
-#set ($module = $user.CurrentModule)
-#set ($issue = $user.ReportingIssue)
+#set ($module = $scarabR.CurrentModule)
+#set ($issue = $data.User.getReportingIssue($module))
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 
 <h2>$page.Title</h2>
 <form name="ReportForm" method="get" action="$action">
 
 <p class="functnbar">
-<input type="submit" name="eventSubmit_doSubmitattributes" value="next" />&#160;<input type="reset" value="reset" /></p>
+<input type="submit" name="eventSubmit_doSubmitattributes" value="next" />&#160;
+<input type="reset" value="reset" /></p>
 
 <h3>Input your issue</h3>
 
@@ -66,7 +66,8 @@ $page.setTitle("Enter New Issue")
 </div>
 
 <p class="functnbar">
-<input type="submit" name="eventSubmit_doSubmitattributes" value="next" />&#160;<input type="reset" value="reset" /></p>
+<input type="submit" name="eventSubmit_doSubmitattributes" value="next" />&#160;
+<input type="reset" value="reset" /></p>
 $intake.declareGroups()
 </form>
 </div>

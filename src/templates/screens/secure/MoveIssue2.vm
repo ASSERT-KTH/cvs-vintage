@@ -1,10 +1,9 @@
 #set ($action = $link.setPage("MoveIssue2.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "Links.vm"))
 
-#set ($user = $data.User)
 #set ($issueId = $data.Parameters.getString("issue_id"))
 #set ($issue = $scarabR.getIssue($issueId))
 #set ($moduleId = $data.Parameters.getString("module_id"))
-#set ($module = $user.CurrentModule)
+#set ($module = $scarabR.CurrentModule)
 
 <form method="post" action="$action" >
 

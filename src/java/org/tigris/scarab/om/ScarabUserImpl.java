@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.14 2001/08/28 02:16:42 dlr Exp $
+    @version $Id: ScarabUserImpl.java,v 1.15 2001/08/28 02:55:56 jon Exp $
 */
 public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 {    
@@ -405,22 +405,12 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
         return modules;
     }
 
-    public ModuleEntity getCurrentModule()
-    {
-        return (ModuleEntity) getTemp(CURRENT_MODULE);
-    }
-
-    public void setCurrentModule(ModuleEntity m)
-    {
-        setTemp(CURRENT_MODULE, m);
-    }
-
-    public Issue getReportingIssue() throws Exception
+    public Issue getReportingIssue(ModuleEntity me) throws Exception
     {
         Issue issue = (Issue) getTemp(REPORTING_ISSUE);
         if ( issue == null ) 
         {
-            issue = getCurrentModule().getNewIssue(this);
+            issue = me.getNewIssue(this);
             setTemp(REPORTING_ISSUE, issue);            
         }
         

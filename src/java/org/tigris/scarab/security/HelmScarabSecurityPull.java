@@ -70,7 +70,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Security wrapper around helm
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: HelmScarabSecurityPull.java,v 1.4 2001/08/13 20:38:18 jmcnally Exp $
+ * @version $Id: HelmScarabSecurityPull.java,v 1.5 2001/08/28 02:55:56 jon Exp $
 */
 public class HelmScarabSecurityPull 
     extends DefaultScarabSecurityPull
@@ -155,7 +155,7 @@ public class HelmScarabSecurityPull
         boolean hasPermission = false;
         try
         {
-            ModuleEntity module = ((ScarabUser)data.getUser()).getCurrentModule();
+            ModuleEntity module = getCurrentModule();
             hasPermission = hasPermission(permission, module);
         }
         catch (Exception e)

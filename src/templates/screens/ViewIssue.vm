@@ -6,8 +6,7 @@
 
 #if ($currentIssue)
     #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
-#set ($user = $data.User)
-#set ($module = $user.CurrentModule)
+#set ($module = $scarabR.CurrentModule)
 
 
 <form name="IssueForm" method="post" action="$action" >

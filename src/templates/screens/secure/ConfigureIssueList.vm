@@ -1,7 +1,7 @@
 #set ( $action = $link.setPage("secure,ConfigureIssueList.vm").setAction("ConfigureIssueList").addPathInfo("nextTemplate", "secure,ConfigureIssueList.vm") )
 
 #set ($user = $data.User)
-#set ($module = $user.CurrentModule)
+#set ($module = $scarabR.CurrentModule)
 
 #if( $user.UserId )
 
@@ -12,9 +12,7 @@
 <input type="hidden" name="user_id" value="$user.UserId">
 <input type="hidden" name="module_id" value="$module.ModuleId">
       <div class="app" id="div2-6-1">
-      <h2>Add/remove attributes from view (2.6.0.1)</h2>
-
-      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
+      <h2>Add/remove attributes from view</h2>
             
             
 <p class="functnbar"><input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel"/>&nbsp;<input type="submit" value="reset to default"  name="eventSubmit_doCancel" /></p>

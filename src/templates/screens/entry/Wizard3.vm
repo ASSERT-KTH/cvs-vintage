@@ -1,7 +1,6 @@
 #set ( $action = $link.setPage("entry,Wizard3.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard4.vm") )
-#set ($user = $data.User)
-#set ($module = $user.CurrentModule)
-#set ($issue = $user.ReportingIssue)
+#set ($module = $scarabR.CurrentModule)
+#set ($issue = $data.User.getReportingIssue($module))
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 
 <div id="entrywizard3">

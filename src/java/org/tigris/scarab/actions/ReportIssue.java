@@ -84,7 +84,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.39 2001/08/28 00:51:54 jon Exp $
+    @version $Id: ReportIssue.java,v 1.40 2001/08/28 02:55:56 jon Exp $
 */
 public class ReportIssue extends TemplateAction
 {
@@ -106,7 +106,10 @@ public class ReportIssue extends TemplateAction
         
         // Summary is always required (because we are going to search on it.)
         ScarabUser user = (ScarabUser)data.getUser();
-        Issue issue = user.getReportingIssue();
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+
+        Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
         Field summary = getSummaryField(intake, issue);
         summary.setRequired(true);
 
@@ -177,10 +180,14 @@ public class ReportIssue extends TemplateAction
             .get(ScarabConstants.INTAKE_TOOL);
         ScarabUser user = (ScarabUser)data.getUser();
 
-        String query = getSummaryField(intake, 
-                                         user.getReportingIssue()).toString();
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
-        List matchingIssues = searchIssues(query, user.getCurrentModule(), 
+        String query = getSummaryField(intake, 
+                            user.getReportingIssue(scarabR.getCurrentModule()))
+                                .toString();
+
+        List matchingIssues = searchIssues(query, scarabR.getCurrentModule(), 
                                            intake, 25);                  
                 
         // set the template to dedupe unless none exist, then skip
@@ -237,7 +244,10 @@ public class ReportIssue extends TemplateAction
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
         ScarabUser user = (ScarabUser)data.getUser();
-        Issue issue = user.getReportingIssue();
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+
+        Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
         AttributeValue aval = null;
         String summary = getSummaryField(intake, issue).toString();
 

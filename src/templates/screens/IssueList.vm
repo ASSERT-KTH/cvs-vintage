@@ -1,9 +1,9 @@
 #set ( $action = $link.setPage("IssueList.vm").setAction("Search") )
 
 #set ($user = $data.User)
-#set ($module = $user.CurrentModule)
-#set($search = $scarabR.Search)
-#set ( $searchGroup = $intake.SearchIssue.mapTo($search) ) 
+#set ($module = $scarabR.CurrentModule)
+#set ($search = $scarabR.Search)
+#set ($searchGroup = $intake.SearchIssue.mapTo($search)) 
 #set ($searchType = $data.Parameters.getString("searchType"))
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
 #set ($pageNum = $data.Parameters.getInt("pageNum"))

@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurityPull.java,v 1.6 2001/08/13 20:38:18 jmcnally Exp $
+ * @version $Id: TurbineDBScarabSecurityPull.java,v 1.7 2001/08/28 02:55:56 jon Exp $
 */
 public class TurbineDBScarabSecurityPull 
     extends DefaultScarabSecurityPull
@@ -156,8 +156,7 @@ public class TurbineDBScarabSecurityPull
         boolean hasPermission = false;
         try
         {
-            ModuleEntity module = 
-                ((ScarabUser)data.getUser()).getCurrentModule();
+            ModuleEntity module = getCurrentModule();
             hasPermission = hasPermission(permission, module);
         }
         catch (Exception e)

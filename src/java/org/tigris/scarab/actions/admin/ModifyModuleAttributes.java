@@ -70,7 +70,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.10 2001/08/28 00:51:55 jon Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.11 2001/08/28 02:55:56 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -85,7 +85,10 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         IntakeTool intake = (IntakeTool)context
            .get(ScarabConstants.INTAKE_TOOL);
 
-        ModuleEntity module = ((ScarabUser)data.getUser()).getCurrentModule();
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+
+        ModuleEntity module = scarabR.getCurrentModule();
         List rmas = (List)((Vector)module
             .getRModuleAttributes(false)).clone();
 
@@ -136,14 +139,14 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     {
         IntakeTool intake = (IntakeTool)context
            .get(ScarabConstants.INTAKE_TOOL);
-        ScarabRequestTool scarab = (ScarabRequestTool)context
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
         if ( intake.isAllValid() ) 
         {
             RModuleAttribute attribute = 
-                scarab.getRModuleAttribute();
-            ModuleEntity module = scarab.getUser().getCurrentModule();
+                scarabR.getRModuleAttribute();
+            ModuleEntity module = scarabR.getCurrentModule();
             RModuleOption option = null;
             Vector attributeOptions = (Vector)((Vector)module
                 .getRModuleOptions(attribute.getAttribute(), false)).clone(); 

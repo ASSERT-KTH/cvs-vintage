@@ -1,8 +1,7 @@
 #if ( !$actionLink )
     #set ( $actionLink = $link.setPage("AssignIssue.vm").setAction("AssignIssue").addPathInfo("nextTemplate", "Index.vm") )
 #end
-#set ($user = $data.User)
-#set ($module = $user.CurrentModule)
+#set ($module = $scarabR.CurrentModule)
 #set ($issue = $scarabR.Issue)
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 #if ( $data.Parameters.getString("action") && $data.Parameters.getString("action") == "AssignIssue" )

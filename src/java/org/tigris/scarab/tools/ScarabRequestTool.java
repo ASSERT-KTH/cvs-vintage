@@ -415,10 +415,10 @@ try{
                 NumberKey attId = (NumberKey)getIntakeTool()
                     .get("Attribute", IntakeTool.DEFAULT_KEY)
                     .get("Id").getValue();
-                if ( attId != null && ((ScarabUser)data.getUser()).getCurrentModule() != null )
+                ModuleEntity currentModule = getCurrentModule();
+                if ( attId != null && currentModule != null )
                 {
-                    NumberKey[] nka = {attId, 
-                        ((ScarabUser)data.getUser()).getCurrentModule().getModuleId()};
+                    NumberKey[] nka = {attId, currentModule.getModuleId()};
                     rma = RModuleAttributePeer.retrieveByPK(new ComboKey(nka));
                 }
                 else 
@@ -603,7 +603,11 @@ try{
         throws Exception
     {
         IssueSearch search = new IssueSearch();
-        search.setModuleCast(((ScarabUser)data.getUser()).getCurrentModule());
+        if (getCurrentModule() == null)
+        {
+            throw new Exception ("SRT:getSearch() current module is null");
+        }
+        search.setModuleCast(getCurrentModule());
         return search;
     }
 
@@ -656,7 +660,7 @@ try{
     {
         List issueList = new ArrayList();
         ScarabUser user = (ScarabUser)data.getUser();
-        List issueIdList = (List)(user.getTemp(ScarabConstants.ISSUE_ID_LIST));
+        List issueIdList = (List)(user.getTemp("issueIdList"));
         for (int i = 0;i<issueIdList.size();i++)
         {
            Issue issue = (Issue)IssuePeer

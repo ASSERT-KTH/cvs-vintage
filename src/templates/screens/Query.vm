@@ -1,11 +1,7 @@
-#set ($user = $data.User)
-#set ($module = $user.CurrentModule)
+#set ($module = $scarabR.CurrentModule)
 
-	<h3>Advanced Query (2.2.0)</h3>
+	<h3>Advanced Query</h3>
 	
-	<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
-
-
         <form action="$link.setPage("Search.vm")" method="get">
         <input type="hidden" name="nextTemplate" value="IssueList.vm" />
         <input type="hidden" name="action" value="Search" />

@@ -1,11 +1,10 @@
 #set ( $action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("nextTemplate", "QueryList.vm") )
 
-#set ($user = $data.User)
-#set ($module = $user.CurrentModule)
+#set ($module = $scarabR.CurrentModule)
 
 
 <form method="post" action="$action" >
-  <h2>Saved query list (2.2.2)</h2>
+  <h2>Saved query list</h2>
 
 #if ( !$module.Queries.isEmpty() )
 
