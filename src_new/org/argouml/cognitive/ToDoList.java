@@ -1,4 +1,4 @@
-// $Id: ToDoList.java,v 1.26 2005/02/16 23:47:11 bobtarling Exp $
+// $Id: ToDoList.java,v 1.27 2005/03/10 20:23:40 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ import org.argouml.cognitive.critics.Critic;
  * and elimiates ToDoItem's that are no longer valid.<p>
  *
  * One difficulty designers face is keeping track of all
- * the myrid details of thier task. It is all to
+ * the myrid details of their task. It is all to
  * easy to skip a step in the design process,
  * leave part of the design unspecified, of make
  * a mistake that requires revision. Argo provides
@@ -60,8 +60,7 @@ import org.argouml.cognitive.critics.Critic;
  * unstable. Please test and let us know
  * what you find through Issuezilla.<p>
  *
- * Items are shown under all applicable headings.
- * The "to do" list may also be viewed as a flat list.<p>
+ * Items are shown under all applicable headings.<p>
  *
  * This class is dependent on Designer.<p>
  *
