@@ -17,37 +17,44 @@
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-#foreach ($group in $module.getDedupeAttributeGroups($issueType))
+#set ($dedupeAttrGroups = $module.getDedupeAttributeGroups($issueType))
+#foreach ($group in $dedupeAttrGroups)
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
-    #if ($rma.Active)
+    #if ($rma && $rma.Active)
       #set ($attVal = $currentIssue.getAttributeValue($att))
+      #if ($attVal)
       <th>$attVal.RModuleAttribute.DisplayValue</th>
+      #else
+      <th>---</th>
+      #end
+      #set ($attVal = false)
     #end
  #end
 #end
 </tr>
-#foreach ($group in $module.getDedupeAttributeGroups($issueType))
+#foreach ($group in $dedupeAttrGroups)
 #indexedRows($velocityCount)
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
-    #if ($rma.Active)
-     #if ($currentIssue.getAttributeValue($att))
-      #set ($attVal = $currentIssue.getAttributeValue($att))
+    #if ($rma && $rma.Active)
+     #set ($attVal = $currentIssue.getAttributeValue($att))
+     #if ($attVal)
       <td>
         #if ($attVal.Attribute.isOptionAttribute())
           #if ($attVal.isSet())
              $attVal.AttributeOption.Name
           #else
-             ---
+            ---
           #end
         #else
-             $!attVal.Value
+          $!attVal.Value
         #end
       </td>
      #else
       <td>---</td>
      #end
+     #set ($attVal = false)
     #end
   #end
 #end
@@ -60,10 +67,10 @@
 <tr>
 <th>$l10n.Select</th>
 <th>$l10n.IssueId</th>
-#foreach ($attrGroup in $module.getDedupeAttributeGroups($issueType))
+#foreach ($attrGroup in $dedupeAttrGroups)
    #foreach ($att in $attrGroup.Attributes)
       #set ($rma = $module.getRModuleAttribute($att, $issueType))
-      #if ($rma.Active)
+      #if ($rma && $rma.Active)
         <th>$rma.DisplayValue</th>
       #end
    #end
@@ -95,26 +102,27 @@
   #end
   </td>
   <td><strong><a href="$link.setPage("ViewIssue.vm").addPathInfo("id",$issue.UniqueId)">$issue.UniqueId</a></strong></td>
-#foreach ($attrGroup in $module.getDedupeAttributeGroups($issueType))
+#foreach ($attrGroup in $dedupeAttrGroups)
    #foreach ($attr in $attrGroup.Attributes)
       #set ($rma = $module.getRModuleAttribute($attr, $issueType))
-      #if ($rma.Active)
-       #if ($issue.getAttributeValue($attr))
-        #set ($attVal = $issue.getAttributeValue($attr))
+      #if ($rma && $rma.Active)
+       #set ($attVal = $issue.getAttributeValue($attr))
+       #if ($attVal)
         #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
       <td>
         #if ($attVal.Attribute.AttributeType.ValidationKey)
-           #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
+          #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
         #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
-           #set ($field = "OptionId")
+          #set ($field = "OptionId")
         #else
           #set ($field = "Value")
         #end
-         $attVal.Value
+        $attVal.Value
       </td>
-      #else
+       #else
       <td>---</td>
-      #end
+       #end
+       #set ($attVal = false)
      #end
   #end
 #end
@@ -139,7 +147,7 @@
 <td>
 #textAreaMedium("$intakeAttachment.Data.Key" $intakeAttachment.Data)
 <p>
-<input type="submit" name="eventSubmit_doAddcomment" value="$l10n.AddComment" />
+<input type="submit" name="eventSubmit_doAddcomment" value="$l10n.AddCommentToSelected" />
 </p>
 </td>
 </tr>
