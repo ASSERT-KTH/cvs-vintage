@@ -39,7 +39,6 @@ import org.apache.tomcat.core.ServerSession;
 import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.buf.UEncoder;
 import org.apache.tomcat.util.http.AcceptLanguage;
-import org.apache.tomcat.util.http.LocaleToCharsetMap;
 import org.apache.tomcat.util.http.MimeHeaders;
 import org.apache.tomcat.util.io.FileUtil;
 import org.apache.tomcat.util.res.StringManager;
@@ -596,7 +595,7 @@ final class DirHandler extends Handler  {
 
         if( defCharset != null ) {
             if( "locale".equals(defCharset))
-                charset=LocaleToCharsetMap.getCharset(locale);
+                charset=sm.getString("defaultservlet.charset");
             else
                 charset=defCharset;
         }

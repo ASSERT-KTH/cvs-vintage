@@ -30,7 +30,6 @@ import org.apache.tomcat.core.Response;
 import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.net.URL;
 import org.apache.tomcat.util.http.HttpMessages;
-import org.apache.tomcat.util.http.LocaleToCharsetMap;
 import org.apache.tomcat.util.log.Log;
 import org.apache.tomcat.util.qlog.Logger;
 import org.apache.tomcat.util.res.StringManager;
@@ -45,8 +44,23 @@ public final class ErrorHandler extends BaseInterceptor {
     private Context rootContext=null;
     boolean showDebugInfo=true;
     int defaultRedirectStatus=301;
+    private String charset = null;
     
     public ErrorHandler() {
+    }
+
+    /**
+     * Set the charset to use for error page generation.
+     */
+    public void setUseCharset(String ucs) {
+	charset = ucs;
+    }
+
+    /**
+     * Get the charset to use for error page generation.
+     */
+    public String getUseCharset() {
+	return charset;
     }
 
     public void setShowDebugInfo( boolean b ) {
@@ -436,12 +450,14 @@ class NotFoundHandler extends Handler {
 	getManager("org.apache.tomcat.resources");
     int sbNote=0;
     boolean showDebugInfo=true;
+    private String useCharset;
     
-    NotFoundHandler(BaseInterceptor bi, boolean showDebugInfo) {
+    NotFoundHandler(ErrorHandler bi, boolean showDebugInfo) {
 	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.notFoundHandler";
 	setModule(bi);
 	this.showDebugInfo=showDebugInfo;
+	useCharset = bi.getUseCharset();
     }
 
     public void doService(Request req, Response res)
@@ -449,7 +465,10 @@ class NotFoundHandler extends Handler {
     {
 	String msg=(String)req.getAttribute("javax.servlet.error.message");
 
-	String charset = LocaleToCharsetMap.getCharset(Locale.getDefault());
+	String charset = useCharset;
+	if(charset == null) {
+	    charset = req.getCharEncoding();
+	}
 	if (charset == null) {
 	    res.setContentType("text/html");
 	} else {
@@ -519,12 +538,14 @@ class ExceptionHandler extends Handler {
 	getManager("org.apache.tomcat.resources");
     int sbNote=0;
     boolean showDebugInfo=true;
+    private String useCharset;
     
-    ExceptionHandler(BaseInterceptor bi, boolean showDebugInfo) {
+    ExceptionHandler(ErrorHandler bi, boolean showDebugInfo) {
 	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.exceptionHandler";
 	setModule( bi );
 	this.showDebugInfo=showDebugInfo;
+	useCharset = bi.getUseCharset();
     }
 
     public void doService(Request req, Response res)
@@ -560,7 +581,10 @@ class ExceptionHandler extends Handler {
 
 	// only include <head>...<body> if reset was successful
 	if ( needsHead ) {
-           String charset = LocaleToCharsetMap.getCharset(Locale.getDefault());
+	    String charset = useCharset;
+	    if(charset == null) {
+		charset = req.getCharEncoding();
+	    }
            if (charset == null)
                res.setContentType("text/html");
            else {
@@ -637,12 +661,14 @@ class StatusHandler extends Handler {
 	getManager("org.apache.tomcat.resources");
     int sbNote=0;
     boolean showDebugInfo=true;
+    private String useCharset;
     
-    StatusHandler(BaseInterceptor bi, boolean showDebugInfo) {
+    StatusHandler(ErrorHandler bi, boolean showDebugInfo) {
 	//setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.statusHandler";
 	setModule( bi );
 	this.showDebugInfo=showDebugInfo;
+	useCharset = bi.getUseCharset();
     }
     
     // We don't want interceptors called for redirect
@@ -664,7 +690,10 @@ class StatusHandler extends Handler {
 	// don't set a content type if we are answering If-Modified-Since.
 	// Proxy caches might update their cached content-type with this
 	// info (mod_proxy does it). Martin Algesten 15th Oct, 2002.
-	String charset = LocaleToCharsetMap.getCharset(Locale.getDefault());
+	String charset = useCharset;
+	if(charset == null) {
+	    charset = req.getCharEncoding();
+	}
 	if (charset == null) {
 	    res.setContentType("text/html");
 	} else {
@@ -761,11 +790,13 @@ class RedirectHandler extends Handler {
 	getManager("org.apache.tomcat.resources");
     int sbNote=0;
     int defaultRedirectStatus=301;
+    String useCharset;
 
-    RedirectHandler(BaseInterceptor bi) {
+    RedirectHandler(ErrorHandler bi) {
 	//setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.redirectHandler";
 	setModule( bi );
+	useCharset = bi.getUseCharset();
     }
 
     public void setDefaultRedirectStatus( int status ) {
@@ -790,7 +821,10 @@ class RedirectHandler extends Handler {
 
 	if( debug>0) ctx.log("Redirect " + location + " " + req );
 
-	String charset = LocaleToCharsetMap.getCharset(Locale.getDefault());
+	String charset = useCharset;
+	if(charset == null) {
+	    charset = req.getCharEncoding();
+	}
 	if (charset == null) {
 	    res.setContentType("text/html");
 	} else {
