@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1999, 2002 Slava Pestov
+ * Copyright (C) 1999, 2003 Slava Pestov
  * Portions copyright (C) 2000 Ollie Rutherfurd
  *
  * This program is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.164 2003/01/03 22:26:15 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.165 2003/01/03 23:16:15 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
