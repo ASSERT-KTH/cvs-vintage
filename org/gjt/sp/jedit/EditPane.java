@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.20 2002/02/11 09:25:51 spestov Exp $
+ * @version $Id: EditPane.java,v 1.21 2002/02/12 04:13:52 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -472,7 +472,12 @@ public class EditPane extends JPanel implements EBComponent
 			 * are not supported. Instead, it waits for the subsequent
 			 * 'Untitled' file creation. */
 			if(buffer.isClosed())
+			{
 				setBuffer(jEdit.getFirstBuffer());
+				// since recentBuffer will be set to the one that
+				// was closed
+				recentBuffer = null;
+			}
 		}
 		else if(msg.getWhat() == BufferUpdate.CLOSED)
 		{

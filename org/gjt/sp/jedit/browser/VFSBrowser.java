@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.33 2002/02/11 03:15:30 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.34 2002/02/12 04:13:52 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -177,7 +177,6 @@ public class VFSBrowser extends JPanel implements EBComponent
 		prefSize.width = 0;
 		pathField.setPreferredSize(prefSize);
 		pathField.addActionListener(actionHandler);
-		pathField.addFocusListener(new FocusHandler());
 		cons.gridx = 1;
 		cons.weightx = 1.0f;
 
@@ -1123,16 +1122,6 @@ public class VFSBrowser extends JPanel implements EBComponent
 				mkdir();
 			else if(source == searchInDirectory)
 				searchInDirectory();
-		}
-	} //}}}
-
-	//{{{ FocusHandler class
-	class FocusHandler extends FocusAdapter
-	{
-		public void focusLost(FocusEvent evt)
-		{
-			if(!requestRunning && !pathField.getText().equals(path))
-				pathField.setText(path);
 		}
 	} //}}}
 

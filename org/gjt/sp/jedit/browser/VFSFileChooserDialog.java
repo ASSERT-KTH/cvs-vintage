@@ -38,7 +38,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.9 2002/02/11 03:15:30 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.10 2002/02/12 04:13:52 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 implements WorkThreadProgressListener
@@ -294,13 +294,10 @@ implements WorkThreadProgressListener
 	//{{{ ActionHandler class
 	class ActionHandler implements ActionListener
 	{
-		//{{{ actionPerformed() method
 		public void actionPerformed(ActionEvent evt)
 		{
 			if(evt.getSource() == ok)
 			{
-				System.err.println(browser.getDirectory());
-				System.err.println(browser.getDirectoryField().getText());
 				if(!browser.getDirectory().equals(
 					browser.getDirectoryField().getText()))
 				{
@@ -312,7 +309,7 @@ implements WorkThreadProgressListener
 			}
 			else if(evt.getSource() == cancel)
 				cancel();
-		} //}}}
+		}
 	} //}}}
 
 	//{{{ BrowserHandler class

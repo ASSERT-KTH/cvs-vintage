@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.20 2002/01/28 04:20:54 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.21 2002/02/12 04:13:52 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -340,8 +340,6 @@ public class OffsetManager
 		for(int i = endLine; i < lineCount; i++)
 		{
 			setLineEndOffset(i,getLineEndOffset(i) + length);
-			lineInfo[i] &= ~(FOLD_LEVEL_VALID_MASK
-				| CONTEXT_VALID_MASK);
 		} //}}}
 
 		updatePositionsForInsert(offset,length);
@@ -389,8 +387,6 @@ public class OffsetManager
 		for(int i = startLine; i < lineCount; i++)
 		{
 			setLineEndOffset(i,getLineEndOffset(i) - length);
-			lineInfo[i] &= ~(FOLD_LEVEL_VALID_MASK
-				| CONTEXT_VALID_MASK);
 		} //}}}
 
 		updatePositionsForRemove(offset,length);
@@ -452,7 +448,8 @@ public class OffsetManager
 	//{{{ setLineEndOffset() method
 	private final void setLineEndOffset(int line, int end)
 	{
-		lineInfo[line] = ((lineInfo[line] & ~END_MASK) | end);
+		lineInfo[line] = ((lineInfo[line] & ~(END_MASK
+			| FOLD_LEVEL_VALID_MASK | CONTEXT_VALID_MASK)) | end);
 	} //}}}
 
 	//{{{ growPositionArray() method

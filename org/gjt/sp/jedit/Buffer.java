@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.68 2002/02/11 09:25:51 spestov Exp $
+ * @version $Id: Buffer.java,v 1.69 2002/02/12 04:13:52 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1324,11 +1324,11 @@ public class Buffer implements EBComponent
 				int whiteSpaceWidth = Math.max(0,MiscUtilities
 					.getLeadingWhiteSpaceWidth(line,tabSize)
 					- indentSize);
-
-				remove(lineStart,whiteSpace);
-				insert(lineStart,MiscUtilities
+	
+				insert(lineStart + whiteSpace,MiscUtilities
 					.createWhiteSpace(whiteSpaceWidth,
 					(noTabs ? 0 : tabSize)));
+				remove(lineStart,whiteSpace);
 			}
 
 		}
@@ -1367,10 +1367,10 @@ public class Buffer implements EBComponent
 				int whiteSpaceWidth = MiscUtilities
 					.getLeadingWhiteSpaceWidth(
 					line,tabSize) + indentSize;
-				remove(lineStart,whiteSpace);
-				insert(lineStart,MiscUtilities
+				insert(lineStart + whiteSpace,MiscUtilities
 					.createWhiteSpace(whiteSpaceWidth,
 					(noTabs ? 0 : tabSize)));
+				remove(lineStart,whiteSpace);
 			}
 		}
 		finally
@@ -1448,6 +1448,16 @@ public class Buffer implements EBComponent
 
 			writeUnlock();
 		}
+	} //}}}
+
+	//{{{ isUndoInProgress() method
+	/**
+	 * Returns if an undo or redo is currently in progress.
+	 * @since jEdit 4.0pre6
+	 */
+	public boolean isUndoInProgress()
+	{
+		return getFlag(UNDO_IN_PROGRESS);
 	} //}}}
 
 	//{{{ beginCompoundEdit() method
