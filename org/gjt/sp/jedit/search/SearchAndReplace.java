@@ -62,7 +62,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: SearchAndReplace.java,v 1.64 2004/08/08 03:41:34 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.65 2004/09/01 23:31:58 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -901,6 +901,17 @@ loop:			while(path != null)
 	} //}}}
 
 	//}}}
+
+	//{{{ escapeRegexp() method
+	/**
+	 * Escapes characters with special meaning in a regexp.
+	 * @since jEdit 4.3pre1
+	 */
+	public static String escapeRegexp(String str)
+	{
+		return MiscUtilities.charsToEscapes(str,
+			"\n\r\t\\()[]{}$^*+?|.");
+	} //}}}
 
 	//{{{ load() method
 	/**

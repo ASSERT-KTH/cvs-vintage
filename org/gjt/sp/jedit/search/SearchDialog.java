@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.52 2004/02/24 03:46:51 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.53 2004/09/01 23:31:58 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -120,7 +120,13 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 		{
 			if(searchString.indexOf('\n') == -1)
 			{
-				find.setText(searchString);
+				if(SearchAndReplace.getRegexp())
+				{
+					find.setText(SearchAndReplace.escapeRegexp(
+						searchString));
+				}
+				else
+					find.setText(searchString);
 				find.selectAll();
 				searchCurrentBuffer.setSelected(true);
 			}

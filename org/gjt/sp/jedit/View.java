@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.112 2004/09/01 22:52:05 spestov Exp $
+ * @version $Id: View.java,v 1.113 2004/09/01 23:31:58 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -388,6 +388,9 @@ public class View extends JFrame implements EBComponent
 			else if(text.indexOf('\n') != -1)
 				text = null;
 
+			if(SearchAndReplace.getRegexp())
+				text = SearchAndReplace.escapeRegexp(text);
+
 			searchBar.getField().setText(text);
 		}
 
@@ -415,6 +418,12 @@ public class View extends JFrame implements EBComponent
 
 			if(text != null && text.indexOf('\n') == -1)
 			{
+				if(SearchAndReplace.getRegexp())
+				{
+					text = SearchAndReplace.escapeRegexp(
+						text);
+				}
+
 				HistoryModel.getModel("find").addItem(text);
 				SearchAndReplace.setSearchString(text);
 				SearchAndReplace.setSearchFileSet(new CurrentBufferSet());
