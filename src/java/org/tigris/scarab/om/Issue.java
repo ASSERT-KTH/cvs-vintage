@@ -1716,6 +1716,7 @@ public class Issue
         else
         {
             comment = " moved from issue ";
+            comment2 = " moved to issue ";
             // delete original issue
             delete(user);
         }
