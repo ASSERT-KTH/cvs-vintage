@@ -8,7 +8,6 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.mysql.MySQLCreateEntityCommand;
 import org.jboss.logging.Logger;
 
 /**
@@ -20,7 +19,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class JDBCCommandFactory {
 
