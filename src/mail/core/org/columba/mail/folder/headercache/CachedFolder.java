@@ -506,15 +506,7 @@ public abstract class CachedFolder extends LocalFolder {
 
         Flags flags = strippedHeader.getFlags();
 
-        // increment recent count of messages if appropriate
-        if (flags.getRecent()) {
-            getMessageFolderInfo().incRecent();
-        }
-
-        // increment unseen count of messages if appropriate
-        if (flags.getSeen()) {
-            getMessageFolderInfo().incUnseen();
-        }
+        getMessageFolderInfo().incUnseen();
 
         // add header to header-cache list
         getHeaderCacheInstance().add(strippedHeader);

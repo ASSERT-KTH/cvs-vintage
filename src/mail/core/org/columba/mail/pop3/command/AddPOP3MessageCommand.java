@@ -20,6 +20,7 @@ import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
+import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.io.SourceInputStream;
 
 
@@ -62,6 +63,9 @@ public class AddPOP3MessageCommand extends FolderCommand {
 
         // add message to folder
         Object uid = inboxFolder.addMessage(new SourceInputStream(message.getSource()), message.getHeader().getAttributes());
+        inboxFolder.getFlags(uid).set(Flags.RECENT);
+
+		inboxFolder.getMessageFolderInfo().incRecent();
 
         // apply filter on message
         FilterList list = inboxFolder.getFilterList();
