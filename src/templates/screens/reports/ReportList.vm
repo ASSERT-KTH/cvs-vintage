@@ -4,7 +4,6 @@
 <input type="hidden" name="action" value="GenerateReport" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="reports,Step1.vm" />
 
-
 ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
 
 <h3>Saved reports</h3>
@@ -27,9 +26,9 @@ Click on "Availability" to execute report.
   #set ($group = $intake.Report.mapTo($report))
   #indexedRows($velocityCount)
 <td><input type="checkbox" name="report_id" value="$report.ReportId">
-<td>$report.Name</a></td>
+<td>$link.setPage("reports,Step1.vm").setLabel("$report.Name").addPathInfo("action", "GenerateReport").addPathInfo("eventSubmit_doEditstoredreport", "foo").addPathInfo("report_id", "$report.ReportId")</td>
 <td>$!report.Description</td>
-<td>Personal profile</a></td>
+<td>$link.setPage("reports,Step1.vm").setLabel("Personal profile").addPathInfo("action", "GenerateReport").addPathInfo("eventSubmit_doRunstoredreport", "foo").addPathInfo("report_id", "$report.ReportId")</td>
 <td>
  #set ($createdUser = $scarabR.getUser($report.UserId.toString()))
 <a href="mailto:$createdUser.Email">$createdUser.Name</a></td>
@@ -38,7 +37,7 @@ Click on "Availability" to execute report.
 
 </table>
 #else
- <p><strong class="alert">There are no saved reports.</strong></p>
+ <p class="alert">There are no saved reports.</p>
 #end
 
 <div class="functnbar3">
@@ -50,7 +49,6 @@ Click on "Availability" to execute report.
 
 ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
 
-</div>
-
 $intake.declareGroups()
 </form>
+</div>
