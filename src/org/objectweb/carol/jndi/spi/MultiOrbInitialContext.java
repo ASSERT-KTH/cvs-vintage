@@ -75,8 +75,14 @@ public class MultiOrbInitialContext implements Context {
      * and instaciate initial contexts
      */
     public MultiOrbInitialContext () throws NamingException {
-	pcur = ProtocolCurrent.getCurrent();
-	activesInitialsContexts = pcur.getContextHashtable();
+	try {
+	    pcur = ProtocolCurrent.getCurrent();
+	    activesInitialsContexts = pcur.getContextHashtable();
+	} catch (Exception e) {
+	    throw new NamingException("multi initial context init fail:\n" +
+				      getProperties() 
+				      + e);
+	}
     }
 
 

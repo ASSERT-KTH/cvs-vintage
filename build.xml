@@ -21,6 +21,7 @@
   <property name="archive" 	  value="${basedir}/archive"/>
   <property name="test" 	  value="${basedir}/test"/>
   <property name="externals" 	  value="${basedir}/externals"/>
+  <property name="ext" 	          value="${basedir}/ext"/>
 
   <!--======================================================
   load the following user properties from a file:
@@ -171,7 +172,18 @@
   present in ${jdoc} directory -->
   <target name="jdoc" description="Build carol java documentation (javadoc)">
     <mkdir dir="${dist.jdoc}"/>
-    <multipleAnt dir="${jdoc}" />
+    <javadoc
+      packagenames="org.objectweb.*"
+      destdir="${dist.jdoc}"
+      windowtitle="Objectweb Common Architecture for RMI ObjectWeb Layer API"
+      doctitle="Objectweb Common Architecture for RMI ObjectWeb Layer "
+      author="true" version="true" use="true" >
+      <sourcepath>
+	<pathelement path="${src}"/>
+	<pathelement path="${build}/classes"/>
+      </sourcepath>
+      <classpath refid="externals.classpath"/>
+    </javadoc>
   </target>
 
 
@@ -191,6 +203,7 @@
   in the ${dist} directory -->
   <target name="config" description="Build carol configuration directory">
     <mkdir dir="${dist.config}"/>
+    <copy file="${ext}/carol.properties" tofile="${dist.config}/carol.properties"/>  
   </target>
 
 

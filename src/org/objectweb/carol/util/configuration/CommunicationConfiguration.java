@@ -65,12 +65,12 @@ public class CommunicationConfiguration {
     /**
      * rmi properties file name 
      */
-    public static String CAROL_FILE_NAME="carol.properties";
+    public static final String CAROL_FILE_NAME="carol.properties";
 
     /**
      * jndi properties file name
      */
-    public static String JNDI_FILE_NAME="jndi.properties";
+    public static final String JNDI_FILE_NAME="jndi.properties";
 
     
     /**
@@ -175,21 +175,21 @@ public class CommunicationConfiguration {
     	//Parse the properties
 	for (Enumeration e =  rmiProps.propertyNames() ; e.hasMoreElements() ;) {
 
-	    String pkey = (String)e.nextElement();
+	    String pkey = ((String)e.nextElement()).trim();
 	    if  (pkey.startsWith(activation_prefix)) { // get default rmi name : the first activated rmi
 		StringTokenizer pTok = new StringTokenizer(rmiProps.getProperty(pkey), ",");
 		if (pTok.hasMoreTokens()) {
-		    defaultRMI = (pTok.nextToken());
+		    defaultRMI = (pTok.nextToken()).trim();
 		} else {
 		   throw new RMIConfigurationException("There is no rmi activated in the file " + CAROL_FILE_NAME); 
 		}
 	    } else if (pkey.startsWith(jvmPref)) { // jvm properties
-		jvmProps.setProperty(pkey.substring(jvmPref.length()+1), rmiProps.getProperty(pkey));	
+		jvmProps.setProperty(pkey.substring(jvmPref.length()+1), (rmiProps.getProperty(pkey)).trim());	
 	    } else if ((pkey.startsWith(rmiPref)) || (pkey.startsWith(jndiPref))) { // this is a carol properties
 		StringTokenizer pkeyToken = new StringTokenizer(pkey, ".");
 		pkeyToken.nextToken();
 		pkeyToken.nextToken();
-		String rmiName = pkeyToken.nextToken();
+		String rmiName = (pkeyToken.nextToken()).trim();
 		
 		if  (!rmiConfigurationTable.containsKey(rmiName)) {
 		    RMIConfiguration rmiConf =  new RMIConfiguration(rmiName, rmiProps, jndiProps);
