@@ -2,13 +2,13 @@
  * Sample user
  */
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
-    values (2, 'jon@latchkey.com', 'NWoZK3kTsExUV00Ywo1G5jlU', 'Jon', 'Stevens', 'jon@latchkey.com', 'CONFIRMED' );
+    values (2, 'jon@latchkey.com', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Jon', 'Stevens', 'jon@latchkey.com', 'CONFIRMED' );
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
-    values (3, 'jss@latchkey.com', 'NWoZK3kTsExUV00Ywo1G5jlU', 'Jon', 'Stevens', 'jon@latchkey.com', 'abcdef' );
+    values (3, 'jss@latchkey.com', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Jon', 'Stevens', 'jon@latchkey.com', 'abcdef' );
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
-    values (4, 'jmcnally@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlU', 'John', 'McNally', 'jmcnally@collab.net', 'CONFIRMED' );
+    values (4, 'jmcnally@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'John', 'McNally', 'jmcnally@collab.net', 'CONFIRMED' );
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
-    values (5, 'elicia@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlU', 'Elicia', 'David', 'elicia@collab.net', 'CONFIRMED' );
+    values (5, 'elicia@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Elicia', 'David', 'elicia@collab.net', 'CONFIRMED' );
 
 
 /*
