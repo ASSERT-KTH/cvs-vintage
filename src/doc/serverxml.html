@@ -3,32 +3,45 @@
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <!-- $Id: serverxml.html,v 1.2 2001/08/27 02:19:10 larryi Exp $ -->
+  <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="style.css">
   <title>Server.xml configuration in tomcat 3.3</title>
-  <meta name="CREATED" content="20010812;22403100" />
-  <meta name="CHANGED" content="20010813;9534200" />
 </head>
 
 <body>
+<!-- Banner element, all hail the Project! -->
+
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+		<td width="50%"><a
+			href="http://jakarta.apache.org/index.html"><img
+			src="images/banner.gif" width="350" height="100"
+			alt="The Jakarta Project" border="0"></a></td>
+		<td width="50%" align="right"><img border="0" src="images/tomcat.gif" width="100" height="71" alt="The mighty Tomcat - Meow!"></td>
+      </tr>
+</table>
+
 <h2>General configuration</h2>
 
 <p>Tomcat is implemented using a set of modules. Each module has a
-number of settable properties and implements one or few 'hooks', implementing a
+number of settable properties and implements one or more 'hooks', providing a
 piece of functionality.</p>
 
 <p>The modules can be configured and assembled in sevaral ways, but the
 default and most flexible mechanism uses XML files. Each module is described
 by an XML element, with attributes used to set module properties. The main
-configuration file is located in TOMCAT_HOME/conf/server.xml, used to
-configure the server. Additional TOMCAT_HOME/conf/server-[NAME].xml files
-will be read after server.xml, allowing local configurations.</p>
+configuration file is located in <code>TOMCAT_HOME/conf/server.xml</code>, used to
+configure the server. Additional </code>TOMCAT_HOME/conf/server-<i>name</i>.xml</code> files
+will be read after </code>server.xml</code>, allowing local configurations.</p>
 
 
 <h3>Variable substitution</h3>
 
-<p>Each attribute value may use ant-style variable substitution ( ${variable}
+<p>Each attribute value may use the ant-style variable substitution ( ${variable}
 ). The values are stored as ContextManager properties, and defined using
-either &lt;property name='foo' value='bar' /&gt;, as attributes in the
+either &lt;property name=&quot;foo&quot; value=&quot;bar&quot; /&gt;, as attributes in the
 &lt;ContextManager&gt; element, or in the command line using "-foo bar" 
 syntax, or as system properties.</p>
 
@@ -37,23 +50,18 @@ syntax, or as system properties.</p>
 <p>All modules have the following common attributes:</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
-  <tbody>
-    <tr valign="top">
-      <td><p><b>Attribute</b></p>
-      </td>
-      <td><p><b>Description</b></p>
-      </td>
-      <td><p><b>Default</b></p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td><p>debug</p>
-      </td>
-      <td><p>Display debug information on the module execution</p>
-      </td>
-      <td>0</td>
-    </tr>
-  </tbody>
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td><p>debug</p>
+    </td>
+    <td><p>Display debug information on the module execution</p>
+    </td>
+    <td>0</td>
+  </tr>
 </table>
 
 <h2>Configuration Elements</h2>
@@ -62,6 +70,12 @@ syntax, or as system properties.</p>
 with java setters beeing automatically associated with element attributes. The 
 javadoc will contain most details, in this document we focus on the common 
 and supported behaviors. </p>
+
+<h2>Parent Configuration Elements</h2>
+
+<p>The purpose of the server.xml is to define the configuration of an instance
+of the Tomcat 3.3 web server.  The parent configuration elements in the
+server.xml file represent that instance.</p>
 
 <!-- ======================================== -->
 
@@ -83,124 +97,148 @@ the tomcat configuration, ContextManager.</p>
 
 <h4 id="Descriptio">Description</h4>
 
-<p>Main tag, used to set generic tomcat options. It has few types of
-childrens:</p>
+<p>This is the main tag, used to set generic Tomcat options. The following are
+some of the childen it supports:</p>
 <dl>
-  <dt>&lt;[MODULE_NAME]&gt;</dt>
-    <dd>Define a module. Module names are defined in module.xml, where each tag is
-      associated with a class name that implements the module. Each element
-      attribute coresponds to a setter method in the implementing class </dd>
+  <dt>&lt;<i>module_name</i>&gt;</dt>
+    <dd>Adds a module to the configuration. Module names are defined in
+	  module.xml, where each tag is associated with a class name that
+	  implements the module. Each element attribute coresponds to a setter
+	  method in the implementing class.</dd>
   <dt>&lt;Context&gt;</dt>
-    <dd>Defines a web application. As a rule, applications should be defined 
-    in separate config files, named apps-[NAME].xml</dd>
-  <dt>&lt;Property name="NAME" value="VALUE"&gt;</dt>
+    <dd>Defines a web application. This is a legacy method of specifying a
+	  web application.  It is included for backward compatibility with older
+	  Tomcats. As a rule, applications should be defined in separate config
+	  files, named apps-<i>name</i>.xml. This way you can configure your
+	  web applications without modifying your server.xml file.</dd>
+  <dt>&lt;Property name=&quot;<i>property_name</i>&quot; value=&quot;<i>property_value</i>&quot;&gt;</dt>
     <dd>Adds arbitrary name/values to ContextManager. The properties can be
-     used for variable substitutions, or instead of attributes.</dd>
-  <dt>&lt;module name="MODULE_NAME" javaClass="full.class.name"&gt;</dt>
-    <dd>Define a module. All modules included in the standard distribution are
-      defined in modules.xml, but you can define additional tags and their 
-      associated class in server.xml. This behaves like taskdef in ant.</dd>
+     used for variable substitutions, instead of attributes.</dd>
+  <dt>&lt;module name=&quot;<i>module_name</i>&quot; javaClass=&quot;<i>full.class.name</i>&quot;&gt;</dt>
+    <dd>Adds a module to the configuration. All modules included in the standard
+	  distribution are defined in modules.xml, but you can define additional
+	  tags and their associated class in server.xml. This behaves like taskdef
+	  in ant.</dd>
 </dl>
 
 <h4 id="Parameters">Parameters</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
-  <tbody>
-    <tr valign="top">
-      <td><p><b>Attribute</b></p>
-      </td>
-      <td><p><b>Description</b></p>
-      </td>
-      <td><p><b>Default</b></p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td>install
-      </td>
-      <td>Base directory for tomcat installation. It is typically guessed by the 
-startup program, but you can override it here.
-      </td>
-      <td>TOMCAT_HOME or one level above the location of the startup script or 
-tomcat.jar ( if "java -jar" is used for startup)
-      </td>
-    </tr>
-    <tr valign="top">
-      <td>workDir
-      </td>
-      <td>Directory where temporary files will be created.
-      </td>
-      <td>TOMCAT_HOME/work
-      </td>
-    </tr>
-    <tr valign="top">
-      <td>home
-      </td>
-      <td>Base directory for the tomcat instance. While 'install' is used to 
-find the libraries, 'home' is used to resolve almost  all relative paths -
-webapps, work, etc.  
-      </td>
-      <td>TOMCAT_HOME or the value guessed by the startup program. 
-      </td>
-    </tr>
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <td>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>install</td>
+    <td>Base directory for tomcat installation. It is typically guessed by the 
+      startup program, but you can override it here.</td>
+    <td>TOMCAT_HOME or one level above the location of the startup script or 
+      tomcat.jar (if "java -jar" is used for startup).</td>
+  </tr>
+  <tr valign="top">
+    <td>workDir</td>
+    <td>Directory where temporary files will be created.  Relative paths are
+	  interpreted as relative to TOMCAT_HOME.</td>
+    <td>work</td>
+  </tr>
+  <tr valign="top">
+    <td>home</td>
+    <td>Base directory for the tomcat instance. While 'install' is used to 
+      find the libraries, 'home' is used to resolve almost all relative paths -
+      webapps, work, etc.</td>
+    <td>TOMCAT_HOME or the value guessed by the startup program.</td>
+  </tr>
 </table>
 
 <h4 id="Examples1">Examples</h4>
-<pre style="margin-bottom: 0.5cm">  &lt;ContextManager install='/opt/tomcat' workDir='/var/tomcat' home='/var' /&gt;</pre>
+<pre>
+&lt;ContextManager install=&quot;/opt/tomcat&quot; workDir=&quot;/var/tomcat&quot; home=&quot;/var&quot; /&gt;
+</pre>
 
-<!-- ======================================== -->
+<h2>Module Configuration Elements</h2>
 
-<h3>AutoWebApp</h3>
+<p>It is the set of modules and their configuration that control the behavior
+of the Tomcat web server.  By specifying which modules and their parameters you
+have a lot of flexibility in controlling the features of your instance of
+Tomcat.</p>
 
-<h4 id="Descriptio1">Description</h4>
+<p>Note that &quot;interceptor&quot; is a name that used in the past, prior to
+the adoption of the name &quot;module&quot;.  It should be considered synonomous
+with &quot;modele&quot;.  &quot;Interceptor&quot; will appear various in places,
+especially in module names and their classes.</p>
 
-<p>Automatically add web applications from a directory.</p>
+<p>The list of modules below is in alphabetical order. Functionally, they may
+be grouped as follows:</p>
 
-<h4 id="Parameters1">Parameters</h4>
+<ul>
+  <li>Access Authentication and Authorization
+    <ul>
+	  <li><a href="#AccessInterceptor">AccessInterceptor</a></li>
+	  <li><a href="#CredentialsInterceptor">CredentialsInterceptor</a></li>
+	  <li><a href="#JDBCRealm">JDBCRealm</a></li>
+	  <li><a href="#SimpleRealm">SimpleRealm</a></li>
+	</ul></li>
+  <li>Configuration
+    <ul>
+	  <li><a href="#ApacheConfig">ApacheConfig</a></li>
+	  <li><a href="#AutoDeploy">AutoDeploy</a></li>
+	  <li><a href="#AutoWebApp">AutoWebApp</a></li>
+	  <li><a href="#ContextXmlReader">ContextXmlReader</a></li>
+	  <li><a href="#IISConfig">IISConfig</a></li>
+	  <li><a href="#JservConfig">JservConfig</a></li>
+	  <li><a href="#LoaderInterceptor11">LoaderInterceptor11</a></li>
+	  <li><a href="#LogSetter">LogSetter</a></li>
+	  <li><a href="#NSConfig">NSConfig</a></li>
+	  <li><a href="#PathSetter">PathSetter</a></li>
+	  <li><a href="#PolicyLoader">PolicyLoader</a></li>
+	  <li><a href="#TrustedLoader">TrustedLoader</a></li>
+	  <li><a href="#WorkDirSetup">WorkDirSetup</a></li>
+	</ul></li>
+  <li>Generators
+    <ul>
+	  <li><a href="#ErrorHandler">ErrorHandler</a></li>
+	  <li><a href="#InvokerInterceptor">InvokerInterceptor</a></li>
+	  <li><a href="#Jdk12Interceptor">Jdk12Interceptor</a></li>
+	  <li><a href="#StaticInterceptor">StaticInterceptor</a></li>
+	</ul></li>
+  <li>Facade
+    <ul>
+	  <li><a href="#WebXmlReader">WebXmlReader</a></li>
+	  <li><a href="#JspInterceptor">JspInterceptor</a></li>
+	  <li><a href="#Servlet22Interceptor">Servlet22Interceptor</a></li>
+	  <li><a href="#LoadOnStartupInterceptor">LoadOnStartupInterceptor</a></li>
+	  <li><a href="#TagPoolManagerInterceptor">TagPoolManagerInterceptor</a></li>
+	</ul></li>
+  <li>Loggers
+    <ul>
+	  <li><a href="#AccessLogInterceptor">AccessLogInterceptor</a></li>
+	  <li><a href="#AccountingInterceptor">AccountingInterceptor</a></li>
+	  <li><a href="#LogEvents">LogEvents</a></li>
+	</ul></li>
+  <li>Mappers
+    <ul>
+	  <li><a href="#DecodeInterceptor">DecodeInterceptor</a></li>
+	  <li><a href="#ReloadInterceptor">ReloadInterceptor</a></li>
+	  <li><a href="#SimpleMapper1">SimpleMapper1</a></li>
+	</ul></li>
+  <li>Server
+    <ul>
+	  <li><a href="#Http10Connector">Http10Connector</a></li>
+	  <li><a href="#JniConnector">JniConnector</a></li>
+	  <li><a href="#Ajp12Connector">Ajp12Connector</a></li>
+	  <li><a href="#Ajp13Connector">Ajp13Connector</a></li>
+	</ul></li>
+  <li>Session
+    <ul>
+	  <li><a href="#SimpleSessionStore">SimpleSessionStore</a></li>
+	  <li><a href="#SessionIdGenerator">SessionIdGenerator</a></li>
+	  <li><a href="#SessionExpirer">SessionExpirer</a></li>
+	  <li><a href="#SessionId">SessionId</a></li>
+	</ul></li>
+</ul>
 
-<table border="1" cellpadding="2" cellspacing="0">
-  <tbody>
-    <tr valign="top">
-      <td><p><b>Attribute</b></p>
-      </td>
-      <td><p><b>Description</b></p>
-      </td>
-      <td><p><b>Default</b></p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td><p>dir</p>
-      </td>
-      <td><p>location to load webapps from.</p>
-      </td>
-      <td><p>${tomcat.home}/webapps</p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td><p>host</p>
-      </td>
-      <td><p>Virtual host where each application will be deployed into</p>
-      </td>
-      <td><p>DEFAULT</p>
-      </td>
-    </tr>
-    <tr>
-      <td>ignoreDot</td>
-      <td>Ignore dirs starting with '.'</td>
-      <td>true</td>
-    </tr>
-    <tr>
-      <td>flat</td>
-      <td>Each dir will be treated as a webapp in the same host. If false,
-        each dir will be treated as a host name and its subdirs as
-        webapplication. You can add apps to multiple virtual hosts. </td>
-      <td>true</td>
-    </tr>
-  </tbody>
-</table>
-
-<h4 id="Examples2">Examples</h4>
-<pre style="margin-bottom: 0.5cm">  &lt;AutoWebApp dir='webapps' host='DEFAULT /&gt;
-    &lt;AutoWebApp dir='myhost' host='myhost.com' /&gt; </pre>
+<hr size="5">
 
 <!-- ======================================== -->
 
@@ -249,124 +287,37 @@ embedding system</p>
 
 <!-- ======================================== -->
 
-<h3>AutoDeploy</h3>
-
-<h4 id="Descriptio31">Description</h4>
-
-<p>Automatically expand WAR files on startup.</p>
-
-<h4 id="Parameters31">Parameters</h4>
-
-<table border="1" cellpadding="2" cellspacing="0">
-  <tbody>
-    <tr valign="top">
-      <td><b>Attribute</b></td>
-      <td><b>Description</b></td>
-      <td><b>Default</b></td>
-    </tr>
-    <tr valign="top">
-      <td>source</td>
-      <td>Directory where .war files are located.</td>
-      <td>${tomcat.home}/webapps</td>
-    </tr>
-    <tr valign="top">
-      <td>target</td>
-      <td>Directory where .war files will be expanded</td>
-      <td>${tomcat.home}/webapps</td>
-    </tr>
-    <tr>
-      <td>redeploy</td>
-      <td>Check if the .war file is changed and re-deploy. This works in the
-        same way as reloading.</td>
-      <td>false</td>
-    </tr>
-    <tr valign="top">
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<h4>Examples</h4>
-<pre>&lt;AutoDeploy source="webapps" target="webapps" /&gt;
-</pre>
-
-<!-- ======================================== -->
-
-<h3>ApacheConfig</h3>
-
-<h4 id="Descriptio311">Description</h4>
-
-<p>Generate configuration files to be included in httpd.conf. See XXX. </p>
-
-<h4 id="Parameters311">Parameters</h4>
-
-<table border="1" cellpadding="2" cellspacing="0">
-  <tbody>
-    <tr valign="top">
-      <td><b>Attribute</b></td>
-      <td><b>Description</b></td>
-      <td><b>Default</b></td>
-    </tr>
-    <tr valign="top">
-      <td>name</td>
-      <td>Desc</td>
-      <td>val.</td>
-    </tr>
-    <tr valign="top">
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr valign="top">
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<h4>Examples</h4>
-
-<!-- ======================================== -->
-
 <h3>ELEMENT</h3>
 
-<h4 id="Descriptio3112">Description</h4>
+<p><b>Type:</b> </p>
+
+<h4>Description</h4>
 
 <p></p>
 
-<h4 id="Parameters3112">Parameters</h4>
+<h4>Parameters</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
-  <tbody>
-    <tr valign="top">
-      <td><b>Attribute</b></td>
-      <td><b>Description</b></td>
-      <td><b>Default</b></td>
-    </tr>
-    <tr valign="top">
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr valign="top">
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr valign="top">
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr valign="top">
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
 </table>
 
 <h4>Examples</h4>
@@ -375,6 +326,412 @@ embedding system</p>
 
 </pre>
 
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="AccessInterceptor">AccessInterceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="AccessLogInterceptor">AccessLogInterceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="AccountingInterceptor">AccountingInterceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="Ajp12Connector">Ajp12Connector</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="Ajp13Connector">Ajp13Connector</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="ApacheConfig">ApacheConfig</a></h3>
+
+<p><b>Type:</b> Configuration</p>
+
+<h4>Description</h4>
+
+<p>Generate configuration file for mod_jk to be included in Apache's httpd.conf.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>configHome</td>
+    <td>Default parent directory for the following paths. Ignored whenever any
+      of the following paths is absolute.</td>
+    <td>TOMCAT_HOME</td>
+  </tr>
+  <tr valign="top">
+    <td>jkConfig</td>
+    <td>Path to use for writing Apache mod_jk configuration file.</td>
+    <td>conf/auto/mod_jk.conf</td>
+  </tr>
+  <tr valign="top">
+    <td>workersConfig</td>
+    <td>Path to workers.properties file used by mod_jk.</td>
+    <td>conf/jk/workers.properties</td>
+  </tr>
+  <tr valign="top">
+    <td>modJk</td>
+    <td>Path to Apache mod_jk plugin file.</td>
+    <td>Windows: modules/mod_jk.dll<br>
+      Netware: modules/mod_jk.nlm<br>
+      Unix and all others: libexec/mod_jk.so</td>
+  </tr>
+  <tr valign="top">
+    <td>jkLog</td>
+    <td>Path to log file to be used by mod_jk.</td>
+    <td></td>
+  </tr>
+  <tr valign="top">
+    <td>jkDebug</td>
+    <td>JK Loglevel setting.  May be debug, info, error, or emerg.</td>
+    <td>emerg</td>
+  </tr>
+  <tr valign="top">
+    <td>jkProtocol</td>
+    <td>The desired protocal, "ajp12", "ajp13" or "inprocess".</td>
+    <td>Defaults to "ajp13" if an Ajp13Interceptor is in use, otherwise it
+      defaults to "ajp12".</td>
+  </tr>
+  <tr valign="top">
+    <td>forwardAll</td>
+    <td>If true, forward all requests to Tomcat. This helps insure that all the
+      behavior configured in the web.xml file functions correctly.  If false,
+      let Apache serve static resources. Warning: When false, some configuration
+      in the web.xml may not be duplicated in Apache.  Review the mod_jk
+      configuration file to see the actual configuration being set in Apache.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>noRoot</td>
+    <td>If true, the root context is not mapped to Tomcat. If false and
+	  forwardAll is true, all requests to the root context are mapped to Tomcat.
+	  If false and forwardAll is false, only JSP and servlets requests to the
+	  root context are mapped to Tomcat. When false, to correctly serve
+	  Tomcat's root context in the default host you must also modify the
+	  DocumentRoot setting in Apache's httpd.conf file to point to Tomcat's root
+	  context directory. Otherwise some content, such as Apache's index.html,
+	  will be served by Apache before mod_jk gets a chance to claim the request
+	  and pass it to Tomcat.  If a root context is assigned to a virtual host,
+	  then the DocumentRoot is automatically included in the configuration for
+	  that virtual host.</td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Examples</h4>
+
+<pre>
+&lt;ApacheConfig forwardAll=&quot;true&quot; noRoot=&quot;false&quot; /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="AutoDeploy">AutoDeploy</a></h3>
+
+<p><b>Type:</b> Configuration</p>
+
+<h4>Description</h4>
+
+<p>Automatically expand WAR files on startup.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>source</td>
+    <td>Directory where .war files are located.</td>
+    <td>${tomcat.home}/webapps</td>
+  </tr>
+  <tr valign="top">
+    <td>target</td>
+    <td>Directory where .war files will be expanded</td>
+    <td>${tomcat.home}/webapps</td>
+  </tr>
+  <tr>
+    <td>redeploy</td>
+    <td>Check if the .war file is changed and re-deploy. This works in the
+      same way as reloading.</td>
+    <td>false</td>
+  </tr>
+</table>
+
+<h4>Examples</h4>
+
+<pre>
+&lt;AutoDeploy source=&quot;webapps&quot; target=&quot;webapps&quot; /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="AutoWebApp">AutoWebApp</a></h3>
+
+<p><b>Type:</b> Configuration</p>
+
+<h4>Description</h4>
+
+<p>Automatically add web applications from a directory.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td><p>dir</p>
+    </td>
+    <td><p>Directory from which to load the web applictions. Relative paths
+      are interpreted as relative to TOMCAT_HOME.</p>
+    </td>
+    <td><p>webapps</p>
+    </td>
+  </tr>
+  <tr valign="top">
+    <td><p>prefix</p>
+    </td>
+    <td><p>Prefix to add to the context path for each deployed web application.
+      The context path will consist of the prefix followed subdirectory name.</p>
+    </td>
+    <td><p>DEFAULT</p>
+    </td>
+  </tr>
+  <tr valign="top">
+    <td><p>host</p>
+    </td>
+    <td><p>Virtual host into which each application will be deployed.</p>
+    </td>
+    <td><p>DEFAULT</p>
+    </td>
+  </tr>
+  <tr valign="top">
+    <td>ignoreDot</td>
+    <td>Ignore dirs starting with '.'</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>flat</td>
+    <td>Each dir will be treated as a webapp in the same host. If false,
+      each dir will be treated as a host name and its subdirs as
+      webapplication. You can add apps to multiple virtual hosts. </td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Examples</h4>
+
+<pre>
+  &lt;AutoWebApp dir=&quot;webapps&quot; host=&quot;DEFAULT&quot; /&gt;
+  &lt;AutoWebApp dir=&quot;myhost&quot; host=&quot;myhost.com&quot; /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="ContextXmlReader">ContextXmlReader</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="CredentialsInterceptor">CredentialsInterceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="DecodeInterceptor">DecodeInterceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="ErrorHandler">ErrorHandler</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="Http10Connector">Http10Connector</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="IISConfig">IISConfig</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="InvokerInterceptor">InvokerInterceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="JDBCRealm">JDBCRealm</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="Jdk12Interceptor">Jdk12Interceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="JniConnector">JniConnector</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="JservConfig">JservConfig</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="JspInterceptor">JspInterceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="LoaderInterceptor11">LoaderInterceptor11</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="LoadOnStartupInterceptor">LoadOnStartupInterceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="LogEvents">LogEvents</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="LogSetter">LogSetter</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="NSConfig">NSConfig</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="PathSetter">PathSetter</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="PolicyLoader">PolicyLoader</a></h3>
+
+
+<p><b>Type:</b> Configuration</p>
+
+<h4>Description</h4>
+
+<p>Run Tomcat 3.3 in a sandbox. The module will be active only if the "sandbox"
+property is set on the ContextManager (as an attribute or via a command line
+option). This minimizes the number of command line arguments. 
+Note that you must define the policy file before starting Tomcat 3.3
+(in some VMs it works if you set it at runtime, but it's safer to set it
+in the command line).</p>
+
+<p>Make sure "-Djava.security.policy=$TOMCAT_HOME/lib/tomcat.policy" is
+included in the startup line, or an equivalent policy is present in the 
+embedding system</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>securityManagerClass</td>
+    <td>Customize the security manager</td>
+    <td><p>java.lang.SecurityManager</p>
+    </td>
+  </tr>
+  <tr valign="top">
+    <td>policyFile</td>
+    <td>Policy file to be used by the security manager.</td>
+    <td>conf/tomcat.policy</td>
+  </tr>
+  <tr valign="top">
+    <td>sandbox</td>
+    <td>Force the use of a sandbox, regardless of command line</td>
+    <td>false
+    </td>
+  </tr>
+</table>
+
+<h4>Examples</h4>
+
+<pre>
+
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="ProfileLoader">ProfileLoader</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="ReloadInterceptor">ReloadInterceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="SessionExpirer">SessionExpirer</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="SessionId">SessionId</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="SessionIdGenerator">SessionIdGenerator</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="SimpleRealm">SimpleRealm</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="SimpleSessionStore">SimpleSessionStore</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="Servlet22Interceptor">Servlet22Interceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="SimpleMapper1">SimpleMapper1</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="StaticInterceptor">StaticInterceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="TagPoolManagerInterceptor">TagPoolManagerInterceptor</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="TrustedLoader">TrustedLoader</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="WebXmlReader">WebXmlReader</a></h3>
+
+<!-- ======================================== -->
+
+<h3><a name="WorkDirSetup">WorkDirSetup</a></h3>
 
 </body>
 </html>
