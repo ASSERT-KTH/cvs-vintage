@@ -77,12 +77,12 @@ public class ScarabUserManager
     {
         super();
         setRegion(getClassName().replace('.', '_'));
-    }
+    }    
 
     /**
      * @return null if there is an UnknownEntityException
      */
-    public ScarabUser getInstanceImpl()
+    protected ScarabUser getInstanceImpl()
     {
         ScarabUser user = null;
         try
