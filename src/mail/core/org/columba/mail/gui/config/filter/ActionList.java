@@ -17,20 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter;
 
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterAction;
-import org.columba.mail.filter.FilterActionList;
-import org.columba.mail.gui.config.filter.plugins.DefaultActionRow;
-import org.columba.mail.gui.config.filter.plugins.MarkActionRow;
-import org.columba.mail.plugin.AbstractFilterPluginHandler;
-import org.columba.mail.plugin.FilterActionPluginHandler;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -40,7 +26,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -51,7 +38,20 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-public class ActionList extends JPanel implements ActionListener {
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.mail.filter.Filter;
+import org.columba.mail.filter.FilterAction;
+import org.columba.mail.filter.FilterActionList;
+import org.columba.mail.gui.config.filter.plugins.DefaultActionRow;
+import org.columba.mail.gui.config.filter.plugins.MarkActionRow;
+import org.columba.mail.plugin.AbstractFilterPluginHandler;
+import org.columba.mail.plugin.FilterActionPluginHandler;
+
+public class ActionList extends JPanel implements ActionListener, ItemListener {
 	private Filter filter;
 	private List list;
 	private JPanel panel;
@@ -243,5 +243,15 @@ public class ActionList extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		updateComponents(false);
 		update();
+	}
+	
+
+	/**
+	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
+	 */
+	public void itemStateChanged(ItemEvent arg0) {
+		updateComponents(false);
+		update();
+
 	}
 }
