@@ -1,5 +1,5 @@
-// $Id: Goal.java,v 1.9 2004/09/05 10:32:30 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: Goal.java,v 1.10 2004/10/30 16:40:36 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -37,6 +37,9 @@ public class Goal {
     ////////////////////////////////////////////////////////////////
     // constants
 
+    /**
+     * The unspecified goal.
+     */
     private static final Goal UNSPEC = new Goal("label.goal.unspecified", 1);
 		       
     ////////////////////////////////////////////////////////////////
@@ -45,6 +48,10 @@ public class Goal {
      * The localized name.
      */
     private String name;
+
+    /**
+     * The priority.
+     */
     private int priority;
 
     /**
@@ -62,10 +69,22 @@ public class Goal {
     // accessors
 				   
     /**
+     * @see java.lang.Object#hashCode()
+     */
+    public int hashCode() {
+        if (name == null) {
+            return 0;
+        }
+        return name.hashCode();
+    }
+
+    /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object d2) {
-	if (!(d2 instanceof Goal)) return false;
+	if (!(d2 instanceof Goal)) {
+	    return false;
+	}
 	return ((Goal) d2).getName().equals(getName());
     }
 				       

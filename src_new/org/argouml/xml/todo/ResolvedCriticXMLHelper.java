@@ -1,4 +1,4 @@
-// $Id: ResolvedCriticXMLHelper.java,v 1.6 2004/09/11 19:14:19 mvw Exp $
+// $Id: ResolvedCriticXMLHelper.java,v 1.7 2004/10/30 16:40:38 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,10 @@
 
 package org.argouml.xml.todo;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
-import java.util.Enumeration;
+
 import org.argouml.cognitive.ResolvedCritic;
 
 /**
@@ -35,8 +37,7 @@ import org.argouml.cognitive.ResolvedCritic;
  * @see	ResolvedCritic
  * @author Michael Stockman
  */
-public class ResolvedCriticXMLHelper
-{
+public class ResolvedCriticXMLHelper {
     /** The ResolvedCritic this instance helps. */
     private final ResolvedCritic item;
 
@@ -45,10 +46,10 @@ public class ResolvedCriticXMLHelper
      *
      * @param	rc	The ResolvedCritic to expose.
      */
-    public ResolvedCriticXMLHelper(ResolvedCritic rc)
-    {
-	if (rc == null)
+    public ResolvedCriticXMLHelper(ResolvedCritic rc) {
+	if (rc == null) {
 	    throw new NullPointerException();
+	}
 	item = rc;
     }
 
@@ -60,8 +61,7 @@ public class ResolvedCriticXMLHelper
      *
      * @return	The encoded critic.
      */
-    public String getCritic()
-    {
+    public String getCritic() {
 	return TodoParser.encode(item.getCritic());
     }
 
@@ -73,25 +73,23 @@ public class ResolvedCriticXMLHelper
      *		no offenders.
      * @see	OffenderXMLHelper
      */
-    public Vector getOffenderList()
-    {
-	Vector in = item.getOffenderList();
-	Enumeration elems;
+    public Vector getOffenderList() {
+	List in = item.getOffenderList();
+	Iterator elems;
 	Vector out;
 
-	if (in == null)
+	if (in == null) {
 	    return null;
+	}
 	out = new Vector();
-	elems = in.elements();
-	while (elems.hasMoreElements())
-	{
+	elems = in.iterator();
+	while (elems.hasNext()) {
 	    try {
 		OffenderXMLHelper helper = 
-		    new OffenderXMLHelper((String) elems.nextElement());
+		    new OffenderXMLHelper((String) elems.next());
 		out.addElement(helper);
-	    }
-	    catch (ClassCastException cce)
-	    {
+	    } catch (ClassCastException cce) {
+	        // TODO: Shouldn't we do something here?
 	    }
 	}
 
