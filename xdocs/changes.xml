@@ -6,7 +6,10 @@
   </properties>
 
   <body>
-    <release version="b19" date="in cvs">
+    <release version="b20" date="in dev">
+    </release>
+
+    <release version="b19" date="13-Apr-2004">
       <action dev="legout" type="update">
         SCB1120 - Most of the text entry input boxes now fill the
         width of the page, resizing with the browser window.
