@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.util;
 
 import java.awt.BorderLayout;
@@ -28,24 +29,13 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.mail.util.MailResourceLoader;
-
 
 /**
  * Dialg showing information to the user. This can be either a URL to document
@@ -54,13 +44,15 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  */
 public class InfoViewerDialog extends JDialog implements ActionListener {
-    JButton helpButton;
-    JButton closeButton;
-    JTextPane textPane;
+    protected JButton helpButton;
+    protected JButton closeButton;
+    protected JTextPane textPane;
 
+    /**
+     * Creates a new info dialog showing the specified string.
+     */
     public InfoViewerDialog(String message) {
         this();
-
         HTMLEditorKit editorKit = new HTMLEditorKit();
         StyleSheet styles = new StyleSheet();
 
@@ -78,27 +70,22 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
     }
 
     /**
- * @throws java.awt.HeadlessException
- */
-    public InfoViewerDialog(URL url) {
+     * Creates a new info dialog showing the contents of the given URL.
+     */
+    public InfoViewerDialog(URL url) throws IOException {
         this();
-
-        try {
-            textPane.setPage(url);
-        } catch (IOException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
-        }
-
+        textPane.setPage(url);
         setVisible(true);
     }
 
+    /**
+     * Internal constructor used by the two public ones.
+     */
     protected InfoViewerDialog() {
         super(new JFrame(), "Info", true);
         initComponents();
         pack();
         setLocationRelativeTo(null);
-        textPane.setEditable(false);
     }
 
     protected void initComponents() {
@@ -108,6 +95,7 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
 
         // centerpanel
         textPane = new JTextPane();
+        textPane.setEditable(false);
 
         JScrollPane scrollPane = new JScrollPane(textPane);
         scrollPane.setPreferredSize(new Dimension(450, 300));
@@ -121,14 +109,14 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "close"));
-        closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
+            MailResourceLoader.getString("global", "close"));
+        closeButton.setActionCommand("CLOSE");
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+            MailResourceLoader.getString("global", "help"));
 
         //TODO: associate help with button and root pane
         buttonPanel.add(helpButton);
