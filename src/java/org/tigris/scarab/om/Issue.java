@@ -1324,6 +1324,84 @@ public class Issue
         return orphanAttributes;
     }
 
+    /**
+     * Brings the current list of users assigned to this issue in
+     * line with the list given by newAssignees.  Users currently
+     * assigned will be deleted, if not in the new list.  This method
+     * will cause this issue to be saved.
+     *
+     * @param newAssignees a <code>List</code> value
+     * @param attachmentText a <code>String</code> value
+     * @param assigner a <code>ScarabUser</code> value
+     * @exception Exception if an error occurs
+     */
+    public void assignUsers(List newAssignees, String attachmentText, 
+                            ScarabUser assigner, Attribute attribute)
+        throws Exception
+    {                
+        Attachment attachment = new Attachment();
+        attachment.setDataAsString(attachmentText);
+        attachment.setName("Assignee Note");
+        attachment.setTextFields(assigner, this, 
+                                 Attachment.MODIFICATION__PK);
+        attachment.save();
+
+        // Save transaction record
+        Transaction transaction = new Transaction();
+        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                           assigner, attachment);
+
+        // we might modify the list and we do not want to affect other
+        // uses of the list
+        List newAssigneesCopy = null;
+        if ( newAssignees != null ) 
+        {
+            newAssigneesCopy = new ArrayList(newAssignees);
+        }
+        // take care of users who were removed or already assigned
+        List assignees = getAttributeValues(attribute);
+        Iterator iter = assignees.iterator();
+        while ( iter.hasNext() ) 
+        {
+            AttributeValue oldAV = (AttributeValue)iter.next();
+            oldAV.startTransaction(transaction);
+            boolean deleted = true;
+            if ( newAssigneesCopy != null ) 
+            {
+                for ( int i=newAssigneesCopy.size()-1; i>=0; i-- ) 
+                {
+                    if ( oldAV.getValue().equals( 
+                        ((ScarabUser)newAssigneesCopy.get(i)).getUserName() ))
+                    {
+                        // a current user was left in the list of assignees
+                        // so remove from list of new assignees and mark as
+                        // not to be deleted.
+                        newAssigneesCopy.remove(i);
+                        deleted = false;
+                        break;
+                    }
+                }
+            }
+            oldAV.setDeleted(deleted);
+        }
+
+        // add new values
+        if ( newAssigneesCopy != null ) 
+        {        
+            for ( int i=0; i<newAssigneesCopy.size(); i++ ) 
+            {
+                ScarabUser user = (ScarabUser)newAssigneesCopy.get(i);
+                AttributeValue av = AttributeValue
+                    .getNewInstance(attribute.getAttributeId(), this);
+                av.startTransaction(transaction);
+                av.setUserId(user.getUserId());
+                av.setValue(user.getUserName());
+                assignees.add(av);
+            }
+        }
+        save();
+    }
+
  
     /**
      * Checks permission and approves or rejects issue template. 
