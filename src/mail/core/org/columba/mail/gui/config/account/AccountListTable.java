@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.account;
 
 import javax.swing.JTable;
@@ -29,52 +30,31 @@ import org.columba.core.main.MainInterface;
 
 class AccountListTable extends JTable
 {
-    private AccountListDataModel model;
     private Config config;
-    private AccountList AccountList;
 
     public AccountListTable(AccountList accountList, ConfigFrame frame)
     {
-        super();
+        super(new AccountListDataModel(accountList));
 
-	this.AccountList = accountList;
         config = MainInterface.config;
 
         setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-
-
-        model = new AccountListDataModel( AccountList );
-        //update();
-
-        setModel( model );
-
         setShowGrid(false);
         setIntercellSpacing(new java.awt.Dimension(0, 0));
-		
 
-        TableColumn tc = getColumn( MailResourceLoader.getString("dialog","account", "accountname") ); //$NON-NLS-1$
+        TableColumn tc = getColumnModel().getColumn(0);
         tc.setCellRenderer( new NameRenderer() );
-        tc.setHeaderRenderer( new AccountHeaderRenderer( MailResourceLoader.getString("dialog","account", "list_accountname") ) ); //$NON-NLS-1$
-	
 
-        tc = getColumn( MailResourceLoader.getString("dialog","account", "type") ); //$NON-NLS-1$
+        tc = getColumnModel().getColumn(1);
         tc.setMaxWidth(100);
         tc.setMinWidth(100);
         tc.setCellRenderer( new StringAccountRenderer(true) );
-        tc.setHeaderRenderer( new AccountHeaderRenderer( MailResourceLoader.getString("dialog","account", "type") ) ); //$NON-NLS-1$
-
 
         sizeColumnsToFit( AUTO_RESIZE_NEXT_COLUMN );
     }
 
     public void update()
     {
-        model.fireTableDataChanged();
-
+        ((AccountListDataModel)getModel()).fireTableDataChanged();
     }
-
-
-
 }
-
-
