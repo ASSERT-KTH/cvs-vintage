@@ -1,4 +1,4 @@
-// $Id: WizAddOperation.java,v 1.9 2004/11/01 10:55:23 mkl Exp $
+// $Id: WizAddOperation.java,v 1.10 2004/12/28 04:42:06 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,13 @@
 
 package org.argouml.uml.cognitive.critics;
 
+import java.util.Collection;
+
 import javax.swing.JPanel;
 
 import org.argouml.cognitive.ui.WizStepTextField;
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.UmlFactory;
 
 /**
@@ -59,7 +62,10 @@ public class WizAddOperation extends UMLWizard {
 		newName = step1.getText();
 	    }
 	    Object me = getModelElement();
-	    UmlFactory.getFactory().getCore().buildOperation(me, newName);
+        Collection propertyChangeListeners = ProjectManager.getManager().getCurrentProject().findFigsForMember(me);
+        Object model = ProjectManager.getManager().getCurrentProject().getModel();
+        Object voidType = ProjectManager.getManager().getCurrentProject().findType("void");
+	    UmlFactory.getFactory().getCore().buildOperation(me, model, voidType, newName, propertyChangeListeners);
         }
     }
     

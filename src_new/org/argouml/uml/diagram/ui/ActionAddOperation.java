@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.10 2004/12/26 11:14:46 mvw Exp $
+// $Id: ActionAddOperation.java,v 1.11 2004/12/28 04:42:10 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.diagram.ui;
 
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.kernel.Project;
@@ -36,6 +37,8 @@ import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLChangeAction;
+
+import ru.novosoft.uml.foundation.core.MClassifier;
 
 /** Action to add an operation to a classifier.
  *  @stereotype singleton
@@ -76,7 +79,10 @@ public class ActionAddOperation extends UMLChangeAction {
 	else
 	    return;
 
-	Object oper = UmlFactory.getFactory().getCore().buildOperation(cls);
+    Collection propertyChangeListeners = ProjectManager.getManager().getCurrentProject().findFigsForMember(cls);
+    Object model = ProjectManager.getManager().getCurrentProject().getModel();
+    Object voidType = ProjectManager.getManager().getCurrentProject().findType("void");
+	Object oper = UmlFactory.getFactory().getCore().buildOperation(cls, model, voidType, propertyChangeListeners);
         TargetManager.getInstance().setTarget(oper);
 
         Iterator it =

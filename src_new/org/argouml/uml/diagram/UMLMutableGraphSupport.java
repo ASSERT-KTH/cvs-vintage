@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.13 2004/11/28 07:01:43 linus Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.14 2004/12/28 04:42:06 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlException;
 import org.argouml.model.uml.UmlFactory;
@@ -197,9 +198,11 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
             // given model elements.
 	    // default aggregation (none)
             connection =
-		UmlFactory.getFactory().buildConnection(edgeClass, fromPort,
-							style, toPort,
-							null, unidirectional);
+		UmlFactory.getFactory().buildConnection(
+                edgeClass, fromPort,
+				style, toPort,
+				null, unidirectional,
+                ProjectManager.getManager().getCurrentProject().getModel());
         } catch (UmlException ex) {
             // fail silently as we expect users to accidentally drop
             // on to wrong component

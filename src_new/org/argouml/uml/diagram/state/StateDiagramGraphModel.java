@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.47 2004/11/01 19:56:08 mvw Exp $
+// $Id: StateDiagramGraphModel.java,v 1.48 2004/12/28 04:42:07 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -351,8 +351,10 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
             if (edgeClass == CommentEdge.class) {
                 try {
                     Object connection = UmlFactory.getFactory()
-                        .buildConnection(edgeClass, fromPort, null, 
-                                                toPort, null, null);
+                        .buildConnection(
+                                edgeClass, fromPort, null, 
+                                toPort, null, null,
+                                ProjectManager.getManager().getCurrentProject().getModel());
                     addEdge(connection);
                     return connection;
                 }

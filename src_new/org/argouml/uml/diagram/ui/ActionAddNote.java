@@ -1,4 +1,4 @@
-// $Id: ActionAddNote.java,v 1.9 2004/12/26 11:14:46 mvw Exp $
+// $Id: ActionAddNote.java,v 1.10 2004/12/28 04:42:37 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,9 +77,10 @@ public class ActionAddNote extends UMLChangeAction {
 
         if (target == null || !(ModelFacade.isAModelElement(target))) {
             return;
-	}
-        Object/*MComment*/ comment =
-	    CoreFactory.getFactory().buildComment(target);
+        }
+        Object model = ProjectManager.getManager().getCurrentProject().getModel();
+        Object comment =
+            CoreFactory.getFactory().buildComment(target, model);
 
         // calculate the position of the comment
         ArgoDiagram diagram =

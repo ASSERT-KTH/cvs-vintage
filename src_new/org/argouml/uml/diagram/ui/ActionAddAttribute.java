@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.10 2004/12/26 11:14:46 mvw Exp $
+// $Id: ActionAddAttribute.java,v 1.11 2004/12/28 04:42:37 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,9 @@
 package org.argouml.uml.diagram.ui;
 
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ProjectBrowser;
@@ -63,7 +65,15 @@ public class ActionAddAttribute extends UMLChangeAction {
 	else
 	    return;
 
-	Object attr = UmlFactory.getFactory().getCore().buildAttribute(cls);
+    Collection propertyChangeListeners = 
+        ProjectManager.getManager().getCurrentProject().findFigsForMember(cls);
+    Object intType = ProjectManager.getManager().getCurrentProject().findType("int");
+    Object model = ProjectManager.getManager().getCurrentProject().getModel();
+	Object attr = UmlFactory.getFactory().getCore().buildAttribute(
+            cls, 
+            model, 
+            intType, 
+            propertyChangeListeners);
 	TargetManager.getInstance().setTarget(attr);
 	super.actionPerformed(ae);
     }

@@ -1,4 +1,4 @@
-// $Id: ActionNewParameter.java,v 1.7 2004/11/24 21:57:05 mvw Exp $
+// $Id: ActionNewParameter.java,v 1.8 2004/12/28 04:42:09 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,9 @@
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.CoreFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
@@ -57,7 +59,10 @@ public class ActionNewParameter extends AbstractActionNewModelElement {
         super.actionPerformed(e);
         //Object target =  getTarget(); // it is not set anywhere, pity...
         Object target =  TargetManager.getInstance().getModelTarget();
-        Object param = CoreFactory.getFactory().buildParameter(target);
+        Object model = ProjectManager.getManager().getCurrentProject().getModel();
+        Object voidType = ProjectManager.getManager().getCurrentProject().findType("void");
+        Collection propertyChangeListeners = ProjectManager.getManager().getCurrentProject().findFigsForMember(target);
+        Object param = CoreFactory.getFactory().buildParameter(target, model, voidType, propertyChangeListeners);
         TargetManager.getInstance().setTarget(param);
     }
 

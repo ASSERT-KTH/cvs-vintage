@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.50 2004/12/20 23:15:10 mvw Exp $
+// $Id: PropPanelAttribute.java,v 1.51 2004/12/28 04:42:09 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,10 @@
 
 package org.argouml.uml.ui.foundation.core;
 
+import java.util.Collection;
+
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -100,8 +103,12 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
         Object target = getTarget();
         if (ModelFacade.isAStructuralFeature(target)) {
             Object owner = ModelFacade.getOwner(target);
+            Collection propertyChangeListeners = 
+                ProjectManager.getManager().getCurrentProject().findFigsForMember(owner);
+            Object intType = ProjectManager.getManager().getCurrentProject().findType("int");
+            Object model = ProjectManager.getManager().getCurrentProject().getModel();
             TargetManager.getInstance().setTarget(
-                    UmlFactory.getFactory().getCore().buildAttribute(owner));
+                    UmlFactory.getFactory().getCore().buildAttribute(owner, model, intType, propertyChangeListeners));
         }
 
     }

@@ -1,4 +1,4 @@
-// $Id: TestParseTransition.java,v 1.2 2004/11/11 09:40:53 mvw Exp $
+// $Id: TestParseTransition.java,v 1.3 2004/12/28 04:42:07 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,9 +25,11 @@
 package org.argouml.uml.generator;
 
 import java.text.ParseException;
+import java.util.Collection;
 
 import junit.framework.TestCase;
 
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 
@@ -59,8 +61,11 @@ public class TestParseTransition extends TestCase {
         Object model =
             UmlFactory.getFactory().getModelManagement().createModel();
         aClass = UmlFactory.getFactory().getCore().buildClass(model);
+        Collection propertyChangeListeners = ProjectManager.getManager().getCurrentProject().findFigsForMember(aClass);
+        Object mdl = ProjectManager.getManager().getCurrentProject().getModel();
+        Object voidType = ProjectManager.getManager().getCurrentProject().findType("void");
         aOper = UmlFactory.getFactory().getCore()
-            .buildOperation(aClass, "myOper");
+            .buildOperation(aClass, mdl, voidType, "myOper", propertyChangeListeners);
         aStateMachine = UmlFactory.getFactory().getStateMachines()
             .buildStateMachine(aClass);
         Object top = ModelFacade.getTop(aStateMachine);
