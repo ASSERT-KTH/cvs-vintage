@@ -1441,7 +1441,7 @@ public class Issue
                     try
                     {
                         saveIdTableKey(dbCon);
-                        id = idbroker.getIdAsInt(con, key);
+                        id = 1;
                     }
                     catch (Exception badException)
                     {
@@ -1492,7 +1492,7 @@ public class Issue
         // FIXME: UGLY! IDBroker doesn't have a Peer yet.
         String sql = "insert into " + idTable 
          + " (ID_TABLE_ID,TABLE_NAME,NEXT_ID,QUANTITY) "
-         + " VALUES (" + id + ",'" + key + "',1,1)" ;
+         + " VALUES (" + id + ",'" + key + "',2,1)" ;
         BasePeer.executeStatement(sql, dbCon);
     }
 
