@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.13 2000/10/20 23:00:05 juha Exp $
+ * $Id: AbstractVerifier.java,v 1.14 2000/11/05 19:02:36 juha Exp $
  */
 
 // standard imports
@@ -33,6 +33,9 @@ import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Arrays;
 
+import java.net.URL;
+import java.net.URLClassLoader;
+
 
 // non-standard class dependencies
 import org.jboss.metadata.ApplicationMetaData;
@@ -40,6 +43,11 @@ import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
 
+import org.jboss.verifier.factory.VerificationEventFactory;
+import org.jboss.verifier.event.VerificationEvent;
+import org.jboss.verifier.Section;
+
+import org.gjt.lindfors.pattern.StrategyContext;
 
 
 /**
@@ -53,7 +61,7 @@ import org.jboss.metadata.SessionMetaData;
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -65,6 +73,66 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         "javax.ejb.EJBHome";
 
 
+    /**
+     * The application classloader. This can be provided by the context directly
+     * via {@link VerificationContext#getClassLoader} method, or constructed
+     * by this object by creating a classloader to the URL returned by 
+     * {@link VerificationContext#getJarLocation} method. <p>
+     *
+     * Initialized in the constructor.
+     */
+    protected ClassLoader classloader          = null;
+
+    /**
+     * Factory for generating the verifier events. <p>
+     *
+     * Initialized in the constructor.
+     * 
+     * @see org.jboss.verifier.factory.DefaultEventFactory
+     */
+    private VerificationEventFactory factory = null;
+
+    /** 
+     * Context is used for retrieving application level information, such
+     * as the application meta data, location of the jar file, etc. <p>
+     *
+     * Initialized in the constructor.
+     */
+    private VerificationContext context      = null;
+
+/*
+ *************************************************************************
+ *
+ *      CONSTRUCTORS
+ *
+ *************************************************************************
+ */
+
+    public AbstractVerifier(VerificationContext      context, 
+                            VerificationEventFactory factory) {
+        
+        this.factory     = factory;
+        this.context     = context;
+        this.classloader = context.getClassLoader();
+
+        if (this.classloader == null) {
+            URL[] list = { context.getJarLocation() };
+
+            ClassLoader parent = Thread.currentThread().getContextClassLoader();
+            this.classloader   = new URLClassLoader(list, parent);
+        }
+        
+    }
+
+
+/*
+ *************************************************************************
+ *
+ *      PUBLIC INSTANCE METHODS
+ *
+ *************************************************************************
+ */
+    
     public boolean hasLegalRMIIIOPArguments(Method method) {
 
         Class[] params = method.getParameterTypes();
@@ -585,7 +653,37 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         }
     }
 
+/*
+ *************************************************************************
+ *
+ *      PROTECTED INSTANCE METHODS
+ *
+ *************************************************************************
+ */
+ 
+    protected void fireSpecViolationEvent(BeanMetaData bean, Section section) {
+        fireSpecViolationEvent(bean, null /* method */, section);
+    }
+    
+    protected void fireSpecViolationEvent(BeanMetaData bean, Method method,
+                                          Section section) {
 
+        VerificationEvent event = factory.createSpecViolationEvent(context, section);
+        event.setName(bean.getEjbName());
+        event.setMethod(method);
+        
+        context.fireSpecViolation(event);
+    }
+
+    protected void fireBeanVerifiedEvent(BeanMetaData bean) {
+
+        VerificationEvent event = factory.createBeanVerifiedEvent(context);
+        event.setName(bean.getEjbName());
+
+        context.fireBeanChecked(event);
+    }
+
+    
 /*
  *************************************************************************
  *
@@ -602,7 +700,16 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      */
     public void checkMessageBean(BeanMetaData bean) {}
 
+    /**
+     * Returns the context object reference for this strategy implementation.
+     *
+     * @return  the client object using this algorithm implementation
+     */
+    public StrategyContext getContext() {
+        return context;
+    }
 
+    
 /*
  *************************************************************************
  *
@@ -693,9 +800,13 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
     private boolean isRMIIDLRemoteInterface(Class type) {
 
+        /*
+         * If does not implement java.rmi.Remote, cannot be valid RMI-IDL
+         * remote interface.
+         */
         if (!java.rmi.Remote.class.isAssignableFrom(type))
             return false;
-
+        
         Iterator methodIterator = Arrays.asList(type.getMethods()).iterator();
 
         while (methodIterator.hasNext()) {
@@ -707,8 +818,9 @@ public abstract class AbstractVerifier implements VerificationStrategy {
              *
              * Spec 28.2.3 (2)
              */
-            if (!throwsRemoteException(m))
+            if (!throwsRemoteException(m)) {
                 return false;
+            }
 
             /*
              * All checked exception classes used in method declarations

@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.7 2000/08/20 20:48:07 juha Exp $
+ * $Id: EJBVerifier20.java,v 1.8 2000/11/05 19:02:36 juha Exp $
  */
 
 
@@ -31,10 +31,7 @@ import java.lang.reflect.Method;
 
 
 // non-standard class dependencies
-import org.gjt.lindfors.pattern.StrategyContext;
-
-import org.jboss.verifier.event.VerificationEvent;
-import org.jboss.verifier.factory.VerificationEventFactory;
+import org.jboss.verifier.factory.DefaultEventFactory;
 
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SessionMetaData;
@@ -45,40 +42,28 @@ import org.jboss.metadata.EntityMetaData;
 /**
  * EJB 2.0 bean verifier.
  *
- * For more detailed documentation, refer to the
- * <a href="" << INSERT DOC LINK HERE >> </a>
- *
- * @see     << OTHER RELATED CLASSES >>
- *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
-
-    private VerificationContext context      = null; 
-
 
     /*
      * Constructor
      */
     public EJBVerifier20(VerificationContext context) {
-        this.context = context;
+        super(context, new DefaultEventFactory());
     }
 
     
-    /*
-     ***********************************************************************
-     *
-     *    IMPLEMENTS VERIFICATION STRATEGY INTERFACE
-     *
-     ***********************************************************************
-     */
+/*
+ ***********************************************************************
+ *
+ *    IMPLEMENTS VERIFICATION STRATEGY INTERFACE
+ *
+ ***********************************************************************
+ */
     
-    public StrategyContext getContext() {
-        return context;
-    }
-
     public void checkSession(SessionMetaData session) {
             
             // NOT IMPLEMENTED YET

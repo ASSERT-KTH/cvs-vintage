@@ -19,27 +19,20 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.22 2000/10/20 23:00:06 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.23 2000/11/05 19:02:36 juha Exp $
  */
 
 
 // standard imports
 import java.util.Iterator;
 import java.util.Arrays;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Field;
 
 // non-standard class dependencies
-import org.gjt.lindfors.pattern.StrategyContext;
-
 import org.jboss.verifier.Section;
-import org.jboss.verifier.event.VerificationEvent;
-
-import org.jboss.verifier.factory.VerificationEventFactory;
 import org.jboss.verifier.factory.DefaultEventFactory;
 
 import org.jboss.metadata.ApplicationMetaData;
@@ -61,39 +54,10 @@ import org.jboss.metadata.EntityMetaData;
  * @author  Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  * @since   JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
-
-    /** 
-     * Context is used for retrieving application level information, such
-     * as the application meta data, location of the jar file, etc. <p>
-     *
-     * Initialized in the constructor.
-     */
-    private VerificationContext context      = null;
-    
-    /**
-     * Factory for generating the verifier events. <p>
-     *
-     * Initialized in the constructor.
-     * 
-     * @see org.jboss.verifier.factory.DefaultEventFactory
-     */
-    private VerificationEventFactory factory = null;
-    
-    /**
-     * The application classloader. This can be provided by the context directly
-     * via {@link VerificationContext#getClassLoader} method, or constructed
-     * by this object by creating a classloader to the URL returned by 
-     * {@link VerificationContext#getJarLocation} method. <p>
-     *
-     * Initialized in the constructor.
-     */
-    private ClassLoader classloader          = null;
-
-
 
     /**
      * Constructs the verifier object.
@@ -101,17 +65,7 @@ public class EJBVerifier11 extends AbstractVerifier {
      * @param   context     context for application information
      */
     public EJBVerifier11(VerificationContext context) {
-
-        this.context       = context;
-        this.factory       = new DefaultEventFactory();
-        this.classloader   = context.getClassLoader();
-
-        if (this.classloader == null) {
-            URL[] list = { context.getJarLocation() };
-
-            ClassLoader parent = Thread.currentThread().getContextClassLoader();
-            this.classloader   = new URLClassLoader(list, parent);
-        }
+        super(context, new DefaultEventFactory());
     }
 
 
@@ -177,14 +131,6 @@ public class EJBVerifier11 extends AbstractVerifier {
         }
     }
 
-    /**
-     * Returns the context object reference for this strategy implementation.
-     *
-     * @return  the client object using this algorithm implementation
-     */
-    public StrategyContext getContext() {
-        return context;
-    }
 
 
 /*
@@ -316,13 +262,72 @@ public class EJBVerifier11 extends AbstractVerifier {
                 status = false;
             }
 
-            // [TODO] 6.10.6 each create method must have a matching ejbCreate
-            //               with same number and types of arguments (diff.
-            //               return type)
-            //        6.10.6 the return type of create must be remote interface
-            //        6.10.6 all the exceptions of ejbCreate must be included
-            //               in the throws clause of create method
-            //        6.10.6 throws clause must include CreateException
+           
+            /*
+             * Each create(...) method in the session bean's home interface MUST
+             * have a matching ejbCreate(...) method in the session bean's class.
+             *
+             * Each create(...) method in the session bean's home interface MUST
+             * have the same number and types of arguments to its matching
+             * ejbCreate(...) method.
+             *
+             * The return type for a create(...) method MUST be the session
+             * bean's remote interface type.
+             *
+             * All the exceptions defined in the throws clause of the matching
+             * ejbCreate(...) method of the enterprise bean class MUST be
+             * included in the throws clause of a matching create(...) method.
+             *
+             * The throws clause of a create(...) method MUST include the
+             * javax.ejb.CreateException.
+             *
+             * Spec 6.10.6
+             */
+            Iterator createMethods = getCreateMethods(home);
+            
+            try {
+                String beanClass   = session.getEjbClass();
+                Class  bean        = classloader.loadClass(beanClass);
+                
+                while (createMethods.hasNext()) {
+                    
+                    Method create = (Method)createMethods.next();
+                    
+                    if (!hasMatchingEJBCreate(bean, create)) {
+                        
+                        fireSpecViolationEvent(session, create, new Section("6.10.6.f"));
+                        
+                        status = false;
+                    }
+                    
+                    if (!hasRemoteReturnType(session, create)) {
+                        
+                        fireSpecViolationEvent(session, create, new Section("6.10.6.g"));
+                        
+                        status = false;
+                    }
+                    
+                    if (hasMatchingEJBCreate(bean, create)) {
+                    
+                        Method ejbCreate     = getMatchingEJBCreate(bean, create);
+                        
+                        if (!hasMatchingExceptions(ejbCreate, create)) {
+                                   
+                            fireSpecViolationEvent(session, create, new Section("6.10.6.h"));
+                        }
+                    }
+                    
+                    if (!throwsCreateException(create)) {
+                        
+                        fireSpecViolationEvent(session, create, new Section("6.10.6.i"));
+                        
+                        status = false;
+                    }
+                }
+            }
+            catch (ClassNotFoundException ignored) {}
+            
+            
         }
         catch (ClassNotFoundException e) {
 
@@ -1371,34 +1376,6 @@ public class EJBVerifier11 extends AbstractVerifier {
 
         return status;
     }
-
-
-    protected void fireSpecViolationEvent(BeanMetaData bean, Section section) {
-        fireSpecViolationEvent(bean, null /* method */, section);
-    }
-    
-    protected void fireSpecViolationEvent(BeanMetaData bean, Method method,
-                                          Section section) {
-
-        VerificationEvent event = factory.createSpecViolationEvent(context, section);
-        event.setName(bean.getEjbName());
-        event.setMethod(method);
-        
-        context.fireSpecViolation(event);
-    }
-
-    protected void fireBeanVerifiedEvent(BeanMetaData bean) {
-
-        VerificationEvent event = factory.createBeanVerifiedEvent(context);
-        event.setName(bean.getEjbName());
-
-        context.fireBeanChecked(event);
-    }
-
-
-
-
-
 
 
 
