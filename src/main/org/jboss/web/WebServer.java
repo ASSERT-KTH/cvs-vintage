@@ -39,7 +39,7 @@ import org.jboss.logging.Logger;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.22 $
+ *   @version $Revision: 1.23 $
  *
  *   Revisions:
  *   
@@ -327,9 +327,10 @@ public class WebServer
                     {
                         if (clazzUrl.getFile().endsWith(".jar"))
                             clazzUrl = new URL("jar:"+clazzUrl+"!/"+filePath);
-                        else
-                            clazzUrl = new URL(clazzUrl, filePath);
+                        else if (!clazzUrl.getProtocol().equals("file"))
+                           clazzUrl = new URL(clazzUrl, filePath);
                         
+                        log.trace("final clazzUrl = "+clazzUrl);
                         // Retrieve bytecodes
                         bytes = getBytes(clazzUrl);
                     }
