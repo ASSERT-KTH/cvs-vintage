@@ -1,8 +1,8 @@
 package org.tigris.scarab.om;
 
 import java.util.*;
-import com.workingdogs.village.*;
-import org.apache.torque.map.*;
+//import com.workingdogs.village.*;
+//import org.apache.torque.map.*;
 import org.apache.torque.pool.DBConnection;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.ObjectKey;
@@ -23,6 +23,31 @@ public class IssueTypePeer
         "IssueTypePeer";
     private static final String GET_ALL_ISSUE_TYPES = 
         "getAllIssueTypes";
+
+    private static final String RETRIEVE_BY_PK = 
+        "retrieveByPK";
+
+    /** 
+     * Retrieve a single object by pk
+     *
+     * @param ObjectKey pk
+     */
+    public static IssueType retrieveByPK( ObjectKey pk )
+        throws Exception
+    {
+        IssueType result = null;
+        Object obj = ScarabCache.get(ISSUE_TYPE_PEER, RETRIEVE_BY_PK, pk); 
+        if ( obj == null ) 
+        {        
+            result = BaseIssueTypePeer.retrieveByPK(pk);
+            ScarabCache.put(result, ISSUE_TYPE_PEER, RETRIEVE_BY_PK, pk);
+        }
+        else 
+        {
+            result = (IssueType)obj;
+        }
+        return result;
+    }
 
     /**
      *  Gets a List of all of the Issue types in the database,

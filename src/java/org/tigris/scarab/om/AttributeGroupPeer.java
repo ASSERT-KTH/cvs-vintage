@@ -1,12 +1,11 @@
 package org.tigris.scarab.om;
 
-import java.util.*;
-import com.workingdogs.village.*;
-import org.apache.torque.map.*;
-import org.apache.torque.pool.DBConnection;
 
-// Local classes
-import org.tigris.scarab.om.map.*;
+// Turbine classes
+import org.apache.torque.om.ObjectKey;
+
+// Scarab classes
+import org.tigris.scarab.services.cache.ScarabCache;
 
 /** 
  *  You should add additional methods to this class to meet the
@@ -16,4 +15,30 @@ import org.tigris.scarab.om.map.*;
 public class AttributeGroupPeer 
     extends org.tigris.scarab.om.BaseAttributeGroupPeer
 {
+    private static final String ATTRIBUTEGROUP_PEER = 
+        "AttributeGroupPeer";
+    private static final String RETRIEVE_BY_PK = 
+        "retrieveByPK";
+
+    /** 
+     * Retrieve a single object by pk
+     *
+     * @param ObjectKey pk
+     */
+    public static AttributeGroup retrieveByPK( ObjectKey pk )
+        throws Exception
+    {
+        AttributeGroup result = null;
+        Object obj = ScarabCache.get(ATTRIBUTEGROUP_PEER, RETRIEVE_BY_PK, pk); 
+        if ( obj == null ) 
+        {        
+            result = BaseAttributeGroupPeer.retrieveByPK(pk);
+            ScarabCache.put(result, ATTRIBUTEGROUP_PEER, RETRIEVE_BY_PK, pk);
+        }
+        else 
+        {
+            result = (AttributeGroup)obj;
+        }
+        return result;
+    }
 }

@@ -2,11 +2,14 @@ package org.tigris.scarab.om;
 
 import java.util.*;
 import com.workingdogs.village.*;
+
+// Turbine classes
+import org.apache.torque.om.ObjectKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.pool.DBConnection;
 
-// Local classes
-import org.tigris.scarab.om.map.*;
+// Scarab classes
+import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.ScarabException;
 
 /** 
@@ -17,6 +20,10 @@ import org.tigris.scarab.util.ScarabException;
 public class ReportPeer 
     extends org.tigris.scarab.om.BaseReportPeer
 {
+    private static final String REPORT_PEER = 
+        "ReportPeer";
+    private static final String RETRIEVE_BY_PK = 
+        "retrieveByPK";
 
     /**
      * Does a saved report exist under the given name.
@@ -57,5 +64,27 @@ public class ReportPeer
         }
         
         return report;
+    }
+
+    /** 
+     * Retrieve a single object by pk
+     *
+     * @param ObjectKey pk
+     */
+    public static Report retrieveByPK( ObjectKey pk )
+        throws Exception
+    {
+        Report result = null;
+        Object obj = ScarabCache.get(REPORT_PEER, RETRIEVE_BY_PK, pk); 
+        if ( obj == null ) 
+        {        
+            result = BaseReportPeer.retrieveByPK(pk);
+            ScarabCache.put(result, REPORT_PEER, RETRIEVE_BY_PK, pk);
+        }
+        else 
+        {
+            result = (Report)obj;
+        }
+        return result;
     }
 }
