@@ -24,7 +24,8 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.36 2002/11/21 12:29:02 mkl Exp $
+// $Id: PropPanel.java,v 1.37 2002/11/23 22:04:45 kataka Exp $
+
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -37,6 +38,7 @@
 package org.argouml.uml.ui;
 
 import org.argouml.application.api.*;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.*;
@@ -77,7 +79,6 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
     private ResourceBundle _bundle = null;
 
     private Vector _panels = new Vector();
-    private UMLNameEventListener _nameListener;
 
     private int lastRow;
 
@@ -654,6 +655,7 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
         }
     }
 
+
     /** check whether this element can be deleted. 
      *  Currently it only checks whether we delete the main model.
      *  ArgoUML does not like that.
@@ -661,8 +663,8 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
      */
    public boolean isRemovableElement() {
        return ((getTarget() != null) && 
-               (getTarget()!= ProjectBrowser.TheInstance.
-                getProject().getModel()));
+               (getTarget()!= ProjectManager.getManager().getCurrentProject().getModel()));
    } 
+
 
 } /* end class PropPanel */

@@ -24,7 +24,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.20 2002/10/20 21:11:12 linus Exp $
+// $Id: Notation.java,v 1.21 2002/11/23 22:04:39 kataka Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -74,8 +74,7 @@ implements PropertyChangeListener {
   /** The name of the default Argo notation.  This notation is
    *  part of Argo core distribution.
    */
-    private static NotationName NOTATION_ARGO = null;
-    // org.argouml.uml.generator.GeneratorDisplay.getInstance().getNotation();
+    private static NotationName NOTATION_ARGO = org.argouml.uml.generator.GeneratorDisplay.getInstance().getNotation();
 
   /** The name of the Argo java-like notation.  This notation is
    *  part of Argo core distribution.
@@ -576,24 +575,6 @@ implements PropertyChangeListener {
     public static ArrayList getAvailableNotations() {
 	return NotationNameImpl.getAvailableNotations();
     }
-
-  /** Create an unversioned notation name.
-   */
-  public static NotationName makeNotation(String k1) {
-      return makeNotation(k1, null, null);
-  }
-
-  /** Create a versioned notation name.
-   */
-  public static NotationName makeNotation(String k1, String k2) {
-      return makeNotation(k1, k2, null);
-  }
-
-  /** Create an unversioned notation name with an icon.
-   */
-  public static NotationName makeNotation(String k1, Icon icon) {
-      return makeNotation(k1, null, icon);
-  }
 
   /** Create a versioned notation name with an icon.
    */

@@ -24,7 +24,7 @@
 // File: PropPanelInclude.java
 // Classes: PropPanelInclude
 // Original Author: mail@jeremybennett.com
-// $Id: PropPanelInclude.java,v 1.5 2002/10/11 20:51:18 kataka Exp $
+// $Id: PropPanelInclude.java,v 1.6 2002/11/23 22:04:46 kataka Exp $
 
 // 2 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support a
 // proper Include implementation with Use Cases
@@ -81,10 +81,10 @@ public class PropPanelInclude extends PropPanelModelElement {
             new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox));
         addField(Argo.localize("UMLMenu", "label.namespace"), namespaceScroll);
     
-    JComboBox baseBox = new UMLComboBox2(this, new UMLIncludeBaseComboBoxModel(this), ActionSetIncludeBase.SINGLETON);
+    JComboBox baseBox = new UMLComboBox2(new UMLIncludeBaseComboBoxModel(), ActionSetIncludeBase.SINGLETON);
     addField(Argo.localize("UMLMenu", "label.usecase-base"), baseBox);
     
-    JComboBox additionBox = new UMLComboBox2(this, new UMLIncludeAdditionComboBoxModel(this), ActionSetIncludeAddition.SINGLETON);
+    JComboBox additionBox = new UMLComboBox2(new UMLIncludeAdditionComboBoxModel(), ActionSetIncludeAddition.SINGLETON);
     addField(Argo.localize("UMLMenu", "label.addition"), additionBox);
     
     add(LabelledLayout.getSeperator());

@@ -24,7 +24,8 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.20 2002/11/20 05:49:27 mkl Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.21 2002/11/23 22:04:43 kataka Exp $
+
 
 package org.argouml.uml.diagram.static_structure;
 

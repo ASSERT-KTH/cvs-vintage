@@ -24,7 +24,8 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.19 2002/11/20 22:53:27 linus Exp $
+// $Id: Critic.java,v 1.20 2002/11/23 22:04:40 kataka Exp $
+
 
 package org.argouml.cognitive.critics;
 

@@ -1,4 +1,4 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -21,32 +21,39 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+// $header$
+package org.argouml.uml.ui;
 
-// File: ActionGoToCritique.java
-// Classes: ActionGoToCritique
-// Original Author: agauthie
-// $Id: ActionGoToCritique.java,v 1.2 2002/11/23 22:04:41 kataka Exp $
+/**
+ * Classes implementing this interface are interested in changes of the
+ * target. Target changes occur when the user or argouml itself (programmatically)
+ * select another modelelement. 
+ *<p>
+ * This listener is introduced to remove the very close dependency between
+ * property panel and GUI elements. More specifically to support the need to
+ * implement GUI elements as singletons which is not possible with the implementation
+ * that uses UMLUserInterfaceComponent as the interface.
+ * </p>
+ * <p>
+ * The methods are called at the moment via UMLChangeDispatch. In the future
+ * an eventpump will come into place that does not call the components on a 
+ * property panel but that will call the interested instances (GUI elements) 
+ * directly.
+ * </p>
+ * @since Nov 8, 2002
+ * @author jaap.branderhorst@xs4all.nl
+ */
+public interface TargetChangedListener {
+    
+    /**
+     * This method is called when a new target is selected, either by the
+     * program or by the user.     * @param newTarget     */
+    public void targetChanged(Object newTarget);
+    
+    /**
+     * This method is called when the navigation history is updated.
+     * @param newTarget
+     */
+    public void targetReasserted(Object newTarget);
 
-package org.argouml.ui;
-
-import java.awt.event.ActionEvent;
-
-import org.argouml.cognitive.ToDoItem;
-import org.argouml.cognitive.ui.ToDoPane;
-import org.argouml.uml.ui.UMLAction;
-
-public class ActionGoToCritique extends UMLAction {
-  ToDoItem _item = null;
-
-  public ActionGoToCritique(ToDoItem item) {
-    super(item.getHeadline(), NO_ICON);
-    _item = item;
-  }
-
-  public void actionPerformed(ActionEvent ae) {
-    ProjectBrowser.TheInstance.getTodoPane().selectItem(_item);
-  }
-
-  public boolean shouldBeEnabled() { return true; }
-
-} /* end class ActionGoToCritique */
+}

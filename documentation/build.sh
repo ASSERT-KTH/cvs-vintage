@@ -1,6 +1,8 @@
 #! /bin/sh
 #
-# $Id: build.sh,v 1.6 2002/11/17 09:08:18 linus Exp $
+
+# $Id: build.sh,v 1.7 2002/11/23 22:04:38 kataka Exp $
+
 #
  
 # Always use the ant that comes with ArgoUML

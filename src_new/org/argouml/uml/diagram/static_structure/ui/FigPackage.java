@@ -24,7 +24,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.14 2002/10/21 06:58:56 mkl Exp $
+// $Id: FigPackage.java,v 1.15 2002/11/23 22:04:43 kataka Exp $
 
 
 package org.argouml.uml.diagram.static_structure.ui;
@@ -154,7 +154,7 @@ public class FigPackage extends FigNodeModelElement {
 					MNamespace	lNS = lPkg;
 
 					ProjectBrowser lPB = ProjectBrowser.TheInstance;
-					Project lP = lPB.getProject();
+					Project lP = ProjectManager.getManager().getCurrentProject();
 
 					Vector diags = lP.getDiagrams();
 					Enumeration diagEnum = diags.elements();
@@ -177,9 +177,8 @@ public class FigPackage extends FigNodeModelElement {
 								{
 								me.consume();
 								super.mouseClicked(me);
-								lPB.getNavPane().addToHistory(lDiagram);
+								ProjectBrowser.TheInstance.getNavigatorPane().addToHistory(lDiagram);
 								lPB.setTarget(lDiagram);
-								lPB.select(lDiagram);
 								return;
 								}
 							}
@@ -191,9 +190,8 @@ public class FigPackage extends FigNodeModelElement {
 						me.consume();
 						super.mouseClicked(me);
 
-						lPB.getNavPane().addToHistory(lFirst);
+						ProjectBrowser.TheInstance.getNavigatorPane().addToHistory(lFirst);
 						lPB.setTarget(lFirst);
-						lPB.select(lFirst);
 						return;
 						}
 					else
@@ -223,9 +221,8 @@ public class FigPackage extends FigNodeModelElement {
 
 								lP.addMember(lNew);
 								
-								lPB.getNavPane().addToHistory(lNew);
-								lPB.setTarget(lNew);
-								lPB.select(lNew);	
+								ProjectBrowser.TheInstance.getNavigatorPane().addToHistory(lNew);
+								lPB.setTarget(lNew);								
 								/* change prefix */
 								lNew.setName(diagramName);
 								}

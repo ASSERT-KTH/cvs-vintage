@@ -23,7 +23,7 @@
 // File: UMLTextField.java
 // Classes: UMLTextField
 // Original Author: not known
-// $Id: UMLTextField.java,v 1.19 2002/10/08 20:04:36 kataka Exp $
+// $Id: UMLTextField.java,v 1.20 2002/11/23 22:04:45 kataka Exp $
 // 25 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the FigUseCase.
 // 3 May 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to mark the
@@ -217,7 +217,7 @@ public class UMLTextField
         }  
        
     
-        Project p = ProjectBrowser.TheInstance.getProject();
+        Project p = ProjectManager.getManager().getCurrentProject();
         // start new code
         Iterator it = p.findFigsForMember(_target).iterator();
         while (it.hasNext()) {

@@ -24,7 +24,8 @@
 // File: ChildGenFind.java
 // Classes: ChildGenFind
 // Original Author: jrobbins
-// $Id: ChildGenFind.java,v 1.4 2002/11/18 04:05:58 mkl Exp $
+// $Id: ChildGenFind.java,v 1.5 2002/11/23 22:04:41 kataka Exp $
+
 
 package org.argouml.uml.cognitive;
 

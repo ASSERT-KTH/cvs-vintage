@@ -25,7 +25,8 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.49 2002/11/15 02:34:48 thn Exp $
+// $Id: GeneratorJava.java,v 1.50 2002/11/23 22:04:40 kataka Exp $
+
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.

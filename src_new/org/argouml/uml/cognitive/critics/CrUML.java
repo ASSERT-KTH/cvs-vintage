@@ -24,7 +24,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.15 2002/11/19 22:56:04 linus Exp $
+// $Id: CrUML.java,v 1.16 2002/11/23 22:04:41 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -155,7 +155,7 @@ public class CrUML extends Critic {
 
 
   public boolean predicate(Object dm, Designer dsgr) {
-    Project p = ProjectBrowser.TheInstance.getProject();
+    Project p = ProjectManager.getManager().getCurrentProject();
     if (p.isInTrash(dm)) {
       cat.debug("in trash:" + dm);
       return NO_PROBLEM;

@@ -25,7 +25,8 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.15 2002/11/20 05:54:33 mkl Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.16 2002/11/23 22:04:42 kataka Exp $
+
 
 package org.argouml.uml.diagram.collaboration;
 

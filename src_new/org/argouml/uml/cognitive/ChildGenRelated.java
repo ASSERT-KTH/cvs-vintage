@@ -24,7 +24,8 @@
 // File: ChildGenRelated.java
 // Classes: ChildGenRelated
 // Original Author: jrobbins
-// $Id: ChildGenRelated.java,v 1.3 2002/11/18 04:06:41 mkl Exp $
+// $Id: ChildGenRelated.java,v 1.4 2002/11/23 22:04:41 kataka Exp $
+
 
 package org.argouml.uml.cognitive;
 

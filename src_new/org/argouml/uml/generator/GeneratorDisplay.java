@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.35 2002/10/28 04:14:01 mkl Exp $
+// $Id: GeneratorDisplay.java,v 1.36 2002/11/23 22:04:44 kataka Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -72,9 +72,14 @@ import org.argouml.uml.MMUtil;
 public class GeneratorDisplay extends Generator
 implements PluggableNotation {
 
-  private static GeneratorDisplay SINGLETON = new GeneratorDisplay();
+  private static GeneratorDisplay SINGLETON;
 
-  public static GeneratorDisplay getInstance() { return SINGLETON; }
+  public static GeneratorDisplay getInstance() { 
+    if (SINGLETON == null) {
+        SINGLETON = new GeneratorDisplay();
+    }
+    return SINGLETON; 
+  }
 
 
   private GeneratorDisplay() {

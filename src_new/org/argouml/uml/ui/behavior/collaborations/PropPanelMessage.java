@@ -26,7 +26,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.16 2002/10/11 20:51:18 kataka Exp $
+// $Id: PropPanelMessage.java,v 1.17 2002/11/23 22:04:45 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -84,7 +84,7 @@ public class PropPanelMessage extends PropPanelModelElement {
    
     add(LabelledLayout.getSeperator());
 
-    addField(Argo.localize("UMLMenu", "label.activator"), new UMLMessageActivatorComboBox(this, new UMLMessageActivatorComboBoxModel(this)));
+    addField(Argo.localize("UMLMenu", "label.activator"), new UMLMessageActivatorComboBox(this, new UMLMessageActivatorComboBoxModel()));
 
     JList actionList = new UMLMutableLinkedList(this, new UMLMessageActionListModel(this), null, ActionNewAction.SINGLETON);
     actionList.setVisibleRowCount(1);

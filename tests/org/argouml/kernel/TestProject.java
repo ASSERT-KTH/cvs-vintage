@@ -1,4 +1,4 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -21,32 +21,31 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+// $header$
+package org.argouml.kernel;
 
-// File: ActionGoToCritique.java
-// Classes: ActionGoToCritique
-// Original Author: agauthie
-// $Id: ActionGoToCritique.java,v 1.2 2002/11/23 22:04:41 kataka Exp $
+import junit.framework.TestCase;
 
-package org.argouml.ui;
+/**
+ * @since Nov 17, 2002
+ * @author jaap.branderhorst@xs4all.nl
+ */
+public class TestProject extends TestCase {
 
-import java.awt.event.ActionEvent;
+    /**
+     * Constructor for TestProject.
+     * @param arg0
+     */
+    public TestProject(String arg0) {
+        super(arg0);
+    }
+    
+    public void testMakeUntitledProject() {
+        Project p = ProjectManager.getManager().getCurrentProject();
+        assertEquals(2, p.getDiagrams().size());
+        assertEquals("untitledModel", p.getModel().getName());
+        // maybe next test is going to change in future
+        assertEquals(p.getRoot(), p.getModel());
+    }
 
-import org.argouml.cognitive.ToDoItem;
-import org.argouml.cognitive.ui.ToDoPane;
-import org.argouml.uml.ui.UMLAction;
-
-public class ActionGoToCritique extends UMLAction {
-  ToDoItem _item = null;
-
-  public ActionGoToCritique(ToDoItem item) {
-    super(item.getHeadline(), NO_ICON);
-    _item = item;
-  }
-
-  public void actionPerformed(ActionEvent ae) {
-    ProjectBrowser.TheInstance.getTodoPane().selectItem(_item);
-  }
-
-  public boolean shouldBeEnabled() { return true; }
-
-} /* end class ActionGoToCritique */
+}

@@ -24,8 +24,7 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.15 2002/11/20 05:51:17 mkl Exp $
-
+// $Id: StateDiagramGraphModel.java,v 1.16 2002/11/23 22:04:42 kataka Exp $
 package org.argouml.uml.diagram.state;
 
 import org.apache.log4j.Category;

@@ -27,7 +27,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.18 2002/11/09 19:55:22 kataka Exp $
+// $Id: FigEdgeModelElement.java,v 1.19 2002/11/23 22:04:44 kataka Exp $
 
 
 package org.argouml.uml.diagram.ui;
@@ -540,7 +540,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
         // GEF does not take into account the multiple diagrams we have
         // therefore we loop through our diagrams and delete each and every 
         // occurence on our own
-        it = ProjectBrowser.TheInstance.getProject().getDiagrams().iterator();
+        it = ProjectManager.getManager().getCurrentProject().getDiagrams().iterator();
         while (it.hasNext()) {
             ArgoDiagram diagram = (ArgoDiagram)it.next();
             diagram.damage();

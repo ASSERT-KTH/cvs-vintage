@@ -46,8 +46,9 @@ import org.argouml.util.logging.*;
  *
  * Supports recursive search in folder for all .java classes.
  *
- * $Revision: 1.10 $
- * $Date: 2002/11/23 19:52:29 $
+ * $Revision: 1.11 $
+ * $Date: 2002/11/23 22:04:45 $
+
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -372,7 +373,7 @@ class ImportRun implements Runnable {
 	    _project.setNeedsSave(true);
 	}
 
-	pb.setProject(_project);
+	ProjectManager.getManager().setCurrentProject(_project);
 	pb.showStatus("Import done");
 
 	// Layout the modified diagrams.

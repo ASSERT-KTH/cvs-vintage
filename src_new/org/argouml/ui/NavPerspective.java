@@ -24,7 +24,7 @@
 // File: NavPerspective.java
 // Classes: NavPerspective
 // Original Author: your email address here
-// $Id: NavPerspective.java,v 1.15 2002/10/20 21:11:14 linus Exp $
+// $Id: NavPerspective.java,v 1.16 2002/11/23 22:04:41 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extends/includes and extension points in the package centric
@@ -520,7 +520,7 @@ implements Serializable, TreeModel, Cloneable {
     fireTreeStructureChanged(source, path, null, null);
   }
 
-  /*
+  /**
    * Notify all listeners that have registered interest for
    * notification on this event type.  The event instance
    * is lazily created using the parameters passed into

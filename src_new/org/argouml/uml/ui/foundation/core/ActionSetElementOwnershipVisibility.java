@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.2 2002/10/13 12:19:15 kataka Exp $
+// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.3 2002/11/23 22:04:46 kataka Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -31,6 +31,7 @@ import javax.swing.JRadioButton;
 
 import org.argouml.application.api.Argo;
 import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.ui.UMLButtonGroup;
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -84,7 +85,7 @@ public class ActionSetElementOwnershipVisibility extends AbstractAction {
     private void markAsChanged() {
         ProjectBrowser pb = ProjectBrowser.TheInstance;
         if (pb == null) return;
-        Project p = pb.getProject();
+        Project p = ProjectManager.getManager().getCurrentProject();
         if (p == null) return;
         p.setNeedsSave(true);
     }
