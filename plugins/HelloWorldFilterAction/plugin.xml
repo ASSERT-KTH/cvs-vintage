@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<plugin id="Hello World" description="Displays Hello World" extension_point="filter_actions" version="1.0" >
- <arguments>
+<plugin id="Hello World" description="Displays Hello World" version="1.0" >
+ <extension name="filter_actions">
   <action name="Hello World" main_class="HelloWorld.py" gui_class="HelloWorldGui.py" />
- </arguments>
+ </extension>
  <runtime type="python"/>
 </plugin>

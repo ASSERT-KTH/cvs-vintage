@@ -13,33 +13,20 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.plugin;
 
+package org.columba.core.action;
+
+import java.util.ListIterator;
+
+import org.columba.core.gui.FrameController;
+import org.columba.core.io.DiskIO;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
+import org.columba.core.xml.XmlIO;
 
-/**
- * @author frd
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
- */
-public class FolderPluginHandler extends AbstractPluginHandler {
-
+public class ActionPluginHandler extends AbstractPluginHandler{
+	
 	protected XmlElement parentNode;
-
-	/**
-	 * Constructor for FolderPluginHandler.
-	 * @param id
-	 * @param config
-	 */
-	public FolderPluginHandler() {
-		super("folder", "org/columba/mail/folder/folder.xml");
-
-		parentNode = getConfig().getRoot().getElement("folderlist");
-	}
 
 	/**
 	 * @see org.columba.core.plugin.AbstractPluginHandler#getNames()
@@ -97,11 +84,61 @@ public class FolderPluginHandler extends AbstractPluginHandler {
 		}
 		return null;
 	}
+
+	public ActionPluginHandler() {
+		super("action", "org/columba/core/action/action.xml");
+
+		parentNode = getConfig().getRoot().getElement("actionlist");
+	}
+
+	
+	public BasicAction getAction( String name, FrameController controller ) throws Exception {
+		return (BasicAction) getPlugin(name, new Object[] { controller } );
+	}
+
+	public IMenu getIMenu( String name, FrameController controller ) throws Exception {
+		return (IMenu) getPlugin(name, new Object[] { controller } );
+	}
+
+	public void addActionList(String actionXml) {		
+		XmlIO actionXmlIO = new XmlIO();
+		actionXmlIO.setURL(DiskIO.getResourceURL(actionXml));
+		actionXmlIO.load();
+
+		XmlElement actionlist = actionXmlIO.getRoot().getElement("actionlist");
+		
+		for( int i=0; i<actionlist.count(); i++) {
+			parentNode.addElement(actionlist.getElement(i));
+		}
+	}
+
 	/* (non-Javadoc)
-	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
+	 * @see org.columba.core.plugin.AbstractPluginHandler#addPlugin(java.lang.String, java.io.File, org.columba.core.xml.XmlElement)
+	 */
+	/*
+	public void addPlugin(String name, File pluginFolder, XmlElement element) {
+		XmlElement extension;
+
+		for( int i=0; i<element.count(); i++) {
+			extension = element.getElement(i);
+			extension.addAttribute("name",name+"$"+extension.getAttribute("name"));
+			
+			super.addPlugin(extension.getAttribute("name"), pluginFolder, element);
+			parentNode.addElement(extension);
+		}
+	}
+*/
+	/* (non-Javadoc)
+	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(org.columba.core.xml.XmlElement)
 	 */
 	public void addExtension(String id, XmlElement extension) {
-
+		ListIterator iterator = extension.getElements().listIterator();
+		XmlElement action;
+		while( iterator.hasNext() ) {
+			action = (XmlElement) iterator.next();
+			action.addAttribute("name", id + '$' + action.getAttribute("name"));
+			parentNode.addElement(action);
+		}
 	}
 
 }

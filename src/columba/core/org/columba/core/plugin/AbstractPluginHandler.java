@@ -16,7 +16,6 @@
 package org.columba.core.plugin;
 
 import java.io.File;
-import java.util.Hashtable;
 
 import org.columba.core.loader.DefaultClassLoader;
 import org.columba.core.xml.XmlElement;
@@ -33,10 +32,8 @@ public abstract class AbstractPluginHandler {
 
 	protected PluginListConfig pluginListConfig;
 	protected String id;
+	protected PluginManager pluginManager;
 
-	protected Hashtable externalPlugins;
-
-	protected Hashtable pluginFolders;
 
 	/**
 	 * Constructor for PluginHandler.
@@ -49,9 +46,6 @@ public abstract class AbstractPluginHandler {
 		if( config != null )
 		pluginListConfig = new PluginListConfig(config);
 
-		externalPlugins = new Hashtable();
-
-		pluginFolders = new Hashtable();
 
 	}
 
@@ -80,26 +74,47 @@ public abstract class AbstractPluginHandler {
 		try {
 			return loadPlugin(className, args);
 		} catch (ClassNotFoundException ex) {
-			XmlElement parent = (XmlElement) externalPlugins.get(name);
-			XmlElement child = parent.getElement("runtime");
-			String type = child.getAttribute("type");
+			String pluginId = name.substring(0,name.indexOf('$'));
+			//XmlElement parent = (XmlElement) MainInterface.pluginManager.getPluginElement(pluginId);
+			//XmlElement child = parent.getElement("runtime");
+			
+			String type = pluginManager.getPluginType(pluginId);
+			/*
 			String jar = child.getAttribute("jar");
 			//String importPackages = child.getAttribute("import");
 			
 			File file = (File) pluginFolders.get(name);
 			if ( jar!=null ) file = new File(file, jar);
+			*/
+			File pluginDir = pluginManager.getPluginDir(pluginId);
 			
-			
-			return PluginLoader.loadExternalPlugin(className, type, file, args);
+			return PluginLoader.loadExternalPlugin(className, type, pluginDir, args);
 		}
 
 	}
 
-	public void addPlugin(String name, File pluginFolder, XmlElement element) {
+	/*
+	public void addPlugin(String id, File pluginFolder, XmlElement element) {
+		externalPlugins.put(id, element);
+		pluginFolders.put(id, pluginFolder);
+	}
+	*/
+	
+	public abstract void addExtension(String id, XmlElement extension);
 
-		externalPlugins.put(name, element);
+	/**
+	 * @return PluginManager
+	 */
+	public PluginManager getPluginManager() {
+		return pluginManager;
+	}
 
-		pluginFolders.put(name, pluginFolder);
+	/**
+	 * Sets the pluginManager.
+	 * @param pluginManager The pluginManager to set
+	 */
+	public void setPluginManager(PluginManager pluginManager) {
+		this.pluginManager = pluginManager;
 	}
 
 }

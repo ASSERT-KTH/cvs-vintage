@@ -33,25 +33,35 @@ import org.columba.core.xml.XmlIO;
  */
 public class PluginManager {
 
-	Hashtable hashTable;
+	File[] pluginFolders;
+	String[] ids;
+	XmlElement[] elements;
+	
+	Hashtable plugins;
+	
 	/**
 	 * Constructor for PluginManager.
 	 */
 	public PluginManager() {
 		super();
 
-		hashTable = new Hashtable(10);
+		
+		plugins = new Hashtable(10);
 
 	}
 
 	public void initPlugins() {
-		File[] pluginFolders = PluginFinder.searchPlugins();
+		pluginFolders = PluginFinder.searchPlugins();
 		if ( pluginFolders == null ) return;
+		ids = new String[pluginFolders.length];
+		elements = new XmlElement[pluginFolders.length];
 		
 		for (int i = 0; i < pluginFolders.length; i++) {
 			File folder = pluginFolders[i];
-			if (folder.getName().equals("CVS"))
+			if (folder.getName().equals("CVS")) {
+				ids[i] = "";
 				continue;
+			}
 
 			ColumbaLogger.log.info("registering plugin: " + folder);
 
@@ -66,55 +76,97 @@ public class PluginManager {
 			config.load();
 
 			XmlElement element = config.getRoot().getElement("/plugin");
+			elements[i] = element;
 			String id = element.getAttribute("id");
-			String extensionPoint = element.getAttribute("extension_point");
+			ids[i] = id;
+			
+			//String extensionPoint = element.getAttribute("extension_point");
+			
 			XmlElement runtime = element.getElement("runtime");
 			String type = runtime.getAttribute("type");
 			String jar = runtime.getAttribute("jar");
 
+			if( jar != null) pluginFolders[i] = new File(pluginFolders[i],jar);
+
 			ColumbaLogger.log.debug("id: " + id);
-			ColumbaLogger.log.debug("extension point: " + extensionPoint);
+			//ColumbaLogger.log.debug("extension point: " + extensionPoint);
 			ColumbaLogger.log.debug("type: " + type);
 			ColumbaLogger.log.debug("jar: " + jar);
+			
+			
+			
+			XmlElement extension;
+			String extensionPoint;
+			
+			for( int j=0; j<element.count(); j++) {
+				extension = element.getElement(j);
+				if( extension.getName().equals("extension")) {
+					extensionPoint = extension.getAttribute("name");	
 
-			if (hashTable.containsKey(extensionPoint)) {
-				// we have a plugin-handler for this kind of plugin
+					if (plugins.containsKey(extensionPoint)) {
+						// we have a plugin-handler for this kind of plugin
 
-				try {
+						try {
+							AbstractPluginHandler handler =
+								(AbstractPluginHandler) plugins.get(extensionPoint);
 
-					AbstractPluginHandler handler =
-						(AbstractPluginHandler) hashTable.get(extensionPoint);
-
-					File file = null;
-					/*
-					if (jar != null)
-						file = new File(folder, jar);
-					else
-					*/
+							File file = null;
+							/*
+							if (jar != null)
+								file = new File(folder, jar);
+							else
+							*/
 					
-					file = folder;
+							file = folder;
 
-					ColumbaLogger.log.info("debug: " + file.toString());
+							ColumbaLogger.log.info("debug: " + file.toString());
 
-					handler.addPlugin(id, file, element);
-				} catch (Exception ex) {
-					ColumbaLogger.log.error(ex.getMessage());
-				}
+							handler.addExtension(id, extension);
+						} catch (Exception ex) {
+							ColumbaLogger.log.error(ex.getMessage());
+						}
+					}
+				}				
 			}
-
 		}
 	}
 
 	public void registerHandler(AbstractPluginHandler handler) {
-		hashTable.put(handler.getId(), handler);
-
+		plugins.put(handler.getId(), handler);
+		handler.setPluginManager(this);
 	}
 
 	public AbstractPluginHandler getHandler(String id) {
-		if (hashTable.containsKey(id))
-			return (AbstractPluginHandler) hashTable.get(id);
+		if (plugins.containsKey(id))
+			return (AbstractPluginHandler) plugins.get(id);
 		else
 			return null;
+	}
+	
+	/*
+	public XmlElement getPlugin( String id ) {
+		return (XmlElement) plugins.get(id); 
+	}
+*/
+	protected int getIndex(String id) {
+		for( int i=0; i<ids.length; i++ ) {
+			if( ids[i].equals(id) ) return i;
+		}
+		
+		return -1;
+	}
+
+	public File getPluginDir(String id) {
+		return pluginFolders[getIndex(id)];
+	}
+	
+	public XmlElement getPluginElement(String id) {
+		return elements[getIndex(id)];
+	}
+
+	public String getPluginType( String id ) {
+		XmlElement runtime = elements[getIndex(id)].getElement("runtime");
+		return runtime.getAttribute("type");
 	}
 
 }

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.plugin;
 
-import java.io.File;
+import java.util.ListIterator;
 
 import org.columba.core.xml.XmlElement;
 
@@ -40,15 +40,29 @@ public class FilterActionPluginHandler extends AbstractFilterPluginHandler {
 			"actionlist");
 
 	}
-
+/*
 	public void addPlugin(String name, File pluginFolder, XmlElement element) {
-		super.addPlugin(name, pluginFolder, element);
+		//super.addPlugin(name, pluginFolder, element);
 
 		
 		XmlElement child = element.getElement("arguments/action");
 
 		parentNode.addElement(child);
 
+	}
+*/
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
+	 */
+	public void addExtension(String id, XmlElement extension) {
+		ListIterator iterator = extension.getElements().listIterator();
+		XmlElement action;
+		while( iterator.hasNext() ) {
+			action = (XmlElement) iterator.next();
+			action.addAttribute("name", id + '$' + action.getAttribute("name"));
+			parentNode.addElement(action);
+		}
 	}
 
 }

@@ -15,6 +15,11 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
+import java.util.Hashtable;
+
+import org.columba.core.scripting.AbstractInterpreter;
+import org.columba.core.xml.XmlElement;
+
 /**
  * @author freddy
  *
@@ -25,17 +30,18 @@ package org.columba.core.plugin;
  */
 public class InterpreterHandler extends AbstractPluginHandler {
 
+	private Hashtable interpreterTable;
+
 	/**
 	 * Constructor for InterpreterHandler.
 	 * @param id
 	 * @param config
 	 */
-	
+
 	public InterpreterHandler() {
-			super("interpreter", null);
-		}
-	
-	
+		super("interpreter", null);
+		interpreterTable = new Hashtable();
+	}
 
 	/**
 	 * @see org.columba.core.plugin.AbstractPluginHandler#getDefaultNames()
@@ -43,11 +49,11 @@ public class InterpreterHandler extends AbstractPluginHandler {
 	public String[] getDefaultNames() {
 		return null;
 	}
-	
+
 	/*
 	public Object getPlugin(String name, String className, Object[] args)
 			throws Exception {
-
+	
 		ColumbaLogger.log.debug("trying to load interpreter plugin");
 		
 			try {
@@ -59,10 +65,28 @@ public class InterpreterHandler extends AbstractPluginHandler {
 				//String type = child.getAttribute("type");
 				
 				File file = (File) pluginFolders.get(name);
-
+	
 				return PluginLoader.loadExternalPlugin(className, "java", file, args);
 			}
-
+	
 		}
 	*/
+
+	public AbstractInterpreter getInterpreter(String type) {
+		return (AbstractInterpreter) interpreterTable.get(type);		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
+	 */
+	public void addExtension(String id, XmlElement extension) {
+		XmlElement interpreter = extension.getElement("interpreter");
+		
+		try {
+			interpreterTable.put(interpreter.getAttribute("name"), PluginLoader.loadExternalPlugin(interpreter.getAttribute("main_class"), pluginManager.getPluginType(id),pluginManager.getPluginDir(id),null));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

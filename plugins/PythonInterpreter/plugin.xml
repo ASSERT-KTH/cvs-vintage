@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<plugin id="python" description="adds python plugin support" extension_point="interpreter" version="1.0" >
- <arguments>
-  <interpreter name="Python Interpreter" main_class="org.columba.core.scripting.PythonInterpreterPlugin"  />
- </arguments>
+<plugin id="org.columba.PythonPlugin" description="adds python plugin support" version="1.0" >
+ <extension name="interpreter">
+  <interpreter name="python" main_class="org.columba.core.scripting.PythonInterpreterPlugin"  />
+ </extension>
  <runtime type="java" jar="PythonInterpreter.jar" import="libs/jython.jar" />
 </plugin>

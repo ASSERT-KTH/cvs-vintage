@@ -26,7 +26,7 @@ import org.columba.core.xml.XmlElement;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class AbstractFilterPluginHandler extends AbstractPluginHandler {
+public abstract class AbstractFilterPluginHandler extends AbstractPluginHandler {
 
 	protected XmlElement parentNode;
 
@@ -72,7 +72,7 @@ public class AbstractFilterPluginHandler extends AbstractPluginHandler {
 			XmlElement action = parentNode.getElement(i);
 			String s = action.getAttribute("name");
 
-			if (name.equalsIgnoreCase(s))
+			if (name.equals(s))
 				return action.getAttribute(id);
 
 		}

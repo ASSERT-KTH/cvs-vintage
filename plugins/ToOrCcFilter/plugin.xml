@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<plugin id="To or Cc" description="search pattern matches contents of To or Cc headerfield" extension_point="filter" version="1.0" >
- <arguments>
+<plugin id="To or Cc" description="search pattern matches contents of To or Cc headerfield" version="1.0" >
+ <extension name="filter">
   <filter name="To or Cc" main_class="org.columba.mail.filter.plugins.ToOrCcFilter" gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
- </arguments>
+ </extension>
  <runtime type="java" jar="ToOrCcFilter.jar" />
 </plugin>

@@ -28,21 +28,22 @@ import javax.swing.KeyStroke;
  * Window>Preferences>Java>Code Generation.
  */
 public class BasicAction extends JAbstractAction {
-	boolean showToolbarText = true;
-
 	/**
 	 * Method BasicAction.
 	 * @param name
 	 * @param longDescription
+	 * @param tooltip
 	 * @param actionCommand
 	 * @param small_icon
 	 * @param big_icon
 	 * @param mnemonic
 	 * @param keyStroke
+	 * @param showToolbarText
 	 */
 	public BasicAction(
 		String name,
 		String longDescription,
+		String tooltip,
 		String actionCommand,
 		ImageIcon small_icon,
 		ImageIcon big_icon,
@@ -55,131 +56,13 @@ public class BasicAction extends JAbstractAction {
 		LARGE_ICON = big_icon;
 
 		putValue(Action.SHORT_DESCRIPTION, longDescription);
+		putValue(Action.SHORT_DESCRIPTION, tooltip);
 		putValue(Action.ACTION_COMMAND_KEY, actionCommand);
 		putValue(Action.ACCELERATOR_KEY, keyStroke);
 		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
 
 		TOOLBAR_NAME = name;
-
-	}
-
-	/**
-	 * Method BasicAction.
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 * @param showToolbarText
-	 */
-	public BasicAction(
-		String name,
-		String longDescription,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke,
-		boolean showToolbarText) {
-		super();
-		putValue(Action.NAME, name);
-		putValue(Action.LONG_DESCRIPTION, longDescription);
-		putValue(Action.SMALL_ICON, small_icon);
-		LARGE_ICON = big_icon;
-
-		putValue(Action.SHORT_DESCRIPTION, longDescription);
-		putValue(Action.ACTION_COMMAND_KEY, actionCommand);
-		putValue(Action.ACCELERATOR_KEY, keyStroke);
-		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
-
-		this.showToolbarText = showToolbarText;
-
-		TOOLBAR_NAME = name;
-
-	}
-
-	/**
-	 * Method BasicAction.
-	 * @param name
-	 * @param tname
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
-	public BasicAction(
-		String name,
-		String tname,
-		String longDescription,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke) {
-		super();
-		putValue(Action.NAME, name);
-		putValue(Action.LONG_DESCRIPTION, longDescription);
-		putValue(Action.SHORT_DESCRIPTION, longDescription);
-		putValue(Action.SMALL_ICON, small_icon);
-		LARGE_ICON = big_icon;
-
-		putValue(Action.ACTION_COMMAND_KEY, actionCommand);
-		putValue(Action.ACCELERATOR_KEY, keyStroke);
-		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
-
-		TOOLBAR_NAME = tname;
-
-	}
-
-	/**
-	 * Method BasicAction.
-	 * @param name
-	 * @param tname
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 * @param showToolbarText
-	 */
-	public BasicAction(
-		String name,
-		String tname,
-		String longDescription,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke,
-		boolean showToolbarText) {
-		super();
-		putValue(Action.NAME, name);
-		putValue(Action.LONG_DESCRIPTION, longDescription);
-		putValue(Action.SHORT_DESCRIPTION, longDescription);
-		putValue(Action.SMALL_ICON, small_icon);
-		LARGE_ICON = big_icon;
-
-		putValue(Action.ACTION_COMMAND_KEY, actionCommand);
-		putValue(Action.ACCELERATOR_KEY, keyStroke);
-		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
-
-		TOOLBAR_NAME = tname;
-
-		this.showToolbarText = showToolbarText;
-
-	}
-
-	/**
-	 * Method isShowToolbarText.
-	 * @return boolean
-	 */
-	public boolean isShowToolbarText() {
-		return this.showToolbarText;
+		
 	}
 
 }
