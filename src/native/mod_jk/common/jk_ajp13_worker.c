@@ -58,7 +58,7 @@
  * Author:      Henri Gomez <hgomez@slib.fr>                               *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.8 $                                           *
+ * Version:     $Revision: 1.9 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -74,6 +74,7 @@
 #define DEF_RETRY_ATTEMPTS      (1)
 #define DEF_CACHE_SZ            (1)
 #define JK_INTERNAL_ERROR       (-2)
+#define JK_FATAL_ERROR          (-3)
 #define MAX_SEND_BODY_SZ        (DEF_BUFFER_SZ - 6)
 #define AJP13_HEADER_LEN	(4)
 #define AJP13_HEADER_SZ_LEN	(2)
@@ -125,6 +126,7 @@ struct ajp13_endpoint {
 struct ajp13_operation {
 	jk_msg_buf_t 	*request;	/* original request storage */
 	jk_msg_buf_t	*reply;		/* reply storage (chuncked by ajp13 */
+    jk_msg_buf_t    *post;      /* small post data storage area */
 	int		uploadfd;	/* future persistant storage id */
 	int		recoverable;	/* if exchange could be conducted on another TC */
 };
@@ -309,6 +311,7 @@ static int read_into_msg_buff(ajp13_endpoint_t *ep,
 }
 
 static int ajp13_process_callback(jk_msg_buf_t *msg, 
+                                  jk_msg_buf_t *pmsg,
                                   ajp13_endpoint_t *ep,
                                   jk_ws_service_t *r, 
                                   jk_logger_t *l) 
@@ -335,7 +338,7 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
                                       res.num_headers)) {
                     jk_log(l, JK_LOG_ERROR, 
                            "Error ajp13_process_callback - start_response failed\n");
-                    return JK_INTERNAL_ERROR;
+                    return JK_FATAL_ERROR;
                 }
             }
 	    break;
@@ -346,7 +349,7 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
                 if(!r->write(r, jk_b_get_buff(msg) + jk_b_get_pos(msg), len)) {
                     jk_log(l, JK_LOG_ERROR, 
                            "Error ajp13_process_callback - write failed\n");
-                    return JK_INTERNAL_ERROR;
+                    return JK_FATAL_ERROR;
                 }
             }
 	    break;
@@ -366,7 +369,7 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
 		}
 
 		/* the right place to add file storage for upload */
-		if(read_into_msg_buff(ep, r, msg, l, len)) {
+		if(read_into_msg_buff(ep, r, pmsg, l, len)) {
 		    r->content_read += len;
 		    return JK_AJP13_HAS_RESPONSE;
 		}                  
@@ -609,7 +612,7 @@ static int send_request(jk_endpoint_t *e,
 	 */
 
 	jk_log(l, JK_LOG_DEBUG, "send_request 2: request body to send %d - request body to resend %d\n", 
-		p->left_bytes_to_send, jk_b_get_len(op->reply) - AJP13_HEADER_LEN);
+		p->left_bytes_to_send, jk_b_get_len(op->post) - AJP13_HEADER_LEN);
 
 	/*
 	 * POST recovery job is done here.
@@ -619,8 +622,8 @@ static int send_request(jk_endpoint_t *e,
 	 * We send here the first part of data which was sent previously to the
 	 * remote Tomcat
 	 */
-	if(jk_b_get_len(op->reply) > AJP13_HEADER_LEN) {
-		if(!connection_tcp_send_message(p, op->reply, l)) {
+	if(jk_b_get_len(op->post) > AJP13_HEADER_LEN) {
+		if(!connection_tcp_send_message(p, op->post, l)) {
 			jk_log(l, JK_LOG_ERROR, "Error resending request body\n");
 			return JK_FALSE;
 		}
@@ -636,13 +639,13 @@ static int send_request(jk_endpoint_t *e,
 			unsigned len = p->left_bytes_to_send;
 			if(len > MAX_SEND_BODY_SZ) 
 				len = MAX_SEND_BODY_SZ;
-            		if(!read_into_msg_buff(p, s, op->reply, l, len)) {
+            		if(!read_into_msg_buff(p, s, op->post, l, len)) {
 				/* the browser stop sending data, no need to recover */
 				op->recoverable = JK_FALSE;
 				return JK_FALSE;
 			}
 			s->content_read = len;
-			if(!connection_tcp_send_message(p, op->reply, l)) {
+			if(!connection_tcp_send_message(p, op->post, l)) {
 				jk_log(l, JK_LOG_ERROR, "Error sending request body\n");
 				return JK_FALSE;
 			}  
@@ -680,7 +683,7 @@ static int get_reply(jk_endpoint_t *e,
 			return JK_FALSE;
 		}
 
-		rc = ajp13_process_callback(op->reply, p, s, l);
+		rc = ajp13_process_callback(op->reply, op->post, p, s, l);
 
 		/* no more data to be sent, fine we have finish here */
        		if(JK_AJP13_END_RESPONSE == rc)
@@ -696,11 +699,18 @@ static int get_reply(jk_endpoint_t *e,
         	 * data to file and replay for it
         	 */
  			op->recoverable = JK_FALSE; 
-			rc = connection_tcp_send_message(p, op->reply, l);
+			rc = connection_tcp_send_message(p, op->post, l);
         		if (rc < 0) {
 				jk_log(l, JK_LOG_ERROR, "Error sending request data %d\n", rc);
                	 		return JK_FALSE;
 			}
+                } else if(JK_FATAL_ERROR == rc) {
+                  /*
+                   * we won't be able to gracefully recover from this so
+                   * set recoverable to false and get out.
+                   */
+                        op->recoverable = JK_FALSE;
+                        return JK_FALSE;
 		} else if(rc < 0) {
 			return (JK_FALSE); /* XXX error */
 		}
@@ -733,6 +743,10 @@ static int JK_METHOD service(jk_endpoint_t *e,
 		op->reply = jk_b_new(&(p->pool));
 		jk_b_set_buffer_size(op->reply, DEF_BUFFER_SZ);
 		jk_b_reset(op->reply); 
+		
+		op->post = jk_b_new(&(p->pool));
+		jk_b_set_buffer_size(op->post, DEF_BUFFER_SZ);
+		jk_b_reset(op->post); 
 		
 		op->recoverable = JK_TRUE;
 		op->uploadfd	 = -1;		/* not yet used, later ;) */
