@@ -131,7 +131,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.15 2002/04/03 00:35:17 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.16 2002/04/09 23:29:02 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -379,6 +379,23 @@ public abstract class AbstractScarabModule
                 crit.add(AttributeGroupPeer.ACTIVE, true);
             }
             groups = AttributeGroupPeer.doSelect(crit);
+
+            // set the dedupe attribute according to position
+            /*
+            AttributeGroup prevAG = null;
+            boolean dedupe = true;
+            Iterator iter = groups.iterator();
+            while (iter.hasNext())
+            {
+                AttributeGroup ag = (AttributeGroup)iter.next();
+                if (prevAG != null) 
+                {
+                    dedupe &= (ag.getOrder() - prevAG.getOrder()) <= 1;
+                }
+                ag.setDedupe(dedupe);
+                prevAG = ag;
+            }
+            */
             getMethodResult().put(groups, this, GET_ATTRIBUTE_GROUPS, 
                                   issueType, activeBool);
         }
