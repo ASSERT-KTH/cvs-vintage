@@ -18,16 +18,6 @@
 
 package org.columba.mail.gui.config.account;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
-import org.columba.core.help.HelpManager;
-
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.SmtpItem;
-import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -37,55 +27,74 @@ import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.help.HelpManager;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.SmtpItem;
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
+
 /**
  * Dialog for managing accounts and their settings.
  */
-public class AccountDialog implements ActionListener {
-    private JDialog dialog;
+public class AccountDialog extends JDialog implements ActionListener {
+
     private AccountItem accountItem;
+
     private IdentityPanel identityPanel;
+
     private IncomingServerPanel incomingServerPanel;
+
     private OutgoingServerPanel outgoingServerPanel;
+
     private SecurityPanel securityPanel;
+
     private ReceiveOptionsPanel receiveOptionsPanel;
+
     private SpamPanel spamPanel;
+
     private JPanel selected = null;
+
     private JTabbedPane tp;
 
-    public AccountDialog(AccountItem item) {
-        dialog = DialogStore.getDialog();
-        dialog.setTitle(MailResourceLoader.getString("dialog", "account",
-                "preferences_for") + " " + item.getName());
+    public AccountDialog(JFrame parent, AccountItem item) {
+        super(parent, true);
+
+        setTitle(MailResourceLoader.getString("dialog", "account",
+                "preferences_for")
+                + " " + item.getName());
         this.accountItem = item;
         createPanels();
         initComponents();
 
-        dialog.pack();
-        dialog.setLocationRelativeTo(null);
-        dialog.setVisible(true);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     protected void createPanels() {
         identityPanel = new IdentityPanel(accountItem);
 
-        receiveOptionsPanel = new ReceiveOptionsPanel(dialog, accountItem);
+        receiveOptionsPanel = new ReceiveOptionsPanel(this, accountItem);
 
-        incomingServerPanel = new IncomingServerPanel(dialog, accountItem,
+        incomingServerPanel = new IncomingServerPanel(this, accountItem,
                 receiveOptionsPanel);
 
         outgoingServerPanel = new OutgoingServerPanel(accountItem);
 
         securityPanel = new SecurityPanel(accountItem.getPGPItem());
-        
-        spamPanel = new SpamPanel(dialog, accountItem);
+
+        spamPanel = new SpamPanel(this, accountItem);
     }
 
     protected void initComponents() {
-        dialog.getContentPane().setLayout(new BorderLayout());
+        getContentPane().setLayout(new BorderLayout());
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
@@ -96,11 +105,11 @@ public class AccountDialog implements ActionListener {
         tp.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
 
         tp.add(MailResourceLoader.getString("dialog", "account", "identity"),
-            identityPanel);
+                identityPanel);
 
         //$NON-NLS-1$
-        String incomingServerPanelTitle = MailResourceLoader.getString("dialog",
-                "account", "incomingserver");
+        String incomingServerPanelTitle = MailResourceLoader.getString(
+                "dialog", "account", "incomingserver");
 
         if (accountItem.isPopAccount()) {
             incomingServerPanelTitle += " (POP3)";
@@ -120,20 +129,20 @@ public class AccountDialog implements ActionListener {
 
         //$NON-NLS-1$
         tp.add(MailResourceLoader.getString("dialog", "account", "security"),
-            securityPanel);
-        
+                securityPanel);
+
         tp.add("Spam Filter", spamPanel);
 
         //$NON-NLS-1$
         mainPanel.add(tp, BorderLayout.CENTER);
 
-        dialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
-        dialog.getContentPane().add(createButtonPanel(), BorderLayout.SOUTH);
-        dialog.getRootPane().registerKeyboardAction(this, "CANCEL",
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
-        HelpManager.getHelpManager().enableHelpKey(dialog.getRootPane(),
-            "configuring_columba");
+        getContentPane().add(mainPanel, BorderLayout.CENTER);
+        getContentPane().add(createButtonPanel(), BorderLayout.SOUTH);
+        getRootPane().registerKeyboardAction(this, "CANCEL",
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW);
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+                "configuring_columba");
     }
 
     protected JPanel createButtonPanel() {
@@ -142,28 +151,28 @@ public class AccountDialog implements ActionListener {
 
         bottom.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "cancel"));
+        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+                MailResourceLoader.getString("global", "cancel"));
 
         //$NON-NLS-1$ //$NON-NLS-2$
         cancelButton.addActionListener(this);
         cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-        ButtonWithMnemonic okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "ok"));
+        ButtonWithMnemonic okButton = new ButtonWithMnemonic(MailResourceLoader
+                .getString("global", "ok"));
 
         //$NON-NLS-1$ //$NON-NLS-2$
         okButton.addActionListener(this);
         okButton.setActionCommand("OK"); //$NON-NLS-1$
         okButton.setDefaultCapable(true);
-        dialog.getRootPane().setDefaultButton(okButton);
+        getRootPane().setDefaultButton(okButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+                MailResourceLoader.getString("global", "help"));
 
         // associate with JavaHelp
         HelpManager.getHelpManager().enableHelpOnButton(helpButton,
-            "configuring_columba");
+                "configuring_columba");
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 3, 6, 0));
@@ -177,12 +186,12 @@ public class AccountDialog implements ActionListener {
     }
 
     /**
- * Check if user entered valid data in all panels
- * <p>
- * Note, that we also select the panel.
- *
- * @return true, if data is valid. false, otherwise
- */
+     * Check if user entered valid data in all panels
+     * <p>
+     * Note, that we also select the panel.
+     * 
+     * @return true, if data is valid. false, otherwise
+     */
     protected boolean isFinished() {
         boolean result = identityPanel.isFinished();
 
@@ -215,11 +224,9 @@ public class AccountDialog implements ActionListener {
         String action = e.getActionCommand();
 
         if (action.equals("OK")) //$NON-NLS-1$
-         {
+        {
             // check if the user entered valid data
-            if (!isFinished()) {
-                return;
-            }
+            if (!isFinished()) { return; }
 
             identityPanel.updateComponents(false);
             incomingServerPanel.updateComponents(false);
@@ -234,19 +241,21 @@ public class AccountDialog implements ActionListener {
                 // update tree label
                 int uid = accountItem.getUid();
 
-                IMAPRootFolder folder = (IMAPRootFolder) MailInterface.treeModel.getImapFolder(uid);
+                IMAPRootFolder folder = (IMAPRootFolder) MailInterface.treeModel
+                        .getImapFolder(uid);
                 folder.updateConfiguration();
             }
 
-            // restart timer 
-            MailInterface.mailCheckingManager.restartTimer(accountItem.getUid());
+            // restart timer
+            MailInterface.mailCheckingManager
+                    .restartTimer(accountItem.getUid());
 
             // notify all observers
             MailInterface.mailCheckingManager.update();
 
-            dialog.setVisible(false);
+            setVisible(false);
         } else if (action.equals("CANCEL")) {
-            dialog.setVisible(false);
+            setVisible(false);
         }
     }
 }

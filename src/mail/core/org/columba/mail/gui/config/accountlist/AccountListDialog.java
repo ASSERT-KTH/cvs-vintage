@@ -1,34 +1,21 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.config.accountlist;
-
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
-import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
-
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.AccountList;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.gui.config.account.AccountDialog;
-import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -48,6 +35,7 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -58,70 +46,54 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-public class ConfigFrame implements ActionListener,
-    ListSelectionListener //, TreeSelectionListener
- {
-    /*
-    private JTextField textField;
-    private JPanel leftPanel;
-    private JPanel rightPanel;
-    private JButton addpopButton;
-    private JButton addimapButton;
-    private JButton removeButton;
-    private JButton defaultButton;
-    private JButton wizardButton;
-    private JButton closeButton;
-    private JDialog frame;
-    private AccountTree tree;
-    */
-    private JDialog dialog;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.help.HelpManager;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.AccountList;
+import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.gui.config.account.AccountDialog;
+import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
-    //private AccountTreeNode selected;
+public class AccountListDialog extends JDialog implements ActionListener,
+        ListSelectionListener {
 
-    /*
-    private IdentityPanel identityPanel;
-    private IncomingServerPanel incomingPanel;
-    private OutgoingServerPanel outgoingServerPanel;
-    */
     private AccountListTable listView;
 
-    //private JSplitPane splitPane;
     private AccountList accountList;
+
     private AccountItem accountItem;
 
-    //private int panel = -1;
     JTextField nameTextField = new JTextField();
+
     JButton addButton;
 
-    //JButton enableButton = new JButton();
-    //JButton disableButton = new JButton();
     JButton removeButton;
 
-    //JButton enableButton = new JButton();
-    //JButton disableButton = new JButton();
     JButton editButton;
 
-    //JButton moveupButton = new JButton();
-    //JButton movedownButton = new JButton();
     private int index;
 
-    public ConfigFrame() {
-        dialog = DialogStore.getDialog();
-        dialog.setTitle(MailResourceLoader.getString("dialog", "account",
+    public AccountListDialog(JFrame parent) {
+        super(parent, true);
+        setTitle(MailResourceLoader.getString("dialog", "account",
                 "dialog_title"));
         accountList = MailInterface.config.getAccountList();
 
         initComponents();
-        dialog.getRootPane().registerKeyboardAction(this, "CLOSE",
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
-        dialog.getRootPane().registerKeyboardAction(this, "HELP",
-            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
-        dialog.pack();
-        dialog.setLocationRelativeTo(null);
-        dialog.setVisible(true);
+        getRootPane().registerKeyboardAction(this, "CLOSE",
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW);
+        getRootPane().registerKeyboardAction(this, "HELP",
+                KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     public AccountItem getSelected() {
@@ -133,20 +105,20 @@ public class ConfigFrame implements ActionListener,
     }
 
     public void initComponents() {
-        dialog.getContentPane().setLayout(new BorderLayout());
+        getContentPane().setLayout(new BorderLayout());
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout(5, 0));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
         addButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "addaccount")); //$NON-NLS-1$
+                "dialog", "account", "addaccount")); //$NON-NLS-1$
 
         addButton.setActionCommand("ADD"); //$NON-NLS-1$
         addButton.addActionListener(this);
 
         removeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "removeaccount")); //$NON-NLS-1$
+                "dialog", "account", "removeaccount")); //$NON-NLS-1$
 
         removeButton.setActionCommand("REMOVE"); //$NON-NLS-1$
 
@@ -154,7 +126,7 @@ public class ConfigFrame implements ActionListener,
         removeButton.addActionListener(this);
 
         editButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "editsettings")); //$NON-NLS-1$
+                "dialog", "account", "editsettings")); //$NON-NLS-1$
 
         editButton.setActionCommand("EDIT"); //$NON-NLS-1$
 
@@ -176,7 +148,7 @@ public class ConfigFrame implements ActionListener,
 
         //mainPanel.add( topBorderPanel, BorderLayout.NORTH );
         JLabel nameLabel = new JLabel(MailResourceLoader.getString("dialog",
-                    "account", "name")); //$NON-NLS-1$
+                "account", "name")); //$NON-NLS-1$
         nameLabel.setEnabled(false);
         topPanel.add(nameLabel);
 
@@ -238,7 +210,7 @@ public class ConfigFrame implements ActionListener,
         scrollPane.setPreferredSize(new Dimension(300, 250));
         scrollPane.getViewport().setBackground(Color.white);
         mainPanel.add(scrollPane);
-        dialog.getContentPane().add(mainPanel);
+        getContentPane().add(mainPanel);
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
@@ -246,33 +218,32 @@ public class ConfigFrame implements ActionListener,
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "close"));
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
+                MailResourceLoader.getString("global", "close"));
         closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+                MailResourceLoader.getString("global", "help"));
         buttonPanel.add(helpButton);
 
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
-        dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-        dialog.getRootPane().setDefaultButton(closeButton);
+        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        getRootPane().setDefaultButton(closeButton);
 
         // associate with JavaHelp
         HelpManager.getHelpManager().enableHelpOnButton(helpButton,
-            "configuring_columba");
-        HelpManager.getHelpManager().enableHelpKey(dialog.getRootPane(),
-            "configuring_columba");
+                "configuring_columba");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+                "configuring_columba");
     }
 
     public void valueChanged(ListSelectionEvent e) {
-        if (e.getValueIsAdjusting()) {
-            return;
-        }
+        if (e.getValueIsAdjusting()) { return; }
 
-        DefaultListSelectionModel theList = (DefaultListSelectionModel) e.getSource();
+        DefaultListSelectionModel theList = (DefaultListSelectionModel) e
+                .getSource();
 
         if (theList.isSelectionEmpty()) {
             removeButton.setEnabled(false);
@@ -292,7 +263,8 @@ public class ConfigFrame implements ActionListener,
         AccountItem parent = getSelected();
 
         if (parent != null) {
-            AccountDialog dialog = new AccountDialog(parent);
+            AccountDialog dialog = new AccountDialog((JFrame) getParent(),
+                    parent);
         }
     }
 
@@ -300,16 +272,16 @@ public class ConfigFrame implements ActionListener,
         String action = e.getActionCommand();
 
         if (action.equals("CLOSE")) //$NON-NLS-1$
-         {
+        {
             try {
                 MainInterface.config.save();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
 
-            dialog.setVisible(false);
+            setVisible(false);
         } else if (action.equals("ADD")) //$NON-NLS-1$
-         {
+        {
             try {
                 new AccountWizardLauncher().launchWizard(false);
                 listView.update();
@@ -317,27 +289,28 @@ public class ConfigFrame implements ActionListener,
                 ex.printStackTrace();
             }
         } else if (action.equals("REMOVE")) //$NON-NLS-1$
-         {
+        {
             // TODO: i18n
-            Object[] options = { "Delete", "No" };
+            Object[] options = { "Delete", "No"};
             int n = JOptionPane.showOptionDialog(null,
                     "Would you really like to delete this account?",
                     "Question", JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 
-            if (n == JOptionPane.NO_OPTION) {
-                return;
-            }
+            if (n == JOptionPane.NO_OPTION) { return; }
 
             AccountItem item = accountList.remove(index);
 
             if (item.isPopAccount()) {
-                MailInterface.popServerCollection.removePopServer(item.getUid());
+                MailInterface.popServerCollection
+                        .removePopServer(item.getUid());
             } else {
-                AbstractFolder folder = (AbstractFolder) MailInterface.treeModel.getImapFolder(item.getUid());
+                AbstractFolder folder = (AbstractFolder) MailInterface.treeModel
+                        .getImapFolder(item.getUid());
 
                 try {
-                    AbstractFolder parentFolder = (AbstractFolder) folder.getParent();
+                    AbstractFolder parentFolder = (AbstractFolder) folder
+                            .getParent();
                     folder.removeFolder();
                     MailInterface.treeModel.nodeStructureChanged(parentFolder);
                 } catch (Exception ex) {
@@ -355,7 +328,7 @@ public class ConfigFrame implements ActionListener,
             editButton.setEnabled(false);
             listView.update();
         } else if (action.equals("EDIT")) //$NON-NLS-1$
-         {
+        {
             showAccountDialog();
             listView.update();
         }

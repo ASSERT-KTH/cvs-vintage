@@ -24,7 +24,7 @@ import javax.swing.table.TableColumn;
 
 
 class AccountListTable extends JTable {
-    public AccountListTable(AccountList accountList, ConfigFrame frame) {
+    public AccountListTable(AccountList accountList, AccountListDialog frame) {
         super(new AccountListDataModel(accountList));
 
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
