@@ -52,7 +52,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -487,7 +487,7 @@ public class JRMPInvoker
                }
                catch(Exception e)
                {
-                  log.error("Failed to setSecurityDomain="+sslDomain+" on socket factory");
+                  log.error("Failed to setSecurityDomain="+sslDomain+" on socket factory", e);
                }
             }
          }
