@@ -19,11 +19,31 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import javax.management.*;
-
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.parsers.*;
+import javax.management.Attribute;
+import javax.management.InstanceNotFoundException;
+import javax.management.JMException;
+import javax.management.JMRuntimeException;
+import javax.management.MalformedObjectNameException;
+import javax.management.MBeanInfo;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanOperationInfo;
+import javax.management.MBeanException;
+import javax.management.MBeanServer;
+import javax.management.ObjectInstance;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
+import javax.management.RuntimeErrorException;
+import javax.management.RuntimeMBeanException;
+import javax.management.RuntimeOperationsException;
+         
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
 
 import org.jboss.logging.Log;
 import org.jboss.util.Service;
@@ -46,7 +66,7 @@ import org.jboss.util.XmlHelper;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  * Revisions:
  *
  * 20010622 scott.stark: Clean up the unsafe downcast of Throwable to Exception
