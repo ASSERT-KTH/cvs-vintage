@@ -65,7 +65,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -630,6 +630,11 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
     * invocation interceptor chain.
     */
    private Object invokeGetRelatedId(Transaction tx, Object myId) {
+
+      Thread thread = Thread.currentThread();
+      ClassLoader oldCL = thread.getContextClassLoader();
+      thread.setContextClassLoader(manager.getContainer().getClassLoader());
+
       try {
          EntityInstanceCache instanceCache = 
                (EntityInstanceCache)manager.getContainer().getInstanceCache();
@@ -651,6 +656,10 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       } catch(Exception e) {
          throw new EJBException("Error in getRelatedId", e);
       }
+      finally
+      {
+         thread.setContextClassLoader(oldCL);
+      }
    }      
       
    /**
@@ -659,6 +668,10 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
     */
    private void invokeAddRelation(
          Transaction tx, Object myId, Object relatedId) {
+
+      Thread thread = Thread.currentThread();
+      ClassLoader oldCL = thread.getContextClassLoader();
+      thread.setContextClassLoader(manager.getContainer().getClassLoader());
 
       try {
          EntityInstanceCache instanceCache = 
@@ -690,6 +703,10 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    private void invokeRemoveRelation(
          Transaction tx, Object myId, Object relatedId) {
 
+      Thread thread = Thread.currentThread();
+      ClassLoader oldCL = thread.getContextClassLoader();
+      thread.setContextClassLoader(manager.getContainer().getClassLoader());
+
       try {
          EntityInstanceCache instanceCache = 
                (EntityInstanceCache)manager.getContainer().getInstanceCache();
@@ -710,6 +727,10 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          throw e;
       } catch(Exception e) {
          throw new EJBException("Error in removeRelation", e);
+      }
+      finally
+      {
+         thread.setContextClassLoader(oldCL);
       }
    }
 
