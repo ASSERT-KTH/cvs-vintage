@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.50 $</tt>
+ * @version <tt>$Revision: 1.51 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -445,7 +445,7 @@ public class EJBDeployer
          if (di.alternativeDD != null)
          {
             String contentsDir = new File(di.url.getPath()).getParent();
-            alternativeDD = new URL("file://" + contentsDir + "/" + di.alternativeDD);
+            alternativeDD = new URL("file:/" + contentsDir + "/" + di.alternativeDD);
          }
 
          // Load XML
