@@ -152,19 +152,24 @@ public class JaasSecurityManager
         Principal beanPrincipal;
 
         try {
-            lc = new LoginContext(beanName, new CallbackHandler() {
-                public void handle(Callback[] callbacks) throws UnsupportedCallbackException {
-                    for (int i = 0; i < callbacks.length; i++) {
-                        if (callbacks[i] instanceof NameCallback) {
-                            ((NameCallback) callbacks[i]).setName(userName);
-                        } else if (callbacks[i] instanceof PasswordCallback) {
-                            ((PasswordCallback) callbacks[i]).setPassword(password);
-                        } else {
-                            throw new UnsupportedCallbackException(callbacks[i], "Unrecognized Callback");
+            synchronized( LoginContext.class )
+            {   /* Need to synchronize on the LoginContext because the load of
+                    is not thread safe.
+                */
+                lc = new LoginContext(beanName, new CallbackHandler() {
+                    public void handle(Callback[] callbacks) throws UnsupportedCallbackException {
+                        for (int i = 0; i < callbacks.length; i++) {
+                            if (callbacks[i] instanceof NameCallback) {
+                                ((NameCallback) callbacks[i]).setName(userName);
+                            } else if (callbacks[i] instanceof PasswordCallback) {
+                                ((PasswordCallback) callbacks[i]).setPassword(password);
+                            } else {
+                                throw new UnsupportedCallbackException(callbacks[i], "Unrecognized Callback");
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
             lc.login();
             _passwords.put(principal, password);
             subj = lc.getSubject();
