@@ -119,7 +119,7 @@ public class Ajp12Interceptor extends PoolTcpConnector
 
 	    AJP12Request reqA=null;
 	    AJP12Response resA=null;
-	    
+
 	    if( thData != null ) {
 		reqA=(AJP12Request)thData[0];
 		resA=(AJP12Response)thData[1];
@@ -163,7 +163,7 @@ class AJP12Request extends Request {
     public void readNextRequest() throws IOException {
 	ajp12.readNextRequest( this );
     }
-    
+
     public void setSocket( Socket s ) throws IOException {
 	ajp12.setSocket( s );
     }
@@ -175,6 +175,7 @@ class AJP12Request extends Request {
     public  int doRead( byte b[], int off, int len ) throws IOException {
 	return ajp12.doRead( b,off,len);
     }
+
 }
 
 
@@ -182,10 +183,15 @@ class AJP12Request extends Request {
 class AJP12Response extends Response {
     Http10 http=new Http10();
 
+    public void recycle() {
+        super.recycle();
+        http.recycle();
+    }
+
     public void setSocket( Socket s ) throws IOException {
 	http.setSocket( s );
     }
-    
+
     public void endHeaders()  throws IOException {
 	super.endHeaders();
 	sendStatus( status, RequestUtil.getMessage( status ));
