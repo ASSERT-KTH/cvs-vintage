@@ -30,7 +30,6 @@ $page.setTitle("Assign users")
 #end
 
 <form action="$actionLink" method="post">
-<div id="projectlist" class="app">
 <input type="hidden" name="action" value="AssignIssue" />
 #foreach ($id in $issueList)
   <input type="hidden" name="issue_ids" value="$id" />
@@ -39,7 +38,6 @@ $page.setTitle("Assign users")
   
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doDone" />
-</div>
 </div>
 </form>
 
@@ -67,7 +65,7 @@ $page.setTitle("Assign users")
     #end
 
     #if ($noUsers.equals("true"))
-     <p><strong class="alert">None assigned.</strong></P>
+     <p><strong class="alert">None assigned.</strong></p>
     #else
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -145,7 +143,6 @@ $intake.declareGroups()
       <option value="Email">Email</option>
      </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="filter" /></td>
   </tr>
- <tr>
 </table>
 </div>
 
@@ -174,7 +171,7 @@ $intake.declareGroups()
 		<tr class="a">
 		<td><input type="checkbox" name="add_user_$user.UserId" value="$user.UserId" /></td>
 		<td><strong>$user.FirstName $user.LastName</strong></td>
-		<td><a href="mailTo:$user.Email">$user.UserName</td>
+		<td><a href="mailTo:$user.Email">$user.UserName</a></td>
         <td><select name="user_attr_$user.UserId">
          #foreach ($userAttr in $userAttrs)
           #if ($user.hasPermission($userAttr.Permission, $module))
@@ -206,12 +203,9 @@ $intake.declareGroups()
 *#
 
 
-    </td>
-   </tr>
-  </table>
 $intake.declareGroups()
 </form>
 
 #end
 
-
+</div>
