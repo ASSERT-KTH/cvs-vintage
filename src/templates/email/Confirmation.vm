@@ -1,5 +1,5 @@
 
-Welcome $scarabR.User.FirstName $scarabR.User.LastName,
+Welcome $!scarabR.User.FirstName $!scarabR.User.LastName,
 
 Thank you for registering with the Scarab Issue Tracking System.
 

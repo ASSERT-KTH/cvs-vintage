@@ -103,7 +103,7 @@
 
 <tr class="a">
   #set ($createdUser = $currentIssue.CreatedBy)
-  <td>$createdUser.FirstName $createdUser.LastName</td>
+  <td>$!createdUser.FirstName $!createdUser.LastName</td>
   <td><a href="mailTo:$createdUser.Email">$createdUser.Email</a></td>
   <td>Committed by</td>
 </tr>
@@ -118,7 +118,7 @@
       #set ($assignedUser = $scarabR.getUser($userId))
 
       <td>
-        $assignedUser.FirstName $assignedUser.LastName
+        $!assignedUser.FirstName $!assignedUser.LastName
         #if (!$assignedUser.hasPermission($attVal.Attribute.Permission, $scarabR.CurrentModule))
             <strong>(disabled)</strong>
         #end
@@ -322,7 +322,7 @@
 <h3>Comments</h3>
   #foreach ($comment in $comments)
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
-     <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&#160;|&#160;<a href="mailto:$commentUser.Email">$commentUser.FirstName $commentUser.LastName</a></h4>
+     <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&#160;|&#160;<a href="mailto:$commentUser.Email">$!commentUser.FirstName $!commentUser.LastName</a></h4>
     #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
       <P>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.DataAsString)
     #else
@@ -495,7 +495,7 @@
      </td>
      <td>
      #set ($user = $scarabR.getUser($act.Transaction.CreatedBy))
-     <a href="mailto:$user.Email">$user.FirstName $user.LastName</a>
+     <a href="mailto:$user.Email">$!user.FirstName $!user.LastName</a>
      </td>
     </tr>
   #end

@@ -56,7 +56,7 @@
   #set ($createdUser = $currentTemplate.CreatedBy)
   <td>
   #if ($createdUser)
-  <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+  <a href="mailTo:$createdUser.Email">$!createdUser.FirstName $!createdUser.LastName</a>
   #else
   &#160;
   #end

@@ -51,7 +51,7 @@
 
   #set ($createdUser = $scarabR.getUser($query.UserId))
   <input type = "hidden" name="query_user_$query.QueryId" value = "$createdUser.UserId" />
-  <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+  <td><a href="mailTo:$createdUser.Email">$!createdUser.FirstName $!createdUser.LastName</a></td>
   <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
   <td>#if ($query.Description) $query.Description #else &#160; #end</td>
   <td> <#textAreaSmall() name="query_comment_$query.QueryId"></textarea></td>
@@ -74,7 +74,7 @@
   <td>enter issue template</td>
   #set ($createdUser = $template.CreatedBy)
   <input type = "hidden" name="template_user_$template.IssueId" value="$createdUser.UserId" />
-  <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+  <td><a href="mailTo:$createdUser.Email">$!createdUser.FirstName $!createdUser.LastName</a></td>
    ##<td>$template.Module.Name</td>
    ##<td>role X</td>
    #set ($editLink = $link.setPathInfo("id", $template.UniqueId.toString()).setPage("SaveTemplate.vm").toString())

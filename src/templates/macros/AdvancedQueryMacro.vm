@@ -114,7 +114,7 @@ from:&#160;<input type="text" size="20"
   #set ($selectedAttr = $data.Parameters.getString("user_attr_$userId"))
 #end
   <td><input type="checkbox" name="delete_user_$userId" /></td>
-  <td><strong>$user.FirstName $user.LastName</strong></td>
+  <td><strong>$!user.FirstName $!user.LastName</strong></td>
   <td><a href="mailto:$user.Email">$user.Email</a></td>
   <td>
    <select name="user_attr_$userId" size="" >

@@ -61,7 +61,7 @@
   #end
   </td>
   #set ($createdUser = $scarabR.getUser($query.UserId.toString()))
-  <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+  <td><a href="mailTo:$createdUser.Email">$!createdUser.FirstName $!createdUser.LastName</a></td>
   </tr>
  #end
 </table>

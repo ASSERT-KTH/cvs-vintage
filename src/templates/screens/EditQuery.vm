@@ -95,7 +95,7 @@ Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
   #set ($user = $su.ScarabUser)
   #indexedRows($velocityCount)
    <td><input type="checkbox" name="subscribed_user_$user.UserId" /></td>
-   <td><a href="mailto:$user.Email">$user.FirstName $user.LastName</a></td>
+   <td><a href="mailto:$user.Email">$!user.FirstName $!user.LastName</a></td>
    <td>$su.Frequency.Name</td>
   </tr>
 #end

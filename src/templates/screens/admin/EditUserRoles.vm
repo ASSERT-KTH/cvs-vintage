@@ -15,7 +15,7 @@ $page.setTitle("User Administration")
 <h3>User Roles</h3>
 
 <p>
-Modifying roles for <b>$user.FirstName $user.LastName</b> [$user.UserName]
+Modifying roles for <b>$!user.FirstName $!user.LastName</b> [$user.UserName]
 </p>
 
 <table>

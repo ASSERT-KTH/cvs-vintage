@@ -41,7 +41,7 @@
   <td>$format.getDate($scarabR.DateFormat, $issue.CreatedDate)</td>
   <td>
    #set ($createdUser = $issue.CreatedBy)
-   <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+   <a href="mailTo:$createdUser.Email">$!createdUser.FirstName $!createdUser.LastName</a>
   </td>
  </tr>
 </table>

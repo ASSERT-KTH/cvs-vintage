@@ -82,7 +82,7 @@
 		  #set ($assignedUser = $scarabR.getUser($assignee.UserId))
 			<tr class="a">
 			<td>#booleanCheckbox($attrInput.Deleted)</td>
-			<td><strong>$assignedUser.FirstName $assignedUser.LastName</strong></td>
+			<td><strong>$!assignedUser.FirstName $!assignedUser.LastName</strong></td>
 			<td><a href="mailto:$assignedUser.Email">$assignedUser.UserName</a></td>
 			<td><select name="$attrInput.AttributeId.Key">
 			 #foreach ($selectUserAttr in $userAttrs)
@@ -168,7 +168,7 @@ $intake.declareGroups()
        #foreach ($user in $searchResults)
 		<tr class="a">
 		<td><input type="checkbox" name="add_user_$user.UserId" value="$user.UserId" /></td>
-		<td><strong>$user.FirstName $user.LastName</strong></td>
+		<td><strong>$!user.FirstName $!user.LastName</strong></td>
 		<td><a href="mailTo:$user.Email">$user.UserName</a></td>
         <td><select name="user_attr_$user.UserId">
          #foreach ($userAttr in $userAttrs)

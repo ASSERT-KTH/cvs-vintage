@@ -27,7 +27,7 @@
   <div align="right" id="login">
    #if ($data.User.hasLoggedIn())
    <div>
-    Logged in: <strong class="username">$data.User.FirstName $data.User.LastName</strong>
+    Logged in: <strong class="username">$!data.User.FirstName $!data.User.LastName</strong>
    </div>
    #end
    <div>
