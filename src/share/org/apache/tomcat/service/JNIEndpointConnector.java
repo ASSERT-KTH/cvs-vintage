@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpointConnector.java,v 1.4 2000/07/11 03:48:54 alex Exp $
- * $Revision: 1.4 $
- * $Date: 2000/07/11 03:48:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpointConnector.java,v 1.5 2000/07/29 01:32:56 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/07/29 01:32:56 $
  *
  * ====================================================================
  *
@@ -78,7 +78,7 @@ import org.apache.tomcat.logging.*;
  *
  * @author Gal Shachor <shachor@il.ibm.com>
  */
-public class JNIEndpointConnector  implements ServerConnector {
+public class JNIEndpointConnector  extends BaseInterceptor implements ServerConnector {
     // XXX define ConnectorException
     // XXX replace strings with sm.get...
     // XXX replace static strings with constants
@@ -98,6 +98,26 @@ public class JNIEndpointConnector  implements ServerConnector {
 
     public JNIEndpointConnector() {
     }
+
+    /** Called when the ContextManger is started
+     */
+    public void engineInit(ContextManager cm) throws TomcatException {
+	this.cm=cm;
+	try {
+	    start();
+	} catch( Exception ex ) {
+	    throw new TomcatException( ex );
+	}
+    }
+
+    public void engineShutdown(ContextManager cm) throws TomcatException {
+	try {
+	    stop();
+	} catch( Exception ex ) {
+	    throw new TomcatException( ex );
+	}
+    }
+
 
     public void start() throws Exception
     {

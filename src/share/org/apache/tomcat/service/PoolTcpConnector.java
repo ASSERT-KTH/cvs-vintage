@@ -86,7 +86,7 @@ import java.util.*;
  * @author costin@eng.sun.com
  * @author Gal Shachor [shachor@il.ibm.com]
  */
-public final class PoolTcpConnector implements ServerConnector, LogAware {
+public final class PoolTcpConnector extends BaseInterceptor implements ServerConnector, LogAware {
     // Attributes we accept ( to support the old model of
     // configuration, will be deprecated )
     public static final String VHOST_PORT="vhost_port";
@@ -139,6 +139,26 @@ public final class PoolTcpConnector implements ServerConnector, LogAware {
     }
 
     // -------------------- Start/stop --------------------
+
+    /** Called when the ContextManger is started
+     */
+    public void engineInit(ContextManager cm) throws TomcatException {
+	this.cm=cm;
+	try {
+	    start();
+	} catch( Exception ex ) {
+	    throw new TomcatException( ex );
+	}
+    }
+
+    public void engineShutdown(ContextManager cm) throws TomcatException {
+	try {
+	    stop();
+	} catch( Exception ex ) {
+	    throw new TomcatException( ex );
+	}
+    }
+
     
     public void start() throws Exception {
     	if(con==null)
