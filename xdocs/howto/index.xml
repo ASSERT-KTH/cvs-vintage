@@ -16,6 +16,8 @@
     	<li><a href="build-docs-howto.html">Building Scarab Docs Howto</a></li>
     	<li><a href="release-howto.html">Releasing Scarab Howto</a></li>
         <li><a href="firewall-howto.html">Scarab Behind Firewall Howto</a></li>
+        <li><a href="tuning-howto.html">Tuning Howto</a></li>  
+        <li><a href="customize-howto.html">Customizing Scarab Howto</a></li>        
         
       </ul>
     </p>

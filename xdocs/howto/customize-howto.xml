@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+
+<document>
+
+<properties>
+    <title>Customizng Scarab</title>
+    <author email="epugh@upstate.com">Eric Pugh</author>
+</properties>
+
+<body>
+
+<section name="Customizing Scarab">
+<p>
+	There are a number of ways of customizing Scarab.
+</p>
+<subsection name="Changing the Context Scarab runs under">
+<p>
+By default, Scarab runs under the context "scarab", so URLS look like
+<source>
+http://myserver:8080/scarab/servlet/scarab
+</source>
+To change this, you will need to update the following files:
+<source>
+/src/WEB-INF/web.xml
+Change the servlet-name from Scarab to whatever you want.
+You will also need to update the various servlet-mapping's servlet-name and url-pattern tags as well.
+
+/tomcat/webapps/scarab.xml
+You will need to update the path that Scarab is running under here as well.
+</source>
+</p>
+</subsection>
+
+<subsection name="Changing the redirect">
+<p>
+To change the redirect for scarab from the default value of:
+<source>
+/scarab/issues
+</source>
+You will need to update the following files:
+<source>
+/src/webapp/index.html
+/src/webapp/index.jsp
+</source>
+</p>
+</subsection>
+
+<subsection name="Changing Maximum Filesize">
+<p>
+If the default filesize is too large or too small, then you can change it by updating these files:
+<source>
+/WEB-INF/conf/TurbineResources.properties
+/WEB-INF/conf/intake.xml
+</source>
+You will need to update the following parameters
+<source>
+services.UploadService.size.max
+intake_MaxFileUploadSizeExceeded
+</source>
+</p>
+</subsection>
+
+
+</section>
+
+</body>
+</document>

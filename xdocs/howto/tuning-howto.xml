@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<document>
+
+<properties>
+    <title>Tuning Scarab</title>
+    <author email="epugh@upstate.com">Eric Pugh</author>
+</properties>
+
+<body>
+
+<section name="Tuning Scarab">
+<p>
+	Run Scarab in production is very different then Scarab in test.  Below are some tips.
+</p>
+<subsection name="Web Context Changes">
+<p>
+Change the tomcat context tag so that reloadable=false.  Or, alternatively, change it to true, but
+set the checkInterval to a larger number like 180.
+</p>
+</subsection>
+
+<subsection name="TurbineResources Changes">
+<p>
+You should change the TurbineResources.properties parameters so that velocity templates don't
+auto-reload.  Set scarab.template.cache=TRUE to have caching turned on.
+</p>
+</subsection>
+</section>
+
+</body>
+</document>
