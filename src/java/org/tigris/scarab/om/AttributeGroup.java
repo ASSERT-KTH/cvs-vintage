@@ -288,31 +288,32 @@ public  class AttributeGroup
         Integer issueTypeId = getIssueTypeId();
         IssueType issueType = IssueTypeManager
             .getInstance(SimpleKey.keyFor(issueTypeId), false);
-        if (issueType.getLocked())
-        { 
-            throw new ScarabException("You cannot delete this group, " + 
-                                      "because this issue type is locked.");
-        }            
+        List attrGroups = null;
+
+        if (isGlobal())
+        {
+            attrGroups = issueType.getAttributeGroups(false);
+            dupeSequence =  issueType.getDedupeSequence();
+            // Delete issuetype-attribute mapping
+            Criteria crit  = new Criteria()
+                .addJoin(RIssueTypeAttributePeer.ATTRIBUTE_ID,
+                         RAttributeAttributeGroupPeer.ATTRIBUTE_ID)
+                .add(RAttributeAttributeGroupPeer.GROUP_ID,
+                     getAttributeGroupId())
+                .add(RIssueTypeAttributePeer.ISSUE_TYPE_ID, issueTypeId);
+            List results = RIssueTypeAttributePeer.doSelect(crit);
+            for (Iterator i = results.iterator(); i.hasNext();)
+            {
+                ((RIssueTypeAttribute)i.next()).delete();
+            }
+        }
         else
         {
-            List attrGroups = null;
-            if (isGlobal())
-            {
-                attrGroups = issueType.getAttributeGroups(false);
-                dupeSequence =  issueType.getDedupeSequence();
-                // Delete issuetype-attribute mapping
-                Criteria crit  = new Criteria()
-                    .addJoin(RIssueTypeAttributePeer.ATTRIBUTE_ID,
-                             RAttributeAttributeGroupPeer.ATTRIBUTE_ID)
-                    .add(RAttributeAttributeGroupPeer.GROUP_ID,
-                         getAttributeGroupId())
-                    .add(RIssueTypeAttributePeer.ISSUE_TYPE_ID, issueTypeId);
-                List results = RIssueTypeAttributePeer.doSelect(crit);
-                for (Iterator i = results.iterator(); i.hasNext();)
-                {
-                    ((RIssueTypeAttribute)i.next()).delete();
-                }
-            }
+            if (issueType.getLocked())
+            { 
+                throw new ScarabException("You cannot delete this group, " + 
+                                          "because this issue type is locked.");
+            }            
             else
             {
                 Module module = getModule();
@@ -323,15 +324,15 @@ public  class AttributeGroup
                     .addJoin(RModuleAttributePeer.ATTRIBUTE_ID,
                              RAttributeAttributeGroupPeer.ATTRIBUTE_ID)
                     .add(RAttributeAttributeGroupPeer.GROUP_ID,
-                         getAttributeGroupId())
+                             getAttributeGroupId())
                     .add(RModuleAttributePeer.MODULE_ID,
                          getModuleId());
                 Criteria.Criterion critIssueType = crit.getNewCriterion(
-                    RModuleAttributePeer.ISSUE_TYPE_ID,
-                    getIssueTypeId(), Criteria.EQUAL);
+                RModuleAttributePeer.ISSUE_TYPE_ID,
+                getIssueTypeId(), Criteria.EQUAL);
                 critIssueType.or(crit.getNewCriterion(
-                    RModuleAttributePeer.ISSUE_TYPE_ID,
-                    issueType.getTemplateId(), Criteria.EQUAL));
+                RModuleAttributePeer.ISSUE_TYPE_ID,
+                issueType.getTemplateId(), Criteria.EQUAL));
                 crit.and(critIssueType);
                 List results = RModuleAttributePeer.doSelect(crit);
                 for (int i=0; i<results.size(); i++)
@@ -340,40 +341,39 @@ public  class AttributeGroup
                     rma.delete();
                 }
             }
+        }
 
-            // Delete attribute - attribute group mapping
-            Criteria crit2 = new Criteria()
-                .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId());
-            RAttributeAttributeGroupPeer.doDelete(crit2);
+        // Delete attribute - attribute group mapping
+        Criteria crit2 = new Criteria()
+            .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId());
+        RAttributeAttributeGroupPeer.doDelete(crit2);
 
 
-            // Delete the attribute group
-            int order = getOrder();
-            crit2 = new Criteria()
-                .add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID, getAttributeGroupId());
-            AttributeGroupPeer.doDelete(crit2);
-            IssueTypeManager.getManager().refreshedObject(this);
-                
-            // Adjust the orders for the other attribute groups
-            for (int i=0; i<attrGroups.size(); i++)
+        // Delete the attribute group
+        int order = getOrder();
+        crit2 = new Criteria()
+            .add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID, getAttributeGroupId());
+        AttributeGroupPeer.doDelete(crit2);
+        IssueTypeManager.getManager().refreshedObject(this);
+            
+        // Adjust the orders for the other attribute groups
+        for (int i=0; i<attrGroups.size(); i++)
+        {
+            AttributeGroup tempGroup = (AttributeGroup)attrGroups.get(i);
+            int tempOrder = tempGroup.getOrder();
+            if (tempGroup.getOrder() > order)
             {
-                AttributeGroup tempGroup = (AttributeGroup)attrGroups.get(i);
-                int tempOrder = tempGroup.getOrder();
-                if (tempGroup.getOrder() > order)
+                if (tempOrder == dupeSequence + 1 && tempOrder == 3)
                 {
-                    if (tempOrder == dupeSequence + 1 && tempOrder == 3)
-                    {
-                        tempGroup.setOrder(tempOrder - 2);
-                    }
-                    else
-                    {
-                        tempGroup.setOrder(tempOrder - 1);
-                    }
-                    tempGroup.save();
+                    tempGroup.setOrder(tempOrder - 2);
                 }
+                else
+                {
+                    tempGroup.setOrder(tempOrder - 1);
+                }
+                tempGroup.save();
             }
         } 
-        ScarabCache.clear();
     }
 
     public void addAttribute(Attribute attribute)
