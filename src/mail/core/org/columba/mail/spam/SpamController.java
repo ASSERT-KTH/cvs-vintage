@@ -261,8 +261,6 @@ public class SpamController {
 			
 			alreadyLoaded = true;
 		} catch (Exception e) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(e);
 
 			if (MainInterface.DEBUG) {
 				e.printStackTrace();
@@ -270,6 +268,8 @@ public class SpamController {
 
 			// fail-case
 			db = new FrequencyDBImpl();
+			
+			alreadyLoaded = true;
 		}
 	}
 
