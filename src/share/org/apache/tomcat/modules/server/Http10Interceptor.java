@@ -94,10 +94,12 @@ import org.apache.tomcat.util.log.*;
 public class Http10Interceptor extends PoolTcpConnector
     implements  TcpConnectionHandler
 {
-	private int	timeout = 300000;	// 5 minutes as in Apache HTTPD server
+    private int	timeout = 300000;	// 5 minutes as in Apache HTTPD server
 
     public Http10Interceptor() {
 	super();
+	// defaults:
+	this.setPort( 8080 );
     }
 
     // -------------------- PoolTcpConnector --------------------
@@ -108,7 +110,7 @@ public class Http10Interceptor extends PoolTcpConnector
 
     // -------------------- Attributes --------------------
     public void setTimeout( int timeouts ) {
-    timeout = timeouts * 1000;
+	timeout = timeouts * 1000;
     }
 
     // -------------------- Handler implementation --------------------

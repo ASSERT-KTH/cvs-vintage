@@ -139,7 +139,7 @@ import java.util.*;
 public class LogSetter extends  BaseInterceptor {
     String name;
     String path;
-    String verbosityLevel;
+    String verbosityLevel="INFORMATION";
     boolean servletLogger=false;
     boolean timestamps=true;
     String tsFormat=null;

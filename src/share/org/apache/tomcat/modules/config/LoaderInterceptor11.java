@@ -78,7 +78,7 @@ import java.security.*;
  * @author costin@dnt.ro
  */
 public class LoaderInterceptor11 extends BaseInterceptor {
-    boolean useAL=false;
+    boolean useAL=true;
     boolean useNoParent=false;
     private int attributeInfo;
     

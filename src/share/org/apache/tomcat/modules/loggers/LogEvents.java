@@ -87,7 +87,7 @@ public class LogEvents extends BaseInterceptor {
 		 + enabled);
 	    hooks.addModule( this );
 	}
-	return DECLINED;
+	return OK;
     }
     
     // -------------------- Request notifications --------------------
