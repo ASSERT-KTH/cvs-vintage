@@ -15,6 +15,7 @@ import java.lang.ThreadLocal;
 import java.lang.reflect.Method;
 import javax.management.Attribute;
 import javax.management.ObjectName;
+import javax.naming.InitialContext;
 import javax.resource.spi.XATerminator;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
@@ -28,15 +29,18 @@ import org.jboss.invocation.Invoker;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.PayloadKey;
 import org.jboss.invocation.ServerID;
+import org.jboss.remoting.ident.Identity;
 import org.jboss.system.client.Client;
 import org.jboss.system.client.ClientServiceMBeanSupport;
 import org.jboss.tm.JBossXidFactory;
 import org.jboss.tm.NoLogTxLogger;
 import org.jboss.tm.TransactionManagerService;
+import org.jboss.tm.UserTransactionImpl;
 import org.jboss.tm.XAResourceFactory;
 import org.jboss.tm.XATerminatorMethods;
-import org.jboss.tm.UserTransactionImpl;
 import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.util.naming.Util;
+import org.jboss.system.Registry;
 
 
 /**
@@ -60,12 +64,12 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 
-public class InvokerXAResource 
+public class InvokerXAResource
    extends ClientServiceMBeanSupport
    implements Invoker, XAResource, XAResourceFactory, InvokerXAResourceMBean
 {
 
-   
+
    private static final ObjectName TRANSACTION_MANAGER_SERVICE = ObjectNameFactory.create("jboss.tm:service=TransactionManagerService");
 
    private static final ObjectName XID_FACTORY = ObjectNameFactory.create("jboss.tm:service=XidFactory");
@@ -96,6 +100,7 @@ public class InvokerXAResource
 
    private transient TransactionManager tm;
 
+   private ObjectName invokerName;
    /**
     * Actually this is "next"
     * The variable <code>invoker</code> tells the prepare/commit
@@ -108,23 +113,36 @@ public class InvokerXAResource
     */
    private Invoker invoker;
 
-   public InvokerXAResource() 
+   public InvokerXAResource()
    {
+   }
+
+   /**
+    * The <code>getIdentityNameClause</code> method converts the
+    * remoting identity into two name-value pairs for use in the
+    * client side object name.
+    *
+    * @return a <code>String</code> value
+    * @exception Exception if an error occurs
+    */
+   private String getIdentityNameClause() throws Exception
+   {
+      return "domain=" + getIdentity().getDomain() + ",instanceid=" + getIdentity().getInstanceId();
    }
 
 
    //Remove this!!
    protected void internalSetServiceName() throws Exception
    {
-      getLog().info("internalSetServiceName called: " + getServerID().toObjectNameClause());
-      serviceName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerXAResource," + getServerID().toObjectNameClause());
+      getLog().info("internalSetServiceName called: " + getIdentity());
+      serviceName = ObjectNameFactory.create("jboss.client:service=InvokerXAResource," + getIdentityNameClause());
    }
-   
+
    private Object readResolve() throws ObjectStreamException
    {
       return internalReadResolve();
    }
-   
+
 
    /**
     * The <code>internalSetup</code> method sets up the transaction
@@ -137,45 +155,45 @@ public class InvokerXAResource
       //register ourselves
       super.internalSetup();
 
-      if (xids == null) 
+      if (xids == null)
       {
-	 xids = new ThreadLocal();
+         xids = new ThreadLocal();
       } // end of if ()
-      if (invocations == null) 
+      if (invocations == null)
       {
-	 invocations = new ThreadLocal();
+         invocations = new ThreadLocal();
       } // end of if ()
-      
+
       //This part is independent of which invoker we are using...
       //Set up the client transaction manager for this vm and remote server, if there is no "real" jboss tm.
       //ObjectName tmName = TRANSACTION_MANAGER_SERVICE;
       if (!getServer().isRegistered(TRANSACTION_MANAGER_SERVICE))
       {
 
-	 //No recovery on clients by default
-	 if (!getServer().isRegistered(TX_LOGGER))
-	 {
-	    Client.createXMBean(NoLogTxLogger.class.getName(), TX_LOGGER, "org/jboss/tm/NoLogTxLogger.xml");
-	    //no attributes
-	 } // end of if ()
-	 
-	 if (!getServer().isRegistered(XID_FACTORY))
-	 {
-	    Client.createXMBean(JBossXidFactory.class.getName(), XID_FACTORY, "org/jboss/tm/JBossXidFactory.xml");
-	    getServer().setAttribute(XID_FACTORY, new Attribute("TxLoggerName", TX_LOGGER));
-	    //leave pad at default
-	 } // end of if ()
+         //No recovery on clients by default
+         if (!getServer().isRegistered(TX_LOGGER))
+         {
+            Client.createXMBean(NoLogTxLogger.class.getName(), TX_LOGGER, "org/jboss/tm/NoLogTxLogger.xml");
+            //no attributes
+         } // end of if ()
 
-	 Client.createXMBean(TransactionManagerService.class.getName(), TRANSACTION_MANAGER_SERVICE, "org/jboss/tm/TransactionManagerService.xml");
-	 getServer().setAttribute(TRANSACTION_MANAGER_SERVICE, new Attribute("TransactionLogger", TX_LOGGER));
-	 getServer().setAttribute(TRANSACTION_MANAGER_SERVICE, new Attribute("XidFactory", XID_FACTORY));
+         if (!getServer().isRegistered(XID_FACTORY))
+         {
+            Client.createXMBean(JBossXidFactory.class.getName(), XID_FACTORY, "org/jboss/tm/JBossXidFactory.xml");
+            getServer().setAttribute(XID_FACTORY, new Attribute("TxLoggerName", TX_LOGGER));
+            //leave pad at default
+         } // end of if ()
 
-	 if (!getServer().isRegistered(USER_TRANSACTION))
-	 {
-	    //getServer().createMBean(UserTransactionImpl.class.getName(), USER_TRANSACTION);
-	    Client.createXMBean(UserTransactionImpl.class.getName(), USER_TRANSACTION, "org/jboss/tm/UserTransactionImpl.xml");
-	    getServer().setAttribute(USER_TRANSACTION, new Attribute("TransactionManagerServiceName", TRANSACTION_MANAGER_SERVICE));
-	 } // end of if ()
+         Client.createXMBean(TransactionManagerService.class.getName(), TRANSACTION_MANAGER_SERVICE, "org/jboss/tm/TransactionManagerService.xml");
+         getServer().setAttribute(TRANSACTION_MANAGER_SERVICE, new Attribute("TransactionLogger", TX_LOGGER));
+         getServer().setAttribute(TRANSACTION_MANAGER_SERVICE, new Attribute("XidFactory", XID_FACTORY));
+
+         if (!getServer().isRegistered(USER_TRANSACTION))
+         {
+            //getServer().createMBean(UserTransactionImpl.class.getName(), USER_TRANSACTION);
+            Client.createXMBean(UserTransactionImpl.class.getName(), USER_TRANSACTION, "org/jboss/tm/UserTransactionImpl.xml");
+            getServer().setAttribute(USER_TRANSACTION, new Attribute("TransactionManagerServiceName", TRANSACTION_MANAGER_SERVICE));
+         } // end of if ()
 
          //create everything
          getServer().invoke(TX_LOGGER, "create", noArgs, noTypes);
@@ -205,7 +223,7 @@ public class InvokerXAResource
    }
 
 
-   
+
    /**
     * Set the TransactionManagerService value.
     * @param newTransactionManagerService The new TransactionManagerService value.
@@ -224,8 +242,8 @@ public class InvokerXAResource
     *
     * @jmx.managed-attribute
     */
-   public Invoker getInvoker() {
-      return invoker;
+   public ObjectName getInvokerName() {
+      return invokerName;
    }
 
    /**
@@ -234,86 +252,166 @@ public class InvokerXAResource
     *
     * @jmx.managed-attribute
     */
-   public void setInvoker(Invoker invoker) {
-      this.invoker = invoker;
+   public void setInvokerName(ObjectName invokerName) {
+      this.invokerName = invokerName;
    }
 
 
    // Implementation of org.jboss.invocation.Invoker
-   
+   //deprecated
    public ServerID getServerID() throws Exception
    {
       return invoker.getServerID();
    }
-   
-   public InvocationResponse invoke(Invocation invocation) throws Exception
+
+   /**
+    * The <code>getIdentity</code> method returns the remoting
+    * identity of the server we are connected to, as returned by the
+    * invokers further down the chain.
+    *
+    * @return an <code>Identity</code> value
+    * @exception Exception if an error occurs
+    */
+   public Identity getIdentity() throws Exception
+   {
+      return invoker.getIdentity();
+   }
+
+   /**
+    * The <code>invoke</code> method uses the transaction manager to
+    * convert the current transaction (if it exists) to an xid for use
+    * as the branch id on the target server transaction manager.
+    *
+    * @param invocation an <code>Invocation</code> value
+    * @return an <code>InvocationResponse</code> value
+    * @exception Throwable if an error occurs
+    */
+   public InvocationResponse invoke(Invocation invocation) throws Throwable
    {
       Transaction tx = invocation.getTransaction();
-      if (tx == null) 
+      if (tx == null)
       {
-	 return invoker.invoke(invocation);
+         return invoker.invoke(invocation);
       }
       else
       {
-	 invocations.set(invocation);
+         invocations.set(invocation);
          tx.enlistResource(this);
-	 //dont' try to send the tx
-	 invocation.setTransaction(null);
-         try 
+         //dont' try to send the tx
+         invocation.setTransaction(null);
+         try
          {
             return invoker.invoke(invocation);
          }
          finally
          {
-	    if (log.isTraceEnabled()) {
-	       log.trace("Returned from invocation");
-	    }
-	    //restore the tx.
-	    invocation.setTransaction(tx);
+            if (log.isTraceEnabled()) {
+               log.trace("Returned from invocation");
+            }
+            //restore the tx.
+            invocation.setTransaction(tx);
             tx.delistResource(this, XAResource.TMSUSPEND);
          } // end of try-catch
       } // end of else
    }
-   
-   
+
+
+   /**
+    * The <code>startService</code> method has different functionality
+    * on the originating server and on the client.  On the server, it
+    * binds to the Registry and jndi tree.  Both of these should be
+    * unnecessary.  On the client, it registers with the client-side
+    * transaction manager.
+    *
+    * @exception Exception if an error occurs
+    */
    protected void startService() throws Exception
    {
-      try
+
+      if (invoker == null)
       {
-         tm = (TransactionManager)getServer().getAttribute(transactionManagerService,
-                            "TransactionManager");
-      }
-      catch (Exception e)
+         invoker = (Invoker)getManagedResource(invokerName);
+      } // end of if ()
+      //Determine if we are on the server or client jmx server.
+      Identity serverId = getIdentity();
+      Identity localId = Identity.get(getServer());
+      if (localId.equals(serverId))
       {
-         getLog().info("Could not find transaction manager, transactions will not work.", e);
+         Registry.bind(getServiceName(), this);
+         //we are on our server... bind ourselves
+         String bindAddress = "invokers/" + serverId.getInstanceId() + "/remoting";
+
+         InitialContext ctx = new InitialContext();
+         Util.rebind(ctx, bindAddress, this);
       }
-      try
+      else
       {
-         getServer().invoke(transactionManagerService,
-                            "registerXAResourceFactory",
-                            new Object[] {this},
-                            new String[] {XAResourceFactory.class.getName()});
-      }
-      catch (Exception e)
-      {
-         getLog().info("Could not register with transaction manager service, recovery impossible", e);
-      }
+         //we are on the client, register with the transaction manager.
+         try
+         {
+            tm = (TransactionManager)getServer().getAttribute(transactionManagerService,
+                                                              "TransactionManager");
+         }
+         catch (Exception e)
+         {
+            getLog().info("Could not find transaction manager, transactions will not work.", e);
+         }
+         try
+         {
+            getServer().invoke(transactionManagerService,
+                               "registerXAResourceFactory",
+                               new Object[] {this},
+                               new String[] {XAResourceFactory.class.getName()});
+         }
+         catch (Exception e)
+         {
+            getLog().info("Could not register with transaction manager service, recovery impossible", e);
+         }
+
+      } // end of else
+
    }
 
+   /**
+    * The <code>stopService</code> method on the server unregisters
+    * from the Registry and jndi (both should be unnecessary).  On the
+    * client, it unregisters from the client side transaction manager.
+    *
+    * @exception Exception if an error occurs
+    */
    protected void stopService() throws Exception
    {
-      tm = null;
-      try
+      Identity serverId = getIdentity();
+      Identity localId = Identity.get(getServer());
+      if (localId.equals(serverId))
       {
-         getServer().invoke(transactionManagerService,
-                            "unregisterXAResourceFactory",
-                            new Object[] {this},
-                            new String[] {XAResourceFactory.class.getName()});
+         Registry.unbind(getServiceName());
+
+         //we are on our server... bind ourselves
+         String bindAddress = "invokers/" + serverId.getInstanceId() + "/remoting";
+
+         InitialContext ctx = new InitialContext();
+         Util.unbind(ctx, bindAddress);
+         invoker = null;
       }
-      catch (Exception e)
+      else
       {
-         getLog().info("Could not unregister with transaction manager service");
-      }
+         tm = null;
+         try
+         {
+            getServer().invoke(transactionManagerService,
+                               "unregisterXAResourceFactory",
+                               new Object[] {this},
+                               new String[] {XAResourceFactory.class.getName()});
+         }
+         catch (Exception e)
+         {
+            getLog().info("Could not unregister with transaction manager service");
+         }
+
+      } // end of else
+
+
    }
 
    //XAResourceFactory interface
@@ -343,7 +441,7 @@ public class InvokerXAResource
    {
    }
 
-   
+
    // implementation of javax.transaction.xa.XAResource interface
 
    /**
@@ -399,16 +497,16 @@ public class InvokerXAResource
       try
       {
          InvocationResponse response = invoker.invoke(invocation);
-	 Integer result = (Integer)response.getResponse();
-	 return result.intValue();
+         Integer result = (Integer)response.getResponse();
+         return result.intValue();
       }
-      catch (Exception e)
+      catch (Throwable e)
       {
-	 if (e instanceof XAException)
-	 {
-	    throw (XAException)e;
-	 }
-	 throw new RuntimeException("Unexpected exception in prepare of xid: " + xid + ", exception: " + e);
+         if (e instanceof XAException)
+         {
+            throw (XAException)e;
+         }
+         throw new RuntimeException("Unexpected exception in prepare of xid: " + xid + ", exception: " + e);
       }
    }
 
@@ -427,16 +525,16 @@ public class InvokerXAResource
       invocation.setArguments(new Object[] {xid, new Boolean(onePhase)});
       try
       {
-	 invoker.invoke(invocation);
+         invoker.invoke(invocation);
       }
-      catch (Exception e)
+      catch (Throwable e)
       {
-	 if (e instanceof XAException)
-	 {
-	    throw (XAException)e;
-	 }
-	 getLog().info("Unexpected exception in commit of xid: " + xid, e);
-	 throw new RuntimeException("Unexpected exception in commit of xid: " + xid + ", exception: " + e);
+         if (e instanceof XAException)
+         {
+            throw (XAException)e;
+         }
+         getLog().info("Unexpected exception in commit of xid: " + xid, e);
+         throw new RuntimeException("Unexpected exception in commit of xid: " + xid + ", exception: " + e);
       }
 
    }
@@ -455,15 +553,15 @@ public class InvokerXAResource
       invocation.setArguments(new Object[] {xid});
       try
       {
-	 invoker.invoke(invocation);
+         invoker.invoke(invocation);
       }
-      catch (Exception e)
+      catch (Throwable e)
       {
-	 if (e instanceof XAException)
-	 {
-	    throw (XAException)e;
-	 }
-	 throw new RuntimeException("Unexpected exception in rollback of xid: " + xid + ", exception: " + e);
+         if (e instanceof XAException)
+         {
+            throw (XAException)e;
+         }
+         throw new RuntimeException("Unexpected exception in rollback of xid: " + xid + ", exception: " + e);
       }
 
    }
@@ -481,15 +579,15 @@ public class InvokerXAResource
       invocation.setArguments(new Object[] {xid});
       try
       {
-	 invoker.invoke(invocation);
+         invoker.invoke(invocation);
       }
-      catch (Exception e)
+      catch (Throwable e)
       {
-	 if (e instanceof XAException)
-	 {
-	    throw (XAException)e;
-	 }
-	 throw new RuntimeException("Unexpected exception in forget of xid: " + xid + ", exception: " + e);
+         if (e instanceof XAException)
+         {
+            throw (XAException)e;
+         }
+         throw new RuntimeException("Unexpected exception in forget of xid: " + xid + ", exception: " + e);
       }
 
    }
@@ -510,15 +608,15 @@ public class InvokerXAResource
       try
       {
          InvocationResponse response = invoker.invoke(invocation);
-	 return (Xid[])response.getResponse();
+         return (Xid[])response.getResponse();
       }
-      catch (Exception e)
+      catch (Throwable e)
       {
-	 if (e instanceof XAException)
-	 {
-	    throw (XAException)e;
-	 }
-	 throw new RuntimeException("Unexpected exception in recover, exception: " + e);
+         if (e instanceof XAException)
+         {
+            throw (XAException)e;
+         }
+         throw new RuntimeException("Unexpected exception in recover, exception: " + e);
       }
 
    }

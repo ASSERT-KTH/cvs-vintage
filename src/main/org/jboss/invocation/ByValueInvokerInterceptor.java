@@ -18,25 +18,25 @@ import java.io.ObjectOutput;
 *
 * @todo The performance could be improved by simulating marshalling
 *       for "local" remote, rather than going straight for the invoker
-* 
+*
 * @author <a href="mailto:adrian.brock@happeningtimes.com">Adrian Brock</a>
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 */
 public class ByValueInvokerInterceptor
    extends InvokerInterceptor
    implements Externalizable
 {
    // Constants -----------------------------------------------------
-   
+
    // Attributes ----------------------------------------------------
-   
+
    // Constructors --------------------------------------------------
-   
+
    public ByValueInvokerInterceptor()
    {
       // For externalization to work
    }
-   
+
    // Public --------------------------------------------------------
 
    /**
@@ -49,12 +49,12 @@ public class ByValueInvokerInterceptor
          return true;
       return false;
    }
-   
+
    /**
     * Invoke using the invoker for remote invocations
     */
    public InvocationResponse invoke(Invocation invocation)
-      throws Exception
+      throws Throwable
    {
       // local interface
       if (isLocal(invocation))
@@ -64,16 +64,16 @@ public class ByValueInvokerInterceptor
          // through the invoker
          return invocation.getInvocationContext().getInvoker().invoke(invocation);
    }
-   
+
    /**
     *  Externalize this instance.
     */
    public void writeExternal(final ObjectOutput out)
       throws IOException
-   { 
+   {
       // We have no state
    }
-   
+
    /**
     *  Un-externalize this instance.
     */
@@ -82,8 +82,8 @@ public class ByValueInvokerInterceptor
    {
       // We have no state
    }
-   
+
    // Private -------------------------------------------------------
-   
+
    // Inner classes -------------------------------------------------
 }

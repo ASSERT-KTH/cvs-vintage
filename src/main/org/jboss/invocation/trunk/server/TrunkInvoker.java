@@ -114,7 +114,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    private ObjectName transactionManagerService;
 
    /**
-    * The proxy object that will sent to clients so that they 
+    * The proxy object that will sent to clients so that they
     * know how to connect to the server.
     */
    private Invoker invoker;
@@ -144,9 +144,9 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
 
 
 
-      ///////////////////////////////////////////////////////////      
+      ///////////////////////////////////////////////////////////
       // Setup the socket level stuff
-      ///////////////////////////////////////////////////////////      
+      ///////////////////////////////////////////////////////////
 
       InetAddress bindAddress =
          (serverBindAddress == null || serverBindAddress.length() == 0)
@@ -160,7 +160,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
 
 
       Class serverClass = BlockingServer.class;
-      
+
       // Try to use the NonBlockingServer if possible
       if( "true".equals( System.getProperty("org.jboss.invocation.trunk.enable_nbio", "true") ) ) {
          try {
@@ -172,7 +172,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
             log.debug("Using the Blocking version of the server");
          }
       }
-      
+
       serverProtocol = (IServer)serverClass.newInstance();
       WorkManager workManager = (WorkManager)getServer().getAttribute(workManagerName, "WorkManager");
 
@@ -183,20 +183,20 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
 
       ServerID sa = new ServerID(clientConnectAddress, clientConnectPort, enableTcpNoDelay, timeoutMillis);
       Invoker transport = new TrunkInvokerProxy(sa);
-      InvokerXAResource xares = new InvokerXAResource();
-      xares.setInvoker(transport);
-      invoker = xares;
+      //InvokerXAResource xares = new InvokerXAResource();
+      //xares.setInvoker(transport);
+      invoker = transport;//xares;
 
       log.info("Invoker service available at: " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
       log.info("Invoker clients will connect to: " + clientConnectAddress + ":" + clientConnectPort);
 
-      ///////////////////////////////////////////////////////////      
+      ///////////////////////////////////////////////////////////
       // Register the service with the rest of the JBoss Kernel
-      ///////////////////////////////////////////////////////////      
+      ///////////////////////////////////////////////////////////
       // Export references to the bean
       Registry.bind(getServiceName(), invoker);
       // Bind the invoker in the JNDI invoker naming space
-      // It should look like so "invokers/<hostname>/trunk" 
+      // It should look like so "invokers/<hostname>/trunk"
       InitialContext ctx = new InitialContext();
       Util.rebind(ctx, "invokers/" + clientConnectAddress + "/trunk", invoker);
 
@@ -269,13 +269,13 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
 
       try
       {
-	 //log.info("returned from invoke, setting up response");
+         //log.info("returned from invoke, setting up response");
          TrunkResponse response = new TrunkResponse(request);
          response.result = result;
          response.exception = resultException;
-	 //log.info("sending response: " + response);
+         //log.info("sending response: " + response);
          trunk.sendResponse(response);
-	 //log.info("sent response");
+         //log.info("sent response");
       }
       catch (IOException e)
       {
@@ -284,7 +284,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    }
 
    /**
-    * The ServerProtocol will use this method to service an invocation 
+    * The ServerProtocol will use this method to service an invocation
     * request.
     */
    public MarshalledObject invoke(Invocation invocation) throws Exception
@@ -294,15 +294,15 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
       try
       {
 
-         // This is bad it should at least be using a sub set of the Registry 
-         // store a map of these names under a specific entry (lookup("ObjecNames")) and look on 
+         // This is bad it should at least be using a sub set of the Registry
+         // store a map of these names under a specific entry (lookup("ObjecNames")) and look on
          // that subset FIXME it will speed up lookup times
-	 //Prove it before you do it -- david.  Should be constant time lookup in a hashmap.
+         //Prove it before you do it -- david.  Should be constant time lookup in a hashmap.
          ObjectName mbean = (ObjectName) Registry.lookup(invocation.getObjectName());
 
          // The cl on the thread should be set in another interceptor
          Object obj = getServer().invoke(mbean, "invoke", new Object[] { invocation }, Invocation.INVOKE_SIGNATURE);
-	 //log.info("got return object: " + obj);
+         //log.info("got return object: " + obj);
 
          return new MarshalledObject(obj);
       }
@@ -429,8 +429,8 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
       this.timeoutMillis = timeoutMillis;
    }
 
-   
-   
+
+
    /**
     * mbean get-set pair for field workManager
     * Get the value of workManager
@@ -442,8 +442,8 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    {
       return workManagerName;
    }
-   
-   
+
+
    /**
     * Set the value of workManager
     * @param workManager  Value to assign to workManager
@@ -454,9 +454,9 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    {
       this.workManagerName = workManagerName;
    }
-   
-   
-   
+
+
+
    /**
     * mbean get-set pair for field transactionManagerService
     * Get the value of transactionManagerService
@@ -468,8 +468,8 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    {
       return transactionManagerService;
    }
-   
-   
+
+
    /**
     * Set the value of transactionManagerService
     * @param transactionManagerService  Value to assign to transactionManagerService
@@ -480,8 +480,8 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    {
       this.transactionManagerService = transactionManagerService;
    }
-   
-   
+
+
 
 
 

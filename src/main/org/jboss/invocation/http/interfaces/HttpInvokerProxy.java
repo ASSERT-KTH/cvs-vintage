@@ -26,7 +26,7 @@ import org.jboss.invocation.ServerID;
  externalURL.
 
 * @author Scott.Stark@jboss.org
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 */
 public class HttpInvokerProxy
    implements Invoker, Externalizable
@@ -65,15 +65,17 @@ public class HttpInvokerProxy
    public ServerID getServerID() throws Exception
    {
       if (serverID == null) {
-      
-	 if( externalURL == null )
-	 {
-	    externalURL = Util.resolveURL(externalURLValue);
-	 } 
-	 serverID = new ServerID(externalURL.getHost(),  externalURL.getPort(), false, 0);
+
+         if( externalURL == null )
+         {
+            externalURL = Util.resolveURL(externalURLValue);
+         }
+         serverID = new ServerID(externalURL.getHost(),  externalURL.getPort(), false, 0);
       } // end of if ()
       return serverID;
    }
+
+   public org.jboss.remoting.ident.Identity getIdentity() {return null;}
 
    /** This method builds a MarshalledInvocation from the invocation passed
        in and then does a post to the target URL.
@@ -94,7 +96,7 @@ public class HttpInvokerProxy
     */
    public void writeExternal(final ObjectOutput out)
       throws IOException
-   { 
+   {
       out.writeObject(externalURLValue);
    }
 

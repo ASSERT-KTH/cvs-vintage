@@ -35,14 +35,17 @@ import org.jboss.security.SecurityAssociation;
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
+ *
+ * @todo make this go through the client interceptor stack so it can
+ * get the context info such as security, tx.
  */
 public class StatefulHandleImpl
    implements Handle
 {
    /** A reference to {@link Handle#getEJBObject}. */
    protected static final Method GET_EJB_OBJECT;
-   
+
    /**
     * Initialize <tt>Handle</tt> method references.
     */
@@ -55,14 +58,14 @@ public class StatefulHandleImpl
          throw new ExceptionInInitializerError(e);
       }
    }
-   
+
    /** The identity of the bean. */
    public int objectName;
    public String jndiName;
    public String invokerProxyBinding;
    public Invoker invoker;
    public Object id;
-   
+
    /**
     * Construct a <tt>StatefulHandleImpl</tt>.
     *
@@ -73,10 +76,10 @@ public class StatefulHandleImpl
     * @param id        Identity of the bean.
     */
    public StatefulHandleImpl(
-         int objectName, 
-         String jndiName, 
-         Invoker invoker, 
-         String invokerProxyBinding, 
+         int objectName,
+         String jndiName,
+         Invoker invoker,
+         String invokerProxyBinding,
          Object id)
    {
       this.objectName = objectName;
@@ -85,19 +88,19 @@ public class StatefulHandleImpl
       this.id = id;
       this.invokerProxyBinding = invokerProxyBinding;
    }
-   
+
    /**
     * Handle implementation.
     *
-    * This differs from Stateless and Entity handles which just invoke 
-    * standard methods (<tt>create</tt> and <tt>findByPrimaryKey</tt> 
+    * This differs from Stateless and Entity handles which just invoke
+    * standard methods (<tt>create</tt> and <tt>findByPrimaryKey</tt>
     * respectively) on the Home interface (proxy).
-    * There is no equivalent option for stateful SBs, so a direct invocation 
-    * on the container has to be made to locate the bean by its id (the 
+    * There is no equivalent option for stateful SBs, so a direct invocation
+    * on the container has to be made to locate the bean by its id (the
     * stateful SB container provides an implementation of
     * <tt>getEJBObject</tt>).
     *
-    * This means the security context has to be set here just as it would 
+    * This means the security context has to be set here just as it would
     * be in the Proxy.
     *
     * @return  <tt>EJBObject</tt> reference.
@@ -106,7 +109,7 @@ public class StatefulHandleImpl
     */
    public EJBObject getEJBObject() throws RemoteException {
       try {
-         Invocation invocation = 
+         Invocation invocation =
          new Invocation(
             null,
             GET_EJB_OBJECT,
@@ -116,22 +119,27 @@ public class StatefulHandleImpl
             // fix for bug 474134 from Luke Taylor
             SecurityAssociation.getPrincipal(),
             SecurityAssociation.getCredential());
-         
+
          invocation.setObjectName(new Integer(objectName));
-         invocation.setValue(InvocationKey.INVOKER_PROXY_BINDING, 
+         invocation.setValue(InvocationKey.INVOKER_PROXY_BINDING,
                invokerProxyBinding, PayloadKey.AS_IS);
-         
+
          // It is a home invocation
          invocation.setType(InvocationType.HOME);
-         
+
          // Get the invoker to the target server (cluster or node)
-        
+
          // Ship it
          InvocationResponse response = invoker.invoke(invocation);
          return (EJBObject)response.getResponse();
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          throw new ServerException("Could not get EJBObject", e);
+      }
+      catch (Throwable e)
+      {
+         throw new ServerException("Could not get EJBObject" +  e.getMessage());
       }
    }
 }

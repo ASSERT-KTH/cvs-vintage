@@ -31,9 +31,9 @@ import org.jboss.invocation.ServerID;
  * The Invoker is a local gate in the JMX system.
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
- * 
+ *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class LocalInvoker
    extends ServiceMBeanSupport
@@ -45,46 +45,48 @@ public class LocalInvoker
    protected void createService() throws Exception
    {
 
-      // note on design: We need to call it ourselves as opposed to 
-      // letting the client InvokerInterceptor look it 
+      // note on design: We need to call it ourselves as opposed to
+      // letting the client InvokerInterceptor look it
       // up through the use of Registry, the reason being including
-      // the classes in the client. 
+      // the classes in the client.
       // If we move to a JNDI format (with local calls) for the
       // registry we could remove the call below
       InvokerInterceptor.setLocal(this);
-      
+
       Registry.bind(serviceName, this);
    }
-   
+
    protected void startService() throws Exception
    {
       log.debug("Local invoker for JMX node started");
    }
-   
+
    protected void destroyService()
    {
       Registry.unbind(serviceName);
    }
-   
+
    // Invoker implementation --------------------------------
-   
-   public ServerID getServerID() 
-   { 
+
+   public ServerID getServerID()
+   {
       return serverID;
    }
-   
+
+   public org.jboss.remoting.ident.Identity getIdentity() {return null;}
+
    /**
     * Invoke a method.
     */
    public InvocationResponse invoke(Invocation invocation) throws Exception
-   {     
+   {
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      
+
       try
-      {         
+      {
          ObjectName mbean = (ObjectName)
             Registry.lookup((Integer)invocation.getObjectName());
-         
+
          return (InvocationResponse)server.invoke(mbean,
                               "",
                               new Object[] { invocation },
@@ -97,7 +99,7 @@ public class LocalInvoker
       finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
-      }      
+      }
    }
 }
 

@@ -20,14 +20,14 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class EntityMetaData extends BeanMetaData
 {
    public final static int CMP_VERSION_1 = 1;
    public final static int CMP_VERSION_2 = 2;
    public static final String DEFAULT_ENTITY_INVOKER_PROXY_BINDING =
-      "entity-rmi-invoker";
+      "entity-remoting-invoker";
    public static final String DEFAULT_CLUSTERED_ENTITY_INVOKER_PROXY_BINDING =
       "clustered-entity-rmi-invoker";
 
@@ -41,7 +41,7 @@ public class EntityMetaData extends BeanMetaData
    private ArrayList queries = new ArrayList();
    private boolean readOnly = false;
    private boolean doDistCachInvalidations = false;
-   private CacheInvalidationConfigMetaData cacheInvalidConfig = null; 
+   private CacheInvalidationConfigMetaData cacheInvalidConfig = null;
 
    public EntityMetaData( ApplicationMetaData app )
    {
@@ -142,7 +142,7 @@ public class EntityMetaData extends BeanMetaData
    public String getDefaultConfigurationName()
    {
       if( isCMP() )
-      { 
+      {
          if( isClustered() )
          {
             return ConfigurationMetaData.CLUSTERED_CMP_13;
@@ -169,7 +169,7 @@ public class EntityMetaData extends BeanMetaData
    {
       return this.doDistCachInvalidations ;
    }
-   
+
    public CacheInvalidationConfigMetaData getDistributedCacheInvalidationConfig ()
    {
       return this.cacheInvalidConfig ;
@@ -305,7 +305,7 @@ public class EntityMetaData extends BeanMetaData
       {
          readOnly = Boolean.valueOf(readOnlyString).booleanValue();
       }
-      
+
       // Manage distributed cache-invalidation settings
       //
       String distCacheInvalidations = getElementContent(getOptionalChild( element,
@@ -322,6 +322,6 @@ public class EntityMetaData extends BeanMetaData
          this.cacheInvalidConfig.importJbossXml(cacheInvalidConfigElement);
       }
 
-      
+
    }
 }

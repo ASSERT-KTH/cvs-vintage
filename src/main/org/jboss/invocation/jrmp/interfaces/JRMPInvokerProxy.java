@@ -35,7 +35,7 @@ import org.jboss.invocation.ServerID;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class JRMPInvokerProxy
    implements Invoker, Externalizable
@@ -109,6 +109,8 @@ public class JRMPInvokerProxy
       return serverID;
    }
 
+   public org.jboss.remoting.ident.Identity getIdentity() {return null;}
+
    /**
     * ???
     *
@@ -131,7 +133,7 @@ public class JRMPInvokerProxy
     * @todo Shouldn't we unwrap _ALL_ RemoteExceptions?
     */
    public InvocationResponse invoke(Invocation invocation)
-      throws Exception
+      throws Throwable
    {
       // We are going to go through a Remote invocation, switch to a Marshalled Invocation
       MarshalledInvocation mi = new MarshalledInvocation(invocation);

@@ -7,14 +7,12 @@
 
 package org.jboss.proxy.ejb;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.rmi.ServerException;
-import java.io.IOException;
 
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
@@ -22,9 +20,6 @@ import javax.ejb.EJBMetaData;
 
 import javax.naming.InitialContext;
 import javax.naming.Context;
-import javax.naming.Name;
-import javax.naming.NamingException;
-import javax.naming.NameNotFoundException;
 import javax.management.ObjectName;
 
 import org.jboss.deployment.DeploymentException;
@@ -32,13 +27,11 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBProxyFactory;
 import org.jboss.ejb.EJBProxyFactoryContainer;
 import org.jboss.invocation.Invoker;
-import org.jboss.invocation.jrmp.server.JRMPInvoker;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
 import org.jboss.metadata.MetaData;
-import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.util.naming.Util;
@@ -71,7 +64,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class ProxyFactory
    implements EJBProxyFactory

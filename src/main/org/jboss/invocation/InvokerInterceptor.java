@@ -22,9 +22,9 @@ import org.jboss.util.id.GUID;
 
 /**
  * A very simple implementation of it that branches to the local stuff.
- * 
+ *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>2001/02/28: marcf</b>
  * <ol>
@@ -37,15 +37,15 @@ public class InvokerInterceptor
 {
    /** Serial Version Identifier. */
    // private static final long serialVersionUID = 1870461898442160570L;
-   
+
    /** The value of our local Invoker.ID to detect when we are local. */
    private GUID invokerID = Invoker.ID;
-      
+
    /** Invoker to the remote JMX node. */
    protected Invoker remoteInvoker;
-   
+
    /** Static references to local invokers. */
-   protected static Invoker localInvoker; 
+   protected static Invoker localInvoker;
 
    /**
     * Get the local invoker reference, useful for optimization.
@@ -67,21 +67,21 @@ public class InvokerInterceptor
    public InvokerInterceptor() {
       super();
    }
-   
+
    /**
-    * Returns wether we are local to the originating container or not. 
+    * Returns wether we are local to the originating container or not.
     */
    public boolean isLocal() {
       return invokerID.equals(Invoker.ID);
       // return containerStartup == Invoker.STARTUP;
    }
-   
+
    /**
-    * The invocation on the delegate, calls the right invoker.  
-    * Remote if we are remote, local if we are local. 
+    * The invocation on the delegate, calls the right invoker.
+    * Remote if we are remote, local if we are local.
     */
    public InvocationResponse invoke(Invocation invocation)
-      throws Exception
+      throws Throwable
    {
       // optimize if calling another bean in same EJB-application
       if (isLocal()) {
@@ -91,9 +91,9 @@ public class InvokerInterceptor
       else {
          // this payload will go through marshalling
          return invocation.getInvocationContext().getInvoker().invoke(invocation);
-      }   
+      }
    }
-   
+
    /**
     * Externalize this instance.
     *
@@ -107,7 +107,7 @@ public class InvokerInterceptor
    {
       out.writeObject(invokerID);
    }
-   
+
    /**
     * Un-externalize this instance.
     *

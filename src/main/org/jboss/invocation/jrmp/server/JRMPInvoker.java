@@ -63,7 +63,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -71,13 +71,13 @@ public class JRMPInvoker
 {
    /** Identifer to instruct the usage of an anonymous port. */
    public static final int ANONYMOUS_PORT = 0;
-   
+
    /** Instance logger. */
    protected Logger log;
 
    /** Service MBean support delegate. */
    protected ServiceMBeanSupport support;
-   
+
    /** The port the container will be exported on */
    protected int rmiPort = ANONYMOUS_PORT;
 
@@ -97,29 +97,29 @@ public class JRMPInvoker
    protected String serverAddress;
    /** The name of the security domain to use with server sockets that support SSL */
    protected String sslDomain;
- 
+
    protected RemoteStub invokerStub;
-   
+
    protected int backlog = 200;
-   
+
    private static TransactionPropagationContextFactory tpcFactory;
    private static TransactionPropagationContextImporter tpcImporter;
 
    public JRMPInvoker()
    {
       final JRMPInvoker delegate = this;
-      
+
       // adapt the support delegate to invoke our state methods
       support = new ServiceMBeanSupport(getClass()) {
-   
+
             protected void startService() throws Exception {
                delegate.startService();
             }
-   
+
             protected void stopService() throws Exception {
                delegate.stopService();
             }
-   
+
             protected void destroyService() throws Exception {
                delegate.destroyService();
             }
@@ -136,7 +136,7 @@ public class JRMPInvoker
    {
       return backlog;
    }
-   
+
    /**
     * @jmx:managed-attribute
     */
@@ -155,23 +155,25 @@ public class JRMPInvoker
     *
     * @return a <code>ServerID</code> value
     */
-   public ServerID getServerID() 
-   { 
+   public ServerID getServerID()
+   {
       String address = serverAddress;
       if (address == null)
       {
-	 try
-	 {
-	    address = InetAddress.getLocalHost().getHostName();
-	 }
-	 catch (Exception ignored)
-	 {
-	    address = "unknownLocalhost";
-	 }
-	 
+         try
+         {
+            address = InetAddress.getLocalHost().getHostName();
+         }
+         catch (Exception ignored)
+         {
+            address = "unknownLocalhost";
+         }
+
       } // end of if ()
       return new ServerID(address, rmiPort, false, 0);
    }
+
+   public org.jboss.remoting.ident.Identity getIdentity() {return null;}
 
    /**
     * @jmx:managed-attribute
@@ -183,10 +185,10 @@ public class JRMPInvoker
    /**
     * @jmx:managed-attribute
     */
-   public int getRMIObjectPort() { 
+   public int getRMIObjectPort() {
       return rmiPort;
    }
-   
+
    /**
     * @jmx:managed-attribute
     */
@@ -197,10 +199,10 @@ public class JRMPInvoker
    /**
     * @jmx:managed-attribute
     */
-   public String getRMIClientSocketFactory() { 
+   public String getRMIClientSocketFactory() {
       return clientSocketFactoryName;
    }
-   
+
    /**
     * @jmx:managed-attribute
     */
@@ -211,21 +213,21 @@ public class JRMPInvoker
    /**
     * @jmx:managed-attribute
     */
-   public String getRMIServerSocketFactory() { 
+   public String getRMIServerSocketFactory() {
       return serverSocketFactoryName;
    }
-   
+
    /**
     * @jmx:managed-attribute
     */
-   public void setServerAddress(final String address) { 
+   public void setServerAddress(final String address) {
       serverAddress = address;
    }
 
    /**
     * @jmx:managed-attribute
     */
-   public String getServerAddress() { 
+   public String getServerAddress() {
       return serverAddress;
    }
 
@@ -247,39 +249,39 @@ public class JRMPInvoker
    public RemoteStub getStub() {
       return this.invokerStub;
    }
-   
+
    protected void startService() throws Exception
    {
       loadCustomSocketFactories();
 
       if (log.isDebugEnabled())
       {
-         log.debug("RMI Port='" + 
-                   (rmiPort == ANONYMOUS_PORT ? "Anonymous" : 
+         log.debug("RMI Port='" +
+                   (rmiPort == ANONYMOUS_PORT ? "Anonymous" :
                     Integer.toString(rmiPort))+"'");
 
          log.debug("Client SocketFactory='" +
-                   (clientSocketFactory == null ? "Default" : 
+                   (clientSocketFactory == null ? "Default" :
                     clientSocketFactory.toString())+"'");
 
          log.debug("Server SocketFactory='" +
-                   (serverSocketFactory == null ? "Default" : 
+                   (serverSocketFactory == null ? "Default" :
                     serverSocketFactory.toString())+"'");
 
-         log.debug("Server SocketAddr='" + 
-                   (serverAddress == null ? "Default" : 
+         log.debug("Server SocketAddr='" +
+                   (serverAddress == null ? "Default" :
                     serverAddress)+"'");
-         log.debug("SecurityDomain='" + 
-                   (sslDomain == null ? "Default" : 
+         log.debug("SecurityDomain='" +
+                   (sslDomain == null ? "Default" :
                     sslDomain)+"'");
       }
 
       InitialContext ctx = new InitialContext();
-         
+
       // Get the transaction propagation context factory
       tpcFactory = (TransactionPropagationContextFactory)
          ctx.lookup("java:/TransactionPropagationContextExporter");
-      
+
       // and the transaction propagation context importer
       tpcImporter = (TransactionPropagationContextImporter)
          ctx.lookup("java:/TransactionPropagationContextImporter");
@@ -301,20 +303,20 @@ public class JRMPInvoker
       rebind(
          // The context
          ctx,
-         // It should look like so "invokers/<name>/jrmp" 
-         "invokers/" + InetAddress.getLocalHost().getHostName() + "/jrmp", 
-         // The bare invoker            
+         // It should look like so "invokers/<name>/jrmp"
+         "invokers/" + InetAddress.getLocalHost().getHostName() + "/jrmp",
+         // The bare invoker
          delegateInvoker);
 
       log.debug("Bound JRMP invoker for JMX node");
 
       ctx.close();
    }
-  
+
    protected void stopService() throws Exception
    {
       InitialContext ctx = new InitialContext();
-      
+
       try
       {
          unexportCI();
@@ -325,7 +327,7 @@ public class JRMPInvoker
          ctx.close();
       }
    }
- 
+
    protected void destroyService() throws Exception
    {
       // Export references to the bean
@@ -337,27 +339,27 @@ public class JRMPInvoker
     */
    public InvocationResponse invoke(Invocation invocation)
       throws Exception
-   {     
+   {
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       try
       {
-         // Deserialize the transaction if it is there  
+         // Deserialize the transaction if it is there
          invocation.setTransaction(importTPC(((MarshalledInvocation) invocation).getTransactionPropagationContext()));
-               
+
          // Extract the ObjectName, the rest is still marshalled
          // ObjectName mbean = new ObjectName((String) invocation.getContainer());
-         
-         // This is bad it should at least be using a sub set of the Registry 
-         // store a map of these names under a specific entry (lookup("ObjecNames")) and look on 
+
+         // This is bad it should at least be using a sub set of the Registry
+         // store a map of these names under a specific entry (lookup("ObjecNames")) and look on
          // that subset FIXME it will speed up lookup times
          ObjectName mbean = (ObjectName) Registry.lookup((Integer) invocation.getObjectName());
-         
+
          // The cl on the thread should be set in another interceptor
          Object obj = support.getServer().invoke(mbean,
                                                  "",
                                                  new Object[] {invocation},
                                                  Invocation.INVOKE_SIGNATURE);
-         
+
          return (InvocationResponse)obj;
       }
       catch (Exception e)
@@ -370,31 +372,31 @@ public class JRMPInvoker
       finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
-      }      
+      }
    }
 
    protected Invoker createDelegateInvoker()
    {
       return new JRMPInvokerProxy(this);
    }
-   
+
    protected void exportCI() throws Exception
    {
       this.invokerStub = (RemoteStub)UnicastRemoteObject.exportObject
          (this, rmiPort, clientSocketFactory, serverSocketFactory);
    }
-   
+
    protected void unexportCI() throws Exception
    {
       UnicastRemoteObject.unexportObject(this, true);
    }
-   
+
    protected void rebind(Context ctx, String name, Object val)
       throws NamingException
    {
-      // Bind val to name in ctx, and make sure that all 
+      // Bind val to name in ctx, and make sure that all
       // intermediate contexts exist
-      
+
       Name n = ctx.getNameParser("").parse(name);
       while (n.size() > 1)
       {
@@ -409,10 +411,10 @@ public class JRMPInvoker
          }
          n = n.getSuffix(1);
       }
-      
+
       ctx.rebind(n.get(0), val);
    }
-   
+
    /** Load and instantiate the clientSocketFactory, serverSocketFactory using
        the TCL and set the bind address and SSL domain if the serverSocketFactory
        supports it.
@@ -420,7 +422,7 @@ public class JRMPInvoker
    protected void loadCustomSocketFactories()
    {
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
-      
+
       try
       {
          if( clientSocketFactoryName != null )
@@ -434,7 +436,7 @@ public class JRMPInvoker
          log.error("Failed to load client socket factory", e);
          clientSocketFactory = null;
       }
-      
+
       try
       {
          if( serverSocketFactoryName != null )
@@ -463,7 +465,7 @@ public class JRMPInvoker
                }
             }
             /* See if the server socket supports setSecurityDomain(SecurityDomain)
-	       if an sslDomain was specified
+               if an sslDomain was specified
             */
             if( sslDomain != null )
             {
@@ -507,7 +509,7 @@ public class JRMPInvoker
          serverSocketFactory = null;
       }
    }
-   
+
    /**
     * Import a transaction propagation context into the local VM, and
     * return the corresponding <code>Transaction</code>.
@@ -528,19 +530,19 @@ public class JRMPInvoker
    public String getName() {
       return support.getName();
    }
-   
+
    public MBeanServer getServer() {
       return support.getServer();
    }
-   
+
    public int getState() {
       return support.getState();
    }
-   
+
    public String getStateString() {
       return support.getStateString();
    }
-   
+
    public void create() throws Exception
    {
       support.create();
@@ -550,33 +552,33 @@ public class JRMPInvoker
    {
       support.start();
    }
-   
+
    public void stop()
    {
       support.stop();
    }
-   
+
    public void destroy()
    {
       support.destroy();
    }
-   
+
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws Exception
    {
       return support.preRegister(server, name);
    }
-   
+
    public void postRegister(Boolean registrationDone)
    {
       support.postRegister(registrationDone);
    }
-   
+
    public void preDeregister() throws Exception
    {
       support.preDeregister();
    }
-   
+
    public void postDeregister()
    {
       support.postDeregister();

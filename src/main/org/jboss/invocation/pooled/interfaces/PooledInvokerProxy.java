@@ -47,29 +47,29 @@ import org.jboss.invocation.ServerID;
  * Client socket connections are pooled to avoid the overhead of
  * making a connection.  RMI seems to do a new connection with each
  * request.
- * 
- * 
+ *
+ *
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
  */
 public class PooledInvokerProxy
    implements Invoker, Externalizable
 {
    // Attributes ----------------------------------------------------
-   
+
    /**
     * Factory for transaction propagation contexts.
     *
     * @todo: marcf remove all transaction spill from here
-    * 
+    *
     * When set to a non-null value, it is used to get transaction
     * propagation contexts for remote method invocations.
     * If <code>null</code>, transactions are not propagated on
     * remote method invocations.
     */
    protected static TransactionPropagationContextFactory tpcFactory = null;
-   
+
    //  @todo: MOVE TO TRANSACTION
-   // 
+   //
    // TPC factory
    public static void setTPCFactory(TransactionPropagationContextFactory tpcf) {
       tpcFactory = tpcf;
@@ -96,7 +96,7 @@ public class PooledInvokerProxy
     * connection information
     */
    protected ServerID serverID;
-   
+
    /**
     * Pool for this invoker.  This is shared between all
     * instances of proxies attached to a specific invoker
@@ -137,7 +137,7 @@ public class PooledInvokerProxy
       super();
    }
 
-   
+
    /**
     * Create a new Proxy.
     *
@@ -225,7 +225,7 @@ public class PooledInvokerProxy
       // This problem always happens with RMI and seems to
       // have nothing to do with backlog or number of threads
       // waiting in accept() on the server.
-      // 
+      //
       for (int i = 0; i < MAX_RETRIES; i++)
       {
          synchronized(pool)
@@ -240,7 +240,7 @@ public class PooledInvokerProxy
                }
             }
          }
-         
+
          try
          {
             socket = new Socket(serverID.address, serverID.port);
@@ -257,9 +257,9 @@ public class PooledInvokerProxy
          }
       }
       socket.setTcpNoDelay(serverID.enableTcpNoDelay);
-      return new ClientSocket(socket, serverID.timeoutMillis); 
+      return new ClientSocket(socket, serverID.timeoutMillis);
    }
- 
+
    protected ClientSocket getPooledConnection()
    {
       ClientSocket socket = null;
@@ -294,12 +294,14 @@ public class PooledInvokerProxy
    {
       return serverID;
    }
-   
+
+   public org.jboss.remoting.ident.Identity getIdentity() {return null;}
+
    /**
     * ???
     *
     * @todo: MOVE TO TRANSACTION
-    *  
+    *
     * @return the transaction propagation context of the transaction
     *         associated with the current thread.
     *         Returns <code>null</code> if the transaction manager was never
@@ -313,15 +315,15 @@ public class PooledInvokerProxy
 
 
    /**
-    * The invocation on the delegate, calls the right invoker.  Remote if we are remote, 
-    * local if we are local. 
+    * The invocation on the delegate, calls the right invoker.  Remote if we are remote,
+    * local if we are local.
     */
    public InvocationResponse invoke(Invocation invocation)
       throws Exception
    {
       // We are going to go through a Remote invocation, switch to a Marshalled Invocation
       MarshalledInvocation mi = new MarshalledInvocation(invocation);
-         
+
       // Set the transaction propagation context
       //  @todo: MOVE TO TRANSACTION
       mi.setTransactionPropagationContext(getTransactionPropagationContext());
@@ -360,7 +362,7 @@ public class PooledInvokerProxy
          //System.out.println("got read exception, exiting");
          throw new ConnectException("Failed to communicate", ex);
       }
-      
+
       //System.out.println("put back in pool");
       // Put socket back in pool for reuse
       synchronized (pool)
@@ -378,12 +380,12 @@ public class PooledInvokerProxy
             catch (Exception ignored) {}
          }
       }
-      
+
       // Return response
       //System.out.println("return response");
 
       try
-      { 
+      {
          if (response instanceof Exception)
          {
             throw ((Exception)response);
@@ -392,7 +394,7 @@ public class PooledInvokerProxy
          {
             return (InvocationResponse)((MarshalledObject)response).get();
          }
-         return (InvocationResponse)response; 
+         return (InvocationResponse)response;
       }
       catch (ServerException ex)
       {
@@ -409,19 +411,19 @@ public class PooledInvokerProxy
             throw (TransactionRolledbackException) ex.detail;
          }
          throw ex;
-      }  
+      }
    }
-   
+
    /**
     * Externalize this instance and handle obtaining the remoteInvoker stub
     */
    public void writeExternal(final ObjectOutput out)
       throws IOException
-   { 
+   {
       out.writeObject(serverID);
       out.writeInt(maxPoolSize);
    }
- 
+
    /**
     * Un-externalize this instance.
     *

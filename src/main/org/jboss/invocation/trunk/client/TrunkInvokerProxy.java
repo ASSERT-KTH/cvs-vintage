@@ -35,7 +35,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
-public final class TrunkInvokerProxy 
+public final class TrunkInvokerProxy
    extends ClientServiceMBeanSupport
    implements java.io.Serializable, Invoker, TrunkInvokerProxyMBean
 {
@@ -72,7 +72,7 @@ public final class TrunkInvokerProxy
    {
       return internalReadResolve();
    }
-   
+
 
    protected void internalSetup() throws Exception
    {
@@ -83,7 +83,7 @@ public final class TrunkInvokerProxy
       ObjectName workManagerName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerWorkManager," + serverIdObjectNameClause);
       if (!getServer().isRegistered(workManagerName))
       {
-         getServer().createMBean("org.jboss.resource.work.BaseWorkManager", 
+         getServer().createMBean("org.jboss.resource.work.BaseWorkManager",
                             workManagerName);
       }
       getServer().setAttribute(workManagerName, new Attribute("MaxThreads", new Integer(50)));
@@ -114,6 +114,8 @@ public final class TrunkInvokerProxy
       return serverID;
    }
 
+   public org.jboss.remoting.ident.Identity getIdentity() {return null;}
+
    /**
     * Get this instance.
     * @return the This value.
@@ -123,9 +125,9 @@ public final class TrunkInvokerProxy
    public TrunkInvokerProxy getTrunkInvokerProxy() {
       return this;
    }
-   
 
-   
+
+
    /**
     * Get the ConnectionManagerName value.
     * @return the ConnectionManagerName value.
@@ -171,12 +173,12 @@ public final class TrunkInvokerProxy
    {
       boolean trace = log.isTraceEnabled();
       if (trace) {
-	 log.trace("Invoking, invocation: " + invocation);
+         log.trace("Invoking, invocation: " + invocation);
       } // end of if ()
       TrunkRequest request = new TrunkRequest();
       request.setOpInvoke(invocation);
       if (trace) {
-	 log.trace("No tx, request: " + request);
+         log.trace("No tx, request: " + request);
       }
       return (InvocationResponse)issue(request);
    }
