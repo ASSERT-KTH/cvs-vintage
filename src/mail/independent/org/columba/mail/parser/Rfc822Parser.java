@@ -27,8 +27,7 @@ import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 
-public class Rfc822Parser extends AbstractParser
-{
+public class Rfc822Parser extends AbstractParser {
 
 	// Definition of Constants
 
@@ -69,8 +68,7 @@ public class Rfc822Parser extends AbstractParser
 	// Constructor
 
 	// Public Methods
-	public Rfc822Parser()
-	{
+	public Rfc822Parser() {
 
 	}
 
@@ -84,77 +82,51 @@ public class Rfc822Parser extends AbstractParser
 		String input,
 		boolean parseHeader,
 		ColumbaHeader header,
-		int action)
-	{
+		int action) {
 
 		//System.out.println("------------------------------Parsing RFC822");
 
 		Message output = new Message();
-		MimePartTree mimeParts ;
+		MimePartTree mimeParts;
 		this.input = divideMessage(input);
 
 		decoder = new EncodedWordDecoder();
 
-		if (parseHeader)
-		{
+		if (parseHeader) {
 			ColumbaHeader tempHeader = parseHeaderString(this.input[0]);
 			//System.out.println( tempHeader.get( "mime-version" ));
 			tempHeader.copyColumbaKeys(header);
 			output.setHeader(tempHeader);
-		}
-		else
-		{
+		} else {
 			output.setHeader(header);
 		}
 
-		String mimeValue = (String) output.getHeader().get("Mime-Version");
-		ColumbaLogger.log.debug("mimeValue="+mimeValue);
-		
-		//System.out.println( mimeValue );
+		String mimeValue = (String) output.getHeader().get("MIME-Version");
+		if ( mimeValue == null )
+		mimeValue = (String) output.getHeader().get("Mime-Version");
 
-		if (mimeValue != null)
-		{
+		if (mimeValue != null) {
 			mime = true;
-			
-			  //Commented for more robustness with MIME-Version
-			/*
-			        if ( mimeValue.equals("1.0") )
-			{
-			    mimeVer = new String("1.0");
-			    mime=true;
-			}
-			        else
-			{
-			
-			    mime=false;
-			}
-			*/
-			
-		}
-		else
-		{
-			//System.out.println("---------------------------NOT Parsing MIME");
-			mime = false;
-			
-			
-		}
-		
-		// TODO fix issues with lower-case headerfields
-		mime=true;
 
-		if (mime)
-		{
+			//Commented for more robustness with MIME-Version
+
+		} else {
+
+			mime = false;
+
+		}
+
+		if (mime) {
 			MimeParser mimeParser = new MimeParser(header, action);
 
 			//System.out.println("------------------------------Parsing MIME");
 
-			mimeParts = new MimePartTree( mimeParser.parse(input) );
-		}
-		else
-		{
+			mimeParts = new MimePartTree(mimeParser.parse(input));
+		} else {
 			MimeHeader helpHeader = new MimeHeader();
 
-			mimeParts = new MimePartTree( new MimePart(helpHeader, this.input[1]));
+			mimeParts =
+				new MimePartTree(new MimePart(helpHeader, this.input[1]));
 		}
 
 		output.setMimePartTree(mimeParts);
@@ -164,10 +136,8 @@ public class Rfc822Parser extends AbstractParser
 
 	// This Method is the Heart of the class as it parses the Header
 
-	public ColumbaHeader parseHeader(String message)
-	{
-		if (message == null)
-		{
+	public ColumbaHeader parseHeader(String message) {
+		if (message == null) {
 
 		}
 		String[] divided = divideMessage(message);
@@ -191,24 +161,25 @@ public class Rfc822Parser extends AbstractParser
 
 		line = tokenizer.nextLine();
 
-		while (line != null)
-		{
-			if (line.indexOf(':') != -1)
-			{
+		while (line != null) {
+			if (line.indexOf(':') != -1) {
 
 				String key = line.substring(0, line.indexOf(':'));
-				
+
 				// TODO fix toLowerCase problems
 				//key = key.toLowerCase();
 
-				output.set(key, decoder.decode(line.substring(line.indexOf(':') + 1).trim()));
+				output.set(
+					key,
+					decoder.decode(
+						line.substring(line.indexOf(':') + 1).trim()));
 			}
 			line = tokenizer.nextLine();
 		}
 
 		return output;
 	}
-	
+
 	public void addColumbaHeaderFields(ColumbaHeader h) {
 		long OneDay = 24 * 60 * 60 * 1000;
 		TimeZone localTimeZone = TimeZone.getDefault();
@@ -260,7 +231,7 @@ public class Rfc822Parser extends AbstractParser
 							shortFrom.substring(0, shortFrom.length() - 1);
 				}
 
-			} 
+			}
 			/*else
 				shortFrom = shortFrom;
 			*/

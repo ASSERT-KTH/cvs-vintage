@@ -274,6 +274,8 @@ public class MessageBuilder {
 		ColumbaHeader header,
 		ComposerModel model) {
 		String messageId = (String) header.get("Message-ID");
+		if  (messageId == null ) messageId = (String) header.get("Message-Id");
+		
 		if (messageId != null) {
 			model.setHeaderField("In-Reply-To", messageId);
 
