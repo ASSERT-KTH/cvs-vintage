@@ -152,7 +152,7 @@
    #set ($name = $scarabG.ParameterName.ISSUE_REASON_REQUIRED)
    #set ($selected = $scarabG.isIssueReasonRequired($editModule))
    <input type="checkbox" name="$name" #checked($selected)/> 
-     Issue updates need valid Reason field
+     "Reason for change" is required for issue modifications
   </td> 
  </tr>
  
