@@ -91,6 +91,12 @@
 #define JK_MAGIC_TYPE       ("application/x-jakarta-servlet")
 #define NULL_FOR_EMPTY(x)   ((x && !strlen(x)) ? NULL : x) 
 
+/*
+ * If you are not using SSL, comment out the following
+ * line. It will make apache run faster.
+ */
+#define ADD_SSL_INFO    
+
 module MODULE_VAR_EXPORT jk_module;
 
 typedef struct {
@@ -102,6 +108,10 @@ typedef struct {
     int  mountcopy;
     jk_map_t *uri_to_context;
     jk_uri_worker_map_t *uw_map;
+
+    char *https_indicator;
+    char *certs_indicator;
+    char *cipher_indicator;
 
     server_rec *s;
 } jk_server_conf_t;
@@ -301,7 +311,8 @@ static int get_content_length(request_rec *r)
 }
 
 static int init_ws_service(apache_private_data_t *private_data,
-                           jk_ws_service_t *s)
+                           jk_ws_service_t *s,
+                           jk_server_conf_t *conf)
 {
     request_rec *r      = private_data->r;
     char *ssl_temp      = NULL;
@@ -335,16 +346,19 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->ssl_cert_len = 0;
     s->ssl_cipher   = NULL;
     s->ssl_session  = NULL;
-    
+
+#ifdef ADD_SSL_INFO    
     ap_add_common_vars(r);
-    ssl_temp = (char *)ap_table_get(r->subprocess_env, "HTTPS");
+#endif
+
+    ssl_temp = (char *)ap_table_get(r->subprocess_env, conf->https_indicator);
     if(ssl_temp && !strcasecmp(ssl_temp, "on")) {
         s->is_ssl       = JK_TRUE;
-        s->ssl_cert     = (char *)ap_table_get(r->subprocess_env, "SSL_CLIENT_CERT");
+        s->ssl_cert     = (char *)ap_table_get(r->subprocess_env, conf->certs_indicator);
         if(s->ssl_cert) {
 	        s->ssl_cert_len = strlen(s->ssl_cert);
         }
-        s->ssl_cipher   = (char *)ap_table_get(r->subprocess_env, "HTTPS_CIPHER");
+        s->ssl_cipher   = (char *)ap_table_get(r->subprocess_env, conf->cipher_indicator);
         s->ssl_session  = NULL;
     }
 
@@ -436,6 +450,45 @@ static const char *jk_set_log_file(cmd_parms *cmd,
     return NULL;
 }
 
+static const char *jk_set_https_indicator(cmd_parms *cmd, 
+                                          void *dummy, 
+                                          char *indicator)
+{
+    server_rec *s = cmd->server;
+    jk_server_conf_t *conf =
+        (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
+
+    conf->https_indicator = indicator;
+
+    return NULL;
+}
+
+static const char *jk_set_certs_indicator(cmd_parms *cmd, 
+                                          void *dummy, 
+                                          char *indicator)
+{
+    server_rec *s = cmd->server;
+    jk_server_conf_t *conf =
+        (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
+
+    conf->certs_indicator = indicator;
+
+    return NULL;
+}
+
+static const char *jk_set_cipher_indicator(cmd_parms *cmd, 
+                                           void *dummy, 
+                                           char *indicator)
+{
+    server_rec *s = cmd->server;
+    jk_server_conf_t *conf =
+        (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
+
+    conf->cipher_indicator = indicator;
+
+    return NULL;
+}
+
 static const char *jk_set_log_level(cmd_parms *cmd, 
                                     void *dummy, 
                                     char *log_level)
@@ -451,16 +504,52 @@ static const char *jk_set_log_level(cmd_parms *cmd,
 
 static const command_rec jk_cmds[] =
 {
+    /*
+     * JkWorkersFile specifies a full path to the location of the worker 
+     * properties file.
+     *
+     * This file defines the different workers used by apache to redirect 
+     * servlet requests.
+     */
     {"JkWorkersFile", jk_set_wroker_file, NULL, RSRC_CONF, TAKE1,
      "the name of a worker file for the Jakarta servlet containers"},
+    /*
+     * JkMount mounts a url prefix to a worker (the worker need to be
+     * defined in the worker properties file.
+     */
     {"JkMount", jk_mount_context, NULL, RSRC_CONF, TAKE23,
      "A mount point from a context to a Tomcat worker"},
+    /*
+     * JkMountCopy specifies if mod_jk should copy the mount points
+     * from the main server to the virtual servers.
+     */
     {"JkMountCopy", jk_set_mountcopy, NULL, RSRC_CONF, FLAG,
      "Should the base server mounts be copied to the virtual server"},
+    /*
+     * JkLogFile & JkLogLevel specifies to where should the plugin log
+     * its information and how much.
+     */
     {"JkLogFile", jk_set_log_file, NULL, RSRC_CONF, TAKE1,
      "Full path to the Jakarta Tomcat module log file"},
     {"JkLogLevel", jk_set_log_level, NULL, RSRC_CONF, TAKE1,
      "The Jakarta Tomcat module log level, can be debug, info, error or emerg"},
+
+    /*
+     * Apache has multiple SSL modules (for example apache_ssl, stronghold
+     * IHS ...). Each of these can have a different SSL environment names
+     * The following properties let the administrator specify the envoiroment
+     * variables names.
+     *
+     * HTTPS - indication for SSL 
+     * CERTS - Base64-Der-encoded client certificates.
+     * CIPHER - A string specifing the ciphers suite in use.
+     */
+    {"JkHTTPSIndicator", jk_set_https_indicator, NULL, RSRC_CONF, TAKE1,
+     "Name of the Apache environment that contains SSL indication"},
+    {"JkCERTSIndicator", jk_set_certs_indicator, NULL, RSRC_CONF, TAKE1,
+     "Name of the Apache environment that contains SSL client certificates"},
+    {"JkCIPHERIndicator", jk_set_cipher_indicator, NULL, RSRC_CONF, TAKE1,
+     "Name of the Apache environment that contains SSL client cipher"},
     {NULL}
 };
 
@@ -496,7 +585,7 @@ static int jk_handler(request_rec *r)
             s.ws_private = &private_data;
             s.pool = &private_data.p;            
             
-            if(init_ws_service(&private_data, &s)) {
+            if(init_ws_service(&private_data, &s, conf)) {
                 jk_endpoint_t *end = NULL;
                 if(worker->get_endpoint(worker, &end, l)) {
                     int is_recoverable_error = JK_FALSE;
@@ -528,6 +617,10 @@ static void *create_jk_config(ap_pool *p, server_rec *s)
     c->log_level   = -1;
     c->log         = NULL;
     c->mountcopy   = JK_FALSE;
+
+    c->https_indicator  = "HTTPS";
+    c->certs_indicator  = "SSL_CLIENT_CERT";
+    c->cipher_indicator = "HTTPS_CIPHER";
 
     if(!map_alloc(&(c->uri_to_context))) {
         jk_error_exit(APLOG_MARK, APLOG_EMERG, s, p, "Memory error");
