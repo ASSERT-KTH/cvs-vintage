@@ -23,7 +23,7 @@
             #end
          #end
        #else
-         #set ($canMakeTransition = $data.User.canMakeTransition($values, $option.OptionId, $scarabR.Issue, $module, $issueType))
+         #set ($canMakeTransition = $data.User.canMakeTransition($scarabR.getAttributeOption($values), $option.getAttributeOption(), $scarabR.Issue, $module, $issueType))
          #if ($values.equals($option.OptionId))
            #set ($selected=true)
           #end
