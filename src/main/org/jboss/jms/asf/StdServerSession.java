@@ -1,21 +1,11 @@
 /*
- * Copyright (c) 2000 Peter Antman Tim <peter.antman@tim.se>
+ * JBoss, the OpenSource J2EE webOS
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
  */
 package org.jboss.jms.asf;
+import java.lang.reflect.Method;
 
 import javax.jms.JMSException;
 import javax.jms.ServerSession;
@@ -34,225 +24,392 @@ import org.apache.log4j.Category;
 import org.jboss.tm.TransactionManagerService;
 
 /**
- * An implementation of ServerSession.
+ * An implementation of ServerSession. <p>
  *
- * <p>Created: Thu Dec  7 18:25:40 2000
+ * Created: Thu Dec 7 18:25:40 2000
  *
- * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.7 $
+ * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
+ * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version   $Revision: 1.8 $
  */
 public class StdServerSession
-   implements Runnable, ServerSession
+       implements Runnable, ServerSession
 {
-   /** Instance logger. */
+   /**
+    * Instance logger.
+    */
    private final Category log = Category.getInstance(this.getClass());
 
-   /** The server session pool which we belong to. */
-   private StdServerSessionPool serverSessionPool; // = null;
+   /**
+    * The server session pool which we belong to.
+    */
+   private StdServerSessionPool serverSessionPool;
+   // = null;
 
-   /** Our session resource. */
-   private Session session; // = null;
+   /**
+    * Our session resource.
+    */
+   private Session session;
+   // = null;
 
-   /** Our XA session resource. */
-   private XASession xaSession; // = null;
+   /**
+    * Our XA session resource.
+    */
+   private XASession xaSession;
+   // = null;
 
-   /** The transaction manager that we will use for transactions. */
+   /**
+    * The transaction manager that we will use for transactions.
+    */
    private TransactionManager tm;
 
    /**
-    * Create a <tt>StdServerSession</tt>.
+    * Use the session's XAResource directly if we have an JBossMQ XASession.
+    * this allows us to get around the TX timeout problem when you have
+    * extensive message processing.
+    */
+   private boolean useXAResouceDirectly;
+
+   /**
+    * Create a <tt>StdServerSession</tt> .
     *
-    * @param pool         The server session pool which we belong to.
-    * @param session      Our session resource.
-    * @param xaSession    Our XA session resource.
-    *
-    * @throws JMSException    Transation manager was not found.
+    * @param pool              The server session pool which we belong to.
+    * @param session           Our session resource.
+    * @param xaSession         Our XA session resource.
+    * @param containerManaged  Description of Parameter
+    * @throws JMSException     Transation manager was not found.
+    * @exception JMSException  Description of Exception
     */
    StdServerSession(final StdServerSessionPool pool,
-                    final Session session,
-                    final XASession xaSession)
-      throws JMSException
+         final Session session,
+         final XASession xaSession,
+         final boolean containerManaged)
+          throws JMSException
    {
       // assert pool != null
       // assert session != null
-      
+
       this.serverSessionPool = pool;
       this.session = session;
       this.xaSession = xaSession;
 
-      if (log.isDebugEnabled()) {
-         log.debug("initializing (pool, session, xaSession): " +
-                   pool + ", " + session + ", " + xaSession);
+      try
+      {
+         this.useXAResouceDirectly = !containerManaged && Class.forName("org.jboss.mq.SpySession").isAssignableFrom(session.getClass());
       }
-      
+      catch (ClassNotFoundException e)
+      {
+         this.useXAResouceDirectly = false;
+      }
+
+      log.debug("initializing (pool, session, xaSession, useXAResouceDirectly): " +
+            pool + ", " + session + ", " + xaSession + ", " + useXAResouceDirectly);
+
       InitialContext ctx = null;
-      try {
+      try
+      {
          ctx = new InitialContext();
          tm = (TransactionManager)
-            ctx.lookup(TransactionManagerService.JNDI_NAME);
+               ctx.lookup(TransactionManagerService.JNDI_NAME);
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          throw new JMSException("Transation manager was not found");
       }
-      finally {
-         if (ctx != null) {
-            try {
+      finally
+      {
+         if (ctx != null)
+         {
+            try
+            {
                ctx.close();
             }
-            catch (Exception ignore) {}
+            catch (Exception ignore)
+            {
+            }
          }
       }
    }
 
    // --- Impl of JMS standard API
-	
+
    /**
-    * Returns the session.
+    * Returns the session. <p>
     *
-    * <p>This simply returns what it has fetched from the connection. It is
-    *    up to the jms provider to typecast it and have a private API to stuff
-    *    messages into it.
+    * This simply returns what it has fetched from the connection. It is up to
+    * the jms provider to typecast it and have a private API to stuff messages
+    * into it.
     *
-    * @return    The session.
+    * @return                  The session.
+    * @exception JMSException  Description of Exception
     */
    public Session getSession() throws JMSException
    {
       return session;
    }
 
-   /**
-    * Start the session and begin consuming messages.
-    *
-    * @throws JMSException    No listener has been specified.
-    */
-   public void start() throws JMSException {
-      log.debug("starting invokes on server session");
-
-      if (session != null) {
-         try {
-            serverSessionPool.getExecutor().execute(this);
-         }
-         catch (InterruptedException ignore) {}
-      }
-      else {
-         throw new JMSException("No listener has been specified");
-      }
-   }
-    
    //--- Protected parts, used by other in the package
-	
+
    /**
-    * Runs in an own thread, basically calls the session.run(), it is up
-    * to the session to have been filled with messages and it will run
-    * against the listener set in StdServerSessionPool. When it has send
-    * all its messages it returns.
-    *
-    * HC: run() also starts a transaction with the TransactionManager and
-    * enlists the XAResource of the JMS XASession if a XASession was
-    * available.  A good JMS implementation should provide the XASession
-    * for use in the ASF.  So we optimize for the case where we have an
-    * XASession.  So, for the case where we do not have an XASession and
-    * the bean is not transacted, we have the unneeded overhead of creating
-    * a Transaction.  I'm leaving it this way since it keeps the code simpler
-    * and that case should not be too common (JBossMQ provides XASessions).
+    * Runs in an own thread, basically calls the session.run(), it is up to the
+    * session to have been filled with messages and it will run against the
+    * listener set in StdServerSessionPool. When it has send all its messages it
+    * returns. HC: run() also starts a transaction with the TransactionManager
+    * and enlists the XAResource of the JMS XASession if a XASession was
+    * available. A good JMS implementation should provide the XASession for use
+    * in the ASF. So we optimize for the case where we have an XASession. So,
+    * for the case where we do not have an XASession and the bean is not
+    * transacted, we have the unneeded overhead of creating a Transaction. I'm
+    * leaving it this way since it keeps the code simpler and that case should
+    * not be too common (JBossMQ provides XASessions).
     */
-   public void run() {
+   public void run()
+   {
       log.debug("running...");
-      
+
+      log.info("running (pool, session, xaSession, useXAResouceDirectly): " +
+            ", " + session + ", " + xaSession + ", " + useXAResouceDirectly);
+
+      // Used if run with useXAResouceDirectly if true
+      JBossMQTXInterface jbossMQTXInterface = null;
+
+      // Used if run with useXAResouceDirectly if false
       Transaction trans = null;
-      try {
-         tm.begin();
-         trans = tm.getTransaction();
-	    
-         if (xaSession != null) {
-            XAResource res = xaSession.getXAResource();
-            trans.enlistResource(res);
-            if (log.isDebugEnabled()) {
-               log.debug("XAResource '"+res+"' enlisted.");
+      try
+      {
+
+         if (useXAResouceDirectly)
+         {
+            // Use JBossMQ One Phase Commit to commit the TX
+            jbossMQTXInterface = new JBossMQTXInterface(session);
+            jbossMQTXInterface.startTX();
+
+         }
+         else
+         {
+
+            // Use the TM to control the TX
+            tm.begin();
+            trans = tm.getTransaction();
+
+            if (xaSession != null)
+            {
+               XAResource res = xaSession.getXAResource();
+               trans.enlistResource(res);
+               if (log.isDebugEnabled())
+               {
+                  log.debug("XAResource '" + res + "' enlisted.");
+               }
             }
-         } 
+         }
+         //currentTransactionId = connection.spyXAResourceManager.startTx();
 
          // run the session
          session.run();
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          log.error("session failed to run; setting rollback only", e);
-	    
-         try {
-            // The transaction will be rolledback in the finally
-            trans.setRollbackOnly();
+
+         if (useXAResouceDirectly)
+         {
+            // Use JBossMQ One Phase Commit to commit the TX
+            jbossMQTXInterface.setRollbackOnly();
          }
-         catch (Exception x) {
-            log.error("failed to set rollback only", x);
-         }
-      }
-      finally {
-         try {
-            // Marked rollback
-            if (trans.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
-               log.info("Rolling back JMS transaction");
-               // actually roll it back 
-               trans.rollback();
-		    
-               // NO XASession? then manually rollback.  
-               // This is not so good but
-               // it's the best we can do if we have no XASession.
-               if (xaSession == null && serverSessionPool.isTransacted()) {
-                  session.rollback();
-               }
-            } else if (trans.getStatus() == Status.STATUS_ACTIVE) {
-               // Commit tx
-               // This will happen if
-               // a) everything goes well
-               // b) app. exception was thrown
-               trans.commit();
-		    
-               // NO XASession? then manually commit.  This is not so good but
-               // it's the best we can do if we have no XASession.
-               if (xaSession == null && serverSessionPool.isTransacted()) {
-                  session.commit();
-               }
+         else
+         {
+
+            // Mark for tollback TX via TM
+            try
+            {
+               // The transaction will be rolledback in the finally
+               trans.setRollbackOnly();
+            }
+            catch (Exception x)
+            {
+               log.error("failed to set rollback only", x);
             }
          }
-         catch (Exception e) {
+
+      }
+      finally
+      {
+         try
+         {
+            if (useXAResouceDirectly)
+            {
+               // Use JBossMQ One Phase Commit to commit the TX
+               jbossMQTXInterface.endTX();
+
+            }
+            else
+            {
+               // Use the TM to commit the Tx
+
+               // Marked rollback
+               if (trans.getStatus() == Status.STATUS_MARKED_ROLLBACK)
+               {
+                  log.info("Rolling back JMS transaction");
+                  // actually roll it back
+                  trans.rollback();
+
+                  // NO XASession? then manually rollback.
+                  // This is not so good but
+                  // it's the best we can do if we have no XASession.
+                  if (xaSession == null && serverSessionPool.isTransacted())
+                  {
+                     session.rollback();
+                  }
+               }
+               else if (trans.getStatus() == Status.STATUS_ACTIVE)
+               {
+                  // Commit tx
+                  // This will happen if
+                  // a) everything goes well
+                  // b) app. exception was thrown
+                  trans.commit();
+
+                  // NO XASession? then manually commit.  This is not so good but
+                  // it's the best we can do if we have no XASession.
+                  if (xaSession == null && serverSessionPool.isTransacted())
+                  {
+                     session.commit();
+                  }
+               }
+            }
+
+         }
+         catch (Exception e)
+         {
             log.error("failed to commit/rollback", e);
          }
-	    
+
          StdServerSession.this.recycle();
       }
 
       log.debug("done");
    }
-    
+
    /**
-    * This method is called by the ServerSessionPool when it is ready to
-    * be recycled intot the pool
+    * Start the session and begin consuming messages.
+    *
+    * @throws JMSException  No listener has been specified.
+    */
+   public void start() throws JMSException
+   {
+      log.debug("starting invokes on server session");
+
+      if (session != null)
+      {
+         try
+         {
+            serverSessionPool.getExecutor().execute(this);
+         }
+         catch (InterruptedException ignore)
+         {
+         }
+      }
+      else
+      {
+         throw new JMSException("No listener has been specified");
+      }
+   }
+
+   /**
+    * Called by the ServerSessionPool when the sessions should be closed.
+    */
+   void close()
+   {
+      if (session != null)
+      {
+         try
+         {
+            session.close();
+         }
+         catch (Exception ignore)
+         {
+         }
+
+         session = null;
+      }
+
+      if (xaSession != null)
+      {
+         try
+         {
+            xaSession.close();
+         }
+         catch (Exception ignore)
+         {
+         }
+         xaSession = null;
+      }
+
+      log.debug("closed");
+   }
+
+   /**
+    * This method is called by the ServerSessionPool when it is ready to be
+    * recycled intot the pool
     */
    void recycle()
    {
       serverSessionPool.recycle(this);
    }
 
+
    /**
-    * Called by the ServerSessionPool when the sessions should be closed.
+    * #Description of the Class
     */
-   void close() {
-      if (session != null) {
-         try {
-            session.close();
-         } catch (Exception ignore) {}
-         
-         session = null;
-      }
-      
-      if (xaSession != null) {
-         try {
-            xaSession.close();
-         } catch (Exception ignore) {}
-         xaSession = null;
+   private static class JBossMQTXInterface
+   {
+
+      static boolean initialzied = false;
+      static Method getXAResourceManager;
+      static Method startTx;
+      static Method endTx;
+      static Method commit;
+      static Method rollback;
+      boolean doRollback = false;
+      Object xid = null;
+      Object spyXAResourceManager = null;
+
+      JBossMQTXInterface(Session sess) throws Exception
+      {
+         if (!initialzied)
+         {
+            getXAResourceManager = Class.forName("org.jboss.mq.SpySession").getMethod("getXAResourceManager", new Class[]{});
+            startTx = Class.forName("org.jboss.mq.SpyXAResourceManager").getMethod("startTx", new Class[]{});
+            endTx = Class.forName("org.jboss.mq.SpyXAResourceManager").getMethod("endTx", new Class[]{Object.class, boolean.class});
+            commit = Class.forName("org.jboss.mq.SpyXAResourceManager").getMethod("commit", new Class[]{Object.class, boolean.class});
+            rollback = Class.forName("org.jboss.mq.SpyXAResourceManager").getMethod("rollback", new Class[]{Object.class});
+            initialzied = true;
+         }
+         spyXAResourceManager = getXAResourceManager.invoke(sess, new Object[]{});
       }
 
-      log.debug("closed");
+      void setRollbackOnly()
+      {
+         doRollback = true;
+      }
+
+      void startTX() throws Exception
+      {
+         xid = startTx.invoke(spyXAResourceManager, new Object[]{});
+      }
+
+      void endTX() throws Exception
+      {
+         if (doRollback)
+         {
+            endTx.invoke(spyXAResourceManager, new Object[]{xid, new Boolean(true)});
+            rollback.invoke(spyXAResourceManager, new Object[]{xid});
+         }
+         else
+         {
+            endTx.invoke(spyXAResourceManager, new Object[]{xid, new Boolean(true)});
+            commit.invoke(spyXAResourceManager, new Object[]{xid, new Boolean(true)});
+         }
+      }
    }
 }
