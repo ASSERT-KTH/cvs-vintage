@@ -74,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class is responsible for managing the query lists (deleting queries).
  *    
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: QueryList.java,v 1.25 2003/04/03 03:19:06 jmcnally Exp $
+ * @version $Id: QueryList.java,v 1.26 2003/04/04 20:04:55 jon Exp $
  */
 public class QueryList extends RequireLoginFirstAction
 {
@@ -191,9 +191,17 @@ public class QueryList extends RequireLoginFirstAction
          }
      }
 
+    /**
+     * This method is used by the Create new button to go to the AdvancedQuery
+     * page. Since it is a 'create new' option, several of the session persistent
+     * options are reset.
+     */
     public void doGotoadvancedquery(RunData data, TemplateContext context)
         throws Exception
     {
+        // reset the MITList
+        ScarabUser user = (ScarabUser)data.getUser();
+        user.setCurrentMITList(null);
         // reset selected users map
         getScarabRequestTool(context).resetSelectedUsers();
         setTarget(data, "AdvancedQuery.vm");
