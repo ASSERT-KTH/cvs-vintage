@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
 * @see org.jboss.system.Service
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.19 $ <p>
+* @version $Revision: 1.20 $ <p>
 *
 * <b>Revisions:</b> <p>
 *
@@ -206,6 +206,7 @@ implements ServiceControllerMBean, MBeanRegistration
                // We work from the service context, if it doesn't exist yet, we have a wrapper (OK)
                ServiceContext service = getServiceContext((ObjectName) iterator.next());
                
+               log.debug("recording that " + ctx.objectName + " depends on " + service.objectName);
                // ctx depends on service
                ctx.iDependOn.add(service);
                
@@ -357,7 +358,7 @@ implements ServiceControllerMBean, MBeanRegistration
    {
       
       ServiceContext ctx = (ServiceContext) nameToServiceMap.get(serviceName);
-      
+      log.debug("stopping service: " + serviceName);
       if (ctx != null) 
       {
          // If we are already stopped (can happen in dependencies) just return
@@ -366,21 +367,20 @@ implements ServiceControllerMBean, MBeanRegistration
          // JSR 77 and to avoid circular dependencies
          ctx.state = ServiceContext.STOPPED;
          
+         log.debug("service context has " + ctx.dependsOnMe.size() + " depending services");
          Iterator iterator = ctx.dependsOnMe.iterator();
          while (iterator.hasNext())
          {
-            
             // stop all the mbeans that depend on me
-            stop(((ServiceContext) iterator.next()).objectName);  
+            ObjectName other = ((ServiceContext) iterator.next()).objectName;
+            log.debug("stopping dependent service " + other);
+            stop(other);
          }
          
          // Call create on the service Proxy  
          try { ctx.proxy.stop(); }
             
          catch (Exception e){ ctx.state = ServiceContext.FAILED; throw e;}
-      
-      
-      
       }
    
    }   
@@ -395,6 +395,7 @@ implements ServiceControllerMBean, MBeanRegistration
    {
       
       ServiceContext ctx = (ServiceContext) nameToServiceMap.get(serviceName);
+      log.debug("destroying service: " + serviceName);
       
       if (ctx != null) 
       {
@@ -409,7 +410,9 @@ implements ServiceControllerMBean, MBeanRegistration
          {
             
             // destroy all the mbeans that depend on me
-            destroy(((ServiceContext) iterator.next()).objectName);  
+            ObjectName other = ((ServiceContext) iterator.next()).objectName;
+            log.debug("destroying dependent service " + other);
+            destroy(other);
          }
          
          // Call create on the service Proxy  
@@ -446,6 +449,7 @@ implements ServiceControllerMBean, MBeanRegistration
    {
       
       ServiceContext ctx = getServiceContext(objectName);    
+      log.debug("removing service: " + objectName);
       
       // Notify those that think I depend on them
       Iterator iterator = ctx.iDependOn.iterator();

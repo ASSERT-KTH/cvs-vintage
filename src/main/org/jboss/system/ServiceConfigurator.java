@@ -40,7 +40,7 @@ import org.w3c.dom.Text;
 *
 * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
-* @version $Revision: 1.14 $
+* @version $Revision: 1.15 $
 *
 * <p><b>20010830 marc fleury:</b>
 * <ul>
@@ -264,7 +264,7 @@ public class ServiceConfigurator
       log.debug("found " + dependsElements.getLength() + " depends elements");
       for (int j = 0; j < dependsElements.getLength(); j++) {
          Element dependsElement = (Element)dependsElements.item(j);
-         
+      dependAttrFound:
          if (!dependsElement.hasChildNodes()) 
          {
             throw new DeploymentException("No ObjectName supplied for depends in  " + objectName);   
@@ -272,30 +272,25 @@ public class ServiceConfigurator
          }		
          
          String mbeanRefName = dependsElement.getAttribute("optional-attribute-name");
+         if ("".equals(mbeanRefName)) 
+         {
+            mbeanRefName = null;
+         } // end of if ()
          
          // Get the mbeanRef value
          String value = ((Text)dependsElement.getFirstChild()).getData().trim();
  
          ObjectName dependsObjectName = new ObjectName(value);
-         log.debug("considering " + mbeanRefName + " with object name " + dependsObjectName);
-         for (int k = 0; k < attributes.length; k++) {
-            if (mbeanRefName.equals(attributes[k].getName())) {
-               String typeName = attributes[k].getType();
-               if (!"javax.management.ObjectName".equals(typeName)) 
-               {
-                  throw new DeploymentException("Trying to set " + mbeanRefName + " as an MBeanRef when it is not of type ObjectName");   
-               } // end of if ()
-               if (!mbeans.contains(dependsObjectName)) 
-               {
-                  mbeans.add(dependsObjectName);
-               } // end of if ()
-               
-               log.debug(mbeanRefName + " set to " + value);
-               server.setAttribute(objectName, new Attribute(mbeanRefName, dependsObjectName));
-               
-               break;
-            }
-         }
+         if (!mbeans.contains(dependsObjectName)) 
+         {
+            mbeans.add(dependsObjectName);
+         } // end of if ()
+         log.debug("considering " + ((mbeanRefName == null)? "<anonymous>": mbeanRefName.toString()) + " with object name " + dependsObjectName);
+         if (mbeanRefName != null) 
+         {
+            //if if doesn't exist or has wrong type, we'll get an exception
+            server.setAttribute(objectName, new Attribute(mbeanRefName, dependsObjectName));
+         } // end of if ()
       }  
       
       
@@ -305,47 +300,39 @@ public class ServiceConfigurator
       for (int j = 0; j < mBeanRefLists.getLength(); j++) {
          Element mBeanRefListElement = (Element)mBeanRefLists.item(j);
          String mBeanRefListName = mBeanRefListElement.getAttribute("optional-attribute-name");
+         if ("".equals(mBeanRefListName)) 
+         {
+            mBeanRefListName = null;
+         } // end of if ()
 
-         for (int k = 0; k < attributes.length; k++) {
-            if (mBeanRefListName.equals(attributes[k].getName())) {
+         NodeList mBeanRefList = mBeanRefListElement.getElementsByTagName("depends-list-element");
+         ArrayList mBeanRefListNames = new ArrayList();
+         for (int l = 0; l < mBeanRefList.getLength(); l++) 
+         {
+            Element mBeanRefElement = (Element)mBeanRefList.item(l);
+            if (!mBeanRefElement.hasChildNodes()) 
+            {
+               throw new DeploymentException("Empty depends-list-element!");    
+            } // end of if ()
 
-               NodeList mBeanRefList = mBeanRefListElement.getElementsByTagName("depends-list-element");
-               ArrayList mBeanRefListNames = new ArrayList();
-               for (int l = 0; l < mBeanRefList.getLength(); l++) 
-               {
-                  Element mBeanRefElement = (Element)mBeanRefList.item(l);
-                  if (!mBeanRefElement.hasChildNodes()) 
-                  {
-                     throw new DeploymentException("Empty depends-list-element!");    
-                  } // end of if ()
-
-                  // Get the mbeanRef value
-                  String mBeanRefValue = ((Text)mBeanRefElement.getFirstChild()).getData().trim();
-                  ObjectName mBeanRefObjectName = new ObjectName(mBeanRefValue);
-                  if (!mBeanRefListNames.contains(mBeanRefObjectName)) 
-                  {
-                     mBeanRefListNames.add(mBeanRefObjectName);
-                  } // end of if ()
-                  if (!mbeans.contains(mBeanRefObjectName)) 
-                  {
-                     mbeans.add(mBeanRefObjectName);
-                  } // end of if ()
-                  
-               } // end of for ()
-
-               log.debug(mBeanRefListName + " set to " + mBeanRefListNames + " in " + objectName);
-               server.setAttribute(objectName, new Attribute(mBeanRefListName, mBeanRefListNames));
-
-               break;
-            }
-
-         }
+            // Get the mbeanRef value
+            String mBeanRefValue = ((Text)mBeanRefElement.getFirstChild()).getData().trim();
+            ObjectName mBeanRefObjectName = new ObjectName(mBeanRefValue);
+            if (!mBeanRefListNames.contains(mBeanRefObjectName)) 
+            {
+               mBeanRefListNames.add(mBeanRefObjectName);
+            } // end of if ()
+            if (!mbeans.contains(mBeanRefObjectName)) 
+            {
+               mbeans.add(mBeanRefObjectName);
+            } // end of if ()
+            
+         } // end of for ()
+         if (mBeanRefListName != null) 
+         {
+            server.setAttribute(objectName, new Attribute(mBeanRefListName, mBeanRefListNames));
+         } // end of if ()
       }
-      
-      
-      
-      
-      
       return mbeans;
    }
    
