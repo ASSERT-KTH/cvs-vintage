@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ScarabModulePeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurity.java,v 1.13 2001/08/09 20:34:11 jmcnally Exp $
+ * @version $Id: TurbineDBScarabSecurity.java,v 1.14 2001/08/13 20:38:18 jmcnally Exp $
 */
 public class TurbineDBScarabSecurity 
     extends DefaultScarabSecurity
@@ -149,6 +149,21 @@ public class TurbineDBScarabSecurity
             Log.error("An exception prevented retrieving any users", e);
         }
         return scarabUsers;
+    }
+
+
+    /**
+     * Get a list of <code>ModuleEntity</code>'s that where a user has
+     * the permissions given.
+     *
+     * @param user a <code>ScarabUser</code> value
+     * @param permissions a <code>String</code> value
+     * @return a <code>ModuleEntity[]</code> value
+     */
+    public ModuleEntity[] getModules(ScarabUser user, String permission)
+    {
+        String[] perms = {permission};
+        return getModules(user, perms);
     }
 
 

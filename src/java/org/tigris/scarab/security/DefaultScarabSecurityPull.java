@@ -61,7 +61,7 @@ import org.tigris.scarab.om.ScarabUser;
  * extends this class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefaultScarabSecurityPull.java,v 1.4 2001/08/09 20:54:53 jmcnally Exp $
+ * @version $Id: DefaultScarabSecurityPull.java,v 1.5 2001/08/13 20:38:18 jmcnally Exp $
 */
 public class DefaultScarabSecurityPull
     implements ScarabSecurityPull, InitableRecyclable, ApplicationTool
@@ -110,6 +110,19 @@ public class DefaultScarabSecurityPull
     public ScarabUser[] getUsers(String permission, ModuleEntity module)
     {
         return null;
+    }
+
+    /**
+     * Get a list of <code>ModuleEntity</code>'s that where a user has
+     * the permissions given.
+     *
+     * @param user a <code>ScarabUser</code> value
+     * @param permissions a <code>String</code> value
+     * @return a <code>ModuleEntity[]</code> value
+     */
+    public ModuleEntity[] getModules(ScarabUser user, String permission)
+    {
+        return security.getModules(user, permission);
     }
 
     /**

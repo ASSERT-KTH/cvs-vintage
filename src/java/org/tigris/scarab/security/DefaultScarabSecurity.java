@@ -60,7 +60,7 @@ import org.tigris.scarab.om.ScarabUser;
  * external implementation of security should be specified.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefaultScarabSecurity.java,v 1.9 2001/08/09 20:54:53 jmcnally Exp $
+ * @version $Id: DefaultScarabSecurity.java,v 1.10 2001/08/13 20:38:18 jmcnally Exp $
 */
 public class DefaultScarabSecurity 
     implements ScarabSecurity
@@ -100,6 +100,20 @@ public class DefaultScarabSecurity
     public ScarabUser[] getUsers(String permission, ModuleEntity module)
     {
         return null;
+    }
+
+    /**
+     * Get a list of <code>ModuleEntity</code>'s that where a user has
+     * the permissions given.
+     *
+     * @param user a <code>ScarabUser</code> value
+     * @param permissions a <code>String</code> value
+     * @return a <code>ModuleEntity[]</code> value
+     */
+    public ModuleEntity[] getModules(ScarabUser user, String permission)
+    {
+        String[] perms = {permission};
+        return getModules(user, permission);
     }
 
     /**
