@@ -1,5 +1,5 @@
 
-// $Id: Actions.java,v 1.56 2003/08/30 18:47:05 alexb Exp $
+// $Id: Actions.java,v 1.57 2003/09/01 20:30:12 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -319,9 +319,9 @@ class ActionNavForw extends UMLAction {
 class ActionNavConfig extends UMLAction {
     public ActionNavConfig() { super("action.nav-config"); }
     public void actionPerformed(ActionEvent ae) {
-	ProjectBrowser pb = ProjectBrowser.getInstance();
-	NavigatorPane nav = pb.getNavigatorPane();
-	NavigatorConfigDialog ncd = new NavigatorConfigDialog(pb, nav);
+	NavigatorConfigDialog ncd = 
+            new NavigatorConfigDialog(ProjectBrowser.getInstance(),
+                                      NavigatorPane.getInstance());
 	ncd.setVisible(true);
     }
 } /* end class ActionNavConfig */

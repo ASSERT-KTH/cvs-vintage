@@ -1,4 +1,4 @@
-// $Id: ActionAddDiagram.java,v 1.19 2003/09/01 11:51:10 bobtarling Exp $
+// $Id: ActionAddDiagram.java,v 1.20 2003/09/01 20:30:12 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.19 2003/09/01 11:51:10 bobtarling Exp $
+// $Id: ActionAddDiagram.java,v 1.20 2003/09/01 20:30:12 bobtarling Exp $
 
 package org.argouml.uml.ui;
 
@@ -32,8 +32,8 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.ui.NavigatorPane;
 import org.argouml.ui.targetmanager.TargetManager;
-import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
 /**
@@ -83,7 +83,7 @@ public abstract class ActionAddDiagram extends UMLChangeAction {
             TargetManager.getInstance().setTarget(diagram);
             //TODO make the explorer listen to project member property
             //changes...  to eliminate coupling on gui.
-            ProjectBrowser.getInstance().getNavigatorPane().forceUpdate();
+            NavigatorPane.getInstance().forceUpdate();
             super.actionPerformed(e);
         } else {
             log.error("No valid namespace found");

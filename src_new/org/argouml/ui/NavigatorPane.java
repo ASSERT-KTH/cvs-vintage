@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.51 2003/09/01 19:01:27 bobtarling Exp $
+// $Id: NavigatorPane.java,v 1.52 2003/09/01 20:30:12 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,7 +108,7 @@ import ru.novosoft.uml.MElementListener;
  *
  * <p>Perspectives are now built here.
  *
- * $Id: NavigatorPane.java,v 1.51 2003/09/01 19:01:27 bobtarling Exp $
+ * $Id: NavigatorPane.java,v 1.52 2003/09/01 20:30:12 bobtarling Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -150,6 +150,12 @@ public class NavigatorPane
     ////////////////////////////////////////////////////////////////
     // constructors
 
+    private static NavigatorPane INSTANCE = new NavigatorPane();
+    
+    public static NavigatorPane getInstance() {
+        return INSTANCE;
+    }
+    
     /**
      * Constructs a new navigator panel.
      * 
@@ -159,8 +165,22 @@ public class NavigatorPane
      * and a configuration dialog to tailor the perspectives (but this
      * is not saved).
      */
+    private NavigatorPane() {
+        this(SplashScreen.getDoSplash());
+    }
+    
+    /**
+     * Constructs a new navigator panel.
+     * 
+     * <p>This panel consists of a Combobox to select a navigation
+     * perspective, a JTree to display the UML model, some history
+     * (back and forward arrows) buttons that are currently disabled,
+     * and a configuration dialog to tailor the perspectives (but this
+     * is not saved).
+     * @deprecated 0.15 delete in 0.16 use NavigatorPane.getInstance()
+     * instead.
+     */
     public NavigatorPane(boolean doSplash) {
-
         _combo = new JComboBox();
         _tree = new DnDNavigatorTree();
         TargetManager.getInstance().addTargetListener(_tree);

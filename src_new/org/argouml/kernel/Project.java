@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.77 2003/08/22 17:37:30 bobtarling Exp $
+// $Id: Project.java,v 1.78 2003/09/01 20:30:12 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,6 +55,7 @@ import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.ui.ArgoDiagram;
+import org.argouml.ui.NavigatorPane;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
@@ -1050,7 +1051,7 @@ public class Project implements java.io.Serializable, TargetListener {
                 needSave = true;
             }
         }        
-        ProjectBrowser.getInstance().getNavigatorPane().forceUpdate();
+        NavigatorPane.getInstance().forceUpdate();
         setNeedsSave(needSave);
     }
 

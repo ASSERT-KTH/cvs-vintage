@@ -1,4 +1,4 @@
-// $Id: ActionAddPackage.java,v 1.4 2003/06/30 21:59:34 linus Exp $
+// $Id: ActionAddPackage.java,v 1.5 2003/09/01 20:30:12 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,7 @@ package org.argouml.uml.ui;
 import java.awt.event.ActionEvent;
 
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.ui.ProjectBrowser;
-
+import org.argouml.ui.NavigatorPane;
 import ru.novosoft.uml.foundation.core.MNamespace;
 
 /** 
@@ -59,10 +58,8 @@ public class ActionAddPackage  extends UMLAction {
      * adds a package to the selected object in the nav pane.
      */
     public void actionPerformed(ActionEvent e) {
-        
-        ProjectBrowser pb = ProjectBrowser.getInstance();
         MNamespace namespace =
-	    (MNamespace) pb.getNavigatorPane().getSelectedObject();
+	    (MNamespace) NavigatorPane.getInstance().getSelectedObject();
         namespace.addOwnedElement(
             UmlFactory.getFactory().getModelManagement().createPackage());
     }

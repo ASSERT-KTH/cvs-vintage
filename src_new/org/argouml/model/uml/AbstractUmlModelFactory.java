@@ -1,4 +1,4 @@
-// $Id: AbstractUmlModelFactory.java,v 1.13 2003/09/01 18:20:46 bobtarling Exp $
+// $Id: AbstractUmlModelFactory.java,v 1.14 2003/09/01 20:30:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.model.uml;
 
 import org.apache.log4j.Category;
 import org.argouml.model.ModelFacade;
-import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.NavigatorPane;
 import org.argouml.uml.UUIDManager;
 
 import ru.novosoft.uml.MBase;
@@ -111,8 +111,9 @@ public abstract class AbstractUmlModelFactory {
             UmlModelEventPump pump = UmlModelEventPump.getPump();
             ((MBase)base).addMElementListener(pump);
             if (guiEnabled) {
-                ((MBase)base).addMElementListener(ProjectBrowser.getInstance()
-					 .getNavigatorPane());
+                // TODO - we have the business layer with knowledge of GUI here
+                // must resolve this.
+                ((MBase)base).addMElementListener(NavigatorPane.getInstance());
             }
             ((MBase)base).addMElementListener(UmlModelListener.getInstance());
         }

@@ -1,4 +1,4 @@
-// $Id: ActionGenerateAll.java,v 1.10 2003/06/30 21:59:34 linus Exp $
+// $Id: ActionGenerateAll.java,v 1.11 2003/09/01 20:30:12 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.ui.ArgoDiagram;
+import org.argouml.ui.NavigatorPane;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.generator.ui.ClassGenerationDialog;
@@ -83,7 +84,7 @@ public class ActionGenerateAll extends UMLAction {
 		continue;
             classes.addElement(owner);
 	}
-	TreePath[] paths = pb.getNavigatorPane().getTree().getSelectionPaths();
+	TreePath[] paths = NavigatorPane.getInstance().getTree().getSelectionPaths();
 	if (classes.size() == 0 && paths != null) {
 	    for (int i = 0; i < paths.length; i++ ) {
 		Object selected = paths[i].getLastPathComponent();

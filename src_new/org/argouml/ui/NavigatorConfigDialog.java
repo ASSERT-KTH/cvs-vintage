@@ -1,4 +1,4 @@
-// $Id: NavigatorConfigDialog.java,v 1.11 2003/06/30 18:00:23 linus Exp $
+// $Id: NavigatorConfigDialog.java,v 1.12 2003/09/01 20:30:12 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -445,8 +445,7 @@ public class NavigatorConfigDialog extends JDialog
     }
 
     public void doOk() {
-	ProjectBrowser pb = ProjectBrowser.getInstance();
-	NavigatorPane np = ProjectBrowser.getInstance().getNavigatorPane();
+	NavigatorPane np = NavigatorPane.getInstance();
 	//np.setPerspectives(NavPerspective.getRegisteredPerspectives());
 	np.updateTree();
 	setVisible(false);

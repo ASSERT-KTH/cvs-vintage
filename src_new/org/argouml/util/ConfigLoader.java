@@ -1,4 +1,4 @@
-// $Id: ConfigLoader.java,v 1.12 2003/09/01 19:01:27 bobtarling Exp $
+// $Id: ConfigLoader.java,v 1.13 2003/09/01 20:30:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,6 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
 import org.argouml.swingext.Orientation;
-import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
 
 public class ConfigLoader {
