@@ -175,7 +175,7 @@ $page.setTitle("Assign users to artifact")
        #foreach ($user in $searchResults)
 		<tr class="a">
 		<td><input type="checkbox" name="newaddusers" value="$user.UserName" /></td>
-		<td><strong>$user.UserName</strong></td>
+		<td><strong>$user.FirstName $user.LastName</strong></td>
 		<td><a href="mailTo:$user.Email">$user.UserName</td>
 		</tr>
        #end
