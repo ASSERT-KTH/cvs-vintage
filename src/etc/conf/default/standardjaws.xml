@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjaws.xml,v 1.19 2001/08/20 22:39:52 user57 Exp $ -->
+<!-- $Id: standardjaws.xml,v 1.20 2001/10/15 18:32:23 starksm Exp $ -->
 
 <jaws>
    <datasource>java:/DefaultDS</datasource>
@@ -389,8 +389,8 @@
 	 <name>PostgreSQL</name>
 	 <mapping>
 	    <java-type>java.lang.Boolean</java-type>
-	    <jdbc-type>TINYINT</jdbc-type>
-	    <sql-type>INT2</sql-type>
+	    <jdbc-type>CHAR(1)</jdbc-type>
+	    <sql-type>BOOLEAN</sql-type>
 	 </mapping>
 	 <mapping>
 	    <java-type>java.lang.Byte</java-type>
