@@ -31,12 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * <p><b>2002/08/27: loubyansky</b>
- * <ol>
- *   <li>added checking for java.lang.Object primary key class and adding a new field for it</li>
- * </ol>
- *
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -294,8 +289,7 @@ public final class JDBCEntityMetaData {
       // AL: this is set up only in this constructor
       // AL: because, AFAIK, others are called with default value
       // AL: produced by this one
-      if( (primaryKeyClass != null)
-         && (primaryKeyClass.getName().equals("java.lang.Object")) )
+      if( primaryKeyClass == java.lang.Object.class )
       {
          JDBCCMPFieldMetaData upkField =
             new JDBCCMPFieldMetaData( this );
@@ -525,6 +519,43 @@ public final class JDBCEntityMetaData {
          int index = cmpFields.indexOf(oldCMPField);
          cmpFields.remove(oldCMPField);
          cmpFields.add(index, cmpFieldMetaData);
+      }
+
+      // unknown primary key field
+      if( primaryKeyClass == java.lang.Object.class )
+      {
+         Element upkElement = MetaData.getOptionalChild( element, "unknown-pk" );
+         if( upkElement != null )
+         {
+            // assume now there is only one upk field
+            JDBCCMPFieldMetaData oldUpkField = null;
+            for( Iterator iter = cmpFields.iterator(); iter.hasNext(); )
+            {
+               JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)iter.next();
+               if( cmpField.isUnknownPkField() )
+               {
+                  oldUpkField = cmpField;
+                  break;
+               }
+            }
+
+            // IMO, this is a redundant check
+            if( oldUpkField == null )
+            {
+               oldUpkField = new JDBCCMPFieldMetaData( this );
+            }
+
+            JDBCCMPFieldMetaData upkField = 
+               new JDBCCMPFieldMetaData( this, upkElement, oldUpkField);
+
+            // update upk field
+            String oldUpkFieldName = oldUpkField.getFieldName();
+            cmpFieldsByName.put( oldUpkFieldName, upkField );
+
+            int oldUpkFieldInd = cmpFields.indexOf( oldUpkField );
+            cmpFields.remove( oldUpkField );
+            cmpFields.add( oldUpkFieldInd, upkField );
+         }
       }
 
       // load-loads
