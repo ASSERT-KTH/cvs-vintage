@@ -58,7 +58,7 @@
  * Author:      Henri Gomez <hgomez@slib.fr>                               *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.11 $                                           *
+ * Version:     $Revision: 1.12 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -79,6 +79,7 @@
 #define MAX_SEND_BODY_SZ        (DEF_BUFFER_SZ - 6)
 #define AJP13_HEADER_LEN	(4)
 #define AJP13_HEADER_SZ_LEN	(2)
+#define CHUNK_BUFFER_PAD        (12)
 
 struct ajp13_operation;
 typedef struct ajp13_operation ajp13_operation_t;
@@ -263,12 +264,22 @@ static int read_fully_from_server(jk_ws_service_t *s,
                                   unsigned len)
 {
     unsigned rdlen = 0;
-
+    unsigned padded_len = len;
+    
     if (s->is_chunked && s->no_more_chunks) {
 	return 0;
     }
+    if (s->is_chunked) {
+        /* Corner case: buf must be large enough to hold next
+         * chunk size (if we're on or near a chunk border).
+         * Pad the length to a reasonable value, otherwise the
+         * read fails and the remaining chunks are tossed.
+         */
+        padded_len = (len < CHUNK_BUFFER_PAD) ?
+                      len : len - CHUNK_BUFFER_PAD;
+    }
 
-    while(rdlen < len) {
+    while(rdlen < padded_len) {
         unsigned this_time = 0;
         if(!s->read(s, buf + rdlen, len - rdlen, &this_time)) {
             return -1;
