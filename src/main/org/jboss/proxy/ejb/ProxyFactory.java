@@ -40,6 +40,7 @@ import org.jboss.metadata.BeanMetaData;
 import org.jboss.naming.Util;
 import org.jboss.proxy.Interceptor;
 import org.jboss.proxy.ClientContainer;
+import org.jboss.proxy.ClientContainerEx;
 import org.jboss.proxy.IClientContainer;
 import org.jboss.proxy.ejb.handle.HomeHandleImpl;
 import org.jboss.system.Registry;
@@ -68,7 +69,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler/a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -115,7 +116,8 @@ public class ProxyFactory
     * The proxy-config/client-interceptors/entity-list stack
     */
    protected ArrayList listEntityInterceptorClasses = new ArrayList();
-
+   /** A flag indicating if the IClientContainer interface should be added */
+   protected boolean includeIClientIface;
    // A pointer to the container this proxy factory is dedicated to
    protected Container container;
 
@@ -260,6 +262,8 @@ public class ProxyFactory
       );
       if(clientInterceptors != null)
       {
+         String value = MetaData.getElementAttribute(clientInterceptors, "exposeContainer");
+         this.includeIClientIface = Boolean.valueOf(value).booleanValue();
          NodeList children = clientInterceptors.getChildNodes();
          for(int i = 0; i < children.getLength(); i++)
          {
@@ -376,13 +380,22 @@ public class ProxyFactory
          context.setValue(InvocationKey.EJB_METADATA, ejbMetaData);
          context.setInvokerProxyBinding(invokerMetaData.getName());
 
-         ClientContainer client = new ClientContainer(context);
+         ClientContainer client = null;
+         EJBProxyFactoryContainer pfc = (EJBProxyFactoryContainer) container;
+         Class[] ifaces = {pfc.getHomeClass(), Class.forName("javax.ejb.Handle")};
+         if( includeIClientIface )
+         {
+            ifaces = new Class[] {IClientContainer.class, pfc.getHomeClass(),
+                           Class.forName("javax.ejb.Handle")};
+            client = new ClientContainerEx(context);
+         }
+         else
+         {
+            client = new ClientContainer(context);
+         }
          loadInterceptorChain(homeInterceptorClasses, client);
 
-         EJBProxyFactoryContainer pfc = (EJBProxyFactoryContainer) container;
          // Create the EJBHome
-         Class[] ifaces = {IClientContainer.class, pfc.getHomeClass(),
-                           Class.forName("javax.ejb.Handle")};
          this.home = (EJBHome) Proxy.newProxyInstance(
                // Class loader pointing to the right classes from deployment
                pfc.getHomeClass().getClassLoader(),
@@ -405,11 +418,17 @@ public class ProxyFactory
             context.setInvokerProxyBinding(invokerMetaData.getName());
             context.setValue(InvocationKey.EJB_HOME, home);
 
-            client = new ClientContainer(context);
-
+            Class[] ssifaces = {pfc.getRemoteClass()};
+            if( includeIClientIface )
+            {
+               ssifaces = new Class[] {IClientContainer.class, pfc.getRemoteClass()};               
+               client = new ClientContainerEx(context);               
+            }
+            else
+            {
+               client = new ClientContainer(context);
+            }
             loadInterceptorChain(beanInterceptorClasses, client);
-
-            Class[] ssifaces = {IClientContainer.class, pfc.getRemoteClass()};
 
             this.statelessObject = 
                (EJBObject)Proxy.newProxyInstance(
@@ -424,13 +443,14 @@ public class ProxyFactory
          else
          {
             // this is faster than newProxyInstance
-            Class[] intfs = {IClientContainer.class, pfc.getRemoteClass()};
+            Class[] intfs = {pfc.getRemoteClass()};
+            if( this.includeIClientIface )
+            {
+               intfs = new Class[]{IClientContainer.class, pfc.getRemoteClass()};
+            }
             Class proxyClass = Proxy.getProxyClass(pfc.getRemoteClass().getClassLoader(), intfs);
-            final Class[] constructorParams =
-               {InvocationHandler.class};
-
+            final Class[] constructorParams = {InvocationHandler.class};
             proxyClassConstructor = proxyClass.getConstructor(constructorParams);
-
          }
 
 
@@ -533,7 +553,16 @@ public class ProxyFactory
       context.setValue(InvocationKey.EJB_HOME, home);
       context.setValue("InvokerID", Invoker.ID);
 
-      ClientContainer client = new ClientContainer(context);
+      ClientContainer client;
+      if( includeIClientIface )
+      {
+         client = new ClientContainerEx(context);
+      }
+      else
+      {
+         client = new ClientContainer(context);
+      }
+
       try
       {
          loadInterceptorChain(beanInterceptorClasses, client);
@@ -576,7 +605,15 @@ public class ProxyFactory
          context.setInvokerProxyBinding(invokerMetaData.getName());
          context.setValue(InvocationKey.EJB_HOME, home);
 
-         ClientContainer client = new ClientContainer(context);
+         ClientContainer client;
+         if( includeIClientIface )
+         {
+            client = new ClientContainerEx(context);
+         }
+         else
+         {
+            client = new ClientContainer(context);
+         }
 
          try
          {
