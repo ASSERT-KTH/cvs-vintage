@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.sql.Connection;
 
 // Turbine classes
+import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
@@ -68,7 +69,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleOption
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleOption.java,v 1.37 2003/06/05 17:17:03 irk_tpt Exp $
+ * @version $Id: RModuleOption.java,v 1.38 2003/06/05 17:29:47 irk_tpt Exp $
  */
 public class RModuleOption 
     extends BaseRModuleOption
