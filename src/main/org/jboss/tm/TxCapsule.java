@@ -43,7 +43,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -814,6 +814,8 @@ class TxCapsule implements TimeoutTarget
                wait();
             } catch (InterruptedException ex) {}
 
+			// MF FIXME: don't we need a notify() in this case?
+			// we need to release all the thread waiting on this lock 
             if (done || myIncarnation != incarnationCount)
               throw new IllegalStateException("No transaction");
          }
