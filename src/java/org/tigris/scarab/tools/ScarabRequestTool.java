@@ -70,6 +70,8 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.QueryPeer;
+import org.tigris.scarab.om.IssueTemplate;
+import org.tigris.scarab.om.IssueTemplatePeer;
 import org.tigris.scarab.om.Depend;
 import org.tigris.scarab.om.DependPeer;
 import org.tigris.scarab.om.ScarabModulePeer;
@@ -125,6 +127,11 @@ public class ScarabRequestTool
      * A Query object for use within the Scarab API.
      */
     private Query query = null;
+
+    /**
+     * An IssueTemplate object for use within the Scarab API.
+     */
+    private IssueTemplate template = null;
 
     /**
      * A ModuleEntity object for use within the Scarab API.
@@ -187,6 +194,14 @@ public class ScarabRequestTool
     public void setQuery (Query query)
     {
         this.query = query;
+    }
+
+    /**
+     * A IssueTemplate object for use within the Scarab API.
+     */
+    public void setIssueTemplate (IssueTemplate template)
+    {
+        this.template = template;
     }
 
     private IntakeTool getIntakeTool()
@@ -328,6 +343,37 @@ try{
             e.printStackTrace();
         }
         return query;
+ 
+   }
+
+    /**
+     * A IssueTemplate object for use within the Scarab API.
+     */
+    public IssueTemplate getIssueTemplate()
+     throws Exception
+    {
+        try
+        {
+            if (template == null)
+            {
+                String templateId = data.getParameters()
+                    .getString("templateId"); 
+
+                if ( templateId == null || templateId.length() == 0 )
+                {
+                    template = IssueTemplate.getInstance();
+                }
+                else 
+                {
+                    template = IssueTemplatePeer.retrieveByPK(new NumberKey(templateId));
+                }
+            }        
+        }        
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return template;
  
    }
 
