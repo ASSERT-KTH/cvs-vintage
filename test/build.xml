@@ -40,8 +40,6 @@
   <!-- directories target definition -->
   <property name="test.dist.lib"           value="${test.dist}/lib"/>
   <property name="test.dist.jdoc"  	   value="${test.dist}/jdoc"/>
-  <property name="test.dist.config"        value="${test.dist}/config"/>
-  <property name="test.dist.doc"  	   value="${test.dist}/doc"/> 
   <property name="test.dist.results"  	   value="${test.dist}/results"/>
   <property name="test.conform"            value="conform"/>
   <property name="test.conform.src"        value="${test.src}/org/objectweb/carol/jtests/conform"/>
@@ -74,7 +72,7 @@
   <!-- *********    COMPILE    **********-->
   <!-- **********************************-->
   <!-- compile all -->
-  <target name="compile" depends="compile.base, compile.stub" description="Compiles carol test" />  
+  <target name="compile" depends="compile.base,compile.stub" description="Compiles carol test" />  
 
   <!-- **************************************-->
   <!-- *********    COMPILE TEST   **********-->
@@ -112,13 +110,10 @@
   <target name="dist">  
     <antcall target="jar"/>
     <antcall target="jdoc"/>
-    <antcall target="doc"/>
-    <antcall target="config"/>
   </target>
 
   <target name="build.test">  
     <antcall target="jar"/>
-    <antcall target="config"/>
   </target>
 
   <!-- *************************************-->
@@ -134,9 +129,6 @@
   <!-- *************************************-->
   <!-- *********        JDOC      **********-->
   <!-- *************************************-->
-  <!-- This target call every default target of each xml file
-  present in ${jdoc} directory.
-  -->
   <target name="jdoc">
     <mkdir dir="${test.dist.jdoc}"/>
     <javadoc
@@ -152,24 +144,6 @@
       </sourcepath>
       <classpath refid="test.classpath"/>
     </javadoc> 
-  </target>
-
-  <!-- *************************************-->
-  <!-- *********        DOC      **********-->
-  <!-- *************************************-->
-  <!-- This target simply copy the present in ${doc} directory  -->
-  <target name="doc">
-    <mkdir dir="${test.dist.doc}"/>
-  </target>
-
-  <!-- *************************************-->
-  <!-- *********      CONFIG    ************-->
-  <!-- *************************************-->
-  <!-- This target simply copy the present ext 
-  in ${dist.config} directory and copy the ext/README 
-  in the ${dist} directory -->
-  <target name="config">
-    <mkdir dir="${test.dist.config}"/>
   </target>
 
   <!-- ************************************-->
