@@ -64,6 +64,7 @@
  #end
 #set ($checked = !$isMoreThanOne)
 #foreach ($rmit in $rmits)
+ <tr>
   #if ($isMoreThanOne)
     #indexedRows2($velocityCount)
   #else
@@ -90,3 +91,5 @@
 <p class="alert">$l10n.NoIssueTypesInModule</p>
 #end
 
+</form>
+</div>

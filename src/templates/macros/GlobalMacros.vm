@@ -143,43 +143,37 @@
 #macro (attrValueErrorMsg $attrValue $fieldName)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #if (!$attrInput.get($fieldName).isValid())
-<p class="alert">$l10n.get($attrInput.get($fieldName).Message)</p>
+<p class="warningmessage"><strong>$l10n.get($attrInput.get($fieldName).Message)</strong></p>
 #end
 #end
 
 #macro (alert $text)
-	<p class="alert">
-	<img src="$staticLink.setPath("/images/icon_alertsml.gif")" width="16" height="14" alt="Alert notification" border="0" />&#160;Alert!
-	<small>$text</small>
-	</p>
+   <div class="warningmessage">
+   <p>$text<p>
+   </div>
 #end
 
 #macro (confirm $text)
-	<p class="confirm">
-	<img src="$staticLink.setPath("/images/icon_confirmsml.gif")" width="16" height="14" alt="Alert notification" border="0" />
-	<small>$text</small>
-	</p>
+   <div class="donemessage">
+   <p>$text<p>
+   </div>
 #end
 
 #macro (info $text)
-	<p class="info">
-	<img src="$staticLink.setPath("/images/icon_infosml.gif")" width="16" height="14" alt="Alert notification" border="0" />
-	<small>$text</small>
-	</p>
+   <div class="infomessage">
+   <p>$text<p>
+   </div>
 #end
 
 #macro (alert $text)
-	<p class="alert">
-	<strong>
-	<img src="$staticLink.setPath("/images/icon_alertsml.gif")" width="16" height="14" alt="Alert notification" border="0" />&#160;Alert!
-	</strong>
-	<small>$text</small>
-	</p>
+   <div class="warningmessage">
+   <p><strong>Alert!</strong> $text<p>
+   </div>
 #end
 
 #macro (fieldErrorMsg $field $br)
 #if ($field && $field.Message.length() > 0 && !$field.isValid())
-<p class="alert"><small><strong>$l10n.Alert</strong>&#160;$l10n.get($field.Message)</small></p>$br
+<p class="warningmark"><strong>$l10n.get($field.Message)</strong></p>$br
 #end
 #end
 
@@ -200,7 +194,7 @@
 
 #macro (stdIntakeMsg)
 #if (!$intake.isAllValid())
-<p class="alert">$l10n.CheckForErrors</p>
+<p class="warningmark"><strong>$l10n.CheckForErrors</strong></p>
 #end
 #end
 
@@ -488,7 +482,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #end
 
 #macro (textAreaLarge $key $value)
- <textarea cols="90" rows="10" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
+ <textarea cols="70" rows="10" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
 #end
 
 #macro (attributeCreatedBy $attribute)
@@ -561,19 +555,19 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
  *#
 #macro (printCollisionInfo)
 #if ($lastActivities && !$lastActivities.isEmpty())
-  <p class="info">
+  <p class="infomark"><em>
   $l10n.LastActivity
-  </p>
-  <ul class="info">
+  </em></p>
   #foreach ($obj in $lastActivities)
     #set ($issue = $obj.get(0))
     <p>Issue $issue.UniqueId last modified by 
     <a href="mailto:$issue.CreatedBy.Email">$issue.CreatedBy.Name</a></p> 
+    <ul>
     #foreach ($activity in $obj.get(1))
       <li>$activity.Description</li>
     #end
+    </ul>
   #end
-  </ul>
 #end
 #end
 
@@ -596,11 +590,11 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #set ($headingType = $data.Parameters.getInt("headingtype", 1))
 
 ## USER SEARCH
-<a name="add"><h3>$l10n.Users</h3></a> 
+<h3><a name="add">$l10n.Users</a></h3> 
 <div class="axial">
 
 #if (!$userAttrs || $userAttrs.isEmpty())
-  <p class="alert">$l10n.NoUserAttributesInCommon</p>
+  <p class="infomark"><em>$l10n.NoUserAttributesInCommon</em></p>
 #else
 
 <table border="0" cellspacing="2" cellpadding="3">
@@ -618,7 +612,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #if ($searchString && $searchString.length() > 0)
     #set ($searchResults = $scarabR.getUserFilteredSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity, $includeCommittedBy))
     #if ( $searchResults.getList().isEmpty())
-        <p class="alert">$l10n.NoUsersMatch</p>
+        <p class="infomark"><em>$l10n.NoUsersMatch</em></p>
         #set ($searchResults = $scarabR.getUserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity, $includeCommittedBy))
     #end
 #else
@@ -634,7 +628,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #end
 
 #if (!$searchResultsList || $searchResultsList.isEmpty()) 
-  <p class="alert">$l10n.NoUsersAvailable</p>
+  <p><em>$l10n.NoUsersAvailable</em></p>
 #else
 
   <table width="100%" border="1" cellspacing="2" cellpadding="3">

@@ -127,7 +127,7 @@
 </table>
 </div>
 
-<div class="functnbar">
+<div class="functnbar2">
 #if ($booleanAction)
   <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doSaveissue" />&#160;
 #else

@@ -39,7 +39,7 @@
 <h3>$l10n.SavedQueries</h3>
 
 #if ($queries.size() < 1)
- <p class="alert">$l10n.NoSavedQueries</p>
+ <p><em>$l10n.NoSavedQueries</em></p>
 <div class="functnbar3">
   <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoadvancedquery" />
 </div>

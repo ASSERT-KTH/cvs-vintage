@@ -119,7 +119,6 @@ $l10n.NoIssueTypeSelected
        value="$l10n.Filter" />
    </td>
   </tr>
- <tr>
 </table>
 </div>
 

@@ -45,15 +45,15 @@
 <h3>$l10n.Templates</h3>
 
 #if ($templates.size() < 1)
-<p class="alert">
+<p><em>
 $l10n.NoTemplates
-</p>
+</em></p>
 #else
   
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
   <th nowrap="nowrap">$l10n.Select</th>
-  <th>#sort ("name" "$l10n.Name")
+  <th>#sort ("name" "$l10n.Name")</th>
   <th>#sort ("desc" "$l10n.Description")</th>
   <th>#sort ("avail" "$l10n.Availability")</th>
   <th>#sort ("user" "$l10n.Author")</th>

@@ -63,7 +63,7 @@ $link.setPage("reports,Info.vm").setLabel("$report.Name").addPathInfo("report_id
 
 </table>
 #else
- <p class="alert">$l10n.NoSavedReports</p>
+ <p><em>$l10n.NoSavedReports</em></p>
 #end
 
 <div class="functnbar3">

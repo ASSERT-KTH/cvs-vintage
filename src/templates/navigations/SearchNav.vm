@@ -89,7 +89,7 @@
   #set ($allTemplates = $scarabR.AllIssueTemplates)
   #if ($allTemplates.size() > 0)    
    <td>
-    <form action="$link.setPage("SaveTemplate.vm")" method="POST">
+    <form action="$link.setPage("SaveTemplate.vm")" method="post">
     <input type="hidden" name="action" value="TemplateList" />
     <input type="hidden" name="eventSubmit_doUsetemplate" value="foo" />
     <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" 

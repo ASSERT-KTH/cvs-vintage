@@ -41,7 +41,7 @@
   $l10n.format("ForRModuleIssueType", $page.Title, $scarabR.CurrentRModuleIssueType.DisplayName)
 #end
 </h3>
-  <p class="alert">$l10n.NoMatchingIssues</p>
+  <p><em>$l10n.NoMatchingIssues</em></p>
 #else
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
 #set ($searchType = $data.Parameters.getString("searchType", ""))
@@ -79,7 +79,7 @@ $l10n.format("IssueListCount", $totalCount)</h3>
 <div class="colbar">
 <small>
 #if ($scarabR.ValidIssueListAttributes.isEmpty())
-<p class="info">$l10n.NoCommonAttributesInList</p>
+<p><em>$l10n.NoCommonAttributesInList</em></p>
 #else
 $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromView)
 #end
