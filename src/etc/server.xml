@@ -69,33 +69,6 @@
 
         <Jdk12Interceptor /> 
 
-       <!-- Use MxInterceptor to enable JMX monitoring.
-            
-            options are :
-            
-            port : http adaptor will listen to this port
-            
-            If you're using the MX4J HTTP Adaptor, you could also 
-            set host and authentication :
-            
-            host : the MX4J http adaptor will listen to this IP/host
-            
-            authentication: the MX4J http adaptor will use HTTP authentification
-                            method which could be (none, basic, digest)
-            
-            user: set the user to be entered when asking for user/password in
-                  HTTP authentification.
-                  
-            password : define the password for HTTP authentification
-            
-            Note, if you're using a JMX console, you don't have to 
-            use the http adaptor
-            
-            <MxInterceptor port="8999" authentification="basic" 
-                           user="admin" password="changeillico"/>
-        
-		-->
-		
         <!-- Non-standard invoker, for backward compat. ( /servlet/* ) -->
         <InvokerInterceptor /> 
 
