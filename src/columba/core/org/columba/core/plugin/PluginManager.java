@@ -18,8 +18,15 @@ package org.columba.core.plugin;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
@@ -34,10 +41,15 @@ import org.columba.core.xml.XmlIO;
  */
 public class PluginManager {
 
-	File[] pluginFolders;
-	String[] ids;
-	XmlElement[] elements;
+	//File[] pluginFolders;
+	//String[] ids;
+	//XmlElement[] elements;
 	Hashtable plugins;
+	Map folders;
+	Map elements;
+	Map jarFiles;
+
+	List ids;
 
 	/**
 	 * Constructor for PluginManager.
@@ -45,87 +57,108 @@ public class PluginManager {
 	public PluginManager() {
 		super();
 		plugins = new Hashtable(10);
+
 	}
 
-	public void initPlugins() {
-		pluginFolders = PluginFinder.searchPlugins();
-		if (pluginFolders == null) return;
-		ids = new String[pluginFolders.length];
-		elements = new XmlElement[pluginFolders.length];
+	public void addPlugin(File folder) {
+		if ((!folder.isDirectory()) || (folder.getName().equals("CVS"))) {
+			return;
+		}
 
-		for (int i = 0; i < pluginFolders.length; i++) {
-			File folder = pluginFolders[i];
-			if ((!folder.isDirectory()) ||(folder.getName().equals("CVS"))) {
-				ids[i] = "";
-				continue;
-			}
-			
-                        ColumbaLogger.log.info("registering plugin: " + folder);
+		ColumbaLogger.log.info("registering plugin: " + folder);
 
-			File xmlFile = new File(folder, "plugin.xml");
-			if (xmlFile == null) continue;
-			if ( xmlFile.exists() == false ) continue;
-			
-			XmlIO config = new XmlIO();
-			try {
-				config.setURL(xmlFile.toURL());
-			} catch (MalformedURLException mue) {}
-			config.load();
+		File xmlFile = new File(folder, "plugin.xml");
+		if (xmlFile == null)
+			return;
+		if (xmlFile.exists() == false)
+			return;
 
-			XmlElement element = config.getRoot().getElement("/plugin");
-			elements[i] = element;
-			String id = element.getAttribute("id");
-			ids[i] = id;
-			
+		XmlIO config = new XmlIO();
+		try {
+			config.setURL(xmlFile.toURL());
+		} catch (MalformedURLException mue) {
+		}
+		config.load();
 
-			//String extensionPoint = element.getAttribute("extension_point");
+		XmlElement element = config.getRoot().getElement("/plugin");
+		String id = element.getAttribute("id");
+		ids.add(id);
+		elements.put(id, element);
+		folders.put(id, folder);
+		/*
+		elements[i] = element;
+		
+		ids[i] = id;
+		*/
 
-			XmlElement runtime = element.getElement("runtime");
-			String type = runtime.getAttribute("type");
-			String jar = runtime.getAttribute("jar");
+		// save plugin folder
 
-			if (jar != null)
-				pluginFolders[i] = new File(pluginFolders[i], jar);
+		//String extensionPoint = element.getAttribute("extension_point");
 
-                        ColumbaLogger.log.debug("id: " + id);
-                        //ColumbaLogger.log.debug("extension point: " + extensionPoint);
-                        ColumbaLogger.log.debug("type: " + type);
-                        ColumbaLogger.log.debug("jar: " + jar);
+		XmlElement runtime = element.getElement("runtime");
+		String type = runtime.getAttribute("type");
+		String jar = runtime.getAttribute("jar");
 
-			XmlElement extension;
-			String extensionPoint;
+		if (jar != null)
+			//pluginFolders[i] = new File(pluginFolders[i], jar);
+			jarFiles.put(id, new File(folder, jar));
 
-			for (int j = 0; j < element.count(); j++) {
-				extension = element.getElement(j);
-				if (extension.getName().equals("extension")) {
-					extensionPoint = extension.getAttribute("name");
+		ColumbaLogger.log.debug("id: " + id);
+		//ColumbaLogger.log.debug("extension point: " + extensionPoint);
+		ColumbaLogger.log.debug("type: " + type);
+		ColumbaLogger.log.debug("jar: " + jar);
 
-					if (plugins.containsKey(extensionPoint)) {
-						// we have a plugin-handler for this kind of plugin
+		XmlElement extension;
+		String extensionPoint;
 
-						try {
-							AbstractPluginHandler handler =
-								(AbstractPluginHandler) plugins.get(
-									extensionPoint);
+		for (int j = 0; j < element.count(); j++) {
+			extension = element.getElement(j);
+			if (extension.getName().equals("extension")) {
+				extensionPoint = extension.getAttribute("name");
 
-							File file = null;
-							/*
-							if (jar != null)
-								file = new File(folder, jar);
-							else
-							*/
+				if (plugins.containsKey(extensionPoint)) {
+					// we have a plugin-handler for this kind of plugin
 
-							file = folder;
+					try {
+						AbstractPluginHandler handler =
+							(AbstractPluginHandler) plugins.get(extensionPoint);
 
-                                                        ColumbaLogger.log.info("debug: " + file.toString());
+						File file = null;
+						/*
+						if (jar != null)
+							file = new File(folder, jar);
+						else
+						*/
 
-							handler.addExtension(id, extension);
-						} catch (Exception ex) {
-							ColumbaLogger.log.error(ex.getMessage());
-						}
+						file = folder;
+
+						ColumbaLogger.log.info("debug: " + file.toString());
+
+						handler.addExtension(id, extension);
+					} catch (Exception ex) {
+						ColumbaLogger.log.error(ex.getMessage());
 					}
 				}
 			}
+		}
+
+	}
+
+	public void initPlugins() {
+		File[] pluginFolders = PluginFinder.searchPlugins();
+		if (pluginFolders == null)
+			return;
+		//ids = new String[pluginFolders.length];
+		//elements = new XmlElement[pluginFolders.length];
+		folders = new HashMap();
+		elements = new HashMap();
+		jarFiles = new HashMap();
+		ids = new Vector();
+
+		for (int i = 0; i < pluginFolders.length; i++) {
+			File folder = pluginFolders[i];
+			addPlugin(folder);
+
 		}
 	}
 
@@ -138,11 +171,15 @@ public class PluginManager {
 		throws PluginHandlerNotFoundException {
 		if (plugins.containsKey(id)) {
 			return (AbstractPluginHandler) plugins.get(id);
-                } else {
-                        ColumbaLogger.log.error("PluginHandler not found: "+id);
+		} else {
+			ColumbaLogger.log.error("PluginHandler not found: " + id);
 
 			throw new PluginHandlerNotFoundException(id);
 		}
+	}
+
+	public Enumeration getHandlers() {
+		return plugins.elements();
 	}
 
 	/*
@@ -150,40 +187,139 @@ public class PluginManager {
 		return (XmlElement) plugins.get(id);
 	}
 	*/
-        
+
+	/*
 	protected int getIndex(String id) {
 		for (int i = 0; i < ids.length; i++) {
-			if ( ids[i] == null ) continue;
-			
+			if (ids[i] == null)
+				continue;
+	
 			if (ids[i].equals(id))
 				return i;
 		}
 		return -1;
 	}
-
-	public File getPluginDir(String id) {
-                if(getIndex(id) >= 0 && getIndex(id) < pluginFolders.length) {
-                        return pluginFolders[getIndex(id)];
-                } else {
-                        return null;
-                }
+	*/
+	/**
+	 * @param id
+	 * 
+	 * @return 
+	 */
+	public File getJarFile(String id) {
+		/*
+		if (getIndex(id) >= 0 && getIndex(id) < pluginFolders.length) {
+			return pluginFolders[getIndex(id)];
+		} else {
+			return null;
+		}*/
+		return (File) jarFiles.get(id);
 	}
 
+	/**
+		 * @param id
+		 * 
+		 * @return directory of this plugin
+		 */
+	public File getFolder(String id) {
+		return (File) folders.get(id);
+	}
+
+	/**
+	 * @param id
+	 * 
+	 * @return	parent xml treenode of "plugin.xml"
+	 */
 	public XmlElement getPluginElement(String id) {
-                if(getIndex(id) >= 0 && getIndex(id) < elements.length) {
-                        return elements[getIndex(id)];
-                } else {
-                    return null;
-                }
+		/*
+		if (getIndex(id) >= 0 && getIndex(id) < elements.length) {
+			return elements[getIndex(id)];
+		} else {
+			return null;
+		}*/
+
+		return (XmlElement) elements.get(id);
 	}
 
 	public String getPluginType(String id) {
-                if(getIndex(id) >= 0 && getIndex(id) < elements.length) {
-                        XmlElement runtime = elements[getIndex(id)].getElement("runtime");
-                        return runtime.getAttribute("type");
-                } else {
-                		ColumbaLogger.log.error("runtime attribute not found");
-                        return null;
-                }
+		/*
+		if (getIndex(id) >= 0 && getIndex(id) < elements.length) {
+			XmlElement runtime = elements[getIndex(id)].getElement("runtime");
+			return runtime.getAttribute("type");
+		} else {
+			ColumbaLogger.log.error("runtime attribute not found");
+			return null;
+		}
+		*/
+		XmlElement e = getPluginElement(id);
+		XmlElement runtime = e.getElement("runtime");
+		return runtime.getAttribute("type");
 	}
+
+	public List getIds() {
+		return ids;
+	}
+
+	/**
+	 * @return	URL of Readme.html, readme.txt, etc.
+	 */
+	public URL getInfoURL(String id) {
+		File pluginDirectory = getFolder(id);
+		if (pluginDirectory == null)
+			return null;
+
+		try {
+			// try all possible version of readme files...
+			File infoFile = new File(pluginDirectory, "readme.html");
+			if (infoFile.exists() == false)
+				infoFile = new File(pluginDirectory, "readme.txt");
+			if (infoFile.exists() == false)
+				infoFile = new File(pluginDirectory, "Readme.html");
+			if (infoFile.exists() == false)
+				infoFile = new File(pluginDirectory, "Readme.txt");
+
+			ColumbaLogger.log.debug("infofile-URL=" + infoFile.toURL());
+			return infoFile.toURL();
+		} catch (MalformedURLException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
+
+		return null;
+	}
+
+	/**
+	 * enable/disable plugin
+	 * -> save changes in plugin.xml
+	 * 
+	 * @param b
+	 */
+	public void setEnabled(String id, boolean b) {
+		
+		//	get directory of plugin
+		File folder = getFolder(id);
+
+		// get plugin.xml of plugin
+		File configFile = new File(folder, "plugin.xml");
+
+		try {
+			XmlIO io = new XmlIO(configFile.toURL());
+			io.load();
+
+			//	get xml tree node
+			XmlElement e = io.getRoot().getElement("/plugin");
+			if (e == null)
+				return;
+
+			// update XmlElement reference in HashMap cache
+			elements.put(id, e);
+			
+			// set enabled attribute
+			e.addAttribute("enabled", new Boolean(b).toString());
+
+			io.save();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+
 }

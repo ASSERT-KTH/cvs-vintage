@@ -83,7 +83,7 @@ public class InterpreterHandler extends AbstractPluginHandler {
 		XmlElement interpreter = extension.getElement("interpreter");
 		
 		try {
-			interpreterTable.put(interpreter.getAttribute("name"), PluginLoader.loadExternalPlugin(interpreter.getAttribute("main_class"), pluginManager.getPluginType(id),pluginManager.getPluginDir(id),null));
+			interpreterTable.put(interpreter.getAttribute("name"), PluginLoader.loadExternalPlugin(interpreter.getAttribute("main_class"), pluginManager.getPluginType(id),pluginManager.getJarFile(id),null));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

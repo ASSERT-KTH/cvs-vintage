@@ -19,7 +19,9 @@ package org.columba.core.plugin;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.ListIterator;
+import java.util.Vector;
 
 import org.columba.core.loader.DefaultClassLoader;
 import org.columba.core.logging.ColumbaLogger;
@@ -33,7 +35,7 @@ import org.columba.core.xml.XmlElement;
  * 
  * 
  */
-public abstract class AbstractPluginHandler {
+public abstract class AbstractPluginHandler implements PluginHandlerInterface{
 	protected String id;
 
 	protected XmlElement parentNode;
@@ -45,6 +47,8 @@ public abstract class AbstractPluginHandler {
 	//  example: org.columba.example.HelloWorld$HelloPlugin -> HelloWorld
 	protected Hashtable transformationTable;
 
+	protected List externalPlugins;
+	
 	/**
 	 * @param id
 	 * @param config
@@ -55,7 +59,11 @@ public abstract class AbstractPluginHandler {
 		transformationTable = new Hashtable();
 		if (config != null)
 			pluginListConfig = new PluginListConfig(config);
+			
+		externalPlugins = new Vector();
+		
 		ColumbaLogger.log.debug("initialising plugin-handler: " + id);
+		
 	}
 
 	/**
@@ -109,7 +117,7 @@ public abstract class AbstractPluginHandler {
 				(dollarLoc > 0 ? name.substring(0, dollarLoc) : name);
 
 			String type = pluginManager.getPluginType(pluginId);
-			File pluginDir = pluginManager.getPluginDir(pluginId);
+			File pluginDir = pluginManager.getJarFile(pluginId);
 
 			return PluginLoader.loadExternalPlugin(
 				className,
@@ -179,6 +187,11 @@ public abstract class AbstractPluginHandler {
 
 		return list;
 	}
+	
+	public ListIterator getExternalPlugins()
+	{
+		return externalPlugins.listIterator();
+	}
 
 	/**
 	 * @return
@@ -239,6 +252,10 @@ public abstract class AbstractPluginHandler {
 	}
 
 	public void addExtension(String id, XmlElement extension) {
+		// add external plugin to list
+		// --> this is used to distinguish internal/external plugins
+		externalPlugins.add(id);
+		
 		ListIterator iterator = extension.getElements().listIterator();
 		XmlElement action;
 		while (iterator.hasNext()) {
@@ -254,6 +271,13 @@ public abstract class AbstractPluginHandler {
 
 			parentNode.addElement(action);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.plugin.PluginHandlerInterface#getParent()
+	 */
+	public XmlElement getParent() {
+		return parentNode;
 	}
 
 }
