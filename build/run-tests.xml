@@ -3,6 +3,18 @@
 <!-- Testcases for Scarab -->
 <project name="main" default="test-all" basedir=".">
 
+  <!-- Allow the user to have multiple configuration files and
+       specify them using -Dscarab.build.configuration=filename -->
+  <property name="configuration.file" value="build.properties"/> 
+
+  <!-- Give user a chance to override without editing this file
+       (and without using -D arguments each time they build) -->
+  <property file="${user.home}/scarab.build.properties" /> 
+  <property file="${user.home}/build.properties" />
+  <property file="${basedir}/${configuration.file}" />
+  <property file="${basedir}/default.${scarab.database.type}.properties" />
+  <property file="${basedir}/default.properties" />
+
   <property name="webapps.scarab" value="../target/webapps/scarab"/>
   <property name="web.inf" value="${webapps.scarab}/WEB-INF"/>
   <property name="web.inf.lib" value="${web.inf}/lib"/>
@@ -11,8 +23,6 @@
   <property name="junit.jar" value="../lib/junit-3.7.jar"/>
   <property name="config.dir"
            value="-Dconfig.dir=${webapps.scarab}"/>
-
-  <property file="${basedir}/default.properties" />
 
   <property name="clover.dbdir" value="${web.inf}/src"/>
   <property name="clover.dbfile" value="${clover.dbdir}/scarab_coverage.db"/>
