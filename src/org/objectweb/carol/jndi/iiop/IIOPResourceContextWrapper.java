@@ -1,5 +1,5 @@
 /*
- * @(#)IIOPRessourceContextWrapper.java	1.0 02/07/15
+ * @(#)IIOPRessourceContextWrapper.java	1.1 02/07/15
  *
  * Copyright (C) 2002 - INRIA (www.inria.fr)
  *
@@ -44,11 +44,12 @@ import  org.objectweb.carol.util.multi.ProtocolCurrent;
 
 /*
  * Class <code>IIOPRemoteResourceContextWrapper</code> is the CAROL JNDI Context. This context make the 
- * iiop serializable resource wrapping to/from a remote object
+ * iiop serializable resource wrapping to/from a remote object. This context unexport the resource in the unbind method 
+ * 
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @see javax.naming.Context
- * @version 1.0, 15/07/2002
+ * @version 1.1, 15/07/2002
  */
 public class IIOPResourceContextWrapper implements Context {
     
@@ -56,7 +57,13 @@ public class IIOPResourceContextWrapper implements Context {
      * the IIOP JNDI context
      * @see #IIOPResourceContextWrapper
      */
-     private static Context iiopContext = null; 
+     private static Context iiopContext = null;
+
+    /**
+     * the Exported Wrapper Hashtable
+     *
+     */
+    private static Hashtable wrapperHash = null;
 
     
     /**
@@ -67,6 +74,7 @@ public class IIOPResourceContextWrapper implements Context {
      */
     public IIOPResourceContextWrapper (Context iiopContext ) throws NamingException {
 	this.iiopContext = iiopContext;
+	this.wrapperHash = new Hashtable();
     }
 
 
@@ -101,11 +109,21 @@ public class IIOPResourceContextWrapper implements Context {
      * @return  a <code>Remote IIOPRemoteResource Object</code> if o is a ressource
      *          o if else
      */
-    private Object encodeObject(Object o) {
+    private Object encodeObject(Object o, Object name, boolean replace) throws NamingException {
 	try {
 	    if ((!(o instanceof Remote)) && (o instanceof Serializable)) {
 		IIOPResourceWrapper irw =  new IIOPResourceWrapper((Serializable) o);
 		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
+		IIOPResourceWrapper oldObj = (IIOPResourceWrapper) wrapperHash.put(name, irw);
+		if (oldObj != null) {
+		    if (replace) {
+			ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
+		    } else {
+			ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject(irw);
+			wrapperHash.put(name, oldObj);
+			throw new NamingException("Object already bind");
+		    }
+		} 
 		return irw;
 	    } else {
 		return o;
@@ -129,34 +147,54 @@ public class IIOPResourceContextWrapper implements Context {
     }
 
     public void bind(String name, Object obj) throws NamingException {
-	iiopContext.bind(name,encodeObject(obj));
+	iiopContext.bind(name,encodeObject(obj, name, false));
     }
 
     public void bind(Name name, Object obj) throws NamingException {
-	iiopContext.bind(name,encodeObject(obj));
+	iiopContext.bind(name,encodeObject(obj, name, false));
     }
 
     public void rebind(String name, Object obj) throws NamingException {
-	iiopContext.rebind(name,encodeObject(obj));
+	iiopContext.rebind(name,encodeObject(obj, name, true));
     }
 
     public void rebind(Name name, Object obj) throws NamingException {
-	iiopContext.rebind(name,encodeObject(obj));
+	iiopContext.rebind(name,encodeObject(obj, name, true));
     }
 
     public void unbind(String name) throws NamingException  {
-	iiopContext.unbind(name);
+	try {
+	    iiopContext.unbind(name);
+	    if(wrapperHash.containsKey(name)){
+		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject((IIOPResourceWrapper)wrapperHash.remove(name));
+	    }
+	} catch (Exception e) {
+	    throw new NamingException("" +e);  
+	}
     }
 
     public void unbind(Name name) throws NamingException  {
-	iiopContext.unbind(name);	
+	try {
+	    iiopContext.unbind(name);
+	    if(wrapperHash.containsKey(name)){
+		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject((IIOPResourceWrapper)wrapperHash.remove(name));
+	    }
+	} catch (Exception e) {
+	    throw new NamingException("" +e);  
+	}
     }
 
-    public void rename(String oldName, String newName) throws NamingException {
+    public void rename(String oldName, String newName) throws NamingException {	
+	if(wrapperHash.containsKey(oldName)){
+	    wrapperHash.put( newName, wrapperHash.remove(oldName));
+	}
 	iiopContext.rename(oldName, newName);
     }
 
     public void rename(Name oldName, Name newName) throws NamingException  {
+	if(wrapperHash.containsKey(oldName)){
+	    wrapperHash.put(newName, wrapperHash.remove(oldName));
+	}
 	iiopContext.rename(oldName, newName);	
     }
 
