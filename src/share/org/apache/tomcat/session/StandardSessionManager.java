@@ -3,7 +3,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -19,15 +19,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -55,7 +55,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.session;
@@ -171,7 +171,7 @@ public final class StandardSessionManager
 	// XXX XXX a manager may be shared by multiple
 	// contexts, we just want to remove the sessions of ctx!
 	// The manager will still run after that ( i.e. keep database
-	// connection open 
+	// connection open
 	if (manager instanceof Lifecycle) {
 	    try {
 		((Lifecycle) manager).stop();
@@ -182,5 +182,20 @@ public final class StandardSessionManager
 
     }
 
-
+    /**
+     * Used by context to configure the session manager's inactivity timeout.
+     *
+     * The SessionManager may have some default session time out, the
+     * Context on the other hand has it's timeout set by the deployment
+     * descriptor (web.xml). This method lets the Context conforgure the
+     * session manager according to this value.
+     *
+     * @param minutes The session inactivity timeout in minutes.
+     */
+    public void setSessionTimeOut(int minutes) {
+        if(-1 != minutes) {
+            // The manager works with seconds...
+            manager.setMaxInactiveInterval(minutes * 60);
+        }
+    }
 }

@@ -21,7 +21,7 @@ import org.w3c.dom.*;
 public class WebXmlReader extends BaseInterceptor {
 
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
-    
+
     public WebXmlReader() {
     }
 
@@ -56,35 +56,35 @@ public class WebXmlReader extends BaseInterceptor {
 	    //	    if( ctx.getDebug() > 5 ) xh.setDebug( 3 );
 
 	    xh.addRule("web-app/context-param", xh.methodSetter("addInitParameter", 2) );
-	    xh.addRule("web-app/context-param/param-name", xh.methodParam(0) ); 
+	    xh.addRule("web-app/context-param/param-name", xh.methodParam(0) );
 	    xh.addRule("web-app/context-param/param-value", xh.methodParam(1) );
 
 	    xh.addRule("web-app/description", xh.methodSetter("setDescription", 0) );
-	    xh.addRule("web-app/icon/small-icon", xh.methodSetter("setIcon", 0) ); 
+	    xh.addRule("web-app/icon/small-icon", xh.methodSetter("setIcon", 0) );
 	    xh.addRule("web-app/distributable", xh.methodSetter("setDistributable", 0) );
 
-	    xh.addRule("web-app/servlet-mapping", xh.methodSetter("addServletMapping", 2) ); 
-	    xh.addRule("web-app/servlet-mapping/servlet-name", xh.methodParam(1) ); 
+	    xh.addRule("web-app/servlet-mapping", xh.methodSetter("addServletMapping", 2) );
+	    xh.addRule("web-app/servlet-mapping/servlet-name", xh.methodParam(1) );
 	    xh.addRule("web-app/servlet-mapping/url-pattern", xh.methodParam(0) );
-	    
-	    xh.addRule("web-app/taglib", xh.methodSetter("addTaglib", 2) ); 
-	    xh.addRule("web-app/taglib/taglib-uri", xh.methodParam(0) ); 
+
+	    xh.addRule("web-app/taglib", xh.methodSetter("addTaglib", 2) );
+	    xh.addRule("web-app/taglib/taglib-uri", xh.methodParam(0) );
 	    xh.addRule("web-app/taglib/taglib-location", xh.methodParam(1) );
-	    
-	    xh.addRule("web-app/env-entry", xh.methodSetter("addTaglib", 4) ); 
-	    xh.addRule("web-app/env-entry/env-entry-name", xh.methodParam(0) ); 
-	    xh.addRule("web-app/env-entry/env-entry-type", xh.methodParam(1) ); 
-	    xh.addRule("web-app/env-entry/env-entry-value", xh.methodParam(2) ); 
-	    xh.addRule("web-app/env-entry/description", xh.methodParam(3) ); 
-	    
-	    xh.addRule("web-app/login-config", xh.methodSetter("setLoginConfig", 4) ); 
-	    xh.addRule("web-app/login-config/auth-method", xh.methodParam(0) ); 
-	    xh.addRule("web-app/login-config/realm-name", xh.methodParam(1) ); 
-	    xh.addRule("web-app/login-config/form-login-config/form-login-page", xh.methodParam(2) ); 
-	    xh.addRule("web-app/login-config/form-login-config/form-error-page", xh.methodParam(3) ); 
-	    
-	    xh.addRule("web-app/mime-mapping", xh.methodSetter("addContentType", 2) ); 
-	    xh.addRule("web-app/mime-mapping/extension", xh.methodParam(0) ); 
+
+	    xh.addRule("web-app/env-entry", xh.methodSetter("addTaglib", 4) );
+	    xh.addRule("web-app/env-entry/env-entry-name", xh.methodParam(0) );
+	    xh.addRule("web-app/env-entry/env-entry-type", xh.methodParam(1) );
+	    xh.addRule("web-app/env-entry/env-entry-value", xh.methodParam(2) );
+	    xh.addRule("web-app/env-entry/description", xh.methodParam(3) );
+
+	    xh.addRule("web-app/login-config", xh.methodSetter("setLoginConfig", 4) );
+	    xh.addRule("web-app/login-config/auth-method", xh.methodParam(0) );
+	    xh.addRule("web-app/login-config/realm-name", xh.methodParam(1) );
+	    xh.addRule("web-app/login-config/form-login-config/form-login-page", xh.methodParam(2) );
+	    xh.addRule("web-app/login-config/form-login-config/form-error-page", xh.methodParam(3) );
+
+	    xh.addRule("web-app/mime-mapping", xh.methodSetter("addContentType", 2) );
+	    xh.addRule("web-app/mime-mapping/extension", xh.methodParam(0) );
 	    xh.addRule("web-app/mime-mapping/mime-type", xh.methodParam(1) );
 
 	    xh.addRule("web-app/welcome-file-list/welcome-file", xh.methodSetter("addWelcomeFile", 0) );
@@ -93,22 +93,23 @@ public class WebXmlReader extends BaseInterceptor {
 	    xh.addRule("web-app/error-page/error-code", xh.methodParam(0) );
 	    xh.addRule("web-app/error-page/exception-type", xh.methodParam(0) );
 	    xh.addRule("web-app/error-page/location", xh.methodParam(1) );
-	    
-	    xh.addRule("web-app/session-cronfig/session-timeout", xh.methodSetter("setSessionTimeout",0) ); 
-	    
+
+	    xh.addRule("web-app/session-config", xh.methodSetter("setSessionTimeOut", 1, new String[]{"int"}));
+	    xh.addRule("web-app/session-config/session-timeout", xh.methodParam(0));
+
 	    // Servlet
 	    xh.addRule("web-app/servlet", xh.objectCreate("org.apache.tomcat.core.ServletWrapper") ); // servlet-wrapper
 	    xh.addRule("web-app/servlet", xh.setParent( "setContext") ); // remove it from stack when done
 	    xh.addRule("web-app/servlet", xh.addChild("addServlet", null) ); // remove it from stack when done
-	    xh.addRule("web-app/servlet/servlet-name", xh.methodSetter("setServletName",0) ); 
+	    xh.addRule("web-app/servlet/servlet-name", xh.methodSetter("setServletName",0) );
 	    xh.addRule("web-app/servlet/servlet-class", xh.methodSetter("setServletClass",0));
 	    xh.addRule("web-app/servlet/jsp-file",xh.methodSetter("setPath",0));
 
-	    xh.addRule("web-app/servlet/security-role-ref", xh.methodSetter("addSecurityMapping", 3) ); 
+	    xh.addRule("web-app/servlet/security-role-ref", xh.methodSetter("addSecurityMapping", 3) );
 	    xh.addRule("web-app/servlet/security-role-ref/role-name", xh.methodParam(0) );
 	    xh.addRule("web-app/servlet/security-role-ref/role-link", xh.methodParam(1) );
-	    xh.addRule("web-app/servlet/security-role-ref/description", xh.methodParam(2) ); 
-	    
+	    xh.addRule("web-app/servlet/security-role-ref/description", xh.methodParam(2) );
+
 	    xh.addRule("web-app/servlet/init-param", xh.methodSetter("addInitParam", 2) ); // addXXX
 	    xh.addRule("web-app/servlet/init-param/param-name", xh.methodParam(0) );
 	    xh.addRule("web-app/servlet/init-param/param-value", xh.methodParam(1) );
@@ -132,7 +133,7 @@ public class WebXmlReader extends BaseInterceptor {
     void addSecurity( XmlMapper xh ) {
 	xh.addRule("web-app/security-constraint",
 		   new SCAction() );
-	
+
 	xh.addRule("web-app/security-constraint/user-data-constraint/transport-guarantee",
 		   new XmlAction() {
 			   public void end( SaxContext ctx) throws Exception {
@@ -153,7 +154,7 @@ public class WebXmlReader extends BaseInterceptor {
 			   }
 		       }
 		   );
-	
+
 	xh.addRule("web-app/security-constraint/web-resource-collection",
 		   new XmlAction() {
 			   public void start( SaxContext ctx) throws Exception {
@@ -195,7 +196,7 @@ public class WebXmlReader extends BaseInterceptor {
 		       }
 		   );
     }
-    
+
 }
 
 /** Specific action for Security-constraint
@@ -210,10 +211,10 @@ class SCAction extends XmlAction {
 	String tag=ctx.getTag(ctx.getTagCount()-1);
 	SecurityConstraint sc=(SecurityConstraint)st.pop();
 	Context context=(Context)st.peek();
-	
+
 	st.push( sc ); // restore stack
 	// add all patterns that will need security
-	
+
 	String roles[]=sc.getRoles();
 	String transport=sc.getTransport();
 	Enumeration en=sc.getResourceCollections();
@@ -235,7 +236,7 @@ class SecurityConstraint {
     Vector roles=new Vector();
     String transport;
     Vector resourceC=new Vector();
-    
+
     public SecurityConstraint() {
     }
 
@@ -270,7 +271,7 @@ class SecurityConstraint {
 class ResourceCollection {
     Vector urlP=new Vector();
     Vector methods=new Vector();
-    
+
     public ResourceCollection() {
     }
 

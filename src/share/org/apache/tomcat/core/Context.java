@@ -3,7 +3,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -19,15 +19,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -55,7 +55,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.core;
@@ -74,12 +74,13 @@ import javax.servlet.*;
  * The implementation is a repository for all the properties
  * defined in web.xml and tomcat specific properties, with all the
  * functionality delegated to interceptors.
- * 
+ *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  * @author Jason Hunter [jch@eng.sun.com]
  * @author Harish Prabandham
  * @author costin@dnt.ro
+ * @author Gal Shachor shachor@il.ibm.com
  */
 public class Context {
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
@@ -100,12 +101,12 @@ public class Context {
     private Hashtable attributes = new Hashtable();
 
     private File workDir;
-    
+
     private RequestSecurityProvider rsProvider;
 
     private Vector contextInterceptors = new Vector();
     private Vector requestInterceptors = new Vector();
-    
+
     // Servlets loaded by this context( String->ServletWrapper )
     private Hashtable servlets = new Hashtable();
 
@@ -127,11 +128,11 @@ public class Context {
     // Maps specified in web.xml ( String url -> ServletWrapper  )
     private Hashtable mappings = new Hashtable();
     Hashtable constraints=new Hashtable();
-    
+
     Hashtable containers=new Hashtable();
-    
+
     private ServletWrapper defaultServlet = null;
-    
+
     // Authentication properties
     String authMethod;
     String realmName;
@@ -139,12 +140,12 @@ public class Context {
     String formErrorPage;
 
     int debug=0;
-    
+
     public Context() {
 	//	System.out.println("New Context ");
 	// XXX  customize it per context
     }
-	
+
     ServletContextFacade getFacade() {
         if(contextFacade==null )
 	    contextFacade = new ServletContextFacade(contextM, this);
@@ -161,14 +162,14 @@ public class Context {
     public void setContextManager(ContextManager cm) {
 	contextM=cm;
     }
-    
+
     public String getPath() {
 	return path;
     }
 
     public void setPath(String path) {
 	// config believes that the root path is called "/",
-	// 
+	//
 	if( "/".equals(path) )
 	    path="";
 	this.path = path;
@@ -178,14 +179,14 @@ public class Context {
        the context and unpack it. It is _very_ inefficient to serve
        files from a remote location ( at least 2x slower )
     */
-    
+
     /** DocBase points to the web application files.
      *
      *  There is no restriction on the syntax and content of DocBase,
      *  it's up to the various modules to interpret this and use it.
      *  For example, to server from a war file you can use war: protocol,
      *  and set up War interceptors.
-     * 
+     *
      *  "Basic" tomcat treats it is a file ( either absolute or relative to
      *  the CM home ). XXX Make it absolute ??
      *
@@ -203,7 +204,7 @@ public class Context {
     public void setReloadable( String s ) {
 	reloadable=new Boolean( s ).booleanValue();
     }
-    
+
     public void setReloadable( boolean b ) {
 	reloadable=b;
     }
@@ -213,7 +214,7 @@ public class Context {
     public boolean getReloadable() {
 	return reloadable;
     }
-    
+
     // -------------------- Web.xml properties --------------------
     public Enumeration getWelcomeFiles() {
 	return welcomeFiles.elements();
@@ -268,8 +269,8 @@ public class Context {
     public Enumeration getEnvEntries() {
 	return envEntryTypes.keys();
     }
-    
-    
+
+
     public String getInitParameter(String name) {
         return (String)initializationParameters.get(name);
     }
@@ -283,7 +284,7 @@ public class Context {
     public void addInitParameter( String name, String value ) {
 	initializationParameters.put(name, value );
     }
-    
+
     public Enumeration getInitParameterNames() {
         return initializationParameters.keys();
     }
@@ -314,7 +315,7 @@ public class Context {
     public void removeAttribute(String name) {
         attributes.remove(name);
     }
-    
+
     public String getDescription() {
         return this.description;
     }
@@ -342,8 +343,11 @@ public class Context {
 
     public void setSessionTimeOut(int sessionTimeOut) {
         this.sessionTimeOut = sessionTimeOut;
+        if(null != sessionManager) {
+            sessionManager.setSessionTimeOut(sessionTimeOut);
+        }
     }
-    
+
     public FileNameMap getMimeMap() {
         return mimeTypes;
     }
@@ -394,10 +398,10 @@ public class Context {
 	this.realmName=realmName;
 	this.formLoginPage=formLoginPage;
 	this.formErrorPage=formErrorPage;
-    }   
-    
+    }
+
     // -------------------- Mappings --------------------
-    
+
     /**
      * Maps a named servlet to a particular path or extension.
      * If the named servlet is unregistered, it will be added
@@ -425,8 +429,8 @@ public class Context {
 	    //	    System.out.println("Servlet not registered " + servletName );
 	    // Workaround for frequent "bug" in web.xmls
 	    // Declare a mapping for a JSP or servlet that is not
-	    // declared as servlet. 
-	    
+	    // declared as servlet.
+
 	    sw = new ServletWrapper(this);
 
 	    sw.setServletName(servletName);
@@ -443,7 +447,7 @@ public class Context {
 	    defaultServlet = sw;
 
 	mappings.put( path, sw );
-	
+
 	Container map=new Container();
 	map.setContext( this );
 	map.setHandler( sw );
@@ -462,7 +466,7 @@ public class Context {
 	    ct.setTransport( transport );
 	    ct.setRoles( roles );
 	    ct.setPath( path[i] );
-	    
+
 	    // XXX check if exists, merge if true.
 	    constraints.put( path[i], ct );
 	    //contextM.addSecurityConstraint( this, path[i], ct);
@@ -473,7 +477,7 @@ public class Context {
     public Enumeration getContainers() {
 	return containers.elements();
     }
-    
+
     public Enumeration getContainerLocations() {
 	return containers.keys();
     }
@@ -481,11 +485,11 @@ public class Context {
     public Container getContainer( String path ) {
 	return (Container)containers.get(path);
     }
-    
+
     public void removeContainer( Container ct ) {
 	containers.remove(ct.getPath());
     }
-    
+
     public ServletWrapper getDefaultServlet() {
 	if( defaultServlet==null)
 	    defaultServlet=getServletByName(Constants.DEFAULT_SERVLET_NAME );
@@ -494,7 +498,7 @@ public class Context {
 
     // -------------------- Servlets management --------------------
 
-    // XXX do we need that ?? 
+    // XXX do we need that ??
     /** Remove the servlet with a specific name
      */
     public void removeServletByName(String servletName)
@@ -539,14 +543,17 @@ public class Context {
     }
 
     public void setSessionManager( SessionManager manager ) {
-	sessionManager= manager;
+    	sessionManager= manager;
+        if(null != sessionManager) {
+            sessionManager.setSessionTimeOut(sessionTimeOut);
+        }
     }
 
 
     public void setServletLoader(ServletLoader loader ) {
 	this.servletL=loader;
     }
-    
+
     public ServletLoader getServletLoader() {
 	return servletL;
     }
@@ -592,7 +599,7 @@ public class Context {
 	    System.out.println("<l:context path=\"" + path  + "\" >" + msg + "</l:context>");
 	}
     }
-    
+
     public String toString() {
 	return "Ctx(" + path + "," + getDocBase() + ")";
     }
@@ -613,7 +620,7 @@ public class Context {
         if (name == null)
 	    return null;
 
-	// We need to do the checks 
+	// We need to do the checks
 	ServletWrapper wrapper = getServletByName( name );
 	if (wrapper == null)
 	    return null;
@@ -628,9 +635,9 @@ public class Context {
     public URL getResource(String rpath) throws MalformedURLException {
         URL url = null;
 
-	if ("".equals(rpath)) 
+	if ("".equals(rpath))
 	    return getDocumentBase();
-	
+
         if (rpath == null)
 	    return null;
 
@@ -651,7 +658,7 @@ public class Context {
 	}
 	if(mappedPath == null )
 	    mappedPath=lr.getLookupPath();
-	
+
         URL docBase = getDocumentBase();
 
 	url=new URL(docBase.getProtocol(), docBase.getHost(),
@@ -660,7 +667,7 @@ public class Context {
 	return url;
     }
 
-    
+
     Context getContext(String path) {
 	if (! path.startsWith("/")) {
 	    return null; // according to spec, null is returned
@@ -678,23 +685,23 @@ public class Context {
     }
 
     /**
-     * 
+     *
      */
     String getRealPath( String path) {
 	//	Real Path is the same as PathTranslated for a new request
-	
+
 	Context base=this; // contextM.getContext("");
 	Request req=contextM.createRequest( base , FileUtil.normPath(path) );
 	contextM.processRequest(req);
-	
+
 	String mappedPath = req.getMappedPath();
 
 	// XXX workaround - need to fix mapper to return mapped path
-	if( mappedPath == null ) 
+	if( mappedPath == null )
 	    mappedPath=req.getPathInfo();
 	if(mappedPath == null )
 	    mappedPath=req.getLookupPath();
-	
+
 	String realPath= this.getDocBase() + mappedPath;
 
         // evaluate relative paths relative to the context's home
@@ -714,7 +721,7 @@ public class Context {
     private URL documentBase;
     private URL servletBase = null;
     private boolean isInvokerEnabled = false;
-    // for serving WARs directly 
+    // for serving WARs directly
     private File warDir = null;
     private boolean isWARExpanded = false;
     private boolean isWARValidated = false;
@@ -726,7 +733,7 @@ public class Context {
     public boolean isInvokerEnabled() {
         return isInvokerEnabled;
     }
-    
+
     /**  @deprecated
      */
     public void setInvokerEnabled(boolean isInvokerEnabled) {
@@ -744,7 +751,7 @@ public class Context {
     public void setWorkDirPersistent( boolean b ) {
 	isWorkDirPersistent=b;
     }
-    
+
     /**  @deprecated
      */
     public File getWorkDir() {
@@ -823,7 +830,7 @@ public class Context {
     public void setIsWARValidated(boolean isWARValidated) {
         this.isWARValidated = isWARValidated;
     }
-    
+
     /**  @deprecated
      */
     public void addContextInterceptor( ContextInterceptor ci) {
@@ -856,13 +863,13 @@ public class Context {
     }
 
     RequestInterceptor rInterceptors[];
-    
+
     /** Return the context interceptors as an array.
 	For performance reasons we use an array instead of
 	returning the vector - the interceptors will not change at
 	runtime and array access is faster and easier than vector
 	access
-	@deprecated 
+	@deprecated
     */
     public RequestInterceptor[] getRequestInterceptors() {
 	if( rInterceptors == null || rInterceptors.length != requestInterceptors.size()) {
@@ -882,7 +889,7 @@ public class Context {
 		return null;
 	    try {
 		String absPath=docBase;
-		
+
 		// detect absolute path
 		if (docBase.startsWith(File.separator) ||
 		    docBase.startsWith("/") ||
@@ -894,14 +901,14 @@ public class Context {
 		} else {
 		    absPath = contextM.getHome() + File.separator + docBase;
 		}
-		
+
 		try {
 		    absPath = new File(absPath).getCanonicalPath();
 		} catch (IOException npe) {
 		}
-		
+
 		documentBase = new URL("file", "", absPath);
-		
+
 	    } catch( MalformedURLException ex ) {
 		ex.printStackTrace();
 	    }

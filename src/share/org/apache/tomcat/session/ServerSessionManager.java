@@ -3,7 +3,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -19,15 +19,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -55,7 +55,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.session;
@@ -68,7 +68,7 @@ import java.util.*;
 import javax.servlet.http.*;
 
 /**
- * 
+ *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
@@ -80,17 +80,19 @@ public class ServerSessionManager implements SessionManager {
         StringManager.getManager("org.apache.tomcat.session");
     private static ServerSessionManager manager; // = new ServerSessionManager();
 
+    protected int inactiveInterval = -1;
+
     static {
 	manager = new ServerSessionManager();
     }
-    
+
     public static ServerSessionManager getManager() {
 	return manager;
     }
 
     private Hashtable sessions = new Hashtable();
     private Reaper reaper;
-    
+
     private ServerSessionManager() {
 	reaper = Reaper.getReaper();
 	reaper.setServerSessionManager(this);
@@ -100,7 +102,7 @@ public class ServerSessionManager implements SessionManager {
     public void accessed( Context ctx, Request req, String id ) {
 	ApplicationSession apS=(ApplicationSession)findSession( ctx, id);
 	if( apS==null) return;
-	
+
 	ServerSession servS=apS.getServerSession();
 	servS.accessed();
 	apS.accessed();
@@ -113,21 +115,25 @@ public class ServerSessionManager implements SessionManager {
 	String sessionId = SessionIdGenerator.generateId();
 	ServerSession session = new ServerSession(sessionId);
 	sessions.put(sessionId, session);
+
+	if(-1 != inactiveInterval) {
+    	session.setMaxInactiveInterval(inactiveInterval);
+    }
 	return session.getApplicationSession( ctx, true );
     }
 
     public HttpSession findSession(Context ctx, String id) {
 	ServerSession sSession=(ServerSession)sessions.get(id);
 	if(sSession==null) return null;
-	
+
 	return sSession.getApplicationSession(ctx, false);
     }
-    
+
     // XXX
     // sync'd for safty -- no other thread should be getting something
     // from this while we are reaping. This isn't the most optimal
     // solution for this, but we'll determine something else later.
-    
+
     synchronized void reap() {
 	Enumeration enum = sessions.keys();
 
@@ -160,5 +166,22 @@ public class ServerSessionManager implements SessionManager {
 		appSession.invalidate();
 	    }
 	}
+    }
+
+    /**
+     * Used by context to configure the session manager's inactivity timeout.
+     *
+     * The SessionManager may have some default session time out, the
+     * Context on the other hand has it's timeout set by the deployment
+     * descriptor (web.xml). This method lets the Context conforgure the
+     * session manager according to this value.
+     *
+     * @param minutes The session inactivity timeout in minutes.
+     */
+    public void setSessionTimeOut(int minutes) {
+        if(-1 != minutes) {
+            // The manager works with seconds...
+            inactiveInterval = (minutes * 60);
+        }
     }
 }

@@ -13,7 +13,7 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import org.w3c.dom.*;
 
-/** 
+/**
  * SAX Handler - it will read the XML and construct java objects
  *
  * @author costin@dnt.ro
@@ -30,15 +30,15 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
     int sp;
 
     String body;
-    
+
     int debug=0;
-    
+
     public XmlMapper() {
 	attributeStack = new Object[100]; // depth of the xml doc
 	tagStack = new String[100];
 	initDefaultRules();
     }
-    
+
     public void setDocumentLocator (Locator locator)
     {
 	if( debug>0 ) log("Set locator : " + locator);
@@ -80,21 +80,21 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 	for( int i=0; i< sp ; i++ ) sb.append( tagStack[i] ).append( "/" );
 	sb.append(" ");
 	AttributeList attributes=(AttributeList) attributeStack[sp-1];
-	if( attributes!=null) 
+	if( attributes!=null)
 	    for (int i = 0; i < attributes.getLength (); i++) {
 		sb.append(attributes.getName(i)).append( "=" ).append(attributes.getValue(i));
 		sb.append(" ");
 	    }
-	
+
 	return sb.toString();
     }
-    
+
     public void endElement (String tag) throws SAXException
     {
 	try {
 	    // Find a match for the current tag in the context
 	    matchEnd( this);
-	    
+
 	    if( sp > 1 ) {
 		tagStack[sp] = null;
 		attributeStack[sp]=null;
@@ -117,8 +117,8 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 	throws SAXException
     {
     }
-    
-    public void processingInstruction (String name, String instruction) 
+
+    public void processingInstruction (String name, String instruction)
 	throws SAXException
     {
     }
@@ -154,7 +154,7 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
     public void setRoot(Object o) {
 	root=o;
     }
-    
+
     // -------------------- Utils --------------------
     // Debug ( to be replaced with the real thing )
     public void setDebug( int level ) {
@@ -189,7 +189,7 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 		parser=ParserFactory.makeParser();
 	    else
 		parser=ParserFactory.makeParser("com.sun.xml.parser.Parser");
-	    
+
 	    input = new InputSource( new FileReader(xmlFile));
 
 	    parser.setDocumentHandler( this);
@@ -288,9 +288,9 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 			 }
 		     }
 		 );
-	
+
     }
-    
+
     public void addRule( String path, XmlAction action ) {
 	rules[ruleCount]=new Rule( new PathMatch( path ) , action);
 	ruleCount++;
@@ -317,9 +317,9 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 
     void matchEnd(SaxContext ctx ) throws Exception {
 	int matchCount=match( ctx, matching );
-	for ( int i=0; i< matchCount; i++ ) 
+	for ( int i=0; i< matchCount; i++ )
 	    matching[i].action.end( ctx );
-	for ( int i=0; i< matchCount; i++ ) 
+	for ( int i=0; i< matchCount; i++ )
 	    matching[i].action.cleanup( ctx );
     }
 
@@ -354,7 +354,7 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 
     // -------------------- Factories for "common" actions --------------------
     // XXX Probably it's better to use the real XmlActions, with new FooAction()
-    
+
     /** Create an object using for a matching tag with the given class name
      */
     public XmlAction objectCreate( String classN ) {
@@ -411,13 +411,13 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
     public XmlAction methodParam(int ord) {
 	return new MethodParam(ord, null); // use body as value
     }
-    
+
     /** Extract the method param from a tag attribute
      */
     public XmlAction methodParam(int ord, String attrib) {
 	return new MethodParam(ord, attrib);
     }
-    
+
 }
 
 //-------------------- "Core" actions --------------------
@@ -427,7 +427,7 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 class ObjectCreate extends XmlAction {
     String className;
     String attrib;
-    
+
     public ObjectCreate(String classN) {
 	className=classN;
     }
@@ -439,13 +439,13 @@ class ObjectCreate extends XmlAction {
 	className=classN;
 	this.attrib=attrib;
     }
-    
+
     public void start( SaxContext ctx) throws Exception {
 	Stack st=ctx.getObjectStack();
 	int top=ctx.getTagCount()-1;
 	String tag=ctx.getTag(top);
 	String classN=className;
-	
+
 	if( attrib!=null) {
 	    AttributeList attributes = ctx.getAttributeList( top );
 	    classN= attributes.getValue(attrib);
@@ -455,7 +455,7 @@ class ObjectCreate extends XmlAction {
 	st.push(o);
 	if( ctx.getDebug() > 0 ) ctx.log("new "  + attrib + " " + classN + " "  + tag  + " " + o);
     }
-    
+
     public void cleanup( SaxContext ctx) {
 	Stack st=ctx.getObjectStack();
 	String tag=ctx.getTag(ctx.getTagCount()-1);
@@ -469,7 +469,7 @@ class ObjectCreate extends XmlAction {
  */
 class SetProperties extends XmlAction {
     //    static Class paramT[]=new Class[] { "String".getClass() };
-    
+
     public SetProperties() {
     }
 
@@ -519,7 +519,7 @@ class SetProperties extends XmlAction {
 		boolean ok=true;
 		if( setter.equals( methods[i].getName() ) &&
 		    methods[i].getParameterTypes().length == 1) {
-		    
+
 		    // match - find the type and invoke it
 		    Class paramType=methods[i].getParameterTypes()[0];
 		    Object params[]=new Object[1];
@@ -528,7 +528,7 @@ class SetProperties extends XmlAction {
 			try {
 			    params[0]=new Integer(value);
 			} catch( NumberFormatException ex ) {ok=false;}
-		    } else if ("java.lang.Boolean".equals( paramType.getName()) || 
+		    } else if ("java.lang.Boolean".equals( paramType.getName()) ||
 			"boolean".equals( paramType.getName())) {
 			params[0]=new Boolean(value);
 		    } else {
@@ -541,7 +541,7 @@ class SetProperties extends XmlAction {
 			return;
 		    }
 		}
-		
+
 		// save "setProperty" for later
 		if( "setProperty".equals( methods[i].getName())) {
 		    setPropertyMethod=methods[i];
@@ -589,7 +589,7 @@ class SetParent extends XmlAction {
     public SetParent(String c) {
 	childM=c;
     }
-    
+
     public void end( SaxContext ctx) throws Exception {
 	Stack st=ctx.getObjectStack();
 
@@ -613,12 +613,12 @@ class SetParent extends XmlAction {
 class AddChild extends XmlAction {
     String parentM;
     String paramT;
-    
+
     public AddChild(String p, String c) {
 	parentM=p;
 	paramT=c;
     }
-    
+
     public void end( SaxContext ctx) throws Exception {
 	Stack st=ctx.getObjectStack();
 
@@ -646,18 +646,18 @@ class  MethodSetter extends 	    XmlAction {
     String mName;
     int paramC;
     String paramTypes[];
-    
+
     public MethodSetter( String mName, int paramC) {
 	this.mName=mName;
 	this.paramC=paramC;
     }
-    
+
     public MethodSetter( String mName, int paramC, String paramTypes[]) {
 	this.mName=mName;
 	this.paramC=paramC;
 	this.paramTypes=paramTypes;
     }
-    
+
     public void start( SaxContext ctx) {
 	Stack st=ctx.getObjectStack();
 	if(paramC==0) return;
@@ -666,7 +666,7 @@ class  MethodSetter extends 	    XmlAction {
     }
 
     static final Class STRING_CLASS="String".getClass(); // XXX is String.CLASS valid in 1.1 ?
-    
+
     public void end( SaxContext ctx) throws Exception {
 	Stack st=ctx.getObjectStack();
 	String params[]=null;
@@ -689,7 +689,7 @@ class  MethodSetter extends 	    XmlAction {
 		// XXX Add more types
 		if( "int".equals( paramTypes[i] ) ) {
 		    realParam[i]=new Integer( params[i] );
-		    paramT[i]=realParam[i].getClass();
+		    paramT[i]=int.class;
 		} else {
 		    realParam[i]=params[i];
 		    paramT[i]=STRING_CLASS;
@@ -699,7 +699,7 @@ class  MethodSetter extends 	    XmlAction {
 
 	Method m=parent.getClass().getMethod( mName, paramT );
 	m.invoke( parent, realParam );
-	    
+
 	if(ctx.getDebug() > 0 ) {
 	    // debug
 	    StringBuffer sb=new StringBuffer();
@@ -719,7 +719,7 @@ class  MethodSetter extends 	    XmlAction {
 class  MethodParam extends XmlAction {
     int paramId;
     String attrib;
-    
+
     public MethodParam( int paramId, String attrib) {
 	this.paramId=paramId;
 	this.attrib=attrib;
@@ -728,7 +728,7 @@ class  MethodParam extends XmlAction {
     // If param is an attrib, set it
     public void start( SaxContext ctx) {
 	if( attrib==null) return;
-	
+
 	Stack st=ctx.getObjectStack();
 	String h[]=(String[])st.peek();
 
