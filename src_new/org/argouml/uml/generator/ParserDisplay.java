@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.86 2003/12/12 10:56:10 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.87 2004/02/07 00:39:49 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.86 2003/12/12 10:56:10 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.87 2004/02/07 00:39:49 d00mst Exp $
 
 
 
@@ -2547,7 +2547,6 @@ public class ParserDisplay extends Parser {
 	} catch (NoSuchElementException nsee) {
 	    throw new ParseException("Unexpected end of message", s.length());
 	} catch (ParseException pre) {
-	    _cat.error("parseexception" , pre);
 	    throw pre;
 	}
 
