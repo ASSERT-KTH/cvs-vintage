@@ -40,7 +40,7 @@ import org.jboss.minerva.jdbc.PSCacheKey;
  * also register a TransactionListener that will be notified when the
  * Transaction is finished, and release the XAConnection at that time.</P>
  * @see org.jboss.minerva.xa.TransactionListener
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionImpl implements XAConnection {
@@ -123,6 +123,17 @@ public class XAConnectionImpl implements XAConnection {
     }
 
     /**
+     * Indicates that the outstanding transaction has finished with a fatal
+     * error, and this object should be closed or permanently removed from a
+     * pool.  This dispatches a close event to all listeners.
+     * @see #addConnectionEventListener
+     */
+    public void transactionFailed() {
+        if(transListener != null)
+            transListener.transactionFailed(this);
+    }
+
+    /**
      * Indicates that the connection given to the client has had an error.
      * If there is currently a transaction, this object should not be closed or
      * returned to a pool.  If not, it can be closed or returned immediately.
@@ -139,10 +150,8 @@ public class XAConnectionImpl implements XAConnection {
      * no transaction will be committed or rolled back but this connection
      * will be reused, we must roll it back.
      */
-    public void rollback() {
-        try {
-            con.rollback();
-        } catch(SQLException e) {}
+    public void rollback() throws SQLException {
+        con.rollback();
     }
 
     // ---- Implementation of javax.sql.XAConnection ----

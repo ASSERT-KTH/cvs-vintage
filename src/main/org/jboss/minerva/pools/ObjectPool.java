@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -703,7 +703,7 @@ public class ObjectPool implements PoolEventListener {
      * is set, the object will be removed from the pool entirely.
      */
     public void objectError(PoolEvent evt) {
-        if(invalidateOnError)
+        if(invalidateOnError || evt.isCatastrophic())
             markObjectAsInvalid(evt.getSource());
         releaseObject(evt.getSource());
     }

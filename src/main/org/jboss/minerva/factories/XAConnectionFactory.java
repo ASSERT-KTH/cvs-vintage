@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  * connection, the same previous connection will be returned.  Otherwise,
  * you won't be able to share changes across connections like you can with
  * the native JDBC 2 Standard Extension implementations.</P>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionFactory extends PoolObjectFactory {
@@ -90,7 +90,11 @@ public class XAConnectionFactory extends PoolObjectFactory {
                 } else {
                     if(trans == null) {
                         // Wrapper - we can only release it if there's no current transaction
-                        ((XAConnectionImpl)con).rollback();
+                        try {
+                            ((XAConnectionImpl)con).rollback();
+                        } catch(SQLException e) {
+                            pool.markObjectAsInvalid(con);
+                        }
                         pool.releaseObject(con);
                     }
                 }
@@ -102,6 +106,15 @@ public class XAConnectionFactory extends PoolObjectFactory {
                 Object tx = wrapperTx.remove(con);
                 if(tx != null)
                     wrapperTx.remove(tx);
+                pool.releaseObject(con);
+            }
+
+            public void transactionFailed(XAConnectionImpl con) {
+                con.clearTransactionListener();
+                Object tx = wrapperTx.remove(con);
+                if(tx != null)
+                    wrapperTx.remove(tx);
+                pool.markObjectAsInvalid(con);
                 pool.releaseObject(con);
             }
         };

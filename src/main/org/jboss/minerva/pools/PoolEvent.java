@@ -13,7 +13,7 @@ import java.util.EventObject;
  * object was used, closed, or had an error occur.  The typical response is
  * to update the last used time in the pool for used events, and return the
  * object to the pool for closed or error events.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class PoolEvent extends EventObject {
@@ -38,6 +38,7 @@ public class PoolEvent extends EventObject {
     public final static int OBJECT_USED   = -8986434;
 
     private int type;
+    private boolean catastrophic = false;
 
     /**
      * Create a new event.
@@ -62,5 +63,21 @@ public class PoolEvent extends EventObject {
      */
     public int getType() {
         return type;
+    }
+
+    /**
+     * Gets whether an object error was so bad that the object should not
+     * be reused by the pool.  This is meaningful for error events only.
+     */
+    public boolean isCatastrophic() {
+        return catastrophic;
+    }
+
+    /**
+     * Marks this as an error so severe that the object should not be reused by
+     * the pool.
+     */
+    public void setCatastrophic() {
+        catastrophic = true;
     }
 }
