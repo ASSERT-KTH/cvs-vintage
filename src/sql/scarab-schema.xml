@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.90 2002/03/25 22:48:26 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.91 2002/04/09 23:21:04 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -275,7 +275,7 @@
     <column name="ACTIVE" required="false" type="BOOLEANINT" 
         default="0" size="1"></column>
     <column name="DEDUPE" required="false" type="BOOLEANINT" 
-        default="1" size="1"/>
+        default="0" size="1"/>
     <column name="PREFERRED_ORDER" javaName="Order" required="false" 
             default="-1" type="INTEGER"></column>
     <foreign-key foreignTable="SCARAB_MODULE">
