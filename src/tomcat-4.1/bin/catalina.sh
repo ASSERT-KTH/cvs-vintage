@@ -32,7 +32,7 @@
 #                   (JSSE) installation, whose JAR files will be added to the
 #                   system class path used to start Tomcat.
 #
-# $Id: catalina.sh,v 1.1 2002/10/26 00:52:00 jon Exp $
+# $Id: catalina.sh,v 1.2 2002/12/17 14:16:08 jon Exp $
 # -----------------------------------------------------------------------------
 
 # OS specific support.  $var _must_ be set to either true or false.
@@ -100,6 +100,7 @@ if $cygwin; then
   JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
   CATALINA_HOME=`cygpath --path --windows "$CATALINA_HOME"`
   CATALINA_BASE=`cygpath --path --windows "$CATALINA_BASE"`
+  CATALINA_TMPDIR=`cygpath --path --windows "$CATALINA_TMPDIR"`
   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
   JSSE_HOME=`cygpath --path --windows "$JSSE_HOME"`
 fi
