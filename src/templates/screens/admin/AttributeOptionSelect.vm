@@ -37,12 +37,12 @@ associated with this attribute in this module.</strong></p>
 #else
 
 <p>The following attributes are available for use in this artifact type.</p>
-<h3>Global attributes</h3>
+<h3>Global attribute options</h3>
 
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
 <th nowrap="nowrap" width="8%"></th>
-<th>Option name</th>
+<th>Name</th>
 </tr>
 
 #foreach ($option in $availOptions)

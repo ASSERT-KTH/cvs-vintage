@@ -34,11 +34,11 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
   <th>Input type</th>
   <td>$attType.Name</td>
  <tr>
-  <th>Attribute name</th>
+  <th>Name</th>
   <td>$attribute.Name</td>
  </tr>
  <tr>
-  <th>Attribute description</th>
+  <th>Description</th>
   <td>$attribute.Description</td>
  </tr>
   #if ($attribute.CreatedDate)
@@ -48,12 +48,10 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
   #attributeCreatedBy($attribute)
   </td>
  </tr>
-  #end
-  #if ($attribute.CreatedDate)
  <tr>
   <th>Creation date</th>
   <td>
-    $attribute.CreatedDate
+    $format.getDate($scarabR.DateFormat, $attribute.CreatedDate)
   </td>
  </tr>
   #end
