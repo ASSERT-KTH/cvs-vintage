@@ -248,8 +248,14 @@ public class Request {
     
     public void setContextManager( ContextManager cm ) {
 	contextM=cm;
-	encodingInfo=cm.getNote( ContextManager.REQUEST_NOTE,"req.encoding" );
-	attributeInfo=cm.getNote( ContextManager.REQUEST_NOTE,"req.attribute" );
+	try {
+	    encodingInfo=cm.getNoteId( ContextManager.REQUEST_NOTE,
+				       "req.encoding" );
+	    attributeInfo=cm.getNoteId( ContextManager.REQUEST_NOTE,
+					"req.attribute" );
+	} catch( TomcatException ex ) {
+	    ex.printStackTrace();
+	}
     }
 
     public ContextManager getContextManager() {
@@ -398,7 +404,7 @@ public class Request {
 	}
 	if( result != null ) {
 	    charEncoding=(String)result;
-	    return;
+	    return charEncoding;
 	}
 	
         charEncoding = ContentType.getCharsetFromContentType(getContentType());
