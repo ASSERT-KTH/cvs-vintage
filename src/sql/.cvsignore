@@ -1,3 +1,6 @@
 report.scarab.sql.generation
 sqldb.map
 create-db.sh
+id-table-schema.sql
+scarab-schema.sql
+turbine-schema.sql
