@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.17 2002/11/16 20:02:55 linus Exp $
+// $Id: Critic.java,v 1.18 2002/11/19 22:56:04 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -187,7 +187,8 @@ public class Critic implements Poster, Serializable {
     _knowledgeTypes.addElement("Correctness");
     _decisionCategory = "Checking";
     _emailAddr = "jrobbins@ics.uci.edu";
-    _moreInfoURL = "http://ics.uci.edu/~jrobbins";
+    _moreInfoURL = "http://argouml.tigris.org/documentation/printablehtml/"
+	+ "manual/argomanual.html#critic." + this.getClass().getName();
     _description = "no description is availible";
     _headline = "default critic headline (" + getClass().getName() + ")";
     _priority = ToDoItem.MED_PRIORITY;
