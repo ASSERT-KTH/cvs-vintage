@@ -24,7 +24,7 @@
 // File: FigExtend.java
 // Classes: FigExtend
 // Original Author: mail@jeremybennett.com
-// $Id: FigExtend.java,v 1.8 2003/05/06 21:52:16 alexb Exp $
+// $Id: FigExtend.java,v 1.9 2003/05/20 10:37:43 mkl Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Extend relationships.
@@ -33,6 +33,7 @@
 package org.argouml.uml.diagram.use_case.ui;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
 import org.argouml.application.api.Notation;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
@@ -74,6 +75,8 @@ public class FigExtend extends FigEdgeModelElement {
 
     protected FigGroup _fg;
 
+
+    private ArrowHeadGreater endArrow = new ArrowHeadGreater();
 
     ///////////////////////////////////////////////////////////////////////////
     //
@@ -146,7 +149,6 @@ public class FigExtend extends FigEdgeModelElement {
 
         setDashed(true);
 
-        ArrowHeadGreater endArrow = new ArrowHeadGreater();
         setDestArrowHead(endArrow);
 
         // Make the edge go between nearest points
@@ -260,6 +262,11 @@ public class FigExtend extends FigEdgeModelElement {
         endTrans();
     }
 
+    public void paint(Graphics g) {
+        endArrow.setLineColor(getLineColor());
+        super.paint(g);
+    }
+    
 
 } /* end class FigExtend */
 

@@ -24,7 +24,7 @@
 // File: FigInclude.java
 // Classes: FigInclude
 // Original Author: mail@jeremybennett.com
-// $Id: FigInclude.java,v 1.6 2003/05/06 21:52:16 alexb Exp $
+// $Id: FigInclude.java,v 1.7 2003/05/20 10:37:43 mkl Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Include relationships.
@@ -33,6 +33,7 @@
 package org.argouml.uml.diagram.use_case.ui;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.tigris.gef.base.PathConvPercent;
@@ -54,6 +55,8 @@ public class FigInclude extends FigEdgeModelElement {
 
 
     private FigText label = null; // the label for the stereotype
+
+    private ArrowHeadGreater endArrow = new ArrowHeadGreater();
     
     /**
      * <p>The default constructor, but should never be called directly (use
@@ -91,7 +94,6 @@ public class FigInclude extends FigEdgeModelElement {
 
         // Add an arrow with an open arrow head
 
-        ArrowHeadGreater endArrow = new ArrowHeadGreater();
         setDestArrowHead(endArrow);
 
         // Make the edge go between nearest points
@@ -166,6 +168,10 @@ public class FigInclude extends FigEdgeModelElement {
 
     protected void modelChanged(MElementEvent e) { }
 
+    public void paint(Graphics g) {
+        endArrow.setLineColor(getLineColor());
+        super.paint(g);
+    }
 
 } /* end class FigInclude */
 
