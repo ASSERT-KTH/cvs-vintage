@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.118 2004/10/17 19:08:10 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.119 2004/10/23 02:28:26 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -107,6 +107,8 @@
       appender level. See bug#696819.
       -->
       <attribute name="Log4jQuietMode">true</attribute>
+      <!-- How frequently in seconds the ConfigurationURL is checked for changes -->
+      <attribute name="RefreshPeriod">60</attribute>
    </mbean>
 
    <!-- ==================================================================== -->
