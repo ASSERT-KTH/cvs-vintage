@@ -82,7 +82,20 @@
         \/     \/     \/           \/    \/ 
 
         [${version}-${DSTAMP}${TSTAMP}]
-      </echo>
+
+
+        Running with following options:
+
+        database name = ${scarab.database.name}
+        database type = ${scarab.database.type}
+        jdbc driver   = ${scarab.database.jdbc.driver}
+        database url  = ${scarab.database.url}
+        host          = ${scarab.database.host}
+        port          = ${scarab.database.port}
+        username      = ${scarab.database.username}
+        admin user    = ${scarab.user.username}
+
+</echo>
     </target>
 
 
