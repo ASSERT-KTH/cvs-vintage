@@ -62,12 +62,12 @@ import org.w3c.dom.Element;
  * @see Container
  * @see EJBDeployer
  *
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Ãberg</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -808,9 +808,13 @@ public class EjbModule
             String className = null;
             try
             {
-               className = MetaData.getElementContent(ielement);
+               className = MetaData.getFirstElementContent(ielement, null);
                Class clazz = loader.loadClass(className);
                Interceptor interceptor = (Interceptor) clazz.newInstance();
+               if (interceptor instanceof XmlLoadable)
+               {
+                  ((XmlLoadable)interceptor).importXml(ielement);
+               }
                istack.add(interceptor);
             }
             catch (Exception e)
