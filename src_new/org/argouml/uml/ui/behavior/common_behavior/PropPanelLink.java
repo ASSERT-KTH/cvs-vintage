@@ -1,4 +1,4 @@
-// $Id: PropPanelLink.java,v 1.27 2003/11/25 10:58:14 jhraigniac Exp $
+// $Id: PropPanelLink.java,v 1.28 2004/07/22 10:58:49 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,17 +27,20 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.27 2003/11/25 10:58:14 jhraigniac Exp $
+// $Id: PropPanelLink.java,v 1.28 2004/07/22 10:58:49 mkl Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
 
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
@@ -47,12 +50,17 @@ public class PropPanelLink extends PropPanelModelElement {
     ////////////////////////////////////////////////////////////////
     // contructors
     public PropPanelLink() {
-        super("Link Properties", _linkIcon, ConfigLoader.getTabPropsOrientation());
+        super("Link", _linkIcon, ConfigLoader.getTabPropsOrientation());
 
         Class mclass = (Class)ModelFacade.LINK;
         addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
         addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
         addLinkField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
+        addSeperator();
+        
+        JList connectionList = new UMLLinkedList(new UMLLinkConnectionListModel());
+        JScrollPane connectionScroll = new JScrollPane(connectionList);
+        addLinkField(Translator.localize("UMLMenu", "label.connections"), connectionScroll);
 
         new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
         new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete object"), "removeElement", null);
