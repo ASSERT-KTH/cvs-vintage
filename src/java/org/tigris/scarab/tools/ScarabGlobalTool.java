@@ -49,6 +49,8 @@ package org.tigris.scarab.tools;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
+import java.util.Enumeration;
 
 import org.apache.log4j.Category;
 import org.apache.fulcrum.security.TurbineSecurity;
@@ -91,7 +93,7 @@ import org.apache.turbine.Turbine;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.34 2002/08/20 22:09:29 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.35 2002/08/30 17:03:40 jmcnally Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -467,6 +469,27 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public int sizeOfArray(Object[] obj)
     {
         return (obj == null) ? -1 : obj.length;
+    }
+
+
+    /**
+     * Breaks text into a list of Strings.  Text is separated into tokens
+     * at characters given in delimiters.  The delimiters are not part
+     * of the resulting tokens. if delimiters is empty or null, "\n" is used.
+     *
+     * @param text a <code>String</code> value
+     * @param delimiters a <code>String</code> value
+     * @return a <code>List</code> value
+     */
+    public Enumeration tokenize(String text, String delimiters)
+    {
+        if (delimiters == null || delimiters.length() == 0) 
+        {
+            delimiters = "\n";
+        }
+        
+        StringTokenizer st = new StringTokenizer(text, delimiters);
+        return st;
     }
 
     /**

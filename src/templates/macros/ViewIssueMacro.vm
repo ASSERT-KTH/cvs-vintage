@@ -226,7 +226,11 @@ $l10n.NoComments
     #if ($isEditComments)
       <p>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.DataAsString)</p>
     #else
-      <p>$comment.DataAsString</p>
+      <p>
+      #foreach($lineoftext in $scarabG.tokenize($comment.DataAsString, ""))
+        $lineoftext<br />
+      #end
+      </p>
     #end
   #end
 
