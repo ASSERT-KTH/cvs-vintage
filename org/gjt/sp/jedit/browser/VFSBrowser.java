@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.37 2002/05/13 07:34:48 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.38 2002/05/13 09:52:46 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -854,7 +854,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 	{
 		VFS.DirectoryEntry[] selectedFiles = browserView.getSelectedFiles();
 
-		for(int i = 0; i < selectedFiles.length; i++)
+check_selected: for(int i = 0; i < selectedFiles.length; i++)
 		{
 			VFS.DirectoryEntry file = selectedFiles[i];
 
@@ -868,8 +868,17 @@ public class VFSBrowser extends JPanel implements EBComponent
 					buffer = jEdit.openFile(null,file.path);
 				else if(doubleClickClose && canDoubleClickClose)
 				{
-					jEdit.closeBuffer(view,buffer);
-					break;
+					// close if this buffer is currently
+					// visible in the view.
+					EditPane[] editPanes = view.getEditPanes();
+					for(int j = 0; j < editPanes.length; j++)
+					{
+						if(editPanes[j].getBuffer() == buffer)
+						{
+							jEdit.closeBuffer(view,buffer);
+							break check_selected;
+						}
+					}
 				}
 
 				if(buffer != null)

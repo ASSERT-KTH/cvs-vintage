@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * A virtual filesystem implementation. Note tha methods whose names are
  * prefixed with "_" are called from the I/O thread.
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.13 2002/03/10 05:36:13 spestov Exp $
+ * @author $Id: VFS.java,v 1.14 2002/05/13 09:52:46 spestov Exp $
  */
 public abstract class VFS
 {
@@ -632,11 +632,11 @@ public abstract class VFS
 			if(!jEdit.getBooleanProperty("vfs.browser.colorize"))
 				return;
 
-			try
+			String glob;
+			int i = 0;
+			while((glob = jEdit.getProperty("vfs.browser.colors." + i + ".glob")) != null)
 			{
-				String glob;
-				int i = 0;
-				while((glob = jEdit.getProperty("vfs.browser.colors." + i + ".glob")) != null)
+				try
 				{
 					colors.addElement(new ColorEntry(
 						new RE(MiscUtilities.globToRE(glob)),
@@ -645,11 +645,12 @@ public abstract class VFS
 						Color.black)));
 					i++;
 				}
-			}
-			catch(REException e)
-			{
-				Log.log(Log.ERROR,VFS.class,"Error loading file list colors:");
-				Log.log(Log.ERROR,VFS.class,e);
+				catch(REException e)
+				{
+					Log.log(Log.ERROR,VFS.class,"Invalid regular expression: "
+						+ glob);
+					Log.log(Log.ERROR,VFS.class,e);
+				}
 			}
 		}
 	} //}}}
