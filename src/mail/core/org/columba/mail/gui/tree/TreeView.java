@@ -30,7 +30,6 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JTree;
 import javax.swing.Timer;
@@ -126,6 +125,15 @@ public class TreeView extends JTree {
         }
         return node;
     }
+    
+    /**
+     * Sets the stored drop target path to null.
+     * This should be done after the getDropTargetFolder() has been used in
+     * a folder command. 
+     */
+    void resetDropTargetFolder() {
+        dropTargetPath = null;
+    }
 
     /**
      * Returns the tree node that was selected before a drag and drop was initiated.
@@ -154,7 +162,7 @@ public class TreeView extends JTree {
      * Stores the selected tree leaf before the action begins, this
      * is used later when the Drag and drop action is completed.
      */
-    private void setUpDndAction() {     
+    private void setUpDndAction() {
         isInDndMode = true;
         selectedPathBeforeDrag = getSelectionPath();
     }
@@ -166,7 +174,6 @@ public class TreeView extends JTree {
     private void resetDndAction() {
         dndAutoExpanderTimer.stop();
         setSelectionPath(selectedPathBeforeDrag);
-        dropTargetPath = null;
         selectedPathBeforeDrag = null;
         isInDndMode = false;
     }
@@ -248,6 +255,7 @@ public class TreeView extends JTree {
         /** {@inheritDoc} */
         public void dragExit(DropTargetEvent e) {
             resetDndAction();
+            dropTargetPath = null;
         }
 
         /** {@inheritDoc} */
@@ -309,7 +317,7 @@ public class TreeView extends JTree {
                 } else {
                     expandPath(dropTargetPath);
                 }
-            } 
+            }
         }
     }
 }

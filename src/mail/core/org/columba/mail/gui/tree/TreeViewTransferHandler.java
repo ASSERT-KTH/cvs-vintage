@@ -146,6 +146,7 @@ public class TreeViewTransferHandler extends TransferHandler {
         FolderCommandReference[] commandRef = new FolderCommandReference[2];
         commandRef[0] = new FolderCommandReference(folder);
         commandRef[1] = new FolderCommandReference(treeView.getDropTargetFolder());
+        treeView.resetDropTargetFolder();
 
         MainInterface.processor.addOp(new MoveFolderCommand(commandRef));
     }
