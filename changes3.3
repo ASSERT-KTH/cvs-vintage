@@ -1,0 +1,157 @@
+-------------------- CORE --------------------
+
+- Only one type of Interceptor - remove the separation between Context/Request
+Interceptor
+
+- Use introspection to detect the hooks implemented by an interceptor, call
+only the interceptors that are implementing the hooks.
+
+- Added handleError hook, refactoring/modularization of error handling - it 
+is now implemented by a module that can be changed ( see Larry's requirements )
+
+- Added documentation and code to enforce "states" and the order in wich the
+hooks are called based on tomcat and context state. For example addContext()
+can't be called before tomcat is initialized ( all engineInit done ), etc
+
+- Optional separation of tomcat class loader and webapps classloaders, 
+ similar with Catalina's 
+
+- Rewrite of class reloading, the check for expire is no longer done
+ per/request, but in a background thread. Added DependManager, that allows 
+checks for all resources, not only classes and works with any class
+ loader ( including URLClassLoader )
+
+- use of URLClassLoader if JDK1.2 is used ( faster, more secure )
+
+- removal of all deprecated methods and calls
+
+- more documentation
+
+- removal of ServletLoader interface, it's functionality is already provided
+in interceptors 
+
+- insure org.apache.tomcat.core and facade are layered and remove all 
+spaghetti calls between layers. 
+
+- rewrite of ServletWrapper, separate base ( core ) functionality from the 
+jsp and servlet-specific.
+
+- removal of ServletConnector, it's functionality can be provided in standard
+interceptors. By using normal interceptors a Connector can be better configured
+( no more <property name/value /> ), and it can affect all request processing
+stages ( to allow future server-based authentication, more performance, etc ) 
+
+- Move back to the original Request/Response base classes instead of 
+interfaces.
+The interfaces were introduced in an effort to merge with Catalina ( by using
+common interfaces), but it's a 2-sided process. 
+
+- Removal of FacadeManager - it's not needed as the same functionality can be 
+provided by Interceptors ( to plug the facade ) and simpler mechanisms to
+access to internal and check "trusted" apps.
+
+- consolidation of error messages in tomcat.res, consistent with other
+apache projects ( and simpler to maintain )
+
+- Removal of Constants - each object will store it's own constants
+( tomcat name/version -> ContextManager, 
+  request attributes -> Request,  context attributes -> context,
+  static file resources -> StaticInterceptor, etc ). This also 
+prevent future inconsistencies ( most of the Constants are not used
+in 3.2 anyway )
+
+- Make the "Buffer" a top level element, remove 
+ BufferedInputStream/BufferedOutputStream. That allow a big increase in performance and allow future improvements by eliminating multiple "copy" and better 
+reuse of objects.
+
+- Refactoring for all connectors - use more Interceptor features, separate the
+tomcat-specific code from the protocol-specific code ( for possible 
+future reuse )
+
+- Use of MessageBytes for all request components
+
+- major simplification of the overal design - fewer and simpler "contracts"
+( Interceptor, 6 core objects ) instead of ( Interceptor, Loader,
+ Connector, 12 core objects ), real layering ( instead of spaghetti ), almost 
+all functionality is now in modules ( like Apache !)  
+
+- refactoring of session - use Interceptors for full access to all request
+stages, keep tomcat-independent code separated and reusable.
+
+-------------------- UTILS --------------------
+
+- consolidation/refactoring of all tomcat-independent and general-purpose/
+reusable code into org.apache.tomcat.util.[log, etc ]
+
+- refactoring for all utils, make sure they are reusable and worth to be
+reused :-)
+
+-------------------- BUILD/STARTUP --------------------
+
+- generate separate jar files for each component ( utils, core, facade, 
+modules ) That insures the layers are properly separated, utils can be reused.
+
+- use JDK1.2 Main-Class: and a custom starter - deprecate the shell/bat 
+scripts and use java to process arguments, guess tomcat home, etc
+
+-------------------- TODO --------------------
+ ( not yet implemented , but it would be nice to have them )
+
+- Reimplement cookies, make the code reusable ( maybe allow fast sessionId,
+lazy evaluation )
+
+- move jasper to a top-level module ( or at least under src/jasper )
+
+- rename shell to bin, etc to conf ( after the files that are not needed
+are removed or reorganized )
+
+- the EncodingInterceptor that uses MessageBytes and find the right charset 
+
+- Use custom-code for Parameters, Cookies ( faster data strucures, like in
+MimeHeaders )
+
+- Merge of all modules -> org.apache.tomcat.modules.[config,server,request,etc]
+instead of org.apache.tomcat.context/request
+
+- A new configuration mechanism that deals with virtual hosts, allow simpler
+installation and configuration for contexts
+
+- Improve Nacho's per/context interceptors, allow "profiles" ( sets of 
+interceptors that are shared by multiple contexts )
+
+- removal of helpers - use either util ( for tomcat-independent, reusable
+ functionality, or Interceptors for tomcat-specific code )
+
+- use JAXP1.1, reopen the debate on binaries checked in
+
+- document MOD_JK, AJP13
+
+- save auth result in session ( idea from catalina )
+
+- cache pages/fragments
+
+- test mutual auth 
+
+- better integration for form login with apache
+
+- This is the living To-Do list for Tomcat 3.3
+
+- Optimize error handling. For example, we can use int IDs for error 
+messages ( needs enhancements in StringManager ) 
+- Cache the error page handler ( instead of doing a second mapping 
+ for each request that authenticates/redirects/have an error).	
+
+- improve the configuration system for Tomcat Standalone and Tomcat+Apache.
+
+- Consistent message handling ( and test with various locales ). Clean up 
+unused strings, make sure all the messages are localized.
+
+- avoid sending common headers like EngineHeader for every request ( apache)
+
+- Maybe rename ContextManager -> ServletContainer
+
+- Merge HTTP1.1 code from catalina
+
+- Merge JMX code from catalina
+
+- Merge JNDI code from catalina
