@@ -7,6 +7,7 @@
 <form action="$link.setPage("AdvancedQuery.vm")" method="get">
 <input type="hidden" name="nextTemplate" value="IssueList.vm" />
 <input type="hidden" name="action" value="Search" />
+<input type="hidden" name="searchType" value="advanced" />
 
 <p class="functnbar">
     <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
