@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
 /**
  * A VFS that lists local root filesystems.
  * @author Slava Pestov
- * @version $Id: FileRootsVFS.java,v 1.3 2002/03/30 04:39:47 spestov Exp $
+ * @version $Id: FileRootsVFS.java,v 1.4 2002/04/03 02:07:18 spestov Exp $
  */
 public class FileRootsVFS extends VFS
 {
@@ -47,7 +47,8 @@ public class FileRootsVFS extends VFS
 		// JDK 1.4 adds a method to obtain a drive letter label
 		try
 		{
-			method = FileSystemView.class.getMethod("getSystemDisplayName",new Class[0]);
+			method = FileSystemView.class.getMethod("getSystemDisplayName",
+				new Class[] { java.io.File.class });
 			fsView = FileSystemView.getFileSystemView();
 			Log.log(Log.DEBUG,this,"FileSystemView.getSystemDisplayName() detected");
 		}
@@ -96,12 +97,12 @@ public class FileRootsVFS extends VFS
 	{
 		String name = path;
 
-		if(method != null)
+		if(method != null && !name.startsWith("A:") && !name.startsWith("B:"))
 		{
 			try
 			{
-				name = (String)method.invoke(fsView,new Object[] {
-					new File(path) });
+				name = name + " " + (String)method.invoke(fsView,
+					new Object[] { new File(path) });
 			}
 			catch(Exception e) {}
 		}
