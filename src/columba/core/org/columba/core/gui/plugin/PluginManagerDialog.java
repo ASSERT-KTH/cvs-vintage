@@ -48,7 +48,8 @@ import javax.swing.event.TreeSelectionListener;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.ConfigPath;
-import org.columba.core.gui.util.*;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.InfoViewerDialog;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;
@@ -127,60 +128,40 @@ public class PluginManagerDialog
 		getContentPane().add(mainPanel);
 
 		installButton =
-			new JButton(
+			new ButtonWithMnemonic(
 				GlobalResourceLoader.getString(
 					RESOURCE_PATH,
 					"pluginmanager",
 					"install"));
-		installButton.setMnemonic(
-			GlobalResourceLoader.getMnemonic(
-				RESOURCE_PATH,
-				"pluginmanager",
-				"install"));
 		installButton.setActionCommand("INSTALL");
 		installButton.addActionListener(this);
 
 		removeButton =
-			new JButton(
+			new ButtonWithMnemonic(
 				GlobalResourceLoader.getString(
 					RESOURCE_PATH,
 					"pluginmanager",
 					"remove"));
-		removeButton.setMnemonic(
-			GlobalResourceLoader.getMnemonic(
-				RESOURCE_PATH,
-				"pluginmanager",
-				"remove"));
 		removeButton.setActionCommand("REMOVE");
 		removeButton.setEnabled(false);
 		removeButton.addActionListener(this);
 
 		optionsButton =
-			new JButton(
+			new ButtonWithMnemonic(
 				GlobalResourceLoader.getString(
 					RESOURCE_PATH,
 					"pluginmanager",
 					"options"));
-		optionsButton.setMnemonic(
-			GlobalResourceLoader.getMnemonic(
-				RESOURCE_PATH,
-				"pluginmanager",
-				"options"));
 		optionsButton.setActionCommand("OPTIONS");
 		optionsButton.setEnabled(false);
 		optionsButton.addActionListener(this);
 
 		infoButton =
-			new JButton(
+			new ButtonWithMnemonic(
 				GlobalResourceLoader.getString(
 					RESOURCE_PATH,
 					"pluginmanager",
 					"info"));
-		infoButton.setMnemonic(
-			GlobalResourceLoader.getMnemonic(
-				RESOURCE_PATH,
-				"pluginmanager",
-				"info"));
 		infoButton.setActionCommand("INFO");
 		infoButton.setEnabled(false);
 		infoButton.addActionListener(this);
@@ -280,7 +261,8 @@ public class PluginManagerDialog
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 		JButton closeButton =
-			new JButton(MailResourceLoader.getString("global", "close"));
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);

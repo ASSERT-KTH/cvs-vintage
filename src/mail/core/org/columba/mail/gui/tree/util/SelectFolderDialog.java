@@ -33,6 +33,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -101,8 +102,9 @@ public class SelectFolderDialog
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 		buttonPanel.add(okButton);
-		newButton = new JButton(MailResourceLoader.getString("dialog", "folder", "new_folder"));
-                newButton.setMnemonic(MailResourceLoader.getMnemonic("dialog", "folder", "new_folder"));
+		newButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString(
+					"dialog", "folder", "new_folder"));
 		newButton.setEnabled(true);
 		newButton.setActionCommand("NEW");
 		newButton.addActionListener(this);

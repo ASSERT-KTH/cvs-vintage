@@ -38,8 +38,10 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterRule;
@@ -82,16 +84,11 @@ public class FilterDialog implements ActionListener {
 		namePanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 10, 11));
 		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
 		nameLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
 					"filter_description"));
-		nameLabel.setDisplayedMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"filter",
-				"filter_description"));
 		namePanel.add(nameLabel);
 		namePanel.add(Box.createHorizontalStrut(5));
 		nameTextField = new JTextField(22);
@@ -118,16 +115,11 @@ public class FilterDialog implements ActionListener {
 		ifPanel.add(Box.createHorizontalGlue());
 
 		nameLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
 					"execute_actions"));
-		nameLabel.setDisplayedMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"filter",
-				"execute_actions"));
 
 		ifPanel.add(nameLabel);
 
@@ -169,10 +161,9 @@ public class FilterDialog implements ActionListener {
 		thenPanel.setLayout(new BoxLayout(thenPanel, BoxLayout.X_AXIS));
 
 		addActionButton =
-			new JButton(
-				MailResourceLoader.getString("dialog", "filter", "add_action"));
-		addActionButton.setMnemonic(
-			MailResourceLoader.getMnemonic("dialog", "filter", "add_action"));
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString(
+					"dialog", "filter", "add_action"));
 		addActionButton.setIcon(ImageLoader.getImageIcon("stock_add_16.png"));
 		addActionButton.addActionListener(this);
 		addActionButton.setActionCommand("ADD_ACTION");
@@ -181,13 +172,9 @@ public class FilterDialog implements ActionListener {
 		//thenPanel.add( Box.createRigidArea( new java.awt.Dimension(5,0) ) );
 
 		JLabel actionLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"action_list"));
-		actionLabel.setDisplayedMnemonic(
-			MailResourceLoader.getMnemonic("dialog", "filter", "action_list"));
+					"dialog", "filter", "action_list"));
 		thenPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 		thenPanel.add(actionLabel);
 
@@ -206,7 +193,9 @@ public class FilterDialog implements ActionListener {
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
                 buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
-		JButton closeButton = new JButton(MailResourceLoader.getString("global", "close"));
+		ButtonWithMnemonic closeButton = 
+				new ButtonWithMnemonic(
+					MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);

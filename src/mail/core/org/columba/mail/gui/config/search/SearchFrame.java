@@ -47,7 +47,10 @@ import javax.swing.border.CompoundBorder;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterRule;
@@ -148,16 +151,9 @@ public class SearchFrame extends JDialog implements ActionListener {
 		JPanel folderPanel = new JPanel();
 		folderPanel.setLayout(new BoxLayout(folderPanel, BoxLayout.X_AXIS));
 		folderLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"choose_folder"));
-		folderLabel.setDisplayedMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"filter",
-				"choose_folder"));
+					"dialog", "filter", "choose_folder"));
 
 		folderPanel.add(folderLabel);
 		folderPanel.add(Box.createHorizontalStrut(5));
@@ -168,16 +164,9 @@ public class SearchFrame extends JDialog implements ActionListener {
 		folderPanel.add(selectButton);
 		folderPanel.add(Box.createHorizontalGlue());
 		includeSubfolderButton =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"include_subfolders"));
-		includeSubfolderButton.setMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"filter",
-				"include_subfolders"));
+					"dialog", "filter", "include_subfolders"));
 		folderPanel.add(includeSubfolderButton);
 		rootPanel.add(folderPanel, BorderLayout.NORTH);
 
@@ -194,16 +183,9 @@ public class SearchFrame extends JDialog implements ActionListener {
 		ifPanel.setLayout(new BoxLayout(ifPanel, BoxLayout.X_AXIS));
 
 		addButton =
-			new JButton(
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"add_criterion"));
-		addButton.setMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"filter",
-				"add_criterion"));
+					"dialog", "filter", "add_criterion"));
 		addButton.setIcon(ImageLoader.getImageIcon("stock_add_16.png"));
 		addButton.addActionListener(this);
 		addButton.setActionCommand("ADD_CRITERION");
@@ -214,16 +196,9 @@ public class SearchFrame extends JDialog implements ActionListener {
 		ifPanel.add(Box.createHorizontalGlue());
 
 		nameLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"execute_actions"));
-		nameLabel.setDisplayedMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"filter",
-				"execute_actions"));
+					"dialog", "filter", "execute_actions"));
 		ifPanel.add(nameLabel);
 
 		ifPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));

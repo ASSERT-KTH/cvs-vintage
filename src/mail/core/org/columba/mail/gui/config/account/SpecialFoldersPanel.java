@@ -31,6 +31,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
@@ -296,53 +298,51 @@ public class SpecialFoldersPanel
 	protected void initComponents() {
 
 		defaultAccountCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
-					"dialog",
-					"account",
-					"use_default_account_settings"));
-		defaultAccountCheckBox.setMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"account",
-				"use_default_account_settings"));
+					"dialog", "account", "use_default_account_settings"));
 		//defaultAccountCheckBox.setEnabled(false);
 		defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
 		defaultAccountCheckBox.addActionListener(this);
 
 		if (isPopAccount()) {
-			inboxLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "inbox_folder")); //$NON-NLS-1$
-			inboxLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog", "account", "inbox_folder")); //$NON-NLS-1$
+			inboxLabel = new LabelWithMnemonic(
+					MailResourceLoader.getString(
+						"dialog", "account", "inbox_folder")); //$NON-NLS-1$
 			inboxButton = new JButton();
 			inboxButton.setActionCommand("INBOX"); //$NON-NLS-1$
 			inboxButton.addActionListener(this);
 			inboxLabel.setLabelFor(inboxButton);
 		}
 
-		draftsLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "drafts_folder")); //$NON-NLS-1$
-		draftsLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog", "account", "drafts_folder")); //$NON-NLS-1$
+		draftsLabel = new LabelWithMnemonic(
+				MailResourceLoader.getString(
+					"dialog", "account", "drafts_folder")); //$NON-NLS-1$
 		draftsButton = new JButton();
 		draftsButton.setActionCommand("DRAFTS"); //$NON-NLS-1$
 		draftsButton.addActionListener(this);
 		draftsLabel.setLabelFor(draftsButton);
 
-		templatesLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "templates_folder")); //$NON-NLS-1$
-		templatesLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog", "account", "templates_folder")); //$NON-NLS-1$
+		templatesLabel = new LabelWithMnemonic(
+				MailResourceLoader.getString(
+					"dialog", "account", "templates_folder")); //$NON-NLS-1$
 		templatesButton = new JButton();
 		templatesButton.setActionCommand("TEMPLATES"); //$NON-NLS-1$
 		templatesButton.addActionListener(this);
 		templatesLabel.setLabelFor(templatesButton);
 
-		sentLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "sent_folder")); //$NON-NLS-1$		
-		sentLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog", "account", "sent_folder")); //$NON-NLS-1$
+		sentLabel = new LabelWithMnemonic(
+				MailResourceLoader.getString(
+					"dialog", "account", "sent_folder")); //$NON-NLS-1$		
 		sentButton = new JButton();
 		sentButton.setActionCommand("SENT"); //$NON-NLS-1$
 		sentButton.addActionListener(this);
 		sentLabel.setLabelFor(sentButton);
 
 		if (!isPopAccount()) {
-			trashLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "trash_folder")); //$NON-NLS-1$			
-			trashLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog", "account", "trash_folder")); //$NON-NLS-1$
+			trashLabel = new LabelWithMnemonic(
+					MailResourceLoader.getString(
+						"dialog", "account", "trash_folder")); //$NON-NLS-1$			
 			trashButton = new JButton();
 			trashButton.setActionCommand("TRASH"); //$NON-NLS-1$
 			trashButton.addActionListener(this);

@@ -47,6 +47,7 @@ import javax.swing.event.ListSelectionListener;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.Config;
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.filter.Filter;
@@ -129,36 +130,24 @@ public class ConfigFrame
 		getContentPane().add(mainPanel);
 
 		addButton =
-			new JButton(
-				MailResourceLoader.getString("dialog", "filter", "add_filter"));
-		addButton.setMnemonic(
-			MailResourceLoader.getMnemonic("dialog", "filter", "add_filter"));
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString(
+					"dialog", "filter", "add_filter"));
 		addButton.setActionCommand("ADD");
 		addButton.addActionListener(this);
 
 		removeButton =
-			new JButton(
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"remove_filter"));
-		removeButton.setMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"filter",
-				"remove_filter"));
+					"dialog", "filter", "remove_filter"));
 		removeButton.setActionCommand("REMOVE");
 		removeButton.setEnabled(false);
 		removeButton.addActionListener(this);
 
 		editButton =
-			new JButton(
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"edit_filter"));
-		editButton.setMnemonic(
-			MailResourceLoader.getMnemonic("dialog", "filter", "edit_filter"));
+					"dialog", "filter", "edit_filter"));
 		editButton.setActionCommand("EDIT");
 		editButton.setEnabled(false);
 		editButton.addActionListener(this);
@@ -174,19 +163,15 @@ public class ConfigFrame
 		*/
 
 		moveupButton =
-			new JButton(
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("dialog", "filter", "moveup"));
-		moveupButton.setMnemonic(
-			MailResourceLoader.getMnemonic("dialog", "filter", "moveup"));
 		moveupButton.setActionCommand("MOVEUP");
 		moveupButton.setEnabled(false);
 		moveupButton.addActionListener(this);
 
 		movedownButton =
-			new JButton(
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("dialog", "filter", "movedown"));
-		movedownButton.setMnemonic(
-			MailResourceLoader.getMnemonic("dialog", "filter", "movedown"));
 		movedownButton.setActionCommand("MOVEDOWN");
 		movedownButton.setEnabled(false);
 		movedownButton.addActionListener(this);
@@ -308,8 +293,9 @@ public class ConfigFrame
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
-		JButton closeButton =
-			new JButton(MailResourceLoader.getString("global", "close"));
+		ButtonWithMnemonic closeButton =
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
