@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.12 2003/06/29 23:53:45 linus Exp $
+// $Id: XMIParser.java,v 1.13 2003/09/16 00:08:30 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,10 +32,9 @@ import java.util.Iterator;
 
 import org.argouml.application.api.Argo;
 import org.argouml.kernel.Project;
+import org.argouml.model.ModelFacade;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.model_management.MModel;
 
 /** XMI is an XML based exchange format between UML tools. 
  *ArgoUML uses this as standard saving mechanism so that easy interchange 
@@ -58,7 +57,7 @@ public class XMIParser {
     ////////////////////////////////////////////////////////////////
     // instance variables
 
-    protected MModel _curModel = null;
+    protected Object _curModel = null;
     protected Project _proj = null;
     protected HashMap _UUIDRefs = null;
 
@@ -71,7 +70,7 @@ public class XMIParser {
     ////////////////////////////////////////////////////////////////
     // accessors
 
-    public MModel getCurModel() {
+    public Object/*MModel*/ getCurModel() {
         return _curModel;
     }
     public void setProject(Project p) {
@@ -121,17 +120,16 @@ public class XMIParser {
         Argo.log.info("=======================================");
 
         
-	_proj.addModel(
-		       (ru.novosoft.uml.foundation.core.MNamespace) _curModel);
+	_proj.addModel(_curModel);
         
 
-        Collection ownedElements = _curModel.getOwnedElements();
+        Collection ownedElements = ModelFacade.getOwnedElements(_curModel);
         Iterator oeIterator = ownedElements.iterator();
 
         while (oeIterator.hasNext()) {
-            MModelElement me = (MModelElement) oeIterator.next();
-            if (me.getName() == null)
-                me.setName("");
+            Object me = /*(MModelElement)*/ oeIterator.next();
+            if (ModelFacade.getName(me) == null)
+                ModelFacade.setName(me, "");
 	    /*
 	      if (me instanceof MClass) {
 	      // _proj.defineType((MClass) me);
