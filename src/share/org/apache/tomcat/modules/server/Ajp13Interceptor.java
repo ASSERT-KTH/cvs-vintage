@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.6 2001/02/05 16:04:00 hgomez Exp $
- * $Revision: 1.6 $
- * $Date: 2001/02/05 16:04:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.7 2001/02/07 07:01:25 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2001/02/07 07:01:25 $
  *
  * ====================================================================
  *
@@ -215,12 +215,19 @@ class Ajp13Request extends Request
     
     public int doRead() throws IOException 
     {
+	if( available <= 0 )
+	    return -1;
+	available--;
 	return ajp13.doRead();
     }
     
     public int doRead(byte[] b, int off, int len) throws IOException 
     {
-	return ajp13.doRead( b,off, len );
+	if( available <= 0 )
+	    return -1;
+	int rd=ajp13.doRead( b,off, len );
+	available -= rd;
+	return rd;
     }
     
     public void recycle() 

@@ -871,7 +871,10 @@ public final class ContextManager {
 	}
 
 	Request lr = new Request();
+	Response res = new Response();
 	lr.setContextManager( this );
+	lr.setResponse( res );
+	res.setRequest( lr );
 	lr.requestURI().setString( urlPath );
 	lr.queryString().setString(queryString );
 

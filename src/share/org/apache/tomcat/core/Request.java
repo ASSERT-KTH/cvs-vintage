@@ -137,9 +137,12 @@ public class Request {
     // Processed information ( redundant ! )
     protected Parameters params=new Parameters();
     //    protected Hashtable parametersH = new Hashtable();
-    protected boolean didReadFormData;
+    protected boolean didReadFormData=false;
 
     protected int contentLength = -1;
+    // how much body we still have to read.
+    protected int available = -1; 
+
     protected String contentType = null;
     protected String charEncoding = null;
     protected MessageBytes serverNameMB=new MessageBytes();
@@ -327,12 +330,26 @@ public class Request {
      *  are available.
      */
     public void handlePostParameters() {
-	int needData=params.needContent();
+	if( didReadFormData )
+	    return;
+	didReadFormData=true;
 
-	if( needData > 0 ) {
+	if( ! methodMB.equalsIgnoreCase("POST") )
+	    return;
+	String contentType= getContentType();
+	if (contentType == null &&
+            contentType.startsWith("application/x-www-form-urlencoded")) {
+	    return;
+	}
+
+	int len=getContentLength();
+	int available=getAvailable();
+
+	// read only available ( someone else may have read the content )
+	if( available > 0 ) {
 	    try {
-		byte[] formData = new byte[needData];
-		readBody( formData, needData );
+		byte[] formData = new byte[available];
+		readBody( formData, available );
 		params.processData( formData );
 	    } catch(IOException ex ) {
 		// XXX should we throw exception or log ?
@@ -345,8 +362,6 @@ public class Request {
 	return params;
     }
     
-
-
     // -------------------- encoding/type --------------------
 
     public String getCharacterEncoding() {
@@ -361,6 +376,7 @@ public class Request {
 
     public void setContentLength( int  len ) {
 	this.contentLength=len;
+	available=len;
     }
 
     public int getContentLength() {
@@ -368,6 +384,7 @@ public class Request {
 
 	MessageBytes clB=headers.getValue("content-length");
         contentLength = (clB==null || clB.isNull() ) ? -1 : clB.getInt();
+	available=contentLength;
 
 	return contentLength;
     }
@@ -690,38 +707,43 @@ public class Request {
         return headers.names();
     }
 
-    // -------------------- Utils - facade for RequestUtil
-
-    /** Read request data, filling a byte[]
-     */
-    public int readBody(byte body[], int len)
-	throws IOException
-    {
-	int offset = 0;
-	
-	do {
-	    int inputLen = doRead(body, offset, len - offset);
-	    if (inputLen <= 0) {
-		return offset;
-	    }
-	    offset += inputLen;
-	} while ((len - offset) > 0);
-	return len;
-    }
-
-
     // -------------------- Computed fields --------------------
     
 
     // -------------------- For adapters --------------------
+    // This should move to an IntputBuffer - the reading of the
+    // request body is really bad in tomcat, it needs some work
+    // and optimizations.
+
+    // We need to make sure nobody reads more than is available
+    // That may happen if both POST and input stream are used
+    // ( illegal, but can happen - and then we're hunged )
+    // ( also, getParameter doesn't throw any exception - if the
+    // user reads the body and then calls getParameter() the best
+    // action is to get him the query params - which are available.
+    
+
+    public void setAvailable( int  len ) {
+	this.available=len;
+    }
+
+    /** How many bytes from the body are still available
+     */
+    public int getAvailable() {
+	
+	return available;
+    }
+
     
     /** Fill in the buffer. This method is probably easier to implement than
 	previous.
-	This method should only be called from SerlvetInputStream implementations.
+	This method should only be called from SerlvetInputStream
+	implementations.
 	No need to implement it if your adapter implements ServletInputStream.
      */
     // you need to override this method if you want non-empty InputStream
     public  int doRead( byte b[], int off, int len ) throws IOException {
+	//	System.out.println( "doRead " );
 	return -1; // not implemented - implement getInputStream
     }
 
@@ -743,7 +765,27 @@ public class Request {
 	// ??
 	//return ((int)b[0]) & 0x000000FF;
     }
+    
+    /** Read request data, filling a byte[]
+     */
+    public int readBody(byte body[], int len)
+	throws IOException
+    {
+	int offset = 0;
+	//	System.out.println( "ReadBody ");
+	do {
+	    int inputLen = doRead(body, offset, len - offset);
+	    if (inputLen <= 0) {
+		return offset;
+	    }
+	    offset += inputLen;
+	} while ((len - offset) > 0);
+	return len;
+    }
 
+
+
+    
     // -------------------- debug --------------------
     
     public String toString() {

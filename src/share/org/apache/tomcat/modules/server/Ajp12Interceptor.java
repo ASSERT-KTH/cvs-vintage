@@ -228,11 +228,18 @@ class AJP12Request extends Request {
     }
 
     public int doRead() throws IOException {
+	if( available <= 0 )
+	    return -1;
+	available--;
 	return ajp12.doRead();
     }
 
     public  int doRead( byte b[], int off, int len ) throws IOException {
-	return ajp12.doRead( b,off,len);
+	if( available <= 0 )
+	    return -1;
+	int rd=ajp12.doRead( b,off,len);
+	available -= rd;
+	return rd;
     }
 
     public boolean isTomcatAuthentication() {

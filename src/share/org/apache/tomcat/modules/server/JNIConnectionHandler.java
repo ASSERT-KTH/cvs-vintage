@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIConnectionHandler.java,v 1.7 2000/12/30 08:26:46 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/12/30 08:26:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIConnectionHandler.java,v 1.8 2001/02/07 07:01:27 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2001/02/07 07:01:27 $
  *
  * ====================================================================
  *
@@ -274,6 +274,8 @@ class JNIRequestAdapter extends Request {
     }
 
     public  int doRead(byte b[], int off, int len) throws IOException {
+	if( available <= 0 )
+	    return 0;
         int rc = 0;
 
         while(0 == rc) {
@@ -282,7 +284,8 @@ class JNIRequestAdapter extends Request {
 	            Thread.currentThread().yield();
 	        }
 	    }
-	    return rc;
+	available -= rc;
+	return rc;
     }
 
     protected void readNextRequest(long s, long l) throws IOException {

@@ -197,11 +197,18 @@ class HttpRequest extends Request {
     }
 
     public int doRead() throws IOException {
+	if( available <= 0 )
+	    return -1;
+	available--;
 	return http.doRead();
     }
 
     public int doRead(byte[] b, int off, int len) throws IOException {
-	return http.doRead( b, off, len );
+	if( available <= 0 )
+	    return 0;
+	int rd=http.doRead( b, off, len );
+	available -= rd;
+	return rd;
     }
     
 

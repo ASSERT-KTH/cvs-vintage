@@ -75,7 +75,6 @@ public final class Parameters extends MultiMap {
     // this class - we can switch to MultiMap
     private Hashtable paramHashStringArray=new Hashtable();
     private boolean didQueryParameters=false;
-    private boolean didReadFormData=false;
     private boolean didMerge=false;
     
     MessageBytes queryMB;
@@ -112,7 +111,6 @@ public final class Parameters extends MultiMap {
 	super.recycle();
 	paramHashStringArray.clear();
 	didQueryParameters=false;
-	didReadFormData=false;
 	currentChild=null;
 	didMerge=false;
     }
@@ -249,7 +247,6 @@ public final class Parameters extends MultiMap {
     
     // XXX ENCODING !!
     public void processData(byte data[]) {
-	didReadFormData = true;
 	// make sure the request line query is processed
 	handleQueryParameters();
 	
@@ -269,36 +266,6 @@ public final class Parameters extends MultiMap {
 	}
     }
     
-    /**
-     * Process the headers and return if body data is needed. This
-     * class doesn't deal with reading.
-     *
-     *  Future enahancements: reuse/access the read buffer. Chunks.
-     *  Additional encodings.
-     */
-    public int needContent() {
-	if( didReadFormData )
-	    return 0;
-
-	MessageBytes contentTypeMB=headers.getValue("content-type");
-	if( contentTypeMB == null || contentTypeMB.isNull() )
-	    return 0;
-	
-	String contentType= contentTypeMB.toString();
-	
-	if (contentType != null &&
-            contentType.startsWith("application/x-www-form-urlencoded")) {
-
-	    MessageBytes clB=headers.getValue("content-length");
-	    int contentLength = (clB==null || clB.isNull() ) ? -1 :
-		clB.getInt();
-	    if( contentLength >0 ) return contentLength;
-	}
-	return 0;
-	
-    }
-
-
     // --------------------
     
     /** Combine 2 hashtables into a new one.

@@ -76,7 +76,6 @@ public class StopTomcat {
     private static StringManager sm =
 	StringManager.getManager("org.apache.tomcat.resources");
 
-    String configFile;
     String tomcatHome;
     
     public StopTomcat() 
@@ -84,16 +83,6 @@ public class StopTomcat {
     }
 
     // -------------------- Parameters --------------------
-
-    public void setConfig( String s ) {
-	configFile=s;
-    }
-
-    /** -f option
-     */
-    public void setF( String s ) {
-	configFile=s;
-    }
 
     public void setH( String s ) {
 	tomcatHome=s;
@@ -223,7 +212,10 @@ public class StopTomcat {
     public  boolean processArgs(String[] args) {
 	for (int i = 0; i < args.length; i++) {
 	    String arg = args[i];
-            
+	    
+	    if (arg.equals("-?")) {
+		return false;
+	    }
 	    if (arg.equals("-h") || arg.equals("-home")) {
 		i++;
 		if (i < args.length)
@@ -238,7 +230,11 @@ public class StopTomcat {
     public static void main(String args[] ) {
 	try {
 	    StopTomcat tomcat=new StopTomcat();
-	    tomcat.processArgs( args );
+	    if( ! tomcat.processArgs( args ) ) {
+		// XXX use sm, i18n
+		System.out.println("Usage: java org.apache.tomcat.startup.StopTomcat [ -home TOMCAT_HOME ] ");
+		return;
+	    }
 	    tomcat.execute();
 	} catch(Exception ex ) {
 	    System.out.println(sm.getString("tomcat.fatal"));
