@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.23 2001/03/02 04:51:30 costin Exp $
- * $Revision: 1.23 $
- * $Date: 2001/03/02 04:51:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.24 2001/06/11 03:42:27 larryi Exp $
+ * $Revision: 1.24 $
+ * $Date: 2001/06/11 03:42:27 $
  *
  * ====================================================================
  * 
@@ -143,7 +143,7 @@ public class Compiler {
         //  - compiling the generated servlets (pass -encoding to javac).
         // XXX - There are really three encodings of interest.
 
-        String jspEncoding = "8859_1";          // default per JSP spec
+        String jspEncoding = "ISO-8859-1";          // default per JSP spec
 
 	// We try UTF8 by default. If it fails, we use the java encoding 
 	// specified for JspServlet init parameter "javaEncoding".

@@ -91,16 +91,99 @@ import org.apache.tomcat.util.log.Log;
  *
  * @author Anil K. Vijendran
  * @author Harish Prabandham
+ * @author Marc A. Saegesser
  */
 public class JspServlet extends HttpServlet {
 
     Log loghelper = Log.getLog("JASPER_LOG", "JspServlet");
 
+    /**
+     * Adds reference counting to the JSP implementation servlet.  This
+     * is required to handle the case where a JSP implementation servlet
+     * is executing requests on several threads when a new implementation
+     * arrives (the JSP source was updated).  We need to wait until all
+     * the requests complete before calling the implementation servlet's
+     * destroy() method.
+     */
+    class JspCountedServlet extends HttpServlet
+    {
+        private Servlet servlet = null;
+        private int threadCount = 0;
+        private boolean destroyed = false;
+
+        public JspCountedServlet(Servlet servlet)
+        {
+            this.servlet = servlet;
+        }
+
+        public void init(ServletConfig config) throws ServletException, JasperException
+        {
+            try{
+                servlet.init(config);
+            }catch(NullPointerException e){
+                throw new JasperException(e);
+            }
+        }
+
+        public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, JasperException
+        {
+            try{
+                incrementCount();
+                servlet.service(req, res);
+            }catch(NullPointerException e){
+                throw new JasperException(e);
+            }finally{
+                decrementCount();
+            }
+        }
+
+        /*
+         * Flags this servlet for destrction once all active requests have completed.
+         * After calling this method it is invalid to call service().
+         */
+        public void destroy()
+        {
+            destroyed = true;
+            if(getCount() == 0)
+                doDestroy();
+        }
+
+        private void doDestroy()
+        {
+            try{
+                servlet.destroy();
+                servlet = null;
+            }catch(NullPointerException e){
+            }
+        }
+
+        private synchronized void incrementCount()
+        {
+            threadCount++;
+        }
+
+        private synchronized void decrementCount()
+        {
+            if(threadCount <= 0){
+                Constants.message("jsp.error.badcount", Log.ERROR);
+                return;
+            }
+
+            --threadCount;
+            if(threadCount == 0 && destroyed)
+                doDestroy();
+        }
+
+        private synchronized int getCount()
+        {
+            return threadCount;
+        }
+    }
+
     class JspServletWrapper {
-        Servlet theServlet;
+        JspCountedServlet theServlet;
 	String jspUri;
 	boolean isErrorPage;
-	// ServletWrapper will set this 
 	Class servletClass;
 	
 	JspServletWrapper(String jspUri, boolean isErrorPage) {
@@ -109,23 +192,46 @@ public class JspServlet extends HttpServlet {
 	    this.theServlet = null;
 	}
 	
-	private void load() throws JasperException, ServletException {
-	    try {
-		// Class servletClass = (Class) loadedJSPs.get(jspUri);
-		// This is to maintain the original protocol.
-		destroy();
+        public synchronized void instantiateServlet(Class servletClass) throws JasperException, ServletException
+        {
+            try {
+                this.servletClass = servletClass;
 
-		theServlet = (Servlet) servletClass.newInstance();
-	    } catch (Exception ex) {
-		throw new JasperException(ex);
-	    }
-	    theServlet.init(JspServlet.this.config);
-	    if (theServlet instanceof HttpJspBase)  {
-                HttpJspBase h = (HttpJspBase) theServlet;
-                h.setClassLoader(JspServlet.this.parentClassLoader);
-	    }
-	}
-	
+                // If we're replacing an existing JSP Implementation class, then
+                // schedule it for destruction
+                if(theServlet != null)
+                    theServlet.destroy();
+
+                // Create an instance of the JSP implementation class
+                Servlet servlet = (Servlet) servletClass.newInstance();
+                // Set the class loader
+                if(servlet instanceof HttpJspBase) {
+                    ((HttpJspBase)servlet).setClassLoader(JspServlet.this.parentClassLoader);
+                }
+
+                // Wrap this servlet in a counted servlet
+                theServlet = new JspCountedServlet(servlet);
+
+                // Call the JSP Implementation servlet's init() method.  This
+                // will cause the page's jspInit() method to be invoked if one exists.
+                theServlet.init(JspServlet.this.config);
+
+            } catch(Exception ex) {
+                throw new JasperException(ex);
+            }
+
+        }
+
+        public synchronized Servlet getServlet()
+        {
+            return theServlet;
+        }
+
+        public synchronized boolean isInstantiated()
+        {
+            return theServlet != null;
+        }
+
 	private void loadIfNecessary(HttpServletRequest req, HttpServletResponse res) 
             throws JasperException, ServletException, FileNotFoundException 
         {
@@ -151,10 +257,7 @@ public class JspServlet extends HttpServlet {
                               }, 
                               Log.INFORMATION);
 
-            if (loadJSP(jspUri, cp, isErrorPage, req, res) 
-                    || theServlet == null) {
-                load();
-            }
+            loadJSP(jspUri, cp, isErrorPage, req, res);
 	}
 	
 	public void service(HttpServletRequest request, 
@@ -162,21 +265,23 @@ public class JspServlet extends HttpServlet {
 			    boolean precompile)
 	    throws ServletException, IOException, FileNotFoundException 
 	{
+            Servlet servlet = null;
             try {
                 loadIfNecessary(request, response);
+                servlet = getServlet();
 
 		// If a page is to only to be precompiled return.
 		if (precompile)
 		    return;
 
-		if (theServlet instanceof SingleThreadModel) {
+		if (servlet instanceof SingleThreadModel) {
 		    // sync on the wrapper so that the freshness
 		    // of the page is determined right before servicing
 		    synchronized (this) {
-			theServlet.service(request, response);
+			servlet.service(request, response);
 		    }
 		} else {
-		    theServlet.service(request, response);
+		    servlet.service(request, response);
 		}
 
             } catch (FileNotFoundException ex) {
@@ -218,10 +323,11 @@ public class JspServlet extends HttpServlet {
             }
 	}
 
-	public void destroy() {
-	    if (theServlet != null)
-		theServlet.destroy();
-	}
+        public void destroy()
+        {
+            if(theServlet != null)
+                theServlet.destroy();
+        }
     }
 	
 	
@@ -275,7 +381,6 @@ public class JspServlet extends HttpServlet {
                                   "<none>"
                               }, Log.DEBUG);
 	}
-	//	System.out.println("JspServlet: init " + config.getServletName() );
 	if( loader==null ) {
 	    if( jdk12 ) {
 		try {
@@ -310,12 +415,19 @@ public class JspServlet extends HttpServlet {
 	throws ServletException, IOException
     {
 	boolean isErrorPage = exception != null;
-	
-	JspServletWrapper wrapper = (JspServletWrapper) jsps.get(jspUri);
-	if (wrapper == null) {
-	    wrapper = new JspServletWrapper(jspUri, isErrorPage);
-	    jsps.put(jspUri, wrapper);
-	}
+        JspServletWrapper wrapper = null;
+
+        /*
+         * Several threads may be handling requests for the same jspUri.
+         * Only one of them is allowed to create the JspServletWrapper.
+         */
+        synchronized(jsps){
+            wrapper = (JspServletWrapper) jsps.get(jspUri);
+            if (wrapper == null) {
+                wrapper = new JspServletWrapper(jspUri, isErrorPage);
+                jsps.put(jspUri, wrapper);
+            }
+        }
 	
 	wrapper.service(request, response, precompile);
     }
@@ -325,8 +437,13 @@ public class JspServlet extends HttpServlet {
         throws ServletException 
     {
         boolean precompile = false;
-        String precom = request.getParameter(Constants.PRECOMPILE);
+        String precom = null;
         String qString = request.getQueryString();
+        // Avoid calling getParameter() unless precompile string is found
+        // in query string.  Allows post data to remain unread per the
+        // servlet spec if the precompile string is not found.
+        if (qString != null && qString.indexOf(Constants.PRECOMPILE) >= 0)
+            precom = request.getParameter(Constants.PRECOMPILE);
         
         if (precom != null) {
             if (precom.equals("true")) 
@@ -337,9 +454,8 @@ public class JspServlet extends HttpServlet {
 		    // This is illegal.
 		    throw new ServletException("Can't have request parameter " +
 					       Constants.PRECOMPILE + " set to " + precom);
-		}
-	    }
-        else if (qString != null && (qString.startsWith(Constants.PRECOMPILE) ||
+            }
+        } else if (qString != null && (qString.startsWith(Constants.PRECOMPILE) ||
                                      qString.indexOf("&" + Constants.PRECOMPILE)
                                      != -1))
             precompile = true;
@@ -384,11 +500,15 @@ public class JspServlet extends HttpServlet {
 		    jasperLog.log("\t      RequestURI: "+request.getRequestURI());
 		    jasperLog.log("\t     QueryString: "+request.getQueryString());
 		    jasperLog.log("\t  Request Params: ");
-		    Enumeration e = request.getParameterNames();
-		    while (e.hasMoreElements()) {
-			String name = (String) e.nextElement();
-			jasperLog.log("\t\t "+name+" = "+request.getParameter(name));
-		    }
+                    if ( request.getMethod().equals("POST") )
+                        jasperLog.log("Parameters not read because method is POST");
+                    else {
+                        Enumeration e = request.getParameterNames();
+                        while (e.hasMoreElements()) {
+                            String name = (String) e.nextElement();
+                            jasperLog.log("\t\t "+name+" = "+request.getParameter(name));
+                        }
+                    }
 		}
             serviceJspFile(request, response, jspUri, null, precompile);
 	} catch (RuntimeException e) {
@@ -442,61 +562,89 @@ public class JspServlet extends HttpServlet {
      *  @param classpath explicitly set the JSP compilation path.
      *  @return true if JSP files is newer
      */
+
+    /*
+     * A word about the thread synchronization below.  The call to 
+     * compiler.isOutDated() is outside the synchronization block on purpose.  
+     * The expectation is that for the vast majority of cases the JSP source file 
+     * will not have changed and there will be no need to recompile the 
+     * implementation class.  For those cases when a compile is required, we 
+     * enter a block that is synchronized on the JspServletWrapper object for 
+     * this JSP page.  Because the initial out dated check is unsynchronized, it 
+     * is possible for more than one request to attempt to enter the synchronized 
+     * compile block.  The compile() method contains performs an outdated check 
+     * of its own.  The first thread into the block will cause a compile, the 
+     * subsequent threads will essentially skip the compilation and instantiation 
+     * steps.  
+     * 
+     * One other thing to note is that there is a window of time between the 
+     * compiler.compile() call and the end of the synchronized block where a new 
+     * thread entering doLoadJSP() will be told that that implementation class is 
+     * up to date even though the code in the synchronized block has not 
+     * completed loading and instantiating the class.  In this case doLoadJSP() 
+     * will return false without attempting to compile the class.  This is OK 
+     * because the JspServletWrapper.getServlet() method used by the 
+     * JspServletWrapper.service() method is synchronized.  Thus, the service 
+     * method will not receive the servlet class until it has been completely loaded and 
+     * instantiated.  
+     * 
+     * The bottom line is that we avoid synchronizing a fairly expensive 
+     * operation (isOutDated) but pay a small price of some unnecessary 
+     * compilation attempts in the atypical case of a modified JSP file.  
+     */
     protected boolean doLoadJSP(String jspUri, String classpath, 
-	boolean isErrorPage, HttpServletRequest req, HttpServletResponse res) 
-	throws JasperException, FileNotFoundException 
+                                boolean isErrorPage, HttpServletRequest req, HttpServletResponse res) 
+    throws JasperException, FileNotFoundException 
     {
-	JspServletWrapper jsw=(JspServletWrapper) jsps.get(jspUri);
-	if( jsw==null ) {
-	    throw new JasperException("Can't happen - JspServletWrapper=null");
-	}
-	//	Class jspClass = (Class) loadedJSPs.get(jspUri);
-	boolean firstTime = jsw.servletClass == null;
-   JspCompilationContext ctxt = new JspEngineContext(loader, classpath,
-                                                     context, jspUri, 
-                                                     isErrorPage, options,
-                                                     req, res);
-	boolean outDated = false; 
+        JspServletWrapper jsw=(JspServletWrapper) jsps.get(jspUri);
+        if( jsw==null ) {
+            throw new JasperException("Can't happen - JspServletWrapper=null");
+        }
+        JspCompilationContext ctxt = new JspEngineContext(loader, classpath,
+                                                          context, jspUri, 
+                                                          isErrorPage, options,
+                                                          req, res);
+        boolean outDated = false; 
 
-        Compiler compiler = ctxt.createCompiler();
-        
+        Compiler compiler = null;
+        synchronized(jsw){
+            /*
+             * Creating a compiler opens the associated .class file (if it exists)
+             * and reads the actual class name.  If we allow a compiler to be
+             * created while a compile is going on then bad things can happen.
+             */
+            compiler = ctxt.createCompiler();
+        }
+
         try {
-            outDated = compiler.isOutDated();
-            if ( (jsw.servletClass == null) || outDated ) {
-                synchronized ( this ) {
-                    if ((jsw.servletClass == null) ||
-			(compiler.isOutDated() ))  {
-                        outDated = compiler.compile();
-                    }
-		}
-            }
-        } catch (FileNotFoundException ex) {
-			  compiler.removeGeneratedFiles();
-            throw ex;
-        } catch (JasperException ex) {
-            throw ex;
-        } catch (Exception ex) {
-	    throw new JasperException(Constants.getString("jsp.error.unable.compile"),
-                                      ex);
-	}
 
-	// Reload only if it's outdated
-	if((jsw.servletClass == null) || outDated) {
-	    try {
-		if( null ==ctxt.getServletClassName() ) {
-		    compiler.computeServletClassName();
-		}
-		jsw.servletClass = loader.loadClass(ctxt.getFullClassName());
-                        //loadClass(ctxt.getFullClassName(), true);
-	    } catch (ClassNotFoundException cex) {
-		throw new JasperException(Constants.getString("jsp.error.unable.load"), 
-					  cex);
-	    }
-	    
-	    //	    loadedJSPs.put(jspUri, jspClass);
-	}
-	
-	return outDated;
+
+            outDated = compiler.isOutDated();
+            if(!jsw.isInstantiated() || outDated ) {
+                synchronized(jsw){
+                    outDated = compiler.compile();
+                    if(!jsw.isInstantiated() || outDated) {
+                        if( null ==ctxt.getServletClassName() ) {
+                            compiler.computeServletClassName();
+                        }
+                        jsw.instantiateServlet(loader.loadClass(ctxt.getFullClassName()));
+                    }
+                }
+            }
+        } catch(FileNotFoundException ex) {
+            compiler.removeGeneratedFiles();
+            throw ex;
+        } catch(JasperException ex) {
+            throw ex;
+        } catch(ClassNotFoundException cex) {
+                throw new JasperException(Constants.getString("jsp.error.unable.load"), 
+                                          cex);
+        } catch(Exception ex) {
+            throw new JasperException(Constants.getString("jsp.error.unable.compile"),
+                                      ex);
+        }
+
+        return outDated;
     }
 
         /**
