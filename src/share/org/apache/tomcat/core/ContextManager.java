@@ -561,7 +561,11 @@ public class ContextManager implements LogAware{
     */
 
     public RequestInterceptor[] getRequestInterceptors( Request req ) {
-        Container ct=req.getContext().getContainer();
+        Context ctx=req.getContext();
+        // if Bad request (ctx == null) only global interceptors are called
+        if( ctx == null )
+           return getRequestInterceptors();
+        Container ct=ctx.getContainer();
         RequestInterceptor[] ari=ct.getCachedRequestInterceptors();
         if (ari.length == 0){
             RequestInterceptor[] cri=ct.getRequestInterceptors();
@@ -611,11 +615,6 @@ public class ContextManager implements LogAware{
     }
 
     public ContextInterceptor[] getContextInterceptors(Container ct) {
-        Context ctx=req.getContext();
-        // if Bad request (ctx == null) only global interceptors are called
-        if( ctx == null )
-           return getRequestInterceptors();
-        Container ct=ctx.getContainer();
         ContextInterceptor[] aci=ct.getCachedContextInterceptors();
         if (aci.length == 0){
             ContextInterceptor[] cci=ct.getContextInterceptors();
