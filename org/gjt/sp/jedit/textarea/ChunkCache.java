@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.27 2002/02/16 07:22:25 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.28 2002/02/19 02:33:36 spestov Exp $
  */
 public class ChunkCache
 {
@@ -256,7 +256,7 @@ public class ChunkCache
 					// setPaintMode() does not reset
 					// graphics mode.
 					Graphics2D xorGfx = (Graphics2D)gfx.create();
-					xorGfx.setXORMode(bgColor);
+					xorGfx.setXORMode(background);
 					xorGfx.setColor(bgColor);
 
 					xorGfx.fill(new Rectangle2D.Float(

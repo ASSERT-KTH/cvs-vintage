@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.5 2002/01/08 08:11:05 spestov Exp $
+ * @version $Id: EditServer.java,v 1.6 2002/02/19 02:33:36 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -264,6 +264,9 @@ public class EditServer extends Thread
 		}
 		else
 		{
+			// Reset the timeout
+			client.setSoTimeout(0);
+
 			Log.log(Log.DEBUG,this,client + ": authenticated"
 				+ " successfully");
 
