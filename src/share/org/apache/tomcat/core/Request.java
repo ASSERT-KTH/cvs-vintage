@@ -483,8 +483,8 @@ public class Request {
 	    }
 	}
 	
-	// if( charEncoding == null )
-	// 	    charEncoding=DEFAULT_CHARACTER_ENCODING;
+	if( charEncoding == null )
+	    charEncoding=DEFAULT_CHARACTER_ENCODING;
  	return charEncoding;
     }
 

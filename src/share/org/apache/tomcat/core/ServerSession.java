@@ -98,7 +98,7 @@ public class ServerSession {
 
     public static final int STATE_RESTORED=5;
 
-
+    private int debug=0;
     private MessageBytes id = new MessageBytes();
     // XXX This must be replaced with a more efficient storage
     private Hashtable attributes = new Hashtable();
@@ -207,6 +207,7 @@ public class ServerSession {
     }
 
     public void removeAllAttributes() {
+	if( debug > 0 ) System.out.println("ServerSession:removeAllAttributes");
 	Enumeration attrs = getAttributeNames();
 	while (attrs.hasMoreElements()) {
 	    String attr = (String) attrs.nextElement();
@@ -215,11 +216,13 @@ public class ServerSession {
     }
 
     public void removeAttribute(String name) {
+	if( debug > 0 ) System.out.println("ServerSession:removeAllAttribute "+ name);
 	// Hashtable is already synchronized
 	attributes.remove(name);
     }
 
     public void setAttribute(String name, Object value) {
+	if( debug > 0 ) System.out.println("ServerSession:setAttribute "+ name);
 	attributes.put(name, value);
     }
 
@@ -243,6 +246,7 @@ public class ServerSession {
      */
     public void recycle() {
 	// Reset the instance variables associated with this Session
+	if( debug > 0 ) System.out.println("ServerSession:recycle ");
 	attributes.clear();
 	ts.recycle();
 	id.recycle();
