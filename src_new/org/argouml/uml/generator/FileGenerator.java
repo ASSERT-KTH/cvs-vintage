@@ -1,4 +1,4 @@
-// $Id: FileGenerator.java,v 1.8 2003/09/17 21:29:02 thierrylach Exp $
+// $Id: FileGenerator.java,v 1.9 2004/08/09 20:55:56 mvw Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,13 +32,16 @@ public interface FileGenerator {
     /**
      * The fileseperation for this operating system.
      */
-    public final static String FILE_SEPARATOR =
+    public static final String FILE_SEPARATOR =
 	System.getProperty("file.separator");
     
     /** Generates a file for this classifier.
      * TODO:
      * This will only work for languages that have each node
      * in a separate files (one or more).
+     *
+     * @param node the node
+     * @param path the path
      * @return filename
      */
     public String GenerateFile(Object node, String path);
