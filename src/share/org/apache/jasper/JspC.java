@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.9 2000/03/17 07:26:10 shemnon Exp $
- * $Revision: 1.9 $
- * $Date: 2000/03/17 07:26:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.10 2000/03/30 04:28:06 shemnon Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/03/30 04:28:06 $
  *
  * ====================================================================
  * 
@@ -100,17 +100,21 @@ public class JspC implements Options { //, JspCompilationContext {
     public static final String SWITCH_WEBAPP_INC = "-webinc";
     public static final String SWITCH_WEBAPP_XML = "-webxml";
     public static final String SWITCH_MAPPED = "-mapped";
+    public static final String SWITCH_DIE = "-die";
 
     public static final int NO_WEBXML = 0;
     public static final int INC_WEBXML = 10;
     public static final int ALL_WEBXML = 20;
+
+    public static final int DEFAULT_DIE_LEVEL = 1;
+    public static final int NO_DIE_LEVEL = 0;
 
     // future direction
     //public static final String SWITCH_XML_OUTPUT = "-xml";
   
     
     boolean largeFile = false;
-	boolean mappedFile = false;
+    boolean mappedFile = false;
 
     int jspVerbosityLevel = Logger.INFORMATION;
 
@@ -129,7 +133,12 @@ public class JspC implements Options { //, JspCompilationContext {
     String uriRoot;
 
     String webxmlFile;
+
     int webxmlLevel;
+
+    int dieLevel;
+    static int die; // I realize it is duplication, but this is for
+                    // the static main catch
 
     //JspLoader loader;
 
@@ -222,6 +231,8 @@ public class JspC implements Options { //, JspCompilationContext {
         String tok;
 
         int verbosityLevel = Logger.WARNING;
+        dieLevel = NO_DIE_LEVEL;
+        die = dieLevel;
 
         while ((tok = nextArg()) != null) {
             if (tok.equals(SWITCH_QUIET)) {
@@ -281,6 +292,14 @@ public class JspC implements Options { //, JspCompilationContext {
                 };
             } else if (tok.equals(SWITCH_MAPPED)) {
                 mappedFile = true;
+            } else if (tok.startsWith(SWITCH_DIE)) {
+                try {
+                    dieLevel = Integer.parseInt(
+                        tok.substring(SWITCH_DIE.length()));
+                } catch (NumberFormatException nfe) {
+                    dieLevel = DEFAULT_DIE_LEVEL;
+                };
+                die = dieLevel;
             } else {
                 pushBackArg();
                 // Not a recognized Option?  Start treting them as JSP Pages
@@ -362,10 +381,16 @@ public class JspC implements Options { //, JspCompilationContext {
             je.printStackTrace(log);
             log.print("error:");
             log.println(je.getMessage());
+            if (dieLevel != NO_DIE_LEVEL) {
+                System.exit(dieLevel);
+            }
         } catch (Exception e) {
             e.printStackTrace(log);
             log.print("ERROR:");
             log.println(e.toString());
+            if (dieLevel != NO_DIE_LEVEL) {
+                System.exit(dieLevel);
+            }
         };
         return false;
     }
@@ -577,6 +602,9 @@ public class JspC implements Options { //, JspCompilationContext {
             } catch (JasperException je) {
                 System.err.print("error:");
                 System.err.println(je.getMessage());
+                if (die != NO_DIE_LEVEL) {
+                    System.exit(die);
+                }
             }
         }
     };
