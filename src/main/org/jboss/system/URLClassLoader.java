@@ -30,7 +30,7 @@ import javax.management.loading.MLet;
  *
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * 
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -64,18 +64,22 @@ public class URLClassLoader
 	* @param String application
 	* @param ClassLoader parent
 	*/
-    /*public URLClassLoader( String pUrl )
+   /*public URLClassLoader( String pUrl )
    {
       super( new URL[] {} );
-      try {
+      try
+      {
          URL lUrl = new URL( pUrl );
          addURL( lUrl );
          this.keyUrl = lUrl;
       }
-      catch( Exception e ) {
+      catch( Exception e )
+      {
          System.out.println("[GPA] WARNING: URL "+keyUrl+" is not valid");
       }
-      try {
+
+      try
+      {
 			
          //url.openStream();
 			
@@ -90,26 +94,25 @@ public class URLClassLoader
       { 
          System.out.println("[GPA] WARNING: URL "+keyUrl+" could not be opened");
       }
-      }*/
-	
+   }*/
+
    /**
     * One url per SCL
     *
     * @param String application
     * @param ClassLoader parent
     */
-	
    public URLClassLoader(URL[] urls, URL keyUrl)
    {
-		
       super(urls);
-		
       this.keyUrl = keyUrl;
-		
-      try {
+
+      try
+      {
           //url.openStream();
 			
-         if (libraries == null) {
+         if (libraries == null)
+         {
             libraries = ServiceLibraries.getLibraries();
          }
 			
@@ -123,12 +126,14 @@ public class URLClassLoader
          // be queried
          libraries.addClassLoader(this);
       }
-      catch(Exception e) { 
+      catch(Exception e)
+      { 
          System.out.println("[GPA] WARNING: URL "+keyUrl+" could not be opened");
       }
    }
 
-   public URL getKeyURL() {
+   public URL getKeyURL()
+   {
       return keyUrl;
    }
 	
@@ -163,36 +168,47 @@ public class URLClassLoader
       return super.loadClass(name, resolve);
    }
 	
-   public URL getResource(String name) {
-      if (name.endsWith("CHANGEME")) {
+   public URL getResource(String name)
+   {
+      if (name.endsWith("CHANGEME"))
+      {
          System.out.println("UCL GETRESOURCE "+name+ " in UCL " +
                             this.hashCode());
       }
       
       URL resource = super.getResource(name);
 		
-      if (resource == null) {
+      if (resource == null)
+      {
          resource = libraries.getResource(name, this);
       }
 		
-      if (resource == null) {
+      if (resource == null)
+      {
          System.out.println("Did not find the UCL resource "+name);
       }
       return resource;
    }
 	
-   public URL getResourceLocally(String name) {
+   public URL getResourceLocally(String name)
+   {
       return super.getResource(name);
    }
 	
-   public InputStream getResourceAsStream(String name) {
-      try {
+   public InputStream getResourceAsStream(String name)
+   {
+      try
+      {
          URL resourceUrl = getResource(name);
 			
-         if (resourceUrl != null) {
+         if (resourceUrl != null)
+         {
             return resourceUrl.openStream();
          }
-      } catch (Exception ignore) {}
+      }
+      catch (Exception ignore)
+      {
+      }
       
       return null;
    }
@@ -213,6 +229,17 @@ public class URLClassLoader
 
    public String toString()
    {
-      return "JBoss URLClassloader: keyURL : " + getKeyURL() + ", URLS: " + getURLs();
+      StringBuffer tmp = new StringBuffer("JBoss URLClassloader: keyURL : ");
+      tmp.append(getKeyURL());
+      tmp.append(", URLS: ");
+      URL[] urls = getURLs();
+      tmp.append('[');
+      for(int u = 0; u < urls.length; u ++)
+      {
+         tmp.append(urls[u]);
+         tmp.append(',');
+      }
+      tmp.append(']');
+      return tmp.toString();
    }
 }
