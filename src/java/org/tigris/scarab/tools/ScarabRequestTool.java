@@ -980,6 +980,7 @@ try{
      * Gets the IssueType associated with the information
      * passed around in the query string. 
      * If it has not been selected, defaults to first nav issue type.
+     * will return null if none of the conditions pass
      */
     public IssueType getCurrentIssueType() throws Exception
     {
@@ -987,8 +988,8 @@ try{
         {
             // if the current issue_type_id is present in the parameter list
             //then select that issue as the current issue_type
-            if(data.getParameters()
-               .containsKey(ScarabConstants.CURRENT_ISSUE_TYPE))
+            if (data.getParameters()
+                .containsKey(ScarabConstants.CURRENT_ISSUE_TYPE))
             {
                 currentIssueType = getIssueType(data.getParameters()
                     .getString(ScarabConstants.CURRENT_ISSUE_TYPE));
@@ -996,12 +997,12 @@ try{
             else if (getCurrentModule() != null)
             {
                 List navIssueTypes = getCurrentModule().getNavIssueTypes();
-                List activeIssueTypes = getCurrentModule().getIssueTypes(true);
                 if (navIssueTypes.size() > 0)
                 {
-                    currentIssueType = (IssueType)navIssueTypes.get(0);
+                    return (IssueType)navIssueTypes.get(0);
                 }
-                else if (activeIssueTypes.size() > 0)
+                List activeIssueTypes = getCurrentModule().getIssueTypes(true);
+                if (activeIssueTypes.size() > 0)
                 {
                     currentIssueType = (IssueType)activeIssueTypes.get(0);
                 }
