@@ -24,7 +24,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.1 2000/09/04 12:50:23 1sturm Exp $
+// $Id: FigPackage.java,v 1.2 2001/07/02 18:22:00 marcus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -156,7 +156,15 @@ public class FigPackage extends FigNodeModelElement {
       }
     }
     try {
-      me.setNamespace(m);
+       // If moved into an Package
+        if (encloser.getOwner() instanceof MPackage) {
+             me.setNamespace(m);
+        }
+        
+        // If default Namespace is not already set
+        if (me.getNamespace() == null) {
+          me.setNamespace(m);
+        }
     }
     catch (Exception e) {
       System.out.println("could not set package");
@@ -198,3 +206,4 @@ public class FigPackage extends FigNodeModelElement {
 
 
 } /* end class FigPackage */
+
