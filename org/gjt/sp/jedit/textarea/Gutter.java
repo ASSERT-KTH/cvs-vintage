@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.37 2003/03/23 19:17:09 spestov Exp $
+ * @version $Id: Gutter.java,v 1.38 2003/04/14 02:25:42 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -553,8 +553,6 @@ public class Gutter extends JComponent implements SwingConstants
 			.getHeight();
 
 		ChunkCache.LineInfo info = textArea.chunkCache.getLineInfo(line);
-		if(!info.chunksValid)
-			System.err.println("gutter paint: not valid");
 		int physicalLine = info.physicalLine;
 
 		//{{{ Paint text area extensions
@@ -824,34 +822,15 @@ public class Gutter extends JComponent implements SwingConstants
 				//{{{ Clicking in bracket scope locates matching bracket
 				else if(bracketHighlight)
 				{
-					if(textArea.isBracketHighlightVisible())
+					if(textArea.isBracketHighlightVisible()
+						&& textArea.lineInBracketScope(line))
 					{
-						int bracketLine = textArea.getBracketLine();
-						int caretLine = textArea.getCaretLine();
-						if(caretLine != bracketLine)
-						{
-							if(caretLine > bracketLine)
-							{
-								int tmp = caretLine;
-								caretLine = bracketLine;
-								bracketLine = tmp;
-							}
-
-							if(line >= caretLine
-								&& line <= bracketLine)
-							{
-								if(e.isShiftDown())
-									textArea.selectToMatchingBracket();
-								else if(e.isControlDown())
-								{
-									textArea.displayManager.narrow(
-										caretLine,bracketLine);
-								}
-								else
-									textArea.goToMatchingBracket();
-								return;
-							}
-						}
+						if(e.isShiftDown())
+							textArea.selectToMatchingBracket();
+						else if(e.isControlDown())
+							textArea.narrowToMatchingBracket();
+						else
+							textArea.goToMatchingBracket();
 					}
 				} //}}}
 			}

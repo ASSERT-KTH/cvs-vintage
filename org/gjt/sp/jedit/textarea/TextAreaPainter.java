@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.77 2003/04/11 00:59:49 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.78 2003/04/14 02:25:42 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -1083,8 +1083,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 			//{{{ Paint token backgrounds
 			ChunkCache.LineInfo lineInfo = textArea.chunkCache
 				.getLineInfo(screenLine);
-			if(!lineInfo.chunksValid)
-				Log.log(Log.ERROR,this,"Chunks not valid for " + screenLine);
 
 			if(lineInfo.chunks != null)
 			{
