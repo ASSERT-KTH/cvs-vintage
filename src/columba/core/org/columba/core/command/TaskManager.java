@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.event.EventListenerList;
+
 /**
  * TaskManager keeps a list of currently running {@link Worker} objects.
  * <p>
@@ -53,7 +55,7 @@ public class TaskManager {
     /**
      * Listeners which are interested in status changes
      */
-    protected List workerListListeners;
+    protected EventListenerList listenerList = new EventListenerList();
 
     /**
      * Default constructor
@@ -62,8 +64,6 @@ public class TaskManager {
         workerList = new Vector();
 
         workerListMutex = new Mutex("workerListMutex");
-
-        workerListListeners = new Vector();
     }
 
     /**
@@ -85,15 +85,6 @@ public class TaskManager {
     }
 
     /**
-     * Add {@link Worker} to this manager
-     *
-     * @param w                new worker
-     */
-    private void addWorker(Worker w) {
-        workerList.add(w);
-    }
-
-    /**
      * Register new {@link Worker} at TaskManager.
      *
      * @param t                new worker
@@ -104,14 +95,14 @@ public class TaskManager {
         try {
             needToRelease = workerListMutex.getMutex();
 
-            addWorker(t);
+            workerList.add(t);
         } finally {
             if (needToRelease) {
                 workerListMutex.releaseMutex();
             }
         }
 
-        fireWorkerAdded(new TaskManagerEvent(this, t));
+        fireWorkerAdded(t);
     }
 
     /**
@@ -131,7 +122,7 @@ public class TaskManager {
 
                 if (tvar == worker.getThreadVar()) {
                     workerList.remove(worker);
-                    fireWorkerRemoved(new TaskManagerEvent(this, worker));
+                    fireWorkerRemoved(worker);
                     break;
                 }
             }
@@ -148,14 +139,14 @@ public class TaskManager {
      * @param l                listener
      */
     public void addTaskManagerListener(TaskManagerListener l) {
-        workerListListeners.add(l);
+        listenerList.add(TaskManagerListener.class, l);
     }
     
     /**
      * Remove a previously registered listener.
      */
     public void removeTaskManagerListener(TaskManagerListener l) {
-        workerListListeners.remove(l);
+        listenerList.remove(TaskManagerListener.class, l);
     }
 
     /**
@@ -163,15 +154,31 @@ public class TaskManager {
      *
      * @param e                event
      */
-    protected void fireWorkerAdded(TaskManagerEvent e) {
-        for (Iterator it = workerListListeners.iterator(); it.hasNext();) {
-            ((TaskManagerListener) it.next()).workerAdded(e);
+    protected void fireWorkerAdded(Worker w) {
+        TaskManagerEvent e = new TaskManagerEvent(this, w);
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == TaskManagerListener.class) {
+                ((TaskManagerListener) listeners[i + 1]).workerAdded(e);
+            }
         }
     }
     
-    protected void fireWorkerRemoved(TaskManagerEvent e) {
-        for (Iterator it = workerListListeners.iterator(); it.hasNext();) {
-            ((TaskManagerListener) it.next()).workerRemoved(e);
+    protected void fireWorkerRemoved(Worker w) {
+        TaskManagerEvent e = new TaskManagerEvent(this, w);
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == TaskManagerListener.class) {
+                ((TaskManagerListener) listeners[i + 1]).workerRemoved(e);
+            }
         }
     }
 }
