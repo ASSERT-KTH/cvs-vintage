@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.16 $ <p>
+ * @version   $Revision: 1.17 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -157,10 +157,16 @@ public class ServiceDeployer
    public Object deploy(URL url)
           throws MalformedURLException, IOException, DeploymentException
    {
+      boolean debug = log.isDebugEnabled();
+      
       SarDeploymentInfo sdi = getSdi(url, true);
       if (sdi.state == MBEANSLOADED)
       {
-         log.debug("document " + url + " is already deployed, undeploy first if you wish to redeploy");
+         if (debug) {
+            log.debug("document " + url + " is already deployed, undeploy " +
+                      "first if you wish to redeploy");
+         }
+         
          return sdi;
       }
 
@@ -179,18 +185,24 @@ public class ServiceDeployer
          try
          {
             NodeList lds = sdi.dd.getElementsByTagName("local-directory");
-            log.debug("about to copy " + lds.getLength() + " local directories");
+            if (debug) {
+               log.debug("about to copy " + lds.getLength() + " local directories");
+            }
             for (int i = 0; i< lds.getLength(); i++)
             {
                 Element ld = (Element)lds.item(i);
                 String path = ld.getAttribute("path");
-                log.debug("about to copy local directory at " + path);
+                if (debug) {
+                   log.debug("about to copy local directory at " + path);
+                }
                 File jbossHomeDir = new File(System.getProperty("jboss.system.home"));
                 File localBaseDir = new File(jbossHomeDir, "db"+File.separator);
                 //Get the url of the local copy from the classloader.
                 URL localUrl = (URL)sdi.getClassUrls().get(0);
-                log.debug("copying from " + localUrl.toString() + path);
-                log.debug("copying to " + localBaseDir);
+                if (debug) {
+                   log.debug("copying from " + localUrl.toString() + path);
+                   log.debug("copying to " + localBaseDir);
+                }
 
                 inflateJar(localUrl, localBaseDir, path);
             } // end of for ()
@@ -251,13 +263,14 @@ public class ServiceDeployer
    private SarDeploymentInfo deployLocalClasses(URL url, URL needsme, boolean reloadSuspended)
         throws DeploymentException
    {
+      boolean debug = log.isDebugEnabled();
       SarDeploymentInfo sdi = getSdi(url, false);
-
+      
       if (reloadSuspended || sdi.state == EMPTY || sdi.state == GHOST)
       {
          try
          {
-            log.debug("deploying document " + url);
+            log.info("Deploying: " + url);
 
             if(url.toString().endsWith("/"))  //adding directory to classpath
             {
@@ -272,8 +285,10 @@ public class ServiceDeployer
                URL localUrl = localCopy.toURL();
                String localName = localCopy.getName();//just the filename, no path
                extractPackages(localUrl, sdi);
-               log.debug("jars from deployment: " + sdi.getClassUrls());
-               log.debug("xml's from deployment: " + sdi.getXmlUrls());
+               if (debug) {
+                  log.debug("jars from deployment: " + sdi.getClassUrls());
+                  log.debug("xml's from deployment: " + sdi.getXmlUrls());
+               }
 
                //OK, what are we trying to deploy?
                //A plain xml file with mbean classpath elements and mbean config.
@@ -339,6 +354,7 @@ public class ServiceDeployer
 
    private boolean deployNeededPackages(URL url, SarDeploymentInfo sdi) throws DeploymentException
    {
+      boolean debug = log.isDebugEnabled();
       Document dd = sdi.dd;
       Collection weNeedClassesFrom = sdi.weNeedClassesFrom;
       weNeedClassesFrom.clear();
@@ -346,14 +362,19 @@ public class ServiceDeployer
          for (int i = 0; i < classpaths.getLength(); i++)
          {
             Element classpath = (Element)classpaths.item(i);
-            log.debug("found classpath " + classpath);
+            if (debug) {
+               log.debug("found classpath " + classpath);
+            }
             String codebase = "";
             String archives = "";
 
             //Does it specify a codebase?
             if (classpath != null)
             {
-               log.debug("setting up classpath " + classpath);
+               if (debug) {
+                  log.debug("setting up classpath " + classpath);
+               }
+               
                // Load the codebase
                codebase = classpath.getAttribute("codebase").trim();
 
@@ -373,10 +394,15 @@ public class ServiceDeployer
                {
                   codebase += "/";
                }
-               log.debug("codebase is " + codebase);
+               if (debug) {
+                  log.debug("codebase is " + codebase);
+               }
+               
                //Load the archives
                archives = classpath.getAttribute("archives").trim();
-               log.debug("archives are " + archives);
+               if (debug) {
+                  log.debug("archives are " + archives);
+               }
             }
 
             if (codebase.startsWith("file:") && archives.equals("*"))
@@ -437,7 +463,6 @@ public class ServiceDeployer
             // We have an archive whatever the codebase go ahead and load the libraries
             else if (!archives.equals(""))
             {
-
                // Still no codebase? get the system default
                if (codebase.equals(""))
                {
@@ -482,26 +507,28 @@ public class ServiceDeployer
                 //find out if any of these were undeployed... if so we can't deploy them nor our mbeans
                 if (jarSdi.state == GHOST) {
                    suspended = true;
-                   log.debug("did not deploy classes for " + neededUrl + ", it's a ghost, we are suspended");
+                   if (debug) {
+                      log.debug("did not deploy classes for " + neededUrl + ", it's a ghost, we are suspended");
+                   }
                 } // end of if ()
                 else
                 {
                    deployLocalClasses(neededUrl, url, false);
-                   log.debug("deployed classes for " + neededUrl);
+                   if (debug) {
+                      log.debug("deployed classes for " + neededUrl);
+                   }
 
                 } // end of else
 
              } catch (DeploymentException e) {
                 log.error("problem deploying classes for " + neededUrl, e);
-                 //put in list of failures TODO
+                //put in list of failures TODO
              } // end of try-catch
 
 
          } // end of while ()
          return suspended;
-
    }
-
 
    /**
     * Undeploys the package at the url string specified. This will: Undeploy
@@ -522,7 +549,7 @@ public class ServiceDeployer
    public void undeploy(URL url, Object localurlObject)
           throws MalformedURLException, IOException, DeploymentException
    {
-      log.debug("undeploying document " + url);
+      log.info("Undeploying: " + url);
 
       SarDeploymentInfo sdi = getSdi(url, false);
 
@@ -639,7 +666,6 @@ public class ServiceDeployer
       {
          log.error("Problem postregistering ServiceDeployer", e);
       }
-
    }
 
    protected Document getDocument(URL url)
@@ -673,7 +699,11 @@ public class ServiceDeployer
    // Private --------------------------------------------------------
    private void addMBeans(URL url, SarDeploymentInfo sdi) throws DeploymentException
    {
-      log.debug("addMBeans: url " + url);
+      boolean debug = log.isDebugEnabled();
+      if (debug) {
+         log.debug("addMBeans: url " + url);
+      }
+      
       List mbeans = sdi.mbeans;
       mbeans.clear();
       NodeList nl = sdi.dd.getElementsByTagName("mbean");
@@ -681,7 +711,9 @@ public class ServiceDeployer
       {
 
          Element mbean = (Element)nl.item(i);
-         log.debug("deploying with ServiceController mbean " + mbean);
+         if (debug) {
+            log.debug("deploying with ServiceController mbean " + mbean);
+         }
          ObjectName service = (ObjectName)invoke(getServiceControllerName(),
                                                  "deploy",
                                                  new Object[]{mbean},
@@ -700,14 +732,21 @@ public class ServiceDeployer
 
    private void removeMBeans(URL url, SarDeploymentInfo sdi) throws DeploymentException
    {
-      log.debug("removeMBeans: url " + url);
+      boolean debug = log.isDebugEnabled();
+      if (debug) {
+         log.debug("removeMBeans: url " + url);
+      }
+      
       List services = sdi.mbeans;
       int lastService = services.size();
       //stop services in reverse order.
       for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
       {
          ObjectName name = (ObjectName)i.previous();
-         log.debug("undeploying mbean " + name);
+         if (debug) {
+            log.debug("undeploying mbean " + name);
+         }
+         
          invoke(getServiceControllerName(),
                  "undeploy",
                  new Object[] {name},
@@ -802,7 +841,8 @@ public class ServiceDeployer
    private static final int GHOST = 5; //undeployed but packages are suspended on us.
 
 
-   protected static class SarDeploymentInfo extends DeployerMBeanSupport.DeploymentInfo
+   protected static class SarDeploymentInfo
+      extends DeployerMBeanSupport.DeploymentInfo
    {
       Collection weNeedClassesFrom = new ArrayList();
       Collection weSupplyClassesTo = new ArrayList();
@@ -815,8 +855,6 @@ public class ServiceDeployer
          super(key);
       }
    }
-
-
 }
 
 

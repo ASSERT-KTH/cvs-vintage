@@ -49,19 +49,20 @@ import org.jboss.system.ServiceMBeanSupport;
  * MBeanServer).
  *
  * If another Auto Deployer is deployed by an AutoDeployer then the initial deployment
- * must be switched of to avoid the auto deployment to hang (see {@link #setWithInitialRun
- * setWithInitialRun()}).
+ * must be switched of to avoid the auto deployment to hang (see
+ * {@link #setWithInitialRun()}).
  *
  * @see org.jboss.deployment.J2eeDeployer
+ * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class AutoDeployer
        extends ServiceMBeanSupport
-       implements AutoDeployerMBean, NotificationListener,Runnable
+       implements AutoDeployerMBean, NotificationListener, Runnable
 {
    // Constants -----------------------------------------------------
    // Attributes ----------------------------------------------------
@@ -280,16 +281,15 @@ public class AutoDeployer
                // TODO: real urls
                if (url.getProtocol().startsWith("file") && !new File(url.getFile()).exists())
                {
-
                   // the file does not exist anymore. undeploy
-                  log.info("Auto undeploy of " + url);
+                  log.info("Auto undeploying: " + url);
                   try
                   {
                      undeploy(url.toString(), deployment.deployerName);
                   }
                   catch (Exception e)
                   {
-                     log.error("Undeployment failed", e);
+                     log.error("Undeployment failed: " + url, e);
                   }
                   deployedURLs.remove(url);
 
@@ -319,7 +319,7 @@ public class AutoDeployer
                // Check old timestamp -- always deploy if first check
                if ((deployment.lastModified == 0) || (deployment.lastModified < lm))
                {
-                  log.info("Auto deploy of " + deployment.url);
+                  log.info("Auto deploying: " + deployment.url);
                   deployment.lastModified = lm;
                   try
                   {
@@ -327,8 +327,7 @@ public class AutoDeployer
                   }
                   catch (Throwable e)
                   {
-                     log.error("Deployment failed:" + deployment.url, e);
-
+                     log.error("Deployment failed: " + deployment.url, e);
                      // Deployment failed - won't retry until updated
                   }
                }
@@ -336,7 +335,8 @@ public class AutoDeployer
          }
          catch (Exception e)
          {
-            log.fatal("auto deployer failure; can not continue", e);
+            log.fatal("can not continue; exiting main loop", e);
+
             // Stop auto deployer
             running = false;
          }
@@ -366,6 +366,8 @@ public class AutoDeployer
    protected void startService()
           throws Exception
    {
+      boolean debug = log.isDebugEnabled();
+      
       // Save JMX names of configured deployers
       StringTokenizer deployers = new StringTokenizer(deployerList, ";");
       deployerNames = new ObjectName[deployers.countTokens()];
@@ -379,8 +381,7 @@ public class AutoDeployer
          }
          catch (MalformedObjectNameException mfone)
          {
-            log.warn("The string '" + deployerName + "'is not a valid " +
-                  "object name - ignoring it.");
+            log.warn("Ignoring invalid object name: " + deployerName);
             continue;
          }
 
@@ -393,18 +394,14 @@ public class AutoDeployer
          }
          catch (ReflectionException re)
          {
-            log.info("Deployer '" + deployerNames[i] + "' doesn't provide a " +
-                  "filter - will try to deploy all files");
-            deployableFilters[i] =
-               new FilenameFilter()
+            if (debug) {
+               log.debug("Deployer '" + deployerNames[i] +
+                         "' doesn't provide a " +
+                         "filter - will try to deploy all files");
+            }
+            
+            deployableFilters[i] = new FilenameFilter()
                {
-                  /**
-                   * #Description of the Method
-                   *
-                   * @param dir Description of Parameter
-                   * @param filename Description of Parameter
-                   * @return Description of the Returned Value
-                   */
                   public boolean accept(File dir, String filename)
                   {
                      return true;
@@ -413,8 +410,12 @@ public class AutoDeployer
          }
          catch (InstanceNotFoundException e)
          {
-            log.info("Deployer '" + deployerNames[i] + "' isn't yet registered " +
-                    "files for this deployer will not be deployed until it is deployed.");
+            if (debug) {
+               log.debug("Deployer '" + deployerNames[i] +
+                         "' isn't yet registered " +
+                         "files for this deployer will not be " +
+                         "deployed until it is deployed.");
+            }
             deployableFilters[i] = null;
          }
       }
@@ -434,27 +435,30 @@ public class AutoDeployer
             if (metaFile.exists())
             {
                // It's unpackaged
-
                try
                {
                   watchedURLs.add(new Deployment(
                         urlFile.getCanonicalFile().toURL()));
-                  log.info("Auto-deploying " + urlFile.getCanonicalFile());
+                  if (debug) {
+                     log.debug("Watching url: " + urlFile.getCanonicalFile());
+                  }
                }
                catch (Exception e)
                {
-                  log.warn("Cannot auto-deploy " + urlFile);
+                  log.warn("Failed add watched url: " + urlFile, e);
                }
             }
             else
             {
                // This is a directory whose contents shall be checked
                // for deployments
+               File dir = urlFile.getCanonicalFile();
                try
                {
-                  File dir = urlFile.getCanonicalFile();
                   watchedDirectories.add(dir);
-                  log.info("Watching " + dir);
+                  if (debug) {
+                     log.debug("Watching dir: " + dir);
+                  }
 
                   // scan the directory now, so that the ordered deployments
                   // will work, when only a base directory is specified
@@ -462,7 +466,7 @@ public class AutoDeployer
                }
                catch (IOException e)
                {
-                  log.warn("failed to add watched directory", e);
+                  log.warn("Failed to add watched dir: " + dir, e);
                }
             }
          }
@@ -474,11 +478,13 @@ public class AutoDeployer
             {
                watchedURLs.add(new Deployment(
                      urlFile.getCanonicalFile().toURL()));
-               log.info("Auto-deploying " + urlFile.getCanonicalFile());
+               if (log.isDebugEnabled()) {
+                  log.debug("Watching file: " + urlFile.getCanonicalFile());
+               }
             }
             catch (Exception e)
             {
-               log.warn("Cannot auto-deploy " + urlFile);
+               log.warn("Failed to add watched file: " + urlFile);
             }
          }
          else
@@ -488,11 +494,13 @@ public class AutoDeployer
             try
             {
                watchedURLs.add(new Deployment(new URL(url)));
+               if (debug) {
+                  log.debug("Watching url: " + url);
+               }
             }
             catch (MalformedURLException e)
             {
-               // Didn't work
-               log.warn("Cannot auto-deploy " + url);
+               log.warn("Failed to add watched url: " + url, e);
             }
          }
       }
@@ -511,24 +519,30 @@ public class AutoDeployer
       // Start auto deploy thread
       running = true;
       new Thread(this, "AutoDeployer").start();
-      
    }
 
    public void handleNotification(Notification notification, Object handback)
    {
+      boolean debug = log.isDebugEnabled();
+      
       String type = notification.getType();
-      if(type.equals(MBeanServerNotification.REGISTRATION_NOTIFICATION))
+      if (type.equals(MBeanServerNotification.REGISTRATION_NOTIFICATION))
       {
          ObjectName mbean = ((MBeanServerNotification)notification).getMBeanName();
-         
-         log.debug("Received notification of mbean "+mbean+"'s deployment.");
-         
+
+         if (debug) {
+            log.debug("Received notification of mbean "+mbean+"'s deployment.");
+         }
+
          for(int i=0; i<deployerNames.length; i++)
          {
             if(deployerNames[i].equals(mbean))
             {
-               log.info("Deployer '" + deployerNames[i] + "' deployed, " +
-                       "now available for deployments.");
+               if (debug) {
+                  log.debug("Deployer '" + deployerNames[i] + "' deployed, " +
+                            "now available for deployments.");
+               }
+               
                try
                {
                   deployableFilters[i] = (FilenameFilter) server.invoke(
@@ -537,8 +551,12 @@ public class AutoDeployer
                }
                catch (ReflectionException re)
                {
-                  log.info("Deployer '" + deployerNames[i] + "' doesn't provide a " +
-                          "filter - will try to deploy all files");
+                  if (debug) {
+                     log.debug("Deployer '" + deployerNames[i] +
+                               "' doesn't provide a " +
+                               "filter - will try to deploy all files");
+                  }
+                  
                   deployableFilters[i] = new FilenameFilter()
                      {
                         public boolean accept(File dir, String filename)
@@ -547,9 +565,10 @@ public class AutoDeployer
                         }
                      };
                }
-               catch(Exception e)
+               catch (Exception e)
                {
-                  log.error("Exception occurred accessing deployer '" + deployerNames[i] + "'.",e);
+                  log.error("Exception occurred accessing deployer: " +
+                            deployerNames[i], e);
                }
             }
          }
@@ -563,8 +582,10 @@ public class AutoDeployer
             if(deployerNames[i].equals(mbean))
             {
                deployableFilters[i] = null;
-               log.info("Deployer '" + deployerNames[i] + "' undeployed, " +
-                       "no longer available for deployments.");
+               if (debug) {
+                  log.debug("Deployer '" + deployerNames[i] + "' undeployed, " +
+                            "no longer available for deployments.");
+               }
             }
          }
       }
@@ -581,6 +602,8 @@ public class AutoDeployer
    protected void scanWatchedDirectories()
           throws MalformedURLException
    {
+      log.trace("Scanning watched directories");
+      
       for (int i = 0; i < watchedDirectories.size(); i++)
       {
          File dir = (File)watchedDirectories.get(i);
@@ -598,6 +621,11 @@ public class AutoDeployer
    protected void scanDirectory(final File dir)
           throws MalformedURLException
    {
+      if (log.isTraceEnabled()) {
+         log.trace("Scanning directory: " + dir);
+      }
+      boolean debug = log.isDebugEnabled();
+      
       File[] files = dir.listFiles();
       for (int idx = 0; idx < files.length; idx++)
       {
@@ -617,7 +645,9 @@ public class AutoDeployer
                // Add to list of files to deploy automatically
                watchedURLs.add(new Deployment(fileUrl));
                deployedURLs.put(fileUrl, fileUrl);
-               log.info("Auto-deploying " + fileUrl);
+               if (debug) {
+                  log.debug("Watching file: " + fileUrl);
+               }
             }
          }
       }
@@ -677,7 +707,11 @@ public class AutoDeployer
    protected void undeploy(String url, ObjectName deployerName)
           throws Exception
    {
-      log.debug("undeploying url " + url + " using deployer " + deployerName);
+      if (log.isDebugEnabled()) {
+         log.debug("Undeploying url " + url +
+                   " using deployer " + deployerName);
+      }
+      
       try
       {
          // Call the appropriate deployer through the JMX server

@@ -31,7 +31,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -140,6 +140,8 @@ public class NamingService
    public void startService()
       throws Exception
    {
+      boolean debug = log.isDebugEnabled();
+      
       // Read jndi.properties into system properties
       // RO: this is necessary because some components (=Tomcat servlets) use a 
       // buggy classloader that disallows finding the resource properly
@@ -152,29 +154,34 @@ public class NamingService
       {
          String key = (String) keys.nextElement();
          String value = props.getProperty(key);
-         log.debug("System.setProperty, key="+key+", value="+value);
+         if (debug) {
+            log.debug("System.setProperty, key="+key+", value="+value);
+         }
          System.setProperty(key, value);
       }
       naming.start();
+      
       /* Create a default InitialContext and dump out its env to show what properties
          were used in its creation. If we find a Context.PROVIDER_URL property
          issue a warning as this means JNDI lookups are going through RMI.
       */
       InitialContext iniCtx = new InitialContext();
       Hashtable env = iniCtx.getEnvironment();
-      log.info("InitialContext Environment:");
+      log.debug("InitialContext Environment:");
       String providerURL = null;
       for (Enumeration keys = env.keys(); keys.hasMoreElements(); )
       {
          String key = (String) keys.nextElement();
          String value = (String) env.get(key);
-         log.info("key="+key+", value="+value);
+         if (debug) {
+            log.debug("key="+key+", value="+value);
+         }
          if( key.equals(Context.PROVIDER_URL) )
             providerURL = value;
       }
       // Warn if there was a Context.PROVIDER_URL
       if( providerURL != null )
-         log.warn("Saw Context.PROVIDER_URL in server jndi.properties, url="+providerURL);
+         log.warn("Context.PROVIDER_URL in server jndi.properties, url="+providerURL);
 
       /* Bind an ObjectFactory to "java:comp" so that "java:comp/env" lookups
        produce a unique context for each thread contexxt ClassLoader that
@@ -186,13 +193,13 @@ public class NamingService
       Reference envRef = new Reference("javax.naming.Context", refAddr, ENCFactory.class.getName(), null);
       Context ctx = (Context)iniCtx.lookup("java:");
       ctx.rebind("comp", envRef);
-      log.info("Naming started on port "+naming.getPort());
+      log.info("Listening on port "+naming.getPort());
    }
 
    public void stopService()
    {
       naming.stop();
-      log.info("JNP server stopped");
+      log.debug("JNP server stopped");
    }
    
    public void postRegister( Boolean pRegistrationDone )

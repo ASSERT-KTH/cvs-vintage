@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -87,7 +87,7 @@ public class Info
       libraryDirectory = System.getProperty("jboss.system.libraryDirectory");
       patchDirectory = System.getProperty("jboss.system.patchDirectory");
 		
-      log.info("General Purpose Architecture [GPA]");
+      log.info("General Purpose Architecture (GPA)");
 		
       // Dump out basic info as INFO priority msgs
       log.info("Java version: " +
@@ -104,13 +104,13 @@ public class Info
               osVersion + "," +
               osArch);
       
-      log.info("JBoss Version : " + jbossVersion);
-      log.info("JBoss start time : " + jbossStarted);
-      log.info("localDir : " + jbossLocalHomeDirectory);
-      log.info("installationURL : " + installationURL);
-      log.info("configuration : " + configurationDirectory);
-      log.info("libraries : " + libraryDirectory);
-      log.info("local patch directory: " + patchDirectory);
+      log.info("JBoss Version: " + jbossVersion);
+      log.info("JBoss start time: " + jbossStarted);
+      log.info("Local Home Dir: " + jbossLocalHomeDirectory);
+      log.info("Installation URL: " + installationURL);
+      log.info("Configuration Dir: " + configurationDirectory);
+      log.info("Library Dir: " + libraryDirectory);
+      log.info("Local Patch Directory: " + patchDirectory);
       log.info("Oh, and remember we love you");
 		
       // dump out the entire system properties if debug is enabled

@@ -6,7 +6,6 @@
  */
 package org.jboss.deployment;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,7 +34,7 @@ import java.util.List;
  *
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *
  * <p><b>Revisions:</b>
  *
@@ -48,18 +47,15 @@ public abstract class DeployerMBeanSupport
    implements DeployerMBean
 {
    // Constants -----------------------------------------------------
-   private static final String SERVICE_CONTROLLER_NAME = "JBOSS-SYSTEM:spine=ServiceController";
+
+   private static final String SERVICE_CONTROLLER_NAME =
+      "JBOSS-SYSTEM:spine=ServiceController";
+   
    // Attributes --------------------------------------------------------
 
    private ObjectName serviceControllerName;
 
-
    private Map deployments = new HashMap();
-
-   /*
-    * log4j Category for logging
-    */
-   //protected Logger category;
 
    /**
     *  The directory that will contain local copies of deployed packages
@@ -162,22 +158,23 @@ public abstract class DeployerMBeanSupport
       deployDir = new File(deployTmpDir, getName());
       if (deployDir.exists())
       {
-         getLog().info("Found a temp directory left over from a previous run - " +
-               "deleting it.");
+         log.debug("Found a temp directory left over " +
+                   "from a previous run; deleting it.");
+                   
          // What could it mean?
          if (!recursiveDelete(deployDir))
          {
-            getLog().warn("Unable to recursively delete temp directory '" +
-                  deployDir + "' that appears to be left over from " +
-                  "the previous run. This might cause problems.");
+            log.warn("Unable to recursively delete temp directory '" +
+                     deployDir + "' that appears to be left over from " +
+                     "the previous run. This might cause problems.");
          }
       }
       if (!deployDir.exists() && !deployDir.mkdirs())
       {
          throw new DeploymentException("Can't create temp directory '" +
-               deployDir + "'");
+                                       deployDir + "'");
       }
-      getLog().info("Temporary deploy directory is " + deployDir);
+      log.info("Temporary deploy directory is " + deployDir);
    }
 
     /**
@@ -190,9 +187,9 @@ public abstract class DeployerMBeanSupport
       // Remove our temp directory
       if (!recursiveDelete(deployDir))
       {
-         getLog().warn("Unable to recursively delete the temp directory '" +
-               deployDir + "' - it should be cleaned up when the " +
-               "server is next restarted.");
+         log.warn("Unable to recursively delete the temp directory '" +
+                  deployDir + "' - it should be cleaned up when the " +
+                  "server is next restarted.");
       }
    }
 
