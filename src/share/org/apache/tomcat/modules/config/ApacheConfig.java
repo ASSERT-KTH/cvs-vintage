@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.15 2001/07/04 05:09:56 costin Exp $
+/* $Id: ApacheConfig.java,v 1.16 2001/07/13 06:13:56 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -69,6 +69,26 @@ import java.util.*;
 import org.apache.tomcat.modules.server.Ajp12Interceptor;
 import org.apache.tomcat.modules.server.Ajp13Interceptor;
 
+/* The idea is to keep all configuration in server.xml and
+   the normal apache config files. We don't want people to
+   touch apache ( or IIS, NES ) config files unless they
+   want to and know what they're doing ( better than we do :-).
+
+   One nice feature ( if someone sends it ) would be to
+   also edit httpd.conf to add the include.
+
+   We'll generate a number of configuration files - this one
+   is trying to generate a native apache config file.
+
+   Some web.xml mappings do not "map" to server configuration - in
+   this case we need to fallback to forward all requests to tomcat.
+
+   Ajp14 will add to that the posibility to have tomcat and
+   apache on different machines, and many other improvements -
+   but this should also work for Ajp12, Ajp13 and Jni.
+
+*/
+
 /**
     Generates automatic apache configurations based on
     the Tomcat server.xml settings and the war contexts
@@ -105,14 +125,16 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Mel Martinez
-	@version $Revision: 1.15 $ $Date: 2001/07/04 05:09:56 $
+	@version $Revision: 1.16 $ $Date: 2001/07/13 06:13:56 $
  */
 public class ApacheConfig  extends BaseInterceptor { 
     
     /** default path to mod_jk .conf location */
     public static final String MOD_JK_CONFIG = "conf/auto/mod_jk.conf";
-    /** default path to workers.properties file */
-    public static final String WORKERS_CONFIG = "conf/auto/workers.properties";
+    /** default path to workers.properties file
+	This should be also auto-generated from server.xml.
+    */
+    public static final String WORKERS_CONFIG = "conf/jk/workers.properties";
     /** default mod_jk log file location */
     public static final String JK_LOG_LOCATION = "logs/mod_jk.log";
     /** default location of mod_jk Apache plug-in. */
@@ -145,6 +167,15 @@ public class ApacheConfig  extends BaseInterceptor {
     private boolean useJkMount=true;
     
     private String jkDebug=null;
+
+    private boolean noRoot=false;
+
+    // ssl settings 
+    private boolean sslExtract=true;
+    private String sslHttpsIndicator="HTTPS";
+    private String sslSessionIndicator="SSL_SESSION_ID";
+    private String sslCipherIndicator="SSL_CIPHER";
+    private String sslCertsIndicator="SSL_CLIENT_CERT";
     
     // default is true until we can map all web.xml directives
     // Or detect only portable directives were used.
@@ -196,6 +227,17 @@ public class ApacheConfig  extends BaseInterceptor {
     */
     public void setUseJkMount( boolean b ) {
 	useJkMount=b;
+    }
+
+    /** Special option - do not generate mappings for the ROOT
+	context. The default is false, and will generate the mappings,
+	redirecting all pages to tomcat ( since / matches everything ).
+	If the ROOT webapp can be configured with apache serving static
+	files, there's no problem. If not, that means Apache will be
+	out of picture for all requests.
+    */
+    public void setNoRoot( boolean b ) {
+	noRoot=b;
     }
     
     /**
@@ -276,7 +318,46 @@ public class ApacheConfig  extends BaseInterceptor {
     public void setJkDebug( String level ) {
 	jkDebug=level;
     }
+
+    /** By default mod_jk is configured to collect SSL information from
+	the apache environment and send it to the Tomcat workers. The
+	problem is that there are many SSL solutions for Apache and as
+	a result the environment variable names may change.
+
+	The following JK related SSL configureation
+	can be used to customize mod_jk's SSL behaviour.
+
+	Should mod_jk send SSL information to Tomact (default is On)
+    */
+    public void setExtractSSL( boolean sslMode ) {
+	this.sslExtract=sslMode;
+    }
+
+    /** What is the indicator for SSL (default is HTTPS)
+     */
+    public void setHttpsIndicator( String s ) {
+	sslHttpsIndicator=s;
+    }
+
+    /**What is the indicator for SSL session (default is SSL_SESSION_ID)
+     */
+    public void setSessionIndicator( String s ) {
+	sslSessionIndicator=s;
+    }
     
+    /**What is the indicator for client SSL cipher suit (default is SSL_CIPHER)
+     */
+    public void setCipherIndicator( String s ) {
+	sslCipherIndicator=s;
+    }
+
+    /** What is the indicator for the client SSL certificated(default
+	is SSL_CLIENT_CERT
+     */
+    public void setCertsIndicator( String s ) {
+	sslCertsIndicator=s;
+    }
+
     // -------------------- Initialize/guess defaults --------------------
 
     /** Initialize defaults for properties that are not set
@@ -292,7 +373,10 @@ public class ApacheConfig  extends BaseInterceptor {
 	jkConfig=getConfigFile( jkConfig, configHome, MOD_JK_CONFIG);
 	workersConfig=getConfigFile( workersConfig, configHome,
 				     WORKERS_CONFIG);
-	modJk=getConfigFile( modJk, configHome, MOD_JK );
+	if( modJk == null )
+	    modJk=new File(MOD_JK);
+	else
+	    modJk=getConfigFile( modJk, configHome, MOD_JK );
 	jkLog=getConfigFile( jkLog, configHome, JK_LOG_LOCATION);
     }
 
@@ -341,8 +425,8 @@ public class ApacheConfig  extends BaseInterceptor {
     	try {
 	    initProperties(cm);
 	    initProtocol(cm);
-	    
-    	    
+
+	    StringBuffer sb=new StringBuffer();
     	    PrintWriter mod_jk = new PrintWriter(new FileWriter(jkConfig));
     	    log("Generating apache mod_jk config = "+jkConfig );
 
@@ -350,15 +434,6 @@ public class ApacheConfig  extends BaseInterceptor {
 
 	    // XXX Make those options configurable in server.xml
 	    generateSSLConfig( mod_jk );
-
-
-            // XXX
-	    mod_jk.println("#");        
-            mod_jk.println("# Root context mounts for Tomcat");
-            mod_jk.println("#");        
-            mod_jk.println("JkMount /*.jsp " + jkProto);
-            mod_jk.println("JkMount /servlet/* " + jkProto);
-            mod_jk.println();
 
     	    // Set up contexts
     	    // XXX deal with Virtual host configuration !!!!
@@ -374,7 +449,8 @@ public class ApacheConfig  extends BaseInterceptor {
     	    mod_jk.close();        
     	} catch( Exception ex ) {
             Log loghelper = Log.getLog("tc_log", this);
-    	    loghelper.log("Error generating automatic apache configuration", ex);
+    	    loghelper.log("Error generating automatic apache configuration",
+			  ex);
     	}
     }//end execute()
 
@@ -382,25 +458,23 @@ public class ApacheConfig  extends BaseInterceptor {
 
     /** Generate the loadModule and general options
      */
-    private void generateJkHead(PrintWriter mod_jk) {
+    private boolean generateJkHead(PrintWriter mod_jk)
+	throws TomcatException
+    {
 
-	mod_jk.println("###################################################################");
-	mod_jk.println("# Auto generated configuration. Dated: " +  new Date());
-	mod_jk.println("###################################################################");
+	mod_jk.println("########## Auto generated on " +  new Date() +
+		       "##########" );
 	mod_jk.println();
-	
-	mod_jk.println("#");
-	mod_jk.println("# The following lines instruct Apache to load the jk module");
-	mod_jk.println("# if it has not already been loaded.  This script assumes");
-	mod_jk.println("# that the module is in the path below.  If you need to ");
-	mod_jk.println("# deploy the module in another location, be sure to use a  ");
-	mod_jk.println("# LoadModule statement prior to Include'ing this conf file.");
-	mod_jk.println("# For example:");
-	mod_jk.println("# ");
-	mod_jk.println("#   LoadModule jk_module d:/mypath/modules/win32/mod_jk.dll");
-	mod_jk.println("# or");
-	mod_jk.println("#   LoadModule jk_module /mypath/modules/linux/mod_jk.so");
-	mod_jk.println("#");
+
+	// Fail if mod_jk not found, let the user know the problem
+	// instead of running into problems later.
+	if( ! modJk.exists() ) {
+	    log( "mod_jk location: " + modJk );
+	    log( "Make sure it is installed corectly or " +
+		 " set the config location" );
+	    log( "Using <ApacheConfig modJk=\"PATH_TO_MOD_JK.SO_OR_DLL\" />" );
+	    //throw new TomcatException( "mod_jk not found ");
+	}
             
 	// Verify the file exists !!
 	mod_jk.println("<IfModule !mod_jk.c>");
@@ -408,9 +482,22 @@ public class ApacheConfig  extends BaseInterceptor {
 		       modJk.toString().replace('\\','/'));
 	mod_jk.println("</IfModule>");
 	mod_jk.println();                
+
+	
+	// Fail if workers file not found, let the user know the problem
+	// instead of running into problems later.
+	if( ! workersConfig.exists() ) {
+	    log( "Can't find workers.properties at " + workersConfig );
+	    log( "Please install it in the default location or " +
+		 " set the config location" );
+	    log( "Using <ApacheConfig workersConfig=\"FULL_PATH\" />" );
+	    throw new TomcatException( "workers.properties not found ");
+	}
+            
 	mod_jk.println("JkWorkersFile \"" 
 		       + workersConfig.toString().replace('\\', '/') 
 		       + "\"");
+
 	mod_jk.println("JkLogFile \"" 
 		       + jkLog.toString().replace('\\', '/') 
 		       + "\"");
@@ -421,192 +508,260 @@ public class ApacheConfig  extends BaseInterceptor {
 	    mod_jk.println("JkLogLevel " + jkDebug);
 	    mod_jk.println();
 	}
-
+	return true;
     }
-
+    
     private void generateSSLConfig(PrintWriter mod_jk) {
-	// XXX mod_jk should try few and detect automatically - it's not difficult 
+	if( ! sslExtract ) {
+	    mod_jk.println("JkExtractSSL Off");        
+	}
+	if( ! "HTTPS".equalsIgnoreCase( sslHttpsIndicator ) ) {
+	    mod_jk.println("JkHTTPSIndicator " + sslHttpsIndicator);        
+	}
+	if( ! "SSL_SESSION_ID".equalsIgnoreCase( sslSessionIndicator )) {
+	    mod_jk.println("JkSESSIONIndicator " + sslSessionIndicator);
+	}
+	if( ! "SSL_CIPHER".equalsIgnoreCase( sslCipherIndicator )) {
+	    mod_jk.println("JkCIPHERIndicator " + sslCipherIndicator);
+	}
+	if( ! "SSL_CLIENT_CERT".equalsIgnoreCase( sslCertsIndicator )) {
+	    mod_jk.println("JkCERTSIndicator " + sslCertsIndicator);
+	}
 
-	mod_jk.println("###################################################################");
-	mod_jk.println("#                     SSL configuration                           #");
-	mod_jk.println("# ");                
-	mod_jk.println("# By default mod_jk is configured to collect SSL information from");
-	mod_jk.println("# the apache environment and send it to the Tomcat workers. The");
-	mod_jk.println("# problem is that there are many SSL solutions for Apache and as");
-	mod_jk.println("# a result the environment variable names may change.");
-	mod_jk.println("#");        
-	mod_jk.println("# The following (commented out) JK related SSL configureation");        
-	mod_jk.println("# can be used to customize mod_jk's SSL behaviour.");        
-	mod_jk.println("# ");        
-	mod_jk.println("# Should mod_jk send SSL information to Tomact (default is On)");        
-	mod_jk.println("# JkExtractSSL Off");        
-	mod_jk.println("# ");        
-	mod_jk.println("# What is the indicator for SSL (default is HTTPS)");        
-	mod_jk.println("# JkHTTPSIndicator HTTPS");        
-	mod_jk.println("# ");        
-	mod_jk.println("# What is the indicator for SSL session (default is SSL_SESSION_ID)");        
-	mod_jk.println("# JkSESSIONIndicator SSL_SESSION_ID");        
-	mod_jk.println("# ");        
-	mod_jk.println("# What is the indicator for client SSL cipher suit (default is SSL_CIPHER)");        
-	mod_jk.println("# JkCIPHERIndicator SSL_CIPHER");
-	mod_jk.println("# ");        
-	mod_jk.println("# What is the indicator for the client SSL certificated(default is SSL_CLIENT_CERT)");        
-	mod_jk.println("# JkCERTSIndicator SSL_CLIENT_CERT");
-	mod_jk.println("# ");        
-	mod_jk.println("#                                                                 #");        
-	mod_jk.println("###################################################################");
 	mod_jk.println();
     }
 
+    // -------------------- Forward all mode --------------------
+    String indent="";
+    
     /** Forward all requests for a context to tomcat.
 	The default.
      */
-    private void generateStupidMappings(Context context, PrintWriter mod_jk ) {
-	String path  = context.getPath();
+    private boolean generateStupidMappings(Context context,
+					   PrintWriter mod_jk )
+    {
+	String ctxPath  = context.getPath();
 	String vhost = context.getHost();
+	String nPath=("".equals(ctxPath)) ? "/" : ctxPath;
 	
 	if( vhost != null ) {
-	    // Generate Apache VirtualHost section for this host
-	    // You'll have to do it manually right now
-	    return;
-	}
-	if( path.length() > 1) {
-	    if( useJkMount ) {
-		mod_jk.println("JkMount " +  path + " " + jkProto );
-	    } else {
-		mod_jk.println("<Location \"" + path + "\">");
-		mod_jk.println("    SetHandler jakarta-servlet");
-		mod_jk.println("</Location>");
+	    generateNameVirtualHost(mod_jk );
+	    mod_jk.println("<VirtualHost *>");
+	    mod_jk.println("    ServerName " + vhost );
+	    Enumeration aliases=context.getHostAliases();
+	    if( aliases.hasMoreElements() ) {
+		mod_jk.print("    ServerAlias " );
+		while( aliases.hasMoreElements() ) {
+		    mod_jk.print( (String)aliases.nextElement() + " " );
+		}
+		mod_jk.println();
 	    }
-	} else {
-	    // the root context
-	    // XXX If tomcat has a root context it should get all requests
-	    // - which means apache will have absolutely nothing to do except
-	    // forwarding requests.
-
-	    // We should at least try to see if the root context has
-	    // a mappable configuration and generate a smart mapping
-	    
+	    indent="    ";
 	}
+	if( noRoot &&  "".equals(ctxPath) ) {
+	    log("Ignoring root context in mount-all mode  ");
+	    return true;
+	} 
+	if( useJkMount ) {
+	    mod_jk.println(indent + "JkMount " +  nPath + " " + jkProto );
+	} else {
+	    mod_jk.println(indent + "<Location \"" + nPath + "\">");
+	    mod_jk.println(indent + "    SetHandler jakarta-servlet");
+	    mod_jk.println(indent + "</Location>");
+	}
+	if( vhost != null ) {
+	    mod_jk.println("</VirtualHost>");
+	    indent="";
+	}
+	return true;
     }    
 
     
+    private void generateNameVirtualHost( PrintWriter mod_jk ) {
+	mod_jk.println("NameVirtualHost *");
+    }
+    
+    // -------------------- Apache serves static mode --------------------
+    // This is not going to work for all apps. We fall back to stupid mode.
+    
     private void generateContextMappings(Context context, PrintWriter mod_jk )
     {
-	String path  = context.getPath();
+	String ctxPath  = context.getPath();
 	String vhost = context.getHost();
-	
+
+	mod_jk.println();
+	mod_jk.println("#################### " +
+		       ((vhost!=null ) ? vhost + ":" : "" ) +
+		       (("".equals(ctxPath)) ? "/" : ctxPath ) +
+		       " ####################" );
 	if( vhost != null ) {
-	    // Generate Apache VirtualHost section for this host
-	    // You'll have to do it manually right now
-	    // XXX
-	    return;
-	}
-	if( path.length() > 1) {
-	    // Dynamic /servet pages go to Tomcat
-	    
-	    generateStaticMappings( context, mod_jk );
-	    
-	    Enumeration servletMaps=context.getContainers();
-	    while( servletMaps.hasMoreElements() ) {
-		Container ct=(Container)servletMaps.nextElement();
-		addMapping( context, ct , mod_jk );
+	    mod_jk.println("<VirtualHost *>");
+	    mod_jk.println("    ServerName " + vhost );
+	    Enumeration aliases=context.getHostAliases();
+	    if( aliases.hasMoreElements() ) {
+		mod_jk.print("    ServerAlias " );
+		while( aliases.hasMoreElements() ) {
+		    mod_jk.print( (String)aliases.nextElement() + " " );
+		}
+		mod_jk.println();
 	    }
+	    indent="    ";
+	}
+	// Dynamic /servet pages go to Tomcat
+	
+	generateStaticMappings( context, mod_jk );
 
-	    mod_jk.println("JkMount " + path + "/*j_security_check " +
-			   jkProto);
-	    mod_jk.println();
-
-	    // XXX ErrorDocument
-	    // Security and filter mappings
+	// InvokerInterceptor - it doesn't have a container,
+	// but it's implemented using a special module.
+	
+	// XXX we need to better collect all mappings
+	addMapping( ctxPath + "/servlet/*", mod_jk );
 	    
-	} else {
-	    // the root context
-	    // XXX use a non-conflicting name
+	Enumeration servletMaps=context.getContainers();
+	while( servletMaps.hasMoreElements() ) {
+	    Container ct=(Container)servletMaps.nextElement();
+	    addMapping( context, ct , mod_jk );
+	}
+	
+	// There is a big problem with this one - it is
+	// equivalent with JkMount path/*...
+	// The good news - there is a container with exactly this
+	// map ( the real path that is used by form auth ), so no need
+	// for this one
+	//mod_jk.println("JkMount " + path + "/*j_security_check " +
+	//		   jkProto);
+	//mod_jk.println();
+	
+	// XXX ErrorDocument
+	// Security and filter mappings
+	    
+	if( vhost != null ) {
+	    mod_jk.println("</VirtualHost>");
+	    indent="";
 	}
     }
 
-    private void addMapping( Context ctx, Container ct, PrintWriter mod_jk ) {
+    private boolean addMapping( Context ctx, Container ct,
+				PrintWriter mod_jk )
+    {
 	int type=ct.getMapType();
 	String ctPath=ct.getPath();
 	String ctxPath=ctx.getPath();
+
+	if( type==Container.EXTENSION_MAP ) {
+	    if( ctPath.length() < 3 ) return false;
+	    String ext=ctPath.substring( 2 );
+	    return addExtensionMapping( ctxPath, ext , mod_jk );
+	}
 	String fullPath=null;
-	if( ctxPath.equals("/") )
-	    fullPath=ctPath;
-	else if( ctPath.startsWith("/" ))
+	if( ctPath.startsWith("/" ))
 	    fullPath=ctxPath+ ctPath;
 	else
 	    fullPath=ctxPath + "/" + ctPath;
-	log( "Adding map for " + fullPath );
+	return addMapping( fullPath, mod_jk);
+    }
 
+    private boolean addExtensionMapping( String ctxPath, String ext,
+					 PrintWriter mod_jk )
+    {
+	mod_jk.println(indent + "<LocationMatch " + ctxPath + "/(.*/)*.*\\." +
+		       ext + " >" );
+	mod_jk.println(indent + "    SetHandler jakarta-servlet ");
+	mod_jk.println(indent + "</LocationMatch>");
+	return true;
+    }
+    
+    
+    private boolean addMapping( String fullPath, PrintWriter mod_jk ) {
+	log( "Adding map for " + fullPath );
 	if( useJkMount ) {
-	    mod_jk.println("JkMount " + fullPath + "  " + jkProto );
+	    mod_jk.println(indent + "JkMount " + fullPath + "  " + jkProto );
 	} else {
-	    mod_jk.println("<Location " + fullPath + " >");
-	    mod_jk.println("    SetHandler jakarta-servlet ");
+	    mod_jk.println(indent + "<Location " + fullPath + " >");
+	    mod_jk.println(indent + "    SetHandler jakarta-servlet ");
 	    // XXX Other nice things like setting servlet and other attributes
-	    mod_jk.println("</Location>");
+	    mod_jk.println(indent + "</Location>");
 	    mod_jk.println();
 	}
+	return true;
+    }
 
-	// XXX deal with security mappings
-	// XXX better deal with extension mappings. 
+    private void generateWelcomeFiles(Context context, PrintWriter mod_jk ) {
+	String wf[]=context.getWelcomeFiles();
+	if( wf==null || wf.length == 0 )
+	    return;
+	mod_jk.print(indent + "    DirectoryIndex ");
+	for( int i=0; i<wf.length ; i++ ) {
+	    mod_jk.print( wf[i] + " " );
+	}
+	mod_jk.println();
     }
 
     /** Mappings for static content. XXX need to add welcome files,
-     *  mime mappings ( all will be handled by Mime and Static modules of apache ).
+     *  mime mappings ( all will be handled by Mime and Static modules of
+     *  apache ).
      */
     private void generateStaticMappings(Context context, PrintWriter mod_jk ) {
-	String path  = context.getPath();
+	String ctxPath  = context.getPath();
+
 	// Calculate the absolute path of the document base
 	String docBase = context.getDocBase();
 	if (!FileUtil.isAbsolute(docBase)){
 	    docBase = tomcatHome + "/" + docBase;
 	}
 	docBase = FileUtil.patch(docBase);
-	if (File.separatorChar == '\\')
-	    docBase = docBase.replace('\\','/');// use separator preferred by Apache
-	
+	if (File.separatorChar == '\\') {
+	    // use separator preferred by Apache
+	    docBase = docBase.replace('\\','/');
+	}
+
+	String npath=("".equals(ctxPath)) ? "/" : ctxPath;
 	// Static files will be served by Apache
-	mod_jk.println("#");		    
-	mod_jk.println("# The following line allow apache to serve static files for " + path );
-	mod_jk.println("#");                        
-	mod_jk.println("Alias " + path + " \"" + docBase + "\"");
-	mod_jk.println("<Directory \"" + docBase + "\">");
-	mod_jk.println("    Options Indexes FollowSymLinks");
+	mod_jk.println(indent + "# Static files ");		    
+	mod_jk.println(indent + "Alias " + npath + " \"" + docBase + "\"/");
+	mod_jk.println();
+	mod_jk.println(indent + "<Directory \"" + docBase + "\">");
+	mod_jk.println(indent + "    Options Indexes FollowSymLinks");
+
+	generateWelcomeFiles(context, mod_jk);
 
 	// XXX XXX Here goes the Mime types and welcome files !!!!!!!!
-	mod_jk.println("</Directory>");
+	mod_jk.println(indent + "</Directory>");
 	mod_jk.println();            
 	
 
 	// Deny serving any files from WEB-INF
 	mod_jk.println();            
-	mod_jk.println("# Deny direct access to WEB-INF and META-INF");
-	mod_jk.println("#");                        
-	mod_jk.println("<Location \"" + path + "/WEB-INF/\">");
-	mod_jk.println("    AllowOverride None");
-	mod_jk.println("    deny from all");
-	mod_jk.println("</Location>");
+	mod_jk.println(indent +
+		       "# Deny direct access to WEB-INF and META-INF");
+	mod_jk.println(indent + "#");                        
+	mod_jk.println(indent + "<Location \"" + ctxPath + "/WEB-INF/*\">");
+	mod_jk.println(indent + "    AllowOverride None");
+	mod_jk.println(indent + "    deny from all");
+	mod_jk.println(indent + "</Location>");
 	// Deny serving any files from META-INF
 	mod_jk.println();            
-	mod_jk.println("<Location \"" + path + "/META-INF/\">");
-	mod_jk.println("    AllowOverride None");
-	mod_jk.println("    deny from all");
-	mod_jk.println("</Location>");
+	mod_jk.println(indent + "<Location \"" + ctxPath + "/META-INF/*\">");
+	mod_jk.println(indent + "    AllowOverride None");
+	mod_jk.println(indent + "    deny from all");
+	mod_jk.println(indent + "</Location>");
 	if (File.separatorChar == '\\') {
-	    mod_jk.println("#");		    
-	    mod_jk.println("# Use Directory too. On Windows, Location doesn't work unless case matches");
-	    mod_jk.println("#");                        
-	    mod_jk.println("<Directory \"" + docBase + "/WEB-INF/\">");
-	    mod_jk.println("    AllowOverride None");
-	    mod_jk.println("    deny from all");
-	    mod_jk.println("</Directory>");
+	    mod_jk.println(indent + "#");		    
+	    mod_jk.println(indent +
+			   "# Use Directory too. On Windows, Location doesn't"
+			   + " work unless case matches");
+	    mod_jk.println(indent + "#");                        
+	    mod_jk.println(indent +
+			   "<Directory \"" + docBase + "/WEB-INF/\">");
+	    mod_jk.println(indent + "    AllowOverride None");
+	    mod_jk.println(indent + "    deny from all");
+	    mod_jk.println(indent + "</Directory>");
 	    mod_jk.println();
-	    mod_jk.println("<Directory \"" + docBase + "/META-INF/\">");
-	    mod_jk.println("    AllowOverride None");
-	    mod_jk.println("    deny from all");
-	    mod_jk.println("</Directory>");
+	    mod_jk.println(indent +
+			   "<Directory \"" + docBase + "/META-INF/\">");
+	    mod_jk.println(indent + "    AllowOverride None");
+	    mod_jk.println(indent + "    deny from all");
+	    mod_jk.println(indent + "</Directory>");
 	}
 	mod_jk.println();
     }    
