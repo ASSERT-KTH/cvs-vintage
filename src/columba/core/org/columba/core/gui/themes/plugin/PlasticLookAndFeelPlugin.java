@@ -13,6 +13,8 @@ import javax.swing.UIManager;
 import com.jgoodies.plaf.FontSizeHints;
 import com.jgoodies.plaf.LookUtils;
 import com.jgoodies.plaf.Options;
+import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
+import com.jgoodies.plaf.plastic.PlasticTheme;
 
 /**
  * @author frd
@@ -36,16 +38,22 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
 	public void setLookAndFeel() throws Exception {
 		UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
 		Options.setGlobalFontSizeHints(FontSizeHints.MIXED);
-		Options.setDefaultIconSize(new Dimension(18, 18));
+		Options.setDefaultIconSize(new Dimension(16, 16));
 
+		// use this when using the cross-platform version of 
+		// jGoodies, which contains also a windows-xp like theme
+		/*
 		String lafName =
 			LookUtils.isWindowsXP()
 				? Options.getCrossPlatformLookAndFeelClassName()
 				: Options.getSystemLookAndFeelClassName();
 		;
+		*/
 
 		try {
-			UIManager.setLookAndFeel(lafName);
+			//UIManager.setLookAndFeel(lafName);
+			PlasticTheme theme = PlasticLookAndFeel.createMyDefaultTheme();
+			LookUtils.setLookAndTheme(new PlasticLookAndFeel(), theme);
 		} catch (Exception e) {
 			System.err.println("Can't set look & feel:" + e);
 		};
