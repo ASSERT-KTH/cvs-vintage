@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.18 2001/10/21 11:13:34 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.19 2001/10/24 08:18:09 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -257,7 +257,7 @@ public class JEditTextArea extends JComponent
 
 		foldVisibilityManager = buffer._getFoldVisibilityManager(this);
 
-		maxHorizontalScrollWidth = 0;
+		maxHorizontalScrollWidth = -1;
 
 		painter.updateTabSize();
 

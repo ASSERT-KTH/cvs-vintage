@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.23 2001/10/22 11:50:57 spestov Exp $
+ * @version $Id: Buffer.java,v 1.24 2001/10/24 08:18:09 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2835,7 +2835,7 @@ public class Buffer implements EBComponent
 			if(offset < 0 || offset > contentMgr.getLength())
 				throw new ArrayIndexOutOfBoundsException(offset);
 
-			return null;
+			return offsetMgr.createPosition(offset);
 		}
 		finally
 		{
