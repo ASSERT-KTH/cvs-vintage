@@ -4365,7 +4365,7 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTIO
 /* priority is p3 */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (8, 1, 7, 56, 'Low');
 /* severity is major */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (9, 1, 9, 66, 'major');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (9, 1, 9, 66, 'minor');
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (19, 1, 12, 89, 'UI');
 
 /* add a transaction for the insertion */
