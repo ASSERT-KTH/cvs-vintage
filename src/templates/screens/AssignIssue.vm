@@ -211,8 +211,8 @@ $intake.declareGroups()
    <th>Filter string</th>
    <td><input type="text" name="searchString" />&nbsp;
      <select name="searchField" >
-      <option value="First Name">First Name</option>
-      <option value="Last Name">Last Name</option>
+      <option value="First Name">First name</option>
+      <option value="Last Name">Last name</option>
       <option value="Email">Email</option>
      </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="Filter" /></td>
   </tr>
@@ -262,7 +262,8 @@ $intake.declareGroups()
     </select></td>
     </tr>
    #end
-   </table>  
+   </table>
+
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAdd" value="Add selected to assignee list" />
 </div>
@@ -270,26 +271,23 @@ $intake.declareGroups()
 #if ($paginated)
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
-		
 
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
-             <tr>
+     <tr>
        <th>Max items per page</td>
-       <td> <input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
+       <td><input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
          <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
          <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
          <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.toString().equals("100")) checked="checked" #end /> 100
         &#160;<input type="submit" value="Refresh" /></p>
-</td>
+       </td>
      </tr>
-      </table>
+  </table>
 </div>
-
 
 $intake.declareGroups()
 </form>
 
 #end
-
 </div>
