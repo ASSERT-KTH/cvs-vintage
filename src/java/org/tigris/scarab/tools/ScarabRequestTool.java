@@ -146,7 +146,7 @@ public class ScarabRequestTool
     implements ApplicationTool
 {
     private static final String TIME_ZONE =
-        Turbine.getConfiguration().getString("scarab.timezone");
+        Turbine.getConfiguration().getString("scarab.timezone", "");
 
     /** the object containing request specific data */
     private RunData data;
