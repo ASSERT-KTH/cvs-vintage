@@ -6,11 +6,9 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: DatabasePersistencePolicy.java,v 1.6 2004/09/21 12:18:44 tdiesler Exp $
+// $Id: DatabasePersistencePolicy.java,v 1.7 2004/09/22 09:33:42 tdiesler Exp $
 
 import org.jboss.ejb.ContainerMBean;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanProxy;
 import org.jboss.mx.util.ObjectNameFactory;
@@ -25,24 +23,11 @@ import javax.management.NotificationFilterSupport;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,30 +45,21 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    // logging support
    private static Logger log = Logger.getLogger(DatabasePersistencePolicy.class);
 
-   // Column names
-   private static final String TIMERID = "TIMERID";
-   private static final String TARGETID = "TARGETID";
-   private static final String INITIALDATE = "INITIALDATE";
-   private static final String INTERVAL = "INTERVAL";
-   private static final String INSTANCEPK = "INSTANCEPK";
-   private static final String INFO = "INFO";
+   // The persistence plugin
+   private DatabasePersistencePlugin dbpPlugin;
 
    // The service attributes
    private ObjectName dataSource;
    private String tableName;
+   private String dbpPluginClassName;
 
+   // The transaction manager, to suspend the current Tx during delete
    private TransactionManager tm;
-   // The data source the timers will be persisted to
-   private DataSource ds;
-   // True when the table has been created
-   private boolean tableCreated;
-   // datasource meta data
-   private ObjectName dataSourceMetaData;
 
    /**
     * Initializes this service.
     */
-   protected void startService() throws Exception
+   public void startService() throws Exception
    {
       // Get the Tx manager
       try
@@ -97,25 +73,22 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
          tm = TxManager.getInstance();
       }
 
-      // Get the DataSource from JNDI
-      try
+      // Get the persistence plugin
+      if (dbpPluginClassName != null)
       {
-         String dsJndiTx = (String)server.getAttribute(dataSource, "BindName");
-         ds = (DataSource)new InitialContext().lookup(dsJndiTx);
+         Class dbpPolicyClass = Thread.currentThread().getContextClassLoader().loadClass(dbpPluginClassName);
+         dbpPlugin = (DatabasePersistencePlugin)dbpPolicyClass.newInstance();
       }
-      catch (NamingException e)
+      else
       {
-         throw new Exception("Failed to lookup data source: " + dataSource);
+         dbpPlugin = new GeneralPurposeDatabasePersistencePlugin();
       }
 
-      // Get the DataSource meta data
-      String dsName = dataSource.getKeyProperty("name");
-      dataSourceMetaData = ObjectName.getInstance("jboss.jdbc:datasource=" + dsName + ",service=metadata");
-      if (server.isRegistered(dataSourceMetaData) == false)
-         throw new IllegalStateException("Canno find datasource meta data: " + dataSourceMetaData);
+      // init the plugin
+      dbpPlugin.init(server, dataSource, tableName);
 
       // create the table if needed
-      createTableIfNotExists();
+      dbpPlugin.createTableIfNotExists();
 
       // await the server startup notification
       registerNotificationListener();
@@ -145,8 +118,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    {
       try
       {
-         createTableIfNotExists();
-         doInsertTimer(timerId, timedObjectId, firstEvent, intervalDuration, info);
+         dbpPlugin.insertTimer(timerId, timedObjectId, firstEvent, intervalDuration, info);
       }
       catch (SQLException e)
       {
@@ -163,14 +135,20 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
     */
    public void deleteTimer(String timerId, TimedObjectId timedObjectId)
    {
+      // suspend the Tx before we get the con, because you cannot get a connection on an already commited Tx
+      Transaction threadTx = suspendTransaction();
+
       try
       {
-         createTableIfNotExists();
-         doDeleteTimer(timerId, timedObjectId);
+         dbpPlugin.deleteTimer(timerId, timedObjectId);
       }
       catch (SQLException e)
       {
          log.warn("Unable to delete timer", e);
+      }
+      finally {
+         // resume the Tx
+         resumeTransaction(threadTx);
       }
    }
 
@@ -182,7 +160,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       List list = new ArrayList();
       try
       {
-         list.addAll(doSelectTimers());
+         list.addAll(dbpPlugin.selectTimers());
       }
       catch (SQLException e)
       {
@@ -198,15 +176,13 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    {
       try
       {
-         createTableIfNotExists();
-
-         List list = doSelectTimers();
+         List list = dbpPlugin.selectTimers();
          if (list.size() > 0)
          {
             log.info("Restoring " + list.size() + " timer(s)");
 
             // delete all timers
-            doDeleteAllTimers();
+            dbpPlugin.clearTimers();
 
             // recreate the timers
             for (int i = 0; i < list.size(); i++)
@@ -237,11 +213,11 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    /**
     * Delete all persisted timers
     */
-   public void deleteAllTimers()
+   public void clearTimers()
    {
       try
       {
-         doDeleteAllTimers();
+         dbpPlugin.clearTimers();
       }
       catch (SQLException e)
       {
@@ -283,169 +259,22 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       this.tableName = tableName;
    }
 
+   /**
+    * @jmx.managed-attribute
+    */
+   public String getDatabasePersistencePlugin()
+   {
+      return dbpPluginClassName;
+   }
+
+   /**
+    * @jmx.managed-attribute
+    */
+   public void setDatabasePersistencePlugin(String dbpPluginClass)
+   {
+      this.dbpPluginClassName = dbpPluginClass;
+   }
    // private **********************************************************************************************************
-
-   private void createTableIfNotExists()
-           throws SQLException
-   {
-      if (tableCreated == false)
-      {
-         Connection con = null;
-         Statement st = null;
-         ResultSet rs = null;
-         try
-         {
-            con = ds.getConnection();
-            final DatabaseMetaData dbMD = con.getMetaData();
-            rs = dbMD.getTables(null, null, tableName, null);
-
-            if (!rs.next())
-            {
-               JDBCTypeMappingMetaData typeMapping = (JDBCTypeMappingMetaData)server.getAttribute(dataSourceMetaData, "TypeMappingMetaData");
-               String dateType = typeMapping.getTypeMappingMetaData(Timestamp.class).getSqlType();
-               String objectType = typeMapping.getTypeMappingMetaData(Object.class).getSqlType();
-               String longType = typeMapping.getTypeMappingMetaData(Long.class).getSqlType();
-
-               String createTableDDL = "create table " + tableName + " (" +
-                       "  " + TIMERID + " varchar(80) not null," +
-                       "  " + TARGETID + " varchar(80) not null," +
-                       "  " + INITIALDATE + " " + dateType + " not null," +
-                       "  " + INTERVAL + " " + longType + "," +
-                       "  " + INSTANCEPK + " " + objectType + "," +
-                       "  " + INFO + " " + objectType + "," +
-                       "  constraint " + tableName + "_PK primary key (" + TIMERID + "," + TARGETID + ")" +
-                       ")";
-
-               log.debug("Executing DDL: " + createTableDDL);
-
-               st = con.createStatement();
-               st.executeUpdate(createTableDDL);
-            }
-
-            tableCreated = true;
-         }
-         catch (SQLException e)
-         {
-            throw e;
-         }
-         catch (Exception e)
-         {
-            log.error("Cannot create timer table", e);
-         }
-         finally
-         {
-            JDBCUtil.safeClose(rs);
-            JDBCUtil.safeClose(st);
-            JDBCUtil.safeClose(con);
-         }
-      }
-   }
-
-   private void doInsertTimer(String timerId, TimedObjectId timedObjectId, Date initialExpiration, long intervalDuration, Serializable info)
-           throws SQLException
-   {
-      Connection con = null;
-      PreparedStatement st = null;
-      try
-      {
-         // Use the Tx data source
-         con = ds.getConnection();
-
-         String sql = "insert into " + tableName + " " +
-                 "(" + TIMERID + "," + TARGETID + "," + INITIALDATE + "," + INTERVAL + "," + INSTANCEPK + "," + INFO + ") " +
-                 "values (?,?,?,?,?,?)";
-         st = con.prepareStatement(sql);
-
-         st.setString(1, timerId);
-         st.setString(2, timedObjectId.toString());
-         st.setTimestamp(3, new Timestamp(initialExpiration.getTime()));
-         st.setLong(4, intervalDuration);
-         st.setBytes(5, serialize(timedObjectId.getInstancePk()));
-         st.setBytes(6, serialize(info));
-
-         int rows = st.executeUpdate();
-         if (rows != 1)
-            log.error("Unable to insert timer for: " + timedObjectId);
-      }
-      finally
-      {
-         JDBCUtil.safeClose(st);
-         JDBCUtil.safeClose(con);
-      }
-   }
-
-   private List doSelectTimers()
-           throws SQLException
-   {
-      Connection con = null;
-      Statement st = null;
-      ResultSet rs = null;
-      try
-      {
-         con = ds.getConnection();
-
-         List list = new ArrayList();
-
-         st = con.createStatement();
-         rs = st.executeQuery("select * from " + tableName);
-         while (rs.next())
-         {
-            String timerId = rs.getString(TIMERID);
-            TimedObjectId targetId = TimedObjectId.parse(rs.getString(TARGETID));
-            Date initialDate = rs.getTimestamp(INITIALDATE);
-            long interval = rs.getLong(INTERVAL);
-            Serializable pKey = (Serializable)deserialize(rs.getBytes(INSTANCEPK));
-            Serializable info = (Serializable)deserialize(rs.getBytes(INFO));
-
-            targetId = new TimedObjectId(targetId.getContainerId(), pKey);
-            TimerHandleImpl handle = new TimerHandleImpl(timerId, targetId, initialDate, interval, info);
-            list.add(handle);
-         }
-
-         return list;
-      }
-      finally
-      {
-         JDBCUtil.safeClose(rs);
-         JDBCUtil.safeClose(st);
-         JDBCUtil.safeClose(con);
-      }
-   }
-
-   private void doDeleteTimer(String timerId, TimedObjectId timedObjectId)
-           throws SQLException
-   {
-      Connection con = null;
-      PreparedStatement st = null;
-      ResultSet rs = null;
-
-      // suspend the Tx before we get the con, because you cannot get a connection on an already commited Tx
-      Transaction threadTx = suspendTransaction();
-
-      try
-      {
-         con = ds.getConnection();
-
-         String sql = "delete from " + tableName + " where " + TIMERID + "=? and " + TARGETID + "=?";
-         st = con.prepareStatement(sql);
-
-         st.setString(1, timerId);
-         st.setString(2, timedObjectId.toString());
-
-         int rows = st.executeUpdate();
-         if (rows != 1)
-            log.warn("Unable to remove timer for: " + timerId);
-      }
-      finally
-      {
-         // resume the Tx
-         resumeTransaction(threadTx);
-
-         JDBCUtil.safeClose(rs);
-         JDBCUtil.safeClose(st);
-         JDBCUtil.safeClose(con);
-      }
-   }
 
    private Transaction suspendTransaction()
    {
@@ -474,26 +303,6 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       }
    }
 
-   private void doDeleteAllTimers()
-           throws SQLException
-   {
-      Connection con = null;
-      PreparedStatement st = null;
-      ResultSet rs = null;
-      try
-      {
-         con = ds.getConnection();
-         st = con.prepareStatement("delete from " + tableName);
-         st.executeUpdate();
-      }
-      finally
-      {
-         JDBCUtil.safeClose(rs);
-         JDBCUtil.safeClose(st);
-         JDBCUtil.safeClose(con);
-      }
-   }
-
    /**
     * Register this service as a listener to the main jboss server.
     * We want the startup notification in order to restore our timers.
@@ -503,44 +312,6 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       NotificationFilterSupport filter = new NotificationFilterSupport();
       filter.enableType(Server.START_NOTIFICATION_TYPE);
       server.addNotificationListener(ObjectNameFactory.create("jboss.system:type=Server"), this, filter, null);
-   }
-
-
-   private byte[] serialize(Object obj) {
-
-      if (obj == null)
-         return null;
-
-      ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-      try
-      {
-         ObjectOutputStream oos = new ObjectOutputStream(baos);
-         oos.writeObject(obj);
-         oos.close();
-      }
-      catch (IOException e)
-      {
-         log.error("Cannot serialize: " + obj, e);
-      }
-      return baos.toByteArray();
-   }
-
-   private Object deserialize(byte[] bytes) {
-
-      if (bytes == null)
-         return null;
-
-      ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-      try
-      {
-         ObjectInputStream oos = new ObjectInputStream(bais);
-         return oos.readObject();
-      }
-      catch (Exception e)
-      {
-         log.error("Cannot deserialize", e);
-         return null;
-      }
    }
 }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- The JBoss service configuration file for the EJB deployer service.
-$Id: ejb-deployer.xml,v 1.8 2004/09/21 12:15:58 tdiesler Exp $
+$Id: ejb-deployer.xml,v 1.9 2004/09/22 09:33:40 tdiesler Exp $
 -->
 <server>
 
@@ -31,7 +31,9 @@ $Id: ejb-deployer.xml,v 1.8 2004/09/21 12:15:58 tdiesler Exp $
    <mbean code="org.jboss.ejb.txtimer.DatabasePersistencePolicy" name="jboss.ejb:service=EJBTimerService,persistencePolicy=database">
      <!-- DataSource JNDI name -->
      <depends optional-attribute-name="DataSource">jboss.jca:service=DataSourceBinding,name=DefaultDS</depends>
-     <!-- table name -->
+     <!-- The plugin that handles database persistence -->
+     <attribute name="DatabasePersistencePlugin">org.jboss.ejb.txtimer.GeneralPurposeDatabasePersistencePlugin</attribute>
+     <!-- The table name -->
      <attribute name="TableName">TIMERS</attribute>
    </mbean>
 

@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: NoopPersistencePolicy.java,v 1.5 2004/09/21 12:15:59 tdiesler Exp $
+// $Id: NoopPersistencePolicy.java,v 1.6 2004/09/22 09:33:42 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
@@ -74,7 +74,7 @@ public class NoopPersistencePolicy implements NoopPersistencePolicyMBean
    /**
     * Delete all persisted timers
     */
-   public void deleteAllTimers()
+   public void clearTimers()
    {
       log.debug("Noop on deleteAllTimers");
    }

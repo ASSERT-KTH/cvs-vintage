@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: PersistencePolicy.java,v 1.5 2004/09/21 12:15:59 tdiesler Exp $
+// $Id: PersistencePolicy.java,v 1.6 2004/09/22 09:33:42 tdiesler Exp $
 
 import java.io.Serializable;
 import java.util.Date;
@@ -45,7 +45,7 @@ public interface PersistencePolicy
    /**
     * Clear the persisted timers
     */
-   void deleteAllTimers();
+   void clearTimers();
 
    /**
     * Restore the persistet timers
