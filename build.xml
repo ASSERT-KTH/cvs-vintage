@@ -87,8 +87,14 @@
 			</fileset>
 		</copy>
 	</target>
+	
+	<target name="validate-xml-resources">
+		<xmlvalidate failonerror="no" warn="yes">
+			<fileset dir="${src}/res/" includes="**/*.xml"/>
+		</xmlvalidate>
+	</target>
 
-	<target name="copy-resources">
+	<target name="copy-resources" depends="validate-xml-resources">
 		<copy todir="${dest}">
 			<fileset dir="${src}/res/"> 
 			 <include name="**"/>
