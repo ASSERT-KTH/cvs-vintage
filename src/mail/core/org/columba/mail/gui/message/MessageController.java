@@ -9,44 +9,18 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
-import org.columba.core.charset.CharsetEvent;
-import org.columba.core.charset.CharsetListener;
-import org.columba.core.charset.CharsetOwnerInterface;
-import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
-
-import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.attachment.AttachmentController;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.util.URLController;
-import org.columba.mail.message.ColumbaHeader;
-
-import org.columba.ristretto.coder.Base64DecoderInputStream;
-import org.columba.ristretto.coder.CharsetDecoderInputStream;
-import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
-import org.columba.ristretto.message.MimeHeader;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.message.StreamableMimePart;
-
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
-import java.io.InputStream;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import java.nio.charset.Charset;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -62,30 +36,82 @@ import javax.swing.text.Element;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
+import org.columba.core.charset.CharsetEvent;
+import org.columba.core.charset.CharsetListener;
+import org.columba.core.charset.CharsetOwnerInterface;
+import org.columba.core.gui.focus.FocusOwner;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.attachment.AttachmentController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
+import org.columba.mail.gui.message.filter.PGPMessageFilter;
+import org.columba.mail.gui.message.viewer.HeaderController;
+import org.columba.mail.gui.message.viewer.HeaderView;
+import org.columba.mail.gui.message.viewer.MessageBodytextViewer;
+import org.columba.mail.gui.message.viewer.SecurityInformationController;
+import org.columba.mail.gui.message.viewer.SpamStatusController;
+import org.columba.mail.gui.util.URLController;
 
 /**
  * this class shows the messagebody
  */
 public class MessageController implements HyperlinkListener, MouseListener,
-    CharsetListener, FocusOwner, CaretListener {
+        CharsetListener, FocusOwner, CaretListener {
+
     private Folder folder;
+
     private Object uid;
+
     private MessageMenu menu;
+
     private JButton button;
+
     private MessageView view;
+
     private URLObservable urlObservable;
+
     protected AbstractMailFrameController abstractFrameController;
+
     protected AttachmentController attachmentController;
 
+    private SecurityInformationController securityInformationController;
+
+    private MessageBodytextViewer bodytextViewer;
+
+    private SpamStatusController spamStatusController;
+
+    private HeaderController headerController;
+
+    private PGPMessageFilter pgpFilter;
+    
     //private MessageSelectionManager messageSelectionManager;
     public MessageController(
-        AbstractMailFrameController abstractFrameController,
-        AttachmentController attachmentController) {
+            AbstractMailFrameController abstractFrameController,
+            AttachmentController attachmentController) {
         this.abstractFrameController = abstractFrameController;
         this.attachmentController = attachmentController;
 
-        view = new MessageView(this, attachmentController.getView());
+        spamStatusController = new SpamStatusController();
+        bodytextViewer = new MessageBodytextViewer();
+        securityInformationController = new SecurityInformationController();
+        headerController = new HeaderController();
+        
+        //headerController.addHyperlinkListener(this);
+        bodytextViewer.addHyperlinkListener(this);
+        //headerController.addMouseListener(this);
+        bodytextViewer.addMouseListener(this);
+        bodytextViewer.addCaretListener(this);
 
+        pgpFilter = new PGPMessageFilter(abstractFrameController);
+        pgpFilter.addSecurityStatusListener(securityInformationController);
+        pgpFilter.addSecurityStatusListener(((HeaderView)headerController.getView()).getStatusPanel());
+        
+        view = new MessageView(this);
+        view.layoutComponents(headerController, spamStatusController, bodytextViewer,
+                securityInformationController, attachmentController.getView());
         //view.addHyperlinkListener(this);
         view.addMouseListener(this);
 
@@ -93,7 +119,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
 
         MainInterface.focusManager.registerComponent(this);
 
-        view.bodyTextViewer.addCaretListener(this);
+        
 
         urlObservable = new URLObservable();
     }
@@ -107,8 +133,8 @@ public class MessageController implements HyperlinkListener, MouseListener,
     }
 
     /**
-* return the PopupMenu for the message viewer
-*/
+     * return the PopupMenu for the message viewer
+     */
     public JPopupMenu getPopupMenu() {
         return menu;
     }
@@ -133,66 +159,55 @@ public class MessageController implements HyperlinkListener, MouseListener,
         this.uid = o;
     }
 
-    public void showMessage(ColumbaHeader header, MimePart bodyPart,
-        MimeTree mimePartTree) throws Exception {
-        if ((header == null) || (bodyPart == null)) {
-            return;
-        }
+    /*
+     * public void showMessage(ColumbaHeader header, MimePart bodyPart,
+     * MimeTree mimePartTree) throws Exception { if ((header == null) ||
+     * (bodyPart == null)) { return; }
+     *  // Which Charset shall we use ? Charset charset =
+     * ((CharsetOwnerInterface) getFrameController()).getCharset();
+     * 
+     * if (charset == null) { String charsetName =
+     * bodyPart.getHeader().getContentParameter("charset");
+     *  // There is no charset info -> the default system charset is used if
+     * (charsetName != null) { charset = Charset.forName(charsetName);
+     * 
+     * ((CharsetOwnerInterface) getFrameController()).setCharset(charset); } }
+     *  // Shall we use the HTML-Viewer? boolean htmlViewer =
+     * bodyPart.getHeader().getMimeType().getSubtype() .equals("html");
+     * 
+     * InputStream bodyStream = ((StreamableMimePart)
+     * bodyPart).getInputStream();
+     * 
+     * int encoding = bodyPart.getHeader().getContentTransferEncoding();
+     * 
+     * switch (encoding) { case MimeHeader.QUOTED_PRINTABLE: { bodyStream = new
+     * QuotedPrintableDecoderInputStream(bodyStream);
+     * 
+     * break; }
+     * 
+     * case MimeHeader.BASE64: { bodyStream = new
+     * Base64DecoderInputStream(bodyStream);
+     * 
+     * break; } }
+     * 
+     * if (charset == null) { charset =
+     * Charset.forName(System.getProperty("file.encoding")); }
+     * 
+     * bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
+     * 
+     * boolean hasAttachments = header.hasAttachments().booleanValue();
+     * 
+     * attachmentController.setMimePartTree(mimePartTree);
+     * 
+     * getView().setDoc(header, bodyStream, htmlViewer, hasAttachments);
+     * 
+     * getView().getVerticalScrollBar().setValue(0); }
+     */
 
-        // Which Charset shall we use ?
-        Charset charset = ((CharsetOwnerInterface) getFrameController()).getCharset();
-
-        if (charset == null) {
-            String charsetName = bodyPart.getHeader().getContentParameter("charset");
-
-            // There is no charset info -> the default system charset is used
-            if (charsetName != null) {
-                charset = Charset.forName(charsetName);
-
-                ((CharsetOwnerInterface) getFrameController()).setCharset(charset);
-            }
-        }
-
-        // Shall we use the HTML-Viewer?
-        boolean htmlViewer = bodyPart.getHeader().getMimeType().getSubtype()
-                                     .equals("html");
-
-        InputStream bodyStream = ((StreamableMimePart) bodyPart).getInputStream();
-
-        int encoding = bodyPart.getHeader().getContentTransferEncoding();
-
-        switch (encoding) {
-        case MimeHeader.QUOTED_PRINTABLE: {
-            bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-
-            break;
-        }
-
-        case MimeHeader.BASE64: {
-            bodyStream = new Base64DecoderInputStream(bodyStream);
-
-            break;
-        }
-        }
-
-        if (charset == null) {
-            charset = Charset.forName(System.getProperty("file.encoding"));
-        }
-
-        bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
-
-        boolean hasAttachments = header.hasAttachments().booleanValue();
-
-        attachmentController.setMimePartTree(mimePartTree);
-
-        getView().setDoc(header, bodyStream, htmlViewer, hasAttachments);
-
-        getView().getVerticalScrollBar().setValue(0);
-    }
-
-    public void setPGPMessage(int value, String message) {
-        getView().getPgp().setValue(value, message);
-    }
+    /*
+     * public void setPGPMessage(int value, String message) {
+     * getView().getPgp().setValue(value, message); }
+     */
 
     public void hyperlinkUpdate(HyperlinkEvent e) {
     }
@@ -216,15 +231,11 @@ public class MessageController implements HyperlinkListener, MouseListener,
     }
 
     public void mouseClicked(MouseEvent event) {
-        if (!SwingUtilities.isLeftMouseButton(event)) {
-            return;
-        }
+        if (!SwingUtilities.isLeftMouseButton(event)) { return; }
 
         URL url = extractURL(event);
 
-        if (url == null) {
-            return;
-        }
+        if (url == null) { return; }
 
         URLController c = new URLController();
 
@@ -243,9 +254,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
         AttributeSet a = e.getAttributes();
         AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
 
-        if (anchor == null) {
-            return null;
-        }
+        if (anchor == null) { return null; }
 
         URL url = null;
 
@@ -268,167 +277,266 @@ public class MessageController implements HyperlinkListener, MouseListener,
             urlObservable.setUrl(url);
         }
 
-        // open context-menu 
+        // open context-menu
         // -> this has to happen in the awt-event dispatcher thread
         SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    getPopupMenu().show(event.getComponent(), event.getX(),
+
+            public void run() {
+                getPopupMenu().show(event.getComponent(), event.getX(),
                         event.getY());
-                }
-            });
+            }
+        });
     }
 
-    /********************* context menu *******************************************/
     /**
- * Returns the mailFrameController.
- * @return MailFrameController
- */
+     * ******************* context menu
+     * ******************************************
+     */
+    /**
+     * Returns the mailFrameController.
+     * 
+     * @return MailFrameController
+     */
     public FrameMediator getFrameController() {
         return abstractFrameController;
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.util.CharsetListener#charsetChanged(org.columba.core.util.CharsetEvent)
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.util.CharsetListener#charsetChanged(org.columba.core.util.CharsetEvent)
+     */
     public void charsetChanged(CharsetEvent e) {
         MainInterface.processor.addOp(new ViewMessageCommand(
                 getFrameController(),
-                ((AbstractMailFrameController) getFrameController()).getTableSelection()));
+                ((AbstractMailFrameController) getFrameController())
+                        .getTableSelection()));
     }
 
-    /******************* FocusOwner interface ***********************/
+    /** ***************** FocusOwner interface ********************** */
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#copy()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#copy()
+     */
     public void copy() {
-        view.bodyTextViewer.copy();
+        getBodytextViewer().copy();
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#cut()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#cut()
+     */
     public void cut() {
         // not supported
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#delete()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#delete()
+     */
     public void delete() {
         // not supported
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#getComponent()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+     */
     public JComponent getComponent() {
-        return view.bodyTextViewer;
+        return getBodytextViewer();
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+     */
     public boolean isCopyActionEnabled() {
-        if (view.bodyTextViewer.getSelectedText() == null) {
-            return false;
-        }
+        if (getBodytextViewer().getSelectedText() == null) { return false; }
 
-        if (view.bodyTextViewer.getSelectedText().length() > 0) {
-            return true;
-        }
+        if (getBodytextViewer().getSelectedText().length() > 0) { return true; }
 
         return false;
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+     */
     public boolean isCutActionEnabled() {
         // action not support
         return false;
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+     */
     public boolean isDeleteActionEnabled() {
         // action not supported
         return false;
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+     */
     public boolean isPasteActionEnabled() {
         // action not supported
         return false;
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+     */
     public boolean isRedoActionEnabled() {
         // action not supported
         return false;
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+     */
     public boolean isSelectAllActionEnabled() {
         return true;
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+     */
     public boolean isUndoActionEnabled() {
         // action not supported
         return false;
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#paste()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#paste()
+     */
     public void paste() {
         // action not supported
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#redo()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#redo()
+     */
     public void redo() {
         // action not supported
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#selectAll()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+     */
     public void selectAll() {
-        view.bodyTextViewer.selectAll();
+        getBodytextViewer().selectAll();
     }
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#undo()
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.columba.core.gui.focus.FocusOwner#undo()
+     */
     public void undo() {
         // TODO Auto-generated method stub
     }
 
-    /************************** CaretUpdateListener interface *****************/
+    /** ************************ CaretUpdateListener interface **************** */
 
-    /* (non-Javadoc)
- * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
- */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
+     */
     public void caretUpdate(CaretEvent arg0) {
         MainInterface.focusManager.updateActions();
     }
 
     /**
- * @return
- */
+     * @return
+     */
     public URLObservable getUrlObservable() {
         return urlObservable;
+    }
+
+    /** *********************************************************************** */
+
+    /**
+     * @return
+     */
+    public SecurityInformationController getPgp() {
+        return securityInformationController;
+    }
+
+    /**
+     * @return Returns the bodytextViewer.
+     */
+    public MessageBodytextViewer getBodytextViewer() {
+        return bodytextViewer;
+    }
+
+    /**
+     * @return Returns the spamStatus.
+     */
+    public SpamStatusController getSpamStatusViewer() {
+        return spamStatusController;
+    }
+
+    /**
+     * @return Returns the headerView.
+     */
+    public HeaderController getHeaderController() {
+        return headerController;
+    }
+
+    /**
+     * @return Returns the securityInformationViewer.
+     */
+    public SecurityInformationController getSecurityInformationViewer() {
+        return securityInformationController;
+    }
+
+    public void showMessage(Folder folder, Object uid) throws Exception {
+
+        MessageBodytextViewer bodytextViewer = getBodytextViewer();
+        bodytextViewer.view(folder, uid,
+                (MailFrameMediator) abstractFrameController);
+        getHeaderController().view(folder, uid,
+                (MailFrameMediator) abstractFrameController);
+        getSpamStatusViewer().view(folder, uid,
+                (MailFrameMediator) abstractFrameController);
+        getSecurityInformationViewer().view(folder, uid,
+                (MailFrameMediator) abstractFrameController);
+
+    }
+    /**
+     * @return Returns the pgpFilter.
+     */
+    public PGPMessageFilter getPgpFilter() {
+        return pgpFilter;
+    }
+    /**
+     * @return Returns the attachmentController.
+     */
+    public AttachmentController getAttachmentController() {
+        return attachmentController;
     }
 }
