@@ -116,8 +116,9 @@ public class BodyTextViewer extends JTextPane {
 	}
 
 	protected void transformToHTML(StringBuffer buf) {
-		buf.insert(0, "<HTML><HEAD>" + CSS + "</HEAD><BODY ><P>");
+		buf.insert(0, "<HTML><HEAD>" + CSS + "</HEAD><BODY ><PRE>");
 
+		
 		int pos = 0;
 		boolean preformat = false;
 		while (pos < buf.length()) {
@@ -132,8 +133,8 @@ public class BodyTextViewer extends JTextPane {
 
 			pos++;
 		}
-
-		buf.append("</P></BODY></HTML>");
+		
+		buf.append("</PRE></BODY></HTML>");
 
 	}
 
