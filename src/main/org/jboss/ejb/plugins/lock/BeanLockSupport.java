@@ -25,7 +25,7 @@ import java.util.HashSet;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
@@ -147,11 +147,12 @@ public abstract class BeanLockSupport
 
       // is this a known non-entrant method
       Method m = mi.getMethod();
-      if (m.equals(getEJBHome) ||
-          m.equals(getHandle) ||
-          m.equals(getPrimaryKey) ||
-          m.equals(isIdentical) ||
-          m.equals(remove))
+      if (m != null && (
+             m.equals(getEJBHome) ||
+             m.equals(getHandle) ||
+             m.equals(getPrimaryKey) ||
+             m.equals(isIdentical) ||
+             m.equals(remove)))
       {
          return true;
       }
