@@ -31,7 +31,7 @@ import ru.novosoft.uml.foundation.core.MParameter;
  * @author jaap.branderhorst@xs4all.nl
  */
 public class UMLParameterTypeComboBoxModel
-    extends UMLAttributeTypeComboBoxModel {
+    extends UMLStructuralFeatureTypeComboBoxModel {
 
     /**
      * Constructor for UMLParameterTypeComboBoxModel.

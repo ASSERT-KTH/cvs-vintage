@@ -44,7 +44,7 @@ public class ActionSetGeneralizationPowertype extends UMLChangeAction {
     public static final ActionSetGeneralizationPowertype SINGLETON = new ActionSetGeneralizationPowertype();
     
     /**
-     * Constructor for ActionSetAttributeType.
+     * Constructor for ActionSetStructuralFeatureType.
      * @param s
      */
     protected ActionSetGeneralizationPowertype() {

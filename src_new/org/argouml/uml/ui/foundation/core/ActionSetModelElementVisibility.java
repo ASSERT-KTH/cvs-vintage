@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetAssociationEndVisibility.java,v 1.1 2003/01/04 16:48:38 kataka Exp $
+// $Id: ActionSetModelElementVisibility.java,v 1.1 2003/01/29 22:21:57 kataka Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -32,7 +32,7 @@ import org.argouml.application.api.Argo;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
-import ru.novosoft.uml.foundation.core.MAssociationEnd;
+import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 
 /**
@@ -40,9 +40,9 @@ import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 4, 2003
  */
-public class ActionSetAssociationEndVisibility extends UMLChangeAction {
+public class ActionSetModelElementVisibility extends UMLChangeAction {
 
-    public static final ActionSetAssociationEndVisibility SINGLETON = new ActionSetAssociationEndVisibility();
+    public static final ActionSetModelElementVisibility SINGLETON = new ActionSetModelElementVisibility();
 
     public final static String PUBLIC_COMMAND = "public";
     public final static String PROTECTED_COMMAND = "protected";
@@ -52,7 +52,7 @@ public class ActionSetAssociationEndVisibility extends UMLChangeAction {
      * Constructor for ActionSetElementOwnershipSpecification.
      * @param s
      */
-    protected ActionSetAssociationEndVisibility() {
+    protected ActionSetModelElementVisibility() {
         super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
     }
 
@@ -65,8 +65,8 @@ public class ActionSetAssociationEndVisibility extends UMLChangeAction {
             JRadioButton source = (JRadioButton) e.getSource();
             String actionCommand = source.getActionCommand();
             Object target = ((UMLRadioButtonPanel) source.getParent()).getTarget();
-            if (target instanceof MAssociationEnd) {
-                MAssociationEnd m = (MAssociationEnd) target;
+            if (target instanceof MModelElement) {
+                MModelElement m = (MModelElement) target;
                 MVisibilityKind kind = null;
                 if (actionCommand.equals(PUBLIC_COMMAND)) {
                     kind = MVisibilityKind.PUBLIC;

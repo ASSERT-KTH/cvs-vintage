@@ -1,4 +1,4 @@
-// $Id: PropPanelCallAction.java,v 1.7 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelCallAction.java,v 1.8 2003/01/29 22:21:56 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,7 +77,7 @@ public class PropPanelCallAction extends PropPanelModelElement {
             buttonPanel,
             _navUpIcon,
             Argo.localize("UMLMenu", "button.go-up"),
-            "navigateNamespace",
+            "navigateUp",
             null);
         new PropPanelButton(
             this,

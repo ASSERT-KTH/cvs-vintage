@@ -24,7 +24,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.25 2003/01/27 20:06:59 kataka Exp $
+// $Id: PropPanelActor.java,v 1.26 2003/01/29 22:21:56 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -86,7 +86,7 @@ public class PropPanelActor extends PropPanelClassifier {
         // The toolbar buttons that go at the top.
 
         new PropPanelButton(this, buttonPanel, _navUpIcon,
-                            Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace",
+                            Argo.localize("UMLMenu", "button.go-up"), "navigateUp",
                             null);
         new PropPanelButton(this, buttonPanel, _navBackIcon,
                             Argo.localize("UMLMenu", "button.go-back"), "navigateBackAction",

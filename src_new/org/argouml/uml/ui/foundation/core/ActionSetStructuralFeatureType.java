@@ -32,20 +32,21 @@ import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLComboBox2;
 import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MStructuralFeature;
 
 /**
  * @since Nov 3, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class ActionSetAttributeType extends UMLChangeAction {
+public class ActionSetStructuralFeatureType extends UMLChangeAction {
 
-    public static final ActionSetAttributeType SINGLETON = new ActionSetAttributeType();
+    public static final ActionSetStructuralFeatureType SINGLETON = new ActionSetStructuralFeatureType();
     
     /**
-     * Constructor for ActionSetAttributeType.
+     * Constructor for ActionSetStructuralFeatureType.
      * @param s
      */
-    protected ActionSetAttributeType() {
+    protected ActionSetStructuralFeatureType() {
         super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
     }
 
@@ -63,7 +64,7 @@ public class ActionSetAttributeType extends UMLChangeAction {
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 box = (UMLComboBox2)source;
             Object o = box.getTarget();
-            if (o instanceof MAttribute) {
+            if (o instanceof MStructuralFeature) {
                 attr = (MAttribute)o;
                 oldClassifier = attr.getType();
             }

@@ -1,5 +1,4 @@
-// $Id: PropPanelComment.java,v 1.8 2003/01/29 22:21:57 kataka Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,40 +21,43 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
+// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.1 2003/01/29 22:21:57 kataka Exp $
 package org.argouml.uml.ui.foundation.core;
 
-import javax.swing.JScrollPane;
-
 import org.argouml.application.api.Argo;
-import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLTextArea2;
-import org.argouml.util.ConfigLoader;
+import org.argouml.uml.ui.UMLCheckBox2;
+
+import ru.novosoft.uml.foundation.core.MStructuralFeature;
+import ru.novosoft.uml.foundation.data_types.MScopeKind;
 
 /**
- * Proppanel for comments (notes). The text of the comment is kept in the name of
- * the MComment.
+ * @author jaap.branderhorst@xs4all.nl
+ * @since Jan 29, 2003
  */
-public class PropPanelComment extends PropPanelModelElement {
+public class UMLStructuralFeatureTargetScopeCheckBox extends UMLCheckBox2 {
+    
 
-    /**
-     * Constructor for PropPanelComment.
-     * @param name
-     * @param icon
-     * @param orientation
-     */
-    public PropPanelComment() {
-        super("Comment", ConfigLoader.getTabPropsOrientation());
-        UMLTextArea2 text = new UMLTextArea2(getNameDocument());
-        text.setLineWrap(true);
-        text.setRows(5);
-        JScrollPane pane = new JScrollPane(text);
-        addField("Text: ", pane);
-        
-        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);
-        new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu", "button.go-back"),"navigateBackAction","isNavigateBackEnabled");
-        new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled"); 
-        new PropPanelButton(this,buttonPanel,_deleteIcon, Argo.localize("UMLMenu", "button.delete-class"),"removeElement",null);      
-    }
+	/**
+	 * Constructor for UMLStructuralFeatureTargetScopeCheckBox.
+	 * @param text
+	 * @param a
+	 * @param propertySetName
+	 */
+	public UMLStructuralFeatureTargetScopeCheckBox() {
+        super(Argo.localize("UMLMenu", "label.classifier"), 
+            ActionSetStructuralFeatureTargetScope.SINGLETON, 
+            "targetScope");
+	}
+
+	/**
+	 * @see org.argouml.uml.ui.UMLCheckBox2#buildModel()
+	 */
+	public void buildModel() {
+        // repair action for possible NP after load
+        if (((MStructuralFeature)getTarget()).getTargetScope() == null) {
+            ((MStructuralFeature)getTarget()).setTargetScope(MScopeKind.INSTANCE);
+        }
+        setSelected(((MStructuralFeature)getTarget()).getTargetScope().equals(MScopeKind.CLASSIFIER));
+	}
 
 }

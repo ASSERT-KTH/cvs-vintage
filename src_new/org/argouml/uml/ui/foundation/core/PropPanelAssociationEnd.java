@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.25 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.26 2003/01/29 22:21:57 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -137,7 +137,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         _targetScopeCheckBox = new UMLAssociationEndTargetScopeCheckbox();
         _aggregationRadioButtonpanel = new UMLAssociationEndAggregationRadioButtonPanel(Argo.localize("UMLMenu", "label.aggregation"), true);
         _changeabilityRadioButtonpanel = new UMLAssociationEndChangeabilityRadioButtonPanel(Argo.localize("UMLMenu", "label.changeability"), true);
-        _visibilityRadioButtonPanel = new UMLAssociationEndVisibilityRadioButtonPanel(Argo.localize("UMLMenu", "label.visibility"), true);
+        _visibilityRadioButtonPanel = new UMLModelElementVisibilityRadioButtonPanel(Argo.localize("UMLMenu", "label.visibility"), true);
         _specificationScroll = new JScrollPane(new UMLMutableLinkedList(new UMLAssociationEndSpecificationListModel(), ActionAddAssociationSpecification.SINGLETON, null, null, true));
         
     }
@@ -206,5 +206,6 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
             ProjectBrowser.TheInstance.setTarget(end.getOppositeEnd());           
         }
     }
+    
 
 } /* end class PropPanelAssociationEnd */
