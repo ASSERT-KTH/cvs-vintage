@@ -45,7 +45,7 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -211,8 +211,11 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
                   lockMonitor.timeouts++;
                }
             }
-            long endWait = System.currentTimeMillis() - startWait;
-            lockMonitor.finishedContending(endWait);
+            if (lockMonitor != null)
+            {
+               long endWait = System.currentTimeMillis() - startWait;
+               lockMonitor.finishedContending(endWait);
+            }
             throw throwable;
          }
       }

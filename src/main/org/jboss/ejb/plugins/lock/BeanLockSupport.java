@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
@@ -109,7 +109,7 @@ public abstract class BeanLockSupport
    {
       if (Thread.currentThread().equals(holdingThread))
       {
-         throw new ApplicationDeadlockException("Application deadlock detected: Current thread already has tx lock in different transaction.");
+         throw new ApplicationDeadlockException("Application deadlock detected: Current thread already has tx lock in different transaction.", false);
       }
       if (miTx == null) return;
 
@@ -127,7 +127,7 @@ public abstract class BeanLockSupport
 	       if (set.contains(waitingFor))
 	       {
 		  log.error("Application deadlock detected: " + miTx + " has deadlock conditions.  Two or more transactions contending for same resources and each have locks eachother need.");
-		  throw new ApplicationDeadlockException("Application deadlock detected: Two or more transactions contention.");
+		  throw new ApplicationDeadlockException("Application deadlock detected: Two or more transactions contention.", true);
 	       }
 	       set.add(waitingFor);
 	    }

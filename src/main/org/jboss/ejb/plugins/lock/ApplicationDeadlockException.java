@@ -17,7 +17,7 @@ import java.rmi.RemoteException;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/02/13: billb</b>
@@ -27,14 +27,24 @@ import java.rmi.RemoteException;
  */
 public class ApplicationDeadlockException extends RemoteException
 {
+   protected boolean retry = false;
+
    public ApplicationDeadlockException()
    {
       super();
    }
 
-   public ApplicationDeadlockException(String msg)
+   public ApplicationDeadlockException(String msg, boolean retry)
    {
       super(msg);
+      this.retry = retry;
    }
+
+   public boolean retryable()
+   {
+      return retry;
+   }
+
+   
 }
 

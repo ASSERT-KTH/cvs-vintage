@@ -25,7 +25,7 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.MetaData;
-
+import org.jboss.ejb.plugins.lock.ApplicationDeadlockException;
 /**
  *  This interceptor handles transactions for CMT beans.
  *
@@ -34,7 +34,7 @@ import org.jboss.metadata.MetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.28 $
+ *  @version $Revision: 1.29 $
  */
 public class TxInterceptorCMT
 extends AbstractTxInterceptor
@@ -46,16 +46,45 @@ extends AbstractTxInterceptor
    private HashMap methodTx = new HashMap();
    
    // Static --------------------------------------------------------
-   
+   public static int MAX_DEADLOCK_RETRIES = 10;
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
    
+
    // Interceptor implementation --------------------------------------
    
    public Object invokeHome(Invocation invocation) throws Exception
    {
-      return runWithTransactions(invocation);
+      Transaction oldTransaction = invocation.getTransaction();
+      for (int i = 0; i < MAX_DEADLOCK_RETRIES; i++)
+      {
+         try
+         {
+            return runWithTransactions(invocation);
+         }
+         catch (TransactionRolledbackException ex)
+         {
+            Throwable cause = ex.detail;
+            if (cause instanceof ApplicationDeadlockException)
+            {
+               ApplicationDeadlockException deadlock = (ApplicationDeadlockException)cause;
+               if (!deadlock.retryable() || oldTransaction != null || i + 1 >= MAX_DEADLOCK_RETRIES) throw deadlock;
+               log.warn(deadlock.getMessage() + " retrying " + (i + 1));
+            }
+            else
+            {
+               throw ex;
+            }
+         }
+         catch (ApplicationDeadlockException deadlock)
+         {
+            // We can only retry if transaction was created within this thread
+            if (!deadlock.retryable() || oldTransaction != null || i + 1 >= MAX_DEADLOCK_RETRIES) throw deadlock;
+            log.warn(deadlock.getMessage() + " retrying " + (i + 1));
+         }
+      }
+      throw new RuntimeException("Unreachable");
    }
    
    /**
@@ -63,7 +92,35 @@ extends AbstractTxInterceptor
     */
    public Object invoke(Invocation invocation) throws Exception
    {
-      return runWithTransactions(invocation);
+      Transaction oldTransaction = invocation.getTransaction();
+      for (int i = 0; i < MAX_DEADLOCK_RETRIES; i++)
+      {
+         try
+         {
+            return runWithTransactions(invocation);
+         }
+         catch (TransactionRolledbackException ex)
+         {
+            Throwable cause = ex.detail;
+            if (cause instanceof ApplicationDeadlockException)
+            {
+               ApplicationDeadlockException deadlock = (ApplicationDeadlockException)cause;
+               if (!deadlock.retryable() || oldTransaction != null || i + 1 >= MAX_DEADLOCK_RETRIES) throw deadlock;
+               log.warn(deadlock.getMessage() + " retrying " + (i + 1));
+            }
+            else
+            {
+               throw ex;
+            }
+         }
+         catch (ApplicationDeadlockException deadlock)
+         {
+            // We can only retry if transaction was created within this thread
+            if (!deadlock.retryable() || oldTransaction != null || i + 1 >= MAX_DEADLOCK_RETRIES) throw deadlock;
+            log.warn(deadlock.getMessage() + " retrying " + (i + 1));
+         }
+      }
+      throw new RuntimeException("Unreachable");
    }
    
    // Private  ------------------------------------------------------
