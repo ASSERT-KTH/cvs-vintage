@@ -91,7 +91,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.144 2003/11/12 08:30:12 dep4b Exp $
+ * @version $Id: Search.java,v 1.145 2003/11/12 22:51:27 dep4b Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -649,8 +649,9 @@ public class Search extends RequireLoginFirstAction
             for (Iterator i = QueryPeer.getUserQueries(user).iterator(); i.hasNext(); ) 
             {
                 Query q = (Query)i.next();
-                if (q.getModule() == null)
+                if (q.getModule() == null){
                     prevQueries.add(q);
+                }
             }
         }
         if (prevQueries != null && !prevQueries.isEmpty())
