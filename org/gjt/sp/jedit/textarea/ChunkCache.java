@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.48 2002/12/28 05:04:01 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.49 2003/01/03 21:26:53 spestov Exp $
  */
 class ChunkCache
 {
@@ -152,11 +152,12 @@ class ChunkCache
 	 * scrolling doesn't cause all visible lines, only newly exposed
 	 * ones, to be retokenized.
 	 */
-	void setFirstLine(int firstLine, int physFirstLine)
+	void setFirstLine(int firstLine, int physFirstLine, boolean bufferSwitch)
 	{
 		int visibleLines = lineInfo.length;
 		// rely on the fact that when we're called physLastLine not updated yet
-		if((!textArea.softWrap && Math.abs(firstLine - this.firstLine) >= visibleLines)
+		if(bufferSwitch
+			|| (!textArea.softWrap && Math.abs(firstLine - this.firstLine) >= visibleLines)
 			|| (textArea.softWrap && physFirstLine > textArea.getLastPhysicalLine()))
 		{
 			//System.err.println("too far");
