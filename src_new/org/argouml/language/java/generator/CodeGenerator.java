@@ -181,7 +181,7 @@ class CodeGenerator
 
 
 
-	writer.write("// $Id: CodeGenerator.java,v 1.3 2001/12/15 19:59:17 dennyd Exp $\n\n");
+	writer.write("// $Id: CodeGenerator.java,v 1.4 2002/03/12 14:43:53 linus Exp $\n\n");
 
 
 
@@ -519,7 +519,7 @@ class CodeGenerator
 
        @param writer The writer to write to.
 
-       @returns True if comment exists, false otherwise.
+       @return True if comment exists, false otherwise.
 
      *
 
@@ -537,7 +537,7 @@ class CodeGenerator
 
      * @param writer the writer to write to
 
-     * @returns true if comment exists, false otherwise
+     * @return true if comment exists, false otherwise
 
      */
 

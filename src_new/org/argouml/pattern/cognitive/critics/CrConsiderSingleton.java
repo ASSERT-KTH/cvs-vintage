@@ -26,7 +26,7 @@
 // File: CrConsiderSingleton.java
 // Classes: CrConsiderSingleton
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConsiderSingleton.java,v 1.5 2002/02/07 14:39:13 jeremybennett Exp $
+// $Id: CrConsiderSingleton.java,v 1.6 2002/03/12 14:43:54 linus Exp $
 
 // 5 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Code factored by use of
 // static methods in central org.argouml.cognitive.critics.CriticUtils utility
@@ -85,8 +85,6 @@ public class CrConsiderSingleton extends CrUML {
      * (PATTERNS), sets a priority for any to-do items (LOW) and adds triggers
      * for metaclasses "stereotype", "structuralFeature" and
      * "associationEnd".</p>
-     *
-     * @return  nothing returned since this is a constructor
      */
 
     public CrConsiderSingleton() {

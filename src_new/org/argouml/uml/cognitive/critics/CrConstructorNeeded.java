@@ -28,7 +28,7 @@
 // File: CrConstructorNeeded.java
 // Classes: CrConstructorNeeded
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConstructorNeeded.java,v 1.2 2002/02/07 14:41:15 jeremybennett Exp $
+// $Id: CrConstructorNeeded.java,v 1.3 2002/03/12 14:43:55 linus Exp $
 
 // 28 Jan 2002: Jeremy Bennett (mail@jeremybennett.com). Bug in detecting
 // constructors with explicit void returns fixed.
@@ -83,8 +83,6 @@ public class CrConstructorNeeded extends CrUML {
      * to found for the current locale. Provides a design issue category
      * (STORAGE) and adds triggers for metaclasses "behaviouralFeature" and
      * "structuralFeature".</p>
-     *
-     * @return  nothing returned since this is a constructor
      */
 
     public CrConstructorNeeded() {

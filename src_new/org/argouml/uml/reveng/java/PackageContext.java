@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.6 2001/05/31 16:55:32 marcus Exp $
+// $Id: PackageContext.java,v 1.7 2002/03/12 14:43:58 linus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -98,7 +98,7 @@ class PackageContext extends Context
        all, a datatype is created and added to the model.
 
        @param classifierName The name of the classifier to find.
-       @returns Found classifier.
+       @return Found classifier.
     */
     public MClassifier get(String name)
 	throws ClassifierNotFoundException

@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.2 2001/06/25 19:50:36 marcus Exp $
+// $Id: ParseState.java,v 1.3 2002/03/12 14:43:58 linus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -115,7 +115,7 @@ class ParseState
     /**
        Get the current context.
 
-       @returns The current context.
+       @return The current context.
      */
     public Context getContext()
     {
@@ -125,7 +125,7 @@ class ParseState
     /**
        Get the current classifier.
 
-       @returns The current classifier.
+       @return The current classifier.
      */
     public MClassifier getClassifier()
     {
@@ -135,7 +135,7 @@ class ParseState
     /**
        Tell the parse state that an anonymous class is being parsed.
 
-       @returns The name of the anonymous class.
+       @return The name of the anonymous class.
      */
     public String anonymousClass()
     {
@@ -157,7 +157,7 @@ class ParseState
     /**
        Get the current classname prefix.
 
-       @returns The current classname prefix.
+       @return The current classname prefix.
      */
     public String getClassnamePrefix()
     {
@@ -215,7 +215,7 @@ class ParseState
        Get a feature from the current classifier not yet modeled.
 
        @param name The name of the feature.
-       @returns The found feature, null if not found.
+       @return The found feature, null if not found.
      */
     public MFeature getFeature(String name)
     {
@@ -232,7 +232,7 @@ class ParseState
        Get a method from the current classifier not yet modeled.
 
        @param name The name of the method.
-       @returns The found method, null if not found.
+       @return The found method, null if not found.
      */
     public MMethod getMethod(String name)
     {
@@ -250,7 +250,7 @@ class ParseState
        Get a operation from the current classifier not yet modeled.
 
        @param name The name of the operation.
-       @returns The found operation, null if not found.
+       @return The found operation, null if not found.
      */
     public MOperation getOperation(String name)
     {

@@ -24,7 +24,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.5 2002/02/09 17:05:59 bobtarling Exp $
+// $Id: FigPackage.java,v 1.6 2002/03/12 14:43:56 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -221,7 +221,7 @@ public class FigPackage extends FigNodeModelElement {
     * Build a collection of menu items relevant for a right-click popup menu on a Package.
     *
     * @param     me     a mouse event
-    * @returns          a collection of menu items
+    * @return          a collection of menu items
     */
   public Vector getPopUpActions(MouseEvent me) {
     Vector popUpActions = super.getPopUpActions(me);

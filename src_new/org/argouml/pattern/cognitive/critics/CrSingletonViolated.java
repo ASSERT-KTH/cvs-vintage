@@ -27,7 +27,7 @@
 // File: CrSingletonViolated.java
 // Classes: CrSingletonViolated
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSingletonViolated.java,v 1.3 2002/02/07 14:40:06 jeremybennett Exp $
+// $Id: CrSingletonViolated.java,v 1.4 2002/03/12 14:43:54 linus Exp $
 
 // 28 Jan 2002: Bug in triggering fixed by Jeremy Bennett
 // (mail@jeremybennett.com)
@@ -93,8 +93,6 @@ public class CrSingletonViolated extends CrUML {
      * (PATTERNS), sets a priority for any to-do items (LOW) and adds triggers
      * for metaclasses "stereotype", "structuralFeature" and
      * "associationEnd".</p>
-     *
-     * @return  nothing returned since this is a constructor
      */
 
     public CrSingletonViolated() {
