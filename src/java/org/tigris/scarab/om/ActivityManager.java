@@ -59,7 +59,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.18 2003/06/26 17:58:13 jmcnally Exp $
+ * @version $Id: ActivityManager.java,v 1.19 2003/12/09 16:29:17 mpoeschl Exp $
  */
 public class ActivityManager
     extends BaseActivityManager
@@ -121,11 +121,11 @@ public class ActivityManager
         String newUsername = null;
         if (oldUserId != null)
         {
-            oldUsername = ((ScarabUser)ScarabUserManager.getInstance(oldUserId)).getUserName();
+            oldUsername = ScarabUserManager.getInstance(oldUserId).getUserName();
         }
         if (newUserId != null)
         {
-            newUsername = ((ScarabUser)ScarabUserManager.getInstance(newUserId)).getUserName();
+            newUsername = ScarabUserManager.getInstance(newUserId).getUserName();
         }
         return create(issue,attribute,activitySet,description,attachment,
                       null, null,
