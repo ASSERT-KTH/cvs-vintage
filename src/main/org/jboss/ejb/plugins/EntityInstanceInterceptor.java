@@ -40,7 +40,7 @@ import org.jboss.invocation.Invocation;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.51 $
+* @version $Revision: 1.52 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/06/28: marcf</b>
@@ -172,7 +172,13 @@ public class EntityInstanceInterceptor
 
       // Associate transaction, in the new design the lock already has the transaction from the
       // previous interceptor
-      ctx.setTransaction(mi.getTransaction());
+
+      // Don't set the transction if a read-only method.  With a read-only method, the ctx can be shared
+      // between multiple transactions.
+      if (!container.isReadOnly() && !container.getBeanMetaData().isMethodReadOnly(mi.getMethod().getName()))
+      {
+	  ctx.setTransaction(mi.getTransaction());
+      }
 
       // Set the current security information
       ctx.setPrincipal(mi.getPrincipal());
