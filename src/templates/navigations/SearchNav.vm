@@ -1,4 +1,6 @@
-#set ($module = $scarabR.CurrentModule)
+#if ($scarabR.CurrentModule)
+  #set ($module = $scarabR.CurrentModule)
+#end
 #if ($data.User.hasLoggedIn() && $module)
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3" width="100%">
