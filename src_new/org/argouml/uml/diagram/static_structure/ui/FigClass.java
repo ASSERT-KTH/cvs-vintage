@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.95 2004/07/17 13:10:29 kataka Exp $
+// $Id: FigClass.java,v 1.96 2004/07/18 20:33:45 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,7 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
+import org.argouml.model.ModelEventPump;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.ArgoJMenu;
@@ -790,6 +791,14 @@ public class FigClass extends FigNodeModelElement {
             updateOperations();
             damage();
         }
+        if (mee != null && mee.getName().equals("parameter") && ModelFacade.isAOperation(mee.getSource())) {
+            if (mee.getAddedValue() != null) {
+                UmlModelEventPump.getPump().addModelEventListener(this, mee.getAddedValue(), new String[] {"name", "kind", "type", "defaultValue"});
+            }
+            if (mee.getRemovedValue() != null) {
+                UmlModelEventPump.getPump().addModelEventListener(this, mee.getRemovedValue());
+            }
+        }
         if (mee == null || mee.getName().equals("isAbstract")) {
             updateAbstract();
             damage();
@@ -1173,6 +1182,7 @@ public class FigClass extends FigNodeModelElement {
                 } else {
                     oper.setFont(LABEL_FONT);
                 }
+                oper.damage();
                 ocounter++;
             }
             if (figs.size() > ocounter) {

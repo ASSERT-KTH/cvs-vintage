@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.193 2004/07/18 18:56:02 kataka Exp $
+// $Id: ModelFacade.java,v 1.194 2004/07/18 20:33:45 kataka Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -6216,7 +6216,7 @@ public class ModelFacade {
      * @param type is the type (a classifier)
      */
     public static void setType(Object handle, Object type) {
-        if (type instanceof MClassifier) {
+        if (type == null || type instanceof MClassifier) {
             if (handle instanceof MObjectFlowState) {
 		((MObjectFlowState) handle).setType((MClassifier) type);
 		return;

@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.37 2004/03/25 22:30:01 mvw Exp $
+// $Id: UMLComboBoxModel2.java,v 1.38 2004/07/18 20:33:46 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -341,10 +341,11 @@ public abstract class UMLComboBoxModel2
                 _buildingModel = true;
                 buildModelList();
                 _buildingModel = false;
+                setSelectedItem(getSelectedModelElement());
                 if (getSize() > 0) {
                     fireIntervalAdded(this, 0, getSize() - 1);
                 }
-                setSelectedItem(getSelectedModelElement());
+               
             }
             if (getSelectedItem() != null && _clearable) {
                 addElement(""); // makes sure we can select 'none'
