@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.146 2003/09/28 19:10:54 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.147 2003/10/07 12:35:47 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3518,16 +3518,16 @@ public class ModelFacade {
      */
     public static String getName(Object handle) {
         if (handle instanceof MModelElement) {
-            MModelElement me = (MModelElement) handle;
-
-            return me.getName();
+            return ((MModelElement)handle).getName();
         }
         if (handle instanceof Diagram) {
-            Diagram d = (Diagram) handle;
-            return d.getName();
+            return ((Diagram)handle).getName();
         }
         if (handle instanceof MOrderingKind) {
             return ((MOrderingKind) handle).getName();
+        }
+        if (handle instanceof MAggregationKind) {
+            return ((MAggregationKind)handle).getName();
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
