@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.22 2003/11/30 22:05:41 alexb Exp $
+// $Id: Designer.java,v 1.23 2003/12/09 14:36:40 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.22 2003/11/30 22:05:41 alexb Exp $
+// $Id: Designer.java,v 1.23 2003/12/09 14:36:40 mkl Exp $
 
 package org.argouml.cognitive;
 
@@ -131,6 +131,9 @@ public class Designer
      *  for selecting and executing critics that are relevant to thid
      *  designer on an on going basis. */
     private Agency _agency;
+    
+    /* the clarifying icon for this poster */
+    private Icon _clarifier = null;
     
     /** needs documenting */
     private Thread _critiquer;
@@ -519,8 +522,15 @@ public class Designer
     /** just returns the descr param */
     public String expand(String desc, VectorSet offs) { return desc; }
     
-    /** just returns null */
-    public Icon getClarifier() { return null; }
+    /** get the generic clarifier for this designer/poster */
+    public Icon getClarifier() { 
+        return _clarifier;
+    }
+    
+    /** get the generic clarifier for this designer/poster */
+    public void setClarifier(Icon clarifier) {
+        _clarifier = clarifier;
+    }
     
     /** Reply this Designer's ToDoList, a list of pending problems and
      *  issues that the designer might be interested in.
