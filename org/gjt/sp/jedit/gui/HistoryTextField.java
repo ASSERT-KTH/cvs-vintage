@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Text field with an arrow-key accessable history.
  * @author Slava Pestov
- * @version $Id: HistoryTextField.java,v 1.10 2003/07/24 20:25:40 spestov Exp $
+ * @version $Id: HistoryTextField.java,v 1.11 2003/11/12 00:24:11 spestov Exp $
  */
 public class HistoryTextField extends JTextField
 {
@@ -166,6 +166,15 @@ public class HistoryTextField extends JTextField
 		return selectAllOnFocus;
 	} //}}}
 
+	//{{{ getModel() method
+	/**
+	 * Returns the underlying history model.
+	 */
+	public HistoryModel getModel()
+	{
+		return historyModel;
+	} //}}}
+
 	//{{{ setModel() method
 	/**
 	 * Sets the history list model.
@@ -214,15 +223,6 @@ public class HistoryTextField extends JTextField
 	{
 		super.setText(text);
 		index = -1;
-	} //}}}
-
-	//{{{ getModel() method
-	/**
-	 * Returns the underlying history model.
-	 */
-	public HistoryModel getModel()
-	{
-		return historyModel;
 	} //}}}
 
 	//{{{ fireActionPerformed() method

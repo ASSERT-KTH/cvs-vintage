@@ -52,7 +52,7 @@ import org.gjt.sp.util.*;
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.58 2003/11/06 23:17:43 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.59 2003/11/12 00:24:11 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -826,9 +826,15 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		{
 			Calendar c = Calendar.getInstance();
 			buf.setLength(0);
-			buf.append(c.get(Calendar.HOUR_OF_DAY));
+			int hour = c.get(Calendar.HOUR_OF_DAY);
+			if(hour < 10)
+				buf.append('0');
+			buf.append(hour);
 			buf.append(':');
-			buf.append(c.get(Calendar.MINUTE));
+			int minute = c.get(Calendar.MINUTE);
+			if(minute < 10)
+				buf.append('0');
+			buf.append(minute);
 			setText(buf.toString());
 		} //}}}
 
