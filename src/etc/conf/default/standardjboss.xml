@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.17 2001/08/30 20:42:24 pra Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.18 2001/10/08 08:04:41 slaboure Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -37,7 +37,7 @@
 	    <RMIObjectPort>4444</RMIObjectPort>
 	 </container-invoker-conf>
 	 <container-cache-conf>
-	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
+	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
 	       <max-capacity>1000</max-capacity>
@@ -79,7 +79,7 @@
 	    <Optimized>True</Optimized>
 	 </container-invoker-conf>
 	 <container-cache-conf>
-	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
+	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
 	       <max-capacity>1000</max-capacity>
@@ -121,7 +121,7 @@
 	    <Optimized>True</Optimized>
 	 </container-invoker-conf>
 	 <container-cache-conf>
-	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
+	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
 	       <max-capacity>1000</max-capacity>
@@ -201,6 +201,36 @@
       </container-configuration>
 
       <container-configuration>
+	 <container-name>Clustered Stateless SessionBean</container-name>
+	 <call-logging>false</call-logging>
+	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvokerHA</container-invoker>
+	 <container-interceptors>
+	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+	    <!-- CMT -->
+	    <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+	    <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+	    <interceptor transaction="Container">org.jboss.ejb.plugins.StatelessSessionInstanceInterceptor</interceptor>
+	    <!-- BMT -->
+	    <interceptor transaction="Bean">org.jboss.ejb.plugins.StatelessSessionInstanceInterceptor</interceptor>
+	    <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
+	    <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+	 </container-interceptors>
+	 <instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
+	 <instance-cache></instance-cache>
+	 <persistence-manager></persistence-manager>
+	 <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+	 <container-invoker-conf>
+	    <RMIObjectPort>4444</RMIObjectPort>
+	    <Optimized>True</Optimized>
+	 </container-invoker-conf>
+	 <container-pool-conf>
+	    <MaximumSize>100</MaximumSize>
+	    <MinimumSize>10</MinimumSize>
+	 </container-pool-conf>
+      </container-configuration>
+
+      <container-configuration>
 	 <container-name>Standard Stateful SessionBean</container-name>
 	 <call-logging>false</call-logging>
 	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
@@ -225,7 +255,7 @@
 	    <Optimized>True</Optimized>
 	 </container-invoker-conf>
 	 <container-cache-conf>
-	    <cache-policy>org.jboss.ejb.plugins.LRUStatefulContextCachePolicy</cache-policy>      
+	    <cache-policy>org.jboss.ejb.plugins.LRUStatefulContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
 	       <max-capacity>1000</max-capacity>
@@ -265,7 +295,7 @@
 	    <Optimized>True</Optimized>
 	 </container-invoker-conf>
 	 <container-cache-conf>
-	    <cache-policy>org.jboss.ejb.plugins.LRUStatefulContextCachePolicy</cache-policy>      
+	    <cache-policy>org.jboss.ejb.plugins.LRUStatefulContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
 	       <max-capacity>1000</max-capacity>
@@ -304,7 +334,7 @@
 	    <Optimized>True</Optimized>
 	 </container-invoker-conf>
 	 <container-cache-conf>
-	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
+	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
 	       <max-capacity>1000</max-capacity>
@@ -346,7 +376,7 @@
 	    <Optimized>True</Optimized>
 	 </container-invoker-conf>
 	 <container-cache-conf>
-	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
+	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
 	       <max-capacity>1000</max-capacity>
