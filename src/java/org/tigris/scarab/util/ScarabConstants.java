@@ -53,7 +53,7 @@ import org.apache.torque.om.NumberKey;
     A place to put public final static strings and other constants.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.24 2001/10/17 20:48:32 jon Exp $
+    @version $Id: ScarabConstants.java,v 1.25 2001/11/10 02:22:56 elicia Exp $
 */
 public interface ScarabConstants
 {
@@ -87,6 +87,14 @@ public interface ScarabConstants
      * that is currently being executed.
      */
     public static final String TEMPLATE = "template";
+
+    /**
+     * This is the key value that stores the name of the template
+     * other than the next, or cancel, where a user can go
+     * depending on an action.
+     */
+    public static final String OTHER_TEMPLATE = "otherTemplate";
+    
     
     /**
      * Primary System Object
