@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.49 2004/07/12 19:25:08 spestov Exp $
+ * @version $Id: Gutter.java,v 1.50 2004/08/08 03:41:34 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -116,8 +116,6 @@ public class Gutter extends JComponent implements SwingConstants
 		int lastLine = (clip.y + clip.height - 1) / lineHeight;
 
 		int y = (clip.y - clip.y % lineHeight);
-
-		int[] physicalLines = new int[lastLine - firstLine + 1];
 
 		extensionMgr.paintScreenLineRange(textArea,gfx,
 			firstLine,lastLine,y,lineHeight);

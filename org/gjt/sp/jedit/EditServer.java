@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.22 2004/07/16 21:07:46 spestov Exp $
+ * @version $Id: EditServer.java,v 1.23 2004/08/08 03:41:34 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -140,7 +140,6 @@ public class EditServer extends Thread
 
 				DataInputStream in = new DataInputStream(
 					client.getInputStream());
-				OutputStream out = client.getOutputStream();
 
 				if(!handleClient(client,in))
 					abort = true;

@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.TextUtilities;
  * for matching XML tags.
  *
  * @author Slava Pestov
- * @version $Id: StructureMatcher.java,v 1.6 2003/11/18 20:51:58 spestov Exp $
+ * @version $Id: StructureMatcher.java,v 1.7 2004/08/08 03:41:35 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public interface StructureMatcher
@@ -144,7 +144,7 @@ public interface StructureMatcher
 			Match match = textArea.getStructureMatch();
 			if(match != null)
 			{
-				paintHighlight(gfx,screenLine,physicalLine,
+				paintHighlight(gfx,screenLine,
 					start,end,y,match);
 			}
 		}
@@ -185,7 +185,7 @@ public interface StructureMatcher
 		}
 	
 		private void paintHighlight(Graphics gfx, int screenLine,
-			int physicalLine, int start, int end, int y,
+			int start, int end, int y,
 			Match match)
 		{
 			if(!textArea.isStructureHighlightVisible())

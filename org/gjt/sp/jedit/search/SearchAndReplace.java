@@ -62,7 +62,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: SearchAndReplace.java,v 1.63 2004/07/12 19:25:08 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.64 2004/08/08 03:41:34 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -699,7 +699,7 @@ loop:			for(;;)
 			{
 				s = selection[i];
 
-				retVal += replaceInSelection(view,textArea,
+				retVal += replaceInSelection(textArea,
 					buffer,matcher,smartCaseReplace,s);
 			}
 
@@ -1033,7 +1033,7 @@ loop:			while(path != null)
 	} //}}}
 
 	//{{{ replaceInSelection() method
-	private static int replaceInSelection(View view, JEditTextArea textArea,
+	private static int replaceInSelection(JEditTextArea textArea,
 		Buffer buffer, SearchMatcher matcher, boolean smartCaseReplace,
 		Selection s) throws Exception
 	{
