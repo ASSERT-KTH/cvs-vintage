@@ -45,7 +45,7 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  * This class parses EJB-QL into an abstract syntax tree.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public class EJBQLParser {
    private Catalog catalog;
@@ -545,7 +545,7 @@ Token AbstractSchema() #AbstractSchema :
    t=<ABSTRACT_SCHEMA> 
    { 
       jjtThis.abstractSchemaName = t.image;
-      jjtThis.entity = catalog.getEntity(t.image);
+      jjtThis.entity = catalog.getEntityByAbstractSchemaName(t.image);
       return t; 
    }
 }
@@ -853,7 +853,7 @@ TOKEN_MGR_DECLS :
 {
    < IDENTIFIER: <NAME> >
    {
-      if(catalog.getEntity(matchedToken.image) != null) {
+      if(catalog.getEntityByAbstractSchemaName(matchedToken.image) != null) {
          matchedToken.kind = ABSTRACT_SCHEMA;
       } else if(idManager.getEntity(matchedToken.image.toLowerCase()) != null) {
          matchedToken.kind = IDENTIFICATION_VARIABLE;

@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
  * This class manages a symbol table for the EJB-QL parser.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public class IdentifierManager {
    private Catalog catalog;
@@ -35,7 +35,9 @@ public class IdentifierManager {
          String identifier,
          String abstractSchemaName) {
 
-      identifiers.put(identifier, catalog.getEntity(abstractSchemaName));
+      identifiers.put(
+            identifier, 
+            catalog.getEntityByAbstractSchemaName(abstractSchemaName));
    }
      
    public void declareCollectionMember(

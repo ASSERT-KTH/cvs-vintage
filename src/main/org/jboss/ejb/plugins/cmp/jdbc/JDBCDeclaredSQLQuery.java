@@ -12,9 +12,7 @@ import java.util.List;
 
 import org.jboss.deployment.DeploymentException;
 
-import org.jboss.ejb.Container;
-import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.plugins.CMPPersistenceManager;
+import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
@@ -31,7 +29,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
    
@@ -71,45 +69,25 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
    private void initSelectObject(JDBCStoreManager manager)
          throws DeploymentException {
 
+      String entityName = metadata.getEJBName();
+
       // if no name is specified we are done
-      if(metadata.getEJBName() == null) {
+      if(entityName == null) {
          return;
       }
 
-      Container c = manager.getContainer().getEjbModule().getContainer(
-            metadata.getEJBName());
+      Catalog catalog = (Catalog)manager.getApplicationData("CATALOG");
 
-      if( !(c instanceof EntityContainer)) {
-         throw new DeploymentException("declared sql can only select an " +
-               "entity bean");
-      }      
-      EntityContainer entityContainer = (EntityContainer) c;
-      
-      // check that the entity is managed by a CMPPersistenceManager
-      if( !(entityContainer.getPersistenceManager() instanceof 
-               CMPPersistenceManager)) {
-         throw new DeploymentException("declared-sql can only select " +
-               "cmp entities.");
-      }                  
-      CMPPersistenceManager cmpPM = (CMPPersistenceManager)
-            entityContainer.getPersistenceManager();
-      if( !(cmpPM.getPersistenceStore() instanceof JDBCStoreManager)) {
-         throw new DeploymentException("declared-sql can only select " +
-               "a JDBC cmp entity.");
+      JDBCEntityBridge entity = 
+            (JDBCEntityBridge)catalog.getEntityByEJBName(entityName);
+      if(entity == null) {
+         throw new DeploymentException("Unknown entity: " + entityName);
       }
-      JDBCStoreManager storeManager = (JDBCStoreManager)
-            cmpPM.getPersistenceStore();
       
-      if(storeManager.getEntityBridge() == null) {
-          throw new DeploymentException("The entity to select has not be " +
-                "properly initialized");
-      }
-         
-      JDBCEntityBridge entity = storeManager.getEntityBridge();
-      if(metadata.getFieldName() == null) {
+      String fieldName = metadata.getFieldName();
+      if(fieldName == null) {
          setSelectEntity(entity);
       } else {
-         String fieldName = metadata.getFieldName();
          JDBCCMPFieldBridge field = entity.getCMPFieldByName(fieldName);
          if(field == null) {
             throw new DeploymentException("Unknown cmp field: " + fieldName);
