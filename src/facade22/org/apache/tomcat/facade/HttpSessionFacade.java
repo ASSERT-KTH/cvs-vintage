@@ -271,9 +271,11 @@ final class HttpSessionFacade implements HttpSession {
 		// double check ( probably not needed since setAttribute calls
 		// remove if it detects a value
 		object=realSession.getAttribute( name );
-		realSession.removeAttribute(name);
-		((HttpSessionBindingListener) object).valueUnbound
-		    (new HttpSessionBindingEvent( this, name));
+		if( object != null ) {
+		    realSession.removeAttribute(name);
+		    ((HttpSessionBindingListener) object).valueUnbound
+			(new HttpSessionBindingEvent( this, name));
+		}
 	    }
 	} else {
 	    // Regular object, no sync overhead
