@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.59 2005/01/09 14:59:05 linus Exp $
+// $Id: PropPanelMessage.java,v 1.60 2005/01/10 19:17:02 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,8 +45,7 @@ import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
 
 /**
- * TODO: this property panel needs refactoring to remove dependency on
- *       old gui components, specifically namesToWatch mechanism.
+ * Properties panel for a Message.
  */
 public class PropPanelMessage extends PropPanelModelElement {
 
@@ -139,18 +138,5 @@ public class PropPanelMessage extends PropPanelModelElement {
             }
         }
     }
-
-    /**
-     * Set the target to the interaction of this message.
-     */
-    public void navigateInteraction() {
-    	Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAMessage(target)) {
-            TargetManager.getInstance()
-                .setTarget(ModelFacade.getInteraction(target));
-        }
-    }
-
-
 
 } /* end class PropPanelMessage */
