@@ -132,6 +132,8 @@ public class Container implements Cloneable{
     String roles[]=null;
 
     String methods[]=null;
+
+    boolean special=false;
     
     public Container() {
 	initHooks();
@@ -164,6 +166,14 @@ public class Container implements Cloneable{
      */
     public Context getContext() {
 	return context;
+    }
+
+    public void setSpecial( boolean b ) {
+	special=b;
+    }
+
+    public boolean isSpecial() {
+	return special;
     }
     
     // -------------------- Mapping LHS --------------------
@@ -365,11 +375,11 @@ public class Container implements Cloneable{
 
     /** See ContextManager comments.
      */
-    public void setNote( int pos, Object value ) {
+    public final void setNote( int pos, Object value ) {
 	notes[pos]=value;
     }
 
-    public Object getNote( int pos ) {
+    public final Object getNote( int pos ) {
 	return notes[pos];
     }
 
