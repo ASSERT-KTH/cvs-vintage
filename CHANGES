@@ -1,5 +1,18 @@
+Version CVS
 
-
+ - mail-component:
+    * added addressbook-pane to composer
+    * added printing support
+    * imap mailfolderinfo fixes
+    * imap synchronize fixes
+    * imap lsub fixes
+    * local folder locking fixes
+    
+ - addressbook-component:
+    * address parser fixes
+    * dnd support for addressbook JList-component
+    
+    
 Version 0.9.9
 
  - mail-component:
