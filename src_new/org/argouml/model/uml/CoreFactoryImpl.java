@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.11 2005/01/09 02:02:24 bobtarling Exp $
+// $Id: CoreFactoryImpl.java,v 1.12 2005/01/12 17:52:24 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1223,9 +1223,6 @@ public class CoreFactoryImpl
         MGeneralizableElement parent = (MGeneralizableElement) parent1;
 
         if (parent.getParents().contains(child)) {
-            return null;
-        }
-        if (!child.getClass().equals(parent.getClass())) {
             return null;
         }
         Iterator it = parent.getGeneralizations().iterator();
