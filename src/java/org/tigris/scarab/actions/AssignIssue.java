@@ -75,6 +75,7 @@ import org.tigris.scarab.services.user.UserManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.Attribute;
@@ -96,7 +97,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.25 2002/01/10 21:03:23 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.26 2002/01/10 22:58:18 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -161,19 +162,35 @@ public class AssignIssue extends RequireLoginFirstAction
                         }
                         else if (!newAttributeId.equals(oldAttributeId))
                         {
-                            StringBuffer buf1 = new StringBuffer("You have been "
-                                                                 + " switched from ");
-                            buf1.append(oldAttribute.getName()).append(" to ");
-                            buf1.append(newAttribute.getName()).append(".");
-                            emailAction = buf1.toString();
+                            // Check to see if user is already assigned to 
+                            // New selected attribute
+                            Criteria crit = new Criteria()
+                               .add(AttributeValuePeer.ISSUE_ID, issue.getIssueId())
+                               .add(AttributeValuePeer.VALUE, assignee.getUserName())
+                               .add(AttributeValuePeer.ATTRIBUTE_ID, newAttributeId);
+                            if (!issue.getAttributeValues(crit).isEmpty())
+                            {
+                                data.setMessage("User " + assignee.getUserName() + 
+                                                " is already assigned to attribute " +
+                                                newAttribute.getName() + ".");
+                                intake.remove(group);
+                            }     
+                            else
+                            {
+                                StringBuffer buf1 = new StringBuffer("You have been "
+                                                                     + " switched from ");
+                                buf1.append(oldAttribute.getName()).append(" to ");
+                                buf1.append(newAttribute.getName()).append(".");
+                                emailAction = buf1.toString();
 
-                            StringBuffer buf2 = new StringBuffer("Switched user");
-                            buf2.append(assignee.getUserName()).append(" from ");
-                            buf2.append(oldAttribute.getName()).append(" to ");
-                            buf2.append(newAttribute.getName());
-                            action = buf2.toString();
-                            attachment.setName(action);
-                            isChanged = true;
+                                StringBuffer buf2 = new StringBuffer("Switched user");
+                                buf2.append(assignee.getUserName()).append(" from ");
+                                buf2.append(oldAttribute.getName()).append(" to ");
+                                buf2.append(newAttribute.getName());
+                                action = buf2.toString();
+                                attachment.setName(action);
+                                isChanged = true;
+                            }
                         }
          
                         if (isChanged)
