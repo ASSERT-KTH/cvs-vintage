@@ -49,7 +49,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.105 $
+ * @version $Revision: 1.106 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -259,8 +259,6 @@ public class EntityContainer
          // Map the interfaces to Long
          setupMarshalledInvocationMapping();
 
-         // Initialize pool
-         instancePool.create();
          // Try to register the instance pool as an MBean
          try
          {
@@ -274,6 +272,8 @@ public class EntityContainer
          {
             log.debug("Failed to register cache as mbean", t);
          }
+         // Initialize pool
+         instancePool.create();
 
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
@@ -282,8 +282,6 @@ public class EntityContainer
             ci.create();
          }
 
-         // Init instance cache
-         instanceCache.create();
          // Try to register the instance cache as an MBean
          try
          {
@@ -297,6 +295,8 @@ public class EntityContainer
          {
             log.debug("Failed to register cache as mbean", t);
          }
+         // Init instance cache
+         instanceCache.create();
 
          // Init persistence
          persistenceManager.create();

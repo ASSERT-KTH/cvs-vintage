@@ -39,7 +39,7 @@ import org.jboss.util.NullArgumentException;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -170,8 +170,6 @@ public class MessageDrivenContainer
          }
          beanMapping = map;
 
-         // Initialize pool
-         instancePool.create();
          // Try to register the instance pool as an MBean
          try
          {
@@ -185,12 +183,13 @@ public class MessageDrivenContainer
          {
             log.debug("Failed to register pool as mbean", t);
          }
+         // Initialize pool
+         instancePool.create();
 
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext();)
          {
             String invokerBinding = (String) it.next();
             EJBProxyFactory ci = (EJBProxyFactory) proxyFactories.get(invokerBinding);
-            ci.create();
             // Try to register the container invoker as an MBean
             try
             {
@@ -205,6 +204,7 @@ public class MessageDrivenContainer
             {
                log.debug("Failed to register invoker binding as mbean", t);
             }
+            ci.create();
          }
 
          // Initialize the interceptor by calling the chain

@@ -33,7 +33,7 @@ import org.jboss.metadata.SessionMetaData;
  * web services.
  * </p>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since 30.10.2003
  */
 
@@ -322,8 +322,6 @@ public abstract class SessionContainer extends Container {
 
    /** creates a new instance pool */
    protected void createInstancePool() throws Exception {
-      // Initialize pool
-      instancePool.create();
 
       // Try to register the instance pool as an MBean
       try {
@@ -335,6 +333,8 @@ public abstract class SessionContainer extends Container {
       } catch (Throwable t) {
          log.debug("Failed to register pool as mbean", t);
       }
+      // Initialize pool
+      instancePool.create();
    }
 
    /**

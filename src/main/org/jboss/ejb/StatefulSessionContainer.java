@@ -33,7 +33,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version <tt>$Revision: 1.64 $</tt>
+ * @version <tt>$Revision: 1.65 $</tt>
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -74,8 +74,6 @@ public class StatefulSessionContainer
    
    /** creates and registers the instance cache */
    protected void createInstanceCache() throws Exception {
-      // Init instance cache
-      instanceCache.create();
       // Try to register the instance cache as an MBean
       try
       {
@@ -89,6 +87,8 @@ public class StatefulSessionContainer
       {
          log.debug("Failed to register cache as mbean", t);
       }
+      // Init instance cache
+      instanceCache.create();
    }
 
    /** create persistence manager */

@@ -8,7 +8,7 @@ package org.jboss.invocation.jrmp.server;
 
 import javax.management.ObjectName;
 
-import org.jboss.system.Service;
+import org.jboss.system.ServiceMBean;
 
 import org.w3c.dom.Element;
 
@@ -17,9 +17,9 @@ import org.w3c.dom.Element;
  * as the transport protocol.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public interface JRMPProxyFactoryMBean extends Service
+public interface JRMPProxyFactoryMBean extends ServiceMBean
 {
    /** Get the server side JRMPInvoker mbean that will be used as the
     * RMI/JRMP transport handler.

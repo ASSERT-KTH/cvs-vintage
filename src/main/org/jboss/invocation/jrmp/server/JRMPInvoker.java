@@ -52,7 +52,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -571,6 +571,11 @@ public class JRMPInvoker
       support.destroy();
    }
 
+   public void jbossInternalLifecycle(String method) throws Exception
+   {
+      support.jbossInternalLifecycle(method);
+   }
+   
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws Exception
    {
