@@ -42,8 +42,7 @@ insert into SCARAB_R_MODULE_ATTRIBUTE(MODULE_ID, ATTRIBUTE_ID) values(2,9);
 insert into SCARAB_R_MODULE_ATTRIBUTE(MODULE_ID, ATTRIBUTE_ID) values(2,10);
 
 /*
- * Module 5 has all of the standard attributes except 2 and 10.
- * Attribute's 1,5,6, and 11 require values before an issue may be entered.
+ * Insert some values for project 5
  */
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (1,5,0,1);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (2,5,1,0);
