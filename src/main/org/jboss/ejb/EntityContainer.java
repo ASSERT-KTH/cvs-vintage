@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  *   @see EntityEnterpriseContext
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  */
 public class EntityContainer
    extends Container
@@ -349,6 +349,14 @@ public class EntityContainer
    }
    
    // Home interface implementation ---------------------------------
+   
+   /*
+   * find(MethodInvocation)
+   *
+   * This methods finds the target instances by delegating to the persistence manager
+   * It then manufactures EJBObject for all the involved instances found
+   */
+   
    public Object find(MethodInvocation mi)
       throws java.rmi.RemoteException, FinderException
    {
@@ -361,37 +369,79 @@ public class EntityContainer
       } else
       {
          // Single entity finder
-         Object id = getPersistenceManager().findEntity(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
+         Object id = getPersistenceManager().findEntity(mi.getMethod(), 
+		                                                mi.getArguments(), 
+														(EntityEnterpriseContext)mi.getEnterpriseContext());
+		 
 		 return (EJBObject)containerInvoker.getEntityEJBObject(id);
       }
    }
+   
+   /*
+   * createHome(MethodInvocation)
+   *
+   * This method takes care of the wiring of the "EJBObject" trio (target, context, proxy)
+   * It delegates to the persistence manager.
+   *
+   */
 	
 	public EJBObject createHome(MethodInvocation mi)
 		throws java.rmi.RemoteException, CreateException
 	{
 		
-		EntityEnterpriseContext ctx = (EntityEnterpriseContext) mi.getEnterpriseContext();
+	    getPersistenceManager().createEntity(mi.getMethod(), 
+											 mi.getArguments(), 
+											 (EntityEnterpriseContext) mi.getEnterpriseContext());
+		return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
+	}
+	/*
 		
-		try {
+		try {                                                                                                    	EntityEnterpriseContext ctx = (EntityEnterpriseContext) mi.getEnterpriseContext();
+	
+		   EntityEnterpriseContext ctx = (EntityEnterpriseContext) mi.getEnterpriseContext();
+	
+			Method createMethod = getBeanClass().getMethod("ejbCreate", mi.getMethod().getParameterTypes())
+			Method postCreateMethod = getBeanClass().getMethod("ejbPostCreate", mi.getMethod().getParameterTypes())
 			
-			// Call ejbCreate
-			getBeanClass().getMethod("ejbCreate", mi.getMethod().getParameterTypes())
-			.invoke(ctx.getInstance(),mi.getArguments());
+			if (((jBossEntity) bean).getPersistenceType().equals("Bean")) {
+				
+				// The return is the primaryKey
+				Object id = createMethod.invoke(ctx.getInstance(), mi.getArguments());
+				
+				// Set it on the context
+				ctx.setId(id);
+				
+				// Lock instance in cache
+				getInstanceCache().insert(ctx);
 			
+				// Deal with the persistence in the persistence manager
+				getPersistenceManager().createEntity(mi.getMethod(), mi.getArguments(), ctx);
 			
-			// Lock instance in cache
-			getInstanceCache().insert(ctx);
+				// Create EJBObject
+				ctx.setEJBObject(getContainerInvoker().getEntityEJBObject(id));
 			
+				// Invoke postCreate
+				postCreateMethod.invoke(ctx.getInstance(),mi.getArguments());
+			}
 			
-			// Deal with the persistence in the persistence manager
-			getPersistenceManager().createEntity(mi.getMethod(), mi.getArguments(), ctx);
+			else {  // We are in the CMP case
 			
-			// Create EJBObject
-			ctx.setEJBObject(getContainerInvoker().getEntityEJBObject(mi.getId()));
+				// The primary key is computed by the PM
+				createMethod.invoke(ctx.getInstance(), mi.getArguments());
+				
+				// Lock instance in cache
+				getInstanceCache().insert(ctx);
 			
-			// Invoke postCreate
-			getBeanClass().getMethod("ejbPostCreate", mi.getMethod().getParameterTypes())
-			.invoke(ctx.getInstance(),mi.getArguments());
+				// The PM returns the PrimaryKey in case of CMP
+				// Compute it and set it on the context
+				ctx.setId(getPersistenceManager().createEntity(mi.getMethod(), mi.getArguments(), ctx));
+			
+				// Create EJBObject
+				ctx.setEJBObject(getContainerInvoker().getEntityEJBObject(ctx.getId()));
+			
+				// Invoke postCreate
+				postCreateMethod.invoke(ctx.getInstance(),mi.getArguments());
+			}
 			
 			return ctx.getEJBObject();
 		
@@ -405,7 +455,8 @@ public class EntityContainer
 			
 			throw new CreateException("Could not create entity:"+e);
 		} 
-	}
+		*/
+	
 		
    // EJBHome implementation ----------------------------------------
    public void removeHome(MethodInvocation mi)
