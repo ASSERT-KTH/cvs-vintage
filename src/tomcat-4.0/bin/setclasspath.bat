@@ -1,7 +1,7 @@
 rem ---------------------------------------------------------------------------
 rem Set CLASSPATH and Java options
 rem
-rem $Id: setclasspath.bat,v 1.2 2002/03/02 06:44:23 jon Exp $
+rem $Id: setclasspath.bat,v 1.3 2002/07/04 00:11:40 jon Exp $
 rem ---------------------------------------------------------------------------
 
 rem Make sure prerequisite environment variables are set
@@ -26,9 +26,6 @@ echo The BASEDIR environment variable is not defined correctly
 echo This environment variable is needed to run this program
 goto end
 :okBasedir
-
-rem Set the default Java options for all scripts
-set JAVA_OPTS=
 
 rem Set the default -Djava.endorsed.dirs argument
 set JAVA_ENDORSED_DIRS=%BASEDIR%\bin;%BASEDIR%\common\lib

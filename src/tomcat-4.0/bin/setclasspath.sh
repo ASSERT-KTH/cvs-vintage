@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 #  Set CLASSPATH and Java options
 #
-#  $Id: setclasspath.sh,v 1.2 2002/03/02 06:44:23 jon Exp $
+#  $Id: setclasspath.sh,v 1.3 2002/07/04 00:11:40 jon Exp $
 # -----------------------------------------------------------------------------
 
 # Make sure prerequisite environment variables are set
@@ -25,9 +25,6 @@ if [ ! -r "$BASEDIR"/bin/setclasspath.sh ]; then
   echo "This environment variable is needed to run this program"
   exit 1
 fi
-
-# Set the default Java options for all scripts
-JAVA_OPTS=
 
 # Set the default -Djava.endorsed.dirs argument
 JAVA_ENDORSED_DIRS="$BASEDIR"/bin:"$BASEDIR"/common/lib

@@ -1,16 +1,19 @@
 rem ---------------------------------------------------------------------------
-rem Append a path onto the CLASSPATH
+rem Append to CLASSPATH
 rem
-rem $Id: cpappend.bat,v 1.6 2002/03/02 06:44:23 jon Exp $
+rem $Id: cpappend.bat,v 1.7 2002/07/04 00:11:40 jon Exp $
 rem ---------------------------------------------------------------------------
 
-rem Get remaining unshifted command line arguments and save them in the
-set CMD_LINE_ARGS=%1
+rem Process the first argument
+if ""%1"" == """" goto end
+set CLASSPATH=%CLASSPATH%;%1
 shift
+
+rem Process the remaining arguments
 :setArgs
-if ""%1""=="""" goto doneSetArgs
-set CMD_LINE_ARGS=%CMD_LINE_ARGS% %1
+if ""%1"" == """" goto doneSetArgs
+set CLASSPATH=%CLASSPATH% %1
 shift
 goto setArgs
 :doneSetArgs
-
+:end

@@ -22,6 +22,9 @@
 #   JAVA_OPTS       (Optional) Java runtime options used when the "start",
 #                   "stop", or "run" command is executed.
 #
+#   JPDA_TRANSPORT  (Optional) JPDA transport used when the "jpda start"
+#                   command is executed. The default is "dt_socket".
+#
 #   JPDA_ADDRESS    (Optional) Java runtime options used when the "jpda start"
 #                   command is executed. The default is 8000.
 #
@@ -29,7 +32,7 @@
 #                   (JSSE) installation, whose JAR files will be added to the
 #                   system class path used to start Tomcat.
 #
-# $Id: catalina.sh,v 1.15 2002/03/02 06:44:23 jon Exp $
+# $Id: catalina.sh,v 1.16 2002/07/04 00:11:40 jon Exp $
 # -----------------------------------------------------------------------------
 
 # OS specific support.  $var _must_ be set to either true or false.
@@ -107,11 +110,14 @@ echo "Using CATALINA_TMPDIR: $CATALINA_TMPDIR"
 echo "Using JAVA_HOME:       $JAVA_HOME"
 
 if [ "$1" = "jpda" ] ; then
+  if [ -z "$JPDA_TRANSPORT" ]; then
+    JPDA_TRANSPORT="dt_socket"
+  fi
   if [ -z "$JPDA_ADDRESS" ]; then
     JPDA_ADDRESS="8000"
   fi
-  if [ -z "$JDPA_OPTS" ]; then
-    JPDA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,address=$JPDA_ADDRESS,server=y,suspend=n"
+  if [ -z "$JPDA_OPTS" ]; then
+    JPDA_OPTS="-Xdebug -Xrunjdwp:transport=$JPDA_TRANSPORT,address=$JPDA_ADDRESS,server=y,suspend=n"
   fi
   CATALINA_OPTS="$CATALINA_OPTS $JPDA_OPTS"
   shift

@@ -14,7 +14,7 @@
 #   JAVA_OPTS     (Optional) Java runtime options used when the "start",
 #                 "stop", or "run" command is executed.
 #
-# $Id: tool-wrapper.sh,v 1.2 2002/03/02 06:44:23 jon Exp $
+# $Id: tool-wrapper.sh,v 1.3 2002/07/04 00:11:40 jon Exp $
 # -----------------------------------------------------------------------------
 
 # OS specific support.  $var _must_ be set to either true or false.
