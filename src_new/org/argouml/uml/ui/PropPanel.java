@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.81 2004/07/18 18:56:06 kataka Exp $
+// $Id: PropPanel.java,v 1.82 2004/07/20 15:26:24 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -379,7 +379,7 @@ public abstract class PropPanel
 		    registrateTargetListeners((Container) components[i]);
                 Object[] objects = list2.getListenerList();
                 for (int j = 1; j < objects.length; j += 2) {
-                    list.add(TargetListener.class, (EventListener) objects[j]);
+                    list.add(TargetListener.class, (TargetListener) objects[j]);
                 }
             }
         }
