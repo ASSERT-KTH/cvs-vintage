@@ -85,8 +85,11 @@ public class ContextWrapper implements Context {
         }
         try {
             envpar = env;
-            isSingle = (env!=null);
+            
+            String jndiURL = (String)env.get(CarolDefaultValues.JNDI_URL_PREFIX);
+            isSingle = ((env!=null)&&(jndiURL!=null));
             if (isSingle) {
+               
                 String rmiName = CarolDefaultValues.getRMIProtocol((String)env.get(CarolDefaultValues.JNDI_URL_PREFIX));
                 Properties prop = (Properties)CarolCurrentConfiguration.getCurrent().getRMIProperties(rmiName);
                 env.put(CarolDefaultValues.JNDI_FACTORY_PREFIX,prop.get(CarolDefaultValues.JNDI_FACTORY_PREFIX));
@@ -95,7 +98,7 @@ public class ContextWrapper implements Context {
                 ac = new MultiContext();
             }
         } catch (Exception e) {
-            String msg = "ContextWrapper.ContextWrapper() failed: " + e; 
+            String msg = "ContextWrapper.ContextWrapper() failed: " + e;
             throw new NamingException(msg);
         }
     }
