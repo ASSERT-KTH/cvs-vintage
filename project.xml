@@ -303,15 +303,7 @@
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
-    <!--dependency>
-      <groupId>fulcrum</groupId>
-      <artifactId>fulcrum</artifactId>
-      <version>20040328.191814</version>
-      <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency-->
+
     <dependency>
       <groupId>oro</groupId>
       <artifactId>oro</artifactId>
@@ -529,7 +521,7 @@
     <dependency>
       <groupId>fulcrum</groupId>
       <artifactId>fulcrum-cache</artifactId>
-      <version>1.0.5-dev</version>
+      <version>1.0.5</version>
       <type>jar</type>   
       <properties>
         <war.bundle>true</war.bundle>
@@ -537,8 +529,8 @@
     </dependency>
     <dependency>
       <groupId>fulcrum</groupId>
-      <artifactId>fulcrum-localization-api</artifactId>
-      <version>1.0.5-dev</version>
+      <artifactId>fulcrum-localization</artifactId>
+      <version>1.0.5</version>
       <type>jar</type>   
       <properties>
         <war.bundle>true</war.bundle>
@@ -546,17 +538,8 @@
     </dependency>    
     <dependency>
       <groupId>fulcrum</groupId>
-      <artifactId>fulcrum-localization-impl</artifactId>
-      <version>1.0.5-dev</version>
-      <type>jar</type>   
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>       
-    </dependency>    
-    <dependency>
-      <groupId>fulcrum</groupId>
-      <artifactId>fulcrum-pool-api</artifactId>
-      <version>1.0.3-dev</version>
+      <artifactId>fulcrum-pool</artifactId>
+      <version>1.0.3</version>
       <type>jar</type>   
       <properties>
         <war.bundle>true</war.bundle>
@@ -564,17 +547,8 @@
     </dependency>
     <dependency>
       <groupId>fulcrum</groupId>
-      <artifactId>fulcrum-pool-impl</artifactId>
-      <version>1.0.3-dev</version>
-      <type>jar</type>   
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>       
-    </dependency>    
-    <dependency>
-      <groupId>fulcrum</groupId>
-      <artifactId>fulcrum-factory-api</artifactId>
-      <version>1.0.3-dev</version>
+      <artifactId>fulcrum-factory</artifactId>
+      <version>1.0.3</version>
       <type>jar</type>   
       <properties>
         <war.bundle>true</war.bundle>
@@ -582,31 +556,13 @@
     </dependency>
     <dependency>
       <groupId>fulcrum</groupId>
-      <artifactId>fulcrum-factory-impl</artifactId>
-      <version>1.0.3-dev</version>
-      <type>jar</type>   
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>       
-    </dependency>        
-    <dependency>
-      <groupId>fulcrum</groupId>
-      <artifactId>fulcrum-mimetype-api</artifactId>
-      <version>1.0.4-dev</version>
+      <artifactId>fulcrum-mimetype</artifactId>
+      <version>1.0.4</version>
       <type>jar</type>   
       <properties>
         <war.bundle>true</war.bundle>
       </properties>       
     </dependency>
-    <dependency>
-      <groupId>fulcrum</groupId>
-      <artifactId>fulcrum-mimetype-impl</artifactId>
-      <version>20041110.065814</version>
-      <type>jar</type>   
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>       
-    </dependency>      
     <dependency>
       <groupId>fulcrum</groupId>
       <artifactId>fulcrum-parser</artifactId>
@@ -620,7 +576,7 @@
    <dependency>
       <groupId>fulcrum</groupId>
       <artifactId>fulcrum-upload</artifactId>
-      <version>20041110.065727</version>
+      <version>1.0.3</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -630,7 +586,7 @@
    <dependency>
       <groupId>fulcrum</groupId>
       <artifactId>fulcrum-yaafi</artifactId>
-      <version>20041025.103241</version>
+      <version>1.0.3</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -778,7 +734,7 @@
     <dependency>
       <groupId>fulcrum</groupId>
       <artifactId>fulcrum-testcontainer</artifactId>
-      <version>1.0.4-dev</version>
+      <version>1.0.4</version>
       <type>jar</type>
     </dependency>        
   </dependencies>
