@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.169 2003/05/13 00:35:36 spestov Exp $
+ * @version $Id: Buffer.java,v 1.170 2003/05/14 20:31:46 spestov Exp $
  */
 public class Buffer
 {
@@ -1244,13 +1244,15 @@ public class Buffer
 					numLines++;
 			}
 
-			firePreContentRemoved(startLine,offset,numLines,length);
+			/* nothing can go here since we re-use the 'seg'! */
 
 			if(!getFlag(UNDO_IN_PROGRESS))
 			{
 				undoMgr.contentRemoved(offset,length,
 					seg.toString(),!getFlag(DIRTY));
 			}
+
+			firePreContentRemoved(startLine,offset,numLines,length);
 
 			contentMgr.remove(offset,length);
 
