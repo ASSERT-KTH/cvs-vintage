@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.81 2003/10/07 19:23:44 d00mst Exp $
+// $Id: FigNodeModelElement.java,v 1.82 2003/10/21 19:54:25 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -274,9 +274,10 @@ public abstract class FigNodeModelElement
         if (items != null && items.size() > 0) {
             JMenu critiques = new JMenu("Critiques");
             ToDoItem itemUnderMouse = hitClarifier(me.getX(), me.getY());
-            if (itemUnderMouse != null)
+            if (itemUnderMouse != null) {
                 critiques.add(new ActionGoToCritique(itemUnderMouse));
-            critiques.addSeparator();
+                critiques.addSeparator();
+            }
             int size = items.size();
             for (int i = 0; i < size; i++) {
                 ToDoItem item = (ToDoItem) items.elementAt(i);
