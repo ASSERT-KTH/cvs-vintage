@@ -382,14 +382,22 @@
   <!-- Packages the distribution with ZIP                                  -->
   <!-- =================================================================== -->
   <target name="dist-zip" depends="dist">
-    <zip zipfile="${Name}-${version}.zip" basedir="${dist.dir}" includes="**"/>
+    <mkdir dir="zip/${Name}-${version}" />
+    <copy todir="zip/${Name}-${version}">^
+      <fileset dir="${dist.dir}"/>^M
+    </copy>^M
+    <zip zipfile="${Name}-${version}.zip" basedir="zip"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Packages the distribution with TAR-GZIP                             -->
   <!-- =================================================================== -->
   <target name="dist-tgz" depends="dist">
-    <tar tarfile="${Name}-${version}.tar" basedir="${dist.dir}" includes="**"/>
+    <mkdir dir="tar/${Name}-${version}" />
+    <copy todir="tar/${Name}-${version}">
+      <fileset dir="${dist.dir}"/>
+    </copy>
+    <tar tarfile="${Name}-${version}.tar" basedir="tar" />
     <gzip zipfile="${Name}-${version}.tar.gz" src="${Name}-${version}.tar"/>
   </target>
 
