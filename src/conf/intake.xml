@@ -303,6 +303,7 @@
 <group name="SearchIssue" key="search" mapToObject="util.word.IssueSearch">
         <field name="SearchWords" key="sw" type="String"/>
         <field name="TextScope" key="ts" type="NumberKey" multiValued="true"/>
+        <field name="CommentQuery" key="cq" type="String"/>
         <field name="MinId" key="lid" type="String"/>
         <field name="MaxId" key="hid" type="String"/>
         <field name="MinDate" key="ld" type="String">

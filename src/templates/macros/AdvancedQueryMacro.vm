@@ -184,7 +184,16 @@ from:&#160;<input type="text" size="20"
 <input type="submit" value="$l10n.EditList" name="eventSubmit_doGotoothertemplate" />
 </div>
 
-## STATE CHANGE QUERY
+## COMMENT QUERY
+<div>
+<h3>$l10n.CommentsTextSearch</h3>
+<p>
+#fieldErrorMsg($searchGroup.CommentQuery "")
+#textAreaMedium("$searchGroup.CommentQuery.Key" $searchGroup.CommentQuery)
+</p>
+</div>
+
+
 <h3>$l10n.StateChangeQuery</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">

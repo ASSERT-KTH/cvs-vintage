@@ -48,6 +48,7 @@ package org.tigris.scarab.util.word;
 
 // JDK classes
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -82,11 +83,14 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.13 2002/09/07 01:49:08 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.14 2002/09/13 00:08:24 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
 {
+    // used to occasionally optimize the index
+    private static int counter = 0;
+
     /** the location of the index */
     private String path;
 
@@ -96,12 +100,18 @@ public class LuceneAdapter
     /** the words and boolean operators */
     private List queryText;
 
+    /** the attachments that will be searched */
+    private List attachmentIds;
+
+    /** the words and boolean operators */
+    private List attachmentQueryText;
+
     /**
      * Ctor.  Sets up an index directory if one does not yet exist in the
      * path specified by searchindex.path property in Scarab.properties.
      */
     public LuceneAdapter()
-        throws java.io.IOException
+        throws IOException
     {
         path = Turbine.getConfiguration().getString(INDEX_PATH);
         if ( path.charAt(0) != '/' ) 
@@ -129,20 +139,38 @@ public class LuceneAdapter
             Log.get().info("Creating index at '" + path + '\'');
             synchronized (getClass())
             {
-                IndexWriter indexer = 
-                    new IndexWriter(path, new PorterStemAnalyzer(), true);
-                indexer.close();   
+                IndexWriter indexer = null;
+                try
+                {
+                    indexer = 
+                        new IndexWriter(path, new PorterStemAnalyzer(), true);
+                }
+                finally
+                {
+                    if (indexer != null) 
+                    {
+                        indexer.close();                           
+                    }
+                }
             }
         }        
 
         attributeIds = new ArrayList(5);
         queryText = new ArrayList(5);
+        attachmentIds = new ArrayList(2);
+        attachmentQueryText = new ArrayList(2);
     }
 
     public void addQuery(NumberKey[] ids, String text)
     {
         attributeIds.add(ids);
         queryText.add(text);
+    }
+
+    public void addAttachmentQuery(NumberKey[] ids, String text)
+    {
+        attachmentIds.add(ids);
+        attachmentQueryText.add(text);
     }
 
     /**
@@ -155,25 +183,58 @@ public class LuceneAdapter
         NumberKey[] result;
         List issueIds = null; 
         // if there are no words to search for return no results 
-        if ( queryText.size() != 0)
-        {        
+        if ( queryText.size() != 0 || attachmentQueryText.size() != 0)
+        {
+            // attributes
             for ( int j=attributeIds.size()-1; j>=0; j-- ) 
             {
                 NumberKey[] ids = (NumberKey[])attributeIds.get(j);
                 String query = (String) queryText.get(j);
-                StringBuffer fullQuery = new StringBuffer(query.length()+100);
+                issueIds = performPartialQuery(ATTRIBUTE_ID, 
+                                               ids, query, issueIds);
+            }
 
-                if (query.length() > 0)
-                {
-                    query.trim();
-                }
+            // attachments
+            for ( int j=attachmentIds.size()-1; j>=0; j-- ) 
+            {
+                NumberKey[] ids = (NumberKey[])attachmentIds.get(j);
+                String query = (String) attachmentQueryText.get(j);
+                issueIds = performPartialQuery(ATTACHMENT_TYPE_ID, 
+                                               ids, query, issueIds);
+            }
 
+            // put results into final form
+            result = new NumberKey[issueIds.size()];
+            for ( int i=0; i<issueIds.size(); i++ ) 
+            {
+                result[i] = (NumberKey)issueIds.get(i);
+            }
+        }
+        else
+        {
+            result = EMPTY_LIST; 
+        }
+        
+        return result;
+    }
+
+    private List performPartialQuery(String key, NumberKey[] ids, 
+                                     String query, List issueIds)
+        throws ScarabException, IOException
+    {
+        StringBuffer fullQuery = new StringBuffer(query.length()+100);
+        
+        if (query.length() > 0)
+        {
+            query.trim();
+        }
+        
                 if ( ids != null && ids.length != 0 ) 
                 {
                     fullQuery.append("+((");
                     for ( int i=ids.length-1; i>=0; i-- ) 
                     {
-                        fullQuery.append(ATTRIBUTE_ID)
+                        fullQuery.append(key)
                             .append(':')
                             .append(ids[i].toString());
                         if ( i != 0 ) 
@@ -192,7 +253,7 @@ public class LuceneAdapter
                         .append(query)
                         .append(')');
                 }
-
+                
                 Query q = null;
                 try
                 {
@@ -232,32 +293,28 @@ public class LuceneAdapter
                 }
                 else 
                 {
-                    // remove any id's not in the current set
-                    for ( int i=issueIds.size()-1; i>=0; i-- ) 
-                    {
-                        Object obj = issueIds.get(i);
-                        if ( !deduper.containsKey(obj.toString()) ) 
-                        {
-                        Log.get().debug("removing issueId from search: " + obj);
-
-                            issueIds.remove(i);
-                        }
-                    }
+                    // perform an AND operation
+                    removeUniqueElements(issueIds, deduper);
                 }
-            }
-            result = new NumberKey[issueIds.size()];
-            for ( int i=0; i<issueIds.size(); i++ ) 
-            {
-                result[i] = (NumberKey)issueIds.get(i);
-            }
-        }
-        else
-        {
-            result = EMPTY_LIST; 
-        }
-        
-        return result;
+        return issueIds;
     }
+
+    /**
+     * Elements from the list that are not in map are removed from the list
+     */
+    private void removeUniqueElements(List list, Map map)
+    {
+        for ( int i=list.size()-1; i>=0; i-- ) 
+        {
+            Object obj = list.get(i);
+            if ( !map.containsKey(obj.toString()) ) 
+            {
+                Log.get().debug("removing issueId from search: " + obj);
+                list.remove(i);
+            }
+        }
+    }
+
 
     /**
      * Store index information for an AttributeValue
@@ -268,17 +325,28 @@ public class LuceneAdapter
         String valId = attributeValue.getValueId().toString();
 
         // make sure any old data stored for this attribute value is deleted.
-        IndexReader reader = IndexReader.open(path);
-
-           
         Term term = new Term(VALUE_ID, valId);
         int deletedDocs = 0;
         try
         {
-            deletedDocs = reader.delete(term);
+            synchronized (getClass())
+            {
+                IndexReader reader = null;
+                try
+                {
+                    reader = IndexReader.open(path);
+                    deletedDocs = reader.delete(term);
+                }
+                finally
+                {
+                    if (reader != null) 
+                    {
+                        reader.close();
+                    }
+                }
+            }
         }
-        catch (NullPointerException npe)
-        {
+        catch (NullPointerException npe)        {
             /* Lucene is throwing npe in reader.delete, so have to explicitely
                search.  Not sure if the npe will be thrown in the 
                case where the attribute has previously been indexed, so
@@ -301,7 +369,6 @@ public class LuceneAdapter
             throw new ScarabException("Multiple AttributeValues in Lucene" +
                                       "index with same ValueId: " + valId);
         }
-        reader.close();
         /*
         System.out.println("deleting valId: " + valId );
         IndexSearcher is = new IndexSearcher(path); 
@@ -329,10 +396,25 @@ public class LuceneAdapter
 
         synchronized (getClass())
         {
-            IndexWriter indexer = 
-                new IndexWriter(path, new PorterStemAnalyzer(), false);
-            indexer.addDocument(doc);
-            indexer.close();
+            IndexWriter indexer = null;
+            try
+            {
+                indexer = new IndexWriter(path, 
+                                          new PorterStemAnalyzer(), false);
+                indexer.addDocument(doc);
+
+                if (++counter % 100 == 0) 
+                {
+                    indexer.optimize();
+                }
+            }
+            finally
+            {
+                if (indexer != null) 
+                {
+                    indexer.close();                    
+                }
+            }
         }
     }
 
@@ -346,9 +428,47 @@ public class LuceneAdapter
         String attId = attachment.getAttachmentId().toString();
 
         // make sure any old data stored for this attribute value is deleted.
-        IndexReader reader = IndexReader.open(path);
         Term term = new Term(ATTACHMENT_ID, attId);
-        if ( reader.delete(term) > 1 ) 
+        int deletedDocs = 0;
+        try
+        {
+            synchronized (getClass())
+            {
+                IndexReader reader = null;
+                try
+                {
+                    reader = IndexReader.open(path);
+                    deletedDocs = reader.delete(term);
+                }
+                finally
+                {
+                    if (reader != null) 
+                    {
+                        reader.close();
+                    }
+                }
+            }
+        }
+        catch (NullPointerException npe)
+        {
+            /* Lucene is throwing npe in reader.delete, so have to explicitely
+               search.  Not sure if the npe will be thrown in the 
+               case where the attribute has previously been indexed, so
+               test whether the npe is harmful.
+            */
+            IndexSearcher is = new IndexSearcher(path); 
+            Query q = QueryParser.parse("+" + ATTACHMENT_ID + ":" + attId, 
+                                        TEXT, new PorterStemAnalyzer());
+            Hits hits = is.search(q);
+            if ( hits.length() > 0) 
+            {
+                String mesg = "An error in Lucene prevented removing " + 
+                    "stale data for Attachment with ID=" + attId;
+                System.out.println(mesg);
+                throw new ScarabException(mesg, npe);
+            }
+        }
+        if ( deletedDocs > 1 ) 
         {
             throw new ScarabException("Multiple Attachments in Lucene" +
                                       "index with same Id: " + attId);
@@ -358,7 +478,7 @@ public class LuceneAdapter
         Field attachmentId = Field.Keyword(ATTACHMENT_ID, attId);
         Field issueId = Field.UnIndexed(ISSUE_ID, 
             attachment.getIssueId().toString());
-        Field typeId = Field.UnIndexed(ATTACHMENT_TYPE_ID, 
+        Field typeId = Field.Keyword(ATTACHMENT_TYPE_ID, 
             attachment.getTypeId().toString());
         Field text = Field.UnStored(TEXT, attachment.getDataAsString());
         doc.add(attachmentId);
@@ -368,10 +488,25 @@ public class LuceneAdapter
 
         synchronized (getClass())
         {
-            IndexWriter indexer = 
-                new IndexWriter(path, new PorterStemAnalyzer(), false);
-            indexer.addDocument(doc);
-            indexer.close();
+            IndexWriter indexer = null;
+            try
+            {
+                indexer = new IndexWriter(path, 
+                                          new PorterStemAnalyzer(), false);
+                indexer.addDocument(doc);
+
+                if (++counter % 100 == 0) 
+                {
+                    indexer.optimize();
+                }
+            }
+            finally
+            {
+                if (indexer != null) 
+                {
+                    indexer.close();                    
+                }
+            }
         }
     }
 }

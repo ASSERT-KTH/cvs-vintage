@@ -63,6 +63,8 @@ import org.apache.fulcrum.upload.UploadService;
 
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.word.SearchIndex;
+import org.tigris.scarab.util.word.SearchFactory;
 
 /** 
  * Attachments contain data associated with an issue.  It used to be that
@@ -77,7 +79,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.40 2002/09/05 18:27:43 jmcnally Exp $
+ * @version $Id: Attachment.java,v 1.41 2002/09/13 00:08:24 jmcnally Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -360,6 +362,25 @@ public class Attachment
         catch (Exception e)
         {
             throw new TorqueException(e);
+        }
+        
+        /*
+         * index the text for searching.
+         */
+        if ( AttachmentTypePeer.COMMENT_PK.equals(getTypeId()) ) 
+        {
+            try
+            {
+                SearchIndex searchIndex = SearchFactory.getInstance();
+                if ( searchIndex != null ) 
+                {
+                    searchIndex.index(this);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new TorqueException(e);
+            }
         }
     }        
     

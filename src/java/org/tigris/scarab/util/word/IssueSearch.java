@@ -70,6 +70,7 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionPeer;
+import org.tigris.scarab.om.AttachmentTypePeer;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssuePeer;
@@ -190,6 +191,7 @@ public class IssueSearch
     private SimpleDateFormat formatter;
 
     private String searchWords;
+    private String commentQuery;
     private NumberKey[] textScope;
     private String minId;
     private String maxId;
@@ -380,6 +382,25 @@ public class IssueSearch
         this.searchWords = v;
     }
 
+    
+    /**
+     * Get the value of commentQuery.
+     * @return value of commentQuery.
+     */
+    public String getCommentQuery() 
+    {
+        return commentQuery;
+    }
+    
+    /**
+     * Set the value of commentQuery.
+     * @param v  Value to assign to commentQuery.
+     */
+    public void setCommentQuery(String  v) 
+    {
+        this.commentQuery = v;
+    }
+    
     /**
      * Get the value of textScope.  if the scope is not set then all
      * text attributes are returned.  if there are no relevant text
@@ -1408,6 +1429,7 @@ public class IssueSearch
     private NumberKey[] getTextMatches(List attValues)
         throws Exception
     {
+        boolean searchCriteriaExists = false;
         NumberKey[] matchingIssueIds = null;
         SearchIndex searchIndex = SearchFactory.getInstance();
         if (searchIndex == null)
@@ -1418,11 +1440,10 @@ public class IssueSearch
         if ( getSearchWords() != null && getSearchWords().length() != 0 )
         {
             searchIndex.addQuery(getTextScope(), getSearchWords());
-            matchingIssueIds = searchIndex.getRelatedIssues();    
+            searchCriteriaExists = true;
         }
         else 
         {
-            boolean atLeastOne = false;
             for ( int i=0; i<attValues.size(); i++ ) 
             {
                 AttributeValue aval = (AttributeValue)attValues.get(i);
@@ -1430,17 +1451,26 @@ public class IssueSearch
                      && aval.getValue() != null 
                      && aval.getValue().length() != 0 )
                 {
-                    atLeastOne = true;
+                    searchCriteriaExists = true;
                     NumberKey[] id = {aval.getAttributeId()};
                     searchIndex
                         .addQuery(id, aval.getValue());
                 }
             }
+        }
 
-            if ( atLeastOne ) 
-            {
-                matchingIssueIds = searchIndex.getRelatedIssues();    
-            }
+        // add comment attachments
+        commentQuery = getCommentQuery();
+        if (commentQuery != null && commentQuery.trim().length() > 0) 
+        {
+            NumberKey[] id = {AttachmentTypePeer.COMMENT_PK};
+            searchIndex.addAttachmentQuery(id, commentQuery);            
+            searchCriteriaExists = true;
+        }
+
+        if (searchCriteriaExists) 
+        {
+            matchingIssueIds = searchIndex.getRelatedIssues();    
         }
 
         return matchingIssueIds;
