@@ -3091,10 +3091,18 @@ e.printStackTrace();
                     issueType = ((Issue)result).getIssueType()
                         .getIssueTypeForTemplateType();
                 }
+                else if (result instanceof IssueType)
+                {
+                    issueType = (IssueType)result;                    
+                }
                 else 
                 {
-                    issueType = (IssueType)result;
+                    Log.get().warn("An object of unexpected class was saved as"
+                        + " the last entered issuetype or template: " + 
+                        result.getClass().getName());
+                    result = null;
                 }
+                
             }
         }
         
