@@ -1,69 +1,70 @@
 @echo off
+if "%OS%" == "Windows_NT" setlocal
 rem ---------------------------------------------------------------------------
-rem jasper.bat - Global Script for Jasper
+rem Script for Jasper compiler
 rem
-rem Environment Variable Prequisites:
-rem   JASPER_HOME (Optional)
-rem       May point at your Jasper "build" directory.
-rem       If not present, the current working directory is assumed.
-rem   JASPER_OPTS (Optional) 
-rem       Java runtime options
-rem   JAVA_HOME     
-rem       Must point at your Java Development Kit installation.
+rem Environment Variable Prequisites
 rem
-rem $Id: jasper.bat,v 1.13 2001/10/14 21:30:36 jon Exp $
+rem   JASPER_HOME   May point at your Catalina "build" directory.
+rem
+rem   JASPER_OPTS   (Optional) Java runtime options used when the "start",
+rem                 "stop", or "run" command is executed.
+rem
+rem   JAVA_HOME     Must point at your Java Development Kit installation.
+rem
+rem   JAVA_OPTS     (Optional) Java runtime options used when the "start",
+rem                 "stop", or "run" command is executed.
+rem
+rem $Id: jasper.bat,v 1.14 2002/02/11 18:41:56 jon Exp $
 rem ---------------------------------------------------------------------------
 
-rem ----- Save Environment Variables That May Change --------------------------
-
-set _JASPER_HOME=%JASPER_HOME%
-set _CLASSPATH=%CLASSPATH%
-
-rem ----- Verify and Set Required Environment Variables -----------------------
-
-if not "%JAVA_HOME%" == "" goto gotJava
-echo You must set JAVA_HOME to point at your Java Development Kit installation
-goto cleanup
-:gotJava
-
+rem Guess JASPER_HOME if not defined
 if not "%JASPER_HOME%" == "" goto gotHome
 set JASPER_HOME=.
+if exist "%JASPER_HOME%\bin\jasper.bat" goto okHome
+set JASPER_HOME=..
 :gotHome
-if exist %JASPER_HOME%\bin\jpappend.bat goto okHome
-echo Using JASPER_HOME: %JASPER_HOME%
-echo JASPER_HOME/bin/jpappend.bat does not exist. Please specify JASPER_HOME properly.
-goto cleanup
+if exist "%JASPER_HOME%\bin\jasper.bat" goto okHome
+echo The JASPER_HOME environment variable is not defined correctly
+echo This environment variable is needed to run this program
+goto end
 :okHome
 
-rem ----- Set Up The Runtime Classpath ----------------------------------------
+rem Get standard environment variables
+if exist "%JASPER_HOME%\bin\setenv.bat" call "%JASPER_HOME%\bin\setenv.bat"
 
-rem FIXME set CLASSPATH=%JASPER_HOME%\dummy
-rem FIXME below
-set CLASSPATH=%JASPER_HOME%\classes
-for %%i in (%JASPER_HOME%\lib\*.jar) do call %JASPER_HOME%\bin\jpappend.bat %%i
-for %%i in (%JASPER_HOME%\jasper\*.jar) do call %JASPER_HOME%\bin\jpappend.bat %%i
-set CLASSPATH=%CLASSPATH%;%JASPER_HOME%\common\lib\servlet.jar
-echo Using CLASSPATH: %CLASSPATH%
+rem Get standard Java environment variables
+if exist "%JASPER_HOME%\bin\setclasspath.bat" goto okSetclasspath
+echo Cannot find %JASPER_HOME%\bin\setclasspath.bat
+echo This file is needed to run this program
+goto end
+:okSetclasspath
+set BASEDIR=%JASPER_HOME%
+call "%JASPER_HOME%\bin\setclasspath.bat"
 
-rem ----- Execute The Requested Command ---------------------------------------
+rem Add on extra jar files to CLASSPATH
+for %%i in ("%JASPER_HOME%\lib\*.jar") do call "%JASPER_HOME%\bin\cpappend.bat" %%i
+for %%i in ("%JASPER_HOME%\common\lib\*.jar") do call "%JASPER_HOME%\bin\cpappend.bat" %%i
+set CLASSPATH=%CLASSPATH%;%JASPER_HOME%\classes
 
-if "%1" == "jspc" goto doJspc
-
-:doUsage
-echo Usage:  jasper ( jspc )
+rem Parse arguments
+if ""%1"" == ""jspc"" goto doJspc
+echo Usage: jasper ( jspc )
 echo Commands:
-echo   jspc - Run the jasper offline JSP compiler
-goto cleanup
-
+echo   jspc - Run the offline JSP compiler
+goto end
 :doJspc
-java %JASPER_OPTS% -Djasper.home=%JASPER_HOME% org.apache.jasper.JspC %2 %3 %4 %5 %6 %7 %8 %9
-goto cleanup
+shift
 
-rem ----- Restore Environment Variables ---------------------------------------
+rem Get remaining unshifted command line arguments and save them in the
+set CMD_LINE_ARGS=
+:setArgs
+if ""%1""=="""" goto doneSetArgs
+set CMD_LINE_ARGS=%CMD_LINE_ARGS% %1
+shift
+goto setArgs
+:doneSetArgs
 
-:cleanup
-set JASPER_HOME=%_JASPER_HOME%
-set _JASPER_HOME=
-set CLASSPATH=%_CLASSPATH%
-set _CLASSPATH=
-:finish
+%_RUNJAVA% %JAVA_OPTS% %JASPER_OPTS% -Djava.endorsed.dirs="%JAVA_ENDORSED_DIRS%" -classpath "%CLASSPATH%" -Djasper.home="%JASPER_HOME%" org.apache.jasper.JspC %CMD_LINE_ARGS%
+
+:end

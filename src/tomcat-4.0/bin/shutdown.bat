@@ -1,20 +1,41 @@
 @echo off
+if "%OS%" == "Windows_NT" setlocal
 rem ---------------------------------------------------------------------------
-rem shutdown.bat - Stop Script for the CATALINA Server
+rem Stop script for the CATALINA Server
 rem
-rem $Id: shutdown.bat,v 1.14 2001/10/14 21:30:36 jon Exp $
+rem $Id: shutdown.bat,v 1.15 2002/02/11 18:41:56 jon Exp $
 rem ---------------------------------------------------------------------------
 
-set _CATALINA_HOME=%CATALINA_HOME%
+rem Guess CATALINA_HOME if not defined
 if not "%CATALINA_HOME%" == "" goto gotHome
 set CATALINA_HOME=.
-if exist "%CATALINA_HOME%\bin\catalina.bat" goto gotHome
+if exist "%CATALINA_HOME%\bin\catalina.bat" goto okHome
 set CATALINA_HOME=..
-if exist "%CATALINA_HOME%\bin\catalina.bat" goto gotHome
-echo Unable to determine the value of CATALINA_HOME
-goto cleanup
 :gotHome
-"%CATALINA_HOME%\bin\catalina" stop %1 %2 %3 %4 %5 %6 %7 %8 %9
-:cleanup
-set CATALINA_HOME=%_CATALINA_HOME%
-set _CATALINA_HOME=
+if exist "%CATALINA_HOME%\bin\catalina.bat" goto okHome
+echo The CATALINA_HOME environment variable is not defined correctly
+echo This environment variable is needed to run this program
+goto end
+:okHome
+
+set EXECUTABLE=%CATALINA_HOME%\bin\catalina.bat
+
+rem Check that target executable exists
+if exist "%EXECUTABLE%" goto okExec
+echo Cannot find %EXECUTABLE%
+echo This file is needed to run this program
+goto end
+:okExec
+
+rem Get remaining unshifted command line arguments and save them in the
+set CMD_LINE_ARGS=
+:setArgs
+if ""%1""=="""" goto doneSetArgs
+set CMD_LINE_ARGS=%CMD_LINE_ARGS% %1
+shift
+goto setArgs
+:doneSetArgs
+
+call "%EXECUTABLE%" stop %CMD_LINE_ARGS%
+
+:end

@@ -1,12 +1,12 @@
 #!/bin/sh
 # -----------------------------------------------------------------------------
-# Script for Jasper compiler
+# Wrapper script for command line tools
 #
 # Environment Variable Prequisites
 #
-#   JASPER_HOME   May point at your Catalina "build" directory.
+#   CATALINA_HOME May point at your Catalina "build" directory.
 #
-#   JASPER_OPTS   (Optional) Java runtime options used when the "start",
+#   TOOL_OPTS     (Optional) Java runtime options used when the "start",
 #                 "stop", or "run" command is executed.
 #
 #   JAVA_HOME     Must point at your Java Development Kit installation.
@@ -14,7 +14,7 @@
 #   JAVA_OPTS     (Optional) Java runtime options used when the "start",
 #                 "stop", or "run" command is executed.
 #
-# $Id: jasper.sh,v 1.13 2002/02/11 18:41:56 jon Exp $
+# $Id: tool-wrapper.sh,v 1.1 2002/02/11 18:41:56 jon Exp $
 # -----------------------------------------------------------------------------
 
 # OS specific support.  $var _must_ be set to either true or false.
@@ -38,59 +38,41 @@ done
 
 # Get standard environment variables
 PRGDIR=`dirname "$PRG"`
-JASPER_HOME=`cd "$PRGDIR/.." ; pwd`
-if [ -r "$JASPER_HOME"/bin/setenv.sh ]; then
-  . "$JASPER_HOME"/bin/setenv.sh
+CATALINA_HOME=`cd "$PRGDIR/.." ; pwd`
+if [ -r "$CATALINA_HOME"/bin/setenv.sh ]; then
+  . "$CATALINA_HOME"/bin/setenv.sh
 fi
 
 # For Cygwin, ensure paths are in UNIX format before anything is touched
 if $cygwin; then
   [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
-  [ -n "$JASPER_HOME" ] && JASPER_HOME=`cygpath --unix "$JASPER_HOME"`
+  [ -n "$CATALINA_HOME" ] && CATALINA_HOME=`cygpath --unix "$CATALINA_HOME"`
   [ -n "$CLASSPATH" ] && CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 
 # Get standard Java environment variables
-if [ -r "$JASPER_HOME"/bin/setclasspath.sh ]; then
-  BASEDIR="$JASPER_HOME"
-  . "$JASPER_HOME"/bin/setclasspath.sh
+if [ -r "$CATALINA_HOME"/bin/setclasspath.sh ]; then
+  BASEDIR="$CATALINA_HOME"
+  . "$CATALINA_HOME"/bin/setclasspath.sh
 else
-  echo "Cannot find $JASPER_HOME/bin/setclasspath.sh"
+  echo "Cannot find $CATALINA_HOME/bin/setclasspath.sh"
   echo "This file is needed to run this program"
   exit 1
 fi
 
 # Add on extra jar files to CLASSPATH
-for i in "$JASPER_HOME"/lib/*.jar; do
-  CLASSPATH="$CLASSPATH":"$i"
-done
-for i in "$JASPER_HOME"/common/lib/*.jar; do
-  CLASSPATH="$CLASSPATH":"$i"
-done
-CLASSPATH="$CLASSPATH":"$JASPER_HOME"/classes
+CLASSPATH="$CLASSPATH":"$CATALINA_HOME"/bin/bootstrap.jar
 
 # For Cygwin, switch paths to Windows format before running java
 if $cygwin; then
   JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
-  JASPER_HOME=`cygpath --path --windows "$JASPER_HOME"`
+  CATALINA_HOME=`cygpath --path --windows "$CATALINA_HOME"`
   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
 fi
 
 # ----- Execute The Requested Command -----------------------------------------
 
-if [ "$1" = "jspc" ] ; then
-
-  shift
-  exec "$_RUNJAVA" $JAVA_OPTS $JASPER_OPTS \
-    -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -classpath "$CLASSPATH" \
-    -Djasper.home="$JASPER_HOME" \
-    org.apache.jasper.JspC "$@"
-
-else
-
-  echo "Usage: jasper.sh ( jspc )"
-  echo "Commands:"
-  echo "  jspc - Run the offline JSP compiler"
-  exit 1
-
-fi
+exec "$_RUNJAVA" $JAVA_OPTS $TOOL_OPTS \
+  -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -classpath "$CLASSPATH" \
+  -Dcatalina.home="$CATALINA_HOME" \
+  org.apache.catalina.startup.Tool "$@"

@@ -1,9 +1,31 @@
 #!/bin/sh
 # -----------------------------------------------------------------------------
-# shutdown.sh - Stop Script for the CATALINA Server
+# Stop script for the CATALINA Server
 #
-# $Id: shutdown.sh,v 1.13 2001/10/14 21:30:36 jon Exp $
+# $Id: shutdown.sh,v 1.14 2002/02/11 18:41:56 jon Exp $
 # -----------------------------------------------------------------------------
 
-BASEDIR=`dirname $0`
-$BASEDIR/catalina.sh stop "$@"
+# resolve links - $0 may be a softlink
+PRG="$0"
+
+while [ -h "$PRG" ] ; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '.*/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+ 
+PRGDIR=`dirname "$PRG"`
+EXECUTABLE=catalina.sh
+
+# Check that target executable exists
+if [ ! -x "$PRGDIR"/"$EXECUTABLE" ]; then
+  echo "Cannot find $PRGDIR/$EXECUTABLE"
+  echo "This file is needed to run this program"
+  exit 1
+fi
+
+exec "$PRGDIR"/"$EXECUTABLE" stop "$@"

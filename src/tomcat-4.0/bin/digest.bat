@@ -1,78 +1,41 @@
 @echo off
+if "%OS%" == "Windows_NT" setlocal
 rem ---------------------------------------------------------------------------
-rem digest.bat - Digest password using the algorithm specificied
+rem Script to digest password using the algorithm specified
 rem
-rem   CATALINA_HOME (Optional) May point at your Catalina "build" directory.
-rem                 If not present, the current working directory is assumed.
-rem
-rem   JAVA_HOME     Must point at your Java Development Kit installation.
-rem
-rem   This script is assumed to run from the bin directory or have the
-rem   CATALINA_HOME env variable set.
-rem
-rem $Id: digest.bat,v 1.7 2001/10/14 21:30:36 jon Exp $
+rem $Id: digest.bat,v 1.8 2002/02/11 18:41:56 jon Exp $
 rem ---------------------------------------------------------------------------
 
-
-rem ----- Save Environment Variables That May Change --------------------------
-
-set _CATALINA_HOME=%CATALINA_HOME%
-set _CLASSPATH=%CLASSPATH%
-set _CP=%CP%
-
-rem ----- Verify and Set Required Environment Variables -----------------------
-
-if not "%JAVA_HOME%" == "" goto gotJavaHome
-echo You must set JAVA_HOME to point at your Java Development Kit installation
-goto cleanup
-:gotJavaHome
-
+rem Guess CATALINA_HOME if not defined
 if not "%CATALINA_HOME%" == "" goto gotHome
 set CATALINA_HOME=.
-if exist "%CATALINA_HOME%\server\lib\catalina.jar" goto okHome
+if exist "%CATALINA_HOME%\bin\tool-wrapper.bat" goto okHome
 set CATALINA_HOME=..
 :gotHome
-if exist "%CATALINA_HOME%\server\lib\catalina.jar" goto okHome
-echo Cannot find catalina.jar in %CATALINA_HOME%\server\lib
-echo Please check your CATALINA_HOME setting or run this script from the bin directory
-goto cleanup
+if exist "%CATALINA_HOME%\bin\tool-wrapper.bat" goto okHome
+echo The CATALINA_HOME environment variable is not defined correctly
+echo This environment variable is needed to run this program
+goto end
 :okHome
 
+set EXECUTABLE=%CATALINA_HOME%\bin\tool-wrapper.bat
 
-rem ----- Prepare Appropriate Java Execution Commands -------------------------
+rem Check that target executable exists
+if exist "%EXECUTABLE%" goto okExec
+echo Cannot find %EXECUTABLE%
+echo This file is needed to run this program
+goto end
+:okExec
 
-set _RUNJAVA="%JAVA_HOME%\bin\java"
+rem Get remaining unshifted command line arguments and save them in the
+set CMD_LINE_ARGS=
+:setArgs
+if ""%1""=="""" goto doneSetArgs
+set CMD_LINE_ARGS=%CMD_LINE_ARGS% %1
+shift
+goto setArgs
+:doneSetArgs
 
-rem ----- Set Up The Runtime Classpath ----------------------------------------
+call "%EXECUTABLE%" -server org.apache.catalina.realm.RealmBase %CMD_LINE_ARGS%
 
-set CP=%CATALINA_HOME%\server\lib\catalina.jar
-set CLASSPATH=%CP%
-echo Using CLASSPATH: %CLASSPATH%
-
-
-rem ----- Execute The Requested Command ---------------------------------------
-
-if "%1" == "-a" (if "%2" neq "" (if "%3" neq "" goto doRun))
-
-:doUsage
-echo Usage:  digest -a [algorithm] [credentials]
-echo Commands:
-echo   algorithm   -   The algorithm to use, i.e. MD5, SHA1
-echo   credentials -   The credential to digest
-goto cleanup
-
-:doRun
-%_RUNJAVA% org.apache.catalina.realm.JDBCRealm %1 %2 %3
-goto cleanup
-
-
-rem ----- Restore Environment Variables ---------------------------------------
-
-:cleanup
-set CATALINA_HOME=%_CATALINA_HOME%
-set _CATALINA_HOME=
-set CLASSPATH=%_CLASSPATH%
-set _CLASSPATH=
-set CP=%_CP%
-set _CP=
-:finish
+:end

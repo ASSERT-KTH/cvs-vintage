@@ -1,32 +1,41 @@
 @echo off
-rem ---
-rem jspc.bat - Script ro run the Jasper "offline JSP compiler"
+if "%OS%" == "Windows_NT" setlocal
+rem ---------------------------------------------------------------------------
+rem Script to run the Jasper "offline JSP compiler"
 rem
-rem $Id: jspc.bat,v 1.13 2001/10/14 21:30:36 jon Exp $
-rem ---
+rem $Id: jspc.bat,v 1.14 2002/02/11 18:41:56 jon Exp $
+rem ---------------------------------------------------------------------------
 
-rem --- Save Env Variables
-set _JASPER_HOME=%JASPER_HOME%
-
-rem --- Set Env Variables
-if not "%JASPER_HOME%" == "" goto gotJasperHome
-echo JASPER_HOME not set. Assuming parent directory.
+rem Guess JASPER_HOME if not defined
+if not "%JASPER_HOME%" == "" goto gotHome
+set JASPER_HOME=.
+if exist "%JASPER_HOME%\bin\jspc.bat" goto okHome
 set JASPER_HOME=..
-:gotJasperHome
+:gotHome
+if exist "%JASPER_HOME%\bin\jspc.bat" goto okHome
+echo The JASPER_HOME environment variable is not defined correctly
+echo This environment variable is needed to run this program
+goto end
+:okHome
 
-rem --- got jasper.bat?
-if exist %JASPER_HOME%\bin\jasper.bat goto gotJasperBat
-echo Using JASPER_HOME: %JASPER_HOME%
-echo jasper.bat does not exist. Please specify JASPER_HOME properly.
-goto restore
-:gotJasperbat
+set EXECUTABLE=%JASPER_HOME%\bin\jasper.bat
 
-rem --- jspc is invoked via jasper's generic script
-%JASPER_HOME%\bin\jasper jspc %1 %2 %3 %4 %5 %6 %7 %8 %9
+rem Check that target executable exists
+if exist "%EXECUTABLE%" goto okExec
+echo Cannot find %EXECUTABLE%
+echo This file is needed to run this program
+goto end
+:okExec
 
-rem --- Restore Env Variables
-:restore
-set JASPER_HOME=%_JASPER_HOME%
-set _JASPER_HOME=
+rem Get remaining unshifted command line arguments and save them in the
+set CMD_LINE_ARGS=
+:setArgs
+if ""%1""=="""" goto doneSetArgs
+set CMD_LINE_ARGS=%CMD_LINE_ARGS% %1
+shift
+goto setArgs
+:doneSetArgs
 
-:eof
+call "%EXECUTABLE%" jspc %CMD_LINE_ARGS%
+
+:end
