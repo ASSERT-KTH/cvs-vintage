@@ -46,6 +46,8 @@ public class TreeView extends JTree {
     private TreePath selectedPathBeforeDrag;
     /** The treepath that is under the mouse pointer in a drag and drop action. */
     private TreePath dropTargetPath;
+    /** The component is in a drag and drop action */
+    private boolean isInDndMode = false;
 
     /**
      * Constructa a tree view
@@ -134,6 +136,14 @@ public class TreeView extends JTree {
     }
 
     /**
+     * Returns true if the tree is in a Drag and Drop action.
+     * @return true if the tree is in a Drag and Drop action; false otherwise.
+     */
+    public boolean isInDndAction() {
+        return isInDndMode;
+    }
+
+    /**
      * Our own drop target implementation.
      * This treeview class uses its own drop target since the common drop target in Swing >1.4
      * does not provide a fine grained support for dragging items onto
@@ -185,6 +195,8 @@ public class TreeView extends JTree {
         /** {@inheritDoc} */
         public void dragEnter(DropTargetDragEvent e) {
             selectedPathBeforeDrag = TreeView.this.getSelectionPath();
+            isInDndMode = true;
+
             DataFlavor[] flavors = e.getCurrentDataFlavors();
 
             JComponent c = (JComponent) e.getDropTargetContext().getComponent();
@@ -209,6 +221,8 @@ public class TreeView extends JTree {
         public void dragExit(DropTargetEvent e) {
             TreeView.this.setSelectionPath(selectedPathBeforeDrag);
             selectedPathBeforeDrag = null;
+            dropTargetPath = null;
+            isInDndMode = false;
         }
 
         /** {@inheritDoc} */
@@ -231,6 +245,7 @@ public class TreeView extends JTree {
                 e.rejectDrop();
             }
             TreeView.this.setSelectionPath(selectedPathBeforeDrag);
+            isInDndMode = false;
         }
 
         /** {@inheritDoc} */

@@ -80,6 +80,12 @@ public class TreeSelectionHandler extends SelectionHandler
             return;
         }
 
+		// If the tree is in a DND action then we dont need to update all
+		// listeners, since this only a temporary folder selection.
+        if (view.isInDndAction()) {
+            return;
+        }
+
         for (int i = 0; i < e.getPaths().length; i++) {
             if (e.getPaths()[i].getLastPathComponent() instanceof FolderTreeNode) {
                 FolderTreeNode folder = (FolderTreeNode) e.getPaths()[i].getLastPathComponent();
