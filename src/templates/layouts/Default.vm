@@ -15,7 +15,7 @@
   <link rel="stylesheet" type="text/css" href="$data.Request.ContextPath/style/print.css" media="print" />
   <link rel="alternate stylesheet" title="compact" type="text/css" href="$data.Request.ContextPath/style/compact.css" />
  </head>
-<body marginwidth="0" marginheight="0">
+<body marginwidth="0" leftmargin="0" marginheight="0" topmargin="0">
  <div id="banner">
   <table border="0" cellspacing="0" cellpadding="8" width="100%">
   <tr>
@@ -42,17 +42,17 @@
   </table>
  </div>
 
-
 <div class="modbar">
-   <small><strong>Current Module:&nbsp;
+  <small><strong>Current Module:&nbsp;
   #if ($scarabR.CurrentModule)
    <a href="$link.setPage("SelectModule.vm")"><strong>$scarabR.CurrentModule.Name</strong></a>
   #else
    --
   #end
+  </small>
 </div>
 
- <table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
+<table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
  <tr valign="top">
   <td id="leftcol" width="20%">
   <div id="navcolumn">
@@ -83,8 +83,8 @@ $renderer.render("layouts", $data, "MainContent.vm")
   $renderer.render("layouts", $data, "/ArtifactTypeHelp.vm")
 #end
  </tr>
- </table>
+</table>
 <!-- Structural Elements -->
 $renderer.render("navigations", $data, "/ScarabBottom.vm")
- </body>
+</body>
 </html>
