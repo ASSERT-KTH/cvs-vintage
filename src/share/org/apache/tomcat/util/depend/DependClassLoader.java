@@ -63,6 +63,8 @@ import java.util.*;
 import java.util.zip.*;
 import java.security.*;
 
+import org.apache.tomcat.util.compat.*;
+
 /**
  * This is a wrapper class loader that will delegate all calls to
  * the parent. It will also generate events for every loaded class,
@@ -83,12 +85,16 @@ import java.security.*;
  */
 public class DependClassLoader extends ClassLoader {
     protected ClassLoader parent;
+    protected ClassLoader parent2;
+    
     final static int debug=0;
     DependManager dependM;
-
+    static Jdk11Compat jdkCompat=Jdk11Compat.getJdkCompat();
+    
     public DependClassLoader( DependManager depM, ClassLoader parent ) {
 	super(); // will check permissions
 	this.parent=parent;
+	this.parent2=jdkCompat.getParentLoader( parent );
 	dependM=depM;
     }
 
@@ -123,25 +129,48 @@ public class DependClassLoader extends ClassLoader {
 	    if(resolve) resolveClass(c);
 	    return c;
         }
+
         String classFileName = name.replace('.', '/' ) + ".class";
 
 	URL res=getResource( classFileName );
-	if( res==null ) {
-	    if( debug >0  )  log( "Resource not found !!! " + name + " " + classFileName);
-	}
+	InputStream is=getResourceAsStream( classFileName );
+	if( res==null || is==null ) 
+	    throw new ClassNotFoundException(name);
 
+	// If it's in parent2, load it ( we'll not track sub-dependencies ).
 	try {
-	    c = parent.loadClass(name);
+	    c = parent2.loadClass(name);
 	    if (c != null) {
 		if (resolve) resolveClass(c);
-		dependency( c, res );
+		// No need, we can't reload anyway
+		// dependency( c, res );
 		return c;
 	    }
 	} catch (Exception e) {
 	    c = null;
 	}
 
-        throw new ClassNotFoundException(name);
+	// It's in our parent. Our task is to track all class loads, the parent
+	// should load anything ( otherwise the deps are lost ), but just resolve
+	// resources.
+	byte data[]=null;
+	try {
+	    data=readFully( is );
+	    if( data.length==0 ) data=null;
+	} catch(IOException ex ) {
+	    if( debug > 0 ) ex.printStackTrace();
+	    data=null;
+	    throw new ClassNotFoundException( name + " error reading " + ex.toString());
+	}
+	if( data==null ) 
+	    throw new ClassNotFoundException( name + " lenght==0");
+
+	c=defineClass(data, 0, data.length);
+	dependency( c, res );
+	
+	if (resolve) resolveClass(c);
+
+	return c;
     }
 
     public URL getResource(String name) {
@@ -181,5 +210,34 @@ public class DependClassLoader extends ClassLoader {
 
     public ClassLoader getParentLoader() {
         return parent;
+    }
+
+    private byte[] readFully( InputStream is )
+	throws IOException
+    {
+	byte b[]=new byte[1024];
+	int count=0;
+
+	int available=1024;
+	
+	while (true) {
+	    int nRead = is.read(b,count,available);
+	    if( nRead== -1 ) {
+		// we're done reading
+		byte result[]=new byte[count];
+		System.arraycopy( b, 0, result, 0, count );
+		return result;
+	    }
+	    // got a chunk
+	    count += nRead;
+            available -= nRead;
+	    if( available == 0 ) {
+		// buffer full
+		byte b1[]=new byte[ b.length * 2 ];
+		available=b.length;
+		System.arraycopy( b, 0, b1, 0, b.length );
+		b=b1;
+	    }
+        }
     }
 }
