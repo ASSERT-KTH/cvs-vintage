@@ -26,7 +26,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.5 2002/07/22 06:19:55 kataka Exp $
+// $Id: UMLSequenceDiagram.java,v 1.6 2002/07/25 12:53:26 kataka Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -85,15 +85,8 @@ public class UMLSequenceDiagram extends UMLDiagram {
 
 
   public UMLSequenceDiagram() {
-  	String name = null;
-  	Object[] args = {name};
-  	do {
-        name = "Sequence diagram " + _SequenceDiagramSerial;
-        _SequenceDiagramSerial++;
-        args[0] = name;
-    }
-    while (vetoCheck("name", args));
-    try { setName(name); }
+  	
+    try { setName(getNewDiagramName()); }
     catch (PropertyVetoException pve) { }
   }
 
@@ -217,10 +210,22 @@ public class UMLSequenceDiagram extends UMLDiagram {
         }
       }
     }
+    
+  
    
   }
 
- 
+   protected static String getNewDiagramName() {
+  	String name = null;
+  	Object[] args = {name};
+  	do {
+        name = "sequence diagram " + _SequenceDiagramSerial;
+        _SequenceDiagramSerial++;
+        args[0] = name;
+    }
+    while (TheInstance.vetoCheck("name", args));
+    return name;
+  }
 
 
 
