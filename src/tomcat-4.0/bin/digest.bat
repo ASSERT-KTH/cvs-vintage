@@ -10,7 +10,7 @@ rem
 rem   This script is assumed to run from the bin directory or have the
 rem   CATALINA_HOME env variable set.
 rem
-rem $Id: digest.bat,v 1.4 2001/09/19 20:19:56 jon Exp $
+rem $Id: digest.bat,v 1.5 2001/09/21 19:35:59 jon Exp $
 rem ---------------------------------------------------------------------------
 
 

@@ -24,7 +24,7 @@
 #                 (JSSE) installation, whose JAR files will be added to the
 #                 system class path used to start Tomcat.
 #
-# $Id: catalina.sh,v 1.10 2001/09/19 20:19:56 jon Exp $
+# $Id: catalina.sh,v 1.11 2001/09/21 19:35:59 jon Exp $
 # -----------------------------------------------------------------------------
 
 

@@ -2,7 +2,7 @@
 rem ---------------------------------------------------------------------------
 rem startup.bat - Start Script for the CATALINA Server
 rem
-rem $Id: startup.bat,v 1.11 2001/09/19 20:19:56 jon Exp $
+rem $Id: startup.bat,v 1.12 2001/09/21 19:35:59 jon Exp $
 rem ---------------------------------------------------------------------------
 
 set _CATALINA_HOME=%CATALINA_HOME%
