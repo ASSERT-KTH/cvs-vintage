@@ -117,32 +117,16 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 			identityPanel);
 		//$NON-NLS-1$
 
-		if (accountItem.isPopAccount()) {
-			PopItem popItem = accountItem.getPopItem();
-
-			/*
-			incomingServerPanel =
-				new IncomingServerPanel( accountItem, popItem);
-			*/
-			tp.add(MailResourceLoader.getString(
+		String incomingServerPanelTitle = MailResourceLoader.getString(
 					"dialog",
 					"account",
-					"incomingserverpop3"),
-				incomingServerPanel);
-			//$NON-NLS-1$
-		} else {
-			ImapItem imapItem = accountItem.getImapItem();
-			/*
-			incomingServerPanel =
-				new IncomingServerPanel( accountItem, imapItem);
-				*/
-			tp.add(MailResourceLoader.getString(
-					"dialog",
-					"account",
-					"incomingserverimap"),
-				incomingServerPanel);
-			//$NON-NLS-1$
-		}
+					"incomingserver");
+                if (accountItem.isPopAccount()) {
+                        incomingServerPanelTitle += " (POP3)";
+                } else {
+                        incomingServerPanelTitle += " (IMAP4)";
+                }
+                tp.add(incomingServerPanelTitle, incomingServerPanel);
 
 		tp.add(MailResourceLoader.getString(
                                         "dialog",
