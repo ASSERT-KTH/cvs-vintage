@@ -17,12 +17,9 @@ package org.columba.mail.gui.config.mailboximport;
 
 import java.awt.Component;
 
-import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.ListCellRenderer;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
@@ -35,13 +32,9 @@ import org.columba.mail.plugin.ImportPluginHandler;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class MailboxImportListRenderer
-	extends JLabel
-	implements ListCellRenderer {
+public class MailboxImportListRenderer extends DefaultListCellRenderer {
 
-	ImportPluginHandler pluginHandler;
-
-	protected static Border noFocusBorder;
+	protected ImportPluginHandler pluginHandler;
 
 	public MailboxImportListRenderer() {
 		super();
@@ -54,12 +47,6 @@ public class MailboxImportListRenderer
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(ex);
 		}
-
-		if (noFocusBorder == null) {
-			noFocusBorder = new EmptyBorder(1, 1, 1, 1);
-		}
-		setOpaque(true);
-		setBorder(noFocusBorder);
 	}
 
 	/* (non-Javadoc)
