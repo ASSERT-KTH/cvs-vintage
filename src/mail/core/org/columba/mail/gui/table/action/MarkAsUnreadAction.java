@@ -8,8 +8,6 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.KeyStroke;
-
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
@@ -50,7 +48,7 @@ public class MarkAsUnreadAction
 			ImageLoader.getSmallImageIcon("mail-new.png"),
 			ImageLoader.getImageIcon("mail-new.png"),
 			'0',
-			KeyStroke.getKeyStroke("M"));
+			null);
 		setEnabled(false);
 		((MailFrameController) frameController).registerTableSelectionListener(
 			this);
