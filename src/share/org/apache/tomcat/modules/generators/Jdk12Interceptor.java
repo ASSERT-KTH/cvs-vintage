@@ -57,8 +57,7 @@
  *
  */
 
-
-package org.apache.tomcat.request;
+package org.apache.tomcat.modules.generators;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;

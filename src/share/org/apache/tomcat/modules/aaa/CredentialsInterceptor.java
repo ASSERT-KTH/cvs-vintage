@@ -56,7 +56,7 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.request;
+package org.apache.tomcat.modules.aaa;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
