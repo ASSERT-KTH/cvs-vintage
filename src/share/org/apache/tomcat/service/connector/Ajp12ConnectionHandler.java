@@ -430,7 +430,7 @@ class AJP12ResponseAdapter extends HttpResponseAdapter {
      */
     protected void sendStatus( int status, String message)  throws IOException {
 	statusSB.setLength(0);
-	statusSB.append("Status: " ).append( status ).append("\r\n");
+	statusSB.append("Status: " ).append( status ).append(" ").append(message).append("\r\n");
 	sout.write(statusSB.toString().getBytes());
     }
 }

@@ -634,7 +634,7 @@ public class ContextManager {
 	}
 	return 0;
     }
-
+    
     void handleError( Request req, Response res , Throwable t, int code ) {
 	Context ctx = req.getContext();
 	if(ctx==null) {
