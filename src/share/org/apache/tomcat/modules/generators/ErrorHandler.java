@@ -168,7 +168,11 @@ public final class ErrorHandler extends BaseInterceptor {
 	// XXX this log was intended to debug the status code generation.
 	// it can be removed for all cases.
 	if( code > 401 ) {// tuneme
-	    ctx.log( "Status code:" + code + " request:"  + req + " msg:" +
+	    if( ctx==null )
+		cm.log( "Status code:" + code + " request:"  + req + " msg:" +
+		     req.getAttribute("javax.servlet.error.message"));
+	    else
+		ctx.log( "Status code:" + code + " request:"  + req + " msg:" +
 		     req.getAttribute("javax.servlet.error.message"));
 	}
 	
