@@ -476,12 +476,12 @@
         </copy>
         <copy todir="${tomcat.dist.dir}/lib" filtering="no">
             <fileset dir="${tomcat.cvs.dir}/build/lib">
-                <include name="namingfactory.jar"/>
+                <include name="**/namingfactory.jar"/>
             </fileset>
         </copy>
         <copy todir="${tomcat.dist.dir}/server" filtering="no">
             <fileset dir="${tomcat.cvs.dir}/build/server">
-                <exclude name="warp.jar"/>
+                <exclude name="**/warp.jar"/>
             </fileset>
         </copy>
     </target>
