@@ -543,5 +543,14 @@ public class IMAPFolder extends RemoteFolder {
 		}
 		*/
 	}
+	
+	public synchronized boolean tryToGetLock() {
+		return getImapRootFolder().tryToGetLock();
+	}
+	
+	public void releaseLock()
+	{
+		getImapRootFolder().releaseLock();
+	}
 
 }
