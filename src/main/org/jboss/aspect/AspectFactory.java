@@ -103,9 +103,37 @@ import org.jboss.util.Classes;
  */
 public class AspectFactory
 {
-
+	private static ThreadLocal contextAspectFactory = new ThreadLocal();
+	
+    private AspectFactory parent;
     private Map aspects = new HashMap();
 
+    public AspectFactory()
+    {
+    }
+    
+    public AspectFactory(AspectFactory parent)
+    {
+        this.parent = parent;
+    }
+    
+    /**
+     * Allows you to associate an AspectFactory with the current thread.
+     * The associated AspectFactory can be obtained later through a call to 
+     * getContextAspectFactory().
+     */
+    static public void setContextAspectFactory(AspectFactory af) {
+    	contextAspectFactory.set( af );
+    }
+    
+    /**
+     * Allows you to get the AspectFactory that was associated with the 
+     * current thread.
+     */
+    static public AspectFactory getContextAspectFactory() {
+    	return (AspectFactory)contextAspectFactory.get();
+    }
+    
     /////////////////////////////////////////////////////////
     //
     // The following methods allow you to configure the Factory.
@@ -154,9 +182,17 @@ public class AspectFactory
         return this;
     }
 
+    /**
+     * Gives you back the AspectDefinition for a given aspect name.
+     * If not defined in the AspectFactory, the parent is searched for
+     * the definition.
+     */
     public AspectDefinition getDefinition(String aspect)
     {
-        return (AspectDefinition) aspects.get(aspect);
+        AspectDefinition rc = (AspectDefinition) aspects.get(aspect);
+        if (rc == null && parent != null)
+            rc = parent.getDefinition(aspect);
+        return rc;
     }
 
     /////////////////////////////////////////////////////////
