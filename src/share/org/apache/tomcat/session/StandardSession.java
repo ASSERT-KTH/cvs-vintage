@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.1 2000/01/09 03:23:22 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/09 03:23:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.2 2000/01/10 02:52:38 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/10 02:52:38 $
  *
  * ====================================================================
  *
@@ -94,7 +94,7 @@ import org.apache.tomcat.util.StringManager;
  * HttpSession view of this instance back to a Session view.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:23:22 $
+ * @version $Revision: 1.2 $ $Date: 2000/01/10 02:52:38 $
  */
 
 final class StandardSession
@@ -182,6 +182,12 @@ final class StandardSession
      */
     private StringManager sm =
         StringManager.getManager(Constants.Package);
+
+
+    /**
+     * The HTTP session context associated with this session.
+     */
+    private static HttpSessionContext sessionContext = null;
 
 
     /**
@@ -288,8 +294,15 @@ final class StandardSession
      * Return the maximum time interval, in seconds, between client requests
      * before the servlet container will invalidate the session.  A negative
      * time indicates that the session should never time out.
+     *
+     * @exception IllegalStateException if this method is called on
+     *  an invalidated session
      */
     public int getMaxInactiveInterval() {
+
+	if (!isValid())
+	    throw new IllegalStateException
+		(sm.getString("standardSession.getMaxInactiveInterval.ise"));
 
 	return (this.maxInactiveInterval);
 
@@ -431,8 +444,15 @@ final class StandardSession
     /**
      * Return the time when this session was created, in milliseconds since
      * midnight, January 1, 1970 GMT.
+     *
+     * @exception IllegalStateException if this method is called on an
+     *  invalidated session
      */
     public long getCreationTime() {
+
+	if (!isValid())
+	    throw new IllegalStateException
+		(sm.getString("standardSession.getCreationTime.ise"));
 
 	return (this.creationTime);
 
@@ -448,7 +468,9 @@ final class StandardSession
      */
     public HttpSessionContext getSessionContext() {
 
-	return (null);
+	if (sessionContext == null)
+	    sessionContext = new StandardSessionContext();
+	return (sessionContext);
 
     }
 
@@ -461,8 +483,15 @@ final class StandardSession
      * <code>null</code> if no object is bound with that name.
      *
      * @param name Name of the attribute to be returned
+     *
+     * @exception IllegalStateException if this method is called on an
+     *  invalidated session
      */
     public Object getAttribute(String name) {
+
+	if (!isValid())
+	    throw new IllegalStateException
+		(sm.getString("standardSession.getAttribute.ise"));
 
 	return (attributes.get(name));
 
@@ -472,8 +501,15 @@ final class StandardSession
     /**
      * Return an <code>Enumeration</code> of <code>String</code> objects
      * containing the names of the objects bound to this session.
+     *
+     * @exception IllegalStateException if this method is called on an
+     *  invalidated session
      */
     public Enumeration getAttributeNames() {
+
+	if (!isValid())
+	    throw new IllegalStateException
+		(sm.getString("standardSession.getAttributeNames.ise"));
 
 	return (attributes.keys());
 
@@ -485,6 +521,9 @@ final class StandardSession
      * <code>null</code> if no object is bound with that name.
      *
      * @param name Name of the value to be returned
+     *
+     * @exception IllegalStateException if this method is called on an
+     *  invalidated session
      *
      * @deprecated As of Version 2.2, this method is replaced by
      *  <code>getAttribute()</code>
@@ -500,10 +539,17 @@ final class StandardSession
      * Return the set of names of objects bound to this session.  If there
      * are no such objects, a zero-length array is returned.
      *
+     * @exception IllegalStateException if this method is called on an
+     *  invalidated session
+     *
      * @deprecated As of Version 2.2, this method is replaced by
      *  <code>getAttributeNames()</code>
      */
     public String[] getValueNames() {
+
+	if (!isValid())
+	    throw new IllegalStateException
+		(sm.getString("standardSession.getValueNames.ise"));
 
 	Vector results = new Vector();
 	Enumeration attrs = getAttributeNames();
@@ -569,6 +615,9 @@ final class StandardSession
      *
      * @param name Name to which the object is bound, cannot be null
      * @param value Object to be bound, cannot be null
+     *
+     * @exception IllegalStateException if this method is called on an
+     *  invalidated session
      *
      * @deprecated As of Version 2.2, this method is replaced by
      *  <code>setAttribute()</code>
@@ -649,7 +698,7 @@ final class StandardSession
      * @param name Name to which the object is bound, cannot be null
      * @param value Object to be bound, cannot be null
      *
-     * @excpetion IllegalArgumentException if an attempt is made to add a
+     * @exception IllegalArgumentException if an attempt is made to add a
      *  non-serializable object in an environment marked distributable.
      * @exception IllegalStateException if this method is called on an
      *  invalidated session
@@ -762,6 +811,61 @@ final class StandardSession
 
 
     }
+
+
+}
+
+
+// -------------------------------------------------------------- Private Class
+
+
+/**
+ * This class is a dummy implementation of the <code>HttpSessionContext</code>
+ * interface, to conform to the requirement that such an object be returned
+ * when <code>HttpSession.getSessionContext()</code> is called.
+ *
+ * @author Craig R. McClanahan
+ *
+ * @deprecated As of Java Servlet API 2.1 with no replacement.  The
+ *  interface will be removed in a future version of this API.
+ */
+
+final class StandardSessionContext implements HttpSessionContext {
+
+
+    private Vector dummy = new Vector();
+
+    /**
+     * Return the session identifiers of all sessions defined
+     * within this context.
+     *
+     * @deprecated As of Java Servlet API 2.1 with no replacement.
+     *  This method must return an empty <code>Enumeration</code>
+     *  and will be removed in a future version of the API.
+     */
+    public Enumeration getIds() {
+
+	return (dummy.elements());
+
+    }
+
+
+    /**
+     * Return the <code>HttpSession</code> associated with the
+     * specified session identifier.
+     *
+     * @param id Session identifier for which to look up a session
+     *
+     * @deprecated As of Java Servlet API 2.1 with no replacement.
+     *  This method must return null and will be removed in a
+     *  future version of the API.
+     */
+    public HttpSession getSession(String id) {
+
+	return (null);
+
+    }
+
 
 
 }
