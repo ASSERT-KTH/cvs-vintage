@@ -119,7 +119,7 @@ public class ScarabLocalizationTool
         String value = null;
         try 
         {
-            super.get(key);
+            value = super.get(key);
             if (value == null)
             {
                 value = super.get(DEFAULT_SCOPE + '.', key);
