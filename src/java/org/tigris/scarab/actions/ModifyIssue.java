@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.58 2002/01/10 20:11:51 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.59 2002/01/10 22:26:43 richard Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -287,7 +287,7 @@ public class ModifyIssue extends RequireLoginFirstAction
     }
     
 
-    /**
+   /**
     *  Adds an attachment.
     */
     private void submitAttachment (RunData data, TemplateContext context, 
@@ -378,7 +378,9 @@ public class ModifyIssue extends RequireLoginFirstAction
                         attachment.save();    
                         String uploadFile = attachment
                             .getRepositoryDirectory(scarabR.getIssue().getModule().getCode())
-                            + File.separator + attachment.getPrimaryKey().toString() + "_" + fileName;
+                            + File.separator + fileName.substring(0, fileName.lastIndexOf('.')) + "_" 
+                            + attachment.getPrimaryKey().toString() 
+                            + fileName.substring(fileName.lastIndexOf('.')); 
                         
                         file.write(uploadFile);
                         attachment.setFilePath(uploadFile);
@@ -795,6 +797,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         doCancel(data, context);
     }
 }
+
 
 
 
