@@ -492,7 +492,7 @@ This includes both type mapping and function mapping.
       fk-constraint-template, auto-increment-template?, alias-header-prefix,
       alias-header-suffix, alias-max-length, subquery-supported,
       true-mapping, false-mapping,
-      function-mapping*, mapping+, entity-commands*)>
+      function-mapping*, mapping+)>
 
 <!--
 Name of the type-mapping.
