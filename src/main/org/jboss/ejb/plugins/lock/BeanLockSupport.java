@@ -19,13 +19,14 @@ import org.jboss.logging.Logger;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.w3c.dom.Element;
 
 /**
  * Support for the BeanLock
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
@@ -62,24 +63,22 @@ public abstract class BeanLockSupport
 
    protected int txTimeout;
 
-	
+   protected Element config;
+
    public void setId(Object id) { this.id = id;}
    public Object getId() { return id;}
    public void setReentrant(boolean reentrant) {this.reentrant = reentrant;}
    public void setTimeout(int timeout) {txTimeout = timeout;}
    public void setContainer(Container container) { this.container = container; }
+   public void setConfiguration(Element config) { this.config = config; }
 	
-   public void sync()
+   public void sync() throws InterruptedException
    {
       synchronized(this)
       {
          while(synched)
          {
-            try
-            {
-               this.wait();
-            }
-            catch (InterruptedException ex) { /* ignore */ }
+            this.wait();
          }
          synched = true;
       }
