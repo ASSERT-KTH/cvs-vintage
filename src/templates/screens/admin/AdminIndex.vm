@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.6 2001/12/05 13:39:46 dr Exp $
+@version $Id: AdminIndex.vm,v 1.7 2001/12/06 20:43:03 elicia Exp $
 *#
 
 $page.setTitle("Scarab Administration")
@@ -10,6 +10,7 @@ $page.setTitle("Scarab Administration")
 
 <h2>$page.Title</h2>
 
+#if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT, $scarabR.CurrentModule))
 <p>
 This is the new administrative piece of Scarab (to replace Flux). At this
 point, a lot of the underlying 'action' code is a rip off of the 'Flux'
@@ -45,6 +46,20 @@ The following are some other things to do (in no particular order):
 <ul>
  <li> <a href="admin,ManageRoles.vm">Role List</a> </li>
  <li> <a href="admin,AddRole.vm">Add New Role</a> </li>
+</ul>
+
+<h3>Global Data</h3>
+<ul>
+ <li><a href="$link.setPage("admin,GlobalArtifactTypeShow.vm")">Global Artifact Types</a></li>
+ <li><a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attributes</a></li>
+</ul>
+
+#end
+
+<h3>Modules</h3>
+<ul>
+ <li><a href="$link.setPage("admin,ManageArtifactTypes.vm")">Manage Artifact Types</a></li>
+ <li><a href="$link.setPage("admin,ManageModules.vm")">Manage Modules</a></li>
 </ul>
 
 </div>
