@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
-import org.columba.core.plugin.PluginInterface;
+import org.columba.core.plugin.Plugin;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.FolderItem;
@@ -43,7 +43,7 @@ import org.columba.mail.gui.frame.MailFrameMediator;
  *
  * @author fdietz
  */
-public abstract class AbstractFolderOptionsPlugin implements PluginInterface {
+public abstract class AbstractFolderOptionsPlugin implements Plugin {
     /**
  * mail frame mediator
  */

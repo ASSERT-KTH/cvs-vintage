@@ -43,7 +43,7 @@ import java.util.Vector;
  * The <class>AbstractPluginHandler</class> is the Context of the Strategy
  * pattern.
  * <p>
- * The plugins (<interface>PluginInterface</interface>) represent the used
+ * The plugins (<interface>Plugin</interface>) represent the used
  * strategy.
  * <p>
  * Therefore, the context is responsible to set the appropriate strategy we
@@ -68,7 +68,7 @@ import java.util.Vector;
  * @author fdietz
  *
  */
-public abstract class AbstractPluginHandler implements PluginHandlerInterface {
+public abstract class AbstractPluginHandler implements PluginHandler {
 
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger("org.columba.core.plugin");
 
@@ -444,7 +444,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
     /*
      * (non-Javadoc)
      *
-     * @see org.columba.core.plugin.PluginHandlerInterface#getParent()
+     * @see org.columba.core.plugin.PluginHandler#getParent()
      */
     public XmlElement getParent() {
         return parentNode;

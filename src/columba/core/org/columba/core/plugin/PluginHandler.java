@@ -31,7 +31,7 @@ import java.util.ListIterator;
  * @author fdietz
  *
  */
-public interface PluginHandlerInterface {
+public interface PluginHandler {
     /**
  * return ID identification string of handler
  *

@@ -26,5 +26,5 @@ package org.columba.core.plugin;
  *
  *  @author fdietz
  */
-public interface PluginInterface {
+public interface Plugin {
 }

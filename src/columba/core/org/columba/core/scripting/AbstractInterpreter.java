@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.scripting;
 
-import org.columba.core.plugin.PluginInterface;
+import org.columba.core.plugin.Plugin;
 
 
 /**
@@ -26,7 +26,7 @@ import org.columba.core.plugin.PluginInterface;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public abstract class AbstractInterpreter implements PluginInterface {
+public abstract class AbstractInterpreter implements Plugin {
     abstract public Object instanciate(String fileName, String className,
         Object[] args, Object parent);
 }

@@ -16,7 +16,7 @@
 package org.columba.mail.gui.config.filter.plugins;
 
 import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.core.plugin.PluginInterface;
+import org.columba.core.plugin.Plugin;
 
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
@@ -32,7 +32,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 
-public class DefaultCriteriaRow implements PluginInterface {
+public class DefaultCriteriaRow implements Plugin {
     protected FilterCriteria criteria;
     protected CriteriaList criteriaList;
     protected JPanel panel;

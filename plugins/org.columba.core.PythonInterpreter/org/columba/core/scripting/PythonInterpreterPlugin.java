@@ -19,7 +19,7 @@
 package org.columba.core.scripting;
 
 import org.columba.core.io.DiskIO;
-import org.columba.core.plugin.PluginInterface;
+import org.columba.core.plugin.Plugin;
 import org.python.core.Py;
 import org.python.core.PyModule;
 import org.python.core.PyObject;
@@ -256,7 +256,7 @@ public final class PythonInterpreterPlugin extends AbstractInterpreter{
 			}
 			//System.out.println("pyObject=" + pyObject);
 
-			Object javaObject = pyObject.__tojava__(PluginInterface.class);
+			Object javaObject = pyObject.__tojava__(Plugin.class);
 			//System.out.println("javaObject=" + javaObject);
 			//( (DefaultPlugin) javaObject).run("asdfljasf");
 

@@ -82,7 +82,7 @@ public class PluginManager {
     /**
      * 
      * Save all plugin handlers in this <interface>Map </interface>. Use plugin
-     * handler id as key, <interface>PluginHandlerInterface </interface> as
+     * handler id as key, <interface>PluginHandler </interface> as
      * value
      *  
      */

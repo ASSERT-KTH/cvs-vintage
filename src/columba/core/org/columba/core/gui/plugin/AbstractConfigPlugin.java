@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.plugin;
 
-import org.columba.core.plugin.PluginInterface;
+import org.columba.core.plugin.Plugin;
 
 import javax.swing.JPanel;
 
@@ -29,7 +29,7 @@ import javax.swing.JPanel;
  *  @author fdietz
  *
  */
-public abstract class AbstractConfigPlugin implements PluginInterface {
+public abstract class AbstractConfigPlugin implements Plugin {
     /**
  * default constructor
  */

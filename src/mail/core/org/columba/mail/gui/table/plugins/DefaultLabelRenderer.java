@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
-import org.columba.core.plugin.PluginInterface;
+import org.columba.core.plugin.Plugin;
 
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.message.ColumbaHeader;
@@ -45,7 +45,7 @@ import javax.swing.table.TableCellRenderer;
  * @author dietz
  */
 public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
-    PluginInterface {
+    Plugin {
     private Border unselectedBorder = null;
     private Border selectedBorder = null;
     private Color background;

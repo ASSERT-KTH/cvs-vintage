@@ -39,7 +39,7 @@ public class SaveAllAddressbooksPlugin implements TaskInterface {
     }
 
     /**
- * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
+ * @see org.columba.core.shutdown.ShutdownPlugin#run()
  */
     public void run() {
         saveFolders((AddressbookTreeNode) AddressbookInterface.addressbookTreeModel.getRoot());

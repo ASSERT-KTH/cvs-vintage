@@ -18,7 +18,7 @@ package org.columba.mail.gui.config.filter.plugins;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginInterface;
+import org.columba.core.plugin.Plugin;
 
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
@@ -34,7 +34,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 
-public class DefaultActionRow implements PluginInterface {
+public class DefaultActionRow implements Plugin {
     protected JPanel panel;
     protected FilterAction filterAction;
     private JComboBox actionComboBox;

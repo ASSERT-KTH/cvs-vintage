@@ -16,7 +16,7 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.core.command.Command;
-import org.columba.core.plugin.PluginInterface;
+import org.columba.core.plugin.Plugin;
 
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.MessageFolder;
@@ -34,7 +34,7 @@ import org.columba.mail.folder.MessageFolder;
  *
  * @author fdietz
  */
-public abstract class AbstractFilterAction implements PluginInterface {
+public abstract class AbstractFilterAction implements Plugin {
     /**
  * 
  * @param filterAction      filterAction containing the filter actoin configuration

@@ -24,7 +24,7 @@ import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.PluginInterface;
+import org.columba.core.plugin.Plugin;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,7 +32,7 @@ import java.io.FileNotFoundException;
 import javax.swing.JOptionPane;
 
 
-public abstract class DefaultAddressbookImporter implements PluginInterface {
+public abstract class DefaultAddressbookImporter implements Plugin {
     public static int TYPE_FILE = 0;
     public static int TYPE_DIRECTORY = 1;
     protected Folder destinationFolder;

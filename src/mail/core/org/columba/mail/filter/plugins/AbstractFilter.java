@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.plugin.PluginInterface;
+import org.columba.core.plugin.Plugin;
 
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.MessageFolder;
@@ -31,7 +31,7 @@ import org.columba.mail.folder.MessageFolder;
  *
  * @author fdietz
  */
-public abstract class AbstractFilter implements PluginInterface {
+public abstract class AbstractFilter implements Plugin {
     /**
  * Constructor for AbstractFilter
 
