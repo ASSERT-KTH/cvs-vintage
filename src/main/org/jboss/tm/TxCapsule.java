@@ -43,14 +43,14 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class TxCapsule implements TimeoutTarget
 {
    // Constants -----------------------------------------------------
 
    // Trace enabled flag
-   static private final boolean trace = false;
+   static private final boolean trace = true;
 
    // Code meaning "no heuristics seen", must not be XAException.XA_HEURxxx
    static private final int HEUR_NONE     = XAException.XA_RETRY;
@@ -245,6 +245,7 @@ class TxCapsule implements TimeoutTarget
          case Status.STATUS_UNKNOWN:
             throw new IllegalStateException("Unknown state");
          case Status.STATUS_MARKED_ROLLBACK:
+            doBeforeCompletion();
             endResources();
             rollbackResources();
             doAfterCompletion();
@@ -340,6 +341,7 @@ class TxCapsule implements TimeoutTarget
          switch (status) {
          case Status.STATUS_ACTIVE:
          case Status.STATUS_MARKED_ROLLBACK:
+            doBeforeCompletion();
             endResources();
             rollbackResources();
             cancelTimeout();
@@ -839,9 +841,9 @@ class TxCapsule implements TimeoutTarget
          try {
             timeout.cancel();
          } catch (Exception e)
-			{
-				Logger.debug(e);
-			} finally {
+            {
+                Logger.debug(e);
+            } finally {
             lock();
          }
          timeout = null;
@@ -905,7 +907,7 @@ class TxCapsule implements TimeoutTarget
    private void startResource(XAResource xaRes, int flags)
       throws XAException
    {
-		Logger.debug("TxCapsule.startResource(" + xid.toString() +
+        Logger.debug("TxCapsule.startResource(" + xid.toString() +
                    ") entered: " + xaRes.toString() +
                    " flags=" + flags);
       unlock();
@@ -913,7 +915,7 @@ class TxCapsule implements TimeoutTarget
          xaRes.start(xid, flags);
       } finally {
          lock();
-		Logger.debug("TxCapsule.startResource(" + xid.toString() +
+        Logger.debug("TxCapsule.startResource(" + xid.toString() +
                    ") leaving: " + xaRes.toString() +
                    " flags=" + flags);
       }
@@ -926,7 +928,7 @@ class TxCapsule implements TimeoutTarget
    private void endResource(XAResource xaRes, int flag)
       throws XAException
    {
-		Logger.debug("TxCapsule.endResource(" + xid.toString() +
+        Logger.debug("TxCapsule.endResource(" + xid.toString() +
                    ") entered: " + xaRes.toString() +
                    " flag=" + flag);
       unlock();
@@ -934,7 +936,7 @@ class TxCapsule implements TimeoutTarget
          xaRes.end(xid, flag);
       } finally {
          lock();
-		Logger.debug("TxCapsule.endResource(" + xid.toString() +
+        Logger.debug("TxCapsule.endResource(" + xid.toString() +
                    ") leaving: " + xaRes.toString() +
                    " flag=" + flag);
       }
@@ -964,13 +966,13 @@ class TxCapsule implements TimeoutTarget
                resourceState[i] = RS_ENLISTED;
             }
             if (resourceState[i] == RS_ENLISTED) {
-			  Logger.debug("endresources("+i+"): state="+resourceState[i]);
+              Logger.debug("endresources("+i+"): state="+resourceState[i]);
               endResource(resources[i], XAResource.TMSUCCESS);
               resourceState[i] = RS_ENDED;
             }
          } catch(XAException e) {
-			Logger.debug("endresources: XAException: " + e);
-			Logger.debug("endresources: XAException: errorCode=" + e.errorCode);
+            Logger.debug("endresources: XAException: " + e);
+            Logger.debug("endresources: XAException: errorCode=" + e.errorCode);
             Logger.exception(e);
             status = Status.STATUS_MARKED_ROLLBACK;
          }
@@ -1207,7 +1209,7 @@ class TxCapsule implements TimeoutTarget
       status = Status.STATUS_COMMITTING;
 
       for (int i = 0; i < resourceCount; i++) {
-		Logger.debug("TxCapsule.commitResources(): resourceStates["+i+"]="+resourceState[i]);
+        Logger.debug("TxCapsule.commitResources(): resourceStates["+i+"]="+resourceState[i]);
          if (!onePhase && resourceState[i] != RS_VOTE_OK)
            continue;
 
