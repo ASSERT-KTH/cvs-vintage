@@ -6,23 +6,23 @@
  *  See terms of license at gnu.org.   *
  *                                     *
  ***************************************/
-
 package org.jboss.jmx.adaptor.rmi;
 
-
-
+import java.io.Serializable;
+import java.lang.reflect.InvocationHandler;
 import javax.management.ObjectName;
+import javax.naming.InitialContext;
 
 
 /**
  * A factory for producing MBean proxies that run on a distant node and access
  * the server through RMI. Most of the code comes from MBeanProxy.
  *
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
  */
 public class RMIRemoteMBeanProxy 
-   implements java.io.Serializable, java.lang.reflect.InvocationHandler
+   implements Serializable, InvocationHandler
 {
    /** The server to proxy invoke calls to. */
    private final RMIAdaptor remoteServer;
@@ -88,7 +88,8 @@ public class RMIRemoteMBeanProxy
    
    protected RMIAdaptor getRmiAdaptor () throws Exception
    {
-      return (RMIAdaptor)new javax.naming.InitialContext().lookup (RMIAdaptorService.DEFAULT_JNDI_NAME);
+      InitialContext ctx = new InitialContext();
+      return (RMIAdaptor) ctx.lookup("jmx/invoker/RMIAdaptor");
    }
 
 
@@ -120,7 +121,7 @@ public class RMIRemoteMBeanProxy
     * @param server    The MBeanServer that contains the MBean to proxy to.
     * @return          A MBean proxy.
     *
-    * @throws MalformedObjectNameException    Invalid object name.
+    * @throws Exception    Invalid object name.
     */
    public static Object create (final Class intf, final String name, final javax.management.MBeanServer server) throws Exception
    {
