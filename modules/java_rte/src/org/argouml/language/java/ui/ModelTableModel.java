@@ -1,4 +1,4 @@
-// $Id: ModelTableModel.java,v 1.3 2003/09/04 17:39:17 thierrylach Exp $
+// $Id: ModelTableModel.java,v 1.4 2004/04/26 19:49:50 thn Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
 
 import org.argouml.kernel.*;
-import org.argouml.uml.generator.Generator;
+import org.argouml.uml.generator.Generator2;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 
 /**
@@ -100,16 +100,16 @@ public class ModelTableModel extends DefaultTableModel implements Runnable {
 	else if (cls instanceof MInterface) {
 	    type = "Interface";
 	}
-	String codePath = Generator.getCodePath(cls);
+	String codePath = Generator2.getCodePath(cls);
 	MNamespace parent = cls.getNamespace();
 	if (codePath == null) {
-	    codePath = Generator.getCodePath(parent);
+	    codePath = Generator2.getCodePath(parent);
 	}
 	String packagePath = parent.getName();
 	parent = parent.getNamespace();
 	while (parent != null) {
 	    if (codePath == null) {
-		codePath = Generator.getCodePath(parent);
+		codePath = Generator2.getCodePath(parent);
 	    }
 	    // ommit root package name; it's the model's root
 	    if (parent.getNamespace() != null) {
