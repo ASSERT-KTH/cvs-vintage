@@ -26,7 +26,7 @@
   <td>Artifact type is changed.<br/>
       The following  are unchanged: shared attributes, artifact ID, creation date, created by, history, comments, attachments, dependencies, URLs.<br/>
       Values of all shared attributes remain unchanged.<br/>
-      Values of unshared attributes in source artifact type are entered as an additional comment in the target artifact type or deleted.</td>
+      Values of inactive and unshared attributes in source artifact type are entered as an additional comment in the target artifact type or deleted.</td>
 </tr>
 <tr valign="top">
   <td><strong>Trigger event:</strong></td>
@@ -61,6 +61,8 @@
 </tr>
 <tr valign="top">
   <td><strong>Notes and Issues:</strong></td>
-  <td>Only one target artifact type may be selected.</td>
+  <td>Only one target artifact type may be selected.<br/>
+  Unshared and inactive attribute values (i.e., those that were originally annotated as comments in the target artifact) are not preserved.</td>
+
 </tr>
 </table>
