@@ -1,4 +1,4 @@
-// $Id: JavaImport.java,v 1.25 2004/02/29 12:35:46 linus Exp $
+// $Id: JavaImport.java,v 1.26 2004/04/05 09:08:57 lepekhine Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,9 +54,10 @@ public class JavaImport extends FileImportSupport {
 	if (o instanceof File ) {
 	    File f = (File) o;
 	    // Create a scanner that reads from the input stream passed to us
+	    String encoding = _import.getInputSourceEncoding();
+	    FileInputStream in = new FileInputStream(f);
 	    JavaLexer lexer =
-		new JavaLexer(new BufferedReader(new FileReader(f)));
-
+		new JavaLexer(new BufferedReader(new InputStreamReader(in, encoding)));
 	    // We use a special Argo token, that stores the preceding
 	    // whitespaces.
 	    lexer.setTokenObjectClass( "org.argouml.uml.reveng.java.ArgoToken");
