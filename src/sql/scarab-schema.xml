@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.100 2002/05/21 22:12:22 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.101 2002/06/13 22:06:08 jon Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -67,6 +67,15 @@
     -->
     <column name="END_DATE" required="false" type="DATE"/>
 
+    <!--
+        If an attachment is associated to the activity, store it
+        here. Note: there is also attachments associated to the 
+        transaction which 'contains' the activity. These are generally
+        the result of multiple activity records being created via
+        the modification of several attributes at one time.
+    -->
+    <column name="ATTACHMENT_ID" required="false" type="INTEGER"/>
+
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
     </foreign-key>
@@ -87,6 +96,9 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
         <reference local="NEW_OPTION_ID" foreign="OPTION_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ATTACHMENT">
+        <reference local="ATTACHMENT_ID" foreign="ATTACHMENT_ID"/>
     </foreign-key>
     <index name="IX_ATTRIBUTE_ISSUE_ENDDATE">
         <index-column name="ATTRIBUTE_ID"/>
