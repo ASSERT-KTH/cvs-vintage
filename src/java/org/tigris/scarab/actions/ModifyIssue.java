@@ -95,7 +95,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.156 2003/04/17 22:35:32 elicia Exp $
+ * @version $Id: ModifyIssue.java,v 1.157 2003/04/22 16:37:21 jmcnally Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -1063,8 +1063,12 @@ public class ModifyIssue extends BaseModifyIssue
     public void doMove(RunData data, TemplateContext context)
          throws Exception
     {
-        data.getParameters().add("mv_0rb", "move");
-        data.getParameters().add("issue_ids", ((ScarabRequestTool)getScarabRequestTool(context)).getIssue().getUniqueId());
+        ParameterParser pp = data.getParameters();
+        pp.setString("mv_0rb", "move");
+        ((IntakeTool)context.get("intake")).get("MoveIssue")
+            .getDefault().get("Action").init(pp);
+        pp.add("issue_ids", ((ScarabRequestTool)getScarabRequestTool(context))
+               .getIssue().getUniqueId());
         setTarget(data, "MoveIssue.vm");            
     }
 
@@ -1074,8 +1078,12 @@ public class ModifyIssue extends BaseModifyIssue
     public void doCopy(RunData data, TemplateContext context)
          throws Exception
     {
-        data.getParameters().add("mv_0rb", "copy");
-        data.getParameters().add("issue_ids", ((ScarabRequestTool)getScarabRequestTool(context)).getIssue().getUniqueId());
+        ParameterParser pp = data.getParameters();
+        pp.setString("mv_0rb", "copy");
+        ((IntakeTool)context.get("intake")).get("MoveIssue")
+            .getDefault().get("Action").init(pp);
+        pp.add("issue_ids", ((ScarabRequestTool)getScarabRequestTool(context))
+               .getIssue().getUniqueId());
         setTarget(data, "MoveIssue.vm");            
     }
 
