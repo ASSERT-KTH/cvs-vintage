@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.140 2003/09/08 10:12:50 parun Exp $
+ * @version $Id: Search.java,v 1.141 2003/09/09 14:16:39 parun Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -360,8 +360,9 @@ public class Search extends RequireLoginFirstAction
                 }
                 else
                 {
-                    scarabR.setInfoMessage(l10n.format("NotifyPendingApproval",
-                                                "query"));
+                    scarabR.setInfoMessage(
+                                    l10n.format("NotifyPendingApproval",
+                                    l10n.get("Query").toLowerCase()));
                 }
                 setTarget(data, "QueryList.vm");
             }
@@ -385,7 +386,7 @@ public class Search extends RequireLoginFirstAction
         Group queryGroup = intake.get("Query",
                                       query.getQueryKey());
         queryGroup.get("Name").setRequired(true);
-        if (intake.isAllValid()) 
+        if (intake.isAllValid())
         {
             queryGroup.setProperties(query);
             if (checkForDupes(query, user, module))
@@ -402,8 +403,9 @@ public class Search extends RequireLoginFirstAction
                 }
                 else
                 {
-                    scarabR.setInfoMessage(l10n.format("NotifyPendingApproval",
-                                                    "query"));
+                    scarabR.setInfoMessage(
+                                    l10n.format("NotifyPendingApproval",
+                                    l10n.get("Query").toLowerCase()));
                     setTarget(data, data.getParameters().getString(
                                     ScarabConstants.CANCEL_TEMPLATE));
                 }

@@ -89,7 +89,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.57 2003/09/08 10:12:50 parun Exp $
+ * @version $Id: TemplateList.java,v 1.58 2003/09/09 14:16:39 parun Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -186,8 +186,9 @@ public class TemplateList extends RequireLoginFirstAction
                         else
                         {
                             // Display the list of issue templates.
-                            scarabR.setInfoMessage(l10n.format(
-                                    "NotifyPendingApproval", "template"));
+                            scarabR.setInfoMessage(
+                                l10n.format("NotifyPendingApproval",
+                                l10n.get("Template").toLowerCase()));
                             setTarget(data, "TemplateList.vm");
                             doPerform(data, context);
                         }
@@ -196,10 +197,11 @@ public class TemplateList extends RequireLoginFirstAction
                     {
                         scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                     }
-                } 
+                }
                 else
                 {
-                    scarabR.setAlertMessage(l10n.get("AtLeastOneAttributeForTemplate"));
+                    scarabR.setAlertMessage(
+                                l10n.get("AtLeastOneAttributeForTemplate"));
                 }
             }
         }
@@ -343,8 +345,9 @@ public class TemplateList extends RequireLoginFirstAction
                 }
                 else
                 {
-                    scarabR.setInfoMessage(l10n.format(
-                                    "NotifyPendingApproval", "template"));
+                    scarabR.setInfoMessage(
+                                    l10n.format("NotifyPendingApproval",
+                                    l10n.get("Template").toLowerCase()));
                     setTarget(data, data.getParameters().getString(
                                     ScarabConstants.CANCEL_TEMPLATE));
                 }
