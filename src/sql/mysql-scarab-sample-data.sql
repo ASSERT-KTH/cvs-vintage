@@ -94,10 +94,10 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTIO
 /* add a transaction for the insertion */
 insert into SCARAB_TRANSACTION(TRANSACTION_ID, TYPE_ID, CREATED_BY, CREATED_DATE)
        values (1, 1, 5, 200109020030);
-insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_VALUE)
-       values (1, 1, 11, 1, 'Docs are out of date.');
-insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_OPTION_ID)
-       values (2, 1, 3, 1, 2);
+insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_VALUE, DESCRIPTION)
+       values (1, 1, 11, 1, 'Docs are out of date.', 'Issue 1 had Description set to Docs are out of Date');
+insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_OPTION_ID, DESCRIPTION)
+       values (2, 1, 3, 1, 2, 'Issue 1 had Status set to New');
 
 insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT) 
        values (2, 2, 'PACS', 1);
@@ -123,10 +123,11 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTIO
 /* add a transaction for the insertion */
 insert into SCARAB_TRANSACTION(TRANSACTION_ID, TYPE_ID, CREATED_BY, CREATED_DATE)
        values (2, 1, 5, 200109030815);
-insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_VALUE)
-       values (3, 2, 11, 2, 'Dates display in long form instead of short form.');
-insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_OPTION_ID)
-       values (4, 2, 3, 2, 2);
+insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_VALUE, DESCRIPTION)
+       values (3, 2, 11, 2, 'Dates display in long form instead of short form.',
+          "Issue 2 had Description set to 'Dates display in long form instead of short form'");
+insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_OPTION_ID, DESCRIPTION)
+       values (4, 2, 3, 2, 2, "Issue 2 had status set to New");
 
 
 /* make this issue a child issue of issue 1 */
