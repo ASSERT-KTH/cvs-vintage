@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.62 2003/05/11 07:09:11 kataka Exp $
+// $Id: Project.java,v 1.63 2003/05/11 16:53:11 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -362,10 +362,6 @@ public class Project implements java.io.Serializable, TargetListener {
             throw e;
         }
     }
-
-    ////////////////////////////////////////////////////////////////
-    // accessors
-    // TODO
 
     /**
      * Added Eugenio's patches to load 0.8.1 projects.

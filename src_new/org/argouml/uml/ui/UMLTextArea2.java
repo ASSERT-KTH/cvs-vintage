@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLTextArea2.java,v 1.2 2003/05/03 11:59:25 kataka Exp $
+// $Id: UMLTextArea2.java,v 1.3 2003/05/11 16:53:12 kataka Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.JTextArea;
@@ -34,8 +34,6 @@ import ru.novosoft.uml.MElementListener;
 
 /**
  * A JTextArea especially made to represent UMLPlainTextDocuments. 
- * TODO: refactor the UMLChangeDispatch class so this class can be replaced with
- * ordinary JTextAreas.
  * @author jaap.branderhorst@xs4all.nl	
  * @since Dec 28, 2002
  */
@@ -48,6 +46,10 @@ public class UMLTextArea2 extends JTextArea implements MElementListener, Targett
      */
     public UMLTextArea2(UMLPlainTextDocument doc) {
         super(doc);
+        addCaretListener(ActionCopy.getInstance());
+        addCaretListener(ActionCut.getInstance());  
+        addCaretListener(ActionPaste.getInstance());
+        addFocusListener(ActionPaste.getInstance());
     }
 
     /**

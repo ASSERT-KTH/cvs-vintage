@@ -24,7 +24,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.14 2003/05/10 12:38:41 alexb Exp $
+// $Id: TabStyle.java,v 1.15 2003/05/11 16:53:12 kataka Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -41,6 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;
 
+import org.apache.log4j.Logger;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.kernel.Project;
@@ -77,6 +78,9 @@ import org.tigris.gef.presentation.Fig;
 public class TabStyle
     extends TabSpawnable
     implements TabFigTarget, PropertyChangeListener, DelayedVChangeListener {
+        
+    private Logger _cat = Logger.getLogger(this.getClass());
+    
     ////////////////////////////////////////////////////////////////
     // instance variables
     protected Fig _target;
@@ -232,7 +236,7 @@ public class TabStyle
             }
             _panels.put(targetClass, p);
         } else
-            cat.debug("found style for " + targetClass.getName());
+            _cat.debug("found style for " + targetClass.getName());
         return p;
     }
 

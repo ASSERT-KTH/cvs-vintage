@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLPlainTextDocument.java,v 1.14 2003/05/04 14:38:06 kataka Exp $
+// $Id: UMLPlainTextDocument.java,v 1.15 2003/05/11 16:53:12 kataka Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.text.AttributeSet;
@@ -226,7 +226,7 @@ public abstract class UMLPlainTextDocument
      * @param editing The editing to set
      */
     public void setEditing(boolean editing) {
-        _editing = editing;
+        _editing = editing;       
     }
 
     /**

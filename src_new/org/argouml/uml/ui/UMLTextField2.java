@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLTextField2.java,v 1.7 2003/05/03 11:59:25 kataka Exp $
+// $Id: UMLTextField2.java,v 1.8 2003/05/11 16:53:12 kataka Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.JTextField;
@@ -45,6 +45,10 @@ public class UMLTextField2
      */
     public UMLTextField2(UMLPlainTextDocument doc) {
         super(doc, null, 0);
+        addCaretListener(ActionCopy.getInstance());
+        addCaretListener(ActionCut.getInstance());  
+        addCaretListener(ActionPaste.getInstance());
+        addFocusListener(ActionPaste.getInstance()); 
     }
 
     /**
