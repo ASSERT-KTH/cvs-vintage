@@ -102,7 +102,7 @@ package org.gjt.sp.jedit.gui;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.88 2003/12/16 01:58:56 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.89 2003/12/20 06:32:53 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -1520,8 +1520,15 @@ public class DockableWindowManager extends JPanel implements EBComponent
 			int leftWidth = _left.width;
 			int rightWidth = _right.width;
 
-			Dimension closeBoxSize = ((Container)topButtons)
-				.getComponent(0).getPreferredSize();
+			Dimension closeBoxSize;
+			if(((Container)topButtons).getComponentCount() == 0)
+				closeBoxSize = new Dimension(0,0);
+			else
+			{
+				closeBoxSize = ((Container)topButtons)
+					.getComponent(0).getPreferredSize();
+			}
+
 			int closeBoxWidth = Math.max(closeBoxSize.width,
 				closeBoxSize.height) + 1;
 

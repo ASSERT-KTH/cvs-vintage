@@ -19,7 +19,7 @@
  * along with the jEdit program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: Hex_Convert.bsh,v 1.1 2001/11/24 03:56:51 jgellene Exp $
+ * $Id: Hex_Convert.bsh,v 1.2 2003/12/20 06:32:53 spestov Exp $
  */
 
 import java.io.*;
@@ -57,6 +57,7 @@ void stringToByte(String target)
     int length = string.length;
     for (int i = 0; i < string; k++)
     {
+		
         foo.append("0x" + byteToHex(string[k]));
         if (i < length - 1) foo.append(",");
     }
@@ -65,13 +66,23 @@ void stringToByte(String target)
 
 void byteToString(String target)
 {
+	if(target.length() == 0)
+		return;
+
+	try
+	{
     byte b = Byte.parseByte(target, 16);
     String str = new String(new byte[] { b });
 
     StringBuffer foo = new StringBuffer();
-    foo.append("character = " + str);
+		foo.append("" + target + " = " + str);
 
     print(foo.toString());
+	}
+	catch(NumberFormatException nfe)
+	{
+		Macros.error(view, "" + target + " is not valid hex string.");
+	}
 }
 
 String target = Macros.input(view,"Byte to String:");
