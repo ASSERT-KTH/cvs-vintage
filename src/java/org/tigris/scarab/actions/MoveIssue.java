@@ -85,7 +85,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.64 2003/09/17 01:43:28 dlr Exp $
+ * @version $Id: MoveIssue.java,v 1.65 2003/10/14 04:59:22 jmcnally Exp $
  */
 public class MoveIssue extends BaseModifyIssue
 {
@@ -356,7 +356,7 @@ public class MoveIssue extends BaseModifyIssue
                getString("scarab.email.moveissue.template",
                          "MoveIssue.vm");
             Set allToUsers =
-                issue.getAllUsersToEmail(AttributePeer.ASSIGNED_TO); 
+                issue.getAllUsersToEmail(AttributePeer.EMAIL_TO); 
             HashSet toUsers = new HashSet();
             Set allCCUsers = issue.getAllUsersToEmail(AttributePeer.CC_TO); 
             HashSet ccUsers = new HashSet();

@@ -80,8 +80,6 @@ import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.lang.StringUtils;
 
 // Scarab
-import org.tigris.scarab.da.AttributeAccess;
-import org.tigris.scarab.da.DAFactory;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Issue;
@@ -627,15 +625,6 @@ public class ScarabRequestTool
     /**
      * A Attribute object for use within the Scarab API.
      */
-    public Attribute getAttribute(String pk)
-     throws Exception
-    {
-         return getAttribute(new Integer(pk));
-    }
-
-    /**
-     * A Attribute object for use within the Scarab API.
-     */
     public AttributeOption getAttributeOption(Integer pk)
      throws Exception
     {
@@ -675,11 +664,7 @@ public class ScarabRequestTool
                 {
                     Module module = currentList.getModule();
                     IssueType issueType = currentList.getIssueType();
-                    
-                    issueListColumns = DAFactory.getAttributeAccess()
-                        .retrieveQueryColumnIDs(user.getUserId().toString(),
-                            null, module.getModuleId().toString(),
-                            issueType.getIssueTypeId().toString());
+                    issueListColumns = user.getRModuleUserAttributes(module, issueType);
                     if (issueListColumns.isEmpty())
                     {
                         issueListColumns = module
@@ -694,10 +679,7 @@ public class ScarabRequestTool
 
             if (issueListColumns == null)
             {
-                issueListColumns = DAFactory.getAttributeAccess()
-                    .retrieveQueryColumnIDs(user.getUserId().toString(),
-                        null, module.getModuleId().toString(),
-                        issueType.getIssueTypeId().toString());
+                issueListColumns = user.getRModuleUserAttributes(module, issueType);
                 if (issueListColumns.isEmpty())
                 {
                     issueListColumns = module.getDefaultRModuleUserAttributes(issueType);

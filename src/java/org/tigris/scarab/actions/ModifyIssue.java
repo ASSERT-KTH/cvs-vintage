@@ -49,7 +49,6 @@ package org.tigris.scarab.actions;
 import java.util.Iterator;
 import java.util.List;
 import java.util.HashMap;
-import java.util.Set;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
@@ -66,7 +65,6 @@ import org.apache.turbine.ParameterParser;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.BaseModifyIssue;
-import org.tigris.scarab.da.DAFactory;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.Module;
@@ -95,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.178 2003/09/17 02:19:15 jmcnally Exp $
+ * @version $Id: ModifyIssue.java,v 1.179 2003/10/14 04:59:22 jmcnally Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -146,10 +144,8 @@ public class ModifyIssue extends BaseModifyIssue
 
         // Set any other required flags
         IssueType issueType = issue.getIssueType();
-        Set requiredAttributes = DAFactory.getAttributeAccess()
-            .retrieveRequiredAttributeIDs(
-                issue.getModule().getModuleId().toString(), 
-                issueType.getIssueTypeId().toString());
+        List requiredAttributes = issueType
+            .getRequiredAttributes(issue.getModule());
         AttributeValue aval = null;
         Group group = null;
         SequencedHashMap modMap = issue.getModuleAttributeValuesMap();
@@ -171,10 +167,14 @@ public class ModifyIssue extends BaseModifyIssue
                     field = group.get("Value");
                 }
             
-                if (requiredAttributes
-                    .contains(aval.getAttributeId().toString()))
+                for (int j=requiredAttributes.size()-1; j>=0; j--) 
                 {
-                    field.setRequired(true);
+                    if (aval.getAttribute().getPrimaryKey().equals(
+                         ((Attribute)requiredAttributes.get(j)).getPrimaryKey())) 
+                    {
+                        field.setRequired(true);
+                        break;
+                    }                    
                 }
             } 
         } 

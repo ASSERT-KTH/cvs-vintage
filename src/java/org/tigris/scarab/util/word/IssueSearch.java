@@ -80,7 +80,6 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Logger;
 
 // Scarab classes
-import org.tigris.scarab.da.DAFactory;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttachmentTypePeer;
@@ -117,7 +116,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.115 2003/09/18 18:45:50 jmcnally Exp $
+ * @version $Id: IssueSearch.java,v 1.116 2003/10/14 04:59:23 jmcnally Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -1042,41 +1041,33 @@ public class IssueSearch
     public List getQuickSearchTextAttributeValues()
         throws Exception
     {
-        SequencedHashMap searchValues = getCommonAttributeValuesMap();
-        List searchAttributeValues = new ArrayList(searchValues.size());
-
-        Set quickSearchIDs =  DAFactory.getAttributeAccess()
-            .retrieveQuickSearchAttributeIDs(getModuleId().toString(), 
-                                             getTypeId().toString());
-
-        for (Iterator i = searchValues.values().iterator(); i.hasNext();) 
-        {
-            AttributeValue searchValue = (AttributeValue)i.next();
-            if (quickSearchIDs.contains(
-                 searchValue.getAttributeId().toString())
-                && searchValue.getAttribute().isTextAttribute()) 
-            {
-                searchAttributeValues.add(searchValue);
-            }
-            
-        }
-        return searchAttributeValues;
+        return getTextAttributeValues(true);
     }
 
     public List getTextAttributeValues()
         throws Exception
     {
+        return getTextAttributeValues(false);
+    }
+
+    private List getTextAttributeValues(boolean quickSearchOnly)
+        throws Exception
+    {
         SequencedHashMap searchValues = getCommonAttributeValuesMap();
-        List searchAttributeValues = new ArrayList(searchValues.size());
-        for (Iterator i = searchValues.iterator(); i.hasNext();) 
+        List searchAttributes = new ArrayList(searchValues.size());
+
+        for (int i=0; i<searchValues.size(); i++) 
         {
-            AttributeValue searchValue = (AttributeValue)i.next();
-            if (searchValue.getAttribute().isTextAttribute())
+            AttributeValue searchValue = 
+                (AttributeValue)searchValues.getValue(i);
+            if ((!quickSearchOnly || searchValue.isQuickSearchAttribute())
+                 && searchValue.getAttribute().isTextAttribute()) 
             {
-                searchAttributeValues.add(searchValue);
+                searchAttributes.add(searchValue);
             }
         }
-        return searchAttributeValues;
+
+        return searchAttributes;
     }
 
     /**
@@ -1088,25 +1079,7 @@ public class IssueSearch
     public List getQuickSearchOptionAttributeValues()
         throws Exception
     {
-        SequencedHashMap searchValues = getCommonAttributeValuesMap();
-        List searchAttributeValues = new ArrayList(searchValues.size());
-
-        Set quickSearchIDs =  DAFactory.getAttributeAccess()
-            .retrieveQuickSearchAttributeIDs(getModuleId().toString(), 
-                                             getTypeId().toString());
-
-        for (Iterator i = searchValues.values().iterator(); i.hasNext();) 
-        {
-            AttributeValue searchValue = (AttributeValue)i.next();
-            if (quickSearchIDs.contains(
-                 searchValue.getAttributeId().toString())
-                && searchValue instanceof OptionAttribute) 
-            {
-                searchAttributeValues.add(searchValue);
-            }
-            
-        }
-        return searchAttributeValues;
+        return getOptionAttributeValues(true);
     }
 
     /**
@@ -1118,16 +1091,33 @@ public class IssueSearch
     public List getOptionAttributeValues()
         throws Exception
     {
+        return getOptionAttributeValues(false);
+    }
+
+
+    /**
+     * Returns OptionAttributes which have been marked for Quick search.
+     *
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    private List getOptionAttributeValues(boolean quickSearchOnly)
+        throws Exception
+    {
         SequencedHashMap searchValues = getCommonAttributeValuesMap();
         List searchAttributeValues = new ArrayList(searchValues.size());
-        for (Iterator i = searchValues.iterator(); i.hasNext();) 
+
+        for (int i=0; i<searchValues.size(); i++) 
         {
-            AttributeValue searchValue = (AttributeValue)i.next();
-            if (searchValue instanceof OptionAttribute) 
+            AttributeValue searchValue = 
+                (AttributeValue)searchValues.getValue(i);
+            if ((!quickSearchOnly || searchValue.isQuickSearchAttribute())
+                 && searchValue instanceof OptionAttribute) 
             {
                 searchAttributeValues.add(searchValue);
             }
         }
+
         return searchAttributeValues;
     }
 
@@ -2151,13 +2141,14 @@ public class IssueSearch
             boolean sortColumnAdded = false;
             for (Iterator i = rmuas.iterator(); i.hasNext();) 
             {
-                String id = (String)i.next();
-                Integer attrPK = new Integer(id);
+                RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+                Integer attrPK = rmua.getAttributeId();
                 if (attrPK.equals(sortAttrId)) 
                 {
                     sortColumnAdded = true;
                 }
                 
+                String id = attrPK.toString();
                 String alias = AV + id;
                 // add column to SELECT column clause
                 partialSql.append(',').append(alias).append(DOT_VALUE);

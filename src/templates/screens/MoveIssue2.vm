@@ -20,7 +20,7 @@
 #set ($issue = $scarabR.getIssue($data.Parameters.getString("issue_ids")))
 #set ($module = $issue.Module)
 #set ($issueType = $issue.IssueType)
-#set ($unsetReqdAttrs = $issue.getUnsetRequiredAttrs("$newModuleId", "$newIssueTypeId"))
+#set ($unsetReqdAttrs = $issue.getUnsetRequiredAttrs($newModule, $newIssueType))
 #set ($isSingleIssueOp = $scarabG.sizeOfArray($issueList) == 1)
 
 #if ($isSingleIssueOp)
@@ -29,8 +29,8 @@
   #set ($nonMatchingAttributes = $issue.getNonMatchingAttributeValuesList($newModule, $newIssueType))
 #else
   ## For multiple issue move, cannot display attribute values, only attributes.
-  #set ($matchingAttributes = $issueType.getMatchingAttributesList($module, $newModule, $newIssueType))
-  #set ($nonMatchingAttributes = $issueType.getNonMatchingAttributesList($module, $newModule, $newIssueType))
+  #set ($matchingAttributes = $issueType.getMatchingAttributeValuesList($module, $newModule, $newIssueType))
+  #set ($nonMatchingAttributes = $issueType.getNonMatchingAttributeValuesList($module, $newModule, $newIssueType))
 #end
 
 #if ($selectAction.toString().equals("move"))

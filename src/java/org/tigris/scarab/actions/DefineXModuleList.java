@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.26 2003/09/11 18:32:49 jmcnally Exp $
+ * @version $Id: DefineXModuleList.java,v 1.27 2003/10/14 04:59:22 jmcnally Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
@@ -289,14 +289,10 @@ public class DefineXModuleList extends RequireLoginFirstAction
             // save the new list
             list.save();
 
-            // if the list is modifiable, we do not keep the saved list
-            // as the current list.  Copy it, so that changes do not
-            // affect the saved version.
-            if (list.getModifiable()) 
-            {
-                user.setCurrentMITList(list.copy());
-            }
-            
+            // Setting the current list to null
+            // So that on IssueTypeList screen can select a saved list
+            user.setCurrentMITList(null);
+ 
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
             setTarget(data, data.getParameters()
                       .getString(ScarabConstants.LAST_TEMPLATE));

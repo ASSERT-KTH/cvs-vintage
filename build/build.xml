@@ -230,14 +230,10 @@
             </fileset>
         </copy>
 
-        <copy todir="${build.project.webinf}" filtering="yes"
-              overwrite="true"
-              verbose="true">
-            <fileset dir="${extensions.conf.dir}/">
-                <include name="web.xml"/>
-                <include name="server-config.wsdd"/>
-            </fileset>
-        </copy>
+        <!-- Conditionally copy extension conf -->
+        <available property="extensions.conf.exist" 
+            file="${extensions.conf.dir}"/>
+        <antcall target="copy-conf-extensions"/>
 
         <condition property="template.path" value="/WEB-INF">
             <equals arg1="${scarab.copy.templates}" arg2="true"/>
@@ -353,6 +349,11 @@
         <filter token="SCARAB_EMAIL_FORGOTPASSWORD_FROMADDRESS" 
             value="${scarab.email.forgotpassword.fromAddress}"/>
         <filter token="SCARAB_MODULE_PACKAGES" value="${scarab.module.packages}"/>
+        <filter token="HTTP_DOMAIN" value="${scarab.http.domain}"/>
+        <filter token="HTTP_SCHEME" value="${scarab.http.scheme}"/>
+        <filter token="HTTP_SCRIPTNAME" value="${scarab.http.scriptname}"/>
+        <filter token="HTTP_PORT" value="${scarab.http.port}"/>
+        <filter token="SCARAB_SECURITY_USER_MANAGER" value="${scarab.security.user.manager}"/>
 
         <copy todir="${build.project.webinf}/conf" filtering="yes" overwrite="true">
             <fileset dir="${src.conf.dir}/">
@@ -374,13 +375,10 @@
             </fileset>
         </copy>
 
-        <copy todir="${build.project.webinf}/lib" filtering="no"
-              overwrite="true"
-              verbose="true">
-            <fileset dir="${extensions.lib.dir}/">
-                <include name="**/*.jar"/>
-            </fileset>
-        </copy>
+        <!-- Conditionally copy extension libraries -->
+        <available property="extensions.lib.exist" 
+            file="${extensions.lib.dir}"/>
+        <antcall target="copy-lib-extensions"/>
 
         <echo>Using ${scarab.database.type} JDBC driver from:
     ${lib.dir}/${scarab.jdbc.driver.jar}
@@ -465,6 +463,27 @@
         <mkdir dir="${build.project}/logs"/>
     </target>
 
+    <!-- conditional file copy used in prepare target-->
+    <target name="copy-conf-extensions" if="extensions.conf.exist">
+        <copy todir="${build.project.webinf}" filtering="yes"
+              overwrite="true"
+              verbose="true">
+            <fileset dir="${extensions.conf.dir}/">
+                <include name="web.xml"/>
+                <include name="server-config.wsdd"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="copy-lib-extensions" if="extensions.lib.exist">
+        <copy todir="${build.project.webinf}/lib" filtering="no"
+              overwrite="true"
+              verbose="true">
+            <fileset dir="${extensions.lib.dir}/">
+                <include name="**/*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Copies templates to WEB-INF directory, if specified                -->
     <!-- ================================================================== -->
@@ -472,6 +491,12 @@
         <copy todir="${build.project.webinf}/templates" filtering="no">
             <fileset dir="${src.templates.dir}"/>
         </copy>
+        <available property="extension.templates.exist" 
+            file="${extensions.templates.dir}"/>
+        <antcall target="copy-template-extensions"/>
+    </target>
+
+    <target name="copy-template-extensions" if="extension.templates.exist">
         <copy todir="${build.project.webinf}/templates" filtering="no"
               overwrite="true"
               verbose="true">
@@ -1795,7 +1820,7 @@ diff -u -r1.5 project.xml
             <property name="lib.dir" value="${build.project.webinf}/lib"/>
             <property name="build.properties"
                       value="${torque.dir.scarab}/build.properties"/> 
-            <property name="outputDirectory" value="schema"/> 
+            <property name="torque.output.dir" value="${src.sql.dir}"/> 
             <property name="torque.database.driver"
 	              value="${scarab.database.jdbc.driver}"/>
             <property name="torque.database.url"
@@ -1805,8 +1830,6 @@ diff -u -r1.5 project.xml
             <property name="torque.database.password"
 	              value="${scarab.database.password}"/>
         </ant>
-        <move file="${torque.dir.scarab}/schema/${project}-${project}-all-data.xml"
-            tofile="${src.sql.dir}/${project}-${project}-all-data.xml"/>
     </target>
 
     <!-- ================================================================== -->

@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.143 2003/09/18 18:18:05 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.144 2003/10/14 04:59:23 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -125,16 +125,21 @@ public class ScarabModule
         {
             try
             {
-                domain = Turbine.getConfiguration()
-                     .getString(ScarabConstants.WEB_DOMAIN);
-                if (domain == null || domain.trim().length() == 0) 
+                domain = GlobalParameterManager
+                    .getString(ScarabConstants.HTTP_DOMAIN);
+                if (domain == null)
                 {
-                    domain = "";
+                    domain = Turbine.getConfiguration()
+                        .getString(ScarabConstants.HTTP_DOMAIN);
+                    if (domain == null || domain.trim().length() == 0) 
+                    {
+                        domain = "";
+                    }
                 }
             }
             catch (Exception e)
             {
-                log().error("Error getting WEB_DOMAIN:", e);
+                log().error("Error getting HTTP_DOMAIN:", e);
             }
         }
         return domain;
@@ -161,11 +166,16 @@ public class ScarabModule
     {
         if (port == null)
         {
-            port = Turbine.getConfiguration()
-                     .getString(ScarabConstants.WEB_PORT);
-            if (port == null || port.trim().length() == 0) 
+            port = GlobalParameterManager
+                    .getString(ScarabConstants.HTTP_PORT);
+            if (port == null)
             {
-                port = "";
+                port = Turbine.getConfiguration()
+                    .getString(ScarabConstants.HTTP_PORT);
+                if (port == null || port.trim().length() == 0) 
+                {
+                    port = "";
+                }
             }
         }
         return port;
@@ -193,11 +203,16 @@ public class ScarabModule
     {
         if (scheme == null)
         {
-            scheme = Turbine.getConfiguration()
-                .getString(ScarabConstants.WEB_SCHEME);
-            if (scheme == null || scheme.trim().length() == 0) 
+            scheme = GlobalParameterManager
+                    .getString(ScarabConstants.HTTP_SCHEME);
+            if (scheme == null)
             {
-                scheme = "";
+                scheme = Turbine.getConfiguration()
+                    .getString(ScarabConstants.HTTP_SCHEME);
+                if (scheme == null || scheme.trim().length() == 0) 
+                {
+                    scheme = "";
+                }
             }
         }
         return scheme;
@@ -225,12 +240,17 @@ public class ScarabModule
     {
         if (scriptName == null)
         {
-            scriptName = Turbine.getConfiguration()
-                     .getString(ScarabConstants.WEB_SCRIPT_NAME);
-            if (scriptName == null || scriptName.trim().length() == 0) 
+            scriptName = GlobalParameterManager
+                    .getString(ScarabConstants.HTTP_SCRIPT_NAME);
+            if (scriptName == null)
             {
-                scriptName = "";
-            }            
+                scriptName = Turbine.getConfiguration()
+                    .getString(ScarabConstants.HTTP_SCRIPT_NAME);
+                if (scriptName == null || scriptName.trim().length() == 0) 
+                {
+                    scriptName = "";
+                }
+            }    
         }
         return scriptName;
     }

@@ -64,7 +64,7 @@ import org.tigris.scarab.util.SkipFiltering;
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: EmailLink.java,v 1.5 2003/07/28 14:44:37 thierrylach Exp $
+ * @version $Id: EmailLink.java,v 1.6 2003/10/14 04:59:23 jmcnally Exp $
  */
 public class EmailLink
     implements InitableRecyclable, SkipFiltering
@@ -293,7 +293,17 @@ public class EmailLink
      */
     public String getServerName()
     {
-        return (currentModule != null ? currentModule.getDomain() : null);
+        String domain = null;
+        if (currentModule != null) 
+        {
+            domain = currentModule.getDomain();
+            if (domain == null || domain.length() == 0) 
+            {
+                domain = "check.Scarab.properties";
+            }
+        }
+        
+        return domain;
     }
 
     /**

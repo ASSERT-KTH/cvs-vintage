@@ -46,12 +46,10 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -61,8 +59,6 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.manager.MethodResultCache;
 import org.apache.fulcrum.localization.Localization;
 
-import org.tigris.scarab.da.AttributeAccess;
-import org.tigris.scarab.da.DAFactory;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssuePeer;
@@ -76,7 +72,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.62 2003/09/17 02:27:00 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.63 2003/10/14 04:59:23 jmcnally Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -90,12 +86,22 @@ public  class IssueType
         "getInstance";
     protected static final String GET_ATTRIBUTE_GROUPS = 
         "getAttributeGroups";
+    protected static final String GET_ATTRIBUTE_GROUP =
+        "getAttributeGroup";
     protected static final String GET_R_ISSUETYPE_ATTRIBUTES = 
         "getRIssueTypeAttributes";
     protected static final String GET_R_ISSUETYPE_OPTIONS = 
         "getRIssueTypeOptions";
     protected static final String GET_ALL_R_ISSUETYPE_OPTIONS = 
         "getAllRIssueTypeOptions";
+    protected static final String GET_DEFAULT_TEXT_ATTRIBUTE = 
+        "getDefaultTextAttribute";
+    protected static final String GET_QUICK_SEARCH_ATTRIBUTES = 
+        "getQuickSearchAttributes";
+    protected static final String GET_REQUIRED_ATTRIBUTES = 
+        "getRequiredAttributes";
+    protected static final String GET_ACTIVE_ATTRIBUTES = 
+        "getActiveAttributes";
 
     static final String USER = "user";
     static final String NON_USER = "non-user";
@@ -278,7 +284,7 @@ public  class IssueType
         }
 
         // Copy attribute groups
-        List attrGroups = getAttributeGroups(null, false);
+        List attrGroups = getAttributeGroups(false);
         for (int i = 0; i<attrGroups.size(); i++)
         {
             AttributeGroup group = (AttributeGroup)attrGroups.get(i);
@@ -366,15 +372,12 @@ public  class IssueType
         ag2.save();
     }
 
-    /**
-     * Overload passes a null module argument to get groups in the global
-     * definition.  This overload is needed as velocity templates cannot
-     * pass null arguments.  
-     *
-     * @param activeOnly a <code>boolean</code> value
-     * @return a <code>List</code> value
-     * @exception Exception if an error occurs
-     */
+    public List getAttributeGroups(Module module)
+        throws Exception
+    {
+        return getAttributeGroups(module, false);
+    }
+
     public List getAttributeGroups(boolean activeOnly)
         throws Exception
     {
@@ -406,7 +409,7 @@ public  class IssueType
             }
             else
             {
-                crit.add(AttributeGroupPeer.MODULE_ID, null);
+                crit.add(AttributeGroupPeer.MODULE_ID, 0);
             }
             groups = AttributeGroupPeer.doSelect(crit);
             getMethodResult().put(groups, this, GET_ATTRIBUTE_GROUPS,
@@ -908,24 +911,18 @@ public  class IssueType
     /**
      * Gets a list of non-user AttributeValues which match a given Module.
      * It is used in the MoveIssue2.vm template
-     * @return right now this does need to return torque 
-     * <code>Attribute</code>s
      */
-    public List getMatchingAttributesList(Module oldModule, Module newModule, 
-                                          IssueType newIssueType)
+    public List getMatchingAttributeValuesList(Module oldModule, Module newModule, 
+                                               IssueType newIssueType)
           throws Exception
     {
-        AttributeAccess aa = DAFactory.getAttributeAccess();
         List matchingAttributes = new ArrayList();
-        Collection srcActiveAttrs = aa.retrieveActiveAttributeOMs(
-            oldModule.getModuleId().toString(), 
-            this.getIssueTypeId().toString(), true);
-        Collection destActiveAttrs = aa.retrieveActiveAttributeOMs(
-            newModule.getModuleId().toString(), 
-            newIssueType.getIssueTypeId().toString(), false);
-        for (Iterator i = srcActiveAttrs.iterator(); i.hasNext();)
+        List srcActiveAttrs = getActiveAttributes(oldModule);
+        List destActiveAttrs = newIssueType.getActiveAttributes(newModule);
+        for (int i = 0; i<srcActiveAttrs.size(); i++)
         {
-            Attribute attr = (Attribute)i.next();
+            Attribute attr = (Attribute)srcActiveAttrs.get(i);
+                
             if (destActiveAttrs.contains(attr))
             {
                 matchingAttributes.add(attr);
@@ -937,51 +934,23 @@ public  class IssueType
     /**
      * Gets a list of Attributes which do not match a given Module.
      * It is used in the MoveIssue2.vm template
-     * @return right now this does need to return torque 
-     * <code>Attribute</code>s
      */
-    public List getOrphanAttributesList(Module oldModule, Module newModule, 
-                                        IssueType newIssueType)
+    public List getOrphanAttributeValuesList(Module oldModule, Module newModule, 
+                                             IssueType newIssueType)
           throws Exception
     {
-        AttributeAccess aa = DAFactory.getAttributeAccess();
         List orphanAttributes = new ArrayList();
-        Collection srcActiveAttrs = aa.retrieveActiveAttributeOMs(
-            oldModule.getModuleId().toString(), 
-            this.getIssueTypeId().toString(), true);
-        Collection destActiveAttrs = aa.retrieveActiveAttributeOMs(
-            newModule.getModuleId().toString(), 
-            newIssueType.getIssueTypeId().toString(), false);
-        for (Iterator i = srcActiveAttrs.iterator(); i.hasNext();)
+        List srcActiveAttrs = getActiveAttributes(oldModule);
+        List destActiveAttrs = newIssueType.getActiveAttributes(newModule);
+        for (int i = 0; i<srcActiveAttrs.size(); i++)
         {
-            Attribute attr = (Attribute)i.next();
+            Attribute attr = (Attribute)srcActiveAttrs.get(i);
             if (!destActiveAttrs.contains(attr))
             {
                 orphanAttributes.add(attr);
-            } 
+            }
         }
         return orphanAttributes;
-    }
-
-    /**
-     * Get the attribute ID for the default text attribute.  if one has
-     * not been explicitly selected, the highest ranked, active text 
-     * attribute will be used.
-     *
-     * @param module a <code>Module</code> value
-     * @return a <code>String</code> attribute ID
-     */
-    public String getDefaultTextAttributeId(Module module)
-    {
-        AttributeAccess aa = DAFactory.getAttributeAccess();
-        String id = aa.retrieveDefaultTextAttributeID(
-            module.getModuleId().toString(), getIssueTypeId().toString());
-        if (id == null)
-        {
-            id = aa.retrieveFirstActiveTextAttributeID(
-                module.getModuleId().toString(), getIssueTypeId().toString());
-        }
-        return id;
     }
 
     /**
@@ -1003,4 +972,215 @@ public  class IssueType
         return systemDefined;
     }
 
+
+    /**
+     * if an RMA is the chosen attribute for email subjects then return it.
+     * if not explicitly chosen, choose the highest ordered text attribute.
+     *
+     * @return the Attribute to use as the email subject,
+     * or null if no suitable Attribute could be found. 
+     */
+    public Attribute getDefaultTextAttribute(Module module)
+        throws Exception
+    {
+        Attribute result = null;
+        Object obj = ScarabCache.get(this, GET_DEFAULT_TEXT_ATTRIBUTE); 
+        if (obj == null) 
+        {        
+            // get related RMAs
+            Criteria crit = new Criteria()
+                .add(RModuleAttributePeer.MODULE_ID, 
+                     module.getModuleId());
+            crit.addAscendingOrderByColumn(
+                RModuleAttributePeer.PREFERRED_ORDER);
+            List rmas = getRModuleAttributes(crit);
+            
+            // the code to find the correct attribute could be quite simple by
+            // looping and calling RMA.isDefaultText().  The code from
+            // that method can be restructured here to more efficiently
+            // answer this question.
+            Iterator i = rmas.iterator();
+            while (i.hasNext()) 
+            {
+                RModuleAttribute rma = (RModuleAttribute)i.next();
+                if (rma.getDefaultTextFlag()) 
+                {
+                    result = rma.getAttribute();
+                    break;
+                }
+            }
+            
+            if (result == null) 
+            {
+                // locate the highest ranked text attribute
+                i = rmas.iterator();
+                while (i.hasNext()) 
+                {
+                    RModuleAttribute rma = (RModuleAttribute)i.next();
+                    Attribute testAttr = rma.getAttribute();
+                    if (testAttr.isTextAttribute() && 
+                         getAttributeGroup(module, testAttr).getActive()) 
+                    {
+                        result = testAttr;
+                        break;
+                    }
+                }
+            }
+            ScarabCache.put(result, this, GET_DEFAULT_TEXT_ATTRIBUTE);
+        }
+        else 
+        {
+            result = (Attribute)obj;
+        }
+        return result;
+    }
+
+    /**
+     * Array of Attributes used for quick search.
+     *
+     * @return an <code>List</code> of Attribute objects
+     */
+    public List getQuickSearchAttributes(Module module)
+        throws Exception
+    {
+        List attributes = null;
+        Object obj = ScarabCache.get(this, GET_QUICK_SEARCH_ATTRIBUTES, 
+                                     module); 
+        if (obj == null) 
+        {        
+            Criteria crit = new Criteria(3)
+                .add(RModuleAttributePeer.QUICK_SEARCH, true);
+            addOrderByClause(crit, module);
+            attributes = getAttributes(crit);
+            ScarabCache.put(attributes, this, GET_QUICK_SEARCH_ATTRIBUTES, 
+                            module);
+        }
+        else 
+        {
+            attributes = (List)obj;
+        }
+        return attributes;
+    }
+
+    /**
+     * gets a list of all of the Attributes in a Module based on the Criteria.
+     */
+    private List getAttributes(Criteria criteria)
+        throws Exception
+    {
+        List moduleAttributes = getRModuleAttributes(criteria);
+        List attributes = new ArrayList(moduleAttributes.size());
+        for (int i=0; i<moduleAttributes.size(); i++)
+        {
+            attributes.add(
+               ((RModuleAttribute) moduleAttributes.get(i)).getAttribute());
+        }
+        return attributes;
+    }
+
+    /**
+     * Array of Attributes which are active and required by this module.
+     * Whose attribute group's are also active.
+     * @return an <code>List</code> of Attribute objects
+     */
+    public List getRequiredAttributes(Module module)
+        throws Exception
+    {
+
+        List attributes = null;
+        Object obj = ScarabCache.get(this, GET_REQUIRED_ATTRIBUTES, 
+                                     module); 
+        if (obj == null) 
+        {        
+            Criteria crit = new Criteria(3)
+                .add(RModuleAttributePeer.REQUIRED, true);
+            crit.add(RModuleAttributePeer.ACTIVE, true);
+            addOrderByClause(crit, module);
+            List temp =  getAttributes(crit);
+            List requiredAttributes  = new ArrayList();
+            for (int i=0; i <temp.size(); i++)
+            {
+                Attribute att = (Attribute)temp.get(i);
+                AttributeGroup group = getAttributeGroup(module, att);
+                if (group != null && group.getActive())
+                {
+                    requiredAttributes.add(att);
+                }
+            }
+            attributes = requiredAttributes;
+            ScarabCache.put(attributes, this, GET_REQUIRED_ATTRIBUTES, 
+                            module);
+        }
+        else 
+        {
+            attributes = (List)obj;
+        }
+        return attributes;
+
+    }
+
+    /**
+     * Array of active Attributes for an issue type.
+     *
+     * @return an <code>List</code> of Attribute objects
+     */
+    public List getActiveAttributes(Module module)
+        throws Exception
+    {
+        List attributes = null;
+        Object obj = ScarabCache.get(this, GET_ACTIVE_ATTRIBUTES, module);
+        if (obj == null)
+        {
+            Criteria crit = new Criteria(2);
+            crit.add(RModuleAttributePeer.ACTIVE, true);
+            addOrderByClause(crit, module);
+            attributes = getAttributes(crit);
+            ScarabCache.put(attributes, this, GET_ACTIVE_ATTRIBUTES, 
+                            module);
+        }
+        else
+        {
+            attributes = (List)obj;
+        }
+        return attributes;
+    }
+
+    private void addOrderByClause(Criteria crit, Module module)
+    {
+        crit.addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
+        crit.addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
+        crit.add(RModuleAttributePeer.MODULE_ID, module.getModuleId());
+    }
+
+    private AttributeGroup getAttributeGroup(Module module, 
+                                             Attribute attribute)
+        throws Exception
+    {
+        AttributeGroup group = null;
+        Object obj = ScarabCache.get(this, GET_ATTRIBUTE_GROUP, 
+                                     module, attribute); 
+        if (obj == null)
+        {
+            Criteria crit = new Criteria()
+                .add(AttributeGroupPeer.ISSUE_TYPE_ID, getIssueTypeId())
+                .add(AttributeGroupPeer.MODULE_ID, 
+                     module.getModuleId())
+                .addJoin(RAttributeAttributeGroupPeer.GROUP_ID, 
+                   AttributeGroupPeer.ATTRIBUTE_GROUP_ID)
+                .add(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, 
+                     attribute.getAttributeId());
+            List results = AttributeGroupPeer.doSelect(crit);
+            if (results.size() > 0)
+            {
+                group = (AttributeGroup)results.get(0);
+                ScarabCache.put(group, this, GET_ATTRIBUTE_GROUP, 
+                                module, attribute);
+            }
+        }
+        else 
+        {
+            group = (AttributeGroup)obj;
+        }
+        return group;
+    }
 }

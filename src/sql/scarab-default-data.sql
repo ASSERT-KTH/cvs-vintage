@@ -356,7 +356,7 @@ insert into SCARAB_R_OPTION_OPTION values (75,27,1,5,5);
 insert into SCARAB_R_OPTION_OPTION values (75,28,1,6,6);
 insert into SCARAB_R_OPTION_OPTION values (75,29,1,7,7);
 insert into SCARAB_R_OPTION_OPTION values (75,30,1,8,8);
-insert into SCARAB_R_OPTION_OPTION values (76,31,1,9,9);
+insert into SCARAB_R_OPTION_OPTION values (76,31,1,10,10);
 insert into SCARAB_R_OPTION_OPTION values (76,32,1,11,11);
 insert into SCARAB_R_OPTION_OPTION values (76,33,1,12,12);
 insert into SCARAB_R_OPTION_OPTION values (76,34,1,13,13);

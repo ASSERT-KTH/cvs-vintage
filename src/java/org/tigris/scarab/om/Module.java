@@ -72,7 +72,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.78 2003/09/17 02:27:00 jmcnally Exp $
+ * @version $Id: Module.java,v 1.79 2003/10/14 04:59:23 jmcnally Exp $
  */
 public interface Module
     extends Serializable

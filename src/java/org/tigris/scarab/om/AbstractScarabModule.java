@@ -73,7 +73,6 @@ import org.apache.fulcrum.localization.Localization;
 import org.apache.turbine.Turbine;
 
 // Scarab classes
-import org.tigris.scarab.da.DAFactory;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Attribute;
@@ -126,7 +125,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.111 2003/09/17 02:27:00 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.112 2003/10/14 04:59:22 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -729,16 +728,11 @@ public abstract class AbstractScarabModule
             result = new LinkedList();
             Attribute[] attributes = new Attribute[3];
             int count = 0;
-            String id = DAFactory.getAttributeAccess()
-                .retrieveDefaultTextAttributeID(
-                    getModuleId().toString(), 
-                    issueType.getIssueTypeId().toString());
-            if (id != null) 
+            attributes[count++] = issueType.getDefaultTextAttribute(this);
+            if (attributes[0] == null) 
             {
-                attributes[count++] = 
-                    AttributeManager.getInstance(new Integer(id));
-            }
-            
+                count = 0;
+            }            
             List rma1s = getRModuleAttributes(issueType, true, NON_USER);
             Iterator i = rma1s.iterator();
             while (i.hasNext())
@@ -775,7 +769,12 @@ public abstract class AbstractScarabModule
             {
                 if (attributes[j] != null) 
                 {
-                    result.add(attributes[j].getAttributeId().toString());
+                    RModuleUserAttribute rmua = 
+                        RModuleUserAttributeManager.getInstance();
+                    rmua.setAttribute(attributes[j]);
+                    rmua.setIssueType(issueType);
+                    rmua.setOrder(j+1);
+                    result.add(rmua);
                 }
             }
             ScarabCache.put(result, this, GET_DEFAULT_RMODULE_USERATTRIBUTES, 

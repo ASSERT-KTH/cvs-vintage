@@ -51,7 +51,6 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -76,8 +75,6 @@ import org.apache.torque.util.BasePeer;
 import org.apache.fulcrum.localization.Localization;
 
 // Scarab classes
-import org.tigris.scarab.da.AttributeAccess;
-import org.tigris.scarab.da.DAFactory;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.attribute.UserAttribute;
@@ -100,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.329 2003/09/18 11:50:43 parun Exp $
+ * @version $Id: Issue.java,v 1.330 2003/10/14 04:59:23 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -879,25 +876,20 @@ public class Issue
         Object obj = getCachedObject(GET_MODULE_ATTRVALUES_MAP, isActive ? Boolean.TRUE : Boolean.FALSE);
         if (obj == null) 
         {        
-            Collection attributes = null;
+            List attributes = null;
             if (isActive)
             {
-                attributes = DAFactory.getAttributeAccess()
-                    .retrieveActiveAttributeOMs(
-                        getModuleId().toString(), 
-                        getTypeId().toString(), true);
+                attributes = getIssueType().getActiveAttributes(getModule());
             }
             else
             {
                 attributes = getModule().getAttributes(getIssueType());
             }
-
             Map siaValuesMap = getAttributeValuesMap();
             result = new SequencedHashMap((int)(1.25*attributes.size() + 1));
-            for (Iterator i = attributes.iterator(); i.hasNext();)
+            for (int i=0; i<attributes.size(); i++)
             {
-                Attribute attribute = (Attribute)i.next();
-                String key = attribute.getName().toUpperCase();
+                String key = ((Attribute)attributes.get(i)).getName().toUpperCase();
                 if (siaValuesMap.containsKey(key))
                 {
                     result.put(key, siaValuesMap.get(key));
@@ -905,7 +897,7 @@ public class Issue
                 else 
                 {
                     AttributeValue aval = AttributeValue
-                        .getNewInstance(attribute, this);
+                        .getNewInstance(((Attribute)attributes.get(i)), this);
                     addAttributeValue(aval);
                     siaValuesMap.put(
                         aval.getAttribute().getName().toUpperCase(), aval);
@@ -934,14 +926,8 @@ public class Issue
     public AttributeValue getAttributeValue(Attribute attribute)
        throws Exception
     {
-        return getAttributeValue(attribute.getAttributeId());
-    }
-
-    private AttributeValue getAttributeValue(Integer attributeID)
-       throws Exception
-    {
         AttributeValue result = null;
-        Object obj = ScarabCache.get(this, GET_ATTRVALUE, attributeID); 
+        Object obj = ScarabCache.get(this, GET_ATTRVALUE, attribute); 
         if (obj == null) 
         {        
             if (isNew()) 
@@ -953,7 +939,7 @@ public class Issue
                     while (i.hasNext()) 
                     {
                         AttributeValue tempAval = (AttributeValue)i.next();
-                        if (tempAval.getAttributeId().equals(attributeID)) 
+                        if (tempAval.getAttribute().equals(attribute)) 
                         {
                             result = tempAval;
                             break;
@@ -966,7 +952,8 @@ public class Issue
                 Criteria crit = new Criteria(2)
                     .add(AttributeValuePeer.ISSUE_ID, getIssueId())        
                     .add(AttributeValuePeer.DELETED, false)        
-                    .add(AttributeValuePeer.ATTRIBUTE_ID, attributeID);
+                    .add(AttributeValuePeer.ATTRIBUTE_ID, 
+                         attribute.getAttributeId());
                 
                 List avals = getAttributeValues(crit);               
                 if (avals.size() == 1)
@@ -975,11 +962,10 @@ public class Issue
                 }
                 else if (avals.size() > 1)
                 {
-                    throw new Exception("Error! Expected single valued " + 
-                                        "attribute and got multiple values.");
+                    throw new Exception("Error in retrieving users.");
                 }
             }
-            ScarabCache.put(result, this, GET_ATTRVALUE, attributeID);
+            ScarabCache.put(result, this, GET_ATTRVALUE, attribute);
         }
         else 
         {
@@ -1101,9 +1087,8 @@ public class Issue
     public boolean containsMinimumAttributeValues()
         throws Exception
     {
-        Set requiredAttributes = DAFactory.getAttributeAccess()
-            .retrieveRequiredAttributeIDs(
-                getModuleId().toString(), getTypeId().toString());
+        List attributes = getIssueType()
+            .getRequiredAttributes(getModule());
 
         boolean result = true;
         SequencedHashMap avMap = getModuleAttributeValuesMap();
@@ -1114,10 +1099,17 @@ public class Issue
             
             if (aval.getOptionId() == null && aval.getValue() == null) 
             {
-                if (requiredAttributes
-                    .contains(aval.getAttributeId().toString()))
+                for (int j=attributes.size()-1; j>=0; j--) 
                 {
-                    result = false;
+                    if (aval.getAttribute().getPrimaryKey().equals(
+                         ((Attribute)attributes.get(j)).getPrimaryKey())) 
+                    {
+                        result = false;
+                        break;
+                    }                    
+                }
+                if (!result) 
+                {
                     break;
                 }
             }
@@ -1193,7 +1185,7 @@ public class Issue
 
         ScarabUser createdBy = issue.getCreatedBy();
         if (createdBy != null && !users.contains(createdBy) &&
-            AttributePeer.ASSIGNED_TO.equals(action) &&
+            AttributePeer.EMAIL_TO.equals(action) &&
                createdBy.hasPermission(ScarabSecurity.ISSUE__ENTER, module))
         {
             users.add(createdBy);
@@ -2222,25 +2214,21 @@ public class Issue
     /**
      *  Get Unset required attributes in destination module / issue type.
      */
-    public List getUnsetRequiredAttrs(String newModuleId, String newIssueTypeId)
+    public List getUnsetRequiredAttrs(Module newModule, IssueType newIssueType)
         throws Exception
     {
-        String issueTypeId = getIssueType().getIssueTypeId().toString();
-        String moduleId = getModule().getModuleId().toString();
         List attrs = new ArrayList();
-        if (!issueTypeId.equals(newIssueTypeId)
-                    || !moduleId.equals(newModuleId))
+        if (!getIssueType().getIssueTypeId()
+            .equals(newIssueType.getIssueTypeId())
+            || !getModule().getModuleId().equals(newModule.getModuleId()))
         {
-            Set requiredAttributes = DAFactory.getAttributeAccess()
-                .retrieveRequiredAttributeIDs(newModuleId, newIssueTypeId);
-
+            List requiredAttributes = 
+                newIssueType.getRequiredAttributes(newModule);
             Map attrValues = getAttributeValuesMap();
 
             for (Iterator i = requiredAttributes.iterator(); i.hasNext(); )
             {
-                Attribute attr = AttributeManager
-                                    .getInstance(new Integer((String)i.next()));
-
+                Attribute attr = (Attribute)i.next();
                 if (!attrValues.containsKey(attr.getName().toUpperCase()))
                 {
                     attrs.add(attr);
@@ -2400,11 +2388,10 @@ public class Issue
                         // Copy over the attribute value
                         if (a.getEndDate() == null && !a.getAttributeId().equals(new Integer("0")))
                         {
-                            AttributeValue attVal = getAttributeValue(
-                                a.getAttributeId());
+                            AttributeValue attVal = getAttributeValue(a.getAttribute());
                             // Only copy if the target artifact type contains this
                             // Attribute
-                            if (!nonMatchingAttributes.contains(attVal))
+                            if (attVal != null && !nonMatchingAttributes.contains(attVal))
                             {
                                 AttributeValue newAttVal = attVal.copy();
                                 newAttVal.setIssueId(newIssue.getIssueId());
@@ -2551,7 +2538,24 @@ public class Issue
         Object obj = ScarabCache.get(this, GET_CLOSED_DATE); 
         if (obj == null) 
         {  
-            AttributeValue status = getAttributeValue(AttributePeer.STATUS__PK);
+            Attribute attribute = null;
+            try
+            { 
+                attribute = AttributeManager
+                    .getInstance(AttributePeer.STATUS__PK);
+            }
+            catch (TorqueException e)
+            {
+                if (e.getMessage() == null 
+                    || !e.getMessage().startsWith("Failed to select one")) 
+                {
+                    throw e;
+                }
+                // closed date has no meaning
+                return null;
+            }
+
+            AttributeValue status = getAttributeValue(attribute);
             if (status != null && status.getOptionId()
                  .equals(AttributeOption.getStatusClosedPK())) 
             {
@@ -2719,6 +2723,14 @@ public class Issue
         return matchingAttributes;
     }
 
+    public List getMatchingAttributeValuesList(String moduleId, String issueTypeId)
+          throws Exception
+    {
+         Module module = ModuleManager.getInstance(new Integer(moduleId));
+         IssueType issueType = IssueTypeManager.getInstance(new Integer(issueTypeId));
+         return getMatchingAttributeValuesList(module, issueType);
+    }
+
     /**
      * Gets a list AttributeValues which the source module has,
      * But the destination module does not have, when doing a copy.
@@ -2839,11 +2851,12 @@ public class Issue
         AttributeValue result = null;
         Object obj = ScarabCache.get(this, GET_DEFAULT_TEXT_ATTRIBUTEVALUE); 
         if (obj == null) 
-        {
-            String id = getIssueType().getDefaultTextAttributeId(getModule());
-            if (id != null) 
+        {        
+            Attribute defaultTextAttribute = 
+                getIssueType().getDefaultTextAttribute(getModule());
+            if (defaultTextAttribute != null) 
             {
-                result = getAttributeValue(new Integer(id));
+                result = getAttributeValue(defaultTextAttribute);
             }
             ScarabCache.put(result, this, GET_DEFAULT_TEXT_ATTRIBUTEVALUE);
         }
@@ -2853,7 +2866,6 @@ public class Issue
         }
         return result;
     }
-
 
     /**
      * This calls getDefaultTextAttributeValue() and then returns the

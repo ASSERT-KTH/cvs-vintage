@@ -32,9 +32,11 @@
  </tr>
 
  #foreach ($attribute in $attributes)
-  #foreach ($columnAttribute in $scarabR.RModuleUserAttributes)
-   #if ($attribute.QueryKey.equals($columnAttribute))
-    #set ($order = $velocityCount)
+  #set ($userAttribute = $user.getRModuleUserAttribute($attribute))
+  #set ($order = 0)
+  #foreach ($moduleUserAttribute in $scarabR.RModuleUserAttributes)
+   #if ($attribute.Name.equals($moduleUserAttribute.Attribute.Name))
+    #set ($order = $moduleUserAttribute.Order)
    #end
   #end
 

@@ -66,7 +66,7 @@ import org.tigris.scarab.util.ScarabException;
   * to create combination of a ROptionOption and a AttributeOption
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ParentChildAttributeOption.java,v 1.17 2003/07/17 21:35:39 elicia Exp $
+  * @version $Id: ParentChildAttributeOption.java,v 1.18 2003/10/14 04:59:23 jmcnally Exp $
   */
 public class ParentChildAttributeOption 
     implements Retrievable, java.io.Serializable
@@ -342,15 +342,6 @@ public class ParentChildAttributeOption
             {
                 throw new Exception (Localization.getString("CannotCreateChild"));
             }
-        }
-
-        // if the pcao is deleted and the parent is not Root, then delete
-        // the option option mapping
-        else if (getDeleted() && ! getParentId().equals(new Integer(0)))
-        {
-            ROptionOption
-                .doRemove(getParentId(), getOptionId());
-            return;
         }
 
         // if getOptionId() is null, then it will just create a new instance

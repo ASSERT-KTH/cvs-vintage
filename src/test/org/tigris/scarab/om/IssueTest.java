@@ -63,7 +63,7 @@ import org.apache.torque.util.Criteria;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.28 2003/09/17 02:27:23 jmcnally Exp $
+ * @version $Id: IssueTest.java,v 1.29 2003/10/14 04:59:24 jmcnally Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -218,7 +218,7 @@ public class IssueTest extends BaseTestCase
     private void testGetUsersToEmail() throws Exception
     {
         System.out.println ("testGetUsersToEmail()");
-        Set users = getIssue0().getUsersToEmail(AttributePeer.ASSIGNED_TO,
+        Set users = getIssue0().getUsersToEmail(AttributePeer.EMAIL_TO,
                                                 getIssue0(), null);
         assertEquals(users.size(), 2);
     }

@@ -47,6 +47,9 @@ package org.tigris.scarab.services;
  */ 
 
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
 import java.util.Locale;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -55,10 +58,14 @@ import java.util.Iterator;
 import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.InitializationException;
 import org.apache.fulcrum.localization.Localization;
+import org.apache.turbine.Turbine;
 
+import org.apache.torque.Torque;
 import org.apache.torque.util.Criteria;
 
+import org.tigris.scarab.om.GlobalParameter;
 import org.tigris.scarab.om.GlobalParameterManager;
+import org.tigris.scarab.om.GlobalParameterPeer;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 
@@ -67,7 +74,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * respective localized values upon initial startup of Fulcrum.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.15 2003/07/25 17:18:00 thierrylach Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.16 2003/10/14 04:59:23 jmcnally Exp $
  */
 public class DatabaseInitializer
     extends BaseService
@@ -76,6 +83,13 @@ public class DatabaseInitializer
     private static final String STARTED_L10N = "started";
     private static final String POST_L10N = "post-l10n";
     private static final String DB_L10N_STATE = "db-l10n-state";
+
+    // some old parameter keys for the http parameters
+    private static final String MODULE_DOMAIN = "module-domain";
+    private static final String MODULE_PORT = "module-port";
+    private static final String MODULE_SCHEME = "module-scheme";
+    private static final String MODULE_SCRIPT_NAME = "module-script-name";
+
 
     /**
      * The values returned by {@link #getInputData()}.
@@ -112,6 +126,8 @@ public class DatabaseInitializer
                 Log.get().info("Done localizing.  Time elapsed = " + 
                     (System.currentTimeMillis()-start)/1000.0 + " s");
             }
+
+            checkNewHttpParameters();
         }
         catch (Exception e)
         {
@@ -193,6 +209,159 @@ public class DatabaseInitializer
                     }
                     save.invoke(om, null);
                 } 
+            }
+        }
+    }
+
+    private void checkNewHttpParameters()
+        throws Exception
+    {
+        String oldDomain = GlobalParameterManager
+            .getString(ScarabConstants.HTTP_DOMAIN);
+        String oldScheme = GlobalParameterManager
+            .getString(ScarabConstants.HTTP_SCHEME);
+        String oldScriptName = GlobalParameterManager
+            .getString(ScarabConstants.HTTP_SCRIPT_NAME);
+        String oldPort = GlobalParameterManager
+            .getString(ScarabConstants.HTTP_PORT);
+
+        if (oldDomain == null)
+        {
+            // installations with post-b15 but pre-b16 may have module
+            // specific values.  
+            Criteria crit = new Criteria();
+            crit.add(GlobalParameterPeer.NAME, MODULE_DOMAIN);
+            List parameters = GlobalParameterPeer.doSelect(crit);
+            if (!parameters.isEmpty()) 
+            {
+                oldDomain = ((GlobalParameter)parameters.get(0)).getValue();
+            }
+
+            crit = new Criteria();
+            crit.add(GlobalParameterPeer.NAME, MODULE_SCHEME);
+            parameters = GlobalParameterPeer.doSelect(crit);
+            if (!parameters.isEmpty()) 
+            {
+                oldScheme = ((GlobalParameter)parameters.get(0)).getValue();
+            }
+
+            crit = new Criteria();
+            crit.add(GlobalParameterPeer.NAME, MODULE_SCRIPT_NAME);
+            parameters = GlobalParameterPeer.doSelect(crit);
+            if (!parameters.isEmpty()) 
+            {
+                oldScriptName = 
+                    ((GlobalParameter)parameters.get(0)).getValue();
+            }
+
+            crit = new Criteria();
+            crit.add(GlobalParameterPeer.NAME, MODULE_PORT);
+            parameters = GlobalParameterPeer.doSelect(crit);
+            if (!parameters.isEmpty()) 
+            {
+                oldPort = ((GlobalParameter)parameters.get(0)).getValue();
+            }
+        }
+
+        String newValue = Turbine.getConfiguration()
+            .getString(ScarabConstants.HTTP_DOMAIN);
+        if (newValue != null && newValue.trim().length() != 0
+            && !newValue.equals(oldDomain)) 
+        {
+            GlobalParameterManager
+                .setString(ScarabConstants.HTTP_DOMAIN, newValue);
+            fixIssueIdCounters(oldDomain, newValue);
+        }
+
+        newValue = Turbine.getConfiguration()
+            .getString(ScarabConstants.HTTP_SCHEME);
+        if (newValue != null && newValue.trim().length() != 0
+            && !newValue.equals(oldScheme)) 
+        {
+            GlobalParameterManager
+                .setString(ScarabConstants.HTTP_SCHEME, newValue);
+        }
+
+        newValue = Turbine.getConfiguration()
+            .getString(ScarabConstants.HTTP_SCRIPT_NAME);
+        if (newValue != null && newValue.trim().length() != 0
+            && !newValue.equals(oldScriptName)) 
+        {
+            GlobalParameterManager
+                .setString(ScarabConstants.HTTP_SCRIPT_NAME, newValue);
+        }
+
+        newValue = Turbine.getConfiguration()
+            .getString(ScarabConstants.HTTP_PORT);
+        if (newValue != null && newValue.trim().length() != 0
+            && !newValue.equals(oldPort)) 
+        {
+            GlobalParameterManager
+                .setString(ScarabConstants.HTTP_PORT, newValue);
+        }
+    }
+
+    private void fixIssueIdCounters(String oldDomain, String newDomain)
+        throws Exception
+    {
+        String sql = 
+            "select NEXT_ID from ID_TABLE where TABLE_NAME='ID_TABLE'";
+        Connection con = null;
+        try 
+        {
+            con = Torque.getConnection();
+            Statement s = con.createStatement();
+            ResultSet rs = s.executeQuery(sql);
+            int maxId = 0;
+            if (rs.next()) 
+            {
+                maxId = rs.getInt(1);
+            }
+            s.close();
+
+            for (int id = 1000; id <= maxId; id++) 
+            {
+                sql = "select TABLE_NAME from ID_TABLE where ID_TABLE_ID=" 
+                    + id;
+                s = con.createStatement();
+                rs = s.executeQuery(sql);
+                if (rs.next()) 
+                {
+                    String oldKey = rs.getString(1);
+                    s.close();
+                    int hyphenPos = oldKey.indexOf('-');
+                    String newKey = null;
+                    if ( (oldDomain == null || oldDomain.length() == 0)
+                         && hyphenPos <= 0) 
+                    {
+                        newKey = newDomain + '-' + oldKey;
+                    }
+                    else 
+                    {
+                        String prefix = oldKey.substring(0, hyphenPos);
+                        String code = oldKey.substring(hyphenPos+1);
+                        if (prefix.equals(oldDomain)) 
+                        {
+                            newKey = newDomain + '-' + code;
+                        }
+                    }
+                    
+                    if (newKey != null) 
+                    {
+                        sql = "update ID_TABLE set TABLE_NAME='" + newKey +
+                            "' where ID_TABLE_ID=" + id;
+                        s = con.createStatement();
+                        s.executeUpdate(sql);
+                        s.close();
+                    }
+                }
+            }
+        }
+        finally
+        {
+            if (con != null) 
+            {
+                con.close();
             }
         }
     }

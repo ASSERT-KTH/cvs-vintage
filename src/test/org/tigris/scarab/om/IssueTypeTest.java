@@ -53,7 +53,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTypeTest.java,v 1.7 2003/09/15 23:45:50 jmcnally Exp $
+ * @version $Id: IssueTypeTest.java,v 1.8 2003/10/14 04:59:24 jmcnally Exp $
  */
 public class IssueTypeTest extends BaseTestCase
 {
@@ -139,8 +139,8 @@ public class IssueTypeTest extends BaseTestCase
 
     private void testGetAttributeGroups(int expectedSize) throws Exception
     {
-        assertEquals(issueType.getAttributeGroups(null, true).size(), 
-                     expectedSize);
+        assertEquals(expectedSize,
+                     issueType.getAttributeGroups(null, true).size());
     }
 
     private void testCreateNewGroup() throws Exception

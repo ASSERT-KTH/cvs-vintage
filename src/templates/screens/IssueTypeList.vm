@@ -11,7 +11,7 @@ $user.setHomePage("query")
  <input type="hidden" name="queryId" 
      value="$!data.Parameters.getString("queryId")" />
  <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" 
-     value="home,XModuleList.vm" />
+     value="IssueTypeList.vm" />
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" 
      value="AdvancedQuery.vm" />
 

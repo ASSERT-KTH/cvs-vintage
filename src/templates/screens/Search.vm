@@ -112,7 +112,7 @@ $user.setHomePage("query")
  <select name="$searchGroup.SortAttributeId.Key">
     <option value="">$l10n.Choose</option>
 #foreach ($rmua in $rmuas)
-#set ($attribute = $scarabR.getAttribute($rmua))
+#set ($attribute = $rmua.Attribute)
    <option value="$attribute.AttributeId"
      #if ($searchGroup.SortAttributeId.Value.equals($attribute.AttributeId))
           selected="selected" #end>

@@ -196,7 +196,7 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
 drop table xxxx_populate_RolePermission;
 
 
--- Assign the user 'turbine@tigris.org' a system-wide role 'Root'
+-- Assign the user '@ADMIN_USERNAME@' a system-wide role 'Root'
 
 INSERT INTO TURBINE_USER_GROUP_ROLE ( USER_ID, GROUP_ID, ROLE_ID ) 
 SELECT TURBINE_USER.USER_ID, SCARAB_MODULE.MODULE_ID, TURBINE_ROLE.ROLE_ID from 

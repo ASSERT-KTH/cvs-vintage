@@ -74,7 +74,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
- * @version $Id: ScarabLink.java,v 1.68 2003/09/18 18:18:05 jmcnally Exp $
+ * @version $Id: ScarabLink.java,v 1.69 2003/10/14 04:59:23 jmcnally Exp $
  */
 public class ScarabLink extends TemplateLink
     implements InitableRecyclable, SkipFiltering
@@ -153,7 +153,7 @@ public class ScarabLink extends TemplateLink
         {
             result = currentModule.getDomain();
         }
-        if (result.length() == 0)
+        if (result == null || result.length() == 0)
         {
             result = super.getServerName();
         }

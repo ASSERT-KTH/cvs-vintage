@@ -64,8 +64,6 @@ import org.apache.torque.om.BaseObject;
 
 import org.apache.fulcrum.localization.Localization;
 
-import org.tigris.scarab.da.DAFactory;
-import org.tigris.scarab.da.AttributeAccess;
 import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -79,11 +77,14 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.94 2003/09/17 01:45:25 dlr Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.95 2003/10/14 04:59:23 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
 {
+    /** Method name used as part of a cache key */
+    private static final String GET_R_MODULE_USERATTRIBUTES = 
+        "getRModuleUserAttributes";
     /** Method name used as part of a cache key */
     private static final String GET_R_MODULE_USERATTRIBUTE = 
         "getRModuleUserAttribute";
@@ -412,6 +413,37 @@ public abstract class AbstractScarabUser
     }
 
     /**
+     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(Module, IssueType)
+     */
+    public List getRModuleUserAttributes(Module module,
+                                         IssueType issueType)
+        throws Exception
+    {
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_R_MODULE_USERATTRIBUTES, 
+                                     module, issueType); 
+        if (obj == null) 
+        {        
+            Criteria crit = new Criteria()
+                .add(RModuleUserAttributePeer.USER_ID, getUserId())
+                .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
+                .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
+                     issueType.getIssueTypeId())
+                .addAscendingOrderByColumn(
+                    RModuleUserAttributePeer.PREFERRED_ORDER);
+            
+            result = getRModuleUserAttributes(crit);
+            ScarabCache.put(result, this, GET_R_MODULE_USERATTRIBUTES,  
+                            module, issueType);
+        }
+        else 
+        {
+            result = (List)obj;
+        }
+        return result;
+    }
+
+    /**
      * Should return a list of <code>RModuleUserAttribute</code>'s that
      * meet the given criteria. 
      */
@@ -733,11 +765,19 @@ public abstract class AbstractScarabUser
             {
                 UserPreference up = UserPreferenceManager.getInstance(uid);
                 homePage = up.getHomePage();
+
                 if ("query".equals(homePage)) 
                 {
                     homePage = getQueryTarget();
                 }
-                
+                // protect against removal of old screens
+                else if (homePage != null && 
+                    (homePage.endsWith("ModuleQuery.vm") ||
+                     homePage.endsWith("XModuleList.vm"))) 
+                {
+                    homePage = getQueryTarget();
+                }
+
                 int i = 0;
                 while (homePage == null || !isHomePageValid(homePage, module)) 
                 {
@@ -1562,16 +1602,16 @@ public abstract class AbstractScarabUser
         throws Exception
     {
         MITList mitList = getCurrentMITList();
-            
         Module module = null;
         IssueType issueType = null;
 
         // Delete current attribute selections for user
-        AttributeAccess aa = DAFactory.getAttributeAccess();
-        aa.deleteQueryColumnIDs(getUserId().toString(),
-                                (mitList == null ?
-                                 null : mitList.getListId().toString()),
-                                null, null);
+        for (Iterator currentAttributes = mitList.getSavedRMUAs().iterator();
+               currentAttributes.hasNext();) 
+        {
+            deleteRModuleUserAttribute(
+                (RModuleUserAttribute)currentAttributes.next());
+        }
 
         int i = 1;
         for (Iterator iter = attributes.iterator(); iter.hasNext();) 
@@ -1583,6 +1623,11 @@ public abstract class AbstractScarabUser
             rmua.save();
         }
     }
+
+    protected abstract void 
+        deleteRModuleUserAttribute(RModuleUserAttribute rmua)
+        throws Exception;
+
 
     /**
      * Report the sizes of maps used to hold per-thread attributes

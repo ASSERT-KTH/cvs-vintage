@@ -74,6 +74,7 @@ import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.om.MITList;
+import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -90,7 +91,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.142 2003/09/10 00:41:45 jmcnally Exp $
+ * @version $Id: Search.java,v 1.143 2003/10/14 04:59:22 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -281,7 +282,7 @@ public class Search extends RequireLoginFirstAction
          throws Exception
     {
         data.getParameters().setString("queryString", getQueryString(data));
-        setTarget(data, "home,XModuleList.vm");
+        setTarget(data, "IssueTypeList.vm");
     }
 
     /**
@@ -515,6 +516,10 @@ public class Search extends RequireLoginFirstAction
             }
             else if (go.equals("myIssues"))
             {
+                Module module = user.getCurrentModule();
+                user.setCurrentMITList(MITListManager
+                    .getSingleModuleAllIssueTypesList(module, user));
+
                 String userId = user.getQueryKey();
                 StringBuffer sb = new StringBuffer(26 + 2*userId.length());
                 String query = sb.append("&user_list=").append(userId)
