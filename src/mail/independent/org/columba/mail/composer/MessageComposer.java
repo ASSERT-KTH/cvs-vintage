@@ -22,11 +22,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -424,7 +427,19 @@ public class MessageComposer {
 		SendableHeader header = initHeader();
 		MimePart root = null;
 
-		List mimeParts = model.getAttachments();
+		/*
+		 * *20030921, karlpeder* The old code was (accidentially!?) modifying
+		 * the attachment list of the model. This affects the composing
+		 * when called a second time for saving the message after sending!
+		 */
+		//List mimeParts = model.getAttachments();
+		
+		List attachments = model.getAttachments();
+		List mimeParts = new ArrayList();
+		Iterator ite = attachments.iterator();
+		while (ite.hasNext()) {
+			mimeParts.add(ite.next());
+		}
 
 		// *20030919, karlpeder* Added handling of html messages
 		StreamableMimePart body;
@@ -479,6 +494,9 @@ public class MessageComposer {
 			next = in.read();
 		}
 		message.setStringSource(composedMessage.toString());
+
+		ColumbaLogger.log.debug("Message:\n" + 
+				composedMessage.toString());
 
 		// size
 		int size = composedMessage.length() / 1024;
