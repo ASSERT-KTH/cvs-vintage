@@ -24,7 +24,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.10 2002/10/08 20:04:30 kataka Exp $
+// $Id: FigTransition.java,v 1.11 2002/10/09 21:00:56 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -51,6 +51,7 @@ import org.tigris.gef.presentation.*;
 
 import org.apache.log4j.Category;
 import org.argouml.application.api.*;
+import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.*;
 import org.argouml.uml.generator.*;
@@ -132,5 +133,27 @@ public class FigTransition extends FigEdgeModelElement {
   }
   
   
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#getDestination()
+     */
+    protected MModelElement getDestination() {
+        if (getOwner() != null) {
+            return StateMachinesHelper.getHelper().getDestination((MTransition)getOwner());
+        }
+        return null;
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#getSource()
+     */
+    protected MModelElement getSource() {
+        if (getOwner() != null) {
+            return StateMachinesHelper.getHelper().getSource((MTransition)getOwner());
+        }
+        return null;
+    }
+    
+    
+
 } /* end class FigTransition */
 
