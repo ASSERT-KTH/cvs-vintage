@@ -17,9 +17,12 @@ $issue.UniqueId Report
 #foreach ($group in $module.getAttributeGroups($issueType))
 #foreach ($att in $group.Attributes)
 #set ($rma = $module.getRModuleAttribute($att, $issueType))
+#set ($attVal = "")
 #if ($rma.Active)
 #set ($attVal = $attrValues.get($att.getName().toUpperCase()))
-$attVal.RModuleAttribute.DisplayValue: $attVal.Value
+#if ($attVal.Value) 
+$rma.DisplayValue: $attVal.Value
+#end
 #end
 #end
 #end
