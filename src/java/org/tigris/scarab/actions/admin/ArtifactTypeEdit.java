@@ -85,7 +85,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.30 2002/09/11 21:47:07 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.31 2002/09/11 23:33:44 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -138,8 +138,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         // Only have dedupe if there are more than one active group
         if (module.getAttributeGroups(issueType, true).size() > 1)
         {
-            dupeOrder = Integer.parseInt(data.getParameters()
-                                                 .getString("dupe_order"));
+            dupeOrder = data.getParameters().getInt("dupe_order");
 
             // Check for duplicate sequence numbers
             for (int i=0; i<attGroups.size(); i++) 
