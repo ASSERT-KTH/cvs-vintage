@@ -1,7 +1,6 @@
 <div class="app" id="issuelist">
 
 #set ($user = $data.User)
-#set ($search = $scarabR.Search)
 #set ($searchType = $data.Parameters.getString("searchType",""))
 #if (!$issueIdList)
    #set ($issueIdList = $scarabR.CurrentSearchResults)
