@@ -356,7 +356,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	Context ctx=req.getContext();
 	String ctxP=ctx.getPath();
 
-	String path = req.getPathInfo(); // we haven't matched any prefix,
+	String path = req.getServletPath(); // we haven't matched any prefix,
 	if( path == null ) return null;
 
 	String extension=URLUtil.getExtension( path );
