@@ -114,13 +114,14 @@ public class Activity
                        NumberKey oldUserId, NumberKey newUserId,
                        NumberKey oldOptionId, NumberKey newOptionId,
                        String oldValue, String newValue)
-         throws TorqueException
+         throws TorqueException, Exception
     {
         create(issue, attribute, desc, transaction,
                oldNumericValue, newNumericValue,
                oldUserId, newUserId,
                oldOptionId, newOptionId,
                oldValue, newValue, null);
+        issue.getActivity(true).add(this);
     }
 
     /**
@@ -172,6 +173,14 @@ public class Activity
             {
                 save(dbCon);
             }
+           try
+           {
+             issue.getActivity(true).add(this);
+           }
+           catch (Exception e)
+           {
+                throw new TorqueException(e);
+           }
     }
 
     /**
