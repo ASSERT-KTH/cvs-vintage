@@ -24,7 +24,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.62 2003/02/11 20:47:56 thn Exp $
+// $Id: GeneratorJava.java,v 1.63 2003/02/20 07:38:48 lepekhine Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -559,7 +559,11 @@ public class GeneratorJava
         if (cls.isLeaf()) {
             sb.append("final ");
         }
-
+        
+        // add additional modifiers
+        if (cls.getTaggedValue("src_modifiers") != null)
+            sb.append(" "+cls.getTaggedValue("src_modifiers")+" ");
+        
         // add classifier keyword and classifier name
         sb.append(sClassifierKeyword).append(" ").append(
             generateName(cls.getName()));
