@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.49 2002/10/07 21:12:49 thierrylach Exp $
+$Id: README.txt,v 1.50 2002/10/26 21:10:56 jon Exp $
 
 Welcome to Scarab!
 
@@ -27,13 +27,14 @@ Ant 1.4 or higher        --> <http://jakarta.apache.org/ant/>
 The version of torque used with scarab must be compiled with Ant 1.4.x
 
 Tomcat 4.0.4 or higher   --> <http://jakarta.apache.org/tomcat/>
-                             (Note: Tomcat is included with Scarab.)
+                             (Note: Tomcat 4.1.x is included with Scarab.)
 
 MySQL 3.23 or higher       --> <http://www.mysql.org/>
                            OR
 Postgresql 7.2.1 or higher --> <http://www.postgresql.org/>
 
-NOTE: Scarab is known to not work when compiled with Jikes 1.16.
+NOTE: Scarab is known to not work when compiled with Jikes 1.16, but does
+work when compiled with Jikes 1.17.
 
 You must have the JAVA_HOME environment variable properly set to be the 
 location of your JDK installation directory.
@@ -119,7 +120,9 @@ Within the /src directory are a number of sub directories...
     /sql        <-- SQL files for defining the database.
     /templates  <-- Velocity templates for the HTML and Email.
     /test       <-- Test suite code.
-    /tomcat-4.0 <-- A minimal copy of Tomcat 4.0 for use with the Scarab
+    /tomcat-4.0 <-- A minimal copy of Tomcat 4.0.x for use with the Scarab
+                    sandbox. Will be removed soon.
+    /tomcat-4.1 <-- A minimal copy of Tomcat 4.1.x for use with the Scarab
                     sandbox.
 
 
