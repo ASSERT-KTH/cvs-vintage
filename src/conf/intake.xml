@@ -98,10 +98,11 @@
            <rule name="mask" value="^$|[0-9]+">Please select a valid choice</rule>
         </field>
         <field name="Name" key="name" type="String">
-            <rule name="maxLength" value="255"/>
+            <rule name="required" value="true">Name may not be blank</rule>
+            <rule name="maxLength" value="255">Issue type name must be less than 255 characters long</rule>    
         </field>
         <field name="Description" key="desc" type="String">
-            <rule name="maxLength" value="255"/>
+            <rule name="maxLength" value="255">Description must be less than 255 characters long</rule>    
         </field>
         <field name="Template" key="tem" type="boolean" mapToProperty=""/>
         <field name="Deleted" key="del" type="boolean"/>
