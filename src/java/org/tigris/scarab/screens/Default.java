@@ -75,7 +75,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.54 2002/06/10 22:59:55 jon Exp $
+ * @version $Id: Default.java,v 1.55 2002/06/11 21:02:54 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -85,8 +85,7 @@ public class Default extends TemplateSecureScreen
     public void doBuildTemplate( RunData data, TemplateContext context )
         throws Exception 
     {
-        ScarabRequestTool scarabR = ((ScarabRequestTool)context
-                                 .get(ScarabConstants.SCARAB_REQUEST_TOOL));
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         // This may not be the best location for this, we might need to create
         // a valve.  
         // check that the module exists, it may not have been created yet.
@@ -135,10 +134,7 @@ public class Default extends TemplateSecureScreen
 
             String perm = ScarabSecurity.getScreenPermission(template);
 
-            ScarabRequestTool scarabR = 
-                (ScarabRequestTool)getTemplateContext(data)
-                .get(ScarabConstants.SCARAB_REQUEST_TOOL);
-
+            ScarabRequestTool scarabR = getScarabRequestTool(getTemplateContext(data));
             Module currentModule = scarabR.getCurrentModule();
             IssueType currentIssueType = scarabR.getCurrentIssueType();
             ScarabUser user = (ScarabUser)data.getUser();
@@ -222,7 +218,7 @@ public class Default extends TemplateSecureScreen
     /**
      * Helper method to retrieve the ScarabRequestTool from the Context
      */
-    public ScarabRequestTool getScarabRequestTool(TemplateContext context)
+    public static ScarabRequestTool getScarabRequestTool(TemplateContext context)
     {
         return (ScarabRequestTool)context
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
