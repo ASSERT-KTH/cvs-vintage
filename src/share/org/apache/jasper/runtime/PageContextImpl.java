@@ -94,8 +94,6 @@ import org.apache.tomcat.util.log.*;
  */
 public class PageContextImpl extends PageContext {
 
-    Log loghelper = Log.getLog("JASPER_LOG", "JspFactoryImpl");
-
     PageContextImpl(JspFactory factory) {
         this.factory = factory;
     }
@@ -462,12 +460,13 @@ public class PageContextImpl extends PageContext {
     protected JspWriter _createOut(int bufferSize, boolean autoFlush)
         throws IOException, IllegalArgumentException
     {
-	try {
-	    return new JspWriterImpl(response, bufferSize, autoFlush);
-	} catch( Throwable t ) {
-	    loghelper.log("creating out", t);
-	    return null;
-	}
+	// This may fail for security expcetions, if the sandbox is broken !!
+	//	try {
+	return new JspWriterImpl(response, bufferSize, autoFlush);
+	// 	} catch( Throwable t ) {
+	// 	    loghelper.log("creating out", t);
+	// 	    return null;
+	// 	}
     }
 
     /*

@@ -103,6 +103,9 @@ public class BodyContentImpl extends BodyContent {
         }
     }
 
+    /** Make space for len chars. If len is small, allocate
+	a reserve space too.
+     */
     private void reAllocBuff (int len) {
         //Need to re-allocate the buffer since it is to be
  	//unbounded according to the updated spec..
@@ -112,12 +115,11 @@ public class BodyContentImpl extends BodyContent {
 	//XXX Should it be multiple of DEFAULT_BUFFER_SIZE??
 
 	if (len <= Constants.DEFAULT_BUFFER_SIZE) {
-	    tmp = new char [bufferSize + Constants.DEFAULT_BUFFER_SIZE];
-	    //	    bufferSize = bufferSize * 2;
-	    bufferSize += Constants.DEFAULT_BUFFER_SIZE;
+	    bufferSize = bufferSize * 2;
+	    tmp = new char [bufferSize];
 	} else {
-	    tmp = new char [bufferSize + len];
 	    bufferSize += len;
+	    tmp = new char [bufferSize];
 	}
 	System.arraycopy(cb, 0, tmp, 0, cb.length);
 	cb = tmp;
