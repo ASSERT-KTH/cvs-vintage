@@ -94,7 +94,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.27 2002/04/13 02:39:32 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.28 2002/04/22 21:32:56 jon Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -287,11 +287,11 @@ public class MoveIssue extends RequireLoginFirstAction
             
         if (selectAction.equals("move"))
         {
-            attachment.setName("Moved Issue Note");
+            attachment.setName("Moved issue note");
         }
         else
         {
-            attachment.setName("Copied Issue Note");
+            attachment.setName("Copied issue note");
         }
         attachment.setTextFields(user, newIssue, Attachment.MODIFICATION__PK);
         attachment.save();
@@ -338,6 +338,5 @@ public class MoveIssue extends RequireLoginFirstAction
     {
         setTarget(data, data.getParameters()
             .getString(ScarabConstants.CANCEL_TEMPLATE, "MoveIssue.vm"));
-    }
-    
-} 
+    }    
+}
