@@ -95,8 +95,12 @@ public class DefaultContainer extends JFrame implements Container,
 
 		this.setIconImage(ImageLoader.getImageIcon("icon16.png").getImage());
 
-		setTitle("Columba - version: "
-				+ org.columba.core.main.MainInterface.version);
+		if (MainInterface.DEBUG) { 
+			setTitle("Columba - version: " + org.columba.core.main.MainInterface.version +
+					" Running in DEBUG MODE");
+		} else { 
+			setTitle("Columba - version: " + org.columba.core.main.MainInterface.version);
+		}
 
 		//		register statusbar at global taskmanager
 		statusBar = new StatusBar(MainInterface.processor.getTaskManager());
