@@ -1,4 +1,4 @@
-// $Id: ActionAddExtensionPoint.java,v 1.2 2004/01/06 21:47:16 jjones Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.3 2004/08/01 12:47:17 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionAddExtensionPoint.java
 // Classes: ActionAddExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: ActionAddExtensionPoint.java,v 1.2 2004/01/06 21:47:16 jjones Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.3 2004/08/01 12:47:17 mvw Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // the display of extension points.
@@ -63,7 +63,7 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
      *   access method.</p>
      */
 
-    private static ActionAddExtensionPoint _singleton = null;
+    private static ActionAddExtensionPoint singleton = null;
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -75,13 +75,7 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
     /**
      * <p>Constructor is private, since it cannot be called directly for a
      *   singleton. Make use of the access funtion.</p>
-     *
-     * <p><em>Warning</em>. There is a horrible piece of coding under all
-     *   this. The name of the icon MUST be the same as the tool tip with
-     *   spaces removed (Arrgh!). So we must have
-     *   <code>AddExtensionPoint.gif</code> somewhere.</p>
      */
-
     public ActionAddExtensionPoint() {
         super("New Extension Point");
     }
@@ -107,11 +101,11 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
 
         // Create the singleton if it does not exist, and then return it
 
-        if (_singleton == null) {
-            _singleton = new ActionAddExtensionPoint();
+        if (singleton == null) {
+            singleton = new ActionAddExtensionPoint();
         }
 
-        return _singleton;
+        return singleton;
     }
 
 
@@ -136,7 +130,8 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
         // invoke the superclass action method.
 
 	Object/*MExtensionPoint*/ ep =
-            UmlFactory.getFactory().getUseCases().buildExtensionPoint(/*(MUseCase)*/target);
+            UmlFactory.getFactory().getUseCases()
+                            .buildExtensionPoint(/*(MUseCase)*/target);
 
         TargetManager.getInstance().setTarget(ep);
 	super.actionPerformed(ae);
@@ -154,7 +149,8 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
     public boolean shouldBeEnabled() {
 	Object         target = TargetManager.getInstance().getModelTarget();
 
-	return super.shouldBeEnabled() && (org.argouml.model.ModelFacade.isAUseCase(target));
+	return super.shouldBeEnabled() && (org.argouml.model.ModelFacade
+	                .isAUseCase(target));
     }
 
 } /* end class ActionAddExtensionPoint */
