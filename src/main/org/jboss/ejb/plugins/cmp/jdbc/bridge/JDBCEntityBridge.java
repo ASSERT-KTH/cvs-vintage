@@ -61,7 +61,7 @@ import org.jboss.ejb.plugins.keygenerator.KeyGeneratorFactory;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
@@ -227,9 +227,6 @@ public class JDBCEntityBridge implements EntityBridge {
 
    /**
     * Loads the specified load groups.
-    * Note: if optimistic locking is specified then
-    * optimistic locking fields are added each group to
-    * ensure the locking fields are always loaded
     */
    private void loadLoadGroups(JDBCEntityMetaData metadata)
          throws DeploymentException {
@@ -433,7 +430,7 @@ public class JDBCEntityBridge implements EntityBridge {
       }
       return field;
    }
- 
+
    public List getCMPFields() {
       return cmpFields;
    }
@@ -457,13 +454,13 @@ public class JDBCEntityBridge implements EntityBridge {
    public JDBCCMPFieldBridge getCMPFieldByName(String name) {
       return (JDBCCMPFieldBridge)cmpFieldsByName.get(name);
    }
-   
+
    private JDBCCMPFieldBridge getExistingCMPFieldByName(String name)
          throws DeploymentException {
 
       JDBCCMPFieldBridge cmpField = getCMPFieldByName(name);
       if(cmpField == null) {
-         throw new DeploymentException("cmpField not found: " + 
+         throw new DeploymentException("cmpField not found: " +
                "cmpFieldName="+name + " entityName=" + getEntityName());
       }
       return cmpField;
@@ -472,7 +469,7 @@ public class JDBCEntityBridge implements EntityBridge {
    public List getCMRFields() {
       return cmrFields;
    }
-   
+
    public JDBCCMRFieldBridge getCMRFieldByName(String name) {
       return (JDBCCMRFieldBridge)cmrFieldsByName.get(name);
    }
@@ -507,24 +504,34 @@ public class JDBCEntityBridge implements EntityBridge {
       }
    }
 
+   /**
+    * Returns the list of dirty fields.
+    * Note: instead of CMR fields its foreign key fields are
+    * included
+    */
    public List getDirtyFields(EntityEnterpriseContext ctx) {
       List dirtyFields = new ArrayList(fields.size());
-      
       for(Iterator iter = fields.iterator(); iter.hasNext();) {
          JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
-         if(field.isDirty(ctx)) {
-            dirtyFields.add(field);
+         if(field instanceof JDBCCMRFieldBridge) {
+             List dirtyFkFields = ((JDBCCMRFieldBridge)field).getDirtyForeignKeyFields(ctx);
+            if(!dirtyFkFields.isEmpty())
+               dirtyFields.addAll(dirtyFkFields);
+         } else {
+            if(field.isDirty(ctx)) {
+               dirtyFields.add(field);
+            }
          }
       }
       return dirtyFields;
    }
-   
+
    public void initPersistenceContext(EntityEnterpriseContext ctx) {
       // If we have an EJB 2.0 dynaymic proxy,
       // notify the handler of the assigned context.
       Object instance = ctx.getInstance();
       if(instance instanceof Proxies.ProxyTarget) {
-         InvocationHandler handler = 
+         InvocationHandler handler =
                ((Proxies.ProxyTarget)instance).getInvocationHandler();
          if(handler instanceof EntityBridgeInvocationHandler) {
             ((EntityBridgeInvocationHandler)handler).setContext(ctx);
