@@ -19,7 +19,7 @@ import org.jboss.metadata.QueryMetaData;
  * Imutable class contains information about a declated query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
    /**
@@ -94,22 +94,7 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
       order = MetaData.getOptionalChildContent(queryElement, "order");
       other = MetaData.getOptionalChildContent(queryElement, "other");
 
-
-		String resultTypeMappingString = MetaData.getOptionalChildContent(
-            queryElement,
-            "result-type-mapping");
-            
-		if(QueryMetaData.LOCAL.equals(resultTypeMappingString)) {
-         resultTypeMappingLocal = true;
-      } else if(QueryMetaData.REMOTE.equals(resultTypeMappingString)) {
-         resultTypeMappingLocal = false;
-      } else if(resultTypeMappingString == null) {
-         resultTypeMappingLocal = jdbcQueryMetaData.isResultTypeMappingLocal();
-      } else {
-			throw new DeploymentException("result-type-mapping, if specified, " +
-               "must be '" + QueryMetaData.REMOTE + "' or '" +
-               QueryMetaData.LOCAL + "', and it is case sensitive.");
-		}
+      resultTypeMappingLocal = jdbcQueryMetaData.isResultTypeMappingLocal();
 
       // load ejbSelect info
       Element selectElement = 
