@@ -13,6 +13,7 @@ Overview of the architecture of jboss.xml
 
   <enforce-ejb-restrictions />
   <security-domain />
+  <unauthenticated-principal />
 
   <enterprise-beans>
 
@@ -84,7 +85,7 @@ deployed
 3- the deployer can specify runtime jndi names for resource managers.
 
 -->
-<!ELEMENT jboss (enforce-ejb-restrictions? , security-domain? , enterprise-beans? , resource-managers? , container-configurations?)>
+<!ELEMENT jboss (enforce-ejb-restrictions? , security-domain? , unauthenticated-principal?, enterprise-beans? , resource-managers? , container-configurations?)>
 
 <!--
   The enforce-ejb-restrictions element tells the container to enforce ejb1.1 restrictions
@@ -107,6 +108,13 @@ level.
   Used in: jboss, container-configuration
 -->
 <!ELEMENT security-domain (#PCDATA)>
+
+<!-- The unauthenticated-principal element specifies the name of the principal
+that will be returned by the EJBContext.getCallerPrincipal() method if there
+is no authenticated user. This Principal has no roles or privaledges to call
+any other beans. 
+-->
+<!ELEMENT unauthenticated-principal (#PCDATA)>
 
 <!-- 
   The enterprise-beans element contains additional information about 
