@@ -7,27 +7,28 @@
 
 package org.jboss.ejb;
 
+
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Map;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.rmi.RemoteException;
-
+import java.util.Map;
+import javax.ejb.CreateException;
+import javax.ejb.EJBException;
+import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalHome;
+import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBMetaData;
+import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
-import javax.ejb.EJBObject;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.EJBMetaData;
-import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
-import javax.ejb.EJBException;
-
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
+import org.jboss.metadata.ConfigurationMetaData;
 
 /**
  * The container for <em>stateless</em> session beans.
@@ -35,7 +36,7 @@ import org.jboss.invocation.MarshalledInvocation;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  * 
  * <p><b>2001219 marc fleury</b>
  * <ul>
@@ -122,20 +123,21 @@ public class StatelessSessionContainer
    
    protected void createService() throws Exception
    {
+      typeSpecificInitialize();
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
 
       try
       {
+
+         // Call default init
+         super.createService();
          // Acquire classes from CL
          if (metaData.getHome() != null)
             homeInterface = classLoader.loadClass(metaData.getHome());
          if (metaData.getRemote() != null)
             remoteInterface = classLoader.loadClass(metaData.getRemote());
-
-         // Call default init
-         super.createService();
 
          // Map the bean methods
          setupBeanMapping();
@@ -564,6 +566,29 @@ public class StatelessSessionContainer
    {
       return new ContainerInterceptor();
    }
+   
+   //Moved from EjbModule-------------------
+   /**
+    * Describe <code>typeSpecificInitialize</code> method here.
+    * stateless session specific initialization.
+    */
+   protected void typeSpecificInitialize()  throws Exception
+   {
+      ClassLoader cl = getDeploymentInfo().ucl;
+      ClassLoader localCl = getDeploymentInfo().localCl;
+      int transType = getBeanMetaData().isContainerManagedTx() ? CMT : BMT;
+      
+      genericInitialize(transType, cl, localCl );
+      if (getBeanMetaData().getHome() != null)
+      {
+         createProxyFactories(cl);
+      }
+      ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
+      setInstancePool( createInstancePool( conf, cl ) );
+   }
+
+
+   //end moved from EjbModule---------------
    
    /**
     * This is the last step before invocation - all interceptors are done

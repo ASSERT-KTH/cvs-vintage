@@ -7,14 +7,27 @@
 
 package org.jboss.ejb;
 
+
+
+
+
+import java.lang.ClassLoader;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
-import java.util.Map;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Collection;
 import java.util.List;
-
+import java.util.Map;
+import javax.ejb.EJBException;
+import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalHome;
+import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBMetaData;
+import javax.ejb.EJBObject;
+import javax.ejb.Handle;
+import javax.ejb.HomeHandle;
+import javax.ejb.RemoveException;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
@@ -29,28 +42,18 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
-
-import javax.ejb.Handle;
-import javax.ejb.HomeHandle;
-import javax.ejb.EJBObject;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.EJBMetaData;
-import javax.ejb.EJBException;
-import javax.ejb.RemoveException;
-
 import javax.transaction.Transaction;
 import javax.transaction.TransactionRolledbackException;
-
 import org.jboss.deployment.DeploymentException;
+import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.management.j2ee.SampleData;
+import org.jboss.metadata.ConfigurationMetaData;
+import org.jboss.metadata.EntityMetaData;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.util.collection.SerializableEnumeration;
-import org.jboss.metadata.EntityMetaData;
 
 /**
  * This is a Container for EntityBeans (both BMP and CMP).
@@ -65,7 +68,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.82 $
+ * @version $Revision: 1.83 $
  *
  * <p><b>Revisions:</b>
  *
@@ -277,20 +280,22 @@ public class EntityContainer
    
    protected void createService() throws Exception
    {
+      typeSpecificInitialize();
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
 
       try
       {
+         // Call default init
+         super.createService();
+
          // Acquire classes from CL
          if (metaData.getHome() != null)
             homeInterface = classLoader.loadClass(metaData.getHome());
          if (metaData.getRemote() != null)
             remoteInterface = classLoader.loadClass(metaData.getRemote());
 
-         // Call default init
-         super.createService();
 
          // Map the bean methods
          setupBeanMapping();
@@ -1029,6 +1034,50 @@ public class EntityContainer
       return new ContainerInterceptor();
    }
    
+   //Moved from EjbModule-------------------
+   /**
+    * Describe <code>typeSpecificInitialize</code> method here.
+    * entity specific initialization.
+    */
+   protected void typeSpecificInitialize()  throws Exception
+   {
+      ClassLoader cl = getDeploymentInfo().ucl;
+      ClassLoader localCl = getDeploymentInfo().localCl;
+      int transType = CMT;
+      
+      genericInitialize(transType, cl, localCl );
+      if (getBeanMetaData().getHome() != null)
+      {
+         createProxyFactories(cl);
+      }
+      ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
+      setInstanceCache( createInstanceCache( conf, false, cl ) );
+      setInstancePool( createInstancePool( conf, cl ) );
+      //Set the bean Lock Manager
+      setLockManager(createBeanLockManager(((EntityMetaData)getBeanMetaData()).isReentrant(),conf.getLockConfig(), cl));
+      
+      // Set persistence manager
+      if( ( (EntityMetaData)getBeanMetaData()).isBMP() )
+      {
+         //Should be BMPPersistenceManager
+         setPersistenceManager( (EntityPersistenceManager) cl.loadClass( conf.getPersistenceManager() ).newInstance() );
+      }
+      else
+      {
+         // CMP takes a manager and a store
+         org.jboss.ejb.plugins.CMPPersistenceManager persistenceManager =
+            new org.jboss.ejb.plugins.CMPPersistenceManager();
+         
+         //Load the store from configuration
+         persistenceManager.setPersistenceStore( (EntityPersistenceStore) cl.loadClass( conf.getPersistenceManager() ).newInstance() );
+         // Set the manager on the container
+         setPersistenceManager( persistenceManager );
+      }
+   }
+
+
+   //end moved from EjbModule---------------
+
    // Inner classes -------------------------------------------------
    
    /**

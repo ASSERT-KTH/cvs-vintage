@@ -8,10 +8,13 @@
 package org.jboss.ejb;
 
 
+
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,30 +52,44 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.transaction.TransactionManager;
 import org.jboss.deployment.DeploymentException;
+import org.jboss.deployment.DeploymentInfo;
 import org.jboss.ejb.BeanLockManager;
+import org.jboss.ejb.plugins.AbstractInstanceCache;
+import org.jboss.ejb.plugins.SecurityProxyInterceptor;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.logging.Logger;
+import org.jboss.management.j2ee.EJB;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.EjbLocalRefMetaData;
 import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
+import org.jboss.metadata.InvokerProxyBindingMetaData;
+import org.jboss.metadata.MetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
+import org.jboss.metadata.SessionMetaData;
+import org.jboss.metadata.XmlLoadable;
 import org.jboss.monitor.StatisticsProvider;
+import org.jboss.mx.loading.UnifiedClassLoader;
 import org.jboss.naming.ENCThreadLocalKey;
 import org.jboss.naming.Util;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.NestedError;
+import org.jboss.util.jmx.MBeanProxy;
 import org.jboss.util.jmx.ObjectNameFactory;
-
+import org.jboss.web.WebClassLoader;
+import org.jboss.web.WebServiceMBean;
 import org.w3c.dom.Element;
+import org.jboss.system.Registry;
+
 /**
  * This is the base class for all EJB-containers in JBoss. A Container
  * functions as the central hub of all metadata and plugins. Through this
@@ -93,7 +110,9 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.101 $
+ * @version $Revision: 1.102 $
+ *
+ * @todo convert all the deployment/service lifecycle stuff to an aspect/interceptor.  Make this whole stack into a model mbean.
  */
 public abstract class Container
    extends ServiceMBeanSupport
@@ -105,9 +124,37 @@ public abstract class Container
    public final static ObjectName EJB_CONTAINER_QUERY_NAME = 
          ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",*");
    
+   // Constants uses with container interceptor configurations
+   public static final int BMT = 1;
+   public static final int CMT = 2;
+   public static final int ANY = 3;
+   
+   static final String BMT_VALUE = "Bean";
+   static final String CMT_VALUE = "Container";
+   static final String ANY_VALUE = "Both";
+   
+   //Externally supplied configuration data
+
+   private DeploymentInfo di;
+
+   /**
+    * This is the new metadata. it includes information from both ejb-jar and
+    * jboss.xml the metadata for the application can be accessed trough
+    * metaData.getApplicationMetaData()
+    */
+   protected BeanMetaData metaData;
+   
    /** This is the application that this container is a part of */
    protected EjbModule ejbModule;
    
+
+   //Internally generated configuration data
+
+   /** ObjectName of Container
+    * @todo use getObjectName() from serviceMBeanSupport.
+    */
+   private ObjectName jmxName;
+
    /**
     * This is the local classloader of this container. Used for loading
     * resources that must come from the local jar file for the container.
@@ -125,13 +172,6 @@ public abstract class Container
    /** The class loader for remote dynamic classloading */
    protected ClassLoader webClassLoader;
 
-   /**
-    * This is the new metadata. it includes information from both ejb-jar and
-    * jboss.xml the metadata for the application can be accessed trough
-    * metaData.getApplicationMetaData()
-    */
-   protected BeanMetaData metaData;
-   
    /** This is the EnterpriseBean class */
    protected Class beanClass;
    
@@ -178,9 +218,6 @@ public abstract class Container
    /** ObjectName of the JSR-77 EJB representation **/
    protected String mEJBObjectName;
    
-   /** ObjectName of Container **/
-   private ObjectName jmxName;
-
    protected HashMap proxyFactories = new HashMap();
 
    /** 
@@ -197,6 +234,72 @@ public abstract class Container
    
    // Public --------------------------------------------------------
 
+   //Properties set from the outside
+
+   /**
+    * Get the Di value.
+    * @return the Di value.
+    */
+   public DeploymentInfo getDeploymentInfo()
+   {
+      return di;
+   }
+
+   /**
+    * Set the Di value.
+    * @param newDi The new Di value.
+    */
+   public void setDeploymentInfo(DeploymentInfo di)
+   {
+      this.di = di;
+   }
+
+   
+
+   /**
+    * Sets the application deployment unit for this container. All the bean
+    * containers within the same application unit share the same instance.
+    *
+    * @param   app     application for this container
+    */
+   public void setEjbModule(EjbModule app)
+   {
+      if (app == null)
+         throw new IllegalArgumentException("Null EjbModule");
+      
+      ejbModule = app;
+   }
+   
+   public EjbModule getEjbModule()
+   {
+      return ejbModule;
+   }
+   
+
+
+   /**
+    * Sets the meta data for this container. The meta data consists of the
+    * properties found in the XML descriptors.
+    *
+    * @param metaData
+    */
+   public void setBeanMetaData(final BeanMetaData metaData)
+   {
+      this.metaData = metaData;
+   }
+   
+   /**
+    * Returns the metadata of this container.
+    *
+    * @return metaData;
+    */
+   public BeanMetaData getBeanMetaData()
+   {
+      return metaData;
+   }
+
+
+   //Properties set up in createService/initialization
    public Class getLocalClass() 
    {
       return localInterface;
@@ -289,26 +392,6 @@ public abstract class Container
    {
       return (EJBProxyFactory)proxyFactories.get(binding);
    }
-
-   /**
-    * Sets the application deployment unit for this container. All the bean
-    * containers within the same application unit share the same instance.
-    *
-    * @param   app     application for this container
-    */
-   public void setEjbModule(EjbModule app)
-   {
-      if (app == null)
-         throw new IllegalArgumentException("Null EjbModule");
-      
-      ejbModule = app;
-   }
-   
-   public EjbModule getEjbModule()
-   {
-      return ejbModule;
-   }
-   
    /**
     * Sets the local class loader for this container. 
     * Used for loading resources from the local jar file for this container. 
@@ -363,27 +446,6 @@ public abstract class Container
    public void setWebClassLoader(final ClassLoader webClassLoader)
    {
       this.webClassLoader = webClassLoader;
-   }
-
-   /**
-    * Sets the meta data for this container. The meta data consists of the
-    * properties found in the XML descriptors.
-    *
-    * @param metaData
-    */
-   public void setBeanMetaData(final BeanMetaData metaData)
-   {
-      this.metaData = metaData;
-   }
-   
-   /**
-    * Returns the metadata of this container.
-    *
-    * @return metaData;
-    */
-   public BeanMetaData getBeanMetaData()
-   {
-      return metaData;
    }
    
    /**
@@ -493,6 +555,26 @@ public abstract class Container
     */
    protected void createService() throws Exception
    {
+      // Create JSR-77 EJB-Wrapper
+      log.debug( "Application.create(), create JSR-77 EJB-Component" );
+
+      int lType =
+         metaData.isSession() ?
+         ( ( (SessionMetaData) metaData ).isStateless() ? 2 : 1 ) :
+         ( metaData.isMessageDriven() ? 3 : 0 );
+      ObjectName lEJB = EJB.create(
+         server,
+         getEjbModule().getModuleName() + "",
+         lType,
+         metaData.getJndiName(),
+         jmxName
+         );
+      log.debug( "Application.start(), EJB: " + lEJB );
+      if( lEJB != null ) {
+         mEJBObjectName = lEJB.toString();
+      }
+
+
       // Acquire classes from CL
       beanClass = classLoader.loadClass(metaData.getEjbClass());
       
@@ -525,6 +607,11 @@ public abstract class Container
       setupEnvironment();
       started = true;
       localProxyFactory.start();
+
+      // We keep the hashCode around for fast creation of proxies
+      int jmxHash = jmxName.hashCode();
+      Registry.bind(new Integer(jmxHash), jmxName);
+      log.debug("Bound jmxName="+jmxName+", hash="+jmxHash+"into Registry");
    }
    
    /**
@@ -534,29 +621,54 @@ public abstract class Container
     */
    protected void stopService() throws Exception
    {
+      int jmxHash = jmxName.hashCode();
+      Registry.unbind(new Integer(jmxHash));
+
       started = false;
       localProxyFactory.stop();
       teardownEnvironment();
+      WebServiceMBean webServer = 
+         (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, 
+                                            WebServiceMBean.OBJECT_NAME);
+      ClassLoader wcl = getWebClassLoader();
+      if( wcl != null )
+      {
+         try
+         {
+            webServer.removeClassLoader(wcl);
+         }
+         catch(Throwable e)
+         {
+            log.warn("Failed to unregister webClassLoader", e);
+         }
+      }
    }
    
    /**
-    * A default implementation of destroying the container service (no-op).
+    * A default implementation of destroying the container service
     * The concrete container classes should override this method to introduce
     * implementation specific destroy behaviour.
     */
    protected void destroyService() throws Exception
    {
+         // Remove JSR-77 EJB-Wrapper
+         if( mEJBObjectName != null )
+         {
+            EJB.destroy( getServer(), mEJBObjectName );
+         }
       localProxyFactory.destroy();
       ejbModule.removeLocalHome( this );
       this.classLoader = null;
       this.webClassLoader = null;
       this.localClassLoader = null;
-      this.ejbModule = null;
       
       // this.lockManager = null; Setting this to null causes AbstractCache 
       // to fail on undeployment
       this.methodPermissionsCache.clear();
    }
+
+
+
 
    /**
     * This method is called when a method call comes
@@ -1214,6 +1326,381 @@ public abstract class Container
    }
 
 
+   //----------------------------------------
+   //Moved from EjbModule
+
+   /**
+    * Describe <code>typeSpecificInitialize</code> method here.
+    * Override in type-specific subclasses.  Each implementation calls genericInitialize.
+    */
+   protected void typeSpecificInitialize()  throws Exception
+   {}
+
+   /**
+    * Perform the common steps to initializing a container.
+    *
+    * @todo see if the webserver registration can be moved to the start step.
+    */
+   protected void genericInitialize( int transType,
+                                     ClassLoader cl,
+                                     ClassLoader localCl )
+      throws NamingException, DeploymentException
+   {
+      // Create local classloader for this container
+      // For loading resources that must come from the local jar.  Not for loading classes!
+      setLocalClassLoader( new URLClassLoader( new URL[ 0 ], localCl ) );
+      // Create the container's WebClassLoader 
+      // and register it with the web service.
+      String webClassLoaderName = getWebClassLoaderClassName();
+      log.debug("Creating WebClassLoader of class " + webClassLoaderName);
+      WebClassLoader wcl = null;
+      try 
+      {
+         Class clazz = cl.loadClass(webClassLoaderName);
+         Constructor constructor = clazz.getConstructor(
+            new Class[] { ObjectName.class, UnifiedClassLoader.class } );
+         wcl = (WebClassLoader)constructor.newInstance(
+            new Object[] { getJmxName(), cl });
+      }
+      catch (Exception e) 
+      {
+         throw new DeploymentException(
+            "Failed to create WebClassLoader of class " 
+            + webClassLoaderName + ": ", e);
+      }
+      //THis is an invalid operation in the create lifecycle step.  
+      //The webserver might not be started.
+      WebServiceMBean webServer = 
+         (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, 
+                                            WebServiceMBean.OBJECT_NAME);
+      URL[] codebase = { webServer.addClassLoader(wcl) };
+      wcl.setWebURLs(codebase);
+      setWebClassLoader(wcl);
+      StringBuffer sb = new StringBuffer();
+      for (int i = 0; i < codebase.length; i++)
+      {
+         sb.append(codebase[i].toString());
+         if (i < codebase.length - 1)
+         {
+            sb.append(" ");
+         }
+      }
+      setCodebase(sb.toString());
+
+      // Create classloader for this container
+      // Only used to unique the bean ENC and does not augment class loading
+      setClassLoader( new URLClassLoader( new URL[ 0 ], wcl ) );
+
+      // Set transaction manager
+      InitialContext iniCtx = new InitialContext();
+      setTransactionManager( (TransactionManager) iniCtx.lookup( "java:/TransactionManager" ) );
+      
+      // Set security domain manager
+      String securityDomain = getBeanMetaData().getApplicationMetaData().getSecurityDomain();
+      String confSecurityDomain = getBeanMetaData().getContainerConfiguration().getSecurityDomain();
+      // Default the config security to the application security manager
+      if( confSecurityDomain == null )
+         confSecurityDomain = securityDomain;
+      // Check for an empty confSecurityDomain which signifies to disable security
+      if( confSecurityDomain != null && confSecurityDomain.length() == 0 )
+         confSecurityDomain = null;
+      if( confSecurityDomain != null )
+      {   // Either the application has a security domain or the container has security setup
+         try
+         {
+            log.debug("Setting security domain from: "+confSecurityDomain);
+            Object securityMgr = iniCtx.lookup(confSecurityDomain);
+            AuthenticationManager ejbS = (AuthenticationManager) securityMgr;
+            RealmMapping rM = (RealmMapping) securityMgr;
+            setSecurityManager( ejbS );
+            setRealmMapping( rM );
+         }
+         catch(NamingException e)
+         {
+            throw new DeploymentException("Could not find the security-domain, name="+confSecurityDomain, e);
+         }
+         catch(Exception e)
+         {
+            throw new DeploymentException("Invalid security-domain specified, name="+confSecurityDomain, e);
+         }
+      }
+
+      // Load the security proxy instance if one was configured
+      String securityProxyClassName = getBeanMetaData().getSecurityProxy();
+      if( securityProxyClassName != null )
+      {
+         try
+         {
+            Class proxyClass = cl.loadClass(securityProxyClassName);
+            Object proxy = proxyClass.newInstance();
+            setSecurityProxy(proxy);
+            log.debug("setSecurityProxy, "+proxy);
+         }
+         catch(Exception e)
+         {
+            throw new DeploymentException("Failed to create SecurityProxy of type: " +
+                                          securityProxyClassName, e);
+         }
+      }
+      
+      // Install the container interceptors based on the configuration
+      addInterceptors(transType, getBeanMetaData().getContainerConfiguration().getContainerInterceptorsConf());
+   }
+
+   /**
+    * Return the name of the WebClassLoader class for this ejb.
+    */
+   private String getWebClassLoaderClassName()
+      throws DeploymentException
+   {
+      String webClassLoader = null;
+      Iterator it = getBeanMetaData().getInvokerBindings();
+      int count = 0;
+      while (it.hasNext())
+      {
+         String invoker = (String)it.next();
+         ApplicationMetaData amd = getBeanMetaData().getApplicationMetaData();
+         InvokerProxyBindingMetaData imd = (InvokerProxyBindingMetaData)
+                           amd.getInvokerProxyBindingMetaDataByName(invoker);
+         Element proxyFactoryConfig = imd.getProxyFactoryConfig();
+         String webCL = MetaData.getOptionalChildContent(proxyFactoryConfig, 
+                                                         "web-class-loader");
+         if (webCL != null)
+         {
+            log.debug("Invoker " + invoker + " specified WebClassLoader class" + webCL);
+            webClassLoader = webCL;
+            count++;
+         }
+      }
+      if (count > 1) {
+         log.warn(count + " invokers have WebClassLoader specifications.");
+         log.warn("Using the last specification seen (" + webClassLoader + ")."); 
+      }
+      else if (count == 0) {
+         webClassLoader = getBeanMetaData().getContainerConfiguration().getWebClassLoader();
+      }
+      return webClassLoader;
+   }
+   
+   /**
+    * Given a container-interceptors element of a container-configuration,
+    * add the indicated interceptors to the container depending on the container
+    * transcation type and metricsEnabled flag.
+    *
+    *
+    * @todo marcf: frankly the transaction type stuff makes no sense to me, we have externalized
+    * the container stack construction in jbossxml and I don't see why or why there would be a 
+    * type missmatch on the transaction
+    * 
+    * @param container   the container instance to setup.
+    * @param transType   one of the BMT, CMT or ANY constants.
+    * @param element     the container-interceptors element from the
+    *                    container-configuration.
+    */
+   private void addInterceptors(int transType,
+                                Element element)
+      throws DeploymentException
+   {
+      // Get the interceptor stack(either jboss.xml or standardjboss.xml)
+      Iterator interceptorElements = MetaData.getChildrenByTagName(element, "interceptor");
+      String transTypeString = stringTransactionValue(transType);
+      ClassLoader loader = getClassLoader();
+      /* First build the container interceptor stack from interceptorElements
+         match transType and metricsEnabled values
+      */
+      ArrayList istack = new ArrayList();
+      while( interceptorElements != null && interceptorElements.hasNext() )
+      {
+         Element ielement = (Element) interceptorElements.next();
+         /* Check that the interceptor is configured for the transaction mode of the bean
+            by comparing its 'transaction' attribute to the string representation
+            of transType
+            FIXME: marcf, WHY???????
+         */
+         String transAttr = ielement.getAttribute("transaction");
+         if( transAttr == null || transAttr.length() == 0 )
+            transAttr = ANY_VALUE;
+         if( transAttr.equalsIgnoreCase(ANY_VALUE) || transAttr.equalsIgnoreCase(transTypeString) )
+         {   // The transaction type matches the container bean trans type, check the metricsEnabled
+            String metricsAttr = ielement.getAttribute("metricsEnabled");
+            boolean metricsInterceptor = metricsAttr.equalsIgnoreCase("true");
+            try 
+            {
+               boolean metricsEnabled = ((Boolean)server.getAttribute(EJBDeployerMBean.OBJECT_NAME,
+                                                                      "MetricsEnabled")).booleanValue();
+               if( metricsEnabled == false && metricsInterceptor == true )
+               {
+                  continue;
+               }
+            }
+            catch (Exception e)
+            {
+               throw new DeploymentException("couldn't contact EJBDeployer!", e);
+            } // end of try-catch
+            
+           
+            String className = null;
+            try
+            {
+               className = MetaData.getElementContent(ielement);
+               Class clazz = loader.loadClass(className);
+               Interceptor interceptor = (Interceptor) clazz.newInstance();
+               interceptor.setConfiguration(ielement);
+               istack.add(interceptor);
+            }
+            catch(Exception e)
+            {
+               log.warn("Could not load the "+className+" interceptor for this container", e);
+            }
+         }
+      }
+      
+      if( istack.size() == 0 )
+         log.warn("There are no interceptors configured. Check the standardjboss.xml file");
+      
+      // Now add the interceptors
+      for(int i = 0; i < istack.size(); i ++)
+      {
+         Interceptor interceptor = (Interceptor) istack.get(i);
+         addInterceptor(interceptor);
+      }
+      
+      /* If there is a security proxy associated with the container add its
+         interceptor just before the container interceptor
+      */
+      if( getSecurityProxy() != null )
+      {
+         addInterceptor(new SecurityProxyInterceptor());
+      }
+      
+      // Finally we add the last interceptor from the container
+      addInterceptor(createContainerInterceptor());
+   }
+   
+   private static String stringTransactionValue(int transType)
+   {
+      String transaction = ANY_VALUE;
+      switch( transType )
+      {
+      case BMT:
+         transaction = BMT_VALUE;
+         break;
+      case CMT:
+         transaction = CMT_VALUE;
+         break;
+      }
+      return transaction;
+   }
+   
+   /**
+    * Create all proxy factories for this ejb
+    */
+   protected void createProxyFactories(ClassLoader cl )
+      throws Exception
+   {
+      Iterator it = getBeanMetaData().getInvokerBindings();
+      while (it.hasNext())
+      {
+         String invoker = (String)it.next();
+         String jndiBinding = (String)getBeanMetaData().getInvokerBinding(invoker);
+         log.debug("creating binding for " + jndiBinding + ":" + invoker);
+         InvokerProxyBindingMetaData imd = (InvokerProxyBindingMetaData)getBeanMetaData().getApplicationMetaData().getInvokerProxyBindingMetaDataByName(invoker);
+         EJBProxyFactory ci = null;
+
+         // create a ProxyFactory instance
+         try
+         {
+            ci = (EJBProxyFactory) cl.loadClass(imd.getProxyFactory()).newInstance();
+            ci.setContainer(this);
+            ci.setInvokerMetaData(imd);
+            ci.setInvokerBinding(jndiBinding);
+            if( ci instanceof XmlLoadable )
+            {
+               // the container invoker can load its configuration from the jboss.xml element
+               ( (XmlLoadable) ci ).importXml(imd.getProxyFactoryConfig());
+            }
+            addProxyFactory(invoker, ci);
+         }
+         catch( Exception e )
+         {
+            throw new DeploymentException( "Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml): " + invoker, e );
+         }
+      }
+   }
+   
+   
+   protected BeanLockManager createBeanLockManager(boolean reentrant, Element config,
+                                                         ClassLoader cl )
+      throws Exception
+   {
+      // The bean lock manager
+      BeanLockManager lockManager = new BeanLockManager(this);
+      String beanLock = MetaData.getElementContent(config, "org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock");
+      Class lockClass = null;
+      try
+      {
+         lockClass =  cl.loadClass( beanLock);
+      }
+      catch( Exception e )
+      {
+         throw new DeploymentException( "Missing or invalid lock class (in jboss.xml or standardjboss.xml): " + beanLock+ " - " + e );
+      }
+      
+      lockManager.setLockCLass(lockClass);
+      lockManager.setReentrant(reentrant);
+      lockManager.setConfiguration(config);
+      
+      return lockManager;
+   }
+   
+   protected  InstancePool createInstancePool( ConfigurationMetaData conf,
+                                                   ClassLoader cl )
+      throws Exception
+   {
+      // Set instance pool
+      InstancePool ip = null;
+      try
+      {
+         ip = (InstancePool) cl.loadClass( conf.getInstancePool() ).newInstance();
+      }
+      catch( Exception e )
+      {
+         throw new DeploymentException( "Missing or invalid Instance Pool (in jboss.xml or standardjboss.xml)", e);
+      }
+      
+      if( ip instanceof XmlLoadable )
+         ( (XmlLoadable) ip ).importXml( conf.getContainerPoolConf() );
+      
+      return ip;
+   }
+   
+   protected static InstanceCache createInstanceCache( ConfigurationMetaData conf,
+                                                     boolean jmsMonitoring,
+                                                     ClassLoader cl )
+      throws Exception
+   {
+      // Set instance cache
+      InstanceCache ic = null;
+      
+      try
+      {
+         ic = (InstanceCache) cl.loadClass( conf.getInstanceCache() ).newInstance();
+         
+         if( ic instanceof AbstractInstanceCache )
+            ( (AbstractInstanceCache) ic ).setJMSMonitoringEnabled( jmsMonitoring );
+      }
+      catch( Exception e )
+      {
+         throw new DeploymentException( "Missing or invalid Instance Cache (in jboss.xml or standardjboss.xml)", e );
+      }
+      
+      if( ic instanceof XmlLoadable )
+         ( (XmlLoadable) ic ).importXml( conf.getContainerCacheConf() );
+      
+      return ic;
+   }
+
+
    /**
     * The base class for container interceptors.
     * 
@@ -1287,4 +1774,5 @@ public abstract class Container
       }
       
    }
+
 }

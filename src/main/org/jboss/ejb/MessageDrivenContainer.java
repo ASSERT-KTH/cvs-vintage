@@ -7,28 +7,29 @@
 
 package org.jboss.ejb;
 
+
+
+
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.ejb.Handle;
-import javax.ejb.HomeHandle;
-import javax.ejb.EJBObject;
+import java.util.Map;
+import javax.ejb.CreateException;
+import javax.ejb.EJBException;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBMetaData;
-import javax.ejb.CreateException;
+import javax.ejb.EJBObject;
+import javax.ejb.Handle;
+import javax.ejb.HomeHandle;
 import javax.ejb.RemoveException;
-import javax.ejb.EJBException;
-
-import javax.jms.MessageListener;
 import javax.jms.Message;
-
-import org.jboss.invocation.Invocation;
+import javax.jms.MessageListener;
 import org.jboss.ejb.EnterpriseContext;
-
+import org.jboss.invocation.Invocation;
+import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.util.NullArgumentException;
 
 /**
@@ -40,7 +41,7 @@ import org.jboss.util.NullArgumentException;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class MessageDrivenContainer
    extends Container
@@ -132,6 +133,8 @@ public class MessageDrivenContainer
 
    protected void createService() throws Exception
    {
+      typeSpecificInitialize();
+
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
@@ -140,7 +143,6 @@ public class MessageDrivenContainer
       {
          // Call default init
          super.createService();
-
          // Map the bean methods
          Map map = new HashMap();
          Method m = MessageListener.class.getMethod("onMessage", new Class[] { Message.class });
@@ -366,6 +368,26 @@ public class MessageDrivenContainer
          getInstancePool().retrieveStatistics( container, reset );
       }
    }
+
+   //Moved from EjbModule-------------------
+   /**
+    * Describe <code>typeSpecificInitialize</code> method here.
+    * MDB specific initialization.
+    */
+   protected void typeSpecificInitialize()  throws Exception
+   {
+      ClassLoader cl = getDeploymentInfo().ucl;
+      ClassLoader localCl = getDeploymentInfo().localCl;
+      int transType = getBeanMetaData().isContainerManagedTx() ? CMT : BMT;
+      
+      genericInitialize(transType, cl, localCl );
+      createProxyFactories(cl);
+      ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
+      setInstancePool( createInstancePool( conf, cl ) );
+   }
+
+
+   //end moved from EjbModule---------------
    
    /**
     * This is the last step before invocation - all interceptors are done
