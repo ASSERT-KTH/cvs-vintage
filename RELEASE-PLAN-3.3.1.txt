@@ -1,0 +1,112 @@
+NOTE: This document is a draft of a release plan for the next
+dot release of Tomcat. Nothing in this document should be
+considered authoritative until it has been discussed and approved
+on the TOMCAT-DEV mailing list.
+
+			Tomcat 3.3.1 Release Plan 
+			=========================
+
+Objective: 
+
+    The objective of the proposed 3.3.1 release is to provide a bug fix
+    update to Tomcat 3.3. 
+
+
+Tomcat 3.3.1 Beta 1 Release:
+
+	Code Freeze/Tag Date:	Jan 27, 2002
+	Release Manager:	Larry Isaacs
+
+        Prior to this release, the following issues need to be
+        addressed:
+
+	Issue  Description 
+        1      Must be able to compile and run under JDK 1.1.8
+        2      Address Cactus failures running with Tomcat 3.3
+
+ 
+        Bugs to investigate & fix or resolve/leave as LATER:
+        1657  hyphen character '-' in tag name results in "Invalid expression"
+              (port fix from Tomcat 4.x Jasper)
+        3644  Errors reloading resources from jars: possible JDK bug
+              (see if recent changes address this)
+        4382  Starting up twice prevents stopping
+              (implement suggested fix)
+        4600  Tomcat 3.3 redirect behavior differs from Tomcat 3.2
+              (try to make 301 or 302 configurable)
+        4416  URI En/Decoding not working
+              (investigate and fix if feasible)
+        4923  getRealPath().exists() yields security exception
+              (investigate and fix if feasible)
+        5250  Load balancing workers do not correctly handle Cookies
+              conformant with RFC 2965
+              (investigate and fix if feasible)
+        5684  WEB-INF/lib jar file loading and operations problems.
+              (see if recent changes address this)
+        5722  Forward to a page that have no extension displays a blank page
+              (try to fix to do something better than display a blank page)
+
+
+Tomcat 3.3.1 Release Candidate 1 Release:
+
+	Code Freeze/Tag Date:	Feb 2, 2002
+	Release Manager:	Larry Isaacs
+
+        Only safe fixes or documentation updates allowed prior to
+        final release, including:
+
+	Item  Description 
+        1      Update build.xml to work with Ant 1.4 with no warnings, i.e.
+               require Ant 1.4.
+        2      Document special handling of '_' and '.' by AutoWebApp.
+               Make special characters configurable.
+
+
+        Bugs to fix:
+        5532  underscore is wrong (fixed by item 2 above)
+        4206  missing config files do not cause an error
+              (add error or warning messages)
+        5769  NT Service display name should not be used as service name
+              (determine solution and patch)
+        4364  build-solaris for Apache connector does not compile with -DE
+              (do what we can to review and update the connector make files)
+    
+
+Tomcat 3.3.1 Final Release:
+
+	Code Freeze/Tag Date:	Feb 9, 2002
+	Release Manager:	Larry Isaacs
+
+        The current jakarta-tomcat HEAD will be built and released
+        as Tomcat 3.3.1 Final
+        
+
+The following bugs will be updated with the following resolution:
+
+Bug   Resolution  From   Description
+2202  WORKSFORME  REMIND sendRedirect with enctype="Multipart/form-data" does not
+                         work
+3168  WONTFIX     LATER  Reloading JSP Pages with includes in it
+3290  INVALID     LATER  Sessions not sharing properly (lack of test case)
+3333  WORKSFORME  LATER  request.getParameter("action") return only static page
+                         value
+4426  WONTFIX     NEW    DB polling
+5246  WONTFIX     NEW    illegal tag at jsp:plugin
+5411  INVALID     NEW    JSP session does not work with IE/IIS5/Tomcat 3.3
+5449  WORKSFORME  NEW    ajp13 and security constraints don't work
+5560  INVALID     NEW    Removal of unnecessary white space in output
+
+
+The following bugs will be left with their current resolution:
+
+Bug   Resolution  Description
+2700  LATER       New setStatusLine method?
+3032  LATER       Cannot recover key Exception while using trust keystore with
+                  multiple keys
+3298  LATER       IIS-Redirector fails to read from client
+3309  LATER       Cannot use pre-compiled jsp as welcome page
+3798  LATER       Service Manager for Tomcat
+
+
+
+
