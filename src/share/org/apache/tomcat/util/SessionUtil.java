@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SessionUtil.java,v 1.4 2000/05/12 02:32:02 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/12 02:32:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SessionUtil.java,v 1.5 2000/05/23 00:43:19 jon Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/05/23 00:43:19 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ import org.apache.tomcat.core.*;
  * <code>Session</code> implementations.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.4 $ $Date: 2000/05/12 02:32:02 $
+ * @version $Revision: 1.5 $ $Date: 2000/05/23 00:43:19 $
  */
 
 public final class SessionUtil {
@@ -172,30 +172,12 @@ public final class SessionUtil {
 
     }
 
-
     /**
      * Generate and return a new session identifier.
-     *
-     * <b>IMPLEMENTATION NOTE</b>:  Copied from the original code in
-     * org.apache.tomcat.util.SessionIdGenerator.  This implementation
-     * is not at all sophisticated or secure.
      */
     public static String generateSessionId() {
-
-	Integer i = new Integer(counter++);
-	StringBuffer buf = new StringBuffer();
-	String dString = Double.toString(Math.abs(Math.random()));
-
-	buf.append("To");
-	buf.append(i);
-	buf.append("mC");
-	buf.append(dString.substring(2));	// Skip "0." at the start
-	buf.append("At");
-
-	return (buf.toString());
-
+        return SessionIdGenerator.generateId();
     }
-
 
     /**
      * Return the session id from the specified array of cookies,
