@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/example/Attic/LogonAction.java,v 1.9 2000/10/16 16:50:03 craigmcc Exp $
- * $Revision: 1.9 $
- * $Date: 2000/10/16 16:50:03 $
+ * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/EditRegistrationAction.java,v 1.1 2001/04/11 02:10:00 rleland Exp $
+ * $Revision: 1.1 $
+ * $Date: 2001/04/11 02:10:00 $
  *
  * ====================================================================
  *
@@ -60,35 +60,37 @@
  */
 
 
-package org.apache.struts.example;
+package org.apache.struts.webapp.example;
 
 
 import java.io.IOException;
-import java.util.Hashtable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
+import java.util.Vector;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
+import org.apache.struts.util.PropertyUtils;
 
 
 /**
- * Implementation of <strong>Action</strong> that validates a user logon.
+ * Implementation of <strong>Action</strong> that populates an instance of
+ * <code>RegistrationForm</code> from the profile of the currently logged on
+ * User (if any).
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.9 $ $Date: 2000/10/16 16:50:03 $
+ * @version $Revision: 1.1 $ $Date: 2001/04/11 02:10:00 $
  */
 
-public final class LogonAction extends Action {
+public final class EditRegistrationAction extends Action {
 
 
     // --------------------------------------------------------- Public Methods
@@ -118,48 +120,66 @@ public final class LogonAction extends Action {
 	// Extract attributes we will need
 	Locale locale = getLocale(request);
 	MessageResources messages = getResources();
-	User user = null;
-
-	// Validate the request parameters specified by the user
-	ActionErrors errors = new ActionErrors();
-	String username = ((LogonForm) form).getUsername();
-	String password = ((LogonForm) form).getPassword();
-	Hashtable database = (Hashtable)
-	  servlet.getServletContext().getAttribute(Constants.DATABASE_KEY);
-	if (database == null)
-            errors.add(ActionErrors.GLOBAL_ERROR,
-                       new ActionError("error.database.missing"));
-	else {
-	    user = (User) database.get(username);
-	    if ((user != null) && !user.getPassword().equals(password))
-		user = null;
-	    if (user == null)
-                errors.add(ActionErrors.GLOBAL_ERROR,
-                           new ActionError("error.password.mismatch"));
-	}
-
-	// Report any errors we have discovered back to the original form
-	if (!errors.empty()) {
-	    saveErrors(request, errors);
-	    return (new ActionForward(mapping.getInput()));
-	}
-
-	// Save our logged-in user in the session
 	HttpSession session = request.getSession();
-	session.setAttribute(Constants.USER_KEY, user);
-	if (servlet.getDebug() >= 1)
-	    servlet.log("LogonAction: User '" + user.getUsername() +
-	                "' logged on in session " + session.getId());
+	String action = request.getParameter("action");
+	if (action == null)
+	    action = "Create";
+        if (servlet.getDebug() >= 1)
+            servlet.log("EditRegistrationAction:  Processing " + action +
+                        " action");
 
-        // Remove the obsolete form bean
-	if (mapping.getAttribute() != null) {
+	// Is there a currently logged on user?
+	User user = null;
+	if (!"Create".equals(action)) {
+	    user = (User) session.getAttribute(Constants.USER_KEY);
+	    if (user == null) {
+		if (servlet.getDebug() >= 1)
+		    servlet.log(" User is not logged on in session "
+	                        + session.getId());
+		return (servlet.findForward("logon"));
+	    }
+	}
+
+	// Populate the user registration form
+	if (form == null) {
+            if (servlet.getDebug() >= 1)
+                servlet.log(" Creating new RegistrationForm bean under key "
+                            + mapping.getAttribute());
+	    form = new RegistrationForm();
             if ("request".equals(mapping.getScope()))
-                request.removeAttribute(mapping.getAttribute());
+                request.setAttribute(mapping.getAttribute(), form);
             else
-                session.removeAttribute(mapping.getAttribute());
-        }
+                session.setAttribute(mapping.getAttribute(), form);
+	}
+	RegistrationForm regform = (RegistrationForm) form;
+	if (user != null) {
+            if (servlet.getDebug() >= 1)
+                servlet.log(" Populating form from " + user);
+            try {
+                PropertyUtils.copyProperties(regform, user);
+                regform.setAction(action);
+                regform.setPassword(null);
+                regform.setPassword2(null);
+            } catch (InvocationTargetException e) {
+                Throwable t = e.getTargetException();
+                if (t == null)
+                    t = e;
+                servlet.log("RegistrationForm.populate", t);
+                throw new ServletException("RegistrationForm.populate", t);
+            } catch (Throwable t) {
+                servlet.log("RegistrationForm.populate", t);
+                throw new ServletException("RegistrationForm.populate", t);
+            }
+	}
 
-	// Forward control to the specified success URI
+        // Set a transactional control token to prevent double posting
+        if (servlet.getDebug() >= 1)
+            servlet.log(" Setting transactional control token");
+        saveToken(request);
+
+	// Forward control to the edit user registration page
+        if (servlet.getDebug() >= 1)
+            servlet.log(" Forwarding to 'success' page");
 	return (mapping.findForward("success"));
 
     }

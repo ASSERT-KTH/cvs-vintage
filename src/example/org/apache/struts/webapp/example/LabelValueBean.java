@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/example/Attic/LabelValueBean.java,v 1.1 2000/12/08 02:42:30 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/Attic/LabelValueBean.java,v 1.1 2001/04/11 02:10:00 rleland Exp $
  * $Revision: 1.1 $
- * $Date: 2000/12/08 02:42:30 $
+ * $Date: 2001/04/11 02:10:00 $
  *
  * ====================================================================
  *
@@ -60,7 +60,7 @@
  */
 
 
-package org.apache.struts.example;
+package org.apache.struts.webapp.example;
 
 
 /**
@@ -68,7 +68,7 @@ package org.apache.struts.example;
  * that are utilized by the <code>&lt;form:options&gt;</code> tag.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/12/08 02:42:30 $
+ * @version $Revision: 1.1 $ $Date: 2001/04/11 02:10:00 $
  */
 
 public class LabelValueBean {

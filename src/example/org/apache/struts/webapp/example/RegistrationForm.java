@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/example/Attic/LogonForm.java,v 1.5 2000/10/15 03:34:53 craigmcc Exp $
- * $Revision: 1.5 $
- * $Date: 2000/10/15 03:34:53 $
+ * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/RegistrationForm.java,v 1.1 2001/04/11 02:10:01 rleland Exp $
+ * $Revision: 1.1 $
+ * $Date: 2001/04/11 02:10:01 $
  *
  * ====================================================================
  *
@@ -60,7 +60,7 @@
  */
 
 
-package org.apache.struts.example;
+package org.apache.struts.webapp.example;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,21 +71,50 @@ import org.apache.struts.action.ActionMapping;
 
 
 /**
- * Form bean for the user profile page.  This form has the following fields,
+ * Form bean for the user registration page.  This form has the following fields,
  * with default values in square brackets:
  * <ul>
- * <li><b>password</b> - Entered password value
- * <li><b>username</b> - Entered username value
+ * <li><b>action</b> - The maintenance action we are performing (Create, Delete,
+ *     or Edit).
+ * <li><b>fromAddress</b> - The EMAIL address of the sender, to be included
+ *     on sent messages.  [REQUIRED]
+ * <li><b>fullName</b> - The full name of the sender, to be included on
+ *     sent messages.  [REQUIRED]
+ * <li><b>password</b> - The password used by this user to log on.
+ * <li><b>password2</b> - The confirmation password, which must match the password
+ *     when changing or setting.
+ * <li><b>replyToAddress</b> - The "Reply-To" address to be included on
+ *     sent messages.  [Same as from address]
+ * <li><b>username</b> - The registered username, which must be unique.
+ *     [REQUIRED]
  * </ul>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.5 $ $Date: 2000/10/15 03:34:53 $
+ * @version $Revision: 1.1 $ $Date: 2001/04/11 02:10:01 $
  */
 
-public final class LogonForm extends ActionForm {
+public final class RegistrationForm extends ActionForm  {
 
 
     // --------------------------------------------------- Instance Variables
+
+
+    /**
+     * The maintenance action we are performing (Create or Edit).
+     */
+    private String action = "Create";
+
+
+    /**
+     * The from address.
+     */
+    private String fromAddress = null;
+
+
+    /**
+     * The full name.
+     */
+    private String fullName = null;
 
 
     /**
@@ -95,12 +124,91 @@ public final class LogonForm extends ActionForm {
 
 
     /**
+     * The confirmation password.
+     */
+    private String password2 = null;
+
+
+    /**
+     * The reply to address.
+     */
+    private String replyToAddress = null;
+
+
+
+    /**
      * The username.
      */
     private String username = null;
 
 
     // ----------------------------------------------------------- Properties
+
+
+    /**
+     * Return the maintenance action.
+     */
+    public String getAction() {
+
+	return (this.action);
+
+    }
+
+
+    /**
+     * Set the maintenance action.
+     *
+     * @param action The new maintenance action.
+     */
+    public void setAction(String action) {
+
+        this.action = action;
+
+    }
+
+
+    /**
+     * Return the from address.
+     */
+    public String getFromAddress() {
+
+	return (this.fromAddress);
+
+    }
+
+
+    /**
+     * Set the from address.
+     *
+     * @param fromAddress The new from address
+     */
+    public void setFromAddress(String fromAddress) {
+
+        this.fromAddress = fromAddress;
+
+    }
+
+
+    /**
+     * Return the full name.
+     */
+    public String getFullName() {
+
+	return (this.fullName);
+
+    }
+
+
+    /**
+     * Set the full name.
+     *
+     * @param fullName The new full name
+     */
+    public void setFullName(String fullName) {
+
+        this.fullName = fullName;
+
+    }
 
 
     /**
@@ -121,6 +229,50 @@ public final class LogonForm extends ActionForm {
     public void setPassword(String password) {
 
         this.password = password;
+
+    }
+
+
+    /**
+     * Return the confirmation password.
+     */
+    public String getPassword2() {
+
+	return (this.password2);
+
+    }
+
+
+    /**
+     * Set the confirmation password.
+     *
+     * @param password The new confirmation password
+     */
+    public void setPassword2(String password2) {
+
+        this.password2 = password2;
+
+    }
+
+
+    /**
+     * Return the reply to address.
+     */
+    public String getReplyToAddress() {
+
+	return (this.replyToAddress);
+
+    }
+
+
+    /**
+     * Set the reply to address.
+     *
+     * @param replyToAddress The new reply to address
+     */
+    public void setReplyToAddress(String replyToAddress) {
+
+        this.replyToAddress = replyToAddress;
 
     }
 
@@ -158,7 +310,12 @@ public final class LogonForm extends ActionForm {
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
 
+        this.action = "Create";
+        this.fromAddress = null;
+        this.fullName = null;
         this.password = null;
+        this.password2 = null;
+        this.replyToAddress = null;
         this.username = null;
 
     }
@@ -179,9 +336,31 @@ public final class LogonForm extends ActionForm {
 
         ActionErrors errors = new ActionErrors();
         if ((username == null) || (username.length() < 1))
-            errors.add("username", new ActionError("error.username.required"));
-        if ((password == null) || (password.length() < 1))
-            errors.add("password", new ActionError("error.password.required"));
+            errors.add("username",
+                       new ActionError("error.username.required"));
+        if (!password.equals(password2))
+            errors.add("password2",
+                       new ActionError("error.password.match"));
+        if ((fromAddress == null) || (fromAddress.length() < 1))
+            errors.add("fromAddress",
+                       new ActionError("error.fromAddress.required"));
+        else {
+	    int atSign = fromAddress.indexOf("@");
+	    if ((atSign < 1) || (atSign >= (fromAddress.length() - 1)))
+		errors.add("fromAddress",
+                           new ActionError("error.fromAddress.format",
+                                           fromAddress));
+	}
+	if ((fullName == null) || (fullName.length() < 1))
+            errors.add("fullName",
+                       new ActionError("error.fullName.required"));
+	if ((replyToAddress != null) && (replyToAddress.length() > 0)) {
+	    int atSign = replyToAddress.indexOf("@");
+	    if ((atSign < 1) || (atSign >= (replyToAddress.length() - 1)))
+                errors.add("replyToAddress",
+                           new ActionError("error.replyToAddress.format",
+                                           replyToAddress));
+	}
 
         return errors;
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/example/Attic/EditSubscriptionAction.java,v 1.9 2000/10/16 05:02:38 craigmcc Exp $
- * $Revision: 1.9 $
- * $Date: 2000/10/16 05:02:38 $
+ * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/SaveSubscriptionAction.java,v 1.1 2001/04/11 02:10:02 rleland Exp $
+ * $Revision: 1.1 $
+ * $Date: 2001/04/11 02:10:02 $
  *
  * ====================================================================
  *
@@ -60,19 +60,21 @@
  */
 
 
-package org.apache.struts.example;
+package org.apache.struts.webapp.example;
 
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
-import java.util.Vector;
+import java.util.Hashtable;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -82,14 +84,14 @@ import org.apache.struts.util.PropertyUtils;
 
 
 /**
- * Implementation of <strong>Action</strong> that populates an instance of
- * <code>SubscriptionForm</code> from the currently specified subscription.
+ * Implementation of <strong>Action</strong> that validates and creates or
+ * updates the mail subscription entered by the user.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.9 $ $Date: 2000/10/16 05:02:38 $
+ * @version $Revision: 1.1 $ $Date: 2001/04/11 02:10:02 $
  */
 
-public final class EditSubscriptionAction extends Action {
+public final class SaveSubscriptionAction extends Action {
 
 
     // --------------------------------------------------------- Public Methods
@@ -116,75 +118,93 @@ public final class EditSubscriptionAction extends Action {
 				 HttpServletResponse response)
 	throws IOException, ServletException {
 
-	// Extract attributes we will need
+	// Extract attributes and parameters we will need
 	Locale locale = getLocale(request);
 	MessageResources messages = getResources();
 	HttpSession session = request.getSession();
+	SubscriptionForm subform = (SubscriptionForm) form;
 	String action = request.getParameter("action");
 	if (action == null)
-	    action = "Create";
-	String host = request.getParameter("host");
+	    action = "?";
         if (servlet.getDebug() >= 1)
-            servlet.log("EditSubscriptionAction:  Processing " + action +
+            servlet.log("SaveSubscriptionAction:  Processing " + action +
                         " action");
 
 	// Is there a currently logged on user?
 	User user = (User) session.getAttribute(Constants.USER_KEY);
 	if (user == null) {
-	    if (servlet.getDebug() >= 1)
-	        servlet.log(" User is not logged on in session "
-	                    + session.getId());
-	    return (servlet.findForward("logon"));
-	}
-
-	// Identify the relevant subscription
-	Subscription subscription = null;
-	if (action.equals("Create")) {
-	    subscription = new Subscription();
-	    subscription.setUser(user);
-	} else {
-	    subscription = user.findSubscription(host);
-	}
-	if (subscription == null) {
-	    if (servlet.getDebug() >= 1)
-		servlet.log(" No subscription for user " +
-			    user.getUsername() + " and host " + host);
-	    return (mapping.findForward("failure"));
-	}
-	session.setAttribute(Constants.SUBSCRIPTION_KEY, subscription);
-
-	// Populate the subscription form
-	if (form == null) {
             if (servlet.getDebug() >= 1)
-                servlet.log(" Creating new SubscriptionForm bean under key "
-                            + mapping.getAttribute());
-	    form = new SubscriptionForm();
-            if ("request".equals(mapping.getScope()))
-                request.setAttribute(mapping.getAttribute(), form);
-            else
-                session.setAttribute(mapping.getAttribute(), form);
+                servlet.log(" User is not logged on in session "
+                            + session.getId());
+	    return (servlet.findForward("logon"));
+        }
+
+	// Is there a related Subscription object?
+	Subscription subscription =
+	  (Subscription) session.getAttribute(Constants.SUBSCRIPTION_KEY);
+	if (subscription == null) {
+	    servlet.log(" Missing subscription for user '" +
+	                 user.getUsername() + "'");
+	    response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+	                       messages.getMessage("error.noSubscription"));
+	    return (null);
 	}
-	SubscriptionForm subform = (SubscriptionForm) form;
-	subform.setAction(action);
+
+	// Was this transaction cancelled?
+	if (isCancelled(request)) {
+	    if (servlet.getDebug() >= 1)
+	        servlet.log(" Transaction '" + action +
+	                    "' was cancelled");
+	    if (mapping.getAttribute() != null)
+	        session.removeAttribute(mapping.getAttribute());
+	    session.removeAttribute(Constants.SUBSCRIPTION_KEY);
+	    return (mapping.findForward("success"));
+	}
+
+	// Was this transaction a Delete?
+	if (action.equals("Delete")) {
+	    if (servlet.getDebug() >= 1)
+	        servlet.log(" Deleting mail server '" +
+	                    subscription.getHost() + "' for user '" +
+	                    user.getUsername() + "'");
+	    subscription.setHost(null);
+	    subscription.setUser(null);
+	    if (mapping.getAttribute() != null)
+	        session.removeAttribute(mapping.getAttribute());
+	    session.removeAttribute(Constants.SUBSCRIPTION_KEY);
+	    return (mapping.findForward("success"));
+	}
+
+	// All required validations were done by the form itself
+
+	// Update the persistent subscription information
         if (servlet.getDebug() >= 1)
-            servlet.log(" Populating form from " + subscription);
+            servlet.log(" Populating database from form bean");
         try {
-            PropertyUtils.copyProperties(subform, subscription);
-            subform.setAction(action);
+            PropertyUtils.copyProperties(subscription, subform);
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
             if (t == null)
                 t = e;
-            servlet.log("SubscriptionForm.populate", t);
-            throw new ServletException("SubscriptionForm.populate", t);
+            servlet.log("Subscription.populate", t);
+            throw new ServletException("Subscription.populate", t);
         } catch (Throwable t) {
-            servlet.log("SubscriptionForm.populate", t);
-            throw new ServletException("SubscriptionForm.populate", t);
+            servlet.log("Subscription.populate", t);
+            throw new ServletException("Subscription.populate", t);
         }
 
-	// Forward control to the edit subscription page
+	// Remove the obsolete form bean and current subscription
+	if (mapping.getAttribute() != null) {
+            if ("request".equals(mapping.getScope()))
+                request.removeAttribute(mapping.getAttribute());
+            else
+                session.removeAttribute(mapping.getAttribute());
+        }
+	session.removeAttribute(Constants.SUBSCRIPTION_KEY);
+
+	// Forward control to the specified success URI
         if (servlet.getDebug() >= 1)
-            servlet.log(" Forwarding to 'success' page");
+            servlet.log(" Forwarding to success page");
 	return (mapping.findForward("success"));
 
     }

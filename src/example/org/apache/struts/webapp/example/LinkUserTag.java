@@ -1,13 +1,13 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/example/Attic/LinkSubscriptionTag.java,v 1.5 2001/03/06 17:14:18 craigmcc Exp $
- * $Revision: 1.5 $
- * $Date: 2001/03/06 17:14:18 $
+ * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/LinkUserTag.java,v 1.1 2001/04/11 02:10:00 rleland Exp $
+ * $Revision: 1.1 $
+ * $Date: 2001/04/11 02:10:00 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Struts", and "Apache Software
+ * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -60,7 +60,7 @@
  */
 
 
-package org.apache.struts.example;
+package org.apache.struts.webapp.example;
 
 
 import java.io.IOException;
@@ -76,20 +76,20 @@ import org.apache.struts.util.ResponseUtils;
 
 /**
  * Generate a URL-encoded hyperlink to the specified URI, with
- * associated query parameters selecting a specified Subscription.
+ * associated query parameters selecting a specified User.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.5 $ $Date: 2001/03/06 17:14:18 $
+ * @version $Revision: 1.1 $ $Date: 2001/04/11 02:10:00 $
  */
 
-public class LinkSubscriptionTag extends TagSupport {
+public class LinkUserTag extends TagSupport {
 
 
     // ----------------------------------------------------- Instance Variables
 
 
     /**
-     * The context-relative URI.
+     * The hyperlink URI.
      */
     protected String page = null;
 
@@ -99,20 +99,20 @@ public class LinkSubscriptionTag extends TagSupport {
      */
     protected static MessageResources messages =
 	MessageResources.getMessageResources
-	("org.apache.struts.example.ApplicationResources");
+	("org.apache.struts.webapp.example.ApplicationResources");
 
 
     /**
      * The attribute name.
      */
-    private String name = "subscription";
+    private String name = "user";
 
 
     // ------------------------------------------------------------- Properties
 
 
     /**
-     * Return the context-relative URI.
+     * Return the hyperlink URI.
      */
     public String getPage() {
 
@@ -122,9 +122,9 @@ public class LinkSubscriptionTag extends TagSupport {
 
 
     /**
-     * Set the context-relative URI.
+     * Set the hyperlink URI.
      *
-     * @param page Set the context-relative URI
+     * @param page Set the hyperlink URI
      */
     public void setPage(String page) {
 
@@ -167,26 +167,24 @@ public class LinkSubscriptionTag extends TagSupport {
 
 	// Generate the URL to be encoded
         HttpServletRequest request =
-          (HttpServletRequest) pageContext.getRequest();
+            (HttpServletRequest) pageContext.getRequest();
         StringBuffer url = new StringBuffer(request.getContextPath());
         url.append(page);
-	Subscription subscription = null;
+	User user = null;
 	try {
-	    subscription = (Subscription) pageContext.findAttribute(name);
+	    user = (User) pageContext.findAttribute(name);
         } catch (ClassCastException e) {
-	    subscription = null;
+	    user = null;
 	}
-	if (subscription == null)
+	if (user == null)
 	    throw new JspException
-	        (messages.getMessage("linkSubscription.noSubscription", name));
+	        (messages.getMessage("linkUser.noUser", name));
 	if (page.indexOf("?") < 0)
 	    url.append("?");
 	else
 	    url.append("&");
 	url.append("username=");
-	url.append(ResponseUtils.filter(subscription.getUser().getUsername()));
-	url.append("&host=");
-	url.append(ResponseUtils.filter(subscription.getHost()));
+	url.append(ResponseUtils.filter(user.getUsername()));
 
 	// Generate the hyperlink start element
 	HttpServletResponse response =
@@ -201,7 +199,7 @@ public class LinkSubscriptionTag extends TagSupport {
 	    writer.print(results.toString());
 	} catch (IOException e) {
 	    throw new JspException
-		(messages.getMessage("linkSubscription.io", e.toString()));
+		(messages.getMessage("linkUser.io", e.toString()));
 	}
 
 	// Evaluate the body of this tag
@@ -240,7 +238,7 @@ public class LinkSubscriptionTag extends TagSupport {
 
         super.release();
         this.page = null;
-        this.name = "subscription";
+        this.name = "user";
 
     }
 

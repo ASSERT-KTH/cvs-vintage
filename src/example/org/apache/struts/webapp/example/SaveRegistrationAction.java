@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/example/Attic/SaveSubscriptionAction.java,v 1.11 2000/10/16 16:50:04 craigmcc Exp $
- * $Revision: 1.11 $
- * $Date: 2000/10/16 16:50:04 $
+ * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/SaveRegistrationAction.java,v 1.1 2001/04/11 02:10:01 rleland Exp $
+ * $Revision: 1.1 $
+ * $Date: 2001/04/11 02:10:01 $
  *
  * ====================================================================
  *
@@ -60,7 +60,7 @@
  */
 
 
-package org.apache.struts.example;
+package org.apache.struts.webapp.example;
 
 
 import java.io.IOException;
@@ -85,13 +85,14 @@ import org.apache.struts.util.PropertyUtils;
 
 /**
  * Implementation of <strong>Action</strong> that validates and creates or
- * updates the mail subscription entered by the user.
+ * updates the user registration information entered by the user.  If a new
+ * registration is created, the user is also implicitly logged on.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.11 $ $Date: 2000/10/16 16:50:04 $
+ * @version $Revision: 1.1 $ $Date: 2001/04/11 02:10:01 $
  */
 
-public final class SaveSubscriptionAction extends Action {
+public final class SaveRegistrationAction extends Action {
 
 
     // --------------------------------------------------------- Public Methods
@@ -122,33 +123,24 @@ public final class SaveSubscriptionAction extends Action {
 	Locale locale = getLocale(request);
 	MessageResources messages = getResources();
 	HttpSession session = request.getSession();
-	SubscriptionForm subform = (SubscriptionForm) form;
+	RegistrationForm regform = (RegistrationForm) form;
 	String action = request.getParameter("action");
 	if (action == null)
-	    action = "?";
+	    action = "Create";
+	Hashtable database = (Hashtable)
+	  servlet.getServletContext().getAttribute(Constants.DATABASE_KEY);
         if (servlet.getDebug() >= 1)
-            servlet.log("SaveSubscriptionAction:  Processing " + action +
+            servlet.log("SaveRegistrationAction:  Processing " + action +
                         " action");
 
-	// Is there a currently logged on user?
+	// Is there a currently logged on user (unless creating)?
 	User user = (User) session.getAttribute(Constants.USER_KEY);
-	if (user == null) {
+	if (!"Create".equals(action) && (user == null)) {
             if (servlet.getDebug() >= 1)
                 servlet.log(" User is not logged on in session "
                             + session.getId());
 	    return (servlet.findForward("logon"));
         }
-
-	// Is there a related Subscription object?
-	Subscription subscription =
-	  (Subscription) session.getAttribute(Constants.SUBSCRIPTION_KEY);
-	if (subscription == null) {
-	    servlet.log(" Missing subscription for user '" +
-	                 user.getUsername() + "'");
-	    response.sendError(HttpServletResponse.SC_BAD_REQUEST,
-	                       messages.getMessage("error.noSubscription"));
-	    return (null);
-	}
 
 	// Was this transaction cancelled?
 	if (isCancelled(request)) {
@@ -161,46 +153,83 @@ public final class SaveSubscriptionAction extends Action {
 	    return (mapping.findForward("success"));
 	}
 
-	// Was this transaction a Delete?
-	if (action.equals("Delete")) {
-	    if (servlet.getDebug() >= 1)
-	        servlet.log(" Deleting mail server '" +
-	                    subscription.getHost() + "' for user '" +
-	                    user.getUsername() + "'");
-	    subscription.setHost(null);
-	    subscription.setUser(null);
-	    if (mapping.getAttribute() != null)
-	        session.removeAttribute(mapping.getAttribute());
-	    session.removeAttribute(Constants.SUBSCRIPTION_KEY);
-	    return (mapping.findForward("success"));
+        // Validate the transactional control token
+	ActionErrors errors = new ActionErrors();
+        if (servlet.getDebug() >= 1) {
+            servlet.log(" Checking transactional control token");
+        }
+        if (!isTokenValid(request))
+            errors.add(ActionErrors.GLOBAL_ERROR,
+                       new ActionError("error.transaction.token"));
+        resetToken(request);
+
+	// Validate the request parameters specified by the user
+        if (servlet.getDebug() >= 1)
+            servlet.log(" Performing extra validations");
+	String value = null;
+	value = regform.getUsername();
+	if (("Create".equals(action)) &&
+	    (database.get(value) != null))
+            errors.add("username",
+                       new ActionError("error.username.unique",
+                                       regform.getUsername()));
+	if ("Create".equals(action)) {
+	    value = regform.getPassword();
+	    if ((value == null) || (value.length() <1))
+                errors.add("password",
+                           new ActionError("error.password.required"));
+	    value = regform.getPassword2();
+	    if ((value == null) || (value.length() < 1))
+                errors.add("password2",
+                           new ActionError("error.password2.required"));
 	}
 
-	// All required validations were done by the form itself
+	// Report any errors we have discovered back to the original form
+	if (!errors.empty()) {
+	    saveErrors(request, errors);
+            saveToken(request);
+	    return (new ActionForward(mapping.getInput()));
+	}
 
-	// Update the persistent subscription information
-        if (servlet.getDebug() >= 1)
-            servlet.log(" Populating database from form bean");
+	// Update the user's persistent profile information
+	if ("Create".equals(action)) {
+	    user = new User();
+	    user.setUsername(regform.getUsername());
+	}
         try {
-            PropertyUtils.copyProperties(subscription, subform);
+            String oldPassword = user.getPassword();
+            PropertyUtils.copyProperties(user, regform);
+            if ((regform.getPassword() == null) ||
+                (regform.getPassword().length() < 1))
+                user.setPassword(oldPassword);
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
             if (t == null)
                 t = e;
-            servlet.log("Subscription.populate", t);
-            throw new ServletException("Subscription.populate", t);
+            servlet.log("Registration.populate", t);
+            throw new ServletException("Registration.populate", t);
         } catch (Throwable t) {
-            servlet.log("Subscription.populate", t);
+            servlet.log("Registration.populate", t);
             throw new ServletException("Subscription.populate", t);
         }
 
-	// Remove the obsolete form bean and current subscription
+
+        // Log the user in if appropriate
+	if ("Create".equals(action)) {
+	    database.put(user.getUsername(), user);
+	    session.setAttribute(Constants.USER_KEY, user);
+	    if (servlet.getDebug() >= 1)
+		servlet.log(" User '" + user.getUsername() +
+	                    "' logged on in session " + session.getId());
+	}
+
+	// Remove the obsolete form bean
 	if (mapping.getAttribute() != null) {
             if ("request".equals(mapping.getScope()))
                 request.removeAttribute(mapping.getAttribute());
             else
                 session.removeAttribute(mapping.getAttribute());
         }
-	session.removeAttribute(Constants.SUBSCRIPTION_KEY);
 
 	// Forward control to the specified success URI
         if (servlet.getDebug() >= 1)

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/example/Attic/LinkUserTag.java,v 1.5 2001/03/06 17:14:20 craigmcc Exp $
- * $Revision: 1.5 $
- * $Date: 2001/03/06 17:14:20 $
+ * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/CheckLogonTag.java,v 1.1 2001/04/11 02:09:59 rleland Exp $
+ * $Revision: 1.1 $
+ * $Date: 2001/04/11 02:09:59 $
  *
  * ====================================================================
  *
@@ -60,81 +60,52 @@
  */
 
 
-package org.apache.struts.example;
+package org.apache.struts.webapp.example;
 
 
 import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
+import org.apache.struts.action.Action;
+import org.apache.struts.util.BeanUtils;
 import org.apache.struts.util.MessageResources;
-import org.apache.struts.util.ResponseUtils;
 
 
 /**
- * Generate a URL-encoded hyperlink to the specified URI, with
- * associated query parameters selecting a specified User.
+ * Check for a valid User logged on in the current session.  If there is no
+ * such user, forward control to the logon page.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.5 $ $Date: 2001/03/06 17:14:20 $
+ * @author Marius Barduta
+ * @version $Revision: 1.1 $ $Date: 2001/04/11 02:09:59 $
  */
 
-public class LinkUserTag extends TagSupport {
+public final class CheckLogonTag extends TagSupport {
 
 
-    // ----------------------------------------------------- Instance Variables
+    // --------------------------------------------------- Instance Variables
 
 
     /**
-     * The hyperlink URI.
+     * The key of the session-scope bean we look for.
      */
-    protected String page = null;
+    private String name = Constants.USER_KEY;
 
 
     /**
-     * The message resources for this package.
+     * The page to which we should forward for the user to log on.
      */
-    protected static MessageResources messages =
-	MessageResources.getMessageResources
-	("org.apache.struts.example.ApplicationResources");
+    private String page = "/logon.jsp";
+
+
+    // ----------------------------------------------------------- Properties
 
 
     /**
-     * The attribute name.
-     */
-    private String name = "user";
-
-
-    // ------------------------------------------------------------- Properties
-
-
-    /**
-     * Return the hyperlink URI.
-     */
-    public String getPage() {
-
-	return (this.page);
-
-    }
-
-
-    /**
-     * Set the hyperlink URI.
-     *
-     * @param page Set the hyperlink URI
-     */
-    public void setPage(String page) {
-
-	this.page = page;
-
-    }
-
-
-    /**
-     * Return the attribute name.
+     * Return the bean name.
      */
     public String getName() {
 
@@ -144,9 +115,9 @@ public class LinkUserTag extends TagSupport {
 
 
     /**
-     * Set the attribute name.
+     * Set the bean name.
      *
-     * @param name The new attribute name
+     * @param name The new bean name
      */
     public void setName(String name) {
 
@@ -155,78 +126,69 @@ public class LinkUserTag extends TagSupport {
     }
 
 
-    // --------------------------------------------------------- Public Methods
+    /**
+     * Return the forward page.
+     */
+    public String getPage() {
+
+	return (this.page);
+
+    }
 
 
     /**
-     * Render the beginning of the hyperlink.
+     * Set the forward page.
+     *
+     * @param page The new forward page
+     */
+    public void setPage(String page) {
+
+	this.page = page;
+
+    }
+
+
+    // ------------------------------------------------------- Public Methods
+
+
+    /**
+     * Defer our checking until the end of this tag is encountered.
      *
      * @exception JspException if a JSP exception has occurred
      */
     public int doStartTag() throws JspException {
 
-	// Generate the URL to be encoded
-        HttpServletRequest request =
-            (HttpServletRequest) pageContext.getRequest();
-        StringBuffer url = new StringBuffer(request.getContextPath());
-        url.append(page);
-	User user = null;
-	try {
-	    user = (User) pageContext.findAttribute(name);
-        } catch (ClassCastException e) {
-	    user = null;
-	}
-	if (user == null)
-	    throw new JspException
-	        (messages.getMessage("linkUser.noUser", name));
-	if (page.indexOf("?") < 0)
-	    url.append("?");
-	else
-	    url.append("&");
-	url.append("username=");
-	url.append(ResponseUtils.filter(user.getUsername()));
-
-	// Generate the hyperlink start element
-	HttpServletResponse response =
-	  (HttpServletResponse) pageContext.getResponse();
-	StringBuffer results = new StringBuffer("<a href=\"");
-	results.append(response.encodeURL(url.toString()));
-	results.append("\">");
-
-	// Print this element to our output writer
-	JspWriter writer = pageContext.getOut();
-	try {
-	    writer.print(results.toString());
-	} catch (IOException e) {
-	    throw new JspException
-		(messages.getMessage("linkUser.io", e.toString()));
-	}
-
-	// Evaluate the body of this tag
-	return (EVAL_BODY_INCLUDE);
+	return (SKIP_BODY);
 
     }
 
 
-
     /**
-     * Render the end of the hyperlink.
+     * Perform our logged-in user check by looking for the existence of
+     * a session scope bean under the specified name.  If this bean is not
+     * present, control is forwarded to the specified logon page.
      *
      * @exception JspException if a JSP exception has occurred
      */
     public int doEndTag() throws JspException {
 
+	// Is there a valid user logged on?
+	boolean valid = false;
+	HttpSession session = pageContext.getSession();
+	if ((session != null) && (session.getAttribute(name) != null))
+	    valid = true;
 
-	// Print the ending element to our output writer
-	JspWriter writer = pageContext.getOut();
-	try {
-	    writer.print("</a>");
-	} catch (IOException e) {
-	    throw new JspException
-	        (messages.getMessage("link.io", e.toString()));
+	// Forward control based on the results
+	if (valid)
+	    return (EVAL_PAGE);
+	else {
+	    try {
+		pageContext.forward(page);
+	    } catch (Exception e) {
+		throw new JspException(e.toString());
+	    }
+	    return (SKIP_PAGE);
 	}
-
-	return (EVAL_PAGE);
 
     }
 
@@ -237,8 +199,8 @@ public class LinkUserTag extends TagSupport {
     public void release() {
 
         super.release();
-        this.page = null;
-        this.name = "user";
+        this.name = Constants.USER_KEY;
+        this.page = "/logon.jsp";
 
     }
 

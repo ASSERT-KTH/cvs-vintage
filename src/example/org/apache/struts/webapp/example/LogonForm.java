@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/example/Attic/SubscriptionForm.java,v 1.8 2000/10/15 03:34:55 craigmcc Exp $
- * $Revision: 1.8 $
- * $Date: 2000/10/15 03:34:55 $
+ * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/Attic/LogonForm.java,v 1.1 2001/04/11 02:10:01 rleland Exp $
+ * $Revision: 1.1 $
+ * $Date: 2001/04/11 02:10:01 $
  *
  * ====================================================================
  *
@@ -60,7 +60,7 @@
  */
 
 
-package org.apache.struts.example;
+package org.apache.struts.webapp.example;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,41 +74,18 @@ import org.apache.struts.action.ActionMapping;
  * Form bean for the user profile page.  This form has the following fields,
  * with default values in square brackets:
  * <ul>
- * <li><b>action</b> - The maintenance action we are performing (Create, Delete,
- *     or Edit).
- * <li><b>host</b> - The mail host for this subscription.  [REQUIRED]
- * <li><b>password</b> - The password for this subscription.  [REQUIRED]
- * <li><b>type</b> - The subscription type (imap,pop3)
-       for this subscription.  [REQUIRED]
- * <li><b>username</b> - The username of this subscription.  [REQUIRED]
+ * <li><b>password</b> - Entered password value
+ * <li><b>username</b> - Entered username value
  * </ul>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.8 $ $Date: 2000/10/15 03:34:55 $
+ * @version $Revision: 1.1 $ $Date: 2001/04/11 02:10:01 $
  */
 
-public final class SubscriptionForm extends ActionForm  {
+public final class LogonForm extends ActionForm {
 
 
     // --------------------------------------------------- Instance Variables
-
-
-    /**
-     * The maintenance action we are performing (Create or Edit).
-     */
-    private String action = "Create";
-
-
-    /**
-     * Should we auto-connect at startup time?
-     */
-    private boolean autoConnect = false;
-
-
-    /**
-     * The host name.
-     */
-    private String host = null;
 
 
     /**
@@ -118,83 +95,12 @@ public final class SubscriptionForm extends ActionForm  {
 
 
     /**
-     * The subscription type.
-     */
-    private String type = null;
-
-
-    /**
      * The username.
      */
     private String username = null;
 
 
     // ----------------------------------------------------------- Properties
-
-
-    /**
-     * Return the maintenance action.
-     */
-    public String getAction() {
-
-	return (this.action);
-
-    }
-
-
-    /**
-     * Set the maintenance action.
-     *
-     * @param action The new maintenance action.
-     */
-    public void setAction(String action) {
-
-        this.action = action;
-
-    }
-
-
-    /**
-     * Return the auto-connect flag.
-     */
-    public boolean getAutoConnect() {
-
-        return (this.autoConnect);
-
-    }
-
-
-    /**
-     * Set the auto-connect flag.
-     *
-     * @param autoConnect The new auto-connect flag
-     */
-    public void setAutoConnect(boolean autoConnect) {
-
-        this.autoConnect = autoConnect;
-    }
-
-
-    /**
-     * Return the host name.
-     */
-    public String getHost() {
-
-	return (this.host);
-
-    }
-
-
-    /**
-     * Set the host name.
-     *
-     * @param host The host name
-     */
-    public void setHost(String host) {
-
-        this.host = host;
-
-    }
 
 
     /**
@@ -215,28 +121,6 @@ public final class SubscriptionForm extends ActionForm  {
     public void setPassword(String password) {
 
         this.password = password;
-
-    }
-
-
-    /**
-     * Return the subscription type.
-     */
-    public String getType() {
-
-	return (this.type);
-
-    }
-
-
-    /**
-     * Set the subscription type.
-     *
-     * @param type The subscription type
-     */
-    public void setType(String type) {
-
-        this.type = type;
 
     }
 
@@ -274,11 +158,7 @@ public final class SubscriptionForm extends ActionForm  {
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
 
-        this.action = "Create";
-        this.autoConnect = false;
-        this.host = null;
         this.password = null;
-        this.type = null;
         this.username = null;
 
     }
@@ -298,27 +178,14 @@ public final class SubscriptionForm extends ActionForm  {
                                  HttpServletRequest request) {
 
         ActionErrors errors = new ActionErrors();
+        if ((username == null) || (username.length() < 1))
+            errors.add("username", new ActionError("error.username.required"));
+        if ((password == null) || (password.length() < 1))
+            errors.add("password", new ActionError("error.password.required"));
 
-	if ((host == null) || (host.length() < 1))
-            errors.add("host",
-                       new ActionError("error.host.required"));
-	if ((username == null) || (username.length() < 1))
-            errors.add("username",
-                       new ActionError("error.username.required"));
-	if ((password == null) || (password.length() < 1))
-            errors.add("password",
-                       new ActionError("error.password.required"));
-	if ((type == null) || (type.length() < 1))
-            errors.add("type",
-                       new ActionError("error.type.required"));
-	else if (!"imap".equals(type) && !"pop3".equals(type))
-            errors.add("type",
-                       new ActionError("error.type.invalid", type));
-
-	return (errors);
+        return errors;
 
     }
 
 
 }
-

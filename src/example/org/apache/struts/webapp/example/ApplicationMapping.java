@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/example/Attic/LogoffAction.java,v 1.4 2000/09/23 22:53:53 craigmcc Exp $
- * $Revision: 1.4 $
- * $Date: 2000/09/23 22:53:53 $
+ * $Header: /tmp/cvs-vintage/struts/src/example/org/apache/struts/webapp/example/ApplicationMapping.java,v 1.1 2001/04/11 02:09:59 rleland Exp $
+ * $Revision: 1.1 $
+ * $Date: 2001/04/11 02:09:59 $
  *
  * ====================================================================
  *
@@ -60,83 +60,89 @@
  */
 
 
-package org.apache.struts.example;
+package org.apache.struts.webapp.example;
 
 
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.Vector;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 
 /**
- * Implementation of <strong>Action</strong> that processes a
- * user logoff.
+ * Implementation of <strong>ActionMapping</strong> for the Struts
+ * example application.  It defines the following custom properties:
+ * <ul>
+ * <li><b>failure</b> - The context-relative URI to which this request
+ *     should be forwarded if a validation error occurs on the input
+ *     information (typically goes back to the input form).
+ * <li><b>success</b> - The context-relative URI to which this request
+ *     should be forwarded if the requested action is successfully
+ *     completed.
+ * </ul>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.4 $ $Date: 2000/09/23 22:53:53 $
+ * @version $Revision: 1.1 $ $Date: 2001/04/11 02:09:59 $
  */
 
-public final class LogoffAction extends Action {
+public final class ApplicationMapping extends ActionMapping {
 
 
-    // --------------------------------------------------------- Public Methods
+    // --------------------------------------------------- Instance Variables
 
 
     /**
-     * Process the specified HTTP request, and create the corresponding HTTP
-     * response (or forward to another web component that will create it).
-     * Return an <code>ActionForward</code> instance describing where and how
-     * control should be forwarded, or <code>null</code> if the response has
-     * already been completed.
-     *
-     * @param mapping The ActionMapping used to select this instance
-     * @param actionForm The optional ActionForm bean for this request (if any)
-     * @param request The HTTP request we are processing
-     * @param response The HTTP response we are creating
-     *
-     * @exception IOException if an input/output error occurs
-     * @exception ServletException if a servlet exception occurs
+     * The failure URI for this mapping.
      */
-    public ActionForward perform(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws IOException, ServletException {
+    private String failure = null;
 
-	// Extract attributes we will need
-	Locale locale = getLocale(request);
-	MessageResources messages = getResources();
-	HttpSession session = request.getSession();
-	User user = (User) session.getAttribute(Constants.USER_KEY);
 
-	// Process this user logoff
-	if (user != null) {
-	    if (servlet.getDebug() >= 1)
-	        servlet.log("LogoffAction: User '" + user.getUsername() +
-	                    "' logged off in session " + session.getId());
-	} else {
-	    if (servlet.getDebug() >= 1)
-	        servlet.log("LogoffActon: User logged off in session " +
-	                    session.getId());
-	}
-	session.removeAttribute(Constants.SUBSCRIPTION_KEY);
-	session.removeAttribute(Constants.USER_KEY);
-	session.invalidate();
+    /**
+     * The success URI for this mapping.
+     */
+    private String success = null;
 
-	// Forward control to the specified success URI
-	return (mapping.findForward("success"));
+
+    // ----------------------------------------------------------- Properties
+
+
+    /**
+     * Return the failure URI for this mapping.
+     */
+    public String getFailure() {
+
+	return (this.failure);
+
+    }
+
+
+    /**
+     * Set the failure URI for this mapping.
+     *
+     * @param failure The failure URI for this mapping
+     */
+    public void setFailure(String failure) {
+
+	this.failure = failure;
+
+    }
+
+
+    /**
+     * Return the success URI for this mapping.
+     */
+    public String getSuccess() {
+
+	return (this.success);
+
+    }
+
+
+    /**
+     * Set the success URI for this mapping.
+     *
+     * @param success The success URI for this mapping
+     */
+    public void setSuccess(String success) {
+
+	this.success = success;
 
     }
 
