@@ -22,9 +22,7 @@
     </tr>
 #foreach ($attKey in $attrValues.sequence())
   #set ($attVal = $attrValues.get($attKey))
- ## turning off user attributes here because we are showing "assigned to"
- ## in another section.  We need to make this code more generic. !FIXME!
- #if (!$attVal.Attribute.isUserAttribute())
+  #set ($attr = $attVal.Attribute)
   #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
   #if ($attVal.Attribute.AttributeType.ValidationKey)
         #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
@@ -37,20 +35,20 @@
      <tr>
       <th>$attVal.RModuleAttribute.DisplayValue</th>
       <td>
-    #if ($attVal.Attribute.isOptionAttribute())
+    #if ($attr.isOptionAttribute())
         #attrValueLeafSelect ($attVal $field "")
         #attrValueErrorMsg ($attVal $field)
+    #elseif ($attr.isUserAttribute())
+      #listUsers($attr)
     #else
         #attrValueErrorMsg($attVal "Value")
-        #if ($attVal.Attribute.AttributeType.Name == "long-string")
+        #if ($attr.AttributeType.Name == "long-string")
            #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
         #else
            <input name= "$attrInput.Value.Key"
                value="$!attrInput.Value" size="20" type="text" />
         #end
     #end
-      </td>
-     </tr>
   #else
     #if ($attVal.isSet())
      <tr>
@@ -59,6 +57,8 @@
        #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
        #if ($attVal.Attribute.isOptionAttribute())
           $!attVal.AttributeOption.Name
+	   #elseif ($attr.isUserAttribute())
+          #listUsers($attr)
        #else
           $!attrInput.Value
        #end
@@ -66,7 +66,6 @@
       </td>
      </tr>
   #end
- #end
 #end
 </table>
 </div>
