@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: AddRole.vm,v 1.4 2002/03/01 17:07:24 jon Exp $
+@version $Id: AddRole.vm,v 1.5 2002/03/15 18:46:06 jon Exp $
 *#
 
 #set ($lastAction = $data.Parameters.getString("lastAction"))
@@ -36,8 +36,8 @@
 </div>
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
- <input type="submit" name="eventSubmit_doAddrole" value="Add Role" />
+ <input type="submit" name="eventSubmit_doAddrole" value="Add Role" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 
 $intake.declareGroups()
