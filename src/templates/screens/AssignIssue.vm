@@ -7,7 +7,6 @@
 #set ($issueListSize = $scarabG.sizeOfArray($issueList))
 #set ($searchString = $data.Parameters.getString("searchString" , ""))
 #set ($searchField = $data.Parameters.getString("searchField" , ""))
-##set ($now = $scarabG.Now.Time)
 
 #if ($userAttrs.isEmpty())
  <p><strong class="alert">
@@ -302,14 +301,12 @@
    #end
    </table>
 
-##passValues()
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAdd" value="Add selected to assignee list" />
 </div>
 
 #if ($paginated)
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
-#end
 
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
@@ -324,6 +321,7 @@
      </tr>
   </table>
 </div>
+#end
 
 #set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "IssueList.vm"))
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
