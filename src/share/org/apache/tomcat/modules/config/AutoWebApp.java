@@ -209,7 +209,7 @@ public class AutoWebApp extends BaseInterceptor {
 	    path="";
 
 	Hashtable loaded=(Hashtable)hosts.get(host);
-	if( loaded.get( path ) != null ) {
+	if( loaded != null && loaded.get( path ) != null ) {
 	    log( "Already loaded");
 	    return; // already loaded
 	}
