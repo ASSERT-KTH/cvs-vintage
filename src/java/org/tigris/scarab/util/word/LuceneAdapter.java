@@ -83,7 +83,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.19 2002/10/25 20:47:23 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.20 2002/11/11 18:07:09 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -547,6 +547,7 @@ public class LuceneAdapter
                 {
                     Log.get().debug("Updated index for attribute values (" + 
                         (i-100L) + "-" + i + "]");                    
+                    Log.debugMemory();
                 }                
             }  
         }
@@ -589,6 +590,7 @@ public class LuceneAdapter
                 {
                     Log.get().debug("Updated index for attachments (" + 
                         (i-100L) + "-" + i + "]");                    
+                    Log.debugMemory();
                 }                
             }  
         }
