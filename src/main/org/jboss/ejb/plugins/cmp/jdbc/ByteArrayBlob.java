@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.sql.Blob;
 
@@ -25,7 +26,7 @@ import java.sql.Blob;
  * field of type SQL <code>BLOB</code>.
  * 
  * @author <a href="mailto:amccullo@sourceforge.new">Andrew McCulloch</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ByteArrayBlob implements Blob
 {
@@ -135,4 +136,27 @@ public class ByteArrayBlob implements Blob
          }
       }
    }
+
+// The setters added in JDK 1.4 are here for compilation only
+
+   public OutputStream setBinaryStream(long pos)
+      throws SQLException
+   {
+      return null;
+   }
+   public int setBytes(long pos, byte[] bytes)
+      throws SQLException
+   {
+      return 0;
+   }
+   public int setBytes(long pos, byte[] bytes, int offset, int length)
+      throws SQLException
+   {
+      return 0;
+   }
+   public void truncate(long length)
+      throws SQLException
+   {
+   }
 }
+
