@@ -8,9 +8,7 @@ import java.util.Hashtable;
 import java.util.*;
 import java.net.*;
 import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.modules.config.*;
 import org.apache.tomcat.util.xml.*;
-import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.log.*;
 import org.xml.sax.*;
 import org.apache.tomcat.util.collections.*;
@@ -25,7 +23,8 @@ import org.apache.tomcat.util.IntrospectionUtils;
 public class EnableAdmin {
 
     Hashtable attributes=new Hashtable();
-
+    String args[];
+    
     public EnableAdmin() {
     }
     
@@ -41,6 +40,7 @@ public class EnableAdmin {
     
     public void setArgs(String args[]) {
 	attributes.put("args", args);
+	this.args=args;
     }
 
     public void setConfig( String s ) {
@@ -84,6 +84,14 @@ public class EnableAdmin {
     
     public void execute() throws Exception
     {
+	if( args!=null ) {
+	    boolean ok=processArgs( args );
+	    if ( ! ok ) {
+		printUsage();
+		return;
+	    }
+	}
+
 	System.out.println("Overriding apps-admin settings ");
 	String home=(String)attributes.get("home");
 	if( home==null) home=(String)attributes.get("install");
@@ -127,7 +135,6 @@ public class EnableAdmin {
      */
     public  boolean processArgs(String[] args) {
 	try {
-	    setArgs(args);	    
 	    return IntrospectionUtils.processArgs( this, args,getOptions1(),
 						   null, getOptionAliases());
 	} catch( Exception ex ) {
@@ -139,8 +146,6 @@ public class EnableAdmin {
     /** Callback from argument processing
      */
     public void setProperty(String s,Object v) {
-	if( getOptionAliases().get( s ) !=null )
-	    s=(String)getOptionAliases().get( s );
 	if ( dL > 0 ) debug( "Generic property " + s );
 	attributes.put(s,v);
     }
@@ -148,16 +153,8 @@ public class EnableAdmin {
     /** Called by Main to set non-string properties
      */
     public void setAttribute(String s,Object o) {
-	if( getOptionAliases().get( s ) !=null )
-	    s=(String)getOptionAliases().get( s );
-
         if ( "args".equals(s) ) {
 	    String args[]=(String[])o;
-	    boolean ok=processArgs( args );
-	    if ( ! ok ) {
-		printUsage();
-		return;
-	    }
 	}
 
 
@@ -169,7 +166,7 @@ public class EnableAdmin {
     public static void main(String args[] ) {
 	try {
 	    EnableAdmin task=new EnableAdmin();
-	    task.processArgs( args );
+	    task.setArgs(args);
             task.execute();
 	} catch(Exception ex ) {
 	    ex.printStackTrace();

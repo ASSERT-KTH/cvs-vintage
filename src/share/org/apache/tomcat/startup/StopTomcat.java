@@ -84,6 +84,7 @@ public class StopTomcat {
     // explicit command line params ( for port, host or secret )
     boolean commandLineParams=false;
     String secretFile=null;
+    String args[];
     
     public StopTomcat() 
     {
@@ -134,10 +135,25 @@ public class StopTomcat {
 	secret=s;
 	commandLineParams=true;
     }
+
+    // Generic properties / attributes
+
+    public void setAttribute(String s, Object o ) {
+    }
+
+    public void setProperty( String name, String v ) {
+
+    }
+
+    public void setArgs( String args[] ) {
+	this.args=args;
+    }
     
     // -------------------- Ant execute --------------------
 
     public void execute() throws Exception {
+	if( args!=null )
+	    processArgs( args );
 	System.out.println(sm.getString("tomcat.stop"));
 	try {
 	    stopTomcat(); // stop serving
@@ -304,7 +320,7 @@ public class StopTomcat {
     public static void main(String args[] ) {
 	try {
 	    StopTomcat tomcat=new StopTomcat();
-	    tomcat.processArgs( args );
+	    tomcat.setArgs( args );
 	    tomcat.execute();
 	} catch(Exception ex ) {
 	    System.out.println(sm.getString("tomcat.fatal"));
