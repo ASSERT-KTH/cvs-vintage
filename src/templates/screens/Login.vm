@@ -55,9 +55,6 @@ $page.setTitle("Welcome to Scarab")
    <input name= "$login.Username.Key"
         value="$!login.Username.Value" size="25" type="text">
 
-<!--
-                <INPUT name="Email" value="$!data.Parameters.Email" TYPE="text" SIZE="25">
-        -->
                  Enter your email address.</TD>
         </TR>
         <TR>
@@ -71,7 +68,7 @@ $page.setTitle("Welcome to Scarab")
         </TR>
         <TR>
                 <TD class="InputHeader">Password:</TD>
-                <TD class="PlainText"><INPUT name="Password" TYPE="password" SIZE="25" onChange="document.login.submit();"> Enter your password.</TD>
+                <TD class="PlainText"><INPUT value="" name="Password" TYPE="password" SIZE="25" onChange="document.login.submit();"> Enter your password.</TD>
         </TR>
         <TR>
                 <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>

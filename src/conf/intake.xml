@@ -79,8 +79,8 @@
 
 <group class="Login" key="login" mapToObject="om.ScarabUser">
     <field name="Username" key="u" type="String" mapToProperty="Username">
-        <rule minLength="1">Please enter a username</rule>
-        <rule mask=".+@.+\..+">Please enter an email address as username</rule>
+        <rule minLength="1">Please enter an email address</rule>
+        <rule mask=".+@.+\..+">Please enter an email address as your username</rule>
     </field>
     <field name="Password" key="p" type="String">
         <rule minLength="1">Please enter a password</rule>
