@@ -19,10 +19,11 @@ import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.core.main.MainInterface;
+import org.columba.mail.folder.imap.IMAPRootFolder;
 
 /**
  * @author freddy
@@ -56,11 +57,15 @@ public class FetchSubFolderListCommand extends FolderCommand {
 	public void execute(Worker worker) throws Exception {
 		ColumbaLogger.log.debug("reference="+getReferences(Command.UNDOABLE_OPERATION));
 		
+		
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences(Command.FIRST_EXECUTION);
+		if ( r == null ) return;
 		
 		treeNode = (FolderTreeNode) r[0].getFolder();
 		
-		treeNode.createChildren(worker);
+		if ( treeNode instanceof IMAPRootFolder )
+			treeNode.createChildren(worker);
+		
 	}
 
 	/**

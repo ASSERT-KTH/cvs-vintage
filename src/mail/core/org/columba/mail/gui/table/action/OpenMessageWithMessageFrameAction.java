@@ -15,9 +15,11 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
+import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
@@ -65,9 +67,18 @@ public class OpenMessageWithMessageFrameAction
 
 		FolderCommandReference[] r =
 			((MailFrameController) getFrameController()).getTableSelection();
-		c.getSelectionManager().getHandler("mail.table").setSelection(r);
+
+		c.treeController.setSelected((Folder) r[0].getFolder());
+		c.setTreeSelection(r);
+
+		c.tableController.setSelected(r[0].getUids());
+				c.setTableSelection(r);
+		MainInterface.processor.addOp(new ViewHeaderListCommand(c, r));
+
+		
 
 		MainInterface.processor.addOp(new ViewMessageCommand(c, r));
+
 	}
 
 	public void selectionChanged(SelectionChangedEvent e) {

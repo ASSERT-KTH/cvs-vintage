@@ -68,7 +68,10 @@ public class TableSelectionHandler extends SelectionHandler implements TreeSelec
 	public void setSelection(DefaultCommandReference[] selection) {
 		FolderCommandReference ref = (FolderCommandReference) selection[0];
 
+		folder = (Folder) ref.getFolder();
+		
 		// TODO implement setSelection
+		/*
 		if ( ref != null )
 		{
 		
@@ -79,7 +82,7 @@ public class TableSelectionHandler extends SelectionHandler implements TreeSelec
 
 		TreePath path[] = new TreePath[uids.length];
 		}
-		
+		*/
 		
 		/*
 		for (int i = 0; i < uids.length; i++) {

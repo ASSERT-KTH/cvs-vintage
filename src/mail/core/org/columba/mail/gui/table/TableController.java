@@ -22,6 +22,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
@@ -34,7 +35,8 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.action.HeaderTableActionListener;
-import org.columba.mail.gui.table.selection.*;
+import org.columba.mail.gui.table.selection.TableSelectionHandler;
+import org.columba.mail.gui.table.selection.TableSelectionManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.message.HeaderList;
@@ -384,6 +386,28 @@ public class TableController
 	 */
 	public FilterActionListener getFilterActionListener() {
 		return filterActionListener;
+	}
+
+	public void setSelected( Object[] uids )
+	{
+		MessageNode[] nodes = new MessageNode[uids.length];
+		
+		for ( int i=0; i<uids.length; i++)
+		{
+			nodes[i] = getHeaderTableModel().getMessageNode(uids[i]);			
+		}
+		
+		TreePath[] paths = new TreePath[nodes.length];
+		
+		for ( int i=0; i<nodes.length; i++ )
+		{
+			paths[i] = new TreePath(nodes[i].getPath());
+			
+		}
+		
+		view.getTree().setSelectionPaths(paths);
+		
+		getTableSelectionManager().fireMessageSelectionEvent(null, uids);
 	}
 
 	public void valueChanged(TreeSelectionEvent e) {

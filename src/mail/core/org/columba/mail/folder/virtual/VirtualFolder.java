@@ -29,8 +29,9 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.DefaultSearchEngine;
+import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.message.AbstractMessage;
@@ -115,9 +116,122 @@ public class VirtualFolder extends Folder {
 
 		applySearch(worker);
 
-		//searchFilter.addSearchToHistory(this);
+		addSearchToHistory();
 
 		return headerList;
+
+	}
+
+	public void addSearchToHistory() throws Exception {
+
+		
+		VirtualFolder folder =
+			(VirtualFolder) MainInterface.treeModel.getFolder(106);
+
+		// only create new subfolders if we used the default "Search Folder"
+		if (!folder.equals(this))
+			return;
+
+		// we only want 10 subfolders
+		// -> if more children exist remove them
+		if (folder.getChildCount() >= 10) {
+			Folder child = (Folder) folder.getChildAt(0);
+			child.removeFromParent();
+		}
+
+		// create new subfolder
+		String name = "search result";
+		VirtualFolder newFolder = null;
+		try {
+
+			newFolder = (VirtualFolder) addFolder(name, "VirtualFolder");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+
+			return;
+		}
+
+		// if creation failed
+		if (newFolder == null)
+			return;
+
+
+		// copy all properties to the subfolder
+		int uid = getFolderItem().getInteger("property", "source_uid");
+		boolean includes =
+			getFolderItem().getBoolean("property", "include_subfolders");
+
+		FolderItem newFolderItem = newFolder.getFolderItem();
+		newFolderItem.set("property", "source_uid", uid);
+		newFolderItem.set("property", "include_subfolders", includes);
+
+		newFolderItem.getElement("filter").removeFromParent();
+		newFolderItem.getRoot().addElement(
+			(XmlElement) getFolderItem().getElement("filter").clone());
+
+		FilterCriteria newc =
+					new Filter(getFolderItem().getElement("filter"))
+						.getFilterRule()
+						.get(
+						0);
+						
+		/*
+		FilterCriteria c =
+			new Filter(getFolderItem().getElement("filter"))
+				.getFilterRule()
+				.get(
+				0);
+
+		FilterCriteria newc =
+			new Filter(getFolderItem().getElement("filter"))
+				.getFilterRule()
+				.get(
+				0);
+		newc.setCriteria(c.getCriteriaString());
+		newc.setHeaderItem(c.getHeaderItemString());
+		newc.setPattern(c.getPattern());
+		newc.setType(c.getType());
+		*/
+		
+		// lets find a good name for our new vfolder
+
+		StringBuffer buf = new StringBuffer();
+
+		if (newc.getType().equalsIgnoreCase("flags")) {
+			System.out.println("flags found");
+
+			buf.append(newc.getType());
+			buf.append(" (");
+			buf.append(newc.getCriteriaString());
+			buf.append(" ");
+			buf.append(newc.getPattern());
+			buf.append(")");
+		} else if (newc.getType().equalsIgnoreCase("custom headerfield")) {
+
+			buf.append(newc.getHeaderItemString());
+			buf.append(" (");
+			buf.append(newc.getCriteriaString());
+			buf.append(" ");
+			buf.append(newc.getPattern());
+			buf.append(")");
+		} else {
+			buf.append(newc.getType());
+			buf.append(" (");
+			buf.append(newc.getCriteriaString());
+			buf.append(" ");
+			buf.append(newc.getPattern());
+			buf.append(")");
+
+		}
+		
+
+		newFolder.renameFolder(buf.toString());
+		
+		// update tree-view
+		MainInterface.treeModel.nodeStructureChanged(folder);
+		
+		// update tree-node (for renaming the new folder)
+		MainInterface.treeModel.nodeChanged(newFolder);
 
 	}
 
@@ -326,7 +440,6 @@ public class VirtualFolder extends Folder {
 		if (header.get("columba.flags.recent").equals(Boolean.TRUE))
 			getMessageFolderInfo().decRecent();
 
-		
 		headerList.remove(uid);
 	}
 
@@ -426,6 +539,8 @@ public class VirtualFolder extends Folder {
 		FolderCommandReference[] newReference = null;
 
 		Object[] uids = r[0].getUids();
+		if (uids == null)
+			return r;
 
 		Hashtable list = new Hashtable();
 

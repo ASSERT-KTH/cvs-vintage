@@ -45,7 +45,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class TreeModel extends DefaultTreeModel {
 	protected FolderXmlConfig folderXmlConfig;
-	
+
 	protected TempFolder tempFolder = new TempFolder();
 
 	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
@@ -53,15 +53,11 @@ public class TreeModel extends DefaultTreeModel {
 	public TreeModel(FolderXmlConfig folderConfig) {
 		super(new Root(folderConfig.getRoot().getElement("tree")));
 
-		//System.out.println("root-uid=" + rootNode.getUid());
 		this.folderXmlConfig = folderConfig;
 
-		//System.out.println("root1=" + getRoot().toString());
 		createDirectories(
 			((FolderTreeNode) getRoot()).getNode(),
 			(FolderTreeNode) getRoot());
-
-		//System.out.println("root2=" + getRoot());
 
 	}
 
@@ -77,18 +73,7 @@ public class TreeModel extends DefaultTreeModel {
 
 				child = parentTreeNode.getElement(i);
 				String name = child.getName();
-				//XmlElement nameNode = child.getName();
 
-				//                System.out.println( "node: "+child );
-				//                System.out.println( "nodename: "+nameNode.getValue());
-
-				/*
-				if ((name.equals("tree")) || (name.equals("folder"))) {
-					FolderTreeNode folder = add(child, parentFolder);
-					if (folder != null)
-						createDirectories(child, folder);
-				}
-				*/
 				if (name.equals("folder")) {
 					FolderTreeNode folder = add(child, parentFolder);
 					if (folder != null)
@@ -174,86 +159,6 @@ public class TreeModel extends DefaultTreeModel {
 			ex.printStackTrace();
 		}
 		return folder;
-
-		/*
-		ClassLoader loader = ClassLoader.getSystemClassLoader();
-		try {
-			Class actClass = loader.loadClass(className);
-			//System.out.println("superclass="+actClass.getSuperclass().getName());
-			
-			
-			
-			Constructor c = actClass.getConstructor(FOLDER_ITEM_ARG);
-			
-			if( c != null ) {
-				Object[] args ={item};
-			
-				FolderTreeNode folder = (FolderTreeNode) c.newInstance( args);
-				parentFolder.add( folder );
-			
-				return folder;
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		*/
-		/*
-		if (item.getType().equals("columba")) {
-			//ColumbaFolder f = new ColumbaFolder(childNode, item);
-			CachedMHFolder f = new CachedMHFolder(childNode, item);
-		
-			FilterList list = new FilterList(f);
-			parentFolder.add(f);
-		
-			return f;
-		} else if (item.getType().equals("virtual")) {
-		
-			VirtualFolder f = new VirtualFolder(childNode, item);
-			Search search = new Search(childNode, f);
-			parentFolder.add(f);
-		
-			return f;
-		} else if (item.getType().equals("outbox")) {
-		
-			OutboxFolder f = new OutboxFolder(childNode, item);
-			parentFolder.add(f); // Do never exchange with line below!!
-		
-			return f;
-		
-		} else if (item.getType().equals("imap")) {
-			AccountItem accountItem =
-				MailConfig.getAccountList().uidGet(item.getAccountUid());
-		
-			ImapItem item2 = accountItem.getImapItem();
-		
-			IMAPRootFolder imapRootFolder = null;
-		
-			IMAPFolder f =
-				new IMAPFolder(childNode, item, item2, imapRootFolder);
-			FilterList list = new FilterList(f);
-			parentFolder.add(f);
-		
-			return f;
-		
-		} else if (item.getType().equals("imaproot")) {
-		
-			AccountItem accountItem =
-				MailConfig.getAccountList().uidGet(item.getAccountUid());
-		
-			ImapItem item2 = accountItem.getImapItem();
-		
-			IMAPRootFolder f =
-				new IMAPRootFolder(
-					childNode,
-					item,
-					item2,
-					item.getAccountUid());
-			f.setName(accountItem.getName());
-			parentFolder.add(f);
-		
-			return f;
-		}
-		*/
 
 	}
 
@@ -351,14 +256,7 @@ public class TreeModel extends DefaultTreeModel {
 
 			if (child.getName().equals(str))
 				return child;
-			/*
-			if (child instanceof Folder) {
-				Folder f = (Folder) child;
-				//System.out.println( "child: "+child.getName());
-				if (f.getName().equals(str))
-					return child;
-			}
-			*/
+
 		}
 
 		return null;
@@ -367,9 +265,8 @@ public class TreeModel extends DefaultTreeModel {
 	public SelectFolderDialog getSelectFolderDialog() {
 		return new SelectFolderDialog();
 	}
-	
-	public TempFolder getTempFolder()
-	{
+
+	public TempFolder getTempFolder() {
 		return tempFolder;
 	}
 

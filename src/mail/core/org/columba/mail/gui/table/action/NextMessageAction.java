@@ -92,7 +92,9 @@ public class NextMessageAction
 			uids[0] = nextUid;
 			ref.setUids(uids);
 
+			
 			((MailFrameController) getFrameController()).setTableSelection(r);
+			table.setSelected(uids);
 
 			MainInterface.processor.addOp(
 				new ViewMessageCommand(getFrameController(), r));

@@ -148,7 +148,8 @@ public class NextUnreadMessageAction
 			ref.setUids(uids);
 
 			((MailFrameController) getFrameController()).setTableSelection(r);
-
+			table.setSelected(uids);
+			
 			MainInterface.processor.addOp(
 				new ViewMessageCommand(getFrameController(), r));
 		}
