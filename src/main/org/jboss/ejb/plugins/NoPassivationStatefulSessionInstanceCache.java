@@ -31,7 +31,7 @@ import org.jboss.ejb.deployment.jBossSession;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.2 $
+*	@version $Revision: 1.3 $
 */
 public class NoPassivationStatefulSessionInstanceCache
 implements InstanceCache
@@ -85,7 +85,7 @@ implements InstanceCache
 		
 		// Do we have the context in cache?
 		StatefulSessionEnterpriseContext ctx = 
-			(StatefulSessionEnterpriseContext)active.get(id)
+			(StatefulSessionEnterpriseContext)active.get(id);
 		
 		// We have it in cache
 		if (ctx != null) {
