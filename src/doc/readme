@@ -1,4 +1,4 @@
-$Id: readme,v 1.16 2001/07/19 20:20:10 larryi Exp $
+$Id: readme,v 1.17 2001/07/20 18:42:33 larryi Exp $
         
                            Release Notes for:
                            ====================
@@ -99,9 +99,12 @@ of ways.  These changes include the following:
              Conf file:    conf/jk/obj.conf-auto
           Workers file:    conf/jk/workers.properties
 
-  Note: The old organization used in Tomcat 3.2 where all the configuration is
-  placed in server.xml is still supported by Tomcat 3.3b1 for Apache.  However,
-  you will need to set the appropriate parameters on the interceptor.
+  Note: The ApacheConfig, JservConfig, and IISConfig by default write a
+  config file that tries to send all requests for a context to Tomcat.  That
+  is the best way to insure that behavior specified in the web application's
+  web.xml functions properly.  If you desire, you can copy the auto generated
+  file and modify it to have the web server serve some of the web application's
+  resources.
 
 - Tomcat Testing:
 
