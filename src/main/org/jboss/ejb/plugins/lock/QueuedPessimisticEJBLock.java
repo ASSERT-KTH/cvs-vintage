@@ -44,7 +44,7 @@ import org.jboss.ejb.EntityContainer;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -279,8 +279,8 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
 		  waiting.put(miTx, this.tx);
 		  addedWaiting = true;
 	       }
-	       deadlockDetection(miTx);
 	    }
+            deadlockDetection(miTx);
 	    wasScheduled = true;
 	    // That's no good, only one transaction per context
 	    // Let's put the thread to sleep the transaction demarcation will wake them up
@@ -340,6 +340,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
 
       // If we get here, this means that we have the txlock
       this.tx = miTx;
+      this.holdingThread = Thread.currentThread();
       return wasScheduled;
    }
 
@@ -402,6 +403,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       }
 
       this.tx = null;
+      this.holdingThread = null;
       this.isReadOnlyTxLock = true;
       // is there a waiting list?
       if (!txWaitQueue.isEmpty())

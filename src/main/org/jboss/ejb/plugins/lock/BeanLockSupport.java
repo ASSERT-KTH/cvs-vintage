@@ -25,7 +25,7 @@ import java.util.HashSet;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
@@ -52,8 +52,12 @@ public abstract class BeanLockSupport
    /** Logger instance */
    static Logger log = Logger.getLogger(BeanLock.class);
  
+   /** Transaction holding lock on bean */
    protected Transaction tx = null;
  
+   /** Thread holding lock on bean */
+   protected Thread holdingThread = null;
+
    protected boolean synched = false;
 
    protected int txTimeout;
@@ -173,6 +177,12 @@ public abstract class BeanLockSupport
 
    public void deadlockDetection(Transaction miTx) throws Exception
    {
+      if (Thread.currentThread().equals(holdingThread))
+      {
+         throw new ApplicationDeadlockException("Application deadlock detected: Current thread already has tx lock in different transaction.");
+      }
+      if (miTx == null) return;
+
       HashSet set = new HashSet();
       set.add(miTx);
       
@@ -186,8 +196,8 @@ public abstract class BeanLockSupport
 	    {
 	       if (set.contains(waitingFor))
 	       {
-		  log.error("Application deadlock detected: " + miTx + " has deadlock conditions");
-		  throw new ApplicationDeadlockException("application deadlock detected");
+		  log.error("Application deadlock detected: " + miTx + " has deadlock conditions.  Two or more transactions contending for same resources and each have locks eachother need.");
+		  throw new ApplicationDeadlockException("Application deadlock detected: Two or more transactions contention.");
 	       }
 	       set.add(waitingFor);
 	    }
