@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.25 2001/07/06 21:45:39 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.26 2001/07/12 02:02:35 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -754,6 +754,43 @@
     </foreign-key>
 
 </table>
+
+<!--
+    User's choice of attributes to appear on the Issue List screen.
+-->
+<table name="SCARAB_R_MODULE_USER_ATTRIBUTE" idMethod="none" 
+        javaName="RModuleUserAttribute">
+    <!--
+
+        Module.
+    -->
+    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Attribute.
+    -->
+    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Flag, which marks that association has been deleted.
+    -->
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+        default="0" size="1"></column>
+
+    <foreign-key foreignTable="SCARAB_MODULE">
+        <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_USER">
+        <reference local="USER_ID" foreign="USER_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE">
+        <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
+    </foreign-key>
+
+</table>
+
 
 <!--
     Transaction is a group of attribute modification that are performed 
