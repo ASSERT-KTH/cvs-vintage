@@ -28,19 +28,13 @@ $l10n.NoComments
    </div>
   #end
 
-
-
   #foreach ($comment in $comments)
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
      <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&#160;|&#160;Added by: <a href="mailto:$commentUser.Email">$!commentUser.Name</a></h4>
     #if ($isEditComments)
       <p>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.Data)</p>
     #else
-      <p>
-      #foreach($lineoftext in $scarabG.tokenize($comment.Data, ""))
-        #linkIssueIds($lineoftext)<br />
-      #end
-      </p>
+      <p>$scarabG.getCommentText($comment.Data, $link, $scarabR.CurrentModule)</p>
     #end
   #end
 
