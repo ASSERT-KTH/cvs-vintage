@@ -42,7 +42,6 @@ public class ExternalEditor {
 	public boolean startExternalEditor(EditorView EditView) {
 		MimeHeader myHeader = new MimeHeader("text", "plain");
 		MimeTypeViewer viewer = new MimeTypeViewer();
-		TempFileStore tmpFileStore = new TempFileStore();
 		File tmpFile = TempFileStore.createTempFileWithSuffix("extern_edit");
 		FileWriter FO;
 		FileReader FI;

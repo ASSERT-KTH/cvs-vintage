@@ -108,8 +108,6 @@ public class Main {
 
     Config.init();
 
-    new TempFileStore();
-
     ThemeSwitcher.setTheme();
 
     doGuiInits();

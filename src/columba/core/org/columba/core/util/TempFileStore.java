@@ -23,9 +23,8 @@ import org.columba.core.io.DiskIO;
 public class TempFileStore
 {
     private static File tempDir;
-
-    public TempFileStore(  )
-    {
+    
+    static {
 	File configDir = ConfigPath.getConfigDirectory();
 
 	tempDir = new File( configDir, "tmp" );
@@ -33,11 +32,7 @@ public class TempFileStore
 	DiskIO.ensureDirectory( tempDir );
     }
 
-    // this is called on startup, to get rid of old tempfiles
-    protected static void cleanupTempFolder()
-    {
-	DiskIO.deleteDirectory( tempDir );
-    }
+    private TempFileStore() {}
 
     protected static String replaceWhiteSpaces( String s )
     {
