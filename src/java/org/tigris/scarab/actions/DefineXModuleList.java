@@ -95,7 +95,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.2 2002/06/27 04:50:21 jmcnally Exp $
+ * @version $Id: DefineXModuleList.java,v 1.3 2002/07/17 21:36:04 jmcnally Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
@@ -112,6 +112,12 @@ public class DefineXModuleList extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
 
         String listId = data.getParameters().getString("list_id");
+        if (listId == null || listId.length()==0)
+        {
+            scarabR.setAlertMessage("No saved cross module query was selected.");
+        }
+        else 
+        {
         MITList list = MITListManager.getInstance(new NumberKey(listId));
         ScarabUser user = (ScarabUser)data.getUser();
         if (list.getModifiable())
@@ -125,6 +131,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
 
         user.setCurrentMITList(list);
         list.setScarabUser(user);
+        }        
     }
 
     public void doRemoveitemsfromlist(RunData data, TemplateContext context)
