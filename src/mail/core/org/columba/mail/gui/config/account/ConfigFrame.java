@@ -102,6 +102,11 @@ public class ConfigFrame
 			"CLOSE",
 			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
+                dialog.getRootPane().registerKeyboardAction(
+                        this,
+                        "HELP",
+                        KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+                        JComponent.WHEN_IN_FOCUSED_WINDOW);
 		dialog.pack();
 		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);

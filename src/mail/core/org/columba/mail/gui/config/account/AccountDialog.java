@@ -173,9 +173,16 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 
 		dialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		dialog.getContentPane().add(createButtonPanel(), BorderLayout.SOUTH);
-                dialog.getRootPane().registerKeyboardAction(this, "CANCEL",
-                                                            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                                                            JComponent.WHEN_IN_FOCUSED_WINDOW);
+                dialog.getRootPane().registerKeyboardAction(
+                        this,
+                        "CANCEL",
+                        KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                        JComponent.WHEN_IN_FOCUSED_WINDOW);
+                dialog.getRootPane().registerKeyboardAction(
+                        this,
+                        "HELP",
+                        KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+                        JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
 	/*
