@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.37 2002/04/10 20:56:43 jon Exp $
+$Id: README.txt,v 1.38 2002/05/23 16:35:46 jon Exp $
 
 Welcome to Scarab!
 
@@ -47,10 +47,7 @@ do not guarantee that Scarab will work on other databases.
 
 All of the necessary .jar files for building and running Scarab are
 included in the /lib directory and the build system is setup to include
-these into your classpath for you. Note that you should use the copy of
-Xerces 1.x that is included with Scarab and make sure that no other
-copies of Xerces (especially Xerces 2.x) are in your JAVA_HOME, ANT_HOME
-or your CLASSPATH. Otherwise, you may get build errors.
+these into your classpath for you.
 
 If you already have an existing webserver or service running on ports
 8080 and 8005, and you are using Scarab's version of Tomcat, you will
@@ -63,6 +60,11 @@ will need to rebuild the sandbox.
 By default, the web applications WEB-INF directory needs to have
 permissions set so that the userid which the JVM is running under can
 write into that directory.
+
+NOTE: One should use the copy of Xerces 1.x that is included with
+Scarab and make sure that no other copies of Xerces (especially
+Xerces 2.x) are in your JAVA_HOME, ANT_HOME or your CLASSPATH.
+Otherwise, you may get build errors.
 
 
 -------------------------------------------------------------------------
