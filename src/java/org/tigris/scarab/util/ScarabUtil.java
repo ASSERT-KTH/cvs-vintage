@@ -49,17 +49,16 @@ package org.tigris.scarab.util;
 import java.util.List;
 import java.util.Iterator;
 
-import org.tigris.scarab.om.Module;
-
 import org.apache.oro.text.perl.Perl5Util;
 
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.IssueIdParser;
 
 /**
  * A Utility class for code that doesn't really go other places.
  *   
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ScarabUtil.java,v 1.3 2003/03/28 00:02:23 jon Exp $
+ * @version $Id: ScarabUtil.java,v 1.4 2003/04/14 21:57:14 dlr Exp $
  */
 public class ScarabUtil
 {
