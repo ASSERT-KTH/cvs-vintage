@@ -31,7 +31,7 @@ import org.jboss.metadata.SessionMetaData;
  * web services.
  * </p>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 30.10.2003
  */
 
@@ -194,7 +194,7 @@ public abstract class SessionContainer extends Container {
                log.debug(
                   "Mapped "
                      + m[i].getName()
-                     + " "
+                     + " HASH "
                      + m[i].hashCode()
                      + "to "
                      + map.get(m[i]));
