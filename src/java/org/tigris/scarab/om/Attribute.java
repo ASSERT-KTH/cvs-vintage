@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.56 2003/02/04 11:26:00 jon Exp $
+  * @version $Id: Attribute.java,v 1.57 2003/02/11 00:02:30 elicia Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -182,6 +182,12 @@ public class Attribute
         throws Exception
     {
         return getInstance(attributeName) != null ? true : false;
+    }
+
+    public static boolean checkForDuplicate(String attributeName, Attribute attribute)
+        throws Exception
+    {
+        return (getInstance(attributeName) != null && !attributeName.equals(attribute.getName())) ? true : false;
     }
 
     /**
