@@ -67,7 +67,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -455,11 +455,11 @@ public class EjbModule
       {
          if (((SessionMetaData) bean).isStateless())   // Is stateless?
          {
-            container = createStatelessSessionContainer(bean, cl, localCl);
+            container = createStatelessSessionContainer((SessionMetaData) bean, cl, localCl);
          }
          else   // Stateful
          {
-            container = createStatefulSessionContainer(bean, cl, localCl);
+            container = createStatefulSessionContainer((SessionMetaData) bean, cl, localCl);
          }
       }
       else   // Entity
@@ -489,7 +489,7 @@ public class EjbModule
       return container;
    }
 
-   private StatelessSessionContainer createStatelessSessionContainer(BeanMetaData bean,
+   private StatelessSessionContainer createStatelessSessionContainer(SessionMetaData bean,
                                                                      ClassLoader cl,
                                                                      ClassLoader localCl)
       throws Exception
@@ -501,7 +501,7 @@ public class EjbModule
       StatelessSessionContainer container = new StatelessSessionContainer();
       int transType = bean.isContainerManagedTx() ? CMT : BMT;
       initializeContainer(container, conf, bean, transType, cl, localCl);
-      if (bean.getHome() != null)
+      if (bean.getHome() != null || bean.getServiceEndpoint()!=null)
       {
          createProxyFactories(bean, container, cl);
       }
@@ -510,7 +510,7 @@ public class EjbModule
       return container;
    }
 
-   private StatefulSessionContainer createStatefulSessionContainer(BeanMetaData bean,
+   private StatefulSessionContainer createStatefulSessionContainer(SessionMetaData bean,
                                                                    ClassLoader cl,
                                                                    ClassLoader localCl)
       throws Exception
@@ -522,7 +522,7 @@ public class EjbModule
       StatefulSessionContainer container = new StatefulSessionContainer();
       int transType = bean.isContainerManagedTx() ? CMT : BMT;
       initializeContainer(container, conf, bean, transType, cl, localCl);
-      if (bean.getHome() != null)
+      if (bean.getHome() != null || bean.getServiceEndpoint()!=null)
       {
          createProxyFactories(bean, container, cl);
       }

@@ -65,7 +65,7 @@ import org.w3c.dom.NodeList;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -78,6 +78,10 @@ public class ProxyFactory
 
    // Metadata for the proxies
    public EJBMetaData ejbMetaData;
+   
+   // as of EJB2.1, we may have the case of web-service enabled beans without
+   // remote interface, we will simply "mute" this factory in this case
+   protected boolean isServiceEndpointOnly;
    
    protected EJBHome home;
    protected EJBObject statelessObject;
@@ -138,7 +142,13 @@ public class ProxyFactory
       boolean isStatelessSession = false;
       if( isSession )
       {
-         isStatelessSession = ((SessionMetaData)bmd).isStateless(); 
+         SessionMetaData smd=(SessionMetaData)bmd;
+         if(bmd.getRemote()==null) {
+            isServiceEndpointOnly=true;
+            // nothing more to do
+            return;
+         }
+         isStatelessSession = smd.isStateless(); 
       }
       Class pkClass = null;
       if (!isSession)
@@ -183,8 +193,10 @@ public class ProxyFactory
     */
    public void start() throws Exception
    {
-      setupInvokers();
-      bindProxy();
+      if(!isServiceEndpointOnly) {
+         setupInvokers(); 
+         bindProxy();
+      }
    }
 
    /** Lookup the invokers in the object registry. This typically cannot
@@ -391,14 +403,20 @@ public class ProxyFactory
 
    public void destroy()
    {
-      try
+      if (!isServiceEndpointOnly)
       {
-         InitialContext ctx = new InitialContext();
-         ctx.unbind(jndiBinding);
-      } 
-      catch (Exception e)
-      {
-         // ignore.
+         try
+         {
+            InitialContext ctx = new InitialContext();
+            ctx.unbind(jndiBinding);
+         }
+         catch (Exception e)
+         {
+            // ignore.
+         }
+         homeInterceptorClasses.clear();
+         beanInterceptorClasses.clear();
+         listEntityInterceptorClasses.clear();
       }
 
       container = null;
@@ -408,10 +426,6 @@ public class ProxyFactory
       beanInvoker = null;
       homeInvoker = null;
       invokerMetaData = null;
-
-      homeInterceptorClasses.clear();
-      beanInterceptorClasses.clear();
-      listEntityInterceptorClasses.clear();
    }
 
    // EJBProxyFactory implementation -------------------------------------

@@ -19,24 +19,20 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationContext.java,v 1.9 2003/08/27 04:32:36 patriot1burke Exp $
+ * $Id: VerificationContext.java,v 1.10 2003/12/02 16:13:04 cgjung Exp $
  *
  * You can reach the author by sending email to jplindfo@helsinki.fi.
  */
 
-
 // standard imports
 import java.net.URL;
-
 
 // non-standard class dependencies
 import org.gjt.lindfors.pattern.StrategyContext;
 
 import org.jboss.verifier.event.VerificationEventGenerator;
-import org.jboss.verifier.factory.VerificationEventFactory;
 
 import org.jboss.metadata.ApplicationMetaData;
-
 
 /**
  * << DESCRIBE THE CLASS HERE >>
@@ -47,45 +43,49 @@ import org.jboss.metadata.ApplicationMetaData;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author  Juha Lindfors
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since   JDK 1.3
  */
-public interface VerificationContext extends StrategyContext,
-                                             VerificationEventGenerator {
-    
-    /*
-     * Version identifier.
-     */
-    public final static String VERSION_1_1 =
-        "Enterprise JavaBeans v1.1, Final Release";
-    
-    /*
-     * Version identifier.
-     */    
-    public final static String VERSION_2_0 =
-        "Enterprise JavaBeans V2.0, Final Release";
+public interface VerificationContext
+   extends StrategyContext, VerificationEventGenerator
+{
 
-        
-     
-    /*
-     * Returns the loaded and parsed ejb jar file
-     */
-    abstract ApplicationMetaData getApplicationMetaData();  
-    
-    /*
-     * Returns the location of the ejb jar file
-     */
-    abstract URL  getJarLocation();
+   /*
+    * Version identifier.
+    */
+   public final static String VERSION_1_1 =
+      "Enterprise JavaBeans v1.1, Final Release";
 
-    /*
-     * Returns the class loader to use for verification (optionally)
-     */
-    abstract ClassLoader getClassLoader();
+   /*
+    * Version identifier.
+    */
+   public final static String VERSION_2_0 =
+      "Enterprise JavaBeans V2.0, Final Release";
 
-    /*
-     * Returns EJB spec version string
-     */
-    abstract String getEJBVersion();
+   /*
+    * Version identifier.
+    */
+   public final static String VERSION_2_1 =
+      "Enterprise JavaBeans V2.1, Final Release";
+
+   /*
+    * Returns the loaded and parsed ejb jar file
+    */
+   abstract ApplicationMetaData getApplicationMetaData();
+
+   /*
+    * Returns the location of the ejb jar file
+    */
+   abstract URL getJarLocation();
+
+   /*
+    * Returns the class loader to use for verification (optionally)
+    */
+   abstract ClassLoader getClassLoader();
+
+   /*
+    * Returns EJB spec version string
+    */
+   abstract String getEJBVersion();
 
 }
-

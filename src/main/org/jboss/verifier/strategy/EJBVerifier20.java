@@ -18,7 +18,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.31 2003/08/27 04:32:36 patriot1burke Exp $
+ * $Id: EJBVerifier20.java,v 1.32 2003/12/02 16:13:04 cgjung Exp $
  */
 
 
@@ -47,7 +47,7 @@ import org.jboss.verifier.factory.DefaultEventFactory;
  * @author Jay Walters     (jwalters@computer.org)
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  *
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  * @since   JDK 1.3
  */
 public class EJBVerifier20
@@ -510,7 +510,7 @@ public class EJBVerifier20
     *
     * @param   session     XML metadata of the session bean
     */
-   private boolean verifySessionHome(SessionMetaData session)
+   protected boolean verifySessionHome(SessionMetaData session)
    {
       boolean status = true;
 
@@ -664,7 +664,7 @@ public class EJBVerifier20
     *
     * @param session parsed metadata of the session bean
     */
-   private boolean verifySessionLocalHome(SessionMetaData session)
+   protected boolean verifySessionLocalHome(SessionMetaData session)
    {
       boolean status = true;
 
@@ -796,7 +796,7 @@ public class EJBVerifier20
    /*
     * Verify Session Bean Remote Interface
     */
-   private boolean verifySessionRemote(SessionMetaData session)
+   protected boolean verifySessionRemote(SessionMetaData session)
    {
       boolean status = true;
 
@@ -903,7 +903,7 @@ public class EJBVerifier20
    /*
     * Verify Session Bean Local Interface
     */
-   private boolean verifySessionLocal(SessionMetaData session)
+   protected boolean verifySessionLocal(SessionMetaData session)
    {
       boolean status = true;
 
@@ -990,7 +990,7 @@ public class EJBVerifier20
    /*
     * Verify Session Bean
     */
-   private boolean verifySessionBean(SessionMetaData session)
+   protected boolean verifySessionBean(SessionMetaData session)
    {
       boolean status = true;
 

@@ -28,7 +28,7 @@ import java.util.Set;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -39,7 +39,8 @@ public class ApplicationMetaData
    private URL url;
 
    // verion of the dtd used to create ejb-jar.xml
-   private int ejbVersion;
+   protected int ejbVersion;
+   protected int ejbMinorVersion;
 
    private ArrayList beans = new ArrayList();
 
@@ -93,6 +94,11 @@ public class ApplicationMetaData
       return ejbVersion == 2;
    }
 
+   public boolean isEJB21() 
+   {
+      return isEJB2x() && ejbMinorVersion==1;
+   }
+   
    /**
     */
    public Iterator getEnterpriseBeans()
@@ -218,6 +224,8 @@ public class ApplicationMetaData
          // test if this is a 2.1 schema-based descriptor
          if("http://java.sun.com/xml/ns/j2ee".equals(element.getNamespaceURI())) {
             ejbVersion=2;
+            //TODO we should have a look at the version attribute
+            ejbMinorVersion=1;
          } else {
             // No good, EJB 1.1/2.1 requires a DOCTYPE declaration
             throw new DeploymentException( "ejb-jar.xml must either obey "+

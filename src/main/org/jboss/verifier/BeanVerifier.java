@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: BeanVerifier.java,v 1.18 2003/08/27 04:32:36 patriot1burke Exp $
+ * $Id: BeanVerifier.java,v 1.19 2003/12/02 16:13:00 cgjung Exp $
  */
 
  
@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.net.URL;
 
 // non-standard class dependencies
+import org.jboss.verifier.strategy.EJBVerifier21;
 import org.jboss.verifier.strategy.VerificationContext;
 import org.jboss.verifier.strategy.VerificationStrategy;
 import org.jboss.verifier.strategy.EJBVerifier11;
@@ -36,8 +37,6 @@ import org.jboss.verifier.strategy.EJBVerifier20;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
 import org.jboss.verifier.event.VerificationEventGeneratorSupport;
-
-import org.jboss.verifier.factory.VerificationEventFactory;
 
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -56,7 +55,7 @@ import org.jboss.logging.Logger;
  * @see     org.jboss.verifier.factory.VerificationEventFactory
  *
  * @author  <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  * @since   JDK 1.3
  */
 public class BeanVerifier
@@ -116,7 +115,11 @@ public class BeanVerifier
       {
          setVerifier(VERSION_1_1);
       }
-      else
+      else if(metaData.isEJB21())
+      {
+         setVerifier(VERSION_2_1);
+      } 
+      else 
       {
          setVerifier(VERSION_2_0);
       }
@@ -248,6 +251,10 @@ public class BeanVerifier
       else if( VERSION_2_0.equals(version) )
       {
          verifier = new EJBVerifier20(this);
+      }
+      else if (VERSION_2_1.equals(version))
+      {
+         verifier=new EJBVerifier21(this);
       }
       else
       {
