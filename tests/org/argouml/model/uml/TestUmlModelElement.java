@@ -1,4 +1,4 @@
-// $Id: TestUmlModelElement.java,v 1.3 2003/11/20 10:35:01 linus Exp $
+// $Id: TestUmlModelElement.java,v 1.4 2003/11/20 10:48:51 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,38 +32,40 @@ import org.argouml.model.ModelFacade;
  */
 public class TestUmlModelElement extends GenericUmlObjectTestFixture
 {
-	/**
-	 * Constructor for FakeUmlModelFacadeTest.
-	 * @param arg0 test name
-	 */
-	public TestUmlModelElement(String arg0)
-	{
-		super(arg0, Uml.MODEL_ELEMENT);
-		validateTestClassIsGeneric(this);
-	}
+    /**
+     * Constructor for FakeUmlModelFacadeTest.
+     * @param arg0 test name
+     */
+    public TestUmlModelElement(String arg0)
+    {
+	super(arg0, Uml.MODEL_ELEMENT);
+	validateTestClassIsGeneric(this);
+    }
 
-	public void testModelElementLegacy() {
-		UmlFactory.getFactory().setJmiProxyCreated(false);
-		Object me = ModelFacade.create(Uml.OBJECT);
-		assertNotNull("Didn't create object", me);
-		assertTrue("Should be a base", ModelFacade.isABase(me));
-		assertTrue("Should be a model element", ModelFacade.isAModelElement(me));
-		runTruthTests(me);
-	}
+    public void testModelElementLegacy() {
+	UmlFactory.getFactory().setJmiProxyCreated(false);
+	Object me = ModelFacade.create(Uml.OBJECT);
+	assertNotNull("Didn't create object", me);
+	assertTrue("Should be a base", ModelFacade.isABase(me));
+	assertTrue("Should be a model element",
+		   ModelFacade.isAModelElement(me));
+	runTruthTests(me);
+    }
 
-	public void testModelElement() {
-		UmlFactory.getFactory().setJmiProxyCreated(true);
-		Object me = ModelFacade.create(Uml.OBJECT);
-		assertNotNull("Didn't create object", me);
-		assertTrue("Should be a base", ModelFacade.isABase(me));
-		assertTrue("Should be a model element", ModelFacade.isAModelElement(me));
-		runTestRefBaseObject(me);
-		runTruthTests(me);
-	}
+    public void testModelElement() {
+	UmlFactory.getFactory().setJmiProxyCreated(true);
+	Object me = ModelFacade.create(Uml.OBJECT);
+	assertNotNull("Didn't create object", me);
+	assertTrue("Should be a base", ModelFacade.isABase(me));
+	assertTrue("Should be a model element",
+		   ModelFacade.isAModelElement(me));
+	runTestRefBaseObject(me);
+	runTruthTests(me);
+    }
 
-	protected void initializeTruth() {
-		setShouldBe(Uml.ELEMENT);
-		setShouldBe(Uml.MODEL_ELEMENT);
+    protected void initializeTruth() {
+	setShouldBe(Uml.ELEMENT);
+	setShouldBe(Uml.MODEL_ELEMENT);
     }
 
 }

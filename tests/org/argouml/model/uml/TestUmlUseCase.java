@@ -1,4 +1,4 @@
-// $Id: TestUmlUseCase.java,v 1.3 2003/11/20 10:35:01 linus Exp $
+// $Id: TestUmlUseCase.java,v 1.4 2003/11/20 10:48:51 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,42 +32,42 @@ import org.argouml.model.ModelFacade;
  */
 public class TestUmlUseCase extends GenericUmlObjectTestFixture
 {
-	/**
-	 * Constructor for FakeUmlModelFacadeTest.
-	 * @param arg0
-	 */
-	public TestUmlUseCase(String arg0)
-	{
-		super(arg0, Uml.USE_CASE);
-		validateTestClassIsGeneric(this);
-	}
+    /**
+     * Constructor for FakeUmlModelFacadeTest.
+     * @param arg0 test name
+     */
+    public TestUmlUseCase(String arg0)
+    {
+	super(arg0, Uml.USE_CASE);
+	validateTestClassIsGeneric(this);
+    }
 
-	public void testUseCaseLegacy() {
-		UmlFactory.getFactory().setJmiProxyCreated(false);
-		Object o = ModelFacade.create(Uml.USE_CASE);
-		assertNotNull("Didn't create object", o);
-		assertTrue("Should be a base", ModelFacade.isABase(o));
-		assertTrue("Should be a use case", ModelFacade.isAUseCase(o));
-		runTruthTests(o);
-	}
+    public void testUseCaseLegacy() {
+	UmlFactory.getFactory().setJmiProxyCreated(false);
+	Object o = ModelFacade.create(Uml.USE_CASE);
+	assertNotNull("Didn't create object", o);
+	assertTrue("Should be a base", ModelFacade.isABase(o));
+	assertTrue("Should be a use case", ModelFacade.isAUseCase(o));
+	runTruthTests(o);
+    }
 
-	public void testUseCase() {
-		UmlFactory.getFactory().setJmiProxyCreated(true);
-		Object o = ModelFacade.create(Uml.USE_CASE);
-		assertNotNull("Didn't create object", o);
-		assertTrue("Should be a base", ModelFacade.isABase(o));
-		assertTrue("Should be a use case", ModelFacade.isAUseCase(o));
-		runTestRefBaseObject(o);
-		runTruthTests(o);
-	}
+    public void testUseCase() {
+	UmlFactory.getFactory().setJmiProxyCreated(true);
+	Object o = ModelFacade.create(Uml.USE_CASE);
+	assertNotNull("Didn't create object", o);
+	assertTrue("Should be a base", ModelFacade.isABase(o));
+	assertTrue("Should be a use case", ModelFacade.isAUseCase(o));
+	runTestRefBaseObject(o);
+	runTruthTests(o);
+    }
 
     protected void initializeTruth() {
-		setTruth(Uml.ELEMENT, true);
-		setTruth(Uml.MODEL_ELEMENT, true);
-		setTruth(Uml.GENERALIZABLE_ELEMENT, true);
-		setTruth(Uml.NAMESPACE, true);
-		setTruth(Uml.CLASSIFIER, true);
-		setTruth(Uml.USE_CASE, true);
+	setTruth(Uml.ELEMENT, true);
+	setTruth(Uml.MODEL_ELEMENT, true);
+	setTruth(Uml.GENERALIZABLE_ELEMENT, true);
+	setTruth(Uml.NAMESPACE, true);
+	setTruth(Uml.CLASSIFIER, true);
+	setTruth(Uml.USE_CASE, true);
     }
 
 }
