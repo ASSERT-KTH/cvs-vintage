@@ -10,11 +10,15 @@ You can view the issue detail at the following URL:
 The following modifications were made to this issue:
 
 #foreach( $activity in $activityList)
+#if ($activity.Attachment)
+$activity.Attachment.DataAsString  
+#else
 $activity.Description
+#end
 #end
 
 #end
 
 #if ($attachment.DataAsString)
 Comment:  $attachment.DataAsString
-#end
+#end  
