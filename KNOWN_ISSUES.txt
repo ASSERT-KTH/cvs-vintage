@@ -1,4 +1,4 @@
-$Id: KNOWN_ISSUES.txt,v 1.2 2002/05/15 17:46:06 jon Exp $
+$Id: KNOWN_ISSUES.txt,v 1.3 2002/06/14 19:55:41 jon Exp $
 
 It is best to always consult the issue tracking system at
 
@@ -18,7 +18,7 @@ things to not work or be difficult...
     send us Oracle specific changes).
 
 #3. XML import/export is completely unstable and not fully
-    implemented. Don't count on it working until the next beta (8).
+    implemented. Don't count on it working until the next beta (9).
 
 #4. Localization (display in other languages) is not entirely working 
     yet. There has been a bunch of discussion on the developer
@@ -26,3 +26,8 @@ things to not work or be difficult...
     problem have been found (as far as I can tell). We will definitely
     get around to fixing this at some point, however if you get to
     it first, that would be great. :-)
+
+#5. There is the possibility that the code surrounding the activity
+    and transactions (ie: issue history) is not completely fleshed
+    out and debugged.
+
