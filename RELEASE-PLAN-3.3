@@ -110,7 +110,7 @@ previous releases.
 Any reported regression is a show-stopper and a release can't be made
 before it is resolved. 
 
-2. Open bugs should be resolved.
+2. Open bugs should be fixed, if possible.
 
 3. Tomcat 3.3 should be tested with existing, complex applications  ( cocoon, 
  bugrat, etc ).
@@ -118,7 +118,7 @@ before it is resolved.
 4. Jasper must include bug fixes that were done in both 3.2.x and 4.0, 
 and various enhancements that are deemed appropriate. 
 
-5.  Bugs found after and during 3.2 release cycle should be fixed. 
+5.  Bugs found after and during 3.2 release cycle should be fixed, if possible. 
 
 6. Full review of the code, making sure the modularity and   extensibility 
   goals have been achieved.
@@ -129,8 +129,10 @@ easier that 3.2
 8. Ensure that the performance is (significantly) better than
   3.2
 
-9. Ensure that Jasper is compatible ( as much as possible ) with the
-   version used in the proposed 4.0.
+9. Ensure that Jasper is compatible (as much as possible) with the
+   version used in the proposed 4.0.  This refers to behavior differences
+   outside of the JSP spec, which could create problems moving a
+   web application from Tomcat 3.3 to Tomcat 4.x.
 
 
 
