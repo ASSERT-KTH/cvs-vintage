@@ -195,6 +195,13 @@ public class Issue
         return getIdPrefix() + getIdCount();
     }
 
+    /**
+     * NoOp for intake's benefit
+     */
+    public void setUniqueId(String id)
+    {
+    }
+
     public String getFederatedId()
         throws TorqueException
     {
