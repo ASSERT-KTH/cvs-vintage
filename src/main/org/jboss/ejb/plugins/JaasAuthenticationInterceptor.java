@@ -9,7 +9,6 @@ package org.jboss.ejb.plugins;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Set;
-import javax.ejb.EJBException;
 import javax.security.auth.Subject;
 
 import org.jboss.ejb.Container;
@@ -29,7 +28,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JaasAuthenticationInterceptor extends AbstractInterceptor
 {
@@ -87,8 +86,7 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if( runAsIdentity != null )
-         SecurityActions.pushRunAsIdentity(runAsIdentity);
+      SecurityActions.pushRunAsIdentity(runAsIdentity);
 
       try
       {
@@ -97,8 +95,7 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if( runAsIdentity != null )
-            SecurityActions.popRunAsIdentity();
+         SecurityActions.popRunAsIdentity();
          SecurityActions.setSubject(prevSubject);
       }
    }
@@ -120,8 +117,7 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if( runAsIdentity != null )
-         SecurityActions.pushRunAsIdentity(runAsIdentity);
+      SecurityActions.pushRunAsIdentity(runAsIdentity);
 
       try
       {
@@ -130,8 +126,7 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if( runAsIdentity != null )
-            SecurityActions.popRunAsIdentity();
+         SecurityActions.popRunAsIdentity();
          SecurityActions.setSubject(prevSubject);
       }
    }

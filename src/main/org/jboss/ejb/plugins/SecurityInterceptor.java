@@ -30,7 +30,7 @@ import java.util.Set;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -92,8 +92,7 @@ public class SecurityInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if( runAsIdentity != null )
-         SecurityActions.pushRunAsIdentity(runAsIdentity);
+      SecurityActions.pushRunAsIdentity(runAsIdentity);
 
       try
       {
@@ -102,8 +101,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if( runAsIdentity != null )
-            SecurityActions.popRunAsIdentity();
+         SecurityActions.popRunAsIdentity();
       }
    }
 
@@ -116,8 +114,7 @@ public class SecurityInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if( runAsIdentity != null )
-         SecurityActions.pushRunAsIdentity(runAsIdentity);
+      SecurityActions.pushRunAsIdentity(runAsIdentity);
 
       try
       {
@@ -126,8 +123,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if( runAsIdentity != null )
-            SecurityActions.popRunAsIdentity();
+         SecurityActions.popRunAsIdentity();
       }
    }
 

@@ -13,7 +13,6 @@ import org.jboss.metadata.AssemblyDescriptorMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityIdentityMetaData;
 import org.jboss.security.RunAsIdentity;
-import org.jboss.security.SecurityAssociation;
 
 import java.util.Set;
 
@@ -22,7 +21,7 @@ import java.util.Set;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class RunAsSecurityInterceptor extends AbstractInterceptor
 {
@@ -71,8 +70,7 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if( runAsIdentity != null )
-         SecurityActions.pushRunAsIdentity(runAsIdentity);
+      SecurityActions.pushRunAsIdentity(runAsIdentity);
       try
       {
          Object returnValue = getNext().invokeHome(mi);
@@ -80,8 +78,7 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if( runAsIdentity != null )
-            SecurityActions.popRunAsIdentity();
+         SecurityActions.popRunAsIdentity();
       }
    }
 
