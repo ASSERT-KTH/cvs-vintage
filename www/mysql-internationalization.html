@@ -1,0 +1,291 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=us-ascii">
+   <META NAME="Author" CONTENT="Jun Inamori">
+   <META NAME="GENERATOR" CONTENT="HTML generator by Jun Inamori(OOP-Reserch) on Tomcat3.1">
+   <META NAME="description" CONTENT="With MySQL JDBC driver, we can store Java String with 2 bytes characters, such as Japanese Shift_JIS, Chinese BIG5 or GB2312. PreparedStatement can be executed to query by Japanese language.">
+   <META NAME="keywords" CONTENT="java,jdbc,sql,mysql,Japanese ShifJIS,Japanese Shif_JIS,Japanese EUC-JP,Chinese GB2312,Chinese BIG5,2 bytes characters,PreparedStatement,ASCII,charset,character set,e-commerce,sql database,jdbc driver,oop-reserch">
+<TITLE>OOP-Reserch : How to store 2 bytes String into MySQL
+</TITLE>
+</HEAD>
+
+<BODY>
+<H2>How to store 2 bytes String into MySQL</H2>
+    
+This documentation describes how to store 2 bytes String into MySQL. MySQL is the world fastest SQL database. Though MySQL can be compiled for some specific character set (charset), such as Japanese ShiftJIS, it is desirable to store String with multiple charsets. For example, SQL database for e-commerce should accept Chinese GB2312 as well as Japanese EUC-JP. With MySQL JDBC driver, we can store Java String with 2 bytes characters, such as Japanese Shift_JIS, Chinese BIG5 or GB2312. PreparedStatement can be executed to query by Japanese language or Chinese on MySQL compiled just for ASCII. By OOP-Reserch.
+    
+<BR>
+<BR>
+<HR SIZE=5 WIDTH="100%">
+
+<TABLE WIDTH="100%" CELLPADDING="3" >
+
+<TR>
+<TD VALIGN="TOP">
+
+<!-- START OF CONTENTS OF THIS PAGE -->
+
+<H1>Java and MySQL</H1>
+<P>
+<A HREF="http://www.mysql.com/">MySQL</A> is the world fastest SQL database, which is available for most platform. Through <A HREF="http://java.sun.com/products/jdbc/index.html">JDBC</A> driver, our Java programs can insert and query the data on MySQL. <A HREF="http://www.worldserver.com/mm.mysql/#downloads">MM Mysql Driver</A> is the complete JDBC2.0 implementation, by which we can use PreparedStatement. Once the instance of PreparedStatement is retrieved, we can execute it again and again along with the different parameters. For example:
+<FORM>
+<CENTER>
+<TEXTAREA NAME="1" ROWS=20 COLS=40>
+
+    private static final String SQL_DRV="org.gjt.mm.mysql.Driver";
+    private static final String SQL_URL="jdbc:mysql://localhost/foo";
+    private static final String INSERT="INSERT INTO my_tbl (col_1,col_2) VALUES(?,?)";
+.....
+    Class.forName(SQL_DRV);
+    Connection con=DriverManager.getConnection(SQL_URL,usr,pss);
+    PreparedStatement ps=con.prepareStatement(INSERT);
+    String col_1_str=null;
+    String col_2_str=null;
+    for(int i=0; col_1s.length; i++){
+        // col_1s and col_2s are the arrays of Strings
+        col_1_str=col_1s[i];
+	col_2_str=col_2s[i];
+	ps.setString(1,col_1_str);
+	ps.setString(2,col_2_str);
+	ps.executeUpdate();
+    }
+    ps.close();
+    con.close();
+</TEXTAREA>
+</CENTER>
+</FORM>
+
+The 2 arrays of Strings are inserted into "my_tbl" by this simple code.
+</P>
+
+<H1>Java is Internationalization ready</H1>
+<P>
+Within our Java code, once the instance of String is created, we need not pay any attention whether it consists of all the ASCII characters or not.
+For example:
+<FORM>
+<CENTER>
+<TEXTAREA NAME="1" ROWS=10 COLS=40>
+
+   private static final String RESOURCE="MyResource";
+   try{
+      ResourceBundle res=ResourceBundle.getBundle(RESOURCE);
+      button_title=res.getString("button");
+      ....
+      }
+   catch(Exception ex){
+      ....
+   }
+   JButton mybutton=new JButton(button_title);
+</TEXTAREA>
+</CENTER>
+</FORM>
+
+In the Japanese language environment, JVM tries to find "MyResource_ja.properties" in its CLASSPATH and parse its contents if found. In case that "MyResource_ja.properties" does not exist in the CLASSPATH, "MyResource.properties" will be parsed as the default property file instead. Anyway, the instance of ResourceBundle is created based on the property file, and it provides us with the instance of String appropriate for the runtime environment.
+<BR>
+Thus, the instance of String with NON-ASCII characters can easily be created. And such an instance of String can be treated as if it is all the ASCII String.
+<BLOCKQUOTE>
+To create the property file for NON-ASCII characters, we should use "native2ascii" tool which is supplied with JDK. For details about these features, please read <A HREF="http://java.sun.com/products/jdk/1.2/docs/index.html">the JDK documentation</A> or <A HREF="http://java.sun.com/docs/books/tutorial/i18n/index.html">Java Tutorial</A>.
+</BLOCKQUOTE>
+<BLOCKQUOTE>
+As for the Strings on Swing GUI, you can write them in the XML file. This can easily be done by <A HREF="http://www.oop-reserch.com/xmlpanel_1_0.html">OOP XMLPanelEdit</A>. It's FREE for non-commercial use.
+</BLOCKQUOTE>
+</P>
+
+<H1>And MySQL can be!</H1>
+<P>
+But what happens to store the NON-ASCII Strings into SQL database? When MySQL is compiled for ASCII charset, all the NON-ASCII Strings inserted into table was corruped. Query on such a culumn fails. Although MySQL can be compiled for the specific charset, it cannot be capable for the Strings other than that charset. How happy we are if MySQL can be Internationalization ready as Java. If it is, we can take the full advantage of Java and MySQL can serve as SQL database behind the web application for almost all the language in the world!
+<BR>
+<FONT SIZE="+1" COLOR="#FF6666">And MySQL can be!</FONT>
+Any NON-ASCII Strings can be converted into all the ASCII Strings using UTF8 byte array. It looks like this:
+<FORM>
+<CENTER>
+<TEXTAREA NAME="1" ROWS=20 COLS=40>
+
+    private static final String SQL_DRV="org.gjt.mm.mysql.Driver";
+    private static final String SQL_URL="jdbc:mysql://localhost/foo";
+    private static final String INSERT="INSERT INTO my_tbl (col_1,col_2) VALUES(?,?)";
+.....
+    Class.forName(SQL_DRV);
+    Connection con=DriverManager.getConnection(SQL_URL,usr,pss);
+    PreparedStatement ps=con.prepareStatement(INSERT);
+    String col_1_str=null;
+    String col_2_str=null;
+    byte[] col_1_b=null;
+    byte[] col_2_b=null;
+    for(int i=0; col_1s.length; i++){
+        // col_1s and col_2s are the arrays of Strings
+	// Now, some of them can be NON-ASCII String
+        col_1_str=col_1s[i];
+	col_2_str=col_2s[i];
+	col_1_b=col_1_str.getBytes("UTF8");
+	col_2_b=col_2_str.getBytes("UTF8");
+	col_1_str=new String(col_1_b,"8859_1");
+	col_2_str=new String(col_2_b,"8859_1");
+	ps.setString(1,col_1_str);
+	ps.setString(2,col_2_str);
+	ps.executeUpdate();
+    }
+    ps.close();
+    con.close();
+</TEXTAREA>
+</CENTER>
+</FORM>
+
+In the "col_1" and "col_2", the Strings which consists of only the ASCII characters are stored. So, some Strings with Japanese ShiftJIS and another with Chinese BIG5 can be stored in the same column of the single table, by MySQL.
+<BR>
+Query on this kind of column can be done by the same way:
+<FORM>
+<CENTER>
+<TEXTAREA NAME="1" ROWS=20 COLS=40>
+
+    private static final String SELECT="SELECT * FROM my_tbl where col_1=?";
+....
+    PreparedStatement ps=con.prepareStatement(SELECT);
+    // query_str may be NON-ASCII String
+    byte[] query_b=query_str.getBytes("UTF8");
+    query_str=new String(query_b,"8859_1");
+    ps.setString(1,query_str);
+    ResultSet rs=ps.executeQuery();
+    while(rs.next()){
+	col_1_str=rs.getString(1);
+	col_2_str=rs.getString(2);
+	col_1_b=col_1_str.getBytes("8859_1");
+	col_2_b=col_2_str.getBytes("8859_1");
+	col_1_str=new String(col_1_b,"UTF8");
+	col_2_str=new String(col_2_b,"UTF8");
+    }
+    rs.close();
+
+</TEXTAREA>
+</CENTER>
+</FORM>
+Note that resulting String must be reverted through the procedure in reverse order.
+
+</P>
+
+<!-- END OF CONTENTS OF THIS PAGE -->
+
+</TD>
+
+<TD VALIGN="TOP">
+&nbsp;
+</TD>
+
+</TR>
+
+</TABLE>
+
+<BR>
+
+<P>
+<FONT SIZE=+2>
+Java and all Java-based trademarks and logos are trademarks or registered of Sun Microsystems, Inc. in the United States and other countries.
+</FONT>
+</P>
+
+<HR SIZE=5 WIDTH="100%">
+
+<BR>
+
+<TABLE WIDTH="100%">
+<TR ALIGN="CENTER">
+
+<!-- The 1st index -->
+<TD ALIGN="CENTER">
+<B>
+<A HREF="index.html">
+HOME
+</A>
+</B>
+</TD>
+
+<!-- The 2nd index -->
+<TD ALIGN="CENTER">
+<B>
+<A HREF="about.html">
+About...
+</A>
+</B>
+</TD>
+
+<!-- The 3rd index -->
+<TD ALIGN="CENTER">
+<B>
+<A HREF="services.html">
+Services
+</A>
+</B>
+</TD>
+
+<!-- The 4th index -->
+<TD ALIGN="CENTER">
+<B>
+<A HREF="download.html">
+Download
+</A>
+</B>
+</TD>
+
+<!-- The 5th index -->
+<TD ALIGN="CENTER">
+<B>
+<A HREF="document.html">
+Document
+</A>
+</B>
+</TD>
+
+<!-- The 6th index -->
+<TD ALIGN="CENTER">
+<B>
+<A HREF="archives.html">
+Archives
+</A>
+</B>
+</TD>
+
+<!-- The 7th index -->
+<TD ALIGN="CENTER">
+<B>
+<A HREF="links.html">
+Links
+</A>
+</B>
+</TD>
+
+<!-- The 8th index -->
+<TD ALIGN="CENTER">
+<B>
+<A HREF="privacy.html">
+Privacy
+</A>
+</B>
+</TD>
+
+<!-- The 9th index -->
+<TD ALIGN="CENTER">
+<B>
+<A HREF="http://www.oop-reserch.com/starter/jspmail_oop.html">
+Contact Us
+</A>
+</B>
+</TD>
+
+</TR>
+</TABLE>
+
+<BR>
+<BR>
+
+<P>
+<B><FONT SIZE=+1>
+ALL CONTENTS COPYRIGHT 2000, OOP-Reserch. All rights reserved.
+</FONT></B>
+</P>
+
+</BODY>
+</HTML>
+
