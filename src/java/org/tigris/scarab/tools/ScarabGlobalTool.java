@@ -96,7 +96,7 @@ import org.apache.turbine.Turbine;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.43 2002/10/11 01:49:17 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.44 2002/10/17 19:49:11 thierrylach Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -496,6 +496,11 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         if (delimiters == null || delimiters.length() == 0) 
         {
             delimiters = "\n";
+        }
+
+        if (text == null) 
+        {
+            text = "";
         }
         
         StringTokenizer st = new StringTokenizer(text, delimiters);
