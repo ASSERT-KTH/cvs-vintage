@@ -18,6 +18,7 @@ import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.RunAsIdentity;
 import org.jboss.security.SecurityRolesAssociation;
+import org.jboss.system.Registry;
 
 import java.security.Principal;
 import java.util.Map;
@@ -30,10 +31,19 @@ import java.util.Set;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
+   /** The interface of an observer that should be notified when principal 
+    authentication fails.
+    */
+   public interface AuthenticationObserver
+   {
+      final String KEY = "SecurityInterceptor.AuthenticationObserver";
+      void authenticationFailed();
+   }
+
    /** The authentication manager plugin
     */
    protected AuthenticationManager securityManager;
@@ -47,6 +57,11 @@ public class SecurityInterceptor extends AbstractInterceptor
 
    // A map of SecurityRolesMetaData from jboss.xml
    protected Map securityRoles;
+
+   // The observer to be notified when principal authentication fails.
+   // This is a hook for the CSIv2 code. The authenticationObserver may
+   // send out a ContextError message, as required by the CSIv2 protocol.
+   protected AuthenticationObserver authenticationObserver;
 
    /** Called by the super class to set the container to which this interceptor
     belongs. We obtain the security manager and runAs identity to use here.
@@ -81,6 +96,8 @@ public class SecurityInterceptor extends AbstractInterceptor
    public void start() throws Exception
    {
       super.start();
+      authenticationObserver = 
+         (AuthenticationObserver) Registry.lookup(AuthenticationObserver.KEY);
    }
 
    public Object invokeHome(Invocation mi) throws Exception
@@ -160,6 +177,9 @@ public class SecurityInterceptor extends AbstractInterceptor
          SecurityRolesAssociation.setSecurityRoles(securityRoles);
          if (securityManager.isValid(principal, credential) == false)
          {
+            // Notify authentication observer
+            if (authenticationObserver != null)
+               authenticationObserver.authenticationFailed();
             // Check for the security association exception
             Exception ex = SecurityActions.getContextException();
             if( ex != null )
