@@ -154,7 +154,7 @@ public class ReloadInterceptor extends  BaseInterceptor
 	ClassLoader cl=context.getClassLoader();
 	
 	ClassLoader loader=DependClassLoader.getDependClassLoader( dm, cl,
-		     context.getAttribute( Context.ATTRIB_PROTECTION_DOMAIN));
+		     context.getAttribute( Context.ATTRIB_PROTECTION_DOMAIN), debug);
 
 	context.setClassLoader(loader);
 	context.setAttribute( "org.apache.tomcat.classloader", loader);

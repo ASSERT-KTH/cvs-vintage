@@ -87,19 +87,20 @@ public class DependClassLoader extends ClassLoader {
     protected ClassLoader parent;
     protected ClassLoader parent2;
     
-    final static int debug=0;
+    private static int debug=0;
     DependManager dependM;
     protected Object pd;
     static Jdk11Compat jdkCompat=Jdk11Compat.getJdkCompat();
 
     public static DependClassLoader getDependClassLoader( DependManager depM,
 							  ClassLoader parent,
-							  Object pd ) {
+							  Object pd, int debug ) {
 	if( jdkCompat.isJava2() ) {
 	    try {
 		Class c=Class.forName( "org.apache.tomcat.util.depend.DependClassLoader12");
 		DependClassLoader dcl=(DependClassLoader)c.newInstance();
 		dcl.init( depM, parent, pd );
+		dcl.debug=debug;
 		return dcl;
 	    } catch(Exception ex ) {
 		ex.printStackTrace();
@@ -241,6 +242,9 @@ public class DependClassLoader extends ClassLoader {
 	    // Bojan Smojver <bojan@binarix.com>: remove jar:
 	    if( fileN.startsWith( "file:" ))
 		fileN=fileN.substring( 5 );
+	    // If the standard URL parser is used ( jdk1.1 compat )
+	    if( fileN.startsWith( "/file:" ))
+		fileN=fileN.substring( 6 );
 	    f=new File(fileN);
 	    if( debug > 0 ) log( "Jar dep "  +f + " " + f.exists() );
 	    if( ! f.exists()) f=null;

@@ -61,6 +61,7 @@ package org.apache.tomcat.util.compat;
 import org.apache.tomcat.util.depend.*;
 
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.ResourceBundle;
 import java.util.Locale;
 
@@ -199,8 +200,38 @@ public class Jdk11Compat {
 	    }
 	} else {
 	    compat=new Jdk11Compat();
+	    // Install jar handler if none installed
+	    try {
+		URL url=new URL( "jar:file:/test.jar!/foo");
+	    } catch( MalformedURLException ex ) {
+		if( dL >0) d( "Installing jar protocol handler ");
+		String handlers=System.getProperty("java.protocol.handler.pkgs");
+		if( handlers==null ) {
+		    handlers=URL_COMPAT_HANDLERS;
+		} else {
+		    if( handlers.indexOf( URL_COMPAT_HANDLERS) < 0 ) {
+			handlers+=":" + URL_COMPAT_HANDLERS;
+		    }
+		}
+		System.getProperties().put("java.protocol.handler.pkgs", handlers);
+		if( dL > 0 ) {
+		    try {
+			URL url=new URL( "jar:file:/test.jar!/foo");
+		    } catch( MalformedURLException ex1 ) {
+			d("Jar protocol failing ");
+			ex1.printStackTrace();
+		    }
+		}
+	    }
 	}
     }
-    
+
+    private static final String URL_COMPAT_HANDLERS=
+	"org.apache.tomcat.util.compat";
+
+    private static final int dL=10;
+    private static void d(String s ) {
+        System.err.println( "Jdk11Compat: " + s );
+    }
 
 }
