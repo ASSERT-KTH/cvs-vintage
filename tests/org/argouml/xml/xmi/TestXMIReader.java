@@ -1,4 +1,4 @@
-// $Id: TestXMIReader.java,v 1.9 2004/08/15 22:49:01 bobtarling Exp $
+// $Id: TestXMIReader.java,v 1.10 2004/08/26 19:34:55 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,13 +64,18 @@ public class TestXMIReader extends TestCase {
      * not work since ArgoUML crashes on a classcastexception that is catched by
      * our dear friends of NSUML. However you can use it to test things quite
      * easily :)
+     *
+     * @throws IOException
+     * @throws MalformedURLException
+     * @throws IllegalFormatException
+     * @throws Exception
      */
     public void testReadReturnParameter()
 	throws IOException, MalformedURLException, IllegalFormatException,
 	       Exception
     {
-        // next statement should be in a ArgoTestCase or something, is allmost 
-        // allways needed
+        // next statement should be in an ArgoTestCase or something,  
+        // is almost always needed
         Project p = ProjectManager.getManager().makeEmptyProject();
         MClass clazz = CoreFactory.getFactory().buildClass(p.getModel());
         MOperation oper = CoreFactory.getFactory().buildOperation(clazz);

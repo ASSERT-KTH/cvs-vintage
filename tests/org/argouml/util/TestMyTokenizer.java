@@ -1,4 +1,4 @@
-// $Id: TestMyTokenizer.java,v 1.5 2004/06/29 00:14:58 d00mst Exp $
+// $Id: TestMyTokenizer.java,v 1.6 2004/08/26 19:35:01 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,17 @@ import java.util.Vector;
 
 import junit.framework.TestCase;
 
+/**
+ * Testing the MyTokenizer class.
+ *
+ */
 public class TestMyTokenizer extends TestCase {
+    
+    /**
+     * The constructor.
+     * 
+     * @param str
+     */
     public TestMyTokenizer(String str) {
 	super(str);
     }
@@ -325,7 +335,8 @@ public class TestMyTokenizer extends TestCase {
 
 	for (i = 0; i < res.length; i++) {
 	    assertTrue(
-		       "MyTokenizer(\"" + str + "\", \"" + delim + "\") lacks tokens",
+		       "MyTokenizer(\"" + str + "\", \"" + delim 
+		           + "\") lacks tokens",
 		       tokenizer.hasMoreTokens());
 	    tok = tokenizer.nextToken();
 	    assertTrue("tokenIndex broken", idx == tokenizer.getTokenIndex());
@@ -363,7 +374,8 @@ public class TestMyTokenizer extends TestCase {
 
 	for (i = 0; i < res.length; i++) {
 	    assertTrue(
-		       "MyTokenizer(\"" + str + "\", \"" + delim + "\") lacks tokens",
+		       "MyTokenizer(\"" + str + "\", \"" + delim 
+		           + "\") lacks tokens",
 		       tokenizer.hasMoreTokens());
 	    tok = tokenizer.nextToken();
 	    assertTrue("tokenIndex broken", idx == tokenizer.getTokenIndex());
@@ -401,7 +413,8 @@ public class TestMyTokenizer extends TestCase {
 
 	for (i = 0; i < res.length; i++) {
 	    assertTrue(
-		       "MyTokenizer(\"" + str + "\", \"" + delim + "\") lacks tokens",
+		       "MyTokenizer(\"" + str + "\", \"" + delim 
+		           + "\") lacks tokens",
 		       tokenizer.hasMoreTokens());
 	    tok = tokenizer.nextToken();
 	    assertTrue("tokenIndex broken", idx == tokenizer.getTokenIndex());
