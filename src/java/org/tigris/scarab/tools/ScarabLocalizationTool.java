@@ -52,6 +52,7 @@ import java.util.Properties;
 import java.util.MissingResourceException;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.fulcrum.localization.Localization;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.LocalizationTool;
@@ -100,6 +101,9 @@ public class ScarabLocalizationTool
      * <code>refresh()</code>.
      */
     private Configuration properties;
+
+    private String bundlePrefix;
+    private String oldBundlePrefix;
 
     /**
      * Creates a new instance.
@@ -342,6 +346,32 @@ public class ScarabLocalizationTool
         return value;
     }
 
+    public void setBundlePrefix(String prefix)
+    {
+        oldBundlePrefix = bundlePrefix;
+        bundlePrefix = prefix; 
+    }
+
+    public void restoreBundlePrefix()
+    {
+        bundlePrefix = oldBundlePrefix;
+    }
+
+    protected String getBundleName()
+    {
+        String name = null;
+        if (bundlePrefix == null) 
+        {
+            name = Localization.getDefaultBundleName();
+        }
+        else 
+        {
+            name = bundlePrefix + Localization.getDefaultBundleName();
+        }
+        return name;
+    }
+
+
     // ---- ApplicationTool implementation  ----------------------------------
 
     /**
@@ -363,5 +393,7 @@ public class ScarabLocalizationTool
         super.refresh();
         data = null;
         properties = null;
+        bundlePrefix = null;
+        oldBundlePrefix = null;
     }
 }
