@@ -158,11 +158,6 @@
     <attribute name="WarDeployerName">:service=EmbeddedTomcat</attribute>
   </mbean>
 
-  <mbean code="org.jboss.ejb.AutoDeployer" name="EJB:service=AutoDeployer">
-    <attribute name="Deployer">J2EE:service=J2eeDeployer</attribute>
-    <attribute name="URLs">../deploy</attribute>
-  </mbean>
-
   <!-- ==================================================================== -->
   <!-- JBossCX setup, for J2EE connector architecture support               -->
   <!-- ==================================================================== -->
@@ -201,11 +196,6 @@
     <attribute name="FactoryName">MinervaXACMFactory</attribute>
     <attribute name="FactoryClass">org.opentools.minerva.connector.jboss.MinervaXACMFactory</attribute>
     <attribute name="Properties"></attribute>
-  </mbean>
-
-  <mbean code="org.jboss.ejb.AutoDeployer" name="JCA:service=AutoDeployer">
-    <attribute name="Deployer">JCA:service=RARDeployer</attribute>
-    <attribute name="URLs">../deploy/lib</attribute>
   </mbean>
 
   <!-- Connection factory for the Minerva JDBC resource adapter. This
@@ -299,6 +289,17 @@
     </attribute>
   </mbean>
   -->
+
+  <!-- ==================================================================== -->
+  <!-- Auto deployment                                                      -->
+  <!-- ==================================================================== -->
+  <mbean code="org.jboss.ejb.AutoDeployer" name="EJB:service=AutoDeployer">
+    <attribute name="Deployers">
+      J2EE:service=J2eeDeployer;
+      JCA:service=RARDeployer
+    </attribute>
+    <attribute name="URLs">../deploy,../deploy/lib</attribute>
+  </mbean>
 
   <!-- ==================================================================== -->
   <!-- JMX adaptors                                                         -->

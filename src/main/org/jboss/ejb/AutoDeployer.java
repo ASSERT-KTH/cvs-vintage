@@ -44,7 +44,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *   @see org.jboss.deployment.J2eeDeployer
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -54,33 +54,33 @@ public class AutoDeployer
 
    // Attributes ----------------------------------------------------
 
-	// Callback to the JMX agent
+   // Callback to the JMX agent
    MBeanServer server;
 
-	// in case more then one J2eeDeployers are available
-	String namedDeployer = "";
+   // in case more then one J2eeDeployers are available
+   String deployerList = "";
 
-	// JMX name of the ContainerFactory
-   ObjectName factoryName;
+   /** JMX names of the configured deployers */
+   ObjectName[] deployerNames;
 
-	// The watch thread
+   // The watch thread
    boolean running = false;
 
-	// Watch these directories for new files
+   // Watch these directories for new files
    ArrayList watchedDirectories = new ArrayList();
 
-	// These URL's have been deployed. Check for new timestamp
+   // These URL's have been deployed. Check for new timestamp
    HashMap deployedURLs = new HashMap();
 
-	// These URL's are being watched
+   // These URL's are being watched
    ArrayList watchedURLs = new ArrayList();
    
    // URL list
    String urlList = "";
 
-   /** Filter to decide which files are deployable and which should be
-       ignored */
-   FilenameFilter deployableFilter = null;
+   /** Filters, one per configured deployer, to decide which files are
+       deployable and which should be ignored */
+   FilenameFilter[] deployableFilters = null;
 
    // Static --------------------------------------------------------
 
@@ -98,7 +98,7 @@ public class AutoDeployer
 
    public AutoDeployer(String _namedDeployer, String urlList)
    {
-	   setDeployer(_namedDeployer);
+	   setDeployers(_namedDeployer);
 	   setURLs(urlList);
    }
 
@@ -112,14 +112,14 @@ public class AutoDeployer
       return urlList;
    }
    
-   public void setDeployer(String deployer)
+   public void setDeployers(String deployers)
    {
-      this.namedDeployer = deployer;
+      this.deployerList = deployers;
    }
    
-   public String getDeployer()
+   public String getDeployers()
    {
-      return namedDeployer;
+      return deployerList;
    }
 
    // Public --------------------------------------------------------
@@ -145,44 +145,48 @@ public class AutoDeployer
                   URL fileUrl = files[idx].toURL();
 
                   // Check if it's a deployable file
-                  if (!deployableFilter.accept(null, fileUrl.getFile()))
-                     continue; // Was not deployable - skip it...
-
-                  if (deployedURLs.get(fileUrl) == null)
+                  for (int j=0; j<deployerNames.length; ++j)
                   {
-							// This file has not been seen before
-							// Add to list of files to deploy automatically
-                     watchedURLs.add(new Deployment(fileUrl, deployableFilter));
-                     deployedURLs.put(fileUrl, fileUrl);
+                     if (!deployableFilters[j].accept(null, fileUrl.getFile()))
+                        continue; // Was not deployable - skip it...
+
+                     if (deployedURLs.get(fileUrl) == null)
+                     {
+                        // This file has not been seen before
+                        // Add to list of files to deploy automatically
+                        watchedURLs.add(new Deployment(fileUrl));
+                        deployedURLs.put(fileUrl, fileUrl);
+                     }
                   }
                }
             }
 
 
-			// undeploy removed jars
-			Iterator iterator = watchedURLs.iterator();
+            // undeploy removed jars
+            Iterator iterator = watchedURLs.iterator();
 
-			while (iterator.hasNext()) {
-				URL url = ((Deployment)iterator.next()).url;
+            while (iterator.hasNext()) {
+               Deployment deployment = (Deployment)iterator.next();
+               URL url = deployment.url;
 
-				// if the url is a file that doesn't exist
-				// TODO: real urls
-				if (url.getProtocol().startsWith("file") && ! new File(url.getFile()).exists()) {
+               // if the url is a file that doesn't exist
+               // TODO: real urls
+               if (url.getProtocol().startsWith("file") && ! new File(url.getFile()).exists()) {
 
-					// the file does not exist anymore. undeploy
-					log.log("Auto undeploy of "+url);
-					try {
-				   		undeploy(url.toString());
-					} catch (Exception e) {
-					    log.error("Undeployment failed");
-						log.exception(e);
-					}
-					deployedURLs.remove(url);
+                  // the file does not exist anymore. undeploy
+                  log.log("Auto undeploy of "+url);
+                  try {
+                     undeploy(url.toString(), deployment.deployerName);
+                  } catch (Exception e) {
+                     log.error("Undeployment failed");
+                     log.exception(e);
+                  }
+                  deployedURLs.remove(url);
 
-					// this should be the safe way to call watchedURLS.remove
-					iterator.remove();
-				}
-			}
+                  // this should be the safe way to call watchedURLS.remove
+                  iterator.remove();
+               }
+            }
 
 
             // Check watched URLs
@@ -194,42 +198,28 @@ public class AutoDeployer
                long lm;
                if (deployment.watch.getProtocol().startsWith("file"))
                {
-						// Get timestamp of file from file system
+                  // Get timestamp of file from file system
                   lm = new File(deployment.watch.getFile()).lastModified();
                } else
                {
-						// Use URL connection to get timestamp
+                  // Use URL connection to get timestamp
                   lm = deployment.watch.openConnection().getLastModified();
                }
 
                // Check old timestamp -- always deploy if first check
                if ((deployment.lastModified == 0) || (deployment.lastModified < lm))
                {
-				   /*
-                  // in case of file first check if it is really completely copied
-                  // (check file size wait 1 second and compare new with old file size)
-                  long size = new File(deployment.watch.getFile()).length ();
-                  try {
-                     Thread.currentThread().sleep (1000L);
-                  } catch (InterruptedException _ie) {}
-                  if (size != new File(deployment.watch.getFile()).length ())
-                  {
-                     log.log (deployment.url+" is not yet ready for deploy...");
-                     continue;
-                  }
-				   */
-                  
                   log.log("Auto deploy of "+deployment.url);
                   deployment.lastModified = lm;
                   try
                   {
-                     deploy(deployment.url.toString());
+                     deploy(deployment.url.toString(), deployment.deployerName);
                   } catch (Throwable e)
                   {
                      log.error("Deployment failed:"+deployment.url);
                      log.exception(e);
 
-							// Deployment failed - won't retry until updated
+                     // Deployment failed - won't retry until updated
                   }
                }
             }
@@ -252,30 +242,41 @@ public class AutoDeployer
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
-   	this.server = server;
-      return new ObjectName(OBJECT_NAME+namedDeployer);
+      this.server = server;
+      return new ObjectName(OBJECT_NAME+deployerList);
    }
 
    protected void startService()
       throws Exception
    {
-      // Save JMX name of EJB ContainerFactory
-      factoryName = new ObjectName(namedDeployer);
+      // Save JMX names of configured deployers
+      StringTokenizer deployers = new StringTokenizer(deployerList, ";");
+      deployerNames = new ObjectName[deployers.countTokens()];
+      deployableFilters = new FilenameFilter[deployerNames.length];
+      for (int i=0; i<deployerNames.length && deployers.hasMoreTokens(); ++i)
+      {
+         String deployerName = deployers.nextToken().trim();
+         deployerNames[i] = new ObjectName(deployerName);
 
-      // Ask the deployer for a filter to detect deployable files
-      try
-      {
-         deployableFilter = (FilenameFilter) server.invoke(
-            factoryName, "getDeployableFilter", new Object[0], new String[0]);
-      }
-      catch (ReflectionException re)
-      {
-         log.log("Deployer doesn't provide a filter - will try to deploy " +
-                 "all files");
-         deployableFilter = new FilenameFilter()
-            {
-               public boolean accept(File dir, String filename) { return true; }
-            };
+         // Ask the deployer for a filter to detect deployable files
+         try
+         {
+            deployableFilters[i] = (FilenameFilter) server.invoke(
+               deployerNames[i], "getDeployableFilter", new Object[0],
+               new String[0]);
+         }
+         catch (ReflectionException re)
+         {
+            log.log("Deployer '" + deployerNames[i] + "' doesn't provide a " +
+                    "filter - will try to deploy all files");
+            deployableFilters[i] = new FilenameFilter()
+               {
+                  public boolean accept(File dir, String filename)
+                  {
+                     return true;
+                  }
+               };
+         }
       }
       
       StringTokenizer urls = new StringTokenizer(urlList, ",");
@@ -295,7 +296,7 @@ public class AutoDeployer
                try
                {
                   watchedURLs.add(new Deployment(
-                     urlFile.getCanonicalFile().toURL(), deployableFilter));
+                     urlFile.getCanonicalFile().toURL()));
                   log.log("Auto-deploying "+urlFile.getCanonicalFile());
                } catch (Exception e)
                {
@@ -303,7 +304,8 @@ public class AutoDeployer
                }
             } else
             {
-   			   // This is a directory whose contents shall be checked for deployments
+               // This is a directory whose contents shall be checked
+               // for deployments
                try
                {
                   watchedDirectories.add(urlFile.getCanonicalFile());
@@ -318,7 +320,7 @@ public class AutoDeployer
                try
                {
                   watchedURLs.add(new Deployment(
-                     urlFile.getCanonicalFile().toURL(), deployableFilter));
+                     urlFile.getCanonicalFile().toURL()));
                   log.log("Auto-deploying "+urlFile.getCanonicalFile());
                } catch (Exception e)
                {
@@ -328,7 +330,7 @@ public class AutoDeployer
          {
             try
             {
-               watchedURLs.add(new Deployment(new URL(url), deployableFilter));
+               watchedURLs.add(new Deployment(new URL(url)));
             } catch (MalformedURLException e)
             {
                // Didn't work
@@ -358,14 +360,14 @@ public class AutoDeployer
    }
 
    // Protected -----------------------------------------------------
-   protected void deploy(String url)
+   protected void deploy(String url, ObjectName deployerName)
       throws Exception
    {
       try
       {
-   		// Call the ContainerFactory that is loaded in the JMX server
-         server.invoke(factoryName, "deploy",
-                         new Object[] { url }, new String[] { "java.lang.String" });
+         // Call the appropriate deployer through the JMX server
+         server.invoke(deployerName, "deploy", new Object[] { url },
+                       new String[] { "java.lang.String" });
       } catch (RuntimeMBeanException e)
       {
 //          System.out.println("Caught a runtime MBean exception: "+e.getTargetException());
@@ -380,14 +382,14 @@ public class AutoDeployer
       }
    }
 
-   protected void undeploy(String url)
+   protected void undeploy(String url, ObjectName deployerName)
       throws Exception
    {
       try
       {
-   		// Call the ContainerFactory that is loaded in the JMX server
-         server.invoke(factoryName, "undeploy",
-                         new Object[] { url }, new String[] { "java.lang.String" });
+         // Call the appropriate deployer through the JMX server
+         server.invoke(deployerName, "undeploy", new Object[] { url },
+                       new String[] { "java.lang.String" });
       } catch (MBeanException e)
       {
          throw e.getTargetException();
@@ -400,20 +402,30 @@ public class AutoDeployer
    // Inner classes -------------------------------------------------
 
 	// This class holds info about a deployement, such as the URL and the last timestamp
-   static class Deployment
+   class Deployment
    {
       long lastModified;
       URL url;
       URL watch;
+      ObjectName deployerName;
 
-      Deployment(URL url, FilenameFilter deployableFilter)
+      Deployment(URL url)
          throws MalformedURLException
       {
          this.url = url;
-         if (deployableFilter.accept(null, url.getFile()))
-            watch = url;
-         else
-            watch = new URL(url, "META-INF/ejb-jar.xml");
+         for (int i=0; i<deployableFilters.length; ++i)
+         {
+            if (deployableFilters[i].accept(null, url.getFile()))
+            {
+               watch = url;
+               deployerName = deployerNames[i];
+               return;
+            }
+         }
+         watch = new URL(url, "META-INF/ejb-jar.xml");
+         // assume first configured deployer is responsible for
+         // ejb-jars
+         deployerName = deployerNames[0];
       }
    }
 }
