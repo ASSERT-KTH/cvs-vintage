@@ -69,7 +69,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.18 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.19 2002/09/18 20:30:13 elicia Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -154,8 +154,10 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
                    issueType = (IssueType) IssueTypePeer
                       .retrieveByPK(new NumberKey(id));
                    issueType.setDeleted(true);
+                   issueType.setLocked(false);
                    issueType.save();
                    issueType.deleteModuleMappings(user);
+                   issueType.deleteIssueTypeMappings(user);
                  }
              }
              scarabR.setConfirmMessage(l10n.get("GlobalIssueTypesDeleted"));
