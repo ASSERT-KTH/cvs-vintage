@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.20 2002/01/18 22:26:03 jon Exp $
+ * @version $Id: MoveIssue.java,v 1.21 2002/01/22 21:08:04 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -289,11 +289,12 @@ public class MoveIssue extends RequireLoginFirstAction
         context.put("oldModule", oldModule.getName());
         context.put("newModule", newModule.getName());
         if (!transaction.sendEmail(new ContextAdapter(context), newIssue, 
-                              "issue " +  newIssue.getUniqueId() + descBuf.toString(),
+                              "issue " +  newIssue.getUniqueId() 
+                              + descBuf.toString(),
                               "email/MoveIssue.vm"))
         {
-             data.setMessage("Your changes were saved, but could not send notification email "
-                              + "due to a sendmail error.");
+             data.setMessage("Your changes were saved, but could not send "
+                             + "notification email due to a sendmail error.");
         }                      
 
         setTarget(data, nextTemplate);
