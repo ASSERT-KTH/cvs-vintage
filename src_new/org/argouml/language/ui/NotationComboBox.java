@@ -1,4 +1,4 @@
-// $Id: NotationComboBox.java,v 1.9 2005/01/09 14:58:07 linus Exp $
+// $Id: NotationComboBox.java,v 1.10 2005/03/03 19:39:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,13 +23,18 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.language.ui;
-import org.apache.log4j.Logger;
-import org.argouml.application.api.*;
-import org.argouml.application.events.*;
+import java.awt.Dimension;
+import java.util.ListIterator;
 
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
+import javax.swing.JComboBox;
+
+import org.apache.log4j.Logger;
+import org.argouml.application.api.Notation;
+import org.argouml.application.api.NotationName;
+import org.argouml.application.events.ArgoEventPump;
+import org.argouml.application.events.ArgoEventTypes;
+import org.argouml.application.events.ArgoNotationEvent;
+import org.argouml.application.events.ArgoNotationEventListener;
 
 /**
  *   This class provides a self-updating notation combo box.
@@ -76,15 +81,11 @@ public class NotationComboBox
      * @see org.argouml.application.events.ArgoNotationEventListener#notationChanged(org.argouml.application.events.ArgoNotationEvent)
      */
     public void notationChanged(ArgoNotationEvent event) {
-        //Notation.LOG.debug("NotationComboBox.notationChanged(" + event + ")");
-        //LOG.info("NotationComboBox.notationChanged(" + event + ")");
-        refresh();
     }
     /**
      * @see org.argouml.application.events.ArgoNotationEventListener#notationAdded(org.argouml.application.events.ArgoNotationEvent)
      */
     public void notationAdded(ArgoNotationEvent event) {
-        //LOG.info("NotationComboBox.notationAdded(" + event + ")");
         refresh();
     }
     /**
@@ -109,22 +110,18 @@ public class NotationComboBox
      * Refresh the combobox contents.
      */
     public void refresh() {
-        if (Configuration.getBoolean(Notation.KEY_UML_NOTATION_ONLY, false)) {
-            setVisible(false);
-        } else {
-            removeAllItems();
-            ListIterator iterator =
-                Notation.getAvailableNotations().listIterator();
-            while (iterator.hasNext()) {
-                try {
-                    NotationName nn = (NotationName) iterator.next();
-                    addItem(nn);
-                } catch (Exception e) {
-                    LOG.error("Unexpected exception", e);
-                }
+        removeAllItems();
+        ListIterator iterator =
+            Notation.getAvailableNotations().listIterator();
+        while (iterator.hasNext()) {
+            try {
+                NotationName nn = (NotationName) iterator.next();
+                addItem(nn);
+            } catch (Exception e) {
+                LOG.error("Unexpected exception", e);
             }
-            setVisible(true);
         }
+        setVisible(true);
         invalidate();
     }
 }
