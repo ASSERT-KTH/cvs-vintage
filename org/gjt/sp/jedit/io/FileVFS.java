@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.53 2005/03/21 23:55:49 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.54 2005/03/22 00:36:31 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -269,7 +269,7 @@ public class FileVFS extends VFS
 		File directory = new File(path);
 		File[] list = null;
 		if(directory.exists())
-			fsView.getFiles(directory,false);
+			list = fsView.getFiles(directory,false);
 
 		if(list == null)
 		{
