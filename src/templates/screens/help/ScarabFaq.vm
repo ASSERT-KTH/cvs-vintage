@@ -39,5 +39,27 @@
     <dd>Many pages in Scarab are customizable. For more information see the 
         discussion on <a href="$link.setPage("help,Navigation.vm")#customize")">customizing</a> the screen.</dd>
     </dl>
+
+<dl> 
+  <dt><strong>What is the difference between a Global attribute and a User attribute?</strong></dt>
+  <dd>Global attributes are used to define issues. Global attributes are defined 
+    at the domain level and made available within issue types by the Project Owner. 
+    When creating issues, the values assigned to global attributes become the 
+    descriptors for issues. Values associated with global attributes and used 
+    to search the database for issues when using queries. You may find Global 
+    attributes like "Status", "Description", "Operating System" and the like in 
+    your Issue Type. </dd>
+  <dt>&nbsp;</dt>
+  <dd>Once issues are created, User attributes are used to associate users with 
+    issues. User attributes are defined at the global level and are associated 
+    with a base permission and an email action. Users with the right permission 
+    appear in the User attributes drop down menu and can be associted with an 
+    issue using that User attribute. The Assigned To attribute is a User attribute.</dd>
+  <dt>&nbsp;</dt>
+  <dd>For more information see <a href=$link.setPage("UserIssues.vm#attributes")>Managing 
+    issues: overview</a> for Global attributes and <a href=$link.setPage("UserIssueModify.vm#manage")>Modifying 
+    Issues</a> for User attributes.</dd>
+</dl>
+
 <div class="courtesylinks"><p><a href="#toc">Top</a></div>
 </div>
