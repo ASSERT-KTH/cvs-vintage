@@ -245,6 +245,30 @@ public class JspReader {
 	return ch;
     }
 
+    /**
+     * Gets Content until the next potential JSP element.  Because all elements
+     * begin with a '&lt;' we can just move until we see the next one.
+     */
+    String nextContent() {
+        int cur_cursor = current.cursor;
+	int len = current.stream.length;
+ 	char ch;
+
+	// pure obsfuscated genius!
+        while ((++current.cursor < len) && 
+	    ((ch = current.stream[current.cursor]) != '<')) {
+
+	    if (ch == '\n') {
+		current.line++;
+		current.col = 0;
+	    } else {
+  		current.col++;
+	    }
+	}
+
+	return new String(current.stream, cur_cursor, current.cursor-cur_cursor);
+    };
+
     char[] getChars(Mark start, Mark stop) {
 	Mark oldstart = mark();
 	reset(start);

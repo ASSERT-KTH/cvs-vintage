@@ -1061,8 +1061,10 @@ public class Parser {
 		    break;
 		} 
 	    }
-	    if (!accepted)
-		caw.write((char) reader.nextChar());
+	    if (!accepted) {
+		String s = reader.nextContent();
+		caw.write(s, 0, s.length());
+	    }
 	}
 	flushCharData();
     }
