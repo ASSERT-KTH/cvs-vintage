@@ -27,6 +27,10 @@ public class AttributeManager
         super();
     }
 
+    public Attribute getInstanceImpl()
+    {
+        return new Attribute();
+    }
 }
 
 
