@@ -5,5 +5,5 @@ Specification-Vendor: "ObjectWeb"
 Implementation-Title: "org.objectweb.carol.util.bootstrap"
 Implementation-Version: "1.0.2"
 Implementation-Vendor: "INRIA"
-Main-Class: org.objectweb.carol.util.bootstrap.RJVMServerDaemon
+Main-Class: org.objectweb.carol.util.bootstrap.ProcessesDaemon
 Class-Path: carol.jar commons-cli.jar

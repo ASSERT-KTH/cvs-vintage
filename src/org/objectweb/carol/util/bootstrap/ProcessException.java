@@ -1,5 +1,5 @@
 /*
- * @(#) RJVMException.java	1.0 02/07/15
+ * @(#) ProcessException.java	1.0 02/07/15
  *
  * Copyright (C) 2002 - INRIA (www.inria.fr)
  *
@@ -29,36 +29,46 @@ package org.objectweb.carol.util.bootstrap;
 
 import java.io.Serializable;
 
-import java.rmi.RemoteException;
-
 /**
- * Class <code>RJVMException</code> is a RJVM exception
+ * Class <code>ProcessException</code> is a Process exception
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  *
  */
 
-public class RJVMException extends  RemoteException implements Serializable {
+public class ProcessException extends Exception implements Serializable {
+
+    String mess = null;
 
     /**
      * empty constructor
     */
-    public RJVMException() {
-	super("RJVMException");
+    public ProcessException() {
+	super("ProcessException");
     }
     /**
      * string constructor
     */
-    public RJVMException(String s) {
-	super("RJVMException" + s);
+    public ProcessException(String s) {
+	super("ProcessException" + s);
+	mess = s;
     }   
     
     /**
      * throwable constructor
     */
-    public RJVMException(Throwable ex) {
-	super("RJVMException", ex);
-    }   
+    public ProcessException(Throwable ex) {
+	super("ProcessException", ex);
+    }
+    
+    /**
+     * to string method
+     */
+    public String toString() {
+
+	return "ProcessException: an exception occurs in the remote Process:\n" + "  " + getMessage() + "\n   " + mess;
+
+    }
         
 }

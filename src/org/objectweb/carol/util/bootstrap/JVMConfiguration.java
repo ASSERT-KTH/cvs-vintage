@@ -1,5 +1,5 @@
 /*
- * @(#) RJVMConfiguration.java	1.0 02/07/15
+ * @(#) JVMConfiguration.java	1.0 02/07/15
  *
  * Copyright (C) 2002 - INRIA (www.inria.fr)
  *
@@ -36,7 +36,7 @@ import java.util.StringTokenizer;
 import java.util.Enumeration;
 
 /**
- * Class <code>RJVMConfiguration</code> Is a Data structure representing a Java command 
+ * Class <code>JVMConfiguration</code> Is a Data structure representing a Java command 
  * This class is serializable and can be pass througth a RMI call (for the Java Deamon for example) 
  * 
  * 
@@ -45,12 +45,7 @@ import java.util.Enumeration;
  *
  */
 
-public class RJVMConfiguration implements Serializable {
-    
-    /**
-     * Directory for the jvm (if null, current directory)
-     */
-    public String directory = null;
+public class JVMConfiguration implements Serializable {
   
     /**
      * Boolean for jvm -server option
@@ -119,7 +114,7 @@ public class RJVMConfiguration implements Serializable {
      * empty constructor 
      * start with default
      */
-    public RJVMConfiguration() {
+    public JVMConfiguration() {
     }
 
     /**
@@ -127,7 +122,7 @@ public class RJVMConfiguration implements Serializable {
      * This constructor is use "like a java ... command"
      * and parse the string 
      */
-    public RJVMConfiguration(String commandLine) throws  RJVMException {
+    public JVMConfiguration(String commandLine) throws ProcessException {
 	StringTokenizer st = new StringTokenizer(commandLine);
 	while (st.hasMoreTokens()) {
 	    String opt= (String)st.nextToken();
@@ -148,7 +143,7 @@ public class RJVMConfiguration implements Serializable {
 		if (prop.countTokens()==2) {		    
 		    addProperty(prop.nextToken(), prop.nextToken());
 		} else {
-		    throw  new RJVMException("-D option is not valid");
+		    throw  new ProcessException("-D option is not valid");
 		}
 	    } else if (opt.startsWith("-X")) {
 		addNonStandard(opt.substring(2));
@@ -159,7 +154,7 @@ public class RJVMConfiguration implements Serializable {
 			addPath(classP.nextToken());
 		    }
 		} else {
-		    throw  new RJVMException("-classpath or -cp option is not a valid path option"); 
+		    throw  new ProcessException("-classpath or -cp option is not a valid path option"); 
 
 		}
 	    } else if (opt.equals("-jar")) {
@@ -254,21 +249,12 @@ public class RJVMConfiguration implements Serializable {
     }
 
     /**
-     * set the path directory for the jvm
-     * Be carful, this is for the moment 
-     * RJVM server System dependant 
-     */
-    public void setDirectory(String dir) {
-	directory = dir;
-    }
-
-    /**
      * set the main class namle for the jvm    
-     * @throws RJVMException if the jar option is set
+     * @throws ProcessException if the jar option is set
      */
-    public void setClass(String cName) throws  RJVMException {
+    public void setClass(String cName) throws  ProcessException {
 	if (jarName != null) {
-	    throw  new RJVMException("Can not set className when there is a jar name with (-jar option)");
+	    throw  new ProcessException("Can not set className when there is a jar name with (-jar option)");
 	} else {
 	    className = cName;
 	}
@@ -276,11 +262,11 @@ public class RJVMConfiguration implements Serializable {
 
     /**
      * set -jar ... option 
-     * @throws RJVMException if the class option is set
+     * @throws ProcessException if the class option is set
      */
-    public void setJar(String jName) throws  RJVMException {
+    public void setJar(String jName) throws  ProcessException {
 	if (className != null) {
-	    throw  new RJVMException("Can not set jar Name when there is a main class define");
+	    throw  new ProcessException("Can not set jar Name when there is a main class define");
 	} else {
 	    jarName = jName;
 	}
@@ -289,15 +275,15 @@ public class RJVMConfiguration implements Serializable {
     /**
      * add mains args ... option 
      */
-    public void addArgs(String args) throws  RJVMException {
+    public void addArgs(String args) throws  ProcessException {
 	mainArgs+=" "+args;
     }  
 
     /**
      * Get the command string
-     * @throws RJVMException if the class or jar option is not set
+     * @throws ProcessException if the class or jar option is not set
      */
-    public String getCommandString() throws  RJVMException {
+    public String getCommandString() throws  ProcessException {
 	String command = " ";
 
 	// standard jvm option 
@@ -337,25 +323,12 @@ public class RJVMConfiguration implements Serializable {
 	} else if(className != null) {
 	    command+=className;
 	} else {
-	    throw new RJVMException("Class or jar name missing");
+	    throw new ProcessException("Class or jar name missing");
 	} 
 
 	// java main args option 
 	command+=" " + mainArgs;
 	
 	return command;
-    }
-
-  
- 
-   /**
-     * Get the command directory
-     */
-    public File getCommandDirectory() {
-	if (directory != null) {
-	    return new File(directory);
-	} else {
-	    return new File(System.getProperty("user.dir"));
-	}
     }
 }

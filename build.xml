@@ -104,12 +104,14 @@
       <!-- we didn'nt exclude the jrmp features because existed in all java 2 jdk --> 
     </javac>     
   </target>
+
   <target name="compile.jvm.daemon">
     <rmic base="${build}/classes" compiler="sun"
-      classname="org.objectweb.carol.util.bootstrap.RJVMServerDaemon">
+      classname="org.objectweb.carol.util.bootstrap.ProcessesManager">
     <classpath refid="carol.classpath"/>
     </rmic>     
   </target>
+
   <target name="compile.iiop" if="interceptor.classes.presents">
     <javac 
       srcdir="${src}"
@@ -163,10 +165,6 @@
   <target name="dist.test" depends="build.test" description="Test the carol distribution">
     <ant antfile="${test}/build.xml" dir="${test}" target="test.all"/>
   </target> 
-
-  <target name="shell" depends="dist" description="Test the carol rjvm shell">
-    <ant antfile="${test}/build.xml" dir="${test}" target="rjvm.shell"/>
-  </target>
 
   <!-- *************************************-->
   <!-- *********        JAR       **********-->
