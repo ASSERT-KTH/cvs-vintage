@@ -6,7 +6,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss.jcml,v 1.54 2001/08/11 21:32:45 user57 Exp $ -->
+<!-- $Id: jboss.jcml,v 1.55 2001/08/12 15:41:06 chirino Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -226,74 +226,74 @@
   <!-- JBossMQ                                                              -->
   <!-- ==================================================================== -->
 
-  <mbean code="org.jbossmq.server.JBossMQService"
+  <mbean code="org.jboss.mq.server.JBossMQService"
 	 name="JBossMQ:service=Server"/>
 
   <!-- The StateManager is used to keep JMS perisitent state data. -->
   <!-- For example: what durable subscriptions are active. -->
-  <mbean code="org.jbossmq.server.StateManager" 
+  <mbean code="org.jboss.mq.server.StateManager" 
 	 name="JBossMQ:service=StateManager">
     <attribute name="StateFile">jbossmq-state.xml</attribute>
   </mbean>
 
   <!-- The PersistenceManager is used to store messages to disk. -->
-  <mbean code="org.jbossmq.pm.file.PersistenceManager"
+  <mbean code="org.jboss.mq.pm.file.PersistenceManager"
 	 name="JBossMQ:service=PersistenceManager">
     <attribute name="DataDirectory">../../db/jbossmq/</attribute>
   </mbean>
 
   <!-- InvocationLayers are the different transport methods that can be used to access the server -->
-  <mbean code="org.jbossmq.il.jvm.JVMServerILService"
+  <mbean code="org.jboss.mq.il.jvm.JVMServerILService"
 	 name="JBossMQ:service=InvocationLayer,type=JVM">
     <attribute name="ConnectionFactoryJNDIRef">java:/ConnectionFactory</attribute>
     <attribute name="XAConnectionFactoryJNDIRef">java:/XAConnectionFactory</attribute>
   </mbean>
 
-  <mbean code="org.jbossmq.il.rmi.RMIServerILService"
+  <mbean code="org.jboss.mq.il.rmi.RMIServerILService"
 	 name="JBossMQ:service=InvocationLayer,type=RMI"> 
     <attribute name="ConnectionFactoryJNDIRef">RMIConnectionFactory</attribute>
     <attribute name="XAConnectionFactoryJNDIRef">RMIXAConnectionFactory</attribute>
   </mbean>
 
-  <mbean code="org.jbossmq.il.oil.OILServerILService"
+  <mbean code="org.jboss.mq.il.oil.OILServerILService"
 	 name="JBossMQ:service=InvocationLayer,type=OIL">
     <attribute name="ConnectionFactoryJNDIRef">ConnectionFactory</attribute>
     <attribute name="XAConnectionFactoryJNDIRef">XAConnectionFactory</attribute>
   </mbean>
 
-  <mbean code="org.jbossmq.il.uil.UILServerILService"
+  <mbean code="org.jboss.mq.il.uil.UILServerILService"
 	 name="JBossMQ:service=InvocationLayer,type=UIL">
     <attribute name="ConnectionFactoryJNDIRef">UILConnectionFactory</attribute>
     <attribute name="XAConnectionFactoryJNDIRef">UILXAConnectionFactory</attribute>
   </mbean>
 
   <!-- The following three line create 3 topics named: testTopic, example, and bob -->
-  <mbean code="org.jbossmq.server.TopicManager"
+  <mbean code="org.jboss.mq.server.TopicManager"
 	 name="JBossMQ:service=Topic,name=testTopic"/>
-  <mbean code="org.jbossmq.server.TopicManager"
+  <mbean code="org.jboss.mq.server.TopicManager"
 	 name="JBossMQ:service=Topic,name=example"/>
-  <mbean code="org.jbossmq.server.TopicManager" 
+  <mbean code="org.jboss.mq.server.TopicManager" 
 	 name="JBossMQ:service=Topic,name=bob"/>
 
   <!-- The following 9 line create 9 topics named: testQueue, controlQueue, A, B, -->
   <!-- C, D, E, F, and ex --> 
-  <mbean code="org.jbossmq.server.QueueManager" 
+  <mbean code="org.jboss.mq.server.QueueManager" 
 	 name="JBossMQ:service=Queue,name=testQueue"/>
-  <mbean code="org.jbossmq.server.QueueManager"
+  <mbean code="org.jboss.mq.server.QueueManager"
 	 name="JBossMQ:service=Queue,name=controlQueue"/>
-  <mbean code="org.jbossmq.server.QueueManager"
+  <mbean code="org.jboss.mq.server.QueueManager"
 	 name="JBossMQ:service=Queue,name=A"/>
-  <mbean code="org.jbossmq.server.QueueManager"
+  <mbean code="org.jboss.mq.server.QueueManager"
 	 name="JBossMQ:service=Queue,name=B"/>
-  <mbean code="org.jbossmq.server.QueueManager"
+  <mbean code="org.jboss.mq.server.QueueManager"
 	 name="JBossMQ:service=Queue,name=C"/>
-  <mbean code="org.jbossmq.server.QueueManager"
+  <mbean code="org.jboss.mq.server.QueueManager"
 	 name="JBossMQ:service=Queue,name=D"/>
-  <mbean code="org.jbossmq.server.QueueManager"
+  <mbean code="org.jboss.mq.server.QueueManager"
 	 name="JBossMQ:service=Queue,name=E"/>
-  <mbean code="org.jbossmq.server.QueueManager"
+  <mbean code="org.jboss.mq.server.QueueManager"
 	 name="JBossMQ:service=Queue,name=F"/>
-  <mbean code="org.jbossmq.server.QueueManager"
+  <mbean code="org.jboss.mq.server.QueueManager"
 	 name="JBossMQ:service=Queue,name=ex"/>
 
 
