@@ -17,7 +17,7 @@ import org.jboss.invocation.Invocation;
  * the target object from the cache.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class EntityMultiInstanceInterceptor
    extends AbstractInterceptor
@@ -51,7 +51,17 @@ public class EntityMultiInstanceInterceptor
       ctx.setPrincipal(mi.getPrincipal());
 
       // Invoke through interceptors
-      return getNext().invokeHome(mi);
+      Object result = getNext().invokeHome(mi);
+      
+      // No id, means we can put the context back in the pool
+      if (ctx.getId() == null)
+      {
+         ctx.setTransaction(null);
+         ec.getInstancePool().free(ctx);
+      }
+      
+      // We are done
+      return result;
    }
 
    public Object invoke(Invocation mi)

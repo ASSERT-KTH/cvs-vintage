@@ -12,14 +12,11 @@ import java.rmi.RemoteException;
 
 import javax.transaction.Transaction;
 
-import org.jboss.ejb.Container;
 import org.jboss.ejb.BeanLock;
-import org.jboss.ejb.BeanLockManager;
+import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
-import org.jboss.ejb.InstancePool;
 import org.jboss.invocation.Invocation;
 
 
@@ -44,7 +41,7 @@ import org.jboss.invocation.Invocation;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.65 $
+* @version $Revision: 1.66 $
 */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -76,7 +73,8 @@ public class EntityInstanceInterceptor
       throws Exception
    {
       // Get context
-      EntityEnterpriseContext ctx = (EntityEnterpriseContext)((EntityContainer)getContainer()).getInstancePool().get();
+      EntityContainer container = (EntityContainer) getContainer();
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext) container.getInstancePool().get();
 
 		// Pass it to the method invocation
       mi.setEnterpriseContext(ctx);
@@ -115,7 +113,12 @@ public class EntityInstanceInterceptor
             container.getLockManager().removeLockRef(ctx.getCacheKey());
          }
       }
-      //Do not send back to pools in any case, let the instance be GC'ed
+      else
+      {
+         // It was just a home invocation, put the context back in the pool
+         ctx.setTransaction(null);
+         container.getInstancePool().free(ctx);
+      }
       return rtn;
    }
 
