@@ -13,7 +13,6 @@ import javax.swing.KeyStroke;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.util.DialogStore;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
@@ -24,6 +23,7 @@ import org.columba.mail.gui.table.action.UpAction;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.action.RenameFolderAction;
+import org.columba.mail.gui.tree.action.ApplyFilterAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.main.MailInterface;
 
@@ -81,6 +81,13 @@ public class ThreePaneMailFrameController
 		treeController.getView().getActionMap().put("F2", renameFolderAction);
 		treeController.getView().getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "F2");
 		
+		ApplyFilterAction applyFilterAction = new ApplyFilterAction(this);
+		// Register ALT-A hotkey for apply filter on folder when the folder tree itself has focus
+		treeController.getView().getActionMap().put("ALT_A", applyFilterAction);
+		treeController.getView().getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.ALT_DOWN_MASK), "ALT_A");
+		tableController.getView().getActionMap().put("ALT_A", applyFilterAction);
+		tableController.getView().getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.ALT_DOWN_MASK), "ALT_A");
+				
 		//register the markasread timer as selection listener
 		tableController
 			.getMailFrameController()
