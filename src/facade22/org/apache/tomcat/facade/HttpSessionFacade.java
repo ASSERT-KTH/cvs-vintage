@@ -155,6 +155,7 @@ public final class HttpSessionFacade implements HttpSession {
 	if( dL > 0 ) d("Invalidate " + realSession.getId());
 	realSession.setState(ServerSession.STATE_EXPIRED);
 	realSession.recycle();
+	realSession.setState(ServerSession.STATE_INVALID);
     }
 
     /**
