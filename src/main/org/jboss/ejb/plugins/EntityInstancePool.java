@@ -21,7 +21,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- *	@version $Revision: 1.13 $
+ *	@version $Revision: 1.14 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -51,13 +51,25 @@ public class EntityInstancePool
     *
     * @param   ctx  
     */
+   private boolean reclaim = false;
+
+   public boolean getReclaim()
+   {
+      return reclaim;
+   }
+
+   public void setReclaim(boolean reclaim)
+   {
+      this.reclaim = reclaim;
+   }
+
    public synchronized void free(EnterpriseContext ctx)
    {
        // If transaction still present don't do anything (let the instance be GC)
        if (ctx.getTransaction() != null) return ;
         
-		 // To simplify design we don't reuse the ctx. 
-      //super.free(ctx);
+       // To simplify design we don't reuse the ctx. 
+       if (reclaim) super.free(ctx);
    }
    
    // Z implementation ----------------------------------------------
