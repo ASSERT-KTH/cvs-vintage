@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.45 2002/04/17 13:34:49 reverbel Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.46 2002/04/22 08:26:59 lsanders Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -193,6 +193,23 @@
     <depends optional-attribute-name="Deployer">jboss.deployment:type=DeploymentCache</depends>
     -->
     <depends optional-attribute-name="Deployer">jboss.system:service=MainDeployer</depends>
+
+    <!-- The URLComparator can be used to specify a deployment ordering
+         for deployments found in a scanned directory.  The class specified
+         must be an implementation of java.util.Comparator, it must be able
+         to compare two URL objects, and it must have a no-arg constructor.
+         The Comparator org.jboss.deployment.DeploymentSorter sorts by file 
+         extension, as follows:
+            "sar", "service.xml", "rar", "jar", "war", "wsr", "ear", "zip"
+    -->
+    <attribute name="URLComparator">org.jboss.deployment.DeploymentSorter</attribute>
+
+    <!-- The Filter specifies a java.io.FileFilter for scanned
+         directories.  Any file not accepted by this filter will not be
+         deployed.  The org.jboss.deployment.scanner.DeploymentFilter 
+         accepts only files that do not start with a ".", or end with a "~"
+    -->
+    <attribute name="Filter">org.jboss.deployment.scanner.DeploymentFilter</attribute>
 
     <attribute name="ScanPeriod">5000</attribute>
 
