@@ -1,44 +1,57 @@
-<div id="approval" class="app">
 $page.setTitle("Approve/reject user submitted items")
+
+<div id="approval" class="app">
+
 <h2>$page.Title</h2>
-#set ( $module = $scarabR.CurrentModule )
+
 <form action="$link.setPage("Approval.vm")" method="get">
 <input type="hidden" name="action" value="admin.Approval" />
 <input type="hidden" name="nextTemplate" value="Approval.vm" />
-#if( ($module.UnapprovedQueries.isEmpty()) && ($module.UnapprovedTemplates.isEmpty()) )
-  <p><strong class="alert">There are no items to approve.</strong></p>
+
+#set ($module = $scarabR.CurrentModule)
+#if (($module.UnapprovedQueries.isEmpty()) && ($module.UnapprovedTemplates.isEmpty()))
+
+  <p><strong class="alert">There are no items to approve at this time.</strong></p>
+
 #else
- <div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
+
+ <div class="functnbar">
+ <table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; <input type="submit" value="Clear form" /></td>
+  <td class="firstchild">
+   <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
+   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
+   <input type="submit" value="Clear form" />
+  </td>
   </tr>
  </table>
  </div>
+
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-   <th nowrap="nowrap">&nbsp;</th>
-   <th><a href="#" title="sort">Date</a></th>
-   <th><a href="#" title="sort">Type</a></th>
-   <th><a href="#" title="sort">Submitted by</a></th>
-  ## <th><a href="#" title="sort">Project</a></th>
-  ## <th><a href="#" title="sort">User role</a></th>
-   <th><a href="#" title="sort">Name</a></th>
-   <th><a href="#" title="sort">Description</a></th>
+   <th nowrap="nowrap">&#160;</th>
+   <th>Date</th>
+   <th>Type</th>
+   <th>Submitted by</th>
+  ## <th>Project</th>
+  ## <th>User role</th>
+   <th>Name</th>
+   <th>Description</th>
    <th>Comments</th>
    <th>Action</th>
   </tr>
- #foreach( $query in $module.UnapprovedQueries )
-  #if( $velocityCount % 2 > 0 )
-   <tr class="a">
-  #else
-   <tr class="b">
-  #end
+
+#foreach( $query in $module.UnapprovedQueries )
+
+  #indexedRows($velocityCount)
+
   <td><input type="checkbox" name="query_id_$query.QueryId" /></td>
   <td>$format.getDate($scarabG.DateFormat, $query.CreatedDate)</td>
   <td>Query</td>
+
   #set ($createdUser = $scarabR.getUser($query.UserId))
   <input type = "hidden" name="query_user_$query.QueryId" value = "$createdUser.UserId" />
-  <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+  <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
   <td>$module.Name</td>
   <td>#set ($comma = "")
    #foreach ($role in $security.getRoles($createdUser, $module))
@@ -47,7 +60,7 @@ $page.setTitle("Approve/reject user submitted items")
    #end
   </td>
   <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
-  <td>#if ($query.Description) $query.Description #else &nbsp; #end</td>
+  <td>#if ($query.Description) $query.Description #else &#160; #end</td>
   <td> <textarea rows="2" cols="20" name="query_comment_$query.QueryId"></textarea></td>
   <td><select name="query_action_$query.QueryId">
    <option value="none">No action</option>
@@ -58,25 +71,25 @@ $page.setTitle("Approve/reject user submitted items")
   </td>
  </tr>
 #end
+
 #foreach ($template in $module.UnapprovedTemplates)
- #if( $velocityCount % 2 > 0 )
-  <tr class="a">
- #else
-  <tr class="b">
- #end
+
+  #indexedRows($velocityCount)
+
   <td><input type="checkbox" name="template_id_$template.IssueId" /></td>
   <td>$format.getDate($scarabG.DateFormat, $template.CreatedDate)</td>
   <td>enter issue template</td>
   #set ($createdUser = $template.CreatedBy)
   <input type = "hidden" name="template_user_$template.IssueId" value="$createdUser.UserId" />
-  <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+  <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
    ##<td>$template.Module.Name</td>
    ##<td>role X</td>
-   #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm"))
+   #set ($editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
    <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
-   <td>#if ($template.TemplateInfo.Description) $template.TemplateInfo.Description #else &nbsp; #end</td>
-   <td> <textarea rows="2" cols="20" name="template_comment_$template.IssueId"></textarea></td>
-   <td><select name="template_action_$template.IssueId">
+   <td>#if ($template.TemplateInfo.Description) $template.TemplateInfo.Description #else &#160; #end</td>
+   <td><textarea rows="2" cols="20" name="template_comment_$template.IssueId"></textarea></td>
+   <td>
+    <select name="template_action_$template.IssueId">
     <option>No action</option>
     <option>Comment only</option>
     <option>Approve</option>
@@ -86,18 +99,24 @@ $page.setTitle("Approve/reject user submitted items")
   </tr>
 #end
 </table>
+
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th width="120">Comments
-   (sent to selected submittees)</th>
+   <th width="120">Comments (sent to selected submittees)</th>
    <td><textarea rows="4" cols="40" name="global_comment"></textarea></td>
   </tr>
  </table>
 </div>
- <div class="functnbar2"><table cellpadding="4" cellspacing="0" border="1">
+
+ <div class="functnbar2">
+ <table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; <input type="submit" value="Clear form" /></td>
+  <td class="firstchild">
+    <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
+    <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
+    <input type="submit" value="Clear form" />
+  </td>
   </tr>
  </table>
  </div>
