@@ -29,10 +29,6 @@ p, ul, ol, dl	{
 table, th, td	{
 	border: none
 	}
-.alert { 
-	border: solid 1px red;
-	padding: .3em;
-	}
 #leftcol div div {
  margin-top: .4em
  }

@@ -69,6 +69,12 @@ a:active, a:hover, #leftcol a:active, #leftcol a:hover {
 .alert { 
 	color: red; 
 	}
+.confirm {
+	color: green;
+	}
+.info {
+	color: blue;
+	}	
 .selection {
 	background: #ffc;
 	font-weight: bold
