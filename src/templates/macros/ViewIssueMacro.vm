@@ -222,7 +222,7 @@ $l10n.NoComments
     #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
       <p>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.DataAsString)</p>
     #else
-        <p><source>$comment.DataAsString</source></p>
+        <p>$comment.DataAsString</p>
     #end
   #end
 
