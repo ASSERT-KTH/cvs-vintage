@@ -1,12 +1,11 @@
 $page.setTitle("Copy/move issue")
-
 <div class="app" id="moveissue2">
 
 <h2>$page.Title</h2>
 
 #set ($moveIssueGroup = $intake.MoveIssue.Default)
 #set ($issueId = $moveIssueGroup.IssueId)
-#set ($issue = $scarabR.getIssue("$issueId"))
+#set ($issue = $scarabR.getIssueByPk("$issueId"))
 
 #if (!$issueId || $issueId.length() == 0 || !$issue)
 
