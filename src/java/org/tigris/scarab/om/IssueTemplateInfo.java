@@ -114,6 +114,13 @@ public  class IssueTemplateInfo
                               "email/RequireApproval.vm");
                 
                 ScarabUser[] toUsers = module.getUsers(ScarabSecurity.MODULE__EDIT);
+                // if the module doesn't have any users, then we need to add at 
+                // least ourselves...
+                if (toUsers.length == 0)
+                {
+                    toUsers = new ScarabUser[1];
+                    toUsers[0] = user;
+                }
                 Email.sendEmail(context, module, null, null, Arrays.asList(toUsers), 
                                 null, subject, template);
             }
