@@ -430,6 +430,9 @@ public class JspServlet extends HttpServlet {
 	// Reload only if it's outdated
 	if((jspClass == null) || outDated) {
 	    try {
+		if( null ==ctxt.getServletClassName() ) {
+		    compiler.computeServletClassName();
+		}
 		jspClass = loader.loadClass(ctxt.getFullClassName());
                         //loadClass(ctxt.getFullClassName(), true);
 	    } catch (ClassNotFoundException cex) {

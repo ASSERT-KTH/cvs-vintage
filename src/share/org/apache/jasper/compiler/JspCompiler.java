@@ -119,7 +119,11 @@ public class JspCompiler extends Compiler implements Mangler {
     }
 
     public final String getJavaFileName() {
-        return javaFileName;
+        if( javaFileName!=null ) return javaFileName;
+	javaFileName = getClassName() + ".java";
+ 	if (outputDir != null && !outputDir.equals(""))
+ 	    javaFileName = outputDir + File.separatorChar + javaFileName;
+	return javaFileName;
     }
     
     public final String getClassFileName() {
@@ -190,9 +194,9 @@ public class JspCompiler extends Compiler implements Mangler {
     }
 
     public final void computeJavaFileName() {
-	javaFileName = getClassName() + ".java";
-	if (outputDir != null && !outputDir.equals(""))
-	    javaFileName = outputDir + File.separatorChar + javaFileName;
+// 	javaFileName = getClassName() + ".java";
+// 	if (outputDir != null && !outputDir.equals(""))
+// 	    javaFileName = outputDir + File.separatorChar + javaFileName;
     }
 
     void computeClassFileName() {
@@ -322,7 +326,8 @@ class ClassFileData {
      */
     private void findClassName() {
         try {
-	    //	    System.out.println("XXX Extracting class name from class");
+	    //System.out.println("XXX Extracting class name from class");
+	    //	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
             className = ClassName.getClassName(classFile);
         } catch( JasperException ex) {
             // ops, getClassName should throw something
