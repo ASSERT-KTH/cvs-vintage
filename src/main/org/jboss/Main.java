@@ -46,7 +46,7 @@ import gnu.getopt.LongOpt;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @version $Revision: 1.59 $
+* @version $Revision: 1.60 $
 *
 * <b>Revisions:</b>
 * <p>
@@ -275,8 +275,8 @@ public class Main
       String systemHome = System.getProperty("jboss.system.home");
       
       String installURL = new File(systemHome).toURL().toString();
-      if (!installURL.endsWith(File.separator)) {
-         installURL += File.separator;
+      if (!installURL.endsWith("/")) {
+         installURL += "/";
       }
       
       // Default configuration name is "default",
