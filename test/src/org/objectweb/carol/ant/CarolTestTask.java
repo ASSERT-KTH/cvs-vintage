@@ -18,7 +18,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolTestTask.java,v 1.4 2005/02/09 16:27:35 el-vadimo Exp $
+ * $Id: CarolTestTask.java,v 1.5 2005/02/09 19:47:48 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -42,12 +42,6 @@ import org.apache.tools.ant.taskdefs.Ant;
 import org.apache.tools.ant.taskdefs.Property;
 
 public final class CarolTestTask extends Task {
-    public final static String IIOP    = "iiop";
-    public final static String JEREMIE = "jeremie";
-    public final static String JRMP    = "jrmp";
-
-    private final static String[] PROTOCOLS = {IIOP, JEREMIE, JRMP};
-
     private String antfile;
     private String propDestination;
     private String propSource;
@@ -87,8 +81,57 @@ public final class CarolTestTask extends Task {
         propSourceDir = new File(propSource);
         assertIsDirectory("propSource", propSourceDir);
 
-        for (int ii=0; ii<PROTOCOLS.length; ii++) {
-            executeSingle(PROTOCOLS[ii]);
+
+        // these are passed on to the Ant <target> task
+        for (Iterator configs=Config.configurations(); configs.hasNext(); ) {
+            Config config = (Config) configs.next();
+
+            // XXX: for now, we only handle single-protocol tests
+            if (config.getProto2() == null) {
+                CarolProtocol proto = config.getProto1();
+
+                Properties targetProps = loadProperties(proto.getName() + ".properties");
+                final File clientPropsFile = new File(propDestDir, "client1.properties");
+                String clientPropsFilename = clientPropsFile.getAbsolutePath();
+                targetProps.setProperty("client.properties.file.name1", clientPropsFilename);
+                targetProps.setProperty("server.properties.file.name", clientPropsFilename);
+
+                Properties clientProps = new Properties();
+                clientProps.setProperty("carol.protocols", proto.getName());
+                clientProps.setProperty("carol.start.ns",
+                                        config.usesExternallyStartedNS());
+
+                Ant ant = newAnt();
+
+                for (Enumeration props=targetProps.propertyNames(); props.hasMoreElements(); ) {
+                    String propName = (String) props.nextElement();
+
+                    if (propName.startsWith("carol.")) {
+                        clientProps.setProperty(propName, targetProps.getProperty(propName));
+                    } else {
+                        Property antProp = ant.createProperty();
+                        antProp.setName(propName);
+                        String propValue = alter(proto, propName, targetProps.getProperty(propName));
+                        antProp.setValue(propValue);
+                    }
+                }
+
+                Property antProp = ant.createProperty();
+                antProp.setName("test.name");
+                antProp.setValue(config.toString());
+
+                try {
+                    FileOutputStream os = new FileOutputStream(clientPropsFile);
+                    clientProps.store(os, null);
+                    os.close();
+                    System.err.println("wrote " + clientPropsFile);
+                } catch (IOException ex) {
+                    throw new BuildException
+                        ("couldn't create " + clientPropsFile, ex);
+                }
+                System.out.println("executing " + config.toString());
+                ant.execute();
+            }
         }
     }
 
@@ -112,90 +155,19 @@ public final class CarolTestTask extends Task {
         }
     }
 
-    private void executeSingle(String proto) throws BuildException {
-        // these are passed on to the Ant <target> task
-        Properties targetProps = loadProperties(proto);
-        final File clientPropsFile = new File(propDestDir, "client1.properties");
-        String clientPropsFilename = clientPropsFile.getAbsolutePath();
-        targetProps.setProperty("client.properties.file.name1", clientPropsFilename);
-        targetProps.setProperty("server.properties.file.name", clientPropsFilename);
-
-        int nVariations = JRMP.equals(proto) ? 2 : 1;
-
-        // in the case of JRMP, we need to test two variations:
-        // "jrmp 1.1" and "jrmp 1.2"
-        for (int ii=1; ii<=nVariations; ii++) {
-
-            // We make two iterations.  During the first one, we start a name
-            // server externally.  During the second one, we let CAROL start
-            // the name server on its own.
-            for (int jj=0; jj<2; jj++) {
-
-                Properties clientProps = new Properties();
-                clientProps.setProperty("carol.protocols", proto);
-                clientProps.setProperty("carol.start.ns", jj==0 ? "true" : "false");
-
-                Ant ant = newAnt();
-
-                for (Enumeration props=targetProps.propertyNames(); props.hasMoreElements(); ) {
-                    String propName = (String) props.nextElement();
-
-                    if (propName.startsWith("carol.")) {
-                        clientProps.setProperty(propName, targetProps.getProperty(propName));
-                    } else {
-                        Property antProp = ant.createProperty();
-                        antProp.setName(propName);
-                        String propValue = alter(proto, ii, propName, targetProps.getProperty(propName));
-                        antProp.setValue(propValue);
-                    }
-                }
-                Property antProp = ant.createProperty();
-                StringBuffer testname = new StringBuffer(proto);
-
-                if (JRMP.equals(proto)) {
-                    testname.append("1.").append(ii);
-                }
-
-                if (jj == 1) {
-                    testname.append(".nons");
-                }
-
-                antProp.setName("test.name");
-                antProp.setValue(testname.toString());
-
-                try {
-                    FileOutputStream os = new FileOutputStream(clientPropsFile);
-                    clientProps.store(os, null);
-                    os.close();
-                    System.err.println("wrote " + clientPropsFile);
-                } catch (IOException ex) {
-                    throw new BuildException
-                        ("couldn't create " + clientPropsFile, ex);
-                }
-                ant.execute();
-            }
-        }
-    }
-
-    private static String alter(String proto, int variation, String name, String value) {
-        if (!JRMP.equals(proto)) {
+    private static String alter(CarolProtocol proto, String name, String value) {
+        if (proto != CarolProtocol.JRMP11 && proto != CarolProtocol.JRMP12) {
             return value;
         }
-        String suffix = variation == 1 ? "1.1" : "1.2";
-        if (name.startsWith("stub.jar.name")) {
-            return value + suffix + ".jar";
+        if (!name.startsWith("stub.jar.name")) {
+            return value;
         }
-
-        if (name.startsWith("test.name")) {
-            return value + suffix;
-        }
-
-        return value;
+        String suffix = proto == CarolProtocol.JRMP11 ? "1.1" : "1.2";
+        return value + suffix + ".jar";
     }
 
 
-    private Properties loadProperties(String proto) throws BuildException {
-        String filename = proto + ".properties";
+    private Properties loadProperties(String filename) throws BuildException {
         File propFile = new File(propSourceDir, filename);
         InputStream is;
         try {
@@ -215,5 +187,78 @@ public final class CarolTestTask extends Task {
             catch (IOException ex) { ; }
         }
         return props;
+    }
+
+    private static class Config {
+        private final CarolProtocol proto1;
+        private final CarolProtocol proto2;
+        private final boolean usesExternallyStartedNS;
+
+        private final static List configurations;
+
+        static {
+            configurations = new LinkedList();
+            CarolProtocol[] protos =
+                new CarolProtocol[] {CarolProtocol.IIOP,
+                                     CarolProtocol.JEREMIE,
+                                     CarolProtocol.JRMP11,
+                                     CarolProtocol.JRMP12};
+
+            boolean[] nsValues = new boolean[] {true, false};
+
+            for (int nsIdx=0; nsIdx<nsValues.length; nsIdx++) {
+                final boolean usesExternal = nsValues[nsIdx];
+
+                for (int ii=0; ii<protos.length; ii++) {
+                    configurations.add(new Config(protos[ii], null, usesExternal));
+                }
+
+                for (int ii=0; ii<protos.length-1; ii++) {
+                    final CarolProtocol proto1 = protos[ii];
+
+                    for (int jj=ii+1; jj<protos.length; jj++) {
+                        final CarolProtocol proto2 = protos[jj];
+                        configurations.add(new Config(proto1, proto2, usesExternal));
+                    }
+                }
+            }
+        }
+
+
+        Config(CarolProtocol proto1, CarolProtocol proto2, boolean usesExternallyStartedNS) {
+            if (proto1 == null) { throw new NullPointerException("proto1"); }
+
+            this.proto1 = proto1;
+            this.proto2 = proto2;
+            this.usesExternallyStartedNS = usesExternallyStartedNS;
+        }
+
+        public CarolProtocol getProto1() {
+            return proto1;
+        }
+
+        public CarolProtocol getProto2() {
+            return proto2;
+        }
+
+        public String usesExternallyStartedNS() {
+            return Boolean.valueOf(usesExternallyStartedNS).toString();
+        }
+
+        public static Iterator configurations() {
+            System.err.println("configurations=" + configurations);
+            return configurations.iterator();
+        }
+
+        public String toString() {
+            StringBuffer sb = new StringBuffer(proto1.getNameVersion());
+            if (proto2 != null) {
+                sb.append('.').append(proto2.getNameVersion());
+            }
+            if (!usesExternallyStartedNS) {
+                sb.append('.').append("nons");
+            }
+            return sb.toString();
+        }
     }
 }
