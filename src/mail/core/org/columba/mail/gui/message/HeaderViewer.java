@@ -1,10 +1,14 @@
 package org.columba.mail.gui.message;
 
 import java.awt.Insets;
+import java.net.URL;
 
 import javax.swing.JTextPane;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
+import org.columba.core.io.DiskIO;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.HeaderInterface;
 
@@ -40,7 +44,12 @@ public class HeaderViewer extends JTextPane {
 	public HeaderViewer() {
 		setMargin(new Insets(5, 5, 5, 5));
 		setEditable(false);
-		setEditorKit(new HTMLEditorKit());
+		HTMLEditorKit editorKit = new HTMLEditorKit();
+		setEditorKit(editorKit);
+
+		URL baseUrl = DiskIO.getResourceURL( "org/columba/core/images/");
+		ColumbaLogger.log.debug(baseUrl.toString());
+		((HTMLDocument)getDocument()).setBase(baseUrl);
 
 		parser = new DocumentParser();
 
@@ -83,7 +92,9 @@ public class HeaderViewer extends JTextPane {
 						(String) header.get(keys[i])));
 			buf.append("</TD></TR>");
 		}
+		
 		buf.append("</TABLE></BODY></HTML>");
+		
 
 		setText(buf.toString());
 
