@@ -1,5 +1,5 @@
 /*
- * $Id: ForwardPI.java,v 1.1 2001/08/26 01:45:39 costin Exp $
+ * $Id: ForwardPI.java,v 1.2 2003/10/02 02:52:03 larryi Exp $
  */
 
 
@@ -8,8 +8,6 @@ package dispatch;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
-
-import RequestDump;
 
 /**
  * Test FORWARD with a path info
