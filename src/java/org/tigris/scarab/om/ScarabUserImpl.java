@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.11 2001/08/02 07:11:38 jon Exp $
+    @version $Id: ScarabUserImpl.java,v 1.12 2001/08/02 22:20:40 elicia Exp $
 */
 public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 {    
@@ -233,6 +233,14 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
         {
             return null;
         }        
+    }
+
+    /**
+        Pass in a string id and return username.
+    */
+    public static String getUserName(String userId)
+    {
+        return getUserName((ObjectKey)new NumberKey(userId));
     }
 
     /**
