@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.CreateException;
+import javax.ejb.FinderException;
 import javax.management.MalformedObjectNameException;
 import javax.sql.DataSource;
 
@@ -302,7 +303,9 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
          else
          {
             log.error("Could not create entity", e);
-            throw new CreateException("Could not create entity:" + e);
+            CreateException ce = new CreateException("Could not create entity: " + e);
+            ce.initCause(e);
+            throw ce;
          }
       }
       finally
