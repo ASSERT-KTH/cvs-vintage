@@ -89,7 +89,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.38 2002/09/29 18:57:30 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.39 2002/10/14 22:23:19 jmcnally Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -343,7 +343,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     }
                     catch (Exception e) 
                     {
-                        scarabR.setAlertMessage(l10n.get(e.getMessage()));
+                        scarabR.setAlertMessage(e.getMessage());
                     }
                 }
             }
