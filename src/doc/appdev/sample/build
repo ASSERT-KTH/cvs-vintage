@@ -1,6 +1,6 @@
 #!/bin/sh
 # build -- Build Script for the "Hello, World" Application
-# $Id: build,v 1.1 2000/03/28 02:36:21 craigmcc Exp $
+# $Id: build,v 1.2 2000/04/04 22:01:13 craigmcc Exp $
 
 # Identify the custom class path components we need
 CP=$TOMCAT_HOME/classes:$TOMCAT_HOME/lib/ant.jar:$TOMCAT_HOME/lib/xml.jar
@@ -8,5 +8,5 @@ CP=$CP:$TOMCAT_HOME/lib/jasper.jar:$TOMCAT_HOME/lib/servlet.jar
 CP=$CP:$TOMCAT_HOME/lib/webserver.jar
 
 # Execute ANT to perform the requested build target
-java -Dtomcat.home=$TOMCAT_HOME -classpath $CP:$CLASSPATH \
-   org.apache.tools.ant.Main "$@"
+java -classpath $CP:$CLASSPATH org.apache.tools.ant.Main \
+  -Dtomcat.home=$TOMCAT_HOME "$@"

@@ -4,22 +4,18 @@
      the recommendations in the Application Developer's Guide.
 
      NOTE:  Before using this file as is, you should review the
-     values for the properties described under the "init" target.
+     values for the properties that are defined below.
      In particular, it is assumed that you wish to install this
      application under context path "/myapp" in the Tomcat installation
      defined by your TOMCAT_HOME environment variable.
 -->
 
-
-  <target name="init">
-    <!-- Property values defined here can be overridden by defining
-         corresponding Java system properties on the Ant command line.  -->
-    <property name="deploy.home"    value="${tomcat.home}/webapps/myapp"/>
-    <property name="dist.home"      value="${deploy.home}"/>
-    <property name="dist.src"       value="myapp.jar"/>
-    <property name="dist.war"       value="myapp.war"/>
-    <property name="javadoc.home"   value="${deploy.home}/javadoc"/>
-  </target>
+  <property name="app.name"       value="myapp"
+  <property name="deploy.home"    value="${tomcat.home}/webapps/${app.name}"/>
+  <property name="dist.home"      value="${deploy.home}"/>
+  <property name="dist.src"       value="${app.name}.jar"/>
+  <property name="dist.war"       value="${app.name}.war"/>
+  <property name="javadoc.home"   value="${deploy.home}/javadoc"/>
 
 
   <target name="prepare" init="init">

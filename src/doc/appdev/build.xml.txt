@@ -10,23 +10,17 @@
 <project name="My Project" default="compile" basedir=".">
 
 
-<!-- The "init" target is executed when Ant is first started, to initialize
-     the values of properties (or perform other setup tasks as needed).
-     In current versions of Ant, this behavior is hard coded - in future
-     versions, the 'init="init"' attribute added to each other target will
-     request this behavior with no further changes required.
-
-     The most common use of the "init" target is to define properties,
-     whose names can be used later in the build process.  The advantage
-     of using properties is that you can change the property value in a
-     single place, and all affected tasks will be automatically updated.
+<!-- Property Definitions
 
      Each of the following properties are used by convention in this
      build file.  The values specified can be overridden at run time by
-     defining a Java system property with the same name as this property.
+     adding a "-Dname=value" argument to the command line that invokes Ant.
      This technique is normally used to copy the values of the ANT_HOME
      and TOMCAT_HOME environment variables into the "ant.home" and
      "tomcat.home" properties, which are normally not defined explicitly.
+
+     app.name          Base name of this application, used to
+                       construct filenames and directories.
 
      deploy.home       The name of the directory into which the
                        deployment hierarchy will be created.
@@ -60,15 +54,12 @@
        http://localhost:8080/myapp
 -->
 
-  <target name="init">
-    <!-- Property values defined here can be overridden by defining
-         corresponding Java system properties on the Ant command line.  -->
-    <property name="deploy.home"    value="${tomcat.home}/webapps/myapp"/>
-    <property name="dist.home"      value="${deploy.home}"/>
-    <property name="dist.src"       value="myapp.jar"/>
-    <property name="dist.war"       value="myapp.war"/>
-    <property name="javadoc.home"   value="${deploy.home}/javadoc"/>
-  </target>
+  <property name="app.name"       value="myapp"/>
+  <property name="deploy.home"    value="${tomcat.home}/webapps/${app.name}"/>
+  <property name="dist.home"      value="${deploy.home}"/>
+  <property name="dist.src"       value="${app.name}.jar"/>
+  <property name="dist.war"       value="${app.name}.war"/>
+  <property name="javadoc.home"   value="${deploy.home}/javadoc"/>
 
 
 <!-- The "prepare" target is used to construct the deployment home
@@ -78,7 +69,7 @@
      hierarchy, and set up the WEB-INF subdirectory appropriately.
 -->
 
-  <target name="prepare" init="init">
+  <target name="prepare">
     <mkdir dir="${deploy.home}"/>
     <copydir src="web" dest="${deploy.home}"/>
     <mkdir dir="${deploy.home}/WEB-INF"/>
@@ -95,7 +86,7 @@
      to compile everything from scratch.
 -->
 
-  <target name="clean" init="init">
+  <target name="clean">
     <deltree dir="${deploy.home}"/>
   </target>
 
@@ -119,7 +110,7 @@
      home directory structure will be created if needed the first time.
 -->
 
-  <target name="compile" depends="prepare" init="init">
+  <target name="compile" depends="prepare">
     <javac srcdir="src" destdir="${deploy.home}/WEB-INF/classes"
            classpath="${deploy.home}/WEB-INF/classes"
            debug="on" optimize="off" deprecation="off"/>
@@ -134,7 +125,7 @@
      the deployment home directory.
 -->
 
-  <target name="javadoc" depends="prepare" init="init">
+  <target name="javadoc" depends="prepare">
     <!-- TODO -->
   </target>
 
@@ -144,7 +135,7 @@
      source code instead of just the files that have been changed.
 -->
 
-  <target name="all" depends="clean,prepare,compile,javadoc" init="init"/>
+  <target name="all" depends="clean,prepare,compile,javadoc"/>
 
 
 <!-- The "dist" target builds the distribution Web ARchive (WAR) file
@@ -154,11 +145,11 @@
      that separately.
 -->
 
-  <target name="dist" depends="prepare,compile" init="init">
+  <target name="dist" depends="prepare,compile">
     <jar jarfile="${dist.home}/${dist.src}"
-         basedir="." items="*"/>
+         basedir="."/>
     <jar jarfile="${dist.home}/${dist.war}"
-         basedir="${deploy.home}" items="*"/>
+         basedir="${deploy.home}"/>
   </target>
 
 
