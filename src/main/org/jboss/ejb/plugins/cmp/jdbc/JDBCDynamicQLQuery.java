@@ -13,6 +13,7 @@ import javax.ejb.FinderException;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDynamicQLQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
@@ -21,7 +22,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * This class generates a query from JBoss-QL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand {
    private final Catalog catalog;
@@ -79,7 +80,17 @@ public class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand {
       
       // set select object
       if(compiler.isSelectEntity()) {
-         setSelectEntity(compiler.getSelectEntity());
+         JDBCEntityBridge selectEntity = compiler.getSelectEntity();
+
+         // set the select entity
+         setSelectEntity(selectEntity);
+
+         // set the preload fields
+         JDBCReadAheadMetaData readahead = metadata.getReadAhead();
+         if(readahead.isOnFind()) {
+            String eagerLoadGroup = readahead.getEagerLoadGroup();
+            setPreloadFields(selectEntity.getLoadGroup(eagerLoadGroup));
+         }
       } else {
          setSelectField(compiler.getSelectField());
       }
