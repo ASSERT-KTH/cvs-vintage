@@ -423,7 +423,7 @@ public class MessageComposer {
 	}
 
 	public SendableMessage compose(WorkerStatusController workerStatusController)
-		throws IOException {
+		throws Exception {
 		this.accountUid = model.getAccountItem().getUid();
 
 		workerStatusController.setDisplayText("Composing Message...");

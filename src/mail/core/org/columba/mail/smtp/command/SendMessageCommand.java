@@ -30,6 +30,8 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
+import org.columba.mail.pgp.CancelledException;
+import org.columba.mail.pgp.PGPException;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.smtp.SMTPException;
@@ -66,8 +68,7 @@ public class SendMessageCommand extends FolderCommand {
 				"statusbar",
 				"message",
 				"send_message"));
-				
-				
+
 		// get composer controller
 		// -> get all the account information from the controller 
 		ComposerController composerController = r[0].getComposerController();
@@ -81,17 +82,29 @@ public class SendMessageCommand extends FolderCommand {
 				item.getSpecialFoldersItem().getInteger("sent"));
 
 		// get the SendableMessage object
-		SendableMessage message =
-			new MessageComposer(
-				((ComposerModel) composerController.getModel())).compose(
-				worker);
-
+		SendableMessage message = null;
+		try {
+			message =
+				new MessageComposer(
+					((ComposerModel) composerController.getModel())).compose(
+					worker);
+		} catch (PGPException e1) {
+			if (e1 instanceof CancelledException) {
+				// user cancelled sending operation
+				
+				return;
+			} else {
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+				
+				return;
+			}
+		}
 		// open connection
 		SMTPServer server = new SMTPServer(item);
 		boolean open = server.openConnection();
-		
+
 		// show interest on status information
-		((StatusObservableImpl)server.getObservable()).setWorker(worker);
+		 ((StatusObservableImpl) server.getObservable()).setWorker(worker);
 
 		if (open) {
 

@@ -59,7 +59,7 @@ public class MultipartEncryptedRenderer extends MimePartRenderer {
 	/* (non-Javadoc)
 	 * @see org.columba.ristretto.composer.MimePartRenderer#render(org.columba.ristretto.message.StreamableMimePart)
 	 */
-	public InputStream render(MimePart part) throws IOException {
+	public InputStream render(MimePart part) throws Exception {
 		Vector streams = new Vector(2 * 2 + 3);
 
 		MimeHeader header = part.getHeader();
@@ -97,9 +97,7 @@ public class MultipartEncryptedRenderer extends MimePartRenderer {
 							part.getChild(0)),
 						pgpItem));
 						
-		} catch (WrongPassphraseException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (PGPException e) {
+		}  catch (PGPException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			
 			e.printStackTrace();

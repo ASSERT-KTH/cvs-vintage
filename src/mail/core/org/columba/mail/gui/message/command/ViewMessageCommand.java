@@ -44,11 +44,11 @@ import org.columba.mail.gui.message.SecurityIndicator;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.pgp.CancelledException;
 import org.columba.mail.pgp.MissingPublicKeyException;
 import org.columba.mail.pgp.PGPController;
 import org.columba.mail.pgp.PGPException;
 import org.columba.mail.pgp.VerificationException;
-import org.columba.mail.pgp.WrongPassphraseException;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
@@ -126,17 +126,11 @@ public class ViewMessageCommand extends FolderCommand {
 
 			pgpMessage = controller.getPgpMessage();
 
-		} catch (WrongPassphraseException e) {
-			e.printStackTrace();
-
-			// you most probably entered a wrong passpharse
-			pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
-
-			pgpMessage = e.getMessage();
-
+		} catch (CancelledException e) {
+			
 			// just show the encrypted raw message
 			return;
-			//decryptedStream = encryptedPart;
+			
 		} catch (PGPException e) {
 
 			// generic pgp error

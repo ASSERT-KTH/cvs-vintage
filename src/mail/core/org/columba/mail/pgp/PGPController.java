@@ -53,11 +53,11 @@ public class PGPController {
 
 	private String pgpMessage;
 
-	private Map passwords;
-
 	private PGPPassphraseDialog dialog;
-	
+
 	private File tempFile;
+
+	private Map passwordMap;
 
 	/**
 	 * here are the utils, from which you can sign, verify, encrypt and decrypt messages
@@ -74,7 +74,8 @@ public class PGPController {
 	protected PGPController() {
 		exitVal = 0;
 
-		passwords = new HashMap();
+		passwordMap = new HashMap();
+
 	}
 	/**
 	 * Gives back an Instance of PGPController. This function controls, that only
@@ -106,13 +107,24 @@ public class PGPController {
 
 		int exitVal = -1;
 
-		this.getPassphrase(item);
+		if (this.getPassphrase(item) == false)
+			// user cancelled
+			throw new CancelledException();
 
 		String error = null;
-		String output = null;
 		try {
-			exitVal = utils[GPG].decrypt(item, cryptMessage);
 
+			// create temporary file from encrypted data
+			if (tempFile == null)
+				createTempFileFromStream(cryptMessage);
+
+			// create stream from file
+			InputStream tempInputStream = getTempInputStream();
+
+			// decrypt stream
+			exitVal = utils[GPG].decrypt(item, tempInputStream);
+
+			// parse error message
 			error = utils[GPG].parse(utils[GPG].getErrorString());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -120,16 +132,16 @@ public class PGPController {
 			throw new PGPException(error);
 		}
 
-		if (save == false) {
-			item.clearPassphrase();
-		}
-
 		pgpMessage = new String(error);
 
 		if (exitVal == 2) {
 			// wrong passprase 
-			throw new WrongPassphraseException(error);
+
+			return decrypt(cryptMessage, item);
 		}
+
+		// clear tempfile
+		tempFile = null;
 
 		return utils[GPG].getStreamResult();
 	}
@@ -187,10 +199,17 @@ public class PGPController {
 		int exitVal = -1;
 		String error = null;
 
-		this.getPassphrase(item);
-
 		try {
-			exitVal = utils[GPG].encrypt(item, pgpStream);
+
+			// create temporary file from encrypted data
+			if (tempFile == null)
+				createTempFileFromStream(pgpStream);
+
+			// create stream from file
+			InputStream tempInputStream = getTempInputStream();
+
+			exitVal = utils[GPG].encrypt(item, tempInputStream);
+			System.out.println("exitVal=" + exitVal);
 
 			error = utils[GPG].parse(utils[GPG].getErrorString());
 		} catch (Exception e) {
@@ -200,15 +219,9 @@ public class PGPController {
 		}
 
 		pgpMessage = new String(error);
-		
-		if (save == false) {
-			item.clearPassphrase();
-		}
 
-		if (exitVal == 1) {
-			// wrong passphrase
-			throw new WrongPassphraseException(error);
-		}
+		// clear temporary file
+		tempFile = null;
 
 		if (exitVal != 0) {
 			throw new PGPException(error);
@@ -239,11 +252,21 @@ public class PGPController {
 		path = item.get("path");
 		id = item.get("id");
 
-		this.getPassphrase(item);
+		if (this.getPassphrase(item) == false)
+			// user cancelled
+			throw new CancelledException();
 
 		try {
 
-			exitVal = utils[GPG].sign(item, pgpStream);
+			// create temporary file from encrypted data
+			if (tempFile == null)
+				createTempFileFromStream(pgpStream);
+
+			// create stream from file
+			InputStream tempInputStream = getTempInputStream();
+
+			exitVal = utils[GPG].sign(item, tempInputStream);
+			System.out.println("exitVal=" + exitVal);
 
 			error = utils[GPG].parse(utils[GPG].getErrorString());
 
@@ -252,15 +275,15 @@ public class PGPController {
 		}
 
 		pgpMessage = new String(error);
-		
-		if (save == false) {
-			item.clearPassphrase();
+
+		if (exitVal == 2) {
+			// wrong passphrase
+
+			return sign(pgpStream, item);
 		}
 
-		if (exitVal == 1) {
-			// wrong passphrase
-			throw new WrongPassphraseException(error);
-		}
+		// clear temporary file
+		tempFile = null;
 
 		if (exitVal != 0) {
 			throw new PGPException(error);
@@ -320,15 +343,19 @@ public class PGPController {
 	}
 
 	private boolean getPassphrase(PGPItem item) {
-		String passphrase = item.getPassphrase();
-		boolean save = false;
-		boolean ret = false;
+
+		String passphrase = "";
+		if (passwordMap.containsKey(item.get("id")))
+			passphrase = (String) passwordMap.get(item.get("id"));
+
+		item.setPassphrase(passphrase);
+
+		boolean ret = true;
 
 		dialog = new PGPPassphraseDialog();
 		if (passphrase.length() == 0) {
-			//PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
 
-			dialog.showDialog(item.get("id"), "", false);
+			dialog.showDialog(item.get("id"), passphrase, false);
 
 			if (dialog.success()) {
 				passphrase =
@@ -337,9 +364,16 @@ public class PGPController {
 						0,
 						dialog.getPassword().length);
 				item.setPassphrase(passphrase);
+
 				save = dialog.getSave();
+
+				// save passphrase in hash map
+				if (save)
+					passwordMap.put(item.get("id"), passphrase);
+
 				ret = true;
-			}
+			} else
+				ret = false;
 		}
 		return ret;
 	}
@@ -380,18 +414,23 @@ public class PGPController {
 		return pgpMessage;
 	}
 
-	protected File createTempFileFromStream(InputStream in) throws IOException {
-		File tempFile = File.createTempFile("columba-pgp" , ".tmp" );
-		FileOutputStream out = new FileOutputStream( tempFile );
-		StreamUtils.streamCopy(in,out);
+	protected void createTempFileFromStream(InputStream in)
+		throws IOException {
+		tempFile = File.createTempFile("columba-pgp", ".tmp");
+		FileOutputStream out = new FileOutputStream(tempFile);
+		StreamUtils.streamCopy(in, out);
 		in.close();
 		out.close();
-		
-		return tempFile;
+
+	}
+
+	protected InputStream getTempInputStream() throws IOException {
+		return new FileInputStream(tempFile);
 	}
 	
-	protected InputStream getTempInputStream() throws IOException {
-		return new FileInputStream( tempFile );
-	} 
+	public void clearAllPassphrases()
+	{
+		passwordMap.clear();
+	}
 
 }
