@@ -82,13 +82,13 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.4 2002/01/29 00:36:39 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.5 2002/01/30 07:32:40 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
 {
     /** the location of the index */
-    private final String path;
+    private String path;
 
     /** the attributes that will be searched */
     private List attributeIds;
@@ -103,10 +103,12 @@ public class LuceneAdapter
     public LuceneAdapter()
         throws java.io.IOException
     {
-        path = 
-            Turbine.getRealPath(Turbine.getConfiguration()
-                                .getString(INDEX_PATH));
-
+        path = Turbine.getConfiguration().getString(INDEX_PATH);
+        if ( path.charAt(0) != '/' ) 
+        {
+            path = Turbine.getRealPath(path);
+        }
+        
         File indexDir = new File(path);
         boolean createIndex = false;
         if ( indexDir.exists() ) 
