@@ -18,7 +18,7 @@
     <property name="build.compiler" value="classic"/>
     <property name="debug" value="on"/>
     <property name="optimize" value="off"/>
-    <property name="deprecation" value="on"/>
+    <property name="deprecation" value="off"/>
 
     <property name="ant.home" value="."/>
     <property name="year" value="2000-2001"/>
@@ -26,6 +26,9 @@
     <property name="build.dir.default" value="../target"/>
 
     <property name="turbine.dir" value="../../jakarta-turbine"/>
+    <property name="turbine.latest.jar" 
+            value="turbine-2.1-dev-unreleased.jar"/>
+    <property name="torque.zip" value="torque.zip"/>
     <property name="src.dir" value="../src"/>
     <property name="src.conf.dir" value="${src.dir}/conf"/>
     <property name="src.html.dir" value="${src.dir}/html"/>
@@ -55,8 +58,8 @@
         <property name="build.webapps" value="${build.dir}/webapps"/>
         <property name="build.project" value="${build.webapps}/${project}"/>
         <property name="build.project.webinf" value="${build.project}/WEB-INF"/>
-        <property name="build.src" value="${build.project.webinf}/src"/>
-        <property name="build.dest"
+        <property name="build.src.scarab" value="${build.project.webinf}/src"/>
+        <property name="build.dest.scarab"
                  value="${build.project.webinf}/classes"/>
         <property name="javadoc.destdir" value="${build.project}/docs"/>
     </target>
@@ -123,7 +126,7 @@
         </copy>
 
         <!-- the source code directory -->
-        <copy todir="${build.src}/org" filtering="yes">
+        <copy todir="${build.src.scarab}/org" filtering="yes">
             <fileset dir="${src.java.dir}/org">
                 <include name="**/*.java"/>
                 <include name="**/*.properties"/>
@@ -145,15 +148,20 @@
 
     <target name="prepare-turbine" depends="check-for-turbine,prepare" 
             if="turbine.cvs.available">
+        <echo message="checking: ${src.lib.dir}/${turbine.latest.jar}"/>
         <uptodate property="turbine.jar.uptodate"
-            targetfile="${build.project.webinf}/lib/${turbine-latest-jar}">
+            targetfile="${src.lib.dir}/${turbine.latest.jar}">
             <srcfiles dir="${turbine.dir}/src/java" includes="**/*.java"/>
         </uptodate>
+        <echo message="${turbine.jar.uptodate}"/>
 
+        <echo message="checking: ${src.lib.dir}/${torque.zip}"/>
         <uptodate property="torque.uptodate"
-            targetfile="${build.project.webinf}/lib/${turbine-latest-jar}">
+            targetfile="${src.lib.dir}/${torque.zip}">
+            <srcfiles dir="${turbine.dir}/conf/torque" includes="**/*"/>
             <srcfiles dir="${turbine.dir}/src/java" includes="**/*.java"/>
         </uptodate>
+        <echo message="${torque.uptodate}"/>
     </target>
     <target name="skip-turbine" depends="check-for-turbine,prepare" 
             unless="turbine.cvs.available">
@@ -163,32 +171,49 @@
 
     <target name="build-turbine" depends="prepare-turbine,skip-turbine"
             unless="turbine.jar.uptodate">
-        <ant antfile="build/build-turbine.xml" 
-            dir="${turbine.dir}" target="jar"/>
-        <copy file="${turbine.dir}/bin/${turbine-latest-jar}" 
-            todir="${build.project.webinf}/lib/"/>
+        <echo message="+------------------------------------------+"/>
+        <echo message="|                                          |"/>
+        <echo message="|           Rebuilding Turbine             |"/>
+        <echo message="|                                          |"/>
+        <echo message="+------------------------------------------+"/>
+        <ant antfile="build-turbine.xml" 
+                dir="${turbine.dir}/build" target="jar">
+            <property name="build.dir" value="../bin"/>
+            <property name="version" value="2.1-dev-unreleased"/>
+            <property name="project" value="turbine"/>
+            <property name="final.name" value="turbine-2.1-dev-unreleased"/>
+            <property name="src.java.dir" value="../src/java"/>
+        </ant>
+        <copy file="${turbine.dir}/bin/${turbine.latest.jar}" overwrite="true"
+            todir="${src.lib.dir}"/>
     </target>
 
     <target name="build-torque"  depends="prepare-turbine,skip-turbine"
             unless="torque.uptodate">
+        <echo message="+------------------------------------------+"/>
+        <echo message="|                                          |"/>
+        <echo message="|           Rebuilding Torque              |"/>
+        <echo message="|                                          |"/>
+        <echo message="+------------------------------------------+"/>
         <ant antfile="build-turbine.xml" 
                 dir="${turbine.dir}/build" target="torque">
             <property name="build.dir" value="../bin"/>
-            <property name="build.src" value="${build.dir}/src"/>
         </ant>
-        <copy file="${turbine.dir}/bin/torque.zip" todir="${src.lib}"/>
+        <copy file="${turbine.dir}/bin/torque.zip" todir="${src.lib.dir}"/>
     </target>
 
     <target name="torque-init" depends="build-torque">
-        <copy file="${src.lib.dir}/torque.zip" todir="${build.src}"/>
-        <unzip src="${build.src}/torque.zip" dest="${build.src}" />
-        <property name="torque.dir" value="${build.src}/torque"/>
+        <copy file="${src.lib.dir}/torque.zip" todir="${build.src.scarab}"/>
+        <unzip src="${build.src.scarab}/torque.zip" 
+                dest="${build.src.scarab}" />
+        <property name="torque.dir" value="${build.src.scarab}/torque"/>
     </target>
 
     <!-- ================================================================== -->
     <!-- Generate SQL from Torque                                           -->
     <!-- ================================================================== -->
     <target name="schema-check">
+        <echo message="checking: ${src.sql.dir}/scarab-schema.sql"/>
         <uptodate property="schema.uptodate"
             targetfile="${src.sql.dir}/scarab-schema.sql">
             <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
@@ -197,28 +222,44 @@
 
     <target name="sql" depends="schema-check,torque-init" 
             unless="schema.uptodate">
-        <copy file="${src.sql.dir}/scarab-schema.xml"
-              todir="${torque.dir}/schema"/>
         <ant antfile="torque.xml" 
                 dir="${torque.dir}" target="project-sql">
             <property name="project" value="scarab"/>
-            <property name="xmlFile" value="schema/scarab-schema.xml"/>
+            <property name="xmlFile" value="${src.sql.dir}/scarab-schema.xml"/>
+            <property name="outputDirectory" value="${torque.dir}/output"/>
+            <property name="templatePath" value="${torque.dir}/templates"/>
             <property name="database" value="mysql"/>
         </ant>
-        <copy file="${outputDirectory}/${project}-schema.sql"
-              todir="${src.dir.sql}"/>
+        <copy file="${torque.dir}/output/${project}-schema.sql" 
+              overwrite="true" todir="${src.sql.dir}"/>
     </target>
 
     <!-- ================================================================== -->
     <!-- Generate OM/Peer classes from Torque                               -->
     <!-- ================================================================== -->
+    <target name="generated-check" depends="schema-check">
+        <echo message="checking: ${build.src.scarab}/torque/output/report.scarab.om.generation"/>
+        <available property="gen.uptodate"
+            file="${build.src.scarab}/torque/output/report.scarab.om.generation"/>
+    </target>
+<!-- would like to regenerate if schema is updated but will just have to 
+     remove target dir on schema update for now
+    <target name="generated-check" depends="pre-generated-check"
+            unless="gen.uptodate">
+        <echo message="checking if schema is up to date"/>
+        <property name="gen.uptodate" value="${schema.uptodate}"/>
+    </target>
+-->
+    <target name="om-peer" depends="generated-check,torque-init" 
+            unless="gen.uptodate">
 
-    <target name="om-peer" depends="schema-check,torque-init" 
-            unless="schema.uptodate">
-
+        <echo message="+------------------------------------------+"/>
+        <echo message="|                                          |"/>
+        <echo message="|        Building OM/Peer classes          |"/>
+        <echo message="|                                          |"/>
+        <echo message="+------------------------------------------+"/>
         <ant antfile="torque.xml" dir="${torque.dir}" target="project-om">
             <property name="project" value="scarab"/>
-            <property name="OMControlTemplate" value="om/Control.vm"/>
             <property name="outputDirectory" value="${torque.dir}/output"/>
             <property name="templatePath" value="${torque.dir}/templates"/>
             <property name="xmlFile" value="${src.sql.dir}/scarab-schema.xml"/>
@@ -229,7 +270,7 @@
             <property name="objectModelType" value="complex"/>
         </ant>
 
-        <copy todir="${build.src}/org" filtering="yes">
+        <copy todir="${build.src.scarab}/org" filtering="yes">
             <fileset dir="${torque.dir}/output/org">
                 <include name="**/ZZBase*.java"/>
                 <include name="**/*.properties"/>
@@ -237,23 +278,18 @@
             </fileset>
         </copy>
 
-    </target>
+        <antcall target="sql"/>
 
-    <target name="torque-check" depends="torque-init">
-        <uptodate property="baseom.uptodate"
-            targetfile="${torque.dir}/${outputDirectory}/${project}.generation.report">
-            <srcfiles dir="${torque.dir}/schema" includes="scarab-schema.xml"/>
-        </uptodate>
     </target>
 
 
     <!-- ================================================================== -->
     <!-- Compiles the source directory                                      -->
     <!-- ================================================================== -->
-    <target name="compile" depends="prepare,om-peer">
-        <mkdir dir="${build.dest}"/>
-        <javac srcdir="${build.src}"
-            destdir="${build.dest}"
+    <target name="compile" depends="build-turbine,prepare,om-peer">
+        <mkdir dir="${build.dest.scarab}"/>
+        <javac srcdir="${build.src.scarab}"
+            destdir="${build.dest.scarab}"
             excludes="**/package.html,torque/**"
             debug="${debug}"
             deprecation="${deprecation}"
