@@ -53,7 +53,7 @@ import org.apache.turbine.Log;
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.11 2002/01/23 10:34:18 dlr Exp $
+ * @version $Id: SearchFactory.java,v 1.12 2002/03/14 23:58:41 jon Exp $
  */
 public class SearchFactory
 {
@@ -86,12 +86,24 @@ public class SearchFactory
     }
 
     public static SearchIndex getInstance()
-        throws InstantiationException, IllegalAccessException
+        throws InstantiationException
     {
         SearchIndex si = null;
         if (searchIndex != null)
         {
-            si = (SearchIndex) searchIndex.newInstance();
+            try
+            {
+                si = (SearchIndex) searchIndex.newInstance();
+            }
+            catch (Exception e)
+            {
+                String str = "Could not create new instance of SearchIndex. " +
+                    "Could be a result of insufficient permission " +
+                    "to write the Index to the disk. The default is to " +
+                    "write the Index into the WEB-INF/index directory.";
+                Log.error(str, e);
+                throw new InstantiationException(str);
+            }
         }
         return si;
     }
