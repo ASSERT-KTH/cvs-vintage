@@ -1,5 +1,5 @@
 # Properties file for QuickNotepad plugin
-# $Id: QuickNotepad.props,v 1.12 2003/04/30 05:28:54 spestov Exp $
+# $Id: QuickNotepad.props,v 1.13 2004/08/28 08:12:46 spestov Exp $
 
 # jEdit only needs to load the plugin the first time the user accesses it
 # the presence of this property also tells jEdit the plugin is using the new API
@@ -13,7 +13,7 @@ plugin.QuickNotepadPlugin.author=John Gellene
 plugin.QuickNotepadPlugin.version=4.2
 
 # online help
-plugin.QuickNotepadPlugin.docs=QuickNotepad.html
+plugin.QuickNotepadPlugin.docs=index.html
 
 # we only have one dependency, jEdit 4.2, since we use the new plugin API
 plugin.QuickNotepadPlugin.depend.0=jedit 04.02.01.00
