@@ -86,7 +86,7 @@ mysql>
 3. Add the information to the server.xml file. For this example I used
    this entry:
 
-    <Realm className="org.apache.tomcat.realm.JDBCRealm" debug="99"
+    <RequestInterceptor className="org.apache.tomcat.realm.JDBCRealm" debug="99"
      driverName="org.gjt.mm.mysql.Driver"
      connectionURL="jdbc:mysql://localhost/authority?user=test;password=test"
      userTable="users" userNameCol="user_name" userCredCol="user_pass"
