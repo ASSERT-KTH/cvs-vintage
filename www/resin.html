@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>Scarab - Resin</title>
+</head>
+
+<body bgcolor="#ffffff">
+
+<h2>Scarab - Resin</h2>
+<h4>$Id: resin.html,v 1.1 2002/11/13 17:55:40 jon Exp $</h4>
+
+<pre>
+------ Forwarded Message
+From: Bruce Jarvis <bruce.jarvis NO-SPAM leanlogistics.com>
+Reply-To: users NO-SPAM scarab.tigris.org
+Date: Wed, 13 Nov 2002 13:49:25 -0500
+To: users NO-SPAM scarab.tigris.org
+Subject: Scarab on Resin
+
+I have Scarab successfully running under the Resin (http://www.caucho.com)
+application server.  Jon Stevens suggested I post what is necessary to get
+Scarab running with Resin.
+
+The good news is that there are no special steps.  I just built the sandbox
+and then copied the resulting web application to the Resin webapps
+directory.  That is:
+
+$ cp -R scarab-VERSION/target/webapps/scarab /usr/local/resin/webapps
+
+I then restarted Resin.  The URL to access the scarab install on Resin is:
+
+http://server.domain.com:port/scarab/issues
+
+Since the scarab webapp is not configured to be the root webapp.
+
+Bruce
+
+------ End of Forwarded Message
+</pre>
+
+</body>
+</html>
