@@ -1,6 +1,8 @@
 #set ($issueType = $scarabR.IssueType)
 #set ($itGroup = $intake.IssueType.mapTo($issueType))
 
+<div class="app" id="div2-1-4-0">
+
 #macro (GlobalArtifactTypeEdit $var)
 <div class="functnbar$var">
 #if (!$createNew)
@@ -10,7 +12,6 @@
 </div>
 #end
 
-<div class="app" id="div2-1-4-0">
 
 #if ($issueType.IssueTypeId)
    #set ($createNew = false)
@@ -27,7 +28,7 @@
 #end
   
 
-#GlobalArtifactTypeEdit()
+#GlobalArtifactTypeEdit("")
 
 <h3>$l10n.IssueTypeDetails</h3>
 <div class="axial">
