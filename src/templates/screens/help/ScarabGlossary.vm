@@ -2,98 +2,98 @@
    <div id="toc">
     <ul>
      <li>
-      Scarab Help 
+      $l10n.ScarabHelp 
 
       <ul>
-       <li><a href="$link.setPage("help,Introduction.vm")">Introduction to Scarab</a></li>
+       <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
 
-       <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a></li>
+       <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a></li>
 
-       <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database</a></li>
+       <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a></li>
 
-       <li><a href="$link.setPage("help,UserReports.vm")">Reports</a></li>
+       <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
 
-       <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Scarab guidelines</a></li>
+       <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.BestPractices</a></li>
 
-       <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
+       <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
 
-       <li><strong>Glossary</strong></li>
+       <li><strong>$l10n.HelpGlossary</strong></li>
       </ul>
      </li>
     </ul>
    </div>
 
-   <h3>Glossary</h3>
+   <h3>$l10n.HelpGlossary</h3>
 
-   <p>The following is a short list of terms found in the Scarab interface.</p>
+   <p>$l10n.GlossaryDesc</p>
 
    <dl>
-    <dt>Active/inactive</dt>
+    <dt>$l10n.ActiveInactive</dt>
 
-    <dd>parameter that determines if an item is available for use</dd>
+    <dd>$l10n.ActiveInactiveDef</dd>
 
-    <dt>Assign</dt>
+    <dt>$l10n.Assign</dt>
 
-    <dd>associating a user with an issue through the "assign" user attribute</dd>
+    <dd>$l10n.AssignDef</dd>
 
-    <dt>Attachment</dt>
+    <dt>$l10n.Attachment</dt>
 
-    <dd>files can be attached directly to issues</dd>
+    <dd>$l10n.AttachmentDef</dd>
 
-    <dt>Attribute</dt>
+    <dt>$l10n.Attribute</dt>
 
-    <dd>Attributes are associated with issue types within projects and are used to define issues.</dd>
+    <dd>$l10n.AttributeDef</dd>
 
-    <dt>Attribute Group</dt>
+    <dt>$l10n.AttributeGroup</dt>
 
-    <dd>Attributes associated with an issue are organized within attribute groups.</dd>
+    <dd>$l10n.AttributeGroupDef</dd>
 
-    <dt>Comparative analysis report</dt>
+    <dt>$l10n.CompAnalysisReport</dt>
 
-    <dd>a report that provides a snap shot of a single point in time</dd>
+    <dd>$l10n.CompAnalysisReportDef</dd>
 
-    <dt>Defect</dt>
+    <dt>$l10n.Defect</dt>
 
-    <dd>issues identified within existing feature/functionality</dd>
+    <dd>$l10n.DefectDef</dd>
 
-    <dt>Feature</dt>
+    <dt>$l10n.Feature</dt>
 
-    <dd>new functionality to be incorporated into the project</dd>
+    <dd>$l10n.FeatureDef</dd>
 
-    <dt>Global attributes</dt>
+    <dt>$l10n.GlobalAttributes</dt>
 
-    <dd>a set of predefined attributes available for association with all projects</dd>
+    <dd>$l10n.GlobalAttributeDef</dd>
 
-    <dt>Issue type</dt>
+    <dt>$l10n.IssueType</dt>
 
-    <dd>All scarab processes are performed within the realm of an issue type. Issue types are comprised of a unique set of attributes, attribute options, issues, templates, queries and reports.</dd>
+    <dd>$l10n.IssueTypeDef</dd>
 
-    <dt>Rate of change report</dt>
+    <dt>$l10n.RateOfChangeReport</dt>
 
-    <dd>a report that tracks changes to issues over a period of time</dd>
+    <dd>$l10n.RateOfChangeReportDef</dd>
 
-    <dt>Report</dt>
+    <dt>$l10n.Report</dt>
 
-    <dd>to track the progress of your project</dd>
+    <dd>$l10n.ReportDef</dd>
 
-    <dt>Primary filter attribute</dt>
+    <dt>$l10n.PrimaryFilterAttribute</dt>
 
-    <dd>defines the subset of issues from which the report is drawn</dd>
+    <dd>$l10n.PrimaryFilterAttributeDef</dd>
 
-    <dt>Query</dt>
+    <dt>$l10n.Query</dt>
 
-    <dd>allows you to search for issues within the database</dd>
+    <dd>$l10n.QueryDef</dd>
 
-    <dt>Template</dt>
+    <dt>$l10n.Template</dt>
 
-    <dd>a set of values for quick access and use while creating issues</dd>
+    <dd>$l10n.TemplateDef</dd>
 
-    <dt>User attributes</dt>
+    <dt>$l10n.UserAttributes</dt>
 
-    <dd>User attributes are used to associate users with issues</dd>
+    <dd>$l10n.UserAttributesDef</dd>
    </dl>
 
    <div class="courtesylinks">
-    <p><a href="#toc">Top</a></p>
+    <p><a href="#toc">$l10n.Top</a></p>
    </div>
   </div>
