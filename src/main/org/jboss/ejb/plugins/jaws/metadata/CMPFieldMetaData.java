@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -179,7 +179,6 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 			field = verifyNestedField();
 			Log.getLog().warning("!!! using buggy hotspot, try to upgrade ... !!!");
 		}
-		Log.getLog().warning("mapping " + name + " to " + getLastComponent(name));
 	}
 
 	/**
