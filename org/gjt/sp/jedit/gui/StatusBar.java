@@ -49,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.19 2002/02/17 05:30:26 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.20 2002/02/17 05:34:11 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -553,24 +553,14 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 			int width = MemoryStatus.this.getWidth()
 				- insets.left - insets.right;
 
-			Color text = MemoryStatus.this.getForeground();
-			Color status = text.darker();//UIManager.getColor("ProgressBar.foreground");
-
 			float fraction = ((float)usedMemory) / totalMemory;
 
 			g.fillRect(insets.left,insets.top,
 				(int)(width * fraction),
 				MemoryStatus.this.getHeight()
 				- insets.top - insets.bottom);
-			if(status.equals(text))
-			{
-				g.setXORMode(MemoryStatus.this.getBackground());
-				g.setColor(status);
-			}
-			else
-				g.setColor(status);
 
-			g.setColor(text);
+			g.setXORMode(MemoryStatus.this.getBackground());
 
 			String str = "" + usedMemory + "Mb/"
 				+ totalMemory + "Mb";
