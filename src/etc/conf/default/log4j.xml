@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: log4j.xml,v 1.23 2004/04/20 07:10:42 ejort Exp $ -->
+<!-- $Id: log4j.xml,v 1.24 2004/05/06 16:15:03 tdiesler Exp $ -->
 
 <!--
    | For more configuration infromation and examples see the Jakarta Log4j
@@ -167,10 +167,15 @@
       <priority value="INFO"/>
    </category>
 
-
-   <!-- Limit JBoss categories to INFO
+   <!-- Limit JBoss categories
    <category name="org.jboss">
-     <priority value="INFO"/>
+      <priority value="INFO"/>
+   </category>
+   -->
+
+   <!-- Limit JBoss webservice category
+   <category name="org.jboss.webservice">
+      <priority value="DEBUG"/>
    </category>
    -->
 
