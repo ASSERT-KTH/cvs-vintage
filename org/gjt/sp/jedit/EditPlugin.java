@@ -25,8 +25,8 @@ package org.gjt.sp.jedit;
 import javax.swing.JMenuItem;
 import java.util.*;
 import org.gjt.sp.jedit.browser.VFSBrowser;
-import org.gjt.sp.jedit.gui.EnhancedMenu;
 import org.gjt.sp.jedit.gui.OptionsDialog;
+import org.gjt.sp.jedit.menu.EnhancedMenu;
 
 /**
  * The abstract base class that every plugin must implement.
@@ -174,7 +174,7 @@ import org.gjt.sp.jedit.gui.OptionsDialog;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EditPlugin.java,v 1.28 2003/05/01 22:43:28 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.29 2003/05/02 21:12:43 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin

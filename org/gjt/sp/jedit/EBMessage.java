@@ -34,7 +34,7 @@ package org.gjt.sp.jedit;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EBMessage.java,v 1.6 2003/04/26 20:05:12 spestov Exp $
+ * @version $Id: EBMessage.java,v 1.7 2003/05/02 21:12:43 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -44,8 +44,19 @@ public abstract class EBMessage
 	/**
 	 * Creates a new message.
 	 * @param source The message source
+	 * @since jEdit 4.2pre1
 	 */
 	public EBMessage(Object source)
+	{
+		this.source = source;
+	} //}}}
+
+	//{{{ EBMessage constructor
+	/**
+	 * Creates a new message.
+	 * @param source The message source
+	 */
+	public EBMessage(EBComponent source)
 	{
 		this.source = source;
 	} //}}}

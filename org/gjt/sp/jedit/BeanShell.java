@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: BeanShell.java,v 1.34 2003/05/02 00:38:20 spestov Exp $
+ * @version $Id: BeanShell.java,v 1.35 2003/05/02 21:12:43 spestov Exp $
  */
 public class BeanShell
 {
@@ -583,6 +583,7 @@ public class BeanShell
 		global.importPackage("org.gjt.sp.jedit.gui");
 		global.importPackage("org.gjt.sp.jedit.help");
 		global.importPackage("org.gjt.sp.jedit.io");
+		global.importPackage("org.gjt.sp.jedit.menu");
 		global.importPackage("org.gjt.sp.jedit.msg");
 		global.importPackage("org.gjt.sp.jedit.options");
 		global.importPackage("org.gjt.sp.jedit.pluginmgr");
