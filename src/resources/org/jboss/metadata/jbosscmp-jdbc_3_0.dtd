@@ -443,7 +443,7 @@ The type-mapping element contains a named java to sql mapping.
 This includes both type mapping and function mapping.
 -->
 <!ELEMENT type-mapping (name, row-locking-template, pk-constraint-template, 
-      fk-constraint-template, (function-mapping, mapping)+)>
+      fk-constraint-template, function-mapping*, mapping+)>
 
 <!--
 Name of the type-mapping.
