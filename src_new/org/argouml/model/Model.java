@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.1 2004/04/19 05:56:46 linus Exp $
+// $Id: Model.java,v 1.2 2004/09/02 09:23:00 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,12 +31,17 @@ package org.argouml.model;
  * Currently these API:s are hard-coded to work with NSUML but eventually
  * another model component will replace them and then all these API:s
  * will instead work against that component.<p>
+ *
+ * Notice that all API:s returned from this class are to be NSUML-free.<p>
  *  
  * @stereotype utility
  * @since 0.15.5
  * @author Linus Tolke
  */
 public final class Model {
+    /**
+     * The ModelEventPump instance.
+     */
     private static ModelEventPump thePumpInstance;
 
     /**
