@@ -49,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.43 2002/11/07 22:52:14 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.44 2002/11/21 19:44:38 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -374,6 +374,8 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 			JEditTextArea textArea = view.getTextArea();
 
 			int currLine = textArea.getCaretLine();
+			//if(currLine >= textArea.getLineCount())
+			//	System.err.println("foo");
 			int start = textArea.getLineStartOffset(currLine);
 			int dot = textArea.getCaretPosition() - start;
 			buffer.getText(start,dot,seg);
