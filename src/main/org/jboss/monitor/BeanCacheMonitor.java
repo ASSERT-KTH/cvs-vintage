@@ -17,8 +17,8 @@ import javax.management.ObjectName;
 import javax.management.ObjectInstance;
 import javax.management.JMException;
 
-import org.jboss.ejb.ContainerFactory;
-import org.jboss.ejb.ContainerFactoryMBean;
+import org.jboss.ejb.EJBDeployer;
+import org.jboss.ejb.EJBDeployerMBean;
 import org.jboss.ejb.Application;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.Container;
@@ -31,7 +31,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see Monitorable
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class BeanCacheMonitor
    implements BeanCacheMonitorMBean, MBeanRegistration
@@ -71,7 +71,7 @@ public class BeanCacheMonitor
       // Get map of deployed applications
       try
       {
-         applications = (Iterator)m_mbeanServer.invoke(new ObjectName(ContainerFactoryMBean.OBJECT_NAME), "getDeployedApplications", new Object[]
+         applications = (Iterator)m_mbeanServer.invoke(new ObjectName(EJBDeployerMBean.OBJECT_NAME), "getDeployedApplications", new Object[]
          {}, new String[]
          {});
       }
