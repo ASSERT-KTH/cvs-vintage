@@ -26,6 +26,32 @@ import java.util.Vector;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 
+/**
+ * Main entrypoint for configuration management.
+ * <p>
+ * Example on how to get a {@link XmlElement} xml treenode:
+ * <pre>
+ * XmlElement gui = Config.get("options").getElement("/options/gui");
+ * </pre>
+ * <p>
+ * This would address the file <b>options.xml</b>. Following a little
+ * example on how this file would look like:
+ * <p>
+ * <pre>
+ * <?xml version="1.0" encoding="UTF-8"?>
+ *  <options>
+ *   <gui enabled="true">
+ *    .. your options here
+ *   </gui>
+ *  </options>
+ * </pre>
+ * <p>
+ * Note that all configuration file have default templates in
+ * the /res directory in package org.columba.core.config.
+ * <p>
+ * 
+ * @author fdietz
+ */
 public class Config {
 
 	public static File inboxDirectory;

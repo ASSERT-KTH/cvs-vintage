@@ -19,6 +19,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
+ * 
+ * Throwing this exception in a Command aborts the execution
+ * immediately.
+ * 
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
  */

@@ -20,6 +20,14 @@ import java.util.Vector;
 
 import org.columba.core.util.Mutex;
 
+/**
+ * Scheduler for background threads
+ * <p>
+ * DefaultProcessor keeps a pool of {@link Worker} instances, which are 
+ * assigned to {@link Command}, when executed.
+ *
+ * @author tstich
+ */
 public class DefaultProcessor extends Thread {
 
 	private final static int MAX_WORKERS = 5;
@@ -38,6 +46,9 @@ public class DefaultProcessor extends Thread {
 
 	private int timeStamp;
 
+	/**
+	 * 
+	 */
 	public DefaultProcessor() {
 		operationQueue = new Vector(10);
 
@@ -59,10 +70,17 @@ public class DefaultProcessor extends Thread {
 
 	}
 
+	/**
+	 * @param op
+	 */
 	public void addOp(Command op) {
 		addOp(op, Command.FIRST_EXECUTION);
 	}
 
+	/**
+	 * @param op
+	 * @param operationMode
+	 */
 	synchronized void addOp(Command op, int operationMode) {
 		//ColumbaLogger.log.debug( "Adding Operation..." );
 		boolean needToRelease = false;
@@ -93,10 +111,17 @@ public class DefaultProcessor extends Thread {
 		notify();
 	}
 
+	/**
+	 * @param opItem
+	 * @return
+	 */
 	private boolean canBeProcessed(OperationItem opItem) {
 		return opItem.operation.canBeProcessed(opItem.operationMode);
 	}
 
+	/**
+	 * @return
+	 */
 	private OperationItem getNextOpItem() {
 		OperationItem nextOp = null;
 		boolean needToRelease = false;
@@ -129,6 +154,10 @@ public class DefaultProcessor extends Thread {
 		return nextOp;
 	}
 
+	/**
+	 * @param op
+	 * @param w
+	 */
 	public synchronized void operationFinished(Command op, Worker w) {
 		boolean needToRelease = false;
 		try {
@@ -144,6 +173,9 @@ public class DefaultProcessor extends Thread {
 		notify();
 	}
 
+	/**
+	 * @return
+	 */
 	private Worker getWorker() {
 		Worker result = null;
 		boolean needToRelease = false;
@@ -160,6 +192,9 @@ public class DefaultProcessor extends Thread {
 		return result;
 	}
 
+	/**
+	 * 
+	 */
 	private synchronized void waitForNotify() {
 		isBusy = false;
 		try {
@@ -170,6 +205,9 @@ public class DefaultProcessor extends Thread {
 		//ColumbaLogger.log.debug( "Operator woke up" );
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	public void run() // Scheduler
 	{
 		OperationItem opItem = null;
@@ -195,10 +233,16 @@ public class DefaultProcessor extends Thread {
 		}
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean isBusy() {
 		return isBusy();
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean hasFinishedCommands() {
 		boolean result;
 		boolean needToRelease = false;
@@ -222,6 +266,9 @@ public class DefaultProcessor extends Thread {
 	}
 
 	/**
+	 * @return
+	 */
+	/**
 	 * Returns the undoManager.
 	 * @return UndoManager
 	 */
@@ -230,6 +277,9 @@ public class DefaultProcessor extends Thread {
 	}
 
 	/**
+	 * @return
+	 */
+	/**
 	 * Returns the taskManager.
 	 * @return TaskManager
 	 */
@@ -237,6 +287,9 @@ public class DefaultProcessor extends Thread {
 		return taskManager;
 	}
 
+	/**
+	 * @return
+	 */
 	/**
 	 * Returns the operationQueue. This method is for testing only!
 	 * @return Vector

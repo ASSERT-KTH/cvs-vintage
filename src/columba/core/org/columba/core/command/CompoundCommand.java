@@ -23,12 +23,13 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Special type of {@link Command} which is used for a set
+ * of different commands.
+ * <p>
+ * This is used by {@link FilterAction} and {@link VirtualFolder}
+ * to execute commands, which work on a set of references.
+ * 
+ * @author tstich, fdietz
  */
 public class CompoundCommand extends Command {
 	protected List commandList;

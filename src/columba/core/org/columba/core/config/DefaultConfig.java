@@ -21,6 +21,18 @@ import java.net.URL;
 
 import org.columba.core.io.DiskIO;
 
+/**
+ * You can register xml configuration files at DefaultConfig.
+ * <p>
+ * DefaultConfig is responsible for copying the template configuration
+ * file to the users configuration directory, when starting Columba
+ * for the first time or if the file is missing.
+ * <p>
+ * It additionally creates the configuration directory.
+ * 
+ *
+ * @author fdietz
+ */
 public class DefaultConfig {
 
 	/**

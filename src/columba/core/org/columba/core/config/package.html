@@ -28,7 +28,13 @@ All Rights Reserved.
 
 XML-based configuration management.
 
-All config files are registered at Config. 
+All config files are registered at {@link Config}.
+<p>
+{@link MailConfig} and {@link AddressbookConfig} are just helper classes which register
+their configuration files at {@link Config}. This can be seen in the configuration directory
+structure of the user's configuration directory. Where mail and addressbook have their
+own folders for storing preferences.
+<p> 
 
 
 </body>

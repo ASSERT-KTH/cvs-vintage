@@ -29,13 +29,14 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 
 /**
- * @author fdietz
+ * 
  *
  * This manager runs in background.
- * 
+ * <p>
  * If the user doesn't do anything with Columba, it starts some
  * cleanup workers, like saving configuration, saving header-cache, etc.
  *
+ * @author fdietz
  */
 public class BackgroundTaskManager implements ActionListener {
 
