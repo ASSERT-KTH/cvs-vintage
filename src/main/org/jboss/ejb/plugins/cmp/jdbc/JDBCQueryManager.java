@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCQueryManager
 {
@@ -101,27 +101,27 @@ public class JDBCQueryManager
       
       if(localHomeClass != null)
       {
+
+         Method method = null;
          try
          {
             // try to get the finder method on the local home interface
-            Method method = localHomeClass.getMethod(
-            "findByPrimaryKey",
-            new Class[]
-            {entity.getPrimaryKeyClass()});
-            
-            // got it add it to known finders
-            JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(method);
-            knownQueries.put(
-            method,
-            factory.createFindByPrimaryKeyQuery(q));
-            
-            log.debug("Added findByPrimaryKey query command for " +
-            "local home interface");
+            localHomeClass.getMethod(
+                  "findByPrimaryKey",
+                  new Class[] { entity.getPrimaryKeyClass() });
          } catch(NoSuchMethodException e)
          {
             throw new DeploymentException("Local home interface does " +
-            "not have a findByPrimaryKey method");
+               "not have the method findByPrimaryKey(" +
+               entity.getPrimaryKeyClass().getName() + ")");
          }
+            
+         // got it add it to known finders
+         JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(method);
+         knownQueries.put(method, factory.createFindByPrimaryKeyQuery(q));
+            
+         log.debug("Added findByPrimaryKey query command for " +
+               "local home interface");
       }
       
       //
