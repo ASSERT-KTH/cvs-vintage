@@ -1,0 +1,104 @@
+/*
+ * $Header: /tmp/cvs-vintage/tomcat/proposals/tomcat.next/Attic/Adapter.java,v 1.1 2000/01/08 03:54:03 craigmcc Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/01/08 03:54:03 $
+ *
+ * ====================================================================
+ *
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:  
+ *       "This product includes software developed by the 
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
+ *
+ * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ *    Foundation" must not be used to endorse or promote products derived
+ *    from this software without prior written permission. For written 
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache"
+ *    nor may "Apache" appear in their names without prior written
+ *    permission of the Apache Group.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ *
+ * [Additional notices, if required by prior licensing conditions]
+ *
+ */ 
+
+
+// package org.apache.tomcat;
+
+
+/**
+ * An <b>Adapter</b> is a component responsible receiving requests from,
+ * and returning responses to, a client application.  An Adapter performs
+ * the following general logic:
+ * <ul>
+ * <li>Receive a request from the client application.
+ * <li>Create (or allocate from a pool) appropriate Request and Response
+ *     instances, and populate their properties based on the contents of
+ *     the received request.
+ * <li>Identify an appropriate Container to use for processing this request.
+ *     For a stand alone Tomcat installation, this will probably be a
+ *     (singleton) Engine implementation.  For a Connector attaching Tomcat
+ *     to a web server such as Apache, this step could take advantage of
+ *     parsing already performed within the web server to identify the
+ *     Context, and perhaps even the Wrapper, to utilize in satisfying this
+ *     Request.
+ * <li>Call the <code>invoke()</code> method of the selected Container,
+ *     passing the initialized Request and Response instances as arguments.
+ * <li>Return any response created by the Container to the client, or
+ *     return an appropriate error message if an exception of any type
+ *     was thrown.
+ * <li>If utilizing a pool of Request and Response objects, recycle the pair
+ *     of instances that was just used.
+ * </ul>
+ * It is expected that the implementation details of various Adapters will
+ * vary widely, so the logic above should considered typical rather than
+ * normative.
+ *
+ * @author Craig R. McClanahan
+ * @version $Revision: 1.1 $ $Date: 2000/01/08 03:54:03 $
+ */
+
+public interface Adapter {
+
+    // No additional methods defined
+
+}
