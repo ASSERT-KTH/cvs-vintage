@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.239 2002/12/20 00:08:20 jon Exp $
+ * @version $Id: Issue.java,v 1.240 2002/12/20 00:23:49 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -530,7 +530,7 @@ public class Issue
             {
                 summary = summary.substring(0,254) + "...";
             }
-            summary = desc + ": '" + summary + "'";
+            summary = desc + " '" + summary + "'";
         }                
         
         ActivityManager
