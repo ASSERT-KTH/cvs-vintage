@@ -268,7 +268,7 @@ public class IMAPProtocol {
 		}
 
 		IMAPResponse[] r = new IMAPResponse[v.size()];
-		((Vector)v).copyInto(r);
+		((Vector) v).copyInto(r);
 
 		return r;
 
@@ -322,7 +322,7 @@ public class IMAPProtocol {
 		}
 
 		IMAPResponse[] r = new IMAPResponse[v.size()];
-		((Vector)v).copyInto(r);
+		((Vector) v).copyInto(r);
 
 		return r;
 
@@ -364,7 +364,7 @@ public class IMAPProtocol {
 
 		while (!finished) {
 			try {
-                imapResponse = getResponse(worker);
+				imapResponse = getResponse(worker);
 
 				worker.setProgressBarValue(++counter);
 			} catch (IOException ex) {
@@ -385,7 +385,7 @@ public class IMAPProtocol {
 		}
 
 		IMAPResponse[] r = new IMAPResponse[v.size()];
-		((Vector)v).copyInto(r);
+		((Vector) v).copyInto(r);
 
 		return r;
 
@@ -881,7 +881,8 @@ public class IMAPProtocol {
 		// changed BODY to BODY.PEEK
 		// this is an alternative approach that does not
 		// implicitly set the \Seen flag
-		IMAPResponse[] responses = fetch("BODY.PEEK[]", messageSet, true, worker);
+		IMAPResponse[] responses =
+			fetch("BODY.PEEK[]", messageSet, true, worker);
 
 		notifyResponseHandler(responses);
 
@@ -926,7 +927,7 @@ public class IMAPProtocol {
 
 		return responses;
 	}
-	
+
 	/**
 		 * Method removeFlags.
 		 * @param messageSet
@@ -935,32 +936,32 @@ public class IMAPProtocol {
 		 * @return IMAPResponse[]
 		 * @throws Exception
 		 */
-		public IMAPResponse[] removeFlags(
-			String messageSet,
-			String flags,
-			boolean enable)
-			throws Exception {
+	public IMAPResponse[] removeFlags(
+		String messageSet,
+		String flags,
+		boolean enable)
+		throws Exception {
 
-			IMAPResponse[] responses = null;
-			if (enable)
-				responses =
-					sendCommand(
-						"UID STORE " + messageSet + " -FLAGS " + flags,
-						null);
-			else
-				responses =
-					sendCommand(
-						"UID STORE " + messageSet + " -FLAGS " + flags,
-						null);
+		IMAPResponse[] responses = null;
+		if (enable)
+			responses =
+				sendCommand(
+					"UID STORE " + messageSet + " -FLAGS " + flags,
+					null);
+		else
+			responses =
+				sendCommand(
+					"UID STORE " + messageSet + " -FLAGS " + flags,
+					null);
 
-			notifyResponseHandler(responses);
+		notifyResponseHandler(responses);
 
-			IMAPResponse r = responses[responses.length - 1];
+		IMAPResponse r = responses[responses.length - 1];
 
-			handleResult(r);
+		handleResult(r);
 
-			return responses;
-		}
+		return responses;
+	}
 
 	/**
 	 * Method expunge.
@@ -986,10 +987,41 @@ public class IMAPProtocol {
 	 * @return IMAPResponse[]
 	 * @throws Exception
 	 */
-	public IMAPResponse[] search(String searchString) throws Exception {
+	public IMAPResponse[] search(Arguments args) throws Exception {
+
+		IMAPResponse[] responses = sendCommand("UID SEARCH ALL", args);
+		//IMAPResponse[] responses = sendCommand("UID SEARCH ", args);
+
+		notifyResponseHandler(responses);
+
+		IMAPResponse r = responses[responses.length - 1];
+
+		handleResult(r);
+
+		return responses;
+	}
+
+	public IMAPResponse[] searchWithCharsetSupport(String charset, Arguments args)
+		throws Exception {
 
 		IMAPResponse[] responses =
-			sendCommand("UID SEARCH " + searchString, null);
+			sendCommand("UID SEARCH CHARSET " + charset + " ALL", args);
+			//sendCommand("UID SEARCH CHARSET " + charset + " ", args);
+
+		notifyResponseHandler(responses);
+
+		IMAPResponse r = responses[responses.length - 1];
+
+		handleResult(r);
+
+		return responses;
+	}
+
+	public IMAPResponse[] search(String messageSet, Arguments args)
+		throws Exception {
+
+		IMAPResponse[] responses =
+			sendCommand("UID SEARCH " + messageSet, args);
 
 		notifyResponseHandler(responses);
 

@@ -46,20 +46,17 @@ public class FilterRule extends DefaultItem {
 		list = new Vector();
 	}
 
-	public void addEmptyCriteria() {
+	public FilterCriteria addEmptyCriteria() {
 		XmlElement criteria = new XmlElement("criteria");
 		criteria.addAttribute("type", "Subject");
 		criteria.addAttribute("criteria", "contains");
 		criteria.addAttribute("pattern", "pattern");
 
 		getRoot().addElement(criteria);
-		/*
-		AdapterNode n =
-			MailConfig.getFolderConfig().addEmptyFilterCriteria(getRootNode());
-		FilterCriteria criteria = new FilterCriteria(n, getDocument());
 		
-		list.add(criteria);
-		*/
+		FilterCriteria c = new FilterCriteria(criteria);
+		
+		return c;
 	}
 
 	public void add(FilterCriteria criteria) {

@@ -58,8 +58,10 @@ import org.columba.mail.imap.IMAPResponse;
  */
 public class ArgumentWriter {
 
-	DataOutputStream output;
-	IMAPProtocol protocol;
+	protected DataOutputStream output;
+	protected IMAPProtocol protocol;
+	
+	static boolean nested = false; 
 	/**
 	 * Constructor for ArgumentWriter.
 	 */
@@ -68,27 +70,65 @@ public class ArgumentWriter {
 		this.protocol = protocol;
 
 		this.output = protocol.getOutputStream();
+		
+		nested = false;
 
+	}
+	
+	/*
+	 * 
+	 * this is only used by testcases
+	 * 
+	 */
+	public ArgumentWriter( DataOutputStream output )
+	{
+		this.output = output;
+		
+		nested = false;
 	}
 
 	public void write(Arguments args) throws Exception {
+		/*
 		if (args.count() == 0)
 			return;
-
+		*/
+		
 		for (int i = 0; i < args.count(); i++) {
 			Object value = args.get(i);
-
+			
 			if (args.count() > 0)
-				output.write(' ');
+			{ 
+				if ( nested == false)
+					output.write(' ');
+				else
+				{
+					if ( i>0 )
+					output.write(' ');
+				}
+			}
 
 			if (value instanceof ByteString) {
 
 				writeString(((ByteString) value).getBytes());
 			} else if (value instanceof byte[]) {
 				writeBytes((byte[]) value);
+			} else if (value instanceof Atom) {
+				writeAtom((Atom) value);
+			} else if (value instanceof Arguments) {
+				// support for nested arguments
+				// -> this is a must have for more complex SEARCH requests
+				output.write('('); // open parans
+				nested = true;
+				write((Arguments) value);
+				output.write(')'); // close params
+				nested = false;
+				output.flush();
+				
 			}
 
 		}
+		
+		output.flush();
 
 	}
 
@@ -205,6 +245,17 @@ public class ArgumentWriter {
 		}
 
 		output.write(data);
+	}
+
+	/**
+	 * 
+	 * send US-ASCII string
+	 * 
+	 * @param s
+	 * @throws Exception
+	 */
+	protected void writeAtom(Atom atom) throws Exception {
+		output.writeBytes(atom.getString());
 	}
 
 }

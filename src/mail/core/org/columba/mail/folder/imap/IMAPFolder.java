@@ -36,8 +36,6 @@ import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.RemoteFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.RemoteHeaderCache;
-import org.columba.mail.folder.search.AbstractSearchEngine;
-import org.columba.mail.folder.search.RemoteSearchEngine;
 import org.columba.mail.imap.IMAPStore;
 import org.columba.mail.imap.parser.IMAPFlags;
 import org.columba.mail.message.AbstractMessage;
@@ -91,7 +89,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 *
 	 */
-	protected RemoteSearchEngine searchEngine;
+	//protected RemoteSearchEngine searchEngine;
 
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#FolderTreeNode(org.columba.mail.config.FolderItem)
@@ -108,13 +106,14 @@ public class IMAPFolder extends RemoteFolder {
 	 * Method getSearchEngineInstance.
 	 * @return AbstractSearchEngine
 	 */
+	/*
 	public AbstractSearchEngine getSearchEngineInstance() {
 		if (searchEngine == null)
 			searchEngine = new RemoteSearchEngine(this);
-
+	
 		return searchEngine;
 	}
-
+	*/
 	/**
 	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter, java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
@@ -123,7 +122,10 @@ public class IMAPFolder extends RemoteFolder {
 		Object[] uids,
 		WorkerStatusController worker)
 		throws Exception {
-		return getSearchEngineInstance().searchMessages(filter, uids, worker);
+
+			return getStore()
+				.search(uids, filter.getFilterRule(), getImapPath(), worker)
+				.toArray();
 	}
 
 	/**
@@ -133,7 +135,12 @@ public class IMAPFolder extends RemoteFolder {
 		Filter filter,
 		WorkerStatusController worker)
 		throws Exception {
-		return getSearchEngineInstance().searchMessages(filter, worker);
+
+		return getStore()
+			.search(filter.getFilterRule(), getImapPath(), worker)
+			.toArray();
+
+		
 	}
 
 	/**

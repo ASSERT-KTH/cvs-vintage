@@ -19,11 +19,11 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.search.AbstractSearchEngine;
-import org.columba.mail.folder.search.RemoteSearchEngine;
+import org.columba.mail.imap.SearchRequestBuilder;
 
 public abstract class RemoteFolder extends Folder {
 
-	protected RemoteSearchEngine searchEngine;
+	//protected RemoteSearchEngine searchEngine;
 
 	public RemoteFolder(FolderItem item) {
 		super(item);
@@ -38,11 +38,12 @@ public abstract class RemoteFolder extends Folder {
 
 	}
 
+	/*
 	public AbstractSearchEngine getSearchEngine() {
 		if (searchEngine == null)
 			searchEngine = new RemoteSearchEngine(this);
 
 		return searchEngine;
 	}
-
+	*/
 }

@@ -31,6 +31,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.ImapItem;
+import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.folder.headercache.CachedHeaderfieldOwner;
 import org.columba.mail.folder.imap.IMAPRootFolder;
@@ -46,6 +47,7 @@ import org.columba.mail.imap.parser.MimePartParser;
 import org.columba.mail.imap.parser.MimePartTreeParser;
 import org.columba.mail.imap.parser.SearchResultParser;
 import org.columba.mail.imap.parser.UIDParser;
+import org.columba.mail.imap.protocol.Arguments;
 import org.columba.mail.imap.protocol.BadCommandException;
 import org.columba.mail.imap.protocol.CommandFailedException;
 import org.columba.mail.imap.protocol.DisconnectedException;
@@ -1169,7 +1171,7 @@ public class IMAPStore {
 
 	public LinkedList search(
 		Object[] uids,
-		String searchString,
+		FilterRule filterRule,
 		String path,
 		WorkerStatusController worker)
 		throws Exception {
@@ -1185,8 +1187,44 @@ public class IMAPStore {
 
 			MessageSet set = new MessageSet(uids);
 
-			IMAPResponse[] responses =
-				imap.search(set.getString() + " " + searchString);
+			SearchRequestBuilder b = new SearchRequestBuilder();
+			b.setCharset("UTF-8");
+			List list = b.generateSearchArguments(filterRule);
+			Arguments searchArguments =
+				b.generateSearchArguments(filterRule, list);
+
+			IMAPResponse[] responses = null;
+
+			// try to use UTF-8 first
+			// -> fall back to system default charset
+			try {
+
+				responses =
+					imap.searchWithCharsetSupport("UTF-8", searchArguments);
+			} catch (BadCommandException ex) {
+				// this probably means that UTF-8 isn't support by server
+				// -> lets try the system  default charset instead
+
+				try {
+					String charset =
+						(String) System.getProperty("file.encoding");
+					b.setCharset(charset);
+					list = b.generateSearchArguments(filterRule);
+					searchArguments =
+						b.generateSearchArguments(filterRule, list);
+					responses =
+						imap.searchWithCharsetSupport(charset, searchArguments);
+				} catch (BadCommandException ex2) {
+					// this is the last possible fall back
+
+					String charset = "US-ASCII";
+					b.setCharset(charset);
+					list = b.generateSearchArguments(filterRule);
+					searchArguments =
+						b.generateSearchArguments(filterRule, list);
+					responses = imap.search(searchArguments);
+				}
+			}
 
 			result = SearchResultParser.parse(responses);
 
@@ -1200,7 +1238,7 @@ public class IMAPStore {
 			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
-			search(uids, searchString, path, worker);
+			//search(uids, searchString, path, worker);
 
 		} finally {
 
@@ -1210,7 +1248,7 @@ public class IMAPStore {
 	}
 
 	public LinkedList search(
-		String searchString,
+		FilterRule filterRule,
 		String path,
 		WorkerStatusController worker)
 		throws Exception {
@@ -1224,28 +1262,42 @@ public class IMAPStore {
 
 			//MessageSet set = new MessageSet(uids);
 			printStatusMessage("Searching in " + path + " ...", worker);
+			SearchRequestBuilder b = new SearchRequestBuilder();
+			b.setCharset("UTF-8");
+			List list = b.generateSearchArguments(filterRule);
+			Arguments searchArguments =
+				b.generateSearchArguments(filterRule, list);
 
 			IMAPResponse[] responses = null;
 
-			if (isAscii(searchString))
-				responses = imap.search("ALL " + searchString);
-			else {
-				// try to use UTF-8 first
-				// -> fall back to system default charset
+			// try to use UTF-8 first
+			// -> fall back to system default charset
+			try {
+
+				responses =
+					imap.searchWithCharsetSupport("UTF-8", searchArguments);
+			} catch (BadCommandException ex) {
+				// this probably means that UTF-8 isn't support by server
+				// -> lets try the system  default charset instead
+
 				try {
-
-					responses =
-						imap.search("ALL CHARSET UTF-8 " + searchString);
-				} catch (BadCommandException ex) {
-					// this probably means that UTF-8 isn't support by server
-					// -> lets try the system  default charset instead
-
 					String charset =
 						(String) System.getProperty("file.encoding");
+					b.setCharset(charset);
+					list = b.generateSearchArguments(filterRule);
+					searchArguments =
+						b.generateSearchArguments(filterRule, list);
 					responses =
-						imap.search(
-							"ALL CHARSET " + charset + " " + searchString);
+						imap.searchWithCharsetSupport(charset, searchArguments);
+				} catch (BadCommandException ex2) {
+					// this is the last possible fall back
 
+					String charset = "US-ASCII";
+					b.setCharset(charset);
+					list = b.generateSearchArguments(filterRule);
+					searchArguments =
+						b.generateSearchArguments(filterRule, list);
+					responses = imap.search(searchArguments);
 				}
 			}
 
@@ -1259,7 +1311,7 @@ public class IMAPStore {
 			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
-			search(searchString, path, worker);
+			//search(searchString, path, worker);
 
 		} finally {
 

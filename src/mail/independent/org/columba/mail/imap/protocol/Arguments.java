@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.imap.protocol;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Vector;
 
@@ -76,19 +77,32 @@ public class Arguments {
 	}
 
 	public void add(String argument) {
-		v.add( new ByteString(argument) );
+		v.add(new ByteString(argument));
 	}
 
 	public void add(byte[] argument) {
 		v.add(argument);
 	}
 
+	public void add(Atom argument) {
+		v.add(argument);
+	}
+
+	public void add(String argument, String charset)
+		throws UnsupportedEncodingException {
+		if (charset == null)
+			add(argument);
+		else
+			v.add(new ByteString(argument.getBytes(charset)));
+	}
+	
+	public void add( Arguments args )
+	{
+		v.add( args );
+	}
+
 	public Object get(int i) {
 		return v.get(i);
 	}
-
-	
-
-	
 
 }

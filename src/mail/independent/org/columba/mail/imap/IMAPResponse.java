@@ -229,6 +229,8 @@ public class IMAPResponse {
 		}
 
 		endOfAtom = skipSpaces(source, index);
+		if ( endOfAtom < index ) return;
+		
 		nextAtom = source.substring(index, endOfAtom);
 		index = endOfAtom;
 
