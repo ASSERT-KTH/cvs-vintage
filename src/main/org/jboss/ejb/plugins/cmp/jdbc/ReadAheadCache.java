@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class ReadAheadCache {
    /**
@@ -81,7 +81,7 @@ public class ReadAheadCache {
          List results,
          JDBCReadAheadMetaData readahead) {
 
-      if(results.isEmpty()) {
+      if(results.size() < 2) {
          // nothing to see here... move along
          return;
       }
