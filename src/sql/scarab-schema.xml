@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.57 2001/10/16 00:47:32 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.58 2001/10/16 03:44:00 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -1165,7 +1165,7 @@
     <!--
         Type.
     -->
-    <column name="QUERY_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
+    <column name="SCOPE_ID" javaName="ScopeId" required="true" type="INTEGER"></column>
     <!--
         Module.
     -->
@@ -1183,8 +1183,8 @@
     <foreign-key foreignTable="SCARAB_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_QUERY_TYPE">
-        <reference local="QUERY_TYPE_ID" foreign="QUERY_TYPE_ID"/>
+    <foreign-key foreignTable="SCARAB_SCOPE">
+        <reference local="SCOPE_ID" foreign="SCOPE_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
@@ -1193,22 +1193,6 @@
         <reference local="DEFAULT_SUBSCRIPTION_FREQUENCY_ID" foreign="FREQUENCY_ID"/>
     </foreign-key>
 
-</table>
-
-<!--
-    Possible types of queries.
-    Examples: global, personal account level
--->
-<table name="SCARAB_QUERY_TYPE" idMethod="none" 
-    javaName="QueryType">
-    <!--
-        Unique identifier.
-    -->
-    <column name="QUERY_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
-    <!--
-        Name.
-    -->
-    <column name="QUERY_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
 </table>
 
 <!--
