@@ -8,11 +8,14 @@ package org.jboss.system;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.management.ObjectName;
 import javax.management.MBeanServer;
 import javax.management.MBeanRegistration;
 import javax.management.RuntimeMBeanException;
+import javax.management.RuntimeOperationsException;
 
 import org.apache.log4j.Category;
 
@@ -22,7 +25,7 @@ import org.apache.log4j.Category;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class Shutdown
    implements MBeanRegistration, ShutdownMBean
@@ -130,9 +133,28 @@ public class Shutdown
          // Destroy services
          server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
                        "destroy", new Object[0] , new String[0]);
+
+         // unload all MBeans except one called JMImplementation:type=MBeanServerDelegate
+         ObjectName delegateName = null;
+         Set allMBeans = server.queryNames(null,null);
+         for(Iterator i = allMBeans.iterator();i.hasNext();)	{
+			ObjectName name = (ObjectName) i.next();
+            if(name.getCanonicalName().equals("JMImplementation:type=MBeanServerDelegate") == false )	{
+				log.info("Unloading MBean : " + name.getCanonicalName());
+            	server.unregisterMBean(name);
+            } else {
+				delegateName = name;
+            }
+         }
+		 // this will throw an RuntimeOperationsException
+         //log.info("Unloading MBean : " + delegateName.getCanonicalName());
+         //server.unregisterMBean(delegateName);
       }
       catch (RuntimeMBeanException rmbe) {
          rmbe.getTargetException().printStackTrace();
+      }
+      catch (RuntimeOperationsException roe) {
+         roe.getTargetException().printStackTrace();
       }
       catch (Exception e) {
          log.error("failed to destroy services", e);
