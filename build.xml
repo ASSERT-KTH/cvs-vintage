@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.9 2001/08/26 07:00:31 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.10 2001/08/26 21:54:26 user57 Exp $ -->
 
 <project default="main">
 
@@ -622,16 +622,6 @@
          <include name="org/jboss/deployment/DeploymentException*"/>
       </fileset>
     </jar>
-
-    <!-- Build jboss-castorjdo.jar -->
-    <!-- This should move to an plugin module
-    <jar jarfile="${build.jars}/jboss-castorjdo.jar">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jdo/castor/**"/>
-      </fileset>
-    </jar>
-    -->
-
   </target>
 
 
