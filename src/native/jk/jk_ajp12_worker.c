@@ -57,7 +57,7 @@
  * Description: ajpv1.2 worker, used to call local or remote jserv hosts   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:    jserv_ajpv12.c from Jserv                                  *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include "jk_ajp12_worker.h"
@@ -388,26 +388,44 @@ static int ajpv12_handle_request(ajp12_endpoint_t *p,
            ajpv12_sendstring(p, ""));              /* JSERV ajpv12 compatibility */
 
     if(!ret) {
-        jk_log(l, JK_LOG_ERROR, "In ajpv12_handle_request, failed to send the ajp12 start sequence\n");
+        jk_log(l, JK_LOG_ERROR, 
+              "In ajpv12_handle_request, failed to send the ajp12 start sequence\n");
         return JK_FALSE;
     }
 
-    jk_log(l, JK_LOG_DEBUG, "ajpv12_handle_request, sending the headers\n");
+    if(s->num_attributes > 0) {
+        unsigned  i;
+        jk_log(l, JK_LOG_DEBUG, 
+               "ajpv12_handle_request, sending the environment variables\n");
+    
+        for(i = 0 ; i < s->num_attributes ; i++) {
+            ret = (ajpv12_mark(p, 5)                            &&
+	    	       ajpv12_sendstring(p, s->attributes_names[i]) &&
+		           ajpv12_sendstring(p, s->attributes_values[i]));
+            if(!ret) {
+                jk_log(l, JK_LOG_ERROR, 
+                       "In ajpv12_handle_request, failed to send environment\n");
+                return JK_FALSE;
+            }
+        }
+    }
+
+    jk_log(l, JK_LOG_DEBUG, 
+           "ajpv12_handle_request, sending the headers\n");
 
     /* Send the request headers */
     if(s->num_headers) {
         unsigned  i;
         for(i = 0 ; i < s->num_headers ; ++i) {
-
             ret = (ajpv12_mark(p, 3) &&
                    ajpv12_sendstring(p, s->headers_names[i]) &&
                    ajpv12_sendstring(p, s->headers_values[i]) );
 
             if(!ret) {
-                jk_log(l, JK_LOG_ERROR, "In ajpv12_handle_request, failed to send headers\n");
+                jk_log(l, JK_LOG_ERROR, 
+                       "In ajpv12_handle_request, failed to send headers\n");
                 return JK_FALSE;
             }
-
         }
     }
 

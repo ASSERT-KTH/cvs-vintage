@@ -58,7 +58,7 @@
  *              These are the web server (ws) the worker and the connection*
  *              JVM connection point                                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #ifndef JK_SERVICE_H
@@ -130,6 +130,20 @@ struct jk_ws_service {
     char    **headers_values;   /* Values of the request headers */
     unsigned num_headers;       /* Number of request headers     */
 
+
+    /*
+     * Request attributes. 
+     *
+     * These attributes that were extracted from the web server and are 
+     * sent to Tomcat.
+     *
+     * The developer should be able to read them from the ServletRequest
+     * attributes. Tomcat is required to append org.apache.tomcat. to 
+     * these attrinbute names.
+     */
+    char    **attributes_names;    /* Names of the request attributes  */
+    char    **attributes_values;   /* Values of the request attributes */
+    unsigned num_attributes;       /* Number of request attributes     */
 
     /*
      * The jvm route is in use when the adapter load balance among

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Utility functions (mainly configuration)                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.5 $                                               *
+ * Version:     $Revision: 1.6 $                                               *
  ***************************************************************************/
 
 
@@ -671,4 +671,34 @@ void jk_append_libpath(jk_pool_t *p,
     if(env) {
         putenv(env);
     }
+}
+
+void jk_init_ws_service(jk_ws_service_t *s)
+{
+    s->ws_private           = NULL;
+    s->pool                 = NULL;
+    s->method               = NULL;
+    s->protocol             = NULL;
+    s->req_uri              = NULL;
+    s->remote_addr          = NULL;
+    s->remote_host          = NULL;
+    s->remote_user          = NULL;
+    s->auth_type            = NULL;
+    s->query_string         = NULL;
+    s->server_name          = NULL;
+    s->server_port          = 80;
+    s->server_software      = NULL;
+    s->content_length       = 0;
+    s->is_ssl               = JK_FALSE;
+    s->ssl_cert             = NULL;
+    s->ssl_cert_len         = 0;
+    s->ssl_cipher           = NULL;
+    s->ssl_session          = NULL;
+    s->headers_names        = NULL;
+    s->headers_values       = NULL;
+    s->num_headers          = 0;
+    s->attributes_names     = NULL;
+    s->attributes_values    = NULL;
+    s->num_attributes       = 0;
+    s->jvm_route            = NULL;
 }

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Various utility functions                                  *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.4 $                                               *
+ * Version:     $Revision: 1.5 $                                               *
  ***************************************************************************/
 #ifndef _JK_UTIL_H
 #define _JK_UTIL_H
@@ -65,7 +65,7 @@
 #include "jk_map.h"
 #include "jk_pool.h"
 #include "jk_logger.h"
-
+#include "jk_service.h"
 
 int jk_parse_log_level(const char *level);
 
@@ -172,6 +172,8 @@ char **jk_parse_sysprops(jk_pool_t *p,
 
 void jk_append_libpath(jk_pool_t *p, 
                        const char *libpath);
+
+void jk_init_ws_service(jk_ws_service_t *s);
 
 #ifdef __cplusplus
 extern "C" {
