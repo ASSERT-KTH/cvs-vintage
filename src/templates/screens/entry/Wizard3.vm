@@ -120,7 +120,7 @@
            <p>Click Browse and select a file. If you do not see a Browse button, your browser does not support file uploads. (Windows users, set Files of Type: to be All Files (*.*) to get a complete file listing.) The File field cannot be used to rename files.</p>
 
 <!-- why is this here? it should do the exact same thing as the submit button.
-           <p><input type="submit" value="add attachment" class="button" /></p>
+           <p><input type="submit" value="add attachment" /></p>
 -->
           </td>
          </tr>
@@ -140,7 +140,7 @@
       </p>
 
       <div class="grouper">
-       <p><input type="submit" name="eventSubmit_doEnterissue" value="Submit Issue" class="button" />&#160;<input type="reset" value="reset" class="button" /></p>
+       <p><input type="submit" name="eventSubmit_doEnterissue" value="Submit Issue" />&#160;<input type="reset" value="reset" /></p>
       </div>
 
 $intake.declareGroups()

@@ -1,3 +1,4 @@
+<div id="wizard1" class="app">
 $page.setTitle("Enter New Issue")
 
 #set ( $action = $link.setPage("entry,Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm") )
@@ -6,43 +7,38 @@ $page.setTitle("Enter New Issue")
 #set ($issue = $user.ReportingIssue)
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 
-<h1>Enter Issue</h1>
-<div class="grouper">
-<form name="ReportForm" method="GET" action="$action">
+<h2>$page.getTitle</h2>
+<form name="ReportForm" method="get" action="$action">
 
-<div class="datatitle">
-    <table width="100%" cellpadding="3" cellspacing="2" border="1">
-        <tr>
-            <td>Input Your Issue:</td>
-        </tr>
-    </table>
-</div>
+<p class="functnbar">
+<input type="submit" name="eventSubmit_doSubmitattributes" value="Next ->" />&#160;<input type="reset" value="reset" /></p>
 
-<div class="listtable">
-    <table width="100%" cellpadding="3" cellspacing="2" border="1">
+<h3>Input your issue</h3>
+
+<div class="axial">
+    <table cellpadding="3" cellspacing="2" border="1">
 #* 
 <!-- Summary is not required here, but is in the ReportIssue Action for now.
      Eventually, that should be optional as well. We can just not do the dedup
      search if Summary is not a present attribute for this module.
      
         <tr>
-            <td width="120" class="a">
+            <th>
             #set ( $attrValue = $attrValues.get("SUMMARY") )
             #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
             #attrValueErrorMsg( $attrValue "Value" )<br/>
-            <strong>Summary:</strong></td>
-            <td class="b">
-<textarea name="$attrInput.Value.Key" rows="4" cols="40" class="text">$!attrInput.Value</textarea><br/>
-                A short description of the issue.
+            Summary:</th>
+            <td>
+<textarea name="$attrInput.Value.Key" rows="4" cols="40">$!attrInput.Value</textarea>
+                <p>A short description of the issue.</p>
             </td>
         </tr> -->
 *#
-
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
   #if ($attVal.isDedupeAttribute())
     <tr>
-        <td width="120" class="a">
+        <th>
      #if ( $attVal.Attribute.AttributeType.ValidationKey )
         #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
      #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
@@ -50,51 +46,27 @@ $page.setTitle("Enter New Issue")
      #elseif ($attVal.Attribute.AttributeType.Name == "string" )
         #set ( $field = "Value" )
      #end
-
      #if ( $attVal.isRequired() )
-        <b>*</b>
+        *
      #end
-     
-     <strong>
      $attVal.Attribute.Name:
-     </strong>
-     
-        #attrValueErrorMsg ( $attVal $field )
-
-    </td>
-    <td class="b">
+     #attrValueErrorMsg ( $attVal $field )
+    </th>
+    <td>
     #if ( $attVal.Attribute.AttributeType.Name == "string" )
         #attrValueText ( $attVal "50" )
     #else
         #attrValueLeafSelect ($attVal $field "")
     #end
     </td>
-    </tr>
+   </tr>
   #end
 #end
     </table>
 </div>
 
-<table width="100%" cellpadding="3" cellspacing="2" border="0">
-    <tr>
-    <td>
-        <input type="submit" 
-            name="eventSubmit_doSubmitattributes" value="Next ->" class="button"/>
-            &#160;<input type="reset" value="reset" class="button"/>
-    </td>
-    </tr>
-</table>
-
-
+<p class="functnbar">
+<input type="submit" name="eventSubmit_doSubmitattributes" value="Next ->" />&#160;<input type="reset" value="reset" /></p>
 $intake.declareGroups()
 </form>
 </div>
-
-
-
-
-
-
-
-
-

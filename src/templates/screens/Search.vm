@@ -7,7 +7,7 @@
 
        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
 
-        <form action="$link.setPage("Search.vm")" method="GET">
+        <form action="$link.setPage("Search.vm")" method="get">
         <input type="hidden" name="nextTemplate" value="IssueList.vm" />
         <input type="hidden" name="action" value="Search" />
 
@@ -15,7 +15,7 @@
         <input type="submit" name="eventSubmit_doSearch" 
             value="Search" />&#160;
         <input type="submit" name="eventSubmit_doCancel" 
-            value="cancel" class="button" />
+            value="cancel" />
        </p>
 
 #set ( $search = $scarabR.Search )
@@ -124,7 +124,7 @@ issues per page:
         <input type="submit" name="eventSubmit_doSearch" 
             value="Search" />&#160;
         <input type="submit" name="eventSubmit_doCancel" 
-            value="cancel" class="button" />
+            value="cancel" />
        </p>
 
         $intake.declareGroups()

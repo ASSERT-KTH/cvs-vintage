@@ -5,7 +5,7 @@ $page.setTitle("Attribute Editor")
 <p><b>Editing Attribute</b>: <i>$attribute.Name</i></p>
 <p>Modify Attribute Options<br>
 </p>
-<form action="$link.setPage("admin,AttributeEditOptions.vm")" method="GET">
+<form action="$link.setPage("admin,AttributeEditOptions.vm")" method="get">
     <input type="hidden" name="action" value="admin.ModifyAttributes">
     <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm">
     <input type="hidden" name="$intake.Attribute.Default.Id.Key" 

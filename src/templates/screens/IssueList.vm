@@ -52,7 +52,7 @@
 	<div class="functnbar">
 		<table width="100%" cellpadding="3" cellspacing="2" border="1">
 		<tr>
-		<td><input type="submit" value="bulk edit selected issues" class="button" />&nbsp;<input type="submit" value="bulk reassign" class="button" /></td>
+		<td><input type="submit" value="bulk edit selected issues" />&nbsp;<input type="submit" value="bulk reassign" /></td>
 		</tr>
 		</table>
 	</div>

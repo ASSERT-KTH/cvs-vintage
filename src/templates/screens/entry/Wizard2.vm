@@ -1,9 +1,10 @@
+<div id="wizard2" class="app">
 #set ( $action = $link.setPage("entry,Wizard2.vm").setAction("ReportIssue").addPathInfo($data.Parameters).addPathInfo("nextTemplate", "entry,Wizard3.vm") )
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 #set ($currentIssue = $user.ReportingIssue)
 
-<form method="GET" name="Report2Form" action="$action">
+<form method="get" name="Report2Form" action="$action">
 
 
       <h1>Identified as Duplicate (2.1.1)</h1>
@@ -139,7 +140,7 @@
       </div>
 
       <p><input type="submit"  name="eventSubmit_doAddvote" 
-             value="add vote to selected" class="button" /></p>
+             value="add vote to selected" /></p>
 
 
 #set ( $atch = $scarabR.Attachment )
@@ -155,7 +156,7 @@
               cols="40" class="text">$!intakeAttachment.DataAsString</textarea>
 
           <p><input type="submit" name="eventSubmit_doAddnote" 
-                 value="submit note" class="button" /></p>
+                 value="submit note" /></p>
          </td>
         </tr>
        </table>
@@ -165,10 +166,10 @@
        <p>
         The issues above do not match my issue:<br />
         <input type="submit" name="eventSubmit_doGotowizard3"
-            value="continue issue entry" class="button" />
+            value="continue issue entry" />
         &#160;
         <input type="submit" name="eventSubmit_doCancel"
-              value="cancel" class="button" />
+              value="cancel" />
        </p>
       </div>
 
@@ -370,3 +371,4 @@ $intake.declareGroups()
 </form>
 
 
+</div>

@@ -17,7 +17,7 @@
       <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
             
             
-<p class="functnbar"><input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" class="button"/>&nbsp;<input type="submit" value="reset to default"  name="eventSubmit_doCancel" class="button" /></p>
+<p class="functnbar"><input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel"/>&nbsp;<input type="submit" value="reset to default"  name="eventSubmit_doCancel" /></p>
       
       <h3>attributes</h3>
 
@@ -60,7 +60,7 @@
 </p>
 
             
-<p class="functnbar"><input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" class="button"/>&nbsp;<input type="submit" value="reset to default"  name="eventSubmit_doCancel" class="button" /></p>
+<p class="functnbar"><input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel"/>&nbsp;<input type="submit" value="reset to default"  name="eventSubmit_doCancel" /></p>
         
      </div></td>
     </tr>

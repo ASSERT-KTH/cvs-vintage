@@ -19,7 +19,7 @@
     </p>
 #end
 
-   <form action="$actionLink" method="GET">
+   <form action="$actionLink" method="get">
 #set ( $issueGroup = $intake.Issue.Default )
     <input type="hidden" name="$issueGroup.Id.Key" value="$issueGroup.Id" />
 
@@ -78,10 +78,10 @@
 
      <tr>
       <td><input type="submit" name="eventSubmit_doAdd" 
-                 value="Add" class="button" /></td>
+                 value="Add" /></td>
 
       <td><input type="submit" name="eventSubmit_doRemove" 
-                 value="Remove" class="button" /></td>
+                 value="Remove" /></td>
      </tr>
     </table>
 
@@ -98,9 +98,9 @@
 
     <p>
         <input type="submit" name="eventSubmit_doSubmit" 
-                 value="submit" class="button" />
+                 value="submit" />
         <input type="submit" name="eventSubmit_doCancel" 
-                 value="cancel" class="button" />
+                 value="cancel" />
         <input type="reset" value="reset" />
     </p>
 

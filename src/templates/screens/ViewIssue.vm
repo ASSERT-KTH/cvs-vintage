@@ -84,7 +84,7 @@
            </td>
         </tr>
         <tr>
-           <td colspan="2"><input type="submit" value="edit attributes" name="eventSubmit_doSubmitattributes" class="button" /></td>
+           <td colspan="2"><input type="submit" value="edit attributes" name="eventSubmit_doSubmitattributes" /></td>
          </tr>
         </table>
        </div>
@@ -136,7 +136,7 @@
 
         </table>
        </div>
-           <p><input type="submit" value="add url" name="eventSubmit_doSubmiturl"  class="button" />&#160;<input type="submit" value="delete url"  name="eventSubmit_doDeleteurl" class="button" /></p>
+           <p><input type="submit" value="add url" name="eventSubmit_doSubmiturl"  />&#160;<input type="submit" value="delete url"  name="eventSubmit_doDeleteurl" /></p>
 
 
 ## ADD DEPENDENCY
@@ -166,7 +166,7 @@
     </td>
  </tr>
 </table>
-       <p><input type="submit" value="add dependency"  name="eventSubmit_doAdddependency" class="button" />
+       <p><input type="submit" value="add dependency"  name="eventSubmit_doAdddependency" />
 </div>
 
 
@@ -219,7 +219,7 @@
 
         </table>
 
-       <p><input type="submit"  name="eventSubmit_doUpdateparent" value="update parent issue" class="button" />
+       <p><input type="submit"  name="eventSubmit_doUpdateparent" value="update parent issue" />
        </div>
       </div>
 #end
@@ -275,7 +275,7 @@
 
         </table>
 
-       <p><input type="submit" value="update child issue"  name="eventSubmit_doUpdatechild" class="button" />
+       <p><input type="submit" value="update child issue"  name="eventSubmit_doUpdatechild" />
        </div>
       </div>
 #end
@@ -307,7 +307,7 @@
         #fieldErrorMsg($commentGroup.DataAsString "<br>")
            <textarea rows="2" cols="35" class="text" name ="$commentGroup.DataAsString.Key"></textarea>
            <input type="hidden" name="$commentGroup.Name.Key" value="comment">
-           <p><input type="submit" value="add comment" name="eventSubmit_doSubmitcomment"  class="button" /></p>
+           <p><input type="submit" value="add comment" name="eventSubmit_doSubmitcomment"  /></p>
           </td>
          </tr>
         </table>
@@ -356,7 +356,7 @@
 
       <p>view complete history</p>
 
-      <p><input type="submit" value="submit append" class="button" />&#160;<input type="submit" value="cancel" class="button" />&#160;<input type="reset" value="reset" class="button" /></p>
+      <p><input type="submit" value="submit append" />&#160;<input type="submit" value="cancel" />&#160;<input type="reset" value="reset" /></p>
 
       <div class="grouper">
         <div class="functnbar">

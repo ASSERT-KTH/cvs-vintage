@@ -12,7 +12,7 @@ $page.setTitle("Attribute Editor")
 Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
 </p>
 
-  <form action="$link.setPage("admin,AttributeEdit.vm")" method="GET">
+  <form action="$link.setPage("admin,AttributeEdit.vm")" method="get">
     <input type="hidden" name="action" value="admin.ModifyAttributes"/>
     <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm"/>
     <input type="hidden" name="$attgroup.Id.Key" value="$attgroup.Id.Value"/>
@@ -142,7 +142,7 @@ $comma$option.Name
 #end
 
   <p>
-  <form action="$link.setPage("admin,AttributeEdit.vm")" method="GET">
+  <form action="$link.setPage("admin,AttributeEdit.vm")" method="get">
     <input type="hidden" name="action" value="admin.ModifyAttributes">
     <input type="hidden" name="nextTemplate" 
             value="admin,AttributeEditOptions.vm">
@@ -159,7 +159,7 @@ In order to modify this attribute, please choose from the options below:
 </p>
 
   <p>
-    <form action="$link.setPage("admin,AttributeEdit.vm")" method="GET">
+    <form action="$link.setPage("admin,AttributeEdit.vm")" method="get">
         <input type="hidden" name="action" value="admin.ModifyAttributes">
 
         #set ( $attgroup = $intake.Attribute.Default )
@@ -194,7 +194,7 @@ In order to modify this attribute, please choose from the options below:
 </p>
 
 <p>
-  <form action="$link.setPage("admin,AttributeEdit.vm")" method="GET">
+  <form action="$link.setPage("admin,AttributeEdit.vm")" method="get">
     <input type="hidden" name="action" value="admin.ModifyAttributes">
     <input type="hidden" name="nextTemplate" value="admin,AttributeShow.vm">
     <input type="hidden" name="$intake.Attribute.Default.Id.Key" 
