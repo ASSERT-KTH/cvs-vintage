@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.49 2001/11/08 20:35:33 elicia Exp $
+ * @version $Id: ScarabUser.java,v 1.50 2001/12/07 23:21:04 dr Exp $
  */
 public interface ScarabUser extends User
 {
@@ -195,7 +195,8 @@ public interface ScarabUser extends User
     public void setQueryKey(String key) throws Exception;
 
     /**
-     * Determine if a user has a permission within a module.
+     * Determine if a user has a permission, either within the specified
+     * module or within the 'Global' module.
      *
      * @param permission a <code>String</code> permission value, which should
      * be a constant in this interface.
