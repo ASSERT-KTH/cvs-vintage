@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.55 2002/01/08 15:36:04 richard Exp $
+    @version $Id: ModifyIssue.java,v 1.56 2002/01/08 20:11:49 richard Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -284,74 +284,6 @@ public class ModifyIssue extends RequireLoginFirstAction
         submitAttachment (data, context, "file");
     }
     
-    /** View an attachment file */
-    public void doViewfile(RunData data, TemplateContext context)
-        throws Exception
-    {
-        ParameterParser params = data.getParameters();
-        Object[] keys = params.getKeys();
-        String key;
-        String attachmentId;
-        for (int i =0; i<keys.length; i++)
-        {
-            key = keys[i].toString();
-            if (key.startsWith("file"))
-            {
-                attachmentId = key.substring(5);
-                Attachment attachment = (Attachment) AttachmentPeer
-                    .retrieveByPK(new NumberKey(attachmentId));
-                File file = new File(attachment.getFilePath());
-                byte[] fileContent = new byte[(int)file.length()];
-                new FileInputStream(file).read(fileContent);
-                if (attachment.getMimeType().equals("text/plain"))
-                {
-                    attachment.setDataAsString(new String(fileContent));
-                }
-                attachment.setData(fileContent);
-                getScarabRequestTool(context).setAttachment(attachment);
-            }
-        }
-        String template = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue");
-        setTarget(data, template);            
-        
-    }
-    
-
-    
-    /** View an attachment file */
-    public void doViewattachment(RunData data, TemplateContext context)
-        throws Exception
-    {
-        ParameterParser params = data.getParameters();
-        Object[] keys = params.getKeys();
-        String key;
-        String attachmentIdKey;
-        
-        for (int i =0; i<keys.length; i++)
-        {
-            key = keys[i].toString();
-            if (key.startsWith("view_file"))
-            {
-                attachmentIdKey = key.substring(10);
-                String attachmentId = params.getString(key);
-                Attachment attachment = (Attachment) AttachmentPeer
-                    .retrieveByPK(new NumberKey(attachmentId));
-                File file = new File(attachment.getFilePath());
-                byte[] fileContent = new byte[(int)file.length()];
-                new FileInputStream(file).read(fileContent);
-                if (attachment.getMimeType().equals("text/plain"))
-                {
-                    attachment.setDataAsString(new String(fileContent));
-                }
-                getScarabRequestTool(context).setAttachment(attachment);
-            }
-        }
-        String template = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue");
-        setTarget(data, template);            
-        
-    }
 
     /**
     *  Adds an attachment.
@@ -546,6 +478,54 @@ public class ModifyIssue extends RequireLoginFirstAction
             .getString(ScarabConstants.NEXT_TEMPLATE);
         setTarget(data, template);            
     }
+    
+        /**
+    *  Deletes an url.
+    */
+   public void doDeletefile (RunData data, TemplateContext context)
+        throws Exception
+    {      
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String attachmentId;
+        ScarabUser user = (ScarabUser)data.getUser();
+        String id = data.getParameters().getString("id");
+        Issue issue = Issue.getIssueById(id);
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("file_delete_"))
+            {
+               attachmentId = key.substring(12);
+               Attachment attachment = (Attachment) AttachmentPeer
+                                     .retrieveByPK(new NumberKey(attachmentId));
+               attachment.setDeleted(true);
+               attachment.save();
+
+               // Save transaction record
+               Transaction transaction = new Transaction();
+               transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                                  user, null);
+
+               // Save activity record
+               Activity activity = new Activity();
+
+               // Generate description of modification
+               StringBuffer descBuf = new StringBuffer("deleted File '");
+               descBuf.append(attachment.getName()).append("'");
+               String desc = descBuf.toString();
+               activity.create(issue, null, desc, transaction, "", "");
+               issue.save();
+               transaction.sendEmail(new ContextAdapter(context), issue);
+            } 
+        }
+        String template = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTarget(data, template);            
+    }
+
 
     /**
     *  Modifies the dependency type between the current issue
