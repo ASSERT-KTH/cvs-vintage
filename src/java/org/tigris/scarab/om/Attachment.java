@@ -82,7 +82,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.58 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: Attachment.java,v 1.59 2003/04/28 16:54:58 jmcnally Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -454,8 +454,9 @@ public class Attachment
         copyObj.setDeleted(getDeleted());
         return copyObj;
     }
+
     /**
-     * Returns users assigned to all user attributes.
+     * Retrieves the Activity in which this attachment was created.
      */
     public Activity getActivity() throws Exception
     {

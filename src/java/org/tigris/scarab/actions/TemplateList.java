@@ -87,7 +87,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.46 2003/03/28 02:08:17 jon Exp $
+ * @version $Id: TemplateList.java,v 1.47 2003/04/28 16:54:58 jmcnally Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -125,21 +125,24 @@ public class TemplateList extends RequireLoginFirstAction
             }
             else
             {
-                // Save activitySet record
-                ActivitySet activitySet = ActivitySetManager
-                    .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
-                activitySet.save();
-
                 Iterator iter = avMap.iterator();
-                while (iter.hasNext()) 
+                if (iter.hasNext()) 
                 {
-                    aval = (AttributeValue)avMap.get(iter.next());
-                    group = intake.get("AttributeValue", aval.getQueryKey(),false);
-                    if (group != null)
+                    // Save activitySet record
+                    ActivitySet activitySet = ActivitySetManager
+                        .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
+                    activitySet.save();
+
+                    while (iter.hasNext()) 
                     {
-                        aval.startActivitySet(activitySet);
-                        group.setProperties(aval);
-                    }                
+                        aval = (AttributeValue)avMap.get(iter.next());
+                        group = intake.get("AttributeValue", aval.getQueryKey(),false);
+                        if (group != null)
+                        {
+                            aval.startActivitySet(activitySet);
+                            group.setProperties(aval);
+                        }                
+                    }
                 }
 
                 // get issue type id = the child type of the current issue type

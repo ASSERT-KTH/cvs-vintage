@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.293 2003/04/23 00:15:22 dlr Exp $
+ * @version $Id: Issue.java,v 1.294 2003/04/28 16:54:58 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2244,6 +2244,7 @@ public class Issue
         {
             newIssue = this;
             newIssue.setIssueType(newIssueType);
+            // FIXME! the logic below will never be true, correct?
             // if moved to new module, delete original issue
             if (!newModule.getModuleId().equals(getModule().getModuleId()))
             {
@@ -2258,11 +2259,6 @@ public class Issue
 
         if (newIssue != this) 
         {
-            // Save activitySet record
-            ActivitySet activitySet = ActivitySetManager
-                .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, getCreatedBy());
-            activitySet.save();
-        
             // If moving issue to new module, delete original
             if (action.equals("move"))
             {
@@ -2273,15 +2269,21 @@ public class Issue
             // Copy over attributes
             List matchingAttributes = getMatchingAttributeValuesList(newModule, 
                                                                      newIssueType);
-            
-            for (int i=0;i<matchingAttributes.size();i++)
+            if (matchingAttributes != null && !matchingAttributes.isEmpty()) 
             {
-                AttributeValue attVal = (AttributeValue) matchingAttributes
-                                                    .get(i);
-                AttributeValue newAttVal = attVal.copy();
-                newAttVal.setIssueId(newIssue.getIssueId());
-                newAttVal.startActivitySet(activitySet);
-                newAttVal.save();
+                // Save activitySet record
+                ActivitySet activitySet = ActivitySetManager.getInstance(
+                    ActivitySetTypePeer.CREATE_ISSUE__PK, getCreatedBy());
+                activitySet.save();
+
+                for (Iterator i = matchingAttributes.iterator(); i.hasNext();)
+                {
+                    AttributeValue attVal = (AttributeValue) i.next();
+                    AttributeValue newAttVal = attVal.copy();
+                    newAttVal.setIssueId(newIssue.getIssueId());
+                    newAttVal.startActivitySet(activitySet);
+                    newAttVal.save();
+                }   
             }
 
             // Adjust dependencies if its a new issue id
@@ -2325,13 +2327,14 @@ public class Issue
                 Attachment newA = oldA.copy();
                 newA.setIssueId(newIssue.getIssueId());
                 newA.save();
-                activitySet = getActivitySet(user, ActivitySetTypePeer.EDIT_ISSUE__PK);
-                activitySet.save();            
                 Activity oldAct = oldA.getActivity();
                 if (oldAct != null)
                 {
-                    Activity act = ActivityManager.createTextActivity(newIssue, 
-                                   activitySet, oldA.getActivity().getDescription(), newA);
+                    ActivitySet activitySet = getActivitySet(
+                        user, ActivitySetTypePeer.EDIT_ISSUE__PK);
+                    activitySet.save();            
+                    ActivityManager.createTextActivity(newIssue, activitySet, 
+                        oldA.getActivity().getDescription(), newA);
                 }
                 if (Attachment.FILE__PK.equals(newA.getTypeId())) 
                 {
@@ -2339,6 +2342,9 @@ public class Issue
                 }
             }
 
+            // FIXME! the comment below mentions 'copy issue transactions'
+            // but ActivitySetTypePeer.MOVE_ISSUE__PK is not used, what is
+            // meant by that phrase?
             // Copy over activity sets for edit and copy issue transactions
             List activitySets = getActivitySets();
             for (Iterator i = activitySets.iterator(); i.hasNext();)
@@ -2347,13 +2353,6 @@ public class Issue
                 ActivitySet newAS = null;
                 if (as.getTypeId().equals(ActivitySetTypePeer.EDIT_ISSUE__PK))
                 {
-                    newAS = new ActivitySet();
-                    newAS.setTypeId(ActivitySetTypePeer.EDIT_ISSUE__PK);
-                    newAS.setAttachmentId(as.getAttachmentId());
-                    newAS.setCreatedBy(user.getUserId());
-                    newAS.setCreatedDate(new Date());
-                    newAS.save();
-
                     // Copy over activities with sets
                     List activities = as.getActivityList();
                     for (Iterator j = activities.iterator(); j.hasNext();)
@@ -2361,7 +2360,17 @@ public class Issue
                         Activity a = (Activity)j.next();
                         if (a.getAttachmentId() == null && a.getDependId() == null)
                         {
-                            Activity newA = a.copy(newIssue, activitySet);
+                            if (newAS == null) 
+                            {
+                                newAS = new ActivitySet();
+                                newAS.setTypeId(ActivitySetTypePeer.EDIT_ISSUE__PK);
+                                newAS.setAttachmentId(as.getAttachmentId());
+                                newAS.setCreatedBy(user.getUserId());
+                                newAS.setCreatedDate(new Date());
+                                newAS.save();
+                            }
+                            
+                            Activity newA = a.copy(newIssue, newAS);
                             newIssue.getActivity(true).add(newA);
                         }
                     }

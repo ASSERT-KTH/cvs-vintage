@@ -82,7 +82,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * inValidationMode set to false will do actual insert of the xml issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.32 2003/04/21 19:39:15 jackrepenning Exp $
+ * @version $Id: ScarabIssues.java,v 1.33 2003/04/28 16:54:58 jmcnally Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -107,6 +107,7 @@ public class ScarabIssues implements java.io.Serializable
 
     /** left side is the id in the XML file. right side is the created id in the db */
     private Map activitySetIdMap = new HashMap();
+    private Map attachmentIdMap = new HashMap();
 
     /** left side is the id in the XML file. right side is the created id in the db */
     private List dependActivitySetId = new ArrayList();
@@ -768,27 +769,17 @@ public class ScarabIssues implements java.io.Serializable
             }
             else
             {
-                try
+                // first try to get the ActivitySet from the internal map
+                if (activitySetIdMap.containsKey(activitySet.getId()))
                 {
-                    // first try to get the ActivitySet from the internal map
-                    if (activitySetIdMap.containsKey(activitySet.getId()))
-                    {
-                        activitySetOM = (@OM@.ActivitySet) activitySetIdMap.get(activitySet.getId());
-                        alreadyCreated = true;
-                        LOG.debug("Found ActivitySet: " + activitySet.getId() + 
-                                  " in map: " + activitySetOM.getActivitySetId());
-                    }
-                    else // if it doesn't exist, then try to get it from the DB
-                    {
-                        activitySetOM = @OM@.ActivitySetManager.getInstance(activitySet.getId());
-                        alreadyCreated = true;
-                        LOG.debug("Found ActivitySet: " + activitySet.getId() + 
-                                  " in db: " + activitySetOM.getActivitySetId());
-                    }
+                    activitySetOM = @OM@.ActivitySetManager.getInstance(
+                        (String)activitySetIdMap.get(activitySet.getId()));
+                    alreadyCreated = true;
+                    log.debug("Found ActivitySet: " + activitySet.getId() + 
+                              " in map: " + activitySetOM.getActivitySetId());
                 }
-                catch (Exception e)
+                else // it hasn't been encountered previously
                 {
-                    // if all else fails, then get a new object
                     activitySetOM = @OM@.ActivitySetManager.getInstance();
                     LOG.debug("Created new ActivitySet");
                 }
@@ -810,7 +801,8 @@ public class ScarabIssues implements java.io.Serializable
                     activitySetOM.setAttachment(activitySetAttachmentOM);
                 }
                 activitySetOM.save();
-                activitySetIdMap.put(activitySet.getId(), activitySetOM);
+                activitySetIdMap.put(activitySet.getId(), 
+                                     activitySetOM.getPrimaryKey().toString());
             }
 
 /////////////////////////////////////////////////////////////////////////////////  
@@ -879,20 +871,21 @@ public class ScarabIssues implements java.io.Serializable
                     // and then delete it, the attachment id is still the
                     // same so there is no reason to re-create the attachment
                     // again.
-                    try
+                    String previousXmlId = activityAttachment.getId();
+                    String previousId = (String)attachmentIdMap
+                        .get(previousXmlId);
+                    if (previousId == null) 
                     {
-                        activityAttachmentOM = @OM@.AttachmentManager
-                            .getInstance(activityAttachment.getId());
-                        LOG.debug("Found existing Activity Attachment");
-                    }
-                    catch (Exception e)
-                    {
-                        activityAttachmentOM = createAttachment(issueOM, module, activityAttachment);
+                        activityAttachmentOM = createAttachment(
+                            issueOM, module, activityAttachment);
                         activityAttachmentOM.save();
+                        attachmentIdMap.put(previousXmlId, 
+                            activityAttachmentOM.getPrimaryKey().toString());
                         
-                        // Special case. After the Attachment object has been saved,
-                        // if the ReconcilePath == true, then assume that the fileName is 
-                        // an absolute path to a file and copy it to the right directory
+                        // Special case. After the Attachment object has been 
+                        // saved, if the ReconcilePath == true, then assume 
+                        // that the fileName is an absolute path to a file and
+                        // copy it to the right directory
                         // structure under Scarab's path.
                         if (activityAttachment.getReconcilePath())
                         {
@@ -901,6 +894,12 @@ public class ScarabIssues implements java.io.Serializable
                                                 activityAttachmentOM.getFullPath());
                         }
                         LOG.debug("Created Activity Attachment object");
+                    }
+                    else 
+                    {
+                        activityAttachmentOM = @OM@.AttachmentManager
+                            .getInstance(previousId);
+                        log.debug("Found existing Activity Attachment");
                     }
                 }
                 else
