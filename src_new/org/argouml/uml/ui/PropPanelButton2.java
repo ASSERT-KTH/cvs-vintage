@@ -1,4 +1,4 @@
-// $Id: PropPanelButton2.java,v 1.6 2003/06/30 18:00:36 linus Exp $
+// $Id: PropPanelButton2.java,v 1.7 2004/07/26 22:36:34 mkl Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,8 +44,8 @@ public class PropPanelButton2 extends JButton implements UMLUserInterfaceCompone
      * @param a
      */
     public PropPanelButton2(UMLUserInterfaceContainer container, Action a) {
-        super(); // canot use the action constructor since we have to support 1.2.2
-        setAction(a);
+        super(a);
+        setText(""); // just the icon and possibly a tooltip
         setContainer(container);
     }
 
