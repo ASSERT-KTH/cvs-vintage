@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<plugin id="Hello World" description="Displays Hello World" extension_point="filter_actions" version="1.0" >
+ <arguments>
+  <action name="Hello World" main_class="HelloWorld.py" gui_class="HelloWorldGui.py" />
+ </arguments>
+ <runtime type="python"/>
+</plugin>
