@@ -213,13 +213,13 @@
              "/examples"
              (XXX need a better example )
              (use  "http://127.0.0.1/examples" )
-         -->
         <Host name="127.0.0.1" >
            <Context path="" 
                     docBase="webapps/examples" />
            <Context path="/examples" 
                     docBase="webapps/ROOT" />
         </Host>
+         -->
 
     </ContextManager>
 </Server>
