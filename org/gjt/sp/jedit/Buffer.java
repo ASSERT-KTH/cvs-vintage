@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.151 2003/04/13 01:35:13 spestov Exp $
+ * @version $Id: Buffer.java,v 1.152 2003/04/14 00:51:59 spestov Exp $
  */
 public class Buffer
 {
@@ -3258,7 +3258,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 	/**
 	 * This socket is closed when the buffer is closed.
 	 */
-	public void setWaitSocket(Socket socket)
+	public void setWaitSocket(Socket waitSocket)
 	{
 		this.waitSocket = waitSocket;
 	} //}}}
@@ -3448,7 +3448,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 		{
 			try
 			{
-				waitSocket.getOutputStream().write('<');
+				waitSocket.getOutputStream().write('\0');
 				waitSocket.getOutputStream().flush();
 				waitSocket.getInputStream().close();
 				waitSocket.getOutputStream().close();
