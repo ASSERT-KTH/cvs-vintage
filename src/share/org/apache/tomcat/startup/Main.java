@@ -145,9 +145,7 @@ public class Main {
 	// Find the directory where tomcat.jar is located
 	
 	String cpath=System.getProperty( "java.class.path");
-	//	log( "CP=" + cpath );
 	String pathSep=System.getProperty( "path.separator");
-	//	log( "PS=" + pathSep);
 	StringTokenizer st=new StringTokenizer( cpath, pathSep );
 	while( st.hasMoreTokens() ) {
 	    String path=st.nextToken();
@@ -167,22 +165,6 @@ public class Main {
 		    ex.printStackTrace();
 		}
 	    }
-	    // 	    if( ! path.endsWith("jar")) {
-	    // 		// it may be a directory - support for /classes
-	    // 		File f=new File( path );
-	    // 		if( f.isDirectory() ) {
-	    // 		    File f2=new File( path, "org/apache/tomcat/startup/Main.class");
-	    // 		    if( f2.exists() ) {
-	    // 			int ending="classes".length();
-	    // 			if( path.endsWith( "/" ) || path.endsWith("\\"))
-	    // 			    ending++;
-	    // 			if( path.length() > ending ) {
-	    // 			    h=path.substring(0, path.length() - ending);
-	    // 			    return path;
-	    // 			}
-	    // 		    }
-	    // 		}
-	    // 	    }
 	}
 
 	return null;
@@ -253,19 +235,38 @@ public class Main {
 
 	try {
 	    int jarCount=cpComp.length;
-	    URL urls[]=new URL[jarCount + 1 ];
+	    Vector urlV=new Vector();
+
 	    for( int i=0; i< jarCount ; i++ ) {
-		urls[i]=getURL(  getLibDir() , cpComp[i] );
-		System.out.println( "Add to CP: " + urls[i] );
+		urlV.addElement( getURL(  getLibDir() , cpComp[i] ));
+	    }
+
+	    // add CLASSPATH
+	    String cpath=System.getProperty( "tomcat.cp");
+	    System.out.println("Extra CLASSPATH: " + cpath);
+	    String pathSep=System.getProperty( "path.separator");
+	    StringTokenizer st=new StringTokenizer( cpath, pathSep );
+	    while( st.hasMoreTokens() ) {
+		String path=st.nextToken();
+		urlV.addElement( getURL( path, "" ));
 	    }
 
 	    // Add tools.jar if JDK1.2
 	    String java_home=System.getProperty( "java.home" );
-	    urls[jarCount]= new URL( "file", null , java_home +
-				     "/../lib/tools.jar");
-	    System.out.println( "Add to CP: " + urls[jarCount] );
+	    urlV.addElement( new URL( "file", null , java_home +
+				       "/../lib/tools.jar"));
+	    
+	    URL urls[]=new URL[ urlV.size() ];
+	    System.out.println("CLASSPATH: " );
+	    for( int i=0; i<urlV.size(); i++ ) {
+		urls[i]=(URL)urlV.elementAt( i );
+		System.out.print(":" + urls[i] );
+	    }
+	    System.out.println();
+	    System.out.println();
 	    
 	    ClassLoader parentL=this.getClass().getClassLoader();
+	    System.out.println("ParentL " + parentL );
 
 	    ClassLoader cl=null;
 	    if( jdk12 )
