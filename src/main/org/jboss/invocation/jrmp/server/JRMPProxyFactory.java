@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  * is bound to. 
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JRMPProxyFactory extends ServiceMBeanSupport
    implements JRMPProxyFactoryMBean
@@ -41,7 +41,7 @@ public class JRMPProxyFactory extends ServiceMBeanSupport
    /** The JNDI name under which the proxy will be bound */
    private String jndiName;
    /** The interface that the proxy implements */
-   private Class exportedInterface;
+   private Class[] exportedInterfaces;
    /** The optional definition */
    private Element interceptorConfig;
    /** The interceptor Classes defined in the interceptorConfig */
@@ -82,11 +82,20 @@ public class JRMPProxyFactory extends ServiceMBeanSupport
 
    public Class getExportedInterface()
    {
-      return exportedInterface;
+      return exportedInterfaces[0];
    }
    public void setExportedInterface(Class exportedInterface)
    {
-      this.exportedInterface = exportedInterface;
+      this.exportedInterfaces = new Class[] {exportedInterface};
+   }
+
+   public Class[] getExportedInterfaces()
+   {
+      return exportedInterfaces;
+   }
+   public void setExportedInterfaces(Class[] exportedInterfaces)
+   {
+      this.exportedInterfaces = exportedInterfaces;
    }
 
    public Element getClientInterceptors()
@@ -129,7 +138,7 @@ public class JRMPProxyFactory extends ServiceMBeanSupport
       // Create the service proxy
       Object cacheID = null;
       String proxyBindingName = null;
-      Class[] ifaces = {exportedInterface};
+      Class[] ifaces = exportedInterfaces;
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
       createProxy(cacheID, proxyBindingName, loader, ifaces);
       log.debug("Created JRMPPRoxy for service="+targetName

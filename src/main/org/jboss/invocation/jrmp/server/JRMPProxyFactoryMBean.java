@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  * as the transport protocol.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface JRMPProxyFactoryMBean extends Service
 {
@@ -42,10 +42,15 @@ public interface JRMPProxyFactoryMBean extends Service
    /** Set the JNDI name under which the HttpInvokerProxy will be bound */
    public void setJndiName(String jndiName);
 
-   /** Get the RMI compatible interface that the HttpInvokerProxy implements */
+   /** Get the RMI compatible interface that the JRMPInvokerProxy implements */
    public Class getExportedInterface();
-   /** Set the RMI compatible interface that the HttpInvokerProxy implements */
+   /** Set the RMI compatible interface that the JRMPInvokerProxy implements */
    public void setExportedInterface(Class exportedInterface);
+
+   /** Get the RMI compatible interface that the JRMPInvokerProxy implements */
+   public Class[] getExportedInterfaces();
+   /** Set the RMI compatible interface that the JRMPInvokerProxy implements */
+   public void setExportedInterfaces(Class[] exportedInterface);
 
    /** Get the proxy client side interceptor configuration
     * 

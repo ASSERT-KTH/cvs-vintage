@@ -52,7 +52,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -375,6 +375,7 @@ public class JRMPInvoker
       finally
       {
          currentThread.setContextClassLoader(oldCl);
+         Thread.interrupted(); // clear interruption because this thread may be pooled.
       }
    }
 
