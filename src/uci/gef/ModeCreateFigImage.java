@@ -27,7 +27,7 @@
 // File: ModeCreateFigImage.java
 // Classes: ModeCreateFigImage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreateFigImage.java,v 1.9 1999/03/15 21:49:55 jrobbins Exp $
+// $Id: ModeCreateFigImage.java,v 1.10 1999/03/17 21:26:21 jrobbins Exp $
 
 package uci.gef;
 
@@ -101,8 +101,6 @@ public class ModeCreateFigImage extends ModeCreate {
 
   /** On mouse down, do nothing. */
   public void mousePressed(MouseEvent me) {
-    if ((me.getModifiers() | InputEvent.BUTTON1_MASK) == 0) return;
-    //if (me.getModifiers() != InputEvent.BUTTON1_MASK) return;
     me.consume();
   }
 

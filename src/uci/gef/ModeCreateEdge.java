@@ -26,7 +26,7 @@
 // File: ModeCreateEdge.java
 // Classes: ModeCreateEdge
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateEdge.java,v 1.15 1999/03/15 21:49:54 jrobbins Exp $
+// $Id: ModeCreateEdge.java,v 1.16 1999/03/17 21:26:21 jrobbins Exp $
 
 package uci.gef;
 
@@ -92,8 +92,6 @@ public class ModeCreateEdge extends ModeCreate {
   /** On mousePressed determine what port the user is dragging from.
    *  The mousePressed event is sent via ModeSelect. */
   public void mousePressed(MouseEvent me) {
-    if ((me.getModifiers() | InputEvent.BUTTON1_MASK) == 0) return;
-    //if (me.getModifiers() != InputEvent.BUTTON1_MASK) return;
     if (me.isConsumed()) return;
     int x = me.getX(), y = me.getY();
     Editor ce = Globals.curEditor();

@@ -26,7 +26,7 @@
 // File: ModePlace.java
 // Classes: ModePlace
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModePlace.java,v 1.13 1999/03/15 21:50:03 jrobbins Exp $
+// $Id: ModePlace.java,v 1.14 1999/03/17 21:26:27 jrobbins Exp $
 
 package uci.gef;
 
@@ -89,8 +89,6 @@ public class ModePlace extends Mode {
 
   /** Move the perpective along with the mouse. */
   public void mousePressed(MouseEvent me) {
-    if ((me.getModifiers() | InputEvent.BUTTON1_MASK) == 0) return;
-    //if (me.getModifiers() != InputEvent.BUTTON1_MASK) return;
     if (me.isConsumed()) return;
     _node = _factory.makeNode();
     start();

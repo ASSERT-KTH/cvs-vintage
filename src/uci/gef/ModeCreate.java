@@ -27,7 +27,7 @@
 // File: ModeCreate.java
 // Classes: ModeCreate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreate.java,v 1.16 1999/03/15 21:49:53 jrobbins Exp $
+// $Id: ModeCreate.java,v 1.17 1999/03/17 21:26:20 jrobbins Exp $
 
 package uci.gef;
 
@@ -98,9 +98,7 @@ public abstract class ModeCreate extends Mode {
 
   /** On mouse down, make a new Fig in memory. */
   public void mousePressed(MouseEvent me) {
-    if ((me.getModifiers() | InputEvent.BUTTON1_MASK) == 0) return;
     if (me.isConsumed()) return;
-    //if (me.getModifiers() == InputEvent.BUTTON3_MASK) return;
     start();
     synchronized (snapPt) {
       snapPt.setLocation(me.getX(), me.getY());

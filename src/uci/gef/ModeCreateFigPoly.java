@@ -26,7 +26,7 @@
 // File: ModeCreateFigPoly.java
 // Classes: ModeCreateFigPoly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreateFigPoly.java,v 1.9 1999/03/15 21:49:57 jrobbins Exp $
+// $Id: ModeCreateFigPoly.java,v 1.10 1999/03/17 21:26:22 jrobbins Exp $
 
 package uci.gef;
 
@@ -72,8 +72,6 @@ public class ModeCreateFigPoly extends ModeCreate {
   // Event handlers
 
   public void mousePressed(MouseEvent me) {
-    if ((me.getModifiers() | InputEvent.BUTTON1_MASK) == 0) return;
-    //if (me.getModifiers() != InputEvent.BUTTON1_MASK) return;
     if (me.isConsumed()) return;
     int x = me.getX(), y = me.getY();
     if (_npoints == 0) { super.mousePressed(me); }

@@ -26,7 +26,7 @@
 // File: ModeBroom.java
 // Classes: ModeBroom
 // Original Author: ics125 spring 1996
-// $Id: ModeBroom.java,v 1.9 1999/03/15 21:49:52 jrobbins Exp $
+// $Id: ModeBroom.java,v 1.10 1999/03/17 21:26:19 jrobbins Exp $
 
 package uci.gef;
 
@@ -107,10 +107,6 @@ public class ModeBroom extends Mode {
    *  the shift key is not down, then go to ModeModify. If the mouse
    *  down event happens on a port, to to ModeCreateEdge.   */
   public void mousePressed(MouseEvent me) {
-    if ((me.getModifiers() | InputEvent.BUTTON1_MASK) == 0) {
-      //System.out.println("wrong button");
-      return;
-    }
     if (me.isConsumed()) return;
     _touched = new Fig[MAX_TOUCHED];
     _origX = new int[MAX_TOUCHED];
