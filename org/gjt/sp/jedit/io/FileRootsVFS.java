@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * A VFS that lists local root filesystems.
  * @author Slava Pestov
- * @version $Id: FileRootsVFS.java,v 1.16 2003/11/18 20:51:58 spestov Exp $
+ * @version $Id: FileRootsVFS.java,v 1.17 2003/12/10 20:13:06 spestov Exp $
  */
 public class FileRootsVFS extends VFS
 {
@@ -175,7 +175,8 @@ public class FileRootsVFS extends VFS
 			// REMIND: calling isDirectory() on a floppy drive
 			// displays stupid I/O error dialog box on Windows
 
-			this.path = this.deletePath = file.getPath();
+			this.path = this.deletePath = this.symlinkPath
+				= file.getPath();
 
 			if(isFloppy(file))
 			{
