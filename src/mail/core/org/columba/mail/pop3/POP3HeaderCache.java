@@ -171,6 +171,6 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 			strippedHeader.set(CachedHeaderfields.POP3_HEADERFIELDS[i], header.get(CachedHeaderfields.POP3_HEADERFIELDS[i]));
 		}
 		
-		super.add(strippedHeader);
+		headerList.add(strippedHeader, strippedHeader.get("columba.pop3uid"));
 	}
 }
