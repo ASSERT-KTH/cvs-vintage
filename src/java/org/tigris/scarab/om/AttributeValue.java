@@ -524,30 +524,6 @@ public abstract class AttributeValue
         return getAttribute().getAttributeOption(getOptionId());
     }
 
-    /**
-     * if the Attribute related to this value is marked as relevant
-     * to checking for duplicates in the module related to the Issue
-     * related to this value.
-     *
-     * @return a <code>boolean</code> value
-     */
-    public boolean isDedupeAttribute()
-        throws Exception
-    {
-        boolean result = false;
-        Attribute[] dedupeAttributes = getIssue().getModule()
-            .getDedupeAttributes(getIssue().getIssueType());
-        for ( int i=dedupeAttributes.length-1; i>=0; i--) 
-        {
-            if ( dedupeAttributes[i].equals(getAttribute()) ) 
-            {
-                result = true;
-                break;
-            }
-        }
-        
-        return result;
-    }
 
     /**
      * if the Attribute related to this value is marked as relevant

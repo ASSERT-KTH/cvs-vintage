@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.9 2001/12/04 17:36:58 kminshull Exp $
+ * @version $Id: IssueType.java,v 1.10 2001/12/20 01:52:36 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -81,6 +81,21 @@ public  class IssueType
         Criteria crit = new Criteria()
             .add(AttributeGroupPeer.MODULE_ID, module.getModuleId())
             .add(AttributeGroupPeer.ISSUE_TYPE_ID, getIssueTypeId())
+            .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
+        return AttributeGroupPeer.doSelect(crit);
+    }
+
+    /**
+     * List of attribute groups associated with this module and issue type.
+     * 
+     */
+    public List getDedupeAttributeGroups(ModuleEntity module)
+        throws Exception
+    {
+        Criteria crit = new Criteria()
+            .add(AttributeGroupPeer.MODULE_ID, module.getModuleId())
+            .add(AttributeGroupPeer.ISSUE_TYPE_ID, getIssueTypeId())
+            .add(AttributeGroupPeer.DEDUPE, true)
             .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
         return AttributeGroupPeer.doSelect(crit);
     }
