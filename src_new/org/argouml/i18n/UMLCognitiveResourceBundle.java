@@ -25,7 +25,7 @@
 // File: UMLCognitiveResourceBundle.java
 // Classes: UMLCognitiveResourceBundle
 // Original Author: Curt Arnold
-// $Id: UMLCognitiveResourceBundle.java,v 1.3 2002/04/21 20:24:02 linus Exp $
+// $Id: UMLCognitiveResourceBundle.java,v 1.4 2002/07/09 11:55:36 linus Exp $
 
 // 4 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed description of
 // CrConstructorNeeded, CrConsiderSingleton and CrSingletonViolated.
@@ -702,6 +702,47 @@ public class UMLCognitiveResourceBundle extends ListResourceBundle {
           "default for an operation. ArgoUML; will also accept any " +
           "operation that follows these conventions as a constructor even " +
           "if it is not stereotyped <<create>> or <<Create>>." },
+
+        { "CrSingletonViolatedMissingStaticAttr_head",
+          "Singleton Stereotype Violated, missing static attribute " +
+	  "in <ocl>self</ocl>" },
+
+        { "CrSingletonViolatedMissingStaticAttr_desc",
+          "<ocl>self</ocl> is marked with the <<singleton>>; stereotype, " +
+          "but it does not satisfy the constraints imposed on Singletons." +
+          "\n" +
+          "It does not have a static attribute (a class variable) to hold " +
+          "the instance.\n" +
+          "\n" +
+          "Whenever you mark a class with a stereotype, the class should " +
+          "satisfy all constraints of the stereotype.  This is an important " +
+          "part of making a self-consistent and understandable design. " +
+          "Using the Singleton Pattern can save time and memory space.\n" +
+          "\n" +
+          "If you no longer want this class to be a Singleton, remove the " +
+          "<<singleton>> or <<Singleton>> stereotype by clicking on the " +
+          "class and selecting the blank selection on the stereotype " +
+          "drop-down within the properties tab.\n" },
+
+        { "CrSingletonViolatedOnlyPrivateConstructors_head",
+          "Singleton Stereotype Violated, has non-private constructor, "
+	  + "in <ocl>self</ocl>" },
+
+        { "CrSingletonViolatedOnlyPrivateConstructors_desc",
+          "<ocl>self</ocl> is marked with the <<singleton>>; stereotype, " +
+          "but it does not satisfy the constraints imposed on Singletons." +
+          "\n" +
+          "It must have only private constructors so that new instances " +
+          "cannot be made by other code.\n" +
+          "Whenever you mark a class with a stereotype, the class should " +
+          "satisfy all constraints of the stereotype.  This is an important " +
+          "part of making a self-consistent and understandable design. " +
+          "Using the Singleton Pattern can save time and memory space.\n" +
+          "\n" +
+          "If you no longer want this class to be a Singleton, remove the " +
+          "<<singleton>> or <<Singleton>> stereotype by clicking on the " +
+          "class and selecting the blank selection on the stereotype " +
+          "drop-down within the properties tab.\n" },
 
         { "CrNodesOverlap_head" ,
                 "Clean Up Diagram" },
