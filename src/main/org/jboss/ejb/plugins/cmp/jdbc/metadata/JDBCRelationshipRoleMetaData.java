@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
  * ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCRelationshipRoleMetaData {
    /**
@@ -78,6 +78,9 @@ public final class JDBCRelationshipRoleMetaData {
       cmrFieldType = relationshipRole.getCMRFieldType();
 
       entity = application.getBeanByEjbName(relationshipRole.getEntityName());
+
+	  if (entity == null)
+		  throw new DeploymentException("Related entity: "+relationshipRole.getEntityName()+" not found for: "+relationshipRoleName);
       
       if(relationMetaData.isTableMappingStyle()) {
          // load all pks of entity into tableKeys map
