@@ -259,6 +259,11 @@
         <copy file="${src.lib.dir}/torque.zip" todir="${build.src.scarab}"/>
         <unzip src="${build.src.scarab}/torque.zip"
                 dest="${build.src.scarab}" />
+        <copy todir="${build.src.scarab}/torque/lib">
+            <fileset dir="${src.lib.dir}">
+                <include name="mm.mysql-*.jar"/>
+            </fileset>
+        </copy>
     </target>
 
     <!-- ================================================================== -->
