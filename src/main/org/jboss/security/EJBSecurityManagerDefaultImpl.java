@@ -46,7 +46,7 @@ public class EJBSecurityManagerDefaultImpl implements EJBSecurityManager
 {
 	public boolean isValid( Principal principal, Object credential )
 	{
-		return principal.getName().equals( credential.toString() );
+		return credential != null && principal.getName().equals( credential.toString() );
 	}
 }
 
