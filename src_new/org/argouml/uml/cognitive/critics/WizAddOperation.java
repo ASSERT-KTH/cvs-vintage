@@ -1,4 +1,4 @@
-// $Id: WizAddOperation.java,v 1.4 2004/09/18 17:13:23 mvw Exp $
+// $Id: WizAddOperation.java,v 1.5 2004/09/27 18:31:27 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,7 @@ public class WizAddOperation extends Wizard {
      */
     public Object getModelElement() {
         if (getToDoItem() != null) {
-            VectorSet offs = item.getOffenders();
+            VectorSet offs = getToDoItem().getOffenders();
             if (offs.size() >= 1) {
                 Object me = /*(MModelElement)*/ offs.elementAt(0);
                 return me;

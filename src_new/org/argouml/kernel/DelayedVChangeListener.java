@@ -1,4 +1,4 @@
-// $Id: DelayedVChangeListener.java,v 1.3 2003/08/21 20:42:38 alexb Exp $
+// $Id: DelayedVChangeListener.java,v 1.4 2004/09/27 18:31:28 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,9 @@ import java.beans.*;
  */
 public interface DelayedVChangeListener {
 
+    /**
+     * @param pce the event
+     */
     public void delayedVetoableChange(PropertyChangeEvent pce);
 
 } /* end interface DelayedVChangeListener */

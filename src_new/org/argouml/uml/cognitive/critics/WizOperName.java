@@ -1,4 +1,4 @@
-// $Id: WizOperName.java,v 1.17 2004/09/18 17:13:23 mvw Exp $
+// $Id: WizOperName.java,v 1.18 2004/09/27 18:31:27 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,7 +114,7 @@ public class WizOperName extends WizMEName {
 	    if (step1 == null) {
 		step1 = 
 		    new WizStepChoice(this, getInstructions(), getOptions());
-		step1.setTarget(item);
+		step1.setTarget(getToDoItem());
 	    }
 	    return step1;
 
@@ -124,7 +124,7 @@ public class WizOperName extends WizMEName {
 		    step2 = 
 			new WizStepCue(this,
 				       "The operator is now a constructor.");
-		    step2.setTarget(item);
+		    step2.setTarget(getToDoItem());
 		}
 		return step2;
 	    } else {
@@ -147,8 +147,8 @@ public class WizOperName extends WizMEName {
      */
     public void undoAction(int origStep) {
 	super.undoAction(origStep);
-	if (step >= 1) {
-	    panels.remove(origStep);
+	if (getStep() >= 1) {
+	    removePanel(origStep);
 	}
 	if (origStep == 1) {
 	    Object oper = getModelElement();
