@@ -144,7 +144,15 @@ public class DefaultItem implements Cloneable, IDefaultItem {
 			setString(pathToElement, key, value);
 		}
 
-		return Integer.parseInt(value);
+		int result=-1;
+		try {
+			result = Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			// this is no integer value
+			return defaultValue;
+		}
+		
+		return result;
 	}
 
 	public void setInteger(String key, int value) {
@@ -264,5 +272,10 @@ public class DefaultItem implements Cloneable, IDefaultItem {
 		}
 		
 		return defaultValue;
+	}
+	
+	public void notifyObservers(String path) {
+		XmlElement e = getElement(path);
+		e.notifyObservers();
 	}
 }

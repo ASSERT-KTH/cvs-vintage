@@ -33,146 +33,167 @@ import org.columba.core.xml.XmlElement;
  */
 public class MailConfig {
 
-    public static final String MODULE_NAME = "mail";
+	public static final String MODULE_NAME = "mail";
 
-    protected Config config;
+	protected Config config;
 
-    protected File path;
+	protected File path;
 
-    protected File accountFile;
+	protected File accountFile;
 
-    protected File folderFile;
+	protected File folderFile;
 
-    protected File mainFrameOptionsFile;
+	protected File mainFrameOptionsFile;
 
-    protected File pop3Directory;
+	protected File pop3Directory;
 
-    protected File popManageOptionsFile;
+	protected File popManageOptionsFile;
 
-    protected File composerOptionsFile;
- 
-    private static MailConfig instance = new MailConfig(Config.getInstance());
-    
-    /**
-     * @see java.lang.Object#Object()
-     */
-    public MailConfig(Config config) {
-        this.config = config;
-        path = new File(config.getConfigDirectory(), MODULE_NAME);
-        DiskIO.ensureDirectory(path);
+	protected File composerOptionsFile;
 
-        pop3Directory = new File(path, "pop3server");
-        DiskIO.ensureDirectory(pop3Directory);
+	private static MailConfig instance = new MailConfig(Config.getInstance());
 
-        accountFile = new File(path, "account.xml");
-        registerPlugin(accountFile.getName(), new AccountXmlConfig(accountFile));
+	private OptionsItem optionsItem;
+	private ComposerItem composerItem;
 
-        folderFile = new File(path, "tree.xml");
-        registerPlugin(folderFile.getName(), new FolderXmlConfig(folderFile));
+	/**
+	 * @see java.lang.Object#Object()
+	 */
+	public MailConfig(Config config) {
+		this.config = config;
+		path = new File(config.getConfigDirectory(), MODULE_NAME);
+		DiskIO.ensureDirectory(path);
 
-        mainFrameOptionsFile = new File(path, "options.xml");
-        registerPlugin(mainFrameOptionsFile.getName(),
-                new MainFrameOptionsXmlConfig(mainFrameOptionsFile));
+		pop3Directory = new File(path, "pop3server");
+		DiskIO.ensureDirectory(pop3Directory);
 
-        File mainToolBarFile = new File(path, "main_toolbar.xml");
-        registerPlugin(mainToolBarFile.getName(), new DefaultXmlConfig(
-                mainToolBarFile));
+		accountFile = new File(path, "account.xml");
+		registerPlugin(accountFile.getName(), new AccountXmlConfig(accountFile));
 
-        File composerToolBarFile = new File(path, "composer_toolbar.xml");
-        registerPlugin(composerToolBarFile.getName(), new DefaultXmlConfig(
-                composerToolBarFile));
+		folderFile = new File(path, "tree.xml");
+		registerPlugin(folderFile.getName(), new FolderXmlConfig(folderFile));
 
-        File messageframeToolBarFile = new File(path,
-                "messageframe_toolbar.xml");
-        registerPlugin(messageframeToolBarFile.getName(), new DefaultXmlConfig(
-                messageframeToolBarFile));
+		mainFrameOptionsFile = new File(path, "options.xml");
+		registerPlugin(mainFrameOptionsFile.getName(),
+				new MainFrameOptionsXmlConfig(mainFrameOptionsFile));
 
-        composerOptionsFile = new File(path, "composer_options.xml");
-        registerPlugin(composerOptionsFile.getName(),
-                new ComposerOptionsXmlConfig(composerOptionsFile));
+		File mainToolBarFile = new File(path, "main_toolbar.xml");
+		registerPlugin(mainToolBarFile.getName(), new DefaultXmlConfig(
+				mainToolBarFile));
 
-    }
+		File composerToolBarFile = new File(path, "composer_toolbar.xml");
+		registerPlugin(composerToolBarFile.getName(), new DefaultXmlConfig(
+				composerToolBarFile));
 
-    
-    
-    public File getConfigDirectory() {
-        return path;
-    }
+		File messageframeToolBarFile = new File(path,
+				"messageframe_toolbar.xml");
+		registerPlugin(messageframeToolBarFile.getName(), new DefaultXmlConfig(
+				messageframeToolBarFile));
 
-    /**
-     * Returns the POP3 directory.
-     */
-    public File getPOP3Directory() {
-        return pop3Directory;
-    }
+		composerOptionsFile = new File(path, "composer_options.xml");
+		registerPlugin(composerOptionsFile.getName(),
+				new ComposerOptionsXmlConfig(composerOptionsFile));
 
-    /**
-     * Method registerPlugin.
-     * 
-     * @param id
-     * @param plugin
-     */
-    protected void registerPlugin(String id, DefaultXmlConfig plugin) {
-        config.registerPlugin(MODULE_NAME, id, plugin);
-    }
+	}
 
-    /**
-     * Method getPlugin.
-     * 
-     * @param id
-     * @return DefaultXmlConfig
-     */
-    protected DefaultXmlConfig getPlugin(String id) {
-        return config.getPlugin(MODULE_NAME, id);
-    }
+	public File getConfigDirectory() {
+		return path;
+	}
 
-    /**
-     * Method getAccountList.
-     * 
-     * @return AccountList
-     */
-    public AccountList getAccountList() {
-        return ((AccountXmlConfig) getPlugin(accountFile.getName()))
-                .getAccountList();
-    }
+	/**
+	 * Returns the POP3 directory.
+	 */
+	public File getPOP3Directory() {
+		return pop3Directory;
+	}
 
-    public XmlElement get(String name) {
-        DefaultXmlConfig xml = getPlugin(name + ".xml");
+	/**
+	 * Method registerPlugin.
+	 * 
+	 * @param id
+	 * @param plugin
+	 */
+	protected void registerPlugin(String id, DefaultXmlConfig plugin) {
+		config.registerPlugin(MODULE_NAME, id, plugin);
+	}
 
-        return xml.getRoot();
-    }
+	/**
+	 * Method getPlugin.
+	 * 
+	 * @param id
+	 * @return DefaultXmlConfig
+	 */
+	protected DefaultXmlConfig getPlugin(String id) {
+		return config.getPlugin(MODULE_NAME, id);
+	}
 
-    /**
-     * Method getFolderConfig.
-     * 
-     * @return FolderXmlConfig
-     */
-    public FolderXmlConfig getFolderConfig() {
+	/**
+	 * Method getAccountList.
+	 * 
+	 * @return AccountList
+	 */
+	public AccountList getAccountList() {
+		return ((AccountXmlConfig) getPlugin(accountFile.getName()))
+				.getAccountList();
+	}
 
-        return (FolderXmlConfig) getPlugin(folderFile.getName());
-    }
+	public XmlElement get(String name) {
+		DefaultXmlConfig xml = getPlugin(name + ".xml");
 
-    /**
-     * Method getMainFrameOptionsConfig.
-     * 
-     * @return MainFrameOptionsXmlConfig
-     */
-    public MainFrameOptionsXmlConfig getMainFrameOptionsConfig() {
+		return xml.getRoot();
+	}
 
-        return (MainFrameOptionsXmlConfig) getPlugin(mainFrameOptionsFile
-                .getName());
-    }
+	/**
+	 * Method getFolderConfig.
+	 * 
+	 * @return FolderXmlConfig
+	 */
+	public FolderXmlConfig getFolderConfig() {
 
-    /**
-     * Method getComposerOptionsConfig.
-     * 
-     * @return ComposerOptionsXmlConfig
-     */
-    public ComposerOptionsXmlConfig getComposerOptionsConfig() {
+		return (FolderXmlConfig) getPlugin(folderFile.getName());
+	}
 
-        return (ComposerOptionsXmlConfig) getPlugin(composerOptionsFile
-                .getName());
-    }
+	/**
+	 * Method getMainFrameOptionsConfig.
+	 * 
+	 * @return MainFrameOptionsXmlConfig
+	 */
+	public MainFrameOptionsXmlConfig getMainFrameOptionsConfig() {
+
+		return (MainFrameOptionsXmlConfig) getPlugin(mainFrameOptionsFile
+				.getName());
+	}
+
+	public OptionsItem getOptionsItem() {
+		if (optionsItem == null) {
+			XmlElement xmlElement = getPlugin(mainFrameOptionsFile.getName())
+					.getRoot().getElement("options");
+			optionsItem = new OptionsItem(xmlElement);
+		}
+
+		return optionsItem;
+	}
+	
+	public ComposerItem getComposerItem() {
+		if (composerItem == null) {
+			XmlElement xmlElement = getPlugin(composerOptionsFile.getName())
+					.getRoot().getElement("options");
+			composerItem = new ComposerItem(xmlElement);
+		}
+
+		return composerItem;
+	}
+
+	/**
+	 * Method getComposerOptionsConfig.
+	 * 
+	 * @return ComposerOptionsXmlConfig
+	 */
+	public ComposerOptionsXmlConfig getComposerOptionsConfig() {
+
+		return (ComposerOptionsXmlConfig) getPlugin(composerOptionsFile
+				.getName());
+	}
 
 	/**
 	 * @return Returns the instance.

@@ -23,6 +23,17 @@ import org.columba.core.xml.XmlElement;
  * 
  * @author fdietz
  */
+
+//
+// views.xml
+//
+//<view header="100" header_enabled="true" id="ThreePaneMail" 
+//	  infopanel="true" main="100">
+// <window maximized="true" height="721" width="1034" y="26" x="0"></window>
+// <toolbars infopanel="true" main="true"></toolbars>
+// <splitpanes header="200" header_enabled="true" main="283" attachment="100"></splitpanes>
+//</view>
+
 public class ViewItem extends DefaultItem {
 
 	public static final String ID = "id";

@@ -21,9 +21,22 @@ import org.columba.core.xml.XmlElement;
 /**
  * User Interface specific options, including the Look&Feel, font settings,
  * toolbar settings.
- *
+ *  
  * @author fdietz
  */
+
+// 
+// options.xml:
+//
+//<gui>
+// <theme name="Plastic" theme="Experience Blue"></theme>
+// <fonts overwrite="false">
+//  <text name="Default" size="12"></text>
+//  <main name="Default" size="12"></main>
+// </fonts>
+// <toolbar text_position="false" enable_icon="true" enable_text="true"></toolbar>
+//</gui>
+
 public class GuiItem extends DefaultItem {
 	
 	public final static String THEME = "theme";	
