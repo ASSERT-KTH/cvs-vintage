@@ -122,7 +122,6 @@
    #end
 #end
 </table>
-</div>
 
 #if ($canEdit)
 <div class="functnbar3">
@@ -325,7 +324,7 @@
   #end
 
   #if ($canEdit)
-   <h4>Add Comment</h4>
+   <h4>Enter new comment</h4>
    <table cellspacing="2" cellpadding="3" border="0">
      <tr>
        <td>
