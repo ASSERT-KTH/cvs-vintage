@@ -16,7 +16,7 @@ import javax.security.auth.Subject;
  * with his run-as role.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class RunAsIdentity extends SimplePrincipal
 {
@@ -53,7 +53,7 @@ public class RunAsIdentity extends SimplePrincipal
     */
    public String toString()
    {
-      return "RunAsIdentity[role=" + runAsRole + ",principal=" + getName() + "]";
+      return "[role=" + runAsRole + ",principal=" + getName() + "]";
    }
 
    /**
