@@ -175,6 +175,19 @@
         <filter token="SCARAB_LINK" value="${scarab.pull.link}"/>
         <filter token="EXTRA_TR_PROPERTIES" 
             value="${scarab.extra.tr.properties}"/>
+        <filter token="LOG_PATTERN" value="${scarab.log.pattern}"/>
+        <filter token="LOG_LEVEL_SCARAB" value="${scarab.log.level.scarab}"/>
+        <filter token="LOG_FILE_SCARAB" value="${scarab.log.file.scarab}"/>
+        <filter token="LOG_APPEND_SCARAB" value="${scarab.log.append.scarab}"/>
+        <filter token="LOG_LEVEL_TURBINE" value="${scarab.log.level.turbine}"/>
+        <filter token="LOG_FILE_TURBINE" value="${scarab.log.file.turbine}"/>
+        <filter token="LOG_APPEND_TURBINE" value="${scarab.log.append.turbine}"/>
+        <filter token="LOG_LEVEL_FULCRUM" value="${scarab.log.level.fulcrum}"/>
+        <filter token="LOG_FILE_FULCRUM" value="${scarab.log.file.fulcrum}"/>
+        <filter token="LOG_APPEND_FULCRUM" value="${scarab.log.append.fulcrum}"/>
+        <filter token="LOG_LEVEL_TORQUE" value="${scarab.log.level.torque}"/>
+        <filter token="LOG_FILE_TORQUE" value="${scarab.log.file.torque}"/>
+        <filter token="LOG_APPEND_TORQUE" value="${scarab.log.append.torque}"/>
         <copy todir="${build.project.webinf}/conf" filtering="yes">
             <fileset dir="${src.conf.dir}/" defaultexcludes="no">
                 <include name="*.properties"/>
