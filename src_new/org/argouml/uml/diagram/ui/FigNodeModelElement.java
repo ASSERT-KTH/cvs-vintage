@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.48 2002/12/30 12:43:25 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.49 2002/12/31 07:32:34 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -247,31 +247,25 @@ public abstract class FigNodeModelElement
 
     public void setEnclosingFig(Fig f) {
         super.setEnclosingFig(f);
-        if (_encloser instanceof FigNodeModelElement)
-            ((FigNodeModelElement) _encloser)._enclosedFigs.removeElement(this);
-        if (_encloser != null && f == null && getOwner() != null) {
-            // moved it from some package into the free wild
-            ProjectBrowser pb = ProjectBrowser.TheInstance;
-            UMLDiagram diagram = (UMLDiagram) pb.getActiveDiagram();
-            MNamespace ns = diagram.getNamespace();
-            ns.addOwnedElement((MModelElement) getOwner());
+        if (!(getOwner() instanceof MModelElement)) 
+        	return;
+        MModelElement elem = (MModelElement)getOwner();
+        if (f == null && getEnclosingFig() != null) { // move from a package to the diagram
+            // TODO: we should print "from blahblah package
+            // TODO: we should take into account 'playing around with the classes' on some diagram
+            return;
+        }
+        if (f == null && getEnclosingFig() == null) { // placement on the diagram
+            return;
+        }        
+        Object fOwner = f.getOwner();
+        if (fOwner instanceof MNamespace) { // placed it on a package
+            if (CoreHelper.getHelper().isValidNamespace(elem, (MNamespace)fOwner)) 
+            	((MNamespace)fOwner).addOwnedElement(elem);
+            return;
         }
         _encloser = f;
-        if (_encloser instanceof FigNodeModelElement) {
-            ((FigNodeModelElement) _encloser)._enclosedFigs.addElement(this);
-            if (_encloser.getOwner() != null
-                && _encloser.getOwner() instanceof MNamespace) {
-                if (CoreHelper
-                    .getHelper()
-                    .isValidNamespace(
-                        (MModelElement) getOwner(),
-                        (MNamespace) _encloser.getOwner())) {
-                    ((MNamespace) _encloser.getOwner()).addOwnedElement(
-                        (MModelElement) getOwner());
-                }
-            }
-        }
-
+                
     }
 
     public Vector getEnclosedFigs() {
