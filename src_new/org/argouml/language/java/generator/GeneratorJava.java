@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.98 2004/08/03 09:28:00 linus Exp $
+// $Id: GeneratorJava.java,v 1.99 2004/08/24 17:37:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1552,6 +1552,15 @@ public class GeneratorJava
         return ModelFacade.getName(m);
     }
 
+    /**
+     * @see org.argouml.application.api.NotationProvider2#generateObjectFlowState(java.lang.Object)
+     */
+    public String generateObjectFlowState(Object m) {
+        Object c = ModelFacade.getType(m);
+        if (c == null) return "";
+        return ModelFacade.getName(c);
+    }
+    
     /**
      * @see org.argouml.application.api.NotationProvider2#generateStateBody(java.lang.Object)
      */

@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.11 2004/08/24 06:33:46 linus Exp $
+// $Id: GeneratorCSharp.java,v 1.12 2004/08/24 17:37:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -276,6 +276,15 @@ public class GeneratorCSharp extends Generator2
 	return null;
     }
 
+    /**
+     * @see org.argouml.application.api.NotationProvider2#generateObjectFlowState(java.lang.Object)
+     */
+    public String generateObjectFlowState(Object m) {
+        Object c = ModelFacade.getType(m);
+        if (c == null) return "";
+        return ModelFacade.getName(c);
+    }
+    
     /**
      * @see org.argouml.application.api.NotationProvider2#generateOperation(
      *         java.lang.Object, boolean)

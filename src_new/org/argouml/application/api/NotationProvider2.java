@@ -1,4 +1,4 @@
-// $Id: NotationProvider2.java,v 1.6 2004/08/08 10:55:41 mvw Exp $
+// $Id: NotationProvider2.java,v 1.7 2004/08/24 17:37:04 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -156,13 +156,21 @@ public interface NotationProvider2 {
     public String generateMultiplicity(Object m);
 
     /**
+     * Generate the String representation for a ObjectFlowState.
+     *
+     * @param m Object to generate representation for.
+     * @return The String representation of the object.
+     */
+    public String generateObjectFlowState(Object m);
+
+    /**
      * Generate the String representation for a State.
      *
      * @param m Object to generate representation for.
      * @return The String representation of the object.
      */
     public String generateState(Object m);
-
+    
     /**
      * Generate the String representation for a StateBody.
      *

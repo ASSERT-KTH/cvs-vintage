@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.9 2004/07/22 15:52:02 d00mst Exp $
+// $Id: GeneratorPHP4.java,v 1.10 2004/08/24 17:37:06 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -175,6 +175,15 @@ public class GeneratorPHP4
         return "generateExtensionPoint(MExtensionPoint modelElement)";
     }
 
+    /**
+     * @see org.argouml.application.api.NotationProvider2#generateObjectFlowState(java.lang.Object)
+     */
+    public String generateObjectFlowState(Object m) {
+        Object c = ModelFacade.getType(m);
+        if (c == null) return "";
+        return ModelFacade.getName(c);
+    }
+    
     /**
      * Generates operation
      *

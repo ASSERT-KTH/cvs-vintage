@@ -1,4 +1,4 @@
-// $Id: Generator2.java,v 1.5 2004/08/09 05:48:36 linus Exp $
+// $Id: Generator2.java,v 1.6 2004/08/24 17:37:06 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -228,6 +228,11 @@ public abstract class Generator2
      */
     public abstract String generateMultiplicity(Object m);
 
+    /**
+     * @see NotationProvider2#generateObjectFlowState(Object)
+     */
+    public abstract String generateObjectFlowState(Object m);
+    
     /**
      * @see NotationProvider2#generateState(Object)
      */

@@ -1,4 +1,4 @@
-// $Id: GeneratorDummy.java,v 1.7 2004/06/24 06:28:40 linus Exp $
+// $Id: GeneratorDummy.java,v 1.8 2004/08/24 17:37:05 mvw Exp $
 // Copyright (c) 2001-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,6 +119,16 @@ public class GeneratorDummy extends Generator2 implements PluggableNotation {
     public String generateMessage(/*MMessage*/Object handle) {
 	return "Message(" + ModelFacade.getName(handle) + ")";
     }
+
+    /**
+     * @see org.argouml.application.api.NotationProvider2#generateObjectFlowState(java.lang.Object)
+     */
+    public String generateObjectFlowState(Object m) {
+        Object c = ModelFacade.getType(m);
+        if (c == null) return "";
+        return ModelFacade.getName(c);
+    }
+    
     public boolean canParse() { return false; }
     public boolean canParse(Object o) { return false; }
 

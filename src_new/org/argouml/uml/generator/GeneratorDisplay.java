@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.68 2004/08/09 20:16:18 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.69 2004/08/24 17:37:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -961,6 +961,15 @@ public class GeneratorDisplay extends Generator2 {
      */
     public String generateState(Object m) {
         return ModelFacade.getName(m);
+    }
+
+    /**
+     * @see org.argouml.application.api.NotationProvider2#generateObjectFlowState(java.lang.Object)
+     */
+    public String generateObjectFlowState(Object m) {
+        Object c = ModelFacade.getType(m);
+        if (c == null) return "";
+        return ModelFacade.getName(c);
     }
 
     /**

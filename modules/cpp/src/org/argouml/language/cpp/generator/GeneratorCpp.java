@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.15 2004/08/02 21:10:39 linus Exp $
+// $Id: GeneratorCpp.java,v 1.16 2004/08/24 17:37:03 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -924,6 +924,15 @@ public class GeneratorCpp extends Generator2
 	return "";
     }
 
+    /**
+     * @see org.argouml.application.api.NotationProvider2#generateObjectFlowState(java.lang.Object)
+     */
+    public String generateObjectFlowState(Object m) {
+        Object c = ModelFacade.getType(m);
+        if (c == null) return "";
+        return ModelFacade.getName(c);
+    }
+    
     /** 2002-11-28 Achim Spangler
      * seperate generation of Operation Prefix from generateOperation
      * so that generateOperation is language independent

@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.51 2004/08/09 05:48:34 linus Exp $
+// $Id: Notation.java,v 1.52 2004/08/24 17:37:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -282,6 +282,11 @@ public final class Notation implements PropertyChangeListener {
     private static String generateState(NotationName notation,
 					  Object/*MState*/ m) {
         return getProvider(notation).generateState(m);
+    }
+
+    private static String generateObjectFlowState(NotationName notation,
+          Object/*MObjectFlowState*/ m) {
+        return getProvider(notation).generateObjectFlowState(m);
     }
 
     private static String generateStateBody(NotationName notation,
@@ -726,6 +731,9 @@ public final class Notation implements PropertyChangeListener {
 	}
         if (ModelFacade.isAActionState(o)) {
             return generateActionState(nn, o);
+        }
+        if (ModelFacade.isAObjectFlowState(o)) {
+            return generateObjectFlowState(nn, o);
         }
         if (ModelFacade.isAState(o)) {
             return generateState(nn, o);
