@@ -1,10 +1,14 @@
-<div class="app" id="index">
 $page.setTitle("Scarab functions index")
+
+<div class="app" id="index">
+
 <h2>$page.Title</h2>
+
 <p class="alert">This is not a complete list of pages in the system yet.
 We are working on it. Please go to the temporary
 <a href="$link.setPage("Links.vm")">Links page</a> to see a more complete set of
 links.</p>
+
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
  <tr>
  <td width="50%"><h3>General user functions</h3></td>
@@ -19,18 +23,21 @@ access template details, in order to view or edit, by clicking on the
 templates name. User selects to use a template via a pop-up menu at the
 top of the enter isse page. This template remains as the default until
 another selection is made.</small>
+
   <div><a href="$link.setPage("QueryList.vm")"><strong>Saved query list</strong></a></div>
 <small>List of all saved queries avaible to role. User can access saved
 query details , in order to view or edit, by clicking on the query's
 name, and execute a query by clicking on it's associated project. Saved
 queries are also available through a pop-up menu at the top of every
 screen within scarab.</small>
+
 <!-- FIXME: Not yet done.
   <div><a href="#"><strong>Vote management</strong></a></div>
 <small>This list displays a user's current open votes, and a vote
 management interface they can use to rescind/reprioritize votes, or to
 append comments to votes.</small>
 -->
+
 <!-- FIXME: Note yet done.
   <div><a href="#"><strong>Auto alert email options</strong></a></div>
 <small>Subscription/frequency options for auto alert emails available
@@ -43,21 +50,25 @@ per project.</small>
 <small>Review and respond interface for user submissions including, role
 promotions, saved queries, templates, automated alert emails,
 etc.</small>
+
 <!-- FIXME: Need admin perms to see this. Not Done yet.
   <div><a href="$link.setPage("admin,ArtifactTypeEdit.vm")"><strong>Manage "enter issue" form</strong></a></div>
 <small>Add, edit, create, group, and arrange attributes on the "enter
 issue form".</small>
  -->
+
 <!-- FIXME: Need admin perms to see this -->
   <div><a href="$link.setPage("admin,GlobalAttributeShow.vm")"><strong>Global attributes</strong></a></div>
 <small>Master list of all attributes, both out of the box, and custom,
 available for use when creating/editing the enter "issue form".</small>
+
 <!-- FIXME: Note yet done.
   <div><a href=""><strong>Vote management</strong></a></div>
 <small>Project level settings for votes. Admin settings include
 determining when a vote is added to an issue (manual or automatic), how
 many votes are required to force a state change, etc.</small>
 -->
+
 <!-- FIXME: Note yet done.
   <div><a href="#"><strong>Auto alert email list</strong></a></div>
   <small>Manage, edit, and create auto alert emails used for automated
