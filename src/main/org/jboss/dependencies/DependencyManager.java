@@ -22,14 +22,13 @@ import org.xml.sax.AttributeList;
 import org.xml.sax.HandlerBase;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import com.sun.xml.parser.Parser;
 
 /**
  * Manages dependencies between MBeans.  Loads an XML configuration file,
  * and then starts a list of MBeans according to the dependencies in the
  * file.
  * @author Aaron Mulder <ammulder@alumni.princeton.edu>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class DependencyManager {
     // Static --------------------------------------------------------
@@ -65,23 +64,6 @@ public class DependencyManager {
     }
 
     // Public --------------------------------------------------------
-
-    /**
-     * Loads dependency configuration from an XML string.
-     */
-    public void loadXML(String source) {
-        dependencies.clear();
-        Parser parser = new Parser();
-        try {
-            parser.setDocumentHandler(new SAXHandler());
-            InputSource input = new InputSource(new StringReader(source));
-            parser.parse(input);
-        } catch(IOException e) {
-            e.printStackTrace();
-        } catch(SAXException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Initializes all the MBeans in a server in an order consistant with the
