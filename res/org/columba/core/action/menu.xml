@@ -37,5 +37,16 @@
 		<extensionpoint name="sort"/>
 		<separator/>
 	</menu>
+	
+	<menu name="menu_help">
+	 <menuitem action="ShowHelp"/>
+	 <menuitem action="ShowFAQ"/>
+	 <menuitem action="ShowBugDatabase"/>
+	 <menuitem action="ShowLicense"/>
+	 <menuitem action="ShowHomepage"/>
+	 <menuitem action="ShowProjectPage"/>
+	 <separator/>
+	 <menuitem action="AboutDialog"/>
+	</menu>
 
 </menubar>

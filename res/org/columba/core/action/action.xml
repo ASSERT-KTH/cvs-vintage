@@ -19,4 +19,13 @@
  <action name="FindAgain" class="org.columba.core.gui.action.FindAgainAction"/> 
  <action name="ViewToolbar" class="org.columba.core.gui.action.ViewToolbarAction"/> 
  <action name="Cancel" class="org.columba.core.gui.statusbar.CancelAction"/> 
+ 
+ <!-- help menu -->
+ <action name="ShowHomepage" class="org.columba.core.gui.action.ShowHomepageAction"/>
+ <action name="ShowBugDatabase" class="org.columba.core.gui.action.ShowBugDatabaseAction"/>
+ <action name="ShowFAQ" class="org.columba.core.gui.action.ShowFAQAction"/>
+ <action name="ShowHelp" class="org.columba.core.gui.action.ShowHelpAction"/>
+ <action name="ShowLicense" class="org.columba.core.gui.action.ShowLicenseAction"/>
+ <action name="ShowProjectPage" class="org.columba.core.gui.action.ShowProjectPageAction"/>
+ <action name="AboutDialog" class="org.columba.core.gui.action.AboutDialogAction"/>
 </actionlist>
