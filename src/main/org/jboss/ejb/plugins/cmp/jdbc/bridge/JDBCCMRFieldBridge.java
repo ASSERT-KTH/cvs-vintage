@@ -31,6 +31,8 @@ import org.jboss.ejb.LocalContainerInvoker;
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.plugins.CMPPersistenceManager;
 import org.jboss.ejb.plugins.EntityInstanceCache;
+import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
+import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
@@ -53,9 +55,9 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */                            
-public class JDBCCMRFieldBridge implements JDBCFieldBridge {
+public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    // ------ Invocation messages ------
    
    /** tells the related continer to retrieve the id of the related entity */
@@ -445,7 +447,14 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
    /**
     * The related entity.
     */
-   public JDBCEntityBridge getRelatedEntity() {
+   public EntityBridge getRelatedEntity() {
+      return relatedEntity;
+   }
+   
+   /**
+    * The related entity.
+    */
+   public JDBCEntityBridge getRelatedJDBCEntity() {
       return relatedEntity;
    }
    
@@ -823,8 +832,8 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
       }
       
       // check the preload cache
-      if(log.isDebugEnabled()) {
-         log.debug("Read ahead cahce load:"+
+      if(log.isTraceEnabled()) {
+         log.trace("Read ahead cahce load:"+
                " cmrField="+getFieldName()+
                " pk="+myCtx.getId());
       }
@@ -887,8 +896,8 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
       // mark the field loaded
       fieldState.setLoaded(true);
       
-      if(log.isDebugEnabled()) {
-         log.debug("Preloaded value: "+
+      if(log.isTraceEnabled()) {
+         log.trace("Preloaded value: "+
                " cmrField="+getFieldName()+
                " pk="+myCtx.getId()+
                " values="+values);

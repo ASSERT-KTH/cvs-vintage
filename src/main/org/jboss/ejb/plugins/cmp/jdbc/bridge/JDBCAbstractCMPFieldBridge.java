@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */                            
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    protected JDBCStoreManager manager;
@@ -75,6 +75,10 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
 
    public JDBCCMPFieldMetaData getMetaData() {
       return metadata;
+   }
+
+   public JDBCStoreManager getManager() {
+      return manager;
    }
 
    public String getFieldName() {

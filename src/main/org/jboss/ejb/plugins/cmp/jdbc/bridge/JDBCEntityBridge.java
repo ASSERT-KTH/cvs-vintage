@@ -53,7 +53,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
@@ -298,6 +298,10 @@ public class JDBCEntityBridge implements EntityBridge {
       return metadata.getName();
    }
 
+   public String getAbstractSchemaName() {
+      return metadata.getAbstractSchemaName();
+   }
+
    public JDBCEntityMetaData getMetaData() {
       return metadata;
    }
@@ -362,14 +366,14 @@ public class JDBCEntityBridge implements EntityBridge {
       return fields;
    }
 
-   public JDBCFieldBridge getFieldByName(String name) {
-      return (JDBCFieldBridge)fieldsByName.get(name);
+   public FieldBridge getFieldByName(String name) {
+      return (FieldBridge)fieldsByName.get(name);
    }
 
    private JDBCFieldBridge getExistingFieldByName(String name)
          throws DeploymentException {
 
-      JDBCFieldBridge field = getFieldByName(name);
+      JDBCFieldBridge field = (JDBCFieldBridge)getFieldByName(name);
       if(field == null) {
          throw new DeploymentException("field not found: " + name);
       }

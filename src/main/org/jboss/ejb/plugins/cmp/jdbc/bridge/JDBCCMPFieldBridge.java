@@ -12,9 +12,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
+import org.jboss.ejb.plugins.cmp.bridge.CMPFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
-
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 
 /**
  * JDBCCMPFieldBridge represents one CMP field. This implementations of 
@@ -29,10 +30,9 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
  *      One for each entity bean cmp field.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
-public interface JDBCCMPFieldBridge 
-      extends JDBCFieldBridge {
+public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge {
 
    /**
     * Gets the java class type of the field.
@@ -44,6 +44,11 @@ public interface JDBCCMPFieldBridge
     * Get metadata for the field.
     */
    public JDBCCMPFieldMetaData getMetaData();
+
+   /**
+    * Gets the JDBCStoreManager for this field
+    */
+   public JDBCStoreManager getManager();
 
    /**
     * Gets the value of this field in the specified primaryKey object.
