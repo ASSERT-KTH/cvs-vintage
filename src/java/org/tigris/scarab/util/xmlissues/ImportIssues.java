@@ -99,7 +99,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.20 2003/07/28 17:27:52 dlr Exp $
+ * @version $Id: ImportIssues.java,v 1.21 2003/07/28 21:21:26 dlr Exp $
  */
 public class ImportIssues
     implements ErrorHandler
@@ -328,10 +328,8 @@ public class ImportIssues
         throws Exception
     {
         List importErrors = null;
-        String msgFragment = "mporting issues from " +
-            (input instanceof FileItem ? "uploaded " : "") + "XML '" +
-            filePath + '\'';
-        LOG.debug('I' + msgFragment);
+        String msg = "Importing issues from XML '" + filePath + '\'';
+        LOG.debug(msg);
         try
         {
             // Disable workflow and set file attachment flag
@@ -349,7 +347,7 @@ public class ImportIssues
         }
         catch (Exception e)
         {
-            LOG.error("Error i" + msgFragment, e);
+            LOG.error(msg, e);
             throw e;
         }
         finally
