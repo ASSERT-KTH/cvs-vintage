@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.66 2003/03/22 18:35:50 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.67 2003/03/25 00:36:55 dlr Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -1071,7 +1071,6 @@ public abstract class AbstractScarabUser
             if (mitList == null) 
             {                
                 mitList = MITListManager.getInstance();
-                Log.get().debug("mitList was null, setting to a new mitList " + mitList);
                 setCurrentMITList(mitList);
             }
 
