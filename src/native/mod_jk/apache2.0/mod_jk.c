@@ -74,7 +74,6 @@
 #include "http_log.h"
 #include "util_script.h"
 #include "util_date.h"
-#include "http_conf_globals.h"
 #include "apr_strings.h"
 /*
  * Jakarta (jk_) include files
