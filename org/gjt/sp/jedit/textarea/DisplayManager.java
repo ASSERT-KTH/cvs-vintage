@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.83 2003/12/10 20:16:35 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.84 2003/12/16 03:04:32 spestov Exp $
  */
 public class DisplayManager
 {
@@ -1526,17 +1526,21 @@ loop:		for(;;)
 
 				lastfvmget = -1;
 				fvmdump();
+
 			}
 
 			if(textArea.getDisplayManager() == DisplayManager.this)
 			{
-				contentInserted(firstLine,startLine,numLines);
-				contentInserted(scrollLineCount,startLine,numLines);
+				if(numLines != 0)
+				{
+					contentInserted(firstLine,startLine,numLines);
+					contentInserted(scrollLineCount,startLine,numLines);
+				}
 
 				if(delayedUpdateEnd >= startLine)
 					delayedUpdateEnd += numLines;
 				delayedUpdate(startLine,endLine);
-				
+
 				//{{{ resize selections if necessary
 				for(int i = 0; i < textArea.selection.size(); i++)
 				{
@@ -1584,9 +1588,12 @@ loop:		for(;;)
 
 			if(textArea.getDisplayManager() == DisplayManager.this)
 			{
-				preContentRemoved(firstLine,startLine,numLines);
-				preContentRemoved(scrollLineCount,startLine,numLines);
-				
+				if(numLines != 0)
+				{
+					preContentRemoved(firstLine,startLine,numLines);
+					preContentRemoved(scrollLineCount,startLine,numLines);
+				}
+
 				if(delayedUpdateEnd >= startLine)
 					delayedUpdateEnd -= numLines;
 				delayedUpdate(startLine,startLine);

@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.72 2003/12/16 01:58:57 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.73 2003/12/16 03:04:32 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -104,7 +104,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 			throw new InternalError("Invalid position: " + position);
 
 		JToggleButton button = new JToggleButton();
-		button.setMargin(new Insets(0,0,0,0));
+		button.setMargin(new Insets(1,1,1,1));
 		button.setRequestFocusEnabled(false);
 		button.setIcon(new RotatedTextIcon(rotation,button.getFont(),
 			entry.title));

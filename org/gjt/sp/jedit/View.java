@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.107 2003/11/18 22:31:48 spestov Exp $
+ * @version $Id: View.java,v 1.108 2003/12/16 03:04:32 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -563,6 +563,12 @@ public class View extends JFrame implements EBComponent
 		if(evt == null)
 			return;
 
+		if(Debug.DUMP_KEY_EVENTS && from != VIEW)
+		{
+			Log.log(Log.DEBUG,this,"Key event after workaround: "
+				+ GrabKeyDialog.toString(evt));
+		}
+
 		switch(evt.getID())
 		{
 		case KeyEvent.KEY_TYPED:
@@ -590,6 +596,13 @@ public class View extends JFrame implements EBComponent
 					.translateKeyEvent(evt);
 				if(keyStroke != null)
 				{
+					if(Debug.DUMP_KEY_EVENTS
+						&& from != VIEW)
+					{
+						Log.log(Log.DEBUG,this,
+							"Translated: "
+							+ keyStroke);
+					}
 					if(inputHandler.handleKey(keyStroke))
 						evt.consume();
 				}
@@ -646,6 +659,13 @@ public class View extends JFrame implements EBComponent
 					.translateKeyEvent(evt);
 				if(keyStroke != null)
 				{
+					if(Debug.DUMP_KEY_EVENTS
+						&& from != VIEW)
+					{
+						Log.log(Log.DEBUG,this,
+							"Translated: "
+							+ keyStroke);
+					}
 					if(inputHandler.handleKey(keyStroke))
 						evt.consume();
 				}
