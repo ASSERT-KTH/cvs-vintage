@@ -33,7 +33,7 @@
     #set ( $nextLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()).setPage("IssueList.vm"))
     | <a href="$nextLink">&raquo;</a> next
   #end
-    (<a href="secure,ConfigureIssueList.vm">add/remove attributes from view</a>)</div>
+    (<a href="ConfigureIssueList.vm">add/remove attributes from view</a>)</div>
 #end
 
 
