@@ -3,7 +3,7 @@ insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (21, 'S
 insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (22, 'SCARAB_ATTACHMENT_TYPE', 100, 10);
 insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (23, 'SCARAB_ATTRIBUTE', 100, 10);
 insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (24, 'SCARAB_ATTRIBUTE_CLASS', 100, 10);
-insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (25, 'SCARAB_ATTRIBUTE_OPTION', 100, 10);
+insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (25, 'SCARAB_ATTRIBUTE_OPTION', 200, 10);
 insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (26, 'SCARAB_OPTION_RELATIONSHIP', 1000, 10);
 insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (27, 'SCARAB_ATTRIBUTE_TYPE', 100, 10);
 insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (28, 'SCARAB_DEPEND', 100, 10);
