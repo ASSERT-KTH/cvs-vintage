@@ -41,8 +41,6 @@ import javax.swing.UIManager;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -58,17 +56,9 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
 	JButton closeButton;
 
 	JTextPane textPane;
-	URL url;
 
 	public InfoViewerDialog(String message) {
-		//		modal dialog
-		super(new JFrame(), true);
-
-		initComponents();
-
-		pack();
-		setLocationRelativeTo(null);
-
+                this();
 		HTMLEditorKit editorKit = new HTMLEditorKit();
 		StyleSheet styles = new StyleSheet();
 
@@ -86,61 +76,45 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
 
 		textPane.setEditorKit(editorKit);
 		textPane.setText(message);
-		textPane.setEditable(false);
-		setVisible(true);
+                setVisible(true);
 	}
 
 	/**
 	 * @throws java.awt.HeadlessException
 	 */
 	public InfoViewerDialog(URL url) {
-		// modal dialog
-		super(new JFrame(), true);
-
-		this.url = url;
-
-		initComponents();
-
-		pack();
-		setLocationRelativeTo(null);
-
+                this();
 		try {
-
 			textPane.setPage(url);
 		} catch (IOException ex) {
-
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(ex);
-
-			return;
 		}
-
-		textPane.setEditable(false);
-
-		setVisible(true);
+                setVisible(true);
 	}
+        
+        protected InfoViewerDialog() {
+		super(new JFrame(), "Info", true);
+		initComponents();
+		pack();
+		setLocationRelativeTo(null);
+		textPane.setEditable(false);
+        }
 
 	protected void initComponents() {
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 0, 11));
 		getContentPane().add(mainPanel);
 
 		// centerpanel
-
-		JPanel centerPanel = new JPanel(new BorderLayout());
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-
 		textPane = new JTextPane();
 		JScrollPane scrollPane = new JScrollPane(textPane);
 		scrollPane.setPreferredSize(new Dimension(450, 300));
 		scrollPane.getViewport().setBackground(Color.white);
-		centerPanel.add(scrollPane);
 
-		mainPanel.add(centerPanel);
+		mainPanel.add(scrollPane);
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 		JButton closeButton =
@@ -166,14 +140,12 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
 			"HELP",
 			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
 		if (action.equals("CLOSE")) {
-
 			setVisible(false);
 		} else if (action.equals("HELP")) {
 			URLController c = new URLController();
@@ -182,7 +154,5 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
 			} catch (MalformedURLException mue) {
 			}
 		}
-
 	}
-
 }
