@@ -149,10 +149,35 @@ public class ServerSession  implements  Serializable {
 	return state;
     }
 
+    /** Change the state, call all hooks
+     */
     public void setState( int state ) {
+	if( context != null ) {
+	    BaseInterceptor reqI[]=context.getContainer().
+		getInterceptors(Container.H_sessionState);
+	    for( int i=0; i< reqI.length; i++ ) {
+		reqI[i].sessionState( null,
+				      this,  state);
+	    }
+	}
 	this.state=state;
     }
 
+    /** Change the state, call all hooks. The request that initiated
+	the event is passed
+     */
+    public void setState( int state, Request req ) {
+	if( context != null ) {
+	    BaseInterceptor reqI[]=context.getContainer().
+		getInterceptors(Container.H_sessionState);
+	    for( int i=0; i< reqI.length; i++ ) {
+		reqI[i].sessionState( req,
+				      this,  state);
+	    }
+	}
+	this.state=state;
+    }
+    
     // ----------------------------------------------------- Session Properties
     /** The time stamp associated with this session
      */
