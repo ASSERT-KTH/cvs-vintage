@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.15 2002/01/26 01:36:24 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.16 2002/02/19 06:51:12 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -685,7 +685,7 @@ public class BufferIORequest extends WorkRequest
 
 			try
 			{
-				buffer.readLock();
+				//buffer.readLock();
 
 				if(!buffer.isDirty())
 				{
@@ -700,12 +700,12 @@ public class BufferIORequest extends WorkRequest
 
 				write(buffer,out);
 			}
-			catch(IOException io)
+			catch(Exception e)
 			{
 			}
 			finally
 			{
-				buffer.readUnlock();
+				//buffer.readUnlock();
 			}
 		}
 		catch(WorkThread.Abort a)
