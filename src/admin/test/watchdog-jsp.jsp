@@ -40,27 +40,28 @@ You can see the context log <a href="/jsp-tests/context_log.txt">here</a>
 <h1>FAILED Tests</h1>
 
 <adm:iterate name="failures" enumeration="<%= gtestTestFailures.elements() %>" 
-               type="org.apache.tomcat.util.test.GTest" >
+               type="org.apache.tomcat.util.test.Matcher" >
 <% // Need more tags - if, etc 
 %>
-<a href='<%= failures.getHttpClient().getURI() %>'> 
-<font color='red'> FAIL </font></a> ( <%= failures.getDescription() %> )
-    <%= failures.getHttpClient().getRequestLine() %>
+<a href='<%= failures.getHttpRequest().getURI() %>'> 
+<font color='red'> FAIL </font></a> ( <%= 
+	failures.getHttpClient().getComment() %> )
+    <%= failures.getHttpRequest().getRequestLine() %>
 <br>
-TEST: <%= failures.getMatcher().getTestDescription() %>
+TEST: <%= failures.getTestDescription() %>
 <br>
 <b>Request: </b>
 <pre>
-  <%= failures.getHttpClient().getFullRequest() %>
+  <%= failures.getHttpRequest().getFullRequest() %>
 </pre>
 
 <b>Message: </b>
 <pre>
-  <%= failures.getMatcher().getMessage() %>
+  <%= failures.getMessage() %>
 </pre>
 
 <b>Response status: </b> 
-<%= failures.getHttpClient().getResponse().getResponseLine() %>
+<%= failures.getHttpResponse().getResponseLine() %>
 <br>
 <b>Response headers: </b>
  (I'm not sure how to do embeded iterations, need JSP expert )
@@ -68,7 +69,7 @@ TEST: <%= failures.getMatcher().getTestDescription() %>
 
 <b>Response body: </b>
 <pre>
-<%= failures.getHttpClient().getResponse().getResponseBody() %>
+<%= failures.getHttpResponse().getResponseBody() %>
 </pre>
 
 </adm:iterate>
