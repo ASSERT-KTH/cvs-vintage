@@ -18,7 +18,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.28 2003/01/24 18:47:31 starksm Exp $
+ * $Id: EJBVerifier20.java,v 1.29 2003/03/28 18:33:34 lqd Exp $
  */
 
 
@@ -43,7 +43,7 @@ import org.jboss.verifier.factory.DefaultEventFactory;
  *
  * @author  Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  * @since   JDK 1.3
  */
 public class EJBVerifier20
@@ -2406,6 +2406,21 @@ public class EJBVerifier20
       if( entity.getPrimKeyField() == null ||
          entity.getPrimKeyField().length() == 0 )
       {
+         // Check whether equals() and hashCode() are actually overridden
+         // in the PK class or any of its superclasses
+         if( !definesEquals(cls) )
+         {
+            log.warn( "The PK Class " + cls.getName() + " or any of its " +
+               "superclasses does not override the equals(Object other) " +
+               "method." );
+         }
+
+         if( !definesHashCode(cls) )
+         {
+            log.warn( "The PK Class " + cls.getName() + " or any of its " +
+               "superclasses does not override the hashCode() method." );
+         }
+
          // This is a check for some interesting implementation of
          // equals() and hashCode().  I am not sure how well it works in
          // the end.

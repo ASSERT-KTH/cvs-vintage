@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.36 2002/09/17 15:30:39 lqd Exp $
+ * $Id: AbstractVerifier.java,v 1.37 2003/03/28 18:33:33 lqd Exp $
  */
 package org.jboss.verifier.strategy;
 
@@ -83,7 +83,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  * @since   JDK 1.3
  */
 public abstract class AbstractVerifier
@@ -1015,6 +1015,72 @@ public abstract class AbstractVerifier
       {
          return false;
       }
+   }
+
+   /**
+    * Checks whether the given class or any of its superclasses defines
+    * a custom 'equals' method instead of using the default one provided
+    * by java.lang.Object
+    *
+    * @param clazz Class to check
+    *
+    * @return <code>true</code> if the equals method is defined
+    */
+   public final boolean definesEquals( Class clazz )
+   {
+      Class[] params = new Class[] { Object.class };
+
+      while( clazz != null && !clazz.equals(Object.class) )
+      {
+         try
+         {
+            Method m = clazz.getDeclaredMethod( "equals",  params );
+            if( m.getReturnType() == Boolean.TYPE )
+            {
+               return true;
+            }
+         }
+         catch( NoSuchMethodException nsme )
+         {
+            // no problem, try superclasses ...
+         }
+         clazz = clazz.getSuperclass();
+      }
+
+      return false;
+   }
+
+   /**
+    * Checks whether the given class or any of its superclasses defines
+    * a custom 'hashCode' method instead of using the default one provided
+    * by java.lang.Object
+    *
+    * @param clazz Class to check
+    *
+    * @return <code>true</code> if the hashCode method is defined
+    */
+   public final boolean definesHashCode( Class clazz )
+   {
+      Class[] params = new Class[0];
+
+      while( clazz != null && !clazz.equals(Object.class) )
+      {
+         try
+         {
+            Method m = clazz.getDeclaredMethod( "hashCode", params );
+            if( m.getReturnType() == Integer.TYPE )
+            {
+               return true;
+            }
+         }
+         catch( NoSuchMethodException nsme )
+         {
+            // no problem, try superclass
+         }
+         clazz = clazz.getSuperclass();
+      }
+
+      return false;
    }
 
 
