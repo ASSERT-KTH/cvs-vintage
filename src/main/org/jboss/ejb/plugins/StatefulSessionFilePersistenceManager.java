@@ -63,7 +63,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -159,6 +159,10 @@ public class StatefulSessionFilePersistenceManager
    public void createSession(Method m, Object[] args, StatefulSessionEnterpriseContext ctx)
    throws Exception
    {
+
+      // Set id
+      ctx.setId(nextId());
+
       // Get methods
       try
       {
@@ -169,10 +173,16 @@ public class StatefulSessionFilePersistenceManager
 
       } catch (IllegalAccessException e)
       {
+         // Clear id
+         ctx.setId(null);
+
          // Throw this as a bean exception...(?)
          throw new EJBException(e);
       } catch (InvocationTargetException ite)
       {
+         // Clear id
+         ctx.setId(null);
+
          Throwable e = ite.getTargetException();
          if (e instanceof EJBException)
          {
@@ -194,9 +204,6 @@ public class StatefulSessionFilePersistenceManager
             throw (Error)e;
          }
       }
-
-      // Set id
-      ctx.setId(nextId());
 
       // Insert in cache
       ((StatefulSessionContainer)con).getInstanceCache().insert(ctx);
