@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.20 2002/03/10 05:36:13 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.21 2002/03/10 06:26:51 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -62,6 +62,8 @@ public class FileVFS extends VFS
 				return FileRootsVFS.PROTOCOL + ":";
 			else if(path.length() == 3 && path.endsWith(":\\"))
 				return FileRootsVFS.PROTOCOL + ":";
+			else if(path.startsWith("\\\\") && path.indexOf('\\',2) == -1)
+				return path;
 		}
 
 		return super.getParentOfPath(path);
