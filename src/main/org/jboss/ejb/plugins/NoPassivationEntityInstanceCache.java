@@ -37,7 +37,7 @@ import org.jboss.metadata.EntityMetaData;
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andy Schaefer</a>
-*	@version $Revision: 1.11 $
+*	@version $Revision: 1.12 $
 */
 public class NoPassivationEntityInstanceCache
 implements EntityInstanceCache
@@ -101,6 +101,8 @@ implements EntityInstanceCache
         
         // Use the CacheKey for the rest of the method
         CacheKey cacheKey = (CacheKey) id;
+		
+		System.out.println("Get "+cacheKey+" from cache");
         
         EntityEnterpriseContext ctx;
       

@@ -32,7 +32,7 @@ import javax.ejb.EJBException;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.6 $
+*   @version $Revision: 1.7 $
 */
 public class StatefulSessionInstanceInterceptor
 extends AbstractInterceptor
@@ -73,32 +73,20 @@ extends AbstractInterceptor
 		// It is a new context for sure so we can lock it
 		ctx.lock();
 		
-		
 		try
 		{
 			// Invoke through interceptors
 			return getNext().invokeHome(mi);
 		} finally
 		{
+			// Release the lock
+			ctx.unlock();
+			
 			// Still free? Not free if create() was called successfully
 			if (ctx.getId() == null)
 			{
-				
 				container.getInstancePool().free(mi.getEnterpriseContext()); 
-			} else
-			{
-				// DEBUG  Logger.log("Session was created; not returned to pool");
-				
-				// Create was called succesfully we go to the cache
-				synchronized (ctx) {
-					
-					// Release the lock
-					ctx.unlock();
-					
-					//Let the waiters know
-					//ctx.notifyAll();
-				}
-			}
+			} 
 		}
 	}
 	

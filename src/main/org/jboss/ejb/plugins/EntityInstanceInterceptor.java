@@ -42,7 +42,7 @@ import org.jboss.metadata.EntityMetaData;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.10 $
+*   @version $Revision: 1.11 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -160,6 +160,10 @@ extends AbstractInterceptor
 						// Try your luck again
 						ctx = null;
 						continue;
+					} else
+					{
+						//take it!
+						ctx.lock();  
 					}
 				}
 			
