@@ -317,7 +317,7 @@ public class TempFolder extends Folder {
 
 		headerList.add(h, newUid);
 
-		messageList.put(newUid, message);
+		messageList.put(newUid, new ColumbaMessage(h, message));
 
 		return newUid;
 	}
