@@ -11,21 +11,9 @@ import java.lang.reflect.Constructor;
 import java.rmi.RemoteException;
 import java.rmi.NoSuchObjectException;
 import java.util.Collections;
-import java.util.Map;
 import java.util.HashMap;
-
-import javax.ejb.EJBException;
-import javax.jms.Topic;
-import javax.jms.TopicPublisher;
-import javax.jms.TopicSession;
-import javax.jms.TopicConnection;
-import javax.jms.TopicConnectionFactory;
-import javax.jms.Message;
-import javax.jms.Session;
-import javax.jms.JMSException;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.rmi.PortableRemoteObject;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.w3c.dom.Element;
 
@@ -43,7 +31,6 @@ import org.jboss.monitor.Monitorable;
 import org.jboss.monitor.client.BeanCacheSnapshot;
 import org.jboss.monitor.MetricsConstants;
 import org.jboss.util.CachePolicy;
-import org.jboss.util.Executable;
 import org.jboss.util.WorkerQueue;
 
 /**
@@ -61,7 +48,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -120,11 +107,6 @@ public abstract class AbstractInstanceCache
    private boolean m_jmsMonitoring;
    /* Useful for log messages */
    private StringBuffer m_buffer = new StringBuffer();
-   /* JMS log members */
-   private TopicConnection m_jmsConnection;
-   private Topic m_jmsTopic;
-   private TopicSession m_jmsSession;
-   private TopicPublisher m_jmsPublisher;
 
    // Static --------------------------------------------------------
 
@@ -133,6 +115,9 @@ public abstract class AbstractInstanceCache
    // Monitorable implementation ------------------------------------
    public void sample(Object s)
    {
+      if( m_cache == null )
+         return;
+
       synchronized (getCacheLock())
       {
          BeanCacheSnapshot snapshot = (BeanCacheSnapshot)s;
@@ -155,40 +140,6 @@ public abstract class AbstractInstanceCache
    // Public --------------------------------------------------------
    public void setJMSMonitoringEnabled(boolean enable) {m_jmsMonitoring = enable;}
    public boolean isJMSMonitoringEnabled() {return m_jmsMonitoring;}
-
-   public void sendMessage(Message message)
-   {
-      try
-      {
-         message.setJMSType(BEANCACHE_METRICS);
-         message.setJMSExpiration(5000);
-         message.setLongProperty(TIME, System.currentTimeMillis());
-         m_jmsPublisher.publish(m_jmsTopic, message);
-      }
-      catch (JMSException x)
-      {
-         log.error("sendMessage failed", x);
-      }
-   }
-   public Message createMessage(Object id)
-   {
-      Message message = null;
-      try
-      {
-         message = m_jmsSession.createMessage();
-         message.setStringProperty(APPLICATION, getContainer().getEjbModule().getName());
-         message.setStringProperty(BEAN, getContainer().getBeanMetaData().getEjbName());
-         if (id != null)
-         {
-            message.setStringProperty(PRIMARY_KEY, id.toString());
-         }
-      }
-      catch (JMSException x)
-      {
-         log.error("createMessage failed", x);
-      }
-      return message;
-   }
 
    /* From InstanceCache interface */
    public EnterpriseContext get(Object id)
@@ -350,32 +301,11 @@ public abstract class AbstractInstanceCache
    {
       getCache().create();
       m_passivationHelper = new PassivationHelper();
-      String threadName = "Passivator Thread for " + getContainer().getBeanMetaData().getEjbName();
-
-      if (isJMSMonitoringEnabled())
-      {
-         // Setup JMS for cache monitoring
-         Context namingContext = new InitialContext();
-         Object factoryRef = namingContext.lookup("TopicConnectionFactory");
-         TopicConnectionFactory factory = (TopicConnectionFactory)PortableRemoteObject.narrow(factoryRef, TopicConnectionFactory.class);
-
-         m_jmsConnection = factory.createTopicConnection();
-
-         Object topicRef = namingContext.lookup("topic/metrics");
-         m_jmsTopic = (Topic)PortableRemoteObject.narrow(topicRef, Topic.class);
-         m_jmsSession = m_jmsConnection.createTopicSession(false, Session.DUPS_OK_ACKNOWLEDGE);
-         m_jmsPublisher = m_jmsSession.createPublisher(m_jmsTopic);
-      }
    }
    /* From Service interface*/
    public void start() throws Exception
    {
       getCache().start();
-
-      if (isJMSMonitoringEnabled())
-      {
-         m_jmsConnection.start();
-      }
    }
    /* From Service interface*/
    public void stop()
@@ -385,29 +315,15 @@ public abstract class AbstractInstanceCache
       {
          getCache().stop();
       }
-
-
-      if (isJMSMonitoringEnabled() && m_jmsConnection != null)
-      {
-         try
-         {
-            m_jmsConnection.stop();
-         }
-         catch (JMSException ignored) {}
-      }
    }
    /* From Service interface*/
    public void destroy()
    {
       getCache().destroy();
-      if (isJMSMonitoringEnabled() && m_jmsConnection != null)
-      {
-         try
-         {
-            m_jmsConnection.close();
-         }
-         catch (JMSException ignored) {}
-      }
+      this.m_cache = null;
+      m_passivationHelper.clear();
+      m_passivationHelper = null;
+      m_buffer.setLength(0);
    }
 
    // Y overrides ---------------------------------------------------
@@ -424,6 +340,7 @@ public abstract class AbstractInstanceCache
       m_passivationHelper.schedule(ctx);
       logPassivationScheduled(getKey(ctx));
    }
+
    /**
     * Tries to unschedule the given EnterpriseContext for passivation; returns
     * the unscheduled context if it wasn't passivated yet, null if the
@@ -446,23 +363,6 @@ public abstract class AbstractInstanceCache
          m_buffer.append(id);
          log.trace(m_buffer.toString());
       }
-
-      if (isJMSMonitoringEnabled())
-      {
-         // Prepare JMS message
-         Message message = createMessage(id);
-         try
-         {
-            message.setStringProperty(TYPE, "ACTIVATION");
-         }
-         catch (JMSException x)
-         {
-            log.error("createMessage failed", x);
-         }
-
-         // Send JMS Message
-         sendMessage(message);
-      }
    }
 
    protected void logPassivationScheduled(Object id)
@@ -475,24 +375,6 @@ public abstract class AbstractInstanceCache
          m_buffer.append(" with id = ");
          m_buffer.append(id);
          log.trace(m_buffer.toString());
-      }
-
-      if (isJMSMonitoringEnabled())
-      {
-         // Prepare JMS message
-         Message message = createMessage(id);
-         try
-         {
-            message.setStringProperty(TYPE, "PASSIVATION");
-            message.setStringProperty(ACTIVITY, "SCHEDULED");
-         }
-         catch (JMSException x)
-         {
-            log.error("createMessage failed", x);
-         }
-
-         // Send JMS Message
-         sendMessage(message);
       }
    }
 
@@ -507,25 +389,6 @@ public abstract class AbstractInstanceCache
          m_buffer.append(id);
          log.trace(m_buffer.toString());
       }
-
-
-      if (isJMSMonitoringEnabled())
-      {
-         // Prepare JMS message
-         Message message = createMessage(id);
-         try
-         {
-            message.setStringProperty(TYPE, "PASSIVATION");
-            message.setStringProperty(ACTIVITY, "PASSIVATED");
-         }
-         catch (JMSException x)
-         {
-            log.error("createMessage failed", x);
-         }
-
-         // Send JMS Message
-         sendMessage(message);
-      }
    }
 
    protected void logPassivationPostponed(Object id)
@@ -538,24 +401,6 @@ public abstract class AbstractInstanceCache
          m_buffer.append(" with id = ");
          m_buffer.append(id);
          log.trace(m_buffer.toString());
-      }
-
-      if (isJMSMonitoringEnabled())
-      {
-         // Prepare JMS message
-         Message message = createMessage(id);
-         try
-         {
-            message.setStringProperty(TYPE, "PASSIVATION");
-            message.setStringProperty(ACTIVITY, "POSTPONED");
-         }
-         catch (JMSException x)
-         {
-            log.error("createMessage failed", x);
-         }
-
-         // Send JMS Message
-         sendMessage(message);
       }
    }
 
@@ -620,6 +465,18 @@ public abstract class AbstractInstanceCache
          m_passivationJobs = Collections.synchronizedMap(new HashMap());
       }
 
+      protected void clear()
+      {
+         log.debug("Cancelling "+m_passivationJobs.size()+" passivation jobs");
+         Iterator iter = m_passivationJobs.values().iterator();
+         while( iter.hasNext() )
+         {
+            PassivationJob job = (PassivationJob) iter.next();
+            job.cancel();
+         }
+         m_passivationJobs.clear();
+      }
+
       /**
        * Creates and schedules a {@link PassivationJob} for passivation
        */
@@ -633,11 +490,10 @@ public abstract class AbstractInstanceCache
             // with a valid key because it may get freed to the InstancePool, then
             // reused before the PassivationJob executes.
             // marcf, actually for simplicity I have removed the "freed" call in the pool (check entity pool)
-            PassivationJob job = new PassivationJob(bean, key)
+            AbstractPassivationJob job = new AbstractPassivationJob(bean, key)
                {
                   public void execute() throws Exception
                   {
-                     EnterpriseContext ctx = this.getEnterpriseContext();
                      if (ctx.getId() == null)
                      {
                         // If this happens, then a passivation request for this bean was issued
@@ -646,7 +502,6 @@ public abstract class AbstractInstanceCache
                      }
 
                      Object id = this.getKey();
-
                      /**
                       * Synchronization / Passivation explanations:
                       * The instance interceptor (II) first acquires the Sync object associated
@@ -694,9 +549,11 @@ public abstract class AbstractInstanceCache
                               {
                                  // Verify that this ctx hasn't already
                                  // been freed and re-used by another thread.
-                                 if (!((EntityEnterpriseContext)ctx).getCacheKey().equals(id))
+                                 EntityEnterpriseContext entityCtx = (EntityEnterpriseContext) ctx;
+                                 if( entityCtx.getCacheKey().equals(id) == false )
                                  {
                                     // ctx has been freed then re-used in another thread.
+                                    entityCtx = null;
                                     return;
                                  }
                               }
@@ -816,80 +673,3 @@ public abstract class AbstractInstanceCache
       }
    }
 }
-
-/**
- * Abstract class for passivation jobs.
- * Subclasses should implement {@link #execute} synchronizing it in some way because
- * the execute method is normally called in the passivation thread,
- * while the cancel method is normally called from another thread.
- * To avoid that subclasses override methods of this class without
- * make them synchronized (except execute of course), they're declared final.
- */
-abstract class PassivationJob implements Executable
-{
-   private EnterpriseContext m_context;
-   private Object m_key;
-   private boolean m_cancelled;
-   private boolean m_executed;
-
-   PassivationJob(EnterpriseContext ctx, Object key)
-   {
-      m_context = ctx;
-      m_key = key;
-   }
-
-   public abstract void execute() throws Exception;
-
-   /**
-    * (Bill Burke) We can't rely on the EnterpriseContext to provide PassivationJob
-    * with a valid key because it may get freed to the InstancePool, then
-    * reused before the PassivationJob executes.
-    */
-   final Object getKey()
-   {
-      return m_key;
-   }
-   /**
-    * Returns the EnterpriseContext associated with this passivation job,
-    * so the bean that will be passivated.
-    * No need to synchronize access to this method, since the returned
-    * reference is immutable
-    */
-   final EnterpriseContext getEnterpriseContext()
-   {
-      return m_context;
-   }
-   /**
-    * Mark this job for cancellation.
-    * @see #isCancelled
-    */
-   final synchronized void cancel()
-   {
-      m_cancelled = true;
-   }
-   /**
-    * Returns whether this job has been marked for cancellation
-    * @see #cancel
-    */
-   final synchronized boolean isCancelled()
-   {
-      return m_cancelled;
-   }
-   /**
-    * Mark this job as executed
-    * @see #isExecuted
-    */
-   final synchronized void executed()
-   {
-      m_executed = true;
-   }
-   /**
-    * Returns whether this job has been executed
-    * @see #executed
-    */
-   final synchronized boolean isExecuted()
-   {
-      return m_executed;
-   }
-}
-

@@ -7,7 +7,8 @@
 package org.jboss.ejb.plugins;
 
 
-import org.jboss.util.TimerTask;
+import java.util.TimerTask;
+
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 
@@ -17,7 +18,7 @@ import org.w3c.dom.Element;
  * Least Recently Used cache policy for StatefulSessionEnterpriseContexts.
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class LRUStatefulContextCachePolicy extends LRUEnterpriseContextCachePolicy
 {
@@ -57,7 +58,7 @@ public class LRUStatefulContextCachePolicy extends LRUEnterpriseContextCachePoli
 		if (m_maxBeanLife > 0)
 		{
 			m_remover = new RemoverTask(m_removerPeriod);
-			scheduler.schedule(m_remover, (long)(Math.random() * m_removerPeriod));
+			tasksTimer.schedule(m_remover, (long)(Math.random() * m_removerPeriod));
 		}
 	}
 
@@ -120,12 +121,18 @@ public class LRUStatefulContextCachePolicy extends LRUEnterpriseContextCachePoli
 		protected void kickOut(LRUCacheEntry entry) {remove(entry.m_key);}
 		protected long getMaxAge() {return m_maxBeanLife;}
 
-		public void execute()
+		public void run()
 		{
+         if( m_cache == null )
+         {
+            cancel();
+            return;
+         }
+
 			synchronized (m_cache.getCacheLock())
 			{
 				// Remove beans from cache, if present
-				super.execute();
+				super.run();
 
 				// Now remove passivated beans
 				m_cache.removePassivated(getMaxAge() - super.getMaxAge());

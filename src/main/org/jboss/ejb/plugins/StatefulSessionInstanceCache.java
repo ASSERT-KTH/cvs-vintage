@@ -16,9 +16,6 @@ import java.rmi.RemoteException;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
 
-import javax.jms.Message;
-import javax.jms.JMSException;
-
 import org.jboss.ejb.Container;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.EnterpriseContext;
@@ -30,7 +27,7 @@ import org.jboss.ejb.StatefulSessionPersistenceManager;
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class StatefulSessionInstanceCache
     extends AbstractInstanceCache
@@ -55,7 +52,13 @@ public class StatefulSessionInstanceCache
     {
         m_container = (StatefulSessionContainer)c;
     }
-    
+
+   public void destroy()
+   {
+      m_passivated.clear();
+      super.destroy();
+   }
+
     // Z implementation ----------------------------------------------
 
     // Y overrides ---------------------------------------------------
@@ -147,23 +150,6 @@ public class StatefulSessionInstanceCache
         m_buffer.append(key);
         if( log.isTraceEnabled() )
          log.trace(m_buffer.toString());
-
-        if (isJMSMonitoringEnabled())
-        {
-            // Prepare JMS message
-            Message message = createMessage(key);
-            try
-            {
-                message.setStringProperty(TYPE, "REMOVER");
-            }
-            catch (JMSException x)
-            {
-                log.error("createMessage failed", x);
-            }
-
-            // Send JMS Message
-            sendMessage(message);
-        }
     }
 
     // Inner classes -------------------------------------------------

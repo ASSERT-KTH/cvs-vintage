@@ -7,18 +7,19 @@
 package org.jboss.ejb.plugins;
 
 import java.util.HashMap;
+
 import org.jboss.ejb.EnterpriseContext;
-import org.jboss.ejb.plugins.EnterpriseContextCachePolicy;
+import org.jboss.util.CachePolicy;
 
 /**
  * Implementation of a no passivation cache policy.
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class NoPassivationCachePolicy 
-	implements EnterpriseContextCachePolicy
+	implements CachePolicy
 {
 	// Constants -----------------------------------------------------
 
@@ -47,7 +48,10 @@ public class NoPassivationCachePolicy
 	
 	public void stop() {}
 	
-	public void destroy() {}
+	public void destroy()
+   {
+      m_map.clear();
+   }
 
 	public Object get(Object key) 
 	{

@@ -20,7 +20,7 @@ import org.jboss.util.Sync;
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  *
  * <p><b>Revisions:</b>
  * <p><b>2001/01/29: billb</b>
@@ -82,6 +82,7 @@ public class EntityInstanceCache
    public void destroy()
    {
       this.m_container = null;
+      super.destroy();
    }
 
 	protected Object getKey(EnterpriseContext ctx) 
