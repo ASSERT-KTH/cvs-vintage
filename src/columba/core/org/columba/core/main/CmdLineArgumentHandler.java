@@ -56,7 +56,7 @@ public class CmdLineArgumentHandler {
             }
         }
 
-        LOG.info("Option Debug: " + cmdLineParser.getComposerOption());
+        LOG.info("Option Debug: " + MainInterface.DEBUG);
         LOG.info("Option subject: " + cmdLineParser.getSubjectOption());
         LOG.info("Option composer: " + cmdLineParser.getComposerOption());
         LOG.info("Option mailurl: " + cmdLineParser.getMailurlOption());
