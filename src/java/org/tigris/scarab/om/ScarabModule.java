@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.133 2003/04/17 23:02:58 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.134 2003/04/21 20:07:43 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -111,7 +111,9 @@ public class ScarabModule
     protected static final Integer ROOT_ID = new Integer(0);
 
     private String domain = null;
-
+    private String port = null;
+    private String scheme = null;
+    
     /**
      * Get the value of domain.
      * @return value of domain.
@@ -137,22 +139,11 @@ public class ScarabModule
      * Set the value of domain.
      * @param v  Value to assign to domain.
      */
-    public void setDomain(String  v) 
+    public void setDomain(String v)
     {
-        // need to do this because setDomain is called a lot (unknown reason)
-        // and is passed in a null value. this way, we only set it if it isn't
-        // null.
         if (v != null)
         {
-            try
-            {
-                GlobalParameterManager
-                    .setString(GlobalParameter.MODULE_DOMAIN, this, v);
-            }
-            catch (Exception e)
-            {
-                // Nothing here
-            }
+            this.domain = v;
         }
     }
 
@@ -163,19 +154,25 @@ public class ScarabModule
     public String getPort() 
         throws Exception
     {
-        return GlobalParameterManager
-                .getString(GlobalParameter.MODULE_PORT, this);
+        if (port == null)
+        {
+            port = GlobalParameterManager
+                   .getString(GlobalParameter.MODULE_PORT, this);
+        }
+        return port;
     }
     
     /**
      * Set the value of port.
      * @param v  Value to assign to port.
      */
-    public void setPort(String  v) 
+    public void setPort(String v)
         throws Exception
     {
-        GlobalParameterManager
-            .setString(GlobalParameter.MODULE_PORT, this, v);
+        if (v != null)
+        {
+            this.port = v;
+        }
     }
 
     /**
@@ -185,19 +182,25 @@ public class ScarabModule
     public String getScheme() 
         throws Exception
     {
-        return GlobalParameterManager
-                .getString(GlobalParameter.MODULE_SCHEME, this);
+        if (scheme == null)
+        {
+            scheme = GlobalParameterManager
+                     .getString(GlobalParameter.MODULE_SCHEME, this);
+        }
+        return scheme;
     }
     
     /**
      * Set the value of scheme.
      * @param v  Value to assign to scheme.
      */
-    public void setScheme(String  v) 
+    public void setScheme(String v) 
         throws Exception
     {
-        GlobalParameterManager
-            .setString(GlobalParameter.MODULE_SCHEME, this, v);
+        if (v != null)
+        {
+            this.scheme = v;
+        }
     }
 
     /**
@@ -591,6 +594,49 @@ public class ScarabModule
         }
     }
 
+    private void setDomainInfo()
+    {
+        // need to do this because setDomain is called a lot (unknown reason)
+        // and is passed in a null value. this way, we only set it if it isn't
+        // null.
+        if (domain != null)
+        {
+            try
+            {
+                GlobalParameterManager
+                    .setString(GlobalParameter.MODULE_DOMAIN, this, domain);
+            }
+            catch (Exception e)
+            {
+                // Nothing here
+            }
+        }
+        if (port != null)
+        {
+            try
+            {
+                GlobalParameterManager
+                    .setString(GlobalParameter.MODULE_PORT, this, port);
+            }
+            catch (Exception e)
+            {
+                // Nothing here
+            }
+        }
+        if (scheme != null)
+        {
+            try
+            {
+                GlobalParameterManager
+                    .setString(GlobalParameter.MODULE_SCHEME, this, scheme);
+            }
+            catch (Exception e)
+            {
+                // Nothing here
+            }
+        }
+    }
+
     /**
      * Saves the module into the database. Note that this
      * cannot be used within a activitySet if the module isNew()
@@ -674,6 +720,10 @@ public class ScarabModule
         {
             super.save(dbCon);
         }
+        
+        // save any updated domain information
+        setDomainInfo();
+        
         // clear out the cache beause we want to make sure that
         // things get updated properly.
         ScarabCache.clear();
