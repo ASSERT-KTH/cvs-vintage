@@ -117,12 +117,8 @@ insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT, CREATED_BY) v
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (1, 1, 1, 'Documents are not as current as they should be.');
 /* summary */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (2, 1, 11, 'Docs are out of date.');
-/* assigned to visitor id 1 */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, USER_ID, VALUE) values (3, 1, 2, 1, 'jon');
 /* status is New */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (4, 1, 3, 2, 'New');
-/* resolution is verified */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (5, 1, 4, 6, 'verified');
 /* platform is SGI */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (6, 1, 5, 21, 'SGI');
 /* os is Linux */
