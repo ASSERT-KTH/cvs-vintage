@@ -13,6 +13,7 @@ import javax.transaction.Transaction;
 import javax.ejb.EJBObject;
 
 import org.jboss.ejb.BeanLock;
+import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ import java.util.HashSet;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *
  * <p><b>Revisions:</b><br>
  *  <p><b>2001/07/29: marcf</b>
@@ -35,6 +36,7 @@ import java.util.HashSet;
 public abstract class BeanLockSupport
    implements BeanLock
 {
+   protected Container container = null;
    /**
     * Number of threads invoking methods on this bean
     * (1 normally >1 if reentrant)
@@ -67,6 +69,7 @@ public abstract class BeanLockSupport
    public Object getId() { return id;}
    public void setReentrant(boolean reentrant) {this.reentrant = reentrant;}
    public void setTimeout(int timeout) {txTimeout = timeout;}
+   public void setContainer(Container container) { this.container = container; }
 	
    public void sync()
    {
@@ -109,7 +112,7 @@ public abstract class BeanLockSupport
    public int getNumMethodLocks() { return numMethodLocks;}
    public void addMethodLock() { numMethodLocks++; }
 	
-   public abstract void releaseMethodLock();
+   public abstract void endInvocation(Invocation mi);
    
    public void addRef() { refs++;}
    public void removeRef() { refs--;}
