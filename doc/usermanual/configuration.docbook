@@ -58,7 +58,7 @@
 		<entry>carol.start.ns</entry>
 		<entry>'true', 'false'</entry>
 		<entry>If this property is set to 'true', CAROL will automatically start all non started and configured Name Services.</entry>
-		<entry>No, default: true</entry>
+		<entry>No, default: false</entry>
 	      </row>
 	      <row>
 		<entry>carol.start.rmi</entry>
