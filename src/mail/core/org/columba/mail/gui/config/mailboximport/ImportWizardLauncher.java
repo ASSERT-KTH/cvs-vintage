@@ -16,17 +16,16 @@
 
 package org.columba.mail.gui.config.mailboximport;
 
-import net.javaprog.ui.wizard.DataLookup;
-import net.javaprog.ui.wizard.DataModel;
-import net.javaprog.ui.wizard.DefaultWizardModel;
-import net.javaprog.ui.wizard.Step;
-import net.javaprog.ui.wizard.Wizard;
-import net.javaprog.ui.wizard.WizardModel;
+import javax.help.CSH;
+
+import net.javaprog.ui.wizard.*;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+
 import org.columba.mail.plugin.ImportPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -60,7 +59,9 @@ public class ImportWizardLauncher {
                                 "mailboximport",
                                 "title"),
                                 ImageLoader.getSmallImageIcon("stock_convert.png"));
-                wizard.setSize(500, 400);
+                CSH.setHelpIDString(wizard, "organising_and_managing_your_email_1");
+                JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpBroker());
+                wizard.setSize(700, 500);
                 wizard.setLocationRelativeTo(null);
                 wizard.setVisible(true);
         }

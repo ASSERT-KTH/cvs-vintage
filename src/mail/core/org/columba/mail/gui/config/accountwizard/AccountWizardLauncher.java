@@ -16,13 +16,13 @@
 
 package org.columba.mail.gui.config.accountwizard;
 
-import net.javaprog.ui.wizard.DataModel;
-import net.javaprog.ui.wizard.DefaultWizardModel;
-import net.javaprog.ui.wizard.Step;
-import net.javaprog.ui.wizard.Wizard;
-import net.javaprog.ui.wizard.WizardModel;
+import javax.help.CSH;
+
+import net.javaprog.ui.wizard.*;
 
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.help.HelpManager;
+
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -54,7 +54,9 @@ public class AccountWizardLauncher {
                                 "accountwizard",
                                 "title"),
                                 ImageLoader.getSmallImageIcon("stock_preferences.png"));
-        wizard.setSize(500, 400);
+        CSH.setHelpIDString(wizard, "getting_started_1");
+        JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpBroker());
+        wizard.setSize(700, 500);
         wizard.setLocationRelativeTo(null);
         wizard.setVisible(true);
     }
