@@ -29,6 +29,11 @@ public abstract class AbstractRule implements Rule {
      * -> use a neutral 0.5 value
      */
     public static float NEARLY_ZERO= 0.5f;
+    
+    /**
+     * Rule found hints that this message is spam
+     * -> use a maximum 0.9 value
+     */
     public static float MAX_PROBABILITY= 0.9f;
     
     private String name;
