@@ -39,9 +39,10 @@
         </copy>
         
         <attainGoal name="scarab:load-default-data"/>
+        <attainGoal name="scarab:load-sample-data"/>
     </goal>
     
-    <goal name="scarab:load-default-data" prereqs="torque:init">
+    <goal name="scarab:load-default-data">
         <!-- Oracle does not have any type of conditional execution    -->
         <!-- of "drop table".  So when running the table creation,     -->
         <!-- it fails when dropping a table.  Rather than setting the  -->
@@ -75,6 +76,18 @@
 
         </sql>
     </goal>
+    
+    <goal name="scarab:load-sample-data">
+
+        <sql
+            driver="${torque.database.driver}"
+            url="${torque.database.createUrl}"
+            userid="${torque.database.user}"
+            password="${torque.database.password}">
+            <classpath refid="maven.dependency.classpath"/>
+            <transaction src="${torque.sql.dir}/scarab-sample-data.sql"/>
+        </sql>
+    </goal>    
     
     <goal name="scarab:sample" prereqs="war:webapp" 
         description="Create an out of the box ready distribution">
