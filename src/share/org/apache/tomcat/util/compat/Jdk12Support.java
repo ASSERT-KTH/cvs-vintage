@@ -105,10 +105,23 @@ public class Jdk12Support extends Jdk11Compat {
 	return Thread.currentThread().getContextClassLoader();
     }
     
+    public ClassLoader getParentLoader( ClassLoader cl ) {
+	if( cl instanceof DependClassLoader ) {
+	    return ((DependClassLoader)cl).getParentLoader();
+	}
+	if( cl instanceof SimpleClassLoader ) {
+	    return ((SimpleClassLoader)cl).getParentLoader();
+	}
+	if( cl instanceof URLClassLoader ) {
+	    return ((URLClassLoader)cl).getParent();
+	}
+	return null;
+    }
+    
     public URL[] getURLs(ClassLoader cl,int depth){
         int c=0;
         do{
-            while(! (cl instanceof URLClassLoader) && cl != null )
+            while(cl instanceof DependClassLoader && cl != null )
                 cl=((DependClassLoader)cl).getParentLoader();
             if (cl==null) break;
             if (depth==c) return ((URLClassLoader)cl).getURLs();

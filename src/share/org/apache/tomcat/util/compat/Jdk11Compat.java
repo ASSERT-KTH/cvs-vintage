@@ -113,11 +113,21 @@ public class Jdk11Compat {
 	return null;
     }
 
+    public ClassLoader getParentLoader( ClassLoader cl ) {
+	if( cl instanceof DependClassLoader ) {
+	    return ((DependClassLoader)cl).getParentLoader();
+	}
+	if( cl instanceof SimpleClassLoader ) {
+	    return ((SimpleClassLoader)cl).getParentLoader();
+		    }
+	return null;
+    }
+    
     public URL[] getURLs(ClassLoader cl,int depth){
         int c=0;
         do{
-            while(! (cl instanceof SimpleClassLoader))
-                cl=((DependClassLoader)cl).getParentLoader();
+            while( cl instanceof DependClassLoader && cl!=null)
+	      cl=((DependClassLoader)cl).getParentLoader();
             if (depth==c) return ((SimpleClassLoader)cl).getURLs();
             c++;
             cl=((SimpleClassLoader)cl).getParentLoader();
