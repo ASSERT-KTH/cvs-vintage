@@ -55,7 +55,6 @@ import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
-import org.apache.torque.om.NumberKey;
 import org.apache.fulcrum.util.parser.ValueParser;
 
 // Scarab Stuff
@@ -79,7 +78,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.87 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.88 2003/03/28 02:08:17 jon Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -106,9 +105,9 @@ public class AssignIssue extends BaseModifyIssue
                 String userId = userIds[i];
                 String attrId = params.get("user_attr_" + userId);
                 Attribute attribute = AttributeManager
-                    .getInstance(new NumberKey(attrId));
+                    .getInstance(new Integer(attrId));
                 ScarabUser su = ScarabUserManager
-                    .getInstance(new NumberKey(userId));
+                    .getInstance(new Integer(userId));
                 item.add(attribute);
                 item.add(su);
                 List issues = scarabR.getAssignIssuesList();
@@ -137,7 +136,7 @@ public class AssignIssue extends BaseModifyIssue
     /**
      * Removes users from temporary working list.
      */
-    private void remove(RunData data, TemplateContext context, NumberKey issueId) 
+    private void remove(RunData data, TemplateContext context, Integer issueId) 
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
@@ -154,9 +153,9 @@ public class AssignIssue extends BaseModifyIssue
                 String userId = userIds[i];
                 String attrId = params.getString("old_attr_" + userId);
                 Attribute attribute = AttributeManager
-                    .getInstance(new NumberKey(attrId));
+                    .getInstance(new Integer(attrId));
                 ScarabUser su = ScarabUserManager
-                    .getInstance(new NumberKey(userId));
+                    .getInstance(new Integer(userId));
                 item.add(attribute);
                 item.add(su);
                 userList.remove(item);
@@ -172,7 +171,7 @@ public class AssignIssue extends BaseModifyIssue
     /**
      * Changes the user attribute a user is associated with.
      */
-    private void update(RunData data, TemplateContext context, NumberKey issueId) 
+    private void update(RunData data, TemplateContext context, Integer issueId) 
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
@@ -190,9 +189,9 @@ public class AssignIssue extends BaseModifyIssue
                 String userId = userIds[i];
                 String attrId = params.getString("old_attr_" + userId);
                 Attribute attribute = AttributeManager
-                    .getInstance(new NumberKey(attrId));
+                    .getInstance(new Integer(attrId));
                 ScarabUser su = ScarabUserManager
-                    .getInstance(new NumberKey(userId));
+                    .getInstance(new Integer(userId));
                 item.add(attribute);
                 item.add(su);
                 userList.remove(item);
@@ -200,7 +199,7 @@ public class AssignIssue extends BaseModifyIssue
                 String newKey = "asso_user_{" + userId + "}_issue_{" + issueId + '}';
                 String newAttrId = params.get(newKey);
                 Attribute newAttribute = AttributeManager
-                     .getInstance(new NumberKey(newAttrId));
+                     .getInstance(new Integer(newAttrId));
                 newItem.add(newAttribute);
                 newItem.add(su);
                 userList.add(newItem);
@@ -363,19 +362,26 @@ public class AssignIssue extends BaseModifyIssue
     {
         ValueParser params = data.getParameters();
         Object[] keys =  params.getKeys();
-        for (int i =0; i<keys.length; i++)
+        try
         {
-            String key = keys[i].toString();
-            if (key.startsWith("eventsubmit_doremove"))
+            for (int i =0; i<keys.length; i++)
             {
-                String issueId = key.substring(21);
-                remove(data, context, new NumberKey(issueId));
+                String key = keys[i].toString();
+                if (key.startsWith("eventsubmit_doremove"))
+                {
+                    String issueId = key.substring(21);
+                    remove(data, context, new Integer(issueId));
+                }
+                else if (key.startsWith("eventsubmit_doupdate"))
+                {
+                    String issueId = key.substring(21);
+                    update(data, context, new Integer(issueId));
+                }
             }
-            else if (key.startsWith("eventsubmit_doupdate"))
-            {
-                String issueId = key.substring(21);
-                update(data, context, new NumberKey(issueId));
-            }
+        }
+        catch (NumberFormatException nfe) // new Integer(issueId) above could fail
+        {
+            getScarabRequestTool(context).setAlertMessage("BadIntegerConversion");
         }
     }
 

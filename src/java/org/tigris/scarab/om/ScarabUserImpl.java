@@ -62,7 +62,6 @@ import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRolePeer;
 import org.apache.fulcrum.security.util.AccessControlList;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
-import org.apache.torque.om.NumberKey;
 import org.apache.commons.util.GenerateUniqueId;
 
 import org.tigris.scarab.reports.ReportBridge;
@@ -81,7 +80,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.93 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.94 2003/03/28 02:08:17 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -340,7 +339,7 @@ public class ScarabUserImpl
                 {
                     // check for the permission within the 'Global' module
                     Module globalModule = ModuleManager
-                        .getInstance(new NumberKey(Module.ROOT_ID));
+                        .getInstance(Module.ROOT_ID);
                     hasPermission = acl.hasPermission(perm, 
                                                       (Group)globalModule);
                 }

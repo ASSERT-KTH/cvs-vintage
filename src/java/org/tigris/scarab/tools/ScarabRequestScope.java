@@ -79,7 +79,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.32 2003/03/15 21:56:59 jon Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.33 2003/03/28 02:08:17 jon Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
@@ -176,9 +176,9 @@ public interface ScarabRequestScope extends ApplicationTool
 
     /**
      * Return a specific User by ID from within the system.  You can
-     * pass in either a NumberKey or something that will resolve to a
+     * pass in either a Integer or something that will resolve to a
      * String object as id.toString() is called on everything that
-     * isn't a <code>NumberKey</code>.
+     * isn't a <code>Integer</code>.
      */
     ScarabUser getUser(Object id) throws Exception;
 

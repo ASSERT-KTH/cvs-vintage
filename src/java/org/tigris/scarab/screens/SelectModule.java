@@ -58,14 +58,13 @@ import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
-import org.apache.torque.om.NumberKey;    
 
 /**
  * This class adds a special link tool that should only be used
  * in SelectModule.vm
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SelectModule.java,v 1.8 2003/02/04 11:26:02 jon Exp $
+ * @version $Id: SelectModule.java,v 1.9 2003/03/28 02:08:17 jon Exp $
  */
 public class SelectModule extends Default
 {
@@ -99,7 +98,7 @@ public class SelectModule extends Default
             try
             {
                 Module module = ModuleManager
-                    .getInstance(new NumberKey(moduleId));
+                    .getInstance(new Integer(moduleId));
                 homePage = ((ScarabUser)data.getUser()).getHomePage(module);
             }
             catch (Exception e)

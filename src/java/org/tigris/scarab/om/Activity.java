@@ -51,7 +51,6 @@ import java.util.List;
 // Turbine classes
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import java.sql.Connection;
 
@@ -63,7 +62,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.44 2003/03/22 18:35:50 jon Exp $
+ * @version $Id: Activity.java,v 1.45 2003/03/28 02:08:17 jon Exp $
  */
 public class Activity 
     extends BaseActivity
@@ -119,7 +118,7 @@ public class Activity
         if (oldAttributeOption==null && (getOldValue() != null))
         {
             oldAttributeOption = AttributeOptionManager
-                .getInstance(new NumberKey(getOldValue()));
+                .getInstance(new Integer(getOldValue()));
         }
         return oldAttributeOption;
     }
@@ -133,7 +132,7 @@ public class Activity
         if (newAttributeOption==null && (getNewValue() != null))
         {
             newAttributeOption = AttributeOptionManager
-                .getInstance(new NumberKey(getNewValue()));
+                .getInstance(new Integer(getNewValue()));
         }
         return newAttributeOption;
     }

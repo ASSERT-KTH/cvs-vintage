@@ -54,8 +54,8 @@ import org.apache.turbine.ParameterParser;
 import org.apache.turbine.TurbineException;
 import org.apache.turbine.pipeline.AbstractValve;
 import org.apache.turbine.ValveContext;
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.TorqueException;
+import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
@@ -72,7 +72,7 @@ import org.tigris.scarab.om.MITListManager;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.15 2003/03/28 01:11:23 jon Exp $
+ * @version $Id: FreshenUserValve.java,v 1.16 2003/03/28 02:08:17 jon Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -153,6 +153,7 @@ public class FreshenUserValve
             MITList mitList = null;
             try
             {
+                // FIXME: no getInstance(Integer)
                 mitList = MITListManager.getInstance(new NumberKey(mitid));
                 user.setCurrentMITList(mitList);
                 mitList.setScarabUser(user);
@@ -174,12 +175,12 @@ public class FreshenUserValve
     {
         Module module = null;
         ParameterParser parameters = data.getParameters();
-        String key = parameters.getString(ScarabConstants.CURRENT_MODULE);
+        Integer key = parameters.getInteger(ScarabConstants.CURRENT_MODULE);
         if (key != null) 
         {
             try
             {
-                module = ModuleManager.getInstance(new NumberKey(key));
+                module = ModuleManager.getInstance(key);
             }
             catch (Exception e)
             {
@@ -210,12 +211,12 @@ public class FreshenUserValve
     {
         IssueType issueType = null;
         ParameterParser parameters = data.getParameters();
-        String key = parameters.getString(ScarabConstants.CURRENT_ISSUE_TYPE);
+        Integer key = parameters.getInteger(ScarabConstants.CURRENT_ISSUE_TYPE);
         if (key != null) 
         {
             try
             {
-                issueType = IssueTypeManager.getInstance(new NumberKey(key));
+                issueType = IssueTypeManager.getInstance(key);
             }
             catch (Exception e)
             {

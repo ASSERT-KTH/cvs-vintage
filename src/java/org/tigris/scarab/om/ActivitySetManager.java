@@ -58,7 +58,7 @@ import org.apache.torque.om.NumberKey;
  *
  * @author <a href="mailto:jmcnally@collab.net">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivitySetManager.java,v 1.5 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: ActivitySetManager.java,v 1.6 2003/03/28 02:08:17 jon Exp $
  */
 public class ActivitySetManager
     extends BaseActivitySetManager
@@ -80,6 +80,7 @@ public class ActivitySetManager
     public static ActivitySet getInstance(String key)
         throws TorqueException
     {
+        // FIXME: no getInstance(Integer)
         return getInstance(new NumberKey(key));
     }
 

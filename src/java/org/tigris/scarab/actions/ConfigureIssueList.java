@@ -57,7 +57,6 @@ import java.util.Collections;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
-import org.apache.torque.om.NumberKey;
 import org.apache.turbine.ParameterParser;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
 
@@ -74,7 +73,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class is responsible for the user configuration of the issue list.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ConfigureIssueList.java,v 1.34 2003/02/07 02:22:15 jon Exp $
+ * @version $Id: ConfigureIssueList.java,v 1.35 2003/03/28 02:08:17 jon Exp $
  */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -95,7 +94,7 @@ public class ConfigureIssueList extends RequireLoginFirstAction
             if (!orders[i].equals("hidden")) 
             {
                 Attribute attribute = AttributeManager
-                    .getInstance(new NumberKey(ids[i]));
+                    .getInstance(new Integer(ids[i]));
                 attributes.add(attribute);
                 Integer order = new Integer(orders[i]);
                 orderMap.put(attribute, order);

@@ -57,7 +57,6 @@ import org.apache.turbine.tool.IntakeTool;
 
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.turbine.ParameterParser;
-import org.apache.torque.om.NumberKey;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -83,7 +82,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.51 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.52 2003/03/28 02:08:17 jon Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -114,20 +113,20 @@ public class MoveIssue extends RequireLoginFirstAction
             return;
         }
 
-        NumberKey newModuleId = null;
-        NumberKey newIssueTypeId = null;
+        Integer newModuleId = null;
+        Integer newIssueTypeId = null;
         Module newModule = null;
         IssueType newIssueType = null;
         try
         {
-            newModuleId = new NumberKey(modIssueType.
+            newModuleId = new Integer(modIssueType.
                       substring(0, modIssueType.indexOf('_')));
-            newIssueTypeId = new NumberKey(modIssueType.
+            newIssueTypeId = new Integer(modIssueType.
                       substring(modIssueType.indexOf('_')+1, modIssueType.length()));
             newModule = ModuleManager
-                               .getInstance(new NumberKey(newModuleId));
+                               .getInstance(newModuleId);
             newIssueType = IssueTypeManager
-                               .getInstance(new NumberKey(newIssueTypeId));
+                               .getInstance(newIssueTypeId);
         }
         catch (Exception e)
         {
@@ -195,14 +194,14 @@ public class MoveIssue extends RequireLoginFirstAction
         IssueType oldIssueType = issue.getIssueType();
         Group moveIssue = intake.get("MoveIssue",
                           IntakeTool.DEFAULT_KEY, false);
-        NumberKey newModuleId = ((NumberKey) moveIssue.get("ModuleId").
+        Integer newModuleId = ((Integer) moveIssue.get("ModuleId").
             getValue());
-        NumberKey newIssueTypeId = ((NumberKey) moveIssue.get("IssueTypeId").
+        Integer newIssueTypeId = ((Integer) moveIssue.get("IssueTypeId").
             getValue());
         Module newModule = ModuleManager
-               .getInstance(new NumberKey(newModuleId));
+               .getInstance(newModuleId);
         IssueType newIssueType = IssueTypeManager
-               .getInstance(new NumberKey(newIssueTypeId));
+               .getInstance(newIssueTypeId);
         String selectAction = moveIssue.get("Action").toString();
         ScarabUser user = (ScarabUser)data.getUser();
         boolean changeModule = !newModuleId.equals(oldModule.getModuleId());

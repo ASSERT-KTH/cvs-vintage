@@ -56,7 +56,6 @@ import org.apache.turbine.ParameterParser;
 import org.apache.turbine.Turbine;
 import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.fulcrum.pool.InitableRecyclable;
-import org.apache.torque.om.NumberKey;
 
 // Scarab
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -75,7 +74,7 @@ import org.tigris.scarab.util.SkipFiltering;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.57 2003/02/04 11:26:03 jon Exp $
+    @version $Id: ScarabLink.java,v 1.58 2003/03/28 02:08:17 jon Exp $
 */
 public class ScarabLink extends TemplateLink
     implements InitableRecyclable, SkipFiltering
@@ -508,7 +507,7 @@ public class ScarabLink extends TemplateLink
                         .equals(currentModuleId)) 
                     {
                         currentModule = ModuleManager
-                            .getInstance(new NumberKey(currentModuleId));
+                            .getInstance(new Integer(currentModuleId));
                     }
                 }
                 ScarabUser user = (ScarabUser)data.getUser();

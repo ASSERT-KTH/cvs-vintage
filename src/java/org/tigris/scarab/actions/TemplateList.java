@@ -54,6 +54,7 @@ import org.apache.commons.collections.SequencedHashMap;
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
+
 import org.apache.torque.om.NumberKey;
 
 import org.apache.turbine.tool.IntakeTool;
@@ -86,7 +87,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.45 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: TemplateList.java,v 1.46 2003/03/28 02:08:17 jon Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -208,7 +209,7 @@ public class TemplateList extends RequireLoginFirstAction
                         {
                             AttributeOption newAttributeOption =
                               AttributeOptionManager
-                              .getInstance(new NumberKey(newValue));
+                              .getInstance(new Integer(newValue));
                             newValue = newAttributeOption.getName();
                         }
                         if (!oldValue.equals(""))
