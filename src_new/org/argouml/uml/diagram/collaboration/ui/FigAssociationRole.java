@@ -1,4 +1,4 @@
-// $Id: FigAssociationRole.java,v 1.22 2004/12/09 19:09:14 mvw Exp $
+// $Id: FigAssociationRole.java,v 1.23 2004/12/19 11:07:49 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,7 +96,6 @@ public class FigAssociationRole extends FigAssociation {
      */
     public void addMessage(FigMessage message) {
     	messages.addFig(message);
-    	// damage();
     	updatePathItemLocations();
     	messages.damage();
     }
@@ -133,7 +132,7 @@ class FigMessageGroup extends FigGroup {
     }
 
     protected void updateFigPositions() {
-    	Collection figs = getFigs(null);
+    	Collection figs = getFigs(null); // the figs that make up this group
         Iterator it = figs.iterator();
     	if (!figs.isEmpty()) {
             FigMessage previousFig = null;
