@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.70 2003/07/17 20:07:36 jmcnally Exp $
+  * @version $Id: Attribute.java,v 1.71 2003/07/22 01:21:12 elicia Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -806,7 +806,7 @@ public class Attribute
         for (int i=0; i<rmas.size(); i++)
         {
             RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
-            rma.delete();
+            rma.delete(true);
         }
         ScarabCache.clear();
     }

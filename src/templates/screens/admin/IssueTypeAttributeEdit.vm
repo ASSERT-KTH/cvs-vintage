@@ -17,7 +17,7 @@
 
 #if (!$attType)
 <p class="infomark"><em>$l10n.AttributeNotFound
-$link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</em></p>
+$link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").</em></p>
 #else
 
 <form action="$link.setPage("admin,IssueTypeAttributeEdit.vm")" method="post">

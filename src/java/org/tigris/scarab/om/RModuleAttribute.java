@@ -54,6 +54,7 @@ import java.sql.Connection;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
+import org.apache.fulcrum.localization.Localization;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -68,7 +69,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleAttribute relationship.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleAttribute.java,v 1.42 2003/07/18 23:27:06 kmaples Exp $
+ * @version $Id: RModuleAttribute.java,v 1.43 2003/07/22 01:21:12 elicia Exp $
  */
 public class RModuleAttribute 
     extends BaseRModuleAttribute
@@ -192,14 +193,19 @@ public class RModuleAttribute
     public void delete()
          throws Exception
     {                
+         delete(false);
+    }
+
+    protected void delete(boolean overrideLock)
+         throws Exception
+    {                
         Module module = getModule();
 
             IssueType issueType = IssueTypeManager
                .getInstance(getIssueTypeId(), false);
-            if (issueType.getLocked())
+            if (issueType.getLocked() && !overrideLock)
             { 
-                throw new ScarabException("You cannot delete this attribute, " + 
-                                          "because this issue type is locked.");
+                throw new ScarabException(Localization.getString("CannotDeleteAttributeFromLockedIssueType"));
             }            
             else
             {
