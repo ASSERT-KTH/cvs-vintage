@@ -71,7 +71,7 @@ public class JavaGeneratorTool {
             if(index == -1 ) continue;
             while (index != -1) {
 		int endIdx=index+keywords[i].length();
-				System.out.println("XXX " + s + " " + index + " " + endIdx );
+		//			System.out.println("XXX " + s + " " + index + " " + endIdx );
 		// Is it a full word ?
 		if( index>0 && s.charAt( index-1 ) != '/' ) {
 		    index = s.indexOf(keywords[i],index+3);
