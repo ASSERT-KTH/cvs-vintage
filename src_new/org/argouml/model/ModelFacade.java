@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.218 2004/12/12 13:17:59 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.219 2004/12/12 13:56:05 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.argouml.kernel.Project;
 import org.argouml.model.uml.CoreHelper;
 import org.argouml.model.uml.ExtensionMechanismsHelper;
 import org.argouml.model.uml.UmlException;
@@ -5330,7 +5329,6 @@ public class ModelFacade {
      */
     public static void setLanguage(Object handle, String language) {
         if (handle instanceof MExpression) {
-            MExpression expression = (MExpression) handle;
             MExpressionEditor expressionEditor = (MExpressionEditor)
                 UmlFactory.getFactory().getDataTypes().
                     createExpressionEditor(handle);
