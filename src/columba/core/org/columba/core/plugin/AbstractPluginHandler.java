@@ -16,6 +16,7 @@
 package org.columba.core.plugin;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
 
 import org.columba.core.loader.DefaultClassLoader;
@@ -98,6 +99,11 @@ public abstract class AbstractPluginHandler {
 				type,
 				pluginDir,
 				args);
+		} catch ( InvocationTargetException ex )
+		{
+			ex.getCause().printStackTrace();
+			
+			throw ex;
 		}
 
 	}

@@ -39,6 +39,9 @@ public class DefaultClassLoader {
 	}
 
 	public Object instanciate(String className) throws Exception {
+		
+		//ColumbaLogger.log.debug("class="+className);
+		
 		Class actClass = loader.loadClass(className);
 
 		return actClass.newInstance();
@@ -47,7 +50,7 @@ public class DefaultClassLoader {
 	public Object instanciate(String className, Object[] args)
 		throws Exception {
 
-		ColumbaLogger.log.debug("class="+className);
+		//ColumbaLogger.log.debug("class="+className);
 		
 		Class actClass = loader.loadClass(className);
 		

@@ -19,6 +19,8 @@ package org.columba.mail.message;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.columba.core.logging.ColumbaLogger;
+
 /**
  * represents a Rfc822-compliant header
  * every headeritem is saved in a hashtable-structure
@@ -95,6 +97,8 @@ public class Rfc822Header implements HeaderInterface {
 
 	// return headeritem
 	public Object get(String s) {
+		
+		
 		Object result = null;
 
 		//  BUGFIX #660269 
@@ -107,13 +111,20 @@ public class Rfc822Header implements HeaderInterface {
 		if (hashTable.containsKey(s) == true) {
 			result = hashTable.get(s);
 		}
-
+		
+		/*
+		else
+			ColumbaLogger.log.debug("key not found:"+s);
+		*/
+		
 		return result;
 	}
 
 	// set headeritem
 	public void set(String s, Object o) {
 
+		
+		
 		// BUGFIX #660269 
 		//   -> email-headers should start with upper-case letters
 		//   -> it is wrong to use the lower-case string 

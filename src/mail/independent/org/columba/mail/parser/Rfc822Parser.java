@@ -255,7 +255,9 @@ public class Rfc822Parser extends AbstractParser
 			{
 
 				String key = line.substring(0, line.indexOf(':'));
-				key = key.toLowerCase();
+				
+				// TODO fix toLowerCase problems
+				//key = key.toLowerCase();
 
 				output.set(key, decoder.decode(line.substring(line.indexOf(':') + 1).trim()));
 			}

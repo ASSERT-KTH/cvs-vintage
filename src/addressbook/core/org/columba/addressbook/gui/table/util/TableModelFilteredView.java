@@ -97,7 +97,9 @@ public class TableModelFilteredView extends TableModelPlugin
 					String item = (String) o;
 					//System.out.println("add item?:"+item);
 					
-					item = item.toLowerCase();
+					// TODO fix toLowerCase problems
+					//item = item.toLowerCase();
+					
 					String pattern = getPatternString().toLowerCase();
 
 					if (item.indexOf(pattern) != -1)

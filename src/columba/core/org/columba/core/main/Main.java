@@ -195,7 +195,9 @@ public class Main {
 				addressbook.initGui();
 				mail.initGui();
 
-				
+				// if no view is open 
+				//  -> open mail-component as default
+				MainInterface.frameModelManager.init();
 
 				return null;
 			}

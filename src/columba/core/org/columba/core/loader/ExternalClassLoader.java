@@ -20,6 +20,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 
+import org.columba.core.logging.ColumbaLogger;
+
 /**
  * @author freddy
  *
@@ -77,6 +79,8 @@ public class ExternalClassLoader extends URLClassLoader {
 
 	public Object instanciate(String className, Object[] args)
 		throws Exception {
+		
+		//ColumbaLogger.log.debug("class="+className);
 
 		Class actClass = findClass(className);
 

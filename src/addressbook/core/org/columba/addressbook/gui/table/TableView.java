@@ -223,7 +223,12 @@ public class TableView extends JPanel implements ListSelectionListener
 			
 			String name = e.get("name");
 			//System.out.println("name:" + name);
-			name = name.toLowerCase();
+			
+			
+			// TODO fix toLowerCase problems
+			//name = name.toLowerCase();
+			
+			
 			int size = e.getInteger("size");
 			int position = e.getInteger("position");
 			boolean enabled = e.getBoolean("enabled");
@@ -261,7 +266,9 @@ public class TableView extends JPanel implements ListSelectionListener
 			
 			if ( enabled == false ) continue;
 			
-			name = name.toLowerCase();
+			// TODO fix toLowerCase problems
+			//name = name.toLowerCase();
+			
 			setupColumn(name);
 		}
 	
