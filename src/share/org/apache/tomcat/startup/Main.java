@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.45 2004/02/25 07:25:48 billbarker Exp $
+/* $Id: Main.java,v 1.46 2004/10/02 20:29:21 billbarker Exp $
  *   
  *  Copyright 1999-2004 The Apache Sofware Foundation.
  *
@@ -256,6 +256,7 @@ public class Main{
 	    initSecurityFile();
 	    initClassLoader();
 
+	    jdk11Compat.setContextClassLoader(commonCL);
             Class cls=commonCL.loadClass((String)tasks.get(task));
 	    
             Object proxy=cls.newInstance();
