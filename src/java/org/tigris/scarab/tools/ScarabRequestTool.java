@@ -1117,18 +1117,23 @@ try{
                 setAlertMessage("A module and issue type must be selected " +
                                 "before entering a new issue.");
             }
+            else if (rmit.getDedupe())
+            {
+                nextTemplate = "entry,Wizard1.vm";
+            }
+            else
+            {
+                nextTemplate = "entry,Wizard3.vm";
+            }
         }
         catch (Exception e)
         {
-            // ignore
-        }
-        if (nextTemplate == null && rmit.getDedupe())
-        {
-            nextTemplate = "entry,Wizard1.vm";
-        }
-        else
-        {
-            nextTemplate = "entry,Wizard3.vm";
+            // system would be messed up, if we are here.  Punt
+            nextTemplate = "Index.vm";
+            String msg = "Cannot determine correct issue entry process. " +
+                "Please notify an administrator.";
+            setAlertMessage(msg);
+            Log.get().error(msg, e);
         }
         return nextTemplate;
     }
