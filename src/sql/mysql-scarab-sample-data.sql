@@ -25,7 +25,7 @@ insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_CODE, MODULE_DESCRIPTIO
  */
 insert into ID_TABLE (table_name, next_id, quantity) VALUES ('PAC', 1, 1);
 insert into ID_TABLE (table_name, next_id, quantity) VALUES ('PACD', 2, 1);
-insert into ID_TABLE (table_name, next_id, quantity) VALUES ('PACS', 1, 1);
+insert into ID_TABLE (table_name, next_id, quantity) VALUES ('PACS', 2, 1);
 insert into ID_TABLE (table_name, next_id, quantity) VALUES ('TBN', 1, 1);
 insert into ID_TABLE (table_name, next_id, quantity) VALUES ('TBND', 1, 1);
 insert into ID_TABLE (table_name, next_id, quantity) VALUES ('TBNS', 1, 1);
