@@ -21,6 +21,7 @@ import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.naming.Util;
+import org.jboss.security.plugins.NullSecurityManager;
 import org.jboss.util.ServiceMBeanSupport;
 
 /** A template pattern class for web container integration into JBoss. This class
@@ -32,17 +33,87 @@ into the JBoss server JNDI namespace:
 - env-entry
 - resource-ref
 - ejb-ref
+- security-domain
 
 Subclasses need to implement the {@link #performDeploy(String, String) performDeploy()}
 and {@link #performUndeploy(String) performUndeploy()} methods to perform the
 container specific steps and return the web application info required by the
-AbstractWebContainer c.ass.
- 
+AbstractWebContainer class.
+
+Integration with the JBossSX security framework is based on the establishment
+of a java:comp/env/security context as described in the
+{@link linkSecurityDomain(String, Context) linkSecurityDomain } comments.
+The security context provides access to the JBossSX security mgr interface
+implementations for use by subclass request interceptors. A outline of the
+steps for authenticating a user is:
+<code>
+    // Get the username & password from the request context...
+    String username = f(request);
+    String password = f(request);
+    // Get the JBoss security manager from the ENC context
+    InitialContext iniCtx = new InitialContext();
+    EJBSecurityManager securityMgr = (EJBSecurityManager) iniCtx.lookup("java:comp/env/security/securityMgr");
+    SimplePrincipal principal = new SimplePrincipal(username);
+    if( securityMgr.isValid(principal, password) )
+    {
+        // Indicate the user is allowed access to the web content...
+        
+        // Propagate the user info to JBoss for any calls into made by the servlet
+        SecurityAssociation.setPrincipal(principal);
+        SecurityAssociation.setCredential(password.toCharArray());
+    }
+    else
+    {
+        // Deny access...
+    }
+</code>
+
+An outline of the steps for authorizing the user is:
+<code>
+    // Get the username & required roles from the request context...
+    String username = f(request);
+    String[] roles = f(request);
+    // Get the JBoss security manager from the ENC context
+    InitialContext iniCtx = new InitialContext();
+    RealmMapping securityMgr = (RealmMapping) iniCtx.lookup("java:comp/env/security/realmMapping");
+    SimplePrincipal principal = new SimplePrincipal(username);
+    Set requiredRoles = new HashSet(Arrays.asList(roles));
+    if( securityMgr.doesUserHaveRole(principal, requiredRoles) )
+    {
+        // Indicate the user has the required roles for the web content...
+    }
+    else
+    {
+        // Deny access...
+    }
+</code>
+
+The one thing to be aware of is the relationship between the thread context
+class loader and the JNDI ENC context. Any method that attempts to access
+the JNDI ENC context must have the ClassLoader in the WebApplication returned
+from the {@link #performDeploy(String, String) performDeploy} as its thread
+context ClassLoader or else the lookup for java:comp/env will fail with a
+name not found exception, or worse, it will receive some other web application
+ENC context. If your adapting a web container that is trying be compatible with
+both 1.1 and 1.2 Java VMs this is something you need to pay special attention
+to. For example, I have seen problems a request interceptor that was handling
+the authentication/authorization callouts in tomcat3.2.1 not having the same
+thread context ClassLoader as was used to dispatch the http service request.
+
+For a complete example see the {@link org.jboss.tomcat.security.JBossSecurityMgrRealm JBossSecurityMgrRealm}
+in the contrib/tomcat module.
+
 @see #performDeploy(String, String)
 @see #performUndeploy(String)
+@see #parseWebAppDescriptors(ClassLoader, Element, Element)
+@see #linkSecurityDomain(String, Context)
+@see org.jboss.security.EJBSecurityManager;
+@see org.jboss.security.RealmMapping;
+@see org.jboss.security.SimplePrincipal;
+@see org.jboss.security.SecurityAssociation;
 
 @author  Scott_Stark@displayscape.com
-@version $Revision: 1.2 $
+@version $Revision: 1.3 $
 */
 public abstract class AbstractWebContainer extends ServiceMBeanSupport implements AbstractWebContainerMBean
 {
@@ -157,7 +228,8 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         return deploymentMap.values().iterator();
     }
 
-    /** Parse the web-app.xml and jboss-web.xml deployment descriptors from a
+    /** This method is called as part of the deploy() method template to
+        parse the web-app.xml and jboss-web.xml deployment descriptors from a
         war deployment. The method creates the ENC(java:comp/env) env-entry,
         resource-ref, & ejb-ref element values. The creation of the env-entry
         values does not require a jboss-web.xml descriptor. The creation of the
@@ -167,14 +239,17 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         Because the ENC context is private to the web application, the web
         application class loader is used to identify the ENC. The class loader
         is used because each war typically requires a unique class loader to
-        isolate the web application classes/resources.
+        isolate the web application classes/resources. This means that the
+        ClassLoader passed to this method must be the thread context ClassLoader
+        seen by the server/jsp pages during init/destroy/service/etc. method
+        invocations if these methods interace with the JNDI ENC context.
 
     @param loader, the ClassLoader for the web application. May not be null.
     @param webApp, the root element of thw web-app.xml descriptor. May not be null.
     @param jbossWeb, the root element of thw jboss-web.xml descriptor. May be null
         to indicate that no jboss-web.xml descriptor exists.
     */
-    protected void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb) throws Exception
+    private void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb) throws Exception
     {
         category.debug("AbstractWebContainer.parseWebAppDescriptors, Begin");
         WebMetaData metaData = new WebMetaData();
@@ -206,6 +281,9 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         Iterator ejbRefs = metaData.getEjbReferences();
         category.debug("linkEjbRefs");
         linkEjbRefs(ejbRefs, envCtx);
+        String securityDomain = metaData.getSecurityDomain();
+        category.debug("linkSecurityDomain");
+        linkSecurityDomain(securityDomain, envCtx);
         category.debug("AbstractWebContainer.parseWebAppDescriptors, End");
     }
 
@@ -256,11 +334,41 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         {
             EjbRefMetaData ejb = (EjbRefMetaData) ejbRefs.next();
             String name = ejb.getName();
-            String jndiName = ejb.getLink();
-            category.debug("Binding ejb-ref: "+name+" to JNDI name:"+jndiName);
+            String jndiName = ejb.getJndiName();
+            String linkName = ejb.getLink();
+            if( jndiName == null )
+                jndiName = linkName;
+            category.debug("Linking ejb-ref: "+name+" to JNDI name: "+jndiName);
             if( jndiName == null )
                  throw new NamingException("ejb-ref: "+name+", expected jndi-name in jboss-web.xml");
             Util.bind(envCtx, name, new LinkRef(jndiName));
+        }
+    }
+
+    /** This creates a java:comp/env/security context that contains a
+        securityMgr binding pointing to an EJBSecurityMgr implementation
+        and a realmMapping binding pointing to a RealmMapping implementation.
+        If the jboss-web.xml descriptor contained a security-domain element
+        then the bindings are LinkRefs to the jndi name specified by the
+        security-domain element. If there was no security-domain element then
+        the bindings are to NullSecurityManager instance which simply allows
+        all access.
+    */
+    protected void linkSecurityDomain(String securityDomain, Context envCtx)
+        throws NamingException
+    {
+        if( securityDomain == null )
+        {
+            category.debug("Binding security/securityMgr to NullSecurityManager");
+            Object securityMgr = new NullSecurityManager(securityDomain);
+            Util.bind(envCtx, "security/securityMgr", securityMgr);
+            Util.bind(envCtx, "security/realmMapping", securityMgr);
+        }
+        else
+        {
+            category.debug("Linking security/securityMgr to JNDI name: "+securityDomain);
+            Util.bind(envCtx, "security/securityMgr", new LinkRef(securityDomain));
+            Util.bind(envCtx, "security/realmMapping", new LinkRef(securityDomain));
         }
     }
 }

@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
 @see AbstractWebContainer
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public class WebApplication
 {
@@ -149,6 +149,8 @@ public class WebApplication
         buffer.append(url);
         buffer.append(", classLoader: ");
         buffer.append(classLoader);
+        buffer.append(':');
+        buffer.append(classLoader.hashCode());
         buffer.append('}');
         return buffer.toString();
     }
