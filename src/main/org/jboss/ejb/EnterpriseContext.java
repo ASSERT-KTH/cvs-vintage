@@ -48,7 +48,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -348,6 +348,13 @@ public abstract class EnterpriseContext
       { 
          if (principal == null)
             return false;
+         RealmMapping rm = con.getRealmMapping();
+         if( rm == null )
+         {
+            String msg = "isCallerInRole() called with no security context. "
+               + "Check that a security-domain has been set for the application.";
+            throw new IllegalStateException(msg); 
+         }
 
          // Map the role name used by Bean Provider to the security role
          // link in the deployment descriptor. The EJB 1.1 spec requires
@@ -360,9 +367,11 @@ public abstract class EnterpriseContext
          Iterator it = getContainer().getBeanMetaData().getSecurityRoleReferences();
          boolean matchFound = false;
          
-         while (it.hasNext()) {
+         while (it.hasNext())
+         {
             SecurityRoleRefMetaData meta = (SecurityRoleRefMetaData)it.next();
-            if (meta.getName().equals(id)) {
+            if (meta.getName().equals(id))
+            {
                id = meta.getLink();                 
                matchFound = true;
                  
@@ -377,12 +386,13 @@ public abstract class EnterpriseContext
          HashSet set = new HashSet();
          set.add( new SimplePrincipal(id) );
          
-         return con.getRealmMapping().doesUserHaveRole( principal, set );
+         return rm.doesUserHaveRole( principal, set );
       }
    
       public UserTransaction getUserTransaction() 
       { 
-         if (userTransaction == null) {
+         if (userTransaction == null)
+         {
             if (con.getBeanMetaData().isContainerManagedTx())
                throw new IllegalStateException("CMT beans are not allowed to get a UserTransaction");
             userTransaction = new UserTransactionImpl(); 
