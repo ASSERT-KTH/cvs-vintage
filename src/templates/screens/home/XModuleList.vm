@@ -228,13 +228,6 @@ There are no more issue types to select.
   #paginateXModuleList()
 #end
 
-#if (!$searchableRMITs.isEmpty())
-<div class="functnbar3">
- <input type="submit"  name="eventSubmit_doAddselectedrmits" 
-     value="Add selected to cross module query list" />
-</div>
-#end
-
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
      <tr>
@@ -248,6 +241,13 @@ There are no more issue types to select.
      </tr>
   </table>
 </div>
+
+#if (!$searchableRMITs.isEmpty())
+<div class="functnbar3">
+ <input type="submit"  name="eventSubmit_doAddselectedrmits" 
+     value="Add selected to cross module query list" />
+</div>
+#end
 
 ## keep track of state of the list, resultsPerPage should come after the
 ## chance to change it, because we will use the first value
