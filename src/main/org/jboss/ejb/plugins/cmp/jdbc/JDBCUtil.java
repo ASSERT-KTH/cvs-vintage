@@ -51,6 +51,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @author Steve Coy
+ * @version $Revision: 1.22 $
  */
 public final class JDBCUtil
 {
