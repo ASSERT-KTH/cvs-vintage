@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.12 2000/10/09 15:31:05 mulder Exp $
+ * $Id: AbstractVerifier.java,v 1.13 2000/10/20 23:00:05 juha Exp $
  */
 
 // standard imports
@@ -53,7 +53,7 @@ import org.jboss.metadata.SessionMetaData;
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -510,7 +510,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         // target must be a superset of source
 
         Class[] a = source.getExceptionTypes();
-        Class[] b = source.getExceptionTypes();
+        Class[] b = target.getExceptionTypes();
 
         for (int i = 0; i < a.length; ++i) {
 

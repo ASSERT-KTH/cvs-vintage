@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.21 2000/10/18 08:59:24 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.22 2000/10/20 23:00:06 juha Exp $
  */
 
 
@@ -61,7 +61,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author  Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  * @since   JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -459,7 +459,7 @@ public class EJBVerifier11 extends AbstractVerifier {
                             status = false;
                         }
                         
-                        if (!hasMatchingExceptions(remoteMethod, beanMethod)) {
+                        if (!hasMatchingExceptions(beanMethod, remoteMethod)) {
                             
                             fireSpecViolationEvent(session, remoteMethod, new Section("6.10.5.g"));
                             
