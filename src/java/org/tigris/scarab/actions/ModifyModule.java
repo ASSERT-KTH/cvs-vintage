@@ -74,7 +74,7 @@ import org.tigris.scarab.services.module.ModuleManager;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.7 2001/10/24 23:41:57 jon Exp $
+ * @version $Id: ModifyModule.java,v 1.8 2001/10/27 00:12:47 elicia Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -171,6 +171,8 @@ public class ModifyModule extends RequireLoginFirstAction
                 .getInstance(new NumberKey(parentId));
             AttributeGroup ag1;
             AttributeGroup ag2;
+            RModuleAttribute rma1;
+            RModuleAttribute rma2;
 
             // create enter issue template types
             List templateTypes = parentModule.getTemplateTypes();
@@ -181,6 +183,19 @@ public class ModifyModule extends RequireLoginFirstAction
                 RModuleIssueType template2 = template1.copy();
                 template2.setModuleId(newModuleId);
                 template2.save();
+
+                //save RModuleAttributes for template types.
+                IssueType it = template1.getIssueType();
+                List rmas = parentModule.getRModuleAttributes(it);
+                for (int j=0; j<rmas.size(); j++)
+                {
+                    rma1 = (RModuleAttribute)rmas.get(j);
+                    rma2 = rma1.copy();
+                    rma2.setModuleId(newModuleId);
+                    rma2.setAttributeId(rma1.getAttributeId());
+                    rma2.setIssueTypeId(rma1.getIssueTypeId());
+                    rma2.save();
+                }
             }
 
             // set module-issue type mappings
@@ -215,15 +230,14 @@ public class ModifyModule extends RequireLoginFirstAction
                         raag2.setGroupId(ag2.getAttributeGroupId());
                         raag2.setAttributeId(raag1.getAttributeId());
                         raag2.setOrder(raag1.getOrder());
-                        raag2.save();
 
                         // set module-attribute defaults
-                        RModuleAttribute rma1 = parentModule
+                        rma1 = parentModule
                            .getRModuleAttribute(attribute, issueType);
-                        RModuleAttribute rma2 = rma1.copy();
+                        rma2 = rma1.copy();
                         rma2.setModuleId(newModuleId);
                         rma2.setAttributeId(rma1.getAttributeId());
-                        rma2.setIssueTypeId(issueType.getIssueTypeId());
+                        rma2.setIssueTypeId(rma1.getIssueTypeId());
                         rma2.save();
                     }
                 }
