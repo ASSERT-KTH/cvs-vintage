@@ -7,6 +7,9 @@
 package org.jboss.ejb.plugins.cmp.jdbc2.schema;
 
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.deployment.DeploymentException;
+import org.jboss.metadata.MetaData;
+import org.w3c.dom.Element;
 
 import javax.transaction.Transaction;
 import java.util.Map;
@@ -17,7 +20,7 @@ import java.util.HashMap;
  * Simple LRU cache. Items are evicted when maxCapacity is exceeded.
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class TableCache
@@ -36,6 +39,15 @@ public class TableCache
    {
       this.maxCapacity = maxCapacity;
       rowsById = new HashMap(initialCapacity);
+   }
+
+   public TableCache(Element conf) throws DeploymentException
+   {
+      String str = MetaData.getOptionalChildContent(conf, "min-capacity");
+      rowsById = (str == null ? new HashMap() : new HashMap(Integer.parseInt(str)));
+
+      str = MetaData.getOptionalChildContent(conf, "max-capacity");
+      maxCapacity = (str == null ? 10000 : Integer.parseInt(str));
    }
 
    /**
@@ -61,6 +73,22 @@ public class TableCache
       {
          unlock();
       }
+   }
+
+   /**
+    * @jmx.managed-attribute
+    */
+   public int getMaxCapacity()
+   {
+      return maxCapacity;
+   }
+
+   /**
+    * @jmx.managed-attribute
+    */
+   public void setMaxCapacity(int maxCapacity)
+   {
+      this.maxCapacity = maxCapacity;
    }
 
    public synchronized void lock()
@@ -103,10 +131,12 @@ public class TableCache
          promoteRow(row);
          fields = new Object[row.fields.length];
          System.arraycopy(row.fields, 0, fields, 0, fields.length);
+         listener.hit();
       }
       else
       {
          fields = null;
+         listener.miss();
       }
       return fields;
    }

@@ -10,7 +10,7 @@ import javax.transaction.Transaction;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public interface Cache
 {
@@ -104,6 +104,10 @@ public interface Cache
 
       void eviction(Object pk, int size);
 
+      void hit();
+
+      void miss();
+
       public Listener NOOP = new Listener()
       {
          public void contention(long time)
@@ -111,6 +115,14 @@ public interface Cache
          }
 
          public void eviction(Object pk, int size)
+         {
+         }
+
+         public void hit()
+         {
+         }
+
+         public void miss()
          {
          }
       };

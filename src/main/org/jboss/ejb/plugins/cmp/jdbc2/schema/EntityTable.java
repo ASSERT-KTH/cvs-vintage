@@ -21,6 +21,7 @@ import org.jboss.logging.Logger;
 import org.jboss.system.ServiceControllerMBean;
 import org.jboss.mx.util.MBeanServerLocator;
 import org.jboss.mx.util.MBeanProxyExt;
+import org.w3c.dom.Element;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -43,7 +44,7 @@ import java.util.HashMap;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public class EntityTable
    implements Table
@@ -107,7 +108,18 @@ public class EntityTable
       updateStrategy = NON_BATCH_UPDATE;
 
       // create cache
-      cache = new TableCache(500, 1000);
+      final Element cacheConf = entity.getContainer()
+         .getBeanMetaData()
+         .getContainerConfiguration()
+         .getContainerCacheConf();
+      if(cacheConf == null)
+      {
+         cache = new TableCache(500, 1000);
+      }
+      else
+      {
+         cache = new TableCache(cacheConf);
+      }
 
       final MBeanServer server = MBeanServerLocator.locateJBoss();
       serviceController = (ServiceControllerMBean)
