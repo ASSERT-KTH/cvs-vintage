@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.28 2005/01/30 20:48:15 linus Exp $
+// $Id: PackageContext.java,v 1.29 2005/02/09 20:41:36 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.reveng.java;
 
+import org.argouml.model.Facade;
 import org.argouml.model.Model;
 import org.argouml.uml.reveng.ImportClassLoader;
 
@@ -76,7 +77,7 @@ class PackageContext extends Context {
 			Model.getCoreFactory()
 			    .buildInterface(name, mPackage);
 		    Model.getCoreHelper().setTaggedValue(mInterface,
-					       Model.getFacade().GENERATED_TAG,
+					       Facade.GENERATED_TAG,
 					       "yes");
 		}
 	    }
@@ -100,7 +101,7 @@ class PackageContext extends Context {
 			    Model.getCoreFactory()
 			        .buildInterface(name, mPackage);
 			Model.getCoreHelper().setTaggedValue(mInterface,
-						   Model.getFacade().GENERATED_TAG,
+						   Facade.GENERATED_TAG,
 						   "yes");
 		    }
                 }
@@ -159,7 +160,7 @@ class PackageContext extends Context {
 			    .buildClass(name, mPackage);
 		}
 		Model.getCoreHelper().setTaggedValue(mClassifier,
-					   Model.getFacade().GENERATED_TAG,
+					   Facade.GENERATED_TAG,
 					   "yes");
 	    }
 	    catch (ClassNotFoundException e) {
@@ -188,7 +189,7 @@ class PackageContext extends Context {
 			        .buildClass(name, mPackage);
 		    }
 		    Model.getCoreHelper().setTaggedValue(mClassifier,
-					       Model.getFacade().GENERATED_TAG,
+					       Facade.GENERATED_TAG,
 					       "yes");
                 }
                 catch (Exception e1) {

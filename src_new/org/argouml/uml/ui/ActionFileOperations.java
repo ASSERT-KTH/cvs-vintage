@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.24 2005/02/05 00:27:11 bobtarling Exp $
+// $Id: ActionFileOperations.java,v 1.25 2005/02/09 20:41:36 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,6 @@ import org.argouml.persistence.LastLoadInfo;
 import org.argouml.persistence.PersistenceManager;
 import org.argouml.persistence.ProjectFilePersister;
 import org.argouml.persistence.VersionException;
-import org.argouml.ui.ArgoDialog;
 import org.argouml.ui.ExceptionDialog;
 import org.argouml.ui.ProjectBrowser;
 

@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.44 2005/01/30 20:48:40 linus Exp $
+// $Id: ClassGenerationDialog.java,v 1.45 2005/02/09 20:41:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -319,13 +319,15 @@ public class ClassGenerationDialog
                         if (isPathInModel) {
                             path = Generator2.getCodePath(node);
                             if (path == null) {
-                                Object parent = Model.getFacade().getNamespace(node);
+                                Object parent = 
+                                    Model.getFacade().getNamespace(node);
                                 while (parent != null) {
                                     path = Generator2.getCodePath(parent);
                                     if (path != null) {
                                         break;
                                     }
-                                    parent = Model.getFacade().getNamespace(parent);
+                                    parent = 
+                                        Model.getFacade().getNamespace(parent);
                                 }
                             }
                         }
@@ -338,8 +340,9 @@ public class ClassGenerationDialog
                             // save the selected language in the model
                             // TODO: no support of multiple checked
                             // languages
-                            Object taggedValue = Model.getFacade().getTaggedValue(
-                                node, "src_lang");
+                            Object taggedValue = 
+                                Model.getFacade().getTaggedValue(
+                                        node, "src_lang");
                             String savedLang = null;
                             if (taggedValue != null) {
                                 savedLang = Model.getFacade().getValueOfTag(
@@ -456,7 +459,8 @@ public class ClassGenerationDialog
                 return false;
             }
 
-            Object taggedValue = Model.getFacade().getTaggedValue(cls, "src_lang");
+            Object taggedValue = 
+                Model.getFacade().getTaggedValue(cls, "src_lang");
             if (taggedValue == null) {
                 return false;
             }
