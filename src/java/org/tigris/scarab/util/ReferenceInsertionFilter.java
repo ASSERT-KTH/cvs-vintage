@@ -58,24 +58,48 @@ import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
  * only filter references that need to be filtered. But it is a start.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.4 2002/01/18 22:26:13 jon Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.5 2002/01/23 02:06:03 jon Exp $
  */
 public class ReferenceInsertionFilter
     implements ReferenceInsertionEventHandler
 {
+
     public Object referenceInsert(String reference, Object value)
     {
-    System.out.println ("reference: '" + reference + "' type: '" + value.getClass().getName());
+        // if value is null, we don't want to filter it of course!
+        if (value == null)
+        {
+            return null;
+        }
+        
+//    System.out.println ("reference: '" + reference + 
+//                        "' type: '" + value.getClass().getName() + "'");
+
+        Object result = value;
         if (value instanceof String)
         {
-            if (!reference.startsWith("$renderer") && 
-                !reference.startsWith("$intake") &&
-                !reference.startsWith("$link"))
+            if (
+                // don't filter renderer because it will get filtered
+                // when the actual rendering is done.
+                !reference.startsWith("$renderer") && 
+                // don't want to filter this because it outputs HTML
+                !reference.startsWith("$intake.declare")
+               )
             {
-                return filter((String)value);
+                // we are already a String
+                result = (Object) filter((String)value);
             }
         }
-        return value;
+        else if (
+                // don't filter links!
+                ! (value instanceof org.tigris.scarab.util.ScarabLink) &&
+                ! (value instanceof org.tigris.scarab.screens.SelectModule$ModuleSwitchingLink)
+                )
+        {
+            // We convert the object to a string and output the result
+            result = (Object) filter(value.toString());
+        }
+        return result;
     }
 
     /**
