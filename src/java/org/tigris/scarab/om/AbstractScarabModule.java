@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.46 2002/08/08 23:55:26 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.47 2002/08/13 23:52:26 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1271,6 +1271,7 @@ public abstract class AbstractScarabModule
             Criteria crit = new Criteria();
             crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, 
                      issueType.getIssueTypeId());
+            crit.add(RModuleAttributePeer.MODULE_ID, getModuleId());
             crit.addAscendingOrderByColumn(
                 RModuleAttributePeer.PREFERRED_ORDER);
             crit.addAscendingOrderByColumn(
@@ -1285,6 +1286,8 @@ public abstract class AbstractScarabModule
             {
                 crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
                          AttributeTypePeer.USER_TYPE_KEY);
+                crit.addJoin(AttributePeer.ATTRIBUTE_ID,
+                         RModuleAttributePeer.ATTRIBUTE_ID); 
             }
             else if (NON_USER.equals(attributeType))
             {
@@ -1296,7 +1299,7 @@ public abstract class AbstractScarabModule
             // this method calls getRModuleAttributesThisModuleOnly
             // which adds some additional criteria (and a join to the 
             // ATTRIBUTE table)
-            rmas = getRModuleAttributes(crit);
+            rmas = RModuleAttributePeer.doSelect(crit); 
             getMethodResult().put(rmas, this, GET_R_MODULE_ATTRIBUTES, 
                 issueType, activeBool, attributeType);
         }
