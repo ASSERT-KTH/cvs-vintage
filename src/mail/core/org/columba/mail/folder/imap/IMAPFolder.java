@@ -741,14 +741,6 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#getMessageSource(java.lang.Object,
-	 *      org.columba.core.command.WorkerStatusController)
-	 */
-	public String getMessageSource(Object uid) throws Exception {
-		return getStore().getMessageSource(uid, getImapPath()).toString();
-	}
-
-	/**
 	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object,
 	 *      org.columba.core.command.WorkerStatusController)
 	 */

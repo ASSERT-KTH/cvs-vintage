@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
+import org.columba.core.io.StreamUtils;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 
@@ -43,7 +44,7 @@ public class BodyFilter extends AbstractFilter {
         
 
         // get message body
-        String body = folder.getMessageSource(uid);
+        StringBuffer body = StreamUtils.readInString(folder.getMessageSourceStream(uid));
 
         // convert criteria into int-value
         int condition = FilterCriteria.getCriteria(criteria);

@@ -191,7 +191,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         ColumbaLogger.log.info("new UID=" + newUid);
 
         // get message source
-        String source = message.getStringSource();
+        Source source = message.getSource();
 
         if (source == null) {
             System.out.println("source is null " + newUid);
@@ -200,7 +200,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         }
 
         // save message to disk
-        getDataStorageInstance().saveMessage(source, newUid);
+        getDataStorageInstance().saveMessage(newUid, new SourceInputStream(source));
 
         // increase total count of messages
         getMessageFolderInfo().incExists();
@@ -271,7 +271,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         //Parse Message from DataStorage
         Source source = null;
         try {
-            source = getDataStorageInstance().getFileSource(uid);
+            source = getDataStorageInstance().getMessageSource(uid);
         } catch (IOException e) {
             // File is no longer present -> someone else deleted it
             // from the file system
@@ -290,9 +290,6 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 
         message.setUID(uid);
         
-        //TODO remove this memory waste here
-        message.setStringSource(source.toString());
-
         aktMessage = message;
 
         return message;
@@ -323,16 +320,6 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
         return header;
-    }
-
-    /**
-     * @see org.columba.mail.folder.Folder#getMessageSource(java.lang.Object, org.columba.core.command.WorkerStatusController)
-     */
-    public String getMessageSource(Object uid) throws Exception {
-        // get source of message
-        String source = getDataStorageInstance().loadMessage(uid);
-
-        return source;
     }
 
     /* (non-Javadoc)
@@ -440,7 +427,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
     /** {@inheritDoc} */
     public InputStream getMessageSourceStream(Object uid)
         throws Exception {
-        return new SourceInputStream(getDataStorageInstance().getFileSource(uid));
+        return new SourceInputStream(getDataStorageInstance().getMessageSource(uid));
     }
 
     /** {@inheritDoc} */
@@ -552,7 +539,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         // generate UID for new message
         Object newUid = generateNextMessageUid();
 
-        getDataStorageInstance().saveInputStream(newUid, in);
+        getDataStorageInstance().saveMessage(newUid, in);
 
         in.close();
         

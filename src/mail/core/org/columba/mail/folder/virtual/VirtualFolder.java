@@ -448,14 +448,6 @@ public class VirtualFolder extends Folder {
     }
 
     /**
-     * @see org.columba.modules.mail.folder.Folder#getMessageSource(Object,
-     *      WorkerStatusController)
-     */
-    public String getMessageSource(Object uid) throws Exception {
-        return null;
-    }
-
-    /**
      * @see org.columba.modules.mail.folder.Folder#getMimePartTree(Object,
      *      WorkerStatusController)
      */

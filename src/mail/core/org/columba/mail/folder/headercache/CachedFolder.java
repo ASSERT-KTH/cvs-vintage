@@ -479,7 +479,7 @@ public abstract class CachedFolder extends LocalFolder {
             return null;
         }
 
-        Source source = getDataStorageInstance().getFileSource(newUid);
+        Source source = getDataStorageInstance().getMessageSource(newUid);
 
         Header header = HeaderParser.parse(source);
         ColumbaHeader h = new ColumbaHeader(header);

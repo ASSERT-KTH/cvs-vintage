@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import org.columba.ristretto.message.io.FileSource;
-
 import java.io.InputStream;
+
+import org.columba.ristretto.message.io.Source;
 
 
 /**
@@ -38,25 +38,6 @@ import java.io.InputStream;
  */
 public interface DataStorageInterface {
     /**
-     * Save message in data storage
-     *
-     * @param source                string containing message source
-     * @param uid                        UID of message
-     * @throws Exception
-     */
-    public void saveMessage(String source, Object uid)
-        throws Exception;
-
-    /**
-     * Get message from data storage
-     *
-     * @param uid                        UID of message
-     * @return                                string containing message source
-     * @throws Exception
-     */
-    public String loadMessage(Object uid) throws Exception;
-
-    /**
      * Remove message from datastorage
      *
      * @param uid                        UID of message
@@ -71,7 +52,7 @@ public interface DataStorageInterface {
      * @return                                source of message
      * @throws Exception
      */
-    public FileSource getFileSource(Object uid) throws Exception;
+    public Source getMessageSource(Object uid) throws Exception;
 
     /**
      * Save message in data storage.
@@ -80,7 +61,7 @@ public interface DataStorageInterface {
      * @param source                message source as stream
      * @throws Exception
      */
-    public void saveInputStream(Object uid, InputStream source)
+    public void saveMessage(Object uid, InputStream source)
         throws Exception;
 
     /**

@@ -22,7 +22,6 @@ import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.Message;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.Source;
 
 
@@ -81,14 +80,6 @@ public class ColumbaMessage {
         this.bodyPart = m.bodyPart;
     }
     
-    public String getStringSource() {
-        return getSource().toString();
-    }
-
-    public void setStringSource(String s) {
-        message.setSource(new CharSequenceSource(s));
-    }
-
     public void setBodyPart(MimePart body) {
         bodyPart = body;
     }

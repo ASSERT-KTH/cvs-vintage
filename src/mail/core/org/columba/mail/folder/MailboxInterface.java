@@ -129,17 +129,6 @@ public interface MailboxInterface {
         throws Exception;
 
     /**
-     * Return the source of the message.
-     *
-     * @deprecated Use #getMessageSourceStream(Object)
-     *
-     * @param uid                UID of message
-     * @return String                the source of the message
-     * @throws Exception
-     */
-    public String getMessageSource(Object uid) throws Exception;
-
-    /**
      * Return mimepart structure. See <class>MimePartTree</class> for
      * more details.
      *

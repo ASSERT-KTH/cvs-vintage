@@ -17,11 +17,14 @@
 //All Rights Reserved.
 package org.columba.mail.folder.temp;
 
-import org.columba.core.main.MainInterface;
+import java.io.File;
+import java.io.InputStream;
+import java.util.Hashtable;
+
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
-
+import org.columba.core.main.MainInterface;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.Folder;
@@ -30,7 +33,6 @@ import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
-
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
@@ -41,12 +43,6 @@ import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.SourceInputStream;
 import org.columba.ristretto.parser.MessageParser;
-
-import java.io.File;
-import java.io.InputStream;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
 
 
 /**
@@ -187,26 +183,6 @@ public class TempFolder extends Folder {
         MimePart mimePart = message.getMimePartTree().getFromAddress(address);
 
         return mimePart;
-    }
-
-    /**
-     * @see org.columba.modules.mail.folder.Folder#getMessageSource(Object,
-     *      WorkerStatusController)
-     */
-    public String getMessageSource(Object uid) throws Exception {
-        ColumbaMessage message = getMessage(uid);
-
-        if (message == null) {
-            System.out.println("no message for uid=" + uid);
-            System.out.println("list-count=" + headerList.count());
-            System.out.println("message-count=" + messageList.size());
-
-            for (Enumeration e = messageList.keys(); e.hasMoreElements();) {
-                System.out.println(e.nextElement());
-            }
-        }
-
-        return message.getStringSource();
     }
 
     /**

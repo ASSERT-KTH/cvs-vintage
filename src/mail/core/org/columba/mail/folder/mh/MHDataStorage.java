@@ -15,24 +15,21 @@
 //All Rights Reserved.
 package org.columba.mail.folder.mh;
 
-import org.columba.core.io.DiskIO;
-import org.columba.core.io.StreamUtils;
-import org.columba.core.logging.ColumbaLogger;
-
-import org.columba.mail.folder.DataStorageInterface;
-import org.columba.mail.folder.LocalFolder;
-
-import org.columba.ristretto.message.io.FileSource;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.columba.core.io.StreamUtils;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.mail.folder.DataStorageInterface;
+import org.columba.mail.folder.LocalFolder;
+import org.columba.ristretto.message.io.FileSource;
+import org.columba.ristretto.message.io.Source;
 
 
 /**
@@ -56,25 +53,6 @@ public class MHDataStorage implements DataStorageInterface {
 
     public MHDataStorage(LocalFolder folder) {
         this.folder = folder;
-    }
-
-    public void saveMessage(String source, Object uid)
-        throws Exception {
-        File file = new File(folder.getDirectoryFile() + File.separator +
-                (Integer) uid);
-
-        if (source == null) {
-            System.out.println(source + uid);
-        }
-
-        DiskIO.saveStringInFile(file, source);
-    }
-
-    public String loadMessage(Object uid) throws Exception {
-        File file = new File(folder.getDirectoryFile() + File.separator +
-                ((Integer) uid).toString());
-
-        return DiskIO.readFileInString(file);
     }
 
     public boolean exists(Object uid) throws Exception {
@@ -129,7 +107,7 @@ public class MHDataStorage implements DataStorageInterface {
     /* (non-Javadoc)
      * @see org.columba.mail.folder.DataStorageInterface#getFileSource(java.lang.Object)
      */
-    public FileSource getFileSource(Object uid) throws Exception {
+    public Source getMessageSource(Object uid) throws Exception {
         File file = new File(folder.getDirectoryFile() + File.separator +
                 ((Integer) uid).toString());
 
@@ -139,7 +117,7 @@ public class MHDataStorage implements DataStorageInterface {
     /* (non-Javadoc)
      * @see org.columba.mail.folder.DataStorageInterface#saveInputStream(java.lang.Object, java.io.InputStream)
      */
-    public void saveInputStream(Object uid, InputStream source)
+    public void saveMessage(Object uid, InputStream source)
         throws IOException {
         File file = new File(folder.getDirectoryFile() + File.separator +
                 (Integer) uid);

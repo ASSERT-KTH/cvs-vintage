@@ -18,23 +18,6 @@
 
 package org.columba.mail.folder.headercache;
 
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.ListTools;
-
-import org.columba.mail.folder.DataStorageInterface;
-import org.columba.mail.folder.FolderInconsistentException;
-import org.columba.mail.folder.LocalFolder;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
-import org.columba.mail.util.MailResourceLoader;
-
-import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.MessageFolderInfo;
-import org.columba.ristretto.message.io.CharSequenceSource;
-import org.columba.ristretto.parser.HeaderParser;
-
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,6 +27,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+import org.columba.core.util.ListTools;
+import org.columba.mail.folder.DataStorageInterface;
+import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
+import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.io.Source;
+import org.columba.ristretto.parser.HeaderParser;
 
 /**
  * Implementation of a local headercache facility, which is also able to resync
@@ -322,7 +319,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
             } else {
 
                 try {
-                    String source = ds.loadMessage(uids[i]);
+                    Source source = ds.getMessageSource(uids[i]);
 
                     if (source.length() == 0) {
                         ds.removeMessage(uids[i]);
@@ -332,7 +329,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
                     header =
                         new ColumbaHeader(
-                            HeaderParser.parse(new CharSequenceSource(source)));
+                            HeaderParser.parse(source));
 
                     header = CachedHeaderfields.stripHeaders(header);
 
@@ -443,14 +440,15 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
         for (int i = 0; i < uids.length; i++) {
             header = (ColumbaHeader) headerList.get(uids[i]);
 
-            String source = ds.loadMessage(uids[i]);
+            Source source = ds.getMessageSource(uids[i]);
 
             if (source.length() == 0) {
                 continue;
             }
 
-            helper = HeaderParser.parse(new CharSequenceSource(source));
-
+            helper = HeaderParser.parse(source);
+            source.close();
+            
             Iterator it = list.iterator();
 
             while (it.hasNext()) {
