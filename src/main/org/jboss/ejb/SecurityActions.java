@@ -4,6 +4,9 @@ import java.security.PrivilegedAction;
 import java.security.AccessController;
 import javax.security.jacc.PolicyContext;
 
+import org.jboss.security.RunAsIdentity;
+import org.jboss.security.SecurityAssociation;
+
 /** A collection of privileged actions for this package
  * 
  * @author Scott.Stark@jboss.org
@@ -50,6 +53,20 @@ public class SecurityActions
       }
    }
 
+   private static class PeekRunAsRoleAction implements PrivilegedAction
+   {
+      int depth;
+      PeekRunAsRoleAction(int depth)
+      {
+         this.depth = depth;
+      }
+      public Object run()
+      {
+         RunAsIdentity principal = SecurityAssociation.peekRunAsIdentity(depth);
+         return principal;
+      }
+   }
+
    static ClassLoader getContextClassLoader()
    {
       ClassLoader loader = (ClassLoader) AccessController.doPrivileged(GetTCLAction.ACTION);
@@ -66,4 +83,11 @@ public class SecurityActions
       String previousID = (String) AccessController.doPrivileged(action);
       return previousID;
    }
+   static RunAsIdentity peekRunAsIdentity(int depth)
+   {
+      PrivilegedAction action = new PeekRunAsRoleAction(depth);
+      RunAsIdentity principal = (RunAsIdentity) AccessController.doPrivileged(action);
+      return principal;
+   }
+
 }
