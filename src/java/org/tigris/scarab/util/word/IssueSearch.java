@@ -2216,6 +2216,7 @@ public class IssueSearch
      */
     protected void finalize()
     {
+        super.finalize();
         close();
     }
 
