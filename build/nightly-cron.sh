@@ -4,7 +4,7 @@
 # that checks the output for status and mails it to
 # a specific email address.
 #
-# $Id: nightly-cron.sh,v 1.1 2002/10/12 22:55:00 jon Exp $
+# $Id: nightly-cron.sh,v 1.2 2002/10/29 21:58:32 jon Exp $
 
 LOGFILE=/tmp/nightly.log
 LIST='dev@scarab.tigris.org'
@@ -18,7 +18,7 @@ rm -rf $LOGFILE
 STAT=$(sed -n '/^.*Tests run:[ 0-9,]*/s///p' $LOGFILE)
 
 case $STAT in
-    *0*0) STAT=OK ;;
+    *0*0|"") STAT=OK ;;
 esac
 
 mail -s "Scarab Nightly Runbox Build [$STAT]" $LIST < $LOGFILE
