@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class JDBCLoadRelationCommand {
    private final JDBCStoreManager manager;
@@ -70,6 +70,7 @@ public class JDBCLoadRelationCommand {
       {
          loadKeys = Collections.singletonList(ctx.getId());
       }
+
 
       // generate the sql
       String sql = getSQL(cmrField, loadKeys.size());
@@ -187,7 +188,7 @@ public class JDBCLoadRelationCommand {
          }
 
          // success, return the results
-         return (List)resultsMap.get(primaryKey); 
+         return (List)resultsMap.get(primaryKey);
       } catch(EJBException e) {
          throw e;
       } catch(Exception e) {
@@ -207,8 +208,8 @@ public class JDBCLoadRelationCommand {
       String relatedTable = cmrField.getRelatedJDBCEntity().getTableName();
       
       // do we need to join the relation table and the related table
-      boolean join = (preloadFields.size() > 0 && 
-            !relationTable.equals(relatedTable));
+      boolean join = ((preloadFields.size() > 0) || cmrField.isFkPartOfPk())
+         && !relationTable.equals(relatedTable);
 
       // aliases for the tables, only required if we are joining the tables
       String relationTableAlias = "";
