@@ -28,7 +28,7 @@ import org.jboss.ejb.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.22 $
+ *   @version $Revision: 1.23 $
  */
 public class ApplicationMetaData extends MetaData
 {
@@ -204,6 +204,10 @@ public class ApplicationMetaData extends MetaData
       // Relationships
 		Element relationshipsElement = getOptionalChild(element, "relationships");
 		if(relationshipsElement != null) {
+         
+         // used to assure that a relationship name is not reused
+         Set relationNames = new HashSet();
+         
 			iterator = getChildrenByTagName(relationshipsElement, "ejb-relation");
 			while(iterator.hasNext()) {
 				Element relationElement = (Element)iterator.next();
@@ -213,6 +217,19 @@ public class ApplicationMetaData extends MetaData
 				} catch (DeploymentException e) {
 					throw new DeploymentException("Error in ejb-jar.xml for relation " + relationMetaData.getRelationName() + ": " + e.getMessage());
 				}
+            
+            // if the relationship has a name, assure that 
+            // it has not already been used
+            String relationName = relationMetaData.getRelationName();
+            if(relationName != null) {
+               if(relationNames.contains(relationName)) {
+                  throw new DeploymentException("ejb-relation-name must be " +
+                        "unique in ejb-jar.xml file: ejb-relation-name is " +
+                        relationName);
+               }
+               relationNames.add(relationName);
+            }
+            
 				relationships.add(relationMetaData);
 			}
 		}	
