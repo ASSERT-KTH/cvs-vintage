@@ -1,4 +1,4 @@
-// $Id: FigAssociationRole.java,v 1.17 2004/01/28 07:17:47 linus Exp $
+// $Id: FigAssociationRole.java,v 1.18 2004/07/22 20:55:09 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.diagram.collaboration.ui;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.argouml.application.api.Notation;
 import org.argouml.uml.diagram.ui.FigAssociation;
@@ -38,6 +37,7 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;
 
 import ru.novosoft.uml.MElementEvent;
+
 public class FigAssociationRole extends FigAssociation {
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -63,6 +63,8 @@ public class FigAssociationRole extends FigAssociation {
     ////////////////////////////////////////////////////////////////
     // event handlers
     /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
+     *
      * calls the method on the "super" (FigAssociation)
      * and then changes the name to take care of the
      * "/ name : base association name" form.
@@ -103,15 +105,6 @@ class FigMessageGroup extends FigGroup {
      */
     public FigMessageGroup() {
 	super();
-    }
-
-    /**
-     * Constructor for FigMessageGroup.
-     * @param figs
-     * @deprecated in 0.15.3 in favour of FigMessageGroup(List)
-     */
-    public FigMessageGroup(Vector figs) {
-	super(figs);
     }
 
     /**

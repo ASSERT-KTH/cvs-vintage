@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.26 2004/03/08 07:07:51 linus Exp $
+// $Id: DiagramInterface.java,v 1.27 2004/07/22 20:55:09 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,6 @@ import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.presentation.Fig;
-import org.argouml.model.ModelFacade;
 
 /**
  * Instances of this class interface the current Class diagram.
@@ -56,12 +55,7 @@ import org.argouml.model.ModelFacade;
  * @since 0.9
  */
 public class DiagramInterface {
-
-    /**
-     * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
-     * class. This will be removed.
-     */
-    protected static Logger cat =
+    private static final Logger LOG =
         Logger.getLogger(DiagramInterface.class);
     
     Editor _currentEditor = null;
@@ -190,16 +184,6 @@ public class DiagramInterface {
      */
     private String getDiagramName(String packageName) {
 	return packageName.replace('.', '_') + "_classes";
-    }
-
-    /**
-     * Create a diagram name for a package
-     *
-     * @param p The package.
-     * @return The name for the diagram.
-     */
-    private String getDiagramName(Object p) {
-	return getDiagramName(ModelFacade.getName(p));
     }
 
     /**
@@ -346,7 +330,7 @@ public class DiagramInterface {
 	    try {
 		d.setName(diagramName);
 	    } catch (Exception e) {
-		cat.error("Failed to set diagram name.");
+		LOG.error("Failed to set diagram name.");
 	    }
 	    p.addMember(d);
 	    setCurrentDiagram(d);
