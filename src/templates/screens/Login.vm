@@ -16,6 +16,9 @@
     #set ($nextTemplate = "SelectModule.vm")
   #end
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" />
+#elseif ($data.Parameters.getString("viewIssueId"))
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+ <input type="hidden" name="id" value="$data.Parameters.getString("viewIssueId")" />
 #else
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="SelectModule.vm" />
 #end
