@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.14 2002/01/09 07:21:53 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.15 2002/02/05 06:28:10 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -141,9 +141,6 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		overwrite.setPreferredSize(dim);
 
 		box.add(overwrite);
-
-		updateBufferStatus();
-		updateMiscStatus();
 
 		box.add(Box.createHorizontalStrut(3));
 		memory = new MemoryStatus();

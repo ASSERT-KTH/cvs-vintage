@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.18 2002/01/31 05:35:48 spestov Exp $
+ * @version $Id: EditPane.java,v 1.19 2002/02/05 06:28:09 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -253,7 +253,7 @@ public class EditPane extends JPanel implements EBComponent
 		 * first/last lines than what we will end up with eventually.
 		 * Instead of confusing the user with status messages that
 		 * appear at random when switching buffers, we simply hide the
-		 * message alltogether. */
+		 * message altogether. */
 		view.getStatus().setMessage(null);
 	} //}}}
 

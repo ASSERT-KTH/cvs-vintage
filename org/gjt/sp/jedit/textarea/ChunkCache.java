@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.19 2002/02/01 07:40:23 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.20 2002/02/05 06:28:10 spestov Exp $
  */
 public class ChunkCache
 {
@@ -593,6 +593,21 @@ public class ChunkCache
 		}
 	} //}}}
 
+	//{{{ lineToChunkList() method
+	void lineToChunkList(Buffer buffer, int physicalLine, ArrayList out)
+	{
+		TextAreaPainter painter = textArea.getPainter();
+
+		buffer.getLineText(physicalLine,textArea.lineSegment);
+
+		lineToChunkList(textArea.lineSegment,
+			buffer.markTokens(physicalLine).getFirstToken(),
+			painter.getStyles(),painter.getFontRenderContext(),
+			painter,textArea.softWrap
+			? textArea.wrapMargin
+			: 0.0f,out);
+	} //}}}
+
 	//{{{ updateChunksUpTo() method
 	void updateChunksUpTo(int lastScreenLine)
 	{
@@ -641,7 +656,6 @@ public class ChunkCache
 		// to uphold this assumption.
 
 		Buffer buffer = textArea.getBuffer();
-		TextAreaPainter painter = textArea.getPainter();
 
 		out.clear();
 
@@ -670,14 +684,7 @@ public class ChunkCache
 					continue;
 				}
 
-				buffer.getLineText(physicalLine,textArea.lineSegment);
-
-				lineToChunkList(textArea.lineSegment,
-					buffer.markTokens(physicalLine).getFirstToken(),
-					painter.getStyles(),painter.getFontRenderContext(),
-					painter,textArea.softWrap
-					? textArea.wrapMargin
-					: 0.0f,out);
+				lineToChunkList(buffer,physicalLine,out);
 
 				info.firstSubregion = true;
 

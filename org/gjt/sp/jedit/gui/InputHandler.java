@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.7 2001/12/26 05:32:34 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.8 2002/02/05 06:28:10 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler extends KeyAdapter
@@ -193,7 +193,7 @@ public abstract class InputHandler extends KeyAdapter
 	public void readNextChar(String msg, String code)
 	{
 		view.getStatus().setMessage(msg);
-		readNextChar(code);
+		readNextChar = code;
 	} //}}}
 
 	//{{{ readNextChar() method

@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.12 2002/01/30 08:06:40 spestov Exp $
+ * @version $Id: View.java,v 1.13 2002/02/05 06:28:09 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -779,25 +779,29 @@ public class View extends JFrame implements EBComponent
 
 		dockableWindowManager = new DockableWindowManager(this);
 
+		toolBars = new JPanel(new VariableGridLayout(
+			VariableGridLayout.FIXED_NUM_COLUMNS,
+			1));
+
+		getContentPane().add(BorderLayout.NORTH,toolBars);
+		getContentPane().add(BorderLayout.CENTER,dockableWindowManager);
+
+		getContentPane().add(BorderLayout.SOUTH,status = new StatusBar(this));
+
 		Component comp = restoreSplitConfig(buffer,splitConfig);
 		dockableWindowManager.add(comp);
+
+		status.updateBufferStatus();
+		status.updateMiscStatus();
 
 		EditBus.addToBus(this);
 
 		setJMenuBar(GUIUtilities.loadMenuBar("view.mbar"));
 
-		toolBars = new JPanel(new VariableGridLayout(
-			VariableGridLayout.FIXED_NUM_COLUMNS,
-			1));
-
 		inputHandler = new DefaultInputHandler(this,(DefaultInputHandler)
 			jEdit.getInputHandler());
 
 		propertiesChanged();
-
-		getContentPane().add(BorderLayout.NORTH,toolBars);
-		getContentPane().add(BorderLayout.CENTER,dockableWindowManager);
-		getContentPane().add(BorderLayout.SOUTH,status = new StatusBar(this));
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowHandler());
