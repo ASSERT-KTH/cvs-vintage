@@ -62,6 +62,7 @@ import org.apache.fulcrum.intake.model.BooleanField;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RAttributeAttributeGroup;
 import org.tigris.scarab.om.RModuleIssueType;
@@ -70,6 +71,7 @@ import org.tigris.scarab.om.AttributeGroup;
 import org.tigris.scarab.om.AttributeGroupPeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypePeer;
@@ -81,7 +83,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.39 2001/11/08 19:25:54 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.40 2001/11/09 18:55:30 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -675,6 +677,39 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         setTarget(data, nextTemplate);            
     }
 
+
+    /**
+     * Changes the properties of existing AttributeOptions.
+     */
+    public synchronized void doModifyattributeoptions ( RunData data, 
+                                                        TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+
+        String attributeId = data.getParameters().getString("attributeid");
+        Attribute attribute = Attribute.getInstance(new NumberKey(attributeId));
+
+        if ( intake.isAllValid() )
+        {
+            ModuleEntity me = scarabR.getCurrentModule();
+            IssueType issueType = scarabR.getCurrentIssueType();
+            List rmos = me.getRModuleOptions(attribute, issueType);
+            for (int i=rmos.size()-1; i>=0; i--) 
+            {
+                RModuleOption rmo = (RModuleOption)rmos.get(i);
+                Group rmoGroup = intake.get("RModuleOption", 
+                                 rmo.getQueryKey(), false);
+                rmoGroup.setProperties(rmo);
+                rmo.save();
+            }
+        } 
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTarget(data, nextTemplate);            
+    }
+
     /**
      * Deletes an attribute group.
      */
@@ -812,6 +847,58 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         }        
         data.getParameters().add("groupid", groupId);
         setTarget(data, "admin,AttributeGroup.vm");            
+    }
+
+    /**
+     * Unmaps attribute options to modules.
+     */
+    public void doDeleteattributeoptions( RunData data, TemplateContext context ) 
+        throws Exception
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
+        IssueType issueType = scarabR.getCurrentIssueType();
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String optionId;
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("delete_"))
+            {
+               optionId = key.substring(7);
+               AttributeOption option = (AttributeOption) AttributeOptionPeer
+                                         .retrieveByPK(new NumberKey(optionId));
+
+               RModuleOption rmo = module.getRModuleOption(option, issueType);
+               try
+               {
+                   rmo.delete(user);
+               }
+               catch (Exception e)
+               {
+                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+               }
+
+               // Remove option - module mapping from template type
+               RModuleOption rmo2 = module.getRModuleOption(option, 
+                   scarabR.getIssueType(issueType.getTemplateId().toString()));
+               try
+               {
+                   rmo2.delete(user);
+               }
+               catch (Exception e)
+               {
+                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+               }
+            }
+        }        
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTarget(data, nextTemplate);            
     }
 
     /**
