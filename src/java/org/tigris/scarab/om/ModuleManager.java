@@ -27,9 +27,8 @@ public class ModuleManager
         super();
     }
 
+    public Module getInstanceImpl()
+    {
+        return new ScarabModule();
+    }
 }
-
-
-
-
-
