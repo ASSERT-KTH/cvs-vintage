@@ -66,9 +66,9 @@
 <th>$l10n.Action</th>
 <td>
  #if ($booleanAction)
- $l10n.Move
+ $l10n.MoveIssue
  #else
- $l10n.Copy
+ $l10n.CopyIssue
  #end
 </td>
 </tr>
