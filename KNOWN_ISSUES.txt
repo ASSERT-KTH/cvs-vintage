@@ -1,4 +1,4 @@
-$Id: KNOWN_ISSUES.txt,v 1.1 2002/05/07 21:34:30 jon Exp $
+$Id: KNOWN_ISSUES.txt,v 1.2 2002/05/15 17:46:06 jon Exp $
 
 It is best to always consult the issue tracking system at
 
@@ -19,3 +19,10 @@ things to not work or be difficult...
 
 #3. XML import/export is completely unstable and not fully
     implemented. Don't count on it working until the next beta (8).
+
+#4. Localization (display in other languages) is not entirely working 
+    yet. There has been a bunch of discussion on the developer
+    mailing list about this, but no final answers to fixing the
+    problem have been found (as far as I can tell). We will definitely
+    get around to fixing this at some point, however if you get to
+    it first, that would be great. :-)
