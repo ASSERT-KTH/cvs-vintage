@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.15 2002/01/11 07:17:17 billbarker Exp $ -->
+  <!-- $Id: serverxml.html,v 1.16 2002/01/13 02:28:28 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -1064,6 +1064,15 @@ error response if not specified.</p>
     <td>null, <i>use default Tomcat server string</i></td>
   </tr>
   <tr valign="top">
+    <td>delaySocketClose<br><b>[Tomcat 3.3.1]</b></td>
+    <td>When set true, a Thread.sleep(0) is executed just prior to closing
+      the socket for a request. This can help when running a test against
+      Tomcat on a very fast system. Otherwise, thread execution may complete
+      the socket close before the test thread gets a chance to read the data
+      resulting in a "Socket reset by peer" error.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
     <td><b>Connection Properties</b></td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
@@ -1159,14 +1168,21 @@ error response if not specified.</p>
 <h4>Description</h4>
 
 <p>Generate configuration files for isapi_redirect.dll to be used for connecting
-IIS to Tomcat.  Two files will be generated, <code>iis_redirect.reg</code> and
+IIS to Tomcat.  In Tomcat 3.3, two files will be generated, <code>iis_redirect.reg</code> and
 <code>uriworkermap.properties</code>. Both files will be written to
 <code>conf/auto</code> relative to TOMCAT_HOME.  The <code>iis_redirect.reg</code>
 contains the needed registry entries for the <code>iis_redirect.dll</code>.
 You may enter the settings into the registry by double-clicking on this file in
 Windows Explorer.  The <code>uriworkermap.properties</code> file will be read
-by the <code>isapi_redirect.dll</code> to get the mappings for determining
+by the <code>isapi_redirect.dll</code> to get the mappings that determine
 which requests should be passed to Tomcat.</p>
+
+<p>In Tomcat 3.3.1, an additional file is written.  The default is to write
+an <code>isapi_redirect.properties</code> file to the same directory as the
+<code>iis_redirect.reg</code> file. It contains the same configuration
+information as the <code>iis_redirect.reg</code>, and offers an alternative
+method of configuring the redirector instead of relying on the registry.
+See the document mentioned in the next paragraph for details on its use.</p>
 
 <p>For additional information on connecting Tomcat to IIS, see the
 <a href="tomcat-iis-howto.html">Tomcat IIS HowTo</a> document.</p>
@@ -1212,6 +1228,23 @@ the configuration files during normal startup, add:</p>
     <td>workersConfig</td>
     <td>Path to workers configuration file.</td>
     <td>conf/jk/workers.properties</td>
+  </tr>
+  <tr valign="top">
+    <td>isapiRedirector&nbsp;&nbsp;<br><b>[Tomcat 3.3.1]</b></td>
+    <td>Name of the ISAPI connector DLL.  This setting controls the name of
+      the redirector DLL included in the configuration settings. This setting
+      appears in the registry settings configuration file specified by the
+      <code>regConfig</code> attribute. It is also written to a file with the
+      same name as the DLL, but with a &quot;.properties&quot; extension.
+      The &quot;properties&quot; file will be written to the same directory
+      as the registry settings configuration file.<br>
+      <br>
+      <b>Note:</b> This &quot;properties&quot; file may be placed in the same
+      directory as the Tomcat redirector plugin DLL being used by IIS.
+      Provided its base name is the same as the DLL (e.g. isapi_redirect.dll and
+      isapi_redirect.properties) the configuration settings in the file will
+      be used instead of settings found in the registry.</td>
+    <td>isapi_redirect.dll</td>
   </tr>
   <tr valign="top">
     <td>jkLog</td>
@@ -1698,7 +1731,7 @@ parent.</p>
     <th>Default</th>
   </tr>
   <tr valign="top">
-    <td>additionalJars<br><b>[Tomcat 3.3.1]</td>
+    <td>additionalJars<br><b>[Tomcat 3.3.1]</b></td>
     <td>List of jars to be added to each web application separated by the
       specified <code>jarSeparator</code>.  If not an absolute path, the path
       is assumed to be relative to <code>TOMCAT_HOME/lib/container</code>.</td>
