@@ -18,9 +18,11 @@ and try again.</strong>
 
 <p>
 Please confirm that the information below is accurate, then click the
-Confirm Registration button. This will send an email to your account with
-instructions for the next step. Otherwise click the Back button to go
-back to the Registration page.
+Confirm Registration button. This will send an email to your account
+with instructions for the next step. If you entered an invalid email
+address, please click the back button and re-enter a valid email
+address. You will not be able to log into the system if the confirmation
+email cannot be sent to you.
 </p>
 
 <h3>Confirmation</h3>
