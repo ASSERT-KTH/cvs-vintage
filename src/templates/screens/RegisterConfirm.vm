@@ -50,7 +50,7 @@ $page.setTitle("Registration Confirmation")
     <input type="hidden" name="nextTemplate" value="Confirm.vm">
 
 ## get the user out of the temp hashtable
-#set ( $user = $data.User.getTemp("scarab.newUser") )
+#set ( $user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER) )
 
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<TR>

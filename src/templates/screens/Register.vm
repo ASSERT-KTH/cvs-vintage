@@ -54,7 +54,7 @@ $data.Parameters.setProperties($scarabR.getUser())
 	<TR>
 		<TD class="StressedText"><FONT COLOR="#FF0000">*</FONT></TD>
 		<TD class="InputHeader">&nbsp;First Name:</TD>
-		<TD><INPUT NAME="FirstName" value="$!scarab.User.FirstName" TYPE="text" SIZE="25"></TD>
+		<TD><INPUT NAME="FirstName" value="$!scarabR.User.FirstName" TYPE="text" SIZE="25"></TD>
 	</TR>
 	<TR>
 		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
@@ -68,7 +68,7 @@ $data.Parameters.setProperties($scarabR.getUser())
 	<TR>
 		<TD class="StressedText"><FONT COLOR="#FF0000">*</FONT></TD>
 		<TD class="InputHeader">&nbsp;Last Name:</TD>
-		<TD><INPUT NAME="LastName" value="$!scarab.User.LastName" TYPE="text" SIZE="25"></TD>
+		<TD><INPUT NAME="LastName" value="$!scarabR.User.LastName" TYPE="text" SIZE="25"></TD>
 	</TR>
 	<TR>
 		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
@@ -83,7 +83,7 @@ $data.Parameters.setProperties($scarabR.getUser())
 	<TR>
 		<TD class="StressedText"><FONT COLOR="#FF0000">*</FONT></TD>
 		<TD class="InputHeader">&nbsp;Email Address:</TD>
-		<TD><INPUT NAME="Email" value="$!scarab.User.Email" TYPE="text" SIZE="25">
+		<TD><INPUT NAME="Email" value="$!scarabR.User.Email" TYPE="text" SIZE="25">
 		</TD>
 	</TR>
 	<TR>
