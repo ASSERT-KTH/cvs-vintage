@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's HTML viewer. It uses a Swing JEditorPane to display the HTML,
  * and implements a URL history.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.1 2002/09/23 20:23:55 spestov Exp $
+ * @version $Id: HelpViewer.java,v 1.2 2002/09/23 20:46:59 spestov Exp $
  */
 public class HelpViewer extends JFrame implements EBComponent
 {
@@ -137,8 +137,14 @@ public class HelpViewer extends JFrame implements EBComponent
 		viewer.addHyperlinkListener(new LinkHandler());
 		viewer.setFont(new Font("Monospaced",Font.PLAIN,12));
 
+		JTabbedPane tabs = new JTabbedPane();
+		tabs.addTab(jEdit.getProperty("helpviewer.toc.label"),
+			toc = new HelpTOCPanel(this));
+		tabs.addTab(jEdit.getProperty("helpviewer.search.label"),
+			new HelpSearchPanel(this));
+
 		final JSplitPane splitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-			new JScrollPane(toc),new JScrollPane(viewer));
+			tabs,new JScrollPane(viewer));
 		splitter.setBorder(null);
 
 		getContentPane().add(BorderLayout.CENTER,splitter);
@@ -240,17 +246,7 @@ public class HelpViewer extends JFrame implements EBComponent
 
 		// select the appropriate tree node.
 		if(shortURL != null)
-		{
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode)nodes.get(shortURL);
-
-			if(node == null)
-				return;
-
-			TreePath path = new TreePath(tocModel.getPathToRoot(node));
-			toc.expandPath(path);
-			toc.setSelectionPath(path);
-			toc.scrollPathToVisible(path);
-		}
+			toc.selectNode(shortURL);
 	} //}}}
 
 	//{{{ dispose() method
@@ -282,6 +278,7 @@ public class HelpViewer extends JFrame implements EBComponent
 	private JTextField urlField;
 	private String[] history;
 	private int historyPos;
+	private HelpTOCPanel toc;
 	//}}}
 
 	//{{{ Inner classes

@@ -41,6 +41,7 @@ import org.gjt.sp.jedit.browser.VFSBrowser;
 import org.gjt.sp.jedit.buffer.BufferIORequest;
 import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.jedit.gui.*;
+import org.gjt.sp.jedit.help.HelpViewer;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.search.SearchAndReplace;
 import org.gjt.sp.jedit.syntax.*;
@@ -51,7 +52,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.88 2002/08/29 22:09:26 spestov Exp $
+ * @version $Id: jEdit.java,v 1.89 2002/09/23 20:46:59 spestov Exp $
  */
 public class jEdit
 {
