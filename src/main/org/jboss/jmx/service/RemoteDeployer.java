@@ -52,7 +52,7 @@ import org.jboss.logging.Logger;
 /**
  * A JMX client to deploy an application into a running JBoss server via RMI.
  *
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
@@ -293,8 +293,8 @@ public class RemoteDeployer
       LongOpt[] lopts =
       {
          new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
-         new LongOpt("server", LongOpt.NO_ARGUMENT, null, 's'),
-         new LongOpt("adapter", LongOpt.NO_ARGUMENT, null, 'a'),
+         new LongOpt("server", LongOpt.REQUIRED_ARGUMENT, null, 's'),
+         new LongOpt("adapter", LongOpt.REQUIRED_ARGUMENT, null, 'a'),
          new LongOpt("deploy", LongOpt.REQUIRED_ARGUMENT, null, 'd'),
          new LongOpt("undeploy", LongOpt.REQUIRED_ARGUMENT, null, 'u'),
          new LongOpt("isdeployed", LongOpt.REQUIRED_ARGUMENT, null, 'i'),
