@@ -1,4 +1,4 @@
-// $Id: ModelMemberFilePersister.java,v 1.4 2005/01/09 14:58:07 linus Exp $
+// $Id: ModelMemberFilePersister.java,v 1.5 2005/01/09 21:10:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,9 @@ import org.xml.sax.SAXException;
  */
 public class ModelMemberFilePersister extends MemberFilePersister {
 
-    /** logger */
+    /**
+     * Logger.
+     */
     private static final Logger LOG =
         Logger.getLogger(ModelMemberFilePersister.class);
 
@@ -123,9 +125,14 @@ public class ModelMemberFilePersister extends MemberFilePersister {
 
     /**
      * Save the project model to XMI.
-     * @see org.argouml.kernel.ProjectMember#save(org.argouml.kernel.ProjectMember, java.io.Writer, Integer)
+     *
+     * @see org.argouml.persistence.MemberFilePersister#save(
+     *         org.argouml.kernel.ProjectMember, java.io.Writer,
+     *         java.lang.Integer)
      */
-    public void save(ProjectMember member, Writer w, Integer indent) throws SaveException {
+    public void save(ProjectMember member, Writer w, Integer indent)
+    	throws SaveException {
+
         if (w == null) {
             throw new IllegalArgumentException("No Writer specified!");
         }

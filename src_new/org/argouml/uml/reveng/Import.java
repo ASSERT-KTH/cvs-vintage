@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.73 2005/01/09 14:58:59 linus Exp $
+// $Id: Import.java,v 1.74 2005/01/09 21:10:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,7 +78,6 @@ import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.static_structure.layout.ClassdiagramLayouter;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.util.logging.SimpleTimer;
-import org.argouml.util.osdep.OsUtil;
 import org.tigris.gef.base.Globals;
 
 /**

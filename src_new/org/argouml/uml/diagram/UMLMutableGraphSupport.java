@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.20 2005/01/09 14:58:37 linus Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.21 2005/01/09 21:10:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.IllegalModelElementConnectionException;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.UmlException;

@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.66 2005/01/09 14:58:39 linus Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.67 2005/01/09 21:10:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,12 +54,13 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
     ////////////////////////////////////////////////////////////////
     // instance variables
 
-    /** The "home" UML model of this diagram, not all ModelElements in this
-     *  graph are in the home model, but if they are added and don't
-     *  already have a model, they are placed in the "home model".
-     *  Also, elements from other models will have their FigNodes add a
-     *  line to say what their model is. */
-
+    /**
+     * The "home" UML model of this diagram, not all ModelElements in this
+     * graph are in the home model, but if they are added and don't
+     * already have a model, they are placed in the "home model".
+     * Also, elements from other models will have their FigNodes add a
+     * line to say what their model is.
+     */
     private Object model;
 
     ////////////////////////////////////////////////////////////////
@@ -326,14 +327,11 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	} else if (ModelFacade.isAAssociationEnd(edge)) {
 	    end0 = ModelFacade.getAssociation(edge);
 	    end1 = ModelFacade.getType(edge);
-            if (end0 != null
-		&& end1 != null
-		&& (containsEdge(end0) || containsNode(end0))
-		&& containsNode(end1)) {
-                return true;
-            } else {
-                return false;
-            }
+
+	    return (end0 != null
+	            && end1 != null
+	            && (containsEdge(end0) || containsNode(end0))
+	            && containsNode(end1));
 	} else if (ModelFacade.isAGeneralization(edge)) {
 	    end0 = ModelFacade.getChild(edge);
 	    end1 = ModelFacade.getParent(edge);
@@ -383,7 +381,9 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
      */
     public void addNode(Object node) {
 	LOG.debug("adding class node!!");
-	if (!canAddNode(node)) return;
+	if (!canAddNode(node)) {
+	    return;
+	}
 	getNodes().add(node);
 	if (ModelFacade.isAModelElement(node)
 	        && ModelFacade.getNamespace(node) == null) {
@@ -445,8 +445,10 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
             Iterator iter = ends.iterator();
             while (iter.hasNext()) {
                 Object associationEnd = iter.next();
-                if (!ModelFacade.isANaryAssociation(ModelFacade.getAssociation(associationEnd))
-                        && canAddEdge(ModelFacade.getAssociation(associationEnd))) {
+                if (!ModelFacade.isANaryAssociation(
+                        ModelFacade.getAssociation(associationEnd))
+                    && canAddEdge(ModelFacade.getAssociation(associationEnd))) {
+
                     addEdge(ModelFacade.getAssociation(associationEnd));
                 }
             }

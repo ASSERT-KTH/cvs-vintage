@@ -1,5 +1,5 @@
-// $Id: ClassfileImport.java,v 1.13 2005/01/09 14:57:57 linus Exp $
-// Copyright (c) 1996-2002, 2005 The Regents of the University of California. All
+// $Id: ClassfileImport.java,v 1.14 2005/01/09 21:10:36 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -47,8 +47,8 @@ import org.argouml.util.SuffixFilter;
 /**
  * This is the main class for the classfile import.
  *
- * $Revision: 1.13 $
- * $Date: 2005/01/09 14:57:57 $
+ * $Revision: 1.14 $
+ * $Date: 2005/01/09 21:10:36 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */

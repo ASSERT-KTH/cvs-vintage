@@ -1,4 +1,4 @@
-// $Id: TestUMLFeatureOwnerComboBoxModel.java,v 1.14 2005/01/08 00:39:38 linus Exp $
+// $Id: TestUMLFeatureOwnerComboBoxModel.java,v 1.15 2005/01/09 21:10:35 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,6 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetEvent;
-
-import ru.novosoft.uml.model_management.MModel;
 
 /**
  * @since Nov 6, 2002

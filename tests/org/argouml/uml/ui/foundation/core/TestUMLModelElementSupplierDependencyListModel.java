@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementSupplierDependencyListModel.java,v 1.12 2005/01/06 23:04:51 linus Exp $
+// $Id: TestUMLModelElementSupplierDependencyListModel.java,v 1.13 2005/01/09 21:10:35 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,9 +28,6 @@ package org.argouml.uml.ui.foundation.core;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
-
-import ru.novosoft.uml.foundation.core.MDependency;
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * @since Oct 30, 2002

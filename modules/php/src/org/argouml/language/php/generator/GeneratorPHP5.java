@@ -1,5 +1,5 @@
-// $Id: GeneratorPHP5.java,v 1.3 2005/01/09 14:58:01 linus Exp $
-// Copyright (c) 2004, 2005 The Regents of the University of California. All
+// $Id: GeneratorPHP5.java,v 1.4 2005/01/09 21:10:45 linus Exp $
+// Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

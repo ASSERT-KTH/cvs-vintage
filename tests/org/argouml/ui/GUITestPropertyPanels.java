@@ -1,4 +1,4 @@
-// $Id: GUITestPropertyPanels.java,v 1.16 2005/01/09 18:11:32 bobtarling Exp $
+// $Id: GUITestPropertyPanels.java,v 1.17 2005/01/09 21:10:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,9 +60,6 @@ import org.tigris.gef.util.EnumerationComposite;
 import org.tigris.gef.util.EnumerationEmpty;
 import org.tigris.gef.util.EnumerationSingle;
 import org.tigris.swidgets.Horizontal;
-
-import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.model_management.MModel;
 
 /**
  * GuiTestPropertyPanels attempts to load a project file and iterates through

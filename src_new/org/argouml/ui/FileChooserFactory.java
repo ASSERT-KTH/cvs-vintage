@@ -1,4 +1,4 @@
-// $Id: FileChooserFactory.java,v 1.3 2005/01/09 14:58:13 linus Exp $
+// $Id: FileChooserFactory.java,v 1.4 2005/01/09 21:10:36 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,8 @@ import org.argouml.util.osdep.win32.Win32FileSystemView;
 /**
  * Factory class to return a JFileChooser configured
  * according to JRE requirements.
- * TODO Remove when JRE1.3 no longer supported.
+ *
+ * TODO: Remove when JRE1.3 no longer supported.
  *
  * @author Bob Tarling
  */

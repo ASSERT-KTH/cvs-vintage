@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.28 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionSaveGraphics.java,v 1.29 2005/01/09 21:10:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,11 +24,13 @@
 
 package org.argouml.uml.ui;
 
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -42,18 +44,15 @@ import org.argouml.ui.FileChooserFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.util.FileFilters;
 import org.argouml.util.SuffixFilter;
-import org.argouml.util.osdep.OsUtil;
 import org.tigris.gef.base.CmdSaveEPS;
 import org.tigris.gef.base.CmdSaveGIF;
 import org.tigris.gef.base.CmdSaveGraphics;
 import org.tigris.gef.base.CmdSavePS;
 import org.tigris.gef.base.CmdSaveSVG;
 import org.tigris.gef.base.Diagram;
+import org.tigris.gef.base.Editor;
+import org.tigris.gef.persistence.PostscriptWriter;
 import org.tigris.gef.util.Util;
-import java.io.*;
-import java.awt.Rectangle;
-import org.tigris.gef.base.*;
-import org.tigris.gef.persistence.*;
 
 
 /**
@@ -119,7 +118,8 @@ public class ActionSaveGraphics
 
 		String filename = p.getURL().getFile();
 		if (!filename.startsWith("/FILE1/+/")) {
-		    chooser = FileChooserFactory.getFileChooser(p.getURL().getFile());
+		    chooser =
+		        FileChooserFactory.getFileChooser(p.getURL().getFile());
 		}
 	    }
 

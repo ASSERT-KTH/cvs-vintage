@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.6 2005/01/09 02:02:24 bobtarling Exp $
+// $Id: CoreHelperImpl.java,v 1.7 2005/01/09 21:10:41 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -798,7 +798,8 @@ class CoreHelperImpl implements CoreHelper {
             throw new IllegalArgumentException();
         }
 
-        Iterator it = ((MGeneralizableElement) clazz).getSpecializations().iterator();
+        Iterator it =
+            ((MGeneralizableElement) clazz).getSpecializations().iterator();
         List list = new ArrayList();
         while (it.hasNext()) {
             MGeneralization gen = (MGeneralization) it.next();

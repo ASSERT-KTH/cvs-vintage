@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationSpecification.java,v 1.14 2005/01/09 19:09:57 bobtarling Exp $
+// $Id: ActionAddAssociationSpecification.java,v 1.15 2005/01/09 21:10:42 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,6 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
-
-import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.model_management.MModel;
 
 /**
  *

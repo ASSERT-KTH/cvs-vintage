@@ -1,4 +1,4 @@
-// $Id: ExplorerPopup.java,v 1.15 2005/01/09 14:58:13 linus Exp $
+// $Id: ExplorerPopup.java,v 1.16 2005/01/09 21:10:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,12 +161,16 @@ public class ExplorerPopup extends JPopupMenu {
                     this.add(action);
                 }
 
-                if ((relationshipSelected && !flowSelected && !nAryAssociationSelected)
-                        || (linkSelected && !sequenceDiagramActive)
-                        || transitionSelected) {
-                    UMLAction action = new ActionAddExistingEdge(
-                        menuLocalize("menu.popup.add-to-diagram"),
-			selectedItem);
+                if ((relationshipSelected
+                        && !flowSelected
+                        && !nAryAssociationSelected)
+                    || (linkSelected && !sequenceDiagramActive)
+                    || transitionSelected) {
+
+                    UMLAction action =
+                        new ActionAddExistingEdge(
+                                menuLocalize("menu.popup.add-to-diagram"),
+                                selectedItem);
                     action.setEnabled(action.shouldBeEnabled());
                     this.add(action);
                 }
@@ -211,7 +215,7 @@ public class ExplorerPopup extends JPopupMenu {
      * @param key The key for the string to localize.
      * @return The localized string.
      */
-    private final String menuLocalize(String key) {
+    private String menuLocalize(String key) {
         return Translator.localize(key);
     }
 

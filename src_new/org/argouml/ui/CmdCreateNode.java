@@ -1,4 +1,4 @@
-// $Id: CmdCreateNode.java,v 1.22 2005/01/09 18:05:08 bobtarling Exp $
+// $Id: CmdCreateNode.java,v 1.23 2005/01/09 21:10:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,18 +24,10 @@
 
 package org.argouml.ui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
 
 import javax.swing.Action;
 
-import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 
@@ -59,16 +51,6 @@ import org.argouml.model.Model;
  * @author jaap.branderhorst@xs4all.nl
  */
 public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
-    /**
-     * Logger.
-     */
-    private static final Logger LOG = Logger.getLogger(CmdCreateNode.class);
-
-    /**
-     * The cache for once found creation methods.
-     */
-    private static Dictionary cache = new Hashtable();
-
     /**
      * Prefix for the action key.
      */

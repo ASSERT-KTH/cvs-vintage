@@ -1,4 +1,4 @@
-// $Id: TodoListMemberFilePersister.java,v 1.6 2005/01/09 14:58:08 linus Exp $
+// $Id: TodoListMemberFilePersister.java,v 1.7 2005/01/09 21:10:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,10 +81,13 @@ public class TodoListMemberFilePersister extends MemberFilePersister {
      *
      * Throws InvalidArgumentException if no writer specified.
      *
-     * @see org.argouml.kernel.ProjectMember#save(org.argouml.kernel.ProjectMember, java.io.Writer,
-     * java.lang.Integer)
+     * @see org.argouml.persistence.MemberFilePersister#save(
+     *         org.argouml.kernel.ProjectMember, java.io.Writer,
+     *         java.lang.Integer)
      */
-    public void save(ProjectMember member, Writer writer, Integer indent) throws SaveException {
+    public void save(ProjectMember member, Writer writer, Integer indent)
+    	throws SaveException {
+
         LOG.info("Saving todo list");
 
         if (writer == null) {
@@ -94,8 +97,8 @@ public class TodoListMemberFilePersister extends MemberFilePersister {
 
         OCLExpander expander;
         try {
-            expander = new OCLExpander(TemplateReader.getInstance()
-                    .read(TO_DO_TEE));
+            expander =
+                new OCLExpander(TemplateReader.getInstance().read(TO_DO_TEE));
         } catch (FileNotFoundException e) {
             throw new SaveException(e);
         }

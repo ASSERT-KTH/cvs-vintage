@@ -1,4 +1,4 @@
-// $Id: AbstractModelEntity.java,v 1.4 2005/01/09 14:58:07 linus Exp $
+// $Id: AbstractModelEntity.java,v 1.5 2005/01/09 21:10:40 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,8 @@
 package org.argouml.model;
 
 
-/** An interface which all ArgoUML-recognized model types
+/**
+ * An interface which all ArgoUML-recognized model types
  * must implement.
  *
  * @author Thierry Lach
@@ -41,14 +42,17 @@ public abstract class AbstractModelEntity implements ModelEntity {
         name = string;
     }
 
-    /** Returns the name
+    /**
+     * Returns the name.
+     *
      * @return the name
      */
     public String getName() {
         return name;
     }
 
-    /** @see java.lang.Object#toString()
+    /**
+     * @see java.lang.Object#toString()
      */
     public String toString() {
         return name;

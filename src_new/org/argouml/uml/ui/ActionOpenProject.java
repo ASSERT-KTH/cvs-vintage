@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.54 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionOpenProject.java,v 1.55 2005/01/09 21:10:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,6 @@ import org.argouml.persistence.PersistenceManager;
 import org.argouml.ui.FileChooserFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.cmd.GenericArgoMenuBar;
-import org.argouml.util.osdep.OsUtil;
 import org.tigris.gef.base.Globals;
 
 /**
