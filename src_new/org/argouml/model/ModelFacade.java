@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.177 2004/03/04 14:38:17 linus Exp $
+// $Id: ModelFacade.java,v 1.178 2004/03/08 06:56:27 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2064,7 +2064,7 @@ public class ModelFacade {
      * @param handle to the association.
      * @return an Iterator with all connections.
      * @deprecated by Linus Tolke as of 0.15.5. Use 
-     * {@link #getConnections()}.size() instead.
+     * {@link #getConnections(Object)}.size() instead.
      */
     public static int getConnectionCount(Object handle) {
         if (handle instanceof MAssociation) {
