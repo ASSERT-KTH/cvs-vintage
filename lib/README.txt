@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------
-$Id: README.txt,v 1.3 2002/02/26 22:21:09 jon Exp $
+$Id: README.txt,v 1.4 2002/02/27 01:40:00 jmcnally Exp $
 --------------------------------------------------------------------------
 
 The files in this directory are here for your convenience in building
@@ -87,6 +87,12 @@ considered 'standard' and well supported in our community circles.
   lightweight regex package
   
   http://jakarta.apache.org/regexp/
+
+* JavaGroups-2.0.jar
+
+  group communication toolkit based on IP multicast, used by JCS (cache)
+
+  http://javagroups.sourceforge.net/
 
 * jdbc2_0-stdext.jar
 
