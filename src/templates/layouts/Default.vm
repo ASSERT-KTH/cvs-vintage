@@ -15,7 +15,7 @@
     <tr>
      <td width="100" id="leftcol">
       <div id="projnav">
-      <form action="$link.setPage("IssueView.vm")" method="get">
+      <form action="$link.setPage("ViewIssue.vm")" method="get">
    Issue# <input type="text" name="id" size="8" maxlength="255" />
       <input type="submit" name="Submit" value="Find" />
    </form>
