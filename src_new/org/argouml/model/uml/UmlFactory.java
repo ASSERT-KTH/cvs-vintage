@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.51 2004/11/01 19:55:06 mvw Exp $
+// $Id: UmlFactory.java,v 1.52 2004/12/04 07:30:27 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -219,7 +219,13 @@ public class UmlFactory extends AbstractUmlModelFactory {
 	{ModelFacade.PERMISSION,       ModelFacade.INTERFACE,
 	 ModelFacade.PACKAGE},
 	{ModelFacade.ABSTRACTION,      ModelFacade.CLASS,
-	 ModelFacade.INTERFACE,          null},
+	 ModelFacade.INTERFACE,        null},
+	{ModelFacade.ABSTRACTION,      ModelFacade.CLASS,
+	 ModelFacade.CLASS,            null,
+	},
+	{ModelFacade.ABSTRACTION,      ModelFacade.PACKAGE,
+	    ModelFacade.PACKAGE,          null,
+	},
 	{ModelFacade.ASSOCIATION,      ModelFacade.CLASS},
 	{ModelFacade.ASSOCIATION,      ModelFacade.CLASS,
 	 ModelFacade.INTERFACE},
