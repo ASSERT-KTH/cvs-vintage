@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.45 2004/10/20 06:07:45 linus Exp $
+// $Id: TabDiagram.java,v 1.46 2004/10/25 18:08:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -412,10 +412,10 @@ class ArgoJGraph extends JGraph {
      * @see Object#hashCode()
      */
     public int hashCode() {
-        if (this._currentDiagramId == null) {
+        if (this.getCurrentDiagramId() == null) {
             return this.getEditor().hashCode();
         } else {
-            return this._currentDiagramId.hashCode()
+            return this.getCurrentDiagramId().hashCode()
 	    	+ this.getEditor().hashCode();
         }
     }
@@ -426,10 +426,10 @@ class ArgoJGraph extends JGraph {
     public boolean equals(Object o) {
         if (o instanceof ArgoJGraph) {
             ArgoJGraph a = (ArgoJGraph) o;            
-            if (((this._currentDiagramId != null
-		  && this._currentDiagramId.equals(a._currentDiagramId))
-		 || (this._currentDiagramId == null
-		     && a._currentDiagramId == null))
+            if (((this.getCurrentDiagramId() != null
+		  && this.getCurrentDiagramId().equals(a.getCurrentDiagramId()))
+		 || (this.getCurrentDiagramId() == null
+		     && a.getCurrentDiagramId() == null))
                 && this.getEditor().equals(a.getEditor())) {
                 return true;
             }
