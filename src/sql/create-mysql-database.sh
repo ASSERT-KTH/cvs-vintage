@@ -1,8 +1,16 @@
 #!/bin/sh
 
 # Define these values if you need to
-USER=`whoami`
-PASS=
+if [ "$1" != "" ] ; then
+    USER=$1
+else
+    USER=`whoami`
+fi
+if [ "$2" != "" ] ; then
+    PASS=$2
+else
+    PASS=
+fi
 
 MYSQL=`which mysql`
 MYSQLSHOW=`which mysqlshow`
@@ -14,7 +22,7 @@ if [ ! -x "${MYSQL}" ] ; then
 fi
 
 if [ "${PASS}" != "" ] ; then
-    PASSCMD="-p ${PASS}"
+    PASSCMD="-p${PASS}"
 fi
 
 # testing if the base already exists and removing it if needed.
