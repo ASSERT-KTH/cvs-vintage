@@ -17,7 +17,7 @@
             <param-name>properties</param-name>
             <!-- This is relative to the docBase -->
             <param-value>
-                WEB-INF/conf/TurbineResources.properties
+                /WEB-INF/conf/TurbineResources.properties
             </param-value>
         </init-param>
     </servlet>
