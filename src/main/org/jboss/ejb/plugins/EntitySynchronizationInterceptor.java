@@ -45,22 +45,39 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
 {
    // Constants -----------------------------------------------------
    public static final int TIMEOUT = 10000;
+	
+	// Commit time options
+   public static final int A = 0; // Keep instance cached
+   public static final int B = 1; // Invalidate state
+   public static final int C = 2; // Passivate
     
    // Attributes ----------------------------------------------------
    HashMap synchs = new HashMap();  // tx -> synch
+	
+	int commitOption = A;
    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
+	public void setCommitOption(int commitOption)
+	{
+		this.commitOption = commitOption;
+	}
+	
+	public int getCommitOption()
+	{
+		return commitOption;
+	}
+	
    public void register(EnterpriseContext ctx, Transaction tx)
    {
       // Associate ctx with tx
@@ -307,11 +324,11 @@ public class EntitySynchronizationInterceptor
       public void afterCompletion(int status)
       {
          InstanceCache cache = ((EntityContainer)getContainer()).getInstanceCache();
+         InstancePool pool = getContainer().getInstancePool();
          
          // If rolled back -> invalidate instance
          if (status == Status.STATUS_ROLLEDBACK)
          {
-            InstancePool pool = getContainer().getInstancePool();
 
             for (int i = 0; i < ctxList.size(); i++)
             {
@@ -332,16 +349,58 @@ public class EntitySynchronizationInterceptor
          {
             for (int i = 0; i < ctxList.size(); i++)
             {
-               try
-               {
-                  EntityEnterpriseContext ctx = (EntityEnterpriseContext)ctxList.get(i);
-                  ctx.setTransaction(null);
-                  ctx.setInvoked(false);
-                  cache.release(ctx);
-               } catch (Exception e)
-               {
-                  // Ignore
-               }
+					switch (commitOption)
+					{
+						// Keep instance cached after tx commit
+						case A:
+							try
+							{
+							   EntityEnterpriseContext ctx = (EntityEnterpriseContext)ctxList.get(i);
+							   ctx.setTransaction(null);
+							   ctx.setInvoked(false);
+							   cache.release(ctx);
+							} catch (Exception e)
+							{
+							   Logger.exception(e);
+							}
+							break;
+						
+						// Keep instance, but invalidate state
+						case B:
+							try
+							{
+							   EntityEnterpriseContext ctx = (EntityEnterpriseContext)ctxList.get(i);
+							   ctx.setTransaction(null);
+							   ctx.setInvoked(false);
+								
+								ctx.setSynchronized(false); // Invalidate state
+							   cache.release(ctx);
+							} catch (Exception e)
+							{
+							   Logger.exception(e);
+							}
+							break;
+							
+					// Passivate instance
+					case C:
+						try
+						{
+						   EntityEnterpriseContext ctx = (EntityEnterpriseContext)ctxList.get(i);
+						   ctx.setTransaction(null);
+						   ctx.setInvoked(false);
+							
+							((EntityContainer)getContainer()).getPersistenceManager().passivateEntity(ctx); // Passivate instance
+						   cache.remove(ctx.getId()); // Remove from cache
+							
+							pool.free(ctx); // Add to instance pool
+							
+						} catch (Exception e)
+						{
+						   Logger.exception(e);
+						}
+						break;
+					}
+				
             }
          }
          
