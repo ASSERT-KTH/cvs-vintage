@@ -1,4 +1,4 @@
-// $Id: TestGeneratorCpp.java,v 1.5 2004/11/15 22:37:35 mvw Exp $
+// $Id: TestGeneratorCpp.java,v 1.6 2004/12/16 01:26:33 euluis Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,10 @@
 package org.argouml.language.cpp.generator;
 
 import java.util.Collection;
-import junit.framework.TestCase;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.apache.log4j.Logger;
 
-import org.argouml.model.uml.CoreFactory;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -40,7 +37,7 @@ import org.argouml.model.ModelFacade;
  * @author euluis
  * @since 0.17.2
  */                                
-public class TestGeneratorCpp extends TestCase {
+public class TestGeneratorCpp extends BaseTestGeneratorCpp {
 
     /** The Logger for this class */
     private static final Logger LOG = Logger.getLogger(TestGeneratorCpp.class);
@@ -68,28 +65,6 @@ public class TestGeneratorCpp extends TestCase {
      */
     public static void main(java.lang.String[] args) {
         junit.textui.TestRunner.run(suite());
-    }
-
-    /** factory for model elements */
-    private CoreFactory factory;
-
-    /** The venerable C++ generator instance used in the test fixtures. */
-    private GeneratorCpp generator;
-
-    /** the AClass model element */
-    private Object aClass;
-
-    /** the AClass::foo() operation */
-    private Object fooMethod;
-    
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
-    protected void setUp() {
-        generator = GeneratorCpp.getInstance();
-        factory = UmlFactory.getFactory().getCore();
-        aClass = factory.buildClass("AClass");
-        fooMethod = factory.buildOperation(aClass, "foo");
     }
 
     /**
@@ -163,4 +138,3 @@ public class TestGeneratorCpp extends TestCase {
         assertNonNullNonZeroLengthString(generator.getModuleKey());
     }
 }
-
