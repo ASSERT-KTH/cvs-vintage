@@ -94,7 +94,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -698,7 +698,7 @@ public class EjbModule
       // Create the container's WebClassLoader 
       // and register it with the web service.
       String webClassLoaderName = getWebClassLoader(conf, bean);
-      log.info("Creating WebClassLoader of class " + webClassLoaderName);
+      log.debug("Creating WebClassLoader of class " + webClassLoaderName);
       WebClassLoader wcl = null;
       try 
       {
@@ -742,25 +742,33 @@ public class EjbModule
       // Set security domain manager
       String securityDomain = bean.getApplicationMetaData().getSecurityDomain();
       String confSecurityDomain = conf.getSecurityDomain();
-      if( securityDomain != null || confSecurityDomain != null )
+      // Default the config security to the application security manager
+      if( confSecurityDomain == null )
+         confSecurityDomain = securityDomain;
+      // Check for an empty confSecurityDomain which signifies to disable security
+      if( confSecurityDomain != null && confSecurityDomain.length() == 0 )
+         confSecurityDomain = null;
+      if( confSecurityDomain != null )
       {   // Either the application has a security domain or the container has security setup
          try
          {
-            if( confSecurityDomain == null )
-               confSecurityDomain = securityDomain;
-            //log.debug("lookup securityDomain manager name: "+confSecurityDomain);
+            log.debug("Setting security domain from: "+confSecurityDomain);
             Object securityMgr = iniCtx.lookup(confSecurityDomain);
             AuthenticationManager ejbS = (AuthenticationManager) securityMgr;
             RealmMapping rM = (RealmMapping) securityMgr;
             container.setSecurityManager( ejbS );
             container.setRealmMapping( rM );
          }
-         catch (NamingException ne)
+         catch(NamingException e)
          {
-            throw new DeploymentException( "Could not find the Security Manager specified for this container, name="+confSecurityDomain, ne);
+            throw new DeploymentException("Could not find the security-domain, name="+confSecurityDomain, e);
+         }
+         catch(Exception e)
+         {
+            throw new DeploymentException("Invalid security-domain specified, name="+confSecurityDomain, e);
          }
       }
-      
+
       // Load the security proxy instance if one was configured
       String securityProxyClassName = bean.getSecurityProxy();
       if( securityProxyClassName != null )
@@ -770,7 +778,7 @@ public class EjbModule
             Class proxyClass = cl.loadClass(securityProxyClassName);
             Object proxy = proxyClass.newInstance();
             container.setSecurityProxy(proxy);
-            //log.debug("setSecurityProxy, "+proxy);
+            log.debug("setSecurityProxy, "+proxy);
          }
          catch(Exception e)
          {
