@@ -18,21 +18,11 @@ import javax.ejb.NoSuchEntityException;
  * 
  *	@see NoPassivationEntityInstanceCache.java    
  *	@author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public interface EntityInstanceCache
    extends InstanceCache
 {
-   // Constants -----------------------------------------------------
-    
-   // Attributes ----------------------------------------------------
-    
-   // Static --------------------------------------------------------
-   
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
-
    /**
     * Returns the key used to cache the context
 	*
