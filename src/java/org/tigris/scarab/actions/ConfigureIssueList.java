@@ -76,7 +76,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.13 2001/10/20 00:13:04 elicia Exp $
+    @version $Id: ConfigureIssueList.java,v 1.14 2001/10/20 00:23:51 elicia Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -105,7 +105,6 @@ public class ConfigureIssueList extends RequireLoginFirstAction
                 mua = (RModuleUserAttribute)RModuleUserAttributePeer.retrieveByPK(moduleId, 
                       user.getUserId(), issueType.getIssueTypeId(),
                       ((RModuleUserAttribute)currentAttributes.get(i)).getAttributeId());
-System.out.println("delete" + mua.getIssueTypeId());
                 mua.delete();
             }
             catch (Exception e)
@@ -128,11 +127,9 @@ System.out.println("delete" + mua.getIssueTypeId());
                 String queryKey = moduleId + ":" + user.getUserId() + ":" 
                                   + issueType.getIssueTypeId() + ":"
                                   + attributeId.toString();
-System.out.println(queryKey);
                 Group group = intake.get("RModuleUserAttribute", 
                                          queryKey, false);
 
-System.out.println(group);
                 
                 mua = user.getRModuleUserAttribute((ScarabModule)module, 
                                                    attribute, issueType);
