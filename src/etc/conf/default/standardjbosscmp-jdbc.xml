@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.34 2002/06/16 20:06:42 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.35 2002/06/19 14:56:42 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -1158,8 +1158,8 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>false</subquery-supported>
-         <true-mapping>0</true-mapping>
-         <false-mapping>1</false-mapping>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
 
          <function-mapping>
             <function-name>concat</function-name>
