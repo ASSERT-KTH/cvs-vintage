@@ -510,33 +510,37 @@ try{
     public Attribute getAttribute()
      throws Exception
     {
-     try
-     {
-        if (attribute == null)
+        try
         {
-            String attId = getIntakeTool()
-                .get("Attribute", IntakeTool.DEFAULT_KEY)
-                .get("Id").toString();
-         if ( attId == null || attId.length() == 0 )
-         {
-            attId = data.getParameters().getString("attId");
-            if ( attId == null || attId.length() == 0 )
-            { 
-                attribute = AttributeManager.getInstance();
-            }
-            else 
+            if (attribute == null)
             {
-                attribute = AttributeManager.getInstance(new NumberKey(attId));
+                String attId = getIntakeTool()
+                    .get("Attribute", IntakeTool.DEFAULT_KEY)
+                    .get("Id").toString();
+                if ( attId == null || attId.length() == 0 )
+                {
+                    attId = data.getParameters().getString("attId");
+                    if ( attId == null || attId.length() == 0 )
+                    { 
+                        attribute = AttributeManager.getInstance();
+                    }
+                    else 
+                    {
+                        attribute = AttributeManager.getInstance(new NumberKey(attId));
+                    }
+                }
+                else 
+                {
+                    attribute = AttributeManager.getInstance(new NumberKey(attId));
+                }
             }
         }
-        else 
+        catch (Exception e)
         {
-            attribute = AttributeManager.getInstance(new NumberKey(attId));
+            e.printStackTrace();
         }
-     } 
-}catch(Exception e){e.printStackTrace();}
         return attribute;
-   }
+    }
 
     /**
      * A Attribute object for use within the Scarab API.
@@ -544,13 +548,18 @@ try{
     public Attribute getAttribute(NumberKey pk)
      throws Exception
     {
+        Attribute attr = null;
         try
         {
-           attribute = AttributeManager.getInstance(pk);
+           attr = AttributeManager.getInstance(pk);
         }
-        catch(Exception e){e.printStackTrace();}
-        return attribute;
-   }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        this.attribute = attr;
+        return attr;
+    }
 
     /**
      * A Attribute object for use within the Scarab API.
