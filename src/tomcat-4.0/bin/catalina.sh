@@ -32,7 +32,7 @@
 #                   (JSSE) installation, whose JAR files will be added to the
 #                   system class path used to start Tomcat.
 #
-# $Id: catalina.sh,v 1.17 2002/09/24 21:30:12 jon Exp $
+# $Id: catalina.sh,v 1.18 2002/10/09 18:11:34 jon Exp $
 # -----------------------------------------------------------------------------
 
 # OS specific support.  $var _must_ be set to either true or false.

@@ -3,7 +3,7 @@ if "%OS%" == "Windows_NT" setlocal
 rem ---------------------------------------------------------------------------
 rem Script to run the Jasper "offline JSP compiler"
 rem
-rem $Id: jspc.bat,v 1.17 2002/09/24 21:30:12 jon Exp $
+rem $Id: jspc.bat,v 1.18 2002/10/09 18:11:34 jon Exp $
 rem ---------------------------------------------------------------------------
 
 rem Guess JASPER_HOME if not defined
