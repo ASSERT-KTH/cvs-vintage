@@ -306,7 +306,7 @@ public class TableView extends JTreeTable {
 				if (str.length() == 0)
 					registerRenderer(
 						name,
-						new HeaderTableCommonRenderer(getTree(), "Subject"),
+						new HeaderTableCommonRenderer(getTree(), name),
 						new CommonHeaderRenderer(
 							name,
 							name,
@@ -318,7 +318,7 @@ public class TableView extends JTreeTable {
 				else
 					registerRenderer(
 						name,
-						new HeaderTableCommonRenderer(getTree(), "Subject"),
+						new HeaderTableCommonRenderer(getTree(), str),
 						new CommonHeaderRenderer(
 							name,
 							str,
