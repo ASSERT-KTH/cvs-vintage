@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.54 2002/02/12 03:22:02 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.55 2002/02/12 06:51:17 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -529,6 +529,9 @@
         <include name="org/jboss/system/ServiceLibraries*.class"/>
         <include name="org/jboss/system/Server*.class"/>
         <include name="org/jboss/deployment/DeploymentException.class"/>
+
+        <!-- Included as a duplicate class to allow core components to use it. -->
+        <include name="org/jboss/util/SafeObjectNameFactory.class"/>
       </fileset>
       <fileset dir="${build.resources}">
         <include name="org/jboss/version.properties"/>
@@ -552,6 +555,9 @@
         <include name="org/jboss/deployment/SARDeployer*.class"/>
         <include name="org/jboss/deployment/DeploymentInfo.class"/>
         <include name="org/jboss/deployment/DeployerMBean*.class"/>
+
+        <!-- Currently duplicated to allow the testsuite to run -->
+        <include name="org/jboss/deployment/DeploymentException.class"/>
       </fileset>
     </jar>
 	 
