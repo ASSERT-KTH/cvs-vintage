@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.11 2001/05/24 13:42:47 marcus Exp $
+// $Id: Modeller.java,v 1.12 2001/05/27 19:49:59 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -129,9 +129,14 @@ public class Modeller
 	    parseState.addPackageContext(mPackage);
 	}
 	else {
-	    MClassifier mClassifier =
-		(new PackageContext(null, mPackage)).get(classifierName);
-	    parseState.addClassifierContext(mClassifier);
+	    try {
+		MClassifier mClassifier =
+		    (new PackageContext(null, mPackage)).get(classifierName);
+		parseState.addClassifierContext(mClassifier);
+	    }
+	    catch(ClassifierNotFoundException e) {
+		// Postpone the problems to the actual class parsing.
+	    }
 	}
     }
 
