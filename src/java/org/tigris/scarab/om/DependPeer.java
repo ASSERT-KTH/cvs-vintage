@@ -74,7 +74,6 @@ public class DependPeer
      * Retrieve a single object by pk
      *
      * @param pk
-     */
     public static Depend retrieveByPK( ObjectKey pk )
         throws TorqueException
     {
@@ -91,5 +90,6 @@ public class DependPeer
         }
         return result;
     }
+     */
 }
 
