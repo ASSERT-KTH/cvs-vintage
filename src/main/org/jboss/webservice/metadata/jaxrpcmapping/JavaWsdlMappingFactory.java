@@ -6,19 +6,17 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMappingFactory.java,v 1.10 2004/10/08 20:30:44 tdiesler Exp $
+// $Id: JavaWsdlMappingFactory.java,v 1.11 2004/11/26 07:02:34 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.xml.binding.ContentNavigator;
 import org.jboss.xml.binding.ObjectModelFactory;
 import org.jboss.xml.binding.Unmarshaller;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.net.URL;
+import javax.xml.namespace.QName;
 import java.io.InputStream;
-import java.io.IOException;
+import java.net.URL;
 
 /**
  * A JBossXB factory for {@link org.jboss.webservice.metadata.jaxrpcmapping.JavaWsdlMapping}
@@ -59,7 +57,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
       InputStream is = jaxrpcMappingFile.openStream();
       try
       {
-         JavaWsdlMapping javaWsdlMapping = (JavaWsdlMapping) unmarshaller.unmarshal(is, this, null);
+         JavaWsdlMapping javaWsdlMapping = (JavaWsdlMapping)unmarshaller.unmarshal(is, this, null);
          return javaWsdlMapping;
       }
       finally
@@ -72,10 +70,10 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     * This method is called on the factory by the object model builder when the parsing starts.
     */
    public Object newRoot(Object root,
-                               ContentNavigator navigator,
-                               String namespaceURI,
-                               String localName,
-                               Attributes attrs)
+                         ContentNavigator navigator,
+                         String namespaceURI,
+                         String localName,
+                         Attributes attrs)
    {
       return new JavaWsdlMapping();
    }
@@ -230,7 +228,13 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
       }
       else if("anonymous-type-qname".equals(localName))
       {
-         typeMapping.setAnonymousTypeQName(value);
+         int index = value.lastIndexOf(':');
+         if(index < 0)
+            throw new IllegalArgumentException("Invalid anonymous qname: " + value);
+
+         String nsURI = value.substring(0, index);
+         String localPart = value.substring(index + 1);
+         typeMapping.setAnonymousTypeQName(new QName(nsURI, localPart));
       }
       else if("qname-scope".equals(localName))
       {

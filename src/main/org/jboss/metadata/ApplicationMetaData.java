@@ -7,6 +7,13 @@
 
 package org.jboss.metadata;
 
+import org.jboss.deployment.DeploymentException;
+import org.jboss.mx.util.MBeanServerLocator;
+import org.w3c.dom.DocumentType;
+import org.w3c.dom.Element;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -14,14 +21,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-
-import org.jboss.deployment.DeploymentException;
-import org.jboss.mx.util.MBeanServerLocator;
-import org.w3c.dom.DocumentType;
-import org.w3c.dom.Element;
 
 /**
  * The top level meta data from the jboss.xml and ejb-jar.xml descriptor.
@@ -33,7 +32,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
  *
- * @version $Revision: 1.53 $
+ * @version $Revision: 1.54 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -53,7 +52,7 @@ public class ApplicationMetaData
    private ArrayList relationships = new ArrayList();
    /** The assembly-descriptor */
    private AssemblyDescriptorMetaData assemblyDescriptor = new AssemblyDescriptorMetaData();
-   /** A HashMap<String, ConfigurationMetaData> for container configs */   
+   /** A HashMap<String, ConfigurationMetaData> for container configs */
    private HashMap configurations = new HashMap();
    /** A HashMap<String, InvokerProxyBindingMetaData> for invoker bindings */
    private HashMap invokerBindings = new HashMap();
@@ -66,6 +65,8 @@ public class ApplicationMetaData
    private String securityDomain;
    /** The  unauthenticated-principal value assigned to the application */
    private String unauthenticatedPrincipal;
+   /** The web context root to use for web services */
+   private String webServiceContextRoot;
    /** An unused flag if the spec security restrictions should be enforced */
    private boolean enforceEjbRestrictions;
    /** The missing-method-permissions-excluded-mode value */
@@ -133,7 +134,7 @@ public class ApplicationMetaData
       Iterator iterator = getEnterpriseBeans();
       while (iterator.hasNext())
       {
-         BeanMetaData current = (BeanMetaData) iterator.next();
+         BeanMetaData current = (BeanMetaData)iterator.next();
          if (current.getEjbName().equals(ejbName))
          {
             return current;
@@ -147,7 +148,17 @@ public class ApplicationMetaData
    public String getWsdlPublishLocationByName(String name)
    {
       // if not found, the we will use default
-      return (String) webserviceDescriptions.get(name);
+      return (String)webserviceDescriptions.get(name);
+   }
+
+   public String getWebServiceContextRoot()
+   {
+      return webServiceContextRoot;
+   }
+
+   public void setWebServiceContextRoot(String webServiceContextRoot)
+   {
+      this.webServiceContextRoot = webServiceContextRoot;
    }
 
    /**
@@ -171,7 +182,7 @@ public class ApplicationMetaData
 
    public ConfigurationMetaData getConfigurationMetaDataByName(String name)
    {
-      return (ConfigurationMetaData) configurations.get(name);
+      return (ConfigurationMetaData)configurations.get(name);
    }
 
    public Iterator getInvokerProxyBindings()
@@ -179,16 +190,15 @@ public class ApplicationMetaData
       return invokerBindings.values().iterator();
    }
 
-   public InvokerProxyBindingMetaData getInvokerProxyBindingMetaDataByName(
-      String name)
+   public InvokerProxyBindingMetaData getInvokerProxyBindingMetaDataByName(String name)
    {
-      return (InvokerProxyBindingMetaData) invokerBindings.get(name);
+      return (InvokerProxyBindingMetaData)invokerBindings.get(name);
    }
 
    public String getResourceByName(String name)
    {
       // if not found, the container will use default
-      return (String) resources.get(name);
+      return (String)resources.get(name);
    }
 
    public void addPluginData(String pluginName, Object pluginData)
@@ -243,7 +253,7 @@ public class ApplicationMetaData
    {
       return assemblyDescriptor.getMessageDestinationMetaData(name);
    }
-   
+
    /**
     * Import data provided by ejb-jar.xml
     *
@@ -283,13 +293,11 @@ public class ApplicationMetaData
          }
 
          // Check for a known public Id
-         if (publicId.startsWith(
-            "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0"))
+         if (publicId.startsWith("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0"))
          {
             ejbVersion = 2;
          }
-         else if (publicId.startsWith(
-            "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1"))
+         else if (publicId.startsWith("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1"))
          {
             ejbVersion = 1;
          }
@@ -309,7 +317,7 @@ public class ApplicationMetaData
       Iterator iterator = getChildrenByTagName(enterpriseBeans, "entity");
       while (iterator.hasNext())
       {
-         Element currentEntity = (Element) iterator.next();
+         Element currentEntity = (Element)iterator.next();
          EntityMetaData entityMetaData = new EntityMetaData(this);
          try
          {
@@ -332,7 +340,7 @@ public class ApplicationMetaData
                throw new DeploymentException(entityMetaData.getEjbName() +
                   ": Duplicate abstract-schema name '" + abstractSchemaName +
                   "'. Already defined for Entity '" +
-                  ((EntityMetaData) schemaNameMap.get(abstractSchemaName)).getEjbName() + "'.");
+                  ((EntityMetaData)schemaNameMap.get(abstractSchemaName)).getEjbName() + "'.");
             }
             schemaNameMap.put(abstractSchemaName, entityMetaData);
          }
@@ -344,7 +352,7 @@ public class ApplicationMetaData
       iterator = getChildrenByTagName(enterpriseBeans, "session");
       while (iterator.hasNext())
       {
-         Element currentSession = (Element) iterator.next();
+         Element currentSession = (Element)iterator.next();
          SessionMetaData sessionMetaData = new SessionMetaData(this);
          try
          {
@@ -363,7 +371,7 @@ public class ApplicationMetaData
       iterator = getChildrenByTagName(enterpriseBeans, "message-driven");
       while (iterator.hasNext())
       {
-         Element currentMessageDriven = (Element) iterator.next();
+         Element currentMessageDriven = (Element)iterator.next();
          MessageDrivenMetaData messageDrivenMetaData =
             new MessageDrivenMetaData(this);
 
@@ -385,7 +393,7 @@ public class ApplicationMetaData
       Iterator beanIt = beans.iterator();
       while (beanIt.hasNext())
       {
-         BeanMetaData bmd = (BeanMetaData) beanIt.next();
+         BeanMetaData bmd = (BeanMetaData)beanIt.next();
 
          String beanName = bmd.getEjbName();
          if (ejbNames.contains(beanName))
@@ -409,7 +417,7 @@ public class ApplicationMetaData
             "ejb-relation");
          while (iterator.hasNext())
          {
-            Element relationElement = (Element) iterator.next();
+            Element relationElement = (Element)iterator.next();
             RelationMetaData relationMetaData = new RelationMetaData();
             try
             {
@@ -448,7 +456,7 @@ public class ApplicationMetaData
          iterator = getChildrenByTagName(descrElement, "security-role");
          while (iterator.hasNext())
          {
-            Element securityRole = (Element) iterator.next();
+            Element securityRole = (Element)iterator.next();
             try
             {
                String roleName = getElementContent(getUniqueChild(securityRole, "role-name"));
@@ -469,7 +477,7 @@ public class ApplicationMetaData
          {
             while (iterator.hasNext())
             {
-               Element methodPermission = (Element) iterator.next();
+               Element methodPermission = (Element)iterator.next();
                // Look for the unchecked element
                Element unchecked = getOptionalChild(methodPermission,
                   "unchecked");
@@ -484,12 +492,10 @@ public class ApplicationMetaData
                {
                   // Get the role-name elements
                   roles = new HashSet();
-                  Iterator rolesIterator = getChildrenByTagName(
-                     methodPermission, "role-name");
+                  Iterator rolesIterator = getChildrenByTagName(methodPermission, "role-name");
                   while (rolesIterator.hasNext())
                   {
-                     roles.add(getElementContent(
-                        (Element) rolesIterator.next()));
+                     roles.add(getElementContent((Element)rolesIterator.next()));
                   }
                   if (roles.size() == 0)
                      throw new DeploymentException("An unchecked " +
@@ -504,7 +510,7 @@ public class ApplicationMetaData
                {
                   // load the method
                   MethodMetaData method = new MethodMetaData();
-                  method.importEjbJarXml((Element) methods.next());
+                  method.importEjbJarXml((Element)methods.next());
                   if (isUnchecked)
                   {
                      method.setUnchecked();
@@ -538,12 +544,11 @@ public class ApplicationMetaData
          {
             while (iterator.hasNext())
             {
-               Element containerTransaction = (Element) iterator.next();
+               Element containerTransaction = (Element)iterator.next();
 
                // find the type of the transaction
                byte transactionType;
-               String type = getElementContent(getUniqueChild(
-                  containerTransaction, "trans-attribute"));
+               String type = getElementContent(getUniqueChild(containerTransaction, "trans-attribute"));
 
                if (type.equalsIgnoreCase("NotSupported") ||
                   type.equalsIgnoreCase("Not_Supported"))
@@ -578,13 +583,12 @@ public class ApplicationMetaData
                }
 
                // find the methods
-               Iterator methods = getChildrenByTagName(
-                  containerTransaction, "method");
+               Iterator methods = getChildrenByTagName(containerTransaction, "method");
                while (methods.hasNext())
                {
                   // load the method
                   MethodMetaData method = new MethodMetaData();
-                  method.importEjbJarXml((Element) methods.next());
+                  method.importEjbJarXml((Element)methods.next());
                   method.setTransactionType(transactionType);
 
                   // give the method to the right bean
@@ -612,7 +616,7 @@ public class ApplicationMetaData
             iterator = getChildrenByTagName(excludeList, "method");
             while (iterator.hasNext())
             {
-               Element methodInf = (Element) iterator.next();
+               Element methodInf = (Element)iterator.next();
                // load the method
                MethodMetaData method = new MethodMetaData();
                method.importEjbJarXml(methodInf);
@@ -633,7 +637,7 @@ public class ApplicationMetaData
          iterator = getChildrenByTagName(descrElement, "message-destination");
          while (iterator.hasNext())
          {
-            Element messageDestination = (Element) iterator.next();
+            Element messageDestination = (Element)iterator.next();
             try
             {
                MessageDestinationMetaData messageDestinationMetaData = new MessageDestinationMetaData();
@@ -715,9 +719,8 @@ public class ApplicationMetaData
 
          while (iterator.hasNext())
          {
-            Element invoker = (Element) iterator.next();
-            String invokerName = getElementContent(getUniqueChild(
-               invoker, "name"));
+            Element invoker = (Element)iterator.next();
+            String invokerName = getElementContent(getUniqueChild(invoker, "name"));
 
             // find the configuration if it has already been defined
             // (allow jboss.xml to modify a standard conf)
@@ -753,7 +756,7 @@ public class ApplicationMetaData
 
          while (iterator.hasNext())
          {
-            Element conf = (Element) iterator.next();
+            Element conf = (Element)iterator.next();
             String confName = getElementContent(getUniqueChild(conf,
                "container-name"));
             String parentConfName = conf.getAttribute("extends");
@@ -770,8 +773,7 @@ public class ApplicationMetaData
             ConfigurationMetaData configurationMetaData = null;
             if (parentConfName != null)
             {
-               configurationMetaData = getConfigurationMetaDataByName(
-                  parentConfName);
+               configurationMetaData = getConfigurationMetaDataByName(parentConfName);
                if (configurationMetaData == null)
                {
                   throw new DeploymentException("Failed to find " +
@@ -780,7 +782,7 @@ public class ApplicationMetaData
 
                // Make a copy of the existing configuration
                configurationMetaData =
-                  (ConfigurationMetaData) configurationMetaData.clone();
+                  (ConfigurationMetaData)configurationMetaData.clone();
                configurations.put(confName, configurationMetaData);
             }
 
@@ -821,7 +823,7 @@ public class ApplicationMetaData
             iterator = getChildrenByTagName(entBeans, "entity");
             while (iterator.hasNext())
             {
-               Element bean = (Element) iterator.next();
+               Element bean = (Element)iterator.next();
                ejbName = getElementContent(getUniqueChild(bean, "ejb-name"));
                BeanMetaData beanMetaData = getBeanByEjbName(ejbName);
                if (beanMetaData == null)
@@ -836,7 +838,7 @@ public class ApplicationMetaData
             iterator = getChildrenByTagName(entBeans, "session");
             while (iterator.hasNext())
             {
-               Element bean = (Element) iterator.next();
+               Element bean = (Element)iterator.next();
                ejbName = getElementContent(getUniqueChild(bean, "ejb-name"));
                BeanMetaData beanMetaData = getBeanByEjbName(ejbName);
                if (beanMetaData == null)
@@ -851,7 +853,7 @@ public class ApplicationMetaData
             iterator = getChildrenByTagName(entBeans, "message-driven");
             while (iterator.hasNext())
             {
-               Element bean = (Element) iterator.next();
+               Element bean = (Element)iterator.next();
                ejbName = getElementContent(getUniqueChild(bean, "ejb-name"));
                BeanMetaData beanMetaData = getBeanByEjbName(ejbName);
                if (beanMetaData == null)
@@ -874,7 +876,7 @@ public class ApplicationMetaData
             iterator = getChildrenByTagName(entBeans, "webservice-description");
             while (iterator.hasNext())
             {
-               Element wsd = (Element) iterator.next();
+               Element wsd = (Element)iterator.next();
                String wsdName = getElementContent(getUniqueChild(wsd, "webservice-description-name"));
                String wsdlPublishLocation = getOptionalChildContent(wsd, "wsdl-publish-location");
                webserviceDescriptions.put(wsdName, wsdlPublishLocation);
@@ -882,8 +884,7 @@ public class ApplicationMetaData
          }
          catch (DeploymentException e)
          {
-            throw new DeploymentException("Error in jboss.xml for webservice description: "
-                    + e.getMessage());
+            throw new DeploymentException("Error in jboss.xml for webservice description: " + e.getMessage());
          }
       }
 
@@ -895,7 +896,7 @@ public class ApplicationMetaData
          iterator = getChildrenByTagName(descrElement, "security-role");
          while (iterator.hasNext())
          {
-            Element securityRole = (Element) iterator.next();
+            Element securityRole = (Element)iterator.next();
             String roleName = getElementContent(getUniqueChild(securityRole, "role-name"));
             SecurityRoleMetaData securityRoleMetaData = assemblyDescriptor.getSecurityRoleByName(roleName);
             if (securityRoleMetaData == null)
@@ -917,7 +918,7 @@ public class ApplicationMetaData
          iterator = getChildrenByTagName(descrElement, "message-destination");
          while (iterator.hasNext())
          {
-            Element messageDestination = (Element) iterator.next();
+            Element messageDestination = (Element)iterator.next();
             try
             {
                String messageDestinationName = getUniqueChildContent(messageDestination, "message-destination-name");
@@ -943,15 +944,12 @@ public class ApplicationMetaData
          {
             while (iterator.hasNext())
             {
-               Element resourceManager = (Element) iterator.next();
-               String resName = getElementContent(getUniqueChild(
-                  resourceManager, "res-name"));
+               Element resourceManager = (Element)iterator.next();
+               String resName = getElementContent(getUniqueChild(resourceManager, "res-name"));
 
-               String jndi = getElementContent(getOptionalChild(
-                  resourceManager, "res-jndi-name"));
+               String jndi = getElementContent(getOptionalChild(resourceManager, "res-jndi-name"));
 
-               String url = getElementContent(getOptionalChild(
-                  resourceManager, "res-url"));
+               String url = getElementContent(getOptionalChild(resourceManager, "res-url"));
 
                if (jndi != null && url == null)
                {

@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMapping.java,v 1.8 2004/10/04 23:48:10 tdiesler Exp $
+// $Id: JavaWsdlMapping.java,v 1.9 2004/11/26 07:02:34 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 /**
  * XML mapping of the java-wsdl-mapping root element in jaxrpc-mapping.xml
- * 
+ *
  * @author Thomas.Diesler@jboss.org
  * @since 14-May-2004
  */
@@ -95,20 +95,31 @@ public class JavaWsdlMapping
 
       if (typeQName != null)
       {
+         // Check the <root-type-qname>
          Iterator it = javaXmlTypeMappings.iterator();
          while (typeMapping == null && it.hasNext())
          {
             JavaXmlTypeMapping mapping = (JavaXmlTypeMapping)it.next();
             if (typeQName.equals(mapping.getRootTypeQName()))
                typeMapping = mapping;
+         }
 
-            String anonymousMapping = mapping.getAnonymousTypeQName();
-            if (typeMapping == null && anonymousMapping != null)
+         // Check the <anonymous-type-qname>
+         it = javaXmlTypeMappings.iterator();
+         while (typeMapping == null && it.hasNext())
+         {
+            JavaXmlTypeMapping mapping = (JavaXmlTypeMapping)it.next();
+            QName anonymousQName = mapping.getAnonymousTypeQName();
+            if (anonymousQName != null)
             {
-               String nsURI = typeQName.getNamespaceURI();
-               String localPart = typeQName.getLocalPart();
-               if (anonymousMapping.equals(nsURI + ":>" + localPart))
-                  typeMapping = mapping;
+               if (typeQName.getNamespaceURI().equals(anonymousQName.getNamespaceURI()))
+               {
+                  String localPart = typeQName.getLocalPart();
+                  if (anonymousQName.getLocalPart().equals(localPart))
+                     typeMapping = mapping;
+                  if (anonymousQName.getLocalPart().equals(">" + localPart))
+                     typeMapping = mapping;
+               }
             }
          }
 

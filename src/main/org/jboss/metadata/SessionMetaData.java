@@ -6,18 +6,17 @@
  */
 package org.jboss.metadata;
 
-import java.util.HashMap;
-
+import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Element;
 
-import org.jboss.deployment.DeploymentException;
+import java.util.HashMap;
 
 /** The meta data information specific to session beans.
  *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Scott.Stark@jboss.org
  *   @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- *   @version $Revision: 1.25 $
+ *   @version $Revision: 1.26 $
  */
 public class SessionMetaData extends BeanMetaData
 {
@@ -58,16 +57,16 @@ public class SessionMetaData extends BeanMetaData
 
    public String getDefaultConfigurationName()
    {
-      if( isStateful() )
+      if (isStateful())
       {
-         if( this.isClustered() )
+         if (this.isClustered())
             return ConfigurationMetaData.CLUSTERED_STATEFUL_13;
          else
             return ConfigurationMetaData.STATEFUL_13;
       }
       else
       {
-         if( this.isClustered() )
+         if (this.isClustered())
             return ConfigurationMetaData.CLUSTERED_STATELESS_13;
          else
             return ConfigurationMetaData.STATELESS_13;
@@ -77,26 +76,24 @@ public class SessionMetaData extends BeanMetaData
    protected void defaultInvokerBindings()
    {
       invokerBindings = new HashMap();
-      if( isClustered() )
+      if (isClustered())
       {
-         if( stateful )
+         if (stateful)
          {
-            invokerBindings.put(
-               DEFAULT_CLUSTERED_STATEFUL_INVOKER,
+            invokerBindings.put(DEFAULT_CLUSTERED_STATEFUL_INVOKER,
                getJndiName());
          }
          else
          {
-            invokerBindings.put(
-               DEFAULT_CLUSTERED_STATELESS_INVOKER,
+            invokerBindings.put(DEFAULT_CLUSTERED_STATELESS_INVOKER,
                getJndiName());
          }
-         if( isWebservice() )
+         if (isWebservice())
             invokerBindings.put(DEFAULT_WEBSERVICE_INVOKER, getJndiName());
       }
       else
       {
-         if( stateful )
+         if (stateful)
          {
             invokerBindings.put(DEFAULT_STATEFUL_INVOKER, getJndiName());
          }
@@ -104,7 +101,7 @@ public class SessionMetaData extends BeanMetaData
          {
             invokerBindings.put(DEFAULT_STATELESS_INVOKER, getJndiName());
          }
-         if( isWebservice() )
+         if (isWebservice())
             invokerBindings.put(DEFAULT_WEBSERVICE_INVOKER, getJndiName());
       }
    }
@@ -115,11 +112,11 @@ public class SessionMetaData extends BeanMetaData
 		
       // set the session type 
       String sessionType = getElementContent(getUniqueChild(element, "session-type"));
-      if( sessionType.equals("Stateful") )
+      if (sessionType.equals("Stateful"))
       {
          stateful = true;
       }
-      else if( sessionType.equals("Stateless") )
+      else if (sessionType.equals("Stateless"))
       {
          stateful = false;
       }
@@ -130,11 +127,11 @@ public class SessionMetaData extends BeanMetaData
 			
       // set the transaction type
       String transactionType = getElementContent(getUniqueChild(element, "transaction-type"));
-      if( transactionType.equals("Bean") )
+      if (transactionType.equals("Bean"))
       {
          containerManagedTx = false;
       }
-      else if( transactionType.equals("Container") )
+      else if (transactionType.equals("Container"))
       {
          containerManagedTx = true;
       }
@@ -151,9 +148,9 @@ public class SessionMetaData extends BeanMetaData
       super.importJbossXml(element);
       // port-component optional element
       Element portElement = getOptionalChild(element, "port-component");
-      if( portElement != null )
+      if (portElement != null)
       {
-         portComponent = new EjbPortComponentMetaData();
+         portComponent = new EjbPortComponentMetaData(this);
          portComponent.importJBossXml(portElement);
       }
    }

@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaXmlTypeMapping.java,v 1.6 2004/07/26 14:11:07 tdiesler Exp $
+// $Id: JavaXmlTypeMapping.java,v 1.7 2004/11/26 07:02:34 tdiesler Exp $
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class JavaXmlTypeMapping
    // The choice <root-type-qname> element
    private QName rootTypeQName;
    // The choice <anonymous-type-qname> element
-   private String anonymousTypeQName;
+   private QName anonymousTypeQName;
 
    /** The required <qname-scope> element
     * The qname-scope elements scopes the reference of a QName to the WSDL element type it applies to.
@@ -80,12 +80,12 @@ public class JavaXmlTypeMapping
       this.rootTypeQName = rootTypeQName;
    }
 
-   public String getAnonymousTypeQName()
+   public QName getAnonymousTypeQName()
    {
       return anonymousTypeQName;
    }
 
-   public void setAnonymousTypeQName(String anonymousTypeQName)
+   public void setAnonymousTypeQName(QName anonymousTypeQName)
    {
       this.anonymousTypeQName = anonymousTypeQName;
    }
