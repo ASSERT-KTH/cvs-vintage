@@ -122,7 +122,7 @@
    #set ($attCommentGroup = $intake.Attachment.setKey("attCommentKey"))
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
-<th>$l10n.ReasonForChange</th>
+<th>* $l10n.ReasonForChange</th>
 <td>$l10n.EnterReason
    #fieldErrorMsg($attCommentGroup.DataAsString "")
    
