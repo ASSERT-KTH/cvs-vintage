@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.12 2002/05/29 11:19:57 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.13 2002/09/11 16:41:47 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent
 {
@@ -158,7 +158,7 @@ public class HyperSearchResults extends JPanel implements EBComponent
 	//{{{ searchStarted() method
 	public void searchStarted()
 	{
-		caption.setText(jEdit.getProperty("hypersearch-results.searching"));
+		caption.setText(jEdit.getProperty("hypersearch-status"));
 		resultTreeRoot.removeAllChildren();
 		resultTreeModel.reload(resultTreeRoot);
 	} //}}}
