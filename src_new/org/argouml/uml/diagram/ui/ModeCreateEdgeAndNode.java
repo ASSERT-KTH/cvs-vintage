@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.36 2005/01/30 20:47:50 linus Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.37 2005/02/18 20:24:00 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -339,7 +339,8 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
                     destPortFig = tempFigPort;
                 }
                 if (edgeType != null) {
-                    newEdge = mgm.connect(startPort, foundPort, (Class) edgeType);
+                    newEdge = 
+                        mgm.connect(startPort, foundPort, (Class) edgeType);
                 } else {
                     newEdge = mgm.connect(startPort, foundPort);
                 }
