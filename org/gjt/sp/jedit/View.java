@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.96 2003/06/11 01:15:31 spestov Exp $
+ * @version $Id: View.java,v 1.97 2003/06/19 19:59:19 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -423,7 +423,7 @@ public class View extends JFrame implements EBComponent
 	public void processKeyEvent(KeyEvent evt)
 	{
 		processKeyEvent(evt,false);
-	}
+	} //}}}
 
 	//{{{ processKeyEvent() method
 	/**
@@ -553,6 +553,8 @@ public class View extends JFrame implements EBComponent
 		if(!evt.isConsumed())
 			super.processKeyEvent(evt);
 	} //}}}
+
+	//}}}
 
 	//{{{ Buffers, edit panes, split panes
 
@@ -1606,9 +1608,10 @@ public class View extends JFrame implements EBComponent
 			{
 				switch(evt.getKeyCode())
 				{
-				case KeyEvent.VK_BACK_SPACE:
-				case KeyEvent.VK_TAB:
 				case KeyEvent.VK_ENTER:
+				case KeyEvent.VK_TAB:
+				case KeyEvent.VK_BACK_SPACE:
+				case KeyEvent.VK_SPACE:
 					return null;
 				}
 			}
