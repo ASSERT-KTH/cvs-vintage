@@ -17,7 +17,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class JDBCCommandFactory {
    private JDBCStoreManager manager;
@@ -42,6 +42,16 @@ public class JDBCCommandFactory {
    public JDBCQueryCommand createEJBQLQuery(JDBCQueryMetaData q) 
          throws DeploymentException {
       return new JDBCEJBQLQuery(manager, q);
+   }
+
+   public JDBCQueryCommand createDynamicQLQuery(JDBCQueryMetaData q) 
+         throws DeploymentException {
+      return new JDBCDynamicQLQuery(manager, q);
+   }
+
+   public JDBCQueryCommand createJBossQLQuery(JDBCQueryMetaData q) 
+         throws DeploymentException {
+      return new JDBCJBossQLQuery(manager, q);
    }
 
    public JDBCQueryCommand createFindByQuery(JDBCQueryMetaData q)
