@@ -15,16 +15,16 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.shutdown.ShutdownManager;
-import org.columba.core.util.GlobalResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
+
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.core.util.GlobalResourceLoader;
 
 
 public class ExitAction extends AbstractColumbaAction {
@@ -49,10 +49,22 @@ public class ExitAction extends AbstractColumbaAction {
     }
 
     /*
-     * Calls ShutdownManager.getShutdownManager().shutdown(int) to start the
-     * shutdown procedure.
+     * Close all open frames, which leads to exiting Columba
      */
     public void actionPerformed(ActionEvent evt) {
-        ShutdownManager.getShutdownManager().shutdown(0);
+    	
+    	//
+    	// @author: fdietz
+    	// using shutdown-manager is wrong here, because this
+    	// automatically also calls the FrameModel, which 
+    	// also starts a second shutdown thread
+    	// -> This leads into two parallel shutdown thread which
+    	// -> is why sometimes config-files, etc. get messed up
+    	//
+        /*
+         * ShutdownManager.getShutdownManager().shutdown(0);
+         */
+    	MainInterface.frameModel.storeViews();
+    	
     }
 }
