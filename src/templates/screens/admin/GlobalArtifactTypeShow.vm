@@ -72,7 +72,7 @@
 #end
 
 #if (!$deletedIssueTypes.isEmpty())
- <h3>Deleted artifact types</h3>
+ <h3>$l10n.DeletedArtifactTypes</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
  <th width="70">$l10n.Select</th>
