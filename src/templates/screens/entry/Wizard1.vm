@@ -80,7 +80,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
         #if (!$attVal.Attribute.isUserAttribute())
           <tr>
             <th> #if ($attVal.isRequired())*#end 
-                 $attVal.RModuleAttribute.DisplayValue: 
+                 $attVal.RModuleAttribute.DisplayValue
             </th>
             <td>
               #if ($attVal.Attribute.isUserAttribute())
