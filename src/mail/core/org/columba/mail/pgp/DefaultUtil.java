@@ -31,17 +31,32 @@ import org.columba.mail.config.PGPItem;
 /**
  * Default class that implements methods which handles pgp functions like singing, encrypting, verify and decrypting.
  * For each pgp tool like gpg a derived class should be extend this class and implementing all abstract methods. Methods
- * of the instantiated class (inclusive this class) are called normally from the PGPController.
+ * of the instantiated class (inclusive this class) are called normally from the PGPController. All real Implementation for
+ * PGP-Tools like GPG should extending this class.
+ * <p>
+ * This class is used by {@link org.columba.mail.pgp.PGPController PGPController}.
  * @author tstich, waffel
  *
  */
 public abstract class DefaultUtil {
-	//protected StreamThread outputStream = null;
-	//protected StreamThread errorStream = null;
 
+	/**
+	 * The output String which holds the output from the whole PGP tool.
+     * @deprecated After using ristretto use only the outputStream.
+	 */
 	protected String outputString;
+	/**
+	 * The error String which holds the error-output from the whole PGP tool.
+     * @deprecated After using ristretto use only the errorStream.
+	 */
 	protected String errorString;
+	/**
+	 * The outputStream which holds the output from the whole PGP tool.
+	 */
 	protected InputStream outputStream;
+	/**
+	 * The errorStream which holds the error output from the whole PGP tool.
+	 */
 	protected InputStream errorStream;
 
 	/** Executes the given command and the returnes the connected process.
@@ -54,12 +69,19 @@ public abstract class DefaultUtil {
 		return p;
 	}
 
+	/**
+     * This method should parse the given String and for example remove all "gpg:" strings from the given String.
+	 * @param str String which should be parsed
+	 * @return a parsed String, not null
+	 */
 	protected abstract String parse(String str);
 
-	/** Returnes the error string which is created from the execution of a extern process. Only if the extern execution
+	/** 
+     * Returnes the error string which is created from the execution of a extern process. Only if the extern execution
 	 * tool like gpg creates a error string on system.error the method is returning a error string. Else the error string
-	 * is empty. Before it should be checked, if the exitValue from the executeion process is not 0.
+	 * is empty. Before using this method it should be checked, if the exitValue from the executeion process is not 0.
 	 * @return Returnes the error string which is created from the execution of a extern process. 
+     * @deprecated since using ristretto and intensive using Stream you should use the {@link #getErrorStream()} method.
 	 */
 	public String getErrorString() {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -71,7 +93,12 @@ public abstract class DefaultUtil {
 		return out.toString();
 	}
 
-	// TODO delete this after ritretto replacement
+	/**
+     * Retruns the output String which is created from the execution of the whole PGP implementation. Only if the PGP tool
+     * creates a Output the method returns a not empty String, else the String is empty.
+	 * @return The output String which is created from the whole PGP tool which implements the pgp stuff.
+     * @deprecated since using ristretto and intensive using Stream you should use the {@link #getStreamResult()} method.
+	 */
 	public String getOutputString() {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
@@ -85,47 +112,46 @@ public abstract class DefaultUtil {
 	 * Returns the result of a operation like singing, encrypting and so on.
 	 * @return the result of one of the oprations like signing, encrypting and so on.
 	 * @deprecated this is deprecated since the new ristretto-implementation which use Streams instead of Strings. 
-	 * Use getStreamResult()
-	 * TODO delete this after ritretto replacement
+	 * Use {@link getStreamResult()}.
 	 */
 	public String getResult() {
 		return this.outputString;
 	}
 
 	/**
-	 * Returns the Restult of a operation like sign, encryypt, verify and so on as a InputStream from which the result can be 
+	 * Returns the restult of a operation like sign, encryypt, verify and so on as an InputStream from which the result can be 
 	 * read. 
-	* @return the Restult of a operation like sign, encryypt, verify and so on as a InputStream from which the result can be 
+	* @return The Restult of a operation like sign, encryypt, verify and so on as an InputStream from which the result can be 
 	 * read.
 	*/
 	public InputStream getStreamResult() {
-		//return new ByteArrayInputStream(this.outputString.getBytes());
 		return this.outputStream;
 	}
 
+	/**
+     * Returns the result of a operation like sign, encrypt and so on as an InputStream from which the error result can be read.
+	 * @return The result of a operation like sign, encrypt and so on as an InputStream from which the error result can be read.
+	 */
 	public InputStream getErrorStream() {
 		return this.errorStream;
 	}
 
 	/**
 	 * Returns the Command-line for a tool like gpg for the given type of operation like ENCRYPT, SIGN and so on.
-	* @param type for which type the commandline should be returned
+	* @param type for which type the commandline should be returned. The types are defined in {@link PGPController}.
 	* @return a String Array which holds all necessary command line argument for the instancieated tool, like gpg.
+    * @see PGPController
 	*/
 	protected abstract String[] getRawCommandString(int type);
 
 	/**
 	 * Gets the path to the commandline tool.
-	 * 
 	 * @see org.columba.core.plugin.ExternalToolsPluginHandler
-	 * 
 	 * @param type		id of commandline tool
-	 * 
-	 * @return			absolut path of tool
+	 * @return			absolut path of tool or null if the path cannot be obtained.
 	 */
 	protected String getPath(String type) {
 		ExternalToolsPluginHandler handler = null;
-
 		try {
 			handler =
 				(
@@ -156,24 +182,6 @@ public abstract class DefaultUtil {
 		String[] rawCommand = getRawCommandString(type);
 		List commandList = new ArrayList();
 
-		// !!!
-		// This has changed. Configuration of external tools like gpg
-		// is not handled on a per account basis anymore. Instead it
-		// it is globally handled, through the external tools plugin
-		// handler.
-		//
-		// @see org.columba.core.plugin.ExternalToolsPluginHandler
-		//
-		//
-		//commandList.add(item.get("path"));
-
-		// Note: This is atm the only PGP tool we support, if we want
-		// to support other tools, too, we have to add an additional
-		// attribute to PGPItem to make this configurable
-		
-		// Note: we try to use the external tools plugin first, if this
-		// fails we fall back to the path information in the PGPItem.
-		// This is essentially a hack to make testing with junit easier.
 		String path = getPath("gpg");
 		if ( path == null ) path = item.get("path");
 		commandList.add(path);
@@ -306,7 +314,7 @@ public abstract class DefaultUtil {
 	 * @return the exit value from the process that executes the whole singing command.
 	 * @throws Exception If the process cannot execute the command. 
 	 * @deprecated this is deprecated since the new ristretto-implementation which use Streams instead of Strings. 
-	 * Use sign(PGPItem item, InputStream message)
+	 * Use {@link #sign(PGPItem, InputStream)}.
 	 */
 	public int sign(PGPItem item, String input) throws Exception {
 		int exitVal = -1;
@@ -358,6 +366,16 @@ public abstract class DefaultUtil {
 		return exitVal;
 	}
 
+	/**
+     * Decrypts the given crypted Stream and returns the exit status of the whole PGP tool. The given Item must have the 
+     * passphrase to decrypt the Stream. Error and output are stored in the intern errorStream and outputStream and can be 
+     * accessed with {@link #getErrorStream()} and {@link #getStreamResult()}. 
+     * <p>
+     * The decrypting process is runnning in a process. The commandline for the process is getted from the real 
+     * implementation of the PGP tool.
+     * @return The exit value from the whole PGP tool.  
+     * @see PGPController#decrypt(InputStream, PGPItem)
+	 */
 	public int decrypt(PGPItem item, InputStream cryptMessage)
 		throws Exception {
 		int exitVal = -1;
