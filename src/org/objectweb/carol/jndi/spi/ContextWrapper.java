@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ContextWrapper.java,v 1.5 2004/12/13 16:24:13 benoitf Exp $
+ * $Id: ContextWrapper.java,v 1.6 2005/02/01 21:49:15 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -82,24 +82,20 @@ public class ContextWrapper implements Context {
         if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("ContextWrapper.ContextWrapper()");
         }
-        try {
-            envpar = env;
 
-            String jndiURL = (String) env.get(CarolDefaultValues.JNDI_URL_PREFIX);
-            isSingle = ((env != null) && (jndiURL != null));
-            if (isSingle) {
+        envpar = env;
 
-                String rmiName = CarolDefaultValues
-                        .getRMIProtocol((String) env.get(CarolDefaultValues.JNDI_URL_PREFIX));
-                Properties prop = CarolCurrentConfiguration.getCurrent().getRMIProperties(rmiName);
-                env.put(CarolDefaultValues.JNDI_FACTORY_PREFIX, prop.get(CarolDefaultValues.JNDI_FACTORY_PREFIX));
-                ac = new InitialContext(env);
-            } else {
-                ac = new MultiContext(env);
-            }
-        } catch (Exception e) {
-            String msg = "ContextWrapper.ContextWrapper() failed: " + e;
-            throw new NamingException(msg);
+        String jndiURL = (String) env.get(CarolDefaultValues.JNDI_URL_PREFIX);
+        isSingle = ((env != null) && (jndiURL != null));
+        if (isSingle) {
+
+            String rmiName = CarolDefaultValues
+                .getRMIProtocol((String) env.get(CarolDefaultValues.JNDI_URL_PREFIX));
+            Properties prop = CarolCurrentConfiguration.getCurrent().getRMIProperties(rmiName);
+            env.put(CarolDefaultValues.JNDI_FACTORY_PREFIX, prop.get(CarolDefaultValues.JNDI_FACTORY_PREFIX));
+            ac = new InitialContext(env);
+        } else {
+            ac = new MultiContext(env);
         }
     }
 

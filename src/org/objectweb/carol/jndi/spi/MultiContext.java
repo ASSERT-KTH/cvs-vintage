@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiContext.java,v 1.4 2004/12/13 16:24:13 benoitf Exp $
+ * $Id: MultiContext.java,v 1.5 2005/02/01 21:49:15 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -79,13 +79,8 @@ public class MultiContext implements Context {
             TraceCarol.debugJndiCarol("MultiContext.MultiContext(env), env = " + env);
 
         }
-        try {
-            cccf = CarolCurrentConfiguration.getCurrent();
-            activesInitialsContexts = cccf.getNewContextHashtable(env);
-        } catch (Exception e) {
-            String msg = "MultiContext.MultiContext() failed: " + e;
-            throw new NamingException(msg);
-        }
+        cccf = CarolCurrentConfiguration.getCurrent();
+        activesInitialsContexts = cccf.getNewContextHashtable(env);
     }
 
     // Inital context wrapper see the Context documentation for this methods
