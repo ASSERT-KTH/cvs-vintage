@@ -45,7 +45,7 @@ import org.jboss.management.j2ee.TimeStatistic;
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  *
  * Revisions:
  * 20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
@@ -151,14 +151,16 @@ public class CMPPersistenceManager
       Class beanClass = con.getBeanClass();
       for (int i = 0; i < methods.length; i++)
       {
-         if (methods[i].getName().equals("create"))
+         String name = methods[i].getName();
+         if (name.startsWith("create"))
          {
             Class[] types = methods[i].getParameterTypes();
             try
             {
-               Method beanMethod = beanClass.getMethod("ejbCreate", types);
+               String nameSuffix = name.substring(0, 1).toUpperCase() + name.substring(1);
+               Method beanMethod = beanClass.getMethod("ejb" + nameSuffix, types);
                createMethods.put(methods[i], beanMethod);
-               beanMethod =  beanClass.getMethod("ejbPostCreate", types);
+               beanMethod =  beanClass.getMethod("ejbPost" + nameSuffix, types);
                postCreateMethods.put(methods[i], beanMethod);
             }
             catch (NoSuchMethodException nsme)

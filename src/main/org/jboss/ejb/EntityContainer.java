@@ -61,7 +61,7 @@ import org.jboss.metadata.EntityMetaData;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.70 $
+* @version $Revision: 1.71 $
 *
 * <p><b>Revisions:</b>
 *
@@ -754,14 +754,18 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
       String append )
    throws DeploymentException
    {
+      // Adrian Brock: This should go away when we don't support EJB1x
+      boolean isEJB1x = metaData.getApplicationMetaData().isEJB1x();
+
       for (int i = 0; i < m.length; i++)
       {
+         String methodName = m[i].getName();
          try
          {
             try // Try home method
             {
-               String methodName = "ejbHome" + Character.toUpperCase(m[i].getName().charAt(0)) + m[i].getName().substring(1);
-               map.put(m[i], beanClass.getMethod(methodName, m[i].getParameterTypes()));
+               String ejbHomeMethodName = "ejbHome" + methodName.substring(0,1).toUpperCase() + methodName.substring(1);
+               map.put(m[i], beanClass.getMethod(ejbHomeMethodName, m[i].getParameterTypes()));
                
                continue;
             } catch (NoSuchMethodException e)
@@ -770,12 +774,17 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
             }
             
             // Implemented by container (in both cases)
-            if (m[i].getName().startsWith("find"))
+            if (methodName.startsWith("find"))
             {
                map.put(m[i], this.getClass().getMethod(finderName, new Class[] { Invocation.class }));
-            }else
+            }
+            else if (isEJB1x == false && methodName.startsWith("create"))
             {
-               map.put(m[i], this.getClass().getMethod(m[i].getName()+append, new Class[] { Invocation.class }));
+               map.put(m[i], this.getClass().getMethod("createHome", new Class[] { Invocation.class }));
+            }
+            else
+            {
+               map.put(m[i], this.getClass().getMethod(methodName+append, new Class[] { Invocation.class }));
             }
          } catch (NoSuchMethodException e)
          {

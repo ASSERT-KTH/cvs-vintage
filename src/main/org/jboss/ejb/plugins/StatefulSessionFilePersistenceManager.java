@@ -47,7 +47,7 @@ import org.jboss.util.jmx.MBeanServerLocator;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -155,9 +155,10 @@ public class StatefulSessionFilePersistenceManager
       // Get methods
       try
       {
-         Method createMethod = con.getBeanClass().getMethod("ejbCreate", m.getParameterTypes());
+         String ejbName = "ejbC" + m.getName().substring(1);
+         Method createMethod = con.getBeanClass().getMethod(ejbName, m.getParameterTypes());
             
-         // Call ejbCreate
+         // Call ejbCreate<METHOD>
          createMethod.invoke(ctx.getInstance(), args);
         
       } catch (IllegalAccessException e)

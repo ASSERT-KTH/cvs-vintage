@@ -32,7 +32,7 @@ import org.jboss.invocation.MarshalledInvocation;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
-* @version $Revision: 1.43 $
+* @version $Revision: 1.44 $
 *
 * <p><b>Revisions</b>
 * <p><b>20010704</b>
@@ -513,11 +513,15 @@ public class StatefulSessionContainer
    protected void setupHomeMapping()
    throws NoSuchMethodException
    {
+      // Adrian Brock: This should go away when we don't support EJB1x
+      boolean isEJB1x = metaData.getApplicationMetaData().isEJB1x();
+
+      boolean infoEnabled = log.isInfoEnabled();
+
       Map map = new HashMap();
       
       if (homeInterface != null)
       {
-         boolean infoEnabled = log.isInfoEnabled();
 
          Method[] m = homeInterface.getMethods();
          for (int i = 0; i < m.length; i++)
@@ -525,9 +529,14 @@ public class StatefulSessionContainer
             try
             {
                // Implemented by container
-               map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[]
-                     { Invocation.class }));
-            } catch (NoSuchMethodException e)
+               if (isEJB1x == false && m[i].getName().startsWith("create"))
+                  map.put(m[i], getClass().getMethod("createHome", new Class[] 
+                        { Invocation.class }));
+               else
+                  map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[]
+                        { Invocation.class }));
+            }
+            catch (NoSuchMethodException e)
             {
                if (infoEnabled)
                   log.info(m[i].getName() + " in bean has not been mapped");
@@ -537,17 +546,20 @@ public class StatefulSessionContainer
       
       if (localHomeInterface != null)
       {
-         boolean infoEnabled = log.isInfoEnabled();
-
          Method[] m = localHomeInterface.getMethods();
          for (int i = 0; i < m.length; i++)
          {
             try
             {
                // Implemented by container
-               map.put(m[i], getClass().getMethod(m[i].getName()+"LocalHome", new Class[]
+               if (isEJB1x == false && m[i].getName().startsWith("create"))
+                  map.put(m[i], getClass().getMethod("createLocalHome", new Class[] 
+                        { Invocation.class }));
+               else
+                  map.put(m[i], getClass().getMethod(m[i].getName()+"LocalHome", new Class[]
                      { Invocation.class }));
-            } catch (NoSuchMethodException e)
+            }
+            catch (NoSuchMethodException e)
             {
                if (infoEnabled)
                   log.info(m[i].getName() + " in bean has not been mapped");

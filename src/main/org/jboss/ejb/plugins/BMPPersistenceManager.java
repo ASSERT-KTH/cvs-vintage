@@ -40,7 +40,7 @@ import org.jboss.management.j2ee.TimeStatistic;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*  @version $Revision: 1.35 $
+*  @version $Revision: 1.36 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -139,11 +139,13 @@ implements EntityPersistenceManager
    {
       for (int i = 0; i < methods.length; i++)
       {
-         if (methods[i].getName().equals("create"))
+         String name = methods[i].getName();
+         if (name.startsWith("create"))
          {
+            String nameSuffix = name.substring(0, 1).toUpperCase() + name.substring(1);
             try
             {
-               createMethods.put(methods[i], con.getBeanClass().getMethod("ejbCreate", methods[i].getParameterTypes()));
+               createMethods.put(methods[i], con.getBeanClass().getMethod("ejb" + nameSuffix, methods[i].getParameterTypes()));
             }
             catch (NoSuchMethodException e)
             {
@@ -152,7 +154,7 @@ implements EntityPersistenceManager
             }
             try
             {
-               postCreateMethods.put(methods[i], con.getBeanClass().getMethod("ejbPostCreate", methods[i].getParameterTypes()));
+               postCreateMethods.put(methods[i], con.getBeanClass().getMethod("ejbPost" + nameSuffix, methods[i].getParameterTypes()));
             }
             catch (NoSuchMethodException e)
             {
@@ -202,7 +204,7 @@ implements EntityPersistenceManager
          Object id = null;
          try
          {
-            // Call ejbCreate
+            // Call ejbCreate<METHOD)
             id = createMethod.invoke(ctx.getInstance(), args);
          } catch (IllegalAccessException e)
          {
