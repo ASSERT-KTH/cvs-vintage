@@ -16,13 +16,7 @@
 
 package org.columba.mail.gui.config.pop3preprocessor;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -31,19 +25,7 @@ import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -52,6 +34,7 @@ import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.Compatibility;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
@@ -110,20 +93,9 @@ public class ConfigFrame extends JDialog
 		
 		//config = MainInterface.config;
 
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				setVisible(false);
-			}
-		});
-
 		initComponents();
 		pack();
-		//		for jdk1.3 compatibility, this is called dynamically
-		Compatibility.simpleSetterInvoke(
-			this,
-			"setLocationRelativeTo",
-			Component.class,
-			null);
+                setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
@@ -367,9 +339,7 @@ public class ConfigFrame extends JDialog
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
-		if (action.equals("OK")) {
-			System.out.println("ok");
-		} else if (action.equals("CLOSE")) {
+                if (action.equals("CLOSE")) {
 			// FIXME
 			//Config.save();
 
@@ -422,10 +392,8 @@ public class ConfigFrame extends JDialog
 		} else if (action.equals("HELP")) {
 			URLController c = new URLController();
 			try {
-				c.open(
-					new URL("http://columba.sourceforge.net/phpwiki/index.php/User%20manual#x34.x2e.5"));
-			} catch (MalformedURLException mue) {
-			}
+				c.open(new URL("http://columba.sourceforge.net/phpwiki/index.php/Using%20Columba#x34.x2e.5"));
+			} catch (MalformedURLException mue) {}
 		}
 	}
 }
