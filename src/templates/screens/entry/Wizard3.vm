@@ -15,7 +15,6 @@ $page.setTitle("Enter issue")
 
 <h2>$page.Title</h2>
 
-<p></p>
 ## Only show templates if user has not come through the wizard.
 #if (!$data.Parameters.getString("oldscreen"))
 <form method="post" action="$link.setPage("entry,Wizard3.vm")">
