@@ -124,7 +124,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
 <div class="functnbar3">
 <input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
 <input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
-<input type="submit" value="Copy" />&#160;
+## commenting out till we decide how to do <input type="submit" value="Copy" />&#160;
 <input type="submit" value="Delete selected" name="eventSubmit_doDeleteattributeoptions" />&#160;
 <input type="submit" value="Resort" name="eventSubmit_doSave" />
 </div>

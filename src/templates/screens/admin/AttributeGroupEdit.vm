@@ -107,11 +107,7 @@
  </tr>
 #end
 </table>
-<p><small>
- * Default text attribute is used when more distinguishing information than
-   the issue id is needed.  It is used in emails after an issue is entered,
-   for example.
-</small></p>
+<p><small>$l10n.DefaultText </small></p>
 #else
   <p><strong class="alert">Click the Add button to add attributes to this group.</strong></p>
 #end

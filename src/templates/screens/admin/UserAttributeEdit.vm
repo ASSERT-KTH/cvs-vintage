@@ -28,7 +28,7 @@
 #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalUserAttributes.vm"))
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 
-<p>
+<p>$l10n.ModifyUserAttributes
 On this screen, one can modify system wide Attribute information.
 </p>
 

@@ -14,9 +14,7 @@
 <div class="app" id="div3-0-2-0">
 <h2>$page.Title</h2>
 
-<p>
-On this screen, one can modify system wide Attribute information.
-</p>
+<p>$i10n.GlobalAttributes </p>
 
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />

@@ -1,8 +1,6 @@
 <div id="globalartifactshow" class="app">
 <h2>$page.Title</h2>
-<p>
-This page is for selecting an Issue type to edit which is defined in a global scope.
-</p>
+<p>$l10n.GlobalIssueTypes </p>
 
 <form action="$link.setPage("admin,GlobalArtifactTypeShow.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypes" />

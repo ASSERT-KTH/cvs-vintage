@@ -45,7 +45,7 @@
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<h3>Templates</h3>
+<h3>$l10n.Templates</h3>
 
 #if ($allTemplates.size() < 1)
     <p><strong class="alert">
@@ -56,11 +56,11 @@
   
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-  <th nowrap="nowrap">Select</th>
-  <th>#sort ("name" "Name")
-  <th>#sort ("desc" "Description")</th>
-  <th>#sort ("avail" "Availability")</th>
-  <th>#sort ("user" "Author")</th>
+  <th nowrap="nowrap">$l10n.Select</th>
+  <th>#sort ("name" "$l10n.Name")
+  <th>#sort ("desc" "$l10n.Description")</th>
+  <th>#sort ("avail" "$l10n.Availability")</th>
+  <th>#sort ("user" "$l10n.Author")</th>
   </tr>
 
 #set ($permItemDelete = $scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
@@ -89,7 +89,7 @@
   </td>
   <td>$template.templateInfo.Scope.Name
      #if (!$template.TemplateInfo.Approved)
-       (until approved)
+       ($l10n.UntilApproved)
      #end
   </td>
    <td>

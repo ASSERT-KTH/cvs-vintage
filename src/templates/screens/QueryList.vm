@@ -10,7 +10,6 @@
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="QueryList.vm" />
 
 
-
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
@@ -40,7 +39,7 @@
  #end
 #end
 
-<h3>Saved queries</h3>
+<h3>$l10n.SavedQueries</h3>
 
 #if ($allQueries.size() < 1)
  <p><strong class="alert">There are no saved queries.
@@ -53,17 +52,17 @@
 #end
 
 
-<p>Click on name to modify the saved query. Click on availability to execute.</p>
+<P>$l10n.Click</p>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
-  <th nowrap="nowrap">Select</th>
+  <th nowrap="nowrap">$l10n.Select</th>
 ##  <th>Subscribe</th>
 ##  <th>Subscribe frequency</th>
-  <th>#sort ("name" "Name")
-  <th>#sort ("desc" "Description")</th>
+  <th>#sort ("name" "$l10n.Name")
+  <th>#sort ("desc" "$l10n.Description")</th>
   <th>Default</th>
-  <th>#sort ("avail" "Availability")</th>
-  <th>#sort ("user" "Created by")</th>
+  <th>#sort ("avail" "$l10n.Availability")</th>
+  <th>#sort ("user" "$l10n.CreatedBy")</th>
  </tr>
  
  #foreach ($query in $allQueries)
@@ -83,7 +82,7 @@
           #if ($rqu.Isdefault) checked="checked" #end /></td>
   <td><a href="$query.getExecuteLink($link.setPage("IssueList.vm").toString())">$query.Scope.Name</a>
   #if (!$query.Approved)
-   (until approved)
+   ($l10n.UntilApproved)
   #end
   </td>
   #set ($createdUser = $scarabR.getUser($query.UserId.toString()))
