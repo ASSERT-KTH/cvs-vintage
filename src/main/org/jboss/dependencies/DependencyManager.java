@@ -1,3 +1,9 @@
+/*
+ * jBoss, the OpenSource EJB server
+ *
+ * Distributable under GPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.dependencies;
 
 import java.io.IOException;
@@ -15,23 +21,50 @@ import org.xml.sax.HandlerBase;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import com.sun.xml.parser.Parser;
-import com.sun.xml.parser.Resolver;
 
+/**
+ * Manages dependencies between MBeans.  Loads an XML configuration file,
+ * and then starts a list of MBeans according to the dependencies in the
+ * file.
+ * @author Aaron Mulder <ammulder@alumni.princeton.edu>
+ * @version $Revision: 1.2 $
+ */
 public class DependencyManager {
+    // Static --------------------------------------------------------
+
+    /**
+     * Set this to true to enable verbose console output (as each MBean
+     * is loaded)
+     */
     private final static boolean DEBUG=false;
+
+    // Attributes ----------------------------------------------------
+
     private HashMap dependencies;
     private HashSet loadedBeans;
     private HashMap remainingBeans;
     private HashSet pendingBeans;
+    private HashSet otherMBeans;
     private MBeanServer server;
 
+    // Constructors --------------------------------------------------
+
+    /**
+     * Initializes a DependencyManager.
+     */
     public DependencyManager() {
         dependencies = new HashMap();
         loadedBeans = new HashSet();
         remainingBeans = new HashMap();
         pendingBeans = new HashSet();
+        otherMBeans = new HashSet();
     }
 
+    // Public --------------------------------------------------------
+
+    /**
+     * Loads dependency configuration from an XML string.
+     */
     public void loadXML(String source) {
         dependencies.clear();
         Parser parser = new Parser();
@@ -46,36 +79,80 @@ public class DependencyManager {
         }
     }
 
+    /**
+     * Starts all the MBeans in a server in an order consistant with the
+     * dependencies.
+     */
     public void startMBeans(MBeanServer server) {
         this.server = server;
         loadedBeans.clear();
         remainingBeans.clear();
         pendingBeans.clear();
+        otherMBeans.clear();
         Iterator it = server.queryNames(null, null).iterator();
+
+        // Identify all the MBeans
         while(it.hasNext()) {
             ObjectName name = (ObjectName)it.next();
             String service = getService(name);
-            if(service == null)
+            if(service == null) {
+                otherMBeans.add(name);
                 continue;
+            }
             Set set = (Set)remainingBeans.get(service);
             if(set == null)
                 set = new HashSet();
             set.add(name);
             remainingBeans.put(service, set);
         }
+
+        // Start all the MBeans that are services
         it = ((Map)remainingBeans.clone()).keySet().iterator();
         while(it.hasNext()) {
             String next = (String)it.next();
-            if(!processMBean(next)) {
-                System.out.println("Unable to load service '"+next+"'");
+            if(!processService(next)) {
+                System.out.println("Unable to start service '"+next+"'");
             }
         }
-        System.out.println(loadedBeans.size()+" services loaded.");
+
+        // Start all the MBeans that are not services
+        it = otherMBeans.iterator();
+        while(it.hasNext()) {
+            ObjectName name = (ObjectName)it.next();
+            if(!startMBean(name)) {
+                System.out.println("Unable to start MBean '"+name.getCanonicalName()+"'");
+            }
+        }
+
+        // Clear out remaining data structures.
+        System.out.println(loadedBeans.size()+" services and "+otherMBeans.size()+" other MBeans started.");
         loadedBeans.clear();
         dependencies.clear();
+        otherMBeans.clear();
     }
 
-    private boolean processMBean(String target) {
+    /**
+     * Prints all the dependencies to the console.
+     */
+    public void printDependencies() {
+        Iterator it = dependencies.keySet().iterator();
+        while(it.hasNext()) {
+            String key = (String)it.next();
+            Iterator child = ((HashSet)dependencies.get(key)).iterator();
+            while(child.hasNext()) {
+                Dependency dep = (Dependency)child.next();
+                System.out.println(key+" depends on "+dep.name+(dep.required ? " REQUIRED" : ""));
+            }
+        }
+    }
+
+    // Private -------------------------------------------------------
+
+    /**
+     * Loads all the dependencies for a service, and then the service itself.
+     * This is a recursive process.
+     */
+    private boolean processService(String target) {
         if(pendingBeans.contains(target))
             throw new RuntimeException("Circular dependencies!");
         if(loadedBeans.contains(target))
@@ -84,47 +161,36 @@ public class DependencyManager {
         pendingBeans.add(target);
         Set set = (Set)dependencies.get(target);
         if(set == null) {
-            return loadMBean(target);
+            return loadService(target);
         } else {
             Iterator it = set.iterator();
             while(it.hasNext()) {
                 Dependency dep = (Dependency)it.next();
                 if(DEBUG) System.out.println("  Service '"+target+"' depends on '"+dep.name+"'");
                 if(!loadedBeans.contains(dep.name)) {
-                    boolean result = processMBean(dep.name);
+                    boolean result = processService(dep.name);
                     if(!result && dep.required)
                         return false;
                 }
             }
-            return loadMBean(target);
+            return loadService(target);
         }
     }
 
-    private boolean loadMBean(String target) {
+    /**
+     * Loads all instances of a service.  That is, all MBeans which have
+     * "service=target" in the ObjectName.
+     */
+    private boolean loadService(String target) {
         boolean loaded = false;
         Set set = (Set)remainingBeans.get(target);
         if(set != null) {
             if(DEBUG) System.out.println("Starting service '"+target+"'");
             Iterator it = set.iterator();
             while(it.hasNext()) {
-                ObjectName name = (ObjectName)it.next();
-                if(DEBUG) System.out.println("Starting instance '"+name.getCanonicalName()+"'");
-                try {
-                    server.invoke(name, "start", new Object[0], new String[0]);
-                    loaded = true;
-                } catch(ReflectionException e) {
-                    if(e.getTargetException() instanceof NoSuchMethodException) {
-                        loaded = true;  // This bean doesn't have a start!
-                    } else {
-                        System.out.println("Error starting service '"+name.getCanonicalName()+"': "+e.getTargetException());
-                        loaded = false;
-                        break;
-                    }
-                } catch(Throwable t) {
-                    System.out.println("Error starting service '"+name.getCanonicalName()+"': "+t);
-                    loaded = false;
+                loaded = startMBean((ObjectName)it.next());
+                if(!loaded)
                     break;
-                }
             }
             remainingBeans.remove(target);
             dependencies.remove(target);
@@ -134,6 +200,32 @@ public class DependencyManager {
         return loaded;
     }
 
+    /**
+     * Calls the "start" method on an MBean.  If no such method is available,
+     * that's OK, but if the call fails for another reason, returns false.
+     */
+    private boolean startMBean(ObjectName name) {
+        boolean loaded = false;
+        if(DEBUG) System.out.println("Starting instance '"+name.getCanonicalName()+"'");
+        try {
+            server.invoke(name, "start", new Object[0], new String[0]);
+            loaded = true;
+        } catch(ReflectionException e) {
+            if(e.getTargetException() instanceof NoSuchMethodException) {
+                loaded = true;  // This bean doesn't have a start!
+            } else {
+                System.out.println("Error starting service '"+name.getCanonicalName()+"': "+e.getTargetException());
+            }
+        } catch(Throwable t) {
+            System.out.println("Error starting service '"+name.getCanonicalName()+"': "+t);
+        }
+        return loaded;
+    }
+
+    /**
+     * Finds the substring "service=XXX" in an ObjectName.
+     * @return The XXX part, or null if there is no such substring.
+     */
     private String getService(ObjectName oName) {
         String name = oName.getCanonicalName();
         int pos = name.indexOf("service=");
@@ -149,37 +241,22 @@ public class DependencyManager {
         return name.substring(pos+8, end);
     }
 
-    public void dump() {
-        Iterator it = dependencies.keySet().iterator();
-        while(it.hasNext()) {
-            String key = (String)it.next();
-            Iterator child = ((HashSet)dependencies.get(key)).iterator();
-            while(child.hasNext()) {
-                Dependency dep = (Dependency)child.next();
-                System.out.println(key+" depends on "+dep.name+(dep.required ? " REQUIRED" : ""));
-            }
-        }
-    }
-
-    public static void main(String args[]) {
-        StringBuffer total = new StringBuffer();
-        try{
-            java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(new java.io.File(args[0])));
-            String line;
-            while((line = reader.readLine()) != null)
-                total.append(line).append('\n');
-            DependencyManager dm = new DependencyManager();
-            dm.loadXML(total.toString());
-            dm.dump();
-        } catch(IOException e) {e.printStackTrace();}
-    }
-
+    // Inner classes -------------------------------------------------
     private class SAXHandler extends HandlerBase {
         private String currentService;
+
+        /**
+         * Clears the current service.
+         */
         public void endElement(String name) throws SAXException {
             if(name.equals("service"))
                 currentService = null;
         }
+
+        /**
+         * Records the current service, or a dependency for the current
+         * service.
+         */
         public void startElement(String name, AttributeList atts) throws SAXException {
             if(name.equals("service")) {
                 currentService = atts.getValue("name");
@@ -192,10 +269,23 @@ public class DependencyManager {
     }
 }
 
+/**
+ * A record of a dependency.
+ */
 class Dependency {
+    /**
+     * The name of the service that should be loaded first.
+     */
     public String name;
+    /**
+     * <B>True</B> if the service <I>must</I> be loaded first, <B>false</B> if
+     * the service should be loaded first only if available.
+     */
     public boolean required;
 
+    /**
+     * Creates a new dependency record.
+     */
     public Dependency(String name, String required) {
         this.name = name;
         this.required = new Boolean(required).booleanValue();
