@@ -1,4 +1,4 @@
-// $Id: CmdCreateNode.java,v 1.23 2005/01/09 21:10:36 linus Exp $
+// $Id: CmdCreateNode.java,v 1.24 2005/01/11 00:49:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -147,21 +147,6 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
         Object newNode =
             Model.getUmlFactory().buildNode(_args.get("className"));
         return newNode;
-    }
-
-    /**
-     * Returns the name of the uml modelelement without impl, M
-     * or the fullname.
-     *
-     * @return String
-     */
-    private String getCreateClassName() {
-        String name = ((Class) _args.get("className")).getName();
-        name = name.substring(name.lastIndexOf('.') + 2, name.length());
-        if (name.endsWith("Impl")) {
-            name = name.substring(0, name.lastIndexOf("Impl"));
-        }
-        return name;
     }
 
     /**
