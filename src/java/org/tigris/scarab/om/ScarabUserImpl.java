@@ -92,7 +92,7 @@ import org.apache.fulcrum.security.impl.db.entity
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.37 2001/11/16 17:40:01 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.38 2001/11/19 03:21:47 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -139,6 +139,26 @@ public class ScarabUserImpl
                 public boolean hasPermission(String perm, ModuleEntity module)
                 {
                     return hasPrivatePermission(perm, module);
+                }
+
+                public List getModules() 
+                    throws Exception
+                {
+                    Criteria crit = new Criteria();
+                    crit.addJoin(TurbineUserGroupRolePeer.USER_ID, 
+                                 ScarabUserImplPeer.USER_ID);
+                    crit.addJoin(TurbineUserGroupRolePeer.GROUP_ID, 
+                                 ScarabModulePeer.MODULE_ID);
+                    crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
+                    GroupSet groups = TurbineSecurity.getGroups(crit);
+                    Iterator itr = groups.elements();
+                    List modules = new ArrayList(groups.size());
+                    while (itr.hasNext())
+                    {
+                        Group group = (Group) itr.next();
+                        modules.add((ModuleEntity)group);
+                    }
+                    return modules;
                 }
             };
     }
