@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.180 2004/11/22 19:58:51 ejort Exp $ -->
+<!-- $Id: build.xml,v 1.181 2004/12/20 03:27:37 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -274,9 +274,6 @@ compile-bin"
         <include name="org/jboss/ejb/plugins/cmp/jdbc2/schema/PartitionedTableCache.java"/>
         <include name="org/jboss/ejb/plugins/inflow/JBossMessageEndpointFactory.java"/>
         <include name="org/jboss/ejb/plugins/jms/JMSContainerInvoker.java"/>
-        <include name="org/jboss/ejb/timer/AbstractTimerSource.java"/>
-        <include name="org/jboss/ejb/timer/FilePersistenceManager.java"/>
-        <include name="org/jboss/ejb/timer/SchedulerTimerSource.java"/>
         <include name="org/jboss/ejb/txtimer/EJBTimerServiceImpl.java"/>
         <include name="org/jboss/ejb/txtimer/FixedDelayRetryPolicy.java"/>
         <include name="org/jboss/ejb/txtimer/DatabasePersistencePolicy.java"/>
