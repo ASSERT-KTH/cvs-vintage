@@ -1,8 +1,7 @@
 ## send out an email. The context for this email is built from within the Screen Confirm.java
 #if ($WebMacroEmail)
-{
     $WebMacroEmail.setTo("New Scarab User", $email).setFrom("Scarab", "scarab@scarab.tigris.org").setSubject("Account Confirmation").setTemplate("email/Confirmation.vm")
-}
+#end
 
 $page.setTitle("Confirm Your Email Address")
 
@@ -45,14 +44,13 @@ $page.setTitle("Confirm Your Email Address")
 </table>
 
 #if ($data.getMessage())
-{
     <p>
     <TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
             <TR>
                 <TD class="MessageText">$data.getMessage()</TD>
             </TR>
     </TABLE>
-}
+#end
 
 <form method="post" action="$link.setPage("Start.vm")">
 <input type="hidden" name="action" value="Confirm">

@@ -46,10 +46,9 @@ Choose a project to work on from the list above. Then modify the components belo
                     <td valign="top" align="middle" nowrap>
                     <form action="$link.setPage("admin,ModifyComponent.vm")" method="POST">
                         <select name="component_id" size=5>
-                        #foreach $comp in $componentList
-                        {
+                        #foreach ($comp in $componentList)
                             <option value="$comp.Id">$comp.Name
-                        }
+                        #end
                         </select><br>
                         <input type="submit" name="eventSubmit_doModify" value="Modify"> <input type="submit" name="eventSubmit_doDelete" value="Delete">
                     </form>
