@@ -218,7 +218,11 @@ public class Log {
 	loggerTemp.log(msg, t, level);
     }
 
-
+    public void flush() {
+	if( logger!=null )
+	    logger.flush();
+    }
+    
     // -------------------- Extra configuration stuff --------------------
     // The real logger object ( that knows to write to
     // files, optimizations, etc)
