@@ -1,4 +1,4 @@
-// $Id: TabStyle.java,v 1.26 2004/09/11 19:14:19 mvw Exp $
+// $Id: TabStyle.java,v 1.27 2004/10/05 23:40:22 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.26 2004/09/11 19:14:19 mvw Exp $
+// $Id: TabStyle.java,v 1.27 2004/10/05 23:40:22 bobtarling Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -48,6 +48,7 @@ import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.StylePanel;
 import org.argouml.ui.TabFigTarget;
 import org.argouml.ui.TabSpawnable;
@@ -347,14 +348,18 @@ public class TabStyle extends TabSpawnable implements TabFigTarget,
         if (!(targetItem instanceof Fig)) {
             if (ModelFacade.isABase(targetItem)) {
                 Project p = ProjectManager.getManager().getCurrentProject();
-                Fig f = p.getActiveDiagram().presentationFor(targetItem);
-
-                if (f != null)
-                    targetItem = f;
-                else {
+                ArgoDiagram diagram = p.getActiveDiagram();
+                if (diagram == null) {
                     shouldBeEnabled = false;
                     return false;
                 }
+                
+                Fig f = diagram.presentationFor(targetItem);
+                if (f == null) {
+                    shouldBeEnabled = false;
+                    return false;
+                }
+                targetItem = f;
             } else {
                 shouldBeEnabled = false;
                 return false;
