@@ -1,4 +1,4 @@
-// $Id: Critic.java,v 1.39 2004/10/21 10:02:47 mkl Exp $
+// $Id: Critic.java,v 1.40 2004/10/21 11:38:30 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.39 2004/10/21 10:02:47 mkl Exp $
+// $Id: Critic.java,v 1.40 2004/10/21 11:38:30 mkl Exp $
 
 
 package org.argouml.cognitive.critics;
@@ -49,7 +49,6 @@ import org.argouml.cognitive.Poster;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Wizard;
-import org.argouml.kernel.WizardItem;
 import org.tigris.gef.util.VectorSet;
 
 /** "Abstract" base class for design critics.  Each subclass should define
@@ -694,30 +693,33 @@ public class Critic implements Poster, Serializable {
     ////////////////////////////////////////////////////////////////
     // corrective automations, wizards
 
-    /** Create a new Wizard to help the user fix the identified problem.
-     *  This version assumes subclasses override getWizClass to return
-     *  the appropriate Class of wizard.  Critic subclasses that need to
-     *  initialize their wizard might override this to call
-     *  super.makeWizard() and then work with the result.
-     *  
-     * @param item the todo item
+    /**
+     * Create a new Wizard to help the user fix the identified problem. This
+     * version assumes subclasses override getWizClass to return the appropriate
+     * Class of wizard. Critic subclasses that need to initialize their wizard
+     * might override this to call super.makeWizard() and then work with the
+     * result.
+     * 
+     * @param item
+     *            the todo item
      * @return the wizard
      */
     public Wizard makeWizard(ToDoItem item) {
-	Class wizClass = getWizardClass(item);
-	// if wizClass is not a subclass of Wizard, print a warning
-	if (wizClass != null) {
-	    try {
-		Wizard w = (Wizard) wizClass.newInstance();
-		w.setToDoItem((WizardItem)item);
-		initWizard(w);
-		return w;
-	    }
-	    catch (Exception ex) {
-		LOG.error("Could not make wizard: " + item, ex);
-	    }
-	}
-	return null;
+        Class wizClass = getWizardClass(item);
+        // if wizClass is not a subclass of Wizard, print a warning
+        if (wizClass != null) {
+            try {
+                Wizard w = (Wizard) wizClass.newInstance();
+                w.setToDoItem(item);
+                initWizard(w);
+                return w;
+            } catch (IllegalAccessException illEx) {
+                LOG.error("Could not access wizard: ", illEx);
+            } catch (InstantiationException instEx) {
+                LOG.error("Could not instantiate wizard: ", instEx);
+            }
+        }
+        return null;
     }
 
     /** Return the Class of wizard that can fix the problem identifed by
