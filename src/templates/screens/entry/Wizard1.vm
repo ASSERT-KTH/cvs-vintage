@@ -68,6 +68,8 @@ $page.setTitle("Enter issue")
 <table cellpadding="3" cellspacing="2" border="0">
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
+  #set ($templAttVal = "")
+  #set ($templAttrInput = "")
   #set ($templAttVal = $template.getAttributeValue($attVal.Attribute))
   #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
   #if ($attVal.isDedupeAttribute())
