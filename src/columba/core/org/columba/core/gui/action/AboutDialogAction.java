@@ -32,29 +32,21 @@ import org.columba.core.util.GlobalResourceLoader;
  */
 public class AboutDialogAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public AboutDialogAction(AbstractFrameController frameController) {
-		super(
-			frameController,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_help_about"),
-			null,
-			"ABOUT",
-			ImageLoader.getSmallImageIcon("stock_about-16.png"),
-			null,
-			'A',
-			null);
+ 		super(
+ 				frameController,
+ 				GlobalResourceLoader.getString(
+ 					null, null, "menu_help_about"));
+
+		// action command
+		setActionCommand("ABOUT");
+		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_about-16.png"));
+
+		// TODO: Use & to define mnemonic
+		setMnemonic('A');
+				
 	}
 
 	/* (non-Javadoc)

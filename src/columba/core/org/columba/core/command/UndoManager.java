@@ -62,30 +62,36 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 	}
 
 	public void initActions() {
-		undoAction =
-			new BasicAction(
-				MailResourceLoader.getString("action", "menu_edit_undo"),
-				MailResourceLoader.getString("action", "menu_edit_undo"),
-				"",
-				"UNDO",
-				ImageLoader.getSmallImageIcon("stock_undo-16.png"),
-				ImageLoader.getImageIcon("stock_undo.png"),
-				'T',
+		// Initialize undo
+		undoAction =new BasicAction(
+				MailResourceLoader.getString("action", "menu_edit_undo"));
+		undoAction.setActionCommand("UNDO");
+		undoAction.setSmallIcon(
+				ImageLoader.getSmallImageIcon("stock_undo-16.png"));
+		undoAction.setLargeIcon(
+				ImageLoader.getImageIcon("stock_undo.png"));
+		undoAction.setAcceleratorKey(
 				KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+		// TODO: Use & to define mnemonic (why is 'T' use as mnemonic??)
+		undoAction.setMnemonic('T');
+
 		undoAction.setEnabled(false);
 
 		undoAction.addActionListener(this);
 
-		redoAction =
-			new BasicAction(
-				MailResourceLoader.getString("action", "menu_edit_redo"),
-				MailResourceLoader.getString("action", "menu_edit_redo"),
-				"",
-				"REDO",				
-				ImageLoader.getSmallImageIcon("stock_redo-16.png"),
-				ImageLoader.getImageIcon("stock_redo.png"),
-				'T',
+		// Initialize redo
+		redoAction = new BasicAction(
+		 		MailResourceLoader.getString("action", "menu_edit_redo"));
+		redoAction.setActionCommand("REDO");
+		redoAction.setSmallIcon(
+		 		ImageLoader.getSmallImageIcon("stock_redo-16.png"));
+		redoAction.setLargeIcon(
+				ImageLoader.getImageIcon("stock_redo.png"));
+		redoAction.setAcceleratorKey(
 				KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+		// TODO: Use & to define mnemonic (why is T use as mnemonic??)
+		redoAction.setMnemonic('T');
+
 		redoAction.setEnabled(false);
 
 		redoAction.addActionListener(this);

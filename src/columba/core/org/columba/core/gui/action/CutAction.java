@@ -31,25 +31,34 @@ public class CutAction extends FrameAction {
 
 	public CutAction(AbstractFrameController controller) {
 		super(
-			controller,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_cut"),
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_cut"),
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_cut"),
-			"CUT",
-			ImageLoader.getSmallImageIcon("stock_cut-16.png"),
-			ImageLoader.getImageIcon("stock_cut.png"),
-			'T',
-			KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK),
-			false);
+				controller,
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_cut"));
+		
+		// tooltip text
+		setTooltipText(
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_cut"));
+					
+		// action command
+		setActionCommand("CUT");
+
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_cut-16.png"));
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_cut.png"));
+
+		// disable toolbar text
+		enableToolBarText(false);
+		
+		// short cut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+
+		// TODO: Use & to define mnemonic
+		setMnemonic('T');				
 		
 		setEnabled(false);	
 		MainInterface.focusManager.setCutAction(this);

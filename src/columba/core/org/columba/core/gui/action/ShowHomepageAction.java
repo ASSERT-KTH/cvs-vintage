@@ -34,29 +34,21 @@ import org.columba.mail.gui.util.URLController;
  */
 public class ShowHomepageAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ShowHomepageAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_help_homepage"),
-			null,
-			"HOMEPAGE",
-			ImageLoader.getImageIcon("stock_home_16.png"),
-			null,
-			'P',
-			null);
+				frameController,
+				GlobalResourceLoader.getString(
+					null, null, "menu_help_homepage"));
+		
+		// action command
+		setActionCommand("HOMEPAGE");
+		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getImageIcon("stock_home_16.png"));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('P');
+		
 	}
 
 	/* (non-Javadoc)

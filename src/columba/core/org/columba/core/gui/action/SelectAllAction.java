@@ -30,20 +30,25 @@ public class SelectAllAction extends FrameAction {
 
 	public SelectAllAction(AbstractFrameController controller) {
 		super(
-			controller,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_selectall"),
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_selectall"),
-			"SELECTALL",
-			null,
-			null,
-			'A',
-			KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+				controller,
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_selectall"));
+		
+		// tooltip text
+		setTooltipText(
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_selectall"));
+		
+		// action command
+		setActionCommand("SELECTALL");
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('A');
 		
 		setEnabled(false);
 		MainInterface.focusManager.setSelectAllAction(this);

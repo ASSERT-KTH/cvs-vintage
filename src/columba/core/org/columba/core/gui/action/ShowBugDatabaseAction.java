@@ -45,18 +45,16 @@ public class ShowBugDatabaseAction extends FrameAction {
 	 */
 	public ShowBugDatabaseAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_help_bug"),
-			null,
-			"BUGREPORT",
-			null,
-			null,
-			'B',
-			null);
-
+				frameController,
+				GlobalResourceLoader.getString(
+					null, null, "menu_help_bug"));
+		
+		// action command
+		setActionCommand("BUGREPORT");
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('B');
+		
 	}
 
 	/* (non-Javadoc)

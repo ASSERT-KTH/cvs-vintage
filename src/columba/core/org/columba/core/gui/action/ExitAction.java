@@ -32,24 +32,32 @@ public class ExitAction extends FrameAction {
 
 	public ExitAction(AbstractFrameController controller) {
 		super(
-			controller,
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_file_exit"),
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_file_exit"),
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_file_exit"),
-			"EXIT",
-			ImageLoader.getSmallImageIcon("stock_exit-16.png"),
-			ImageLoader.getImageIcon("stock_exit.png"),
-			'X',
-			KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+				controller,
+				GlobalResourceLoader.getString(
+					null, null,	"menu_file_exit"));
+					
+		// tooltip text
+		setTooltipText(
+				GlobalResourceLoader.getString(
+					null, null, "menu_file_exit"));
+		
+		// action command
+		setActionCommand("EXIT");
+		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_exit-16.png"));
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_exit.png"));
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('X');
+
 	}
 
 	/* (non-Javadoc)

@@ -31,16 +31,33 @@ public class DeleteAction extends FrameAction {
 
 	public DeleteAction(AbstractFrameController controller) {
 		super(
-			controller,
-			GlobalResourceLoader.getString(null, null, "menu_edit_delete"),
-			GlobalResourceLoader.getString(null, null, "menu_edit_delete"),
-			GlobalResourceLoader.getString(null, null, "menu_edit_delete"),
-			"DELETE",
-			ImageLoader.getImageIcon("stock_delete-16.png"),
-			ImageLoader.getImageIcon("stock_delete.png"),
-			'D',
-			KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
-			false);
+				controller,
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_delete"));
+					
+		// tooltip text
+		setTooltipText(
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_delete"));
+					
+		// action command
+		setActionCommand("DELETE");
+		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getImageIcon("stock_delete-16.png"));
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));
+		
+		// disable toolbar text
+		enableToolBarText(false);
+		
+		// short cut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('D');
 
 		setEnabled(false);
 		MainInterface.focusManager.setDeleteAction(this);

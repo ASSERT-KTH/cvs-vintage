@@ -22,6 +22,21 @@ import org.columba.core.util.GlobalResourceLoader;
 public class PluginManagerAction extends FrameAction {
 	public PluginManagerAction(AbstractFrameController controller) {
 		super(
+				controller,
+				GlobalResourceLoader.getString(
+					null, null,	"menu_edit_pluginmanager"));
+		
+		// tooltip text
+		setTooltipText(
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_pluginmanager"));
+		
+		// action command
+		setActionCommand("PLUGIN_MANAGER");
+
+		// TODO: Define mnemonic (using &)
+		/*		
+		super(
 			controller,
 			GlobalResourceLoader.getString(
 				null,
@@ -40,6 +55,7 @@ public class PluginManagerAction extends FrameAction {
 			null,
 			0,
 			null);
+			*/
 	}
 
 	/* (non-Javadoc)

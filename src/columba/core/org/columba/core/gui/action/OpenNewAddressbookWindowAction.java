@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * @author frd
@@ -32,14 +33,13 @@ public class OpenNewAddressbookWindowAction extends FrameAction {
 
 	public OpenNewAddressbookWindowAction(AbstractFrameController controller) {
 			super(
-				controller,
-				"Addressbook Window",
-				"Addressbook Window",
-				"OPEN_NEW_ADDRESSBOOK_WINDOW",
-				null,
-				null,
-				' ',
-				null);
+					controller,
+					GlobalResourceLoader.getString(
+						null, null, "menu_file_new_addressbook"));
+			
+			// action command
+			setActionCommand("OPEN_NEW_ADDRESSBOOK_WINDOW");
+			
 		}
 
 		/* (non-Javadoc)

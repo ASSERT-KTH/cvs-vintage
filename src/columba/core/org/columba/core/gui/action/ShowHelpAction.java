@@ -32,29 +32,21 @@ import org.columba.core.util.GlobalResourceLoader;
  */
 public class ShowHelpAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ShowHelpAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_help_help"),
-			null,
-			"HELP",
-			ImageLoader.getImageIcon("stock_help_16.png"),
-			null,
-			'H',
-			null);
+				null, null, "menu_help_help"));
+				
+		// action command
+		setActionCommand("HELP");
+
+		// small icon for menu
+		setSmallIcon(ImageLoader.getImageIcon("stock_help_16.png"));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('D');
+		
 	}
 
 	/* (non-Javadoc)

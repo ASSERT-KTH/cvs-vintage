@@ -33,29 +33,18 @@ import org.columba.mail.gui.util.URLController;
  */
 public class ShowProjectPageAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ShowProjectPageAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_help_sourceforge"),
-			null,
-			"SOURCEFORGE",
-			null,
-			null,
-			'S',
-			null);
+				frameController,
+				GlobalResourceLoader.getString(
+					null, null, "menu_help_sourceforge"));
+		
+		// action command
+		setActionCommand("SOURCEFORGE");
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('S');
+		
 	}
 
 	/* (non-Javadoc)

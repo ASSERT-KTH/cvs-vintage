@@ -33,25 +33,34 @@ public class UndoAction extends FrameAction implements WorkerListChangeListener 
 
 	public UndoAction(AbstractFrameController controller) {
 		super(
-			controller,
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_edit_undo"),
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_edit_undo"),
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_edit_undo"),
-			"UNDO",
-			ImageLoader.getSmallImageIcon("stock_undo-16.png"),
-			ImageLoader.getImageIcon("stock_undo.png"),
-			'T',
-			KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK),
-			false);
+				controller,
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_undo"));
+		
+		// tooltip text
+		setTooltipText(
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_undo"));
+		
+		// action command
+		setActionCommand("UNDO");
+
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_undo-16.png"));
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_undo.png"));
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+
+		// disable toolbar text
+		enableToolBarText(false);
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('U');
 		
 		setEnabled(false);
 			

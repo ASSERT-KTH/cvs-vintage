@@ -31,6 +31,43 @@ public class PasteAction extends FrameAction {
 
 	public PasteAction(AbstractFrameController controller) {
 		super(
+				controller,
+				GlobalResourceLoader.getString(
+					null, null,	"menu_edit_paste"));
+
+		// tooltip text
+		setTooltipText(
+				GlobalResourceLoader.getString(
+					null, null,	"menu_edit_paste"));
+		
+		// action command
+		setActionCommand("PASTE");
+
+		// small icon for menu
+		setSmallIcon(ImageLoader.getImageIcon("stock_paste-16.png"));
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_paste.png"));
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+		
+		// disable toolbar text
+		enableToolBarText(false);
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('P');
+		
+		
+		/*		
+		super(
 			controller,
 			GlobalResourceLoader.getString(
 				null,
@@ -50,7 +87,7 @@ public class PasteAction extends FrameAction {
 			'V',
 			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK),
 			false);
-			
+		*/	
 		setEnabled(false);
 		MainInterface.focusManager.setPasteAction(this);
 	}

@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 
 /**
@@ -30,27 +31,16 @@ import org.columba.mail.gui.messageframe.MessageFrameController;
  */
 public class OpenNewMessageFrameWindowAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public OpenNewMessageFrameWindowAction(
-		AbstractFrameController frameController) {
-			super(
+			AbstractFrameController frameController) {
+			
+		super(
 				frameController,
-				"Message Window",
-				"Message Window",
-				"OPEN_NEW_MESSAGEFRAME_WINDOW",
-				null,
-				null,
-				' ',
-				null);
+				GlobalResourceLoader.getString(
+					null, null, "menu_file_new_message"));
+		
+		// action command
+		setActionCommand("OPEN_NEW_MESSAGEFRAME_WINDOW");
 	}
 
 	

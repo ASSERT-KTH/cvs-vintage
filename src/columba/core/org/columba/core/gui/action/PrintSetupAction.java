@@ -27,6 +27,22 @@ public class PrintSetupAction extends FrameAction {
 
 	public PrintSetupAction(AbstractFrameController controller) {
 		super(
+				controller,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_file_printsetup"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_file_printsetup"));
+		
+		// action command
+		setActionCommand("PRINT_SETUP");
+		
+		// TODO: Define mnemonic (using &)
+
+		/*
+		super(
 			controller,
 			MailResourceLoader.getString(
 				"menu",
@@ -41,7 +57,7 @@ public class PrintSetupAction extends FrameAction {
 			null,
 			'0',
 			null);
-		
+		*/
 		setEnabled(false);
 	}
 

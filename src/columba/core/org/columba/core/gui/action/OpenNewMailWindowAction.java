@@ -20,19 +20,19 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class OpenNewMailWindowAction extends FrameAction {
 
 	public OpenNewMailWindowAction(AbstractFrameController controller) {
 		super(
-			controller,
-			"Mail Window",
-			"Mail Window",
-			"OPEN_NEW_MAIL_WINDOW",
-			null,
-			null,
-			' ',
-			null);
+				controller,
+				GlobalResourceLoader.getString(
+					null, null, "menu_file_new_mail"));
+					
+		// action command
+		setActionCommand("OPEN_NEW_MAIL_WINDOW");
+
 	}
 
 	/* (non-Javadoc)

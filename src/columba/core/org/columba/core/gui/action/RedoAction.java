@@ -33,26 +33,35 @@ public class RedoAction extends FrameAction implements WorkerListChangeListener 
 
 	public RedoAction(AbstractFrameController controller) {
 		super(
-			controller,
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_edit_redo"),
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_edit_redo"),
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_edit_redo"),
-			"REDO",
-			ImageLoader.getSmallImageIcon("stock_redo-16.png"),
-			ImageLoader.getImageIcon("stock_redo.png"),
-			'T',
-			KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK),
-			false);
-			
+				controller,
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_redo"));
+		
+		// tooltip text
+		setTooltipText(
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_redo"));
+		
+		// action command
+		setActionCommand("REDO");
+		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_redo-16.png"));
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_redo.png"));
+		
+		// disable toolbar text
+		enableToolBarText(false);
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('R');
+
 		setEnabled(false);
 		MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
 		MainInterface.focusManager.setRedoAction(this);

@@ -30,6 +30,33 @@ public class FindAction extends FrameAction {
 
 	public FindAction(AbstractFrameController controller) {
 		super(
+				controller,
+				GlobalResourceLoader.getString(
+					null, null,	"menu_edit_find"));
+		
+		// tooltip text
+		setTooltipText(
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_find_tooltip"));
+		
+		// action command
+		setActionCommand("FIND");
+
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_search-16.png"));
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_search.png"));
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_F, ActionEvent.CTRL_MASK));
+		
+		// TODO: Define mnemonic (using &)
+		
+		/*		
+		super(
 			controller,
 			GlobalResourceLoader.getString(
                                 null,
@@ -45,6 +72,7 @@ public class FindAction extends FrameAction {
 			ImageLoader.getImageIcon("stock_search.png"),
 			'0',
 		KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
+		*/
 		setEnabled(false);
 	}
 }

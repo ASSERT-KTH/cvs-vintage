@@ -28,6 +28,23 @@ public class ViewToolbarAction extends CheckBoxAction implements Observer{
 
 	public ViewToolbarAction(AbstractFrameController controller) {
 		super(
+				controller,
+				GlobalResourceLoader.getString(
+					null, null, "menu_view_showtoolbar"));
+					
+		// tooltip text
+		setTooltipText(
+				GlobalResourceLoader.getString(
+					null, null, "menu_view_showtoolbar"));
+					
+		// action command
+		setActionCommand("SHOW_TOOLBAR");
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('T');
+
+		/*
+		super(
 			controller,
 			GlobalResourceLoader.getString(
                                 null,
@@ -45,7 +62,7 @@ public class ViewToolbarAction extends CheckBoxAction implements Observer{
 			null,
 			null,
 			'1',
-			null);
+			null);*/
 	}
 
 	/* (non-Javadoc)

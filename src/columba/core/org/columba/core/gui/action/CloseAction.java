@@ -33,18 +33,29 @@ import org.columba.core.util.GlobalResourceLoader;
  */
 public class CloseAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
-	public CloseAction(
-		AbstractFrameController frameController) {
+	public CloseAction(AbstractFrameController frameController) {
+		super(
+				frameController,
+				GlobalResourceLoader.getString(
+					null, null, "close"));
+
+		// tooltip text
+		setTooltipText(
+				GlobalResourceLoader.getString(
+					null, null, "close"));
+					
+		// action command
+		setActionCommand("CLOSE");
+
+		// short cut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('C');
+
+		/*		
 		super(
 			frameController,
 			GlobalResourceLoader.getString(
@@ -59,6 +70,7 @@ public class CloseAction extends FrameAction {
 			null,null,
 			'C',
 			KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+			*/
 	}
 
 	/* (non-Javadoc)

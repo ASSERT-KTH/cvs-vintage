@@ -40,6 +40,33 @@ public class PrintAction
 
 	public PrintAction(AbstractFrameController controller) {
 		super(
+				controller,
+				MailResourceLoader.getString(
+					"menu",	"mainframe", "menu_message_print"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_print_tooltip"));
+		
+		// action command
+		setActionCommand("PRINT");
+
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_print-16.png"));
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_print.png"));
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+		
+		// TODO: Define mnemonic (using &)
+
+		/*		
+		super(
 			controller,
 			MailResourceLoader.getString(
 				"menu",
@@ -55,7 +82,7 @@ public class PrintAction
 			ImageLoader.getImageIcon("stock_print.png"),
 			'0',
 			KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
-
+*/
 			// *20030614, karlpeder* In main view only enabled when 
 			// message(s) selected
 			if (frameController instanceof AbstractMailFrameController) {

@@ -33,29 +33,18 @@ import org.columba.mail.gui.util.URLController;
  */
 public class ShowFAQAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ShowFAQAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_help_faq"),
-			null,
-			"FAQ",
-			null,
-			null,
-			'F',
-			null);
+				frameController,
+				GlobalResourceLoader.getString(
+					null, null, "menu_help_faq"));
+		
+		// action command
+		setActionCommand("FAQ");
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('F');
+		
 	}
 
 	/* (non-Javadoc)

@@ -24,6 +24,22 @@ public class FindAgainAction extends FrameAction {
 
 	public FindAgainAction(AbstractFrameController controller) {
 		super(
+				controller,
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_findagain"));
+		
+		// tooltip text
+		setTooltipText(
+				GlobalResourceLoader.getString(
+					null, null, "menu_edit_findagain_tooltip"));
+		
+		// action command
+		setActionCommand("FIND_AGAIN");
+		
+		// TODO: Define mnemonic (using &)
+		
+		/*
+		super(
 			controller,
 			GlobalResourceLoader.getString(
 				null,
@@ -39,6 +55,7 @@ public class FindAgainAction extends FrameAction {
 			null,
 			'0',
 			null);
+		*/
 		setEnabled(false);
 	}
 }
