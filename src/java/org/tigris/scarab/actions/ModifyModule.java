@@ -75,7 +75,7 @@ import org.tigris.scarab.services.module.ModuleManager;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.10 2001/11/08 19:25:54 elicia Exp $
+ * @version $Id: ModifyModule.java,v 1.11 2001/11/08 21:28:31 elicia Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -250,6 +250,7 @@ public class ModifyModule extends RequireLoginFirstAction
  
                                // Save module-option mappings for template types
                                RModuleOption rmo3 = rmo1.copy();
+                               rmo3.setOptionId(rmo1.getOptionId());
                                rmo3.setModuleId(newModuleId);
                                rmo3.setIssueTypeId(issueType.getTemplateId());
                                rmo3.save();
