@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactory.java,v 1.30 2004/08/08 15:58:27 mvw Exp $
+// $Id: CommonBehaviorFactory.java,v 1.31 2004/10/18 13:43:57 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -539,7 +539,7 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
     public void deleteInstance(MInstance elem) {
 
         if (elem != null) {
-            Collection col = ((MInstance) elem).getLinkEnds();
+            Collection col = elem.getLinkEnds();
             Iterator it = col.iterator();
             while (it.hasNext()) {
                 UmlFactory.getFactory().delete(it.next());

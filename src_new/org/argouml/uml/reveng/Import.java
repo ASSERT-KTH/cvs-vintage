@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.63 2004/10/01 14:01:41 mvw Exp $
+// $Id: Import.java,v 1.64 2004/10/18 13:43:15 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -389,7 +389,7 @@ public class Import {
             importLevel = 0;
 
         // we always start with a level 0 import
-	setAttribute("level", new Integer(0));
+        setAttribute("level", new Integer(0));
 
         diagramInterface = getCurrentDiagram();
 
@@ -627,7 +627,7 @@ public class Import {
                                 + " created in the model\n");
                         StringWriter sw = new StringWriter();
                         PrintWriter pw = new java.io.PrintWriter( sw );
-                        ((Exception) e1).printStackTrace( pw );
+                        e1.printStackTrace( pw );
                         sb.append(sw.getBuffer());
                         LOG.error(sb.toString(), e1);
                     }
@@ -639,7 +639,7 @@ public class Import {
                                 + "created in the model\n");
                         StringWriter sw = new StringWriter();
                         PrintWriter pw = new java.io.PrintWriter( sw );
-                        ((Exception) e1).printStackTrace( pw );
+                        e1.printStackTrace( pw );
                         sb.append(sw.getBuffer());
                         LOG.warn(sb.toString(), e1);
                     }
