@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/MsgBuffer.java,v 1.3 2000/01/08 21:31:40 rubys Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/08 21:31:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/MsgBuffer.java,v 1.4 2000/04/14 22:48:05 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/04/14 22:48:05 $
  *
  * ====================================================================
  *
@@ -160,7 +160,7 @@ public class MsgBuffer {
     public String getString() throws java.io.UnsupportedEncodingException {
 	int ll= getInt();
 	if( (ll == 0xFFFF) || (ll==-1) ) {
-	    System.out.println("null string " + ll);
+	    //	    System.out.println("null string " + ll);
 	    return null;
 	}
 	String s=BuffTool.getString( buff, pos, ll );

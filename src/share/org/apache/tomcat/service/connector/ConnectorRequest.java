@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/ConnectorRequest.java,v 1.5 2000/01/15 23:30:24 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/01/15 23:30:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/ConnectorRequest.java,v 1.6 2000/04/14 22:48:05 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/04/14 22:48:05 $
  *
  * ====================================================================
  *
@@ -98,7 +98,8 @@ public class ConnectorRequest extends RequestImpl {
 	for( int i=0; i<envCount; i++ ) {
 	    String n= msg.getString();
 	    String v= msg.getString();
-	    env_vars.put( n , v );
+	    if(n!=null && v!=null)
+		env_vars.put( n , v );
 	}
 	
 	int hCount = msg.getInt();
