@@ -45,7 +45,7 @@ import org.jboss.metadata.XmlFileLoader;
 import org.jboss.security.EJBSecurityManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.util.MBeanProxy;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
@@ -68,7 +68,7 @@ import org.jboss.web.WebServiceMBean;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.90 $
+* @version $Revision: 1.91 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport

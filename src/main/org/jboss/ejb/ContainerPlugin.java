@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb;
 
-import org.jboss.util.Service;
+import org.jboss.system.Service;
 
 /**
  * This is a superinterface for all Container plugins.
@@ -15,7 +15,7 @@ import org.jboss.util.Service;
  *      
  * @see Service
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public interface ContainerPlugin
    extends Service

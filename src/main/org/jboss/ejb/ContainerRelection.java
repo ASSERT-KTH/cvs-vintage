@@ -7,11 +7,11 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.RuntimeOperationsException;
 
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /** The ContainerRelectionMBean implementation.
  * @author  Scott.Stark@jboss.org
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ContainerRelection extends ServiceMBeanSupport implements ContainerRelectionMBean
 {

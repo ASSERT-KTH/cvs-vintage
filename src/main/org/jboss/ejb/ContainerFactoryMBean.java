@@ -9,7 +9,7 @@ package org.jboss.ejb;
 import java.util.Iterator;
 import java.net.MalformedURLException;
 
-import org.jboss.util.ServiceMBean;
+import org.jboss.system.ServiceMBean;
 
 /**
  * This is the interface of the ContainerFactory that is exposed
@@ -19,7 +19,7 @@ import org.jboss.util.ServiceMBean;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public interface ContainerFactoryMBean
    extends ServiceMBean

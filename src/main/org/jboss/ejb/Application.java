@@ -15,7 +15,7 @@ import java.util.Hashtable;
 
 import javax.ejb.EJBLocalHome;
 
-import org.jboss.util.Service;
+import org.jboss.system.Service;
 
 /**
  * An Application represents a collection of beans that are deployed as a
@@ -28,7 +28,7 @@ import org.jboss.util.Service;
  * @see ContainerFactory
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class Application
    implements Service
