@@ -8,12 +8,10 @@
   <h2>Saved query list (2.2.2)</h2>
 
 #if ( !$module.Queries.isEmpty() )
-       <p>Click on location to execute</p>
-
-      <p class="functnbar"><input type="submit" value="delete selected" name="eventSubmit_doDeletequeries" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
-       <h3>templates</h3>
 
        <p>&#171; previous | 1 of 1 | next &#187; </p>
+
+       <p>Click on location to execute</p>
 
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
@@ -40,13 +38,13 @@
          #end
          <td><input type="checkbox" name="delete_$query.QueryId"/></td>
 
-         <td><a href="#">$query.Name</a></td>
+         <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
 
-         <td>$query.Description</td>
+         <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
 
          <td>$query.QueryType.Name</td>
 
-         <td><a href="$query.getLink($link.toString())">project '$scarabR.getModule($query.ModuleId.toString()).Name'</a></td>
+         <td><a href="$query.getExecuteLink($link.toString())">project '$scarabR.getModule($query.ModuleId.toString()).Name'</a></td>
 
         #set ($createdUser = $scarabR.getUser($query.UserId.toString()) )
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
