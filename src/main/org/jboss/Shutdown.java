@@ -29,7 +29,7 @@ import org.jboss.system.server.ServerImpl;
 /**
  * A JMX client that uses an RMIAdaptor to shutdown a remote JBoss server.
  *
- * @version <tt>$Revision: 1.11 $</tt>
+ * @version <tt>$Revision: 1.12 $</tt>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  Scott.Stark@jboss.org
  */
@@ -58,7 +58,7 @@ public class Shutdown
       System.out.println("    -p, --password=<name>     Specify the password for authentication[not implemented yet]");
       System.out.println();
       System.out.println("operations:");
-      System.out.println("    -S, --shutdown            Shutdown the remove VM (default)");
+      System.out.println("    -S, --shutdown            Shutdown the server (default)");
       System.out.println("    -e, --exit=<code>         Force the VM to exit with a status code");
       System.out.println("    -H, --halt=<code>         Force the VM to halt with a status code");
    }
@@ -202,7 +202,8 @@ public class Shutdown
       {
          server.shutdown();
       }
-      System.out.println("Shutdown complete");
+      System.out.println("Shutdown message has been posted to the server.");
+      System.out.println("Server shutdown may take a while - check logfiles for completion");
    }
 
    private static class ServerProxyHandler implements InvocationHandler
