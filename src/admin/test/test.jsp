@@ -9,7 +9,7 @@
 
 This page will show the result of executing the sanity test suite. 
 
-<%! Date d ; %>
+<%! long t ; %>
 
 <%@ include file="sanity-form.jsp" %>
 
@@ -33,7 +33,7 @@ This page will show the result of executing the sanity test suite.
 %>
 
 <ant:gtest />
-<% d = new Date(); %>
+<% t = System.currentTimeMillis(); %>
 <ant:ant>
   <ant:target param="target" />
   
@@ -57,7 +57,7 @@ This page will show the result of executing the sanity test suite.
 
 <h1>Test <%= antProperties.getProperty("revision") %></h1>
 
-Executed in <%= (new Date()).getTime() - d.getTime() %> Milliseconds.<br>
+Executed in <%= System.currentTimeMillis() - t %> Milliseconds.<br>
 
 <% // -------------------- Failures -------------------- %>
 <h1>FAILED Tests</h1>

@@ -96,11 +96,11 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     boolean isFacadeInitialized=false;
     BufferedReader reader;
     DateFormat []dateFormats = {
-	new SimpleDateFormat(DateTool.RFC1123_PATTERN),
-	new SimpleDateFormat(DateTool.rfc1036Pattern),
-	new SimpleDateFormat(DateTool.asctimePattern)
-	    };
-    
+	new SimpleDateFormat(DateTool.RFC1123_PATTERN, Locale.US),
+	new SimpleDateFormat(DateTool.rfc1036Pattern, Locale.US),
+	new SimpleDateFormat(DateTool.asctimePattern, Locale.US)
+    };
+
     private boolean usingStream = false;
     private boolean usingReader = false;
 
@@ -200,7 +200,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     public long getDateHeader(String name) {
 	String value=request.getHeader( name );
 	if( value==null) return -1;
-	
+
 	long date=DateTool.parseDate(value,dateFormats);
 	if( date==-1) {
 	    String msg = sm.getString("httpDate.pe", value);
@@ -208,7 +208,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	}
 	return date;
     }
-    
+
     public String getHeader(String name) {
         return request.getHeader(name);
     }
