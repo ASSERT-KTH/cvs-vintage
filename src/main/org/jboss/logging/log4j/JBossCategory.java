@@ -15,7 +15,7 @@ import org.apache.log4j.spi.CategoryFactory;
 @see TracePriority
 
 @author Scott.Stark@jboss.org
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public class JBossCategory extends Category
 {
@@ -63,14 +63,14 @@ public class JBossCategory extends Category
    /** Issue a log msg with a priority of TRACE.
    Invokes super.log(TracePriority.TRACE, message);
    */
-   public void trace(String message)
+   public void trace(Object message)
    {
       super.log(TracePriority.TRACE, message);
    }
    /** Issue a log msg and throwable with a priority of TRACE.
    Invokes super.log(TracePriority.TRACE, message, t);
    */
-   public void trace(String message, Throwable t)
+   public void trace(Object message, Throwable t)
    {
       super.log(TracePriority.TRACE, message, t);
    }
