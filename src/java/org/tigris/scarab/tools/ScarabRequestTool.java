@@ -1008,6 +1008,15 @@ try{
     }
 
     /**
+     * Convert paths with slashes to commas.
+     */
+    public String convertPath(String path)
+        throws Exception
+    {
+        return path.replace('/',',');
+    }
+
+    /**
      * a report helper class
      */
     public Report getReport()
