@@ -30,10 +30,17 @@ import javax.ejb.EJBObject;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
+ *
+ *<p><b>20011219 marc fleury:</b>
+* <ul>
+*  <li>Moved from typed return to Object to allow for optimizations in creation
+*  <li>Per Dain Sundstrom requests removed the Remote Exception.
+*  <li>The Container Invoker is going to be replaced by the ProxyFactory 
+*</ul>
  */
 public interface ContainerInvoker
-   extends ContainerPlugin
+extends ContainerPlugin
 {
    /**
     * This method is called whenever the metadata for this container is
@@ -49,7 +56,7 @@ public interface ContainerInvoker
     *
     * @return    An implementation of the home interface for this container.
     */
-   EJBHome getEJBHome();
+   Object getEJBHome();
 
    /**
     * This method is called whenever an EJBObject implementation for a
@@ -59,7 +66,7 @@ public interface ContainerInvoker
     * 
     * @throws RemoteException    Thrown if the EJBObject could not be created.
     */
-   EJBObject getStatelessSessionEJBObject() throws RemoteException;
+   Object getStatelessSessionEJBObject();
 
    /**
     * This method is called whenever an EJBObject implementation for a stateful
@@ -71,7 +78,7 @@ public interface ContainerInvoker
     *              
     * @throws RemoteException    Thrown if the EJBObject could not be created.
     */
-   EJBObject getStatefulSessionEJBObject(Object id) throws RemoteException;
+   Object getStatefulSessionEJBObject(Object id);
 
    /**
     * This method is called whenever an EJBObject implementation for an 
@@ -83,7 +90,7 @@ public interface ContainerInvoker
     *              
     * @throws RemoteException    Thrown if the EJBObject could not be created.
     */
-   EJBObject getEntityEJBObject(Object id) throws RemoteException;
+   Object getEntityEJBObject(Object id);
 
    /**
     * This method is called whenever a collection of EJBObjects for a
@@ -95,6 +102,6 @@ public interface ContainerInvoker
     *                
     * @throws RemoteException    Thrown if the EJBObjects could not be created.
     */
-   Collection getEntityCollection(Collection enum) throws RemoteException;
+   Collection getEntityCollection(Collection enum);
 }
 
