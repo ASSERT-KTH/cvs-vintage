@@ -21,7 +21,7 @@ import javax.transaction.Transaction;
 *	@see EnterpriseContext
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.8 $
+*	@version $Revision: 1.9 $
 */
 public class EntityEnterpriseContext
 extends EnterpriseContext
@@ -56,6 +56,13 @@ extends EnterpriseContext
     }
     
     // Public --------------------------------------------------------
+	
+	public void clear() {
+		
+		this.invoked = false;
+		this.valid = false;
+	}
+	
     public void discard()
     throws RemoteException
     {
