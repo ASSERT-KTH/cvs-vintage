@@ -48,11 +48,11 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  * The JRMPInvoker is an RMI implementation that can generate Invocations
  * from RMI/JRMP into the JMX base.
  *
- * @jmx:mbean extends="org.jboss.system.ServiceMBean"
+ * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -121,7 +121,7 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public int getBacklog()
    {
@@ -129,7 +129,7 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public void setBacklog(int back)
    {
@@ -137,7 +137,7 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public boolean getEnableClassCaching()
    {
@@ -145,7 +145,7 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public void setEnableClassCaching(boolean flag)
    {
@@ -169,7 +169,7 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public void setRMIObjectPort(final int rmiPort)
    {
@@ -177,7 +177,7 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public int getRMIObjectPort()
    {
@@ -185,7 +185,7 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public void setRMIClientSocketFactory(final String name)
    {
@@ -193,7 +193,7 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public String getRMIClientSocketFactory()
    {
@@ -201,7 +201,7 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public void setRMIServerSocketFactory(final String name)
    {
@@ -209,7 +209,7 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public String getRMIServerSocketFactory()
    {
@@ -217,7 +217,7 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public void setServerAddress(final String address)
    {
@@ -225,7 +225,7 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public String getServerAddress()
    {
@@ -233,14 +233,14 @@ public class JRMPInvoker
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public void setSecurityDomain(String domainName)
    {
       this.sslDomain = domainName;
    }
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public String getSecurityDomain()
    {
@@ -357,9 +357,13 @@ public class JRMPInvoker
       }
       catch (Exception e)
       {
-         e = (Exception) JMXExceptionDecoder.decode(e);
+         Throwable th = JMXExceptionDecoder.decode(e);
          if( log.isTraceEnabled() )
-            log.trace("Failed to invoke on mbean: "+mbean, e);
+            log.trace("Failed to invoke on mbean: "+mbean, th);
+
+         if (th instanceof Exception)
+            e = (Exception)th;
+
          throw e;
       }
       finally
