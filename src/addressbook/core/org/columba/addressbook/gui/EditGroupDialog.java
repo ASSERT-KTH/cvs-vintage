@@ -23,21 +23,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.addressbook.config.AdapterNode;
 import org.columba.addressbook.folder.Folder;
@@ -50,7 +40,7 @@ import org.columba.addressbook.gui.util.AddressbookDNDListView;
 import org.columba.addressbook.gui.util.AddressbookListModel;
 import org.columba.addressbook.gui.util.AddressbookListRenderer;
 import org.columba.addressbook.gui.util.LabelTextFieldPanel;
-import org.columba.core.gui.util.wizard.WizardTopBorder;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.main.MainInterface;
 
 public class EditGroupDialog extends JDialog implements ActionListener {
@@ -60,7 +50,7 @@ public class EditGroupDialog extends JDialog implements ActionListener {
 	//private DefaultListModel addressbookModel;
 
 	private AddressbookDNDListView list;
-	private JButton addButton, removeButton, okButton, cancelButton;
+	private JButton addButton, removeButton;
 	private JLabel nameLabel, descriptionLabel;
 	private JTextField nameTextField, descriptionTextField;
 	//private AdapterNode groupNode;
@@ -177,24 +167,21 @@ public class EditGroupDialog extends JDialog implements ActionListener {
 		addressbook = new AddressbookDNDListView();
 		addressbook.setAcceptDrop(false);
 		JScrollPane scrollPane = new JScrollPane(addressbook);
-		rightPanel.add(scrollPane, BorderLayout.CENTER);
+		rightPanel.add(scrollPane);
 
-		mainPanel.add(rightPanel, BorderLayout.CENTER);
+		mainPanel.add(rightPanel);
 
-		getContentPane().add(mainPanel, BorderLayout.CENTER);
+		getContentPane().add(mainPanel);
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(
-			new CompoundBorder(
-				new WizardTopBorder(),
-				BorderFactory.createEmptyBorder(17, 12, 11, 11)));
-
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
-		okButton = new JButton("Ok");
+                buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		JButton okButton = new JButton(AddressbookResourceLoader.getString("global", "ok"));
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 		buttonPanel.add(okButton);
-		cancelButton = new JButton("Cancel");
+		JButton cancelButton = new JButton(AddressbookResourceLoader.getString("global", "cancel"));
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
 		buttonPanel.add(cancelButton);

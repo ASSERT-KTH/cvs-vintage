@@ -29,8 +29,9 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
 import org.columba.core.config.Config;
-import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.filter.Filter;
@@ -61,8 +62,6 @@ public class ConfigFrame extends JDialog
 
 	//private AdapterNode actNode;
 
-	private boolean newAccount = false;
-
 	private int index = -1;
 
 	private FilterList filterList;
@@ -70,9 +69,8 @@ public class ConfigFrame extends JDialog
 	//private JDialog dialog;
 
 	JTextField nameTextField = new JTextField();
-	JLabel nameLabel = new JLabel();
 
-	JButton closeButton, addButton, removeButton, editButton, enableButton, disableButton, moveupButton, movedownButton;
+	JButton addButton, removeButton, editButton, enableButton, disableButton, moveupButton, movedownButton;
 
 	BorderLayout borderLayout3 = new BorderLayout();
 	GridLayout gridLayout1 = new GridLayout();
@@ -167,10 +165,10 @@ public class ConfigFrame extends JDialog
 		JPanel topBorderPanel = new JPanel();
 		topBorderPanel.setLayout(new BorderLayout());
 		//topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-		topBorderPanel.add(topPanel, BorderLayout.CENTER);
+		topBorderPanel.add(topPanel);
 		//mainPanel.add( topBorderPanel, BorderLayout.NORTH );
 
-		nameLabel.setText("name");
+		JLabel nameLabel = new JLabel("name");
 		nameLabel.setEnabled(false);
 		topPanel.add(nameLabel);
 
@@ -267,13 +265,12 @@ public class ConfigFrame extends JDialog
 		scrollPane.getViewport().setBackground(Color.white);
 		centerPanel.add(scrollPane);
 
-		mainPanel.add(centerPanel, BorderLayout.CENTER);
+		mainPanel.add(centerPanel);
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(BorderFactory.createCompoundBorder(
-				new WizardTopBorder(),
-				BorderFactory.createEmptyBorder(17, 12, 11, 11)));
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
+                buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 		JButton closeButton = new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);

@@ -16,37 +16,22 @@
 
 package org.columba.mail.gui.config.account;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
 import org.columba.core.config.Config;
 import org.columba.core.gui.util.DialogStore;
-import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
@@ -84,8 +69,6 @@ public class ConfigFrame
 	private IncomingServerPanel incomingPanel;
 	private OutgoingServerPanel outgoingServerPanel;
 	*/
-	private boolean newAccount = false;
-
 	private AccountListTable listView;
 	//private JSplitPane splitPane;
 
@@ -94,13 +77,9 @@ public class ConfigFrame
 
 	//private int panel = -1;
 
-	JPanel eastPanel = new JPanel();
-	JPanel jPanel1 = new JPanel();
-
 	JTextField nameTextField = new JTextField();
-	JLabel nameLabel = new JLabel();
 
-	JButton addButton, helpButton, closeButton;
+	JButton addButton;
 	//JButton enableButton = new JButton();
 	//JButton disableButton = new JButton();
 	JButton removeButton, editButton;
@@ -223,7 +202,7 @@ public class ConfigFrame
 
 		//mainPanel.add( topBorderPanel, BorderLayout.NORTH );
 
-		nameLabel.setText(MailResourceLoader.getString("dialog", "account", "name")); //$NON-NLS-1$
+		JLabel nameLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "name")); //$NON-NLS-1$
 		nameLabel.setEnabled(false);
 		topPanel.add(nameLabel);
 
@@ -242,7 +221,7 @@ public class ConfigFrame
 
 		gridBagLayout = new GridBagLayout();
 		c = new GridBagConstraints();
-		eastPanel.setLayout(gridBagLayout);
+		JPanel eastPanel = new JPanel(gridBagLayout);
 		mainPanel.add(eastPanel, BorderLayout.EAST);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -288,30 +267,25 @@ public class ConfigFrame
 		JScrollPane scrollPane = new JScrollPane(listView);
 		scrollPane.setPreferredSize(new Dimension(300, 250));
 		scrollPane.getViewport().setBackground(Color.white);
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
-		dialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setBorder(new WizardTopBorder());
-		bottomPanel.setLayout(new BorderLayout());
-		bottomPanel.add(createButtonPanel(), BorderLayout.EAST);
-		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-	}
-
-	protected JPanel createButtonPanel() {
+		mainPanel.add(scrollPane);
+		dialog.getContentPane().add(mainPanel);
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 11, 11));
-		closeButton =
+		JButton closeButton =
 			new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		helpButton =
+		JButton helpButton =
 			new JButton(MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
 		buttonPanel.add(helpButton);
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		dialog.getRootPane().setDefaultButton(closeButton);
-		return buttonPanel;
 	}
 
 	public void valueChanged(ListSelectionEvent e) {

@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -29,8 +30,9 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
 import org.columba.core.config.Config;
-import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.Compatibility;
 import org.columba.core.xml.XmlElement;
@@ -76,7 +78,7 @@ public class ConfigFrame extends JDialog
 	JTextField nameTextField = new JTextField();
 	JLabel nameLabel = new JLabel();
 
-	JButton closeButton, addButton, removeButton, editButton, enableButton, disableButton, moveupButton, movedownButton;
+	JButton addButton, removeButton, editButton, enableButton, disableButton, moveupButton, movedownButton;
 
 	BorderLayout borderLayout3 = new BorderLayout();
 	GridLayout gridLayout1 = new GridLayout();
@@ -88,8 +90,7 @@ public class ConfigFrame extends JDialog
 		
 		this.filterList = filterList;
 
-		setTitle(
-			"POP3 Preprocessing Filter Configuration");
+		setTitle("POP3 Preprocessing Filter Configuration");
 		
 		//config = MainInterface.config;
 
@@ -262,8 +263,7 @@ public class ConfigFrame extends JDialog
 
 		// centerpanel
 
-		centerPanel = new JPanel();
-		centerPanel.setLayout(new BorderLayout());
+		centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 		listView = new FilterListTable(filterList, this);
 		listView.getSelectionModel().addListSelectionListener(this);
@@ -272,14 +272,12 @@ public class ConfigFrame extends JDialog
 		scrollPane.getViewport().setBackground(Color.white);
 		centerPanel.add(scrollPane);
 
-		mainPanel.add(centerPanel, BorderLayout.CENTER);
+		mainPanel.add(centerPanel);
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(
-			BorderFactory.createCompoundBorder(
-				new WizardTopBorder(),
-				BorderFactory.createEmptyBorder(17, 12, 11, 11)));
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
+                buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 		JButton closeButton = new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);

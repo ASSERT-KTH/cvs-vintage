@@ -21,14 +21,16 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.*;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.gui.util.URLController;
@@ -43,8 +45,6 @@ public class FilterDialog implements ActionListener {
 
 	private JButton addActionButton;
 	private JButton removeActionButton;
-
-	private JButton closeButton, helpButton;
 
 	private Filter filter;
 	private JFrame frame;
@@ -189,22 +189,19 @@ public class FilterDialog implements ActionListener {
 		//middleThenPanel.add(Box.createRigidArea(new java.awt.Dimension(0, 10)));
 
 		actionList = new ActionList(filter, frame);
-		middleThenPanel.add(actionList, BorderLayout.CENTER);
+		middleThenPanel.add(actionList);
 
-		dialog.getContentPane().add(centerPanel, BorderLayout.CENTER);
+		dialog.getContentPane().add(centerPanel);
 
-		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
-		bottomPanel.setBorder(
-			BorderFactory.createCompoundBorder(
-				new WizardTopBorder(),
-				BorderFactory.createEmptyBorder(17, 12, 11, 11)));
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		closeButton = new JButton(MailResourceLoader.getString("global", "close"));
+                buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		JButton closeButton = new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		
-		helpButton = new JButton(MailResourceLoader.getString("global", "help"));
+		JButton helpButton = new JButton(MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
 		buttonPanel.add(helpButton);

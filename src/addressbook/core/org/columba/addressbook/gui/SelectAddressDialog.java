@@ -24,19 +24,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-import javax.swing.ListModel;
+import javax.swing.*;
 import javax.swing.border.CompoundBorder;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.GroupListCard;
@@ -45,7 +36,7 @@ import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.gui.util.AddressbookDNDListView;
 import org.columba.addressbook.gui.util.AddressbookListModel;
-import org.columba.core.gui.util.wizard.WizardTopBorder;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.main.MainInterface;
 
 public class SelectAddressDialog extends JDialog implements ActionListener
@@ -70,11 +61,6 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 
 	private HeaderItemList[] headerItemList;
 	
-	private JButton cancelButton;
-	private JButton okButton;
-
-	
-
 	public SelectAddressDialog(
 		JFrame frame,
 		HeaderItemList[] list)
@@ -83,11 +69,9 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 
 		this.headerItemList = list;
 		
-
 		dialogList = new AddressbookListModel[3];
 
 		init();
-
 	}
 
 	public HeaderItemList[] getHeaderItemLists()
@@ -138,7 +122,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		//toList.setCellRenderer(new AddressbookListRenderer());
 		JScrollPane toPane = new JScrollPane(toList);
 		toPane.setPreferredSize(new Dimension(250, 150));
-		list1Panel.add(toPane, BorderLayout.CENTER);
+		list1Panel.add(toPane);
 		leftPanel.add(list1Panel);
 
 		leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -156,7 +140,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		//ccList.setCellRenderer(new AddressbookListRenderer());
 		JScrollPane ccPane = new JScrollPane(ccList);
 		ccPane.setPreferredSize(new Dimension(250, 150));
-		list2Panel.add(ccPane, BorderLayout.CENTER);
+		list2Panel.add(ccPane);
 		leftPanel.add(list2Panel);
 
 		leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -176,7 +160,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		//bccList.setCellRenderer(new AddressbookListRenderer());
 		JScrollPane bccPane = new JScrollPane(bccList);
 		bccPane.setPreferredSize(new Dimension(250, 150));
-		list3Panel.add(bccPane, BorderLayout.CENTER);
+		list3Panel.add(bccPane);
 		leftPanel.add(list3Panel);
 
 		/*
@@ -196,7 +180,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 
 		//panel.add( Box.createRigidArea( new Dimension(20,0) ) );
 
-		panel.add(leftPanel, BorderLayout.CENTER);
+		panel.add(leftPanel);
 
 		mainPanel.add(panel, BorderLayout.WEST);
 
@@ -262,22 +246,21 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 
 		JScrollPane scrollPane = new JScrollPane(addressbook);
 		scrollPane.setPreferredSize(new Dimension(250, 200));
-		rightPanel.add(scrollPane, BorderLayout.CENTER);
+		rightPanel.add(scrollPane);
 
-		mainPanel.add(rightPanel, BorderLayout.CENTER);
+		mainPanel.add(rightPanel);
 
-		getContentPane().add(mainPanel, BorderLayout.CENTER);
+		getContentPane().add(mainPanel);
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new CompoundBorder(
-					new WizardTopBorder(),
-					BorderFactory.createEmptyBorder(17, 12, 11, 11)));
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		okButton = new JButton("Ok");
+                buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		JButton okButton = new JButton(AddressbookResourceLoader.getString("global", "ok"));
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 		buttonPanel.add(okButton);
-		cancelButton = new JButton("Cancel");
+		JButton cancelButton = new JButton(AddressbookResourceLoader.getString("global", "cancel"));
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
 		buttonPanel.add(cancelButton);
