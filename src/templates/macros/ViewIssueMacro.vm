@@ -359,6 +359,55 @@
   #end
 #end
 
+## ATTACHMENT
+#set ($attachments = $currentIssue.Attachments)
+#if ($attachments.size() > 0 )
+<h3>Attachment</h3>
+    <div class="axial">
+    <table cellpadding="3" cellspacing="2" border="0">
+       #set ($atch = $scarabR.Attachment)
+       #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
+       #if ($atch.Name)
+            <tr>
+            <th>Attachment description</th>
+            <td>
+                 $!intakeAttachment.Name
+            </td>
+            </tr>
+       #end
+       <tr>
+        <th>File name</th>
+        <td>
+        <select name="view_file_$intakeAttachment.Id.Key" class="select">
+            #if (!$atch.AttachmentId)
+                <option value="0">Choose file name</option>
+            #else
+                <option value=$atch.AttachmentId>
+                $atch.FilePath</option>
+            #end
+            #foreach ($attachment in $currentIssue.Attachments)
+                <option value="$attachment.AttachmentId">
+                $attachment.FilePath</option>
+            #end
+        </select>
+        </td>
+     </tr>
+     #if ( $atch.DataAsString)
+     <tr>
+      <th>Attachment file content</th>
+        <td>
+          <pre>$!intakeAttachment.DataAsString</pre>
+        </td>
+     </tr>
+     #end
+     
+    </table>
+    </div>
+<div class="functnbar3">
+    <input type="submit" value="View File" name="eventSubmit_doViewattachment" />
+</div>
+
+#end
 
 ## ISSUE HISTORY
 #if ($fullHistory.equals("true"))
