@@ -2,17 +2,6 @@
 #set ($module = $user.CurrentModule)
 
 <table>
-<tr>
-<td>
-
-<form action="$link.setPage("IssueView.vm")" method="get">
- Issue# <input type="text" name="id" size="8" maxlength="255">
-        <input type="submit" name="Submit" value="Find">
-</form>
-
-</td>
-</tr>
-
 
 <TR>
 <TD COLSPAN="3">
@@ -27,9 +16,9 @@
     <TR>
     <TD WIDTH="64%">
 
-        <form action="$link.setPage("Search.vm")" method="get">
-        <input type="hidden" name="nextTemplate" value="IssueList.vm"></input>
-        <input type="hidden" name="action" value="Search"></input>
+        <form action="$link.setPage("Search.vm")" method="GET">
+        <input type="hidden" name="nextTemplate" value="IssueList.vm" />
+        <input type="hidden" name="action" value="Search" />
 
 #set ( $search = $scarabR.Search )
 #set ( $searchGroup = $intake.SearchIssue.mapTo($search) )

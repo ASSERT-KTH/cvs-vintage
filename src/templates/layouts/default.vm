@@ -20,6 +20,12 @@
      <!-- Left -->
 
      <td id="leftprojnav" width="100">
+
+     <form action="$link.setPage("IssueView.vm")" method="GET">
+     Issue# <input type="text" name="id" size="8" maxlength="255">
+            <input type="submit" name="Submit" value="Find">
+     </form>
+
       <a href="#">projectnav</a> 
 
       <ul>
@@ -53,6 +59,7 @@
        </table>
       </div>
 
+<p>#actionErrorMsg()</p>
 $screen_placeholder
 
     </td>
