@@ -1,4 +1,4 @@
-// $Id: java.g,v 1.7 2003/02/14 14:18:53 lepekhine Exp $
+// $Id: java.g,v 1.8 2003/03/27 11:42:54 lepekhine Exp $
 
 header {
 	package org.argouml.language.java.generator;
@@ -63,7 +63,7 @@ header {
  *
  * Version tracking now done with following ID:
  *
- * $Id: java.g,v 1.7 2003/02/14 14:18:53 lepekhine Exp $
+ * $Id: java.g,v 1.8 2003/03/27 11:42:54 lepekhine Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -432,11 +432,12 @@ variableDefinitions returns [Vector codePieces=new Vector()]
  * It can also include possible initialization.
  */
 variableDeclarator returns [CompositeCodePiece cp=null]
-	{CodePiece db=null;}
+	{CodePiece db=null, vin=null;}
 	:	t1:IDENT {cp = new CompositeCodePiece(
 				new SimpleCodePiece(t1));}
 		db=declaratorBrackets {cp.add(db);}
-		varInitializer
+		vin=varInitializer
+                {if (vin!=null) cp.add(vin);}
 	;
 
 declaratorBrackets returns [CompositeCodePiece cp=null]
@@ -454,14 +455,19 @@ declaratorBrackets returns [CompositeCodePiece cp=null]
 	;
 
 varInitializer returns [CompositeCodePiece cp=null]
-	:	( t1:ASSIGN {cp = new CompositeCodePiece(
-				new SimpleCodePiece(t1));}
+	:	( t1:ASSIGN {
+                                //cp = new CompositeCodePiece(
+				//new SimpleCodePiece(t1));
+                            }
 		initializer
-		{cp.add(new SimpleCodePiece(
-			new StringBuffer("@"), 
-			t1.getLine(),
-			t1.getColumn()+1,
-			t1.getColumn()+2));}
+		{
+                    t1=LT(1);
+                    cp = new CompositeCodePiece(new SimpleCodePiece(
+			new StringBuffer(""), 
+			t1.getLine()-1,
+			t1.getColumn()-1,
+			t1.getColumn()-1));
+                }
 		)?
 	;
 
