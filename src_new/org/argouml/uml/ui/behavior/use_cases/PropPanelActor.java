@@ -24,7 +24,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.9 2002/04/04 14:56:08 jeremybennett Exp $
+// $Id: PropPanelActor.java,v 1.10 2002/07/15 15:12:13 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -37,6 +37,7 @@
 
 package org.argouml.uml.ui.behavior.use_cases;
 
+import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.ui.*;
 import org.argouml.uml.ui.foundation.core.*;
 
@@ -169,6 +170,10 @@ public class PropPanelActor extends PropPanelClassifier {
                 navigateTo(actor);
             }
         }
+        // 2002-07-15
+            // Jaap Branderhorst
+            // Force an update of the navigation pane to solve issue 323
+            ProjectBrowser.TheInstance.getNavPane().forceUpdate();
     }
 
     /**

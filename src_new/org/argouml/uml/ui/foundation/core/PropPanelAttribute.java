@@ -26,7 +26,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.11 2001/07/10 11:53:21 1sturm Exp $
+// $Id: PropPanelAttribute.java,v 1.12 2002/07/15 15:12:12 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -143,6 +143,10 @@ public class PropPanelAttribute extends PropPanelModelElement {
 		MAttribute attr = MMUtil.SINGLETON.buildAttribute(owner);
                 navigateTo(attr);
             }
+            // 2002-07-15
+            // Jaap Branderhorst
+            // Force an update of the navigation pane to solve issue 323
+            ProjectBrowser.TheInstance.getNavPane().forceUpdate();
         }
     }
 

@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.9 2002/05/03 19:17:08 jeremybennett Exp $
+// $Id: PropPanelUseCase.java,v 1.10 2002/07/15 15:12:13 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -37,6 +37,7 @@
 
 package org.argouml.uml.ui.behavior.use_cases;
 
+import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.ui.*;
 import org.argouml.uml.ui.foundation.core.*;
 
@@ -231,6 +232,10 @@ public class PropPanelUseCase extends PropPanelClassifier {
                 navigateTo(useCase);
             }
         }
+        // 2002-07-15
+            // Jaap Branderhorst
+            // Force an update of the navigation pane to solve issue 323
+            ProjectBrowser.TheInstance.getNavPane().forceUpdate();
     }
 
 
@@ -262,6 +267,10 @@ public class PropPanelUseCase extends PropPanelClassifier {
                 ns.addOwnedElement(extensionPoint);
 
                 navigateTo(extensionPoint);
+                // 2002-07-15
+            	// Jaap Branderhorst
+            	// Force an update of the navigation pane to solve issue 323
+            	ProjectBrowser.TheInstance.getNavPane().forceUpdate();
             }
         }
     }

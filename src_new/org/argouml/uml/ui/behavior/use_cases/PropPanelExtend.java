@@ -24,7 +24,7 @@
 // File: PropPanelExtend.java
 // Classes: PropPanelExtend
 // Original Author: mail@jeremybennett.com
-// $Id: PropPanelExtend.java,v 1.2 2002/05/03 19:17:08 jeremybennett Exp $
+// $Id: PropPanelExtend.java,v 1.3 2002/07/15 15:12:13 kataka Exp $
 
 // 22 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support a
 // proper Extend implementation with Use Cases
@@ -34,6 +34,7 @@
 
 package org.argouml.uml.ui.behavior.use_cases;
 
+import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.ui.*;
 import org.argouml.uml.ui.foundation.core.*;
 import ru.novosoft.uml.foundation.extension_mechanisms.*;
@@ -247,6 +248,10 @@ public class PropPanelExtend extends PropPanelModelElement {
                 ns.addOwnedElement(extensionPoint);
 
                 navigateTo(extensionPoint);
+                // 2002-07-15
+            // Jaap Branderhorst
+            // Force an update of the navigation pane to solve issue 323
+            ProjectBrowser.TheInstance.getNavPane().forceUpdate();
             }
         }
     }

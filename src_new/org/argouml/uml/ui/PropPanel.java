@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.22 2002/05/03 19:22:02 jeremybennett Exp $
+// $Id: PropPanel.java,v 1.23 2002/07/15 15:12:13 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -581,6 +581,10 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
                 navigateTo(newTarget);
             }
         }
+        // 2002-07-15
+            // Jaap Branderhorst
+            // Force an update of the navigation pane to solve issue 323
+            ProjectBrowser.TheInstance.getNavPane().forceUpdate();
     }
 
     public boolean isAcceptibleStereotype(MModelElement element) {
