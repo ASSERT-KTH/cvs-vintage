@@ -42,7 +42,7 @@
   <img src="$staticLink.setPath("/images/icon_downarrow.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
    Template name</th>
   <th>Template description</th>
-  <th>Project</th>
+  <th>Location</th>
   <th>Author</th>
   </tr>
 
@@ -119,9 +119,9 @@
 #end
 
 <div class="functnbar3">
-  <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
+  <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />
   #if ($hasDelete)
-    <input type="submit" value="Delete selected" name="eventSubmit_doDeletetemplates" />
+    &#160;<input type="submit" value="Delete selected" name="eventSubmit_doDeletetemplates" />
   #end
 </div>
 
