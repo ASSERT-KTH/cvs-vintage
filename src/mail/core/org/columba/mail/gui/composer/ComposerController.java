@@ -36,6 +36,7 @@ import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.AddressCollector;
+import org.frappucino.swing.MultipleTransferHandler;
 
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -51,6 +52,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
 
+import javax.swing.JEditorPane;
 import javax.swing.event.EventListenerList;
 
 /**
@@ -78,7 +80,7 @@ public class ComposerController extends AbstractFrameController
     private ComposerSpellCheck composerSpellCheck;
     private ComposerModel composerModel;
     private Charset charset;
-    protected EventListenerList listenerList = new EventListenerList();
+    private EventListenerList listenerList = new EventListenerList();
 
     /** Buffer for listeners used by addContainerListenerForEditor and createView */
     private List containerListenerBuffer;
@@ -348,6 +350,18 @@ public class ComposerController extends AbstractFrameController
                 }
             }
         }
+        
+        // Setup DnD for the text and attachment list control.
+        ComposerAttachmentTransferHandler dndTransferHandler = new ComposerAttachmentTransferHandler(attachmentController);
+        attachmentController.view.setDragEnabled(true);
+        attachmentController.view.setTransferHandler(dndTransferHandler);
+
+        JEditorPane editorComponent = (JEditorPane) getEditorController().getComponent();
+        MultipleTransferHandler compositeHandler = new MultipleTransferHandler();
+        compositeHandler.addTransferHandler(editorComponent.getTransferHandler());
+        compositeHandler.addTransferHandler(dndTransferHandler);
+        editorComponent.setDragEnabled(true);
+        editorComponent.setTransferHandler(compositeHandler);
     }
 
     /**
