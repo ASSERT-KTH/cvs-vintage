@@ -19,19 +19,10 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBPRODelegate.java,v 1.1 2004/12/13 16:24:13 benoitf Exp $
+ * $Id: JacORBPRODelegate.java,v 1.2 2005/01/10 09:31:55 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
-
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-
-import javax.rmi.CORBA.Tie;
-import javax.rmi.CORBA.Util;
-
-import org.objectweb.carol.jndi.spi.JacORBIIOPContext;
-import org.objectweb.carol.util.configuration.TraceCarol;
 
 import com.sun.corba.se.internal.javax.rmi.PortableRemoteObject;
 
@@ -43,38 +34,5 @@ import com.sun.corba.se.internal.javax.rmi.PortableRemoteObject;
  */
 public class JacORBPRODelegate extends PortableRemoteObject {
 
-    /**
-     * Makes a server object ready to receive remote calls. Note that subclasses
-     * of PortableRemoteObject do not need to call this method, as it is called
-     * by the constructor.
-     * @param obj the server object to export.
-     * @exception RemoteException if export fails.
-     */
-    public void exportObject(Remote obj) throws RemoteException {
 
-        // For JacORB, we need first to unexport object as it is not associated
-        // to an ORB
-        try {
-            unexportObject(obj);
-        } catch (Exception eee) {
-            TraceCarol.debugExportCarol("JacORBPRODelegate :exportObject() unexport = " + eee);
-        }
-
-        /* Now export it */
-        try {
-            super.exportObject(obj);
-        } catch (Exception ee) {
-            TraceCarol.debugExportCarol("JacORBPRODelegate: exportObject()  export:" + ee);
-        }
-
-        Tie theTie = Util.getTie(obj);
-
-        // Then connect it to the ORB
-        if (theTie != null) {
-            theTie.orb(JacORBIIOPContext.getOrb());
-        }
-
-
-
-    }
 }
