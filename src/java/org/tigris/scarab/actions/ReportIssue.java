@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.107 2002/01/27 01:22:02 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.108 2002/01/28 02:52:45 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -171,7 +171,7 @@ public class ReportIssue extends RequireLoginFirstAction
         
         // search on the option attributes and keywords
         IssueSearch search = new IssueSearch(issue);                
-        List matchingIssues = search.getMatchingIssues(25);
+        List matchingIssues = search.getMatchingIssues();
         
         // set the template to dedupe unless none exist, then skip
         // to final entry screen
