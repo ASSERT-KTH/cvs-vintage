@@ -1,4 +1,4 @@
-// $Id: TestActivityGraphsHelper.java,v 1.5 2004/02/24 08:28:17 linus Exp $
+// $Id: TestActivityGraphsHelper.java,v 1.6 2004/08/26 20:27:18 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,15 +46,15 @@ public class TestActivityGraphsHelper extends TestCase {
 
     public void testGetMetaModelName() {
 	CheckUMLModelHelper.metaModelNameCorrect(
-						 this,
-						 ActivityGraphsFactory.getFactory(),
-						 TestActivityGraphsFactory.allModelElements);
+			 this,
+			 ActivityGraphsFactory.getFactory(),
+			 TestActivityGraphsFactory.allModelElements);
     }
 
     public void testIsValidStereoType() {
 	CheckUMLModelHelper.isValidStereoType(
-					      this,
-					      ActivityGraphsFactory.getFactory(),
-					      TestActivityGraphsFactory.allModelElements);
+		      this,
+		      ActivityGraphsFactory.getFactory(),
+		      TestActivityGraphsFactory.allModelElements);
     }
 }

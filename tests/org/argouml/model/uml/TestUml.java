@@ -1,4 +1,4 @@
-// $Id: TestUml.java,v 1.4 2004/02/24 08:28:17 linus Exp $
+// $Id: TestUml.java,v 1.5 2004/08/26 20:27:18 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,8 @@ public class TestUml extends TestCase
 //            String typeName = type.getClass().getName().toUpperCase();
 //            String expected = type.getName().toUpperCase();
 //            // System.out.println(type.getClass().getName().toUpperCase());
-//            // System.out.println("ORG.ARGOUML.MODEL.UML.UML$TYPE" + key.toString().toUpperCase());
+//            // System.out.println("ORG.ARGOUML.MODEL.UML.UML$TYPE" 
+//            // + key.toString().toUpperCase());
 //            assertEquals(
 //                "Not the correct class",
 //                type.getClass().getName().toUpperCase(),

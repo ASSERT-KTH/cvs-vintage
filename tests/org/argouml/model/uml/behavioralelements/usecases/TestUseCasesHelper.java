@@ -1,4 +1,4 @@
-// $Id: TestUseCasesHelper.java,v 1.5 2004/02/24 08:28:18 linus Exp $
+// $Id: TestUseCasesHelper.java,v 1.6 2004/08/26 20:27:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,15 +45,15 @@ public class TestUseCasesHelper extends TestCase {
 
     public void testGetMetaModelName() {
 	CheckUMLModelHelper.metaModelNameCorrect(
-						 this,
-						 UseCasesFactory.getFactory(),
-						 TestUseCasesFactory.allModelElements);
+			 this,
+			 UseCasesFactory.getFactory(),
+			 TestUseCasesFactory.allModelElements);
     }
 
     public void testIsValidStereoType() {
-	CheckUMLModelHelper.isValidStereoType(
-					      this,
-					      UseCasesFactory.getFactory(),
-					      TestUseCasesFactory.allModelElements);
+        CheckUMLModelHelper.isValidStereoType(
+		      this,
+		      UseCasesFactory.getFactory(),
+		      TestUseCasesFactory.allModelElements);
     }
 }

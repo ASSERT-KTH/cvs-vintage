@@ -1,4 +1,4 @@
-// $Id: StatemachinesTestSuite.java,v 1.2 2004/02/24 08:28:18 linus Exp $
+// $Id: StatemachinesTestSuite.java,v 1.3 2004/08/26 20:27:19 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ public class StatemachinesTestSuite {
     public static Test suite() {
         TestSuite suite =
 	    new TestSuite("Tests for "
-			  + StatemachinesTestSuite.class.getPackage().getName());
+	            + StatemachinesTestSuite.class.getPackage().getName());
 	suite.addTestSuite(TestStateMachinesFactory.class);
 	suite.addTestSuite(TestStateMachinesHelper.class);
         return suite;

@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsTestSuite.java,v 1.2 2004/02/24 08:28:17 linus Exp $
+// $Id: ActivityGraphsTestSuite.java,v 1.3 2004/08/26 20:27:18 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ public class ActivityGraphsTestSuite {
     public static Test suite() {
 	TestSuite suite =
 	    new TestSuite("Tests for "
-			  + ActivityGraphsTestSuite.class.getPackage().getName());
+		+ ActivityGraphsTestSuite.class.getPackage().getName());
 	suite.addTestSuite(TestActivityGraphsFactory.class);
 	suite.addTestSuite(TestActivityGraphsHelper.class);
         return suite;

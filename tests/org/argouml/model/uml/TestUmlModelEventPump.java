@@ -1,4 +1,4 @@
-// $Id: TestUmlModelEventPump.java,v 1.17 2004/07/31 22:30:23 kataka Exp $
+// $Id: TestUmlModelEventPump.java,v 1.18 2004/08/26 20:27:18 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -532,14 +532,16 @@ public class TestUmlModelEventPump extends TestCase {
     /*
       public void testListensDependencyToSuperClass() {
       MDependency dep = CoreFactory.getFactory().createDependency();
-      UmlModelEventPump.getPump().addClassModelEventListener(listener2, dep.getClass(), "behavior");
+      UmlModelEventPump.getPump().addClassModelEventListener(listener2, 
+          dep.getClass(), "behavior");
       dep.addBehavior(StateMachinesFactory.getFactory().createStateMachine());
       assertTrue(eventcalled);
       }
     
       public void testListensSuperClassToDependency() {
       MDependency dep = CoreFactory.getFactory().createDependency();
-      UmlModelEventPump.getPump().addClassModelEventListener(listener2, MModelElement.class, "behavior");
+      UmlModelEventPump.getPump().addClassModelEventListener(listener2, 
+          MModelElement.class, "behavior");
       dep.addBehavior(StateMachinesFactory.getFactory().createStateMachine());
       assertTrue(eventcalled);
       }

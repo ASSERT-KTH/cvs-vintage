@@ -1,4 +1,4 @@
-// $Id: TestModelFacade.java,v 1.11 2004/04/27 11:01:11 thn Exp $
+// $Id: TestModelFacade.java,v 1.12 2004/08/26 20:27:17 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ import org.argouml.model.uml.UmlFactory;
  */
 public class TestModelFacade extends TestCase {
 
-    private ModelFacade _facade = null;
+    private ModelFacade facade = null;
 
     /**
      * Constructor for TestModelFacade.
@@ -93,7 +93,7 @@ public class TestModelFacade extends TestCase {
 	    // Test with null
 	    args[0] = null;
 	    rc = null;
-	    rc = (Boolean) methodIsA.invoke(_facade, args);
+	    rc = (Boolean) methodIsA.invoke(facade, args);
 	    assertNotNull("isA" + objectType + " called with null", rc);
 	    assertTrue("isA" + objectType + " called with null",
 		       !rc.booleanValue());
@@ -103,7 +103,7 @@ public class TestModelFacade extends TestCase {
 	    // Test with an object
 	    args[0] = new Object();
 	    rc = null;
-	    rc = (Boolean) methodIsA.invoke(_facade, args);
+	    rc = (Boolean) methodIsA.invoke(facade, args);
 	    assertNotNull("isA" + objectType + " called with new Object()", rc);
 	    assertTrue("isA" + objectType + " called with new Object()",
 		       !rc.booleanValue());
@@ -123,7 +123,7 @@ public class TestModelFacade extends TestCase {
 				  testObject);
 		    args[0] = testObject;
 		    rc = null;
-		    rc = (Boolean) methodIsA.invoke(_facade, args);
+		    rc = (Boolean) methodIsA.invoke(facade, args);
 		    assertTrue("isA" + objectType
 			       + " did not work with legacy create",
 			       rc.booleanValue());
@@ -145,7 +145,7 @@ public class TestModelFacade extends TestCase {
 				  testObject);
 		    args[0] = testObject;
 		    rc = null;
-		    rc = (Boolean) methodIsA.invoke(_facade, args);
+		    rc = (Boolean) methodIsA.invoke(facade, args);
 		    assertTrue("Not JMI interface",
 			       testObject instanceof RefBaseObject);
 		    assertTrue("isA" + objectType
@@ -183,8 +183,8 @@ public class TestModelFacade extends TestCase {
      */
     protected void setUp() throws Exception {
 	super.setUp();
-	_facade = new ModelFacade();
-	assertNotNull("Cound not get ModelFacade", _facade);
+	facade = new ModelFacade();
+	assertNotNull("Cound not get ModelFacade", facade);
     }
 
 }
