@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: QuickNotepadPlugin.java,v 1.5 2001/11/11 12:26:20 jgellene Exp $
+ * $Id: QuickNotepadPlugin.java,v 1.6 2002/04/11 09:42:14 spestov Exp $
  */
 
 import java.util.Vector;
@@ -40,15 +40,6 @@ public class QuickNotepadPlugin extends EditPlugin
 	public static final String MENU = "quicknotepad.menu";
 	public static final String PROPERTY_PREFIX = "plugin.QuickNotepadPlugin.";
 	public static final String OPTION_PREFIX = "options.quicknotepad.";
-
-	public void start()
-	{
-	}
-
-
-	public void stop()
-	{
-	}
 
 
 	public void createMenuItems(Vector menuItems)
