@@ -1,4 +1,4 @@
-<!-- $Id: attributes.html,v 1.1 2001/09/12 20:47:38 jon Exp $ --> 
+<!-- $Id: attributes.html,v 1.2 2002/09/09 19:52:58 jon Exp $ --> 
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -142,6 +142,16 @@ have a parent that is directly another option_id will have a parent of
 '0' which is a special Attribute Option Id that is never shown in the
 user interface. This is required in order to allow the SQL select clause
 to work on the R_OPTION_OPTION table properly.
+</p>
+
+<p>
+One thing that shows up in the user interface, but is not quite used yet
+in any of the programming logic for Scarab is the idea of an Attribute
+Option weight. The idea of the Attribute Option weight is that it would
+be possible to assign Priority P1 as "weighing more than" Priority P2.
+In the future, we can build on top of that so that people can do
+searches as well as use things like color in the UI to represent
+attribute options which weight more than another one.
 </p>
 
 <p>
