@@ -25,6 +25,7 @@ import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 
 import org.jboss.logging.Logger;
+import org.jboss.util.SerializableEnumeration;
 
 /**
  *   This is a Container for EntityBeans (both BMP and CMP).
@@ -33,7 +34,8 @@ import org.jboss.logging.Logger;
  *   @see EntityEnterpriseContext
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.14 $
+ *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ *   @version $Revision: 1.15 $
  */
 public class EntityContainer
    extends Container
@@ -365,7 +367,21 @@ public class EntityContainer
       {
          // Iterator finder
          Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
-         return containerInvoker.getEntityCollection(c);
+         Collection ec = containerInvoker.getEntityCollection(c);
+		 
+		 // BMP entity finder methods are allowed to return java.util.Enumeration.
+		 // We need a serializable Enumeration, so we can't use Collections.enumeration()
+		 try {
+			 if (mi.getMethod().getReturnType().equals(Class.forName("java.util.Enumeration"))) {
+				 return new SerializableEnumeration(ec);
+			 } else {
+				 return ec;
+			 }
+		 } catch (ClassNotFoundException e) {
+		 	// shouldn't happen
+         	return ec;
+		 }
+                            
       } else
       {
          // Single entity finder
