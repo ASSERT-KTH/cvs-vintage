@@ -9,6 +9,7 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("Index.vm")">Index.vm</a></li>
 <li><a href="$link.setPage("Register.vm")">Register.vm</a></li>
 <li><a href="$link.setPage("Login.vm")">Login.vm</a></li>
+<li><a href="$link.setPage("ChangePassword.vm")">ChangePassword.vm</a></li>
 <li><a href="$link.setPage("IssueList.vm")">IssueList.vm</a></li>
 <li><a href="$link.setPage("Search.vm")">Custom Query</a></li>
 <li><a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a></li>

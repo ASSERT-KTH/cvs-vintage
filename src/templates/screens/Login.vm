@@ -3,8 +3,10 @@ $page.setTitle("Login to Scarab")
 
 <h2>$page.Title</h2>
 
-<p>New users, 
- <a href="$link.setPage("Register.vm")"><strong>register here</strong></a>.</p>
+<p>New users,
+  <a href="$link.setPage("Register.vm")"><strong>register here</strong></a>.</p>
+<p>Forgot your password,
+  <a href="$link.setPage("ForgotPassword.vm")"><strong>click here</strong></a>.</p>
 
 <h3>Login</h3>
 
