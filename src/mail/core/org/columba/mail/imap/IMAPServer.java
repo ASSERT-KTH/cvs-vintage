@@ -336,7 +336,6 @@ public class IMAPServer {
 	private void login() throws IOException, IMAPException,
 			CommandCancelledException {
 		PasswordDialog dialog = new PasswordDialog();
-		;
 
 		boolean authenticated = false;
 		boolean first = true;
@@ -353,19 +352,16 @@ public class IMAPServer {
 		// Try to get Password from Configuration
 		if (item.get("password").length() != 0) {
 			password = item.get("password").toCharArray();
-		} 
-
+		}
 		// Login loop until authenticated
 		while (!authenticated) {
-
 			// On the first try check if we need to show the password dialog
 			// -> not necessary when password was stored
 			if (!first || password == null) {
 				// Show the password dialog
 				if(password == null) password = new char[0]; 
-				
-				dialog.showDialog(item.get("user"), new String(password), item
-						.get("host"), item.getBoolean("save_password"));
+				dialog.showDialog(item.get("user"), item.get("host"), 
+				    new String(password), item.getBoolean("save_password"));
 				if (dialog.success()) {
 					// User pressed OK
 					password = dialog.getPassword();
