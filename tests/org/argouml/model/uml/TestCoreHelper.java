@@ -1,4 +1,4 @@
-// $Id: TestCoreHelper.java,v 1.2 2004/11/19 22:46:24 linus Exp $
+// $Id: TestCoreHelper.java,v 1.3 2004/12/21 18:12:04 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.model.uml;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.util.CheckUMLModelHelper;
 
 import ru.novosoft.uml.foundation.core.MClassifierImpl;
@@ -62,10 +63,26 @@ public class TestCoreHelper extends TestCase {
      * Test stereotypes.
      */
     public void testIsValidStereoType() {
-	CheckUMLModelHelper.isValidStereoType(
-		      this,
-		      CoreFactory.getFactory(),
-		      TestCoreFactory.getAllModelElements());
+        CheckUMLModelHelper.isValidStereoType(
+                          this,
+                          CoreFactory.getFactory(),
+                          TestCoreFactory.getAllModelElements());
+    }
+
+    /**
+     * Test subtype check.
+     */
+    public void testIsSubType() {
+    	assertTrue("Is not a subtype", 
+                       CoreHelper.getHelper().
+                       isSubType(ModelFacade.CLASSIFIER, ModelFacade.CLASS));
+        assertTrue("Is not a parent type", 
+                        !CoreHelper.getHelper().
+                        isSubType(ModelFacade.CLASS, ModelFacade.CLASSIFIER));
+        assertTrue("Is not a parent type", 
+                        !CoreHelper.getHelper().
+                        isSubType(ModelFacade.CLASS, 
+                                  ModelFacade.AGGREGATIONKIND));
     }
 
     /**
