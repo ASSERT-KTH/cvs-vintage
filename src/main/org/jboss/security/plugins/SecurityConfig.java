@@ -20,10 +20,13 @@ import javax.security.auth.login.Configuration;
 
 import org.jboss.system.ServiceMBeanSupport;
 
-/** The SecurityConfigMBean implementation. 
+/** The SecurityConfigMBean implementation. This class needs the
+ javax.security.auth.AuthPermission("setLoginConfiguration") to install
+ the javax.security.auth.login.Configuration when running with a security
+ manager.
  
  @author Scott.Stark@jboss.org
- @version $Revision: 1.3 $
+ @version $Revision: 1.4 $
  */
 public class SecurityConfig extends ServiceMBeanSupport
    implements SecurityConfigMBean
@@ -56,15 +59,14 @@ public class SecurityConfig extends ServiceMBeanSupport
       return "SecurityIntialization";
    }
 
-   /** Get the resource path to the JAAS login configuration file to use.
+   /** Get the name of the mbean that provides the default JAAS login configuration 
     */
    public String getLoginConfig()
    {
       return loginConfigName;
    }
 
-   /** Set the resource path to the JAAS login configuration file to use.
-    The default is "auth.conf".
+   /** Set the name of the mbean that provides the default JAAS login configuration 
     */
    public void setLoginConfig(String name) throws MalformedObjectNameException
    {
