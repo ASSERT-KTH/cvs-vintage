@@ -170,4 +170,6 @@ body #banner #login a {
 	color: #000;
 	font-weight: bold;
 	}
+
+#navsearch form { display: inline }	
 /* Scarab/App - styles end here */
