@@ -101,6 +101,7 @@
     <attribute name="VerifyDeployments">true</attribute>
     <attribute name="MetricsEnabled">false</attribute>
     <attribute name="VerifierVerbose">true</attribute>
+    <attribute name="BeanCacheJMSMonitoringEnabled">false</attribute>
   </mbean>
 
   <!-- Uncomment to add embedded tomcat service  
@@ -137,7 +138,11 @@
     <attribute name="Parser" />
     <attribute name="Port">8082</attribute>
   </mbean>
-  
+
+  <!-- Uncomment to enable JMX monitoring of the bean cache  
+  <mbean code="org.jboss.monitor.BeanCacheMonitor" name="Monitor:name=BeanCacheMonitor"/>
+  -->
+
   <!-- Add your custom MBeans here -->
   
 </server>
