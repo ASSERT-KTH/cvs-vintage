@@ -70,14 +70,14 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: IssueTypeAttributeEdit.java,v 1.6 2002/10/29 00:42:59 elicia Exp $
+ * @version $Id: IssueTypeAttributeEdit.java,v 1.7 2002/10/29 19:09:49 elicia Exp $
  */
 public class IssueTypeAttributeEdit extends RequireLoginFirstAction
 {
     /**
      * Changes the properties of existing AttributeOptions.
      */
-    public synchronized void doSaveissuetypeoptions ( RunData data, TemplateContext context )
+    public synchronized void doSave( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -140,7 +140,7 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
                {
                    scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                }
-               ScarabCache.clear();
+               //ScarabCache.clear();
                scarabR.setConfirmMessage(getLocalizationTool(context).get(DEFAULT_MSG));
             }
         }        
