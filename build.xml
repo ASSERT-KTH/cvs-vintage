@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.104 2002/07/30 02:28:06 thesitesman Exp $ -->
+<!-- $Id: build.xml,v 1.105 2002/08/06 00:14:05 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -409,6 +409,7 @@
       <fileset dir="${source.java}">
         <include name="org/jboss/deployment/EARDeployer.java"/>
         <include name="org/jboss/ejb/EjbModule.java"/>
+        <include name="org/jboss/ejb/EJBDeployer.java"/>
         <include name="org/jboss/ejb/plugins/StatefulSessionFilePersistenceManager.java"/>
         <include name="org/jboss/invocation/**/*.java"/>
         <include name="org/jboss/jms/**/*.java"/>
