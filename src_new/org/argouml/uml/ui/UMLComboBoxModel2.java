@@ -1,5 +1,5 @@
 
-// $Id: UMLComboBoxModel2.java,v 1.31 2003/09/04 20:11:43 thierrylach Exp $
+// $Id: UMLComboBoxModel2.java,v 1.32 2003/09/11 17:50:44 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -387,7 +387,7 @@ public abstract class UMLComboBoxModel2
 
     public void setSelectedItem(Object o) {
         if ((_selectedObject != null && !_selectedObject.equals(o))
-            || _selectedObject == null) {
+            || (_selectedObject == null && o != null)) {
             _selectedObject = o;
             fireContentsChanged(this, -1, -1);
         }
