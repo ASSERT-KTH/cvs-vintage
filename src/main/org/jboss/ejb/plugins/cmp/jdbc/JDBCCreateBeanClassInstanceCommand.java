@@ -29,7 +29,7 @@ import org.jboss.deployment.DeploymentException;
  * <FIX-ME>should not generat a subclass for ejb 1.1</FIX-ME>
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 
 public final class JDBCCreateBeanClassInstanceCommand
@@ -143,7 +143,8 @@ public final class JDBCCreateBeanClassInstanceCommand
       for(Iterator iter = selectors.iterator(); iter.hasNext();)
       {
          SelectorBridge selector = (SelectorBridge) iter.next();
-         map.put(selector.getMethod().getName(), selector);
+         //map.put(selector.getMethod().getName(), selector);
+         map.put(selector.getMethod(), selector);
       }
       return Collections.unmodifiableMap(map);
    }

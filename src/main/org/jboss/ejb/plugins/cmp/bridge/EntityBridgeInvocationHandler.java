@@ -30,7 +30,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class EntityBridgeInvocationHandler implements InvocationHandler
 {
@@ -61,12 +61,22 @@ public class EntityBridgeInvocationHandler implements InvocationHandler
    public Object invoke(Object proxy, Method method, Object[] args)
       throws FinderException
    {
+      // todo find a better workaround
+      // CMP/CMR field bridges are mapped to its abstract method names because of the bug
+      // in reflection introduced in Sun's 1.4 JVM, i.e. when an abstract class C1 extends a super class C2
+      // and implements interface I and C2 and I both declare method with the same signature M,
+      // C1.getMethods() will contain M twice.
+      // ejbSelect methods are mapped to Method objects instead. Because ejbSelect methods having the same name
+      // might have different signatures. Hopefully, the probability of an ejbSelect method to appear in an interface
+      // is lower.
+
       String methodName = method.getName();
 
       BridgeInvoker invoker = (BridgeInvoker) fieldMap.get(methodName);
       if(invoker == null)
       {
-         invoker = (BridgeInvoker) selectorMap.get(methodName);
+         //invoker = (BridgeInvoker) selectorMap.get(methodName);
+         invoker = (BridgeInvoker) selectorMap.get(method);
 
          if(invoker == null)
          {
