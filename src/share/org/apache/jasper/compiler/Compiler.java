@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.12 2000/02/13 06:25:24 akv Exp $
- * $Revision: 1.12 $
- * $Date: 2000/02/13 06:25:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.13 2000/02/23 09:44:36 rubys Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/02/23 09:44:36 $
  *
  * ====================================================================
  * 
@@ -268,7 +268,7 @@ public abstract class Compiler {
      * subclasses of Compiler. This is used by the compile method
      * to do all the compilation. 
      */
-    protected abstract boolean isOutDated();
+    public abstract boolean isOutDated();
     
     /**
      * Set java compiler info

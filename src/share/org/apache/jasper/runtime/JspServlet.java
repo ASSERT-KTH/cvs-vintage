@@ -392,7 +392,7 @@ public class JspServlet extends HttpServlet {
      *  @param classpath explicitly set the JSP compilation path.
      *  @return true if JSP files is newer
      */
-    public synchronized boolean loadJSP(String name, String classpath, 
+    public boolean loadJSP(String name, String classpath, 
 	boolean isErrorPage, HttpServletRequest req, HttpServletResponse res) 
 	throws JasperException, FileNotFoundException 
     {
@@ -409,6 +409,12 @@ public class JspServlet extends HttpServlet {
         
         try {
             outDated = compiler.compile();
+            if ((jspClass == null) || (compiler.isOutDated())) {
+                synchronized ( this ) {
+                    if ((jspClass == null) || (compiler.isOutDated() ))
+                        outDated = compiler.compile();
+                }
+            }
         } catch (FileNotFoundException ex) {
             throw ex;
         } catch (JasperException ex) {

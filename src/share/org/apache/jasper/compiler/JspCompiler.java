@@ -115,16 +115,6 @@ public class JspCompiler extends Compiler implements Mangler {
     }
 
     
-    /**
-     * Return true if the .class file is outdated w.r.t
-     * the JSP file. 
-     *
-     * Can (meant to) be overridden by subclasses of JspCompiler. 
-     */
-    protected boolean isOutDated() {
-        return outDated;
-    }
-
     public static String [] keywords = { 
         "abstract", "boolean", "break", "byte",
         "case", "catch", "char", "class",
@@ -188,7 +178,7 @@ public class JspCompiler extends Compiler implements Mangler {
     }
 
     public final void computeJavaFileName() {
-	javaFileName = className + ".java";
+	javaFileName = getClassName() + ".java";
 	if (outputDir != null && !outputDir.equals(""))
 	    javaFileName = outputDir + File.separatorChar + javaFileName;
     }
@@ -254,9 +244,27 @@ public class JspCompiler extends Compiler implements Mangler {
 	return new String(result);
     }
 
+    /**
+     * Determines whether the current JSP class is older than the JSP file
+     * from whence it came
+     */
+    public boolean isOutDated()
+    {
+        File jspReal = null;
+
+        jspReal = new File(ctxt.getRealPath(jsp.getPath()));
+
+        File classFile = new File(classFileName);
+        if (classFile.exists()) {
+            outDated = classFile.lastModified() < jspReal.lastModified();
+        } else {
+            outDated = true;
+        }
+
+        return outDated;
+    }
 
     private final void computeClassFileData()
-	throws JasperException
     {
 	File jspReal = null;
 
@@ -282,14 +290,19 @@ public class JspCompiler extends Compiler implements Mangler {
 	    } else {
 		cfd = new ClassFileData(outDated, classFileName, null);
 	    }
-            String classNameFromFile = ClassName.getClassName(classFileName);
-            String cn = cfd.getClassName();
-            int lastDot = cn.lastIndexOf('.');
-            if (lastDot != -1)
-                className = cn.substring(lastDot+1,
-                                         classNameFromFile.length());
-            else
-                className = cn;
+            try {
+                String classNameFromFile = 
+                    ClassName.getClassName(classFileName);
+                String cn = cfd.getClassName();
+                int lastDot = cn.lastIndexOf('.');
+                if (lastDot != -1)
+                    className = cn.substring(lastDot+1,
+                                             classNameFromFile.length());
+                else
+                    className = cn;
+            } catch (JasperException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }
@@ -321,10 +334,6 @@ class ClassFileData {
             = Integer.valueOf(className.substring(className.lastIndexOf(Constants.JSP_TOKEN)+
                                                   Constants.JSP_TOKEN.length(), 
                                                   className.length())).intValue();
-    }
-	
-    public boolean isOutDated() {
-        return outDated;
     }
 	
     public String getClassName() {
