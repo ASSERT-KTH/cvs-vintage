@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.headercache;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -27,7 +28,6 @@ import java.io.File;
 
 import java.util.List;
 import java.util.Vector;
-
 
 /**
  * Provides basic support for saving and loading email headers as fast as
@@ -225,7 +225,7 @@ public abstract class AbstractHeaderCache {
         // we use the keys as specified in CachedHeaderfields
         // Note: This is different from loading, where we use the
         // keys from the headercache file
-        columnNames = CachedHeaderfields.getUserDefinedHeaderfieldArray();
+        columnNames = CachedHeaderfields.getUserDefinedHeaderfields();
 
         if (columnNames != null) {
             for (int j = 0; j < columnNames.length; j++) {

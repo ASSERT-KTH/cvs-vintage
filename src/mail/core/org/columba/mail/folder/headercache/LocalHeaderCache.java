@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.headercache;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -43,7 +44,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
-
 
 /**
  * Implementation of a local headercache facility, which is also able to resync
@@ -137,7 +137,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
             }
         }
 
-        String[] userDefinedHeaders = CachedHeaderfields.getUserDefinedHeaderfieldArray();
+        String[] userDefinedHeaders = CachedHeaderfields.getUserDefinedHeaderfields();
 
         if ((userDefinedHeaders != null) &&
                 (userDefinedHeaders.length >= additionalHeaderfieldsCount)) {
@@ -238,7 +238,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
         // write keys of user specified headerfields in file
         // -> this allows a much more failsafe handling, when
         // -> users add/remove headerfields from the cache
-        String[] userDefinedHeaderFields = CachedHeaderfields.getUserDefinedHeaderfieldArray();
+        String[] userDefinedHeaderFields = CachedHeaderfields.getUserDefinedHeaderfields();
 
         if (userDefinedHeaderFields != null) {
             // write number of additional headerfields to file
@@ -392,7 +392,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
      */
     protected void reorganizeCache() throws Exception {
         List list = new LinkedList(Arrays.asList(
-                    CachedHeaderfields.getUserDefinedHeaderfieldArray()));
+                    CachedHeaderfields.getUserDefinedHeaderfields()));
         ListTools.substract(list, additionalHeaderfields);
 
         if (list.size() == 0) {

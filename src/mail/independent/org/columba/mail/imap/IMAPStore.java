@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.imap;
 
 import org.columba.core.command.CommandCancelledException;
@@ -74,7 +75,6 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
-
 
 /**
  * IMAPStore encapsulates IMAPProtocol and the parsers for IMAPFolder.
@@ -536,7 +536,6 @@ public class IMAPStore {
         return null;
     }
 
-
     /**
      * List available Mailboxes.
      *
@@ -941,7 +940,7 @@ public class IMAPStore {
         ensureSelectedState(path);
 
         //	get list of user-defined headerfields
-        String[] headercacheList = CachedHeaderfields.getCachedHeaderfieldArray();
+        String[] headercacheList = CachedHeaderfields.getCachedHeaderfields();
 
         // create string representation
         StringBuffer headerFields = new StringBuffer();

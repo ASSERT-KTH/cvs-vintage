@@ -15,9 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-//
-//$Log: IMAPFolder.java,v $
-//
+
 package org.columba.mail.folder.imap;
 
 import java.io.InputStream;
@@ -66,7 +64,6 @@ import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.message.io.SourceInputStream;
-
 
 public class IMAPFolder extends RemoteFolder {
     /**
@@ -902,7 +899,7 @@ public class IMAPFolder extends RemoteFolder {
 
 
         // cached headerfield list
-        List list = Arrays.asList(CachedHeaderfields.getCachedHeaderfieldArray());
+        List list = Arrays.asList(CachedHeaderfields.getCachedHeaderfields());
         
         for (int i = 0; i < keys.length; i++) {
             if (header.get(keys[i]) != null) {
@@ -1045,5 +1042,4 @@ public class IMAPFolder extends RemoteFolder {
         throws Exception {
         return addMessage(in,null);
     }
-
 }

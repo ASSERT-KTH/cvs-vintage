@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.headercache;
 
 import java.io.InputStream;
@@ -41,7 +42,6 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.parser.MessageParser;
-
 
 /**
  *
@@ -575,32 +575,32 @@ public abstract class CachedFolder extends LocalFolder {
      */
     public Header getHeaderFields(Object uid, String[] keys)
         throws Exception {        	
-		// cached headerfield list
-		List cachedList = Arrays.asList(CachedHeaderfields.getCachedHeaderfieldArray());
-		
-		LinkedList keyList = new LinkedList( Arrays.asList(keys));
-		
-		ListTools.substract( keyList, cachedList);
-		
-		if( keyList.size() == 0 ) {
-			// all wanted headers are cached
-			// get header with UID
-			ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
-			
-			// copy fields
-			Header result = new Header();
-			for (int i = 0; i < keys.length; i++) {
-				if (header.get(keys[i]) != null) {
-					// headerfield found
-					result.set(keys[i], header.get(keys[i]));
-				}
-			}
-			
-			return result;
-		} else {
-			// We need to parse
-			return super.getHeaderFields(uid, keys);
-		}
+            // cached headerfield list
+            List cachedList = Arrays.asList(CachedHeaderfields.getCachedHeaderfields());
+
+            LinkedList keyList = new LinkedList(Arrays.asList(keys));
+
+            ListTools.substract(keyList, cachedList);
+
+            if (keyList.size() == 0) {
+                    // all wanted headers are cached
+                    // get header with UID
+                    ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
+
+                    // copy fields
+                    Header result = new Header();
+                    for (int i = 0; i < keys.length; i++) {
+                            if (header.get(keys[i]) != null) {
+                                    // headerfield found
+                                    result.set(keys[i], header.get(keys[i]));
+                            }
+                    }
+
+                    return result;
+            } else {
+                    // We need to parse
+                    return super.getHeaderFields(uid, keys);
+            }
     }
 
     public Flags getFlags(Object uid) throws Exception {
@@ -627,5 +627,4 @@ public abstract class CachedFolder extends LocalFolder {
         	
         return addMessage(in, null);
     }
-
 }
