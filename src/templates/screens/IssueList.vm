@@ -82,7 +82,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
 
 ## PAGINATION
 #if( $paginated)
-  #paginateIssueList ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchType)
+  #paginateIssueList($resultsPerPage $pageNum $sortColumn $sortPolarity $searchType)
 #end
 
 #macro (prepIssueListPageLink)
@@ -214,7 +214,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
 </div>
 
 #if ($paginated)
-  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+  #paginateIssueList($resultsPerPage $pageNum $sortColumn $sortPolarity $searchType)
 #end
 
 #end
