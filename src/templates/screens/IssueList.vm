@@ -80,9 +80,9 @@ $page.setTitle("Queue list")
   </th>
 
   <th>Issue ID</th>
-#set ($rmuas = $user.getRModuleUserAttributes($module))
+#set ($rmuas = $user.getRModuleUserAttributes($module, $scarabR.CurrentIssueType))
 #if ($rmuas.isEmpty())
- #set ($rmuas = $module.DefaultRModuleUserAttributes)
+ #set ($rmuas = $module.getDefaultRModuleUserAttributes($scarabR.CurrentIssueType))
 #end
 
 #foreach ($rmua in $rmuas)
