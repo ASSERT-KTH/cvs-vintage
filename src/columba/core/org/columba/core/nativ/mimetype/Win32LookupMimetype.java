@@ -24,7 +24,9 @@ import com.jniwrapper.win32.registry.RegistryKeyValues;
 
 /**
  * @author fdietz
- *  
+ * @author switt
+ * 
+ * If no RegistryKey for the file extension is found, mimetype text/plain is used 
  */
 public class Win32LookupMimetype implements LookupMimetype {
 
@@ -36,10 +38,23 @@ public class Win32LookupMimetype implements LookupMimetype {
 	 */
 	public String lookup(File file) {
 		String fileExtension = file.getName().substring(file.getName().lastIndexOf('.'));
-		RegistryKey key = RegistryKey.CLASSES_ROOT.openSubKey(fileExtension);
-		RegistryKeyValues values = key.values();
-		String mimetype = (String) values.get("Content Type");
+		
+		//BUGFIX 982663 unknown Filetypes in Windows are not addable as attachment
+		//20040630 SWITT 
+		String mimetype = new String();
+		if (RegistryKey.CLASSES_ROOT.exists( fileExtension))
+		{
+			RegistryKey key = RegistryKey.CLASSES_ROOT.openSubKey(fileExtension);
+		    RegistryKeyValues values = key.values();
+			mimetype = (String) values.get("Content Type");
+		
+		}
+		else {
+			mimetype = "text/plain";
+		}
+		//end Bugfix
+		
 		return mimetype;
 	}
-
+	
 }
