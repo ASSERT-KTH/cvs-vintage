@@ -1,4 +1,4 @@
-// $Id: ActionNewAction.java,v 1.10 2004/11/01 19:55:10 mvw Exp $
+// $Id: ActionNewActionForMessage.java,v 1.1 2004/11/25 19:15:21 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,15 +36,15 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
  * @author jaap.branderhorst@xs4all.nl
  * @stereotype singleton
  */
-public class ActionNewAction extends AbstractActionNewModelElement {
+public class ActionNewActionForMessage extends AbstractActionNewModelElement {
 
-    private static final ActionNewAction SINGLETON = new ActionNewAction();
+    private static final ActionNewActionForMessage SINGLETON = 
+        new ActionNewActionForMessage();
     
     /**
      * The constructor.
-     * 
      */
-    protected ActionNewAction() {
+    public ActionNewActionForMessage() {
         super();
     }    
 
@@ -71,7 +71,7 @@ public class ActionNewAction extends AbstractActionNewModelElement {
     /**
      * @return Returns the SINGLETON.
      */
-    public static ActionNewAction getInstance() {
+    public static ActionNewActionForMessage getInstance() {
         return SINGLETON;
     }
 
