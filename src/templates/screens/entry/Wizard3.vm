@@ -125,7 +125,6 @@ $page.setTitle("Enter issue")
         <th>File Description</th>
        </tr>
        #foreach ($file in $reportingIssue.Attachments)
-            counter = $velocityCount
            #indexedRows($velocityCount)
            #if ($file.TypeId.toString().equals("1"))
              <tr>
