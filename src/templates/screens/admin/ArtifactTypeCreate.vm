@@ -22,7 +22,7 @@
 <div class="axial">
   <table border="0" cellspacing="2" cellpadding="3">
     <tr>
-    <th>* Issue type name</th>
+    <th>Issue type name</th>
     <td>
        #fieldErrorMsg($itGroup.Name "")  
        <input type="text" size="25" name="$itGroup.Name.Key" value="$!itGroup.Name.Value"/>
