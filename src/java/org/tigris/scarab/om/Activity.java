@@ -40,12 +40,75 @@ public class Activity
         }
         return aAttribute;
     }
-
     public void setAttribute(Attribute v) throws Exception
     {
         aAttribute = v;
         super.setAttribute(v);
     }
+
+    // need a local reference
+    private Transaction aTransaction;                 
+    public Transaction getTransaction() throws Exception
+    {
+        if ( aTransaction==null && (getTransactionId() != null) )
+        {
+            aTransaction = TransactionPeer.retrieveByPK(new NumberKey(getTransactionId()));
+            
+            // make sure the parent attribute is in synch.
+            super.setTransaction(aTransaction);            
+        }
+        return aTransaction;
+    }
+
+    public void setTransaction(Transaction v) throws Exception
+    {
+        aTransaction = v;
+        super.setTransaction(v);
+    }
+
+    // returns Attachment object associated with Activity 
+    private Attachment aAttachment;                 
+    public Attachment getAttachment() throws Exception
+    {
+        if ( aAttachment==null && (getAttachmentId() != null) )
+        {
+            aAttachment = AttachmentPeer.retrieveByPK(new NumberKey(getAttachmentId()));
+            
+            // make sure the parent attribute is in synch.
+            super.setAttachment(aAttachment);            
+        }
+        return aAttachment;
+    }
+
+    public void setAttachment(Attachment v) throws Exception
+    {
+        aAttachment = v;
+        super.setAttachment(v);
+    }
+
+    // returns AttributeOption object associated with NewValue field
+    private AttributeOption newAttributeOption;                 
+    public AttributeOption getNewAttributeOption() throws Exception
+    {
+        if ( newAttributeOption==null && (getNewValue() != null) )
+        {
+            newAttributeOption = AttributeOptionPeer.retrieveByPK(new NumberKey(getNewValue()));
+        }
+        return newAttributeOption;
+    }
+
+    // returns AttributeOption object associated with OldValue field
+    private AttributeOption oldAttributeOption;                 
+    public AttributeOption getOldAttributeOption() throws Exception
+    {
+        if ( oldAttributeOption==null && (getOldValue() != null) )
+        {
+            oldAttributeOption = AttributeOptionPeer.retrieveByPK(new NumberKey(getOldValue()));
+        }
+        return oldAttributeOption;
+    }
+
+
 }
 
 
