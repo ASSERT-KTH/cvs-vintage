@@ -16,6 +16,8 @@ import java.rmi.ServerException;
 import java.rmi.RemoteException;
 import java.rmi.MarshalledObject;
 import java.rmi.server.RemoteServer;
+import java.rmi.server.RMIClientSocketFactory;
+import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -76,7 +78,7 @@ import org.w3c.dom.Element;
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *		@author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
- *      @version $Revision: 1.35 $
+ *      @version $Revision: 1.36 $
  */
 public class JRMPContainerInvoker
    extends RemoteServer
@@ -87,7 +89,16 @@ public class JRMPContainerInvoker
 
    // Attributes ----------------------------------------------------
    protected boolean optimize = false;
+   /** The port the container will be exported on */
    protected int rmiPort = ANONYMOUS_PORT;
+   /** An optional custom client socket factory */
+   protected RMIClientSocketFactory clientSocketFactory;
+   /** An optional custom server socket factory */
+   protected RMIServerSocketFactory serverSocketFactory;
+   /** The class name of the optional custom client socket factory */
+   protected String clientSocketFactoryName;
+   /** The class name of the optional custom server socket factory */
+   protected String serverSocketFactoryName;
    protected boolean jdk122 = false;
    protected Container container;
    protected String jndiName;
@@ -130,7 +141,6 @@ public class JRMPContainerInvoker
    public void setContainer(Container con)
    {
       this.container = con;
-      
       ciDelegate.setContainer(con);
    }
 
@@ -251,7 +261,8 @@ public class JRMPContainerInvoker
       try
       {
          // Export CI
-         UnicastRemoteObject.exportObject(this, rmiPort);
+         UnicastRemoteObject.exportObject(this, rmiPort,
+             clientSocketFactory, serverSocketFactory);
          GenericProxy.addLocal(container.getBeanMetaData().getJndiName(), this);
 
          InitialContext context = new InitialContext();
@@ -476,37 +487,81 @@ public class JRMPContainerInvoker
    }
 
 
-   // XmlLoadable implementation
-   public void importXml(Element element) throws DeploymentException
-   {
-      String opt = MetaData.getElementContent(MetaData.getUniqueChild(element, "Optimized"));
-      optimize = Boolean.valueOf(opt).booleanValue();
-      
-      if ((System.getProperty("java.vm.version").compareTo("1.3") >= 0)) jdk122 = false;
-	  else  jdk122 = true;
-      
-      // Create delegate depending on JDK version
-      if (jdk122)
-      {
-         ciDelegate = new org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker(this);
-      } else
-      {
-         ciDelegate = new org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker(this);
-      }
-      
-      try
-      {
-         String port = MetaData.getElementContent(MetaData.getUniqueChild(element, "RMIObjectPort"));
-         rmiPort = Integer.parseInt(port);
-      } catch(NumberFormatException e)
-      {
-         rmiPort = ANONYMOUS_PORT;
-      } catch(DeploymentException e)
-      {
-         rmiPort = ANONYMOUS_PORT;
-      }
-      Logger.debug("Container Invoker RMI Port='"+(rmiPort == ANONYMOUS_PORT ? "Anonymous" : Integer.toString(rmiPort))+"'");
-      Logger.debug("Container Invoker Optimize='"+optimize+"'");
+    // XmlLoadable implementation
+    public void importXml(Element element) throws DeploymentException
+    {
+        Element optElement = MetaData.getUniqueChild(element, "Optimized");
+        if( optElement != null )
+        {
+            String opt = MetaData.getElementContent(optElement);
+            optimize = Boolean.valueOf(opt).booleanValue();
+        }
+
+        if ((System.getProperty("java.vm.version").compareTo("1.3") >= 0))
+            jdk122 = false;
+        else
+            jdk122 = true;
+
+        // Create delegate depending on JDK version
+        if (jdk122)
+        {
+            ciDelegate = new org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker(this);
+        }
+        else
+        {
+            ciDelegate = new org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker(this);
+        }
+
+        try
+        {
+            Element portElement = MetaData.getUniqueChild(element, "RMIObjectPort");
+            if( portElement != null )
+            {
+                String port = MetaData.getElementContent(portElement);
+                rmiPort = Integer.parseInt(port);
+            }
+        } catch(NumberFormatException e)
+        {
+            rmiPort = ANONYMOUS_PORT;
+        } catch(DeploymentException e)
+        {
+            rmiPort = ANONYMOUS_PORT;
+        }
+
+        // Load any custom socket factories
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try
+        {
+            Element csfElement = MetaData.getOptionalChild(element, "RMIClientSocketFactory");
+            if( csfElement != null )
+            {
+                clientSocketFactoryName = MetaData.getElementContent(csfElement);
+            }
+        }
+        catch(Exception e)
+        {
+            Logger.error(e);
+            clientSocketFactoryName = null;
+        }
+        try
+        {
+            Element ssfElement = MetaData.getOptionalChild(element, "RMIServerSocketFactory");
+            if( ssfElement != null )
+            {
+                serverSocketFactoryName = MetaData.getElementContent(ssfElement);
+            }
+        }
+        catch(Exception e)
+        {
+            Logger.error(e);
+            serverSocketFactoryName = null;
+        }
+        loadCustomSocketFactories(loader);
+
+        Logger.debug("Container Invoker RMI Port='"+(rmiPort == ANONYMOUS_PORT ? "Anonymous" : Integer.toString(rmiPort))+"'");
+        Logger.debug("Container Invoker Client SocketFactory='"+(clientSocketFactory == null ? "Default" : clientSocketFactory.toString())+"'");
+        Logger.debug("Container Invoker Server SocketFactory='"+(serverSocketFactory == null ? "Default" : serverSocketFactory.toString())+"'");
+        Logger.debug("Container Invoker Optimize='"+optimize+"'");
    }
 
 
@@ -536,6 +591,35 @@ public class JRMPContainerInvoker
    }
 
    // Private -------------------------------------------------------
+   private void loadCustomSocketFactories(ClassLoader loader)
+   {
+        try
+        {
+            if( clientSocketFactoryName != null )
+            {
+                Class csfClass = loader.loadClass(clientSocketFactoryName);
+                clientSocketFactory = (RMIClientSocketFactory) csfClass.newInstance();
+            }
+        }
+        catch(Exception e)
+        {
+            Logger.error(e);
+            clientSocketFactory = null;
+        }
+        try
+        {
+            if( serverSocketFactoryName != null )
+            {
+                Class ssfClass = loader.loadClass(serverSocketFactoryName);
+                serverSocketFactory = (RMIServerSocketFactory) ssfClass.newInstance();
+            }
+        }
+        catch(Exception e)
+        {
+            Logger.error(e);
+            serverSocketFactory = null;
+        }
+   }
 
    // Inner classes -------------------------------------------------
 }
