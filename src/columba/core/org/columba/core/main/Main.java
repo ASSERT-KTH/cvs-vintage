@@ -213,6 +213,7 @@ public class Main {
 				MainInterface.pluginManager.registerHandler(
 					new RemoteFilterPluginHandler());
 				MainInterface.pluginManager.registerHandler(new FolderPluginHandler());
+				MainInterface.pluginManager.registerHandler(new org.columba.addressbook.plugin.FolderPluginHandler());
 				
 
 				MainInterface.pluginManager.initPlugins();

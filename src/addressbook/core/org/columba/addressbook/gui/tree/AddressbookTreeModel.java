@@ -14,15 +14,17 @@
 
 package org.columba.addressbook.gui.tree;
 
-import java.lang.reflect.Constructor;
 import java.util.Enumeration;
 
 import javax.swing.tree.DefaultTreeModel;
 
 import org.columba.addressbook.config.FolderItem;
-import org.columba.core.config.DefaultXmlConfig;
-import org.columba.core.xml.XmlElement;
 import org.columba.addressbook.folder.Root;
+import org.columba.addressbook.plugin.FolderPluginHandler;
+import org.columba.core.config.DefaultXmlConfig;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+
 
 public class AddressbookTreeModel extends DefaultTreeModel {
 	//private AddressbookTreeNode rootNode;
@@ -126,36 +128,27 @@ public class AddressbookTreeModel extends DefaultTreeModel {
 
 		// now instanciate the folder classes
 
-		String className = item.get("class");
-		ClassLoader loader = ClassLoader.getSystemClassLoader();
+		String type = item.get("type");
+
+		Object[] args = { item };
+
+		FolderPluginHandler handler =
+			(FolderPluginHandler) MainInterface.pluginManager.getHandler(
+				"addressbook_folder");
+
+
+		AddressbookTreeNode folder = null;
 		try {
-			Class actClass = loader.loadClass(className);
-			//System.out.println("superclass="+actClass.getSuperclass().getName());
 
-			/*
-			if (actClass
-				.getSuperclass()
-				.getName()
-				.equals("org.columba.mail.folder.Folder")) {
-			
-				Folder folder = (Folder) actClass.newInstance();
-			}
-			*/
-
-			Constructor c = actClass.getConstructor(FOLDER_ITEM_ARG);
-
-			if (c != null) {
-				Object[] args = { item };
-
-				AddressbookTreeNode folder =
-					(AddressbookTreeNode) c.newInstance(args);
-				parentFolder.add(folder);
-
-				return folder;
-			}
+			folder = (AddressbookTreeNode) handler.getPlugin(type, args);
+			parentFolder.add(folder);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+
+		
+		return folder;
+
 		/*
 		if (item.getType().equals("columba")) {
 			//ColumbaFolder f = new ColumbaFolder(childNode, item);
@@ -213,7 +206,7 @@ public class AddressbookTreeModel extends DefaultTreeModel {
 			return f;
 		}
 		*/
-		return null;
+		//return null;
 	}
 
 	public AddressbookTreeNode getFolder(int uid) {
@@ -223,8 +216,9 @@ public class AddressbookTreeModel extends DefaultTreeModel {
 			e.hasMoreElements();
 			) {
 			AddressbookTreeNode node = (AddressbookTreeNode) e.nextElement();
-			if ( node instanceof Root ) continue;
-			
+			if (node instanceof Root)
+				continue;
+
 			int id = node.getUid();
 
 			if (uid == id) {

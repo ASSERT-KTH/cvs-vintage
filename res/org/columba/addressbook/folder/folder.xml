@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<folderlist>
+ <folder 
+ 	name="Root" 
+ 	class="org.columba.addressbook.folder.Root" />
+ <folder 
+ 	name="LocalRootFolder" 
+ 	class="org.columba.addressbook.folder.LocalRootFolder" />
+ <folder 
+ 	name="RemoteRootFolder" 
+ 	class="org.columba.addressbook.folder.RemoteRootFolder" />
+ <folder 
+ 	name="AddressbookFolder" 
+ 	class="org.columba.addressbook.folder.AddressbookFolder" />
+</folderlist>
