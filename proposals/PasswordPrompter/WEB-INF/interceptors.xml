@@ -6,6 +6,7 @@
 Useful Prompts:
             
 Http10Connector:
+    if using JSSE or PureTLS:
     promptkeypass="Http10Connector|isSecure|isAttributeSet:keypass|setAttribute:keypass|SSL socket detected, please enter the certificate password:"
 
     if using JSSE:
@@ -13,6 +14,7 @@ Http10Connector:
 
 JDBCRealm
     promptJDBCuser="JDBCRealm|always|isConnectionNameSet|setConnectionName|"JDBC Realm detected, please enter the connection password:"
+    promptJDBCpass="JDBCRealm|always|isConnectionPasswordSet|setConnectionPassword|JDBC Realm detected, please enter the connection password:"
     
 Ajp12Connector
     promptajp12secret="Ajp12Connector|always|always|setSecret|Please enter shutdown password for Ajp12 connector"
