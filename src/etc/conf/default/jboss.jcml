@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss.jcml,v 1.56 2001/08/14 22:53:52 user57 Exp $ -->
+<!-- $Id: jboss.jcml,v 1.57 2001/08/15 15:38:42 vharcq Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -546,6 +546,9 @@
     <attribute name="URLs">
       ../deploy,
       ../deploy/lib
+    </attribute>
+    <attribute name="Timeout">
+      3000
     </attribute>
   </mbean>
 
