@@ -1786,7 +1786,7 @@ public class Issue
         // Create transaction for the MoveIssue activity
         Transaction transaction2 = new Transaction();
         transaction2.create(TransactionTypePeer.MOVE_ISSUE__PK,
-                           user, null);
+                           user);
         transaction2.setAttachment(attachment);
         transaction2.save();
 
@@ -2299,5 +2299,71 @@ public class Issue
         } 
         return hasPerm;
     }
-}
 
+    /**
+     * Used to change a user attribute value from one user attribute
+     * to a new one. This is generally used for creating the association
+     * of user to an issue (through the oldAttributeValue).
+     * returns a string array (size 2) that contains the messages 
+     * used for sending the emails (first string: message to person who
+     * is being switched; second string: message to everyone else associated
+     * to the issue).
+     */
+    public String[] doChangeUserAttributeValue(ScarabUser assignee, 
+                                               ScarabUser assigner, 
+                                               AttributeValue oldAttVal, 
+                                               Attribute newUserAttribute, 
+                                               String reason)
+        throws Exception
+    {
+        Attribute oldAttribute = oldAttVal.getAttribute();
+        // Create attachments and email notification text
+        // For assigned user, and for other associated users
+        Attachment attachment = null;
+        String oldAttrDisplayName = this.getModule()
+             .getRModuleAttribute(oldAttribute, this.getIssueType())
+             .getDisplayValue();
+        String newAttrDisplayName = this.getModule()
+             .getRModuleAttribute(newUserAttribute, this.getIssueType())
+             .getDisplayValue();
+        StringBuffer buf1 = new StringBuffer("You have been "
+               + "switched from attribute ");
+        buf1.append(oldAttrDisplayName).append(" to ");
+        buf1.append(newAttrDisplayName).append('.');
+        String userAction = buf1.toString();
+
+        StringBuffer buf2 = new StringBuffer();
+        buf2.append("User " + assigner.getUserName());
+        buf2.append(" has switched user ");
+        buf2.append(assignee.getUserName()).append(" from ");
+        buf2.append(oldAttrDisplayName).append(" to ");
+        buf2.append(newAttrDisplayName + '.');
+        String othersAction = buf2.toString();
+
+        if (!reason.equals(""))
+        {
+            // Save attachment if reason has been provided
+            attachment = new Attachment();
+            attachment.setName("comment");
+            attachment.setDataAsString(reason);
+            attachment.setTextFields(assigner, this, 
+                                     Attachment.MODIFICATION__PK);
+            attachment.save();
+        }
+
+        // Save transaction record
+        Transaction transaction = new Transaction();
+        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                           assigner, attachment);
+        oldAttVal.startTransaction(transaction);
+
+        // Save assignee value
+        oldAttVal.setAttributeId(newUserAttribute.getAttributeId());
+        oldAttVal.save();
+        
+        String[] results = new String[2];
+        results[0] = userAction;
+        results[1] = othersAction;
+        return results;
+    }
+}
