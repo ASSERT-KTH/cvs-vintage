@@ -192,19 +192,15 @@
 #else
       * 
 #end
-      $l10n.IssueEntryComment
+      $l10n.Reason
    </th>
    <td>
 #set ($intakeAttachment = $intake.Attachment.setKey("_1"))
-#if ($reasonOptional)
-    <small>$l10n.CommentFieldDesc</small>
-#else
+#if (!$reasonOptional)
     #fieldErrorMsg($intakeAttachment.Data "")
-    <small><strong>$l10n.MissedRequired1</strong> $l10n.MissedRequired2</small>
+    <p><small><strong>$l10n.MissedRequired1</strong> $l10n.MissedRequired2</small></p>
 #end
-<p>
 #textAreaMedium("$intakeAttachment.Data.Key" $intakeAttachment.Data)
-</p>
    </td>
  </tr>
 
@@ -214,19 +210,21 @@
 #end
 
 <tr>
-<th width="120">After submit</th>
+<th width="120">$l10n.AfterSubmit</th>
 <td><select name="template_code">
 <option value="1"
-  #if ($userPref == 1) selected="selected" #end>Enter new... </option>
+  #if ($userPref == 1) selected="selected" #end>$l10n.EnterNew $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase()</option>
 #if (($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
      && (!$module.getUserAttributes($issueType).isEmpty()))
   <option value="2"
-  #if ($userPref == 0 || $userPref == 2) selected="selected" #end>Assign issue</option>
+  #if ($userPref == 0 || $userPref == 2) selected="selected" #end>$l10n.AssignIssue</option>
 #end
 <option value="3"
-  #if ($userPref == 3) selected="selected" #end>View this issue</option>
+  #if ($userPref == 3) selected="selected" #end>$l10n.ViewThisIssue</option>
+<option value="5"
+  #if ($userPref == 5) selected="selected" #end>$l10n.AddInitialComment</option>
 <option value="4"
-  #if ($userPref == 4) selected="selected" #end>Return to issue types index</option>
+  #if ($userPref == 4) selected="selected" #end>$l10n.ReturnToHome</option>
 </select></td>
 </tr>
 </table>
