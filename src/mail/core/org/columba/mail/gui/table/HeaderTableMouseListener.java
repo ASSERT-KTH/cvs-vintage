@@ -54,7 +54,8 @@ public class HeaderTableMouseListener extends MouseAdapter {
 				headerTableViewer.getView().getTree().getRowForLocation(
 					event.getX(),
 					event.getY());
-			headerTableViewer.getView().setRowSelectionInterval(row, row);
+			//headerTableViewer.getView().setRowSelectionInterval(row, row);
+			headerTableViewer.getView().getTree().setSelectionRow(row);
 
 		} else if (nodes.length == 1) {
 			// select node
@@ -64,7 +65,8 @@ public class HeaderTableMouseListener extends MouseAdapter {
 				headerTableViewer.getView().getTree().getRowForLocation(
 					event.getX(),
 					event.getY());
-			headerTableViewer.getView().setRowSelectionInterval(row, row);
+			//headerTableViewer.getView().setRowSelectionInterval(row, row);
+			headerTableViewer.getView().getTree().setSelectionRow(row);
 		}
 
 		headerTableViewer.getPopupMenu().show(

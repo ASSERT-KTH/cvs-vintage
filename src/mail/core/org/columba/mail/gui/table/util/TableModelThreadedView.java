@@ -465,12 +465,14 @@ public class TableModelThreadedView extends TableModelPlugin {
 
 			case TableModelPlugin.NODES_INSERTED :
 				{
+					// FIXME
+					/*
 					MessageNode node = getHeaderTableModel().getSelectedMessageNode();
 
 					MessageNode parent = addItem(node);
 
 					getHeaderTableModel().insertNodeInto(node, parent, parent.getChildCount());
-
+					*/
 					return true;
 				}
 

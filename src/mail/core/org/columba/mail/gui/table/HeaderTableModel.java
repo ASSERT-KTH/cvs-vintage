@@ -19,13 +19,14 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
-import org.columba.core.gui.util.treetable.AbstractTreeTableModel;
-import org.columba.core.gui.util.treetable.TreeTableModel;
+import org.columba.core.gui.util.treetable.CustomTreeTableCellRenderer;
+import org.columba.core.gui.util.treetable.Tree;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.util.MessageNode;
@@ -33,11 +34,12 @@ import org.columba.mail.gui.table.util.TableModelFilteredView;
 import org.columba.mail.gui.table.util.TableModelPlugin;
 import org.columba.mail.gui.table.util.TableModelSorter;
 import org.columba.mail.gui.table.util.TableModelThreadedView;
+import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MessageCollection;
 
-public class HeaderTableModel extends AbstractTreeTableModel {
+public class HeaderTableModel extends AbstractTableModel {
 
 	private TableItem item;
 
@@ -54,29 +56,29 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 	private Vector tableModelPlugins;
 
+	private Tree tree;
+	
+	private boolean enableThreadedView;
+	
 	public HeaderTableModel(TableItem item) {
 		//super(null);
 		this.item = item;
 
-		/*
-		Vector v = new Vector();
-		for (int i = 0; i < item.getChildCount(); i++) {
-			HeaderItem headerItem = item.getHeaderItem(i);
-			int position = headerItem.getInteger("position");
-			boolean enabled = headerItem.getBoolean("enabled");
-			if
-		}
-		*/
-
 		tableModelPlugins = new Vector();
 
+		/*
 		root = new MessageNode("root", null);
 		super.setRoot(root);
-
+		*/
 		uidList = new Hashtable();
 
 		//mutex = false;
 
+	}
+
+	public void setTree(Tree tree) {
+		this.tree = tree;
+		tree.setRootNode(new MessageNode(new ColumbaHeader(), "0"));
 	}
 
 	public void registerPlugin(TableModelPlugin plugin) {
@@ -104,8 +106,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 	}
 
 	protected void removeNode(MessageNode messageNode) {
-
-		removeNodeFromParent(messageNode);
+		getTreeModel().removeNodeFromParent(messageNode);
 
 	}
 
@@ -143,14 +144,24 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 				}
 
 				if (uids.length < 100)
-					nodeChanged(node);
+					getTreeModel().nodeChanged(node);
 			} else {
 				System.out.println("unable to find message");
 			}
 		}
 
+
+		fireTableDataChanged();
+		/*
 		if (uids.length >= 100)
 			update();
+		*/
+		
+		
+	}
+
+	public DefaultTreeModel getTreeModel() {
+		return (DefaultTreeModel) tree.getModel();
 	}
 
 	public void removeHeaderList(Object[] uids) {
@@ -162,7 +173,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 					uidList.remove(uids[i]);
 				}
 
-				update();
+				//update();
 			} else { // single operation per message
 				for (int i = 0; i < uids.length; i++) {
 					//headerList.remove(uids[i]);
@@ -172,6 +183,8 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 				}
 			}
 		}
+
+		fireTableDataChanged();
 	}
 
 	public void addHeaderList(HeaderInterface[] headerList) throws Exception {
@@ -202,7 +215,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 			getRootNode().add(child);
 
-			nodeStructureChanged(getRootNode());
+			getTreeModel().nodeStructureChanged(getRootNode());
 			return;
 		}
 		try { // we don't need this here
@@ -224,7 +237,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 				} else {
 					int index =
 						getTableModelSorter().getInsertionSortIndex(node);
-					insertNodeInto(node, getRootNode(), index);
+					getTreeModel().insertNodeInto(node, getRootNode(), index);
 					//hashtable.put( message.getUID(), node );
 				}
 			}
@@ -235,11 +248,13 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 	}
 
+	/*
 	public TreeNode[] getPathToRoot(TreeNode aNode, int depth) {
-
+	
 		TreeNode[] nodes = super.getPathToRoot(aNode, depth);
 		return nodes;
 	}
+	*/
 
 	public TableModelFilteredView getTableModelFilteredView() {
 		return (TableModelFilteredView) tableModelPlugins.get(0);
@@ -259,17 +274,20 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 	public void update() {
 
+		if (root == null)
+			root = new MessageNode(new ColumbaHeader(), "0");
+
 		root.removeAllChildren();
 
 		uidList.clear();
 
 		if (headerList == null) {
-			nodeStructureChanged(root);
+			tree.setRootNode(root);
 			return;
 		}
 
 		if (headerList.count() == 0) {
-			nodeStructureChanged(root);
+			tree.setRootNode(root);
 			return;
 		}
 
@@ -298,8 +316,10 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			ex.printStackTrace();
 		}
 
-		nodeStructureChanged(root);
-
+		tree.setRootNode(root);
+		fireTableDataChanged();
+		//tree.revalidate();
+		//tree.repaint();
 	}
 
 	public void setHeaderList(HeaderList list) {
@@ -309,21 +329,23 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 	/***************************** treemodel interface ********************************/ //
 	// The TreeModel interface
 	//
-	public int getChildCount(Object node) {
 
+	/*
+	public int getChildCount(Object node) {
+	
 		DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
 		int count = treeNode.getChildCount();
 		return count;
 	}
-
+	
 	public Object getChild(Object node, int i) {
-
+	
 		DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
 		DefaultMutableTreeNode child =
 			(DefaultMutableTreeNode) treeNode.getChildAt(i);
 		return child;
 	}
-
+	
 	public boolean isLeaf(Object node) {
 		//Message message = (Message) node;
 		DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
@@ -334,6 +356,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			result = false;
 		return result;
 	}
+		*/
 
 	public int getColumnCount() {
 		int count = 0;
@@ -365,100 +388,57 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 		return -1;
 	}
+	
+	public void enableThreadedView( boolean b)
+	{
+		enableThreadedView = b;
+	}
 
 	public Class getColumnClass(int column) {
-		//return getValueAt( getRoot() , column).getClass();
-		//return cTypes[column];
+		
+		if ( enableThreadedView )
+		{
+		
 		String name = getColumnName(column);
-		if (name.equalsIgnoreCase("subject"))
-			return TreeTableModel.class;
+		if (name.equalsIgnoreCase("Subject"))
+			return CustomTreeTableCellRenderer.class;
 		else
-			return getValueAt(getRoot(), column).getClass();
+			return getValueAt(0, column).getClass();
+		}
+		else
+		return getValueAt(0, column).getClass();
 
-		/*
-		String name = getColumnName(column);
-		if (name.equalsIgnoreCase("subject")) {
-			return TreeTableModel.class;
-		} else if (name.equalsIgnoreCase("date")) {
-			return Date.class;
-		} else if (name.equalsIgnoreCase("size")) {
-			return Integer.class;
-		} else if (name.equalsIgnoreCase("status")) {
-			return org.columba.mail.message.Flags.class;
-		} else if (name.equalsIgnoreCase("flagged")) {
-			return Boolean.class;
-		} else if (name.equalsIgnoreCase("attachment")) {
-			return Boolean.class;
-		} else if (name.equalsIgnoreCase("priority")) {
-			return Integer.class;
-		} else if (name.equalsIgnoreCase("fetch")) {
-			return Boolean.class;
-		} else if (name.equalsIgnoreCase("delete")) {
-			return Boolean.class;
-		} else
-			return String.class;
-		*/
+		//return null;
+
 	}
 
-	public Object getValueAt(Object node, int col) {
+	public int getRowCount() {
+		return tree.getRowCount();
+	}
 
+	public Object getValueAt(int row, int col) {
+		TreePath treePath = tree.getPathForRow(row);
+		return (MessageNode) treePath.getLastPathComponent();
+
+		//if ( col == 0 ) return tree;
+	}
+
+	/*
+	public Object getValueAt(Object node, int col) {
+	
 		MessageNode treeNode = (MessageNode) node;
 		return treeNode;
-
-		/*
-		HeaderInterface header = null;
-		if (treeNode.equals(getRootNode()))
-			return null;
-		if (treeNode.getUserObject() instanceof String)
-			return new String("root");
-		else {
-			//System.out.println("found message instance");
-			header = (ColumbaHeader) treeNode.getUserObject();
-		}
-		
-		if (header == null)
-			return "";
-		String column = getColumnName(col);
-		//Message message = folder.get( row );
-		//if ( message == null ) return "";
-		if (column.equals("Status")) {
-			return header.getFlags();
-		} else if (column.equals("Flagged")) {
-			return header.get("columba.flags.flagged");
-		} else if (column.equals("Fetch")) {
-			return (Boolean) header.get("columba.fetchstate");
-		} else if (column.equals("Date")) { //Date date = message.getDate();
-			if (header.get("columba.date") instanceof Date) {
-				Date date = (Date) header.get("columba.date");
-				return date;
-			} else {
-		
-				return (String) header.get("columba.date");
-			}
-		} else if (column.equals("Attachment")) {
-			//Boolean b = new Boolean( message.getAttachment() );
-			return (Boolean) header.get("columba.attachment");
-		} else if (column.equals("Size")) {
-			//Integer i = new Integer( message.getSize() );
-			return (Integer) header.get("columba.size");
-		} else if (column.equals("From")) {
-			//String s = message.getShortFrom();
-			return (String) header.get("columba.from");
-		} else if (column.equals("Priority")) {
-			//int s = message.getPriority();
-			//return new Integer( s );
-			return (Integer) header.get("columba.priority");
-		} else {
-			Object object = header.get(column);
-			if (object == null) {
-				System.out.println("column=" + column + " doesn't exist");
-				return new String("");
-			}
-			return object;
-		}
-		*/
+	
 	}
+	*/
 
+	public boolean isCellEditable(int row, int col) {
+		String name = getColumnName(col);
+		if (name.equalsIgnoreCase("Subject"))
+			return true;
+
+		return false;
+	}
 	public MessageNode getMessageNode(Object uid) {
 		return (MessageNode) uidList.get(uid);
 	}

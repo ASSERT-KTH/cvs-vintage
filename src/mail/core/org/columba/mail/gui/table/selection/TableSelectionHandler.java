@@ -19,20 +19,21 @@ package org.columba.mail.gui.table.selection;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.tree.TreePath;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.table.util.MessageNode;
 
-public class TableSelectionHandler
-	extends SelectionHandler
-	implements TreeSelectionListener {
+public class TableSelectionHandler extends SelectionHandler
+//implements TreeSelectionListener
+implements ListSelectionListener {
 
 	private TableView view;
 	private LinkedList messages;
@@ -46,8 +47,11 @@ public class TableSelectionHandler
 	public TableSelectionHandler(TableView view) {
 		super("mail.table");
 		this.view = view;
-		view.addTreeSelectionListener(this);
-		
+
+		//view.getTree().addTreeSelectionListener(this);
+
+		view.getSelectionModel().addListSelectionListener(this);
+
 		messages = new LinkedList();
 	}
 
@@ -70,39 +74,15 @@ public class TableSelectionHandler
 
 		folder = (Folder) ref.getFolder();
 
-		// TODO implement setSelection
-		/*
-		if ( ref != null )
-		{
-		
-		Object[] uids = ref.getUids();
-		
-		view.clearSelection();
-		view.requestFocus();
-		
-		TreePath path[] = new TreePath[uids.length];
-		}
-		*/
-
-		/*
-		for (int i = 0; i < uids.length; i++) {
-			path[i] =
-					view.getMessagNode(uids[i]).getSelectionTreePath();
-			view.setLeadSelectionPath(path[i]);
-			view.setAnchorSelectionPath(path[i]);
-			view.expandPath(path[i]);
-		}
-		
-		view.setSelectionPaths(path);
-		 */
-
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
 	 */
-	public void valueChanged(TreeSelectionEvent e) {
 
+	/*
+	public void valueChanged(TreeSelectionEvent e) {
+	
 		for (int i = 0; i < e.getPaths().length; i++) {
 			if (e.getPaths()[i].getLastPathComponent()
 				instanceof MessageNode) {
@@ -112,7 +92,7 @@ public class TableSelectionHandler
 					ColumbaLogger.log.debug(
 						"Message added to Selection= " + message.getUid());
 					messages.add(message);
-
+	
 				} else {
 					ColumbaLogger.log.debug(
 						"Message removed from Selection= " + message.getUid());
@@ -120,36 +100,12 @@ public class TableSelectionHandler
 				}
 			}
 		}
-
+	
 		fireSelectionChanged(
 			new TableSelectionChangedEvent(folder, getUidArray()));
-
-		/*
-		DefaultMutableTreeNode node =
-			(DefaultMutableTreeNode) view
-				.getTree()
-				.getLastSelectedPathComponent();
-		
-		if (node == null)
-			return;
-		
-		MessageNode[] nodes = getView().getSelectedNodes();
-		if (nodes == null) {
-			return;
-		}
-		
-		//getActionListener().changeMessageActions();
-		
-		if (nodes.length == 0)
-			return;
-		
-		newUidList = MessageNode.toUidArray(nodes);
-		
-		
-		getTableSelectionManager().fireMessageSelectionEvent(null, newUidList);
-		*/
+	
 	}
-
+	*/
 	/**
 	 * Sets the folder.
 	 * @param folder The folder to set
@@ -169,4 +125,29 @@ public class TableSelectionHandler
 
 		return result;
 	}
+	/* (non-Javadoc)
+	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+	 */
+	public void valueChanged(ListSelectionEvent e) {
+
+		messages = new LinkedList();
+
+		ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+		if (lsm.isSelectionEmpty()) {
+			//no rows are selected
+		} else {
+			int[] rows = view.getSelectedRows();
+
+			for (int i = 0; i < rows.length; i++) {
+				TreePath path = view.getTree().getPathForRow(rows[i]);
+				MessageNode node = (MessageNode) path.getLastPathComponent();
+				messages.add(node);
+			}
+		}
+
+		fireSelectionChanged(
+			new TableSelectionChangedEvent(folder, getUidArray()));
+
+	}
+
 }

@@ -31,7 +31,7 @@ import javax.swing.tree.TreePath;
 import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.treetable.JTreeTable;
+import org.columba.core.gui.util.treetable.TreeTable;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
 import org.columba.mail.gui.table.plugins.BooleanRenderer;
@@ -44,7 +44,6 @@ import org.columba.mail.gui.table.plugins.HeaderTableSizeRenderer;
 import org.columba.mail.gui.table.plugins.PriorityRenderer;
 import org.columba.mail.gui.table.plugins.StatusRenderer;
 import org.columba.mail.gui.table.util.MessageNode;
-import org.columba.mail.gui.table.util.SubjectTreeCellRenderer;
 import org.columba.mail.gui.table.util.TableModelFilteredView;
 import org.columba.mail.gui.table.util.TableModelThreadedView;
 import org.columba.mail.message.HeaderList;
@@ -57,7 +56,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @version 0.9.1
  * @author Frederik
  */
-public class TableView extends JTreeTable {
+public class TableView extends TreeTable {
 
 	protected HeaderTableModel headerTableModel;
 
@@ -79,10 +78,15 @@ public class TableView extends JTreeTable {
 	protected HeaderList headerList;
 
 	public TableView(HeaderTableModel headerTableModel) {
-		super(headerTableModel);
+		super();
 
 		this.headerTableModel = headerTableModel;
 
+		setModel(headerTableModel);
+
+		addMouseListenerToHeaderInTable();
+
+		//setSelectionModel(new HeaderTableSelectionModel());
 		tableModelFilteredView = new TableModelFilteredView(headerTableModel);
 
 		tableModelSorter = new HeaderTableModelSorter(headerTableModel);
@@ -99,6 +103,8 @@ public class TableView extends JTreeTable {
 		headerTableModel.registerPlugin(tableModelThreadedView);
 		headerTableModel.registerPlugin(tableModelSorter);
 
+		getTree().setCellRenderer(new SubjectTreeRenderer());
+
 		try {
 			initRenderer(false);
 			//headerTableModel.update();
@@ -106,10 +112,9 @@ public class TableView extends JTreeTable {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
-		addMouseListenerToHeaderInTable();
 		
-		//setSelectionModel(new HeaderTableSelectionModel());
+
+		adjustColumn();
 
 	}
 
@@ -153,12 +158,15 @@ public class TableView extends JTreeTable {
 					"headerTable->registerRenderer: " + ex.getMessage());
 			}
 
-			setTreeCellRenderer(new SubjectTreeCellRenderer());
+			((HeaderTableModel) getModel()).enableThreadedView(true);
+
+			//getTree().setCellRenderer()new SubjectTreeCellRenderer());
 
 		} else {
 			//tree.setRootVisible(false);
 
-			setTreeCellRenderer(null);
+			 ((HeaderTableModel) getModel()).enableThreadedView(false);
+			//setTreeCellRenderer(null);
 			TableColumn tc = null;
 			try {
 				tc = getColumn("Subject");
@@ -179,6 +187,49 @@ public class TableView extends JTreeTable {
 	 * @param f a <code>Folder</code>
 	 * @see Folder
 	 */
+
+	protected void adjustColumn() {
+		TableItem tableItem =
+			(TableItem) MailConfig.getMainFrameOptionsConfig().getTableItem();
+
+		//.clone();
+		//v.removeEnabledItem();
+
+		for (int i = 0; i < tableItem.count(); i++) {
+			HeaderItem v = tableItem.getHeaderItem(i);
+			boolean enabled = v.getBoolean("enabled");
+
+			if (enabled == false)
+				continue;
+
+			String name = v.get("name");
+			int size = v.getInteger("size");
+			int position = v.getInteger("position");
+			
+			TableColumn tc = null;
+
+			//ColumbaLogger.log.debug("name=" + name);
+
+			try {
+				tc = getColumn(name);
+			} catch (Exception ex) {
+				System.out.println(
+					"headerTable->registerRenderer: " + ex.getMessage());
+			}
+
+			if (tc == null)
+				continue;
+
+			tc.setPreferredWidth(size);
+			
+			try {
+				int index = getColumnModel().getColumnIndex(name);
+				getColumnModel().moveColumn(index, position);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
 
 	protected void initRenderer(boolean b) throws Exception {
 
@@ -273,7 +324,7 @@ public class TableView extends JTreeTable {
 					position);
 
 			} else if (name.equalsIgnoreCase("Subject")) {
-
+				/*
 				registerRenderer(
 					"Subject",
 					new HeaderTableCommonRenderer(getTree(), "Subject"),
@@ -284,6 +335,7 @@ public class TableView extends JTreeTable {
 					size,
 					false,
 					position);
+				*/
 			} else {
 				String str = new String();
 				try {
@@ -469,4 +521,3 @@ public class TableView extends JTreeTable {
 	}
 
 }
-

@@ -16,12 +16,9 @@
 
 package org.columba.mail.gui.table;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.util.Vector;
 
 import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.TableColumn;
@@ -31,6 +28,7 @@ import javax.swing.tree.TreePath;
 import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.CScrollPane;
+import org.columba.core.gui.util.treetable.Tree;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.SwingWorker;
@@ -40,10 +38,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
-import org.columba.mail.gui.table.action.CopyAction;
-import org.columba.mail.gui.table.action.CutAction;
 import org.columba.mail.gui.table.action.HeaderTableActionListener;
-import org.columba.mail.gui.table.action.PasteAction;
 import org.columba.mail.gui.table.selection.TableSelectionManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
@@ -119,9 +114,11 @@ public class TableController implements TreeSelectionListener {
 		//.clone();
 		//headerTableItem.removeEnabledItem();
 
+	
 		headerTableModel = new HeaderTableModel(headerTableItem);
-
+		
 		view = new TableView(headerTableModel);
+		headerTableModel.setTree((Tree)view.getTree());
 
 		tableSelectionManager = new TableSelectionManager();
 
@@ -154,11 +151,12 @@ public class TableController implements TreeSelectionListener {
 
 		//view.addTreeSelectionListener(this);
 
+		
 		getHeaderTableModel().getTableModelSorter().setSortingColumn(
 			headerTableItem.get("selected"));
 		getHeaderTableModel().getTableModelSorter().setSortingOrder(
 			headerTableItem.getBoolean("ascending"));
-
+		
 		
 	}
 

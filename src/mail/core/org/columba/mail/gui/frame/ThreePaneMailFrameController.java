@@ -180,17 +180,19 @@ public class ThreePaneMailFrameController
 				"enable_threaded_view",
 				false);
 
+		
 		tableController.getView().enableThreadedView(enableThreadedView);
 
 		tableController.getView().getTableModelThreadedView().toggleView(
 			enableThreadedView);
-
+		
 		TableChangedEvent ev =
 			new TableChangedEvent(TableChangedEvent.UPDATE, folder);
 
 		TableUpdater.tableChanged(ev);
 
-		boolean ascending = tableController.isAscending();
+		// FIXME
+		//boolean ascending = tableController.isAscending();
 
 		tableController.getView().clearSelection();
 		tableController.getView().scrollRectToVisible(
