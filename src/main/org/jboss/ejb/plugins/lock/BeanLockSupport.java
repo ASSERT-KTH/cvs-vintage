@@ -24,7 +24,7 @@ import java.util.HashSet;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * <p><b>Revisions:</b><br>
  *  <p><b>2001/07/29: marcf</b>
@@ -171,7 +171,7 @@ public abstract class BeanLockSupport
    // This following is for deadlock detection
    protected static HashMap waiting = new HashMap();
 
-   public void deadlockDetection(Transaction miTx)
+   public void deadlockDetection(Transaction miTx) throws Exception
    {
       HashSet set = new HashSet();
       set.add(miTx);
@@ -187,7 +187,7 @@ public abstract class BeanLockSupport
 	       if (set.contains(waitingFor))
 	       {
 		  log.error("Application deadlock detected: " + miTx + " has deadlock conditions");
-		  throw new RuntimeException("application deadlock detected");
+		  throw new ApplicationDeadlockException("application deadlock detected");
 	       }
 	       set.add(waitingFor);
 	    }
