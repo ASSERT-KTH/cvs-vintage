@@ -6,17 +6,19 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMappingFactory.java,v 1.15 2004/12/26 16:39:04 loubyansky Exp $
+// $Id: JavaWsdlMappingFactory.java,v 1.16 2005/01/24 10:25:55 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.xml.binding.UnmarshallingContext;
 import org.jboss.xml.binding.ObjectModelFactory;
 import org.jboss.xml.binding.Unmarshaller;
 import org.jboss.xml.binding.UnmarshallerFactory;
+import org.jboss.xml.binding.JBossXBException;
 import org.xml.sax.Attributes;
 
 import javax.xml.namespace.QName;
 import java.io.InputStream;
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -46,7 +48,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
    /**
     * Factory method for JavaWsdlMapping
     */
-   public JavaWsdlMapping parse(URL jaxrpcMappingFile) throws Exception
+   public JavaWsdlMapping parse(URL jaxrpcMappingFile) throws IOException
    {
       if(jaxrpcMappingFile == null)
       {
@@ -60,6 +62,14 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
       {
          JavaWsdlMapping javaWsdlMapping = (JavaWsdlMapping)unmarshaller.unmarshal(is, this, null);
          return javaWsdlMapping;
+      }
+      catch (JBossXBException e)
+      {
+         IOException ioex = new IOException("Cannot parse: " + jaxrpcMappingFile);
+         Throwable cause = e.getCause();
+         if (cause != null)
+            ioex.initCause(cause);
+         throw ioex;
       }
       finally
       {
