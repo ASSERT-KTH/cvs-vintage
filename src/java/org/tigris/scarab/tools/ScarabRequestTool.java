@@ -1989,12 +1989,34 @@ try{
     // template timing methods
     private long startTime;
     private long lapTime;
+
+    /**
+     * Should be called near the beginning of a template or wherever timing
+     * should start.
+     */
     public void startTimer()
     {
         startTime = System.currentTimeMillis();
         lapTime = startTime;
     }
 
+    /**
+     * Useful when performance tuning.  Usage is to call
+     * <pre><code>
+     * $scarabR.startTimer()
+     * ...
+     * $scarabR.reportTimer("foo")
+     * ...
+     * $scarabR.reportTimer("bar")
+     *
+     * or
+     *
+     * $scarabG.log( $scarabR.reportTimer("bar") )
+     * </code></pre>
+     *
+     * The labels are useful when output is directed to a log file, it can 
+     * be "", if the output is written as part of the response.
+     */
     public String reportTimer(String mesg)
     {
         long endTime = System.currentTimeMillis();
