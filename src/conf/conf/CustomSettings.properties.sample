@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------
-# $Id: CustomSettings.properties.sample,v 1.1 2004/05/10 18:21:51 thierrylach Exp $
+# $Id: CustomSettings.properties.sample,v 1.2 2004/06/04 22:08:39 dabbous Exp $
 #
 # This is the custom settings file for Scarab.  You may override any
 # of Scarab's settings in TurbineResources.properties and Scarab.properties
@@ -58,3 +58,10 @@
 #torque.dsfactory.scarab.connection.url = jdbc:mysql://127.0.0.1:3306/scarab
 #torque.dsfactory.scarab.connection.user = sa
 #torque.dsfactory.scarab.connection.password =
+
+## file attachment settings
+# The default configuration keeps all file attachments on 
+# Disk, when the associations to the attachments are removed 
+# from their issues. If you change this property to "true"
+# the files will also be removed physically.
+scarab.attachment.remove.permanent = false

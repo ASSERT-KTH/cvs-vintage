@@ -72,6 +72,7 @@ import org.apache.commons.collections.SequencedHashMap;
 import org.apache.torque.map.DatabaseMap;
 import org.apache.torque.oid.IDBroker;
 import org.apache.torque.util.BasePeer;
+import org.apache.turbine.Turbine;
 import org.apache.fulcrum.localization.Localization;
 
 // Scarab classes
@@ -85,6 +86,7 @@ import org.tigris.scarab.tools.localization.Localizable;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.TotalVotesAttribute;
 import org.tigris.scarab.attribute.OptionAttribute;
+import org.tigris.scarab.util.MutableBoolean;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.workflow.WorkflowFactory;
@@ -97,7 +99,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.337 2004/05/10 21:28:40 thierrylach Exp $
+ * @version $Id: Issue.java,v 1.338 2004/06/04 22:08:43 dabbous Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3802,38 +3804,74 @@ public class Issue
     }
 
     /**
-     * If the File hasn't changed, it will return a valid ActivitySet
-     * otherwise it returns null.
+     * Remove the attachment. 
+     * On return the MutableBoolean physicallyDeleted is set to true,
+     * if the attachment file also was removed by this operation.
+     * If the attached File still exists for any reason, physicallyDeleted
+     * will be set to false.
+     * Note: You can enable/disable physical deletion by setting the
+     *       environment property scarab.attachment.remove.permanent
+     *       to true/false (false is the default setting).
      */
-    public ActivitySet doDeleteFile(ActivitySet activitySet, 
-                                     Attachment attachment, ScarabUser user)
+    public ActivitySet doRemoveAttachment(ActivitySet activitySet,
+                                          MutableBoolean physicallyDeleted,
+                                          Attachment attachment, 
+                                          ScarabUser user)
         throws Exception
     {
+        boolean attachmentPhysicallyDeleted = false;
+        boolean physicalDeletionAllowed = Turbine.getConfiguration()
+        .getBoolean("scarab.attachment.remove.permanent",false);
+
+        if(physicalDeletionAllowed)
+        {
+            attachmentPhysicallyDeleted = attachment.deletePhysicalAttachment();
+            physicallyDeleted.set(attachmentPhysicallyDeleted);
+        }
+
         attachment.setDeleted(true);
         attachment.save();
 
         // Generate description of modification
-        String name = attachment.getFileName();
-        Object[] args = {name};
-        String desc = Localization.format(
-            ScarabConstants.DEFAULT_BUNDLE_NAME,
-            getLocale(),
-            "FileDeletedDesc", args);
+        String name = new String();
+        Localizable l10nMessage;
+        if (!physicalDeletionAllowed)
+        {
+            name = attachment.getFileName();
+            l10nMessage = new L10NMessage(L10NKeySet.AttachmentDeletedDesc, name);
+        }
+        else if (attachmentPhysicallyDeleted)
+        {
+            name = attachment.getFileName();
+            l10nMessage = new L10NMessage(L10NKeySet.FileDeletedDesc, name );
+        }
+        else
+        {
+            name = attachment.getFullPath();
+            l10nMessage = new L10NMessage(L10NKeySet.FileNotDeletedDesc, name);
+        }
 
-        if (activitySet == null)
+        if (activitySet == null) 
         {
              // Save activitySet record
             activitySet = getActivitySet(user,
-                                      ActivitySetTypePeer.EDIT_ISSUE__PK);
+                              ActivitySetTypePeer.EDIT_ISSUE__PK);
             activitySet.save();
         }
+
         // Save activity record
+        // [TODO] here we currently write resolved language Strings
+        //        into the database. I think, this should eventually 
+        //        be changed to a language independent solution. HD
+        String desc = l10nMessage.getMessage();        
         ActivityManager
             .createTextActivity(this, null, activitySet,
                                 desc, attachment, name, null);
+
         return activitySet;
     }
 
+    
     /**
      * Returns users assigned to all user attributes.
      */

@@ -61,7 +61,7 @@ package org.tigris.scarab.tools.localization;
  * Note: The velocity templates use much more resource keys, which are NOT
  * defined here, because they are not relevant for the java-part of this software.
  * 
- * @version $Id: L10NKeySet.java,v 1.2 2004/05/10 21:04:47 dabbous Exp $
+ * @version $Id: L10NKeySet.java,v 1.3 2004/06/04 22:08:39 dabbous Exp $
  *
  * Default implementation of a Localization Key.
  * <p>
@@ -146,6 +146,10 @@ public class L10NKeySet
     public static final LocalizationKey YourChangesWereSaved                 = new L10NKey("YourChangesWereSaved");
     public static final LocalizationKey MoreInformationWasRequired           = new L10NKey("MoreInformationWasRequired");
     public static final LocalizationKey NoChangesMade                        = new L10NKey("NoChangesMade");
+    public static final LocalizationKey AttachmentDeletedDesc                = new L10NKey("AttachmentDeletedDesc");
+    public static final LocalizationKey FileDeletedDesc                      = new L10NKey("FileDeletedDesc");
+    public static final LocalizationKey FileNotDeletedDesc                   = new L10NKey("FileNotDeletedDesc");
+    
     // The following set is originally been generated from the java sources.
     
     public static final LocalizationKey PasswordsDoNotMatch = new L10NKey("PasswordsDoNotMatch");
@@ -254,6 +258,7 @@ public class L10NKeySet
     public static final LocalizationKey IssueTypeAlreadyAssociated = new L10NKey("IssueTypeAlreadyAssociated");
     public static final LocalizationKey ConfirmFieldIsNullError = new L10NKey("ConfirmFieldIsNullError");
     public static final LocalizationKey FileDeleted = new L10NKey("FileDeleted");
+    public static final LocalizationKey FilesPartiallyDeleted = new L10NKey("FilesPartiallyDeleted");
     public static final LocalizationKey RegisterSessionError = new L10NKey("RegisterSessionError");
     public static final LocalizationKey AssignUsersWithThisIssue = new L10NKey("AssignUsersWithThisIssue");
     public static final LocalizationKey CannotDetermineIssueEntryTemplate = new L10NKey("CannotDetermineIssueEntryTemplate");

@@ -7,6 +7,10 @@
 
   <body>
     <release version="b20" date="in dev">
+      <action dev="legout" type="add">
+        SCB1227 - Issue attachments can now be physically deleted from disk, when the
+        attachments are removed from an issue.
+      </action>
     </release>
 
     <release version="b19" date="13-Apr-2004">

@@ -53,6 +53,7 @@ import java.util.HashMap;
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
+import org.apache.turbine.Turbine;
 
 import org.apache.torque.om.NumberKey; 
 import org.apache.turbine.tool.IntakeTool;
@@ -80,7 +81,9 @@ import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.util.MutableBoolean;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.ScarabUtil;
 
@@ -93,7 +96,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.184 2004/05/10 21:04:44 dabbous Exp $
+ * @version $Id: ModifyIssue.java,v 1.185 2004/06/04 22:08:41 dabbous Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -725,26 +728,50 @@ public class ModifyIssue extends BaseModifyIssue
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         ActivitySet activitySet = null;
-        for (int i =0; i<keys.length; i++)
+        String attachmentFullPath = new String();
+
+        boolean allFilesDeleted = true;
+
+        boolean deletePhysically = Turbine.getConfiguration()
+        .getBoolean("scarab.attachment.remove.permanent",false);
+
+        for (int i = 0; i < keys.length; i++)
         {
             String key = (String) keys[i];
             if (key.startsWith("file_delete_"))
             {
                 String attachmentId = key.substring(12);
-                Attachment attachment = AttachmentManager
-                    .getInstance(new NumberKey(attachmentId), false);
-                activitySet = issue.doDeleteFile(activitySet, attachment, user);
-            } 
+                Attachment attachment = AttachmentManager.getInstance(
+                new NumberKey(attachmentId), false);
+                MutableBoolean physicallyDeleted = new MutableBoolean(false);
+                activitySet = issue.doRemoveAttachment(activitySet, physicallyDeleted, attachment,  user);
+                //set deleted to false if at least for one of the
+                //deleted attachmnents the file was not removed from
+                //disk. 
+                if (deletePhysically && !physicallyDeleted.booleanValue())
+                {
+                    allFilesDeleted = false;
+                }
+                attachmentFullPath = attachment.getFullPath();
+            }
         }
+
         if (activitySet != null)
         {
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
-            sendEmail(activitySet, issue, l10n.get("FileDeleted"), 
-                      context);
+            if (allFilesDeleted)
+            {
+                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            }
+            else
+            {
+                scarabR.setAlertMessage(l10n.get(L10NKeySet.FilesPartiallyDeleted));
+            }
+            sendEmail(activitySet, issue, l10n.get(L10NKeySet.FileDeleted), context);
+
         }
         else
         {
-            scarabR.setInfoMessage(l10n.get("NoFilesChanged"));
+            scarabR.setInfoMessage(l10n.get(L10NKeySet.NoFilesChanged));
         }
     }
 

@@ -84,7 +84,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.66 2004/05/10 21:04:45 dabbous Exp $
+ * @version $Id: Attachment.java,v 1.67 2004/06/04 22:08:43 dabbous Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -278,7 +278,20 @@ public class Attachment
                 throw new TorqueException(e); //EXCEPTION
             }
         }
-    }        
+    }       
+
+    /**
+     * Delete the attachment file on disk
+     * @return true if the file was deleted, false otherwise
+     */
+    public boolean deletePhysicalAttachment() 
+	throws Exception
+    {
+        File f = new File(getFullPath());
+        return f.delete();
+    }
+
+
     
     /**
      * creates the directory given by path, if it does not already exist
