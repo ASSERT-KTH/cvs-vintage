@@ -22,8 +22,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.BufferedReader;
 
 import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -53,7 +56,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public abstract class JDBCCommand
 {
@@ -397,6 +400,20 @@ public abstract class JDBCCommand
         } else if(result instanceof Blob) {
             Blob blob = (Blob)result;
             bytes = blob.getBytes(1, (int)blob.length());
+        } else if(result instanceof Clob && destination.getName().equals("java.lang.String")) {
+            try {
+                Reader in = new BufferedReader(((Clob)result).getCharacterStream());
+                char[] buf = new char[512];
+                StringBuffer string = new StringBuffer("");
+                int count;
+                while((count = in.read(buf)) > -1)
+                    string.append(buf, 0, count);
+                in.close();
+                return string.toString();
+            } catch(IOException e) {
+                log.error("Unable to read a CLOB column: "+e);
+                throw new SQLException("Unable to read a CLOB column: "+e);
+            }
         } else {
             bytes = rs.getBytes(idx);
         }
