@@ -21,7 +21,7 @@ import javax.ejb.EJBException;
  * @author  Rickard Öberg (rickard.oberg@telkel.com)
  * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class EJBMetaDataImpl
       implements EJBMetaData, Serializable
@@ -41,7 +41,8 @@ public class EJBMetaDataImpl
    // Constructors --------------------------------------------------
 
    /**
-    * Construct an <tt>EJBMetaDataInput</tt>.
+    * Construct an <tt>EJBMetaDataImpl</tt>.
+    * this should only be accessible from the factory.
     */
    public EJBMetaDataImpl(final Class remote,
          final Class home,
@@ -105,6 +106,9 @@ public class EJBMetaDataImpl
     */
    public Class getPrimaryKeyClass()
    {
+      if (session == true)
+         throw new RuntimeException("A session bean does not have a primary key class");
+
       return pkClass;
    }
 
