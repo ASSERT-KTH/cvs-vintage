@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.9 2002/01/14 21:11:50 dlr Exp $
+@version $Id: ManageUserSearch.vm,v 1.10 2002/01/22 00:45:07 jon Exp $
 *#
 
 $page.setTitle("User Search")
@@ -69,14 +69,8 @@ Results per page:
 </p>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
    <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
    <input type="submit" name="eventSubmit_doGotoadduser" value="Add User" />
-  </td>
- </tr>
-</table>
 </div>
 
 </form>
@@ -147,15 +141,9 @@ Results per page:
 
 #if ($userList.size() > 0)
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
- <input type="submit" name="eventSubmit_doGotoedituser" value="Edit User" />
- <input type="submit" name="eventSubmit_doGotoeditroles" value="Edit Roles" />
+ <input type="submit" name="eventSubmit_doGotoedituser" value="Edit User" />&#160;
+ <input type="submit" name="eventSubmit_doGotoeditroles" value="Edit Roles" />&#160;
  <input type="submit" name="eventSubmit_doGotodeleteuser" value="Delete" />
-  </td>
- </tr>
-</table>
 </div>
 #end
 
