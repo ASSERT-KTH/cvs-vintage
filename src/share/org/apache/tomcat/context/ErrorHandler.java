@@ -170,7 +170,7 @@ public final class ErrorHandler extends BaseInterceptor {
 	    return;
 	}
 
-	if (!isDefaultHandler)
+	if (!isDefaultHandler && !res.isBufferCommitted())
 	    res.resetBuffer();
 
 	req.setAttribute("javax.servlet.error.status_code",new Integer( code));
@@ -267,11 +267,12 @@ public final class ErrorHandler extends BaseInterceptor {
 	    return;
 	}
 
-	if (!isDefaultHandler)
+	if (!isDefaultHandler && !res.isBufferCommitted())
 	    res.resetBuffer();
 
 	req.setAttribute("javax.servlet.error.exception_type", t.getClass());
 	req.setAttribute("javax.servlet.error.message", t.getMessage());
+	req.setAttribute("javax.servlet.jsp.jspException", t);
 	req.setAttribute("tomcat.servlet.error.throwable", t);
 	req.setAttribute("tomcat.servlet.error.request", req);
 
@@ -361,15 +362,32 @@ class NotFoundHandler extends Handler {
 	    req.setNote( sbNote, buf );
 	}
 	
-	buf.append("<head><title>")
-	    .append(sm.getString("defaulterrorpage.notfound404"))
-	    .append("</title></head>\r\n");
-	buf.append("<body><h1>")
+	boolean bufReset = (res.getBuffer().getBytesWritten() == 0);
+	// only include <head>...<body> if reset was successful
+	if (bufReset) {
+	    buf.append("<head><title>")
+		.append(sm.getString("defaulterrorpage.notfound404"))
+		.append("</title></head>\r\n<body>");
+	}
+	buf.append("<h1>")
 	    .append(sm.getString("defaulterrorpage.notfound404"))
 	    .append("</h1>\r\n");
 	buf.append(sm.getString("defaulterrorpage.originalrequest"))
-	    .append( requestURI );
-	buf.append("</body>\r\n");
+	    .append( requestURI )
+	    .append("\r\n");
+
+	if ( null != requestURI && contextM.isShowDebugInfo() ) {
+	    buf.append("<br><br>\r\n<b>")
+		.append(sm.getString("defaulterrorpage.notfoundrequest"))
+		.append("</b> ")
+		.append( requestURI )
+		.append("\r\n");
+	}
+
+	// only add </body> if reset was successful
+	if ( bufReset )
+	    buf.append("</body>");
+	buf.append("\r\n");
 
 	res.setContentLength(buf.length());
 
@@ -393,6 +411,7 @@ class ExceptionHandler extends Handler {
 	throws Exception
     {
 	String msg=(String)req.getAttribute("javax.servlet.error.message");
+	String errorURI = res.getErrorURI();
 	
 	Throwable e= (Throwable)req.
 	    getAttribute("tomcat.servlet.error.throwable");
@@ -416,8 +435,22 @@ class ExceptionHandler extends Handler {
 	    buf = new StringBuffer();
 	    req.setNote( sbNote, buf );
 	}
+
+	boolean bufReset = (res.getBuffer().getBytesWritten() == 0);
+	// only include <head>...<body> if reset was successful
+	if (bufReset) {
+	    buf.append("<head><title>");
+	    if( null != errorURI && contextM.isShowDebugInfo() ) {
+		buf.append(sm.getString("defaulterrorpage.includedservlet") )
+		    .append(" ");
+	    }  else {
+		buf.append("Error: ");
+	    }
+	    buf.append( 500 )
+		.append("</title></head>\r\n<body>\r\n");
+	}
 	buf.append("<h1>");
-	if( res.isIncluded() ) {
+	if( null != errorURI && contextM.isShowDebugInfo() ) {
 	    buf.append(sm.getString("defaulterrorpage.includedservlet") ).
 		append(" ");
 	}  else {
@@ -433,18 +466,32 @@ class ExceptionHandler extends Handler {
 	    .append(req.requestURI().toString())
 	    .append("</h2>");
 
-	buf.append("<b>")
-	    .append(sm.getString("defaulterrorpage.internalservleterror"))
-	    .append("</b><br>");
+	if ( null != errorURI && contextM.isShowDebugInfo()) {
+	    buf.append("\r\n<h2>")
+		.append(sm.getString("defaulterrorpage.errorlocation"))
+		.append(" ")
+		.append(errorURI)
+		.append("</h2>");
+	}
 
-        buf.append("<pre>");
-	// prints nested exceptions too, including SQLExceptions, recursively
-	String trace = Logger.throwableToString
-	    (e,	"<b>" + sm.getString("defaulterrorpage.rootcause") + "</b>");
-	buf.append(trace);
+ 	if (contextM.isShowDebugInfo()) {
+	    buf.append("<b>")
+		.append(sm.getString("defaulterrorpage.internalservleterror"));
+	    buf.append("</b><br>\r\n<pre>");
+	    // prints nested exceptions too, including SQLExceptions, recursively
+	    String trace = Logger.throwableToString
+		(e, "<b>" + sm.getString("defaulterrorpage.rootcause") + "</b>");
+	    buf.append(trace);
+	    buf.append("</pre>\r\n");
+	} else {
+	    buf.append("<b>Error:</b> ")
+		.append(e.getMessage())
+		.append("<br><br>\r\n");
+	}
 
-	buf.append("</pre>\r\n");
-	
+	// only add </body> if reset was successful
+	if ( bufReset )
+	    buf.append("</body>");
 	buf.append("\r\n");
 	
 	res.getBuffer().write( buf );
@@ -469,6 +516,7 @@ class StatusHandler extends Handler {
 	throws Exception
     {
 	String msg=(String)req.getAttribute("javax.servlet.error.message");
+	String errorURI = res.getErrorURI();
 	
 	res.setContentType("text/html");
 	// res is reset !!!
@@ -487,9 +535,24 @@ class StatusHandler extends Handler {
 	    buf = new StringBuffer();
 	    req.setNote( sbNote, buf );
 	}
+
+	boolean bufReset = (res.getBuffer().getBytesWritten() == 0);
+	// only include <head>...<body> if reset was successful
+	if (bufReset) {
+	    buf.append("<head><title>");
+	    if( null != errorURI && contextM.isShowDebugInfo() ) {
+		buf.append(sm.getString("defaulterrorpage.includedservlet") )
+		    .append(" ");
+	    }  else {
+		buf.append("Error: ");
+	    }
+	    buf.append( sc )
+		.append("</title></head>\r\n<body>\r\n");
+	}
 	buf.append("<h1>");
-	if( res.isIncluded() ) {
-	    buf.append(sm.getString("defaulterrorpage.includedservlet") );
+	if( null != errorURI && contextM.isShowDebugInfo() ) {
+	    buf.append(sm.getString("defaulterrorpage.includedservlet") )
+		.append(" ");
 	}  else {
 	    buf.append("Error: ");
 	}
@@ -503,9 +566,37 @@ class StatusHandler extends Handler {
 	    .append(req.requestURI().toString())
 	    .append("</h2>");
 
-	buf.append("<b>")
+	if ( sc >= 400 && errorURI != null && contextM.isShowDebugInfo()) {
+	    buf.append("\r\n<h2>")
+		.append(sm.getString("defaulterrorpage.errorlocation"))
+		.append(" ")
+		.append(errorURI)
+		.append("</h2>");
+	}
+
+	buf.append("\r\n<b>")
 	    .append(msg)
-	    .append("</b><br>");
+	    .append("</b><br>\r\n");
+
+	// add unavailable time if present
+	if ( sc == 503) {
+	    Integer ut = (Integer)req.getAttribute("tomcat.servlet.error.service.unavailableTime");
+	    if ( ut != null) {
+		buf.append("<br>");
+		// if permanent
+		if (ut.intValue() < 0) {
+		    buf.append(sm.getString("defaulterrorpage.service.permanently.unavailable"));
+		} else {
+		    buf.append(sm.getString("defaulterrorpage.service.unavailable",ut));
+		}
+		buf.append("<br>\r\n");
+	    }
+	}
+
+	// only add </body> if reset was successful
+	if ( bufReset )
+	    buf.append("</body>");
+	buf.append("\r\n");
 
 	res.setContentLength(buf.length());
 	res.getBuffer().write( buf );
