@@ -1,6 +1,6 @@
 
 /*
- * $Id: Post.java,v 1.2 1999/10/14 23:49:01 akv Exp $
+ * $Id: Post.java,v 1.3 1999/10/22 22:09:51 costin Exp $
  */
 
 /**
@@ -91,26 +91,31 @@ public class Post extends TestableBase {
 
     private boolean test(String testId) {
 
-        boolean responseStatus = dispatch(testId);
+        String response = dispatch(testId);
         String magnitude = props.getProperty("test." + testId + ".magnitude", "true");
         boolean testCondition = Boolean.valueOf(magnitude).booleanValue(); 
 
-        return (testCondition) ? responseStatus : ! responseStatus;
+	String responseKey = props.getProperty("test." + testId + ".response");
+	boolean responseStatus = (response.indexOf(responseKey) > -1) ? true : false;
+	
+	if( testCondition!=responseStatus) {
+	    System.out.println("POST error in " + testId );
+	    System.out.println("Response: " + response);
+	}
+        return testCondition==responseStatus;
     }
 
-    private boolean dispatch(String testId) {
+    private String dispatch(String testId) {
         boolean responseStatus = false;
-
+	String response="";
+	
         openIO();
 
         if (ready()) {
             try {
                 writeRequest(testId);
-                String response = getResponse();
+                response = getResponse();
 
-                String responseKey = props.getProperty("test." + testId + ".response");
-                responseStatus =
-                    (response.indexOf(responseKey) > -1) ? true : false;
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
@@ -118,7 +123,7 @@ public class Post extends TestableBase {
 
         closeIO();
 
-        return responseStatus; 
+        return response; 
     }
 
     private void openIO() {
@@ -205,12 +210,19 @@ public class Post extends TestableBase {
 
         if (this.debug)
             System.out.println("<--------");
-        while ((line = br.readLine()) != null) {
-            if (this.debug)
-                System.out.println("\t" + line);
-            sb.append(line);
-            sb.append('\n');
-        }
+	try {
+	    while ((line = br.readLine()) != null) {
+		if (this.debug)
+		    System.out.println("\t" + line);
+		sb.append(line);
+		sb.append('\n');
+	    }
+	} catch(java.net.SocketException ex ) {
+	    // server closed connection before reading the request.
+	    // Happens on Linux - it is safe to ignore the request.
+	    System.out.println("Connection reset by peer - before full request read ");
+	}
+
         if (this.debug)
             System.out.println("-------->");
 

@@ -1,6 +1,6 @@
 
 /*
- * $Id: Get.java,v 1.2 1999/10/14 23:49:01 akv Exp $
+ * $Id: Get.java,v 1.3 1999/10/22 22:09:51 costin Exp $
  */
 
 /**
@@ -171,11 +171,18 @@ public class Get extends TestableBase {
 	boolean responseStatus =
 	    (response.indexOf(responseKey) > -1) ? true : false;
 
-	return (testCondition) ? responseStatus : ! responseStatus;
+	if( testCondition!=responseStatus) {
+	    System.out.println("Get.test: unexpected result ");
+	    System.out.println("Request: " + request );
+	    System.out.println("Expecting: " + responseKey );
+	    System.out.println("Got: " + response);
+	    
+	}
+	return testCondition==responseStatus; // same as (testCondition) ? responseStatus : ! responseStatus;
     }
 
     private String dispatch(String request) {
-        String response = null;
+        String response = ""; // avoid NPE 
 
         openIO();
 
@@ -183,9 +190,9 @@ public class Get extends TestableBase {
 	    try {
 	        writeRequest(request);
 
-		    response = getResponse();
+		response = getResponse();
             
-	    } catch (IOException ioe) {
+	    } catch(IOException ioe) {
 	        ioe.printStackTrace();
 	    }
 	}
@@ -258,12 +265,18 @@ public class Get extends TestableBase {
 
         if (this.debug)
 	        System.out.println("<--------"); 
-        while ((line = br.readLine()) != null) {
-        if (this.debug)
-            System.out.println("\t" + line);
-	    sb.append(line);
-	    sb.append('\n');
-        }
+        try {
+	    while ((line = br.readLine()) != null) {
+		if (this.debug)
+		    System.out.println("\t" + line);
+		sb.append(line);
+		sb.append('\n');
+	    }
+	} catch(java.net.SocketException ex ) {
+	    // server closed connection before reading the request.
+	    // Happens on Linux - it is safe to ignore the request.
+	    System.out.println("Connection reset by peer - before full request read ");
+	}
         if (this.debug)
 	        System.out.println("-------->"); 
 
