@@ -125,7 +125,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.107 2003/09/13 02:11:25 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.108 2003/09/15 23:45:50 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -351,7 +351,7 @@ public abstract class AbstractScarabModule
             .get(this, GET_DEDUPE_GROUPS_WITH_ATTRIBUTES, issueType);
         if (obj == null)
         {
-            List attributeGroups = getAttributeGroups(issueType);
+            List attributeGroups = issueType.getAttributeGroups(this, true);
             result = new ArrayList(attributeGroups.size());
             for (Iterator itr = attributeGroups.iterator(); itr.hasNext() ;)
             {
@@ -370,26 +370,6 @@ public abstract class AbstractScarabModule
         }
         return result;
     }
-
-    /**
-     * List of active attribute groups associated with this module.
-     */
-    public List getAttributeGroups(IssueType issueType)
-        throws Exception
-    {
-        return getAttributeGroups(issueType, true);
-    }
-
-
-    /**
-     * List of attribute groups associated with this module).
-     */
-    public List getAttributeGroups(IssueType issueType, boolean activeOnly)
-        throws Exception
-    {
-        return issueType.getAttributeGroups(this, activeOnly);
-    }
-
 
     /**
      * Get this attribute's attribute group.
@@ -1803,7 +1783,7 @@ public abstract class AbstractScarabModule
 
         String typeName = issueType.getName();
         // check attribute groups
-        List testGroups = issueType.getAttributeGroups(false);
+        List testGroups = issueType.getAttributeGroups(null, false);
         try
         {
             if (testGroups == null) 
@@ -1902,7 +1882,7 @@ public abstract class AbstractScarabModule
         WorkflowFactory.getInstance().addIssueTypeWorkflowToModule(this, issueType);
 
         // add attribute groups
-        List groups = issueType.getAttributeGroups(false);
+        List groups = issueType.getAttributeGroups(null, false);
         if (groups.isEmpty())
         {
             // Create default groups
@@ -2187,7 +2167,8 @@ public abstract class AbstractScarabModule
             IssueType issueType = rmit1.getIssueType();
 
             // set attribute group defaults
-            List attributeGroups = parentModule.getAttributeGroups(issueType);
+            List attributeGroups = issueType
+                .getAttributeGroups(parentModule, true);
             for (int j=0; j<attributeGroups.size(); j++)
             {
                 ag1 = (AttributeGroup)attributeGroups.get(j);

@@ -85,7 +85,7 @@ import org.tigris.scarab.util.Log;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.56 2003/09/10 00:20:38 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.57 2003/09/15 23:45:49 jmcnally Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -460,7 +460,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         // If there are no attributes in any of the dedupe
         // Attribute groups, turn off deduping in the module
         boolean areThereDedupeAttrs = false;
-        List attributeGroups = module.getAttributeGroups(issueType);
+        List attributeGroups = issueType.getAttributeGroups(module, true);
         if (attributeGroups.size() > 0)
         {
             for (int j=0; j<attributeGroups.size(); j++)

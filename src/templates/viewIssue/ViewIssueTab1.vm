@@ -16,7 +16,7 @@
 </table>
 </div>
 <div class="axial">
-#foreach ($group in $module.getAttributeGroups($issueType))
+#foreach ($group in $issueType.getAttributeGroups($module, true))
   #if (!$group.Attributes.isEmpty())
     <h3>$group.Name</h3>
     <table cellpadding="3" cellspacing="2" border="0">

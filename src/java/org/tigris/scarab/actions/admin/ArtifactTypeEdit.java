@@ -78,7 +78,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.57 2003/08/26 15:11:09 venkatesh Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.58 2003/09/15 23:45:49 jmcnally Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -192,14 +192,14 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             doCancel(data, context);
             return false;
         }
-        List attGroups = module.getAttributeGroups(issueType, false);
+        List attGroups = issueType.getAttributeGroups(module, false);
 
         int dupeOrder = 2;
         boolean areThereDedupeAttrs = false;
 
         // Manage attribute groups
         // Only have dedupe if there are more than one active group
-        if (module.getAttributeGroups(issueType, true).size() > 1)
+        if (issueType.getAttributeGroups(module, true).size() > 1)
         {
             dupeOrder = data.getParameters().getInt("dupe_order");
 
@@ -249,7 +249,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
 
             // Set dedupe property for module-issueType
         if (!areThereDedupeAttrs
-                || module.getAttributeGroups(issueType).size() < 2)
+                || issueType.getAttributeGroups(module, true).size() < 2)
         {
             rmit.setDedupe(false);
         }
@@ -375,7 +375,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         String key;
         String groupId;
         Module module = scarabR.getCurrentModule();
-        List attributeGroups = module.getAttributeGroups(issueType, false);
+        List attributeGroups = issueType.getAttributeGroups(module, false);
 
         for (int i =0; i<keys.length; i++)
         {

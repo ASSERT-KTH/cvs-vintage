@@ -63,7 +63,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.14 2003/03/25 20:31:54 jmcnally Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.15 2003/09/15 23:45:50 jmcnally Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
@@ -143,7 +143,7 @@ public class ScarabModuleTest extends BaseTestCase
         throws Exception
     {
         System.out.println ("testGetAttributeGroups()");
-        List attrGroups = newModule.getAttributeGroups(issueType);
+        List attrGroups = issueType.getAttributeGroups(newModule, true);
         for (int i=0;i<attrGroups.size(); i++)
         {
             AttributeGroup group = (AttributeGroup)attrGroups.get(i);

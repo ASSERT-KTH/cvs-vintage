@@ -96,7 +96,7 @@
 <h3>$l10n.TemplateAttributes</h3>
 
 #set ($attrValues = $currentTemplate.ModuleAttributeValuesMap)
-#foreach ($attrgroup in $module.getAttributeGroups($issueType))
+#foreach ($attrgroup in $issueType.getAttributeGroups($module, true))
   #if (!$attrgroup.Attributes.isEmpty())
     <h4>$attrgroup.Name</h4>
     <div class="axial">

@@ -342,7 +342,7 @@ public  class AttributeGroup
 
         if (isGlobal())
         {
-            attrGroups = issueType.getAttributeGroups(false);
+            attrGroups = issueType.getAttributeGroups(null, false);
             dupeSequence =  issueType.getDedupeSequence();
             // Delete issuetype-attribute mapping
             Criteria crit  = new Criteria()
@@ -367,7 +367,7 @@ public  class AttributeGroup
             else
             {
                 Module module = getModule();
-                attrGroups = module.getAttributeGroups(getIssueType(), false);
+                attrGroups = getIssueType().getAttributeGroups(module, false);
                 dupeSequence =  module.getDedupeSequence(issueType);
                 // Delete module-attribute mapping
                 Criteria crit  = new Criteria()

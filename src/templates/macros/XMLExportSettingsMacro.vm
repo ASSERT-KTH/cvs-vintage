@@ -121,7 +121,7 @@
         <display-name>$moduleIssueType.DisplayName</display-name>
         <display-description>$moduleIssueType.DisplayDescription</display-description>
 
-        #set ($allModuleAttributeGroups = $module.getAttributeGroups($issueType))
+        #set ($allModuleAttributeGroups = $issueType.getAttributeGroups($module,true))
         #if ($allModuleAttributeGroups && !$allModuleAttributeGroups.isEmpty())
 
         <module-attribute-groups>

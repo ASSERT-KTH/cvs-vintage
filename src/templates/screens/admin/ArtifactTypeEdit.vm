@@ -2,7 +2,7 @@
 #set ($issueType = $scarabR.IssueType)
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId",""))
 #set ($issueTypeLock = $issueType.Locked)
-#set ($groups = $module.getAttributeGroups($issueType, false))
+#set ($groups = $issueType.getAttributeGroups($module, false))
 #set ($rmit= $module.getRModuleIssueType($issueType))
 #set ($immutable = $issueType.SystemDefined)
 #if($immutable)

@@ -75,7 +75,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.38 2003/08/22 18:20:51 venkatesh Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.39 2003/09/15 23:45:49 jmcnally Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -180,14 +180,14 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
             scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
             return false;
         }
-        List attGroups = issueType.getAttributeGroups(false);
+        List attGroups = issueType.getAttributeGroups(null, false);
         int nbrAttGroups = attGroups.size();
         String errorMsg = ERROR_MESSAGE;
         int dupeOrder = 2;
 
         // Manage attribute groups, only seeking sequence collisions
         // when there is more than one active group.
-        if (issueType.getAttributeGroups(true).size() > 1)
+        if (issueType.getAttributeGroups(null, true).size() > 1)
         {
             dupeOrder = data.getParameters().getInt("dupe_order");
 
@@ -298,7 +298,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
             scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
             return;
         }
-        List attributeGroups = issueType.getAttributeGroups(false);
+        List attributeGroups = issueType.getAttributeGroups(null, false);
 
         boolean atLeastOne = false;
         for (int i =0; i<keys.length; i++)

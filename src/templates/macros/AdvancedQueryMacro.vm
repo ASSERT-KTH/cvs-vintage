@@ -341,7 +341,7 @@ $l10n.From:&#160;<input type="text" size="20"
  #set ( $module = $search.getModule() )
  #set ( $issueType = $search.getIssueType() )
  #set ($firstTextWidget = true)
- #foreach ($group in $module.getAttributeGroups($issueType,false))
+ #foreach ($group in $issueType.getAttributeGroups($module,false))
   #if (($optionsOnly && $group.hasAnyOptionAttributes()) || (!$optionsOnly && !$group.Attributes.isEmpty()))
     <h$headerLevel>$group.Name</h$headerLevel>
     <table cellpadding="3" cellspacing="2" border="0">

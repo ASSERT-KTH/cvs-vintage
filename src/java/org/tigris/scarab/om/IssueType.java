@@ -72,7 +72,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.60 2003/08/19 21:18:50 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.61 2003/09/15 23:45:50 jmcnally Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -274,7 +274,7 @@ public  class IssueType
         }
 
         // Copy attribute groups
-        List attrGroups = getAttributeGroups(false);
+        List attrGroups = getAttributeGroups(null, false);
         for (int i = 0; i<attrGroups.size(); i++)
         {
             AttributeGroup group = (AttributeGroup)attrGroups.get(i);
@@ -362,12 +362,15 @@ public  class IssueType
         ag2.save();
     }
 
-    public List getAttributeGroups(Module module)
-        throws Exception
-    {
-        return getAttributeGroups(module, false);
-    }
-
+    /**
+     * Overload passes a null module argument to get groups in the global
+     * definition.  This overload is needed as velocity templates cannot
+     * pass null arguments.  
+     *
+     * @param activeOnly a <code>boolean</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
     public List getAttributeGroups(boolean activeOnly)
         throws Exception
     {

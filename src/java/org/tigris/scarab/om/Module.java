@@ -72,7 +72,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.76 2003/08/04 12:50:34 mpoeschl Exp $
+ * @version $Id: Module.java,v 1.77 2003/09/15 23:45:50 jmcnally Exp $
  */
 public interface Module
     extends Serializable
@@ -238,18 +238,6 @@ public interface Module
      * in them.
      */
     List getDedupeGroupsWithAttributes(IssueType issueType)
-        throws Exception;
-
-    /**
-     * List of active attribute groups associated with this module.
-     */
-    List getAttributeGroups(IssueType issueType)
-        throws Exception;
-
-    /**
-     * List of attribute groups associated with this module).
-     */
-    List getAttributeGroups(IssueType issueType, boolean activeOnly)
         throws Exception;
 
     /**
