@@ -101,11 +101,13 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.62 2003/12/20 13:38:35 pledbrook Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.63 2004/05/10 21:28:40 thierrylach Exp $
  */
 public class ScarabGlobalTool
     implements ApplicationTool
 {
+    private static int moduleCodeLength = 0;
+
     private static final Logger LOG = 
         Logger.getLogger("org.tigris.scarab");
 
@@ -744,4 +746,32 @@ public class ScarabGlobalTool
                 .getInstance().getService(VelocityService.SERVICE_NAME))
             .templateExists(template);
     }
+
+    /**
+     * @return
+     */
+    public synchronized static int getModuleCodeLength() {
+        if (moduleCodeLength == 0)
+        {
+            try
+            {
+                moduleCodeLength = Integer.parseInt(Turbine.getConfiguration().
+                                   getString("scarab.module.code.length", "4"));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                moduleCodeLength = 4;
+            }
+        }
+        return moduleCodeLength;
+    }
+
+    /**
+     * @return
+     */
+    public static int getModuleCodeLengthPadded() {
+        return getModuleCodeLength() + 6;
+    }
+
 }

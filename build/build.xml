@@ -165,6 +165,9 @@
              <fileset dir="${src.dir}/conf/conf">
                  <include name="**/*.*"/>
              </fileset>
+             <filterset>
+                 <filter token="SCARAB_MODULE_CODE_LENGTH" value="${scarab.module.code.length}"/>
+             </filterset>
         </copy>
 
         <!-- Conditionally copy templates -->
@@ -265,6 +268,9 @@
     <target name="copy-templates">
         <copy todir="${build.project.webinf}/templates" filtering="no">
             <fileset dir="${src.templates.dir}"/>
+            <filterset>
+              <filter token="SCARAB_MODULE_CODE_LENGTH" value="${scarab.module.code.length}"/>
+            </filterset>
         </copy>
         <available property="extension.templates.exist" 
                    file="${extensions.templates.dir}"/>
@@ -276,6 +282,9 @@
               overwrite="true"
               verbose="true">
             <fileset dir="${extensions.templates.dir}"/>
+            <filterset>
+              <filter token="SCARAB_MODULE_CODE_LENGTH" value="${scarab.module.code.length}"/>
+            </filterset>
         </copy>
     </target>
 
@@ -286,7 +295,11 @@
         <!-- copy the schema's to the torque directory -->
         <copy file="${src.sql.dir}/${project}-schema.xml" 
               todir="${torque.dir.scarab}/schema"
-              filtering="true" overwrite="true"/>
+              filtering="true" overwrite="true">
+          <filterset>
+            <filter token="SCARAB_MODULE_CODE_LENGTH" value="${scarab.module.code.length}"/>
+          </filterset>
+        </copy>
         <copy file="${src.sql.dir}/id-table-schema.xml" 
               todir="${torque.dir.scarab}/schema"
               filtering="true" overwrite="true"/>

@@ -80,7 +80,8 @@
   <tr>
    <th>* $l10n.Code</th>
    <td>
-    <input name="$moduleGroup.Code.Key" value="$moduleGroup.Code" type="text" size="10" maxlength="4" />
+    <!-- $moduleGroup.class.name -->
+    <input name="$moduleGroup.Code.Key" value="$moduleGroup.Code" type="text" size="$scarabG.getModuleCodeLengthPadded()" maxlength="$scarabG.getModuleCodeLength()" />
     #fieldErrorMsg($moduleGroup.Code "")
    </td>
   </tr>

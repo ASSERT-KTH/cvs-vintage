@@ -103,13 +103,14 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.119 2004/05/10 21:04:45 dabbous Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.120 2004/05/10 21:28:39 thierrylach Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
     implements Module, Comparable
 {
-    // the following Strings are method names that are used in caching results
+    private static int moduleCodeLength;
+	// the following Strings are method names that are used in caching results
     protected static final String GET_R_MODULE_ATTRIBUTES = 
         "getRModuleAttributes";
     protected static final String GET_DEDUPE_GROUPS_WITH_ATTRIBUTES = 
@@ -2210,5 +2211,6 @@ public abstract class AbstractScarabModule
     {
         return ModuleManager.getMethodResult();
     }
+
 }
 

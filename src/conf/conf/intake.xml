@@ -356,7 +356,7 @@
         </field>
         <field name="Code" key="code" type="String">
             <rule name="mask" value="^[:alpha:]+$">intake_CodeMustBeAlpha</rule>
-            <rule name="maxLength" value="4"/>
+            <rule name="maxLength" value="@SCARAB_MODULE_CODE_LENGTH@"/>
         </field>
         <!--
         <field name="Url" key="url" type="String">
