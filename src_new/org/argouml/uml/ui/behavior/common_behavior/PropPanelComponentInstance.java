@@ -1,4 +1,4 @@
-// $Id: PropPanelComponentInstance.java,v 1.26 2004/05/17 07:04:50 linus Exp $
+// $Id: PropPanelComponentInstance.java,v 1.27 2004/05/17 07:53:15 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,18 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: PropPanelComponentInstance.java
-// Classes: PropPanelComponentInstance
-// Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelComponentInstance.java,v 1.26 2004/05/17 07:04:50 linus Exp $
-
 package org.argouml.uml.ui.behavior.common_behavior;
 
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
+import org.argouml.i18n.Translator;
 
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLClassifierComboBoxModel;
@@ -51,29 +46,54 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  */
 public class PropPanelComponentInstance extends PropPanelModelElement {
 
-  ////////////////////////////////////////////////////////////////
-  // contructors
+    /**
+     * Contructor.
+     */
     public PropPanelComponentInstance() {
-        super("Component Instance", _componentInstanceIcon, ConfigLoader.getTabPropsOrientation());
+        super("Component Instance",
+	      _componentInstanceIcon,
+	      ConfigLoader.getTabPropsOrientation());
 
         Class mclass = (Class) ModelFacade.COMPONENT_INSTANCE;
 
         Class[] namesToWatch =
-            {(Class) ModelFacade.STEREOTYPE, (Class) ModelFacade.NAMESPACE, (Class)ModelFacade.CLASSIFIER};
+        {
+	    (Class) ModelFacade.STEREOTYPE,
+	    (Class) ModelFacade.NAMESPACE,
+	    (Class) ModelFacade.CLASSIFIER};
 
         setNameEventListening(namesToWatch);
 
-        addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
+        addField(Translator.localize("label.name"),
+		 getNameTextField());
 
-        UMLClassifierComboBoxModel classifierModel = new UMLClassifierComboBoxModel(this, "isAcceptibleClassifier", "classifier", "getClassifier", "setClassifier", false, (Class)ModelFacade.CLASSIFIER, true);
+        UMLClassifierComboBoxModel classifierModel =
+	    new UMLClassifierComboBoxModel(this,
+					   "isAcceptibleClassifier",
+					   "classifier",
+					   "getClassifier",
+					   "setClassifier",
+					   false,
+					   (Class) ModelFacade.CLASSIFIER,
+					   true);
         UMLComboBox clsComboBox = new UMLComboBox(classifierModel);
-        addField("Classifier:", new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-class"), clsComboBox));
+        addField("Classifier:",
+		 new UMLComboBoxNavigator(this,
+			 Translator.localize("tooltip.nav-class"),
+			 clsComboBox));
 
-        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
-        addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
+        addField(Translator.localize("label.stereotype"), getStereotypeBox());
+        addField(Translator.localize("label.namespace"),
+		 getNamespaceComboBox());
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-        new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete"), "removeElement", null);
+        new PropPanelButton(this,
+			    buttonPanel, _navUpIcon,
+			    Translator.localize("button.go-up"),
+			    "navigateUp", null);
+        new PropPanelButton(this,
+			    buttonPanel, _deleteIcon,
+			    Translator.localize("Delete"),
+			    "removeElement", null);
     }
 
     /**
