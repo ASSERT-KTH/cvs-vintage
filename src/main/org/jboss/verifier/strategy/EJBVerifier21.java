@@ -5,10 +5,10 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: EJBVerifier21.java,v 1.2 2004/04/06 19:54:14 tdiesler Exp $
+// $Id: EJBVerifier21.java,v 1.3 2004/07/22 21:12:30 ejort Exp $
 package org.jboss.verifier.strategy;
 
-// $Id: EJBVerifier21.java,v 1.2 2004/04/06 19:54:14 tdiesler Exp $
+// $Id: EJBVerifier21.java,v 1.3 2004/07/22 21:12:30 ejort Exp $
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import org.jboss.verifier.Section;
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
  * @author Thomas.Diesler@jboss.org
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since   02.12.2003
  */
 
@@ -249,27 +249,43 @@ public class EJBVerifier21 extends EJBVerifier20
       //
       // Spec 15.7.4
       //
-      if( hasOnMessageMethod(bean) )
+      
+      Class messageListener = null;
+      try
       {
-         Iterator it = getOnMessageMethods(bean);
-         Method onMessage = (Method)it.next();
-
-         if (!isPublic(onMessage))
-         {
-            fireSpecViolationEvent(mdBean, onMessage, new Section("15.7.4.b"));
-            status = false;
-         }
-
-         if ( (isFinal(onMessage)) || (isStatic(onMessage)) )
-         {
-            fireSpecViolationEvent(mdBean, onMessage, new Section("15.7.4.c"));
-            status = false;
-         }
+         messageListener = classloader.loadClass(mdBean.getMessagingType());
       }
-      else
+      catch (ClassNotFoundException cnfe)
       {
-         fireSpecViolationEvent(mdBean, new Section("15.7.4.a"));
-         status = false;
+         fireSpecViolationEvent(
+               mdBean,
+               new Section(
+                  "15.7.2.b",
+                  "Class not found on '" + mdBean.getMessagingType() + "': " + cnfe.getMessage()));
+            status = false;
+         
+      }
+      
+      if (messageListener != null)
+      {
+         Method[] methods = bean.getMethods();
+         for (int i = 0; i < methods.length; ++i)
+         {
+            if (methods[i].getDeclaringClass().equals(messageListener))
+            {
+               if (!isPublic(methods[i]))
+               {
+                  fireSpecViolationEvent(mdBean, methods[i], new Section("15.7.4.b"));
+                  status = false;
+               }
+
+               if ( (isFinal(methods[i])) || (isStatic(methods[i])) )
+               {
+                  fireSpecViolationEvent(mdBean, methods[i], new Section("15.7.4.c"));
+                  status = false;
+               }
+            }
+         }
       }
 
       // A message driven bean MUST implement the ejbRemove() method.
