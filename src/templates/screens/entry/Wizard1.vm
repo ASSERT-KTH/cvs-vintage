@@ -16,7 +16,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 
 <h2>$page.Title</h2>
 
-<form method="get" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
+<form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 
 <p class="functnbar">

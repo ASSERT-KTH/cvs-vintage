@@ -19,7 +19,7 @@ $page.setTitle("Identified as duplicate")
 </div>
 	
 #set ($templateId = $data.Parameters.getString("templateId"))
-<form method="get" name="Report2Form" action="$link.setPage("entry,Wizard2.vm")">
+<form method="post" name="Report2Form" action="$link.setPage("entry,Wizard2.vm")">
 <input type="hidden" name="action" value="ReportIssue" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 <input type="hidden" name="templateId" value="$!templateId" />

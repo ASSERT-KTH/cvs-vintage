@@ -13,12 +13,12 @@ $page.setTitle("Enter issue")
 
 <div class="app" id="div2-1-0">
 
-<h2>Enter issue</h2>
+<h2>$page.Title</h2>
 
 <p></p>
 ## Only show templates if user has not come through the wizard.
 #if (!$data.Parameters.getString("oldscreen"))
-<form method="get" action="$link.setPage("entry,Wizard3.vm")">
+<form method="post" action="$link.setPage("entry,Wizard3.vm")">
 <input type="hidden" name="action" value="ReportIssue" />
 
 #set ($privateTemplateList = $module.getPrivateTemplates($user,$issueType))
@@ -53,7 +53,7 @@ $page.setTitle("Enter issue")
 
 <p class="functnbar">
 <input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
-<input type="reset" value="Reset form" />&#160;
+<input type="reset" value="Reset" />&#160;
 <input type="reset" value="Cancel" />
 </p>
     
@@ -157,7 +157,7 @@ $page.setTitle("Enter issue")
 
 <p class="functnbar2">
 <input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
-<input type="reset" value="Reset form" />&#160;
+<input type="reset" value="Reset" />&#160;
 <input type="reset" value="Cancel" />
 </p>
 
