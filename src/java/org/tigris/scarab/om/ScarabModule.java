@@ -87,7 +87,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.27 2001/09/26 02:12:51 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.28 2001/09/28 01:29:30 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -183,16 +183,19 @@ public class ScarabModule
     /**
      * List of Issue Template objects associated with this module.
      */
-    public Vector getPrivateIssueTemplates(ScarabUser user)
+    public Vector getPrivateTemplates(ScarabUser user)
         throws Exception
     {
         Vector templates = null;
         Criteria crit = new Criteria()
-            .add(IssueTemplatePeer.MODULE_ID, getModuleId())
-            .add(IssueTemplatePeer.DELETED, 0)
-            .add(IssueTemplatePeer.USER_ID, user.getUserId())
-            .add(IssueTemplatePeer.TEMPLATE_TYPE_ID, IssueTemplate.USER__PK);
-        templates = IssueTemplatePeer.doSelect(crit);
+            .add(IssuePeer.MODULE_ID, getModuleId())
+            .add(IssuePeer.DELETED, 0)
+            .addJoin(TransactionPeer.TRANSACTION_ID, 
+                     ActivityPeer.TRANSACTION_ID) 
+            .add(TransactionPeer.CREATED_BY, user.getUserId())
+            .add(IssuePeer.TYPE_ID, IssueType.USER_TEMPLATE__PK);
+        crit.setDistinct();
+        templates = IssuePeer.doSelect(crit);
         return templates;
     }
 
@@ -204,10 +207,10 @@ public class ScarabModule
     {
         Vector templates = null;
         Criteria crit = new Criteria()
-            .add(IssueTemplatePeer.MODULE_ID, getModuleId())
-            .add(IssueTemplatePeer.DELETED, 0)
-            .add(IssueTemplatePeer.TEMPLATE_TYPE_ID, IssueTemplate.GLOBAL__PK);
-        templates = IssueTemplatePeer.doSelect(crit);
+            .add(IssuePeer.MODULE_ID, getModuleId())
+            .add(IssuePeer.DELETED, 0)
+            .add(IssuePeer.TYPE_ID, IssueType.GLOBAL_TEMPLATE__PK);
+        templates = IssuePeer.doSelect(crit);
         return templates;
     }
 
@@ -703,9 +706,10 @@ try{
     public Vector getUnapprovedTemplates() throws Exception
     {
         Criteria crit = new Criteria(3);
-        crit.add(IssueTemplatePeer.APPROVED, 0)
-           .add(IssueTemplatePeer.DELETED, 0);
-        return IssueTemplatePeer.doSelect(crit);
+        crit.add(IssueTemplateInfoPeer.APPROVED, 0)
+            .addJoin(IssuePeer.ISSUE_ID, IssueTemplateInfoPeer.ISSUE_ID)
+            .add(IssuePeer.DELETED, 0);
+        return IssuePeer.doSelect(crit);
     }
 
     /**
