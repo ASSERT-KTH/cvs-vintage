@@ -15,10 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpecialFoldersItem;
@@ -28,8 +29,7 @@ import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
+import org.columba.ristretto.message.Flags;
 
 
 /**
@@ -59,16 +59,28 @@ public class SaveAsDraftAction extends AbstractColumbaAction {
         if (composerController.checkState()) {
             return;
         }
+        
+        ComposerModel model = ((ComposerModel) composerController.getModel());
 
-        AccountItem item = ((ComposerModel) composerController.getModel()).getAccountItem();
+        // get selected account
+        AccountItem item = model.getAccountItem();
+        // get "Drafts" folder of account
         SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
         String str = folderItem.get("drafts");
         int destUid = Integer.parseInt(str);
         MessageFolder destFolder = (MessageFolder) MailInterface.treeModel.getFolder(destUid);
-
+   
+        // mark as read, mark as draft
+        Flags flags = new Flags();
+        flags.setSeen(true);
+        flags.setDraft(true);
+        model.getMessage().getHeader().setFlags(flags);
+        
+        // create command reference
         ComposerCommandReference[] r = new ComposerCommandReference[1];
         r[0] = new ComposerCommandReference(composerController, destFolder);
-
+     
+        // create command
         SaveMessageCommand c = new SaveMessageCommand(r);
 
         MainInterface.processor.addOp(c);

@@ -59,6 +59,10 @@ public class MarkMessageCommand extends FolderCommand {
     public final static int MARK_AS_SPAM = 5;
 
     public final static int MARK_AS_NOTSPAM = -5;
+    
+    public final static int MARK_AS_DRAFT = 6;
+    
+    public final static int MARK_AS_NOTDRAFT = -6;
 
     protected FolderCommandAdapter adapter;
 

@@ -43,6 +43,7 @@
  <action name="ToggleFlaggedFlag" class="org.columba.mail.gui.table.action.ToggleFlaggedFlagAction"/>
  <action name="ToggleExpungedFlag" class="org.columba.mail.gui.table.action.ToggleExpungedFlagAction"/>
  <action name="ToggleSpamFlag" class="org.columba.mail.gui.table.action.ToggleSpamFlagAction"/>
+ <action name="ToggleDraftFlag" class="org.columba.mail.gui.table.action.ToggleDraftFlagAction"/>
  <action name="ToggleAnsweredFlag" class="org.columba.mail.gui.table.action.ToggleAnsweredFlagAction"/>
  <action name="MarkAsRead" class="org.columba.mail.gui.table.action.MarkAsReadAction"/>
  <action name="MarkAsUnread" class="org.columba.mail.gui.table.action.MarkAsUnreadAction"/>

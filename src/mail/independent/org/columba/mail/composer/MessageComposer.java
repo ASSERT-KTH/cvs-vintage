@@ -143,6 +143,9 @@ if (priority != null) {
         header.set("columba.date", date);
         header.set("Date", RFC822Date.toString(date));
 
+        // copy flags
+        header.setFlags(model.getMessage().getHeader().getFlags());
+        
         return header;
     }
 

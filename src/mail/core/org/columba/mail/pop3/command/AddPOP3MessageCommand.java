@@ -68,7 +68,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 
         // add message to folder
         SourceInputStream messageStream = new SourceInputStream(message.getSource());
-        Object uid = inboxFolder.addMessage(messageStream, message.getHeader().getAttributes(),message.getFlags());
+        Object uid = inboxFolder.addMessage(messageStream, message.getHeader().getAttributes(),message.getHeader().getFlags());
         messageStream.close();
         inboxFolder.getFlags(uid).set(Flags.RECENT);
 

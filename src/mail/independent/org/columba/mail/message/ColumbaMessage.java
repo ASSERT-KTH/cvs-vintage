@@ -17,26 +17,25 @@
 //All Rights Reserved.
 package org.columba.mail.message;
 
-import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.Message;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.io.Source;
 
-
 /**
- * Adds Columba-specific features to the default {@link Message}
- * object found in the Ristretto API.
+ * Adds Columba-specific features to the default {@link Message}object found in
+ * the Ristretto API.
  * <p>
- *
- *
+ * 
  * @author fdietz, tstich
  */
 public class ColumbaMessage {
+
     protected ColumbaHeader columbaHeader;
-    protected Flags flags;
+
     protected Message message;
+
     protected MimePart bodyPart;
 
     public ColumbaMessage() {
@@ -47,14 +46,12 @@ public class ColumbaMessage {
         columbaHeader = header;
         message = new Message();
 
-        flags = columbaHeader.getFlags();
     }
 
     public ColumbaMessage(Message m) {
         columbaHeader = new ColumbaHeader(m.getHeader());
         message = m;
 
-        flags = columbaHeader.getFlags();
     }
 
     public ColumbaMessage(Header header) {
@@ -62,12 +59,10 @@ public class ColumbaMessage {
         message = new Message();
         message.setHeader(header);
 
-        flags = columbaHeader.getFlags();
     }
 
     public ColumbaMessage(ColumbaHeader h, Message m) {
         columbaHeader = h;
-        flags = columbaHeader.getFlags();
 
         columbaHeader.setHeader(m.getHeader());
         message = m;
@@ -75,7 +70,7 @@ public class ColumbaMessage {
 
     public ColumbaMessage(ColumbaMessage m) {
         this.columbaHeader = m.columbaHeader;
-        this.flags = m.flags;
+
         this.message = m.message;
         this.bodyPart = m.bodyPart;
     }
@@ -110,85 +105,78 @@ public class ColumbaMessage {
     }
 
     /*
- * (non-Javadoc)
- *
- * @see org.columba.ristretto.message.Message#getHeader()
- */
+     * (non-Javadoc)
+     * 
+     * @see org.columba.ristretto.message.Message#getHeader()
+     */
     public ColumbaHeader getHeader() {
         return columbaHeader;
     }
 
     /*
- * (non-Javadoc)
- *
- * @see org.columba.ristretto.message.Message#setHeader(org.columba.ristretto.message.Header)
- */
+     * (non-Javadoc)
+     * 
+     * @see org.columba.ristretto.message.Message#setHeader(org.columba.ristretto.message.Header)
+     */
     public void setHeader(ColumbaHeader h) {
         columbaHeader = h;
     }
 
     /*
- * (non-Javadoc)
- *
- * @see org.columba.ristretto.message.Message#getBodyPart()
- */
+     * (non-Javadoc)
+     * 
+     * @see org.columba.ristretto.message.Message#getBodyPart()
+     */
     public MimePart getBodyPart() {
         return bodyPart;
     }
 
     /*
- * (non-Javadoc)
- *
- * @see org.columba.ristretto.message.Message#getMimePart(int)
- */
+     * (non-Javadoc)
+     * 
+     * @see org.columba.ristretto.message.Message#getMimePart(int)
+     */
     public MimePart getMimePart(int number) {
         return message.getMimePart(number);
     }
 
     /*
- * (non-Javadoc)
- *
- * @see org.columba.ristretto.message.Message#getMimePartCount()
- */
+     * (non-Javadoc)
+     * 
+     * @see org.columba.ristretto.message.Message#getMimePartCount()
+     */
     public int getMimePartCount() {
         return message.getMimePartCount();
     }
 
     /*
- * (non-Javadoc)
- *
- * @see org.columba.ristretto.message.Message#getSource()
- */
+     * (non-Javadoc)
+     * 
+     * @see org.columba.ristretto.message.Message#getSource()
+     */
     public Source getSource() {
         return message.getSource();
     }
 
     /*
- * (non-Javadoc)
- *
- * @see org.columba.ristretto.message.Message#setHeader(org.columba.ristretto.message.Header)
- */
+     * (non-Javadoc)
+     * 
+     * @see org.columba.ristretto.message.Message#setHeader(org.columba.ristretto.message.Header)
+     */
     public void setHeader(Header h) {
         message.setHeader(h);
     }
 
     /*
- * (non-Javadoc)
- *
- * @see org.columba.ristretto.message.Message#setSource(org.columba.ristretto.message.io.Source)
- */
+     * (non-Javadoc)
+     * 
+     * @see org.columba.ristretto.message.Message#setSource(org.columba.ristretto.message.io.Source)
+     */
     public void setSource(Source source) {
         message.setSource(source);
     }
 
-    /**
- * @return
- */
-    public Flags getFlags() {
-        return flags;
-    }
-    
     public void close() {
-    	message.close();
+        message.close();
     }
 }

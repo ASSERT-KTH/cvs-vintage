@@ -28,6 +28,7 @@
 		<menu name="menu_message_mark">
 		 <menuitem action="ToggleReadFlag"/>
 		 <menuitem action="ToggleAnsweredFlag"/>
+		 <menuitem action="ToggleDraftFlag"/>
 		 <menuitem action="ToggleFlaggedFlag"/>
 		 <menuitem action="ToggleExpungedFlag"/>
 		 <menuitem action="ToggleSpamFlag"/>

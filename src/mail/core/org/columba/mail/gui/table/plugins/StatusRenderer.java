@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
@@ -29,15 +31,23 @@ import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
-
 public class StatusRenderer extends DefaultLabelRenderer {
+
     boolean bool;
+
     ImageIcon image1;
+
     ImageIcon image2;
+
     ImageIcon image4;
+
     ImageIcon image3;
+
     ImageIcon image5;
+
     ImageIcon image6;
+
+    ImageIcon image7;
 
     public StatusRenderer() {
         super();
@@ -51,12 +61,13 @@ public class StatusRenderer extends DefaultLabelRenderer {
         image4 = ImageLoader.getSmallImageIcon("mark-as-important-16.png");
         image5 = ImageLoader.getSmallImageIcon("mail-read.png");
         image6 = ImageLoader.getSmallImageIcon("mail-new.png");
+        image7 = ImageLoader.getSmallImageIcon("drafts-16.png");
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value,
-        boolean isSelected, boolean hasFocus, int row, int column) {
+            boolean isSelected, boolean hasFocus, int row, int column) {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-            row, column);
+                row, column);
 
         if (value == null) {
             setIcon(null);
@@ -65,13 +76,14 @@ public class StatusRenderer extends DefaultLabelRenderer {
         }
 
         if (value instanceof String) {
-            System.out.println(
-                "statusrenderer-> instanceof String not expected");
+            System.out
+                    .println("statusrenderer-> instanceof String not expected");
 
             return this;
         }
 
-        Flags flags = ((ColumbaHeader) ((MessageNode) value).getHeader()).getFlags();
+        Flags flags = ((ColumbaHeader) ((MessageNode) value).getHeader())
+                .getFlags();
 
         if (flags.getExpunged()) {
             setIcon(image3);
@@ -82,6 +94,10 @@ public class StatusRenderer extends DefaultLabelRenderer {
             setIcon(image1);
             setToolTipText(MailResourceLoader.getString("header", "column",
                     "answered"));
+        } else if (flags.getDraft()) {
+            setIcon(image7);
+            setToolTipText(MailResourceLoader.getString("header", "column",
+                    "draft"));
         } else if (!flags.getSeen()) {
             setIcon(image6);
             setToolTipText(MailResourceLoader.getString("header", "column",
@@ -90,7 +106,7 @@ public class StatusRenderer extends DefaultLabelRenderer {
             setIcon(image5);
             setToolTipText(MailResourceLoader.getString("header", "column",
                     "read"));
-        } else {
+        }  else {
             setIcon(null);
         }
 

@@ -125,6 +125,8 @@ public class ToggleMarkCommand extends FolderCommand {
                     if (flags.getExpunged()) result = true;
                 } else if (markVariant == MarkMessageCommand.MARK_AS_ANSWERED) {
                     if (flags.getAnswered()) result = true;
+                }  else if (markVariant == MarkMessageCommand.MARK_AS_DRAFT) {
+                    if (flags.getDraft()) result = true;
                 } else if (markVariant == MarkMessageCommand.MARK_AS_SPAM) {
                     boolean spam = ((Boolean) srcFolder.getAttribute(uids[j],
                             "columba.spam")).booleanValue();

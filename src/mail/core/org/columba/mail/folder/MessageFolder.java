@@ -132,7 +132,7 @@ public abstract class MessageFolder extends AbstractFolder implements
     public MessageFolder(FolderItem item, String path) {
         super(item);
 
-        String dir = path + System.getProperty("file.separator")+getUid();
+        String dir = path + System.getProperty("file.separator") + getUid();
 
         if (DiskIO.ensureDirectory(dir)) {
             directoryFile = new File(dir);
@@ -151,7 +151,7 @@ public abstract class MessageFolder extends AbstractFolder implements
     public MessageFolder(String name, String type, String path) {
         super(name, type);
 
-        String dir = path + System.getProperty("file.separator")+getUid();
+        String dir = path + System.getProperty("file.separator") + getUid();
 
         if (DiskIO.ensureDirectory(dir)) {
             directoryFile = new File(dir);
@@ -548,6 +548,18 @@ public abstract class MessageFolder extends AbstractFolder implements
         case MarkMessageCommand.MARK_AS_NOTSPAM:
             {
                 setAttribute(uid, "columba.spam", Boolean.FALSE);
+
+                break;
+            }
+        case MarkMessageCommand.MARK_AS_DRAFT:
+            {
+                flags.setDraft(true);
+
+                break;
+            }
+        case MarkMessageCommand.MARK_AS_NOTDRAFT:
+            {
+                flags.setDraft(false);
 
                 break;
             }

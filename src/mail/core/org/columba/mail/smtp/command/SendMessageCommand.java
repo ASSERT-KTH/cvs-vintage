@@ -17,13 +17,17 @@
 //All Rights Reserved.
 package org.columba.mail.smtp.command;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+
+import javax.swing.JOptionPane;
+
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.MessageComposer;
@@ -38,15 +42,9 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.pgp.CancelledException;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
-
+import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.smtp.SMTPException;
 import org.waffel.jscf.JSCFException;
-
-import java.io.IOException;
-
-import java.net.UnknownHostException;
-
-import javax.swing.JOptionPane;
 
 
 /**
@@ -98,7 +96,9 @@ public class SendMessageCommand extends FolderCommand {
 
         sendMessageDialog = new SendMessageDialog(worker);
 
-        AccountItem item = ((ComposerModel) composerController.getModel()).getAccountItem();
+        ComposerModel model = ((ComposerModel) composerController.getModel());
+        
+        AccountItem item = model.getAccountItem();
 
         // sent folder
         MessageFolder sentFolder = (MessageFolder) MailInterface.treeModel.getFolder(item.getSpecialFoldersItem()
@@ -109,7 +109,7 @@ public class SendMessageCommand extends FolderCommand {
 
         try {
             // compose the message suitable for sending
-            message = new MessageComposer(((ComposerModel) composerController.getModel())).compose(worker);
+            message = new MessageComposer(model).compose(worker);
         } catch (JSCFException e1) {
             if (e1 instanceof CancelledException) {
                 // user cancelled sending operation
@@ -172,11 +172,16 @@ public class SendMessageCommand extends FolderCommand {
             // close composer frame
             composerController.close();
 
+            // mark as read
+            Flags flags = new Flags();
+            flags.setSeen(true);
+            message.getHeader().setFlags(flags);
+            
             // save message in Sent folder
             ComposerCommandReference[] ref = new ComposerCommandReference[1];
             ref[0] = new ComposerCommandReference(composerController, sentFolder);
             ref[0].setMessage(message);
-
+            
             SaveMessageCommand c = new SaveMessageCommand(ref);
 
             MainInterface.processor.addOp(c);
