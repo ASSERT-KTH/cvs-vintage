@@ -92,7 +92,7 @@ import org.apache.commons.lang.Strings;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.164 2002/07/03 17:10:17 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.165 2002/07/09 21:58:29 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1838,9 +1838,25 @@ public class Issue
         Date result = null;
         Object obj = ScarabCache.get(this, GET_CLOSED_DATE); 
         if ( obj == null ) 
-        {        
-            AttributeValue status = getAttributeValue(
-                AttributeManager.getInstance(AttributePeer.STATUS__PK));
+        {  
+            Attribute attribute = null;
+            try
+            { 
+                attribute = AttributeManager
+                    .getInstance(AttributePeer.STATUS__PK);
+            }
+            catch (TorqueException e)
+            {
+                if (e.getMessage() == null 
+                    || !e.getMessage().startsWith("Failed to select one")) 
+                {
+                    throw e;
+                }
+                // closed date has no meaning
+                return null;
+            }
+
+            AttributeValue status = getAttributeValue(attribute);
             if ( status != null && status.getOptionId()
                  .equals(AttributeOption.STATUS__CLOSED__PK) ) 
             {
