@@ -27,7 +27,7 @@ import org.jboss.tm.TxUtils;
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class StatefulSessionInstanceCache
    extends AbstractInstanceCache
@@ -47,6 +47,16 @@ public class StatefulSessionInstanceCache
    // Constructors --------------------------------------------------
 
    // Public --------------------------------------------------------
+
+   /** Get the passivated count.
+    * @jmx:managed-attribute
+    * @return the number of passivated instances.
+    */
+   public long getPassivatedCount()
+   {
+      return m_passivated.size();
+   }
+
    /* From ContainerPlugin interface */
    public void setContainer(Container c)
    {
@@ -113,10 +123,13 @@ public class StatefulSessionInstanceCache
       }
    }
 
-   // Package protected ---------------------------------------------
-   void removePassivated(long maxLifeAfterPassivation)
+   /** Remove all passivated instances that have been inactive too long.
+    * @param maxLifeAfterPassivation the upper bound in milliseconds that an
+    * inactive session will be kept.
+    */
+   protected void removePassivated(long maxLifeAfterPassivation)
    {
-      StatefulSessionPersistenceManager store = (StatefulSessionPersistenceManager)m_container.getPersistenceManager();
+      StatefulSessionPersistenceManager store = m_container.getPersistenceManager();
       long now = System.currentTimeMillis();
       Iterator entries = m_passivated.entrySet().iterator();
       while (entries.hasNext())
@@ -126,17 +139,27 @@ public class StatefulSessionInstanceCache
          long passivationTime = ((Long)entry.getValue()).longValue();
          if (now - passivationTime > maxLifeAfterPassivation)
          {
+            preRemovalPreparation(key);
             store.removePassivated(key);
             if( log.isTraceEnabled() )
                log(key);
-            // Must use the iterator to remove, otherwise
-            // ConcurrentModificationException is thrown
+                // Must use iterator to avoid ConcurrentModificationException
             entries.remove();
+            postRemovalCleanup(key);
          }
       }
    }
 
    // Protected -----------------------------------------------------
+    protected void preRemovalPreparation(Object key)
+    {
+        //  no-op...extending classes may add prep
+    }
+
+    protected void postRemovalCleanup(Object key)
+    {
+        //  no-op...extending classes may add cleanup
+    }
 
    // Private -------------------------------------------------------
    private void log(Object key)
