@@ -1,4 +1,4 @@
-// $Id: PerspectiveConfigurator.java,v 1.9 2004/10/22 20:36:45 mvw Exp $
+// $Id: PerspectiveConfigurator.java,v 1.10 2004/10/22 21:07:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -291,7 +291,6 @@ public class PerspectiveConfigurator extends ArgoDialog {
         ruleLibraryList.addMouseListener(new RuleListMouseListener());
         
         removePerspectiveButton.setEnabled(false);
-        dupPersButton.setEnabled(false);
         addRuleButton.setEnabled(false);
         removeRuleButton.setEnabled(false);
     }
@@ -342,7 +341,13 @@ public class PerspectiveConfigurator extends ArgoDialog {
     
     class DuplicatePerspectiveListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            
+            Object sel = perspectiveList.getSelectedValue();
+            if (sel != null) {
+                ExplorerPerspective newPers = ((ExplorerPerspective) sel)
+                    .makeNamedClone("Copy of " + sel.toString()); //TODO:i18n
+                perspectiveListModel.insertElementAt(newPers, 0);
+                perspectiveList.setSelectedValue(newPers, true);
+            }
         }
     }
     

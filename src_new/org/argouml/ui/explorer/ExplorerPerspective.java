@@ -1,4 +1,4 @@
-// $Id: ExplorerPerspective.java,v 1.8 2004/10/13 05:52:30 linus Exp $
+// $Id: ExplorerPerspective.java,v 1.9 2004/10/22 21:07:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,5 +84,16 @@ public class ExplorerPerspective {
      */
     public String toString() {
         return name;
+    }
+    
+    /**
+     * Make a clone of this ExplorerPerspective with a different given name.
+     * @param newName the given name
+     * @return the new ExplorerPerspective
+     */
+    public ExplorerPerspective makeNamedClone(String newName) {
+        ExplorerPerspective ep = new ExplorerPerspective(newName);
+        ep.rules.addAll(rules);
+        return ep;
     }
 }
