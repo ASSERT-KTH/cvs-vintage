@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: app_docplan.xml,v 1.6 2003/08/16 10:41:10 linus Exp $ -->
+<!-- $Id: app_docplan.xml,v 1.7 2003/10/15 19:07:40 mvw Exp $ -->
 
 <!--
 
@@ -90,16 +90,16 @@ TODO: Remove this from the user manual.
     <title>Suggested Manual Structure</title>
 
     <para>Here are my thoughts. I think the user manual is really a set of two
-      books, the tutorial manual (corresponding to Chapters 1&ndash;3 of the
-      current manual), and the reference manual (Chapter 4 of the current
+      books, the tutorial manual (corresponding to Part I of the
+      current manual), and the reference manual (Part II of the current
       manual)</para>
 
     <para>I suggest that the tutorial book be based around an &ooad; process
       (any preferences), and that each UML concept is introduced with each step
       of the process, followed by an explanation of how to do it under
       &argouml;. A <emphasis>simple</emphasis>case study will be needed
-      throughout. A lot of this material can come from existing Chapters
-      1&ndash;3, with some additional material from chapter 4 of the Cookbook,
+      throughout. A lot of this material can come from existing Tutorial 
+      Chapters, with some additional material from the Cookbook,
       answers in the FAQ and Jason Robbins dissertation.</para>
 
     <sect2>
@@ -192,7 +192,7 @@ TODO: Remove this from the user manual.
     <sect2>
       <title>Reference Manual Structure</title>
 
-      <para>This section largely follows Chapter 4 of the existing User Manual,
+      <para>This section largely follows the existing User Manual,
         including the Gloassary. However it needs a few extra things.</para>
 
       <orderedlist>
