@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmTool.java,v 1.1 1999/10/23 22:30:18 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/23 22:30:18 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmTool.java,v 1.2 1999/10/24 00:08:02 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/24 00:08:02 $
  *
  * ====================================================================
  *
@@ -73,6 +73,7 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import org.apache.tomcat.util.HexUtils;
 import org.apache.tomcat.util.StringManager;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -114,7 +115,7 @@ import org.xml.sax.SAXParseException;
  * </pre>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 1999/10/23 22:30:18 $
+ * @version $Revision: 1.2 $ $Date: 1999/10/24 00:08:02 $
  */
 
 public final class FileRealmTool {
@@ -329,41 +330,6 @@ public final class FileRealmTool {
     }
 
 
-    /** [Private] Convert the specified byte array representation of an
-     * encrypted password into the corresponding hexadecimal digit
-     * representation.
-     *
-     * @param bytes Byte array representation
-     */
-    private static String convert(byte bytes[]) {
-
-	StringBuffer sb = new StringBuffer(bytes.length * 2);
-	for (int i = 0; i < bytes.length; i++) {
-	    sb.append(convertDigit((int) (bytes[i] >> 4)));
-	    sb.append(convertDigit((int) (bytes[i] & 0x0f)));
-	}
-	return (sb.toString());
-
-    }
-
-
-    /**
-     * [Private] Convert the specified value (0 .. 15) to the corresponding
-     * hexadecimal digit.
-     *
-     * @param value Value to be converted
-     */
-    private static char convertDigit(int value) {
-
-	value &= 0x0f;
-	if (value >= 10)
-	    return ((char) (value - 10 + 'a'));
-	else
-	    return ((char) (value + '0'));
-
-    }
-
-
     /**
      * Drop an existing group, if it is already present.
      */
@@ -507,8 +473,8 @@ public final class FileRealmTool {
 	while (users.hasMoreElements()) {
 	    FileRealmUser user = (FileRealmUser) users.nextElement();
 	    System.out.print("User '" + user.getName() +
-			     "', password='" + convert(user.getPassword()) +
-			     "'");
+			     "', password='" +
+			     HexUtils.convert(user.getPassword()) + "'");
 	    Enumeration groups = user.getGroups();
 	    while (groups.hasMoreElements()) {
 		FileRealmGroup group = (FileRealmGroup) groups.nextElement();
