@@ -51,9 +51,11 @@
     #fieldErrorMsg($attgroup.Description "")
   </td>
 </tr>
+#if (!$attribute.isNew())
 <tr>
   <th width="120">Creation date</th> <td class="b">$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</th>
 </tr>
+#end
 </table>
 </div>
 
