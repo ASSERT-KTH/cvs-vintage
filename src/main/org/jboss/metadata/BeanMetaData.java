@@ -30,7 +30,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -117,7 +117,7 @@ public abstract class BeanMetaData
    private ClusterConfigMetaData clusterConfig = null;
 
    // from jboss.xml
-	 
+
    /** The JNDI name under with the home interface should be bound */
    private String jndiName;
 
@@ -152,23 +152,35 @@ public abstract class BeanMetaData
    public String getLocalHome() { return localHomeClass; }
 	
    public String getLocal() { return localClass; }    
-        
+
    public String getEjbClass() { return ejbClass; }
-	
+
    public String getEjbName() { return ejbName; }
 
    public boolean isContainerManagedTx() { return containerManagedTx; }
 
    public boolean isBeanManagedTx() { return !containerManagedTx; }
-	
+
    public Iterator getEjbReferences() { return ejbReferences.values().iterator(); }
-        
+
    public Iterator getEjbLocalReferences() { return ejbLocalReferences.values().iterator(); }
 
-   public String getHomeInvoker() { return homeInvoker; }
+   public String getHomeInvoker()
+   {
+     if (homeInvoker != null)
+       return homeInvoker;
+     else
+       return DEFAULT_HOME_INVOKER;
+   }
 
-   public String getBeanInvoker() { return beanInvoker; }
-	
+   public String getBeanInvoker()
+   {
+     if (beanInvoker != null)
+       return beanInvoker;
+     else
+       return DEFAULT_BEAN_INVOKER;
+   }
+
    public EjbRefMetaData getEjbRefByName(String name)
    {
       return (EjbRefMetaData)ejbReferences.get(name);
@@ -366,13 +378,13 @@ public abstract class BeanMetaData
 		
       while (iterator.hasNext()) {
          Element envEntry = (Element)iterator.next();
- 			
+
          EnvEntryMetaData envEntryMetaData = new EnvEntryMetaData();
          envEntryMetaData.importEjbJarXml(envEntry);
 			
          environmentEntries.add(envEntryMetaData);
       }
-		
+
       // set the ejb references
       iterator = getChildrenByTagName(element, "ejb-ref");
 		
@@ -422,7 +434,7 @@ public abstract class BeanMetaData
 		
       while (iterator.hasNext()) {
          Element resourceRef = (Element) iterator.next();
-			
+
          ResourceRefMetaData resourceRefMetaData = new ResourceRefMetaData();
          resourceRefMetaData.importEjbJarXml(resourceRef);
 			
@@ -494,7 +506,7 @@ public abstract class BeanMetaData
          }
          ejbRefMetaData.importJbossXml(ejbRef);
       }
-      
+
       // Has a custom invoker been defined?
       //
       homeInvoker = getElementContent(getOptionalChild(element, "home-invoker"));
