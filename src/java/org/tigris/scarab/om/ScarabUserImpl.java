@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Calendar;
+import java.util.Vector;
 
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Role;
@@ -57,6 +58,7 @@ import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.util.GroupSet;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRolePeer;
+import org.apache.torque.pool.DBConnection;
 import org.apache.torque.Torque;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.BaseObject;
@@ -90,7 +92,7 @@ import org.apache.fulcrum.security.impl.db.entity
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.31 2001/10/26 23:09:24 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.32 2001/10/30 00:44:33 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -101,6 +103,7 @@ public class ScarabUserImpl
     public static final String PASSWORD_EXPIRE = "PASSWORD_EXPIRE";
 
     private int issueCount = 0;
+    private AbstractScarabUser internalUser;
 
     /**
      * The maximum length for the unique identifier used at user
@@ -114,8 +117,44 @@ public class ScarabUserImpl
     public ScarabUserImpl()
     {
         super();
+
+        internalUser = new AbstractScarabUser()
+            {
+                public NumberKey getUserId()
+                {
+                    return getPrivateUserId();
+                }
+
+                protected Vector getRModuleUserAttributes(Criteria crit)
+                    throws Exception
+                {
+                    return getPrivateRModuleUserAttributes(crit);
+                }
+
+                public boolean hasPermission(String perm, ModuleEntity module)
+                {
+                    return hasPrivatePermission(perm, module);
+                }
+            };
     }
 
+    // the following three methods are to avoid naming conflicts when
+    // supplying implementations of the methods needed by AbstractScarabUser
+    // when instantiated in the constructor
+    private NumberKey getPrivateUserId()
+    {
+        return getUserId();
+    }
+    private Vector getPrivateRModuleUserAttributes(Criteria crit)
+        throws Exception
+    {
+        return getRModuleUserAttributes(crit);
+    }
+    private boolean hasPrivatePermission(String perm, ModuleEntity module)
+    {
+        return hasPermission(perm, module);
+    }
+    
     /**
      *   Utility method that takes a username and a confirmation code
      *   and will return true if there is a match and false if no match.
@@ -339,19 +378,7 @@ public class ScarabUserImpl
      */
     public List getModules() throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.addJoin(TurbineUserGroupRolePeer.USER_ID, ScarabUserImplPeer.USER_ID);
-        crit.addJoin(TurbineUserGroupRolePeer.GROUP_ID, ScarabModulePeer.MODULE_ID);
-        crit.add(TurbineUserGroupRolePeer.USER_ID, this.getUserId());
-        GroupSet groups = TurbineSecurity.getGroups(crit);
-        Iterator itr = groups.elements();
-        List modules = new ArrayList(groups.size());
-        while (itr.hasNext())
-        {
-            Group group = (Group) itr.next();
-            modules.add((ModuleEntity)group);
-        }
-        return modules;
+        return internalUser.getModules();
     }
 
     /**
@@ -359,21 +386,8 @@ public class ScarabUserImpl
      */
     public List getEditableModules() throws Exception
     {
-        List userModules = getModules();
-        ArrayList editModules = new ArrayList();
-
-        for (int i=0; i<userModules.size(); i++)
-        {
-            ModuleEntity module = (ModuleEntity)userModules.get(i);
-            if (hasPermission(ScarabSecurity.MODULE__EDIT, 
-                              (ModuleEntity)module)
-               && !(module.getModuleId().toString().equals("0")))
-            {
-                editModules.add(module);
-            }
-        }
-        return editModules;
-     }
+        return internalUser.getEditableModules();
+    }
 
     /**
      * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(ModuleEntity, IssueType)
@@ -382,14 +396,7 @@ public class ScarabUserImpl
                                          IssueType issueType)
         throws Exception
     {
-        List rmuas = new ArrayList();
-        Criteria crit = new Criteria()
-           .add(RModuleUserAttributePeer.USER_ID, getUserId())
-           .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
-           .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
-                issueType.getIssueTypeId());
-
-        return getRModuleUserAttributes(crit);
+        return internalUser.getRModuleUserAttributes(module, issueType);
     }
 
             
@@ -401,27 +408,8 @@ public class ScarabUserImpl
                                                        IssueType issueType)
         throws Exception
     {
-        RModuleUserAttribute mua = null;
-        Criteria crit = new Criteria(4)
-           .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
-           .add(RModuleUserAttributePeer.USER_ID, getUserId())
-           .add(RModuleUserAttributePeer.ATTRIBUTE_ID, attribute.getAttributeId())
-           .add(RModuleUserAttributePeer.ATTRIBUTE_ID, issueType.getIssueTypeId());
-        try
-        {
-   
-            mua = (RModuleUserAttribute)RModuleUserAttributePeer
-                                        .doSelect(crit).elementAt(0);
-        }
-        catch (Exception e)
-        {
-            mua = new RModuleUserAttribute();
-            mua.setModuleId(module.getModuleId());
-            mua.setUserId(getUserId());
-            mua.setIssueTypeId(issueType.getIssueTypeId());
-            mua.setAttributeId(attribute.getAttributeId());
-        }
-        return mua;
+        return internalUser
+            .getRModuleUserAttribute(module, attribute, issueType);
     }
 
 
@@ -431,7 +419,7 @@ public class ScarabUserImpl
     public Issue getReportingIssue(String key)
         throws Exception
     {
-        return (Issue) getTemp(REPORTING_ISSUE+key);
+        return internalUser.getReportingIssue(key);
     }
 
     /**
@@ -440,17 +428,7 @@ public class ScarabUserImpl
     public String setReportingIssue(Issue issue)
         throws ScarabException
     {
-        String key = null;
-        if (issue == null) 
-        {
-            throw new ScarabException("Null Issue is not allowed.");
-        }
-        else 
-        {
-            key = String.valueOf(issueCount++);
-            setTemp(REPORTING_ISSUE+key, issue);
-        }
-        return key;
+        return internalUser.setReportingIssue(issue);
     }
 
     /**
@@ -458,64 +436,35 @@ public class ScarabUserImpl
      */
     public void setReportingIssue(String key, Issue issue)
     {
-        if (issue == null) 
-        {
-            removeTemp(REPORTING_ISSUE+key);
-        }
-        else 
-        {
-            setTemp(REPORTING_ISSUE+key, issue);
-        }
+        internalUser.setReportingIssue(key, issue);
     }
 
     /**
      * Clears default query for this module/issuetype.
      */
-    public RQueryUser getDefaultQueryUser(ModuleEntity me, IssueType issueType)
+    public RQueryUser getDefaultQueryUser(ModuleEntity module, 
+                                          IssueType issueType)
         throws Exception
     {
-        RQueryUser rqu = null;
-        Criteria crit = new Criteria();
-        crit.add(RQueryUserPeer.USER_ID, getUserId());
-        crit.add(RQueryUserPeer.ISDEFAULT, 1);
-        crit.addJoin(RQueryUserPeer.QUERY_ID,
-                     QueryPeer.QUERY_ID);
-        crit.add(QueryPeer.MODULE_ID, me.getModuleId());
-        crit.add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
-        if (RQueryUserPeer.doSelect(crit).size() > 0)
-        {
-            rqu = (RQueryUser)RQueryUserPeer.doSelect(crit).get(0);
-        }
-        return rqu;
+        return internalUser.getDefaultQueryUser(module, issueType);
     }
 
     /**
      * gets default query for this module/issuetype.
      */
-    public Query getDefaultQuery(ModuleEntity me, IssueType issueType)
+    public Query getDefaultQuery(ModuleEntity module, IssueType issueType)
         throws Exception
     {
-        Query query = null;
-        RQueryUser rqu = getDefaultQueryUser(me, issueType);
-        if (rqu != null)
-        { 
-            query = (Query)rqu.getQuery();
-        }
-        return query;
+        return internalUser.getDefaultQuery(module, issueType);
     }
 
     /**
      * Clears default query for this module/issuetype.
      */
-    public void resetDefaultQuery(ModuleEntity me, IssueType issueType)
+    public void resetDefaultQuery(ModuleEntity module, IssueType issueType)
         throws Exception
     {
-        RQueryUser rqu = getDefaultQueryUser(me, issueType);
-        if (rqu != null)
-        { 
-            rqu.setIsdefault(false);
-            rqu.save();
-        }
+        internalUser.resetDefaultQuery(module, issueType);
     }
 
     /**
