@@ -111,11 +111,6 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
         try {
             reader = new ObjectReader(headerFile);
-        } catch (Exception e) {
-            if (MainInterface.DEBUG) {
-                e.printStackTrace();
-            }
-        }
 
         int capacity = ((Integer) reader.readObject()).intValue();
         LOG.fine("capacity=" + capacity);
@@ -196,7 +191,13 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
         LOG.info("next UID for new messages =" + nextUid);
         ((LocalFolder) folder).setNextMessageUid(nextUid);
 
-        reader.close();
+        } catch (Exception e) {
+            if (MainInterface.DEBUG) {
+                e.printStackTrace();
+            }
+        } finally {
+        	reader.close();
+        }
 
         if (configurationChanged) {
             // headerfield cache configuration changed
