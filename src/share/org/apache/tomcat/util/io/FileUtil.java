@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.4 2001/04/22 05:38:17 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2001/04/22 05:38:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.5 2001/08/11 02:52:45 larryi Exp $
+ * $Revision: 1.5 $
+ * $Date: 2001/08/11 02:52:45 $
  *
  * ====================================================================
  *
@@ -432,5 +432,25 @@ public class FileUtil {
     }
 
 
+    public static File getConfigFile( File base, File configDir, String defaultF )
+    {
+        if( base==null )
+            base=new File( defaultF );
+        if( ! base.isAbsolute() ) {
+            if( configDir != null )
+                base=new File( configDir, base.getPath());
+            else
+                base=new File( base.getAbsolutePath()); //??
+        }
+        File parent=new File(base.getParent());
+        if(!parent.exists()){
+            if(!parent.mkdirs()){
+                throw new RuntimeException(
+                    "Unable to create path to config file :"+
+                    base.getAbsolutePath());
+            }
+        }
+        return base;
+    }
 
 }
