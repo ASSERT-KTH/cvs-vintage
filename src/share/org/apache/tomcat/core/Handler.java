@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.5 2000/06/22 19:49:35 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/06/22 19:49:35 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.6 2000/06/22 23:59:23 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/06/22 23:59:23 $
  *
  * ====================================================================
  *
@@ -64,7 +64,6 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.facade.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.servlets.TomcatInternalServlet;
 import java.io.*;
 import java.net.*;
 import java.util.*;

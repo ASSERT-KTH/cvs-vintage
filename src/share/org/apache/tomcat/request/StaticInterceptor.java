@@ -359,7 +359,7 @@ class DirHandler extends ServletWrapper  {
 	// the next round of optimizations
 	Locale locale=RequestUtil.getLocale(req);
 	StringManager sm=StringManager.
-	    getManager("org.apache.tomcat.servlets",locale);
+	    getManager("org.apache.tomcat.resources",locale);
 	DateFormat dateFormat =
 	    new SimpleDateFormat(datePattern,locale );
 

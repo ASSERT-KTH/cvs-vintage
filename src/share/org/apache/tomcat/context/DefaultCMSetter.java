@@ -137,7 +137,7 @@ public class DefaultCMSetter extends BaseInterceptor {
 
 class NotFoundHandler extends ServletWrapper {
     static StringManager sm=StringManager.
-	getManager("org.apache.tomcat.servlets");
+	getManager("org.apache.tomcat.resources");
 
     NotFoundHandler() {
 	initialized=true;
@@ -186,7 +186,7 @@ class NotFoundHandler extends ServletWrapper {
 
 class ExceptionHandler extends ServletWrapper {
     static StringManager sm=StringManager.
-	getManager("org.apache.tomcat.servlets");
+	getManager("org.apache.tomcat.resources");
 
     ExceptionHandler() {
 	initialized=true;
@@ -272,7 +272,7 @@ class ExceptionHandler extends ServletWrapper {
 
 class StatusHandler extends ServletWrapper {
     static StringManager sm=StringManager.
-	getManager("org.apache.tomcat.servlets");
+	getManager("org.apache.tomcat.resources");
 
     StatusHandler() {
 	initialized=true;
@@ -325,7 +325,7 @@ class StatusHandler extends ServletWrapper {
 	
 class RedirectHandler extends ServletWrapper {
     static StringManager sm=StringManager.
-	getManager("org.apache.tomcat.servlets");
+	getManager("org.apache.tomcat.resources");
 
     RedirectHandler() {
 	initialized=true;
