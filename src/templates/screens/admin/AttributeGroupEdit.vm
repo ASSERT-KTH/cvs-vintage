@@ -130,13 +130,13 @@
 #if (!$issueType.Locked)
   <div class="functnbar3">
   #if (!$group.Attributes.isEmpty())
-    <input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
+    <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveattributes" />&#160;
   #end
   <input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
   ##<input type="submit" value="$l10n.CopySelected" />&#160;
   #if (!$group.Attributes.isEmpty())
      <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteattributes" />&#160;
-     <input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
+     <input type="submit" value="$l10n.Resort" name="eventSubmit_doSaveattributes" />
   #end
 </div>
 #end
