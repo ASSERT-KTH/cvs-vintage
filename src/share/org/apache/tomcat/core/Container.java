@@ -214,6 +214,7 @@ public class Container implements Cloneable {
     }
     
     public ServletWrapper getHandler() {
+        if (handler == null) handler=context.getDefaultServlet();
 	return handler;
     }
     

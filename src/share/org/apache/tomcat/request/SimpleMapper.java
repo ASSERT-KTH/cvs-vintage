@@ -190,10 +190,6 @@ public class SimpleMapper extends  BaseInterceptor  {
 	// set default container, return
 	if (container == null) {
 	    container=m.defaultContainer;
-	    if( m.defaultContainer.getHandler() == null ) {
-		ServletWrapper sw=context.getDefaultServlet();
-		m.defaultContainer.setHandler( sw );
-	    }
 	    req.setWrapper( m.defaultContainer.getHandler() );
 	    req.setServletPath( "" );
 	    req.setPathInfo( path);
@@ -309,8 +305,6 @@ public class SimpleMapper extends  BaseInterceptor  {
 	    mtable.put( ctxP, m );
 	    Container def=new Container();
 	    def.setContext( ctx );
-	    ServletWrapper wrapper = ctx.getDefaultServlet();
-	    def.setHandler( wrapper );
 	    m.defaultContainer=def;
 	}
 	if(debug>0) ctx.log( "Add mapping " + path + " " + ct + " " + m );
