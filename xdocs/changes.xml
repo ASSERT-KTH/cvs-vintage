@@ -8,8 +8,8 @@
   <body>
     <release version="b20" date="in dev">
       <action dev="epugh" type="add">
-        Rudimentary RSS and Atom feeds.  Added badges to Query pages so that saved queries can be run to
-        populate a feed.
+        Rudimentary RSS and Atom feeds.  Added badges to Query and Issue pages so that saved queries can be run to
+        populate a feed as well as viewing the history of an Issue.
       </action>          
       <action dev="epugh" type="add">
         Scarab Cache is now a facade ScarabCache and an Avalon component.  NoOpScarabCacheService
