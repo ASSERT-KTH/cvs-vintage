@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.2 2001/07/19 12:08:18 1sturm Exp $
+// $Id: Critic.java,v 1.3 2001/08/06 05:52:30 mkl Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -150,7 +150,7 @@ public class Critic implements Poster, java.io.Serializable {
     _decisionCategory = "Checking";
     _emailAddr = "jrobbins@ics.uci.edu";
     _moreInfoURL = "http://ics.uci.edu/~jrobbins";
-    _description = "no description is availible";
+    _description = "no description is available";
     _headline = "default critic headline";
     _priority = ToDoItem.MED_PRIORITY;
   }
