@@ -1,4 +1,4 @@
-// $Id: CrNoOperations.java,v 1.16 2003/09/01 15:02:06 bobtarling Exp $
+// $Id: CrNoOperations.java,v 1.17 2003/12/04 18:37:11 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,14 +31,16 @@ package org.argouml.uml.cognitive.critics;
 import java.util.Iterator;
 import javax.swing.Icon;
 import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
 
 
 // Uses Model through ModelFacade.
 
 
-/** A critic to detect when a class or its base class doesn't 
+/** A critic to detect when a class or interface or its base class doesn't 
  * have any operations.
  */
 public class CrNoOperations extends CrUML {
@@ -51,7 +53,8 @@ public class CrNoOperations extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAClass(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAClass(dm) || 
+            ModelFacade.isAInterface(dm))) return NO_PROBLEM;
 
 	if (!(ModelFacade.isPrimaryObject(dm))) return NO_PROBLEM;
 
@@ -109,5 +112,18 @@ public class CrNoOperations extends CrUML {
 
 	return false;
     }
+    
+    public void initWizard(Wizard w) {
+	if (w instanceof WizAddOperation) {
+	    ToDoItem item = w.getToDoItem();
+	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
+	    String ins = "Set the name of the new operation.";
+	    String sug = "newOperation";
+	    ((WizAddOperation) w).setInstructions(ins);
+	    ((WizAddOperation) w).setSuggestion(sug);
+	}
+    }
+    
+    public Class getWizardClass(ToDoItem item) { return WizAddOperation.class; }
 } /* end class CrNoOperations */
 
