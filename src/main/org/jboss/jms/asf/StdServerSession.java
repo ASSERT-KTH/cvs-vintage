@@ -31,7 +31,7 @@ import org.jboss.tm.XidImpl;
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.10 $
+ * @version   $Revision: 1.11 $
  */
 public class StdServerSession
    implements Runnable, ServerSession, MessageListener
@@ -40,39 +40,39 @@ public class StdServerSession
     * Instance logger.
     */
    static Logger log = Logger.getLogger(StdServerSession.class);
-
+   
    /**
     * The server session pool which we belong to.
     */
    private StdServerSessionPool serverSessionPool;
-
+   
    /**
     * Our session resource.
     */
    private Session session;
-
+   
    /**
     * Our XA session resource.
     */
    private XASession xaSession;
-
+   
    /**
     * The transaction manager that we will use for transactions.
     */
    private TransactionManager tm;
-
+   
    /**
     * Use the session's XAResource directly if we have an JBossMQ XASession.
     * this allows us to get around the TX timeout problem when you have
     * extensive message processing.
     */
    private boolean useLocalTX;
-
+   
    /**
     * The listener to delegate calls, to. In our case the container invoker.
     */
    private MessageListener delegateListener;
-
+   
    /**
     * Create a <tt>StdServerSession</tt> .
     *
@@ -85,38 +85,37 @@ public class StdServerSession
     * @exception JMSException  Description of Exception
     */
    StdServerSession(final StdServerSessionPool pool,
-         final Session session,
-         final XASession xaSession,
-	 final MessageListener delegateListener,
-         boolean useLocalTX)
-          throws JMSException
+      final Session session,
+      final XASession xaSession,
+      final MessageListener delegateListener,
+      boolean useLocalTX)
+      throws JMSException
    {
       // assert pool != null
       // assert session != null
-
+      
       this.serverSessionPool = pool;
       this.session = session;
       this.xaSession = xaSession;
       this.delegateListener = delegateListener;
       if( xaSession == null )
-	      useLocalTX = false;
+         useLocalTX = false;
       this.useLocalTX = useLocalTX;
-
+      
       log.debug("initializing (pool, session, xaSession, useLocalTX): " +
-            pool + ", " + session + ", " + xaSession + ", " + useLocalTX);
-
+      pool + ", " + session + ", " + xaSession + ", " + useLocalTX);
+      
       // Set out self as message listener
       if (xaSession != null)
-      	 xaSession.setMessageListener(this);
+         xaSession.setMessageListener(this);
       else
-	  session.setMessageListener(this);
-
+         session.setMessageListener(this);
+      
       InitialContext ctx = null;
       try
       {
          ctx = new InitialContext();
-         tm = (TransactionManager)
-               ctx.lookup(TransactionManagerService.JNDI_NAME);
+         tm = (TransactionManager) ctx.lookup(TransactionManagerService.JNDI_NAME);
       }
       catch (Exception e)
       {
@@ -136,9 +135,9 @@ public class StdServerSession
          }
       }
    }
-
+   
    // --- Impl of JMS standard API
-
+   
    /**
     * Returns the session. <p>
     *
@@ -152,13 +151,13 @@ public class StdServerSession
    public Session getSession() throws JMSException
    {
       if (xaSession != null)
-      	 return xaSession;
+         return xaSession;
       else
-	 return session;
+         return session;
    }
-
+   
    //--- Protected parts, used by other in the package
-
+   
    /**
     * Runs in an own thread, basically calls the session.run(), it is up to the
     * session to have been filled with messages and it will run against the
@@ -167,11 +166,12 @@ public class StdServerSession
     */
    public void run()
    {
-      log.debug("running...");
+      if( log.isTraceEnabled() )
+         log.trace("running...");
       if (xaSession != null)
-      	 xaSession.run();
+         xaSession.run();
       else
-	 session.run();
+         session.run();
    }
    /**
     * Will get called from session for each message stuffed into it.
@@ -185,20 +185,21 @@ public class StdServerSession
     * leaving it this way since it keeps the code simpler and that case should
     * not be too common (JBossMQ provides XASessions).
     */
-   public void onMessage(Message msg) {
-
-      log.info("running (pool, session, xaSession, useLocalTX): " +
-            ", " + session + ", " + xaSession + ", " + useLocalTX);
+   public void onMessage(Message msg)
+   {      
+      boolean trace = log.isTraceEnabled();
+      if( trace )
+         log.trace("onMessage running (pool, session, xaSession, useLocalTX): " +
+         ", " + session + ", " + xaSession + ", " + useLocalTX);
 
       // Used if run with useLocalTX if true
       Xid localXid = null;
       boolean localRollbackFlag=false;
-
       // Used if run with useLocalTX if false
       Transaction trans = null;
       try
       {
-
+         
          if (useLocalTX)
          {
             // Use JBossMQ One Phase Commit to commit the TX
@@ -206,34 +207,35 @@ public class StdServerSession
             XAResource res = xaSession.getXAResource();
             res.start(localXid, XAResource.TMNOFLAGS);
             
-            if (log.isTraceEnabled()) log.trace("Using optimized 1p commit to control TX.");
-
+            if( trace )
+               log.trace("Using optimized 1p commit to control TX.");
          }
          else
          {
-
+            
             // Use the TM to control the TX
             tm.begin();
             trans = tm.getTransaction();
-
+            
             if (xaSession != null)
             {
                XAResource res = xaSession.getXAResource();
                trans.enlistResource(res);
-               if (log.isTraceEnabled()) log.trace("XAResource '" + res + "' enlisted.");
+               if( trace )
+                  log.trace("XAResource '" + res + "' enlisted.");
             }
          }
          //currentTransactionId = connection.spyXAResourceManager.startTx();
-
+         
          // run the session
          //session.run();
-	 // Call delegate listener
-	 delegateListener.onMessage(msg);
+         // Call delegate listener
+         delegateListener.onMessage(msg);
       }
       catch (Exception e)
       {
          log.error("session failed to run; setting rollback only", e);
-
+         
          if (useLocalTX)
          {
             // Use JBossMQ One Phase Commit to commit the TX
@@ -241,12 +243,12 @@ public class StdServerSession
          }
          else
          {
-
             // Mark for tollback TX via TM
             try
             {
                // The transaction will be rolledback in the finally
-               if (log.isTraceEnabled()) log.trace("Using TM to mark TX for rollback.");
+               if( trace )
+                  log.trace("Using TM to mark TX for rollback.");
                trans.setRollbackOnly();
             }
             catch (Exception x)
@@ -254,7 +256,7 @@ public class StdServerSession
                log.error("failed to set rollback only", x);
             }
          }
-
+         
       }
       finally
       {
@@ -262,33 +264,37 @@ public class StdServerSession
          {
             if (useLocalTX)
             {
-            	if( localRollbackFlag == true  ) {
-		            if (log.isTraceEnabled()) log.trace("Using optimized 1p commit to rollback TX.");
-		            
-		            XAResource res = xaSession.getXAResource();
-		            res.end(localXid, XAResource.TMSUCCESS);
-		            res.rollback(localXid);
-		            
-            	} else {
-		            if (log.isTraceEnabled()) log.trace("Using optimized 1p commit to commit TX.");
-		            
-		            XAResource res = xaSession.getXAResource();
-		            res.end(localXid, XAResource.TMSUCCESS);
-		            res.commit(localXid, true);
-            	}          	
-
+               if( localRollbackFlag == true  )
+               {
+                  if( trace )
+                     log.trace("Using optimized 1p commit to rollback TX.");
+                  
+                  XAResource res = xaSession.getXAResource();
+                  res.end(localXid, XAResource.TMSUCCESS);
+                  res.rollback(localXid);
+                  
+               }
+               else
+               {
+                  if( trace )
+                     log.trace("Using optimized 1p commit to commit TX.");
+                  
+                  XAResource res = xaSession.getXAResource();
+                  res.end(localXid, XAResource.TMSUCCESS);
+                  res.commit(localXid, true);
+               }
             }
             else
             {
-               // Use the TM to commit the Tx
-
+               // Use the TM to commit the Tx               
                // Marked rollback
                if (trans.getStatus() == Status.STATUS_MARKED_ROLLBACK)
                {
-                  log.debug("Rolling back JMS transaction");
+                  if( trace )
+                     log.trace("Rolling back JMS transaction");
                   // actually roll it back
                   trans.rollback();
-
+                  
                   // NO XASession? then manually rollback.
                   // This is not so good but
                   // it's the best we can do if we have no XASession.
@@ -303,7 +309,8 @@ public class StdServerSession
                   // This will happen if
                   // a) everything goes well
                   // b) app. exception was thrown
-                  if (log.isTraceEnabled()) log.trace("Commiting the JMS transaction");
+                  if( trace )
+                     log.trace("Commiting the JMS transaction");
                   trans.commit();
 
                   // NO XASession? then manually commit.  This is not so good but
@@ -313,17 +320,17 @@ public class StdServerSession
                      session.commit();
                   }
                }
-            }
-
+            }            
          }
          catch (Exception e)
          {
             log.error("failed to commit/rollback", e);
          }
-
+         
          StdServerSession.this.recycle();
       }
-      if (log.isTraceEnabled()) log.trace("done");
+      if( trace )
+         log.trace("onMessage done");
    }
 
    /**
@@ -333,8 +340,9 @@ public class StdServerSession
     */
    public void start() throws JMSException
    {
-      log.debug("starting invokes on server session");
-
+      if( log.isTraceEnabled() )
+         log.trace("starting invokes on server session");
+      
       if (session != null)
       {
          try
@@ -350,7 +358,7 @@ public class StdServerSession
          throw new JMSException("No listener has been specified");
       }
    }
-
+   
    /**
     * Called by the ServerSessionPool when the sessions should be closed.
     */
@@ -365,10 +373,10 @@ public class StdServerSession
          catch (Exception ignore)
          {
          }
-
+         
          session = null;
       }
-
+      
       if (xaSession != null)
       {
          try
@@ -380,10 +388,10 @@ public class StdServerSession
          }
          xaSession = null;
       }
-
+      
       log.debug("closed");
    }
-
+   
    /**
     * This method is called by the ServerSessionPool when it is ready to be
     * recycled intot the pool
@@ -392,8 +400,6 @@ public class StdServerSession
    {
       serverSessionPool.recycle(this);
    }
-
-
+   
 }
-
 

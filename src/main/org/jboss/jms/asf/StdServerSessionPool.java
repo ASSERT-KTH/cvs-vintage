@@ -28,7 +28,7 @@ import javax.jms.XASession;
 import javax.jms.XATopicConnection;
 import javax.jms.XATopicSession;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * Implementation of ServerSessionPool. <p>
@@ -37,7 +37,7 @@ import org.apache.log4j.Category;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.15 $
+ * @version   $Revision: 1.16 $
  */
 public class StdServerSessionPool
        implements ServerSessionPool
@@ -56,7 +56,7 @@ public class StdServerSessionPool
    /**
     * Instance logger.
     */
-   private final Category log = Category.getInstance(this.getClass());
+   private final Logger log = Logger.getLogger(this.getClass());
 
    /**
     * The size of the pool.
@@ -126,7 +126,7 @@ public class StdServerSessionPool
          final boolean useLocalTX,
          final MessageListener listener,
          final int maxSession)
-          throws JMSException
+         throws JMSException
    {
       this.con = con;
       this.ack = ack;
@@ -175,7 +175,8 @@ public class StdServerSessionPool
     */
    public ServerSession getServerSession() throws JMSException
    {
-      log.debug("getting a server session");
+      if( log.isTraceEnabled() )
+         log.trace("getting a server session");
       ServerSession session = null;
 
       try
@@ -212,8 +213,8 @@ public class StdServerSessionPool
       }
 
       // assert session != null
-
-      log.debug("using server session: " + session);
+      if( log.isTraceEnabled() )
+         log.trace("using server session: " + session);
       return session;
    }
 
@@ -314,7 +315,8 @@ public class StdServerSessionPool
          {
             sessionPool.add(session);
             sessionPool.notifyAll();
-            log.debug("recycled server session: " + session);
+            if( log.isTraceEnabled() )
+               log.trace("recycled server session: " + session);
          }
       }
    }
@@ -360,21 +362,9 @@ public class StdServerSessionPool
             throw new JMSException("Connection was not reconizable: " + con);
          }
 
-
-
          // create the server session and add it to the pool - it is up to the
-	 // server session to set the listener
+         // server session to set the listener
          StdServerSession serverSession = new StdServerSession(this, ses, xaSes, listener, useLocalTX);
-
-
-         // This might not be totaly spec compliant since it says that app
-         // server should create as many message listeners its needs.
-         //log.debug("setting session listener: " + listener);
-	 //if(xaSession
-	 //ses.setMessageListener(serverSession);
-	 //FIXME, it seems as if Sonic is using ites XaSession to do all work
-	 //if (xaSes != null)
-	 //   xaSes.setMessageListener(serverSession);
 
          sessionPool.add(serverSession);
          numServerSessions++;
@@ -382,5 +372,4 @@ public class StdServerSessionPool
       }
    }
 }
-
 
