@@ -13,21 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder;
 
 import java.util.logging.Logger;
 
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.Lock;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 
-import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
-
 
 /**
  * Represents a treenode and is the abstract class every folder
@@ -43,11 +41,6 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder");
-
-    private static final ImageIcon COLLAPSED_ICON = ImageLoader.getSmallImageIcon(
-            "folder-closed.png");
-    private static final ImageIcon EXPANDED_ICON = ImageLoader.getSmallImageIcon(
-            "folder-open.png");
 
     // the next new folder will get this UID
     private static int nextUid = 0;
@@ -98,14 +91,6 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 
     public int getUid() {
         return node.getInteger("uid");
-    }
-
-    public ImageIcon getCollapsedIcon() {
-        return COLLAPSED_ICON;
-    }
-
-    public ImageIcon getExpandedIcon() {
-        return EXPANDED_ICON;
     }
 
     public XmlElement getNode() {
@@ -185,14 +170,12 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
             if (j == newIndex) {
                 newParentNode.insertElement(newChildNode, i);
                 inserted = true;
-                System.out.println("------> adapternode insert correctly");
             }
         }
 
         if (!inserted) {
             if ((j + 1) == newIndex) {
                 newParentNode.append(newChildNode);
-                System.out.println("------> adapternode appended correctly");
             }
         }
     }

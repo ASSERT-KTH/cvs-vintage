@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.export;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -24,6 +25,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.ExportFolderCommand;
+import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -50,23 +52,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-
 
 /**
  * ExportDialog lets you select a number of folders for exporting
@@ -95,7 +85,7 @@ public class ExportDialog extends JDialog implements ActionListener {
             FolderTreeNode child = (FolderTreeNode) parent.getChildAt(i);
 
             CheckableTreeNode c = new CheckableTreeNode(child.getName());
-            c.setIcon(child.getCollapsedIcon());
+            c.setIcon(FolderTreeCellRenderer.getFolderIcon(child, false));
             c.setNode(child);
             root.add(c);
 

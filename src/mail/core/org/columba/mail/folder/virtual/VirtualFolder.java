@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.virtual;
 
 import java.io.InputStream;
@@ -23,12 +24,10 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 
 import org.columba.addressbook.config.AdapterNode;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
@@ -66,11 +65,6 @@ import org.columba.ristretto.message.MimeTree;
  *
  */
 public class VirtualFolder extends Folder {
-    protected static final ImageIcon virtualIcon = ImageLoader.getSmallImageIcon(
-            "virtualfolder.png");
-
-    //private MainInterface mainInterface;
-    //private Search searchFilter;
     protected int nextUid;
     protected HeaderList headerList;
 
@@ -146,14 +140,6 @@ public class VirtualFolder extends Folder {
 
             getFolderItem().getRoot().addElement(f.getRoot());
         }
-    }
-
-    public ImageIcon getCollapsedIcon() {
-        return virtualIcon;
-    }
-
-    public ImageIcon getExpandedIcon() {
-        return virtualIcon;
     }
 
     protected Object generateNextUid() {

@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.infopanel;
 
 import org.columba.core.gui.selection.SelectionChangedEvent;
@@ -22,6 +23,7 @@ import org.columba.core.gui.util.CInfoPanel;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
+import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
 import org.columba.ristretto.message.MessageFolderInfo;
 
@@ -35,7 +37,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 
 public class FolderInfoPanel extends CInfoPanel implements SelectionListener {
     private JLabel leftLabel;
@@ -147,7 +148,7 @@ public class FolderInfoPanel extends CInfoPanel implements SelectionListener {
         int unread = info.getUnseen();
         int recent = info.getRecent();
 
-        leftLabel.setIcon(newFolder.getCollapsedIcon());
+        leftLabel.setIcon(FolderTreeCellRenderer.getFolderIcon(newFolder, false));
 
         leftLabel.setText(newFolder.getName() + " ( total: " + total + " )");
         unreadLabel.setText(" unread: " + unread);

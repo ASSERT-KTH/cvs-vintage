@@ -17,7 +17,6 @@ package org.columba.mail.folder.imap;
 
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.gui.util.ImageLoader;
 
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
@@ -35,17 +34,11 @@ import org.columba.ristretto.imap.protocol.IMAPProtocol;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.swing.ImageIcon;
-
-
 public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.imap");
 
-    protected static final ImageIcon imapRootIcon =
-        //ImageLoader.getSmallImageIcon("imap-16.png");
-        ImageLoader.getSmallImageIcon("stock_internet-16.png");
     private static final int ONE_SECOND = 1000;
     private static final String[] SPECIAL_FOLDER_NAMES = {
         "trash", "drafts", "templates", "sent"
@@ -119,14 +112,6 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
         FolderItem item = getFolderItem();
         item.set("property", "accessrights", "system");
         item.set("property", "subfolder", "true");
-    }
-
-    public ImageIcon getCollapsedIcon() {
-        return imapRootIcon;
-    }
-
-    public ImageIcon getExpandedIcon() {
-        return imapRootIcon;
     }
 
     public String getDefaultChild() {

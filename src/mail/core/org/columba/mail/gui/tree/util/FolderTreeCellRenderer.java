@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.tree.util;
 
 import org.columba.core.gui.util.ImageLoader;
@@ -20,6 +21,9 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.LocalRootFolder;
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.folder.virtual.VirtualFolder;
 
 import org.columba.ristretto.message.MessageFolderInfo;
 
@@ -27,39 +31,44 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-
 /**
- * This class is used for the mail folder tree. It it extended from JLabel and shows the folder names in a tree.
+ * This class is used for the mail folder tree.
  */
-public class FolderTreeCellRenderer extends DefaultTreeCellRenderer //extends JLabel implements TreeCellRenderer
- {
-    Border unselectedBorder = null;
-    Border selectedBorder = null;
-    boolean isBordered = true;
-    private ImageIcon defaultIcon;
-    private ImageIcon localhostIcon;
-    private ImageIcon remotehostIcon;
-    private ImageIcon virtualfolderIcon;
-    private ImageIcon draftIcon;
-    private ImageIcon templateIcon;
-    private ImageIcon sentIcon;
-    private ImageIcon inboxIcon;
-    private ImageIcon outboxIcon;
-    private ImageIcon trashIcon;
+public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
+    private static Icon expandedFolderIcon;
+    private static Icon collapsedFolderIcon;
+    private static Icon virtualFolderIcon;
+    private static Icon localRootFolderIcon;
+    private static Icon imapRootFolderIcon;
+    private static Icon inboxIcon;
+    private static Icon outboxIcon;
+    private static Icon trashIcon;
+    
+    static {
+        collapsedFolderIcon = ImageLoader.getSmallImageIcon("folder-closed.png");
+        expandedFolderIcon = ImageLoader.getSmallImageIcon("folder-open.png");
+        virtualFolderIcon = ImageLoader.getSmallImageIcon("virtualfolder.png");
+        localRootFolderIcon = ImageLoader.getSmallImageIcon("localhost.png");
+        imapRootFolderIcon = ImageLoader.getSmallImageIcon("stock_internet-16.png");
+        inboxIcon = ImageLoader.getSmallImageIcon("inbox-16.png");
+        outboxIcon = ImageLoader.getSmallImageIcon("outbox-16.png");
+        trashIcon = ImageLoader.getSmallImageIcon("stock_delete-16.png");
+    }
+    
     private Font plainFont;
     private Font boldFont;
     private Font italicFont;
 
     /**
- * Generates a new CellRenderer. In this contructor font and images are set to local variables. The fonts are
- * depended on the current UIManager.
- */
+     * Generates a new CellRenderer. In this contructor font and images are set
+     * to local variables. The fonts are depended on the current UIManager.
+     */
     public FolderTreeCellRenderer() {
         super();
 
@@ -68,26 +77,23 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer //extends JL
         italicFont = UIManager.getFont("Tree.font");
         italicFont = italicFont.deriveFont(Font.ITALIC);
         plainFont = UIManager.getFont("Tree.font");
-
-        inboxIcon = ImageLoader.getSmallImageIcon("inbox-16.png");
-        outboxIcon = ImageLoader.getSmallImageIcon("outbox-16.png");
-        trashIcon = ImageLoader.getSmallImageIcon("stock_delete-16.png");
     }
 
     /**
- * The tooltip text and unseen counter for the current folder component are set. If the folder has unseen Messages the
- * folder self is show as bold and the unseen message counter is added to the folder label. The folder becomes a tooltip
- * where infos (unseen, recent, total) are set. If the folder is an Imap-folder and not selectable the folder is set to
- * italic with a darkgrey background.
- * @see javax.swing.tree.TreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree, java.lang.Object, boolean, boolean, boolean, int, boolean)
- */
+     * The tooltip text and unseen counter for the current folder component
+     * are set. If the folder has unseen Messages the folder self is show
+     * as bold and the unseen message counter is added to the folder label.
+     * The folder gets a tooltip where infos (unseen, recent, total) are
+     * set. If the folder is an IMAP folder and not selectable the folder is
+     * set to italic with a darkgrey background.
+     */
     public Component getTreeCellRendererComponent(JTree tree, Object value,
         boolean isSelected, boolean expanded, boolean leaf, int row,
         boolean hasFocusVar) {
         /* RIYAD: Even though we don't do anything with this value, what it
- * is doing is setting up the selection colors and such as implemented
- * per the default cell rendered.
- */
+         * is doing is setting up the selection colors and such as implemented
+         * per the default cell rendered.
+         */
         super.getTreeCellRendererComponent(tree, value, isSelected, expanded,
             leaf, row, hasFocusVar);
 
@@ -96,18 +102,9 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer //extends JL
         setToolTipText("");
 
         FolderTreeNode treeNode = (FolderTreeNode) value;
-
         setText(treeNode.getName());
+        setIcon(getFolderIcon(treeNode, expanded));
 
-        // set defaul icons 
-        // -> use icons from folders
-        if (expanded) {
-            setIcon(treeNode.getExpandedIcon());
-        } else {
-            setIcon(treeNode.getCollapsedIcon());
-        }
-
-        // if the value was an folder
         if (value instanceof Folder) {
             Folder folder = (Folder) value;
 
@@ -144,18 +141,6 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer //extends JL
 
                 setText(name);
 
-                // overwrite special folders with custom icons
-                if (folder.isInboxFolder()) {
-                    // inbox
-                    setIcon(inboxIcon);
-                } else if (folder.getUid() == 103) {
-                    // outbox
-                    setIcon(outboxIcon);
-                } else if (folder.isTrashFolder()) {
-                    // trash
-                    setIcon(trashIcon);
-                }
-
                 // important for imap
                 // is this folder is not selectable 
                 if (!item.getBoolean("selectable", true)) {
@@ -164,7 +149,30 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer //extends JL
                 }
             }
         }
-
         return this;
+    }
+    
+    /**
+     * Returns an icon suitable for the given folder.
+     */
+    public static Icon getFolderIcon(FolderTreeNode node, boolean expanded) {
+        if (node instanceof LocalRootFolder) {
+            return localRootFolderIcon;
+        } else if (node instanceof IMAPRootFolder) {
+            return imapRootFolderIcon;
+        } else if (node instanceof VirtualFolder) {
+            return virtualFolderIcon;
+        } else if (node instanceof Folder) {
+            Folder folder = (Folder)node;
+            if (folder.isInboxFolder()) {
+                return inboxIcon;
+            } else if (folder.getUid() == 103) {
+                // outbox
+                return outboxIcon;
+            } else if (folder.isTrashFolder()) {
+                return trashIcon;
+            }
+        }
+        return expanded ? expandedFolderIcon : collapsedFolderIcon;
     }
 }

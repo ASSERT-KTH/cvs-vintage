@@ -210,7 +210,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      * message removal.
      */
     protected void fireMessageRemoved(Object uid, Flags flags) {
-        
         getMessageFolderInfo().decExists();
         if (!flags.getSeen()) {
             getMessageFolderInfo().decUnseen();
@@ -218,16 +217,11 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         if (flags.getRecent()) {
             getMessageFolderInfo().decRecent();
         }
-        
-        
         try {
             getHeaderListStorage().removeMessage(uid);
         } catch (Exception e) {
         }
-        
-        
         setChanged(true);
-        
         FolderEvent e = new FolderEvent(this, uid);
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
@@ -278,8 +272,9 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
     }
 
     /**
-     * Propagates an event to all registered listeners notifying them that a
-     * subfolder has been removed from this folder.
+     * Propagates an event to all registered listeners notifying them that this
+     * folder has been removed from its parent folder. This method removes all
+     * registered listeners.
      */
     protected void fireFolderRemoved(Folder folder) {
         FolderEvent e = new FolderEvent(this, folder);
@@ -291,6 +286,8 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == FolderListener.class) {
                 ((FolderListener) listeners[i + 1]).folderRemoved(e);
+                listenerList.remove(FolderListener.class, 
+                        (FolderListener)listeners[i + 1]);
             }
         }
     }
@@ -636,6 +633,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
                 break;
             }
         }
+        setChanged(true);
     }
 
     /**
@@ -648,11 +646,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
                 markMessage(uids[i], variant);
             }
         }
-
-        // set folder changed flag
-        // -> if not, the header cache wouldn't notice that something
-        // -> has changed. And wouldn't save the changes.
-        setChanged(true);
     }
 
     /** {@inheritDoc} */
@@ -683,9 +676,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
                 removeMessage(uid);
             }
         }
-
-        // folder was modified
-        setChanged(true);
     }
 
     /**
@@ -767,11 +757,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
     }
 
     /**
-     * ************************ Search Engine
-     * ***********************************
-     */
-
-    /**
      * @return
      */
     public DefaultSearchEngine getSearchEngine() {
@@ -851,5 +836,4 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 
         return bodyStream;
     }
-
 }

@@ -45,7 +45,7 @@ public interface FolderListener extends EventListener {
     public void folderAdded(FolderEvent e);
     
     /**
-     * Called when a subfolder has been removed from a folder.
+     * Called when a folder has been removed from its parent folder.
      */
     public void folderRemoved(FolderEvent e);
 }

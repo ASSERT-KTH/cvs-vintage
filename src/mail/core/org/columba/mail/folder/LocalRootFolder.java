@@ -13,14 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder;
 
-import org.columba.core.gui.util.ImageLoader;
-
 import org.columba.mail.config.FolderItem;
-
-import javax.swing.ImageIcon;
-
 
 /**
  * Top-level folder of all local folders.
@@ -32,10 +28,6 @@ import javax.swing.ImageIcon;
  *  @author fdietz
  */
 public class LocalRootFolder extends FolderTreeNode implements RootFolder {
-    protected static final ImageIcon rootIcon = ImageLoader.getSmallImageIcon(
-            "localhost.png");
-
-    //ImageLoader.getSmallImageIcon("16_computer.png");
 
     /**
  * Constructor
@@ -50,15 +42,7 @@ public class LocalRootFolder extends FolderTreeNode implements RootFolder {
     public LocalRootFolder(FolderItem item, String path) {
         super(item);
     }
-
-    public ImageIcon getCollapsedIcon() {
-        return rootIcon;
-    }
-
-    public ImageIcon getExpandedIcon() {
-        return rootIcon;
-    }
-
+    
     /* (non-Javadoc)
  * @see org.columba.mail.folder.RootFolder#getTrashFolder()
  */
