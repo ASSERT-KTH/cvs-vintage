@@ -26,16 +26,17 @@
 // File: Poster.java
 // Classes: Poster
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Poster.java,v 1.3 2002/07/18 19:24:36 linus Exp $
+// $Id: Poster.java,v 1.4 2003/06/13 06:54:59 mkl Exp $
 
 package org.argouml.cognitive;
 
-import java.util.*;
-import javax.swing.*;
+import java.util.Vector;
 
-import org.tigris.gef.util.*;
+import javax.swing.Icon;
 
-/** MInterface that defines methods required on any object that can
+import org.tigris.gef.util.VectorSet;
+
+/** Interface that defines methods required on any object that can
  *  post a ToDoItem to the Designer's ToDoList. Basically requires that
  *  the poster (1) have contact information, (2) be able to snooze
  *  and unsnooze itself, and (3) be able to determine if a ToDoItem it
