@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.45 2002/09/10 22:02:41 jon Exp $
+$Id: README.txt,v 1.46 2002/09/19 18:42:07 jon Exp $
 
 Welcome to Scarab!
 
@@ -324,6 +324,14 @@ NOTE: If you get a 'Server configuration denies access to data source'
       error from MySQL in the log files, please read the MySQL
       documentation on how to fix this error. We will not provide
       support for this since it is really a MySQL configuration issue.
+
+      Hint: On some operating systems, there seems to be a weird
+      interation between the JVM, DNS resolution and the MySQL driver
+      where a JDBC url pointing to 'localhost' will resolve as
+      'localhost.localdomain' and will prevent the connection to MySQL
+      from authenticating correctly because most people configure MySQL
+      for 'localhost'. One way to get around this is to use IP addresses
+      in both the MySQL ACL as well as in the JDBC url.
 
       In order to setup the right permissions in MySQL, you may wish to
       try executing this command on a Unix command line (it has been

@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.8 2002/09/10 22:02:29 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.9 2002/09/19 18:42:21 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -145,6 +145,15 @@ NOTE: If you get a 'Server configuration denies access to data source'
       support for this since it is really a MySQL configuration issue.
 </p>
 
+<p>
+    Hint: On some operating systems, there seems to be a weird
+    interation between the JVM, DNS resolution and the MySQL driver
+    where a JDBC url pointing to 'localhost' will resolve as 
+    'localhost.localdomain' and will prevent the connection to MySQL
+    from authenticating correctly because most people configure MySQL
+    for 'localhost'. One way to get around this is to use IP addresses
+    in both the MySQL ACL as well as in the JDBC url.
+</p>
 <p>
       In order to setup the right permissions in MySQL, you may wish to
       try executing this command on a Unix command line (it has been
