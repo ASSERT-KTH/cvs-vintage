@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.60 2003/07/29 15:04:06 thierrylach Exp $
+$Id: README.txt,v 1.61 2003/07/30 17:21:24 dlr Exp $
 
 Welcome to Scarab!
 
@@ -20,7 +20,7 @@ system running.
 | R E Q U I R E M E N T S                                               |
 -------------------------------------------------------------------------
 
-SDK 1.3 or higher        --> <http://java.sun.com/>
+SDK 1.3.1 or higher      --> <http://java.sun.com/>
 Make sure that you download the SDK and not the JRE!
 Note: On some operating systems (OS X, for instance), the SDK is
 included.
