@@ -28,9 +28,14 @@ import org.gjt.sp.jedit.Buffer;
  * A interface for notification of changes to buffer text. While the
  * <code>BufferUpdate</code> EditBus message is used for general buffer
  * state changes, this interface is used for events which are fired
- * frequently, or for which performance is essential.
+ * frequently, or for which performance is essential.<p>
+ *
+ * Because this interface is subject to change in the future, you
+ * should subclass <code>BufferChangeAdapter</code> instead of
+ * implementing it directly.
+ *
  * @author Slava Pestov
- * @version $Id: BufferChangeListener.java,v 1.1 2001/10/11 11:44:27 spestov Exp $
+ * @version $Id: BufferChangeListener.java,v 1.2 2001/10/12 09:12:14 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public interface BufferChangeListener
@@ -40,9 +45,10 @@ public interface BufferChangeListener
 	 * Called when the fold level of a line changes.
 	 * @param buffer The buffer in question
 	 * @param line The line number
+	 * @param level The fold level
 	 * @since jEdit 4.0pre1
 	 */
-	void foldLevelChanged(Buffer buffer, int line);
+	void foldLevelChanged(Buffer buffer, int line, int level);
 	//}}}
 
 	//{{{ contentInserted() method
