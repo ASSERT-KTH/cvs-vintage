@@ -6,13 +6,14 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: DatabasePersistencePolicy.java,v 1.1 2004/09/09 22:04:29 tdiesler Exp $
+// $Id: DatabasePersistencePolicy.java,v 1.2 2004/09/10 07:58:07 tdiesler Exp $
 
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.ObjectNameFactory;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.system.server.Server;
+import org.jboss.tm.TxManager;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
@@ -22,6 +23,9 @@ import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -46,18 +50,16 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    private static Logger log = Logger.getLogger(DatabasePersistencePolicy.class);
 
    // The service attributes
-   private ObjectName dataSourceTx;
-   private ObjectName dataSourceNoTx;
+   private ObjectName dataSource;
    private String tableName;
    private String targetIdColumn;
    private String initialDateColumn;
    private String intervalColumn;
    private String createTableDDL;
 
+   private TransactionManager tm;
    // The data source the timers will be persisted to
-   private DataSource dsTx;
-   // The data source for removal of stale timers outside an Tx
-   private DataSource dsNoTx;
+   private DataSource ds;
    // True when the table has been created
    private boolean tableCreated;
 
@@ -66,16 +68,26 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
     */
    protected void startService() throws Exception
    {
+      // Get the Tx manager
       try
       {
-         String dsJndiTx = (String)server.getAttribute(dataSourceTx, "BindName");
-         dsTx = (DataSource)new InitialContext().lookup(dsJndiTx);
-         String dsJndiNoTx = (String)server.getAttribute(dataSourceNoTx, "BindName");
-         dsNoTx = (DataSource)new InitialContext().lookup(dsJndiNoTx);
+         InitialContext iniCtx = new InitialContext();
+         tm = (TransactionManager) iniCtx.lookup("java:/TransactionManager");
+      }
+      catch (Exception e)
+      {
+         log.warn("Cannot obtain TransactionManager from JNDI: " + e.toString());
+         tm = TxManager.getInstance();
+      }
+
+      try
+      {
+         String dsJndiTx = (String)server.getAttribute(dataSource, "BindName");
+         ds = (DataSource)new InitialContext().lookup(dsJndiTx);
       }
       catch (NamingException e)
       {
-         throw new Exception("Failed to lookup data source: " + dataSourceTx);
+         throw new Exception("Failed to lookup data source: " + dataSource);
       }
 
       // create the table if needed
@@ -183,33 +195,17 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    /**
     * @jmx.managed-attribute
     */
-   public ObjectName getDataSourceTx()
+   public ObjectName getDataSource()
    {
-      return dataSourceTx;
+      return dataSource;
    }
 
    /**
     * @jmx.managed-attribute
     */
-   public void setDataSourceTx(ObjectName dataSourceTx)
+   public void setDataSource(ObjectName dataSource)
    {
-      this.dataSourceTx = dataSourceTx;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public ObjectName getDataSourceNoTx()
-   {
-      return dataSourceNoTx;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public void setDataSourceNoTx(ObjectName dataSource)
-   {
-      this.dataSourceNoTx = dataSource;
+      this.dataSource = dataSource;
    }
 
    /**
@@ -304,7 +300,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
          ResultSet rs = null;
          try
          {
-            con = dsNoTx.getConnection();
+            con = ds.getConnection();
             final DatabaseMetaData dbMD = con.getMetaData();
             rs = dbMD.getTables(null, null, tableName, null);
 
@@ -335,7 +331,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       try
       {
          // Use the Tx data source
-         con = dsTx.getConnection();
+         con = ds.getConnection();
 
          String sql = "insert into " + tableName + " (" + targetIdColumn + "," + initialDateColumn + "," + intervalColumn + ") values (?,?,?)";
          st = con.prepareStatement(sql);
@@ -363,7 +359,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       ResultSet rs = null;
       try
       {
-         con = dsNoTx.getConnection();
+         con = ds.getConnection();
 
          List list = new ArrayList();
 
@@ -393,9 +389,13 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       Connection con = null;
       PreparedStatement st = null;
       ResultSet rs = null;
+
+      // suspend the Tx before we get the con, because you cannot get a connection on an already commited Tx
+      Transaction threadTx = suspendTransaction();
+
       try
       {
-         con = dsNoTx.getConnection();
+         con = ds.getConnection();
 
          String sql = "delete from " + tableName + " where " + targetIdColumn + "=? and " + initialDateColumn + "=?";
          st = con.prepareStatement(sql);
@@ -409,9 +409,37 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       }
       finally
       {
+         // resume the Tx
+         resumeTransaction(threadTx);
+
          JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(st);
          JDBCUtil.safeClose(con);
+      }
+   }
+
+   private Transaction suspendTransaction () {
+      Transaction threadTx = null;
+      try
+      {
+         threadTx = tm.suspend();
+      }
+      catch (SystemException e)
+      {
+         log.warn ("Cannot suspend Tx: " + e.toString());
+      }
+      return threadTx;
+   }
+
+   private void resumeTransaction (Transaction threadTx) {
+      try
+      {
+         if (threadTx != null)
+            tm.resume(threadTx);
+      }
+      catch (Exception e)
+      {
+         log.warn ("Cannot resume Tx: " + e.toString());
       }
    }
 
@@ -423,7 +451,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       ResultSet rs = null;
       try
       {
-         con = dsNoTx.getConnection();
+         con = ds.getConnection();
          st = con.prepareStatement("delete from " + tableName);
          st.executeUpdate();
       }
