@@ -346,7 +346,6 @@ public class Ajp13
                 break;
 		
 	    case SC_A_REQ_ATTRIBUTE :
-		isSSL = true;
 		req.setAttribute(msg.getString(), 
 				 msg.getString());
                 break;
