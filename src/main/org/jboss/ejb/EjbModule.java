@@ -80,7 +80,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -149,7 +149,12 @@ public class EjbModule
    public EjbModule(final DeploymentInfo di)
    {
       this.deploymentInfo = di;
-      this.name = deploymentInfo.url.toString();
+      String name = deploymentInfo.url.toString();
+      if (name.endsWith("/"))
+      {
+         name = name.substring(0, name.length() - 1);
+      }
+      this.name = name;
    }
 
    public Map getModuleDataMap()

@@ -158,7 +158,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.42 $
+@version $Revision: 1.43 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -200,7 +200,7 @@ public abstract class AbstractWebContainer
    public boolean accepts(DeploymentInfo sdi) 
    {
       String warFile = sdi.url.getFile();
-      return warFile.endsWith("war");
+      return warFile.endsWith("war") || warFile.endsWith("war/");
    }
 
    public synchronized void init(DeploymentInfo di) 

@@ -67,7 +67,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- * @version $Revision: 1.17 $ 
+ * @version $Revision: 1.18 $ 
  */
 public class EJBDeployer
    extends SubDeployerSupport
@@ -258,7 +258,8 @@ public class EJBDeployer
    {
       
       // To be accepted the deployment's root name must end in jar
-      if (!di.url.getFile().endsWith("jar")) return false;
+      String urlStr = di.url.getFile();
+      if (!urlStr.endsWith("jar") && !urlStr.endsWith("jar/")) return false;
          
       // However the jar must also contain at least one ejb-jar.xml
       
@@ -300,6 +301,9 @@ public class EJBDeployer
          }    
       }
       catch (Exception e) {throw new DeploymentException("problem in init"+e.getMessage());}
+      
+      // invoke super-class initialization
+      processNestedDeployments(di);
    }
    
    

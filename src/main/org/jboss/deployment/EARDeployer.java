@@ -47,7 +47,7 @@ import org.jboss.management.j2ee.J2EEApplication;
  * Enterprise Archive Deployer.
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -83,7 +83,8 @@ public class EARDeployer
    
    public boolean accepts(DeploymentInfo di) 
    {
-      return di.url.getFile().endsWith("ear");
+      String urlStr = di.url.getFile();
+      return urlStr.endsWith("ear") || urlStr.endsWith("ear/");
    }
    
    
@@ -98,7 +99,8 @@ public class EARDeployer
          InputStream in = di.localCl.getResourceAsStream("META-INF/application.xml");
          XmlFileLoader xfl = new XmlFileLoader();
          Element root = xfl.getDocument(in, "META-INF/application.xml").getDocumentElement();
-         di.metaData = new J2eeApplicationMetaData(root);
+         J2eeApplicationMetaData metaData = new J2eeApplicationMetaData(root);
+         di.metaData = metaData;
          in.close();
          
          // resolve the watch
@@ -118,6 +120,37 @@ public class EARDeployer
                
             // If directory we watch the xml files
             else di.watch = new URL(di.url, "META-INF/application.xml"); 
+         }
+         
+         // Obtain the sub-deployment list
+         File parentDir = null;
+         String urlPrefix = null;
+         if (di.isDirectory) 
+         {
+            parentDir = new File(di.localUrl.getFile());
+         } 
+         else
+         {
+            urlPrefix = "njar:" + di.localUrl + "^/";
+         }
+         for (Iterator iter = metaData.getModules(); iter.hasNext(); )
+         {
+            J2eeModuleMetaData mod = (J2eeModuleMetaData)iter.next();
+            String fileName = mod.getFileName();
+            if (fileName != null && (fileName = fileName.trim()).length() > 0)
+            {
+               if (di.isDirectory)
+               {
+                  File f = new File(parentDir, fileName);
+                  DeploymentInfo sub = new DeploymentInfo(f.toURL(), di);
+                  log.debug("Deployment Info: " + sub + ", isDirectory: " + sub.isDirectory);
+               }
+               else
+               {
+                  DeploymentInfo sub = new DeploymentInfo(new URL(urlPrefix + fileName), di);
+                  log.debug("Deployment Info: " + sub + ", isDirectory: " + sub.isDirectory);
+               }
+            }
          }
       }
       catch (Exception e)
