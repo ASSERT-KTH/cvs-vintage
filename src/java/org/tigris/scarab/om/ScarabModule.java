@@ -62,6 +62,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
+
 import java.sql.Connection;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.util.RoleSet;
@@ -91,6 +92,7 @@ import org.apache.fulcrum.security.impl.db.entity
     .TurbineUserGroupRolePeer;
 import org.apache.fulcrum.security.impl.db.entity
     .TurbineRolePermissionPeer;
+import org.apache.fulcrum.security.impl.db.entity.TurbineUserPeer;
 
 /**
  * The ScarabModule class is the focal point for dealing with
@@ -103,7 +105,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.152 2004/05/10 21:04:45 dabbous Exp $
+ * @version $Id: ScarabModule.java,v 1.153 2004/10/14 11:33:43 dep4b Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -314,6 +316,10 @@ public class ScarabModule
                 crit.addIn(TurbineUserGroupRolePeer.GROUP_ID, groups);
                 crit.addJoin(ScarabUserImplPeer.USER_ID, 
                              TurbineUserGroupRolePeer.USER_ID);
+                
+                crit.add(ScarabUserImplPeer.getColumnName(User.CONFIRM_VALUE),(Object)ScarabUser.DELETED,Criteria.NOT_EQUAL);
+                
+
                 try
                 {
                     User[] users = TurbineSecurity.getUsers(crit);
