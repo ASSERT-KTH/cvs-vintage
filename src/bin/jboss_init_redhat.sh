@@ -22,13 +22,29 @@
 
 # [ #420297 ] JBoss startup/shutdown for RedHat
 
-
+#define where jboss is - this is the directory containing directories log, bin, conf etc
 JBOSS_HOME=${JBOSS_HOME:-"/usr/local/jboss"}
+
+#make java is on your path
 JAVAPTH=${JAVAPTH:-"/usr/local/jdk/bin"}
 
+#define the classpath for the shutdown class
 JBOSSCP=${JBOSSCP:-"$JBOSS_HOME/lib/ext/jboss.jar"}
+
+#define the script to use to start jboss
 JBOSSSH=${JBOSSSH:-"$JBOSS_HOME/bin/run.sh"}
+
+#define the user under which jboss will run, or use RUNASIS to run as the current user
 JBOSSUS=${JBOSSUS:-"jboss"}
+
+CMD_START="cd $JBOSS_HOME/bin; $JBOSSSH" 
+CMD_STOP="java -classpath $JBOSSCP org.jboss.Shutdown"
+
+if [ "$JBOSSUS" = "RUNASIS" ]; then
+  SUBIT=""
+else
+  SUBIT="su - $JBOSSUS -c "
+fi
 
 if [ -z "`echo $PATH | grep $JAVAPTH`" ]; then
   export PATH=$PATH:$JAVAPTH
@@ -39,12 +55,25 @@ if [ ! -d "$JBOSS_HOME" ]; then
   exit 1
 fi
 
+
+echo CMD_START = $CMD_START
+
+
 case "$1" in
 start)
-    su - $JBOSSUS -c "cd $JBOSS_HOME/bin; $JBOSSSH >/dev/null 2>&1 &"
+    cd $JBOSS_HOME/bin
+    if [ -z "$SUBIT" ]; then
+        eval $CMD_START >/tmp/jboss.log 2>&1 &
+    else
+        $SUBIT "$CMD_START >/dev/null 2>&1 &" 
+    fi
     ;;
 stop)
-    su - $JBOSSUS -c "java -classpath $JBOSSCP org.jboss.Shutdown"
+    if [ -z "$SUBIT" ]; then
+        $CMD_STOP
+    else
+        $SUBIT "$CMD_STOP"
+    fi 
     ;;
 restart)
     $0 stop

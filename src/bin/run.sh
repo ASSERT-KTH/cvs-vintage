@@ -2,6 +2,14 @@
 
 # Minimal jar file to get JBoss started.
 
+#assumed that this script will start in the bin directory
+
+#but just in case use JBOSS_HOME if found
+if [ "$JBOSS_HOME" ]; then
+   cd $JBOSS_HOME/bin
+   echo Using JBOSS_HOME to set current directory to $JBOSS_HOME/bin
+fi 
+
 JBOSS_CLASSPATH=$JBOSS_CLASSPATH:run.jar
 
 # Add all login modules for JAAS-based security
