@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.45 2003/11/02 21:16:38 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.46 2004/03/06 22:56:08 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -144,8 +144,9 @@ public class FileVFS extends VFS
 	//{{{ LocalDirectoryEntry class
 	public static class LocalDirectoryEntry extends VFS.DirectoryEntry
 	{
+		// use system default short format
 		public static DateFormat DATE_FORMAT
-			= new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+			= DateFormat.getInstance();
 
 		public long modified;
 
