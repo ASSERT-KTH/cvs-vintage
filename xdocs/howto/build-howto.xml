@@ -24,11 +24,11 @@
 </p>
 </section>
 
-<section name="New Maven and Ant Build">
+<section name="New Maven and/or Ant Build">
 <subsection name="Generating Database">
 <p>
-	Now, the build, at least on the face of it is much more complex.  However, once you grok the fact that
-	all of the database related steps are still in the old ant build, then things aren't so bad.  You still
+	Now you can compile your code in either Ant or Maven.  However,	all of the database and torque OM related steps are 
+	still in the old ant build.  You still
 	generate your database by doing this:
 	<source>
 	cd build
@@ -43,10 +43,11 @@
 	your settings for the type of database, you still need to create the java files.
 	<source>
 	cd build
-	ant create
+	ant
 	</source>
-	This will create in <code>/src/java</code> the various Torque objects.  You are now done with Ant and the rest of the
-	process is in Maven.  You can now perform all the various functions of Maven that you would expect.
+	This will create in <code>/src/java</code> the various Torque objects.  You are now done with Ant and 
+	you can continue the rest of the
+	process is in Maven or continue to use Ant.  You can now perform all the various functions of Maven that you would expect.
 </p>
 <p>
 	<strong>Note:</strong> There is a Torque plugin for Maven that will do all of this.  The Ant steps
