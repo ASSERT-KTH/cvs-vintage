@@ -16,7 +16,7 @@ This class is used to map PrintStream/PrintWriter oriented logging onto
 the log4j Categories. Examples include capturing System.out/System.err writes.
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public class CategoryStream extends PrintStream
 {
@@ -49,8 +49,9 @@ public class CategoryStream extends PrintStream
     public void write(byte[] b, int off, int len)
     {
         // Remove the end of line chars
-        while( (b[len-1] == '\n' || b[len-1] == '\r') && len > off )
+        while( len > 0 && (b[len-1] == '\n' || b[len-1] == '\r') && len > off )
             len --;
+
         String msg = new String(b, off, len);
         category.log(priority, msg);
     }

@@ -132,6 +132,18 @@
     </rmic>
 
     <rmic base="${build.classes.dir}"
+          classname="org.jboss.tm.plugins.tyrex.CoordinatorRemote"
+          stubVersion="1.2">
+            <classpath refid="classpath"/>
+    </rmic>
+
+    <rmic base="${build.classes.dir}"
+          classname="org.jboss.tm.plugins.tyrex.ResourceRemote"
+          stubVersion="1.2">
+            <classpath refid="classpath"/>
+    </rmic>
+
+    <rmic base="${build.classes.dir}"
           classname="org.jboss.jmx.server.JMXAdaptorImpl"
           stubVersion="1.2">
             <classpath refid="classpath"/>

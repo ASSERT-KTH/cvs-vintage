@@ -35,6 +35,14 @@
     -->
   </mbean>
 
+  <!-- Uncomment to use Tyrex (tyrex.exolab.org) transaction manager plugin
+       instead of the org.jboss.tm.TransactionManagerService and comment out
+       the TransactionManagerService above	
+  <mbean code="org.jboss.tm.plugins.tyrex.TransactionManagerService" name="DefaultDomain:service=TransactionManager">
+        <attribute name="ConfigFileName">../conf/tyrex/domain.xml</attribute>
+  </mbean>
+  -->
+
   <mbean code="org.jboss.tm.usertx.server.ClientUserTransactionService" name="DefaultDomain:service=ClientUserTransaction">
   </mbean>
 
