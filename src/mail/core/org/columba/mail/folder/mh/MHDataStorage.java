@@ -13,12 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.mh;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -141,18 +144,16 @@ public class MHDataStorage implements DataStorageInterface {
 	 * @see org.columba.mail.folder.DataStorageInterface#saveInputStream(java.lang.Object, java.io.InputStream)
 	 */
 	public void saveInputStream(Object uid, InputStream source)
-		throws Exception {
+		throws IOException {
 			File file =
 				new File(
 					folder.getDirectoryFile() + File.separator + (Integer) uid);
-
 
 			OutputStream out = new FileOutputStream( file );
 			
 			StreamUtils.streamCopy(source, out);
 			
-			out.close();	
+                        source.close();
+			out.close();
 	}
-
 }
-
