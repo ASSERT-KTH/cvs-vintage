@@ -21,7 +21,7 @@ public class AntTag extends TagSupport {
     public int doStartTag() throws JspException {
 	try {
             args.clear();
-            targets.clear();
+            targets.removeAllElements();
 	    pageContext.setAttribute("antProperties",
 				     args);
 	} catch (Exception ex ) {

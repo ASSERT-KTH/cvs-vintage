@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.39 2001/08/22 04:55:33 costin Exp $
+/* $Id: Main.java,v 1.40 2001/09/07 04:25:20 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -212,8 +212,8 @@ public class Main{
 		    File.separator + "tomcat.policy";
 		
 		debug("Setting policy " + policyFile );
-		System.setProperty( "tomcat.home", installDir );
-		System.setProperty("java.security.policy",  policyFile);
+		System.getProperties().put( "tomcat.home", installDir );
+		System.getProperties().put("java.security.policy",  policyFile);
 		jdk11Compat.refreshPolicy();
 	    }
 	}

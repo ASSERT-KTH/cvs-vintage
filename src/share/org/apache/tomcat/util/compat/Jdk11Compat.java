@@ -139,7 +139,7 @@ public class Jdk11Compat {
             if (depth==c) return ((SimpleClassLoader)cl).getURLs();
             c++;
             cl=((SimpleClassLoader)cl).getParentLoader();
-        }while((cl!=null) && ( depth < c ));
+        }while((cl!=null) && ( depth >= c ));
         return null;
     }
 

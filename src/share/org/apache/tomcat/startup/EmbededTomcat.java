@@ -195,7 +195,10 @@ public class EmbededTomcat {
 	    setArgs((String [])v);
 	if( name.equals("commonClassPath")  )
 	    setCommonClassPath((URL [])v);
-	attributes.put( name, v );
+	if( v==null)
+	    attributes.remove( name );
+	else
+	    attributes.put( name, v );
     }
     
     // Ant compatibility

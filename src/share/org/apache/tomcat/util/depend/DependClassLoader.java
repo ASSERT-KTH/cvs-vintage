@@ -164,9 +164,6 @@ public class DependClassLoader extends ClassLoader {
         String classFileName = name.replace('.', '/' ) + ".class";
 
 	URL res=getResource( classFileName );
-	InputStream is=getResourceAsStream( classFileName );
-	if( res==null || is==null ) 
-	    throw new ClassNotFoundException(name);
 
 	// If it's in parent2, load it ( we'll not track sub-dependencies ).
 	try {
@@ -180,6 +177,16 @@ public class DependClassLoader extends ClassLoader {
 	} catch (Exception e) {
 	    c = null;
 	}
+
+	if( res==null ) 
+	    throw new ClassNotFoundException(name);
+
+	// This should work - SimpleClassLoader should be able to get
+	// resources from jar files. 
+	InputStream is=getResourceAsStream( classFileName );
+	if( is==null ) 
+	    throw new ClassNotFoundException(name);
+
 
 	// It's in our parent. Our task is to track all class loads, the parent
 	// should load anything ( otherwise the deps are lost ), but just resolve
