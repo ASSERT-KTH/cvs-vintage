@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.88 2003/05/27 21:15:31 spestov Exp $
+ * @version $Id: View.java,v 1.89 2003/05/28 01:52:50 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -442,6 +442,16 @@ public class View extends JFrame implements EBComponent
 		switch(evt.getID())
 		{
 		case KeyEvent.KEY_TYPED:
+			// if the user pressed eg C+e n n in the
+			// search bar we want focus to go back there
+			// after the prefix is done
+			if(prefixFocusOwner != null)
+			{
+				if(prefixFocusOwner.isShowing())
+					prefixFocusOwner.requestFocus();
+				prefixFocusOwner = null;
+			}
+
 			// this is terrible!
 			if(calledFromTextArea)
 			{
@@ -464,21 +474,29 @@ public class View extends JFrame implements EBComponent
 			if(isClosed())
 				return;
 
-			// if the user pressed eg C+e n n in the
-			// search bar we want focus to go back there
-			// after the prefix is done
-			if(prefixFocusOwner != null)
+			// this is a weird hack.
+			// we don't want C+e a to insert 'a' in the
+			// search bar if the search bar has focus...
+			if(inputHandler.isPrefixActive()
+				&& getFocusOwner() instanceof JTextComponent)
 			{
-				if(prefixFocusOwner.isShowing())
-					prefixFocusOwner.requestFocus();
-				prefixFocusOwner = null;
+				prefixFocusOwner = getFocusOwner();
+				getTextArea().requestFocus();
 			}
+
 			break;
 		case KeyEvent.KEY_PRESSED:
 			if(keyEventInterceptor != null)
 				keyEventInterceptor.keyPressed(evt);
 			else
 			{
+				if(prefixFocusOwner != null)
+				{
+					if(prefixFocusOwner.isShowing())
+						prefixFocusOwner.requestFocus();
+					prefixFocusOwner = null;
+				}
+
 				inputHandler.keyPressed(evt);
 
 				// we might have been closed as a result of
@@ -494,15 +512,6 @@ public class View extends JFrame implements EBComponent
 				{
 					prefixFocusOwner = getFocusOwner();
 					getTextArea().requestFocus();
-				}
-				// but if the user pressed eg C+e C+x in the
-				// search bar we want focus to go back there
-				// after the prefix is done
-				else if(prefixFocusOwner != null)
-				{
-					if(prefixFocusOwner.isShowing())
-						prefixFocusOwner.requestFocus();
-					prefixFocusOwner = null;
 				}
 			}
 			break;

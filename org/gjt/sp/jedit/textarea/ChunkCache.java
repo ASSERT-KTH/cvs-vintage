@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.83 2003/05/16 01:34:42 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.84 2003/05/28 01:52:50 spestov Exp $
  */
 class ChunkCache
 {
@@ -457,7 +457,9 @@ class ChunkCache
 	LineInfo[] getLineInfosForPhysicalLine(int physicalLine)
 	{
 		out.clear();
-		lineToChunkList(physicalLine,out);
+
+		if(buffer.isLoaded())
+			lineToChunkList(physicalLine,out);
 
 		if(out.size() == 0)
 			out.add(null);

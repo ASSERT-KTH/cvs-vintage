@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.11 2003/05/12 03:05:20 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.12 2003/05/28 01:52:50 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -116,6 +116,14 @@ public class BufferIORequest extends WorkRequest
 	//{{{ run() method
 	public void run()
 	{
+		try
+		{
+			Thread.sleep(3000);
+		}
+		catch(Exception e)
+		{
+		}
+
 		switch(type)
 		{
 		case LOAD:
