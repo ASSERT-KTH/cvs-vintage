@@ -51,11 +51,9 @@ public class FilterDialog implements ActionListener {
 
 	private JDialog dialog;
 
-	private JLabel nameLabel;
 	private JTextField nameTextField;
 
 	private JButton addActionButton;
-	private JButton removeActionButton;
 
 	private Filter filter;
 	private JFrame frame;
@@ -86,7 +84,7 @@ public class FilterDialog implements ActionListener {
 		JPanel namePanel = new JPanel();
 		namePanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
-		nameLabel =
+		JLabel nameLabel =
 			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
@@ -243,6 +241,7 @@ public class FilterDialog implements ActionListener {
 
 			// filter description JTextField
 			nameTextField.setText(filter.getName());
+			nameTextField.selectAll();
 
 			// all / match any JComboBox
 			FilterRule filterRule = filter.getFilterRule();
