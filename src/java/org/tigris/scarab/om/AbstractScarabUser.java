@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.79 2003/05/01 21:48:44 dlr Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.80 2003/05/02 22:36:14 dlr Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -97,7 +97,7 @@ public abstract class AbstractScarabUser
     /**
      * The user's preferred locale.
      */
-    private Locale locale = null;
+    protected Locale locale = null;
 
     /** 
      * counter used as part of a key to store an Issue the user is 
