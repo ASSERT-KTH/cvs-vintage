@@ -403,7 +403,7 @@ public class Ajp13
 		return -1;
 	    }
         }
-        return (char) bodyBuff[pos++];
+        return bodyBuff[pos++] & 0xFF;  // prevent sign extension of byte value
     }
     
     /**
@@ -864,7 +864,7 @@ public class Ajp13
 	 */
 	public void appendBytes( byte b[], int off, int numBytes ) {
 	    appendInt( numBytes );
-	    if( pos + numBytes > buff.length ) {
+	    if( pos + numBytes >= buff.length ) {
 		System.out.println("Buffer overflow " + buff.length + " " + pos + " " + numBytes );
 		// XXX Log
 	    }
