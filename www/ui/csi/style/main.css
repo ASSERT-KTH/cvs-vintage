@@ -6,6 +6,7 @@
 body {
 	background: white;
 	color: black;
+	font-size:	x-small;
 	margin: 0;
 	padding: 0;
 	line-height: 140%; 
@@ -24,9 +25,6 @@ body, div, p, th, td, li, dl, dd {
 h2, h3, h4 {
 	font-family: Tahoma, Verdana, Lucida, Arial, Helvetica, sans-serif;
 	}
-h2 {
-	font-size: 16px;
- 	}
 th, td {
 	text-align: left;
 	vertical-align: top;
@@ -41,7 +39,7 @@ th, td {
 	vertical-align:	top;
 	}
 .app {
-	margin: 0 12px 0 24px;
+	margin-right: 12px;
 	}
 .app th {
 	background: #ccc;
@@ -98,28 +96,11 @@ dd	{
 #navcol table	{
 	margin-bottom: 1em;
 	}
-#login {
-	font-weight: bold;
+#banner h3 {
 	color: white;
+	padding: .5em;
+	margin: 0;
 	}
-#loginstatus {
-	color: white;
-	}	
-#loginstatus a:link, #loginstatus a:visited {
-	color: white; 
-	text-decoration: underline;
-	}
-#loginstatus a:active, #loginstatus a:hover {
-	color: red;
-	}
-#loginstatus .username {
-	color: white;
-	}
-.username {
-	white-space: nowrap;
-	color: white;
-	}
-
 #helptext {
 	margin-top: 2em;
 	margin: 12px;
@@ -138,18 +119,6 @@ dd	{
 #sidebar p {
 	padding: 4px;
 	}
-
-#banner { 
-	background: #369;
-	color: white;
-	background: #369 url(../images/logo.gif) no-repeat left;
-	}
-#banner h3 {
-	color: white;
-	padding: .5em;
-	margin: 0;
-	}
-
 #crumbbar td {
 	background: #efefef;
 	padding-left: 12px;
@@ -163,7 +132,6 @@ dd	{
 
 /* Scarab/App - styles start here */
 #topmodule {
-	margin-left: 24px;
 	}
 #topmodule td {
 	background: #efefef;
@@ -178,15 +146,12 @@ dd	{
 	color: black;
 	padding-left: 2px;
 	padding-right: 2px;
-	}	
+	}
 #tabs th {
-	color: black;
-	background-color: #999;
 	padding-left: 7px;
 	padding-right: 7px;
 	}
 #tabs td {
-	background-color: #ccc;
 	padding-left: 7px;
 	padding-right: 7px;
 	}

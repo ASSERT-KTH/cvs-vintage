@@ -43,6 +43,9 @@ dt	{
 h3, h4	{
 	margin-bottom: 0;
 	}
+h2 {
+	font-size: 16px;
+ 	}
 body #footer div, body #leftcol div * {
 	font-family: Verdana, Lucida, Arial, Helvetica, sans-serif;
 	font-size:	x-small;
@@ -89,9 +92,31 @@ ul, ol, dd	{
 .docs h4 {
 	border-top: solid 1px #ccc; 
  	}
+#login {
+	font-weight: bold;
+	color: white;
+	}
+#loginstatus {
+	color: white;
+	}	
+#loginstatus a:link, #loginstatus a:visited {
+	color: white; 
+	text-decoration: underline;
+	}
+#loginstatus a:active, #loginstatus a:hover {
+	color: red;
+	}
+#loginstatus .username {
+	color: white;
+	}
+.username {
+	white-space: nowrap;
+	color: white;
+	}
 #banner {
 	border-top: 1px solid #6699CC;
 	border-bottom: 1px solid #003366;
+	background: #369 url(../images/logo.gif) no-repeat left;
 	}
 #crumbbar {
 	border-top: 1px solid white;
@@ -137,11 +162,11 @@ ul, ol, dd	{
 	}
 #tabs { border-bottom: 1em #999 solid }
 #tabs th {
-	background: url(../images/nw_min.gif) no-repeat top left;
+	background: #999 url(../images/nw_min.gif) no-repeat top left;
 	border-right: 1px solid #666;
 	}
 #tabs td {
-	background: url(../images/nw_min.gif) no-repeat top left;
+	background: #ccc url(../images/nw_min.gif) no-repeat top left;
 	border-bottom: 1px solid #666;
 	border-right: 1px solid #666;
 	}
