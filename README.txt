@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.68 2004/02/13 09:22:07 dep4b Exp $
+$Id: README.txt,v 1.69 2004/03/10 17:20:34 pledbrook Exp $
 
 Welcome to Scarab!
 
@@ -470,6 +470,9 @@ local build.properties (see above for the explanation about how to use
 build.properties) based on what is in the
 scarab/build/default.properties. You will also need to update the war file
 by editing the CustomSettings.xml
+
+NOTE: PostgreSQL users should follow a different procedure for creating
+      the database. See PostgreSQL.txt.
 
 NOTE: If you would like to only load the required database data and not
       the sample/default data, you can do so by passing skip.seed.data

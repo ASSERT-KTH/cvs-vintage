@@ -91,21 +91,21 @@
     <target name="prepare" depends="prepare-build-dir">
 
         <echo>
-        +-------------------------------------------------------------
-        |
-	    | Scarab database type       = ${scarab.database.type}
-        | Scarab database name       = ${scarab.database.name}
-        | Scarab database admin user = ${scarab.database.admin.username}
-        | Scarab database admin pwd  = ${scarab.database.admin.password}
-        |
-        | Scarab Administrator name  = ${scarab.user.username}
-        |
-        +-------------------------------------------------------------
++-------------------------------------------------------------
+|
+| Scarab database type       = ${scarab.database.type}
+| Scarab database name       = ${scarab.database.name}
+| Scarab database admin user = ${scarab.database.admin.username}
+| Scarab database admin pwd  = ${scarab.database.admin.password}
+|
+| Scarab Administrator name  = ${scarab.user.username}
+|
++-------------------------------------------------------------
         </echo>
 
         <!-- things to go into the project directory -->      
-         <copy todir="${build.project}" filtering="no">
-             <fileset dir="${src.dir}/webapp">
+        <copy todir="${build.project}" filtering="no">
+            <fileset dir="${src.dir}/webapp">
                 <include name="WEB-INF/tld/**/*"/>
                 <include name="WEB-INF/server-config.wsdd"/>
                 <include name="WEB-INF/web.xml"/>
@@ -115,10 +115,12 @@
                 <include name="style/*"/>
                 <include name="index.html"/>
                 <include name="index.jsp"/>
-             </fileset>
-         </copy>
+            </fileset>
+        </copy>
         
-    <!-- Copy the miscellaneous runtime configuration files into the webapp -->
+        <!--
+          Copy the miscellaneous runtime configuration files into the webapp
+        -->
         <copy todir="${build.project.webinf}/conf" filtering="no">
              <fileset dir="${src.dir}/conf/conf">
                  <include name="**/*.*"/>
@@ -133,7 +135,7 @@
                    file="${extensions.conf.dir}"/>
         <antcall target="copy-conf-extensions"/>
 
-    <!-- things to go into the web-inf directory -->
+        <!-- things to go into the web-inf directory -->
         <copy todir="${build.project.webinf}/lib" filtering="no" flatten="true">
             <fileset dir="${lib.dir}/">
                 <exclude name="**/servlet*.jar"/>
@@ -151,7 +153,8 @@
         <antcall target="copy-lib-extensions"/>
 
         <!-- Copy the appropriate database driver to the webapp lib folder -->
-        <echo>Using ${scarab.database.type} JDBC driver named ${scarab.jdbc.driver.jar}
+        <echo>Using ${scarab.database.type} JDBC driver named
+              ${scarab.jdbc.driver.jar}
         </echo>
 
         <copy todir="${build.project.webinf}/lib" filtering="no"
@@ -296,7 +299,9 @@
     </target>
     
     <!-- ================================================================== -->
-    <!-- Generate SQL from Torque                                           -->
+    <!-- Generate SQL from Torque for a specified database type. Set the    -->
+    <!-- generatesql.database.type property when calling this target to     -->
+    <!-- specify the required database type.                                -->
     <!-- ================================================================== -->
     <target name="sql-specific-db" depends="torque-copy-all-schema">
         <filter token="DATABASE_TYPE" value="${generatesql.database.type}"/>
@@ -332,6 +337,19 @@
             tofile="${build.sql.scarab}/${generatesql.database.type}/turbine.sql"/>
         <move file="${src.sql.dir}/id-table-schema.sql"
             tofile="${build.sql.scarab}/${generatesql.database.type}/id-table.sql"/>
+    </target>
+    
+    
+    <!-- ================================================================== -->
+    <!-- Generate SQL from Torque for the database type set in the build    -->
+    <!-- property "scarab.database.type".                                   -->
+    <!-- ================================================================== -->
+    <target name="sql-current-db">
+        <!-- Generate the Torque files for the specified database type -->
+        <antcall target="sql-specific-db">
+            <param name="generatesql.database.type"
+                   value="${scarab.database.type}"/>
+        </antcall>
     </target>
 
     <!-- ================================================================== -->
@@ -383,6 +401,7 @@
                 <equals arg1="${scarab.database.type}" arg2="db2"/>
                 <equals arg1="${scarab.database.type}" arg2="mssql"/>
                 <equals arg1="${scarab.database.type}" arg2="hypersonic"/>
+                <equals arg1="${scarab.database.type}" arg2="postgresql"/>
             </or>
         </not>
         </condition>
@@ -409,9 +428,14 @@
     <!-- ================================================================== -->
     <!-- Create database if not bypassed in "db-type-check"                 -->
     <!-- ================================================================== -->
-    <target name="create-db-schema" depends="db-type-check,sql-all,prepare" 
+    <target name="create-db-schema" depends="db-type-check,prepare,sql-current-db" 
             if="auto.create.db">
-
+        <!-- Generate the Torque files for the specified database type -->
+        <antcall target="sql-specific-db">
+            <param name="generatesql.database.type"
+                   value="${scarab.database.type}"/>
+        </antcall>
+        
         <copy file="${src.sql.dir}/create-${scarab.database.type}-db.sql" 
               todir="${build.src.scarab}"
               filtering="true" overwrite="true"/>
@@ -930,5 +954,4 @@
         </b15b16-1>
 
     </target>
-        
 </project>
