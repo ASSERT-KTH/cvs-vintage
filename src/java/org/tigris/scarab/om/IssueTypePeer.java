@@ -17,7 +17,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 public class IssueTypePeer 
     extends org.tigris.scarab.om.BaseIssueTypePeer
 {
-    public static Integer ROOT_KEY = new Integer("0");
+    public static Integer ROOT_KEY = new Integer(0);
 
     private static final String ISSUE_TYPE_PEER = 
         "IssueTypePeer";
