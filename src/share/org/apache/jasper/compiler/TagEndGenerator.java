@@ -113,13 +113,13 @@ public class TagEndGenerator
             writer.popIndent(); // try 
 
             /** FIXME: REMOVE BEGIN */
-            writer.println("} catch (Throwable t) {");
-            writer.pushIndent();
+            //              writer.println("} catch (Throwable t) {");
+            //              writer.pushIndent();
 
-            writer.println("System.err.println(\"Caught: \");");
-            writer.println("t.printStackTrace();");
+            //              writer.println("System.err.println(\"Caught: \");");
+            //              writer.println("t.printStackTrace();");
 
-            writer.popIndent();
+            //              writer.popIndent();
             /** FIXME: REMOVE END */
         
             writer.println("} finally {");
@@ -142,12 +142,12 @@ public class TagEndGenerator
 	writer.popIndent(); // try
 
         /** FIXME: REMOVE BEGIN */
-        writer.println("} catch (Throwable t) {");
-        writer.pushIndent();
+        //          writer.println("} catch (Throwable t) {");
+        //          writer.pushIndent();
 
-        writer.println("System.err.println(\"Caught: \");");
-        writer.println("t.printStackTrace();");
-        writer.popIndent();
+        //          writer.println("System.err.println(\"Caught: \");");
+        //          writer.println("t.printStackTrace();");
+        //          writer.popIndent();
         /** FIXME: REMOVE END */
 
 	writer.println("} finally {");
