@@ -436,8 +436,11 @@ public class JspReader {
 	    
 	    if ( ch == limit.charAt(0) ) {
 		for (int i = 1 ; i < limlen ; i++) {
-		    if (Character.toLowerCase((char) nextChar()) != limit.charAt(i))
+		    if (Character.toLowerCase((char) nextChar()) != limit.charAt(i)){
+			reset(ret);
+			advance(1);
 			continue skip;
+		    }
 		}
 		return ret;
 	    }
