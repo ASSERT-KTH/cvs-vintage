@@ -54,6 +54,7 @@ import org.apache.turbine.tool.TemplateLink;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabLink;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
@@ -64,7 +65,7 @@ import org.apache.torque.om.NumberKey;
  * in SelectModule.vm
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SelectModule.java,v 1.6 2002/07/10 00:58:21 jmcnally Exp $
+ * @version $Id: SelectModule.java,v 1.7 2002/07/24 22:14:18 jmcnally Exp $
  */
 public class SelectModule extends Default
 {
@@ -103,7 +104,7 @@ public class SelectModule extends Default
             }
             catch (Exception e)
             {
-                log.error("Could not determine homepage", e);
+                Log.get().error("Could not determine homepage", e);
                 homePage = "Index.vm";
             }
             return super.setPage( homePage, moduleId);
