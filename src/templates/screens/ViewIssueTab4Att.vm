@@ -17,6 +17,7 @@ $l10n.NoAttachments
      <th>$l10n.Description</th>
      <th>$l10n.Type</th>
      <th>$l10n.CreatedBy</th>
+     <th>$l10n.CreationDate</th>
    </tr>
    #foreach ($file in $attachments)
      #indexedRows($velocityCount)
@@ -36,6 +37,7 @@ $l10n.NoAttachments
        <td>$file.MimeType</td>
        #set ($createdUser = $file.ScarabUserRelatedByCreatedBy)
        <td><a href="mailTo:$createdUser.Email">$!createdUser.Name</a></td>
+       <td>$format.getDate($scarabR.DateFormat, $file.CreatedDate)</td>
      </tr>
      #end
    #end
