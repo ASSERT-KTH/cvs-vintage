@@ -34,7 +34,7 @@ import javax.transaction.Transaction;
  *    a repository of objects. 
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * 
  * Revisions:
  *
@@ -65,6 +65,8 @@ implements java.io.Serializable
       OBJECT_NAME = new Integer(new String("OBJECT_NAME").hashCode()),
       // The Cache-ID associates an instance in cache somewhere on the server with this invocation
       CACHE_ID = new Integer(new String("CACHE_ID").hashCode()),
+      // The invoker-proxy binding name
+      INVOKER_PROXY_BINDING = new Integer(new String("INVOKER_PROXY_BINDING").hashCode()),
       // The invoker
       INVOKER = new Integer(new String("INVOKER").hashCode());
       
@@ -103,5 +105,8 @@ implements java.io.Serializable
    
    public void setInvoker(Invoker invoker) { context.put(INVOKER, invoker);}
    public Invoker getInvoker() { return (Invoker) context.get(INVOKER);}
+   
+   public void setInvokerProxyBinding(String binding) { context.put(INVOKER_PROXY_BINDING, binding);}
+   public String getInvokerProxyBinding() { return (String) context.get(INVOKER_PROXY_BINDING);}
    
 }

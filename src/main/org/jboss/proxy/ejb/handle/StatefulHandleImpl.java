@@ -20,6 +20,7 @@ import javax.naming.InitialContext;
 
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.security.SecurityAssociation;
 
@@ -30,7 +31,7 @@ import org.jboss.security.SecurityAssociation;
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/01/09: billb</b>
@@ -61,6 +62,7 @@ public class StatefulHandleImpl
    /** The identity of the bean. */
    public int objectName;
    public String jndiName;
+   public String invokerProxyBinding;
    public Invoker invoker;
    public Object id;
    
@@ -73,12 +75,13 @@ public class StatefulHandleImpl
     * @param name      JNDI name.
     * @param id        Identity of the bean.
     */
-   public StatefulHandleImpl(int objectName, String jndiName, Invoker invoker, Object id)
+   public StatefulHandleImpl(int objectName, String jndiName, Invoker invoker, String invokerProxyBinding, Object id)
    {
       this.objectName = objectName;
       this.jndiName= jndiName;
       this.invoker = invoker;
       this.id = id;
+      this.invokerProxyBinding = invokerProxyBinding;
    }
    
    /**
@@ -110,6 +113,7 @@ public class StatefulHandleImpl
             SecurityAssociation.getCredential());
          
          invocation.setObjectName(new Integer(objectName));
+         invocation.setValue(InvocationContext.INVOKER_PROXY_BINDING, invokerProxyBinding, Invocation.AS_IS);
          
          // It is a home invocation
          invocation.setType(Invocation.HOME);

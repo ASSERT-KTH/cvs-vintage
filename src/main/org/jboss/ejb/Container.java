@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.MarshalledObject; // tmp
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -47,8 +48,9 @@ import javax.transaction.Transaction; // tmp
 import javax.transaction.TransactionManager;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.BeanLockManager;
-import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
+import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
@@ -59,6 +61,7 @@ import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.naming.Util;
+import org.jboss.naming.ENCThreadLocalKey;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.util.jmx.ObjectNameFactory;
@@ -82,7 +85,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.86 $
+* @version $Revision: 1.87 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -172,8 +175,8 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    protected BeanLockManager lockManager;
    
    /** ??? */
-   protected LocalContainerInvoker localContainerInvoker = 
-      new BaseLocalContainerInvoker();
+   protected LocalProxyFactory localProxyFactory = 
+      new BaseLocalProxyFactory();
    
    /** This is a cache for method permissions */
    private HashMap methodPermissionsCache = new HashMap();
@@ -191,16 +194,14 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    /** ObjectName of Container **/
    private ObjectName jmxName;
 
+   protected HashMap proxyFactories = new HashMap();
+
    /** 
-    * The name of the Remote invoker dedicated to this container, 
-    * the type is set through deployment
-    * @todo Make invokerType configurable through xml.
+    * The Proxy factory is set in the Invocation.  This TL is used
+    * for methods that do not have access to the Invocation.
     */
-   // marcf FIXME: FOR NOW ONLY JRMP (Debugging) but in the future make 
-   // configurable from xml
-   // FIXME
-   protected String invokerType = "jboss:service=invoker,type=jrmp";
-   
+   protected ThreadLocal proxyFactoryTL = new ThreadLocal();
+
    // We need the visibility on the MBeanServer for prototyping, it will be removed in the future FIXME marcf
    //protected MBeanServer mbeanServer;
    /**
@@ -294,11 +295,6 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       this.sm = sm;
    }
    
-   public String getInvokerType()
-   {
-      return invokerType;    
-   }
-   
    public AuthenticationManager getSecurityManager()
    {
       return sm;
@@ -315,6 +311,11 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       lockManager.setContainer(this);
    }
    
+   public void addProxyFactory(String invokerBinding, EJBProxyFactory factory)
+   {
+      proxyFactories.put(invokerBinding, factory);
+   }
+
    public void setRealmMapping(RealmMapping rm)
    {
       this.rm = rm;
@@ -335,6 +336,21 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       return securityProxy;
    }
    
+   public EJBProxyFactory getProxyFactory()
+   {
+      return (EJBProxyFactory)proxyFactoryTL.get();
+   }
+
+   public void setProxyFactory(Object factory)
+   {
+      proxyFactoryTL.set(factory);
+   }
+   
+   public EJBProxyFactory lookupProxyFactory(String binding)
+   {
+      return (EJBProxyFactory)proxyFactories.get(binding);
+   }
+
    /**
     * Sets the application deployment unit for this container. All the bean
     * containers within the same application unit share the same instance.
@@ -542,10 +558,10 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       if (metaData.getLocal() != null)
          localInterface = classLoader.loadClass(metaData.getLocal());
       
-      localContainerInvoker.setContainer( this );
-      localContainerInvoker.create();
+      localProxyFactory.setContainer( this );
+      localProxyFactory.create();
       if (localHomeInterface != null)
-         ejbModule.addLocalHome(this, localContainerInvoker.getEJBLocalHome() );
+         ejbModule.addLocalHome(this, localProxyFactory.getEJBLocalHome() );
    }
    
    /**
@@ -564,7 +580,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       // Setup "java:comp/env" namespace
       setupEnvironment();
       started = true;
-      localContainerInvoker.start();
+      localProxyFactory.start();
    }
    
    /**
@@ -575,7 +591,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    public void stop()
    {
       started = false;
-      localContainerInvoker.stop();
+      localProxyFactory.stop();
    }
    
    /**
@@ -585,7 +601,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     */
    public void destroy()
    {
-      localContainerInvoker.destroy();
+      localProxyFactory.destroy();
       ejbModule.removeLocalHome( this );
       this.classLoader = null;
       this.webClassLoader = null;
@@ -596,7 +612,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    }
 
    /**
-    * This method is called by the ContainerInvoker when a method call comes
+    * This method is called when a method call comes
     * in on the Home object.  The Container forwards this call to the
     * interceptor chain for further processing.
     *
@@ -609,7 +625,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       throws Exception;
    
    /**
-    * This method is called by the ContainerInvoker when a method call comes
+    * This method is called when a method call comes
     * in on an EJBObject.  The Container forwards this call to the interceptor
     * chain for further processing.
     *
@@ -678,6 +694,18 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       
          Object value = null;
          Invocation mi = (Invocation)params[0];
+         /*
+         String jndiBinding = (String)mi.getValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME);
+         if (jndiBinding == null)
+         {
+            System.out.println("***************** jndiBInding is null ********");
+            new Throwable().printStackTrace();
+            System.out.println("*************************");
+         }
+         Object proxyFactory = Registry.lookup(jndiBinding + "/proxyFactory");
+         if (proxyFactory == null) System.out.println("***************** proxyFactory is null ********");
+	 proxyFactoryTL.set(proxyFactory);
+         */
 
          // Must have a valid Invocation to continue
          if (mi == null)
@@ -956,14 +984,43 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
                }
                else
                {
-                  // External link
-                  if (ref.getJndiName() == null)
+                  Iterator it = beanMetaData.getInvokerBindings();
+                  Reference reference = null;
+                  while (it.hasNext())
                   {
-                     throw new DeploymentException("ejb-ref "+ref.getName()+", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
+                     String invokerBinding = (String)it.next();
+                     String name = ref.getInvokerBinding(invokerBinding);
+                     if (name == null) name = ref.getJndiName();
+                     if (name == null) // still null?
+                     {
+                        throw new DeploymentException("ejb-ref "+ref.getName()+", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
+                     }
+                     StringRefAddr addr = new StringRefAddr(invokerBinding, name);
+                     System.out.println("******* adding " + invokerBinding + ":" + name + " to Reference");
+                     if (reference == null)
+                     {
+                        reference = new Reference("javax.naming.LinkRef", ENCThreadLocalKey.class.getName(), null);
+                     }
+                     reference.add(addr);
                   }
-                  if (debug)
-                     log.debug("Binding "+ref.getName()+" to external JNDI source: "+ref.getJndiName());
-                  Util.bind(envCtx, ref.getName(), new LinkRef(ref.getJndiName()));
+                  if (reference != null)
+                  {
+                     if (ref.getJndiName() != null)
+                     {
+                        // Add default
+                        StringRefAddr addr = new StringRefAddr("default", ref.getJndiName());
+                        reference.add(addr);
+                     }
+                     Util.bind(envCtx, ref.getName(), reference);
+                  }
+                  else
+                  {
+                     if (ref.getJndiName() == null)
+                     {
+                        throw new DeploymentException("ejb-ref "+ref.getName()+", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
+                     }
+                     Util.bind(envCtx, ref.getName(), new LinkRef(ref.getJndiName()));
+                  }
                }
             }
          }

@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.rmi.RemoteException;
 
 import javax.ejb.Handle;
@@ -32,7 +33,7 @@ import org.jboss.invocation.MarshalledInvocation;
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
-* @version $Revision: 1.35 $
+* @version $Revision: 1.36 $
 * <p><b>2001219 marc fleury</b>
 * <ul>
 * <li> move to the new invocation layer and Invocation object
@@ -40,7 +41,7 @@ import org.jboss.invocation.MarshalledInvocation;
 */
 public class StatelessSessionContainer
 extends Container
-implements ContainerInvokerContainer, InstancePoolContainer
+implements EJBProxyFactoryContainer, InstancePoolContainer
 {
    // Constants -----------------------------------------------------
    
@@ -58,9 +59,6 @@ implements ContainerInvokerContainer, InstancePoolContainer
    */
    protected Map beanMapping;
    
-   /** This is the container invoker for this container */
-   protected ContainerInvoker containerInvoker;
-   
    /** This is the instancepool that is to be used */
    protected InstancePool instancePool;
    
@@ -74,23 +72,9 @@ implements ContainerInvokerContainer, InstancePoolContainer
    
    // Public --------------------------------------------------------
    
-   public void setContainerInvoker(ContainerInvoker ci)
+   public LocalProxyFactory getLocalProxyFactory()
    {
-      if (ci == null)
-         throw new IllegalArgumentException("Null invoker");
-      
-      this.containerInvoker = ci;
-      ci.setContainer(this);
-   }
-   
-   public ContainerInvoker getContainerInvoker()
-   {
-      return containerInvoker;
-   }
-   
-   public LocalContainerInvoker getLocalContainerInvoker()
-   {
-      return localContainerInvoker;
+      return localProxyFactory;
    }
    
    public void setInstancePool(InstancePool ip)
@@ -171,8 +155,12 @@ implements ContainerInvokerContainer, InstancePoolContainer
          instancePool.create();
 
          // Init container invoker
-         if (containerInvoker != null)
-            containerInvoker.create();
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            ci.create();
+         }
 
          // Initialize the interceptor by calling the chain
          Interceptor in = interceptor;
@@ -202,8 +190,12 @@ implements ContainerInvokerContainer, InstancePoolContainer
          super.start();
 
          // Start container invoker
-         if (containerInvoker != null)
-            containerInvoker.start();
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            ci.start();
+         }
 
          // Start the instance pool
          instancePool.start();
@@ -235,8 +227,12 @@ implements ContainerInvokerContainer, InstancePoolContainer
          super.stop();
 
          // Stop container invoker
-         if (containerInvoker != null)
-            containerInvoker.stop();
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            ci.stop();
+         }
 
          // Stop the instance pool
          instancePool.stop();
@@ -265,10 +261,12 @@ implements ContainerInvokerContainer, InstancePoolContainer
       try
       {
          // Destroy container invoker
-         if (containerInvoker != null)
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
-            containerInvoker.destroy();
-            containerInvoker.setContainer(null);
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            ci.destroy();
+            ci.setContainer(null);
          }
 
          // Destroy the pool
@@ -347,10 +345,11 @@ implements ContainerInvokerContainer, InstancePoolContainer
    public EJBHome getEJBHome(Invocation mi)
       throws RemoteException
    {
-      if (containerInvoker == null)
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null) {
          throw new IllegalStateException();
-      
-      return (EJBHome) containerInvoker.getEJBHome();
+      }
+      return (EJBHome) ci.getEJBHome();
    }
    
    /**
@@ -366,7 +365,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    
    public EJBLocalHome getEJBLocalHome(Invocation mi)
    {
-      return localContainerInvoker.getEJBLocalHome();
+      return localProxyFactory.getEJBLocalHome();
    }
    
    // EJBLocalHome implementation
@@ -374,9 +373,9 @@ implements ContainerInvokerContainer, InstancePoolContainer
    public EJBLocalObject createLocalHome()
       throws CreateException
    {
-      if (localContainerInvoker == null)
+      if (localProxyFactory == null)
          throw new IllegalStateException();
-      return localContainerInvoker.getStatelessSessionEJBLocalObject();
+      return localProxyFactory.getStatelessSessionEJBLocalObject();
    }
    
    /**
@@ -392,10 +391,11 @@ implements ContainerInvokerContainer, InstancePoolContainer
    public EJBObject createHome()
       throws RemoteException, CreateException
    {
-      if (containerInvoker == null)
+       EJBProxyFactory ci = getProxyFactory();
+      if (ci == null) {
          throw new IllegalStateException();
-      
-      Object obj = containerInvoker.getStatelessSessionEJBObject();
+      }
+      Object obj = ci.getStatelessSessionEJBObject();
       return (EJBObject)obj;
    }
    

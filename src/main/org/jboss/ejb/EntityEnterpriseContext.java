@@ -26,7 +26,7 @@ import javax.ejb.EntityContext;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  *
  * <p><b>Revisions</b>
  * <p>20010703 marcf
@@ -180,14 +180,14 @@ public class EntityEnterpriseContext
    {
       public EJBObject getEJBObject()
       {
-         if (((EntityContainer)con).getContainerInvoker()==null)
+         if (((EntityContainer)con).getProxyFactory()==null)
             throw new IllegalStateException( "No remote interface defined." );
          
          if (ejbObject == null)
          {   
                // Create a new CacheKey
                Object cacheKey = ((EntityCache)((EntityContainer)con).getInstanceCache()).createCacheKey(id);
-               ejbObject = (EJBObject) ((EntityContainer)con).getContainerInvoker().getEntityEJBObject(cacheKey);  
+               ejbObject = (EJBObject) ((EntityContainer)con).getProxyFactory().getEntityEJBObject(cacheKey);  
          }
 
          return ejbObject;
@@ -201,7 +201,7 @@ public class EntityEnterpriseContext
          if (ejbLocalObject == null)
          {
             Object cacheKey = ((EntityCache)((EntityContainer)con).getInstanceCache()).createCacheKey(id);            
-            ejbLocalObject = ((EntityContainer)con).getLocalContainerInvoker().getEntityEJBLocalObject(cacheKey);
+            ejbLocalObject = ((EntityContainer)con).getLocalProxyFactory().getEntityEJBLocalObject(cacheKey);
          }
          return ejbLocalObject;
       }

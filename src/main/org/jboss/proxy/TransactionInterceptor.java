@@ -28,15 +28,11 @@ import org.jboss.invocation.Invoker;
 import org.jboss.proxy.ejb.handle.HomeHandleImpl;
 import org.jboss.invocation.Invocation;
 
-/*
-import javax.naming.Name;
-import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
-*/
 /**
 * The client-side proxy for an EJB Home object.
 *      
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 *
 * <p><b>2001/11/21: marcf</b>
 * <ol>

@@ -7,6 +7,7 @@
 package org.jboss.metadata;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.w3c.dom.Element;
@@ -18,7 +19,7 @@ import org.jboss.deployment.DeploymentException;
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  *   @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- *   @version $Revision: 1.15 $
+ *   @version $Revision: 1.16 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -30,6 +31,8 @@ public class EntityMetaData extends BeanMetaData {
    // Constants -----------------------------------------------------
    public final static int CMP_VERSION_1 = 1;
    public final static int CMP_VERSION_2 = 2;
+   public static final String DEFAULT_ENTITY_INVOKER_PROXY_BINDING = "entity-rmi-invoker";
+   public static final String DEFAULT_CLUSTERED_ENTITY_INVOKER_PROXY_BINDING = "clustered-entity-rmi-invoker";
     
    // Attributes ----------------------------------------------------
    private boolean cmp;
@@ -103,37 +106,16 @@ public class EntityMetaData extends BeanMetaData {
       if (isCMP()) {
          if(jdk13Enabled()) {
             if(isCMP2x()) {
-               if (isClustered())
-               {
-                  return ConfigurationMetaData.CLUSTERED_CMP_2x_13;
-               }
-               else
-               {
-                  return ConfigurationMetaData.CMP_2x_13;
-               }
+               return ConfigurationMetaData.CMP_2x_13;
             } else {
-               if (isClustered())
-               {
-                  return ConfigurationMetaData.CLUSTERED_CMP_1x_13;
-               }
-               else
-               {
-                  return ConfigurationMetaData.CMP_1x_13;
-               }
+               return ConfigurationMetaData.CMP_1x_13;
             }
          } else { 
             return ConfigurationMetaData.CMP_12;
          }
       } else {
          if(jdk13Enabled()) {
-            if (isClustered())
-            {
-               return ConfigurationMetaData.CLUSTERED_BMP_13;
-            }
-            else
-            {
-               return ConfigurationMetaData.BMP_13;
-            }
+            return ConfigurationMetaData.BMP_13;
          } else {
             return ConfigurationMetaData.BMP_12;
          }
@@ -211,6 +193,19 @@ public class EntityMetaData extends BeanMetaData {
                queries.add(queryMetaData);
             }
          }
+      }
+   }
+
+   protected void defaultInvokerBindings()
+   {
+      this.invokerBindings = new HashMap();
+      if (isClustered())
+      {
+         this.invokerBindings.put(DEFAULT_CLUSTERED_ENTITY_INVOKER_PROXY_BINDING, getJndiName());
+      }
+      else
+      {
+         this.invokerBindings.put(DEFAULT_ENTITY_INVOKER_PROXY_BINDING, getJndiName());
       }
    }
 

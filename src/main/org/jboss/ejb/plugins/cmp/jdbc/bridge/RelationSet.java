@@ -16,7 +16,7 @@ import java.util.HashSet;
 import javax.ejb.EJBException; 
 import javax.ejb.EJBLocalObject; 
 import org.jboss.ejb.EntityEnterpriseContext; 
-import org.jboss.ejb.LocalContainerInvoker; 
+import org.jboss.ejb.LocalProxyFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge; 
 
 /**
@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */                            
 public class RelationSet implements Set {
    private JDBCCMRFieldBridge cmrField;
@@ -249,7 +249,7 @@ public class RelationSet implements Set {
 
       return new Iterator() {
          private final Iterator idIterator = getIdList().iterator();
-         private final LocalContainerInvoker containerInvoker = 
+         private final LocalProxyFactory localFactory = 
                cmrField.getRelatedInvoker();
          private Object currentId;
 
@@ -269,7 +269,7 @@ public class RelationSet implements Set {
 
             try {
                currentId = idIterator.next();
-               return containerInvoker.getEntityEJBLocalObject(currentId);   
+               return localFactory.getEntityEJBLocalObject(currentId);   
             } catch(ConcurrentModificationException e) {
                throw new IllegalStateException("Underlying collection has " +
                      "been modified");

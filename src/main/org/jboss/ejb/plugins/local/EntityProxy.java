@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 /** The EJBLocal proxy for an entity
 
  @author  <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.2 $
+ @version $Revision: 1.3 $
  */
 class EntityProxy extends LocalProxy
    implements InvocationHandler
@@ -14,9 +14,9 @@ class EntityProxy extends LocalProxy
    static final long serialVersionUID = 5196148608172665115L;
    private Object cacheKey;
 
-   EntityProxy(String jndiName, Object id, BaseLocalContainerInvoker invoker)
+   EntityProxy(String jndiName, Object id, BaseLocalProxyFactory factory)
    {
-      super(jndiName, invoker);
+      super(jndiName, factory);
       cacheKey = id;
    }
 
@@ -35,7 +35,7 @@ class EntityProxy extends LocalProxy
       if( retValue == null )
       {
          // If not taken care of, go on and call the container
-         retValue = invoker.invoke(cacheKey, m, args);
+         retValue = factory.invoke(cacheKey, m, args);
       }
       return retValue;
    }

@@ -22,7 +22,7 @@ import org.jboss.proxy.ejb.handle.EntityHandleImpl;
 /**
  * An EJB entity bean proxy class.
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>2001/11/19: marcf</b>
  * <ol>
@@ -112,7 +112,6 @@ extends GenericEJBInterceptor
          invocation.setType(Invocation.REMOTE);
          // We pertain to this ID (represented by cache ID)
          invocation.setId(ctx.getCacheId());
-         
          return getNext().invoke(invocation);
       }
    }

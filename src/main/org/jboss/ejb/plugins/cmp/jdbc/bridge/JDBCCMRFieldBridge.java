@@ -28,7 +28,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.LocalContainerInvoker;
+import org.jboss.ejb.LocalProxyFactory;
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.plugins.CMPPersistenceManager;
 import org.jboss.ejb.plugins.EntityInstanceCache;
@@ -57,7 +57,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    // ------ Invocation messages ------
@@ -161,7 +161,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
     * The related entity's local container invoker.
     */
-   private LocalContainerInvoker relatedInvoker;
+   private LocalProxyFactory relatedInvoker;
    
    /**
     * The related entity.
@@ -264,7 +264,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       relatedManager = (JDBCStoreManager)cmpPM.getPersistenceStore();
       
       // get the related container invoker      
-      relatedInvoker = theContainer.getLocalContainerInvoker();
+      relatedInvoker = theContainer.getLocalProxyFactory();
 
       // 
       // Initialize the key fields
@@ -506,7 +506,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
     * The related entity's local container invoker.
     */
-   public LocalContainerInvoker getRelatedInvoker() {
+   public LocalProxyFactory getRelatedInvoker() {
       return relatedInvoker;
    }
 

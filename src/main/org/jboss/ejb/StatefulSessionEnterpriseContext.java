@@ -26,7 +26,7 @@ import javax.ejb.SessionContext;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -127,11 +127,11 @@ public class StatefulSessionEnterpriseContext
    {
       public EJBObject getEJBObject()
       {
-         if (((StatefulSessionContainer)con).getContainerInvoker()==null)
+         if (((StatefulSessionContainer)con).getProxyFactory()==null)
             throw new IllegalStateException( "No remote interface defined." );
 
          if (ejbObject == null) {
-               ejbObject = (EJBObject) ((StatefulSessionContainer)con).getContainerInvoker().getStatefulSessionEJBObject(id);
+               ejbObject = (EJBObject) ((StatefulSessionContainer)con).getProxyFactory().getStatefulSessionEJBObject(id);
          }  
 
          return ejbObject;
@@ -143,7 +143,7 @@ public class StatefulSessionEnterpriseContext
             throw new IllegalStateException( "No local interface for bean." );
          if (ejbLocalObject == null)
          {
-            ejbLocalObject = ((StatefulSessionContainer)con).getLocalContainerInvoker().getStatefulSessionEJBLocalObject(id);
+            ejbLocalObject = ((StatefulSessionContainer)con).getLocalProxyFactory().getStatefulSessionEJBLocalObject(id);
          }
          return ejbLocalObject;
       }

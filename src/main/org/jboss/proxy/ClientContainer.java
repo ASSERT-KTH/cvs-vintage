@@ -22,7 +22,7 @@ import org.jboss.invocation.InvocationContext;
 
 /**
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>2001/11/19: marcf</b>
  * <ol>
@@ -71,6 +71,7 @@ public class ClientContainer
       invocation.setObjectName(context.getObjectName());
       invocation.setMethod(m);
       invocation.setArguments(args);
+      invocation.setValue(InvocationContext.INVOKER_PROXY_BINDING, context.getInvokerProxyBinding(), Invocation.AS_IS);
       
       // send the invocation down the client interceptor chain
       return next.invoke(invocation);

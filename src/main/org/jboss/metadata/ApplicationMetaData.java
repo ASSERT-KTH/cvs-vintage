@@ -28,7 +28,7 @@ import org.jboss.deployment.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @version $Revision: 1.25 $
+ *   @version $Revision: 1.26 $
  */
 public class ApplicationMetaData extends MetaData
 {
@@ -52,6 +52,7 @@ public class ApplicationMetaData extends MetaData
    
    private ArrayList securityRoles = new ArrayList();
    private HashMap configurations = new HashMap();
+   private HashMap invokerBindings = new HashMap();
    private HashMap resources = new HashMap();
    private HashMap plugins = new HashMap();
    /** The security-domain value assigned to the application */
@@ -123,6 +124,16 @@ public class ApplicationMetaData extends MetaData
    public ConfigurationMetaData getConfigurationMetaDataByName(String name)
    {
       return (ConfigurationMetaData)configurations.get(name);
+   }
+   
+   public Iterator getInvokerProxyBindings()
+   {
+      return invokerBindings.values().iterator();
+   }
+   
+   public InvokerProxyBindingMetaData getInvokerProxyBindingMetaDataByName(String name)
+   {
+      return (InvokerProxyBindingMetaData)invokerBindings.get(name);
    }
    
    public String getResourceByName(String name)
@@ -448,6 +459,39 @@ public class ApplicationMetaData extends MetaData
       if( unauth != null )
          unauthenticatedPrincipal = getElementContent(unauth);
       
+      // find the invoker configurations
+      Element invokerConfs = getOptionalChild(element, "invoker-proxy-bindings");
+      if (invokerConfs != null)
+      {
+         iterator = getChildrenByTagName(invokerConfs, "invoker-proxy-binding");
+         
+         while (iterator.hasNext())
+         {
+            Element invoker = (Element)iterator.next();
+            String invokerName = getElementContent(getUniqueChild(invoker, "name"));
+            
+            // find the configuration if it has already been defined
+            // (allow jboss.xml to modify a standard conf)
+            InvokerProxyBindingMetaData invokerMetaData = getInvokerProxyBindingMetaDataByName(invokerName);
+            
+            // create it if necessary
+            if (invokerMetaData == null)
+            {
+               invokerMetaData = new InvokerProxyBindingMetaData(invokerName);
+               invokerBindings.put(invokerName, invokerMetaData);
+               System.out.println("***** putting invoker " + invokerName + " into ApplicationMetaData");
+            }
+            
+            try
+            {
+               invokerMetaData.importJbossXml(invoker);
+            } catch (DeploymentException e)
+            {
+               throw new DeploymentException("Error in jboss.xml for invoker-proxy-binding " + invokerMetaData.getName() + ": " + e.getMessage());
+            }
+         }
+      }
+
       // find the container configurations (we need them first to use them in the beans)
       Element confs = getOptionalChild(element, "container-configurations");
       if (confs != null)

@@ -47,7 +47,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  *
  *  <p><b>Revisions:</b>
  *  <p><b>20010621 Bill Burke:</b>
@@ -262,13 +262,13 @@ public class CMPPersistenceManager
       ctx.setCacheKey(cacheKey);
       
       // Create EJBObject
-      if (con.getContainerInvoker() != null)
+      if (con.getProxyFactory() != null)
       {
-         ctx.setEJBObject((EJBObject) con.getContainerInvoker().getEntityEJBObject(cacheKey));
+         ctx.setEJBObject((EJBObject) con.getProxyFactory().getEntityEJBObject(cacheKey));
       }
       if (con.getLocalHomeClass() != null)
       {
-         ctx.setEJBLocalObject(con.getLocalContainerInvoker().getEntityEJBLocalObject(cacheKey));
+         ctx.setEJBLocalObject(con.getLocalProxyFactory().getEntityEJBLocalObject(cacheKey));
       }
    }
 

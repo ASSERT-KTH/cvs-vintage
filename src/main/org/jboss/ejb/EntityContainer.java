@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Collection;
 
 import javax.management.Attribute;
@@ -62,7 +63,7 @@ import org.jboss.metadata.EntityMetaData;
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-* @version $Revision: 1.77 $
+* @version $Revision: 1.78 $
 *
 * <p><b>Revisions:</b>
 *
@@ -92,8 +93,8 @@ import org.jboss.metadata.EntityMetaData;
 * </ul>
 */
 public class EntityContainer
-extends Container
-implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
+   extends Container
+   implements EJBProxyFactoryContainer, InstancePoolContainer, StatisticsProvider
 {
    // Constants -----------------------------------------------------
 
@@ -113,9 +114,6 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    */
    protected Map beanMapping = new HashMap();
    
-   
-   /** This is the container invoker for this container */
-   protected ContainerInvoker containerInvoker;
    
    /** This is the persistence manager for this container */
    protected EntityPersistenceManager persistenceManager;
@@ -180,23 +178,9 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    }
 
 
-   public void setContainerInvoker(ContainerInvoker ci)
+   public LocalProxyFactory getLocalProxyFactory()
    {
-      if (ci == null)
-         throw new IllegalArgumentException("Null invoker");
-      
-      this.containerInvoker = ci;
-      ci.setContainer(this);
-   }
-   
-   public ContainerInvoker getContainerInvoker()
-   {
-      return containerInvoker;
-   }
-   
-   public LocalContainerInvoker getLocalContainerInvoker()
-   {
-      return localContainerInvoker;
+      return localProxyFactory;
    }
    
    public void setInstancePool(InstancePool ip)
@@ -326,9 +310,12 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
          // Initialize pool
          instancePool.create();
 
-         // Init container invoker
-         if (containerInvoker != null)
-            containerInvoker.create();
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            ci.create();
+         }
 
          // Init instance cache
          instanceCache.create();
@@ -365,9 +352,13 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
          // Call default start
          super.start();
 
-         // Start container invoker
-         if (containerInvoker != null)
-            containerInvoker.start();
+         // Start container invokers
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            ci.start();
+         }
 
          // Start instance cache
          instanceCache.start();
@@ -424,8 +415,12 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
          instanceCache.stop();
 
          // Stop container invoker
-         if (containerInvoker != null)
-            containerInvoker.stop();
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            ci.stop();
+         }
 
          // Call default stop
          super.stop();
@@ -447,8 +442,12 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
       try
       {
          // Destroy container invoker
-         if (containerInvoker != null)
-            containerInvoker.destroy();
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            ci.destroy();
+         }
 
          // Destroy instance cache
          instanceCache.destroy();
@@ -539,10 +538,11 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    public EJBHome getEJBHome(Invocation mi)
    throws RemoteException
    {
-      if (containerInvoker == null) {
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null) {
          throw new IllegalStateException();
       }
-      return (EJBHome) containerInvoker.getEJBHome();
+      return (EJBHome) ci.getEJBHome();
    }
    
    public boolean isIdentical(Invocation mi)
@@ -557,7 +557,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    */
    public EJBLocalHome getEJBLocalHome(Invocation mi)
    {
-      return localContainerInvoker.getEJBLocalHome();
+      return localProxyFactory.getEJBLocalHome();
    }
    
    /**
@@ -610,7 +610,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
          Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
          
          // Get the EJBObjects with that
-         Collection ec = localContainerInvoker.getEntityLocalCollection(c);
+         Collection ec = localProxyFactory.getEntityLocalCollection(c);
          
          // BMP entity finder methods are allowed to return java.util.Enumeration.
          try {
@@ -636,7 +636,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
             (EntityEnterpriseContext)mi.getEnterpriseContext());
          
          //create the EJBObject
-         return (EJBLocalObject)localContainerInvoker.getEntityEJBLocalObject(id);
+         return (EJBLocalObject)localProxyFactory.getEntityEJBLocalObject(id);
       }
    }
    
@@ -655,6 +655,10 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
       */
       synchronizeEntitiesWithinTransaction(mi.getTransaction());
       
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null) {
+         throw new IllegalStateException();
+      }
       // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getRemoteClass()))
       {
@@ -662,7 +666,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
          Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
          
          // Get the EJBObjects with that
-         Collection ec = containerInvoker.getEntityCollection(c);
+         Collection ec = ci.getEntityCollection(c);
          
          // BMP entity finder methods are allowed to return java.util.Enumeration.
          // We need a serializable Enumeration, so we can't use Collections.enumeration()
@@ -689,7 +693,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
             (EntityEnterpriseContext)mi.getEnterpriseContext());
          
          //create the EJBObject
-         return (EJBObject)containerInvoker.getEntityEJBObject(id);
+         return (EJBObject)ci.getEntityEJBObject(id);
       }
    }
    
@@ -739,8 +743,12 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    public EJBObject getEJBObject(Invocation mi)
    throws RemoteException
    {
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null) {
+         throw new IllegalStateException();
+      }
       // All we need is an EJBObject for this Id;
-      return (EJBObject)containerInvoker.getEntityEJBObject(((EntityCache) instanceCache).createCacheKey(mi.getId()));
+      return (EJBObject)ci.getEntityEJBObject(((EntityCache) instanceCache).createCacheKey(mi.getId()));
    }
    
    // EJBHome implementation ----------------------------------------
@@ -757,7 +765,11 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    public EJBMetaData getEJBMetaDataHome(Invocation mi)
    throws RemoteException
    {
-      return getContainerInvoker().getEJBMetaData();
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null) {
+         throw new IllegalStateException();
+      }
+      return ci.getEJBMetaData();
    }
    
    /**

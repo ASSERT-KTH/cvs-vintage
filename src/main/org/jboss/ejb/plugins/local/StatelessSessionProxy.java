@@ -7,16 +7,16 @@ import java.lang.reflect.Method;
 /** The EJBLocal proxy for a stateless session
 
  @author  <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.2 $
+ @version $Revision: 1.3 $
  */
 class StatelessSessionProxy extends LocalProxy
    implements InvocationHandler
 {
    static final long serialVersionUID = 5677941766264344565L;
 
-   StatelessSessionProxy(String jndiName, BaseLocalContainerInvoker invoker)
+   StatelessSessionProxy(String jndiName, BaseLocalProxyFactory factory)
    {
-      super(jndiName, invoker);
+      super(jndiName, factory);
    }
    
    protected Object getId()
@@ -78,7 +78,7 @@ class StatelessSessionProxy extends LocalProxy
       // If not taken care of, go on and call the container
       else
       {
-         retValue = invoker.invoke(jndiName, m, args);
+         retValue = factory.invoke(jndiName, m, args);
       }
 
       return retValue;

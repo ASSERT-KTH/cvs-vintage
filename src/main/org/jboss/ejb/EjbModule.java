@@ -46,14 +46,17 @@ import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.EntityMetaData;
+import org.jboss.metadata.InvokerProxyBindingMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.mx.loading.UnifiedClassLoader;
+import org.jboss.proxy.ProxyFactoryRegistry;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
+import org.jboss.system.Registry;
 import org.jboss.system.Service;
 import org.jboss.system.ServiceControllerMBean;
 import org.jboss.system.ServiceMBeanSupport;
@@ -83,7 +86,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -136,7 +139,7 @@ public class EjbModule
    private ServiceControllerMBean serviceController;
 
    private final Map moduleData = 
-         Collections.synchronizedMap(new HashMap());
+      Collections.synchronizedMap(new HashMap());
    
    // Static --------------------------------------------------------
    
@@ -351,7 +354,7 @@ public class EjbModule
             lName,
             deploymentInfo.localUrl,
             getServiceName()
-         );
+            );
       if( lModule != null ) 
       {
          setModuleName( lModule );
@@ -395,20 +398,24 @@ public class EjbModule
             //BeanMetaData lMetaData = con.getBeanMetaData();
             int lType =
                metaData.isSession() ?
-                  ( ( (SessionMetaData) metaData ).isStateless() ? 2 : 1 ) :
+               ( ( (SessionMetaData) metaData ).isStateless() ? 2 : 1 ) :
                ( metaData.isMessageDriven() ? 3 : 0 );
             ObjectName lEJB = EJB.create(
                server,
                getModuleName().toString(),
                lType,
                metaData.getJndiName()
-            );
+               );
             if (debug) {
                log.debug( "Application.start(), EJB: " + lEJB );
             }
             if( lEJB != null ) {
                con.mEJBObjectName = lEJB.toString();
             }
+            // We keep the hashCode around for fast creation of proxies
+            int jmxHash = jmxName.hashCode();
+            Registry.bind(new Integer(jmxHash), jmxName);
+            log.debug("Bound jmxName="+jmxName+", hash="+jmxHash+"into Registry");
          }
       }
       catch (Exception e)
@@ -464,12 +471,14 @@ public class EjbModule
    public void destroyService()
    {
       WebServiceMBean webServer = 
-            (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, 
-                                               WebServiceMBean.OBJECT_NAME);
+         (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, 
+                                            WebServiceMBean.OBJECT_NAME);
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
          ObjectName jmxName =  con.getJmxName();
+         int jmxHash = jmxName.hashCode();
+         Registry.unbind(new Integer(jmxHash));
          // Remove JSR-77 EJB-Wrapper
          if( con.mEJBObjectName != null )
          {
@@ -526,7 +535,7 @@ public class EjbModule
    // ******************
    
    private Container createContainer( BeanMetaData bean, DeploymentInfo sdi)
-   throws Exception
+      throws Exception
    {
       ClassLoader cl = sdi.ucl;
       ClassLoader localCl = sdi.localCl;
@@ -556,9 +565,9 @@ public class EjbModule
    }
    
    private MessageDrivenContainer createMessageDrivenContainer( BeanMetaData bean,
-      ClassLoader cl,
-      ClassLoader localCl )
-   throws Exception
+                                                                ClassLoader cl,
+                                                                ClassLoader localCl )
+      throws Exception
    {
       // get the container configuration for this bean
       // a default configuration is now always provided
@@ -569,16 +578,16 @@ public class EjbModule
       int transType = bean.isContainerManagedTx() ? CMT : BMT;
       
       initializeContainer( container, conf, bean, transType, cl, localCl );
-      container.setContainerInvoker( createContainerInvoker( conf, cl ) );
+      createProxyFactories(bean, container, cl);
       container.setInstancePool( createInstancePool( conf, cl ) );
       
       return container;
    }
    
    private StatelessSessionContainer createStatelessSessionContainer( BeanMetaData bean,
-      ClassLoader cl,
-      ClassLoader localCl )
-   throws Exception
+                                                                      ClassLoader cl,
+                                                                      ClassLoader localCl )
+      throws Exception
    {
       // get the container configuration for this bean
       // a default configuration is now always provided
@@ -588,16 +597,18 @@ public class EjbModule
       int transType = bean.isContainerManagedTx() ? CMT : BMT;
       initializeContainer( container, conf, bean, transType, cl, localCl );
       if (bean.getHome() != null)
-         container.setContainerInvoker( createContainerInvoker( conf, cl ) );
+      {
+         createProxyFactories(bean, container, cl);
+      }
       container.setInstancePool( createInstancePool( conf, cl ) );
       
       return container;
    }
    
    private StatefulSessionContainer createStatefulSessionContainer( BeanMetaData bean,
-      ClassLoader cl,
-      ClassLoader localCl )
-   throws Exception
+                                                                    ClassLoader cl,
+                                                                    ClassLoader localCl )
+      throws Exception
    {
       // get the container configuration for this bean
       // a default configuration is now always provided
@@ -608,10 +619,10 @@ public class EjbModule
       initializeContainer( container, conf, bean, transType, cl, localCl );
       if (bean.getHome() != null)
       {
-         container.setContainerInvoker( createContainerInvoker( conf, cl ) );
+         createProxyFactories(bean, container, cl);
       }
       boolean beanCacheJMSMonitoring = ((Boolean)server.getAttribute(EJBDeployerMBean.OBJECT_NAME,
-                                                           "BeanCacheJMSMonitoringEnabled")).booleanValue();
+                                                                     "BeanCacheJMSMonitoringEnabled")).booleanValue();
       container.setInstanceCache( createInstanceCache( conf, beanCacheJMSMonitoring, cl ) );
       // No real instance pool, use the shadow class
       container.setInstancePool( new StatefulSessionInstancePool() );
@@ -624,9 +635,9 @@ public class EjbModule
    }
    
    private EntityContainer createEntityContainer( BeanMetaData bean,
-      ClassLoader cl,
-      ClassLoader localCl )
-   throws Exception
+                                                  ClassLoader cl,
+                                                  ClassLoader localCl )
+      throws Exception
    {
       // get the container configuration for this bean
       // a default configuration is now always provided
@@ -637,10 +648,10 @@ public class EjbModule
       initializeContainer( container, conf, bean, transType, cl, localCl );
       if (bean.getHome() != null)
       {
-         container.setContainerInvoker( createContainerInvoker( conf, cl ) );
+         createProxyFactories(bean, container, cl);
       }
       boolean beanCacheJMSMonitoring = ((Boolean)server.getAttribute(EJBDeployerMBean.OBJECT_NAME,
-                                                           "BeanCacheJMSMonitoringEnabled")).booleanValue();
+                                                                     "BeanCacheJMSMonitoringEnabled")).booleanValue();
       container.setInstanceCache( createInstanceCache( conf, beanCacheJMSMonitoring, cl ) );
       container.setInstancePool( createInstancePool( conf, cl ) );
       //Set the bean Lock Manager
@@ -656,7 +667,7 @@ public class EjbModule
       {
          // CMP takes a manager and a store
          org.jboss.ejb.plugins.CMPPersistenceManager persistenceManager =
-         new org.jboss.ejb.plugins.CMPPersistenceManager();
+            new org.jboss.ejb.plugins.CMPPersistenceManager();
          
          //Load the store from configuration
          persistenceManager.setPersistenceStore( (EntityPersistenceStore) cl.loadClass( conf.getPersistenceManager() ).newInstance() );
@@ -672,15 +683,15 @@ public class EjbModule
    // **************
    
    /**
-   * Perform the common steps to initializing a container.
-   */
+    * Perform the common steps to initializing a container.
+    */
    private void initializeContainer( Container container,
-      ConfigurationMetaData conf,
-      BeanMetaData bean,
-      int transType,
-      ClassLoader cl,
-      ClassLoader localCl )
-   throws NamingException, DeploymentException
+                                     ConfigurationMetaData conf,
+                                     BeanMetaData bean,
+                                     int transType,
+                                     ClassLoader cl,
+                                     ClassLoader localCl )
+      throws NamingException, DeploymentException
    {
       // Create local classloader for this container
       // For loading resources that must come from the local jar.  Not for loading classes!
@@ -697,19 +708,19 @@ public class EjbModule
       {
          Class clazz = cl.loadClass(webClassLoaderName);
          Constructor constructor = clazz.getConstructor(
-                  new Class[] { ObjectName.class, UnifiedClassLoader.class } );
+            new Class[] { ObjectName.class, UnifiedClassLoader.class } );
          wcl = (WebClassLoader)constructor.newInstance(
-                  new Object[] { container.getJmxName(), cl });
+            new Object[] { container.getJmxName(), cl });
       }
       catch (Exception e) 
       {
          throw new DeploymentException(
-                  "Failed to create WebClassLoader of class: " 
-                  + webClassLoaderName + ": ", e);
+            "Failed to create WebClassLoader of class: " 
+            + webClassLoaderName + ": ", e);
       }
       WebServiceMBean webServer = 
-            (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, 
-                                               WebServiceMBean.OBJECT_NAME);
+         (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, 
+                                            WebServiceMBean.OBJECT_NAME);
       URL[] codebase = { webServer.addClassLoader(wcl) };
       wcl.setWebURLs(codebase);
       container.setWebClassLoader(wcl);
@@ -768,7 +779,7 @@ public class EjbModule
          catch(Exception e)
          {
             throw new DeploymentException("Failed to create SecurityProxy of type: " +
-                                          securityProxyClassName + ", "+ conf.getContainerInvoker(), e);
+                                          securityProxyClassName, e);
          }
       }
       
@@ -777,20 +788,20 @@ public class EjbModule
    }
    
    /**
-   * Given a container-interceptors element of a container-configuration,
-   * add the indicated interceptors to the container depending on the container
-   * transcation type and metricsEnabled flag.
-   *
-   *
-   * @todo marcf: frankly the transaction type stuff makes no sense to me, we have externalized
-   * the container stack construction in jbossxml and I don't see why or why there would be a 
-   * type missmatch on the transaction
-   * 
-   * @param container   the container instance to setup.
-   * @param transType   one of the BMT, CMT or ANY constants.
-   * @param element     the container-interceptors element from the
-   *                    container-configuration.
-   */
+    * Given a container-interceptors element of a container-configuration,
+    * add the indicated interceptors to the container depending on the container
+    * transcation type and metricsEnabled flag.
+    *
+    *
+    * @todo marcf: frankly the transaction type stuff makes no sense to me, we have externalized
+    * the container stack construction in jbossxml and I don't see why or why there would be a 
+    * type missmatch on the transaction
+    * 
+    * @param container   the container instance to setup.
+    * @param transType   one of the BMT, CMT or ANY constants.
+    * @param element     the container-interceptors element from the
+    *                    container-configuration.
+    */
    private void addInterceptors(Container container,
                                 int transType,
                                 Element element)
@@ -801,16 +812,16 @@ public class EjbModule
       String transTypeString = stringTransactionValue(transType);
       ClassLoader loader = container.getClassLoader();
       /* First build the container interceptor stack from interceptorElements
-      match transType and metricsEnabled values
+         match transType and metricsEnabled values
       */
       ArrayList istack = new ArrayList();
       while( interceptorElements != null && interceptorElements.hasNext() )
       {
          Element ielement = (Element) interceptorElements.next();
          /* Check that the interceptor is configured for the transaction mode of the bean
-         by comparing its 'transaction' attribute to the string representation
-         of transType
-         FIXME: marcf, WHY???????
+            by comparing its 'transaction' attribute to the string representation
+            of transType
+            FIXME: marcf, WHY???????
          */
          String transAttr = ielement.getAttribute("transaction");
          if( transAttr == null || transAttr.length() == 0 )
@@ -860,7 +871,7 @@ public class EjbModule
       }
       
       /* If there is a security proxy associated with the container add its
-      interceptor just before the container interceptor
+         interceptor just before the container interceptor
       */
       if( container.getSecurityProxy() != null )
          container.addInterceptor(new SecurityProxyInterceptor());
@@ -874,60 +885,57 @@ public class EjbModule
       String transaction = ANY_VALUE;
       switch( transType )
       {
-         case BMT:
-            transaction = BMT_VALUE;
+      case BMT:
+         transaction = BMT_VALUE;
          break;
-         case CMT:
-            transaction = CMT_VALUE;
+      case CMT:
+         transaction = CMT_VALUE;
          break;
       }
       return transaction;
    }
    
    /**
-   * createCOntainerInvoker DEPRACATED CONTAINER INVOKER DOES NOTHING BUT MANUFACTURE EJBs
-   *
-   * @todo Leftover code in createContainerInvoker!! Move to EJBFactory, implement with ProxyFactory.   The EJBFactory must be made aware of invocation type
-   * FIXME : TEMPORARY 
-   */
-   private static ContainerInvoker createContainerInvoker( ConfigurationMetaData conf,
-      ClassLoader cl )
-   throws Exception
+    * Create all proxy factories for this ejb
+    */
+   private static void createProxyFactories(BeanMetaData conf, Container container,
+					    ClassLoader cl )
+      throws Exception
    {
-      // Set container invoker
-      ContainerInvoker ci = null;
-      
-      String invoker =conf.getContainerInvoker();
-      
-      // Just a nicety for 2.4 legacy users
-      if (invoker.equals("org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker"))
+      Iterator it = conf.getInvokerBindings();
+      while (it.hasNext())
       {
-         log.warn("you are using deprecated JRMPContainerInvoker. Please change to org.jboss.proxy.ejb.ProxyFactory");
-         invoker = "org.jboss.proxy.ejb.ProxyFactory";
+         String invoker = (String)it.next();
+         String jndiBinding = (String)conf.getInvokerBinding(invoker);
+         System.out.println("_________ creating binding for " + jndiBinding + ":" + invoker);
+         InvokerProxyBindingMetaData imd = (InvokerProxyBindingMetaData)conf.getApplicationMetaData().getInvokerProxyBindingMetaDataByName(invoker);
+         EJBProxyFactory ci = null;
+
+         // create a ProxyFactory instance
+         try
+         {
+            ci = (EJBProxyFactory) cl.loadClass(imd.getProxyFactory()).newInstance();
+            ci.setContainer(container);
+            ci.setInvokerMetaData(imd);
+	    ci.setInvokerBinding(jndiBinding);
+            if( ci instanceof XmlLoadable )
+            {
+               // the container invoker can load its configuration from the jboss.xml element
+               ( (XmlLoadable) ci ).importXml(imd.getProxyFactoryConfig());
+            }
+            container.addProxyFactory(invoker, ci);
+         }
+         catch( Exception e )
+         {
+            throw new DeploymentException( "Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml): " + invoker, e );
+         }
       }
-      try
-      {
-         
-         ci = (ContainerInvoker) cl.loadClass(invoker).newInstance();
-      }
-      catch( Exception e )
-      {
-         throw new DeploymentException( "Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml): " + invoker, e );
-      }
-      
-      if( ci instanceof XmlLoadable )
-      {
-         // the container invoker can load its configuration from the jboss.xml element
-         ( (XmlLoadable) ci ).importXml( conf.getContainerInvokerConf() );
-      }
-      
-      return ci;
    }
    
    
    private static BeanLockManager createBeanLockManager( boolean reentrant, String beanLock,
-      ClassLoader cl )
-   throws Exception
+                                                         ClassLoader cl )
+      throws Exception
    {
       // The bean lock manager
       BeanLockManager lockManager = new BeanLockManager();
@@ -949,8 +957,8 @@ public class EjbModule
    }
    
    private static InstancePool createInstancePool( ConfigurationMetaData conf,
-      ClassLoader cl )
-   throws Exception
+                                                   ClassLoader cl )
+      throws Exception
    {
       // Set instance pool
       InstancePool ip = null;
@@ -971,9 +979,9 @@ public class EjbModule
    }
    
    private static InstanceCache createInstanceCache( ConfigurationMetaData conf,
-      boolean jmsMonitoring,
-      ClassLoader cl )
-   throws Exception
+                                                     boolean jmsMonitoring,
+                                                     ClassLoader cl )
+      throws Exception
    {
       // Set instance cache
       InstanceCache ic = null;

@@ -23,7 +23,7 @@ import org.jboss.proxy.ejb.handle.StatefulHandleImpl;
 /**
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>2001/11/23: marcf</b>
  * <ol>
@@ -88,7 +88,7 @@ public class StatefulSessionInterceptor
          String jndiName = (String) ctx.getValue(JNDI_NAME);
          Invoker invoker = ctx.getInvoker();
          Object id = ctx.getCacheId();
-         return new StatefulHandleImpl(objectName, jndiName, invoker, id);
+         return new StatefulHandleImpl(objectName, jndiName, invoker, ctx.getInvokerProxyBinding(), id);
       }
       else if (m.equals(GET_EJB_HOME))
       {

@@ -49,7 +49,7 @@ import org.jboss.util.jmx.MBeanServerLocator;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -200,11 +200,11 @@ public class StatefulSessionFilePersistenceManager
       ((StatefulSessionContainer)con).getInstanceCache().insert(ctx);
         
       // Create EJBObject
-      if (con.getContainerInvoker() != null)
-         ctx.setEJBObject((EJBObject)con.getContainerInvoker().getStatefulSessionEJBObject(ctx.getId()));
+      if (con.getProxyFactory() != null)
+         ctx.setEJBObject((EJBObject)con.getProxyFactory().getStatefulSessionEJBObject(ctx.getId()));
       // Create EJBLocalObject
       if (con.getLocalHomeClass() != null)
-         ctx.setEJBLocalObject(con.getLocalContainerInvoker().getStatefulSessionEJBLocalObject(ctx.getId()));
+         ctx.setEJBLocalObject(con.getLocalProxyFactory().getStatefulSessionEJBLocalObject(ctx.getId()));
    }
     
    public void activateSession(StatefulSessionEnterpriseContext ctx)

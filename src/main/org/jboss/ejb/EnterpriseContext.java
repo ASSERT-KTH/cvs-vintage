@@ -47,7 +47,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -252,21 +252,21 @@ public abstract class EnterpriseContext
       { 
          if (con instanceof EntityContainer)
          {
-            if (((EntityContainer)con).getContainerInvoker()==null)
+            if (((EntityContainer)con).getProxyFactory()==null)
                throw new IllegalStateException( "No remote home defined." );
-            return (EJBHome)((EntityContainer)con).getContainerInvoker().getEJBHome(); 
+            return (EJBHome)((EntityContainer)con).getProxyFactory().getEJBHome(); 
          } 
          else if (con instanceof StatelessSessionContainer)
          {
-            if (((StatelessSessionContainer)con).getContainerInvoker()==null)
+            if (((StatelessSessionContainer)con).getProxyFactory()==null)
                throw new IllegalStateException( "No remote home defined." );
-            return (EJBHome) ((StatelessSessionContainer)con).getContainerInvoker().getEJBHome(); 
+            return (EJBHome) ((StatelessSessionContainer)con).getProxyFactory().getEJBHome(); 
          } 
          else if (con instanceof StatefulSessionContainer) 
          {
-            if (((StatefulSessionContainer)con).getContainerInvoker()==null)
+            if (((StatefulSessionContainer)con).getProxyFactory()==null)
                throw new IllegalStateException( "No remote home defined." );
-            return (EJBHome) ((StatefulSessionContainer)con).getContainerInvoker().getEJBHome();
+            return (EJBHome) ((StatefulSessionContainer)con).getProxyFactory().getEJBHome();
          }
 
          // Should never get here
@@ -279,19 +279,19 @@ public abstract class EnterpriseContext
          {
             if (((EntityContainer)con).getLocalHomeClass()==null)
                throw new IllegalStateException( "No local home defined." );
-            return ((EntityContainer)con).getLocalContainerInvoker().getEJBLocalHome(); 
+            return ((EntityContainer)con).getLocalProxyFactory().getEJBLocalHome(); 
          } 
          else if (con instanceof StatelessSessionContainer)
          {
             if (((StatelessSessionContainer)con).getLocalHomeClass()==null)
                throw new IllegalStateException( "No local home defined." );
-            return ((StatelessSessionContainer)con).getLocalContainerInvoker().getEJBLocalHome(); 
+            return ((StatelessSessionContainer)con).getLocalProxyFactory().getEJBLocalHome(); 
          } 
          else if (con instanceof StatefulSessionContainer) 
          {
             if (((StatefulSessionContainer)con).getLocalHomeClass()==null)
                throw new IllegalStateException( "No local home defined." );
-            return ((StatefulSessionContainer)con).getLocalContainerInvoker().getEJBLocalHome();
+            return ((StatefulSessionContainer)con).getLocalProxyFactory().getEJBLocalHome();
          }
 
          // Should never get here

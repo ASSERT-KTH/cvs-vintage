@@ -18,7 +18,7 @@ import javax.naming.Name;
 
  @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.6 $
+ @version $Revision: 1.7 $
  */
 public class LocalHomeProxy
    extends LocalProxy
@@ -54,9 +54,9 @@ public class LocalHomeProxy
       }
    }
    
-   public LocalHomeProxy(String jndiName, BaseLocalContainerInvoker invoker)
+   public LocalHomeProxy(String jndiName, BaseLocalProxyFactory factory)
    {
-      super(jndiName, invoker);
+      super(jndiName, factory);
    }
 
    protected Object getId()
@@ -102,12 +102,12 @@ public class LocalHomeProxy
          // The trick is simple we trick the container in believe it
          // is a remove() on the instance
          Object id = args[0];
-         retValue = invoker.invoke(id, REMOVE_OBJECT, EMPTY_ARGS);
+         retValue = factory.invoke(id, REMOVE_OBJECT, EMPTY_ARGS);
       }
       // If not taken care of, go on and call the container
       else
       {
-         retValue = invoker.invokeHome(m, args);
+         retValue = factory.invokeHome(m, args);
       }
 
       return retValue;

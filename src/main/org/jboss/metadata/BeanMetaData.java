@@ -33,7 +33,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -53,6 +53,7 @@ public abstract class BeanMetaData
    public static final char SESSION_TYPE = 'S';
    public static final char ENTITY_TYPE = 'E';
    public static final char MDB_TYPE = 'M';
+   public static final String LOCAL_INVOKER_PROXY_BINDING = "LOCAL";
 
    // Attributes ----------------------------------------------------
    private ApplicationMetaData application;
@@ -110,12 +111,7 @@ public abstract class BeanMetaData
    /** The assembly-descriptor/exclude-list method(s) */
    private ArrayList excludedMethods = new ArrayList();
    /** what JRMP invokers do we use? **/
-   private String homeInvoker = null;
-   private String beanInvoker = null;
-   public static final String DEFAULT_HOME_INVOKER = "jboss:service=invoker,type=jrmp";
-   public static final String DEFAULT_BEAN_INVOKER = "jboss:service=invoker,type=jrmp";
-   public static final String DEFAULT_CLUSTERED_HOME_INVOKER = "jboss:service=invoker,type=jrmpha";
-   public static final String DEFAULT_CLUSTERED_BEAN_INVOKER = "jboss:service=invoker,type=jrmpha";
+   protected HashMap invokerBindings = null;
    /** The cluster-config element info */
    private ClusterConfigMetaData clusterConfig = null;
 
@@ -170,20 +166,17 @@ public abstract class BeanMetaData
 
    public Iterator getEjbLocalReferences() { return ejbLocalReferences.values().iterator(); }
 
-   public String getHomeInvoker()
-   {
-     if (homeInvoker != null)
-       return homeInvoker;
-     else
-       return DEFAULT_HOME_INVOKER;
-   }
+   protected abstract void defaultInvokerBindings();
 
-   public String getBeanInvoker()
-   {
-     if (beanInvoker != null)
-       return beanInvoker;
-     else
-       return DEFAULT_BEAN_INVOKER;
+   public Iterator getInvokerBindings() 
+   { 
+      if (invokerBindings == null) defaultInvokerBindings();
+      return invokerBindings.keySet().iterator(); 
+   }
+   public String getInvokerBinding(String invokerName) 
+   { 
+      if (invokerBindings == null) defaultInvokerBindings();
+      return (String)invokerBindings.get(invokerName); 
    }
 
    public EjbRefMetaData getEjbRefByName(String name)
@@ -554,24 +547,48 @@ public abstract class BeanMetaData
       Element mas = getOptionalChild(element, "method-attributes");
       if(mas != null)
       {
-	  // read in the read-only methods
-	  iterator = getChildrenByTagName(mas, "method");
-	  while (iterator.hasNext())
-	  {
-	      MethodAttributes ma = new MethodAttributes();
-	      Element maNode = (Element)iterator.next();
-	      ma.pattern = getElementContent(getUniqueChild(maNode, "method-name"));
-	      ma.readOnly = getOptionalChildBooleanContent(maNode, "read-only");
-	      ma.idempotent = getOptionalChildBooleanContent(maNode, "idempotent");
-	      methodAttributes.add(ma);
-	  }
+         // read in the read-only methods
+         iterator = getChildrenByTagName(mas, "method");
+         while (iterator.hasNext())
+         {
+            MethodAttributes ma = new MethodAttributes();
+            Element maNode = (Element)iterator.next();
+            ma.pattern = getElementContent(getUniqueChild(maNode, "method-name"));
+            ma.readOnly = getOptionalChildBooleanContent(maNode, "read-only");
+            ma.idempotent = getOptionalChildBooleanContent(maNode, "idempotent");
+            methodAttributes.add(ma);
+         }
       }
 
+      // Invokers
+      // If no invoker bindings have been defined they will be defined in EntityMetaData, or SessionMetaData
+      Element inv = getOptionalChild(element, "invoker-bindings");
+      if(inv != null)
+      {
+         // read in the read-only methods
+         iterator = getChildrenByTagName(inv, "invoker");
+         invokerBindings = new HashMap();
+         while (iterator.hasNext())
+         {
+            Element node = (Element)iterator.next();
+            String invokerBindingName = getUniqueChildContent(node, "invoker-proxy-binding-name");
+            String jndiBinding = getOptionalChildContent(node, "jndi-name");
+            if (jndiBinding == null) jndiBinding = jndiName; // default to jndiName
+            invokerBindings.put(invokerBindingName, jndiBinding);
 
-      // Has a custom invoker been defined?
-      //
-      homeInvoker = getElementContent(getOptionalChild(element, "home-invoker"));
-      beanInvoker = getElementContent(getOptionalChild(element, "bean-invoker"));
+            // set the external ejb-references (optional)
+            Iterator ejbrefiterator = getChildrenByTagName(node, "ejb-ref");
+            while (ejbrefiterator.hasNext()) {
+               Element ejbRef = (Element)ejbrefiterator.next();
+               String ejbRefName = getElementContent(getUniqueChild(ejbRef, "ejb-ref-name"));
+               EjbRefMetaData ejbRefMetaData = getEjbRefByName(ejbRefName);
+               if (ejbRefMetaData == null) {
+                  throw new DeploymentException("ejb-ref " + ejbRefName + " found in jboss.xml but not in ejb-jar.xml");
+               }
+               ejbRefMetaData.importJbossXml(invokerBindingName, ejbRef);
+            }
+         }
+      }
 
       // Determine if the bean is to be deployed in the cluster (more advanced config will be added in the future)
       //
@@ -587,29 +604,6 @@ public abstract class BeanMetaData
 	 clusterConfig.importJbossXml(clusterConfigElement);
       }
 
-      // Setup default invokers for this bean
-      if (homeInvoker == null)
-      {
-	 if (clustered)
-	 {
-	    homeInvoker = DEFAULT_CLUSTERED_HOME_INVOKER;
-	 }
-	 else
-	 {
-	    homeInvoker = DEFAULT_HOME_INVOKER;
-	 }
-      }
-      if (beanInvoker == null)
-      {
-	 if (!clustered)
-	 {
-	    beanInvoker = DEFAULT_BEAN_INVOKER;
-	 }
-	 else // Setup default clustered bean invoker
-	 {
-	    beanInvoker = DEFAULT_CLUSTERED_BEAN_INVOKER;
-	 }
-      }
 
       //Get depends object names
       for (Iterator dependsElements = getChildrenByTagName(element, "depends"); dependsElements.hasNext();)

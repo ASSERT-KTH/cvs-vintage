@@ -12,7 +12,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import org.jboss.deployment.DeploymentException;
-
+import java.util.HashMap;
 /**
  * Provides a container and parser for the metadata of a message driven bean.
  *
@@ -30,7 +30,7 @@ import org.jboss.deployment.DeploymentException;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -43,6 +43,7 @@ public class MessageDrivenMetaData
    public static final byte DURABLE_SUBSCRIPTION = 0;
    public static final byte NON_DURABLE_SUBSCRIPTION = 1;
    public static final byte TX_UNSET = 9;
+   public static final String DEFAULT_MESSAGE_DRIVEN_BEAN_INVOKER_PROXY_BINDING = "message-driven-bean";
 
    // Attributes ----------------------------------------------------
    
@@ -271,6 +272,12 @@ public class MessageDrivenMetaData
          throw new DeploymentException
             ("transaction type should be 'Bean' or 'Container'");
       }
+   }
+
+   public void defaultInvokerBindings()
+   {
+      this.invokerBindings = new HashMap();
+      this.invokerBindings.put(DEFAULT_MESSAGE_DRIVEN_BEAN_INVOKER_PROXY_BINDING, getJndiName());
    }
 
    public void importJbossXml(Element element) throws DeploymentException

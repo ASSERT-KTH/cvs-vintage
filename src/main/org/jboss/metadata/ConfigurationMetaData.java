@@ -20,7 +20,7 @@ import org.w3c.dom.NodeList;
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.26 $
+ *   @version $Revision: 1.27 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/08/02: marcf</b>
@@ -77,7 +77,6 @@ public class ConfigurationMetaData extends MetaData
 
    // Attributes ----------------------------------------------------
    private String name;
-   private String containerInvoker;
    private String instancePool;
    private String instanceCache;
    private String persistenceManager;
@@ -96,12 +95,9 @@ public class ConfigurationMetaData extends MetaData
    private String authenticationModule;
    private String roleMappingManager;
 
-   private Element containerInvokerConf;
    private Element containerPoolConf;
    private Element containerCacheConf;
    private Element containerInterceptorsConf;
-   private Element clientInterceptors;
-   private HashMap clientInterceptorConfs = new HashMap();
    private Collection depends = new LinkedList();
 
    // Static --------------------------------------------------------
@@ -114,8 +110,6 @@ public class ConfigurationMetaData extends MetaData
    // Public --------------------------------------------------------
 
    public String getName() { return name; }
-
-   public String getContainerInvoker() { return containerInvoker; }
 
    public String getInstancePool() { return instancePool; }
 
@@ -134,14 +128,9 @@ public class ConfigurationMetaData extends MetaData
 
    public String getLockClass() {return lockClass;} 
 
-   public Element getContainerInvokerConf() { return containerInvokerConf; }
    public Element getContainerPoolConf() { return containerPoolConf; }
    public Element getContainerCacheConf() { return containerCacheConf; }
    public Element getContainerInterceptorsConf() { return containerInterceptorsConf; }
-   public Element getClientInterceptorConf(String interceptorName)
-   {
-      return (Element)clientInterceptorConfs.get(interceptorName);
-   }
 
    public boolean getCallLogging() { return callLogging; }
 
@@ -166,9 +155,6 @@ public class ConfigurationMetaData extends MetaData
 
       // set read-only get methods
       readOnlyGetMethods = Boolean.valueOf(getElementContent(getOptionalChild(element, "read-only-get-methods"))).booleanValue();
-
-      // set the container invoker
-      containerInvoker = getElementContent(getOptionalChild(element, "container-invoker"), containerInvoker);
 
       // set the instance pool
       instancePool = getElementContent(getOptionalChild(element, "instance-pool"), instancePool);
@@ -229,24 +215,6 @@ public class ConfigurationMetaData extends MetaData
       // The configuration for the container interceptors
       containerInterceptorsConf = getOptionalChild(element, "container-interceptors", containerInterceptorsConf);
 
-      clientInterceptors = getOptionalChild(element, "client-interceptors", clientInterceptors);
-      if (clientInterceptors != null)
-      {
-         NodeList children = clientInterceptors.getChildNodes();
-         for (int i = 0; i < children.getLength(); i++)
-         {
-            Node currentChild = children.item(i);
-            if (currentChild.getNodeType() == Node.ELEMENT_NODE)
-            {
-               Element interceptor = (Element)children.item(i);
-               clientInterceptorConfs.put(interceptor.getTagName(), interceptor);
-            }
-         }
-      }
-
-      // configuration for container invoker
-      containerInvokerConf = getOptionalChild(element, "container-invoker-conf", containerInvokerConf);
-
       // configuration for instance pool
       containerPoolConf = getOptionalChild(element, "container-pool-conf", containerPoolConf);
 
@@ -260,16 +228,7 @@ public class ConfigurationMetaData extends MetaData
          String dependsName = getElementContent(dependsElement);
          depends.add(ObjectNameFactory.create(dependsName));
       } // end of for ()
-      
-
-      // DEPRECATED: Remove this in JBoss 4.0
-      if (containerInvoker.equals("org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker") ||
-          containerInvoker.equals("org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker"))
-      {
-         System.out.println("Deprecated container invoker. Change to org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker");
-         containerInvoker = "org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker";
-      }
-   }
+   }      
 
    // Package protected ---------------------------------------------
 

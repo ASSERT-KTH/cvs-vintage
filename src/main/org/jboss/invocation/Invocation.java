@@ -25,7 +25,7 @@ import javax.transaction.Transaction;
  *    a repository of objects. 
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * 
  * Revisions:
  *
@@ -82,7 +82,7 @@ public class Invocation
       TRANSACTION = new Integer(new String("TRANSACTION").hashCode()),
       PRINCIPAL = new Integer(new String("PRINCIPAL").hashCode()),
       CREDENTIAL = new Integer(new String("CREDENTIAL").hashCode()),
-   
+
       // We can keep a reference to an abstract "container" this invocation is associated with
       OBJECT_NAME = new Integer(new String("CONTAINER").hashCode()),
       

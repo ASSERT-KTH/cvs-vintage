@@ -24,8 +24,8 @@ import java.sql.ResultSet;
 import javax.ejb.FinderException;
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.ejb.ContainerInvoker;
-import org.jboss.ejb.LocalContainerInvoker;
+import org.jboss.ejb.EJBProxyFactory;
+import org.jboss.ejb.LocalProxyFactory;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge; 
@@ -44,7 +44,7 @@ import org.jboss.ejb.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;
@@ -168,14 +168,14 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
       // This is an ejbSelect, so we need to convert the pks to real ejbs.
       EntityContainer selectContainer = selectManager.getContainer();
       if(queryMetaData.isResultTypeMappingLocal()) {
-         LocalContainerInvoker localInvoker;
-         localInvoker = selectContainer.getLocalContainerInvoker();
+         LocalProxyFactory localFactory;
+         localFactory = selectContainer.getLocalProxyFactory();
 
-         return localInvoker.getEntityLocalCollection(finderResults);
+         return localFactory.getEntityLocalCollection(finderResults);
       } else {
-         ContainerInvoker invoker;
-         invoker = selectContainer.getContainerInvoker();
-         return invoker.getEntityCollection(finderResults);
+         EJBProxyFactory factory;
+         factory = selectContainer.getProxyFactory();
+         return factory.getEntityCollection(finderResults);
       }
    }
 

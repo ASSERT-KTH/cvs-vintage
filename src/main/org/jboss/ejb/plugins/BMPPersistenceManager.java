@@ -42,7 +42,7 @@ import org.jboss.metadata.ConfigurationMetaData;
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-*  @version $Revision: 1.40 $
+*  @version $Revision: 1.41 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -265,13 +265,13 @@ implements EntityPersistenceManager
       ctx.setCacheKey(cacheKey);
 
       // Create EJBObject
-      if (con.getContainerInvoker() != null)
+      if (con.getProxyFactory() != null)
       {
-         ctx.setEJBObject((EJBObject) con.getContainerInvoker().getEntityEJBObject(cacheKey));
+         ctx.setEJBObject((EJBObject) con.getProxyFactory().getEntityEJBObject(cacheKey));
       }
       if (con.getLocalHomeClass() != null)
       {
-         ctx.setEJBLocalObject(con.getLocalContainerInvoker().getEntityEJBLocalObject(cacheKey));
+         ctx.setEJBLocalObject(con.getLocalProxyFactory().getEntityEJBLocalObject(cacheKey));
       }
    }
 

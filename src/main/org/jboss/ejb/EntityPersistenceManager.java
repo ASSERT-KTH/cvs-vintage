@@ -26,7 +26,7 @@ import org.jboss.monitor.StatisticsProvider;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public interface EntityPersistenceManager extends ContainerPlugin
 {
@@ -73,7 +73,7 @@ public interface EntityPersistenceManager extends ContainerPlugin
     * This method is called when single entities are to be found. The
     * persistence manager must find out whether the wanted instance is
     * available in the persistence store, and if so it shall use the
-    * ContainerInvoker plugin to create an EJBObject to the instance, which
+    * EJBProxyFactory plugin to create an EJBObject to the instance, which
     * is to be returned as result.
     *
     * @param finderMethod    the find method in the home interface that was
@@ -91,7 +91,7 @@ public interface EntityPersistenceManager extends ContainerPlugin
     * This method is called when collections of entities are to be found. The
     * persistence manager must find out whether the wanted instances are
     * available in the persistence store, and if so it shall use the
-    * ContainerInvoker plugin to create EJBObjects to the instances, which are
+    * EJBProxyFactory plugin to create EJBObjects to the instances, which are
     * to be returned as result.
     *
     * @param finderMethod    the find method in the home interface that was

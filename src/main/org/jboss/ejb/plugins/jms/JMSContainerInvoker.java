@@ -31,7 +31,7 @@ import javax.transaction.TransactionManager;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
-import org.jboss.ejb.ContainerInvoker;
+import org.jboss.ejb.EJBProxyFactory;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.invocation.Invocation;
@@ -43,12 +43,13 @@ import org.jboss.jms.asf.StdServerSessionPool;
 import org.jboss.jms.jndi.JMSProviderAdapter;
 import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.MetaData;
+import org.jboss.metadata.InvokerProxyBindingMetaData;
 import org.jboss.metadata.XmlLoadable;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 /**
- * ContainerInvoker for JMS MessageDrivenBeans, based on JRMPContainerInvoker.
+ * EJBProxyFactory for JMS MessageDrivenBeans
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
@@ -56,10 +57,10 @@ import org.w3c.dom.Node;
  *      </a>
  * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.44 $
+ * @version   $Revision: 1.45 $
  */
 public class JMSContainerInvoker
-   implements ContainerInvoker, XmlLoadable
+   implements EJBProxyFactory
 {
    // Constants -----------------------------------------------------
    
@@ -156,7 +157,20 @@ public class JMSContainerInvoker
     * DLQConfig element from MDBConfig element from jboss.xml.
     */
    protected Element dlqConfig;
+
+   protected InvokerProxyBindingMetaData invokerMetaData;
    
+   protected String invokerBinding;
+   
+   /**
+    * Set the invoker meta data so that the ProxyFactory can initialize properly
+    */
+   public void setInvokerMetaData(InvokerProxyBindingMetaData imd) { invokerMetaData = imd; }
+   /**
+    * Set the invoker jndi binding
+    */
+   public void setInvokerBinding(String binding) { invokerBinding = binding; }
+
    /**
     * Instance logger.
     */
@@ -193,7 +207,7 @@ public class JMSContainerInvoker
       this.optimize = optimize;
    }
    
-   // ContainerInvoker implementation
+   // EJBProxyFactory implementation
    
 /*
     * Gets the EJBHome attribute of the JMSContainerInvoker object
@@ -410,6 +424,7 @@ public class JMSContainerInvoker
     * @throws Exception  Failed to initalize.
     */
    public void create() throws Exception {
+      importXml(invokerMetaData.getProxyFactoryConfig());
       exListener = new ExceptionListenerImpl(this);
       try {
           innerCreate();

@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class CacheKey
    implements Externalizable
@@ -50,7 +50,7 @@ public class CacheKey
     * - implementing Entity.toString() --> cacheKey.getId().toString()
     * - implementing Entity.hashCode() --> cacheKey.getId().hashCode()
     * - etc...
-    * org.jboss.ejb.plugins.local.BaseLocalContainerInvoker.EntityProxy.getId()
+    * org.jboss.ejb.plugins.local.BaseLocalProxyFactory.EntityProxy.getId()
     */
    protected Object id;
    

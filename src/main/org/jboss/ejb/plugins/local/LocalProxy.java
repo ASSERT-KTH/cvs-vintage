@@ -17,7 +17,7 @@ import javax.ejb.EJBLocalObject;
 
  @author  <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  @author  <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.6 $
+ @version $Revision: 1.7 $
  */
 public abstract class LocalProxy implements Serializable
 {
@@ -49,7 +49,7 @@ public abstract class LocalProxy implements Serializable
    protected static final Method IS_IDENTICAL;
    
    protected String jndiName;
-   protected transient BaseLocalContainerInvoker invoker;
+   protected transient BaseLocalProxyFactory factory;
 
    /**
     * Initialize {@link EJBObject} method references.
@@ -99,10 +99,10 @@ public abstract class LocalProxy implements Serializable
    }
    protected abstract Object getId();
    
-   public LocalProxy(String jndiName, BaseLocalContainerInvoker invoker)
+   public LocalProxy(String jndiName, BaseLocalProxyFactory factory)
    {
       this.jndiName = jndiName;
-      this.invoker = invoker;
+      this.factory = factory;
    }
 
    /**
@@ -158,13 +158,13 @@ public abstract class LocalProxy implements Serializable
    }
 
    /** Restore the jndiName using default serialization and then lookup
-    the BaseLocalContainerInvoker using the jndiName
+    the BaseLocalProxyFactory using the jndiName
     */
    private void readObject(ObjectInputStream in)
      throws IOException, ClassNotFoundException
    {
       in.defaultReadObject();
-      invoker = (BaseLocalContainerInvoker) BaseLocalContainerInvoker.invokerMap.get(jndiName);
+      factory = (BaseLocalProxyFactory) BaseLocalProxyFactory.invokerMap.get(jndiName);
    }
 
    private void writeObject(ObjectOutputStream out)
