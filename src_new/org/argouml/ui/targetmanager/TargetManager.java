@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.14 2003/05/10 21:35:18 kataka Exp $
+// $Id: TargetManager.java,v 1.15 2003/05/11 07:09:11 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -440,6 +439,12 @@ public final class TargetManager {
                             i,
                             targets.length - i);
                     // set the listener array to the new array or null
+                    if (target == _modelTarget) {
+                        _modelTarget = null;
+                    }
+                    if (target == _figTarget) {
+                        _figTarget = null;
+                    }
                     fireTargetRemoved(target);
                     _targets = (targets.length == 0) ? new Object[0] : targets;
 
@@ -639,7 +644,7 @@ public final class TargetManager {
         _historyManager.clean();
     }
 
-    public void removeHistoryElement(Object o) {
+    public void removeHistoryElement(Object o) {      
         _historyManager.removeHistoryTarget(o);
     }
 
