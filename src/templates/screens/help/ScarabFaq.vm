@@ -2,62 +2,40 @@
   <div id="toc"> 
    
     <ul>
-      <li>Scarab Help 
+      <li>$l10n.ScarabHelp 
         <ul>
-          <li><a href="$link.setPage("help,Introduction.vm")">Introduction to 
-            Scarab</a></li>
-          <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a></li>
-          <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database</a></li>
-          <li><a href="$link.setPage("help,UserReports.vm")">Reports</a></li>
-          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Scarab guidelines</a></li>
-          <li><strong>FAQ</strong></li>
-          <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.BestPractices</a></li>
+          <li><strong>$l10n.HelpFAQ</strong></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
         </ul>
       </li>
     </ul>
   </div>
-  <h3><a name="top" id="top">Frequently asked questions</a></h3>
+  <h3><a name="top" id="top">$l10n.FrequentlyAskedQuestions</a></h3>
   <dl> 
-    <dt>How do I figure out what issue type to use?</dt>
-    <dd>The issue types available to you in your project have been determined 
-      by your project administrator. By accessing the <strong>Issue Type selection</strong> 
-      screen you can see a description of each issue type and select the one that 
-      best describes your issue. For more information see the <a href="$link.setPage("help,UserIssues.vm")#types">issue 
-      types</a> discussion.</dd>
-    <dt>Can I move an issue to a different issue type? how about to a different 
-      project?</dt>
-    <dd>Issues can be moved between issue types through the issue detail page. 
-      For more information see the <a href="$link.setPage("help,UserIssueModify.vm")#move">moving issues</a> 
-      discussion. For a discussion on circumstances in which you may wish 
-      to move issues, see the <a href="$link.setPage("help,ScarabBestPractices.vm")">Best practices</a> document.</dd>
-    <dt>How can stop the duplication checking?</dt>
-    <dd> The duplication checking process is set by the project leader. If you 
-      feel it is affecting the processing of issues, contact your project administrator.</dd>
-    <dt>How do I add or remove attributes from my screen?</dt>
-    <dd>Many pages in Scarab are customizable. For more information see the 
-        discussion on <a href="$link.setPage("help,Navigation.vm")#customize">customizing</a> the screen.</dd>
+    <dt>$l10n.WhatIssueType</dt>
+    <dd>$l10n.WhatIssueTypeAnswer <strong>$l10n.WhatIssueTypeAnswer2</strong> $l10n.WhatIssueTypeAnswer3 <a href="$link.setPage("help,UserIssues.vm")#types">$l10n.IssueTypes</a> $l10n.WhatIssueTypeAnswer4</dd>
+    <dt>$l10n.CanIMoveIssues</dt>
+    <dd>$l10n.CanIMoveIssuesAnswer <a href="$link.setPage("help,UserIssueModify.vm")#move">$l10n.CanIMoveIssuesAnswer2</a> 
+      $l10n.CanIMoveIssuesAnswer3 <a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.BestPractices</a> $l10n.CanIMoveIssuesAnswer4</dd>
+    <dt>$l10n.StopDuplicateChecking</dt>
+    <dd>$l10n.StopDuplicateCheckingAnswer</dd>
+    <dt>$l10n.CanIAddAttributes</dt>
+    <dd>$l10n.CanIAddAttributesAnswer <a href="$link.setPage("help,Navigation.vm")#customize">$l10n.CustomizingTheScreen</a></dd>
     </dl>
 
 <dl> 
-  <dt><strong>What is the difference between a Global attribute and a User attribute?</strong></dt>
-  <dd>Global attributes are used to define issues. Global attributes are defined 
-    at the domain level and made available within issue types by the Project Owner. 
-    When creating issues, the values assigned to global attributes become the 
-    descriptors for issues. Values associated with global attributes and used 
-    to search the database for issues when using queries. You may find Global 
-    attributes like "Status", "Description", "Operating System" and the like in 
-    your Issue Type. </dd>
+  <dt><strong>$l10n.GlobalAndUserAttributes</strong></dt>
+  <dd>$l10n.GlobalAndUserAttributesAnswer</dd>
   <dt>&nbsp;</dt>
-  <dd>Once issues are created, User attributes are used to associate users with 
-    issues. User attributes are defined at the global level and are associated 
-    with a base permission and an email action. Users with the right permission 
-    appear in the User attributes drop down menu and can be associted with an 
-    issue using that User attribute. The Assigned To attribute is a User attribute.</dd>
+  <dd>$l10n.GlobalAndUserAttributesAnswer2</dd>
   <dt>&nbsp;</dt>
-  <dd>For more information see <a href="$link.setPage("help,UserIssues.vm")#attributes">Managing 
-    issues: overview</a> for Global attributes and <a href="$link.setPage("help,UserIssueModify.vm")#manage">Modifying 
-    Issues</a> for User attributes.</dd>
+  <dd>$l10n.GlobalAndUserAttributesAnswer3 <a href="$link.setPage("help,UserIssues.vm")#attributes">$l10n.ManagingIssues.</a> $l10n.GlobalAndUserAttributesAnswer4 <a href="$link.setPage("help,UserIssueModify.vm")#manage">$l10n.ModifyingIssues.</a></dd>
 </dl>
 
-<div class="courtesylinks"><p><a href="#toc">Top</a></div>
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div>
 </div>
