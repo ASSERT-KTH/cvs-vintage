@@ -208,14 +208,14 @@ public class Request {
     protected Handler handler = null;
     Container container;
 
-    Cookies scookies;
+    protected Cookies scookies;
 
     // sub-request support 
     Request top;
     Request parent;
     Request child;
 
-    UDecoder urlDecoder;
+    protected UDecoder urlDecoder;
     
     // Error handling support
     Exception errorException;
@@ -383,7 +383,7 @@ public class Request {
 	    return;
 	didReadFormData=true;
 
-	if( ! methodMB.equalsIgnoreCase("POST") )
+	if( ! method().equalsIgnoreCase("POST") )
 	    return;
 	String contentType= getContentType();
 	if (contentType == null ||
@@ -543,7 +543,7 @@ public class Request {
 
     public boolean isSecure() {
 	// The adapter is responsible for providing this information
-        return schemeMB.equalsIgnoreCase("HTTPS");
+        return scheme().equalsIgnoreCase("HTTPS");
     }
 
     public void setUserPrincipal( Principal p ) {
