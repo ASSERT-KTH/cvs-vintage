@@ -85,7 +85,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.63 2003/09/15 20:48:19 dlr Exp $
+ * @version $Id: MoveIssue.java,v 1.64 2003/09/17 01:43:28 dlr Exp $
  */
 public class MoveIssue extends BaseModifyIssue
 {
@@ -98,7 +98,8 @@ public class MoveIssue extends BaseModifyIssue
         throws Exception
     {
         boolean collisionOccurred = isCollision(data, context);
-        context.put("collisionDetectedOnMoveAttempt", collisionOccurred ? Boolean.TRUE : Boolean.FALSE);
+        context.put("collisionDetectedOnMoveAttempt",
+                    collisionOccurred ? Boolean.TRUE : Boolean.FALSE);
         if (collisionOccurred)
         {
             // Report the collision to the user.
