@@ -61,7 +61,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * Created: Thu Aug 23 21:17:26 2001
  *
- * @version <tt>$Revision: 1.15 $</tt>
+ * @version <tt>$Revision: 1.16 $</tt>
  * @author ???
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -278,7 +278,7 @@ public class DLQHandler
 
       try
       {
-         msg = makeWritable(msg); // Don't know yet if we are gona clone or not
+         msg = makeWritable(msg, trace); // Don't know yet if we are gona clone or not
          
          // Set the properties
          msg.setStringProperty(JBOSS_ORIG_MESSAGEID,
@@ -354,7 +354,7 @@ public class DLQHandler
     *
     * @return the writable message.
     */
-   protected Message makeWritable(Message msg) throws JMSException
+   protected Message makeWritable(Message msg, boolean trace) throws JMSException
    {
       Hashtable tmp = new Hashtable();
 
@@ -372,7 +372,15 @@ public class DLQHandler
       while (keys.hasMoreElements())
       {
          String key = (String) keys.nextElement();
-         msg.setObjectProperty(key, tmp.get(key));
+         try
+         {
+            msg.setObjectProperty(key, tmp.get(key));
+         }
+         catch (JMSException ignored)
+         {
+            if (trace)
+               log.trace("Could not copy message property " + key, ignored);
+         }
       }
       
       return msg;
