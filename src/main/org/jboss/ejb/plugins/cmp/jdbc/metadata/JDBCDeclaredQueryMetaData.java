@@ -19,7 +19,7 @@ import org.jboss.metadata.QueryMetaData;
  * Imutable class contains information about a declated query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
    /**
@@ -112,23 +112,38 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
 		}
 
       // load ejbSelect info
-      if(method.getName().startsWith("ejbSelect")) {
-         Element selectElement = 
-               MetaData.getUniqueChild(queryElement, "select");
+      Element selectElement = 
+            MetaData.getOptionalChild(queryElement, "select");
          
+      if(selectElement != null) {
          // should select use distinct?
          distinct = 
-               (MetaData.getOptionalChild(selectElement, "distinct") != null);
+            (MetaData.getOptionalChild(selectElement, "distinct") != null);
          
-         ejbName = MetaData.getUniqueChildContent(selectElement, "ejb-name");
-         fieldName = 
-               MetaData.getOptionalChildContent(selectElement, "field-name");
-      } else {
-         // the select element is not allowed for finders
-         if(MetaData.getOptionalChild(queryElement, "select") != null) {
-            throw new DeploymentException("The select element of " +
-                  "declared-sql is only allowed for ejbSelect queries.");
+         if(method.getName().startsWith("ejbSelect")) {
+            ejbName = MetaData.getUniqueChildContent(selectElement, "ejb-name");
+            fieldName = 
+                  MetaData.getOptionalChildContent(selectElement, "field-name");
+         } else {
+            // the ejb-name and field-name elements are not allowed for finders
+            if(MetaData.getOptionalChild(selectElement, "ejb-name") != null) {
+               throw new DeploymentException(
+                     "The ejb-name element of declared-sql select is only " +
+                     "allowed for ejbSelect queries.");
+            }
+            if(MetaData.getOptionalChild(selectElement, "field-name") != null) {
+               throw new DeploymentException(
+                     "The field-name element of declared-sql select is only " +
+                     "allowed for ejbSelect queries.");
+            }
+            ejbName = null;
+            fieldName = null;
          }
+      } else {
+         if(method.getName().startsWith("ejbSelect")) {
+            throw new DeploymentException("The select element of " +
+                  "declared-sql is required for ejbSelect queries.");
+         } 
          distinct = false;
          ejbName = null;
          fieldName = null;
