@@ -39,7 +39,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.32 2002/06/23 01:23:16 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.33 2002/06/23 04:09:32 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -517,15 +517,16 @@ public class DockableWindowManager extends JPanel
 	 * Opens a new instance of the specified dockable window in a floating
 	 * container.
 	 * @param name The dockable window name
+	 * @return The new dockable window instance
 	 * @since jEdit 4.1pre2
 	 */
-	public void floatDockableWindow(String name)
+	public JComponent floatDockableWindow(String name)
 	{
 		Entry entry = (Entry)windows.get(name);
 		if(entry == null)
 		{
 			Log.log(Log.ERROR,this,"Unknown dockable window: " + name);
-			return;
+			return null;
 		}
 
 		// create a copy of this dockable window and float it
@@ -533,6 +534,7 @@ public class DockableWindowManager extends JPanel
 		newEntry.open();
 		if(newEntry.win != null)
 			newEntry.container.show(newEntry);
+		return newEntry.win;
 	} //}}}
 
 	//{{{ showDockableWindow() method

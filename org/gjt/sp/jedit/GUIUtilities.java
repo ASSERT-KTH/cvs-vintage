@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.35 2002/06/22 08:32:59 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.36 2002/06/23 04:09:31 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -173,9 +173,7 @@ public class GUIUtilities
 	 */
 	public static JMenu loadMenu(String name)
 	{
-		if(name.equals("open-encoding"))
-			return new OpenWithEncodingMenu();
-		else if(name.equals("recent-files"))
+		if(name.equals("recent-files"))
 			return new RecentFilesMenu();
 		else if(name.equals("recent-directories"))
 			return new RecentDirectoriesMenu();

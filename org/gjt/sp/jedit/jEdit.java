@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.79 2002/06/22 08:33:00 spestov Exp $
+ * @version $Id: jEdit.java,v 1.80 2002/06/23 04:09:31 spestov Exp $
  */
 public class jEdit
 {
@@ -1162,77 +1162,6 @@ public class jEdit
 	//}}}
 
 	//{{{ Buffer creation methods
-
-	//{{{ showOpenFileDialog() method
-	/**
-	 * Displays the open file dialog box, and opens any selected files.
-	 *
-	 * @param view The view
-	 * @since jEdit 2.7pre2
-	 */
-	public static void showOpenFileDialog(View view)
-	{
-		showOpenFileDialog(view,null);
-	} //}}}
-
-	//{{{ showOpenFileWithOtherEncodingDialog() method
-	/**
-	 * Displays the open file dialog box, and opens any selected files,
-	 * but first prompts for a character encoding to use.
-	 *
-	 * @param view The view
-	 * @since jEdit 2.7pre2
-	 */
-	public static void showOpenFileWithOtherEncodingDialog(View view)
-	{
-		String encoding = GUIUtilities.input(view,"encoding-prompt",null,
-			jEdit.getProperty("buffer.encoding",
-			System.getProperty("file.encoding")));
-		if(encoding == null)
-			return;
-
-		Macros.Recorder recorder = view.getMacroRecorder();
-		if(recorder != null)
-		{
-			recorder.record("props = new Hashtable();");
-			recorder.record("props.put(\"encoding\",\"" + encoding + "\");");
-			recorder.record("jEdit.showOpenFileDialog(view,props);");
-		}
-
-		Hashtable props = new Hashtable();
-		props.put(Buffer.ENCODING,encoding);
-		showOpenFileDialog(view,props);
-	} //}}}
-
-	//{{{ showOpenFileDialog() method
-	/**
-	 * Displays the open file dialog box, and opens any selected files,
-	 * setting the properties specified in the hash table in the buffers.
-	 *
-	 * @param view The view
-	 * @param props The properties to set in the buffer
-	 * @since jEdit 3.2pre2
-	 */
-	public static void showOpenFileDialog(View view, Hashtable props)
-	{
-		String[] files = GUIUtilities.showVFSFileDialog(view,null,
-			VFSBrowser.OPEN_DIALOG,true);
-
-		Buffer buffer = null;
-		if(files != null)
-		{
-			for(int i = 0; i < files.length; i++)
-			{
-				Buffer newBuffer = openFile(null,null,files[i],
-					false,props);
-				if(newBuffer != null)
-					buffer = newBuffer;
-			}
-		}
-
-		if(buffer != null)
-			view.setBuffer(buffer);
-	} //}}}
 
 	//{{{ restoreOpenFiles() method
 	/**
