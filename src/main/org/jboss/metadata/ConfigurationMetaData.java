@@ -20,7 +20,7 @@ import org.w3c.dom.NodeList;
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.31 $
+ *   @version $Revision: 1.32 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/08/02: marcf</b>
@@ -249,10 +249,16 @@ public class ConfigurationMetaData extends MetaData
       throw new DeploymentException("Invalid commit option: '" + commitOption + "'");
    }
 
-   private static long stringToRefreshRate(String refreshRate) throws DeploymentException {
-      try{
-         return Long.parseLong(refreshRate);
-      } catch ( Exception e){
+   private static long stringToRefreshRate(String refreshRate) throws DeploymentException
+   {
+      try
+      {
+         long rate = Long.parseLong(refreshRate);
+         // Convert from seconds to milliseconds
+         rate *= 1000;
+         return rate;
+      } catch ( Exception e)
+      {
          throw new DeploymentException("Invalid optiond-refresh-rate \"" + refreshRate + "\". Should be a number"); 
       }
 
