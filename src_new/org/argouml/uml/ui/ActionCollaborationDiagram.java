@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.39 2005/01/03 20:23:26 mvw Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.40 2005/01/04 18:41:51 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,7 +87,8 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
 //                Model.getUmlFactory().getCollaborations().buildCollaboration(
 //                    namespace);
         }
-        UMLCollaborationDiagram d = new UMLCollaborationDiagram(collaboration);
+        UMLCollaborationDiagram d = 
+            new UMLCollaborationDiagram(namespace, collaboration);
         return d;
     }
 

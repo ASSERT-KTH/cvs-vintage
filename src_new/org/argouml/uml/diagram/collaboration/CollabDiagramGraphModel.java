@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.42 2005/01/02 10:08:31 linus Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.43 2005/01/04 18:41:54 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,14 +64,14 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
     /**
      * @see org.argouml.uml.diagram.UMLMutableGraphSupport#getNamespace()
      */
-    public Object getNamespace() { return collab; }
+    public Object getNamespace() { return ModelFacade.getNamespace(collab); }
     
     /**
-     * @param m the namespace to be set for this diagram
+     * @param m the collaboration to be set for this diagram
      */
-    public void setNamespace(Object m) {
+    public void setCollaboration(Object m) {
         if (!(ModelFacade.isACollaboration(m))) {
-            throw new IllegalArgumentException("invalid namespace");
+            throw new IllegalArgumentException("invalid collaboration");
         }
         collab = /*(MCollaboration)*/ m;
     }

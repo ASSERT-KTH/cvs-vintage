@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.58 2004/12/19 11:06:28 mvw Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.59 2005/01/04 18:41:52 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,6 +59,7 @@ import org.tigris.gef.presentation.Fig;
  */
 public class UMLCollaborationDiagram extends UMLDiagram {
 
+    private Object collaboration;
     /**
      * Logging.
      */
@@ -98,8 +99,20 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     /**
      * @param namespace the namespace for the diagram
      */
-    public UMLCollaborationDiagram(Object namespace) {
+    private UMLCollaborationDiagram(Object namespace) {
         this();
+        setNamespace(namespace);
+    }
+
+    /**
+     * The constructor.
+     * 
+     * @param namespace the namespace for the diagram
+     * @param collab the collaboration represented by this diagram
+     */
+    public UMLCollaborationDiagram(Object namespace, Object collab) {
+        this();
+        collaboration = collab;
         setNamespace(namespace);
     }
 
@@ -143,12 +156,11 @@ public class UMLCollaborationDiagram extends UMLDiagram {
             throw new IllegalArgumentException(
                 "Illegal argument. Object " + handle + " is not a namespace");
         }
-        Object m = /*(MNamespace)*/ handle;
-        super.setNamespace(m);
+        super.setNamespace(handle);
         CollabDiagramGraphModel gm = new CollabDiagramGraphModel();
-        gm.setNamespace(m);
+        gm.setCollaboration(collaboration);
         LayerPerspective lay =
-            new LayerPerspectiveMutable(ModelFacade.getName(m), gm);
+            new LayerPerspectiveMutable(ModelFacade.getName(handle), gm);
         CollabDiagramRenderer rend = new CollabDiagramRenderer(); // singleton
         lay.setGraphNodeRenderer(rend);
         lay.setGraphEdgeRenderer(rend);
