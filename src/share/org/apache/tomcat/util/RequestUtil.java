@@ -182,6 +182,8 @@ public class RequestUtil {
                     
                     String name = token.substring(0, i).trim();
                     String value = token.substring(i+1, token.length()).trim();
+		    // RFC 2109 and bug 
+		    value=stripQuote( value );
                     Cookie cookie = new Cookie(name, value);
                     cookies.addElement(cookie);
                 } else {
@@ -190,6 +192,31 @@ public class RequestUtil {
             }
         }
     }
+
+    
+    /**
+     *
+     * Strips quotes from the start and end of the cookie string
+     * This conforms to RFC 2109
+     * 
+     * @param value            a <code>String</code> specifying the cookie 
+     *                         value (possibly quoted).
+     *
+     * @see #setValue
+     *
+     */
+    private static String stripQuote( String value )
+    {
+	//	System.out.println("Strip quote from " + value );
+	if (((value.startsWith("\"")) && (value.endsWith("\""))) ||
+	    ((value.startsWith("'") && (value.endsWith("'"))))) {
+	    try {
+		return value.substring(1,value.length()-1);
+	    } catch (Exception ex) { 
+	    }
+	}
+	return value;
+    }  
     
     public static void processFormData(String data, Hashtable parameters) {
         // XXX
