@@ -132,6 +132,8 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 	    resA.setRequest(reqA);
 
 	    reqA.readNextRequest();
+	    if( reqA.isPing )
+		return;
 	    if( reqA.shutdown )
 		return;
 	    if (resA.getStatus() >= 400) {
@@ -171,6 +173,7 @@ class AJP12RequestAdapter extends RequestImpl {
     Ajpv12InputStream ajpin;
     ContextManager contextM;
     boolean shutdown=false;
+    boolean isPing=false;
     boolean doLog;
 
     public int doRead() throws IOException {
@@ -346,6 +349,8 @@ class AJP12RequestAdapter extends RequestImpl {
 			} catch (IOException ignored) {
 			    System.err.println(ignored);
 			}
+                        isPing = true;
+                        return;
 		    } else {
 			try {
 			    // close the socket connection before handling any signal
