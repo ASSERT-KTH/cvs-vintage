@@ -28,6 +28,8 @@ import org.jboss.util.StringPropertyReplacer;
 import org.jboss.util.threadpool.BasicThreadPoolMBean;
 import org.jboss.util.threadpool.BasicThreadPool;
 
+import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
+
 /**
  * A mini webserver that should be embedded in another application. It can
  * server any file that is available from classloaders that are registered with
@@ -40,7 +42,7 @@ import org.jboss.util.threadpool.BasicThreadPool;
  * It is configured by calling any methods programmatically prior to startup.
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  * @see WebClassLoader
  */
 public class WebServer
@@ -68,7 +70,7 @@ public class WebServer
    /**
     * The map of class loaders registered with the web server
     */
-   private final HashMap loaderMap = new HashMap();
+   private final ConcurrentReaderHashMap loaderMap = new ConcurrentReaderHashMap();
    /**
     * The web server http listening socket
     */
