@@ -46,7 +46,6 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.test.BaseTestCase;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.om.ScopePeer;
@@ -58,7 +57,7 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.12 2003/03/25 20:31:54 jmcnally Exp $
+ * @version $Id: QueryTest.java,v 1.13 2003/10/17 13:59:14 dep4b Exp $
  */
 public class QueryTest extends BaseTestCase
 {

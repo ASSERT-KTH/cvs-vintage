@@ -47,7 +47,6 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
 
@@ -63,7 +62,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.16 2003/09/17 02:27:23 jmcnally Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.17 2003/10/17 13:59:14 dep4b Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {

@@ -46,7 +46,6 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ import org.apache.torque.util.Criteria;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.29 2003/10/14 04:59:24 jmcnally Exp $
+ * @version $Id: IssueTest.java,v 1.30 2003/10/17 13:59:14 dep4b Exp $
  */
 public class IssueTest extends BaseTestCase
 {
