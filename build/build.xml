@@ -128,6 +128,7 @@
             <fileset dir="${src.html.dir}" defaultexcludes="no">
                 <include name="**/*.html"/>
                 <include name="**/*.css"/>
+                <include name="**/*.js"/>
             </fileset>
         </copy>
         <copy todir="${build.project}/images" filtering="no">
