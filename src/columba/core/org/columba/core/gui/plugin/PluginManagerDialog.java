@@ -72,13 +72,6 @@ import org.columba.mail.util.MailResourceLoader;
  * - enable/disable plugins
  * - view plugin info (readme.txt in plugin folder)
  * 
- * TODO: remove plugins
- * 
- * TODO: enable/disable plugins doesn't work right know
- *       - have to find a good way of using renderer/editor (JCheckBox)
- *       - EabledRenderer/Editor aren't working correctly
- *         (and are disabled right now)
- * 
  */
 public class PluginManagerDialog
 	extends JDialog
@@ -102,6 +95,12 @@ public class PluginManagerDialog
 	public PluginManagerDialog() {
 		// modal JDialog
 		super(new JFrame(), true);
+
+		setTitle(
+			GlobalResourceLoader.getString(
+				"org.columba.core.i18n.dialog",
+				"pluginmanager",
+				"title"));
 
 		try {
 
@@ -266,7 +265,8 @@ public class PluginManagerDialog
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+		ButtonWithMnemonic helpButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
