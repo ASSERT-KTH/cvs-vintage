@@ -61,6 +61,7 @@
 package org.apache.tomcat.facade;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.collections.SimplePool;
 import org.apache.tomcat.core.*;
 import java.io.*;
 import java.net.*;
@@ -82,11 +83,20 @@ public final class Servlet22Interceptor
     extends BaseInterceptor
 {
     public static final String SERVLET_STAMP = " ( JSP 1.1; Servlet 2.2 )";
+    private int stmPoolSize = SimplePool.DEFAULT_SIZE;
+    private boolean useStmPool = true;
 	
     public Servlet22Interceptor() {
     }
 
     public Servlet22Interceptor(Context ctx) {
+    }
+
+    public void setSTMPoolSize(int size) {
+	stmPoolSize = size;
+    }
+    public void setUseSTMPool(boolean use) {
+	useStmPool = use;
     }
 
     // -------------------- implementation
@@ -145,7 +155,8 @@ public final class Servlet22Interceptor
     {
 	String hN=ct.getHandlerName();
 	if( hN == null ) return;
-			     
+	
+
 	if( ct.getHandler() == null ) {
 	    // we have a container with a valid handler name but without
 	    // a Handler. Create a ServletWrapper
@@ -160,8 +171,12 @@ public final class Servlet22Interceptor
 	    handler.setModule( this );
 	    ct.setHandler(handler);
 	    ct.getContext().addServlet( handler );
+	} 
+	if(ct.getHandler() instanceof ServletHandler) {
+	    ServletHandler handler = (ServletHandler)ct.getHandler();
+	    handler.setSTMPoolSize(stmPoolSize);
+	    handler.setUseSTMPool(useStmPool);
 	}
-	    
     }
 
 

@@ -59,7 +59,8 @@
 package org.apache.tomcat.facade;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.collections.*;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -111,6 +112,12 @@ public final class ServletHandler extends Handler {
     private ServletInfo sw;
 
     private String servletClassName;
+
+    private SimplePool stmPool=null;
+    private int stmPoolSize=SimplePool.DEFAULT_SIZE;
+    private int stmInstances=0;
+    private boolean useStmPool=true;
+
     protected Class servletClass;
     protected Servlet servlet;
     protected Context context;
@@ -131,7 +138,14 @@ public final class ServletHandler extends Handler {
     public void setServletInfo( ServletInfo sw ) {
 	this.sw=sw;
     }
-    
+
+    public void setUseSTMPool(boolean useP){
+	useStmPool = useP;
+    }
+    public void setSTMPoolSize(int size) {
+	stmPoolSize = size;
+    }
+
     public ServletInfo getServletInfo() {
 	if( sw==null ) {
 	    // it is possible to create a handler without ServletInfo
@@ -330,6 +344,13 @@ public final class ServletHandler extends Handler {
 	}
 	
 	servlet = (Servlet)servletClass.newInstance();
+	if (useStmPool && ( servlet instanceof SingleThreadModel )) {
+	    if(stmPool == null){
+		stmPool = new SimplePool(stmPoolSize);
+	    }
+	    stmPool.put(servlet);
+	    stmInstances++;
+	}
 	return servlet;
     }
 
@@ -348,7 +369,15 @@ public final class ServletHandler extends Handler {
 			    log(context, "preServletDestroy", ex);
 			}
 		    }
-		    servlet.destroy();
+		    if(useStmPool && (servlet instanceof SingleThreadModel)){
+			Servlet sl=null;
+			while((sl = (Servlet)stmPool.get()) != null){
+			    sl.destroy();
+			}
+			stmInstances=0;
+		    } else {
+			servlet.destroy();
+		    }
 
 		    for( int i=0; i< cI.length; i++ ) {
 			try {
@@ -432,7 +461,40 @@ public final class ServletHandler extends Handler {
 	super.service( req, res );
     }
 
-    
+    protected void doSTMService(HttpServletRequest reqF, HttpServletResponse resF) 
+	throws Exception {
+	Servlet sl = null;
+	try {
+	    boolean newInstance = false;
+	    if ((sl = (Servlet)stmPool.get()) == null) {
+		synchronized (this) {
+		    if (stmInstances < stmPoolSize) {
+			stmInstances++;
+			newInstance = true;
+		    }
+		}
+		if (newInstance) {
+		    sl = (Servlet)servletClass.newInstance();
+		    sl.init(getServletInfo().getServletConfig());
+		} else {
+		 /* The pool is full, just synchronize on the initial instance.
+		    Ideally, we would the pain across all pooled instances
+		    to avoid a bottleneck on a single instance. */
+		    sl = servlet;
+		}
+	    }
+	    /* Since this may be the initial instance, we still need to
+	       synchronize here */
+	    synchronized(sl) {
+		sl.service(reqF, resF);
+	    }
+	} finally {
+	    if (sl != null) {
+		stmPool.put(sl);
+	    }
+	}
+    }
+         
     protected void doService(Request req, Response res)
 	throws Exception
     {
@@ -477,8 +539,12 @@ public final class ServletHandler extends Handler {
 	try {
 	    // We are initialized and fine
 	    if (servlet instanceof SingleThreadModel) {
-		synchronized(servlet) {
-		    servlet.service(reqF, resF);
+		if(useStmPool) {
+		    doSTMService(reqF,resF);
+		} else {
+		    synchronized(servlet) {
+			servlet.service(reqF, resF);
+		    }
 		}
 	    } else {
 		servlet.service(reqF, resF);
