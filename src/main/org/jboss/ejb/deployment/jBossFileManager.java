@@ -30,7 +30,8 @@ import com.dreambean.ejx.FileManagerFactory;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *   @version $Revision: 1.6 $
  */
 public class jBossFileManager
    extends BeanContextServicesSupport
@@ -63,6 +64,13 @@ public class jBossFileManager
       return ejbJar;
    }
 
+	/*
+	* load(URL file)
+	*
+	* This method creates the jBossEjbJar that encapsulates the MetaData for the container
+	* if no proper jboss.xml and jaws.xml are found the system ones are used 
+	*
+	*/
    public jBossEjbJar load(URL file)
       throws Exception
    {
@@ -70,9 +78,13 @@ public class jBossFileManager
       // Create classloader
       {
          URL fileUrl = file;
-         if (fileUrl.toString().endsWith("ejb-jar.xml"))
+         if (fileUrl.toString().endsWith("ejb-jar.xml")) {
+			 
+			// fileURL points to the top of the directory of the beans
             fileUrl = new File(fileUrl.getFile()).getParentFile().getParentFile().toURL();
-            
+	  	 }  
+		 
+		 // The classLoader has visibility on all the classes in this directory
          cl = new URLClassLoader(new URL[] { fileUrl }, Thread.currentThread().getContextClassLoader());
       }
          
@@ -100,14 +112,15 @@ public class jBossFileManager
             ejbJar.importXml(doc.getDocumentElement());
          } catch (IOException e)
          {
-            // Couldn't find jboss.xml.. that's ok!            // Load default jBoss XML
+            // Couldn't find jboss.xml.. that's ok!            
+			// Load default jBoss XML
             InputStream jbossXml = getClass().getResourceAsStream("defaultjboss.xml");
             if (jbossXml == null)
             {
                // No default found
                return ejbJar;
             }
-            in = new BufferedReader(new InputStreamReader(jbossXml));
+			in = new BufferedReader(new InputStreamReader(jbossXml));
             doc = xm.load(in);
             in.close();
             
@@ -176,10 +189,11 @@ public class jBossFileManager
                // No default found
                return ejbJar;
             }
+			
             in = new BufferedReader(new InputStreamReader(jbossXml));
             doc = xm.load(in);
             in.close();
-            
+ 
             ejbJar.importXml(doc.getDocumentElement());
             return ejbJar;
          }
