@@ -152,7 +152,7 @@ public class AccountDialog implements ActionListener {
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
 
-		bottom.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		bottom.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
 		ButtonWithMnemonic cancelButton =
 			new ButtonWithMnemonic(
@@ -177,7 +177,7 @@ public class AccountDialog implements ActionListener {
 		HelpManager.enableHelpOnButton(helpButton, "configuring_columba");
 
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
+		buttonPanel.setLayout(new GridLayout(1, 3, 6, 0));
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
 		buttonPanel.add(helpButton);

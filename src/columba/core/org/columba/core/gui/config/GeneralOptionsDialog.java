@@ -50,6 +50,7 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.FontSelectionDialog;
+import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ConfigPluginHandler;
 import org.columba.core.plugin.ThemePluginHandler;
@@ -368,12 +369,15 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
 		buttonPanel.add(okButton);
 
 		buttonPanel.add(cancelButton);
+		
+		buttonPanel.add(helpButton);
+		
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		contentPane.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -487,9 +491,9 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		helpButton =
 			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
-		helpButton.setActionCommand("HELP");
-		helpButton.addActionListener(this);
-
+		// associate with JavaHelp
+		HelpManager.enableHelpOnButton(helpButton, "configuring_columba_8");
+		
 	}
 
 	public void actionPerformed(ActionEvent event) {

@@ -110,8 +110,8 @@ public class ChooseTemplateDialog
 		HelpManager.enableHelpOnButton(helpButton, "template_dialog");
 
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
-		buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		buttonPanel.setLayout(new GridLayout(1, 3, 6, 0));
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
 		buttonPanel.add(helpButton);
@@ -138,7 +138,7 @@ public class ChooseTemplateDialog
 		list.setCellRenderer(new HeaderCellRenderer(headerList));
 
 		JPanel panel = new JPanel();
-		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		panel.setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
 		panel.setLayout(new BorderLayout());
 
 		JScrollPane scrollPane = new JScrollPane(list);

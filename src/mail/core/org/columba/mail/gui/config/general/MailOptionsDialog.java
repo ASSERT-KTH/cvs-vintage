@@ -44,6 +44,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
@@ -383,8 +384,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 		helpButton = new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
-		helpButton.setActionCommand("HELP");
-		helpButton.addActionListener(this);
+		// associate with JavaHelp
+		HelpManager.enableHelpOnButton(helpButton, "configuring_columba_7");
 
 	}
 
@@ -460,12 +461,14 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(11, 11, 11, 11));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
 		buttonPanel.add(okButton);
 
 		buttonPanel.add(cancelButton);
+		buttonPanel.add(helpButton);
+		
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		contentPane.add(bottomPanel, BorderLayout.SOUTH);
 

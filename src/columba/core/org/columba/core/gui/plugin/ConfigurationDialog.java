@@ -34,6 +34,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ConfigPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
@@ -48,7 +49,8 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 
 	JButton okButton;
 	JButton cancelButton;
-
+	JButton helpButton;
+	
 	String pluginId;
 
 	AbstractConfigPlugin plugin;
@@ -105,7 +107,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 	protected void initComponents() {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		getContentPane().add(mainPanel);
 
 		// centerpanel
@@ -118,8 +120,8 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		okButton = new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "ok"));
 		okButton.setActionCommand("OK");
@@ -130,6 +132,13 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
 		buttonPanel.add(cancelButton);
+		helpButton =
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
+		// associate with JavaHelp
+		HelpManager.enableHelpOnButton(helpButton, "extending_columba_1");
+		buttonPanel.add(helpButton);
+		
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		//setContentPane(mainPanel);

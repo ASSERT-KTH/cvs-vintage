@@ -104,12 +104,13 @@ public class SearchFrame extends JDialog implements ActionListener {
 		this.destFolder = (VirtualFolder) folder;
 
 		JPanel contentPane = new JPanel(new BorderLayout());
-		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		//contentPane.add(createTopPanel("Search messages","Specify your search criteria...",ImageLoader.getImageIcon("virtualfolder.png")));
 		contentPane.add(createCenterPanel(), BorderLayout.NORTH);
 		JPanel bottom = new JPanel(new BorderLayout());
-		bottom.setBorder(BorderFactory.createEmptyBorder(17, 0, 0, 0));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 5, 0));
+		bottom.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+		bottom.setBorder(BorderFactory.createEmptyBorder(12, 0, 0, 0));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
 		searchButton =
 			new JButton(
 				MailResourceLoader.getString("dialog", "filter", "search"));
@@ -117,8 +118,8 @@ public class SearchFrame extends JDialog implements ActionListener {
 		searchButton.addActionListener(this);
 		searchButton.setActionCommand("SEARCH");
 		buttonPanel.add(searchButton);
-		JButton closeButton =
-			new JButton(MailResourceLoader.getString("global", "close"));
+		ButtonWithMnemonic closeButton =
+			new ButtonWithMnemonic(MailResourceLoader.getString("global", "close"));
 		closeButton.addActionListener(this);
 		closeButton.setActionCommand("CLOSE");
 		buttonPanel.add(closeButton);

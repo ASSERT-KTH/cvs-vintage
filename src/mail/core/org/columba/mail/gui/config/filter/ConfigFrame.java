@@ -126,7 +126,7 @@ public class ConfigFrame
 	public void initComponents() {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		getContentPane().add(mainPanel);
 
 		addButton =
@@ -294,8 +294,8 @@ public class ConfigFrame
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		ButtonWithMnemonic closeButton =
 			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "close"));
@@ -308,7 +308,7 @@ public class ConfigFrame
 		// associate with JavaHelp
 		HelpManager.enableHelpOnButton(
 			helpButton,
-			"organizing_and_managing_your_email");
+			"organising_and_managing_your_email_3");
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -318,11 +318,13 @@ public class ConfigFrame
 			"CLOSE",
 			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
+			/*
 		getRootPane().registerKeyboardAction(
 			this,
 			"HELP",
 			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
+			*/
 	}
 
 	public void valueChanged(ListSelectionEvent e) {

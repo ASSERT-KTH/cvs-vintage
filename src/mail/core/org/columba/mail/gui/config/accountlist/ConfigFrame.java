@@ -141,83 +141,31 @@ public class ConfigFrame
 		dialog.getContentPane().setLayout(new BorderLayout());
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout(5, 0));
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-		/*
-		Border b1 = BorderFactory.createEtchedBorder();
-		Border b2 = BorderFactory.createTitledBorder(
-				b1,
-				MailResourceLoader.getString(
-					"dialog",
-					"account",
-					"account_information"));
-		
-		Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-		Border border = BorderFactory.createCompoundBorder(emptyBorder,b2);
-		Border border2 = BorderFactory.createCompoundBorder(border,emptyBorder);
-		mainPanel.setBorder(border2);
-		*/
 
 		addButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "account", "addaccount")); //$NON-NLS-1$
-		/*
-		addButton.setMnemonic(
-			MailResourceLoader.getMnemonic("dialog", "account", "addacount"));
-			*/
-
-		//addButton.setIcon( ImageLoader.getImageIcon("stock_add_16.png") );
+		
 		addButton.setActionCommand("ADD"); //$NON-NLS-1$
 		addButton.addActionListener(this);
 
 		removeButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "account", "removeaccount")); //$NON-NLS-1$
 
-		/*
-		removeButton.setMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"account",
-				"removeacount"));
-				*/
 
 		removeButton.setActionCommand("REMOVE"); //$NON-NLS-1$
-		//removeButton.setIcon( ImageLoader.getImageIcon("stock_remove_16.png") );
+		
 		removeButton.setEnabled(false);
 		removeButton.addActionListener(this);
 
 		editButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "account", "editsettings")); //$NON-NLS-1$
-		/*
-		 editButton.setMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"account",
-				"editsettings"));
-				*/
+	
 
 		editButton.setActionCommand("EDIT"); //$NON-NLS-1$
-		//editButton.setIcon( ImageLoader.getImageIcon("stock_properties_16.png") );
+		
 		editButton.setEnabled(false);
 		editButton.addActionListener(this);
 
-		/*
-		enableButton.setText("Enable");
-		enableButton.setActionCommand("ENABLE");
-		enableButton.addActionListener( this );
-		
-		disableButton.setText("Disable");
-		disableButton.setActionCommand("DISABLE");
-		disableButton.addActionListener( this );
-		*/
-
-		/*
-		moveupButton.setText("Move up");
-		moveupButton.setActionCommand("MOVEUP");
-		moveupButton.setEnabled( false );
-		moveupButton.addActionListener( this );
-		
-		movedownButton.setText("Move down");
-		movedownButton.setActionCommand("MOVEDOWN");
-		movedownButton.setEnabled( false );
-		movedownButton.addActionListener( this );
-		*/
+	
 
 		// top panel
 
@@ -286,13 +234,6 @@ public class ConfigFrame
 		gridBagLayout.setConstraints(glue, c);
 		eastPanel.add(glue);
 
-		/*
-		c.gridheight = GridBagConstraints.REMAINDER;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weighty = 0;
-		gridBagLayout.setConstraints(closeButton, c);
-		eastPanel.add(closeButton);
-		*/
 
 		listView = new AccountListTable(accountList, this);
 		listView.getSelectionModel().addListSelectionListener(this);
@@ -303,8 +244,8 @@ public class ConfigFrame
 		dialog.getContentPane().add(mainPanel);
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 11, 11));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		ButtonWithMnemonic closeButton =
 			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "close"));

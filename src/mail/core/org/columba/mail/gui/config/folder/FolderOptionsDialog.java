@@ -304,8 +304,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 		HelpManager.enableHelpOnButton(helpButton, "folder_options");
 
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
-		buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		buttonPanel.setLayout(new GridLayout(1, 3, 6, 0));
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
 		buttonPanel.add(helpButton);

@@ -205,7 +205,7 @@ public class ExportDialog
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
 		JScrollPane scrollPane = new JScrollPane(tree);
-		scrollPane.setPreferredSize(new Dimension(450, 300));
+		scrollPane.setPreferredSize(new Dimension(300, 300));
 		scrollPane.getViewport().setBackground(Color.white);
 		centerPanel.add(scrollPane);
 

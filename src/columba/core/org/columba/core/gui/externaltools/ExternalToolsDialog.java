@@ -48,6 +48,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.InfoViewerDialog;
+import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ExternalToolsPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
@@ -98,8 +99,8 @@ public class ExternalToolsDialog
 
 	protected void initComponents() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
-		setContentPane(mainPanel);
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+
 
 		// TODO: i18n
 		configButton = new ButtonWithMnemonic("Con&figure...");
@@ -120,6 +121,7 @@ public class ExternalToolsDialog
 		// top panel
 
 		JPanel topPanel = new JPanel();
+		
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
@@ -171,27 +173,28 @@ public class ExternalToolsDialog
 		// centerpanel
 
 		JPanel centerPanel = new JPanel(new BorderLayout());
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
 		JScrollPane scrollPane = new JScrollPane(list);
 		scrollPane.setPreferredSize(new Dimension(150, 150));
 		scrollPane.getViewport().setBackground(Color.white);
 		centerPanel.add(scrollPane);
 
 		mainPanel.add(centerPanel);
-
+		getContentPane().add(mainPanel, BorderLayout.CENTER);
+		
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 0, 0));
-		JButton closeButton =
-			new JButton(MailResourceLoader.getString("global", "close"));
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		ButtonWithMnemonic closeButton =
+			new ButtonWithMnemonic(MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
 		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
-		helpButton.setActionCommand("HELP");
-		helpButton.addActionListener(this);
+		// associate with JavaHelp
+		HelpManager.enableHelpOnButton(helpButton, "extending_columba_2");
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);

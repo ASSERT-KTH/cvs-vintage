@@ -81,7 +81,7 @@ public class FilterDialog implements ActionListener {
 
 	private void initComponents() {
 		JPanel namePanel = new JPanel();
-		namePanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 10, 11));
+		namePanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
 		nameLabel =
 			new LabelWithMnemonic(
@@ -162,8 +162,7 @@ public class FilterDialog implements ActionListener {
 
 		addActionButton =
 			new ButtonWithMnemonic(
-				MailResourceLoader.getString(
-					"dialog", "filter", "add_action"));
+				MailResourceLoader.getString("dialog", "filter", "add_action"));
 		addActionButton.setIcon(ImageLoader.getImageIcon("stock_add_16.png"));
 		addActionButton.addActionListener(this);
 		addActionButton.setActionCommand("ADD_ACTION");
@@ -174,7 +173,9 @@ public class FilterDialog implements ActionListener {
 		JLabel actionLabel =
 			new LabelWithMnemonic(
 				MailResourceLoader.getString(
-					"dialog", "filter", "action_list"));
+					"dialog",
+					"filter",
+					"action_list"));
 		thenPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 		thenPanel.add(actionLabel);
 
@@ -191,18 +192,21 @@ public class FilterDialog implements ActionListener {
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-                buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
-		ButtonWithMnemonic closeButton = 
-				new ButtonWithMnemonic(
-					MailResourceLoader.getString("global", "close"));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		ButtonWithMnemonic closeButton =
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+		ButtonWithMnemonic helpButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
 		// associate with JavaHelp
-		HelpManager.enableHelpOnButton(helpButton, "organizing_and_managing_your_email");	
+		HelpManager.enableHelpOnButton(
+			helpButton,
+			"organizing_and_managing_your_email_3");
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -212,11 +216,13 @@ public class FilterDialog implements ActionListener {
 			"CLOSE",
 			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
-                dialog.getRootPane().registerKeyboardAction(
-                        this,
-                        "HELP",
-                        KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-                        JComponent.WHEN_IN_FOCUSED_WINDOW);
+		/*
+		    dialog.getRootPane().registerKeyboardAction(
+		            this,
+		            "HELP",
+		            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+		            JComponent.WHEN_IN_FOCUSED_WINDOW);
+		            */
 	}
 
 	public void updateComponents(boolean b) {
@@ -265,12 +271,10 @@ public class FilterDialog implements ActionListener {
 
 			criteriaList.add();
 
-		}
-		
-		else if (action.equals("ADD_ACTION")) {
+		} else if (action.equals("ADD_ACTION")) {
 			//System.out.println( "add" );
 			actionList.add();
 
-		} 
+		}
 	}
 }

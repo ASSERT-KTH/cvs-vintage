@@ -51,6 +51,7 @@ import org.columba.core.config.ConfigPath;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.InfoViewerDialog;
 import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.help.HelpManager;
 import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;
 import org.columba.core.main.MainInterface;
@@ -123,7 +124,7 @@ public class PluginManagerDialog
 	protected void initComponents() {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		getContentPane().add(mainPanel);
 
 		installButton =
@@ -249,7 +250,7 @@ public class PluginManagerDialog
 		table = new PluginTree();
 		table.getTree().addTreeSelectionListener(this);
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setPreferredSize(new Dimension(450, 300));
+		scrollPane.setPreferredSize(new Dimension(350, 300));
 		scrollPane.getViewport().setBackground(Color.white);
 		centerPanel.add(scrollPane);
 
@@ -257,8 +258,8 @@ public class PluginManagerDialog
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		JButton closeButton =
 			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "close"));
@@ -268,8 +269,8 @@ public class PluginManagerDialog
 		ButtonWithMnemonic helpButton =
 			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
-		helpButton.setActionCommand("HELP");
-		helpButton.addActionListener(this);
+		// associate with JavaHelp
+		HelpManager.enableHelpOnButton(helpButton, "extending_columba_1");
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
