@@ -317,6 +317,7 @@ public final class Parameters extends MultiMap {
     // incredibly inefficient data representation for parameters,
     // until we test the new one
     private void addParam( String key, String value ) {
+	if( key==null ) return;
 	String values[];
 	if (paramHashStringArray.containsKey(key)) {
 	    String oldValues[] = (String[])paramHashStringArray.
