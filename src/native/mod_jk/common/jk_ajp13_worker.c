@@ -58,7 +58,7 @@
  * Author:      Henri Gomez <hgomez@slib.fr>                               *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.9 $                                           *
+ * Version:     $Revision: 1.10 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -75,6 +75,7 @@
 #define DEF_CACHE_SZ            (1)
 #define JK_INTERNAL_ERROR       (-2)
 #define JK_FATAL_ERROR          (-3)
+#define JK_CLIENT_ERROR         (-4)
 #define MAX_SEND_BODY_SZ        (DEF_BUFFER_SZ - 6)
 #define AJP13_HEADER_LEN	(4)
 #define AJP13_HEADER_SZ_LEN	(2)
@@ -338,7 +339,7 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
                                       res.num_headers)) {
                     jk_log(l, JK_LOG_ERROR, 
                            "Error ajp13_process_callback - start_response failed\n");
-                    return JK_FATAL_ERROR;
+                    return JK_CLIENT_ERROR;
                 }
             }
 	    break;
@@ -349,7 +350,7 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
                 if(!r->write(r, jk_b_get_buff(msg) + jk_b_get_pos(msg), len)) {
                     jk_log(l, JK_LOG_ERROR, 
                            "Error ajp13_process_callback - write failed\n");
-                    return JK_FATAL_ERROR;
+                    return JK_CLIENT_ERROR;
                 }
             }
 	    break;
@@ -711,6 +712,15 @@ static int get_reply(jk_endpoint_t *e,
                    */
                         op->recoverable = JK_FALSE;
                         return JK_FALSE;
+                } else if(JK_CLIENT_ERROR == rc) {
+                  /*
+                   * Client has stop talking to us, so get out.
+                   * We assume this isn't our fault, so just a normal exit.
+                   * In most (all?)  cases, the ajp13_endpoint::reuse will still be
+                   * false here, so this will be functionally the same as an
+                   * un-recoverable error.  We just won't log it as such.
+                   */
+		        return JK_TRUE;
 		} else if(rc < 0) {
 			return (JK_FALSE); /* XXX error */
 		}
