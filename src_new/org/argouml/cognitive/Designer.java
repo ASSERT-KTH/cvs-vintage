@@ -26,7 +26,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.4 2001/12/14 13:32:52 dennyd Exp $
+// $Id: Designer.java,v 1.5 2002/07/18 19:24:36 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -357,7 +357,6 @@ implements Poster, Runnable, PropertyChangeListener, MElementListener, java.io.S
   public boolean containsKnowledgeType(String type) {
     return type.equals("Designer's");
   }
-  public VectorSet getKnowledgeTypes() { return new VectorSet("Designer's"); }
 
   public String expand(String desc, VectorSet offs) { return desc; }
 

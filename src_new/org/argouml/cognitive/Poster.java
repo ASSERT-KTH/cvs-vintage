@@ -26,7 +26,7 @@
 // File: Poster.java
 // Classes: Poster
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Poster.java,v 1.2 2001/12/05 16:06:20 thierrylach Exp $
+// $Id: Poster.java,v 1.3 2002/07/18 19:24:36 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -66,7 +66,6 @@ public interface Poster {
   boolean supports(Goal g);
   Vector getSupportedGoals();
   boolean containsKnowledgeType(String knowledgeType);
-  VectorSet getKnowledgeTypes();
 
   /** Customize the description string just before it is displayed. */
   String expand(String desc, VectorSet offs);
