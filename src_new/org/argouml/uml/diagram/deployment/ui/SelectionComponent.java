@@ -1,4 +1,4 @@
-// $Id: SelectionComponent.java,v 1.10 2002/12/27 10:08:01 linus Exp $
+// $Id: SelectionComponent.java,v 1.11 2003/02/06 06:01:58 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SelectionComponent.java
 // Classes: SelectionComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionComponent.java,v 1.10 2002/12/27 10:08:01 linus Exp $
+// $Id: SelectionComponent.java,v 1.11 2003/02/06 06:01:58 mkl Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -59,7 +59,8 @@ public class SelectionComponent extends SelectionWButtons {
   ////////////////////////////////////////////////////////////////
   // constants
   public static Icon dep = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Dependency");
-
+  public static Icon depRight = 
+      ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("DependencyRight");
 
 
   ////////////////////////////////////////////////////////////////
@@ -115,8 +116,8 @@ public class SelectionComponent extends SelectionWButtons {
     int ch = _content.getHeight();
     paintButtonAbove(dep, g, cx + cw/2, cy, 10);
     paintButtonBelow(dep, g, cx + cw/2, cy + ch, 11);
-    paintButtonLeft(dep, g, cx + cw, cy + ch/2, 12);
-    paintButtonRight(dep, g, cx, cy + ch/2, 13);
+    paintButtonLeft(depRight, g, cx + cw, cy + ch/2, 12);
+    paintButtonRight(depRight, g, cx, cy + ch/2, 13);
   }
 
 
