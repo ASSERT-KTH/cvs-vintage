@@ -42,7 +42,7 @@
   <td>
     #set ($types = $attribute.CompatibleAttributeTypes)
     #if ($types.isEmpty())
-      <input type="hidden" name="$attgroup.TypeId.Key" value="$attribute.AttributeTypeId" />
+      <input type="hidden" name="$attgroup.TypeId.Key" value="$attribute.TypeId" />
       $attribute.AttributeType.Name <p class="info">$l10n.TypeCannotChange</p>
     #else
     <select name="$attgroup.TypeId.Key" size="1">
