@@ -58,7 +58,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AssignIssue.java,v 1.3 2002/10/24 22:59:28 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.4 2003/05/13 23:43:57 elicia Exp $
  */
 public class AssignIssue extends Default
 {
@@ -68,10 +68,15 @@ public class AssignIssue extends Default
         throws Exception 
    {
         String[] issueIdList = data.getParameters().getStrings("issue_ids");
+        String singleIssue = data.getParameters().getString("issueId");
         Integer size = null;
         if (issueIdList == null) 
         {
             size = new Integer(0);
+        }
+        else if (singleIssue != null)
+        {
+            size = new Integer(1);
         }
         else 
         {

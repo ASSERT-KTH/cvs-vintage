@@ -80,7 +80,7 @@ import org.tigris.scarab.util.EmailContext;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.95 2003/05/03 22:37:24 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.96 2003/05/13 23:43:57 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -214,13 +214,27 @@ public class AssignIssue extends BaseModifyIssue
         }
     }
 
-    private void commitAssigneeChanges(RunData data, TemplateContext context)
+    public void doSave(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        List issues = scarabR.getAssignIssuesList();
+        List issues = null;
+        String singleIssueId = data.getParameters().getString("issueId");
+        if (singleIssueId != null)
+        {
+            Issue issue = scarabR.getIssue(singleIssueId);
+            if (issue != null)
+            {
+                issues = new ArrayList();
+                issues.add(issue);
+            }
+        }
+        else
+        {
+            issues = scarabR.getAssignIssuesList();
+        }
         Map userMap = user.getAssociatedUsersMap();
         String actionString = null;
         ScarabUser assigner = (ScarabUser)data.getUser();
@@ -346,15 +360,6 @@ public class AssignIssue extends BaseModifyIssue
         return activitySet.sendEmail(ectx, issue, template);
     }
 
-    /**
-     * Adds or removes users, sends email, and return to previous page.
-     */
-    public void doDone(RunData data, TemplateContext context) 
-        throws Exception
-    {
-        commitAssigneeChanges(data, context);
-        doCancel(data, context);
-    }
 
     public void doPerform(RunData data, TemplateContext context) 
         throws Exception
@@ -384,17 +389,4 @@ public class AssignIssue extends BaseModifyIssue
         }
     }
 
-    public void doCancel(RunData data, TemplateContext context)
-        throws Exception
-    {
-        String cancelPage = getCancelTemplate(data, "IssueList.vm");
-        List issues = getScarabRequestTool(context).getAssignIssuesList();
-        if (issues != null && issues.size() == 1)
-        {
-            Issue issue = (Issue)issues.get(0);
-            data.getParameters().setString("id", issue.getUniqueId());
-            cancelPage = "ViewIssue.vm";
-        }
-        setTarget(data, cancelPage);
-    }
 }

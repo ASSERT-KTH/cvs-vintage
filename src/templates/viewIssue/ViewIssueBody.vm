@@ -16,6 +16,11 @@
 <input type="hidden" name="id" value="$currentIssueId" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
 <input type="hidden" name="tab" value="$tab" />
+#if ($issueList)
+   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssueLong.vm" />
+#else
+   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
+#end
 
 #if ($showCopyButton || $showMoveButton)
 <div class="functnbar">

@@ -93,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.161 2003/05/07 00:50:39 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.162 2003/05/13 23:43:57 elicia Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -1048,7 +1048,7 @@ public class ModifyIssue extends BaseModifyIssue
             // call it issue_ids because AssignIssue can be used to
             // assign to multiple issues at the same time. however, this
             // ui interface just sets one id.
-            data.getParameters().add("issue_ids", issue.getUniqueId());
+            data.getParameters().add("issueId", issue.getUniqueId());
             scarabR.resetAssociatedUsers();
             setTarget(data, "AssignIssue.vm");
         }
