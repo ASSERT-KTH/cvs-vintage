@@ -116,7 +116,8 @@ public class DefaultCMSetter extends BaseInterceptor {
 	//  Note: home defaults to tomcat.home if none is set...
 	File f=new File( cm.getTomcatHome() + "/conf/web.xml");
 	if( ! f.exists() ) {
-	    throw new TomcatException( "Wrong tomcat home " + cm.getHome());
+	    throw new TomcatException( "Wrong tomcat home " +
+	                               cm.getTomcatHome());
 	}
 	// update the workdir
 	String workDir=cm.getWorkDir();
