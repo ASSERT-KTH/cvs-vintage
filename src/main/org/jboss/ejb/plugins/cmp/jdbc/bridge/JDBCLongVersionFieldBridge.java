@@ -39,8 +39,8 @@ public class JDBCLongVersionFieldBridge extends JDBCCMP2xVersionFieldBridge
 
    public Object updateVersion(EntityEnterpriseContext ctx)
    {
-      long current = ((Long)getInstanceValue(ctx)).longValue();
-      Long next = new Long(current + 1);
+      final Long value = (Long)getInstanceValue(ctx);
+      Long next = value == null ? FIRST_VERSION : new Long(value.longValue() + 1);
       setInstanceValue(ctx, next);
       return next;
    }
