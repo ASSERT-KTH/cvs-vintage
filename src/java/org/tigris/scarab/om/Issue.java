@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.188 2002/08/29 00:08:05 elicia Exp $
+ * @version $Id: Issue.java,v 1.189 2002/09/03 21:06:51 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -450,6 +450,7 @@ public class Issue
         attachment.setTypeId(Attachment.COMMENT__PK);
         attachment.setName("");
         attachment.setCreatedBy(user.getUserId());
+        attachment.setCreatedDate(new Date());
         attachment.setMimeType("text/plain");
         attachment.save();
     }
