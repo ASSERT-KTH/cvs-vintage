@@ -170,7 +170,13 @@ public abstract class DefaultUtil {
 		// Note: This is atm the only PGP tool we support, if we want
 		// to support other tools, too, we have to add an additional
 		// attribute to PGPItem to make this configurable
-		commandList.add(getPath("gpg"));
+		
+		// Note: we try to use the external tools plugin first, if this
+		// fails we fall back to the path information in the PGPItem.
+		// This is essentially a hack to make testing with junit easier.
+		String path = getPath("gpg");
+		if ( path == null ) path = item.get("path");
+		commandList.add(path);
 
 		for (int i = 0; i < rawCommand.length; i++) {
 			StringBuffer command = new StringBuffer();

@@ -47,7 +47,10 @@ public class PGPControllerTest extends TestCase {
 			new ByteArrayInputStream(pgpMessage.getBytes("ISO-8859-1"));
 		PGPController pgpContr = PGPController.getInstance();
 		PGPItem item = new PGPItem(xmle);
+		
 		// TODO: add better testcase
+		// @see org.columba.mail.gui.message.command.ViewMessageCommand
+		// use exceptions or use PGPController.getReturnValue()
 		//assertTrue(pgpContr.verifySignature(message, sigDataStream, item));
 	}
 	/**
@@ -70,7 +73,9 @@ public class PGPControllerTest extends TestCase {
 		// go to the begin of the Stream
 		testDataStream.reset();
 		
-//		TODO: add better testcase
+		// TODO: add better testcase
+		// @see org.columba.mail.gui.message.command.ViewMessageCommand
+		// use exceptions or use PGPController.getReturnValue()
 		//assertTrue(pgpContr.verifySignature(testDataStream, signStream, item));
 	}
 
