@@ -20,17 +20,15 @@ package org.columba.mail.smtp;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.ProgressObservedInputStream;
-import org.columba.core.command.StatusObservable;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
@@ -40,6 +38,8 @@ import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.gui.util.PasswordDialog;
+import org.columba.mail.pop3.AuthenticationManager;
+import org.columba.mail.pop3.AuthenticationSecurityComparator;
 import org.columba.mail.pop3.POP3Store;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.auth.AuthenticationFactory;
@@ -64,17 +64,9 @@ import org.columba.ristretto.smtp.SMTPProtocol;
  */
 public class SMTPServer {
 
-    private static final int NONE = 0;
-
-    private static final int POP = 1;
-
-    private static final int DEFAULT = 2;
-
-    private static final int AUTH = 3;
-
     private static final int CLOSED = 0;
 
-    private static final int INITIALIZED = 1;
+    private static final int CONNECTED = 1;
 
     private static final int AUTHENTICTED = 2;
 
@@ -89,6 +81,8 @@ public class SMTPServer {
     protected String fromAddress;
 
     private int state;
+    
+    private boolean usingSSL;
 
     /**
      * Constructor for SMTPServer.
@@ -100,11 +94,22 @@ public class SMTPServer {
 
         identity = accountItem.getIdentity();
         state = CLOSED;
+        
     }
 
-    private void ensureState(int newstate) throws IOException, SMTPException {
-        if (newstate >= INITIALIZED) {
-        }
+    private void ensureConnected() throws IOException, SMTPException {
+    	if( state < CONNECTED) {
+            // initialise protocol layer
+            SmtpItem smtpItem = accountItem.getSmtpItem();
+            String host = smtpItem.get("host");
+    		
+            protocol = new SMTPProtocol(host, smtpItem.getInteger("port"));
+
+            // Start login procedure
+            protocol.openPort();
+            
+            initialize();
+    	}
     }
 
     /**
@@ -117,7 +122,6 @@ public class SMTPServer {
         String username;
         char[] password;
         boolean savePassword;
-        boolean ssl = false;
 
         // Init Values
         // user's email address
@@ -125,7 +129,6 @@ public class SMTPServer {
 
         // POP3 server host name
         SmtpItem smtpItem = accountItem.getSmtpItem();
-        String host = smtpItem.get("host");
 
         // Sent Folder
         SpecialFoldersItem specialFoldersItem = accountItem
@@ -133,11 +136,12 @@ public class SMTPServer {
         Integer i = new Integer(specialFoldersItem.get("sent"));
         int sentFolder = i.intValue();
 
-        String authType = accountItem.getSmtpItem().get("login_method");
-        int authMethod = getAuthentication(authType);
-        boolean authenticated = (authMethod == NONE);
+        usingSSL = smtpItem.getBoolean("enable_ssl");
+        int authMethod = getLoginMethod();
+        
+        boolean authenticated = (authMethod == AuthenticationManager.NONE);
 
-        if (authMethod == POP) {
+        if (authMethod == AuthenticationManager.POP_BEFORE_SMTP) {
             // no esmtp - use POP3-before-SMTP instead
             try {
                 pop3Authentification();
@@ -147,20 +151,14 @@ public class SMTPServer {
 
             authenticated = true;
         }
-
-        // initialise protocol layer
-        protocol = new SMTPProtocol(host, smtpItem.getInteger("port"));
-
-        // Start login procedure
-        protocol.openPort();
-
-        initialize();
+        
+        ensureConnected();
 
         if (smtpItem.getBoolean("enable_ssl")) {
             if (isSupported("STARTTLS")) {
                 try {
                     protocol.startTLS();
-                    ssl = true;
+                    usingSSL = true;
                 } catch (Exception e) {
                     Object[] options = new String[] {
                             MailResourceLoader.getString("", "global", "ok")
@@ -212,32 +210,6 @@ public class SMTPServer {
             }
         }
 
-        // Do the authentication stuff
-        String authMechanism = null;
-
-        if (!authenticated) {
-            if (authMethod == DEFAULT) {
-                if (!ssl) {
-                    try {
-                        authMechanism = findSecurestMechanism();
-                    } catch (SMTPException e) {
-                        //TODO show message: auth turned off
-                        //Turn off authentication
-                        accountItem.getSmtpItem().set("login_method", "NONE");
-
-                        // Server does not support Authentication
-                        authenticated = true;
-                    }
-                } else {
-                    // We only need plain since the connection
-                    // is already secure
-                    authMechanism = "PLAIN";
-                }
-            } else {
-                authMechanism = authType.toUpperCase();
-            }
-        }
-
         if (!authenticated) {
             username = smtpItem.get("user");
             password = smtpItem.getRoot().getAttribute("password", "")
@@ -275,7 +247,7 @@ public class SMTPServer {
             // try to authenticate
             while (!authenticated) {
                 try {
-                    protocol.auth(authMechanism, username, password);
+                    protocol.auth(AuthenticationManager.getSaslName(authMethod), username, password);
                     authenticated = true;
                 } catch (SMTPException e) {
                     passDialog.showDialog(username, smtpItem.get("host"),
@@ -317,50 +289,27 @@ public class SMTPServer {
     /**
      * @return
      */
-    private String findSecurestMechanism() throws SMTPException {
-        List serverSupported = null;
+    public List checkSupportedAuthenticationMethods() throws IOException, SMTPException {
+    	ensureConnected();
+    	
+    	List supportedMechanisms = new ArrayList();
 
         for (int i = 0; i < capas.length; i++) {
             if (capas[i].startsWith("AUTH")) {
-                serverSupported = parseAuthCapas(capas[i]);
+				List authMechanisms = AuthenticationFactory.getInstance().getSupportedMechanisms(capas[i]);
+				Iterator it = authMechanisms.iterator();
+				while( it.hasNext() ) {
+					supportedMechanisms.add(new Integer(AuthenticationManager.getSaslCode((String)it.next())));
+				}
+				
+				break;
             }
         }
 
-        if (serverSupported == null) { throw new SMTPException(
-                "Server does not support the AUTH command"); }
 
-        String mechanism = null;
-
-        for (int i = 0; (i < serverSupported.size()) && (mechanism == null); i++) {
-            if (AuthenticationFactory.getInstance().isSupported(
-                    (String) serverSupported.get(i))) {
-                mechanism = (String) serverSupported.get(i);
-            }
-        }
-
-        if (mechanism == null) { throw new SMTPException(
-                "Server does not support Authentication!"); }
-
-        return mechanism;
+        return supportedMechanisms;
     }
-
-    /**
-     * @param string
-     * @return
-     */
-    private List parseAuthCapas(String string) {
-        Matcher tokenizer = Pattern.compile("\\b[^\\s]+\\b").matcher(string);
-        tokenizer.find();
-
-        List mechanisms = new LinkedList();
-
-        while (tokenizer.find()) {
-            mechanisms.add(tokenizer.group());
-        }
-
-        return mechanisms;
-    }
-
+ 
     private void initialize() throws IOException, SMTPException {
         try {
             capas = protocol.ehlo(InetAddress.getLocalHost());
@@ -375,14 +324,30 @@ public class SMTPServer {
      * @param authType
      * @return
      */
-    private int getAuthentication(String authType) {
-        if (authType.equalsIgnoreCase("none")) { return NONE; }
-
-        if (authType.equalsIgnoreCase("pop before smtp")) { return POP; }
-
-        if (authType.equalsIgnoreCase("default")) { return DEFAULT; }
-
-        return AUTH;
+    private int getLoginMethod() throws IOException, SMTPException {
+        String authType = accountItem.getSmtpItem().get("login_method");
+        int method = 0;
+        
+       	try {
+			method = Integer.parseInt(authType);
+		} catch (NumberFormatException e) {
+			//Fallback to Securest Login method
+		}
+		
+		if( method == 0 ) {
+			List supported = checkSupportedAuthenticationMethods();
+			
+			if( usingSSL ) {
+				// NOTE if SSL is possible we just need the plain login
+				// since SSL does the encryption for us.
+				method = ((Integer)supported.get(0)).intValue();
+			} else {
+				Collections.sort(supported, new AuthenticationSecurityComparator());
+				method = ((Integer)supported.get(supported.size()-1)).intValue();
+			}
+		}
+        
+		return method;
     }
 
     /**

@@ -21,9 +21,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,14 +45,13 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.util.ListTools;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.main.MailInterface;
+import org.columba.mail.pop3.AuthenticationManager;
+import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.auth.AuthenticationFactory;
 import org.columba.ristretto.smtp.SMTPException;
-import org.columba.ristretto.smtp.SMTPProtocol;
 
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -70,7 +66,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.config.account");
 
     private static final Pattern AUTH_MODE_TOKENIZE_PATTERN = Pattern.compile(
-            "([^;]+);?");
+            "(\\d+);?");
     private JLabel hostLabel;
     private JTextField hostTextField;
     private JLabel portLabel;
@@ -128,7 +124,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
             secureCheckBox.setSelected(item.getBoolean("enable_ssl", false));
 
-            if (!item.get("login_method").equals("NONE")) {
+            if (!(item.get("login_method").equals(Integer.toString(AuthenticationManager.NONE)) || item.get("login_method").equals("NONE"))) {
                 needAuthCheckBox.setSelected(true);
 
                 storePasswordCheckBox.setEnabled(true);
@@ -136,7 +132,10 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
                 loginTextField.setEnabled(true);
 
                 String loginMethod = item.get("login_method");
-                authenticationComboBox.setSelectedItem(loginMethod);
+                try {
+					authenticationComboBox.setSelectedItem(new Integer(loginMethod));
+				} catch (NumberFormatException e) {
+				}
             } else {
                 needAuthCheckBox.setSelected(false);
 
@@ -172,14 +171,9 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
             item.set("enable_ssl", secureCheckBox.isSelected());
 
             if (needAuthCheckBox.isSelected()) {
-                if (authenticationComboBox.getSelectedIndex() == 0) {
-                    item.set("login_method", "DEFAULT");
-                } else {
-                    String loginMethod = (String) authenticationComboBox.getSelectedItem();
-                    item.set("login_method", loginMethod);
-                }
+                item.set("login_method", authenticationComboBox.getSelectedItem().toString());
             } else {
-                item.set("login_method", "NONE"); //$NON-NLS-1$
+                item.set("login_method", Integer.toString(AuthenticationManager.NONE)); 
             }
 
             item.set("use_default_account", defaultAccountCheckBox.isSelected());
@@ -350,6 +344,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
                     "dialog", "account", "authentication_type"));
 
         authenticationComboBox = new JComboBox();
+        authenticationComboBox.setRenderer(new AuthenticationListCellRenderer());
         authenticationLabel.setLabelFor(authenticationComboBox);
 
         updateAuthenticationComboBox();
@@ -373,13 +368,12 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
      *
      */
     private void updateAuthenticationComboBox() {
-        authenticationComboBox.removeAllItems();
+   		authenticationComboBox.removeAllItems();
 
-        authenticationComboBox.addItem(MailResourceLoader.getString("dialog",
-                "account", "authentication_securest"));
+        authenticationComboBox.addItem(new Integer(0));
 
         if (accountItem.isPopAccount()) {
-            authenticationComboBox.addItem("POP before SMTP");
+            authenticationComboBox.addItem(new Integer(AuthenticationManager.POP_BEFORE_SMTP));
         }
 
         String authMethods = accountItem.get("smtpserver",
@@ -390,12 +384,10 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
             Matcher matcher = AUTH_MODE_TOKENIZE_PATTERN.matcher(authMethods);
 
             while (matcher.find()) {
-                authenticationComboBox.addItem(matcher.group(1));
+                authenticationComboBox.addItem(new Integer(matcher.group(1)));
             }
         }
 
-        authenticationComboBox.setSelectedItem(accountItem.get("smtpserver",
-                "login_method"));
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -434,27 +426,19 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
                 checkAuthMethods.setEnabled(false);
             }
         } else if (action.equals("CHECK_AUTHMETHODS")) {
-            getAuthMechanisms();
+            fetchSupportedAuthenticationMechanisms();
         }
     }
 
-    private void getAuthMechanisms() {
+    private void fetchSupportedAuthenticationMechanisms() {
         {
             List list = new LinkedList();
 
             try {
-                list = getAuthSMTP();
-                LOG.info("Server supported AUTH types: " + list.toString());
-
-                // If the server doesn't support an AUTH -> POP before SMTP is only choice
-                ListTools.intersect_astable(list,
-                    AuthenticationFactory.getInstance().getSupportedMechanisms());
+            	SMTPServer server = new SMTPServer(accountItem);
+            	list = server.checkSupportedAuthenticationMethods();
             }  catch (SMTPException e1) {
                 LOG.severe("Server does not support the CAPA command");
-
-                // Let the user choose
-                list = AuthenticationFactory.getInstance()
-                                            .getSupportedMechanisms();
             } catch (Exception e) {
                 // let exception handler process other errors
                 new ExceptionHandler().processException(e);
@@ -479,29 +463,6 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
             updateAuthenticationComboBox();
         }
-    }
-
-    /**
-      * @return
-      */
-    private List getAuthSMTP() throws IOException, SMTPException {
-        List result = new LinkedList();
-        SMTPProtocol protocol = new SMTPProtocol(hostTextField.getText(),
-        		 ((Integer) portSpinner.getValue()).intValue());
-
-        protocol.openPort();
-
-        String[] capas = protocol.ehlo(InetAddress.getLocalHost());
-
-        LOG.info("Server CAPAs: " + Arrays.asList(capas).toString());
-
-        for (int i = 0; i < capas.length; i++) {
-            if (capas[i].startsWith("AUTH")) {
-                result = parseAuthCapas(capas[i]);
-            }
-        }
-
-        return result;
     }
 
     /**

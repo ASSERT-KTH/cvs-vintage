@@ -21,7 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -47,7 +50,10 @@ import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.pop3.AuthenticationManager;
+import org.columba.mail.pop3.AuthenticationSecurityComparator;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.auth.AuthenticationFactory;
 import org.columba.ristretto.imap.IMAPDate;
 import org.columba.ristretto.imap.IMAPDisconnectedException;
 import org.columba.ristretto.imap.IMAPException;
@@ -155,14 +161,18 @@ public class IMAPServer {
 	 * @return
 	 */
 	protected StatusObservable getObservable() {
-		return imapRoot.getObservable();
+		if( imapRoot != null ) {
+			return imapRoot.getObservable();
+		} else return null;
 	}
 
 	/**
 	 * @param message
 	 */
 	protected void printStatusMessage(String message) {
-		getObservable().setMessage(item.get("host") + ": " + message);
+		if( getObservable() != null ) {
+			getObservable().setMessage(item.get("host") + ": " + message);
+		}
 	}
 
 	/**
@@ -304,20 +314,59 @@ public class IMAPServer {
 	
 	}
 
+	public List checkSupportedAuthenticationMethods() throws IOException {
+		
+		ArrayList supportedMechanisms = new ArrayList();
+		//LOGIN is always supported
+		supportedMechanisms.add(new Integer(AuthenticationManager.LOGIN));
+		
+		try {
+			String serverSaslMechansims[] = getCapas("AUTH");
+			// combine them to one string
+			StringBuffer oneLine = new StringBuffer("AUTH");
+			for( int i=0; i<serverSaslMechansims.length; i++) {
+				oneLine.append(' ');
+				oneLine.append(serverSaslMechansims[i].substring(5)); // remove the 'AUTH='
+			}
+			
+			//AUTH?
+			if( serverSaslMechansims != null ) {
+				List authMechanisms = AuthenticationFactory.getInstance().getSupportedMechanisms(oneLine.toString());
+				Iterator it = authMechanisms.iterator();
+				while( it.hasNext() ) {
+					supportedMechanisms.add(new Integer(AuthenticationManager.getSaslCode((String)it.next())));
+				}
+			}
+		} catch (IOException e) {			
+		}
+		
+		return supportedMechanisms;
+	}
+	
+	
+	/**
+	 * @param command
+	 * @return
+	 */
+	private String[] getCapas(String command) throws IOException {
+		fetchCapas();
+		ArrayList list = new ArrayList();
+		
+		for (int i = 0; i < capabilities.length; i++) {
+			if (capabilities[i].startsWith(command)) {
+				list.add(capabilities[i]);
+			}
+		}
+
+		return (String[]) list.toArray(new String[0]);		
+	}
+	
 	/**
 	 * @param command
 	 * @return
 	 */
 	private boolean isSupported(String command) throws IOException {
-		if( capabilities == null ) {
-		
-		try {
-			capabilities = protocol.capability();
-		} catch (IMAPException e) {
-			// CAPA not supported
-			capabilities = new String[0];
-		}
-		}
+		fetchCapas();
 		
 		for (int i = 0; i < capabilities.length; i++) {
 			if (capabilities[i].startsWith(command)) {
@@ -328,6 +377,57 @@ public class IMAPServer {
 		return false;		
 	}
 
+	/**
+	 * @throws IOException
+	 */
+	private void fetchCapas() throws IOException {
+		if( capabilities == null ) {
+		try {
+				ensureConnectedState();
+			
+			capabilities = protocol.capability();
+		} catch (IMAPException e) {
+			// CAPA not supported
+			capabilities = new String[0];
+		} catch( CommandCancelledException e) {
+			
+		}
+		}
+	}
+
+	
+	/**
+	 * Gets the selected Authentication method or else the most secure.
+	 * 
+	 * @return the authentication method
+	 */
+	private int getLoginMethod() throws CommandCancelledException, IOException {
+		String loginMethod = item.get("login_method");
+		int result = 0;
+		
+		try {
+			result = Integer.parseInt(loginMethod);
+		} catch (NumberFormatException e) {
+			//Just use the default as fallback
+		}
+
+		if( result == 0 ) {
+			List supported = checkSupportedAuthenticationMethods();
+			
+			if( usingSSL ) {
+				// NOTE if SSL is possible we just need the plain login
+				// since SSL does the encryption for us.
+				result = ((Integer)supported.get(0)).intValue();
+			} else {
+				Collections.sort(supported, new AuthenticationSecurityComparator());
+				result = ((Integer)supported.get(supported.size()-1)).intValue();
+			}
+			
+		}
+
+		return result;
+	}
+	
 	/**
 	 * Login to IMAP server.
 	 * <p>
@@ -347,9 +447,7 @@ public class IMAPServer {
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
 				"authenticating"));
 
-		String loginMethod = item.get("login_method"
-				);
-		//TODO: Use selected authentication method
+		int loginMethod = getLoginMethod();
 
 		// Try to get Password from Configuration
 		if (item.get("password").length() != 0) {
@@ -386,7 +484,12 @@ public class IMAPServer {
 			// from configuration of from the dialog
 
 			try {
-				protocol.login(item.get("user"), password);
+				if( loginMethod == AuthenticationManager.LOGIN ) {
+					protocol.login(item.get("user"), password);
+				} else {
+					//AUTH
+					protocol.authenticate(AuthenticationManager.getSaslName(loginMethod), item.get("user"), password);					
+				}
 
 				// If no exception happened we have successfully logged
 				// in
@@ -825,6 +928,18 @@ public class IMAPServer {
 			fetchHeaderList(headerList, list, path);
 		}
 		
+	}
+	
+	protected void ensureConnectedState() throws CommandCancelledException, IOException, IMAPException {
+		int actState;
+		
+		actState = protocol.getState();
+		
+		if (actState < IMAPProtocol.NON_AUTHENTICATED) {
+			openConnection();
+
+			actState = protocol.getState();
+		}
 	}
 
 	/**

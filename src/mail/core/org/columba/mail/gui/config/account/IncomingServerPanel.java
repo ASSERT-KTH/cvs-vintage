@@ -23,8 +23,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,10 +50,11 @@ import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
+import org.columba.mail.imap.IMAPServer;
 import org.columba.mail.main.MailInterface;
+import org.columba.mail.pop3.POP3Store;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPProtocol;
-import org.columba.ristretto.pop3.POP3Exception;
 import org.columba.ristretto.pop3.POP3Protocol;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -72,7 +71,7 @@ public class IncomingServerPanel extends DefaultPanel implements
 			.getLogger("org.columba.mail.gui.config.account");
 
 	private static final Pattern AUTH_MODE_TOKENIZE_PATTERN = Pattern
-			.compile("([^;]+);?");
+			.compile("(\\d+);?");
 
 	public static final int IMAPS_POP3S = 0;
 
@@ -179,8 +178,11 @@ public class IncomingServerPanel extends DefaultPanel implements
 			defaultAccountCheckBox.setSelected(serverItem
 					.getBoolean("use_default_account"));
 
-			authenticationComboBox.setSelectedItem(serverItem
-					.get("login_method"));
+			try {
+				authenticationComboBox.setSelectedItem(new Integer(serverItem
+						.get("login_method")));
+			} catch (NumberFormatException e) {
+			}
 			
 			// disable the actionlistener for this period
 			// to avoid an unwanted port check
@@ -218,15 +220,9 @@ public class IncomingServerPanel extends DefaultPanel implements
 			serverItem.set("enable_ssl", secureCheckBox.isSelected());
 			serverItem.set("ssl_type", sslComboBox.getSelectedIndex());
 
-			if (isPopAccount()) {
-				// if securest write DEFAULT
-				if (authenticationComboBox.getSelectedIndex() != 0) {
-					serverItem.set("login_method",
-							(String) authenticationComboBox.getSelectedItem());
-				} else {
-					serverItem.set("login_method", "DEFAULT");
-				}
-			}
+			// if securest write DEFAULT
+			serverItem.set("login_method",
+					authenticationComboBox.getSelectedItem().toString());
 
 			serverItem.set("use_default_account", defaultAccountCheckBox
 					.isSelected());
@@ -370,17 +366,10 @@ public class IncomingServerPanel extends DefaultPanel implements
 		typeComboBox.addItem("POP3");
 		typeComboBox.addItem("IMAP4");
 
-		switch(accountItem.getAccountType())
-		{
-			case AccountItem.POP3_ACCOUNT:
-			  typeComboBox.setSelectedIndex(0);
-				break;
-			case AccountItem.IMAP_ACCOUNT:
-			  typeComboBox.setSelectedIndex(1);
-				break;
-			default:
-			  //do nothing
-			  
+		if (accountItem.isPopAccount()) {
+			typeComboBox.setSelectedIndex(0);
+		} else {
+			typeComboBox.setSelectedIndex(1);
 		}
 
 		typeLabel.setLabelFor(typeComboBox);
@@ -426,6 +415,7 @@ public class IncomingServerPanel extends DefaultPanel implements
 				.getString("dialog", "account", "authentication_type"));
 
 		authenticationComboBox = new JComboBox();
+		authenticationComboBox.setRenderer( new AuthenticationListCellRenderer() );
 		authenticationLabel.setLabelFor(authenticationComboBox);
 
 		updateAuthenticationComboBox();
@@ -452,23 +442,25 @@ public class IncomingServerPanel extends DefaultPanel implements
 	private void updateAuthenticationComboBox() {
 		authenticationComboBox.removeAllItems();
 
-		authenticationComboBox.addItem(MailResourceLoader.getString("dialog",
-				"account", "authentication_securest"));
+		authenticationComboBox.addItem(new Integer(0));
 
+		String authMethods;
 		if (isPopAccount()) {
-			String authMethods = accountItem.get("popserver",
+			 authMethods = accountItem.get("popserver",
 					"authentication_methods");
-
+		} else {
+			 authMethods = accountItem.get("imapserver",
+				"authentication_methods");			
+		}
 			// Add previously fetch authentication modes
 			if (authMethods != null) {
 				Matcher matcher = AUTH_MODE_TOKENIZE_PATTERN
 						.matcher(authMethods);
 
 				while (matcher.find()) {
-					authenticationComboBox.addItem(matcher.group(1));
+					authenticationComboBox.addItem(new Integer(matcher.group(1)));
 				}
 			}
-		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -491,7 +483,7 @@ public class IncomingServerPanel extends DefaultPanel implements
 			revalidate();
 			receiveOptionsPanel.revalidate();
 		} else if (action.equals("CHECK_AUTHMETHODS")) {
-			getAuthMechanisms();
+			fetchAuthMechanisms();
 		} 
 		else if (action.equals("SSL")) {
 			sslComboBox.setEnabled(secureCheckBox.isSelected());
@@ -564,21 +556,29 @@ public class IncomingServerPanel extends DefaultPanel implements
 
 	}
 
-	private void getAuthMechanisms() {
+	private void fetchAuthMechanisms() {
 		{
 			List list = new LinkedList();
 
 			if (isPopAccount()) {
+				POP3Store store = new POP3Store(accountItem.getPopItem());
+				
 				try {
-					list = getAuthPOP3();
-				} catch (POP3Exception e) {
-					LOG.fine("Server does not support the CAPA command");
-
-					//TODO Server does not support CAPA
+					list = store.checkSupportedAuthenticationMethods();
 				} catch (Exception e) {
-					//                  let exception handler process other errors
+					//let exception handler process other errors
 					new ExceptionHandler().processException(e);
 				}
+			} else {
+				IMAPServer server = new IMAPServer(accountItem.getImapItem(),null);
+				
+				try {
+					list = server.checkSupportedAuthenticationMethods();
+				} catch (Exception e) {
+					//let exception handler process other errors
+					new ExceptionHandler().processException(e);
+				}
+				
 			}
 
 			// Save the authentication modes
@@ -592,39 +592,18 @@ public class IncomingServerPanel extends DefaultPanel implements
 					authMethods.append(it.next());
 				}
 
-				accountItem.set("popserver", "authentication_methods",
-						authMethods.toString());
+				if (isPopAccount()) {
+					accountItem.set("popserver", "authentication_methods",authMethods.toString());
+				} else {
+					accountItem.set("imapserver", "authentication_methods",authMethods.toString());
+				}
+						
 			}
 
 			updateAuthenticationComboBox();
 		}
 	}
 
-	private LinkedList getAuthPOP3() throws IOException, POP3Exception {
-		LinkedList list;
-		POP3Protocol protocol = new POP3Protocol(hostTextField.getText(),
-				((Integer) portSpinner.getValue()).intValue());
-		protocol.openPort();
-
-		String[] capas = protocol.capa();
-
-		protocol.quit();
-		list = new LinkedList();
-
-		// Search for authenticatio modes in the Capabilities
-		for (int i = 0; i < capas.length; i++) {
-			if (capas[i].equals("APOP")) {
-				list.add(capas[i]);
-			} else if (capas[i].equals("USER")) {
-				list.add(capas[i]);
-			} else if (capas[i].startsWith("AUTH")) {
-				// TODO Check if Columba supports this auth
-				// algorithm
-			}
-		}
-
-		return list;
-	}
 
 	public boolean isFinished() {
 		String host = getHost();
@@ -642,39 +621,9 @@ public class IncomingServerPanel extends DefaultPanel implements
 
 			//$NON-NLS-1$
 			return false;
-		} 
-		else if (defaultAccountCheckBox.isSelected())
-		{
-		  AccountItem defaultAccount = 
-		    MailInterface.config.getAccountList().getDefaultAccount();
-		  
-			if (defaultAccount.getAccountType() !=
-					accountItem.getAccountType())
-			{
-
-			  String errorMessage = 
-			    MailResourceLoader.getString(	"dialog", 
-			                                	"account", 
-			                                  "cannot_use_default_account");
-
-			  Object[] accountType = new Object[]
-				                     			{defaultAccount.getAccountTypeDescription()};
-			  
-				errorMessage = MessageFormat.format(errorMessage,accountType);
-				
-				JOptionPane.showMessageDialog(null, errorMessage);
-				
-				return false;
-			}
 		}
-		else if (!AccountItem.validHostname(host))
-		{
-			JOptionPane.showMessageDialog(null, MailResourceLoader.getString(
-					"dialog", "account", "invalid_inhostname"));
-			return false;		  
-		}
-	
 
 		return true;
 	}
 }
+

@@ -69,7 +69,9 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 
     /** Timer to use when clearing status bar text after a certain timeout */
     private Timer clearTextTimer;
-
+    private Timer updateTimer;
+    
+    
     public StatusBar(TaskManager tm) {
         taskManager = tm;
         tm.addTaskManagerListener(this);
@@ -161,6 +163,9 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 
         // init timer
         initClearTextTimer();
+        
+        updateTimer = new Timer(40, this);
+        updateTimer.start();
     }
 
     public Border getDefaultBorder() {
@@ -185,7 +190,7 @@ public class StatusBar extends JComponent implements TaskManagerListener,
     }
 
     protected void setText(String s) {
-        // *20031102, karlpeder* Setting a new text must cancel pending
+/*        // *20031102, karlpeder* Setting a new text must cancel pending
         // requests for clearing the text
         clearTextTimer.stop();
 
@@ -201,10 +206,10 @@ public class StatusBar extends JComponent implements TaskManagerListener,
             SwingUtilities.invokeLater(run);
         } catch (Exception ex) {
         }
-    }
+*/    }
 
     protected void setMaximum(int i) {
-        final int n = i;
+/*        final int n = i;
 
         Runnable run = new Runnable() {
                 public void run() {
@@ -217,10 +222,10 @@ public class StatusBar extends JComponent implements TaskManagerListener,
             SwingUtilities.invokeLater(run);
         } catch (Exception ex) {
         }
-    }
+*/    }
 
     protected void setMaximumAndValue(int v, int m) {
-        final int max = m;
+/*        final int max = m;
         final int val = v;
 
         Runnable run = new Runnable() {
@@ -234,10 +239,10 @@ public class StatusBar extends JComponent implements TaskManagerListener,
             SwingUtilities.invokeLater(run);
         } catch (Exception ex) {
         }
-    }
+*/    }
 
     protected void setValue(int i) {
-        final int n = i;
+ /*       final int n = i;
 
         Runnable run = new Runnable() {
                 public void run() {
@@ -249,11 +254,13 @@ public class StatusBar extends JComponent implements TaskManagerListener,
             SwingUtilities.invokeLater(run);
         } catch (Exception ex) {
         }
-    }
+*/    }
 
     public void workerAdded(TaskManagerEvent e) {
         updateTaskCount();
-        setDisplayedWorker(e.getWorker());
+        if( getDisplayedWorker() == null ) {
+        	setDisplayedWorker(e.getWorker());
+        } 
     }
     
     public void workerRemoved(TaskManagerEvent e) {
@@ -309,6 +316,11 @@ public class StatusBar extends JComponent implements TaskManagerListener,
     }
 
     public void actionPerformed(ActionEvent e) {
+    	if( e.getSource() == updateTimer ) {
+    		updateGui();
+    		return;
+    	}
+    	
         String command = e.getActionCommand();
 
         if (command.equals("ONLINE")) {
@@ -322,22 +334,21 @@ public class StatusBar extends JComponent implements TaskManagerListener,
     }
     
     /**
+	 * Runs in EventDispoathcer
+	 */
+	private void updateGui() {
+		if( displayedWorker != null) {
+			label.setText(displayedWorker.getDisplayText());
+			progressBar.setValue(displayedWorker.getProgressBarValue());
+			progressBar.setMaximum(displayedWorker.getProgessBarMaximum());
+		}
+	}
+
+	/**
      * Sets the worker to be displayed.
      */
     protected void setDisplayedWorker(Worker w) {
-        if (displayedWorker != null) {
-            displayedWorker.removeWorkerStatusChangeListener(this);
-        }
-        displayedWorker = w;
-        
-        if (w == null) {
-            setText("");
-            setMaximumAndValue(0, 0);
-        } else {
-            setText(w.getDisplayText());
-            setMaximumAndValue(w.getProgressBarValue(), w.getProgessBarMaximum());
-            w.addWorkerStatusChangeListener(this);
-        }
+       	displayedWorker = w;
     }
 
     /**
