@@ -60,6 +60,12 @@ import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * This class manages the validation and importing of issues.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: ScarabIssues.java,v 1.12 2003/01/20 23:44:50 jon Exp $
+ */
 public class ScarabIssues implements java.io.Serializable
 {
     private final static Log log = LogFactory.getLog(ScarabIssues.class);
@@ -87,6 +93,11 @@ public class ScarabIssues implements java.io.Serializable
 
     private static @OM@.Attribute NULL_ATTRIBUTE = null;
 
+    /** We default to be in validation mode. insert only happens after validation has happened. */
+    private static boolean inValidationMode = true;
+    private List importErrors = null;
+    private List importUsers = null;
+
     public ScarabIssues() 
     {
         issues = new ArrayList();
@@ -103,9 +114,19 @@ public class ScarabIssues implements java.io.Serializable
         }
     }
 
-    public Module getModule()
+    public static void setInValidationMode(boolean value)
     {
-        return this.module;
+        inValidationMode=value;
+    }
+
+    public static boolean isInValidationMode()
+    {
+        return inValidationMode;
+    }
+    
+    public List getImportErrors()
+    {
+        return importErrors;
     }
 
     public void setImportType(String value)
@@ -135,13 +156,88 @@ public class ScarabIssues implements java.io.Serializable
         return this.importTypeCode;
     }
 
+    public Module getModule()
+    {
+        return this.module;
+    }
+
     public void setModule(Module module)
     {
         log.debug("Module.setModule(): " + module.getName());
         this.module = module;
     }
 
-    public void doHandleDependencies()
+    void doValidateUsers()
+        throws Exception
+    {
+        if (importUsers != null && importUsers.size() > 0)
+        {
+            for (Iterator itr = importUsers.iterator(); itr.hasNext();)
+            {
+                String userStr = (String)itr.next();
+                try
+                {
+                    @OM@.ScarabUser user = @OM@.ScarabUserManager.getInstance(userStr, 
+                         getModule().getDomain());
+                    if (user == null)
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch (Exception e)
+                {
+                    importErrors.add("Could not locate username in db: " + userStr);
+                }
+            }
+        }
+    }
+
+    void doValidateDependencies()
+        throws Exception
+    {
+        if (allDependencies != null && allDependencies.size() > 0)
+        {
+            for (Iterator itr = allDependencies.iterator(); itr.hasNext();)
+            {
+                Activity activity = (Activity)itr.next();
+                Dependency dependency = activity.getDependency();
+                String child = (String)issueXMLMap.get(dependency.getChild());
+                String parent = (String)issueXMLMap.get(dependency.getParent());
+                if (parent == null || child == null)
+                {
+                    log.debug("Could not find issues: parent: " + parent + " child: " + child);
+                    continue;
+                }
+                try
+                {
+                    @OM@.Issue parentIssueOM = @OM@.Issue.getIssueById(parent);
+                    if (parentIssueOM == null)
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch (Exception e)
+                {
+                    importErrors.add("Could not locate parent depend issue in db: " + parent);
+                }
+                try
+                {
+                    @OM@.Issue childIssueOM = @OM@.Issue.getIssueById(child);
+                    if (childIssueOM == null)
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch (Exception e)
+                {
+                    importErrors.add("Could not locate child depend issue in db: " + child);
+                }
+            }
+        }
+        allDependencies.clear();
+    }
+
+    void doHandleDependencies()
         throws Exception
     {
         log.debug("Number of dependencies found: " + allDependencies.size());
@@ -212,7 +308,7 @@ public class ScarabIssues implements java.io.Serializable
                 catch (Exception e)
                 {
                     e.printStackTrace();
-                    throw new Exception();
+                    throw e;
                 }
             }
         }
@@ -235,12 +331,157 @@ public class ScarabIssues implements java.io.Serializable
         this.issue = issue;
         try
         {
-            doIssueEvent(getModule(), getIssue());
+            if (inValidationMode)
+            {
+                importUsers = new ArrayList();
+                importErrors = new ArrayList();
+                doIssueValidateEvent(getModule(), getIssue());
+            }
+            else
+            {
+                doIssueEvent(getModule(), getIssue());
+            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
             throw e;
+        }
+    }
+
+    private void doIssueValidateEvent(Module module, Issue issue)
+    {
+        // check for existing module
+        try
+        {
+            @OM@.Module moduleOM = @OM@.ModuleManager.getInstance(module.getName(), module.getCode());
+            if (moduleOM == null)
+            {
+                throw new Exception();
+            }
+            importUsers.add(module.getOwner());
+        }
+        catch (Exception e)
+        {
+            importErrors.add("Could not find Module: " + module.getName() + " Code: " + module.getCode());
+        }
+        
+        // get the instance of the issue type
+        try
+        {
+            @OM@.IssueType issueTypeOM = @OM@.IssueType.getInstance(issue.getArtifactType());
+            if (issueTypeOM == null)
+            {
+                throw new Exception();
+            }
+        }
+        catch (Exception e)
+        {
+            importErrors.add("Could not find Issue type: " + issue.getArtifactType());
+        }
+
+        List activitySets = issue.getActivitySets();
+        for (Iterator itr = activitySets.iterator(); itr.hasNext();)
+        {
+            ActivitySet activitySet = (ActivitySet) itr.next();
+            importUsers.add(activitySet.getCreatedBy());
+            if (activitySet.getAttachment() != null)
+            {
+                importUsers.add(activitySet.getAttachment().getCreatedBy());
+            }
+            
+            // validate the activity set types
+            try
+            {
+                @OM@.ActivitySetType ttOM = @OM@.ActivitySetTypeManager.getInstance(activitySet.getType());
+                if (ttOM == null)
+                {
+                    throw new Exception();
+                }
+            }
+            catch (Exception e)
+            {
+                importErrors.add("Could not find ActivitySet Type: " + activitySet.getType());
+            }
+    
+            List activities = activitySet.getActivities();
+            for (Iterator itrb = activities.iterator(); itrb.hasNext();)
+            {
+                Activity activity = (Activity) itrb.next();
+                if (activity.getOldUser() != null)
+                {
+                    importUsers.add(activity.getOldUser());
+                }
+                if (activity.getNewUser() != null)
+                {
+                    importUsers.add(activity.getNewUser());
+                }
+                if (activity.getAttachment() != null)
+                {
+                    importUsers.add(activity.getAttachment().getCreatedBy());
+                }
+
+                // Get the Attribute associated with the Activity
+                @OM@.Attribute attributeOM = null;
+                try
+                {
+                    attributeOM = @OM@.Attribute.getInstance(activity.getAttribute());
+                    if (attributeOM == null)
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch (Exception e)
+                {
+                    importErrors.add("Could not find Attribute: " + activity.getAttribute());
+                }
+
+                if (attributeOM.equals(NULL_ATTRIBUTE))
+                {
+                    // add any dependency activities to a list for later processing
+                    if (isDependencyActivity(activity))
+                    {
+                        if (!isDuplicateDependency(activitySet))
+                        {
+                            allDependencies.add(activity);
+                            log.debug("-------------Stored Dependency # " + allDependencies.size() + "-------------");
+                        }
+                        continue;
+                    }
+                }
+                else if (activity.getNewOption() != null)
+                {
+                    try
+                    {
+                        @OM@.AttributeOption attributeOptionOM = @OM@.AttributeOption
+                            .getInstance(attributeOM, activity.getNewOption());
+                        if (attributeOptionOM == null)
+                        {
+                            throw new Exception();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        importErrors.add("Could not find Attribute Option: " + activity.getNewOption());
+                    }
+                }
+                else if (activity.getOldOption() != null)
+                {
+                    try
+                    {
+                        @OM@.AttributeOption attributeOptionOM = @OM@.AttributeOption
+                            .getInstance(attributeOM, activity.getOldOption());
+                        if (attributeOptionOM == null)
+                        {
+                            throw new Exception();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        importErrors.add("Could not find Attribute Option: " + activity.getOldOption());
+                    }
+                }
+            }
         }
     }
 
@@ -284,8 +525,6 @@ public class ScarabIssues implements java.io.Serializable
                 log.debug("Found Issue in db: " + issueOM.getUniqueId());
             }
         }
-
-//        issueCreatedMap.put(module.getCode() + issue.getId(), issueOM.getUniqueId());
 
 /////////////////////////////////////////////////////////////////////////////////  
 
@@ -411,6 +650,10 @@ public class ScarabIssues implements java.io.Serializable
                 @OM@.Attribute oldAttributeOM = @OM@.Attribute.getInstance(activityA.getAttribute());
 
                 @OM@.AttributeValue oldAttValOM = issueOM.getUserAttributeValue(assigneeOM, oldAttributeOM);
+                if (oldAttValOM == null)
+                {
+                    log.error("User '" + assigneeOM.getName() + "' was not previously '" + oldAttributeOM.getName() + "' to the issue!");
+                }
 
                 // Get the Attribute associated with the new Activity
                 @OM@.Attribute newAttributeOM = @OM@.Attribute.getInstance(activityB.getAttribute());
@@ -503,8 +746,7 @@ public class ScarabIssues implements java.io.Serializable
                                             issueOM, attributeOM, activitySetOM);
 
                 // check to see if this is a new activity or an update activity
-                Iterator moduleAttributeValueItr = avMap.iterator();
-                while (moduleAttributeValueItr.hasNext()) 
+                for (Iterator moduleAttributeValueItr = avMap.iterator();moduleAttributeValueItr.hasNext();)
                 {
                     @OM@.AttributeValue avalOM = 
                         (@OM@.AttributeValue)avMap.get(moduleAttributeValueItr.next());

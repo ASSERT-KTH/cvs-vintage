@@ -46,6 +46,9 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */
 
+import java.util.List;
+import java.util.Iterator;
+
 import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -149,7 +152,26 @@ public class ImportScarabIssues extends MatchingTask
         {
             BeanReader reader = createBeanReader();
             log.debug("Importing: " + getXmlFile().getAbsolutePath());
+            
+            ScarabIssues.setInValidationMode(true);
             ScarabIssues si = (ScarabIssues) reader.parse(
+                getXmlFile().getAbsolutePath());
+            si.doValidateDependencies();
+            si.doValidateUsers();
+            List importErrors = si.getImportErrors();
+            if (importErrors != null && importErrors.size() > 0)
+            {
+                log.debug("Found " + importErrors.size() + " errors:");
+                for (Iterator itr = importErrors.iterator(); itr.hasNext();)
+                {
+                    String message = (String)itr.next();
+                    log.error(message);
+                }
+                return;
+            }
+            log.debug("Zero validation errors!");
+            ScarabIssues.setInValidationMode(false);
+            si = (ScarabIssues) reader.parse(
                 getXmlFile().getAbsolutePath());
             si.doHandleDependencies();
 
