@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/HexUtils.java,v 1.1 1999/10/24 00:08:03 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/24 00:08:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/HexUtils.java,v 1.2 1999/10/28 17:02:57 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/28 17:02:57 $
  *
  * ====================================================================
  *
@@ -74,6 +74,28 @@ import java.io.ByteArrayOutputStream;
  */
 
 public final class HexUtils {
+    // Code from Ajp11, from Apache's JServ
+    
+    // Table for HEX to DEC byte translation
+    public static final int[] DEC = {
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        00, 01, 02, 03, 04, 05, 06, 07,  8,  9, -1, -1, -1, -1, -1, -1,
+        -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    };
+    
 
 
     /**
@@ -144,6 +166,34 @@ public final class HexUtils {
 	return (sb.toString());
 
     }
+
+    /** Convert 4 hex digits to an int.
+     */
+    public int convert2Int( byte[] hex ) {
+	// Code from Ajp11, from Apache's JServ
+    
+	// assert b.length==4
+	// assert valid data
+	int len;
+	if(hex.length < 4 ) return 0;
+	if( DEC[hex[0]]<0 )
+	    throw new IllegalArgumentException(sm.getString("hexUtil.bad"));
+	len = DEC[hex[0]];
+	len = len << 4;
+	if( DEC[hex[1]]<0 )
+	    throw new IllegalArgumentException(sm.getString("hexUtil.bad"));
+	len += DEC[hex[1]];
+	len = len << 4;
+	if( DEC[hex[2]]<0 )
+	    throw new IllegalArgumentException(sm.getString("hexUtil.bad"));
+	len += DEC[hex[2]];
+	len = len << 4;
+	if( DEC[hex[3]]<0 )
+	    throw new IllegalArgumentException(sm.getString("hexUtil.bad"));
+	len += DEC[hex[3]];
+	return len;
+    }
+
 
 
     /**
