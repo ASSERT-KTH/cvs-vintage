@@ -49,9 +49,10 @@
 <td>
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
+<input type="hidden" name="$scarabG.Constant.REMOVE_CURRENT_MITLIST_QKEY" value="true" />
   <select name="go" tabindex="3" onChange="this.form.submit();">
-    <option value="AdvancedQuery.vm">$l10n.SelectQuery</option>
-    <option value="AdvancedQuery.vm">&#160;$l10n.Advanced</option>
+    <option value="home,ModuleQuery.vm">$l10n.SelectQuery</option>
+    <option value="home,ModuleQuery.vm">&#160;$l10n.NewModuleQuery</option>
     <option value="Search.vm">&#160;$l10n.Custom</option>
     <option value="IssueList.vm">&#160;$l10n.MyIssues</option>
     #if ($currentIssueType && $user.hasMostRecentQuery())
