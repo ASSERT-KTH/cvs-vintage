@@ -21,7 +21,7 @@ import org.jboss.cache.invalidation.InvalidationManager.BridgeInvalidationSubscr
  * @see org.jboss.cache.invalidation.InvalidationManagerMBean
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b>
  *
@@ -299,7 +299,7 @@ public class InvalidationManager
     */
    class InvalidationGroupImpl implements InvalidationGroup, javax.management.DynamicMBean
    {
-      
+      protected org.jboss.logging.Logger igLog = null;      
       protected String groupName = null;
       protected boolean asynchronous = DEFAULT_TO_ASYNCHRONOUS_MODE;
       protected HashSet registered = new HashSet();
@@ -318,6 +318,7 @@ public class InvalidationManager
       public InvalidationGroupImpl (String groupName)
       {
          this.groupName = groupName;
+         this.igLog = org.jboss.logging.Logger.getLogger(getClass() + "." + groupName);
       }
       
       public InvalidationManagerMBean getInvalidationManager ()
@@ -384,7 +385,7 @@ public class InvalidationManager
       public void addReference ()
       {         
          counter++;
-         log.debug ("Counter reference value (++): " + counter);
+         igLog.debug ("Counter reference value (++): " + counter);
       }
       
       public int getReferenceCount ()
@@ -395,7 +396,7 @@ public class InvalidationManager
       public void removeReference ()
       {
          counter--;
-         log.debug ("Counter reference value (--): " + counter);
+         igLog.debug ("Counter reference value (--): " + counter);
          
          if (counter<=0)
          {
