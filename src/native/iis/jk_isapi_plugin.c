@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.4 $                                               *
+ * Version:     $Revision: 1.5 $                                               *
  ***************************************************************************/
 
 #include <httpext.h>
@@ -797,6 +797,61 @@ static int init_ws_service(isapi_private_data_t *private_data,
     s->headers_names    = NULL;
     s->headers_values   = NULL;
     s->num_headers      = 0;
+    
+    /*
+     * Add SSL IIS environment
+     */
+    if(s->is_ssl) {         
+        char *ssl_env_names[9] = {
+            "CERT_ISSUER", 
+            "CERT_SUBJECT", 
+            "CERT_COOKIE", 
+            "HTTPS_SERVER_SUBJECT", 
+            "CERT_FLAGS", 
+            "HTTPS_SECRETKEYSIZE", 
+            "CERT_SERIALNUMBER", 
+            "HTTPS_SERVER_ISSUER", 
+            "HTTPS_KEYSIZE"
+        };
+        char *ssl_env_values[9] = {
+            NULL, 
+            NULL, 
+            NULL, 
+            NULL, 
+            NULL, 
+            NULL, 
+            NULL, 
+            NULL, 
+            NULL
+        };
+        unsigned i;
+        unsigned num_of_vars = 0;
+
+        for(i = 0 ; i < 9 ; i++) {
+            GET_SERVER_VARIABLE_VALUE(ssl_env_names[i], ssl_env_values[i]);
+            if(ssl_env_values[i]) {
+                num_of_vars++;
+            }
+        }
+        if(num_of_vars) {
+            unsigned j;
+
+            s->attributes_names = 
+                jk_pool_alloc(&private_data->p, num_of_vars * sizeof(char *));
+            s->attributes_values = 
+                jk_pool_alloc(&private_data->p, num_of_vars * sizeof(char *));
+
+            j = 0;
+            for(i = 0 ; i < 9 ; i++) {                
+                if(ssl_env_values[i]) {
+                    s->attributes_names[j] = ssl_env_names[i];
+                    s->attributes_values[j] = ssl_env_values[i];
+                    j++;
+                }
+            }
+            s->num_attributes = num_of_vars;
+        }
+    }
 
     huge_buf_sz = sizeof(huge_buf);         
     if(get_server_value(private_data->lpEcb,
