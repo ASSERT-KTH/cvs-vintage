@@ -74,7 +74,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.8 $ 
+* @version $Revision: 1.9 $ 
 */
 public class EJBDeployer
 extends ServiceMBeanSupport
@@ -432,10 +432,14 @@ implements EJBDeployerMBean
          // Init application
          //app.create();
          // Start application
-         log.info( "start application, deploymentInfo: " + sdi +
-            ", short name: " + sdi.shortName +
-            ", parent short name: " + ( sdi.parent == null ? "null" : sdi.parent.shortName )
-         );
+         if (debug)
+         {
+            log.debug( "start application, deploymentInfo: " + sdi +
+                       ", short name: " + sdi.shortName +
+                       ", parent short name: " + ( sdi.parent == null ? "null" : sdi.parent.shortName )
+                       );
+         }
+         
          // Create JSR-77 EJB-Module
          int i = app.getName().lastIndexOf( "/" );
          String lName = app.getName().substring(
