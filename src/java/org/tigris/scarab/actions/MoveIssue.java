@@ -47,6 +47,8 @@ package org.tigris.scarab.actions;
  */
 
 import java.util.Locale;
+import java.util.List;
+import java.util.ArrayList;
 
 // Turbine Stuff
 import org.apache.turbine.Turbine;
@@ -57,7 +59,7 @@ import org.apache.turbine.tool.IntakeTool;
 
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.localization.Localization;
-
+import org.apache.turbine.ParameterParser;
 import org.apache.torque.om.NumberKey;
 
 // Scarab Stuff
@@ -66,6 +68,9 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.IssueTypeManager;
+import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.ScarabConstants;
@@ -78,7 +83,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.37 2002/10/24 22:59:25 jon Exp $
+ * @version $Id: MoveIssue.java,v 1.38 2002/11/23 00:03:17 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -101,10 +106,30 @@ public class MoveIssue extends RequireLoginFirstAction
         Module oldModule = issue.getModule();
         Group moveIssue = intake.get("MoveIssue",
                           IntakeTool.DEFAULT_KEY, false);
-        NumberKey newModuleId = ((NumberKey) moveIssue.get("ModuleId").
-                                                       getValue());
-        Module newModule = ModuleManager
-                           .getInstance(new NumberKey(newModuleId));
+        String modIssueType = data.getParameters().getString("mod_issuetype");
+        NumberKey newModuleId = null;
+        NumberKey newIssueTypeId = null;
+        Module newModule = null;
+        IssueType newIssueType = null; 
+
+        try
+        {
+            newModuleId = new NumberKey(modIssueType.
+                      substring(0, modIssueType.indexOf("_")));
+            newIssueTypeId = new NumberKey(modIssueType.
+                      substring(modIssueType.indexOf("_")+1, modIssueType.length()));
+            newModule = ModuleManager
+                               .getInstance(new NumberKey(newModuleId));
+            newIssueType = IssueTypeManager
+                               .getInstance(new NumberKey(newIssueTypeId));
+        }
+        catch (Exception e)
+        {
+            getScarabRequestTool(context).setAlertMessage("Please select " +
+                      "a module and issue type.");
+            return;
+        }
+          
         ScarabUser user = (ScarabUser)data.getUser();
 
         // Check permissions
@@ -115,12 +140,8 @@ public class MoveIssue extends RequireLoginFirstAction
             return;
         }
 
-        // Check that destination module has the current issue type
-        if (newModule.getRModuleIssueType(issue.getIssueType()) == null)
-        {
-            data.setMessage(l10n.get("DestinationModuleLacksIssueType"));
-            return;
-        }
+        context.put("moduleId", newModuleId.toString());
+        context.put("issueTypeId", newIssueTypeId.toString());
 
         String nextTemplate = getNextTemplate(data);
         setTarget(data, nextTemplate);
@@ -146,19 +167,40 @@ public class MoveIssue extends RequireLoginFirstAction
                           IntakeTool.DEFAULT_KEY, false);
         NumberKey newModuleId = ((NumberKey) moveIssue.get("ModuleId").
             getValue());
+        NumberKey newIssueTypeId = ((NumberKey) moveIssue.get("IssueTypeId").
+            getValue());
         Module newModule = ModuleManager
                .getInstance(new NumberKey(newModuleId));
+        IssueType newIssueType = IssueTypeManager
+               .getInstance(new NumberKey(newIssueTypeId));
         String selectAction = moveIssue.get("Action").toString();
         ScarabUser user = (ScarabUser)data.getUser();
 
-        Issue newIssue = issue.move(newModule, selectAction, user);
+        // Get selected non-matching attributes to save in comment
+        ArrayList commentAttrs = new ArrayList();
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        for (int i=0; i<keys.length; i++)
+        {
+            String key = (String) keys[i];
+            if (key.startsWith("comment_attr_ids_"))
+            {
+                commentAttrs.add((Attribute)getScarabRequestTool(context).getAttribute(new NumberKey(key.substring(17))));
+            }
+        }
+        String reason = data.getParameters().getString("reason");
+
+        // Do the copy/move
+        Issue newIssue = issue.move(newModule, newIssueType, selectAction, user,
+                                    reason, commentAttrs);
         getScarabRequestTool(context).setConfirmMessage(l10n.get(DEFAULT_MSG));
 
         // generate comment
         Object[] msgArgs = {
             newIssue.getUniqueId(),
             issue.getUniqueId(),
-            oldModule.getName()};
+            oldModule.getName(),
+            issue.getIssueType().getName()};
         String subject = null;
         if (selectAction.equals("copy"))
         {
@@ -176,10 +218,12 @@ public class MoveIssue extends RequireLoginFirstAction
         }
 
         // placed in the context for the email to be able to access them
+        context.put("reason", reason);
         context.put("action", selectAction);
         context.put("issue", newIssue);
         context.put("oldModule", oldModule);
         context.put("newModule", newModule.getName());
+        context.put("newIssueType", newIssueType.getName());
 
         // Send notification email
         String[] replyToUser = newModule.getSystemEmail();
@@ -190,8 +234,7 @@ public class MoveIssue extends RequireLoginFirstAction
                              user, replyToUser,
                              issue.getUsersToEmail(AttributePeer.EMAIL_TO),
                              issue.getUsersToEmail(AttributePeer.CC_TO),
-                              "Issue " +  newIssue.getUniqueId()
-                              + subject, template))
+                             subject, template))
         {
              getScarabRequestTool(context).setAlertMessage(
                  l10n.get(EMAIL_ERROR));

@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.217 2002/11/18 21:53:34 elicia Exp $
+ * @version $Id: Issue.java,v 1.218 2002/11/23 00:03:17 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1950,7 +1950,9 @@ public class Issue
     /**
      *  Move or copy issue to destination module.
      */
-    public Issue move(Module newModule, String action, ScarabUser user)
+    public Issue move(Module newModule, IssueType newIssueType,
+                      String action, ScarabUser user, String reason,
+                      List commentAttrs)
           throws Exception
     {
         Issue newIssue;
@@ -1959,10 +1961,8 @@ public class Issue
         Attachment attachment = new Attachment();
 
         Module oldModule = getModule();
-        newIssue = newModule.getNewIssue(getIssueType());
+        newIssue = newModule.getNewIssue(newIssueType);
         newIssue.save();
-        List matchingAttributes = getMatchingAttributeValuesList(newModule);
-        List orphanAttributes = getOrphanAttributeValuesList(newModule);
         Attribute zeroAttribute = AttributeManager
             .getInstance(new NumberKey("0"));
 
@@ -1972,6 +1972,9 @@ public class Issue
         activitySet.save();
         
         // Copy over attributes
+        List matchingAttributes = getMatchingAttributeValuesList(newModule, 
+                                                                 newIssueType);
+
         for (int i=0;i<matchingAttributes.size();i++)
         {
            AttributeValue attVal = (AttributeValue) matchingAttributes
@@ -1985,25 +1988,25 @@ public class Issue
         // Generate comment to deal with attributes that do not
         // Exist in destination module, as well as the user attributes.
         // Later will find another solution for user attributes.
-        if (!orphanAttributes.isEmpty())
+        StringBuffer delAttrsBuf = new StringBuffer(reason).append(". ");
+        if (commentAttrs.size() > 0)
         {
-            // Save comment
-            StringBuffer delAttrsBuf = new StringBuffer("Did not copy over the "
+            delAttrsBuf.append("Did not copy over the "
                  + "following attribute info: ");
-            for (int i=0;i<orphanAttributes.size();i++)
+            for (int i=0;i<commentAttrs.size();i++)
             {
-                AttributeValue attVal = (AttributeValue) orphanAttributes.get(i);
+                AttributeValue attVal = getAttributeValue((Attribute)commentAttrs.get(i));
                 String field = null;
                 delAttrsBuf.append(attVal.getAttribute().getName());
                 field = attVal.getValue();
                 delAttrsBuf.append("=").append(field).append(". ");
            }
-           attachment.setData(delAttrsBuf.toString()); 
         }
         else
         {
-            attachment.setData("All attributes were copied.");
+            delAttrsBuf.append("All attributes were copied.");
         }
+        attachment.setData(delAttrsBuf.toString()); 
             
         if (action.equals("move"))
         {
@@ -2053,6 +2056,7 @@ public class Issue
         }
 
         // Save activity record
+        descBuf = new StringBuffer();
         descBuf = new StringBuffer(comment).append(getUniqueId());
         descBuf.append(" in module ").append(oldModule.getName());
 
@@ -2062,6 +2066,7 @@ public class Issue
                                 oldModule.getName(), newModule.getName());
         // Save activity record for old issue
         descBuf2 = new StringBuffer(comment2).append(newIssue.getUniqueId());
+        descBuf2 = new StringBuffer();
         descBuf2.append(" in module ").append(newModule.getName());
 
         ActivityManager
@@ -2202,7 +2207,8 @@ public class Issue
      * Gets a list of non-user AttributeValues which match a given Module.
      * It is used in the MoveIssue2.vm template
      */
-    public List getMatchingAttributeValuesList(Module newModule)
+    public List getMatchingAttributeValuesList(Module newModule, 
+                                               IssueType newIssueType)
           throws Exception
     {
         AttributeValue aval = null;
@@ -2219,7 +2225,7 @@ public class Issue
             {
                 AttributeValue attVal = (AttributeValue)values.get(i);
                 RModuleAttribute modAttr = newModule.
-                    getRModuleAttribute(aval.getAttribute(), getIssueType());
+                    getRModuleAttribute(aval.getAttribute(), newIssueType);
                 
                 // If this attribute is active for the destination module,
                 // Add to matching attributes list
@@ -2268,11 +2274,12 @@ public class Issue
         return matchingAttributes;
     }
 
-    public List getMatchingAttributeValuesList(String moduleId)
+    public List getMatchingAttributeValuesList(String moduleId, String issueTypeId)
           throws Exception
     {
          Module module = ModuleManager.getInstance(new NumberKey(moduleId)); 
-         return getMatchingAttributeValuesList(module);
+         IssueType issueType = IssueTypeManager.getInstance(new NumberKey(issueTypeId)); 
+         return getMatchingAttributeValuesList(module, issueType);
     }
 
     /**
@@ -2280,7 +2287,8 @@ public class Issue
      * But the destination module does not have, when doing a copy.
      * It is used in the MoveIssue2.vm template
      */
-    public List getOrphanAttributeValuesList(Module newModule)
+    public List getOrphanAttributeValuesList(Module newModule, 
+                                             IssueType newIssueType)
           throws Exception
     {
         List orphanAttributes = new ArrayList();
@@ -2297,7 +2305,7 @@ public class Issue
             {
                 AttributeValue attVal = (AttributeValue)values.get(i);
                 RModuleAttribute modAttr = newModule.
-                    getRModuleAttribute(aval.getAttribute(), getIssueType());
+                    getRModuleAttribute(aval.getAttribute(), newIssueType);
                 
                 // If this attribute is not active for the destination module,
                 // Add to orphanAttributes list
@@ -2346,11 +2354,12 @@ public class Issue
         return orphanAttributes;
     }
 
-    public List getOrphanAttributeValuesList(String moduleId)
+    public List getOrphanAttributeValuesList(String moduleId, String issueTypeId)
           throws Exception
     {
          Module module = ModuleManager.getInstance(new NumberKey(moduleId)); 
-         return getOrphanAttributeValuesList(module);
+         IssueType issueType = IssueTypeManager.getInstance(new NumberKey(issueTypeId)); 
+         return getOrphanAttributeValuesList(module, issueType);
     }
 
     /**
