@@ -1,12 +1,9 @@
 $page.setTitle("Copy/move issue")
-
 <div class="app" id="moveissue">
 
 <h2>$page.Title</h2>
 
 #set ($user = $data.User)
-#set ($currentModule = $scarabR.CurrentModule)
-#set ($moduleId = $data.Parameters.getString("module_id"))
 #set ($issueId = $data.Parameters.getString("id"))
 #set ($issue = $scarabR.getIssue($issueId))
 
@@ -22,7 +19,7 @@ $page.setTitle("Copy/move issue")
 #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 
 <form method="post" action="$link.setPage("MoveIssue.vm").setAction("MoveIssue")">
-<input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issueId" />
+<input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issue.IssueId" />
 ## need to also pass id so that if we re-display this page, the right value is kept around
 <input type="hidden" name="id" value="$issueId" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="MoveIssue2.vm" />
@@ -60,7 +57,7 @@ $issue.Module.Name
 <select name="$moveIssueGroup.ModuleId.Key">
  <option>Select Module...</option>
  #foreach ($module in $user.getModules($scarabG.Permission.ISSUE__ENTER))
-  #if ($module.ModuleId.equals($moduleId))
+  #if ($module.ModuleId.equals($scarabR.CurrentModule.ModuleId))
     <option selected="selected" value="$module.ModuleId">$module.Name</option>
   #else
     <option value="$module.ModuleId">$module.Name</option>
