@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/RealmBase.java,v 1.1 2001/07/14 03:20:37 nacho Exp $
- * $Revision: 1.1 $
- * $Date: 2001/07/14 03:20:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/RealmBase.java,v 1.2 2001/08/24 03:25:18 larryi Exp $
+ * $Revision: 1.2 $
+ * $Date: 2001/08/24 03:25:18 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -97,25 +97,25 @@ public abstract class RealmBase extends BaseInterceptor {
     protected static StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
 
     /**
-     * Digest algorithm used in passwords thit is same values accepted by MessageDigest  for algorithm
-     * plus "No" ( no encode ) that is the default
+     * Digest algorithm used in passwords.  Should be a value accepted by MessageDigest for algorithm
+     * or "No" ( no encode ).  "No" is the default.
      */
     protected String digest = "No";
 
     /**
-     * Gets the digest algorithm  used for credentials in the database
-     * could be the same that MessageDigest accepts vor algorithm and "No" that
-     * is the Default
-     * @return
+     * Gets the digest algorithm used for credentials in the database.
+     * Should be a value that MessageDigest accepts for algorithm or "No".
+     * "No" is the Default.
+     * @return the digest algorithm being used, or "No" if no encoding
      */
     public String getDigest() {
         return digest;
     }
 
     /**
-     * Sets the digest algorithm  used for credentials in the database
-     * could be the same that MessageDigest accepts vor algorithm and "No"
-     * that is the Default
+     * Sets the digest algorithm used for credentials in the database.
+     * Should be a value that MessageDigest accepts for algorithm or "No".
+     * "No" is the Default.
      * @param algorithm the Encode type
      */
     public void setDigest(String algorithm) {
@@ -127,7 +127,7 @@ public abstract class RealmBase extends BaseInterceptor {
      * convert the result to a corresponding hex string.
      * If exception, the plain credentials string is returned
      * @param credentials Password or other credentials to use in authenticating this username
-     * @param algorithm Algorithm used to do th digest
+     * @param algorithm Algorithm used to do the digest
      */
     public static final String digest(String credentials,String algorithm ) {
         try {
@@ -205,6 +205,7 @@ public abstract class RealmBase extends BaseInterceptor {
         }
         return DECLINED;
     }
+
     private boolean checkPassword(String username,String credentials) {
         // Create the authentication search prepared statement if necessary
         // Perform the authentication search
