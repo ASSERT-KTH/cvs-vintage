@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.72 2003/08/19 22:14:47 thn Exp $
+// $Id: ModelFacade.java,v 1.73 2003/08/20 18:40:04 thn Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2422,13 +2422,13 @@ public class ModelFacade {
     }
 
     /**
-     * Sets the classifiers of some object.
-     * @param object
+     * Sets the classifiers of some instance.
+     * @param instance
      * @param classifier vector
      */
     public static void setClassifiers(Object o, Vector v) {
-        if (o != null && o instanceof MObject) {
-            ((MObject) o).setClassifiers(v);
+        if (o != null && o instanceof MInstance) {
+            ((MInstance) o).setClassifiers(v);
         }
     }
 
