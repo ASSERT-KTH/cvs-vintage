@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.175 2004/10/08 15:37:12 loubyansky Exp $ -->
+<!-- $Id: build.xml,v 1.176 2004/10/17 18:50:37 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -443,7 +443,7 @@
     <jar jarfile="${build.lib}/jboss-minimal.jar"
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
-        <include name="org/jboss/invocation/*"/>
+        <include name="org/jboss/invocation/**"/>
         <include name="org/jboss/logging/**"/>
         <include name="org/jboss/naming/**"/>
       </fileset>
