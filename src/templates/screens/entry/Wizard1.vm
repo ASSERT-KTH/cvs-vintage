@@ -1,4 +1,4 @@
-$page.setTitle("Enter issue")
+$page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 
 <div id="wizard1" class="app">
 
@@ -55,7 +55,7 @@ $page.setTitle("Enter issue")
 
 <form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
-<h3>Input your issue</h3>
+<h3>$scarabR.CurrentIssueType.Name</h3>
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
