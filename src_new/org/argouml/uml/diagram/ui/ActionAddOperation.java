@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.3 2004/04/07 11:19:27 d00mst Exp $
+// $Id: ActionAddOperation.java,v 1.4 2004/08/01 07:50:46 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class ActionAddOperation extends UMLChangeAction {
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    public ActionAddOperation() { super("button.new-operation"); }
+    public ActionAddOperation() { super("button.new-operation", true); }
 
     ////////////////////////////////////////////////////////////////
     // main methods
