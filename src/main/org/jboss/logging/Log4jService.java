@@ -51,7 +51,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean name="jboss.system:type=Log4jService,service=Logging"
  *            extends="org.jboss.system.ServiceMBean"
  *
- * @version <tt>$Revision: 1.24 $</tt>
+ * @version <tt>$Revision: 1.25 $</tt>
  * @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
@@ -387,14 +387,16 @@ public class Log4jService
    private void uninstallSystemAdapters()
    {
       // Remove System adapters
-      if (out != null) {
+      if (out != null)
+      {
          System.out.flush();
          System.setOut(out);
          log.debug("Removed System.out adapter");
          out = null;
       }
       
-      if (err != null) {
+      if (err != null)
+      {
          System.err.flush();
          System.setErr(err);
          log.debug("Removed System.err adapter");
@@ -568,6 +570,7 @@ public class Log4jService
          else
          {
             xml = contentType.equalsIgnoreCase("text/xml");
+            xml |= contentType.equalsIgnoreCase("application/xml");
          }
          if (trace) log.trace("reconfiguring; xml=" + xml);
 
