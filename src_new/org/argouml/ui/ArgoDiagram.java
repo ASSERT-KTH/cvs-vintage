@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.27 2004/01/28 07:17:46 linus Exp $
+// $Id: ArgoDiagram.java,v 1.28 2004/02/29 12:35:41 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,11 @@ public class ArgoDiagram extends Diagram {
     static final long serialVersionUID = -401219134410459387L;
 
     /**
-     * @see org.argouml.uml.ui.VetoablePropertyChange#getVetoMessage(String)
+     * TODO: The reference to the method
+     * org.argouml.uml.ui.VetoablePropertyChange#getVetoMessage(String)
+     * was here but the class does exist anymore. Where is it?
+     *
+     * @param propertyName is the name of the property
      * @return a message or null if not applicable.
      */
     public String getVetoMessage(String propertyName) {
@@ -103,11 +107,15 @@ public class ArgoDiagram extends Diagram {
   
 
     /**
-     * Finds the presentation (the fig) for some object. If the object is a 
-     * modelelement that is contained in some other modelelement that has its 
-     * own fig, that fig is returned. It extends presentationFor that only gets
-     * the fig belonging to the node obj.
+     * Finds the presentation (the Fig) for some object. If the object
+     * is a modelelement that is contained in some other modelelement
+     * that has its own fig, that fig is returned. It extends
+     * presentationFor that only gets the fig belonging to the node
+     * obj.<p>
+     *
      * @author jaap.branderhorst@xs4all.nl
+     * @return the Fig for the object
+     * @param obj is th object
      */
     public Fig getContainingFig(Object obj) {
         Fig fig = super.presentationFor(obj);
@@ -149,7 +157,7 @@ public class ArgoDiagram extends Diagram {
     }
 
     /**
-     * @see org.tigris.gef.base.Diagram#getEdges()
+     * @see Diagram#getEdges(Collection)
      */
     public Collection getEdges(Collection c) {
         if (getGraphModel() != null) {
@@ -169,7 +177,7 @@ public class ArgoDiagram extends Diagram {
     }
     
     /**
-     * @see org.tigris.gef.base.Diagram#getNodes()
+     * @see Diagram#getNodes(Collection)
      */
     public Collection getNodes(Collection c) {
         if (getGraphModel() != null) {

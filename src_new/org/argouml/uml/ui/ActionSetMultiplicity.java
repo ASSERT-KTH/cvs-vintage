@@ -1,5 +1,5 @@
-// $Id: ActionSetMultiplicity.java,v 1.5 2003/10/12 08:55:24 linus Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ActionSetMultiplicity.java,v 1.6 2004/02/29 12:35:46 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetMultiplicity.java,v 1.5 2003/10/12 08:55:24 linus Exp $
+// $Id: ActionSetMultiplicity.java,v 1.6 2004/02/29 12:35:46 linus Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -38,7 +38,6 @@ public abstract class ActionSetMultiplicity extends UMLChangeAction {
 
     /**
      * Constructor for ActionSetMultiplicity.
-     * @param s
      */
     protected ActionSetMultiplicity() {
         super(Translator.localize("Set"), true, NO_ICON);

@@ -1,5 +1,5 @@
-// $Id: PredAND.java,v 1.4 2003/10/15 20:04:13 alexb Exp $
-// Copyright (c) 2003 The Regents of the University of California. All
+// $Id: PredAND.java,v 1.5 2004/02/29 12:35:39 linus Exp $
+// Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -51,7 +51,7 @@ public class PredAND implements Predicate {
     /**
      * Returns true if both its internal Predicates return true; 
      *
-     * @param  Object to test. 
+     * @param obj Object to test. 
      *
      * @return Returns true if both its internal Predicates
      *         return true;

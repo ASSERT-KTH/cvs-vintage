@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.30 2004/02/28 12:29:42 linus Exp $
+// $Id: FigClassifierRole.java,v 1.31 2004/02/29 12:35:42 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,7 @@ public class FigClassifierRole extends FigNodeModelElement {
 
     /**
      * The fig that is used for the complete classifier role.
-     * Identical in size to {@link #_bigPort}.<p>
+     * Identical in size to {@link FigNodeModelElement#_bigPort}.<p>
      */
     FigRect _cover;
 
@@ -101,12 +101,16 @@ public class FigClassifierRole extends FigNodeModelElement {
     /**
      * Constructor for a new classifier role.<p>
      *
-     * An invisible {@link FigRect} as the point of contact for connections
-     * ({@link #_bigPort}), with matching rectangle providing the graphic
-     * rendering ({@link #_cover}). Stereotype and name are rendered centrally
-     * in the rectangle.<p>
+     * An invisible {@link FigRect} as the point of contact for
+     * connections ({@link FigNodeModelElement#_bigPort}), with
+     * matching rectangle providing the graphic rendering ({@link
+     * #_cover}). Stereotype and name are rendered centrally in the
+     * rectangle.<p>
      */
     public FigClassifierRole() {
+	// TODO: I (Linus Tolke) don't understand why I get a warning
+	// on the _cover link in the javadoc (jdk1.4.2). I think everything
+	// is correct. I hope that we can eventually solve it.
 
         // The big port and cover. Color of the big port is irrelevant
 

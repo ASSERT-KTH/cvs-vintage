@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.18 2004/02/28 12:29:44 linus Exp $
+// $Id: ActionSaveGraphics.java,v 1.19 2004/02/29 12:35:46 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,6 +62,7 @@ import org.tigris.gef.persistence.*;
 public class ActionSaveGraphics
     extends UMLAction
     implements CommandLineInterface {
+
     /**
      * @deprecated as of 0.15.4. Will be made private. Use your own logger.
      */
@@ -80,15 +81,12 @@ public class ActionSaveGraphics
     public static ActionSaveGraphics SINGLETON = new ActionSaveGraphics(); 
 
     /**
-     * Separator between file path elements.
+     * @deprecated by Linus Tolke as of 0.15.4. Get this information from
+     * some java.io class.
+     *
+     * @see java.io
      */
-    private static final String SEPARATOR = "/";
-
-    /**
-     * @deprecated by Linus Tolke as of 0.15.4. Use {@link #SEPARATOR}
-     * instead.
-     */
-    public static final String separator = SEPARATOR;
+    public static final String separator = "/";
 
 
     ////////////////////////////////////////////////////////////////
@@ -98,7 +96,7 @@ public class ActionSaveGraphics
      * Constructor for this action.
      */
     public ActionSaveGraphics() {
-	super( "action.save-graphics", NO_ICON);
+	super("action.save-graphics", NO_ICON);
     }
 
 

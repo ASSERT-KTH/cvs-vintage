@@ -1,5 +1,5 @@
-// $Id: PredNOT.java,v 1.4 2003/10/15 20:04:13 alexb Exp $
-// Copyright (c) 2003 The Regents of the University of California. All
+// $Id: PredNOT.java,v 1.5 2004/02/29 12:35:39 linus Exp $
+// Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -51,7 +51,7 @@ public class PredNOT implements Predicate {
      * Returns true it initialized predicate
      * returns false;  
      *
-     * @param  Object to test. 
+     * @param obj Object to test. 
      *
      * @return Returns true if its internal
      *         predicate returns false; 

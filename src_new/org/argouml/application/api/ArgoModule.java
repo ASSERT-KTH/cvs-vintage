@@ -1,5 +1,5 @@
-// $Id: ArgoModule.java,v 1.11 2003/09/16 20:06:28 thierrylach Exp $
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: ArgoModule.java,v 1.12 2004/02/29 12:35:39 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -44,7 +44,11 @@ import org.apache.log4j.*;
  */
 public interface ArgoModule { 
 
-    /** Define a static log4j category variable for ArgoUML configuration.
+    /**
+     * Define a static log4j category variable for ArgoUML configuration.
+     *
+     * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
+     * class. This will be removed.
      */
     public static final Logger cat = 
 	Logger.getLogger("org.argouml.application.modules");
@@ -102,11 +106,11 @@ public interface ArgoModule {
      */
     public String getModuleAuthor(); 
     
-    /** calls all modules to let them add to a popup menu
+    /** 
+     * Calls all modules to let them add to a popup menu.
      * 
      * @param popUpActions Vector of actions
      * @param context which the actions are valid for
-     * @return
      */
     public Vector getModulePopUpActions(Vector popUpActions, Object context);
 

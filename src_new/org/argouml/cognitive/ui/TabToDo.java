@@ -1,5 +1,5 @@
-// $Id: TabToDo.java,v 1.15 2003/09/19 21:28:41 d00mst Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: TabToDo.java,v 1.16 2004/02/29 12:35:39 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -140,7 +140,7 @@ public class TabToDo extends TabSpawnable implements TabToDoTarget {
      *             the visibility of this method will change in the future,
      *             replaced by 
      *             {@link org.argouml.ui.targetmanager.TargetManager}.
-     * @param Object the new target
+     * @param item the new target
      */
     public void setTarget(Object item) {
         Object target = item;
@@ -177,14 +177,16 @@ public class TabToDo extends TabSpawnable implements TabToDoTarget {
     }
 
     /**
-     * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
+     * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(
+     *          TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
 	setTarget(e.getNewTarget());
     }
 
     /**
-     * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
+     * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(
+     *          TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
 	// how to handle empty target lists?
@@ -193,7 +195,7 @@ public class TabToDo extends TabSpawnable implements TabToDoTarget {
     }
 
     /**
-     * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
+     * @see org.argouml.ui.targetmanager.TargetListener#targetSet(TargetEvent)
      */
     public void targetSet(TargetEvent e) {
 	setTarget(e.getNewTarget());

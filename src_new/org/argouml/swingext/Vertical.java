@@ -1,5 +1,5 @@
-// $Id: Vertical.java,v 1.5 2004/02/08 12:44:56 mvw Exp $
-// Copyright (c) 2003 The Regents of the University of California. All
+// $Id: Vertical.java,v 1.6 2004/02/29 12:35:41 linus Exp $
+// Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -74,10 +74,8 @@ public class Vertical extends Orientation {
     }
 
     /**
-     * Get an instance of an <code>Orientation</code> object.
+     * Get an instance of an <code>Orientation</code> object.<p>
      *
-     * @param orientation value representing the type of
-     * orientation required, HORIZONTAL or VERTICAL.
      * @return An instance of <code>Orientation</code>.
      */
     public static Orientation getInstance() {

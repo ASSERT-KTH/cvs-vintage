@@ -1,5 +1,5 @@
-// $Id: ActivityGraphsFactory.java,v 1.13 2003/09/22 18:58:42 bobtarling Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ActivityGraphsFactory.java,v 1.14 2004/02/29 12:35:40 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -55,7 +55,8 @@ public class ActivityGraphsFactory extends AbstractUmlModelFactory {
     private static ActivityGraphsFactory SINGLETON =
 	new ActivityGraphsFactory();
 
-    /** Singleton instance access method.
+    /**
+     * Singleton instance access method.
      */
     public static ActivityGraphsFactory getFactory() {
         return SINGLETON;
@@ -143,12 +144,13 @@ public class ActivityGraphsFactory extends AbstractUmlModelFactory {
     }
     
     /**
-     * Builds an activity graph owned by the given context
-     * @param context
-     * @return MActivityGraph
+     * Builds an activity graph owned by the given context.<p>
+     *
+     * @param theContext is a ModelElement that will own the graph.
+     * @return the new MActivityGraph
      */
-    public MActivityGraph buildActivityGraph(Object/*MModelElement*/ theContext) {
-        MModelElement context = (MModelElement)theContext;
+    public MActivityGraph buildActivityGraph(Object theContext) {
+        MModelElement context = (MModelElement) theContext;
     	if (context != null
 	    && (context instanceof MBehavioralFeature
 		|| context instanceof MClassifier

@@ -1,5 +1,5 @@
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.8 2003/11/11 21:54:08 linus Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.9 2004/02/29 12:35:46 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.8 2003/11/11 21:54:08 linus Exp $
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.9 2004/02/29 12:35:46 linus Exp $
 package org.argouml.uml.ui;
 
 import java.util.ArrayList;
@@ -48,8 +48,8 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
 
     /**
      * Constructor for UMLMultiplicityComboBoxModel.
+     *
      * @param propertySetName
-     * @param clearable
      */
     public UMLMultiplicityComboBoxModel(String propertySetName) {
         super(propertySetName, false);
@@ -89,8 +89,11 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
      * @see javax.swing.ComboBoxModel#setSelectedItem(java.lang.Object)
      */
     public void setSelectedItem(Object anItem) {        
-        if (!contains(anItem) && org.argouml.model.ModelFacade.isAMultiplicity(anItem)) {
+        if (!contains(anItem)
+	    && org.argouml.model.ModelFacade.isAMultiplicity(anItem)) {
+
             addElement(anItem);
+
         }        
         super.setSelectedItem(anItem);        
     }

@@ -1,5 +1,5 @@
-// $Id: ActionAddAssociationRole.java,v 1.7 2003/11/10 12:34:59 jhraigniac Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ActionAddAssociationRole.java,v 1.8 2004/02/29 12:35:45 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -42,7 +42,8 @@ public class ActionAddAssociationRole extends CmdSetMode {
     
     /**
      * Construct a new ActionAddAssociationRole
-     * @param aggregation the required aggregation for the association.
+     *
+     * @param aggregationKind the required aggregation for the association.
      * @param unidirectional true if this is to create a unidirectional 
      *        association
      * @param name the action description
