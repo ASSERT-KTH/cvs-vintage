@@ -33,7 +33,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class JMSProviderLoader
    extends ServiceMBeanSupport
@@ -176,7 +176,7 @@ public class JMSProviderLoader
          throw new DeploymentException
             ("missing required attribute: TopicFactoryRef");
 
-      Class cls = Class.forName(providerAdapterClass);
+      Class cls = Thread.currentThread().getContextClassLoader().loadClass(providerAdapterClass);
       providerAdapter = (JMSProviderAdapter)cls.newInstance();
       providerAdapter.setName(providerName);
       providerAdapter.setProviderUrl(url);
