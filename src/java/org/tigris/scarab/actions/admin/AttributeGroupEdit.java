@@ -89,7 +89,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.35 2002/09/17 18:21:29 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.36 2002/09/17 21:35:53 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -441,6 +441,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         String groupId = data.getParameters().getString("groupId");
         AttributeGroup ag = AttributeGroupManager
                             .getInstance(new NumberKey(groupId), false);
+        doSaveinfo( data, context);
         if (ag.isGlobal())
         {
             doSaveglobal( data, context);
@@ -449,7 +450,6 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         {
             doSave( data, context);
         }
-        doSaveinfo( data, context);
         doCancel( data, context);
     }
         
