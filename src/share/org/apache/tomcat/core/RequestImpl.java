@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.24 2000/03/28 00:04:02 costin Exp $
- * $Revision: 1.24 $
- * $Date: 2000/03/28 00:04:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.25 2000/03/31 18:22:34 craigmcc Exp $
+ * $Revision: 1.25 $
+ * $Date: 2000/03/31 18:22:34 $
  *
  * ====================================================================
  *
@@ -403,10 +403,20 @@ public class RequestImpl  implements Request {
     }
 
     public HttpSession getSession(boolean create) {
-	// use the cached value
-	if( serverSession!=null )
-	    return serverSession;
 
+	// use the cached value, unless it is invalid
+	if( serverSession!=null ) {
+	    // Detect "invalidity" by trying to access a property
+	    try {
+		serverSession.getCreationTime();
+		return (serverSession);
+	    } catch (IllegalStateException e) {
+		// It's invalid, so pretend we never saw it
+		serverSession = null;
+		reqSessionId = null;
+	    }
+	}
+	
 	SessionManager sM=context.getSessionManager();
 
 	// if the interceptors found a request id, use it
