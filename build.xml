@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.62 2002/02/16 07:21:50 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.63 2002/02/16 10:37:15 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -741,7 +741,6 @@
          <include name="org/jboss/system/ServiceMBean*.class"/>
          <include name="org/jboss/logging/**"/>
          <include name="org/jboss/ejb/CacheKey.class"/>
-         <include name="org/jboss/util/FastKey.class"/>
       </fileset>
     </jar>
 
