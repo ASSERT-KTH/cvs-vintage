@@ -31,6 +31,7 @@ import java.awt.event.*;
 import java.awt.font.*;
 import java.awt.geom.*;
 import java.awt.*;
+import org.gjt.sp.jedit.buffer.FoldHandler;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.textarea.*;
 import org.gjt.sp.jedit.*;
@@ -48,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.15 2002/02/05 06:28:10 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.16 2002/02/09 09:13:20 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -105,11 +106,15 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		foldMode.setToolTipText(jEdit.getProperty("view.status.fold-tooltip"));
 		foldMode.addMouseListener(mouseHandler);
 
+		int inc = 0;
+		String[] foldModes = FoldHandler.getFoldModes();
+		for (int i = 0; i < foldModes.length; i++)
+		{
+			inc = Math.max(inc, fm.stringWidth(foldModes[i]));
+		}
+
 		Dimension dim = foldMode.getPreferredSize();
-		dim.width += Math.max(fm.stringWidth("none"),
-			Math.max(
-			fm.stringWidth("indent"),
-			fm.stringWidth("explicit")));
+		dim.width += inc;
 		foldMode.setPreferredSize(dim);
 
 		box.add(foldMode);
@@ -344,12 +349,17 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 			else if(source == foldMode)
 			{
 				String text = foldMode.getText();
-				if(text.equals("none"))
-					text = "indent";
-				else if(text.equals("indent"))
-					text = "explicit";
-				else if(text.equals("explicit"))
-					text = "none";
+				String[] foldModes = FoldHandler.getFoldModes();
+
+				for (int i = 0; i < foldModes.length; i++)
+				{
+					if (text.equals(foldModes[i]))
+					{
+						i = (i + 1) % foldModes.length;
+						text = foldModes[i];
+						break;
+					}
+				}
 
 				JEditTextArea textArea = view.getTextArea();
 				Buffer buffer = view.getBuffer();

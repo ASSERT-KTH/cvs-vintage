@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.64 2002/02/05 22:14:04 spestov Exp $
+ * @version $Id: Buffer.java,v 1.65 2002/02/09 09:13:20 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1555,12 +1555,18 @@ public class Buffer implements EBComponent
 		setTokenMarker(mode.getTokenMarker());
 
 		String folding = getStringProperty("folding");
-		if("explicit".equals(folding))
-			setFoldHandler(new ExplicitFoldHandler());
-		else if("indent".equals(folding))
-			setFoldHandler(new IndentFoldHandler());
+		FoldHandler handler = FoldHandler.getFoldHandler(folding);
+
+		if(handler != null)
+		{
+			setFoldHandler(handler);
+		}
 		else
+		{
+			if (folding != null)
+				Log.log(Log.WARNING, this, path + ": invalid 'folding' property: " + folding); 
 			setFoldHandler(new DummyFoldHandler());
+		}
 	} //}}}
 
 	//{{{ getTabSize() method

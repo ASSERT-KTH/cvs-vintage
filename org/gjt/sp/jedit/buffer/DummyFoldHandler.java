@@ -28,11 +28,18 @@ import org.gjt.sp.jedit.Buffer;
 /**
  * A fold handler that does nothing.
  * @author Slava Pestov
- * @version $Id: DummyFoldHandler.java,v 1.2 2001/10/10 10:07:04 spestov Exp $
+ * @version $Id: DummyFoldHandler.java,v 1.3 2002/02/09 09:13:20 spestov Exp $
  * @since jEdit 4.0pre1
  */
-public class DummyFoldHandler implements FoldHandler
+public class DummyFoldHandler extends FoldHandler
 {
+	//{{{ DummyFoldHandler constructor
+	public DummyFoldHandler()
+	{
+		super("none");
+	}
+	//}}}
+
 	//{{{ getFoldLevel() method
 	/**
 	 * Returns the fold level of the specified line.

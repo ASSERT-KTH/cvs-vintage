@@ -28,6 +28,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.StringTokenizer;
+import org.gjt.sp.jedit.buffer.FoldHandler;
 import org.gjt.sp.jedit.msg.BufferUpdate;
 import org.gjt.sp.jedit.textarea.FoldVisibilityManager;
 import org.gjt.sp.jedit.*;
@@ -36,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Buffer-specific options dialog.
  * @author Slava Pestov
- * @version $Id: BufferOptions.java,v 1.13 2002/02/01 07:40:22 spestov Exp $
+ * @version $Id: BufferOptions.java,v 1.14 2002/02/09 09:13:20 spestov Exp $
  */
 public class BufferOptions extends EnhancedDialog
 {
@@ -140,11 +141,7 @@ public class BufferOptions extends EnhancedDialog
 		//}}}
 
 		//{{{ Fold mode
-		String[] foldModes = {
-			"none",
-			"indent",
-			"explicit"
-		};
+		String[] foldModes = FoldHandler.getFoldModes();
 
 		folding = new JComboBox(foldModes);
 		folding.setSelectedItem(buffer.getStringProperty("folding"));
