@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.8 2001/11/05 07:56:44 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.9 2001/11/07 08:53:20 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -855,6 +855,9 @@ loop:			for(;;)
 
 		int occurCount = 0;
 
+		boolean smartCaseReplace = (TextUtilities.getStringCase(replace)
+			== TextUtilities.LOWER_CASE);
+
 		Segment text = new Segment();
 		int offset = start;
 loop:		for(;;)
@@ -869,7 +872,7 @@ loop:		for(;;)
 
 			String found = new String(text.array,text.offset + _start,_length);
 			String subst = matcher.substitute(found);
-			if(ignoreCase)
+			if(smartCaseReplace && ignoreCase)
 			{
 				int strCase = TextUtilities.getStringCase(found);
 				if(strCase == TextUtilities.LOWER_CASE)
