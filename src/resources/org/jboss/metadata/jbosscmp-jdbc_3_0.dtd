@@ -183,7 +183,7 @@ Each entity instance will be stored in one row of this table.
 The cmp-field element contains the configuration of a cmp-field.
 -->
 <!ELEMENT cmp-field (field-name, read-only?, time-out?, 
-         column-name?, ((jdbc-type, sql-type) | (property+))? )>
+         column-name?, not-null?, ((jdbc-type, sql-type) | (property+))? )>
 
 
 <!--
@@ -197,6 +197,12 @@ declared for this entity in the ejb-jar.xml file.
 The name of the column that will hold the data for this field.
 -->
 <!ELEMENT column-name (#PCDATA)>
+
+
+<!--
+If present the field will not allow a field value.
+-->
+<!ELEMENT not-null EMPTY>
 
 
 <!--
@@ -219,7 +225,7 @@ The property element contains the configuration of a dependent
 value class property of a cmp-field that is the type of a dependent
 value class.
 -->
-<!ELEMENT property (property-name, column-name?, 
+<!ELEMENT property (property-name, column-name?, not-null?,
          (jdbc-type, sql-type)?)>
 
 
