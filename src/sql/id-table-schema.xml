@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
 <!DOCTYPE database SYSTEM 
-"http://db.apache.org/torque/dtd/database_3_0_1.dtd">
+"http://db.apache.org/torque/dtd/database_3_1.dtd">
 
 <!-- ==================================================================== -->
 <!--                                                                      -->
@@ -11,7 +11,7 @@
 <!-- ID_TABLE table used by the id broker mechanism in Turbine.           -->
 <!-- ==================================================================== -->
 <!-- @author: <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>      -->
-<!-- @version $Id: id-table-schema.xml,v 1.4 2003/06/23 11:18:09 mpoeschl Exp $ -->
+<!-- @version $Id: id-table-schema.xml,v 1.5 2003/11/25 16:32:00 mpoeschl Exp $ -->
 <!-- ==================================================================== -->
 
 <database name="@DATABASE_NAME@">
