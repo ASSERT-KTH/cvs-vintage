@@ -127,7 +127,9 @@
   <!-- Creates the jar archives                                            -->
   <!-- =================================================================== -->
   <target name="jar" depends="xmlbeans,compileTest">
-    <copydir src="${src.resources}" dest="${build.classes.dir}"/>
+    <copy todir="${build.classes.dir}">
+    	<fileset dir="${src.resources}"/>
+    </copy>
 
     <mkdir dir="${build.bin.dir}"/>
     <jar jarfile="${build.bin.dir}/run.jar"
@@ -209,24 +211,46 @@
      <mkdir dir="${dist.dir}/client"/>
      <mkdir dir="${dist.dir}/tmp"/>
 
-     <copyfile src="${etc.dir}/deploy.txt" dest="${dist.dir}/deploy/deploy.txt"/>
-     <copyfile src="${etc.dir}/hypersonic.txt" dest="${dist.dir}/db/hypersonic/hypersonic.txt"/>
+     <copy file="${etc.dir}/deploy.txt" tofile="${dist.dir}/deploy/deploy.txt"/>
+     <copy file="${etc.dir}/hypersonic.txt" tofile="${dist.dir}/db/hypersonic/hypersonic.txt"/>
 
-     <copyfile src="${lib.dir}/jmxri.jar" dest="${dist.dir}/lib/jmxri.jar"/>
-     <copyfile src="${etc.dir}/log.properties" dest="${dist.dir}/log/log.properties"/>
-     <copyfile src="${etc.dir}/db.properties" dest="${dist.dir}/db/db.properties"/>
-     <copyfile src="${etc.dir}/tmp.properties" dest="${dist.dir}/tmp/tmp.properties"/>
+     <copy file="${lib.dir}/jmxri.jar" tofile="${dist.dir}/lib/jmxri.jar"/>
+     <copy file="${etc.dir}/log.properties" tofile="${dist.dir}/log/log.properties"/>
+     <copy file="${etc.dir}/db.properties" tofile="${dist.dir}/db/db.properties"/>
+     <copy file="${etc.dir}/tmp.properties" tofile="${dist.dir}/tmp/tmp.properties"/>
 
-     <copydir src="${etc.dir}/conf" dest="${dist.dir}/conf"/>
-     <copydir src="${src.bin.dir}" dest="${dist.dir}/bin"/>
+     <copy todir="${dist.dir}/conf">
+     	<fileset dir="${etc.dir}/conf"/>
+     </copy>
+     <copy todir="${dist.dir}/bin">
+     	<fileset dir="${src.bin.dir}"/>
+     </copy>
      <chmod file="${dist.dir}/bin/run.sh" perm="+x" />
-     <copydir src="${src.lib.dir}" dest="${dist.dir}/lib" includes="parser.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar"/>
-     <copydir src="${src.lib.dir}" dest="${dist.dir}/lib/ext" excludes="parser.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar"/>
-     <copydir src="${build.bin.dir}" dest="${dist.dir}/bin"/>
-     <copydir src="${build.lib.dir}/ext" dest="${dist.dir}/lib/ext"/>
-     <copydir src="${build.lib.dir}" dest="${dist.dir}/lib"/>
-     <copydir src="${build.dir}/client" dest="${dist.dir}/client"/>
-     <copydir src="${src.client.dir}" dest="${dist.dir}/client"/>
+     <copy todir="${dist.dir}/lib">
+     	<fileset dir="${src.lib.dir}"
+     			 includes="parser.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar"
+     	/>
+     </copy>
+     <copy todir="${dist.dir}/lib/ext">
+     	<fileset dir="${src.lib.dir}"
+     			 excludes="parser.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar"
+     	/>
+     </copy>
+     <copy todir="${dist.dir}/bin">
+     	<fileset dir="${build.bin.dir}"/>
+     </copy>
+     <copy todir="${dist.dir}/lib/ext">
+     	<fileset dir="${build.lib.dir}/ext"/>
+     </copy>
+     <copy todir="${dist.dir}/lib">
+     	<fileset dir="${build.lib.dir}"/>
+     </copy>
+     <copy todir="${dist.dir}/client">
+     	<fileset dir="${build.dir}/client"/>
+     </copy>
+     <copy todir="${dist.dir}/client">
+     	<fileset dir="${src.client.dir}"/>
+     </copy>
   </target>
 
   <!-- =================================================================== -->
@@ -264,8 +288,10 @@
                      org/jboss/ejb/DeploymentException.java"
     />
   
-    <copydir src="${src.resources}/org/jboss/verifier" dest="${build.verifier.classes.dir}/org/jboss/verifier"/>
-    <copyfile src="${etc.dir}/conf/default/standardjboss.xml" dest="${build.verifier.classes.dir}/standardjboss.xml"/>
+    <copy todir="${build.verifier.classes.dir}/org/jboss/verifier">
+    	<fileset dir="${src.resources}/org/jboss/verifier"/>
+    </copy>
+    <copy file="${etc.dir}/conf/default/standardjboss.xml" tofile="${build.verifier.classes.dir}/standardjboss.xml"/>
     
     
     <mkdir dir="${dist.dir}/bin"/>
@@ -286,11 +312,17 @@
   <target name="dist" depends="main,jar,javadocs,verifier">
      <mkdir dir="${dist.dir}/docs"/>
      <mkdir dir="${dist.dir}/docs/api"/>
-     <copydir src="${docs.dir}" dest="${dist.dir}/docs"/>
-     <copydir src="${build.javadocs.dir}" dest="${dist.dir}/docs/api"/>
+     <copy todir="${dist.dir}/docs">
+     	<fileset dir="${docs.dir}"/>
+     </copy>
+     <copy todir="${dist.dir}/docs/api">
+     	<fileset dir="${build.javadocs.dir}"/>
+     </copy>
 
      <mkdir dir="${dist.dir}/src"/>
-     <copydir src="${src.dir}" dest="${dist.dir}/src"/>
+     <copy todir="${dist.dir}/src">
+     	<fileset dir="${src.dir}"/>
+     </copy>
   </target>
 
   <!-- =================================================================== -->
@@ -318,15 +350,15 @@
          includes="org/jboss/jmx/interfaces/JMXConnector**,org/jboss/jmx/interfaces/RMI**,org/jboss/jmx/server/RMIConnector**,org/jboss/jmx/server/ObjectHandler.class,org/jboss/util/Service**,org/jboss/logging/Log.class,org/jboss/logging/Log$$**,test/jboss/jmx/TestServer**,org/jboss/naming/**"
     />
     <mkdir dir="${dist.dir}/external"/>
-    <copyfile src="${build.dir}/client/rmiconnector.jar" dest="${dist.dir}/external/rmiconnector.jar"/>
+    <copy file="${build.dir}/client/rmiconnector.jar" tofile="${dist.dir}/external/rmiconnector.jar"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->
   <target name="clean" depends="init">
-    <deltree dir="${build.dir}"/>
-    <deltree dir="${dist.dir}"/>
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
   </target>
 
   <!-- =================================================================== -->
