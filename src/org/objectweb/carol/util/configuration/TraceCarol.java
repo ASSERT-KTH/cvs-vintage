@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: TraceCarol.java,v 1.7 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: TraceCarol.java,v 1.8 2005/03/10 16:52:06 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -35,6 +35,9 @@ import org.objectweb.util.monolog.api.LevelFactory;
 import org.objectweb.util.monolog.api.Logger;
 import org.objectweb.util.monolog.api.LoggerFactory;
 import org.objectweb.util.monolog.file.monolog.PropertiesConfAccess;
+import org.objectweb.util.monolog.wrapper.printwriter.LoggerImpl;
+
+
 
 /**
  * Class <code> TraceCarol </code> for Carol Trace configuration
@@ -313,4 +316,30 @@ public class TraceCarol {
      * public static void infoCmiCarol(String msg) { if (cmiCarolLogger != null) {
      * cmiCarolLogger.log(BasicLevel.INFO, msg); } }
      */
+
+    /**
+     * @return the jndiCarolLogger.
+     */
+    public static Logger getJndiCarolLogger() {
+        if (jndiCarolLogger == null) {
+            return new DummyLogger();
+        } else {
+            return jndiCarolLogger;
+        }
+
+    }
+
+}
+
+
+class DummyLogger extends LoggerImpl implements Logger {
+
+    /**
+     * Dummy Logger used when jotm classes are used on client side
+     */
+    public void log(int level, java.lang.Object o) {
+        if (level >= BasicLevel.INFO) {
+            System.out.println(o);
+        }
+    }
 }
