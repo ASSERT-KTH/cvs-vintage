@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.24 2001/11/28 00:27:14 juhalindfors Exp $
+ * $Id: AbstractVerifier.java,v 1.25 2002/02/10 17:02:50 luke_t Exp $
  */
 
 // standard imports
@@ -62,6 +62,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  * @author  Vinay Menon   (menonv@cpw.co.uk)
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
+ * @author <a href="mailto:luke@mkeym.com">Luke Taylor</a>
  *
  * <p><b>Revisions:</b></p>
  * <p><b>20011101: Andy</b>
@@ -69,8 +70,14 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * <li>Changed the throwRemoteException() method to check accordingly to the RMI spec.</li>
  * </ul>
  * </p>
+ * <p><b>20020210: luke</b>
+ * <ul>
+ * <li>Changed hasRemoteReturnType() to use isAssignableFrom() rather than just compare strings.
+ * See Bug 489554 (sub-classed remote return types should be OK)</li>
+ * </ul>
+ * </p>
  *
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -261,7 +268,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     }
 
     /*
-     * checks if a class's memeber (method, constructor or field) has a 'public'
+     * checks if a class's member (method, constructor or field) has a 'public'
      * modifier.
      */
     public boolean isPublic(Member member) {
@@ -316,7 +323,15 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      *  checks the return type of method matches the bean's remote interface
      */
     public boolean hasRemoteReturnType(BeanMetaData bean, Method m) {
-        return (m.getReturnType().getName().equals(bean.getRemote()));
+        try {
+             Class clazz = classloader.loadClass(bean.getRemote());
+             System.out.println("Bean remote "+bean.getRemote()+ ", return type " + m.getReturnType().getName());
+             return m.getReturnType().isAssignableFrom(clazz);
+        } catch(Exception e) {
+           e.printStackTrace();
+           return false;
+        }
+        //return (m.getReturnType().getName().equals());
     }
 
     /*
@@ -983,7 +998,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 //               exception classes, are assumed to be mapped to the implicit
 //               CORBA system exception, and are therefore not explicitly
 //               declared in OMG IDL.
-//           
+//
 //        if (RuntimeException.class.isAssignableFrom(type))
 //            return false;
 
