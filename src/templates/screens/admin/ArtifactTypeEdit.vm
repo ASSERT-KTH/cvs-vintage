@@ -36,7 +36,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
     <tr>
     <th>Name</th>
     <td><input type="text" size="25" name="$rmitGroup.DisplayName.Key" 
-      #if ($rmitGroup.DisplayName.Value.toString().length() != 0)
+      #if ($rmitGroup.DisplayName.Value)
           value="$rmitGroup.DisplayName.Value"/>
       #else
           value="$issueType.Name"/>
@@ -45,7 +45,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
     </tr>
     <tr>
     <th>Description</th>
-    <td><textarea cols="55" rows="5" wrap="virtual" name="$rmitGroup.DisplayDesc.Key">#if($rmitGroup.DisplayDesc.Value.toString().length() != 0)$rmitGroup.DisplayDesc.Value#else$!issueType.Description#end</textarea></td>
+    <td><textarea cols="55" rows="5" wrap="virtual" name="$rmitGroup.DisplayDesc.Key">#if($rmitGroup.DisplayDesc.Value)$rmitGroup.DisplayDesc.Value#else$!issueType.Description#end</textarea></td>
     </tr>
     </table>
 </div>
