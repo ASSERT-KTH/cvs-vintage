@@ -17,13 +17,10 @@
 package org.columba.core.shutdown;
 
 import java.awt.Component;
-import java.awt.Dimension;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -210,16 +207,8 @@ public class ShutdownManager {
      * Returns a component notifying the user of the shutdown procedure.
      */
     protected Component createShutdownDialog() {
-        JFrame dialog = new JFrame(GlobalResourceLoader.getString(
-                RESOURCE_PATH,
-                "session",
-                "exit_title"));
-        dialog.getContentPane().add(new JButton(GlobalResourceLoader.getString(
-                RESOURCE_PATH, 
-                "session",
-                "exit_msg")));
-        dialog.setSize(new Dimension(300, 50));
-        dialog.setLocationRelativeTo(null);
+        JFrame dialog = new ShutdownDialog();
+        
         return dialog;
     }
     
