@@ -1,4 +1,4 @@
-// $Id: SAXParserBase.java,v 1.17 2004/05/17 06:15:43 linus Exp $
+// $Id: SAXParserBase.java,v 1.18 2004/06/27 12:10:50 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -137,7 +137,7 @@ public abstract class SAXParserBase extends DefaultHandler {
     ////////////////////////////////////////////////////////////////
     // non-abstract methods
 
-    public void startElement(String name, Attributes atts)
+    public void startElement(String uri, String localname, String name, Attributes atts)
 	throws SAXException {
 	_startElement = true;
 	XMLElement e = null;
@@ -166,7 +166,7 @@ public abstract class SAXParserBase extends DefaultHandler {
 	_startElement = false;
     }
 
-    public void endElement(String name) throws SAXException {
+    public void endElement(String uri, String localname, String name) throws SAXException {
 	XMLElement e = _elements[--_nElements];
 	if (LOG.isDebugEnabled()) {
 	    StringBuffer buf = new StringBuffer();
