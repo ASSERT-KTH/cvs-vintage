@@ -1,13 +1,13 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestDispatcherImpl.java,v 1.2 1999/11/03 20:38:52 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/11/03 20:38:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestDispatcherImpl.java,v 1.3 1999/12/29 04:54:15 bergsten Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/12/29 04:54:15 $
  *
  * ====================================================================
- * 
+ *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -23,15 +23,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -59,13 +59,14 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.StringManager;
 import java.io.*;
+import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -75,6 +76,7 @@ import javax.servlet.http.*;
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
+ * @author Alex Cruikshank [alex@epitonic.com]
  */
 
 public class RequestDispatcherImpl implements RequestDispatcher {
@@ -90,7 +92,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     RequestDispatcherImpl(Context context) {
         this.context = context;
     }
-    
+
     public void forward(ServletRequest request, ServletResponse response)
     throws ServletException, IOException {
 	HttpServletRequestFacade reqFacade =
@@ -113,23 +115,12 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	ForwardedRequest fRequest =
 	    new ForwardedRequest(realRequest, urlPath);
 
-        // join the query strings of the destination request
-        // with the originaing request in that order.
-
-        String aggregatedQueryString = this.queryString;
-
-        if (realRequest.getQueryString() != null &&
-            realRequest.getQueryString().trim().length() > 0) {
-            if (aggregatedQueryString == null) {
-                aggregatedQueryString = realRequest.getQueryString();
-            } else {
-                aggregatedQueryString += "&" + realRequest.getQueryString();
-            }
-        }
+        // add new query string parameters to request
+        // if names are duplicates, new values will be prepended to arrays
+        reqFacade.getRealRequest().addQueryString(queryString);
 
         fRequest.setServletPath(this.lookupResult.getServletPath());
 	fRequest.setPathInfo(this.lookupResult.getPathInfo());
-        fRequest.setQueryString(aggregatedQueryString);
 
 	this.lookupResult.getWrapper().handleRequest(fRequest, resFacade);
     }
@@ -141,7 +132,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
         // XXX
         // while this appears to work i believe the code
         // could be streamlined/normalized a bit.
-	
+
 	// if we are in a chained include, then we'll store the attributes
 	// from the last round so that we've got them for the next round
 
@@ -153,7 +144,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
             (String)req.getAttribute(Constants.Attribute.PathInfo);
 	String query_string =
 	    (String)req.getAttribute(Constants.Attribute.QueryString);
-	
+
 	HttpServletRequestFacade reqFacade =
 	    (HttpServletRequestFacade)request;
 	HttpServletResponseFacade resFacade =
@@ -161,6 +152,8 @@ public class RequestDispatcherImpl implements RequestDispatcher {
         Request realRequest = reqFacade.getRealRequest();
 	Response realResponse = resFacade.getRealResponse();
         String originalQueryString = realRequest.getQueryString();
+        Hashtable originalParameters = realRequest.getParametersCopy();
+
 
 	// XXX
 	// not sure why we're pre-pending context.getPath() here
@@ -186,37 +179,22 @@ public class RequestDispatcherImpl implements RequestDispatcher {
                 lookupResult.getPathInfo());
 	}
 
-        // join the query strings of the destination request
-        // with the originaing request in that order.
+        // add new query string parameters to request
+        // if names are duplicates, new values will be prepended to arrays
+        reqFacade.getRealRequest().addQueryString( this.queryString );
 
-        String aggregatedQueryString = this.queryString;
-
-        if (realRequest.getQueryString() != null &&
-            realRequest.getQueryString().trim().length() > 0) {
-            if (aggregatedQueryString == null) {
-                aggregatedQueryString = realRequest.getQueryString();
-            } else {
-                aggregatedQueryString += "&" + realRequest.getQueryString();
-            }
+        if (reqFacade.getRealRequest().getQueryString() != null) {
+	    req.setAttribute(Constants.Attribute.QueryString,
+                reqFacade.getRealRequest().getQueryString());
         }
 
-	if (aggregatedQueryString != null) {
-	    req.setAttribute(Constants.Attribute.QueryString,
-                aggregatedQueryString);
-	}
-
-        // inline the aggregated query string for the scope
-        // of the include
-
-	reqFacade.getRealRequest().setQueryString(aggregatedQueryString);
-	
 	IncludedResponse iResponse = new IncludedResponse(realResponse);
 
 	lookupResult.getWrapper().handleRequest(reqFacade, iResponse);
 
-        // revert the query string to its original value
-
-        reqFacade.getRealRequest().setQueryString(originalQueryString);
+        // revert the parameters and query string to its original value
+        reqFacade.getRealRequest().setParameters(originalParameters);
+        reqFacade.getRealRequest().replaceQueryString(originalQueryString);
 
 	if (request_uri != null) {
 	    req.setAttribute(Constants.Attribute.RequestURI, request_uri);

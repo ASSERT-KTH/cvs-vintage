@@ -1,13 +1,13 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.8 1999/11/03 20:38:52 costin Exp $
- * $Revision: 1.8 $
- * $Date: 1999/11/03 20:38:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.9 1999/12/29 04:54:15 bergsten Exp $
+ * $Revision: 1.9 $
+ * $Date: 1999/12/29 04:54:15 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -23,15 +23,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -59,7 +59,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.core;
@@ -78,13 +78,14 @@ import javax.servlet.http.*;
  * @author James Todd [gonzo@eng.sun.com]
  * @author Jason Hunter [jch@eng.sun.com]
  * @author Harish Prabandham
+ * @author Alex Cruikshank [alex@epitonic.com]
  */
 public class Request  {
     // XXX used by forward to override, need a better
     // mechanism
     protected String requestURI;
     protected String queryString;
- 
+
    //  RequestAdapterImpl Hints
     String serverName;
     protected Vector cookies = new Vector();
@@ -93,7 +94,7 @@ public class Request  {
     protected String lookupPath;
     protected String servletPath;
     protected String pathInfo;
-    
+
     protected Hashtable parameters = new Hashtable();
     protected String reqSessionId;
     protected int contentLength = -1;
@@ -102,7 +103,7 @@ public class Request  {
     protected String authType;
     protected String remoteUser;
 
-    // Request 
+    // Request
     protected RequestAdapter reqA;
     protected Response response;
     protected HttpServletRequestFacade requestFacade;
@@ -113,7 +114,7 @@ public class Request  {
     protected boolean didReadFormData;
     protected boolean didParameters;
     protected boolean didCookies;
-    // end "Request" variables    
+    // end "Request" variables
 
     protected StringManager sm =
         StringManager.getManager(Constants.Package);
@@ -121,20 +122,20 @@ public class Request  {
     public Request() {
         requestFacade = new HttpServletRequestFacade(this);
     }
-    
+
     public void setRequestAdapter( RequestAdapter reqA) {
 	this.reqA=reqA;
     }
-    
+
     // Begin Adapter
     public String getScheme() {
         return reqA.getScheme();
     }
-    
+
     public String getMethod() {
         return reqA.getMethod();
     }
-    
+
     public String getRequestURI() {
         if( requestURI!=null) return requestURI;
 	return reqA.getRequestURI();
@@ -145,11 +146,11 @@ public class Request  {
 	if( queryString != null ) return queryString;
         return reqA.getQueryString();
     }
-    
+
     public String getProtocol() {
         return reqA.getProtocol();
     }
-    
+
     public String getHeader(String name) {
         return reqA.getHeader(name);
     }
@@ -157,7 +158,7 @@ public class Request  {
     public Enumeration getHeaderNames() {
         return reqA.getHeaderNames();
     }
-    
+
     public ServletInputStream getInputStream()
 	throws IOException {
 	return reqA.getInputStream();
@@ -187,21 +188,21 @@ public class Request  {
     public int getServerPort() {
         return reqA.getServerPort();
     }
-    
+
     public String getRemoteAddr() {
         return reqA.getRemoteAddr();
     }
-    
+
     public String getRemoteHost() {
 	return reqA.getRemoteHost();
-    }    
-    
+    }
+
     // End Adapter "required" fields
 
     public String getLookupPath() {
 	return lookupPath;
     }
-    
+
 
     public String[] getParameterValues(String name) {
 	if(!didParameters) {
@@ -216,7 +217,7 @@ public class Request  {
 
         return (String[])parameters.get(name);
     }
-    
+
     public Enumeration getParameterNames() {
 	if(!didParameters) {
 	    processFormData(getQueryString());
@@ -227,17 +228,32 @@ public class Request  {
 
         return parameters.keys();
     }
-    
+
+    /**
+     * Used by the RequestDispatcherImpl to get a copy of the
+     * original parameters before adding parameters from the
+     * query string, if any.
+     */
+    public Hashtable getParametersCopy() {
+       if(!didParameters) {
+           processFormData(getQueryString());
+       }
+       if (!didReadFormData) {
+           readFormData();
+       }
+
+       return (Hashtable) parameters.clone();
+    }
 
     public String getAuthType() {
-    	return authType;    
+    	return authType;
     }
-    
+
     public String getCharacterEncoding() {
         if(charEncoding!=null) return charEncoding;
 	charEncoding=reqA.getCharacterEncoding();
 	if(charEncoding!=null) return charEncoding;
-	
+
         charEncoding = getCharsetFromContentType(getContentType());
 	return charEncoding;
     }
@@ -249,27 +265,27 @@ public class Request  {
 	contentLength = getIntHeader("content-length");
 	return contentLength;
     }
-    
+
     public String getContentType() {
-	if(contentType != null) return contentType;   
+	if(contentType != null) return contentType;
 	contentType= reqA.getContentType();
 	if(contentType != null) return contentType;
 	contentType = getHeader("content-type");
 	if(contentType != null) return contentType;
-	// can be null!! - 
+	// can be null!! -
 	return contentType;
     }
-    
-    
+
+
     public String getPathInfo() {
         return pathInfo;
     }
-    
+
     public String getRemoteUser() {
         return remoteUser;
     }
-    
-    
+
+
     public String getRequestedSessionId() {
         return reqSessionId;
     }
@@ -277,9 +293,9 @@ public class Request  {
     public String getServletPath() {
         return servletPath;
     }
-    
+
     // End hints
-    
+
     // -------------------- Request methods ( high level )
     public HttpServletRequestFacade getFacade() {
 	return requestFacade;
@@ -292,7 +308,7 @@ public class Request  {
     public void setResponse(Response response) {
 	this.response = response;
     }
-    
+
     // Called after a Context is found, adjust all other paths.
     // XXX XXX XXX
     public void setContext(Context context) {
@@ -308,7 +324,7 @@ public class Request  {
 	if (qindex > -1) {
 	    lookupPath = lookupPath.substring(0, qindex);
 	}
-	
+
 	if (lookupPath.length() < 1) {
 	    lookupPath = "/";
 	}
@@ -323,13 +339,13 @@ public class Request  {
 	    didCookies=true;
 	    processCookies();
 	}
-	
+
 	Cookie[] cookieArray = new Cookie[cookies.size()];
-	
+
 	for (int i = 0; i < cookies.size(); i ++) {
-	    cookieArray[i] = (Cookie)cookies.elementAt(i);    
+	    cookieArray[i] = (Cookie)cookies.elementAt(i);
 	}
-	
+
 	return cookieArray;
 	//        return cookies;
     }
@@ -355,7 +371,7 @@ public class Request  {
 
 	return serverSession;
     }
-    
+
     public ApplicationSession getSession(boolean create) {
 	getServerSession(create);
 	ApplicationSession appSession = null;
@@ -399,7 +415,7 @@ public class Request  {
 //     public void setServerPort( int port ) {
 // 	serverPort=port;
 //     }
-    
+
 //     public void setRemoteAddress(String addr) {
 // 	this.remoteAddr = addr;
 //     }
@@ -425,11 +441,11 @@ public class Request  {
 	    this.parameters=h;
 	// XXX Should we override query parameters ??
     }
-        
+
     public void setContentLength( int  len ) {
 	this.contentLength=len;
     }
-        
+
     public void setContentType( String type ) {
 	this.contentType=type;
     }
@@ -444,8 +460,8 @@ public class Request  {
     public void setCharacterEncoding(String charEncoding) {
 	this.charEncoding = charEncoding;
     }
-    
-    
+
+
     public void setPathInfo(String pathInfo) {
         this.pathInfo = pathInfo;
     }
@@ -462,24 +478,69 @@ public class Request  {
             this.parameters.clear();
         }
     }
-    
+
 //     public void setScheme(String scheme) {
 //         this.scheme = scheme;
 //     }
-    
+
+
+    /**
+     * Adds a query string to the existing set of parameters.
+     * The additional parameters represented by the query string will be
+     * merged with the existing parameters.
+     * Used by the RequestDispatcherImpl to add query string parameters
+     * to the request.
+     *
+     * @param inQueryString URLEncoded parameters to add
+     */
+    public void addQueryString(String inQueryString) {
+        // if query string is null, do nothing
+        if ((inQueryString == null) || (inQueryString.trim().length() <= 0))
+            return;
+
+        // add query string to existing string
+        if ((queryString == null) || (queryString.trim().length() <= 0))
+            queryString = inQueryString;
+        else
+            queryString = inQueryString + "&" + queryString;
+
+        // process parameters
+        Hashtable newParameters = null;
+        try {
+            newParameters = HttpUtils.parseQueryString(queryString);
+        } catch (Exception e) {
+            return;
+        }
+
+        // merge new parameters with existing parameters
+        if (newParameters != null)
+            parameters = RequestUtil.mergeParameters(newParameters, parameters);
+    }
+
+    /**
+     * Replaces the query string without processing the parameters.
+     * Used by the RequestDispatcherImpl to restore the original
+     * query string.
+     *
+     * @param inQueryString queryString to replace
+     */
+    public void replaceQueryString(String inQueryString) {
+        this.queryString = inQueryString;
+    }
+
     public void setRequestedSessionId(String reqSessionId) {
 	this.reqSessionId = reqSessionId;
     }
-    
+
     public void setServerSession(ServerSession serverSession) {
 	this.serverSession = serverSession;
     }
-    
+
     public void setServletPath(String servletPath) {
 	this.servletPath = servletPath;
     }
 
-    
+
     // XXX
     // the server name should be pulled from a server object of some
     // sort, not just set and got.
@@ -501,7 +562,7 @@ public class Request  {
     public void removeAttribute(String name) {
 	attributes.remove(name);
     }
-    
+
     public Enumeration getAttributeNames() {
         return attributes.keys();
     }
@@ -511,23 +572,23 @@ public class Request  {
     public long getDateHeader(String name) {
 	return reqA.getMimeHeaders().getDateHeader(name);
     }
-    
+
     public Enumeration getHeaders(String name) {
 	Vector v = reqA.getMimeHeaders().getHeadersVector(name);
 	return v.elements();
     }
-    
+
     public int getIntHeader(String name)  {
         return reqA.getMimeHeaders().getIntHeader(name);
     }
-    
+
     // -------------------- Utils - facade for RequestUtil
     public BufferedReader getReader()
 	throws IOException {
 	return RequestUtil.getReader( this );
     }
 
-    
+
     private void readFormData() {
 	didReadFormData = true;
 	if(!didParameters) {
@@ -542,12 +603,12 @@ public class Request  {
     public void processCookies() {
 	RequestUtil.processCookies( this, cookies );
     }
-    
+
     // XXX
     // general comment -- we've got one form of this method that takes
     // a string, another that takes an inputstream -- they don't work
     // well together. FIX
-    
+
     public void processFormData(String data) {
 	didParameters=true;
 	RequestUtil.processFormData( data, parameters );
@@ -573,7 +634,7 @@ public class Request  {
 	    throw new IllegalArgumentException(msg);
 	}
 
-    }           
+    }
 
     // XXX This method is duplicated in core/Response.java
     public String getCharsetFromContentType(String type) {
