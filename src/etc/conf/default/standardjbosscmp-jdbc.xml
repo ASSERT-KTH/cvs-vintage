@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.6 2001/08/20 22:39:52 user57 Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.7 2001/11/05 05:25:25 schaefera Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -242,7 +242,7 @@
 	 <mapping>
 	    <java-type>java.lang.String</java-type>
 	    <jdbc-type>VARCHAR</jdbc-type>
-	    <sql-type>VARCHAR(255)</sql-type>
+	    <sql-type>VARCHAR2(255)</sql-type>
 	 </mapping>
 	 <mapping>
 	    <java-type>java.sql.Date</java-type>
@@ -339,7 +339,7 @@
 	 <mapping>
 	    <java-type>java.lang.String</java-type>
 	    <jdbc-type>VARCHAR</jdbc-type>
-	    <sql-type>VARCHAR(255)</sql-type>
+	    <sql-type>VARCHAR2(255)</sql-type>
 	 </mapping>
 	 <mapping>
 	    <java-type>java.sql.Date</java-type>

@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjaws.xml,v 1.22 2001/10/18 17:09:33 starksm Exp $ -->
+<!-- $Id: standardjaws.xml,v 1.23 2001/11/05 05:25:25 schaefera Exp $ -->
 
 <jaws>
    <datasource>java:/DefaultDS</datasource>
@@ -216,7 +216,7 @@
 	 <mapping>
 	    <java-type>java.lang.String</java-type>
 	    <jdbc-type>VARCHAR</jdbc-type>
-	    <sql-type>VARCHAR(255)</sql-type>
+	    <sql-type>VARCHAR2(255)</sql-type>
 	 </mapping>
 	 <mapping>
 	    <java-type>java.sql.Date</java-type>
@@ -287,7 +287,7 @@
 	 <mapping>
 	    <java-type>java.lang.String</java-type>
 	    <jdbc-type>VARCHAR</jdbc-type>
-	    <sql-type>VARCHAR(255)</sql-type>
+	    <sql-type>VARCHAR2(255)</sql-type>
 	 </mapping>
 	 <mapping>
 	    <java-type>java.sql.Date</java-type>
