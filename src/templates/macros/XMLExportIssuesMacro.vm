@@ -3,9 +3,11 @@
 
 #macro (XMLExportIssues $issueIdList)
 #set ($module = $scarabR.CurrentModule)
+
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE scarab SYSTEM "$staticLink.setPath("/dtd/scarab-issues.dtd")">
 <scarab-issues>
+  <import-type>update-same-db</import-type>
   <module>
     <id>$module.ModuleId</id>
     <parent-id>$module.ParentId</parent-id>
@@ -31,8 +33,8 @@
           <type>$activitySet.ActivitySetType.Name</type>
           <created-by>$scarabR.getUser($activitySet.CreatedBy).UserName</created-by>
           <created-date>
-            <format>$sdf.toPattern()</format>
-            <timestamp>$sdf.format($activitySet.CreatedDate)</timestamp>
+            <format>$scarabG.Constant.DATE_FORMAT</format>
+            <timestamp>$format.getDate($scarabG.Constant.DATE_FORMAT, $activitySet.CreatedDate)</timestamp>
           </created-date>
           <activities>
           #foreach ($activity in $activitySet.ActivityList)
@@ -142,12 +144,12 @@
         
             <mimetype>$attachment.MimeType</mimetype>
             <created-date>
-              <format>$sdf.toPattern()</format>
-              <timestamp>$sdf.format($attachment.CreatedDate)</timestamp>
+              <format>$scarabG.Constant.DATE_FORMAT</format>
+              <timestamp>$format.getDate($scarabG.Constant.DATE_FORMAT, $attachment.CreatedDate)</timestamp>
             </created-date>
             <modified-date>
-              <format>$sdf.toPattern()</format>
-              <timestamp>$sdf.format($attachment.ModifiedDate)</timestamp>
+              <format>$scarabG.Constant.DATE_FORMAT</format>
+              <timestamp>$format.getDate($scarabG.Constant.DATE_FORMAT, $attachment.ModifiedDate)</timestamp>
             </modified-date>
             <created-by>$scarabR.getUser($attachment.CreatedBy).UserName</created-by>
             #if ($attachment.ModifiedBy)
