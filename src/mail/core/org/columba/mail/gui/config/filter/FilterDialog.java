@@ -74,6 +74,8 @@ public class FilterDialog extends JDialog implements ActionListener {
 	public FilterDialog(FrameMediator mediator, Filter filter) {
 		super(mediator.getView().getFrame(), true);
 
+		this.mediator = mediator;
+		
 		setTitle(MailResourceLoader.getString("dialog", "filter",
 				"dialog_title"));
 		this.filter = filter;
