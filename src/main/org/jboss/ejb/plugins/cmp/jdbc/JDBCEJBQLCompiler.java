@@ -73,7 +73,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  *          <p/>
  *          TODO: collecting join paths needs rewrite
  */
@@ -126,10 +126,12 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       this.catalog = catalog;
    }
 
-   public void compileEJBQL(String ejbql,
-                            Class returnType,
-                            Class[] parameterTypes,
-                            JDBCReadAheadMetaData readAhead) throws Exception
+   public void compileEJBQL(
+      String ejbql,
+      Class returnType,
+      Class[] parameterTypes,
+      JDBCReadAheadMetaData readAhead
+      ) throws Exception
    {
       // reset all state variables
       reset();
@@ -165,10 +167,12 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       }
    }
 
-   public void compileJBossQL(String ejbql,
-                              Class returnType,
-                              Class[] parameterTypes,
-                              JDBCReadAheadMetaData readAhead)
+   public void compileJBossQL(
+      String ejbql,
+      Class returnType,
+      Class[] parameterTypes,
+      JDBCReadAheadMetaData readAhead
+      )
       throws Exception
    {
       // reset all state variables
@@ -299,17 +303,21 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
 
    public Object visit(SimpleNode node, Object data)
    {
-      throw new RuntimeException("Internal error: Found unknown node type in " +
-         "EJB-QL abstract syntax tree: node=" + node);
+      throw new RuntimeException(
+         "Internal error: Found unknown node type in " +
+         "EJB-QL abstract syntax tree: node=" + node
+      );
    }
 
    private void setTypeFactory(JDBCTypeFactory typeFactory)
    {
       this.typeFactory = typeFactory;
       this.typeMapping = typeFactory.getTypeMapping();
-      aliasManager = new AliasManager(typeMapping.getAliasHeaderPrefix(),
+      aliasManager = new AliasManager(
+         typeMapping.getAliasHeaderPrefix(),
          typeMapping.getAliasHeaderSuffix(),
-         typeMapping.getAliasMaxLength());
+         typeMapping.getAliasMaxLength()
+      );
       subquerySupported = typeMapping.isSubquerySupported();
    }
 
@@ -325,28 +333,39 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
    }
 
    // verify that parameter is the same type as the entity
-   private void verifyParameterEntityType(int number,
-                                          JDBCEntityBridge entity)
+   private void verifyParameterEntityType(
+      int number,
+      JDBCEntityBridge entity
+      )
    {
       Class parameterType = getParameterType(number);
       Class remoteClass = entity.getMetaData().getRemoteClass();
       Class localClass = entity.getMetaData().getLocalClass();
-      if((localClass == null ||
-         !localClass.isAssignableFrom(parameterType)) &&
-         (remoteClass == null ||
-         !remoteClass.isAssignableFrom(parameterType)))
+      if((
+         localClass == null ||
+         !localClass.isAssignableFrom(parameterType)
+         ) &&
+         (
+         remoteClass == null ||
+         !remoteClass.isAssignableFrom(parameterType)
+         ))
       {
 
-         throw new IllegalStateException("Only like types can be " +
-            "compared: from entity=" + entity.getEntityName() +
-            " to parameter type=" + parameterType);
+         throw new IllegalStateException(
+            "Only like types can be " +
+            "compared: from entity=" +
+            entity.getEntityName() +
+            " to parameter type=" + parameterType
+         );
       }
    }
 
-   private void compareEntity(boolean not,
-                              Node fromNode,
-                              Node toNode,
-                              StringBuffer buf)
+   private void compareEntity(
+      boolean not,
+      Node fromNode,
+      Node toNode,
+      StringBuffer buf
+      )
    {
       buf.append('(');
       if(not)
@@ -384,9 +403,12 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          // can only compare like kind entities
          if(!fromEntity.equals(toEntity))
          {
-            throw new IllegalStateException("Only like types can be " +
-               "compared: from entity=" + fromEntity.getEntityName() +
-               " to entity=" + toEntity.getEntityName());
+            throw new IllegalStateException(
+               "Only like types can be " +
+               "compared: from entity=" +
+               fromEntity.getEntityName() +
+               " to entity=" + toEntity.getEntityName()
+            );
          }
 
          SQLUtil.getSelfCompareWhereClause(fromEntity.getPrimaryKeyFields(), fromAlias, toAlias, buf);
@@ -778,20 +800,24 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       }
    }
 
-   private void createThetaJoin(ASTPath path,
-                                int i,
-                                Set joinedAliases,
-                                StringBuffer buf)
+   private void createThetaJoin(
+      ASTPath path,
+      int i,
+      Set joinedAliases,
+      StringBuffer buf
+      )
    {
       String childAlias = aliasManager.getAlias(path.getPath(i));
       createThetaJoin(path, i, joinedAliases, childAlias, buf);
    }
 
-   private void createThetaJoin(ASTPath path,
-                                int i,
-                                Set joinedAliases,
-                                String childAlias,
-                                StringBuffer buf)
+   private void createThetaJoin(
+      ASTPath path,
+      int i,
+      Set joinedAliases,
+      String childAlias,
+      StringBuffer buf
+      )
    {
       if(!path.isCMRField(i) || joinedAliases.contains(childAlias))
       {
@@ -967,46 +993,80 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       //
       // TODO: add support for input parameter, not only for single-valued path
       //
-      ASTPath path = (ASTPath)node.jjtGetChild(0);
 
-      if(path.isCMRField())
+      final Node child0 = node.jjtGetChild(0);
+      if(child0 instanceof ASTPath)
       {
-         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
-         if(cmrField.getRelationMetaData().isTableMappingStyle())
+         ASTPath path = (ASTPath)child0;
+
+         if(path.isCMRField())
          {
-            existsClause(path, buf, !node.not);
-            return buf;
-         }
-      }
-
-      String alias = aliasManager.getAlias(path.getPath(path.size() - 2));
-      JDBCFieldBridge field = (JDBCFieldBridge)path.getField();
-
-      // if jdbc type is null then it should be a cmr field in
-      // a one-to-one mapping that isn't a foreign key.
-      // handle it the way the IS EMPTY on the one side of one-to-many
-      // relationship is handled
-      if(field.getJDBCType() == null)
-      {
-         existsClause(path, buf, !node.not);
-         return buf;
-      }
-
-      // check the path for cmr fields and add them to join paths
-      if(path.fieldList.size() > 2)
-      {
-         for(int i = 0; i < path.fieldList.size(); ++i)
-         {
-            Object pathEl = path.fieldList.get(i);
-            if(pathEl instanceof JDBCCMRFieldBridge)
+            JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
+            if(cmrField.getRelationMetaData().isTableMappingStyle())
             {
-               addJoinPath(path);
-               break;
+               existsClause(path, buf, !node.not);
+               return buf;
             }
          }
+         else
+         {
+            String alias = aliasManager.getAlias(path.getPath(path.size() - 2));
+            JDBCFieldBridge field = (JDBCFieldBridge)path.getField();
+
+            // if jdbc type is null then it should be a cmr field in
+            // a one-to-one mapping that isn't a foreign key.
+            // handle it the way the IS EMPTY on the one side of one-to-many
+            // relationship is handled
+            if(field.getJDBCType() == null)
+            {
+               existsClause(path, buf, !node.not);
+               return buf;
+            }
+
+            // check the path for cmr fields and add them to join paths
+            if(path.fieldList.size() > 2)
+            {
+               for(int i = 0; i < path.fieldList.size(); ++i)
+               {
+                  Object pathEl = path.fieldList.get(i);
+                  if(pathEl instanceof JDBCCMRFieldBridge)
+                  {
+                     addJoinPath(path);
+                     break;
+                  }
+               }
+            }
+
+            SQLUtil.getIsNullClause(node.not, field, alias, buf);
+         }
+      }
+      else if(child0 instanceof ASTParameter)
+      {
+         ASTParameter param = (ASTParameter)child0;
+         Class type = getParameterType(param.number);
+
+         QueryParameter queryParam = new QueryParameter(
+            param.number - 1,
+            false, // isPrimaryKeyParameter
+            null, // field
+            null, // parameter
+            typeFactory.getJDBCTypeForJavaType(type)
+         );
+         inputParameters.add(queryParam);
+
+         buf.append("? IS ");
+         if(node.not)
+         {
+            buf.append(SQLUtil.NOT);
+         }
+         buf.append(SQLUtil.NULL);
+      }
+      else
+      {
+         throw new IllegalStateException("Unexpected node in IS NULL clause: " + node);
       }
 
-      return SQLUtil.getIsNullClause(node.not, field, alias, buf);
+      return buf;
    }
 
    public Object visit(ASTIsEmpty node, Object data)
@@ -1064,9 +1124,12 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          // can only compare like kind entities
          if(!fromEntity.equals(toChildEntity))
          {
-            throw new IllegalStateException("Only like types can be " +
-               "compared: from entity=" + fromEntity.getEntityName() +
-               " to entity=" + toChildEntity.getEntityName());
+            throw new IllegalStateException(
+               "Only like types can be " +
+               "compared: from entity=" +
+               fromEntity.getEntityName() +
+               " to entity=" + toChildEntity.getEntityName()
+            );
          }
       }
 
@@ -1130,24 +1193,32 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          // compre pk to pk
          if(relationTableAlias == null)
          {
-            SQLUtil.getSelfCompareWhereClause(toChildEntity.getPrimaryKeyFields(),
+            SQLUtil.getSelfCompareWhereClause(
+               toChildEntity.getPrimaryKeyFields(),
                toChildAlias,
                fromAlias,
-               buf);
+               buf
+            );
          }
          else
          {
-            SQLUtil.getRelationTableJoinClause(toCMRField.getRelatedCMRField(),
+            SQLUtil.getRelationTableJoinClause(
+               toCMRField.getRelatedCMRField(),
                fromAlias,
                relationTableAlias,
-               buf);
+               buf
+            );
          }
       }
       else
       {
          // add the parameters
-         inputParameters.addAll(QueryParameter.createParameters(fromParamNumber - 1,
-            toChildEntity));
+         inputParameters.addAll(
+            QueryParameter.createParameters(
+               fromParamNumber - 1,
+               toChildEntity
+            )
+         );
 
          // compare pk to parameter
          if(relationTableAlias == null)
@@ -1156,9 +1227,11 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          }
          else
          {
-            SQLUtil.getWhereClause(toCMRField.getRelatedCMRField().getTableKeyFields(),
+            SQLUtil.getWhereClause(
+               toCMRField.getRelatedCMRField().getTableKeyFields(),
                relationTableAlias,
-               buf);
+               buf
+            );
          }
       }
 
@@ -1193,9 +1266,12 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          Class parameterType = getParameterType(toParam.number);
          if(!(fromCMPField.getFieldType().equals(parameterType)))
          {
-            throw new IllegalStateException("Only like types can be " +
-               "compared: from CMP field=" + fromCMPField.getFieldType() +
-               " to parameter=" + parameterType);
+            throw new IllegalStateException(
+               "Only like types can be " +
+               "compared: from CMP field=" +
+               fromCMPField.getFieldType() +
+               " to parameter=" + parameterType
+            );
          }
 
          inputParameters.addAll(QueryParameter.createParameters(toParam.number - 1, fromCMPField));
@@ -1211,9 +1287,12 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          // can only compare like kind entities
          if(!(fromCMPField.getFieldType().equals(toCMPField.getFieldType())))
          {
-            throw new IllegalStateException("Only like types can be " +
-               "compared: from CMP field=" + fromCMPField.getFieldType() +
-               " to CMP field=" + toCMPField.getFieldType());
+            throw new IllegalStateException(
+               "Only like types can be " +
+               "compared: from CMP field=" +
+               fromCMPField.getFieldType() +
+               " to CMP field=" + toCMPField.getFieldType()
+            );
          }
 
          SQLUtil.getSelfCompareWhereClause(fromCMPField, toCMPField, fromAlias, toAlias, buf);
@@ -1465,8 +1544,10 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       StringBuffer buf = (StringBuffer)data;
       if(!node.isCMPField())
       {
-         throw new IllegalStateException("Can only visit cmp valued path " +
-            "node. Should have been handled at a higher level.");
+         throw new IllegalStateException(
+            "Can only visit cmp valued path " +
+            "node. Should have been handled at a higher level."
+         );
       }
 
       // make sure this is mapped to a single column
@@ -1475,8 +1556,10 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          case EJBQLTypes.ENTITY_TYPE:
          case EJBQLTypes.VALUE_CLASS_TYPE:
          case EJBQLTypes.UNKNOWN_TYPE:
-            throw new IllegalStateException("Can not visit multi-column path " +
-               "node. Should have been handled at a higher level.");
+            throw new IllegalStateException(
+               "Can not visit multi-column path " +
+               "node. Should have been handled at a higher level."
+            );
       }
 
       addJoinPath(node);
@@ -1488,8 +1571,10 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
 
    public Object visit(ASTAbstractSchema node, Object data)
    {
-      throw new IllegalStateException("Can not visit abstract schema node. " +
-         "Should have been handled at a higher level.");
+      throw new IllegalStateException(
+         "Can not visit abstract schema node. " +
+         "Should have been handled at a higher level."
+      );
    }
 
    /**
@@ -1506,15 +1591,19 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          ejbqlType == EJBQLTypes.VALUE_CLASS_TYPE ||
          ejbqlType == EJBQLTypes.UNKNOWN_TYPE)
       {
-         throw new IllegalStateException("Can not visit multi-column " +
-            "parameter node. Should have been handled at a higher level.");
+         throw new IllegalStateException(
+            "Can not visit multi-column " +
+            "parameter node. Should have been handled at a higher level."
+         );
       }
 
-      QueryParameter param = new QueryParameter(node.number - 1,
+      QueryParameter param = new QueryParameter(
+         node.number - 1,
          false, // isPrimaryKeyParameter
          null, // field
          null, // parameter
-         typeFactory.getJDBCTypeForJavaType(type));
+         typeFactory.getJDBCTypeForJavaType(type)
+      );
       inputParameters.add(param);
       buf.append('?');
       return buf;
@@ -1705,22 +1794,27 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
 
       // get a list of all fields to be loaded
       // get the identifier for this field
-      SQLUtil.getColumnNamesClause(selectEntity.getPrimaryKeyFields(),
+      SQLUtil.getColumnNamesClause(
+         selectEntity.getPrimaryKeyFields(),
          alias,
-         columnNamesClause);
+         columnNamesClause
+      );
 
       if(readAhead.isOnFind())
       {
          String eagerLoadGroupName = readAhead.getEagerLoadGroup();
          boolean[] loadGroupMask = selectEntity.getLoadGroupMask(eagerLoadGroupName);
-         SQLUtil.appendColumnNamesClause(selectEntity.getTableFields(),
+         SQLUtil.appendColumnNamesClause(
+            selectEntity.getTableFields(),
             loadGroupMask,
             alias,
-            columnNamesClause);
+            columnNamesClause
+         );
 
          try
          {
-            leftJoinCMRList = JDBCAbstractQueryCommand.getLeftJoinCMRNodes(selectEntity, path.getPath(), readAhead.getLeftJoins());
+            leftJoinCMRList =
+               JDBCAbstractQueryCommand.getLeftJoinCMRNodes(selectEntity, path.getPath(), readAhead.getLeftJoins());
          }
          catch(DeploymentException e)
          {
