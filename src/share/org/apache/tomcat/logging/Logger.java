@@ -58,13 +58,19 @@ package org.apache.tomcat.logging;
 
 import java.io.Writer;
 import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
 import java.io.FileWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 
 import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
+import javax.servlet.ServletException;	// for throwableToString()
+import org.apache.tomcat.core.TomcatException;	// for throwableToString()
+import org.apache.tomcat.util.FastDateFormat;
 
 /**
  * Interface for a logging object. A logging object provides mechanism
@@ -72,16 +78,29 @@ import java.text.SimpleDateFormat;
  * is trying to monitor the system.
  * 
  * @author Anil Vijendran (akv@eng.sun.com)
+ * @author Alex Chaffee (alex@jguru.com)
  * @since  Tomcat 3.1
  */
 public abstract class Logger {
 
+    // ----- static content -----
+    
     /**
-     * Is this Log usable?
+     * Verbosity level codes.
      */
-    public boolean isOpen() {
-	return this.sink != null;
+    public static final int FATAL = Integer.MIN_VALUE;
+    public static final int ERROR = 1;
+    public static final int WARNING = 2;
+    public static final int INFORMATION = 3;
+    public static final int DEBUG = 4;
+
+    protected static Writer defaultSink = new OutputStreamWriter(System.err);
+    protected static Hashtable loggers = new Hashtable(5);
+    protected static Logger defaultLogger = new DefaultLogger();
+    static {
+	defaultLogger.setVerbosityLevel(DEBUG);
     }
+      
 
     /**
      * Prints the log message on a specified logger. 
@@ -91,14 +110,16 @@ public abstract class Logger {
      * @param	verbosityLevel	what type of message is this? 
      *				(WARNING/DEBUG/INFO etc)
      */
-    public static void log(String logName, String message, 
+    /*
+      public static void log(String logName, String message, 
 			   int verbosityLevel) 
     {
 	Logger logger = getLogger(logName);
 	if (logger != null)
 	    logger.log(message, verbosityLevel);
     }
-
+    */
+    
     /**
      * Prints the log message on a specified logger at the "default"
      * log leve: INFORMATION
@@ -106,24 +127,182 @@ public abstract class Logger {
      * @param	name		the name of the logger. 
      * @param	message		the message to log. 
      */
-    public static void log(String logName, String message)
+    /*
+      public static void log(String logName, String message)
     {
 	Logger logger = getLogger(logName);
 	if (logger != null)
 	    logger.log(message);
     }
+    */
     
-     
     /**
-     * Prints the log message.
+     * Set the default output stream that is used by all logging
+     * channels. 
      * 
-     * @param	message		the message to log.
-     * @param	verbosityLevel	what type of message is this?
-     * 				(WARNING/DEBUG/INFO etc)
+     * @param	w		the default output stream. 
      */
-    public final void log(String message, int verbosityLevel) {
-	if (matchVerbosityLevel(verbosityLevel))
-	    realLog(message);
+    public static void setDefaultSink(Writer w) {
+	defaultSink = w;
+    }
+
+    public static Logger getLogger(String name) {
+	return (Logger) loggers.get(name);
+    }
+
+    /**
+     * Get the logger that prints to the default sink
+     * (usu. System.err)
+     **/
+    public static Logger getDefaultLogger() {
+	return defaultLogger;
+    }
+
+    public static Enumeration getLoggerNames() {
+	return loggers.keys();
+    }
+
+    public static void putLogger(Logger logger) {	
+	loggers.put(logger.getName(), logger);	
+    }
+
+    public static void removeLogger(Logger logger) {
+	loggers.remove(logger.getName());
+    }
+
+    /**
+     * Converts a Throwable to a printable stack trace, including the
+     * nested root cause for a ServletException or TomcatException if
+     * applicable
+     * TODO: JDBCException too
+     * 
+     * @param t any Throwable, or ServletException, or null
+     **/
+    public static String throwableToString( Throwable t ) {
+	// we could use a StringManager here to get the
+	// localized translation of "Root cause:" , but
+	// since it's going into a log, no user will see
+	// it, and it's desirable that the log file is
+	// predictable, so just use English
+	return throwableToString( t, "Root cause:" );
+    }
+
+    /**
+     * Converts a Throwable to a printable stack trace, including the
+     * nested root cause for a ServletException or TomcatException or
+     * SQLException if applicable
+     * 
+     * @param t any Throwable, or ServletException, or null
+     * @param rootcause localized string equivalent of "Root Cause"
+     **/
+    public static String throwableToString( Throwable t, String rootcause ) {
+	if (rootcause == null)
+	    rootcause = "Root Cause:";
+	StringWriter sw = new StringWriter();
+	PrintWriter w = new PrintWriter(sw);
+	printThrowable(w, t, rootcause);
+	w.flush();
+	return sw.toString();
+    }
+
+    private static void printThrowable(PrintWriter w, Throwable t, String rootcause ) {
+	if (t != null) {
+	    t.printStackTrace(w);
+	    if (t instanceof ServletException) {
+		Throwable cause = ((ServletException)t).getRootCause();
+		if (cause != null) {
+		    w.println(rootcause);
+		    printThrowable(w, cause, rootcause);
+		}
+	    }
+	    else if (t instanceof TomcatException) {
+		Throwable cause = ((TomcatException)t).getRootCause();
+		if (cause != null) {
+		    w.println(rootcause);
+		    printThrowable(w, cause, rootcause);
+		}
+	    }
+	    else if (t instanceof java.sql.SQLException) {
+		java.sql.SQLException sql = ((java.sql.SQLException)t).getNextException();
+		if (sql != null) {
+		    w.println("Next SQL Exception:");
+		    printThrowable(w, sql, rootcause);
+		}
+	    }
+	    else if (t instanceof org.xml.sax.SAXException) {
+		Throwable embedded = ((org.xml.sax.SAXException)t).getException();
+		if (embedded != null) {
+		    w.println("Embedded SAX Exception:");
+		    printThrowable(w, embedded, rootcause);
+		}
+	    }
+	}
+    }
+    
+    /**
+     * General purpose nasty hack to determine if an exception can be
+     * safely ignored -- specifically, if it's an IOException or
+     * SocketException that is thrown in the normal course of a socket
+     * closing halfway through a connection, or if it's a weird
+     * unknown type of exception.  This is an intractable problem, and
+     * this is a bad solution, but at least it's centralized.
+     **/
+    public static boolean canIgnore(Throwable t) {
+	String msg = t.getMessage();
+	if (t instanceof java.io.InterruptedIOException) {
+	    return true;
+	}
+	else if (t instanceof java.io.IOException) {
+	    // Streams throw Broken Pipe exceptions if their
+	    // underlying sockets close
+	    if( "Broken pipe".equals(msg))
+		return true;
+	}
+	else if (t instanceof java.net.SocketException) {
+	    // TCP stacks can throw SocketExceptions when the client
+	    // disconnects.  We don't want this to shut down the
+	    // endpoint, so ignore it. Is there a more robust
+	    // solution?  Should we compare the message string to
+	    // "Connection reset by peer"?
+	    return true;
+	}
+	return false;
+    }
+
+
+    // ----- instance (non-static) content -----
+    
+    protected boolean custom = true;
+    protected Writer sink = defaultSink;
+    String path;
+    protected String name;
+    
+    private int level = WARNING;
+
+    /**
+     * Should we timestamp this log at all?
+     **/
+    protected boolean timestamp = true;
+
+    /**
+     * true = The timestamp format is raw msec-since-epoch <br>
+     * false = The timestamp format is a custom string to pass to SimpleDateFormat
+     **/
+    protected boolean timestampRaw = false;
+
+    /**
+     * The timestamp format string, default is "yyyy-MM-dd hh:mm:ss"
+     **/
+    protected String timestampFormat = "yyyy-MM-dd hh:mm:ss";
+
+    protected DateFormat timestampFormatter
+	= new FastDateFormat(new SimpleDateFormat(timestampFormat));
+    
+    /**
+     * Is this Log usable?
+     */
+    public boolean isOpen() {
+	return this.sink != null;
     }
 
     /**
@@ -134,7 +313,30 @@ public abstract class Logger {
     public final void log(String message) {
 	log(message, Logger.INFORMATION);
     }
-    
+        
+    /**
+     * Prints the log message.
+     * 
+     * @param	message		the message to log.
+     * @param	verbosityLevel	what type of message is this?
+     * 				(WARNING/DEBUG/INFO etc)
+     */
+    public final void log(String message, int verbosityLevel) {
+	log(message, null, level);
+    }
+
+    /**
+     * Prints log message and stack trace, with verbosityLevel ERROR.
+     * This makes the assumption that throwables are exceptions which
+     * are errors by nature; if you disagree, you can always call
+     * log(msg, t, Logger.INFORMATION) or whatever.
+     *
+     * @param	message		the message to log. 
+     * @param t the exception that was thrown.  */
+    public final void log(String message, Throwable t)
+    {
+	log(message, t, ERROR);
+    }
     
     /**
      * Prints log message and stack trace.
@@ -147,8 +349,14 @@ public abstract class Logger {
     public final void log(String message, Throwable t, 
 			  int verbosityLevel) 
     {
-	if (matchVerbosityLevel(verbosityLevel))
-	    realLog(message, t);
+	if (matchVerbosityLevel(verbosityLevel)) {
+	    if (t == null) {
+		realLog(message);
+	    }
+	    else {
+		realLog(message, t);
+	    }
+	}
     }
 
     public boolean matchVerbosityLevel(int verbosityLevel) {
@@ -172,7 +380,6 @@ public abstract class Logger {
      */
     protected abstract void realLog(String message, Throwable t);
     
-
     /**
      * Flush the log. 
      */
@@ -223,6 +430,10 @@ public abstract class Logger {
 	return path;
     }
 
+    public String toString() {
+	return "Logger(" + getName() + ", " + getPath() + ")";
+    }
+
     /** Open the log - will create the log file and all the parent directories.
      *  You must open the logger before use, or it will write to System.err
      */
@@ -244,14 +455,6 @@ public abstract class Logger {
 	}
     }
 
-    /**
-     * Verbosity level codes.
-     */
-    public static final int FATAL = Integer.MIN_VALUE;
-    public static final int ERROR = 1;
-    public static final int WARNING = 2;
-    public static final int INFORMATION = 3;
-    public static final int DEBUG = 4;
     
 
     /**
@@ -321,7 +524,8 @@ public abstract class Logger {
 	else {
 	    timestampRaw = false;
 	    timestampFormat = value;
-	    timestampFormatter = new SimpleDateFormat(timestampFormat);
+	    timestampFormatter =
+		new FastDateFormat(new SimpleDateFormat(timestampFormat));
 	}
     }
     
@@ -333,32 +537,6 @@ public abstract class Logger {
 	    return timestampFormat;
     }
     
-    /**
-     * Set the default output stream that is used by all logging
-     * channels. 
-     * 
-     * @param	w		the default output stream. 
-     */
-    public static void setDefaultSink(Writer w) {
-	defaultSink = w;
-    }
-
-    public static Logger getLogger(String name) {
-	return (Logger) loggers.get(name);
-    }
-
-    public static Enumeration getLoggerNames() {
-	return loggers.keys();
-    }
-
-    public static void putLogger(Logger logger) {
-	loggers.put(logger.getName(), logger);
-    }
-
-    public static void removeLogger(Logger logger) {
-	loggers.remove(logger.getName());
-    }
-
     public void setCustomOutput( String value ) {
 	if ("true".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value))
 	    custom = true;
@@ -373,7 +551,7 @@ public abstract class Logger {
     }
 
     // dummy variable to make SimpleDateFormat work right
-    static java.text.FieldPosition position = new java.text.FieldPosition(DateFormat.YEAR_FIELD);
+    private static java.text.FieldPosition position = new java.text.FieldPosition(DateFormat.YEAR_FIELD);
     
     protected void formatTimestamp(long msec, StringBuffer buf) {
 	if (timestamp == false)
@@ -389,32 +567,179 @@ public abstract class Logger {
 	}
     }
     
-    protected boolean custom = true;
-    protected Writer sink = defaultSink;
-    String path;
-    protected String name;
+    // ----- Logger.Helper static inner class -----
     
-    protected static Writer defaultSink = new PrintWriter(System.err);
-    protected static Hashtable loggers = new Hashtable(5);
-
-    private int level = WARNING;
-
     /**
-     * Should we timestamp this log at all?
+     * Wrapper for Logger. It has a preferred log name to write to; if
+     * it can't find a log with that name, it outputs to the default
+     * sink.  Also prepends a descriptive name to each message
+     * (usually the toString() of the calling object), so it's easier
+     * to identify the source.<p>
+     *
+     * Intended for use by client classes to make it easy to do
+     * reliable, consistent logging behavior, even if you don't
+     * necessarily have a context, or if you haven't registered any
+     * log files yet, or if you're in a non-Tomcat application.  Not
+     * intended to supplant Logger, but to allow client objects a
+     * consistent bit of code that prepares log messages before they
+     * reach logger (and does the right thing if there is no logger).
+     * <p>
+     * Usage: <pre>
+     * class Foo {
+     *   Logger.Helper loghelper = new Logger.Helper("tc_log", "Foo"); // or...
+     *   Logger.Helper loghelper = new Logger.Helper("tc_log", this); // fills in "Foo" for you
+     *   ...
+     *     loghelper.log("Something happened");
+     *     ...
+     *     loghelper.log("Starting something", Logger.DEBUG);
+     *     ...
+     *     catch (IOException e) {
+     *       loghelper.log("While doing something", e);
+     *     }
+     * </pre>
+     *
+     * @author Alex Chaffee [alex@jguru.com]
      **/
-    protected boolean timestamp = true;
+    public static class Helper implements LogAware {
 
-    /**
-     * true = The timestamp format is raw msec-since-epoch <br>
-     * false = The timestamp format is a custom string to pass to SimpleDateFormat
-     **/
-    protected boolean timestampRaw = false;
+	private String logname;
+	private String prefix;
+	private Logger logger;
+	private Helper proxy;
 
-    /**
-     * The timestamp format string, default is "yyyy-MM-dd hh:mm:ss"
-     **/
-    protected String timestampFormat = "yyyy-MM-dd hh:mm:ss";
+	/**
+	 * Subclass constructor, for classes that want to *be* a
+	 * LogHelper, and get the log methods for free (like a mixin)
+	 **/
+	protected Helper(String logname) {
+	    this.logname = logname;
+	    String cname=this.getClass().getName();
+	    this.prefix = cname.substring( cname.lastIndexOf(".") +1);
+	}
 
-    protected SimpleDateFormat timestampFormatter
-	= new SimpleDateFormat(timestampFormat);
+	/**
+	 * @param logname name of log to use
+	 * @param owner object whose class name to use as prefix
+	 **/
+	public Helper(String logname, Object owner) 
+	{
+	    this.logname = logname;
+	    String cname = owner.getClass().getName();
+	    this.prefix = cname.substring( cname.lastIndexOf(".") +1);
+	}	
+
+	/**
+	 * @param logname name of log to use
+	 * @param prefix string to prepend to each message
+	 **/
+	public Helper(String logname, String prefix) 
+	{
+	    this.logname = logname;
+	    this.prefix = prefix;
+	}
+
+	public Logger getLogger() {
+	    if (proxy != null)
+		logger = proxy.getLogger();
+	    return logger;
+	}
+
+	/**
+	 * Set a logger explicitly.  Also resets the logname property to
+	 * match that of the given log.
+	 *
+	 * <p>(Note that setLogger(null) will not necessarily redirect log
+	 * output to System.out; if there is a logger named logname it
+	 * will fall back to using it, or trying to.)
+	 **/
+	public void setLogger(Logger logger) {
+	    if (logger != null)
+		setLogname(logger.getName());
+	    this.logger = logger;
+	}
+
+	/**
+	 * Set the logger by name.  Will throw away current idea of what
+	 * its logger is, and next time it's asked, will locate the global
+	 * Logger object if the given name.
+	 **/	
+	public void setLogname(String logname) {
+	    logger = null;	// prepare to locate a new logger
+	    this.logname = logname;
+	}
+
+	/**
+	 * Set the prefix string to be prepended to each message
+	 **/
+	public void setLogPrefix(String prefix) {
+	    this.prefix = prefix;
+	}
+
+	/**
+	 * Set a "proxy" Logger.Helper -- whatever that one says its
+	 * Logger is, use it
+	 **/
+	public void setProxy(Helper helper) {
+	    this.proxy = helper;
+	}
+
+	public Helper getLoggerHelper() {
+	    return this;
+	}
+	
+	/**
+	 * Logs the message with level INFORMATION
+	 **/
+	public void log(String msg) 
+	{
+	    log(msg, null, Logger.INFORMATION);
+	}
+
+	/**
+	 * Logs the Throwable with level ERROR (assumes an exception is
+	 * trouble; if it's not, use log(msg, t, level))
+	 **/
+	public void log(String msg, Throwable t) 
+	{
+	    log(msg, t, Logger.ERROR);
+	}
+
+	/**
+	 * Logs the message with given level
+	 **/
+	public void log(String msg, int level) 
+	{
+	    log(msg, null, level);
+	}
+
+	/**
+	 * Logs the message and Throwable to its logger or, if logger
+	 * not found, to the default logger, which writes to the
+	 * default sink, which is usually System.err
+	 **/
+	public void log(String msg, Throwable t, int level)
+	{
+	    if (prefix != null) {
+		// tuneme
+		msg = prefix + ": " + msg;
+	    }
+
+	    // activate proxy if present
+	    if (proxy != null)
+		logger = proxy.getLogger();
+
+	    // activate logname fetch if necessary
+	    if (logger == null) {
+		if (logname != null)
+		    logger = Logger.getLogger(logname);
+	    }
+
+	    // if all else fails, use default logger (writes to default sink)
+	    Logger loggerTemp = logger;
+	    if (loggerTemp == null) {
+		loggerTemp = defaultLogger;
+	    }
+	    loggerTemp.log(msg, t, level);
+	}
+    }    
 }
