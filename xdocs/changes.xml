@@ -7,6 +7,9 @@
 
   <body>
     <release version="b20" date="in dev">  
+      <action dev="epugh" type="update" due-to="Dimitry Mardiyan" issue-id="SCB1369">
+        QUICKSTART.txt had incorrect path in instructions on building scarab.
+      </action>           
       <action dev="epugh" type="fix" due-to="C. G. Brown" issue-id="SCB1378">
         Renaming module code causes multiple issues to have same ID count
       </action>            

@@ -49,8 +49,8 @@ So, if you don't already have one, now would be a good time to create a
 just a standard java properties file containing property values relevant
 to the Scarab build.
 
-The file 'scarab-1.0-b19/default.properties' describes the properties that
-you can set and also contains default values, but at a bare minimum I
+The file 'scarab-1.0-b19/build/default.properties' describes the properties 
+that you can set and also contains default values, but at a bare minimum I
 suggest you provide values for the following:
 
   scarab.database.type     - Your database provider. This can be one of:
