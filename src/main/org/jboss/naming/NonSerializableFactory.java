@@ -48,11 +48,10 @@ the number of steps to:
     Context ctx = new InitialContext();
     // The non-Serializable object to bind
     Object nonserializable = ...;
-    // An arbitrary key to use in the StringRefAddr. The best key is the jndi
-    // name that the object will be bound under.
-    String key = ...;
+    // The jndiName that the object will be bound into ctx with
+    String jndiName = ...;
     // This places nonserializable into the NonSerializableFactory hashmap under key
-    NonSerializableFactory.rebind(ctx, key, nonserializable);
+    NonSerializableFactory.rebind(ctx, jndiName, nonserializable);
 </code>
 
 To unbind the object, use the following code snippet:
@@ -66,7 +65,7 @@ To unbind the object, use the following code snippet:
 @see #rebind(Context, String, Object)
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.4 $
+@version $Revision: 1.5 $
 */
 public class NonSerializableFactory implements ObjectFactory
 {
@@ -128,7 +127,8 @@ public class NonSerializableFactory implements ObjectFactory
         non-zerializable object into a JNDI context.
 
     @param ctx, the JNDI context to rebind to.
-    @param key, the key to use in both the NonSerializableFactory map and JNDI.
+    @param key, the key to use in both the NonSerializableFactory map and JNDI. It
+        must be a valid name for use in ctx.bind().
     @param target, the non-Serializable object to bind.
     @throws NamingException, thrown on failure to rebind key into ctx.
     */
