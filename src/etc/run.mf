@@ -1,2 +1,2 @@
 Main-Class: org.jboss.Main
-Class-Path: ../lib/jmxri.jar ../conf/ ../client/jboss-client.jar ../lib/jaas.jar ../lib/jdbc2_0-stdext.jar ../lib/jboss-jaas.jar ../lib/jaxp.jar
+Class-Path: ../lib/jmxri.jar ../conf/ ../client/jboss-client.jar ../lib/jaas.jar ../lib/jboss-jdbc_ext.jar ../lib/jboss-jaas.jar ../lib/jaxp.jar

@@ -1,1 +1,1 @@
-Class-Path: jnp-client.jar jbosssx-client.jar ejb.jar jndi.jar jta-spec1_0_1.jar
+Class-Path: jnp-client.jar jbosssx-client.jar jboss-j2ee.jar jndi.jar

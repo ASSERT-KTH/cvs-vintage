@@ -60,7 +60,7 @@
     <!-- to use other xml parsers - add them to this list (yuck) - these jars get put into jboss' main classpath - from whence everything else is loaded.
 	The xml.jar is only here to support the ejx editor app.
      -->
-    <property name="bootstrap.jars"             value="crimson.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar,jboss-jaas.jar,xml.jar"/>
+    <property name="bootstrap.jars"             value="crimson.jar,jaxp.jar,jaas.jar,jboss-jdbc_ext.jar,jboss-jaas.jar,xml.jar"/>
 
   <!-- Build classpath -->
   <path id="classpath">
@@ -85,7 +85,7 @@
   <!-- Utility library build classpath -->
   <path id="util.classpath">
       <pathelement location="${build.util.classes.dir}"/>
-      <pathelement location="${src.lib.dir}/ejb.jar"/>
+      <pathelement location="${src.lib.dir}/jboss-j2ee.jar"/>
       <pathelement location="${src.lib.dir}/log4j.jar"/>
       <pathelement location="${lib.dir}/jmxri.jar"/>
   </path>
@@ -356,7 +356,7 @@
      <copy todir="${admin.client.lib.dir}">
        <fileset dir="${src.client.dir}/admin/lib"/>
        <fileset dir="${src.lib.dir}"
-                includes="ejb.jar,jms.jar,jta-spec1_0_1.jar,jaas.jar"/>
+                includes="jboss-j2ee.jar,jaas.jar"/>
        <fileset dir="${src.client.dir}"
                 includes="jnp-client.jar,jboss-client.jar,jbossmq-client.jar,jbosssx-client.jar"/> 
      </copy>
