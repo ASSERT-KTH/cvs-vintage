@@ -46,6 +46,8 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Iterator;
 import java.util.Date;
 import java.util.HashMap;
@@ -96,7 +98,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.50 2001/11/28 20:01:03 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.51 2001/12/19 23:04:05 jon Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -262,6 +264,41 @@ public class ModifyIssue extends RequireLoginFirstAction
    {
         submitAttachment (data, context, "comment");
    } 
+    
+    
+    /** View an attachment file */
+    public void doViewattachment(RunData data, TemplateContext context )
+        throws Exception
+    {
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String attachmentIdKey;
+        
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("view_file"))
+            {
+                attachmentIdKey = key.substring(10);
+                String attachmentId = params.getString(key);
+                Attachment attachment = (Attachment) AttachmentPeer
+                    .retrieveByPK(new NumberKey(attachmentId));
+                File file = new File(attachment.getFilePath());
+                byte[] fileContent = new byte[(int)file.length()];
+                new FileInputStream(file).read(fileContent);
+                if(attachment.getMimeType().equals("text/plain"))
+                {
+                    attachment.setDataAsString(new String(fileContent));
+                }
+                getScarabRequestTool(context).setAttachment(attachment);
+            }
+        }
+        String template = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue");
+        setTarget(data, template);            
+        
+    }
 
     /**
     *  Adds an attachment.
