@@ -9,26 +9,20 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.ui.internal.commands.old;
+package org.eclipse.ui.internal.contexts;
 
-/**
- * JAVADOC
- * 
- * <p>
- * This interface is not intended to be extended by clients.
- * </p>
- * <p>
- * <em>EXPERIMENTAL</em>
- * </p>
- * 
- * @since 3.0
- */
-public interface IRegistryListener {
+import java.util.Collections;
+import java.util.List;
 
-	/**
-	 * JAVADOC
-	 * 
-	 * @param registryEvent
-	 */	
-	void registryChanged(RegistryEvent registryEvent);
-}
+abstract class AbstractRegistry implements IRegistry {
+
+	protected List contexts = Collections.EMPTY_LIST;
+	
+	protected AbstractRegistry() {
+		super();
+	}
+
+	public List getContexts() {
+		return Collections.unmodifiableList(contexts);
+	}
+}	

@@ -9,40 +9,15 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.ui.internal.commands.old;
+package org.eclipse.ui.internal.contexts;
 
-/**
- * JAVADOC
- * 
- * <p>
- * This class is not intended to be extended by clients.
- * </p>
- * <p>
- * <em>EXPERIMENTAL</em>
- * </p>
- * 
- * @since 3.0
- */
-public class RegistryEvent {
+import java.io.IOException;
+import java.util.List;
 
-	private IRegistry registry;
+interface IRegistry {
 
-	/**
-	 * JAVADOC
-	 * 
-	 * @param registry
-	 */	
-	public RegistryEvent(IRegistry registry) {		
-		super();
-		this.registry = registry;
-	}
+	List getContexts();
 
-	/**
-	 * JAVADOC
-	 * 
-	 * @return
-	 */		
-	public IRegistry getRegistry() {
-		return registry;
-	}
-}
+	void load()
+		throws IOException;
+}	
