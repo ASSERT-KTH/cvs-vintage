@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.213 2002/11/12 21:48:25 elicia Exp $
+ * @version $Id: Issue.java,v 1.214 2002/11/13 00:23:47 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -439,12 +439,36 @@ public class Issue
     }
 
     /**
-     * This method is used when AttributeValues are 
-     * associated with an Issue and a 'reason for change'
-     * comment has been added. It should be used with
-     * Issue.setInitialAttributeValues()
+     * Adds a comment to an issue.
      */
-    public void setInitialAttributeValuesComment(ActivitySet activitySet, 
+    public ActivitySet addComment(ActivitySet activitySet, 
+                           Attachment attachment, ScarabUser user)
+        throws Exception
+    {
+        // FIXME: l10n this string...
+        String description = "Added comment to issue";
+        return addMessage(activitySet, description, attachment, user);
+    }
+
+    /**
+     * Used for adding a Note on Wizard2. This creates the ActivitySet
+     * since one is not passed in from Wizard2.
+     */
+    public ActivitySet addNote(ActivitySet activitySet, 
+                            Attachment attachment, ScarabUser user)
+        throws Exception
+    {
+        // FIXME: l10n this string...
+        String description = "Added note to issue";
+        return addMessage(activitySet, description, attachment, user);
+    }
+
+    /**
+     * Used by the addComment/addNote methods. Essentially, they
+     * are the same method with different messages and slightly 
+     * different usage patterns.
+     */
+    private ActivitySet addMessage(ActivitySet activitySet, String description, 
                            Attachment attachment, ScarabUser user)
         throws Exception
     {
@@ -455,29 +479,17 @@ public class Issue
         attachment.setMimeType("text/plain");
         attachment.save();
 
-        activitySet.setAttachment(attachment);
-        activitySet.save();
-    }
-
-    /**
-     * Used for adding a Note on Wizard2.
-     */
-    public void addNote(Attachment attachment, ScarabUser user)
-        throws Exception
-    {
-        attachment.setIssue(this);
-        attachment.setTypeId(Attachment.COMMENT__PK);
-        attachment.setName("comment");
-        attachment.setCreatedBy(user.getUserId());
-        attachment.setMimeType("text/plain");
-        attachment.save();
-
-        ActivitySet activitySet = getActivitySet(user, attachment, 
-                                    ActivitySetTypePeer.EDIT_ISSUE__PK);
+        if (activitySet == null)
+        {
+            activitySet = getActivitySet(user, attachment, 
+                                        ActivitySetTypePeer.EDIT_ISSUE__PK);
+        }
+        else
+        {
+            activitySet.setAttachment(attachment);
+        }
         activitySet.save();
 
-        // FIXME: l10n this string...
-        String description = "Added note to issue";
         String summary = attachment.getData();
         if (summary != null && summary.length() > 60)
         {
@@ -487,8 +499,9 @@ public class Issue
         ActivityManager
             .createTextActivity(this, activitySet,
                                 description, summary);
-    }
-    
+        return activitySet;
+    }    
+
     /**
      * Adds an attachment file to this issue
      */
@@ -2791,7 +2804,8 @@ public class Issue
      *
      * @throws Exception when the workflow has an error to report
      */
-    public ActivitySet setInitialAttributeValues(ActivitySet activitySet, HashMap newValues, ScarabUser user)
+    public ActivitySet setInitialAttributeValues(ActivitySet activitySet, 
+            Attachment attachment, HashMap newValues, ScarabUser user)
         throws Exception
     {
         // Check new values for workflow
@@ -2821,8 +2835,15 @@ public class Issue
             }
             catch (ScarabException se)
             {
-                throw new Exception("Fatal Error: " + se.getMessage() + " Please start over.");    
+                throw new Exception("Fatal Error: " + 
+                    se.getMessage() + " Please start over.");    
             }
+        }
+
+        if (attachment.getData() != null 
+             && attachment.getData().length() > 0) 
+        {
+            addComment(activitySet, attachment, user);
         }
 
         save();                
@@ -2869,7 +2890,8 @@ public class Issue
             Attribute attr = AttributeManager.getInstance(attrId);
             oldAttVal = (AttributeValue)avMap.get(attr.getName().toUpperCase());
             newAttVal = (AttributeValue)newAttVals.get(attrId);
-            if (newAttVal.getValue() != null && newAttVal.getValue().length() > 0)
+            String newAttValValue = newAttVal.getValue();
+            if (newAttValValue != null && newAttValValue.length() > 0)
             {
                 oldAttVal.setProperties(newAttVal);
             }
