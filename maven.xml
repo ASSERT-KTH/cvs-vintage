@@ -225,12 +225,12 @@
              <outputproperty name="method" value="text"/>
         </ant:style> 
 
-        <ant:style  
+        <!--ant:style  
              in="xdocs/howto/build-howto.xml"
              out="NREADME.txt"
              style="readme.xsl">
              <outputproperty name="method" value="text"/>
-        </ant:style> 
+        </ant:style--> 
 
     </goal>
 
