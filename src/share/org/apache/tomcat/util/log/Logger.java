@@ -98,37 +98,38 @@ public abstract class Logger {
 
     protected static Writer defaultSink = new OutputStreamWriter(System.err);
 
-    // registered loggers 
+    // registered loggers
     protected static Hashtable loggers = new Hashtable(5);
     // default logger
     public static Logger defaultLogger = new DefaultLogger();
     static {
 	defaultLogger.setVerbosityLevel(DEBUG);
     }
-      
+    protected long day;
+    protected String fileDateFormat="yyyyMMdd";
     // Usefull for subclasses
     private static final String separator = System.getProperty("line.separator", "\n");
     public static final char[] NEWLINE=separator.toCharArray();
 
 
     /**
-     * Prints the log message on a specified logger. 
+     * Prints the log message on a specified logger.
      *
-     * @param	name		the name of the logger. 
-     * @param	message		the message to log. 
-     * @param	verbosityLevel	what type of message is this? 
+     * @param	name		the name of the logger.
+     * @param	message		the message to log.
+     * @param	verbosityLevel	what type of message is this?
      *				(WARNING/DEBUG/INFO etc)
      */
     /*
-      public static void log(String logName, String message, 
-			   int verbosityLevel) 
+      public static void log(String logName, String message,
+			   int verbosityLevel)
     {
 	Logger logger = getLogger(logName);
 	if (logger != null)
 	    logger.log(message, verbosityLevel);
     }
     */
-    
+
     /**
      * Prints the log message on a specified logger at the "default"
      * log leve: INFORMATION
@@ -313,7 +314,7 @@ public abstract class Logger {
     /**
      * The timestamp format string, default is "yyyy-MM-dd hh:mm:ss"
      **/
-    protected String timestampFormat = "yyyy-MM-dd hh:mm:ss";
+    protected String timestampFormat = "yyyy-MM-dd HH:mm:ss";
 
     protected DateFormat timestampFormatter
 	= new FastDateFormat(new SimpleDateFormat(timestampFormat));
@@ -370,6 +371,16 @@ public abstract class Logger {
 			  int verbosityLevel) 
     {
 	if (matchVerbosityLevel(verbosityLevel)) {
+	// Construct the timestamp we will use, if requested
+            if (path!= null){
+                // If the date has changed, switch log files
+                if (day!=getDay(System.currentTimeMillis())) {
+                    synchronized (this) {
+                        close();
+                        open();
+                    }
+                }
+            }
 	    if (t == null) {
 		realLog(message);
 	    }
@@ -458,16 +469,18 @@ public abstract class Logger {
      *  You must open the logger before use, or it will write to System.err
      */
     public void open() {
-	if (path == null) 
+	if (path == null)
             return;
 	// use default sink == System.err
+        long date=System.currentTimeMillis();
+        day=getDay(date);
 	try {
 	    File file = new File(path);
-	    
+
 	    if (!file.exists())
 		new File(file.getParent()).mkdirs();
-	    
-	    this.sink = new FileWriter(path);
+            String logName=file.getParent()+File.separator+getDatePrefix(date)+file.getName();
+	    this.sink = new FileWriter(logName);
 	} catch (IOException ex) {
 	    System.err.print("Unable to open log file: "+path+"! ");
 	    System.err.println(" Using stderr as the default.");
@@ -572,7 +585,7 @@ public abstract class Logger {
 
     // dummy variable to make SimpleDateFormat work right
     private static java.text.FieldPosition position = new java.text.FieldPosition(DateFormat.YEAR_FIELD);
-    
+
     protected void formatTimestamp(long msec, StringBuffer buf) {
 	if (timestamp == false)
 	    return;
@@ -586,7 +599,24 @@ public abstract class Logger {
 	    return;
 	}
     }
-    
+
     // ----- Logger.Helper static inner class -----
-    
+
+    String getDatePrefix(long millis) {
+        SimpleDateFormat sdf=new SimpleDateFormat(fileDateFormat);
+        return sdf.format(new Date(millis));
+    }
+
+    long getDay(long millis){
+        return (millis+TimeZone.getDefault().getRawOffset()) / ( 24*60*60*1000 );
+    }
+
+    public String getFileDateFormat() {
+        return fileDateFormat;
+    }
+
+    public void setFileDateFormat(String newFileDateFormat) {
+        fileDateFormat = newFileDateFormat;
+    }
+
 }
