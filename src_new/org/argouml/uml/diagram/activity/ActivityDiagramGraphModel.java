@@ -1,4 +1,4 @@
-//$Id: ActivityDiagramGraphModel.java,v 1.2 2004/07/18 12:17:12 mkl Exp $
+//$Id: ActivityDiagramGraphModel.java,v 1.3 2004/07/18 12:41:50 mkl Exp $
 //Copyright (c) 1996-2004 The Regents of the University of California. All
 //Rights Reserved. Permission to use, copy, modify, and distribute this
 //software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.diagram.activity;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.state.StateDiagramGraphModel;
 
 /**
