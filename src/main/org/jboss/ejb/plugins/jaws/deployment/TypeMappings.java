@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class TypeMappings
    extends BeanContextSupport
@@ -106,7 +106,7 @@ public class TypeMappings
             Node n = nl.item(i);
             String name = n.getNodeName();
             
-            if (name.equals("type-mapping"))
+            if (name.equals("type-mapping-definition"))
             {
                TypeMapping tm = (TypeMapping)Beans.instantiate(getClass().getClassLoader(), "org.jboss.ejb.plugins.jaws.deployment.TypeMapping");
                tm.importXml((Element)n);

@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class TypeMapping
    extends BeanContextServicesSupport
@@ -190,7 +190,7 @@ public class TypeMapping
    public Element exportXml(Document doc)
    	throws Exception
    {
-      Element typemapping = doc.createElement("type-mapping");
+      Element typemapping = doc.createElement("type-mapping-definition");
       XMLManager.addElement(typemapping,"name",getName());
       
       for (Iterator enum = iterator(); enum.hasNext();)

@@ -14,7 +14,7 @@
     </default-entity>
 
     <type-mappings>
-        <type-mapping>
+        <type-mapping-definition>
             <name>InterBase</name>
             <mapping>
                 <java-type>java.lang.Boolean</java-type>
@@ -81,9 +81,9 @@
                 <jdbc-type>JAVA_OBJECT</jdbc-type>
                 <sql-type>VARCHAR(2000)</sql-type>
             </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
             <name>DB2</name>
             <mapping>
                 <java-type>java.lang.Boolean</java-type>
@@ -153,9 +153,9 @@
                 <jdbc-type>JAVA_OBJECT</jdbc-type>
                 <sql-type>BLOB(2000)</sql-type>
             </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
             <name>Oracle8</name>
             <mapping>
                 <java-type>java.lang.Boolean</java-type>
@@ -229,9 +229,9 @@
 <!-- Change this from BLOB to RAW(255) if you know your
      serialized object will be <= 255 bytes -->
             </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
             <name>Oracle7</name>
             <mapping>
                 <java-type>java.lang.Boolean</java-type>
@@ -300,9 +300,9 @@
 <!-- Change this from LONG RAW to RAW(255) if you know your
      serialized object will be <= 255 bytes -->
             </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
             <name>Sybase</name>
             <mapping>
                 <java-type>java.lang.Boolean</java-type>
@@ -372,9 +372,9 @@
                 <jdbc-type>JAVA_OBJECT</jdbc-type>
                 <sql-type>IMAGE</sql-type>
             </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
             <name>PostgreSQL</name>
             <mapping>
                 <java-type>java.lang.Boolean</java-type>
@@ -441,9 +441,9 @@
                 <jdbc-type>JAVA_OBJECT</jdbc-type>
                 <sql-type>OID</sql-type>
             </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
             <name>InstantDB</name>
             <mapping>
                 <java-type>java.lang.Integer</java-type>
@@ -505,9 +505,9 @@
                 <jdbc-type>DATE</jdbc-type>
                 <sql-type>DATE</sql-type>
             </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
             <name>Hypersonic SQL</name>
             <mapping>
                 <java-type>java.lang.Byte</java-type>
@@ -569,9 +569,9 @@
                 <jdbc-type>DOUBLE</jdbc-type>
                 <sql-type>DOUBLE</sql-type>
             </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
             <name>PointBase</name>
             <mapping>
                 <java-type>java.lang.Character</java-type>
@@ -623,9 +623,9 @@
                 <jdbc-type>INTEGER</jdbc-type>
                 <sql-type>INTEGER</sql-type>
             </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
             <name>SOLID</name>
             <mapping>
                 <java-type>java.lang.Character</java-type>
@@ -687,9 +687,9 @@
                 <jdbc-type>DATE</jdbc-type>
                 <sql-type>DATE</sql-type>
             </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
             <name>mySQL</name>
             <mapping>
                 <java-type>java.lang.Float</java-type>
@@ -761,9 +761,9 @@
                 <jdbc-type>TIME</jdbc-type>
                 <sql-type>BIGINT</sql-type>
             </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
           <name>MS SQLSERVER</name>
           <mapping>
               <java-type>java.lang.Integer</java-type>
@@ -840,9 +840,9 @@
               <jdbc-type>FLOAT</jdbc-type>
               <sql-type>FLOAT</sql-type>
           </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping> 
+        <type-mapping-definition> 
             <name>MS SQLSERVER2000</name> 
             
             <mapping> 
@@ -934,9 +934,9 @@
                 <jdbc-type>DOUBLE</jdbc-type> 
                 <sql-type>FLOAT</sql-type> 
             </mapping> 
-        </type-mapping>
+        </type-mapping-definition>
         
-        <type-mapping>
+        <type-mapping-definition>
           <name>DB2/400</name>
           <mapping>
               <java-type>java.lang.Character</java-type>
@@ -1005,9 +1005,9 @@
               <jdbc-type>TIMESTAMP</jdbc-type>
               <sql-type>TIMESTAMP</sql-type>
           </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
           <name>SapDB</name>
           <mapping>
               <java-type>java.lang.Integer</java-type>
@@ -1074,9 +1074,9 @@
               <jdbc-type>DECIMAL</jdbc-type>
               <sql-type>DECIMAL(20)</sql-type>
           </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
-        <type-mapping>
+        <type-mapping-definition>
           <name>Cloudscape</name>
           <mapping>
               <java-type>java.math.BigDecimal</java-type>
@@ -1148,10 +1148,10 @@
               <jdbc-type>JAVA_OBJECT</jdbc-type>
               <sql-type>LONG VARBINARY</sql-type>
           </mapping>
-        </type-mapping>
+        </type-mapping-definition>
 
         
-        <type-mapping> 
+        <type-mapping-definition> 
             <name>InformixDB</name> 
             <mapping> 
                 <java-type>java.lang.Character</java-type> 
@@ -1242,7 +1242,7 @@
                 <jdbc-type>JAVA_OBJECT</jdbc-type> 
                 <sql-type>BYTE</sql-type> 
             </mapping> 
-      </type-mapping> 
+      </type-mapping-definition> 
 
     </type-mappings>
 </jaws>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jaws>
     <type-mappings>
-        <type-mapping>
+        <type-mapping-definition>
             <name>PostgreSQL</name>
             <mapping>
                 <java-type>java.lang.Boolean</java-type>
@@ -63,8 +63,8 @@
                 <jdbc-type>BIGINT</jdbc-type>
                 <sql-type>BIGINT</sql-type>
             </mapping>
-        </type-mapping>
-        <type-mapping>
+        </type-mapping-definition>
+        <type-mapping-definition>
             <name>InstantDB</name>
             <mapping>
                 <java-type>java.lang.Integer</java-type>
@@ -126,8 +126,8 @@
                 <jdbc-type>DATE</jdbc-type>
                 <sql-type>DATE</sql-type>
             </mapping>
-        </type-mapping>
-        <type-mapping>
+        </type-mapping-definition>
+        <type-mapping-definition>
             <name>Hypersonic SQL</name>
             <mapping>
                 <java-type>java.lang.Byte</java-type>
@@ -189,8 +189,8 @@
                 <jdbc-type>DOUBLE</jdbc-type>
                 <sql-type>DOUBLE</sql-type>
             </mapping>
-        </type-mapping>
-        <type-mapping>
+        </type-mapping-definition>
+        <type-mapping-definition>
             <name>PointBase</name>
             <mapping>
                 <java-type>java.lang.Character</java-type>
@@ -242,8 +242,8 @@
                 <jdbc-type>INTEGER</jdbc-type>
                 <sql-type>INTEGER</sql-type>
             </mapping>
-        </type-mapping>
-        <type-mapping>
+        </type-mapping-definition>
+        <type-mapping-definition>
             <name>Oracle</name>
             <mapping>
                 <java-type>java.lang.Long</java-type>
@@ -305,8 +305,8 @@
                 <jdbc-type>INTEGER</jdbc-type>
                 <sql-type>NUMBER</sql-type>
             </mapping>
-        </type-mapping>
-        <type-mapping>
+        </type-mapping-definition>
+        <type-mapping-definition>
             <name>SOLID</name>
             <mapping>
                 <java-type>java.lang.Character</java-type>
@@ -368,8 +368,8 @@
                 <jdbc-type>DATE</jdbc-type>
                 <sql-type>DATE</sql-type>
             </mapping>
-        </type-mapping>
-        <type-mapping>
+        </type-mapping-definition>
+        <type-mapping-definition>
             <name>mySQL</name>
             <mapping>
                 <java-type>java.lang.Float</java-type>
@@ -431,8 +431,8 @@
                 <jdbc-type>DATE</jdbc-type>
                 <sql-type>DATE</sql-type>
             </mapping>
-        </type-mapping>
-        <type-mapping>
+        </type-mapping-definition>
+        <type-mapping-definition>
           <name>MS SQLSERVER</name>
           <mapping>
               <java-type>java.lang.Integer</java-type>
@@ -494,8 +494,8 @@
               <jdbc-type>FLOAT</jdbc-type>
               <sql-type>FLOAT</sql-type>
           </mapping>
-        </type-mapping>
-        <type-mapping>
+        </type-mapping-definition>
+        <type-mapping-definition>
           <name>DB2/400</name>
           <mapping>
               <java-type>java.lang.Character</java-type>
@@ -562,6 +562,6 @@
               <jdbc-type>TIMESTAMP</jdbc-type>
               <sql-type>TIMESTAMP</sql-type>
           </mapping>
-        </type-mapping>
+        </type-mapping-definition>
     </type-mappings>
 </jaws>

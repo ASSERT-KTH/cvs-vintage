@@ -42,8 +42,6 @@ import org.jboss.logging.Log;
 import org.jboss.util.MBeanProxy;
 import org.jboss.util.ServiceMBeanSupport;
 
-import org.jboss.metadata.XmlFileLoader;
-
 import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.ContainerFactoryMBean;
 
@@ -58,7 +56,7 @@ import org.w3c.dom.Element;
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  *  @author <a href="mailto:wburke@commercetone.com">Bill Burke</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class InstallerFactory
 {

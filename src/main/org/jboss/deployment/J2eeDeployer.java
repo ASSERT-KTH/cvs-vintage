@@ -45,8 +45,6 @@ import org.jboss.logging.Log;
 import org.jboss.util.MBeanProxy;
 import org.jboss.util.ServiceMBeanSupport;
 
-import org.jboss.metadata.XmlFileLoader;
-
 import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.ContainerFactoryMBean;
 
@@ -68,7 +66,7 @@ import org.w3c.dom.Element;
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
 *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-*   @version $Revision: 1.32 $
+*   @version $Revision: 1.33 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport

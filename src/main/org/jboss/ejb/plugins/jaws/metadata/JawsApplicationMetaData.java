@@ -30,7 +30,7 @@ import org.jboss.metadata.ApplicationMetaData;
  *      
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -137,7 +137,7 @@ public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
 		Element typeMaps = getOptionalChild(element, "type-mappings");
 
 		if (typeMaps != null) {
-			iterator = getChildrenByTagName(typeMaps, "type-mapping");
+			iterator = getChildrenByTagName(typeMaps, "type-mapping-definition");
 			
 			while (iterator.hasNext()) {
 				Element typeMappingElement = (Element)iterator.next();
@@ -145,7 +145,7 @@ public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
 				try {
 					typeMapping.importXml(typeMappingElement);
 				} catch (DeploymentException e) {
-					throw new DeploymentException("Error in jaws.xml for type-mapping " + typeMapping.getName() + ": " + e.getMessage());
+					throw new DeploymentException("Error in jaws.xml for type-mapping-definition " + typeMapping.getName() + ": " + e.getMessage());
 				}
 				typeMappings.put(typeMapping.getName(), typeMapping);
 			}
