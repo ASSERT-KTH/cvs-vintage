@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.12 2002/02/03 04:55:25 jmcnally Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.13 2002/02/07 20:21:03 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -328,7 +328,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
 
                 // add module-attributeoption mappings
                 List options = attribute.getAttributeOptions();
-                for (int j=0;i < options.size();j++)
+                for (int j=0;j < options.size();j++)
                 {
                     AttributeOption option = (AttributeOption)options.get(j);
                     RModuleOption rmo = module.addRModuleOption(issueType, 
