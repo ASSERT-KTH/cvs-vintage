@@ -411,8 +411,8 @@ public class Parser {
 		if (stop == null)
 		    throw new ParseException(Constants.getString("jsp.error.unterminated", 
                                                                  new Object[] { OPEN_COMMENT }));
-		
-		parser.flushCharData(start, stop);
+
+		parser.flushCharData(parser.tmplStart, parser.tmplStop);
 		return true;
 	    }
 	    return false;
