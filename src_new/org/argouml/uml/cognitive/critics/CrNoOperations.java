@@ -24,7 +24,7 @@
 // File: CrNoOperations.javoa
 // Classes: CrNoOperations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoOperations.java,v 1.4 2002/03/01 12:30:26 mkl Exp $
+// $Id: CrNoOperations.java,v 1.5 2002/08/11 06:52:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -53,6 +53,7 @@ public class CrNoOperations extends CrUML {
   public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MClass)) return NO_PROBLEM;
     MClass cls = (MClass) dm;
+    if (!(CriticUtils.isPrimaryObject(cls))) return NO_PROBLEM;
     //if (cls.containsStereotype(MStereotype.UTILITY)) return NO_PROBLEM;
     // stereotype <<record>>?
     //needs-more-work: different critic or special message for classes

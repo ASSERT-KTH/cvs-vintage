@@ -26,7 +26,7 @@
 // File: CrUselessInterface.java
 // Classes: CrUselessInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessInterface.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrUselessInterface.java,v 1.3 2002/08/11 06:52:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -55,6 +55,7 @@ public class CrUselessInterface extends CrUML {
   public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MInterface)) return false;
     MInterface intf = (MInterface) dm;
+    if (!(CriticUtils.isPrimaryObject(intf))) return NO_PROBLEM;
     Collection realization = getRealizations(intf);
     if (realization == null || realization.size() == 0)
       return PROBLEM_FOUND;

@@ -26,7 +26,7 @@
 // File: CrConsiderSingleton.java
 // Classes: CrConsiderSingleton
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConsiderSingleton.java,v 1.7 2002/03/15 10:31:57 jeremybennett Exp $
+// $Id: CrConsiderSingleton.java,v 1.8 2002/08/11 06:52:15 linus Exp $
 
 // 5 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Code factored by use of
 // static methods in central org.argouml.cognitive.critics.CriticUtils utility
@@ -135,6 +135,7 @@ public class CrConsiderSingleton extends CrUML {
         // Now we know it is a class, handle the object as a class
 
         MClass cls = (MClass) dm;
+	if (!(CriticUtils.isPrimaryObject(cls))) return NO_PROBLEM;
 
         // Check for Singleton stereotype, uninitialised instance variables and
         // outgoing associations, as per JavaDoc above.

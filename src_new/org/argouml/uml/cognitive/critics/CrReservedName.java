@@ -26,7 +26,7 @@
 // File: CrReservedName.java
 // Classes: CrReservedName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrReservedName.java,v 1.4 2002/02/25 08:37:50 linus Exp $
+// $Id: CrReservedName.java,v 1.5 2002/08/11 06:52:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -177,6 +177,8 @@ public class CrReservedName extends CrUML {
     _javaReserved.addElement("var");
     _javaReserved.addElement("volatile");
     _javaReserved.addElement("transient");
+
+    _javaReserved.addElement("assert");
   }
 
 

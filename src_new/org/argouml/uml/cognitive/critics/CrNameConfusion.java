@@ -26,7 +26,7 @@
 // File: CrNameConfusion.java
 // Classes: CrNameConfusion
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrNameConfusion.java,v 1.3 2002/08/11 06:52:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -132,6 +132,9 @@ public class CrNameConfusion extends CrUML {
       char c = s.charAt(i);
       if (Character.isLetterOrDigit(c))
 	res.append(Character.toLowerCase(c));
+      else if (c == ']' && i > 1 && s.charAt(i - 1) == '[') {
+	  res.append("[]");
+      }
     }
     return res.toString();
   }

@@ -24,7 +24,7 @@
 // File: CrNoAssociations.javoa
 // Classes: CrNoAssociations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoAssociations.java,v 1.3 2002/02/25 08:37:50 linus Exp $
+// $Id: CrNoAssociations.java,v 1.4 2002/08/11 06:52:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -53,6 +53,7 @@ public class CrNoAssociations extends CrUML {
   public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MClassifier)) return NO_PROBLEM;
     MClassifier cls = (MClassifier) dm;
+    if (!(CriticUtils.isPrimaryObject(cls))) return NO_PROBLEM;
     //if (cls.containsStereotype(MStereotype.UTILITY)) return NO_PROBLEM;
     // stereotype <<record>>?
     //needs-more-work: different critic or special message for classes

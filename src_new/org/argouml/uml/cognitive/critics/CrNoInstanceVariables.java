@@ -28,7 +28,7 @@
 // File: CrNoInstanceVariables.java
 // Classes: CrNoInstanceVariables
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInstanceVariables.java,v 1.4 2002/03/01 12:10:59 mkl Exp $
+// $Id: CrNoInstanceVariables.java,v 1.5 2002/08/11 06:52:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -62,6 +62,7 @@ public class CrNoInstanceVariables extends CrUML {
   public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MClass)) return NO_PROBLEM;
     MClass cls = (MClass) dm;
+    if (!(CriticUtils.isPrimaryObject(cls))) return NO_PROBLEM;
     if ((cls.getStereotype()!=null) && "utility".equals(cls.getStereotype().getName()) )
       return NO_PROBLEM;
     Collection str = getInheritedStructuralFeatures(cls,0);
