@@ -68,7 +68,7 @@ import org.tigris.scarab.util.word.SearchIndex;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: UpdateSearchIndex.java,v 1.7 2002/12/20 21:09:56 jon Exp $
+ * @version $Id: UpdateSearchIndex.java,v 1.8 2002/12/20 21:17:30 jon Exp $
  */
 public class UpdateSearchIndex extends RequireLoginFirstAction
 {
@@ -91,7 +91,8 @@ public class UpdateSearchIndex extends RequireLoginFirstAction
         
         synchronized (this)
         {
-            Object[] time = {new Integer(seconds)};
+            Integer inttime = new Integer(seconds);
+            Object[] time = {inttime};
             if (tg == null)
             {
                 try
@@ -99,7 +100,7 @@ public class UpdateSearchIndex extends RequireLoginFirstAction
                     tg = new ThreadGroup("UpdateIndex");
                     Thread updateThread = new Thread(tg, new UpdateThread());
                     updateThread.start();
-                    context.put("updateFrequency", time[0]);
+                    context.put("updateFrequency", inttime.toString());
                     scarabR.setConfirmMessage(l10n.format("SearchIndexDoNoteLeavePage",time));
                 }
                 catch (Exception e)
@@ -123,7 +124,7 @@ public class UpdateSearchIndex extends RequireLoginFirstAction
                 {
                     seconds = 15;
                 }
-                context.put("updateFrequency", time[0]);
+                context.put("updateFrequency", inttime.toString());
                 scarabR.setConfirmMessage(l10n.format("SearchIndexDoNoteLeavePage",time));
                 counter++;
             }
