@@ -65,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.35 2003/01/22 23:37:33 elicia Exp $
+ * @version $Id: IssueType.java,v 1.36 2003/02/03 18:48:25 jmcnally Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -90,6 +90,9 @@ public  class IssueType
     static final String USER = "user";
     static final String NON_USER = "non-user";
 
+    // this will not change, so only look it up once.
+    private IssueType templateIssueType;
+
     /**
      * Gets the IssueType template for this IssueType. The template
      * is a special type of IssueType.
@@ -97,9 +100,7 @@ public  class IssueType
     public IssueType getTemplateIssueType()
         throws Exception
     {
-        IssueType result = null;
-        Object obj = ScarabCache.get(this, GET_TEMPLATE_ISSUE_TYPE); 
-        if ( obj == null ) 
+        if ( templateIssueType == null ) 
         {        
             Criteria crit = new Criteria();
             crit.add(IssueTypePeer.PARENT_ID, getIssueTypeId());
@@ -110,15 +111,10 @@ public  class IssueType
             }
             else
             {
-                result = (IssueType)results.get(0);
+                templateIssueType = (IssueType)results.get(0);
             }
-            ScarabCache.put(result, this, GET_TEMPLATE_ISSUE_TYPE);
         }
-        else 
-        {
-            result = (IssueType)obj;
-        }
-        return result;
+        return templateIssueType;
     }
 
     /**
