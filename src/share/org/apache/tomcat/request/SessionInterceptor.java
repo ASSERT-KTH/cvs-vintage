@@ -167,6 +167,7 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
     public void contextShutdown( Context ctx )
 	throws TomcatException
     {
+	if( ctx.getDebug() > 0 ) ctx.log("Removing sessions from " + ctx );
 	ctx.getSessionManager().removeSessions(ctx);
     }
 

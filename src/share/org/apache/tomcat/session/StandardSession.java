@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.4 2000/02/14 04:59:41 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/14 04:59:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.5 2000/03/01 00:31:19 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/03/01 00:31:19 $
  *
  * ====================================================================
  *
@@ -93,7 +93,7 @@ import org.apache.tomcat.util.StringManager;
  * HttpSession view of this instance back to a Session view.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.4 $ $Date: 2000/02/14 04:59:41 $
+ * @version $Revision: 1.5 $ $Date: 2000/03/01 00:31:19 $
  */
 
 final class StandardSession
@@ -653,9 +653,11 @@ final class StandardSession
 	    if (object == null)
 		return;
 	    attributes.remove(name);
-	    if (object instanceof HttpSessionBindingListener)
+	    //	    System.out.println( "Removing attribute " + name );
+	    if (object instanceof HttpSessionBindingListener) {
 		((HttpSessionBindingListener) object).valueUnbound
 		    (new HttpSessionBindingEvent((HttpSession) this, name));
+	    }
 	}
 
     }

@@ -65,18 +65,21 @@ public class Tomcat {
 	xh.addRule( "ContextManager/Connector", xh.setParent( "setContextManager") );
 	xh.addRule( "ContextManager/Connector", xh.addChild( "addServerConnector", "org.apache.tomcat.core.ServerConnector") );
 
-	
+	xh.addRule( "ContextManager/Connector/Parameter", xh.methodSetter("setProperty",2) );
+	xh.addRule( "ContextManager/Connector/Parameter", xh.methodParam(0, "name") );
+	xh.addRule( "ContextManager/Connector/Parameter", xh.methodParam(1, "value") );
+    }
+
+    	
+    void setLogHelper( XmlMapper xh ) {
 	xh.addRule("Server/Logger",
 		   xh.objectCreate("org.apache.tomcat.logging.TomcatLogger"));
 	xh.addRule("Server/Logger", xh.setProperties());
 	xh.addRule("Server/Logger", 
 		   xh.addChild("addLogger", "org.apache.tomcat.logging.Logger") );
-
-	xh.addRule( "ContextManager/Connector/Parameter", xh.methodSetter("setProperty",2) );
-	xh.addRule( "ContextManager/Connector/Parameter", xh.methodParam(0, "name") );
-	xh.addRule( "ContextManager/Connector/Parameter", xh.methodParam(1, "value") );
     }
     
+
     public void execute(String args[] ) throws Exception {
 	if( ! processArgs( args ) ) {
 	    System.out.println("Wrong arguments");
@@ -84,10 +87,17 @@ public class Tomcat {
 	    return;
 	}
 
+	if( doStop ) {
+	    System.out.println("Stop tomcat");
+	    stopTomcat(); // stop serving
+	    return;
+	}
+
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( 0 );
 	ContextManager cm=new ContextManager();
 	setHelper( xh );
+	setLogHelper( xh );
 
 	File f=new File(cm.getHome(), configFile);
 
@@ -104,18 +114,13 @@ public class Tomcat {
 	org.apache.tomcat.task.ApacheConfig apacheConfig=new  org.apache.tomcat.task.ApacheConfig();
 	apacheConfig.execute( cm );     
 
-	if( doStop ) {
-	    stopTomcat(cm); // stop serving
-	    return;
-	}
-
+	System.out.println("Starting tomcat. Check logs/tomcat.log for error messages ");
 	cm.init(); // set up contexts
 	cm.start(); // start serving
     }
     
     public static void main(String args[] ) {
 	try {
-	    System.out.println("Starting tomcat. Check logs/tomcat.log for error messages ");
 	    Tomcat tomcat=new Tomcat();
 	    tomcat.execute( args );
 	} catch(Exception ex ) {
@@ -133,7 +138,23 @@ public class Tomcat {
      *  that will change when we add real callbacks ( it's equivalent
      *  with the previous RMI method from almost all points of view )
      */
-    void stopTomcat( ContextManager cm ) {
+    void stopTomcat() {
+	XmlMapper xh=new XmlMapper();
+	xh.setDebug( 0 );
+	ContextManager cm=new ContextManager();
+	setHelper( xh );
+	// no log helper - we don't want stop to override the logs
+
+	File f=new File(cm.getHome(), configFile);
+
+	try {
+	    xh.readXml(f,cm);
+	} catch( Exception ex ) {
+	    System.out.println("FATAL: configuration error" );
+	    ex.printStackTrace();
+	    System.exit(1);
+	}
+
 	// Find Ajp12 connector
 	int portInt=8007;
 	Enumeration enum=cm.getConnectors();
