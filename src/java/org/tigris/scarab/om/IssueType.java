@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.23 2002/07/08 19:44:19 jon Exp $
+ * @version $Id: IssueType.java,v 1.24 2002/07/09 15:25:45 jmcnally Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -134,7 +134,7 @@ public  class IssueType
             List issueTypes = (List)IssueTypePeer.doSelect(crit);
             if(issueTypes == null || issueTypes.size() == 0 )
             {
-                throw new ScarabException("Invalid issue artifact type: " +
+                throw new ScarabException("Invalid issue type: " +
                                           issueTypeName);
             }
             result = (IssueType)issueTypes.get(0);
