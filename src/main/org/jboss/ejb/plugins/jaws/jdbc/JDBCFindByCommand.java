@@ -10,10 +10,9 @@ package org.jboss.ejb.plugins.jaws.jdbc;
 import java.lang.reflect.Method;
 
 import java.sql.PreparedStatement;
-
 import java.util.Iterator;
 
-import org.jboss.logging.Logger;
+import org.apache.log4j.Category;
 
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
@@ -21,31 +20,37 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 /**
  * JAWSPersistenceManager JDBCFindByCommand
  *
- * @see <related>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
  * @author <a href="mailto:jaeger@oio.de">Torben Jäger</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
-public class JDBCFindByCommand extends JDBCFinderCommand
+public class JDBCFindByCommand
+   extends JDBCFinderCommand
 {
    // Attributes ----------------------------------------------------
    
    // The meta-info for the field we are finding by
    private CMPFieldMetaData cmpField;
-   
+   private Category log = Category.getInstance(JDBCFindByCommand.class);
+
    // Constructors --------------------------------------------------
    
-   public JDBCFindByCommand(JDBCCommandFactory factory, Method finderMethod, FinderMetaData md)
+   public JDBCFindByCommand(JDBCCommandFactory factory,
+                            Method finderMethod,
+                            FinderMetaData md)
       throws IllegalArgumentException
    {
       super(factory, md);
       
       String cmpFieldName = finderMethod.getName().substring(6).toLowerCase();
-      Logger.debug("Finder:"+cmpFieldName);
+
+      if (log.isDebugEnabled()) {
+         log.debug("cmp field name: " + cmpFieldName);
+      }
       
       // Find the meta-info for the field we want to find by
       
