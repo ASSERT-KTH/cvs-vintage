@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.25 2002/01/29 21:12:23 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.26 2002/02/03 20:22:15 azakkerman Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -84,6 +84,9 @@
      | Uncomment to use Tyrex (tyrex.exolab.org) transaction manager plugin
      | instead of the org.jboss.tm.TransactionManagerService and comment out
      | the TransactionManagerService above.
+     | Make sure you have Xerces in lib/ext. At the moment JBoss does not
+     | ship Xerces as part of distribution. Version 1.x seems to work fine,
+     | though 2.x should as well, use whichever you like.
      |
   <mbean code="org.jboss.tm.plugins.tyrex.TransactionManagerService"
          name="jboss:service=TransactionManager">
