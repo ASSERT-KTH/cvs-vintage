@@ -142,7 +142,7 @@ public class SimpleRealm extends  BaseInterceptor {
 	// This realm will use only username and password callbacks
 	String user=(String)req.getNote( userNote );
 	String password=(String)req.getNote( passwordNote );
-	if( user==null) return 0;
+	if( user==null) return DECLINED; // we don't know about this 
 	
 	if( debug > 0 ) log( "Verify user=" + user + " pass=" + password );
 	if( memoryRealm.checkPassword( user, password ) ) {
@@ -154,8 +154,13 @@ public class SimpleRealm extends  BaseInterceptor {
 		String userRoles[] = memoryRealm.getUserRoles( user );
 		req.setUserRoles( userRoles );
 	    }
+	    return OK; // the user is ok, - no need for more work
 	}
-	return 0;
+	return DECLINED; // the user is not known to me - it may
+	// be in a different realm.
+
+	// XXX maybe we should add "realm-name" - the current behavior
+	// is to treat them as "global users"
     }
 
     class MemoryRealm {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.27 2000/12/28 00:46:14 nacho Exp $
- * $Revision: 1.27 $
- * $Date: 2000/12/28 00:46:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.28 2000/12/28 01:57:41 costin Exp $
+ * $Revision: 1.28 $
+ * $Date: 2000/12/28 01:57:41 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -497,8 +497,8 @@ public final class JDBCRealm extends BaseInterceptor {
     public int authenticate( Request req, Response response ) {
         String user=(String)req.getNote( userNote );
         String password=(String)req.getNote( passwordNote );
-	if( user==null) return 0;
-
+	if( user==null) return DECLINED; 
+	
 	if( checkPassword( user, password ) ) {
      	    if( debug > 0 ) log( "Auth ok, user=" + user );
             Context ctx = req.getContext();
@@ -509,9 +509,10 @@ public final class JDBCRealm extends BaseInterceptor {
 //		req.setNote(reqRealmSignNote,this);
 		String userRoles[] = getUserRoles( user );
 		req.setUserRoles( userRoles );
+		return OK;
 	    }
 	}
-	return 0;
+	return DECLINED;
     }
 
   

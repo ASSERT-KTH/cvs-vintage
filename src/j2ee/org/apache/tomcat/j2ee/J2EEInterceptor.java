@@ -194,7 +194,7 @@ public class J2EEInterceptor extends BaseInterceptor {
 
 	if( user==null || password == null ) {
 	    // Need auth, but have no user/pass
-	    return 0;
+	    return DECLINED;
 	}
 	byte authData[]=password.getBytes();
 	
@@ -204,7 +204,7 @@ public class J2EEInterceptor extends BaseInterceptor {
 	LoginContext lc = initLoginContext(realm);
 	if( lc==null ) {
 	    log("Authenticate - Can't get LoginContext....");
-	    return 0;
+	    return DECLINED;
 	}
 	
 	if(authM != null) 
@@ -220,8 +220,8 @@ public class J2EEInterceptor extends BaseInterceptor {
 	    Log.err.println(le);
 	    //le.printStackTrace();
 	    log("Login failed for..: " + user);
-	    return 0;
-	}
+	    return DECLINED; // or 401 ?
+ 	}
 
 	if(debug>0) {
 	    log("Login succeeded for..: " + user);
@@ -230,7 +230,7 @@ public class J2EEInterceptor extends BaseInterceptor {
 	req.setRemoteUser( user );
 	req.setUserPrincipal( getUserPrincipal() );
 
-	return 0;
+	return OK;
     }
 
     public int authorize( Request req, Response response, String roles[] )

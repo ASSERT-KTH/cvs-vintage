@@ -402,7 +402,7 @@ public class Request {
 		getInterceptors(Container.H_authenticate);
 	    for( int i=0; i< reqI.length; i++ ) {
 		status=reqI[i].authenticate( this, response );
-		if ( status != 0 ) {
+		if ( status != BaseInterceptor.DECLINED ) {
 		    break;
 		}
 	    }
