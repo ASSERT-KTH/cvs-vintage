@@ -1,0 +1,31 @@
+<div class="docs" id="userquery"> 
+  <div id="toc"> 
+       <ul>
+      <li>$l10n.ScarabHelp 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a></li>
+           <ul>
+            <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">$l10n.AdvancedQueries</a></li>
+            <li><a href="$link.setPage("help,UserQueryCustom.vm")">$l10n.CustomQueries</a></li>
+            <li><a href="$link.setPage("help,UserQueryText.vm")">$l10n.TextQueries</a></li>
+            <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
+            <li><strong>$l10n.CrossProjectQueries</strong></li>
+           </ul>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>  
+  </div>
+
+  <h3>$l10n.CrossProjectQueries</h3>
+  <p>$l10n.CrossProjectP1</p>
+  <p>$l10n.CrossProjectP2</p>
+  <p>$l10n.CrossProjectP3</p>
+  <p>$l10n.CrossProjectP4</p>
+</div>
+

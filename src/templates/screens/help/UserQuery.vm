@@ -17,6 +17,7 @@
             <li><a href="$link.setPage("help,UserQueryCustom.vm")">$l10n.CustomQueries</a></li>
             <li><a href="$link.setPage("help,UserQueryText.vm")">$l10n.TextQueries</a></li>
             <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
+            <li><a href="$link.setPage("help,UserQueryCrossProject.vm")">$l10n.CrossProjectQueries</a></li>
            </ul>
            </li>
           <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
