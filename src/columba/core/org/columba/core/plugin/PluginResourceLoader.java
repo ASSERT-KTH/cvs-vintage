@@ -13,41 +13,39 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.plugin;
 
 import org.columba.core.main.MainInterface;
 
 import java.io.File;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-
 /**
+ * Provides internationalization support for plugins.
+ *
  * @author fdietz
- *
- * Adds internationalization support for plugins
- *
- *
  */
 public class PluginResourceLoader {
-    String pluginId;
-    File pluginFolder;
-    Map map;
+    protected String pluginId;
+    protected File pluginFolder;
+    protected Map map;
 
     /**
  *
  */
     public PluginResourceLoader(String pluginId) {
         this.pluginId = pluginId;
-
         pluginFolder = MainInterface.pluginManager.getFolder(pluginId);
-
         map = new HashMap();
     }
 
@@ -56,38 +54,32 @@ public class PluginResourceLoader {
             // use already cached ResouceBundle class
             try {
                 return ((ResourceBundle) map.get(propertyFile)).getString(resource);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-
+            } catch (MissingResourceException ex) {
                 return resource;
             }
         }
 
+        URLClassLoader loader = null;
         // create File from directory and name of property file
         File rcFile = new File(pluginFolder, propertyFile);
 
         try {
             // initialize URL classloader with rcFile url
-            URL[] urls = new URL[1];
-            urls[0] = rcFile.toURL();
+            URL[] urls = new URL[] {rcFile.toURL()};
+            loader = new URLClassLoader(urls);
+        } catch (MalformedURLException ex) {} //does not happen
 
-            URLClassLoader loader = new URLClassLoader(urls);
-
-            // init locale
-            Locale locale = Locale.getDefault();
-
+        try {
             // create resource bundle
             // -> pass current locale and classloader
             ResourceBundle rb = ResourceBundle.getBundle(rcFile.getPath(),
-                    locale, loader);
-
+                    Locale.getDefault(), loader);
+            map.put(propertyFile, rb);
+            
             // return string if available
             return rb.getString(resource);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (MissingResourceException ex) {
+            return resource;
         }
-
-        // failcase -> return i18n id
-        return resource;
     }
 }
