@@ -43,7 +43,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.60 $
+ * @version $Revision: 1.61 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -300,6 +300,13 @@ public class EntitySynchronizationInterceptor
             //register the wrapper with the transaction monitor (but only register once).
             // The transaction demarcation will trigger the storage operations
             if (!ctx.hasTxSynchronization()) register(ctx,tx);
+	    //mark it dirty in global tx entity map if it reports it is modified
+	    EntityContainer ctxContainer = (EntityContainer) ctx.getContainer();
+	    if (!ctxContainer.isReadOnly() 
+		&& ctxContainer.getPersistenceManager().isModified(ctx))
+	    {
+	       ctxContainer.getGlobalTxEntityMap().associate(tx, ctx);
+	    }
          }
       }
       //
@@ -314,8 +321,10 @@ public class EntitySynchronizationInterceptor
             // And skip reads too ("get" methods)
             if (ctx.getId() != null)
             {
-	       EntityContainer.doStore(ctx);
-               //container.storeEntity(ctx);
+	       if (!container.isReadOnly())
+	       {
+		  container.storeEntity(ctx);
+	       }
             }
     
             return result;
@@ -367,65 +376,7 @@ public class EntitySynchronizationInterceptor
   
       public void beforeCompletion()
       {
-         boolean trace = log.isTraceEnabled();
-         if( trace )
-            log.trace("beforeCompletion called for ctx "+ctx);
-   
-         if (ctx.getId() != null)
-         {
-            // This is an independent point of entry. We need to make sure the
-            // thread is associated with the right context class loader
-            ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(container.getClassLoader());
-    
-            try
-            {
-               try
-               {
-                  // Store instance if business method was invoked
-                  if( trace )
-                     log.trace("Checking ctx="+ctx+", for status of tx="+tx);
-                  if (tx.getStatus() != Status.STATUS_MARKED_ROLLBACK)
-                  {
-		     EntityContainer.doStore(ctx);
-                     //container.storeEntity(ctx);
-
-                     if( trace )
-                        log.trace("sync calling store on ctx "+ctx);
-                  }
-               }
-               catch (NoSuchEntityException ignored)
-               {
-                  if( trace )
-                     log.trace("Ignoring NSEE", ignored);
-               }
-            }
-            // EJB 1.1 12.3.2: all exceptions from ejbStore must be marked for rollback
-            // and the instance must be discarded
-            catch (Exception e)
-            {
-               log.error("Store failed", e);
-               // Store failed -> rollback!
-               try
-               {
-                  tx.setRollbackOnly();
-               }
-               catch (SystemException ex)
-               {
-                  if( trace )
-                     log.trace("Ignoring SE", ex);
-               }
-               catch (IllegalStateException ex)
-               {
-                  if( trace )
-                     log.trace("Ignoring ISE", ex);
-               }
-            }
-            finally
-            {
-               Thread.currentThread().setContextClassLoader(oldCl);
-            }
-         }
+	 //synchronization is handled by GlobalTxEntityMap.
       }
   
       public void afterCompletion(int status)

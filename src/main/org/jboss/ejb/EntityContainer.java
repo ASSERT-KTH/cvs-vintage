@@ -39,6 +39,7 @@ import javax.ejb.EJBException;
 import javax.ejb.RemoveException;
 import javax.management.j2ee.CountStatistic;
 import javax.transaction.Transaction;
+import javax.transaction.TransactionRolledbackException;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.invocation.Invocation;
@@ -61,7 +62,7 @@ import org.jboss.metadata.EntityMetaData;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.65 $
+* @version $Revision: 1.66 $
 *
 * <p><b>Revisions:</b>
 *
@@ -157,37 +158,22 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    * @throws Exception if an problem occures while storing the entities
    */
    public static void synchronizeEntitiesWithinTransaction(Transaction tx)
+      throws TransactionRolledbackException
    {
       // If there is no transaction, there is nothing to synchronize.
-      try
+      if(tx != null)
       {
-         if(tx != null)
-         {
-            EntityEnterpriseContext[] entities = globalTxEntityMap.getEntities(tx);
-            for (int i = 0; i < entities.length; i++)
-            {
-               EntityEnterpriseContext ctx = entities[i];
-               doStore(ctx);
-            }
-         }
-      }
-      catch (Exception ex)
-      {
-         throw new EJBException(ex);
+	 getGlobalTxEntityMap().syncEntities(tx);
       }
    }
-   
-   public static void doStore(EntityEnterpriseContext ctx) throws Exception
-   {
-      EntityContainer container = (EntityContainer)ctx.getContainer();
-      if (!((EntityMetaData)container.getBeanMetaData()).isReadOnly())
-      {
-         container.storeEntity(ctx);
-      }
-   }
-   
    // Public --------------------------------------------------------
    
+   public boolean isReadOnly()
+   {
+      return readOnly;
+   }
+
+
    public void setContainerInvoker(ContainerInvoker ci)
    {
       if (ci == null)
@@ -349,7 +335,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
          in.create();
          in = in.getNext();
       }
-      
+      readOnly = ((EntityMetaData)metaData).isReadOnly();
       // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
    }

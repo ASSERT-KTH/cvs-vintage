@@ -15,12 +15,12 @@ import javax.transaction.Synchronization;
 /**
  * This class provides a way to find out what entities of a certain type that are contained in
  * within a transaction.  It is attached to a specific instance of a container.
- * This class interfaces with the static GlobalTxEntityMap.  EntitySynchronizationInterceptor
+ *<no longer - global only holds possibly dirty> This class interfaces with the static GlobalTxEntityMap.  EntitySynchronizationInterceptor
  * registers tx/entity pairs through this class.
  * Used in EntitySynchronizationInterceptor.
  * 
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
  * Revisions:
  *
@@ -48,7 +48,7 @@ public class TxEntityMap
          m_map.put(tx, entityMap);
          tx.registerSynchronization(new TxEntityMapCleanup(this, tx));
       }
-      EntityContainer.getGlobalTxEntityMap().associate(tx, entity);
+      //EntityContainer.getGlobalTxEntityMap().associate(tx, entity);
       entityMap.put(entity.getCacheKey(), entity);
    }
 
