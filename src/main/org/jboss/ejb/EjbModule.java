@@ -94,7 +94,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -620,9 +620,7 @@ public class EjbModule
       {
          createProxyFactories(bean, container, cl);
       }
-      boolean beanCacheJMSMonitoring = ((Boolean)server.getAttribute(EJBDeployerMBean.OBJECT_NAME,
-                                                                     "BeanCacheJMSMonitoringEnabled")).booleanValue();
-      container.setInstanceCache( createInstanceCache( conf, beanCacheJMSMonitoring, cl ) );
+      container.setInstanceCache( createInstanceCache( conf, false, cl ) );
       // No real instance pool, use the shadow class
       container.setInstancePool( new StatefulSessionInstancePool() );
       // Set persistence manager
@@ -649,9 +647,7 @@ public class EjbModule
       {
          createProxyFactories(bean, container, cl);
       }
-      boolean beanCacheJMSMonitoring = ((Boolean)server.getAttribute(EJBDeployerMBean.OBJECT_NAME,
-                                                                     "BeanCacheJMSMonitoringEnabled")).booleanValue();
-      container.setInstanceCache( createInstanceCache( conf, beanCacheJMSMonitoring, cl ) );
+      container.setInstanceCache( createInstanceCache( conf, false, cl ) );
       container.setInstancePool( createInstancePool( conf, cl ) );
       //Set the bean Lock Manager
       container.setLockManager(createBeanLockManager(((EntityMetaData) bean).isReentrant(),conf.getLockClass(), cl));
