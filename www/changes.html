@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.275 2002/10/28 13:19:29 thierrylach Exp $ -->
+<!-- $Id: changes.html,v 1.276 2002/10/28 17:11:48 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -76,7 +76,24 @@
                     For more information, see Bug Report
                     #<a href="http://issues.whichever.com/issues/id/SCB251">SCB251</a>. (EWD)</li>
                 <li>Sequence numbers for attribute groups were off. Fixed. (EWD)</li>
-
+                <li>Fixed inability for users to request roles in modules by 
+                    not requiring a permission in order to request roles.  
+                    Also don't require a module selection prior to
+                    executing an action, if the module is not needed for a
+                    permission check.   
+                    For more information, see Bug Report
+                    #<a href="http://issues.whichever.com/issues/id/SCB299">SCB299</a>. (JDM)</li>
+                <li>Null attribute values or attachments are now ignored when
+                    reindexing text.
+                    For more information, see Bug Report
+                    #<a href="http://issues.whichever.com/issues/id/SCB311">SCB311</a>. (JDM)</li>
+                <li>Create directory to store file attachments when 
+                    copying/moving an issue to a module which has not 
+                    previously had any file attachments.
+                    For more information, see Bug Report
+                    #<a href="http://issues.whichever.com/issues/id/SCB314">SCB314</a>. (JDM)</li>
+                <li>Don't cache the homepage in case permission changes affect
+                    which tab should be shown. (JDM)</li>
             </ul>
         </td>
     </tr>
