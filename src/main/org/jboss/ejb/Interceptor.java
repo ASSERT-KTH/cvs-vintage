@@ -9,14 +9,12 @@ package org.jboss.ejb;
 import java.lang.reflect.Method;
 import java.security.Principal;
 
-import com.dreambean.ejx.ejb.EnterpriseBean;
-
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public interface Interceptor
    extends ContainerPlugin
