@@ -29,11 +29,16 @@ import javax.management.loading.MLet;
  *    resources and classes.
  *
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
+ * @version $Revision: 1.5 $
  * 
  * <p><b>20010830 marc fleury:</b>
  * <ul>
  *   <li>Initial import
+ * </ul>
+ * <p><b>20011009 cgj:</b>
+ * <ul>
+ *   <li>fixed default resolution behaviour
  * </ul>
  */
 public class URLClassLoader
@@ -145,11 +150,6 @@ public class URLClassLoader
       return libraries.loadClass(name, resolve, this);	
    }
 	
-   public Class loadClass(String name) 
-      throws ClassNotFoundException
-   {
-      return loadClass(name, true);
-   }
 	
    public Class loadClassLocally (String name, boolean resolve)
       throws ClassNotFoundException
