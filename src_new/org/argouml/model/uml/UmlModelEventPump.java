@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.12 2003/01/26 16:22:46 kataka Exp $
+// $Id: UmlModelEventPump.java,v 1.13 2003/01/31 21:06:32 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -440,7 +440,7 @@ public final class UmlModelEventPump implements MElementListener {
      */
     public void propertySet(MElementEvent e) {
         cat.debug("Pumping propertySet event with name " + e.getName() + " and source " + e.getSource());
-        if (e.getNewValue() != null && !(e.getNewValue().equals(e.getOldValue()))) {
+        if (e.getNewValue() == null || !(e.getNewValue().equals(e.getOldValue()))) {
             Iterator it = getListenerList(e).iterator();
 
             while (it.hasNext()) {
