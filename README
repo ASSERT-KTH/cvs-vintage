@@ -12,7 +12,8 @@ Installing and Building Tomcat
 
 In order to successfully build Tomcat, you will need to do the following.  In
 the instructions below, $JAKARTA_HOME is assumed to be the directory into which
-you are installing all of the required distributions.
+you are installing all of the required distributions.  If you are using Win9x,
+the $JAKARA_HOME path should not contain spaces.
 
 * Download and install a version 1.1 or later Java Development Kit
   implementation for your operating system platform.  Set a "JAVA_HOME"
@@ -22,23 +23,29 @@ you are installing all of the required distributions.
 
 * Download and install an XML parser that is compliant with the Java API for
   XML Parsing specification.  You will need to add the appropriate JAR files
-  for your parser to your system classpath.  Parsers known to work with
-  Tomcat include:
+  for your parser to your system classpath.  Parsers known to successfully
+  build and work with Tomcat include:
 
   * The JAXP reference implementation (version 1.0 or later), which can be
-    downloaded from <http://java.sun.com/xml>.
+    downloaded from <http://java.sun.com/xml>.  Make sure that the "jaxp.jar"
+    and "parser.jar" files are on your class path.
 
   * The Xerces parser (version 1.1.2 or later), which can be downloaded
-    from <http://xml.apache.org>.
+    from <http://xml.apache.org>.  Make sure that the "xerces.jar" is
+    on your class path.
 
-* Download and install the Java API for XML Parsing implementation (get version
-  1.0 or later) from <http://java.sun.com/xml>.  Make sure that the
-  "jaxp.jar" and "parser.jar" files are on your class path.
+  If you plan to build the binary distribution, you will need to download
+  JAXP version 1.0.1.  Extract it to your $JAKARTA_HOME directory and
+  rename its directory to jaxp-1.0.1.  The binary distribution includes
+  jaxp.jar and parser.jar as the built-in XML parser.
 
-* Download and install the Ant distribution (subproject "jakarta-ant") into
-  a directory named "$JAKARTA_HOME/jakarta-ant".  If you have downloaded the
-  source distribution, you will need to build the executable version by
-  executing the following commands:
+* Download and install the Ant version 1.2 distribution (subproject
+  "jakarta-ant") into a directory named "$JAKARTA_HOME/jakarta-ant".
+  You will need to create the "jakarta-ant" directory and extract the files
+  into it. Downloading and installing the binary distribution will avoid
+  the need to build the executable version. If you have downloaded the source
+  distribution, you will need to build the executable version by executing
+  the following commands:
 
 	cd $JAKARTA_HOME/jakarta-ant
 	./bootstrap.sh		<-- Unix
@@ -47,11 +54,17 @@ you are installing all of the required distributions.
   This should result in the creation of a file "ant.jar" in the "lib"
   subdirectory, which will be used when building Tomcat.
 
+  Note: If you building from source on Win9x, edit the LPC.BAT file in
+  jakarta-ant\src\bin to remove the trailing LF characters.
+
 * Download and install the Servletapi distribution (subproject
   "jakarta-servletapi") into a subdirectory named
-  "$JAKARTA_HOME/jakarta-servletapi".  If you have downloaded the source
-  distribution, you will need to build the executable version by
-  executing the following commands:
+  "$JAKARTA_HOME/jakarta-servletapi".  The Servletapi distribution can be found
+  at the same location as the Tomcat distribution. Since the
+  "jakarta-servletapi" directory is included in the archive, expand the
+  distribution to $JAKARTA_HOME. If you have downloaded the source distribution,
+  you will need to build the executable version by executing the following
+  commands:
 
 	cd $JAKARTA_HOME/jakarta-servletapi
 	./build.sh dist		<-- Unix
@@ -60,11 +73,17 @@ you are installing all of the required distributions.
   This should result in the creation of a file "servlet.jar" in the "lib"
   subdirectory, which will be used when building Tomcat.
 
+* If you want to include SSL support, download and install the Java Secure
+  Sockets Extension (JSSE) implementation (current version number is 1.0.2)
+  from <http://java.sun.com/products/jsse>.  Include the jars found in its
+  "lib" directory in your classpath.
+
 * Download the source distribution of Tomcat (subpackage "jakarta-tomcat"),
   or check it out via anonymous CVS, into a subdirectory named
-  "$JAKARTA_HOME/jakarta-tomcat".  You can now build an "unpacked" version
-  of Tomcat (quicker builds because no time is spent JARing up results)
-  by executing the following commands:
+  "$JAKARTA_HOME/jakarta-tomcat". Since the "jakarta-tomcat" directory is
+  included in the archive, expand the source distribution to $JAKARTA_HOME.
+  You can now build an "unpacked" version of Tomcat (builds quicker because
+  no time is spent JARing up results) by executing the following commands:
 
 	cd $JAKARTA_HOME/jakarta-tomcat
 	./build.sh		<-- Unix
@@ -161,13 +180,38 @@ Testing the Build
 Tomcat includes a small web application with some quick tests to exercize
 the various parts of the server.  It is built automatically, along with the
 rest of Tomcat, by the steps described above.  To run the tests against the
-"unpacked" build, for example, you would do the following:
+"unpacked" build, for example, you first need to set the Admin application
+to "trusted".  This can be accomplished by executing the following:
 
 	cd $JAKARTA_HOME/build/tomcat	<-- Unix
-	./bin/tomcat.sh ant -buildfile conf/test-tomcat.xml
+	./bin/tomcat.sh run -enableAdmin
 
 	cd %JAKARTA_HOME%\build\tomcat	<-- Windows
-	bin\tomcat ant -buildfile conf\test-tomcat.xml
+	bin\tomcat run -enableAdmin
+
+After this, start tomcat with: 
+
+	./bin/startup.sh	<-- Unix
+	bin\startup		<-- Windows
+
+To run the test, invoke the following URL in your browser:
+
+	http://localhost:8080/admin/test/test.jsp
+
+and then click "Submit Query".  The build targets for the Ant based test
+script are then listed and the tests executed.  After the tests are
+completed, the results will appear with "FAILED Tests" listed first,
+followed the "PASSED Tests". This same procedure will also work with the
+binary distribution which is created in "$JAKARTA_HOME/dist/tomcat".
+
+For security reasons, after you are done with the test, you should either
+restore the Admin application to the default "untrusted" state, or change
+the password for the "admin" user. To restore the Admin application to the
+default "untrusted" state, change trusted="true" to trusted="false" in the
+"apps-admin.xml" file found in Tomcat's "conf" directory. If you want to
+leave the Admin application as "trusted, you should change the password for
+the "admin" user in the "admin-users.xml" file located in Tomcat's
+"conf/users" directory.
 
 You can also use the Watchdog compatibility test suite, also available at
 <http://jakarta.apache.org>, to test Tomcat's compliance to the servlet and
