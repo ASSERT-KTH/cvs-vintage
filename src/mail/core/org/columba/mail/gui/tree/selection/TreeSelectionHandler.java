@@ -30,6 +30,18 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.tree.TreeView;
 
+/**
+ * Handles the tree selection.
+ * <p>
+ * Listens for swing tree selection events and translates TreePath
+ * selection to FolderCommandReference.
+ * <p>
+ * Actions creating Commands and passing FolderCommandReference directly
+ * ask {@link TreeSelectionManager} for the selection. They don't talk
+ * with the swing JTree.
+ *
+ * @author fdietz, tstich
+ */
 public class TreeSelectionHandler
 	extends SelectionHandler
 	implements TreeSelectionListener {

@@ -22,12 +22,17 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 
 /**
- * @author freddy
+ * Manages tree selection.
+ * <p>
+ * Actions creating Commands and passing FolderCommandReference directly
+ * ask this class for the current selection.
+ * <p>
+ * If an command wants to select a {@link FolderTreeNode} it should use
+ * this class, too.
+ * <p>
+ * This way you don't have to deal with the swing JTree class anymore.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz, tstich
  */
 public class TreeSelectionManager extends SelectionManager {
 
