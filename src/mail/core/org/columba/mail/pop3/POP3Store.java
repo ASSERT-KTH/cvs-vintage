@@ -19,7 +19,6 @@ package org.columba.mail.pop3;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -333,15 +332,16 @@ public class POP3Store {
 			try {
 				switch (loginMethod) {
 					case USER : {
-						login = protocol
-								.userPass(popItem.get("user"), password);
+						protocol.userPass(popItem.get("user"), password);
+						login = true;
 
 						break;
 					}
 
 					case APOP : {
-						login = protocol.apop(popItem.get("user"), password);
-
+						protocol.apop(popItem.get("user"), password);
+						login = true;
+						
 						break;
 					}
 				}
