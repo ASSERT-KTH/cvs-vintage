@@ -54,7 +54,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
@@ -349,6 +349,14 @@ public class JDBCEntityBridge implements EntityBridge {
       return tableName;
    }
 
+   public Class getRemoteInterface() {
+      return metadata.getRemoteClass();
+   }
+   
+   public Class getLocalInterface() {
+      return metadata.getLocalClass();
+   }
+
    public Class getPrimaryKeyClass() {
       return metadata.getPrimaryKeyClass();
    }
@@ -419,7 +427,8 @@ public class JDBCEntityBridge implements EntityBridge {
 
       JDBCCMPFieldBridge cmpField = getCMPFieldByName(name);
       if(cmpField == null) {
-         throw new DeploymentException("cmpField not found: " + name);
+         throw new DeploymentException("cmpField not found: " + 
+               "cmpFieldName="+name + " entityName=" + getEntityName());
       }
       return cmpField;
    }
