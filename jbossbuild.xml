@@ -18,6 +18,16 @@
    <!-- The main build -->
    <import file="../jbossas/build.xml"/>
 
+    <!-- default.type.mapping is used in standardjaws.xml and standardjbosscmp-jdbc.xml-->
+    <property name="default.type.mapping" value="Hypersonic SQL"/>
+
+    <!--Choice of with or without new connection caching scheme -->
+    <!--without-->
+    <!--property name="jca.connection.interceptor" value=""/-->
+    <!--with-->
+    <property name="jca.connection.interceptor" value="&lt;interceptor&gt;org.jboss.resource.connectionmanager.CachedConnectionInterceptor&lt;/interceptor&gt;"/>
+
+
    <!-- =============================================================== -->
    <!-- The component definition                                        -->
    <!-- =============================================================== -->
@@ -62,16 +72,194 @@
          <include input="transaction-project"/>
          <include input="remoting-project"/>
          <include input="system-project"/>
+
+         <!-- TODO
+         <exclude name="org/jboss/ejb/plugins/cmp/jdbc/jdbc3/*.java" unless="HAVE_JDK_1.4"/>
+         -->
       </source>
 
       <resource id="resources-root" path="."/>
+      <resource id="client-deployer"/>
+      <resource id="verifier" path="org/jboss/verifier"/>
+      <resource id="uuid-key-generator"/>
 
       <!-- ============================================================ -->
       <!-- jboss.jar                                                    -->
       <!-- ============================================================ -->
 
       <artifactdef artifact="jboss.jar">
-         <include input="main"/>
+         <include input="main">
+            <include pattern="org/jboss/**"/>
+
+            <!-- Exclude command line utilities -->
+            <exclude pattern="org/jboss/*"/>
+
+            <!-- Exclude JMX Connector stuff we will use the connector SAR for that -->
+            <exclude pattern="org/jboss/jmx/**"/>
+
+            <!-- Exclude key factory stuff -->
+            <exclude pattern="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
+            <exclude pattern="org/jboss/ejb/plugins/keygenerator/hilo/**"/>
+         </include>
+         <include input="resources-root">
+            <include pattern="org/jboss/**"/>
+            <include pattern="dtd/**"/>
+            <include pattern="schema/**"/>
+            <exclude pattern="org/jboss/ejb/deployment/**"/>
+            <exclude pattern="org/jboss/ejb/plugins/**"/>
+         </include>
+         <include input="client-deployer">
+            <include pattern="client-deployer-xmbean.xml"/>
+         </include>
+      </artifactdef>
+
+      <!-- ============================================================ -->
+      <!-- jboss-minimal.jar                                            -->
+      <!-- ============================================================ -->
+
+      <artifactdef artifact="jboss-minimal.jar">
+         <include input="main">
+            <include pattern="org/jboss/invocation/**"/>
+            <include pattern="org/jboss/logging/**"/>
+            <include pattern="org/jboss/naming/**"/>
+         </include>
+      </artifactdef>
+
+      <!-- ============================================================ -->
+      <!-- jboss-client.jar                                             -->
+      <!-- ============================================================ -->
+
+      <artifactdef artifact="jboss-client.jar">
+         <include input="main">
+            <include pattern="org/jboss/corba/**"/>
+            <include pattern="org/jboss/ejb/CacheKey.class"/>
+            <include pattern="org/jboss/ejb/ListCacheKey.class"/>
+            <include pattern="org/jboss/ejb/plugins/cmp/jdbc/Mapper.class"/>
+            <include pattern="org/jboss/ejb/plugins/keygenerator/KeyGenerator.class"/>
+            <include pattern="org/jboss/ejb/plugins/keygenerator/KeyGeneratorFactory.class"/>
+            <include pattern="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
+            <include pattern="org/jboss/invocation/ByValueInvokerInterceptor.class"/>
+            <include pattern="org/jboss/invocation/Invocation.class"/>
+            <include pattern="org/jboss/invocation/InvocationContext.class"/>
+            <include pattern="org/jboss/invocation/InvocationKey.class"/>
+            <include pattern="org/jboss/invocation/InvocationException.class"/>
+            <include pattern="org/jboss/invocation/InvocationType.class"/>
+            <include pattern="org/jboss/invocation/Invoker.class"/>
+            <include pattern="org/jboss/invocation/InvokerInterceptor.class"/>
+            <include pattern="org/jboss/invocation/MarshallingInvokerInterceptor.class"/>
+            <include pattern="org/jboss/invocation/PayloadKey.class"/>
+            <include pattern="org/jboss/invocation/MarshalledInvocation.class"/>
+            <include pattern="org/jboss/invocation/MarshalledValue.class"/>
+            <include pattern="org/jboss/invocation/MarshalledValueInputStream.class"/>
+            <include pattern="org/jboss/invocation/MarshalledValueOutputStream*.class"/>
+            <include pattern="org/jboss/invocation/http/interfaces/*"/>
+            <include pattern="org/jboss/invocation/jrmp/interfaces/*"/>
+            <include pattern="org/jboss/invocation/jrmp/server/*Stub.class"/>
+            <include pattern="org/jboss/invocation/pooled/interfaces/*.class"/>
+            <include pattern="org/jboss/monitor/client/*.class"/>
+            <include pattern="org/jboss/naming/LinkRefPair.class"/>
+            <include pattern="org/jboss/naming/LinkRefPairObjectFactory.class"/>
+            <include pattern="org/jboss/naming/*NamingContextFactory*.class"/>
+            <include pattern="org/jboss/naming/client/**"/>
+            <include pattern="org/jboss/naming/interceptors/*"/>
+            <include pattern="org/jboss/proxy/**"/>
+            <include pattern="org/jboss/tm/JBossTransactionRolledbackException.class"/>
+            <include pattern="org/jboss/tm/JBossTransactionRolledbackLocalException.class"/>
+            <include pattern="org/jboss/tm/usertx/client/*.class"/>
+            <include pattern="org/jboss/tm/usertx/interfaces/*.class"/>
+            <include pattern="org/jboss/tm/usertx/server/*Stub.class"/>
+            <include pattern="org/jboss/webservice/metadata/jaxrpcmapping/*.class"/>
+         </include>
+      </artifactdef>
+
+      <!-- ============================================================ -->
+      <!-- verifier.jar                                                 -->
+      <!-- ============================================================ -->
+
+      <artifactdef artifact="verifier.jar" manifest="verifier.mf">
+         <include input="main">
+            <include pattern="org/jboss/verifier/**"/>
+         </include>
+         <include input="verifier"/>
+      </artifactdef>
+
+      <!-- ============================================================ -->
+      <!-- jmx-adaptor-plugin.jar                                      -->
+      <!-- ============================================================ -->
+
+      <artifactdef artifact="jmx-adaptor-plugin.jar">
+         <include input="main">
+            <include pattern="org/jboss/jmx/**"/>
+         </include>
+      </artifactdef>
+
+      <!-- ============================================================ -->
+      <!-- jmx-invoker-adaptor-client.jar                               -->
+      <!-- ============================================================ -->
+
+      <artifactdef artifact="jmx-invoker-adaptor-client.jar">
+         <include input="main">
+            <include pattern="org/jboss/jmx/adaptor/rmi/RMIAdaptor*"/>
+            <include pattern="org/jboss/jmx/adaptor/rmi/RMINotificationListener*"/>
+            <include pattern="org/jboss/jmx/connector/invoker/client/**"/>
+         </include>
+      </artifactdef>
+
+      <!-- ============================================================ -->
+      <!-- shutdown.jar                                                 -->
+      <!-- ============================================================ -->
+
+      <artifactdef artifact="shutdown.jar">
+         <include input="main">
+            <include pattern="org/jboss/Shutdown*.class"/>
+         </include>
+         <include input="resources-root">
+            <include pattern="log4j.properties"/>
+            <include pattern="jndi.properties"/>
+         </include>
+         <include input="getopt.jar">
+            <include pattern="**"/>
+         </include>
+      </artifactdef>
+
+      <!-- ============================================================ -->
+      <!-- jboss-security.jar                                           -->
+      <!-- ============================================================ -->
+
+      <artifactdef artifact="jboss-security.jar">
+         <include input="main">
+            <include pattern="org/jboss/security/**"/>
+         </include>
+      </artifactdef>
+
+      <!-- ============================================================ -->
+      <!-- server-testsuite-support.jar                                          -->
+      <!-- ============================================================ -->
+
+      <artifactdef artifact="server-testsuite-support.jar">
+         <include input="main">
+            <include pattern="org/jboss/jmx/service/RemoteDeployer*.class"/>
+            <include pattern="org/jboss/jmx/connector/RemoteMBeanServer**"/>
+            <include pattern="org/jboss/jmx/connector/notification/RMI**"/>
+            <include pattern="org/jboss/jmx/connector/rmi/RMIConnector.class"/>
+            <include pattern="org/jboss/jmx/connector/rmi/RMINotificationListener.class"/>
+            <include pattern="org/jboss/jmx/connector/rmi/RMIClientConnectorImpl*.class"/>
+            <include pattern="org/jboss/jmx/connector/rmi/RMIConnectorImpl_Stub.class"/>
+            <include pattern="org/jboss/jmx/connector/ConnectorFactory*.class"/>
+            <include pattern="org/jboss/ejb/CacheKey.class"/>
+         </include>
+      </artifactdef>
+
+      <!-- ============================================================ -->
+      <!-- uuid-key-generator.sar                                       -->
+      <!-- ============================================================ -->
+
+      <artifactdef artifact="uuid-key-generator.sar">
+         <include input="main">
+            <include pattern="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
+            <include pattern="org/jboss/ejb/plugins/keygenerator/hilo/**"/>
+         </include>
+         <include input="uuid-key-generator"/>
       </artifactdef>
 
       <!-- ============================================================ -->
@@ -79,6 +267,7 @@
       <!-- ============================================================ -->
 
       <artifactdef artifact="sqlexception-service.xml"/>
+      <artifactdef artifact="client-deployer-service.xml"/>
 
 
       <!-- ============================================================ -->
