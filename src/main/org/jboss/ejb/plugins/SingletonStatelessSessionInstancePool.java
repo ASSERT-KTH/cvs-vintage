@@ -29,7 +29,7 @@ import org.jboss.management.j2ee.CountStatistic;
  *
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -200,11 +200,18 @@ public class SingletonStatelessSessionInstancePool
       mReadyBean.reset();
    }
 
+   public int getMaxSize()
+   {
+      return 1;
+   }
+
    // Z implementation ----------------------------------------------
 
     // XmlLoadable implementation
-    public void importXml(Element element) throws DeploymentException {
-        isSynchronized = Boolean.valueOf(MetaData.getElementContent(MetaData.getUniqueChild(element, "Synchronized"))).booleanValue();
+    public void importXml(Element element) throws DeploymentException
+    {
+      Element synch = MetaData.getUniqueChild(element, "Synchronized");
+      isSynchronized = Boolean.valueOf(MetaData.getElementContent(synch)).booleanValue();
     }
 
    // Package protected ---------------------------------------------

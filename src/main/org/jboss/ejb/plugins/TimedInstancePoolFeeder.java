@@ -1,34 +1,24 @@
 /*
- * JBoss, the OpenSource EJB server
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+* JBoss, the OpenSource EJB server
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
 package org.jboss.ejb.plugins;
-
-import org.jboss.ejb.InstancePool;
-import org.jboss.ejb.InstancePoolFeeder;
-
-import org.jboss.logging.Logger;
-
-import org.jboss.metadata.XmlLoadable;
-import org.jboss.metadata.MetaData;
-
-import org.jboss.deployment.DeploymentException;
-
-import org.w3c.dom.Element;
 
 import java.util.TimerTask;
 import java.util.Timer;
 
+import org.w3c.dom.Element;
+
+import org.jboss.deployment.DeploymentException;
+import org.jboss.ejb.InstancePool;
+import org.jboss.ejb.InstancePoolFeeder;
+import org.jboss.metadata.XmlLoadable;
+import org.jboss.metadata.MetaData;
+
 /**
- * Implementation of Pool feeder that is a java.util.Timer that checks at
- * regular period the size of the pool and bring it closer to its capacity by
- * adding a number of new instances.
  *
- * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
- *
- * @version $Revision: 1.1 $
  */
 public class TimedInstancePoolFeeder
       extends TimerTask
@@ -36,11 +26,11 @@ public class TimedInstancePoolFeeder
 {
 
    // Private -------------------------------------------------------
-
+   /** The instance pool we feed */
    private InstancePool ip;
-
+   /** The rate in milliseconds between updates to the InstancePool */
    private int rate;
-   private int capacity;
+   /** The number of instances to add to the pool each period */
    private int increment;
 
    private Timer timer;
@@ -48,9 +38,7 @@ public class TimedInstancePoolFeeder
 
    // Constructor ---------------------------------------------------
 
-   public TimedInstancePoolFeeder()
-   {
-   }
+   public TimedInstancePoolFeeder(){}
 
    // Public --------------------------------------------------------
 
@@ -58,6 +46,7 @@ public class TimedInstancePoolFeeder
    {
       try
       {
+         int capacity = ip.getMaxSize();
          if (ip.getCurrentSize() < capacity)
          {
             for (int i=0 ; i < increment ; i++)
@@ -104,14 +93,12 @@ public class TimedInstancePoolFeeder
    // XmlLoadable Impl ----------------------------------------------
 
    public void importXml(Element element)
-   throws DeploymentException
+      throws DeploymentException
    {
       try
       {
          Element instancePoolConf = MetaData.getUniqueChild(element, "feeder-policy-conf");
          Element tmp;
-         tmp = MetaData.getUniqueChild(instancePoolConf,"capacity");
-         capacity = Integer.parseInt(MetaData.getElementContent(tmp));
          tmp = MetaData.getUniqueChild(instancePoolConf,"increment");
          increment = Integer.parseInt(MetaData.getElementContent(tmp));
          tmp = MetaData.getUniqueChild(instancePoolConf,"period");

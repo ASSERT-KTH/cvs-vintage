@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 
-<!-- 
+<!--
 This is the XML DTD for the JBoss 2.2 EJB deployment descriptor.
 The DOCTYPE is:
   <!DOCTYPE jboss PUBLIC
@@ -32,7 +32,7 @@ Overview of the architecture of jboss.xml
         <res-ref-name />
         <resource-name />
       </resource-ref>
-    </session>          
+    </session>
 
   </enterprise-beans>
 
@@ -72,9 +72,9 @@ Overview of the architecture of jboss.xml
 
 </jboss>
 -->
-<!-- 
-The jboss element is the root element of the jboss.xml file. It 
-contains all the information used by jboss but not described in the 
+<!--
+The jboss element is the root element of the jboss.xml file. It
+contains all the information used by jboss but not described in the
 ejb-jar.xml file. All of it is optional.
 
 1- the application assembler can define custom container configurations
@@ -88,10 +88,10 @@ deployed
 
 <!--
   The secure element tells the container to enforce ejb1.1 restrictions
-  It must be one of the following : 
+  It must be one of the following :
      <secure>true</secure>
      <secure>false</secure>
-  
+
   Used in: jboss
   -->
 <!ELEMENT secure (#PCDATA)>
@@ -104,66 +104,66 @@ level using the authentication-module and role-mapping-manager elements.
 -->
 <!ELEMENT security-domain (#PCDATA)>
 
-<!-- 
-  The enterprise-beans element contains additional information about 
-  the beans. These informations, such as jndi names, resource managers and 
-  container configurations, are specific to jboss and not described in 
-  ejb-jar.xml. 
-  
-  jboss will provide a standard behaviour if no enterprise-beans element 
-  is found, see container-configurations, jndi-name and resource-managers 
+<!--
+  The enterprise-beans element contains additional information about
+  the beans. These informations, such as jndi names, resource managers and
+  container configurations, are specific to jboss and not described in
+  ejb-jar.xml.
+
+  jboss will provide a standard behaviour if no enterprise-beans element
+  is found, see container-configurations, jndi-name and resource-managers
   for defaults.
-  
+
   Used in: jboss
   -->
 <!ELEMENT enterprise-beans (session | entity)+>
 
 <!--
     The entity element holds information specific to jboss and not declared
-    in ejb-jar.xml about an entity bean, such as jndi name, container 
+    in ejb-jar.xml about an entity bean, such as jndi name, container
     configuration, and resource managers. (see tags for details)
-    The bean should already be declared in ejb-jar.xml, with the same 
+    The bean should already be declared in ejb-jar.xml, with the same
     ejb-name.
-    
+
     Used in: enterprise-beans
     -->
 <!ELEMENT entity (ejb-name , jndi-name? , configuration-name? , security-proxy?, ejb-ref* , resource-ref*)>
 
 <!--
     The session element holds information specific to jboss and not declared
-    in ejb-jar.xml about a session bean, such as jndi name, container 
+    in ejb-jar.xml about a session bean, such as jndi name, container
     configuration, and resource managers. (see tags for details)
-    The bean should already be declared in ejb-jar.xml, with the same 
+    The bean should already be declared in ejb-jar.xml, with the same
     ejb-name.
-    
+
     Used in: enterprise-beans
     -->
 <!ELEMENT session (ejb-name , jndi-name? , configuration-name?, security-proxy?, ejb-ref* , resource-ref*)>
 
-<!-- 
-      The ejb-name element gives the name of the bean, it must correspond to 
+<!--
+      The ejb-name element gives the name of the bean, it must correspond to
       an ejb-name element in ejb-jar.xml
-      
+
       Used in: entity and session
       -->
 <!ELEMENT ejb-name (#PCDATA)>
 
 <!--
       The jndi-name element gives the actual jndi name under which the bean will
-      be deployed. It is provided by the deployer. If not, jboss will assume 
+      be deployed. It is provided by the deployer. If not, jboss will assume
       "jndi-name" = "ejb-name"
-      
+
       Used in: entity and session
       -->
 <!ELEMENT jndi-name (#PCDATA)>
 
 <!--
-      The configuration-name element gives the name of the container 
-      configuration for this bean. It must match one of the container-name 
+      The configuration-name element gives the name of the container
+      configuration for this bean. It must match one of the container-name
       tags in the container-configurations section, or one of the standard
       configurations. If none is provided, jboss will automatically use the
       right standard configuration, see container-configurations.
-      
+
       Used in: entity and session
       -->
 <!ELEMENT configuration-name (#PCDATA)>
@@ -177,69 +177,69 @@ level using the authentication-module and role-mapping-manager elements.
 -->
 <!ELEMENT security-proxy (#PCDATA)>
 
-<!-- 
-      The ejb-ref element is used to give the jndi-name of an external 
-      ejb reference. In the case of an external ejb reference, you don't 
+<!--
+      The ejb-ref element is used to give the jndi-name of an external
+      ejb reference. In the case of an external ejb reference, you don't
       provide a ejb-link element in ejb-jar.xml, but you provide a jndi-name
       in jboss.xml
-       
+
       Used in: entity, session
       -->
 <!ELEMENT ejb-ref (ejb-ref-name , jndi-name)>
 
-<!-- 
+<!--
         The ejb-ref-name element is the name of the ejb reference as given in
-        ejb-jar.xml. 
-        
+        ejb-jar.xml.
+
         Used in: ejb-ref
         -->
 <!ELEMENT ejb-ref-name (#PCDATA)>
 
-<!-- 
-        The jndi-name element gives the deployed name of the reference. The 
-        general form is 
+<!--
+        The jndi-name element gives the deployed name of the reference. The
+        general form is
            <jndi-name>t3://otherserver/application/beanB</jndi-name>
-        
+
         Used in: ejb-ref
 
 	(It's commented out here because it appears above and you
          can't declare an element more than once per DTD)
         -->
 <!--    <!ELEMENT jndi-name (#PCDATA)> -->
-<!-- 
-      The resource-ref element gives a mapping between the "code name" 
-      of a resource (res-ref-name, provided by the Bean Developper) and 
+<!--
+      The resource-ref element gives a mapping between the "code name"
+      of a resource (res-ref-name, provided by the Bean Developper) and
       its "xml name" (resource-name, provided by the Application Assembler).
       If no resource-ref is provided, jboss will assume that
       "xml-name" = "code name"
-       
+
       See resource-managers.
-      
+
       Used in: session, entity
       -->
 <!ELEMENT resource-ref (res-ref-name , resource-name)>
 
-<!-- 
-        The res-ref-name element gives the "code name" of a resource. It is 
+<!--
+        The res-ref-name element gives the "code name" of a resource. It is
         provided by the Bean Developper. See resource-managers for the actual
         configuration of the resource.
-        
+
         Used in: resource-ref
         -->
 <!ELEMENT res-ref-name (#PCDATA)>
 
-<!-- 
-        The resource-name element gives the "xml name" of the resource. It is 
+<!--
+        The resource-name element gives the "xml name" of the resource. It is
         provided by the Application Assembler. See resource-managers for the
-        actual configuration of the resource. 
-        
+        actual configuration of the resource.
+
         Used in: resource-ref
         -->
 <!ELEMENT resource-name (#PCDATA)>
 
 <!--
-  The resource-managers element is used to declare resource managers. 
-  
+  The resource-managers element is used to declare resource managers.
+
   A resource has 3 names:
   - the "code name" is the name used in the code of the bean, supplied by
     the Bean Developper in the resource-ref section of the ejb-jar.xml file
@@ -247,32 +247,32 @@ level using the authentication-module and role-mapping-manager elements.
   - the "xml name" is an intermediary name used by the Application Assembler
     to identify resources in the XML file.
 
-  - the "runtime jndi name" is the actual jndi-name or url of the deployed 
+  - the "runtime jndi name" is the actual jndi-name or url of the deployed
     resource, it is supplied by the Deployer.
-  
-  The mapping between the "code name" and the "xml name" is given 
+
+  The mapping between the "code name" and the "xml name" is given
   in the resource-ref section for the bean. If not, jboss will assume that
   "xml name" = "code name".
-  
-  The mapping between the "xml name" and the "runtime jndi name" is given in 
-  a resource-manager section. If not, and if the datasource is of type 
+
+  The mapping between the "xml name" and the "runtime jndi name" is given in
+  a resource-manager section. If not, and if the datasource is of type
   javax.sql.DataSource, jboss will look for a javax.sql.DataSource in the jndi
   tree.
-  
+
   Used in: jboss
   -->
 <!ELEMENT resource-managers (resource-manager*)>
 
 <!--
-    The resource-manager element is used to provide a mapping between the 
-    "xml name" of a resource (res-name) and its "runtime jndi name" 
+    The resource-manager element is used to provide a mapping between the
+    "xml name" of a resource (res-name) and its "runtime jndi name"
     (res-jndi-name or res-url according to the type of the resource).
-    If it is not provided, and if the type of the resource is 
-    javax.sql.DataSource, jboss will look for a javax.sql.DataSource in the 
+    If it is not provided, and if the type of the resource is
+    javax.sql.DataSource, jboss will look for a javax.sql.DataSource in the
     jndi tree.
-    
+
     See resource-managers.
-    
+
     Used in: resource-managers
     -->
 <!ELEMENT resource-manager (res-name , (res-jndi-name | res-url))>
@@ -284,53 +284,53 @@ level using the authentication-module and role-mapping-manager elements.
 <!ATTLIST resource-manager res-class CDATA  #REQUIRED>
 
 <!--
-      The res-name element gives the "xml name" of a resource, it is provided 
+      The res-name element gives the "xml name" of a resource, it is provided
       by the Application Assembler. See resource-managers.
-      
+
       Used in: resource-manager
       -->
 <!ELEMENT res-name (#PCDATA)>
 
-<!-- 
-      The res-jndi-name element is the "deployed jndi name" of a resource, it 
+<!--
+      The res-jndi-name element is the "deployed jndi name" of a resource, it
       is provided by the Deployer. See resource-managers.
-      
+
       Used in: resource-manager
       -->
 <!ELEMENT res-jndi-name (#PCDATA)>
 
-<!-- 
-      The res-url element is the "runtime jndi name" as a url of the resource. 
+<!--
+      The res-url element is the "runtime jndi name" as a url of the resource.
       It is provided by the Deployer. See resource-managers.
-      
+
       Used in: resource-manager
       -->
 <!ELEMENT res-url (#PCDATA)>
 
-<!-- 
-  The container-configurations element declares the different possible 
-  container configurations that the beans can use. standardjboss.xml 
+<!--
+  The container-configurations element declares the different possible
+  container configurations that the beans can use. standardjboss.xml
   provides 4 standard configurations with the following container-names:
    - Standard CMP EntityBean
    - Standard BMP EntityBean
    - Standard Stateless SessionBean
    - Standard Stateful SessionBean
-  
-  These standard configurations will automatically be used if no custom 
+
+  These standard configurations will automatically be used if no custom
   configuration is specified.
-  
+
   The application assembler can define advanced custom configurations here.
-  
+
   Used in: jboss
   -->
 <!ELEMENT container-configurations (container-configuration*)>
 
-<!-- 
-    The container-configuration element describes a configuration for the 
+<!--
+    The container-configuration element describes a configuration for the
     container.
-    The different plugins to use are declared here, as well as their 
+    The different plugins to use are declared here, as well as their
     configurations. The configuration-class attribute is no longer used.
-    
+
     Used in: container-configurations
     -->
 <!ELEMENT container-configuration (container-name, call-logging, container-invoker,
@@ -347,9 +347,9 @@ commit-option? , (role-mapping-manager, authentication-module?)?)>
 <!ATTLIST container-configuration configuration-class CDATA  #IMPLIED>
 
 <!--
-      The container-name element gives the name of the configuration being 
+      The container-name element gives the name of the configuration being
       defined. Beans may refer to this name in their configuration-name tag.
-      
+
       Used in: container-configuration
       -->
 <!ELEMENT container-name (#PCDATA)>
@@ -357,19 +357,19 @@ commit-option? , (role-mapping-manager, authentication-module?)?)>
 <!--
       The call-logging element tells if the container must log every method
       invocation for this bean or not. Its value must be trus or false.
-      
+
       Used in: container-configuration
       -->
 <!ELEMENT call-logging (#PCDATA)>
 
-<!-- 
-      The container-invoker element gives the class name of the container 
-      invoker jboss must use for in this configuration. This class must 
-      implement the org.jboss.ejb.ContainerInvoker interface. The default is 
-      org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker, it may be 
+<!--
+      The container-invoker element gives the class name of the container
+      invoker jboss must use for in this configuration. This class must
+      implement the org.jboss.ejb.ContainerInvoker interface. The default is
+      org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker, it may be
       changed to org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker if
       no 1.3 VM is available
-      
+
       Used in: container-configuration
       -->
 <!ELEMENT container-invoker (#PCDATA)>
@@ -411,78 +411,78 @@ default if metricsEnabled is not explicitly given.
 
 <!--
       The instance-pool element gives the class name of the instance pool
-      jboss must use for in this configuration. This class must implement 
+      jboss must use for in this configuration. This class must implement
       the org.jboss.ejb.InstancePool interface. The defaults are:
       - org.jboss.ejb.plugins.EntityInstancePool for entity beans
       - org.jboss.ejb.plugins.StatelessSessionInstancePool for stateless
       session beans.
       - no pool is used for stateful session beans
-      
+
       Used in: container-configuration
       -->
 <!ELEMENT instance-pool (#PCDATA)>
 
 <!--
       The instance-cache element gives the class name of the instance cache
-      jboss must use for in this configuration. This class must implement 
+      jboss must use for in this configuration. This class must implement
       the org.jboss.ejb.InstanceCache interface. The defaults are:
       - org.jboss.ejb.plugins.NoPassivationEntityInstanceCache for entity beans
       - org.jboss.ejb.plugins.NoPassivationStatefulSessionInstanceCache for
       stateful session beans.
       - no cache is used for stateless session beans
-      
+
       Used in: container-configuration
       -->
 <!ELEMENT instance-cache (#PCDATA)>
 
 <!--
       The persistence-manager element gives the class name of the persistence
-      manager / persistence store jboss must use for in this configuration. 
+      manager / persistence store jboss must use for in this configuration.
       This class must implement:
-      - org.jboss.ejb.EntityPersistenceStore for CMP Entity Beans (default is 
+      - org.jboss.ejb.EntityPersistenceStore for CMP Entity Beans (default is
       org.jboss.ejb.plugins.jaws.JAWSPersistenceManager)
       - org.jboss.ejb.EntityPersistenceManager for BMP entity beans (default
       is org.jboss.ejb.plugins.BMPPersistenceManager)
-      - org.jboss.ejb.StatefulSessionPersistenceManager for stateless session 
+      - org.jboss.ejb.StatefulSessionPersistenceManager for stateless session
       beans.
       - no persistence-manager is used for stateless session beans
-      
+
       Used in: container-configuration
       -->
 <!ELEMENT persistence-manager (#PCDATA)>
 
 <!--
-      The transaction-manager element gives the class name of the transaction 
-      manager jboss must use for in this configuration. This class must implement 
-      the javax.transaction.TransactionManager interface. The default is 
+      The transaction-manager element gives the class name of the transaction
+      manager jboss must use for in this configuration. This class must implement
+      the javax.transaction.TransactionManager interface. The default is
       org.jboss.tm.TxManager.
-      
+
       Used in: container-configuration
       -->
 <!ELEMENT transaction-manager (#PCDATA)>
 
-<!-- 
-      The container-invoker-conf element holds configuration data for the 
+<!--
+      The container-invoker-conf element holds configuration data for the
       container invoker.
-      jboss does not read directly the subtree for this element: instead, 
-      it is passed to the container invoker instance (if it implements 
+      jboss does not read directly the subtree for this element: instead,
+      it is passed to the container invoker instance (if it implements
       org.jboss.metadata.XmlLoadable) for it to load its parameters.
 
       The Optimized tag described here only relates to the default container
       invoker, JRMPContainerInvoker.
-      
+
       Used in: container-configuration
       -->
 <!ELEMENT container-invoker-conf (Optimized , RMIObjectPort, RMIClientSocketFactory?, RMIServerSocketFactory?)>
 
-<!-- 
-        This element is only valid if the container invoker is 
+<!--
+        This element is only valid if the container invoker is
         JRMPContainerInvoker.
 
         The Optimized element tells if the container invoker to bypass RMI layers
         when the client is local (same VM as the server). This optimizes RMI calls.
         Its value must be true or false.
-        
+
         Used in: container-invoker-conf for JRMPContainerInvoker
         -->
 <!ELEMENT Optimized (#PCDATA)>
@@ -500,7 +500,7 @@ default if metricsEnabled is not explicitly given.
 
         Its value must an integer (0, or a valid port number).  Note that
 	normal user on a UNIX system cannot access privileged ports (<1024)
-        
+
         Used in: container-invoker-conf for JRMPContainerInvoker
 	-->
 <!ELEMENT RMIObjectPort (#PCDATA)>
@@ -539,13 +539,13 @@ default if metricsEnabled is not explicitly given.
 	-->
 <!ELEMENT RMIServerSocketFactory (#PCDATA)>
 
-<!-- 
-      The container-cache-conf element holds dynamic configuration data 
+<!--
+      The container-cache-conf element holds dynamic configuration data
       for the instance cache.
-      jboss does not read directly the subtree for this element: instead, 
-      it is passed to the instance cache instance (if it implements 
+      jboss does not read directly the subtree for this element: instead,
+      it is passed to the instance cache instance (if it implements
       org.jboss.metadata.XmlLoadable) for it to load its parameters.
-      
+
       The default instance caches, NoPassivationEntityInstanceCache and
       NoPassivationStatefulSessionInstanceCache, have no configuration
       available.
@@ -613,28 +613,40 @@ default if metricsEnabled is not explicitly given.
 	  -->
 <!ELEMENT cache-load-factor (#PCDATA)>
 
-<!-- 
-      The container-pool-conf element holds configuration data for the 
+<!--
+      The container-pool-conf element holds configuration data for the
       instance pool.
-      jboss does not read directly the subtree for this element: instead, 
-      it is passed to the instance pool instance (if it implements 
+      jboss does not read directly the subtree for this element: instead,
+      it is passed to the instance pool instance (if it implements
       org.jboss.metadata.XmlLoadable) for it to load its parameters.
-      
-      The default instance pools, EntityInstancePool and 
+
+      The default instance pools, EntityInstancePool and
       StatelessSessionInstancePool, both accept the following configuration.
 
       Used in: container-configuration
       -->
-<!ELEMENT container-pool-conf (feeder-policy , feeder-policy-conf)>
+<!ELEMENT container-pool-conf (MaximumSize , feeder-policy , feeder-policy-conf)>
 
-<!-- 
+<!--
+        The capacity of the Pool.  The pool feeder will feed the pool with new
+        instances, the pool size being limited by this value.  For pools where
+        reclaim is possible, the pool will also be feed when the instance is
+        free to be reused.
+        This is not an hard limit, if instances are needed when the pool is at
+        its MaximumSize, new instances will be created following the demand.
+
+        Used in: container-pool-conf
+        -->
+<!ELEMENT MaximumSize (#PCDATA)>
+
+<!--
         This element is only valid if the instance pool is a subclass of
         AbstractInstancePool.
 
         The feeder-policy element gives the Class that implements InstancePoolFeeder
         and is responsible to feed the pool with new instances of bean.
         If not present, no thread are started and the pool will have a size of 1.
-        
+
         TimedInstancePoolFeeder is the first implementation available.
 
         Used in: container-pool-conf for AbstractInstancePool subclasses
@@ -644,34 +656,26 @@ default if metricsEnabled is not explicitly given.
 <!--
         This element describes properties that the InstancePoolFeeder implementation
         will read to configure itself (XmlLoadable).
-        
+
         Note: the 3 attributes are hardcoded here for TimedInstancePoolFeeder.
-        
+
         Used in: container-pool-conf for InstancePoolFeeder implementations
         -->
-<!ELEMENT feeder-policy-conf (capacity , increment , period)>
+<!ELEMENT feeder-policy-conf (increment , period)>
 
 <!--
-        The capacity of the Pool.  The pool feeder will feed the pool with new
-        instances, the pool size being limited by this value.
-        
-        Used in: feeder-policy-conf
-        -->
-<!ELEMENT capacity (#PCDATA)>
-
-<!--
-        The pool feeder will feed the pool with this number of new instances at 
+        The pool feeder will feed the pool with this number of new instances at
         a regular period.
-        
+
         Used in: feeder-policy-conf
         -->
 <!ELEMENT increment (#PCDATA)>
 
 <!--
-        The interval of time (in milliseconds) the pool feeder look if the pool 
-        has come to its maximum size (capacity) and if not, will feed it with 
+        The interval of time (in milliseconds) the pool feeder look if the pool
+        has come to its maximum size (capacity) and if not, will feed it with
         a particular number of new instances (increment).
-        
+
         Used in: feeder-policy-conf
         -->
 <!ELEMENT period (#PCDATA)>
@@ -680,15 +684,15 @@ default if metricsEnabled is not explicitly given.
       This option is only used for entity container configurations.
 
       The commit-option element tells the container which option to use for transactions.
-      Its value must be A, B or C. 
+      Its value must be A, B or C.
 
-      - option A: the entiry instance has exclusive access to the database. The instance 
+      - option A: the entiry instance has exclusive access to the database. The instance
       stays ready after a transaction.
-      - option B: the entity instance does not have exclusive access to the database. 
+      - option B: the entity instance does not have exclusive access to the database.
       The state is loaded before the next transaction.
-      - option C: same as B, except the container does not keep the instance after commit: 
+      - option C: same as B, except the container does not keep the instance after commit:
       a passivate is immediately performed after the commit.
-      
+
       See ejb1.1 specification for details (p118).
 
       Used in: container-configuration

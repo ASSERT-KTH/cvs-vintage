@@ -13,7 +13,7 @@ import org.jboss.monitor.StatisticsProvider;
  * Defines the model for a EnterpriseContext instance pool.
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -72,6 +72,13 @@ public interface InstancePool
     * @return the size of the pool.
     */
    int getCurrentSize();
+
+   /**
+    * Get the maximum size of the pool.
+    *
+    * @return the size of the pool.
+    */
+   public int getMaxSize();
 
 }
 

@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.29 2001/12/23 19:50:47 vharcq Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.30 2001/12/28 03:47:11 vharcq Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -51,9 +51,9 @@
 	    </cache-policy-conf>
 	 </container-cache-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -97,9 +97,9 @@
 	    </cache-policy-conf>
 	 </container-cache-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -145,9 +145,9 @@
 	    </cache-policy-conf>
 	 </container-cache-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -191,9 +191,9 @@
 	    </cache-policy-conf>
 	 </container-cache-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -237,9 +237,9 @@
 	    </cache-policy-conf>
 	 </container-cache-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -272,9 +272,9 @@
 	    <Optimized>True</Optimized>
 	 </container-invoker-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -306,9 +306,9 @@
 	    <Optimized>True</Optimized>
 	 </container-invoker-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -340,9 +340,9 @@
 	    <Optimized>True</Optimized>
 	 </container-invoker-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -388,9 +388,9 @@
 	    </cache-policy-conf>
 	 </container-cache-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -436,9 +436,9 @@
 	    </cache-policy-conf>
 	 </container-cache-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -485,9 +485,9 @@
 	    </cache-policy-conf>
 	 </container-cache-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -530,9 +530,9 @@
 	    </cache-policy-conf>
 	 </container-cache-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -576,9 +576,9 @@
 	    </cache-policy-conf>
 	 </container-cache-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -622,9 +622,9 @@
 	    </cache-policy-conf>
 	 </container-cache-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>
@@ -668,9 +668,9 @@
             </MDBConfig>
 	 </container-invoker-conf>
      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
         <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
             <feeder-policy-conf>
-                <capacity>100</capacity>
                 <increment>10</increment>
                 <period>500</period>
             </feeder-policy-conf>

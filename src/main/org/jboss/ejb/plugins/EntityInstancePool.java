@@ -17,7 +17,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- *	@version $Revision: 1.17 $
+ *	@version $Revision: 1.18 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -62,7 +62,8 @@ public class EntityInstancePool
        // If transaction still present don't do anything (let the instance be GC)
        if (ctx.getTransaction() != null)
        {
-          // log.debug("Can Not FREE Entity Context because a Transaction exists.");
+          if( log.isTraceEnabled() )
+             log.trace("Can Not FREE Entity Context because a Transaction exists.");
           return ;
        }
 
@@ -90,4 +91,3 @@ public class EntityInstancePool
    // Inner classes -------------------------------------------------
 
 }
-

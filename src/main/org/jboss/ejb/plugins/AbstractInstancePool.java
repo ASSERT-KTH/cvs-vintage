@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  *  @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  *
- *  @version $Revision: 1.21 $
+ *  @version $Revision: 1.22 $
  *
  *  <p><b>Revisions:</b>
  *  <p><b>20010704 marcf:</b>
@@ -68,11 +68,14 @@ implements InstancePool, XmlLoadable
 
    // Attributes ----------------------------------------------------
 
-   protected Logger log = Logger.getLogger(AbstractInstancePool.class);
+   protected Logger log = Logger.getLogger(this.getClass());
 
    protected Container container;
 
    protected Stack pool = new Stack();
+
+   /** The maximum number of instances allowed in the pool */
+   protected int maxSize = 30;
 
    /** determine if we reuse EnterpriseContext objects i.e. if we actually do pooling */
    protected boolean reclaim = false;
@@ -105,9 +108,7 @@ implements InstancePool, XmlLoadable
    }
 
    /**
-    * <review>
     * @return Callback to the container which can be null if not set proviously
-    * </review>
     */
    public Container getContainer()
    {
@@ -126,13 +127,14 @@ implements InstancePool, XmlLoadable
 
    public void stop()
    {
-     if (useFeeder && poolFeeder.isStarted()) poolFeeder.stop();
-     freeAll();
+     if (useFeeder && poolFeeder.isStarted())
+     {
+        poolFeeder.stop();
+     }
    }
 
    public void destroy()
    {
-     if (useFeeder && poolFeeder.isStarted()) poolFeeder.stop();
      freeAll();
    }
 
@@ -155,7 +157,10 @@ implements InstancePool, XmlLoadable
    public void add()
    throws Exception
    {
-      this.pool.push(create(container.createBeanClassInstance()));
+      EnterpriseContext ctx = create(container.createBeanClassInstance());
+      if( log.isTraceEnabled() )
+         log.trace("Add instance "+this+"#"+ctx);
+      this.pool.push(ctx);
    }
 
    /**
@@ -168,22 +173,29 @@ implements InstancePool, XmlLoadable
    public synchronized EnterpriseContext get()
    throws Exception
    {
-      //Logger.debug("Get instance "+this+"#"+pool.empty()+"#"+getContainer().getBeanClass());
+      if( log.isTraceEnabled() )
+         log.trace("Get instance "+this+"#"+pool.empty()+"#"+getContainer().getBeanClass());
+
+      EnterpriseContext ctx = null;
 
       if (!pool.empty())
       {
          mReadyBean.remove();
-         return (EnterpriseContext)pool.pop();
+         ctx = (EnterpriseContext) pool.pop();
       }
       // The Pool feeder should avoid this
       else
       {
-         if (useFeeder && poolFeeder.isStarted() && log.isDebugEnabled()) log.debug("The Pool for " + container.getBeanClass().getName()
+         if (useFeeder && poolFeeder.isStarted() && log.isDebugEnabled())
+         {
+            log.debug("The Pool for " + container.getBeanClass().getName()
                + " has been overloaded.  You should change pool parameters.");
+         }
          try
          {
-            if (useFeeder && ! poolFeeder.isStarted()) poolFeeder.start();
-            return create(container.createBeanClassInstance());
+             if (useFeeder && ! poolFeeder.isStarted())
+                poolFeeder.start();
+             ctx = create(container.createBeanClassInstance());
          } catch (InstantiationException e)
          {
             throw new ServerException("Could not instantiate bean", e);
@@ -192,6 +204,8 @@ implements InstancePool, XmlLoadable
             throw new ServerException("Could not instantiate bean", e);
          }
       }
+
+      return ctx;
    }
 
    /**
@@ -205,22 +219,41 @@ implements InstancePool, XmlLoadable
     */
    public synchronized void free(EnterpriseContext ctx)
    {
-      // Pool it
-      //DEBUG      Logger.debug("Free instance:"+ctx.getId()+"#"+ctx.getTransaction());
+      if( log.isTraceEnabled() )
+      {
+         String msg = maxSize+" Free instance:"+this+"#"+ctx.getId()
+            +"#"+ctx.getTransaction()
+            +"#"+reclaim
+            +"#"+getContainer().getBeanClass();
+         log.trace(msg);
+      }
       ctx.clear();
 
       // If (!reclaim), we do not reuse but create a brand new instance simplifies the design
       try {
          mReadyBean.add();
-         if (this.reclaim)
+         if( this.reclaim && pool.size() < maxSize )
          {
-            pool.push(ctx);
+            // Add the unused context back into the pool
+            try
+            {
+               pool.push(ctx);
+            }
+            catch (Exception ignored)
+            {
+            }
          }
          else
          {
+            // Discard the context
             discard (ctx);
          }
       } catch (Exception ignored) {}
+   }
+
+   public int getMaxSize()
+   {
+      return this.maxSize;
    }
 
    public void discard(EnterpriseContext ctx)
@@ -246,7 +279,18 @@ implements InstancePool, XmlLoadable
    /**
     * XmlLoadable implementation
     */
-   public void importXml(Element element) throws DeploymentException {
+   public void importXml(Element element) throws DeploymentException
+   {
+      String maximumSize = MetaData.getElementContent(MetaData.getUniqueChild(element, "MaximumSize"));
+      try
+      {
+         this.maxSize = Integer.parseInt(maximumSize);
+      }
+      catch (NumberFormatException e)
+      {
+         throw new DeploymentException("Invalid MaximumSize value for instance pool configuration");
+      }
+
       String feederPolicy = MetaData.getElementContent(MetaData.getOptionalChild(element, "feeder-policy"));
       if (feederPolicy != null)
       {
