@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -9,7 +10,8 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -19,6 +21,8 @@ package org.columba.mail.gui.composer;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.ContainerListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
@@ -29,6 +33,8 @@ import java.util.Observer;
 import java.util.logging.Logger;
 
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.event.EventListenerList;
 
 import org.columba.addressbook.folder.Folder;
@@ -46,6 +52,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ViewPluginHandler;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.gui.composer.action.SaveAsDraftAction;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.text.TextEditorController;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
@@ -57,29 +64,38 @@ import org.frappucino.swing.MultipleTransferHandler;
 
 /**
  * @author frd
- *
+ * 
  * controller for message composer dialog
  */
-public class ComposerController extends AbstractFrameController
-    implements CharsetOwnerInterface, ComponentListener, Observer {
+public class ComposerController extends AbstractFrameController implements
+        CharsetOwnerInterface, ComponentListener, Observer {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer");
+    private static final Logger LOG = Logger
+            .getLogger("org.columba.mail.gui.composer");
 
     private IdentityInfoPanel identityInfoPanel;
+
     private AttachmentController attachmentController;
+
     private SubjectController subjectController;
+
     private PriorityController priorityController;
+
     private AccountController accountController;
 
     //private TextEditorController editorController;
     private AbstractEditorController editorController;
+
     private HeaderController headerController;
 
     //private MessageComposer messageComposer;
     private ComposerSpellCheck composerSpellCheck;
+
     private ComposerModel composerModel;
+
     private Charset charset;
+
     private EventListenerList listenerList = new EventListenerList();
 
     /** Buffer for listeners used by addContainerListenerForEditor and createView */
@@ -93,9 +109,7 @@ public class ComposerController extends AbstractFrameController
         // update ComposerModel based on user-changes in ComposerView
         updateComponents(false);
 
-        if (!subjectController.checkState()) {
-            return false;
-        }
+        if (!subjectController.checkState()) { return false; }
 
         return !headerController.checkState();
     }
@@ -114,76 +128,67 @@ public class ComposerController extends AbstractFrameController
     protected void initAddressCompletion() {
         AddressCollector.clear();
 
-        HeaderItemList list = ((Folder) AddressbookInterface.addressbookTreeModel.getFolder(101)).getHeaderItemList();
+        HeaderItemList list = ((Folder) AddressbookInterface.addressbookTreeModel
+                .getFolder(101)).getHeaderItemList();
 
         for (int i = 0; i < list.count(); i++) {
             HeaderItem item = list.get(i);
 
             if (item.contains("displayname")) {
                 AddressCollector.addAddress((String) item.get("displayname"),
-                    item); //$NON-NLS-1$ //$NON-NLS-2$
+                        item); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             if (item.contains("email;internet")) {
-                AddressCollector.addAddress((String) item.get("email;internet"),
-                    item); //$NON-NLS-1$ //$NON-NLS-2$
+                AddressCollector.addAddress(
+                        (String) item.get("email;internet"), item); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
 
-        list = ((Folder) AddressbookInterface.addressbookTreeModel.getFolder(102)).getHeaderItemList();
+        list = ((Folder) AddressbookInterface.addressbookTreeModel
+                .getFolder(102)).getHeaderItemList();
 
         for (int i = 0; i < list.count(); i++) {
             HeaderItem item = list.get(i);
 
             if (item.contains("displayname")) {
                 AddressCollector.addAddress((String) item.get("displayname"),
-                    item); //$NON-NLS-1$ //$NON-NLS-2$
+                        item); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             if (item.contains("email;internet")) {
-                AddressCollector.addAddress((String) item.get("email;internet"),
-                    item); //$NON-NLS-1$ //$NON-NLS-2$
+                AddressCollector.addAddress(
+                        (String) item.get("email;internet"), item); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
     }
 
     /*
-    protected void updateAddressbookFrame() {
-
-            if ((view.getLocation().x
-                    - composerInterface.addressbookFrame.getSize().width
-                    < 0)
-                    || (view.getLocation().y < 0)) {
-                    int x =
-                            view.getLocation().x
-                                    - composerInterface.addressbookFrame.getSize().width;
-                    int y = view.getLocation().y;
-
-                    if (x <= 0)
-                            x = 0;
-                    if (y <= 0)
-                            y = 0;
-
-                    view.setLocation(
-                            x + composerInterface.addressbookFrame.getSize().width,
-                            y);
-
-            }
-
-            composerInterface.addressbookFrame.setLocation(
-                    view.getLocation().x
-                            - composerInterface.addressbookFrame.getSize().width,
-                    view.getLocation().y);
-
-    }*/
+     * protected void updateAddressbookFrame() {
+     * 
+     * if ((view.getLocation().x -
+     * composerInterface.addressbookFrame.getSize().width < 0) ||
+     * (view.getLocation().y < 0)) { int x = view.getLocation().x -
+     * composerInterface.addressbookFrame.getSize().width; int y =
+     * view.getLocation().y;
+     * 
+     * if (x <= 0) x = 0; if (y <= 0) y = 0;
+     * 
+     * view.setLocation( x + composerInterface.addressbookFrame.getSize().width,
+     * y); }
+     * 
+     * composerInterface.addressbookFrame.setLocation( view.getLocation().x -
+     * composerInterface.addressbookFrame.getSize().width,
+     * view.getLocation().y); }
+     */
     public void componentHidden(ComponentEvent e) {
     }
 
     public void componentMoved(ComponentEvent e) {
         /*
-        if (composerInterface.addressbookFrame.isVisible()) {
-                updateAddressbookFrame();
-        }*/
+         * if (composerInterface.addressbookFrame.isVisible()) {
+         * updateAddressbookFrame(); }
+         */
     }
 
     public void componentResized(ComponentEvent e) {
@@ -192,7 +197,9 @@ public class ComposerController extends AbstractFrameController
     public void componentShown(ComponentEvent e) {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.columba.core.gui.FrameController#createView()
      */
     protected AbstractView createView() {
@@ -201,23 +208,25 @@ public class ComposerController extends AbstractFrameController
         ViewPluginHandler handler = null;
 
         try {
-            handler = (ViewPluginHandler) MainInterface.pluginManager.getHandler(
-                    "org.columba.core.view");
+            handler = (ViewPluginHandler) MainInterface.pluginManager
+                    .getHandler("org.columba.core.view");
         } catch (PluginHandlerNotFoundException ex) {
             NotifyDialog d = new NotifyDialog();
             d.showDialog(ex);
         }
 
         // get view using the plugin handler found above
-        Object[] args = {this};
+        Object[] args = { this};
 
         try {
-            view = (AbstractView) handler.getPlugin(
-                getViewItem().getRoot().getAttribute("frame", id), args);
+            view = (AbstractView) handler.getPlugin(getViewItem().getRoot()
+                    .getAttribute("frame", id), args);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
+        view.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        view.getFrame().addWindowListener(new ComposerWindowAdapter());
 
         // *20030917, karlpeder* If ContainerListeners are waiting to be
         // added, add them now.
@@ -228,7 +237,8 @@ public class ComposerController extends AbstractFrameController
 
             while (ite.hasNext()) {
                 ContainerListener cl = (ContainerListener) ite.next();
-                ((AbstractComposerView)view).getEditorPanel().addContainerListener(cl);
+                ((AbstractComposerView) view).getEditorPanel()
+                        .addContainerListener(cl);
             }
 
             containerListenerBuffer = null; // done, the buffer has been emptied
@@ -245,7 +255,9 @@ public class ComposerController extends AbstractFrameController
         headerController.getView().editLastRow();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.columba.core.gui.FrameController#initInternActions()
      */
     protected void initInternActions() {
@@ -277,8 +289,8 @@ public class ComposerController extends AbstractFrameController
      */
     public AbstractEditorController getEditorController() {
         /*
-         * *20030906, karlpeder* Method signature changed to
-         * return an AbstractEditorController
+         * *20030906, karlpeder* Method signature changed to return an
+         * AbstractEditorController
          */
         return editorController;
     }
@@ -311,7 +323,9 @@ public class ComposerController extends AbstractFrameController
         return subjectController;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.columba.core.gui.FrameController#init()
      */
     protected void init() {
@@ -329,8 +343,8 @@ public class ComposerController extends AbstractFrameController
 
         // set default html or text based on stored option
         // ... can be overridden by setting the composer model
-        XmlElement optionsElement = MailInterface.config.get("composer_options")
-                                                        .getElement("/options");
+        XmlElement optionsElement = MailInterface.config
+                .get("composer_options").getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 
         // create default element if not available
@@ -371,15 +385,18 @@ public class ComposerController extends AbstractFrameController
                 }
             }
         }
-        
+
         // Setup DnD for the text and attachment list control.
-        ComposerAttachmentTransferHandler dndTransferHandler = new ComposerAttachmentTransferHandler(attachmentController);
+        ComposerAttachmentTransferHandler dndTransferHandler = new ComposerAttachmentTransferHandler(
+                attachmentController);
         attachmentController.view.setDragEnabled(true);
         attachmentController.view.setTransferHandler(dndTransferHandler);
 
-        JEditorPane editorComponent = (JEditorPane) getEditorController().getComponent();
+        JEditorPane editorComponent = (JEditorPane) getEditorController()
+                .getComponent();
         MultipleTransferHandler compositeHandler = new MultipleTransferHandler();
-        compositeHandler.addTransferHandler(editorComponent.getTransferHandler());
+        compositeHandler.addTransferHandler(editorComponent
+                .getTransferHandler());
         compositeHandler.addTransferHandler(dndTransferHandler);
         editorComponent.setDragEnabled(true);
         editorComponent.setTransferHandler(compositeHandler);
@@ -387,23 +404,24 @@ public class ComposerController extends AbstractFrameController
 
     /**
      * Returns the composer model
-     * @return        Composer model
+     * 
+     * @return Composer model
      */
     public ComposerModel getModel() {
-        //if (composerModel == null) // *20030907, karlpeder* initialized in init
+        //if (composerModel == null) // *20030907, karlpeder* initialized in
+        // init
         //  composerModel = new ComposerModel();
         return composerModel;
     }
 
     /**
-     * Sets the composer model. If the message type of the new
-     * model (html / text) is different from the message type of
-     * the existing, the editor controller is changed and the
-     * view is changed accordingly.
-     * <br>
+     * Sets the composer model. If the message type of the new model (html /
+     * text) is different from the message type of the existing, the editor
+     * controller is changed and the view is changed accordingly. <br>
      * Finally the components are updated according to the new model.
-     *
-     * @param         model        New composer model
+     * 
+     * @param model
+     *            New composer model
      */
     public void setComposerModel(ComposerModel model) {
         boolean wasHtml = composerModel.isHtml();
@@ -423,8 +441,8 @@ public class ComposerController extends AbstractFrameController
             }
 
             // change configuration based on new model
-            htmlElement.addAttribute("enable",
-                Boolean.toString(composerModel.isHtml()));
+            htmlElement.addAttribute("enable", Boolean.toString(composerModel
+                    .isHtml()));
 
             // notify observers - this includes this object - but here it will
             // do nothing, since the model is already setup correctly
@@ -436,19 +454,18 @@ public class ComposerController extends AbstractFrameController
     }
 
     /**
-     * Private utility for switching btw. html and text.
-     * This includes instantiating a new editor controller
-     * and refreshing the editor view accordingly.
-     * <br>
-     * Pre-condition: The caller should set the composer model
-     * before calling this method. If a message was already entered
-     * in the UI, then updateComponents should have been called to
-     * synchronize model with view before switching, else data will be lost.
-     * <br>
-     * Post-condition: The caller must call updateComponents afterwards
-     * to display model data using the new controller-view pair
-     *
-     * @param        html        True if we should switch to html, false for text
+     * Private utility for switching btw. html and text. This includes
+     * instantiating a new editor controller and refreshing the editor view
+     * accordingly. <br>
+     * Pre-condition: The caller should set the composer model before calling
+     * this method. If a message was already entered in the UI, then
+     * updateComponents should have been called to synchronize model with view
+     * before switching, else data will be lost. <br>
+     * Post-condition: The caller must call updateComponents afterwards to
+     * display model data using the new controller-view pair
+     * 
+     * @param html
+     *            True if we should switch to html, false for text
      */
     private void switchEditor(boolean html) {
         if (composerModel.isHtml()) {
@@ -466,19 +483,18 @@ public class ComposerController extends AbstractFrameController
     }
 
     /**
-     * Register ContainerListener for the panel, that holds the
-     * editor view. By registering as listener it is possible to
-     * get information when the editor changes.
-     * <br>
-     * If the view is not yet created, the listener is stored in
-     * a buffer - add then added in createView. This is necessary to
-     * handle the timing involved in setting up the controller-view
-     * framework for the composer
+     * Register ContainerListener for the panel, that holds the editor view. By
+     * registering as listener it is possible to get information when the editor
+     * changes. <br>
+     * If the view is not yet created, the listener is stored in a buffer - add
+     * then added in createView. This is necessary to handle the timing involved
+     * in setting up the controller-view framework for the composer
      */
     public void addContainerListenerForEditor(ContainerListener cl) {
         if (view != null) {
             // add listener
-            ((AbstractComposerView) view).getEditorPanel().addContainerListener(cl);
+            ((AbstractComposerView) view).getEditorPanel()
+                    .addContainerListener(cl);
         } else {
             // view not yet created - store listener in buffer
             if (containerListenerBuffer == null) {
@@ -490,12 +506,12 @@ public class ComposerController extends AbstractFrameController
     }
 
     /**
-     * Removes a ContainerListener from the panel, that holds the
-     * editor view (previously registered using
-     * addContainListenerForEditor)
+     * Removes a ContainerListener from the panel, that holds the editor view
+     * (previously registered using addContainListenerForEditor)
      */
     public void removeContainerListenerForEditor(ContainerListener cl) {
-        ((AbstractComposerView) getView()).getEditorPanel().removeContainerListener(cl);
+        ((AbstractComposerView) getView()).getEditorPanel()
+                .removeContainerListener(cl);
     }
 
     public Charset getCharset() {
@@ -505,8 +521,8 @@ public class ComposerController extends AbstractFrameController
     public void setCharset(Charset charset) {
         this.charset = charset;
 
-        XmlElement optionsElement = MailInterface.config.get("composer_options")
-                                                        .getElement("/options");
+        XmlElement optionsElement = MailInterface.config
+                .get("composer_options").getElement("/options");
         XmlElement charsetElement = optionsElement.getElement("charset");
 
         if (charset == null) {
@@ -547,7 +563,7 @@ public class ComposerController extends AbstractFrameController
 
     /**
      * Used for listenen to the enable html option
-     *
+     * 
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void update(Observable o, Object arg) {
@@ -585,4 +601,47 @@ public class ComposerController extends AbstractFrameController
             }
         }
     }
+
+    /**
+     * Window listener prompts the user to save his work when closing the
+     * dialog.
+     * <p>
+     * TODO: For some reason the window is closed before this dialog is
+     * opened (Linux). Currently, the composer is just made visible again.
+     *  
+     * @author fdietz
+     */
+    class ComposerWindowAdapter extends WindowAdapter {
+
+        public void windowClosing(WindowEvent e) {
+            // only prompt user, if composer contains some text
+            if ( editorController.getViewText().length() == 0) return;
+            
+            Object[] options = { "Close", "Cancel", "Save"};
+            int n = JOptionPane
+                    .showOptionDialog(
+                            getView().getFrame(),
+                            "Message wasn't send. Would you like to save your changes?",
+                            "Warning: Message was modified",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE, null, options,
+                            options[2]); //default button title
+
+            if (n == 2) {
+                // save changes
+                new SaveAsDraftAction(ComposerController.this)
+                        .actionPerformed(null);
+
+                // close composer
+                getView().getFrame().setVisible(false);
+            } else if (n == 1) {
+                // cancel question dialog and don't close composer
+                getView().getFrame().setVisible(true);
+            } else {
+                // close composer
+                getView().getFrame().setVisible(false);
+            }
+        }
+    };
+
 }

@@ -189,9 +189,9 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
         columns.addElement(createColumn("Flagged", "23"));
         columns.addElement(createColumn("Priority", "23"));
         columns.addElement(createColumn("Subject", "200"));
-        columns.addElement(createColumn("From", "100"));
-        columns.addElement(createColumn("Date", "100"));
-        columns.addElement(createColumn("Size", "50"));
+        columns.addElement(createColumn("From", "150"));
+        columns.addElement(createColumn("Date", "60"));
+        columns.addElement(createColumn("Size", "30"));
         columns.addElement(createColumn("Spam", "23"));
 
         return columns;
