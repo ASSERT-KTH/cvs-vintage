@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.25 2005/02/09 20:29:07 mvw Exp $
+// $Id: GeneratorPHP4.java,v 1.26 2005/03/19 08:16:13 kscr Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -398,6 +398,22 @@ public class GeneratorPHP4
                         || Model.getFacade().getKind(modelElement).equals(
                             Model.getDirectionKind().getOutParameter())) {
                     sParameter += "&";
+                }
+            }
+
+            if (iLanguageMajorVersion >= 5) {
+            	String sTypeHint = null;
+
+            	try {
+            	    sTypeHint = NameGenerator.generateClassifierName(
+                        Model.getFacade().getType(modelElement));
+                } catch (Exception exp) {
+                    LOG.error("Finding type hint FAILED: " + exp.getMessage());
+                } finally {
+	                if (sTypeHint != null && sTypeHint != "" && convertType(
+                        Model.getFacade().getType(modelElement)) == null) {
+	            	    sParameter += " - " + sTypeHint + " ";
+	                }
                 }
             }
 
