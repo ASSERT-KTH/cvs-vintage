@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.37 2004/05/22 15:08:04 mkl Exp $
+// $Id: PropPanelDataType.java,v 1.38 2004/05/23 08:30:12 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,10 +36,8 @@ import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLCheckBox;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
-import org.argouml.uml.ui.UMLReflectionBooleanProperty;
 import org.argouml.util.ConfigLoader;
 
 /**
