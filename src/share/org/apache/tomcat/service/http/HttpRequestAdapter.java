@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.1 1999/11/01 22:24:19 costin Exp $
- * $Revision: 1.1 $
- * $Date: 1999/11/01 22:24:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.2 1999/12/17 05:14:03 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/12/17 05:14:03 $
  *
  * ====================================================================
  *
@@ -108,7 +108,7 @@ public class HttpRequestAdapter extends RequestAdapterImpl {
 	String line="";
 	// cut&paste from BufferedInputStream.
 	// XXX reuse buff, avoid creating strings 
-	byte[] buf = new byte[1024];
+	byte[] buf = new byte[Constants.RequestBufferSize];
 	int count = in.readLine(buf, 0, buf.length);
 	if (count >= 0) {
 	    line=new String(buf, 0, count);
