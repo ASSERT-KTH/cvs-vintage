@@ -73,7 +73,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.71 2003/04/14 23:37:31 jmcnally Exp $
+ * @version $Id: Module.java,v 1.72 2003/04/17 22:57:19 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -164,8 +164,17 @@ public interface Module
     String getCode();
     void setCode(String code);
 
+    /** www.foo.com */
     String getDomain();
     void setDomain(String domain);
+
+    /** the port number used on the domain */
+    String getPort() throws Exception;
+    void setPort(String port) throws Exception;
+    
+    /** the scheme (http|https) used */
+    String getScheme() throws Exception;
+    void setScheme(String scheme) throws Exception;
 
     String getDescription();
     void setDescription(String description);
