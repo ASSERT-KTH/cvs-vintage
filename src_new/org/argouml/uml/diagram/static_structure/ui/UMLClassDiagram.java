@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.53 2004/09/21 20:20:08 mvw Exp $
+// $Id: UMLClassDiagram.java,v 1.54 2004/10/06 14:46:55 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -244,5 +244,115 @@ public class UMLClassDiagram extends UMLDiagram {
             name = getNewDiagramName();
         }
         return name;
+    }
+    
+    /**
+     * See issue 2835.
+     * @return Returns the actionAggregation.
+     */
+    protected Action getActionAggregation() {
+        return actionAggregation;
+    }
+    /**
+     * @return Returns the actionAssociation.
+     */
+    protected Action getActionAssociation() {
+        return actionAssociation;
+    }
+    /**
+     * @return Returns the actionClass.
+     */
+    protected Action getActionClass() {
+        return actionClass;
+    }
+    /**
+     * @return Returns the actionComposition.
+     */
+    protected Action getActionComposition() {
+        return actionComposition;
+    }
+    /**
+     * @return Returns the actionDepend.
+     */
+    protected Action getActionDepend() {
+        return actionDepend;
+    }
+    /**
+     * @return Returns the actionGeneralize.
+     */
+    protected Action getActionGeneralize() {
+        return actionGeneralize;
+    }
+    /**
+     * @return Returns the actionInterface.
+     */
+    protected Action getActionInterface() {
+        return actionInterface;
+    }
+    /**
+     * @return Returns the actionLink.
+     */
+    protected Action getActionLink() {
+        return actionLink;
+    }
+    /**
+     * @return Returns the actionModel.
+     */
+    protected Action getActionModel() {
+        return actionModel;
+    }
+    /**
+     * @return Returns the actionObject.
+     */
+    protected Action getActionObject() {
+        return actionObject;
+    }
+    /**
+     * @return Returns the actionPackage.
+     */
+    protected Action getActionPackage() {
+        return actionPackage;
+    }
+    /**
+     * @return Returns the actionPermission.
+     */
+    protected Action getActionPermission() {
+        return actionPermission;
+    }
+    /**
+     * @return Returns the actionRealize.
+     */
+    protected Action getActionRealize() {
+        return actionRealize;
+    }
+    /**
+     * @return Returns the actionSubsystem.
+     */
+    protected Action getActionSubsystem() {
+        return actionSubsystem;
+    }
+    /**
+     * @return Returns the actionUniAggregation.
+     */
+    protected Action getActionUniAggregation() {
+        return actionUniAggregation;
+    }
+    /**
+     * @return Returns the actionUniAssociation.
+     */
+    protected Action getActionUniAssociation() {
+        return actionUniAssociation;
+    }
+    /**
+     * @return Returns the actionUniComposition.
+     */
+    protected Action getActionUniComposition() {
+        return actionUniComposition;
+    }
+    /**
+     * @return Returns the actionUsage.
+     */
+    protected Action getActionUsage() {
+        return actionUsage;
     }
 } /* end class UMLClassDiagram */
