@@ -303,8 +303,10 @@ public class ExportDialog
 
 			// ask the user about the destination file
 			JFileChooser chooser = new JFileChooser();
+			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			chooser.setMultiSelectionEnabled(false);
 
-			int result = chooser.showOpenDialog(this);
+			int result = chooser.showSaveDialog(this);
 			if (result == JFileChooser.APPROVE_OPTION) {
 				File file = chooser.getSelectedFile();
 
