@@ -102,7 +102,7 @@ import org.apache.tomcat.util.io.*;
  *
  * @author    Larry Isaacs
  * @author    Christopher Cain
- * @version   $Revision: 1.2 $ $Date: 2002/03/12 04:08:30 $
+ * @version   $Revision: 1.3 $ $Date: 2002/03/14 11:33:31 $
  */
 public class PasswordPrompter extends BaseInterceptor {
 
@@ -172,6 +172,19 @@ public class PasswordPrompter extends BaseInterceptor {
         return MOD_VERSION;
     }
 
+    /**
+     * Perform the prompts if appropriate for any of the
+     * specified interceptors.
+     */
+    public void doPrompts( Object[] modules, Context ctx ) {
+        for ( int idx = 0; idx < prompts.size(); idx++ ) {
+            UserPrompt p =
+                    (UserPrompt)prompts.elementAt(idx);
+            // perform this prompt for any applicable modules in the array
+            p.prompt( modules, ctx, delay, scroll );
+        }
+    }
+
     // -------------------------------------------------------------- Callbacks
 
     /**
@@ -211,7 +224,7 @@ public class PasswordPrompter extends BaseInterceptor {
 
         // if time to prompt
         if ( cm.getState() != ContextManager.STATE_CONFIG ) {
-            BaseInterceptor[] modules;
+            Object[] modules;
 
             // if adding ourselves (i.e. the first call )
             if ( i == this ) {
@@ -225,18 +238,25 @@ public class PasswordPrompter extends BaseInterceptor {
 
                 // check all previously added modules
                 modules =
-                        cm.getContainer().getInterceptors( Container.H_engineInit );
+                        cm.getContainer().getInterceptors();
+                // do prompts on these modules
+                doPrompts( modules, ctx );
+
+                // check local context modules
+                Enumeration enum = cm.getContexts();
+                while (enum.hasMoreElements()) {
+                    ctx = (Context)enum.nextElement();
+                    modules = ctx.getContainer().getHooks().getModules();
+                    if ( modules.length > 0 )
+                        doPrompts( modules, ctx );
+                }
             } else {
                 // check just the module being added
                 modules = new BaseInterceptor[] { i };
+                // do prompts on this module
+                doPrompts( modules, ctx );
             }
 
-            for ( int idx = 0; idx < prompts.size(); idx++ ) {
-                UserPrompt p =
-                        (UserPrompt)prompts.elementAt(idx);
-                // perform this prompt for any applicable modules in the array
-                p.prompt( modules, delay, scroll );
-            }
         }
     }
 
@@ -329,12 +349,12 @@ class UserPrompt
      *  methods succeed, the prompt is displayed and the response is
      *  set on the module using the "set" method.
      */
-    public void prompt( BaseInterceptor [] modules, int delay, int scroll ) {
+    public void prompt( Object [] modules, Context ctx, int delay, int scroll ) {
         if ( !valid )
             return;
 
         for ( int i = 0; i < modules.length; i++ ) {
-            BaseInterceptor module = modules[i];
+            BaseInterceptor module = (BaseInterceptor)modules[i];
             if ( !moduleClass.isInstance( module ) ) {
                 continue;
             }
@@ -365,7 +385,11 @@ class UserPrompt
             // go ahead with the prompting
             String response = null;
             try {
-                response = Prompter.promptForInput( prompt, scroll );
+                String temp = prompt;
+                if ( ctx != null ) {
+                    temp = "Context " + ctx.getName() + "\n" + prompt;
+                }
+                response = Prompter.promptForInput( temp, scroll );
                 setMethod.invokeSet( module, response );
             } catch (IOException ioe) {
                 logger.log( "IO problem with command line: " + ioe.toString() );
