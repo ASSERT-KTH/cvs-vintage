@@ -29,7 +29,7 @@ import org.jboss.ejb.plugins.jaws.metadata.TypeMappingMetaData;
  * @author <a href="mailto:menonv@cpw.co.uk">Vinay Menon</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  *
  * Revisions:
  * 20010621 Bill Burke: exposed parameterArray through get method.
@@ -57,20 +57,20 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       String query = "";
       ArrayList parameters = new ArrayList();
       if (f.getQuery() != null)  {
-	      StringTokenizer finderQuery = new StringTokenizer(f.getQuery(),"{}", true);
+         StringTokenizer finderQuery = new StringTokenizer(f.getQuery(),"{}", true);
 
-	      while (finderQuery.hasMoreTokens())
-	      {
-	         String t = finderQuery.nextToken();
-	         if (t.equals("{"))
-	         {
-	            query += "?";
-	            String idx = finderQuery.nextToken(); // Remove number
-	            parameters.add(new Integer(idx));
-	            finderQuery.nextToken(); // Remove }
-	         } else
-	            query += t;
-	      }
+         while (finderQuery.hasMoreTokens())
+         {
+            String t = finderQuery.nextToken();
+            if (t.equals("{"))
+            {
+               query += "?";
+               String idx = finderQuery.nextToken(); // Remove number
+               parameters.add(new Integer(idx));
+               finderQuery.nextToken(); // Remove }
+            } else
+               query += t;
+         }
       }
 
       // Copy index numbers to parameterArray
@@ -255,7 +255,17 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       for (int i = 0; i < parameterArray.length; i++)
       {
           Object arg = args[parameterArray[i]];
-          int jdbcType = typeMapping.getJdbcTypeForJavaType(arg.getClass());
+          int jdbcType;
+
+          if(arg!=null)
+          {
+             jdbcType = typeMapping.getJdbcTypeForJavaType(arg.getClass());
+          }
+          else
+          {
+             jdbcType = java.sql.Types.NULL;
+          }
+
           setParameter(stmt,i+1,jdbcType,arg);
       }
    }
