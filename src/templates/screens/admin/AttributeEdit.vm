@@ -12,7 +12,7 @@ $page.setTitle("Attribute Editor")
 <blockquote><i>
 #set ( $comma = "" )
 #foreach ($option in $attOptions)
-$comma$option.DisplayValue
+$comma$option.Name
 #set ( $comma = ", " )
 #end
 </i></blockquote>
