@@ -1,7 +1,7 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
-#if (($module.getPrivateTemplates($user, $issueType).isEmpty()) && ($module.getGlobalTemplates($issueType).isEmpty()))
+#if ($module.getTemplates($user, $issueType).isEmpty())
    #set ($noTemplates = "true")
 #else
    #set ($noTemplates = "false")
@@ -26,6 +26,40 @@
 
 #TemplateListBar("")
 
+## SORTING
+#set ($sortColumn = $data.Parameters.getString("sortColumn",""))
+#set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
+#if (!$sortColumn || $sortColumn.length() == 0)
+   #set ($sortColumn = "name")
+#end
+#if (!$sortPolarity || $sortPolarity.length() == 0)
+   #set ($sortPolarity = "asc")
+#end
+#set ($allTemplates = $scarabR.IssueTemplates)
+
+
+## PAGINATION
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
+#set ($pageNum = $data.Parameters.getInt("pageNum",0))
+#if ($resultsPerPage == 0)
+  #set ($resultsPerPage = 25)
+#end
+#if ($pageNum == 0)
+  #set ($pageNum = 1)
+#end
+#if ($allTemplates.size() > $resultsPerPage)
+ #set ($paginated = "true")
+ #set ($pagList = $scarabR.getPaginatedList($allTemplates, $pageNum.toString(),       $resultsPerPage.toString()))
+ #if ($pagList)
+   #set ($allTemplates = $pagList)
+ #end
+#end
+
+#if ($paginated)
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+#end
+
 <h3>Templates</h3>
 
 #if ($noTemplates.equals("true"))
@@ -37,47 +71,17 @@
   
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-  <th nowrap="nowrap">Select</th>
-  <th>
-  <img src="$staticLink.setPath("/images/icon_downarrow.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
-   Template name</th>
-  <th>Template description</th>
-  <th>Availability</th>
-  <th>Author</th>
+  <th nowrap="nowrap"></th>
+  <th>#sort ("name" "Template name")
+  <th>#sort ("desc" "Template description")</th>
+  <th>#sort ("avail" "Availability")</th>
+  <th>#sort ("user" "Author")</th>
   </tr>
 
-#foreach ($template in $module.getPrivateTemplates($user, $issueType))
-   #indexedRows($velocityCount)
-   #set ($hasDelete = "true")
-  <td><input type="checkbox" name="delete_$template.IssueId" /></td>
-  #set ($editLink = $link.setPathInfo("templateId", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
-  <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
-  <td>
-    #if($template.TemplateInfo.Description)
-      $template.TemplateInfo.Description
-    #else
-      &#160;
-    #end
-  </td>
-  <td>$template.templateInfo.Scope.Name
-     #if (!$template.TemplateInfo.Approved)
-       (until approved)
-     #end
-  </td>
-   <td>
-   #set ($createdUser = $template.CreatedBy)
-   #if ($createdUser)
-   <a href="mailTo:$createdUser.Email">$!createdUser.FirstName $!createdUser.LastName</a>
-   #else
-   &#160;
-   #end
-   </td>
-  </tr>
-#end
-
-#foreach ($template in $module.getGlobalTemplates($issueType))
+#foreach ($template in $allTemplates)
 #indexedRows($velocityCount)
-#if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
+#if ( ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
+   ||   ($template.CreatedBy.UserId.equals($user.UserId)))
   #set ($hasDelete = "true")
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
 #else
@@ -98,7 +102,7 @@
       &#160; 
     #end
   </td>
-  <td>$template.IssueType.Name
+  <td>$template.templateInfo.Scope.Name
      #if (!$template.TemplateInfo.Approved)
        (until approved)
      #end
