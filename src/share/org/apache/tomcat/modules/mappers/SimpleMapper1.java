@@ -568,9 +568,12 @@ class PrefixMapper  {
     /**
      */
     public void addExactMapping( String host, String path, Object target ) {
-	if( host==null )
-	    exactMappedServlets.put( path, target);
-	else {
+        if( host==null ) {
+            if ( ignoreCase )
+                exactMappedServlets.put( path.toLowerCase(), target);
+            else
+                exactMappedServlets.put( path, target);
+        } else {
 	    host=host.toLowerCase();
 	    PrefixMapper vmap=(PrefixMapper)vhostMaps.get( host );
 	    if( vmap == null ) {
@@ -596,7 +599,6 @@ class PrefixMapper  {
 	String host=hostMB.toString();
 	String path=pathMB.toString();
 	Object container = null;
-        String s = path;
 
 	PrefixMapper myMap=null;
 	if( host!=null ) {
@@ -621,6 +623,7 @@ class PrefixMapper  {
 	    if( container!=null ) return container;
 	}
 		
+        String s = path;
 	while (s.length() >= 0) {
 	    //if(debug>8) context.log( "Prefix: " + s  );
 	    container = myMap.prefixMappedServlets.get(s);
