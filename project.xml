@@ -420,6 +420,16 @@
       </properties>
     </dependency>
     <dependency>
+      <!-- Added by HD to make the ant-build happy -->
+      <groupId>torque</groupId>
+      <artifactId>torque-gen</artifactId>
+      <version>3.1.1-dev</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
       <groupId>torque</groupId>
       <artifactId>torque</artifactId>
       <version>3.1.1-dev</version>
@@ -440,7 +450,7 @@
     <dependency>
       <groupId>velocity</groupId>
       <artifactId>velocity</artifactId>
-      <version>1.4-dev</version>
+      <version>1.4</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>

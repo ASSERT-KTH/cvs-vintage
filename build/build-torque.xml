@@ -20,9 +20,8 @@
   <property name="build.properties" value="build.properties"/>
   <property name="torque.contextProperties" value="${build.properties}"/>
   <property file="${torque.contextProperties}"/>
+  <property name="repository.dir" value="${basedir}/../www/repository"/>
   <property name="lib.dir" value="lib"/>
-  <property name="torque.lib.dir" value="${lib.dir}"/>
-  <property name="torque.jar" value="torque-gen-3.1.jar"/>
 
   <property name="databaseSchema" value="default"/>
   <property name="databaseUser" value="${scarab.database.user}"/>
@@ -37,16 +36,11 @@
     do a general inclusion of the torque.lib.dir to catch any drivers.
   -->
   <path id="torque-classpath">
-    <fileset dir="${torque.lib.dir}">
-      <include name="**/commons-collections-2.1.jar"/>
-      <include name="**/commons-lang-2.0.jar"/>
-      <include name="**/log4j-1.2.8.jar"/>
-      <include name="**/${torque.jar}"/>
-      <include name="**/velocity-1.4-dev.jar"/>
-      <include name="**/village-2.0-dev-20030825.jar"/>
-      <include name="**/xercesImpl-2.0.2.jar"/>
-      <include name="**/xml-apis-2.0.2.jar"/>
-      <include name="**/*.jar"/>
+    <fileset dir="${repository.dir}">
+      <include name="*/jars/*.jar"/>
+    </fileset>
+    <fileset dir="${lib.dir}">
+      <include name="**.jar"/>
     </fileset>
   </path>
 

@@ -1,14 +1,46 @@
 --------------------------------------------------------------------------
-$Id: README.txt,v 1.9 2003/01/31 19:43:32 jon Exp $
+$Id: README.txt,v 1.10 2004/10/28 20:16:33 dabbous Exp $
 --------------------------------------------------------------------------
 
-The files in this directory are here for your convenience in building
+Starting from Scarab-1.0-b20 the distribution does not ship any other 
+files within this directory except this README.txt.
+
+All library dependencies for Scarab are now fully resolved and maintained
+by Maven. But in order to keep support of ant builds and local maven 
+builds in parallel, we generate and ship an up to date maven-compatible 
+repository which contains all necessary jar libraries for Scarab. The
+repository can be found in
+
+    www/repository/...  (relative to the distribution root)
+
+The ant build system has been updated to use the necessary
+resources from that repository. 
+
+
+If you use Maven as your primary build system, you don't need to,
+but you can add www/repository to your Maven runtime resources.
+Maven can resolve the necessary dependencies by itself.
+
+   [FIXME: how to tell maven about the repo]
+
+If you use ant as your primary build system, the files in 
+www/repository are here for your convenience in building
 and using Scarab. The versions included with Scarab are known to be
 working with Scarab. If you decide to use another version of these
 libraries, unless otherwise noted (like with servlet.jar), no support
-will be provided.
+will be provided. 
+
+If you need additional libraries, which are not distributed by Scarab
+but needed for your Scarab customization, please place these libraries
+into this directory (/lib). The build process will pick them up and
+copy them to their final destination.
+
+
+The remainder of this file describes the libraries, which are used
+by Scarab.
 
 --------------------------------------------------------------------------
+[FIXME]: The description is partially outdated)
 
 CORE LIBRARIES
 ==============
