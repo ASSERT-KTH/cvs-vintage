@@ -374,7 +374,8 @@ public class JspServlet extends HttpServlet {
     {
 	try {
             String includeUri 
-                = (String) request.getAttribute(Constants.INC_REQUEST_URI);
+		//  = (String) request.getAttribute(Constants.INC_REQUEST_URI);
+                = (String) request.getAttribute(Constants.INC_SERVLET_PATH);
 
             String jspUri;
 
