@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.15 2002/06/06 00:27:52 elicia Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.16 2002/07/18 23:31:13 elicia Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -118,6 +118,8 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                                  rmit.getQueryKey(), false);
                 rmitGroup.setProperties(rmit);
                 rmit.save();
+                String pageNum = data.getParameters().getString("pageNum","1");
+                data.getParameters().add("pageNum", pageNum);
             }
             ScarabCache.clear();
         } 
