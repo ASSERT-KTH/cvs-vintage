@@ -1,33 +1,33 @@
 package org.tigris.scarab.actions.admin;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
- * 
+ * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution, if
  * any, must include the following acknowlegement: "This product includes
- * software developed by Collab.Net <http://www.Collab.Net/>."
+ * software developed by CollabNet <http://www.Collab.Net/>."
  * Alternately, this acknowlegement may appear in the software itself, if
  * and wherever such third-party acknowlegements normally appear.
- * 
+ *
  * 4. The hosted project names must not be used to endorse or promote
  * products derived from this software without prior written
  * permission. For written permission, please contact info@collab.net.
- * 
- * 5. Products derived from this software may not use the "Tigris" or 
- * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
- * prior written permission of Collab.Net.
- * 
+ *
+ * 5. Products derived from this software may not use the "Tigris" or
+ * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without
+ * prior written permission of CollabNet.
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
@@ -41,10 +41,10 @@ package org.tigris.scarab.actions.admin;
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
- * individuals on behalf of Collab.Net.
- */ 
+ * individuals on behalf of CollabNet.
+ */
 
 import java.util.List;
 import java.util.Iterator;
@@ -85,7 +85,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.30 2002/11/07 00:16:52 jmcnally Exp $
+ * @version $Id: Approval.java,v 1.31 2003/02/03 07:19:31 jon Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
@@ -96,11 +96,11 @@ public class Approval extends RequireLoginFirstAction
     private static final String REJECT = "reject";
     private static final String APPROVE = "approve";
 
-    private static Integer QUERY = new Integer(0);
-    private static Integer ISSUE_ENTRY_TEMPLATE = new Integer(1);
+    private static final Integer QUERY = new Integer(0);
+    private static final Integer ISSUE_ENTRY_TEMPLATE = new Integer(1);
     
-    private static Integer REJECTED = QUERY;
-    private static Integer APPROVED = ISSUE_ENTRY_TEMPLATE;
+    private static final Integer REJECTED = QUERY;
+    private static final Integer APPROVED = ISSUE_ENTRY_TEMPLATE;
     
     public void doSubmit( RunData data, TemplateContext context )
         throws Exception
