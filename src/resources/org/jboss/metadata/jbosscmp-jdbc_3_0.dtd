@@ -21,7 +21,7 @@ entities, and relationships.
          remove-table?, read-only?, read-time-out?, row-locking?, 
          pk-constraint?, fk-constraint?, preferred-relation-mapping?, 
          read-ahead?, list-cache-max?, fetch-size?, unknown-pk?,
-         create-entity-command?, entity-command?)>
+         entity-command?)>
 
 
 <!--
