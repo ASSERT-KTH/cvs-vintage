@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.39 2005/01/30 01:21:56 bobtarling Exp $
+// $Id: Init.java,v 1.40 2005/02/13 15:28:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -188,6 +188,36 @@ public class Init {
     private static Critic crInstanceWithoutClassifier =
 	new CrInstanceWithoutClassifier();
 
+    private static Critic crInvalidHistory =
+        new CrInvalidHistory();
+    
+    private static Critic crInvalidSynch =
+        new CrInvalidSynch();
+    
+    private static Critic crInvalidJoinTriggerOrGuard =
+        new CrInvalidJoinTriggerOrGuard();
+    
+    private static Critic crInvalidForkTriggerOrGuard =
+        new CrInvalidForkTriggerOrGuard();
+    
+    private static Critic crInvalidPseudoStateTrigger =
+        new CrInvalidPseudoStateTrigger();
+    
+    private static Critic crMultipleDeepHistoryStates =
+        new CrMultipleDeepHistoryStates();
+    
+    private static Critic crMultipleShallowHistoryStates =
+        new CrMultipleShallowHistoryStates();
+    
+    private static Critic crInvalidInitial =
+        new CrInvalidInitial();
+    
+    private static Critic crForkOutgoingTransition =
+        new CrForkOutgoingTransition();
+    
+    private static Critic crJoinIncomingTransition =
+        new CrJoinIncomingTransition();
+
     // private static Critic crCallWithoutReturn = new CrCallWithoutReturn();
     // private static Critic crReturnWithoutCall = new CrReturnWithoutCall();
     // private static Critic crSeqInstanceWithoutClassifier =
@@ -276,6 +306,8 @@ public class Init {
         Object stateVertexCls = Model.getMetaTypes().getStateVertex();
         Object stateCls = Model.getMetaTypes().getState();
         Object compositieStateCls = Model.getMetaTypes().getCompositeState();
+        Object synchStateCls = Model.getMetaTypes().getSynchState();
+
 	// Class stateDiagramCls   = UMLStateDiagram.class;
 	// Class useCaseDiagramCls = UMLUseCaseDiagram.class;
 
@@ -377,6 +409,17 @@ public class Init {
 	Agency.register(crObjectWithoutComponent, deploymentDiagramCls);
 	Agency.register(crWrongLinkEnds, deploymentDiagramCls);
 	Agency.register(crInstanceWithoutClassifier, deploymentDiagramCls);
+
+	Agency.register(crMultipleDeepHistoryStates, pseudostateCls);
+	Agency.register(crMultipleShallowHistoryStates, pseudostateCls);
+	Agency.register(crInvalidHistory, pseudostateCls);
+	Agency.register(crInvalidSynch, synchStateCls);
+	Agency.register(crInvalidJoinTriggerOrGuard, transitionCls);
+	Agency.register(crInvalidForkTriggerOrGuard, transitionCls);
+	Agency.register(crInvalidPseudoStateTrigger, transitionCls);
+	Agency.register(crInvalidInitial, pseudostateCls);
+	Agency.register(crForkOutgoingTransition, transitionCls);
+	Agency.register(crJoinIncomingTransition, transitionCls);
 
 	// Class sequenceDiagramCls = UMLSequenceDiagram.class;
 	// Agency.register(crCallWithoutReturn, sequenceDiagramCls);
