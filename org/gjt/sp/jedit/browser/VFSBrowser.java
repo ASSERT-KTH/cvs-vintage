@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.101 2003/11/22 20:32:28 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.102 2003/12/27 05:13:54 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -1187,7 +1187,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 		// directory if request already active
 		if(maybeReloadRequestRunning)
 		{
-			Log.log(Log.WARNING,this,"VFS update: request already in progress");
+			//Log.log(Log.WARNING,this,"VFS update: request already in progress");
 			return;
 		}
 

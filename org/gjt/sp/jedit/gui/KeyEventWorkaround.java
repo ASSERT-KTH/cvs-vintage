@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.35 2003/12/25 01:37:25 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.36 2003/12/27 05:13:54 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -220,6 +220,10 @@ public class KeyEventWorkaround
 			case KeyEvent.VK_ALT:
 				modifiers &= ~InputEvent.ALT_MASK;
 				lastKeyTime = evt.getWhen();
+				// we consume this to work around the bug
+				// where A+TAB window switching activates
+				// the menu bar on Windows.
+				evt.consume();
 				return null;
 			case KeyEvent.VK_ALT_GRAPH:
 				modifiers &= ~InputEvent.ALT_GRAPH_MASK;

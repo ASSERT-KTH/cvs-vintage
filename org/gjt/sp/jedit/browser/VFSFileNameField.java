@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.OperatingSystem;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.16 2003/09/10 02:23:12 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.17 2003/12/27 05:13:54 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -94,7 +94,12 @@ class VFSFileNameField extends HistoryTextField
 			case KeyEvent.VK_PAGE_UP:
 			case KeyEvent.VK_PAGE_DOWN:
 			case KeyEvent.VK_ENTER:
-				browser.getBrowserView().getTable().processKeyEvent(evt);
+				browser.filesActivated(
+					(evt.isShiftDown()
+					? VFSBrowser.M_OPEN_NEW_VIEW
+					: VFSBrowser.M_OPEN),false);
+				setText(null);
+				evt.consume();
 				break;
 			default:
 				super.processKeyEvent(evt);
