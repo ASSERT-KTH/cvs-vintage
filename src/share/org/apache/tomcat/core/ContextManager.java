@@ -578,12 +578,20 @@ public final class ContextManager {
     public final void shutdown() throws TomcatException {
         if( state==STATE_START ) stop();
 	while (!contextsV.isEmpty()) {
-	    removeContext((Context)contextsV.firstElement());
+	    try {
+		removeContext((Context)contextsV.firstElement());
+	    } catch(Exception ex ) {
+		log( "shutdown.removeContext" , ex );
+	    }
 	}
 
 	BaseInterceptor cI[]=defaultContainer.getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
-	    removeInterceptor( cI[i] );
+	    try {
+		removeInterceptor( cI[i] );
+	    } catch( Exception ex ) {
+		log( "shutdown.removeInterceptor" , ex );
+	    }
 	}
     }
 
