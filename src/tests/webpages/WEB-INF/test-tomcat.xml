@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.38 $" />  
+     <property name="revision" value="$Revision: 1.39 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -1211,6 +1211,12 @@ mod_webapp into mod_jk )
 		      method="GET" />
           <httpStatusMatch match="200"/>
           <responseMatch match="getRequestURI: /test/js%70/ShowPathInfo.jsp"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/jsp/ShowPathInfo.jsp;jsessionid=123" 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
       </httpClient>
    </target>
 
