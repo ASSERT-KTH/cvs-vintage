@@ -143,6 +143,7 @@ public class ReloadInterceptor extends  BaseInterceptor
 	    dm.reset();
 	}
 	loaderHook(dm, context);
+	log( "Reloading context " + context );
     }
 
     
