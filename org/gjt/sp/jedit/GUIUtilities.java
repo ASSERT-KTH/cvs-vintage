@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.80 2004/03/19 19:16:35 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.81 2004/06/01 20:01:40 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -945,14 +945,14 @@ public class GUIUtilities
 		Rectangle osbounds = OperatingSystem.getScreenBounds(desired);
 
 		if(desired.x < osbounds.x || desired.x+desired.width
-			> osbounds.width)
+			> desired.x + osbounds.width)
 		{
 			if (desired.width > osbounds.width)
 				desired.width = osbounds.width;
 			desired.x = (osbounds.width - desired.width) / 2;
 		}
 		if(desired.y < osbounds.y || desired.y+desired.height
-			> osbounds.height)
+			> osbounds.y + osbounds.height)
 		{
 			if (desired.height >= osbounds.height)
 				desired.height = osbounds.height;

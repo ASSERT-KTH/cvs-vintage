@@ -137,11 +137,23 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.29 2004/05/12 20:44:16 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.30 2004/06/01 20:01:40 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
 {
+	//{{{ ActionSet constructor
+	/**
+	 * Creates a new action set.
+	 * @since jEdit 4.0pre1
+	 */
+	public ActionSet()
+	{
+		actions = new Hashtable();
+		loaded = true;
+		label = "<no label set; plugin bug>";
+	} //}}}
+
 	//{{{ ActionSet constructor
 	/**
 	 * Creates a new action set.
@@ -168,17 +180,6 @@ public class ActionSet
 			}
 		}
 		loaded = false;
-	} //}}}
-
-	//{{{ ActionSet constructor
-	/**
-	 * Creates a new action set.
-	 * @since jEdit 4.0pre1
-	 */
-	public ActionSet()
-	{
-		actions = new Hashtable();
-		loaded = true;
 	} //}}}
 
 	//{{{ ActionSet constructor
