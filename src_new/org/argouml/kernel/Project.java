@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.127 2004/12/23 18:27:52 bobtarling Exp $
+// $Id: Project.java,v 1.128 2004/12/28 20:16:47 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -142,17 +142,6 @@ public class Project implements java.io.Serializable, TargetListener {
 
     /**
      * Constructor.
-     * 
-     * @param file File to read from.
-     * @throws MalformedURLException if the file name is incorrect.
-     * @throws IOException if we cannot read the file.
-     */
-    public Project(File file) throws MalformedURLException, IOException {
-        this(Util.fileToURL(file));
-    }
-
-    /**
-     * Constructor.
      *
      * @param theProjectUrl Url to read the project from.
      */
@@ -213,25 +202,6 @@ public class Project implements java.io.Serializable, TargetListener {
         setActiveDiagram((ArgoDiagram) getDiagrams().get(0));
     }
  
-    /**
-     * Constructor.
-     * 
-     * @param model The new model.
-     */
-    public Project(Object model) {
-        this();
-        
-        if (!ModelFacade.isAModel(model)) {
-            throw new IllegalArgumentException();
-        }
-        
-        LOG.info("making empty project with model: "
-		        + ModelFacade.getName(model));
-        setRoot(model);
-        setCurrentNamespace(model);
-        setNeedsSave(false);
-    }
-    
     /**
      * Find the base name of this project.<p>
      * 
