@@ -503,6 +503,10 @@ public class PrintMessageCommand extends FolderCommand {
                 charset = Charset.forName(charsetToUse);
             } catch (UnsupportedCharsetException ex) {
                 // decode using default charset
+                ColumbaLogger.log.severe("The charset " + 
+                		charsetToUse + 
+						" is not supported. " + 
+						"System default encoding will be used.");
                 charset = Charset.forName(System.getProperty("file.encoding"));
             }
 
