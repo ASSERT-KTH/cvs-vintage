@@ -164,15 +164,21 @@ called "setAttribute()" after this request's "removeAttribute()" and before
 "realSession.setAttribute()", the second request's value would be overwritten
 without an valueUnbound() being called.
 
+    RESOLUTION: Implemented
+
 2. Evaluate Tomcat 3.3's vulnerability to "Double Checked Locking". This
 is referred to in Bug #177. See:
 http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
 for details.  I think ServletHandler.init() is currently subject to this
 vulnerability.
 
+    RESOLUTION: Implemented
+
 3. The spec doesn't address whether a the form-login-page and form-error-page
 should be excluded from the security-constraint, but it makes sense that
 it should.  It might be best to postpone this.
+
+    RESOLUTION: Postponed.
 
 4. Address user authentication via Ajp12 and Ajp13.  Ajp12 has a test for
 isTomcatAuthentication() to see if req.setRemoteUser() should be called.
@@ -181,33 +187,32 @@ user is anonymous, i.e. user = "", should we call req.setRemoteUser()
 with this value?  This prevents Tomcat's normal authentication from being
 triggered.
 
+    RESOLUTION: tomcatAuthentication property has been added to Ajp13.
+
 5. If a error handler is not found for an exception, check the root cause
 as well if it is a ServletException.  This is mentioned in Bug 3233.  I think
 it would be a good idea to apply this.  I don't think we are prohibited
 by the spec.  We could add an option to be safe if there is concern.
+
+    RESOLUTION: Implemented.
 
 6. StaticInterceptor is missing a localization enhancement added to
 Tomcat 3.2.x.  Should this enhancement be ported to Tomcat 3.3?  Is
 this still considered a regression, though it isn't part of the
 Servlet 2.2/JSP 1.1 spec?
 
+    RESOLUTION: Postponed to RC2
+
 7. Evaluate whether anything should be done to deal with the use of
 non-thread-safe DateFormat and related classes.
 
+    RESOLUTION: Minimized vulnerability.
+
+
 Must Resolve Bugs:
 
-177   Race condition during servlet initialization BugRat Report#2
-182   JSP error-page doesn't work with virtual hosts BugRat Report
-274   request.getUserPrincipal() doesn't work when user is authent
-437   req.getParameter(name) Ignores charset. always assumes ISO88  
-463   Ctx( /examples ): IOException in: R( /examples + + null) No  
 1253  Frequent Connection reset by peer errors  
-1663  Tomcat -SSL problem  
-1798  Tomcat 3.2.2b5 with Apache and ajp13 stops responding after  
-3233  exception handling wrt errorpages seems to be incorrect  
-3486  Session problem (with case insensitive context matching on windows)
-3572  HttpSessionFacade.invalidate don't unbound Attributes
-3577  NPE when DecodeInterceptor gets confused
+
 
 Tomcat 3.3 Release Candidate 2:
 
@@ -238,6 +243,8 @@ in Tomcat 3.3's mod_jk.  I'm fine with not supporting it, but I want
 to include some justification in the documentation to avoid some of
 the "why don't you" questions.
 
+    IN PROGRESS: Making user configurable
+
 12. To simplify upgrade development, I would like to see the classpath
 for the "container", "common", and "apps" classloaders include the
 directory so classes placed under them will be picked up.
@@ -245,18 +252,14 @@ directory so classes placed under them will be picked up.
 13. Determine cause of pauses running Tomcat's internal test with
 Tomcat + IIS.
 
+14. StaticInterceptor is missing a localization enhancement added to
+Tomcat 3.2.x.  Should this enhancement be ported to Tomcat 3.3?
+
 Must Resolve Bugs:
 
-82    Jasper not affected by mod_rewrite BugRat Report#49  (part of issue 11)
-111   after httpd reload mod_jk fails to find a worker BugRat Repo  
-276   JNI problem: bufferedreader.read fails in Tomcat/IIS/JNI set  
-319   Nor Hig All cmanolache@yahoo.com UNCO  Tomcat does not launch with given
-      Unix script files BugRat R  
-405   response.sendRedirect() in MS Explorer 5.5 fails using both  
-620   StopTomcat defaults to localhost  
+1798  Tomcat 3.2.2b5 with Apache and ajp13 stops responding after  
 2333  HTTP Reason will be destroyed in header using AJP12  
 2550  Ajp13 Connection hanging on static content.  
-2927  ArrayIndexOutOfBoundsException when accessing ajp13  
 3581  Ctx() : Error creating validation mark  - java.io.FileNotFoundException
 
 Tomcat 3.3 Final Release
@@ -271,7 +274,9 @@ Tomcat 3.3 Final Release
 
 Open in 3.2.x But Fixed in 3.3
 
+274   request.getUserPrincipal() doesn't work when user is authent
 384   AJP13 returns no Status Message (Reason-Phrase RFC 2616) Bug  
+620   StopTomcat defaults to localhost  
 1482  Ignored session ids in encoded URLs  
 2057  URL contains encoded special chars  
 
