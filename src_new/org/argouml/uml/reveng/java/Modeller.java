@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.78 2003/10/27 21:10:49 alexb Exp $
+// $Id: Modeller.java,v 1.79 2003/11/27 20:13:55 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1483,8 +1483,11 @@ public class Modeller
 
 	    // If there is a tagged value named stereotype, make it a real
 	    // stereotype
-	    String stereo =
-		ModelFacade.getValueOfTag(ModelFacade.getTaggedValue(modelElement, "stereotype"));
+            Object tv = ModelFacade.getTaggedValue(modelElement, "stereotype");
+            String stereo = null;
+            if (tv != null) {
+                stereo = ModelFacade.getValueOfTag(tv);
+            }
 	    if (stereo != null && stereo.length() > 0) {
 		ModelFacade.setStereotype(modelElement, getStereotype(stereo));
 	    }
