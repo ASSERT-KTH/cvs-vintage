@@ -325,12 +325,9 @@
     value="$optionModel.Value">$optionModel.Name</option>
 #end
 
-#macro (paginate)
-#set ($searchType = $data.Parameters.getString("searchType"))
-#set ($resultsPerPage = $data.Parameters.getString("resultsPerPage",""))
-#set ($pageNum = $data.Parameters.getInt("pageNum",0))
-#if ($resultsPerPage.equals("0"))
-  #set ($resultsPerPage = "25")
+#macro (paginate $resultsPerPage $pageNum )
+#if ($resultsPerPage == 0)
+  #set ($resultsPerPage = 25)
 #end
 #if ($pageNum == 0)
   #set ($pageNum = 1)
@@ -338,12 +335,12 @@
 
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.PrevPage").setPage($template).toString())
+  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPage($template).toString())
   <a href="$prevLink">&laquo;</a> previous |
  #end
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
-  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.NextPage").setPage($template).toString())
+  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPage($template).toString())
   | <a href="$nextLink">&raquo;</a> next
  #end
  </p>

@@ -141,7 +141,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 </div>
         
 #if ($paginated)
-  #paginate ()
+  #paginate ($resultsPerPage $pageNum)
 #end
 
 
