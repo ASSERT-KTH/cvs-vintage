@@ -94,7 +94,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.34 2001/09/24 21:36:28 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.35 2001/09/28 01:26:58 elicia Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -642,7 +642,7 @@ public class ModifyIssue extends TemplateAction
             descBuf.append(depend.getDependType().getName());
             descBuf.append(" dependency for Issue ");
             descBuf.append(issue.getUniqueId());
-            descBuf.append(" on Issue  ");
+            descBuf.append(" on Issue ");
             descBuf.append(parentIssue.getUniqueId());
             String desc = descBuf.toString();
             activity.create(issue, null, desc,
