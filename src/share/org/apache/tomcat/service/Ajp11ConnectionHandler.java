@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.2 1999/10/19 23:38:32 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/19 23:38:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.3 1999/10/24 17:34:03 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/24 17:34:03 $
  *
  * ====================================================================
  *
@@ -146,7 +146,7 @@ public class Ajp11ConnectionHandler implements  TcpConnectionHandler {
     }
 }
 
-class AJPRequest extends RequestImpl {
+class AJPRequest extends Request {
     StringManager sm = StringManager.getManager("org.apache.tomcat.service");
     Socket socket;
     

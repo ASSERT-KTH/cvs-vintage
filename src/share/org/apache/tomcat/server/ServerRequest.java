@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServerRequest.java,v 1.2 1999/10/22 21:54:01 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/22 21:54:01 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServerRequest.java,v 1.3 1999/10/24 17:34:02 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/24 17:34:02 $
  *
  * ====================================================================
  *
@@ -80,7 +80,7 @@ import javax.servlet.http.*;
  * @author Harish Prabandham
  */
 
-public class ServerRequest extends RequestImpl {
+public class ServerRequest extends Request {
 
     private StringManager sm =
         StringManager.getManager(Constants.Package);

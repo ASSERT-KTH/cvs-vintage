@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequest.java,v 1.1 1999/10/09 00:20:49 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequest.java,v 1.2 1999/10/24 17:34:05 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/24 17:34:05 $
  *
  * ====================================================================
  *
@@ -73,7 +73,7 @@ import org.apache.tomcat.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-public class HttpRequest extends RequestImpl {
+public class HttpRequest extends Request {
 
     public HttpRequest() {
 	super();

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/ContextManager.java,v 1.2 1999/10/12 06:41:33 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/12 06:41:33 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/ContextManager.java,v 1.3 1999/10/24 17:34:01 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/24 17:34:01 $
  *
  * ====================================================================
  *
@@ -404,7 +404,7 @@ public class ContextManager  implements Server {
     /** Common for all connectors, needs to be shared in order to avoid
 	code duplication
     */
-    public void service( RequestImpl rrequest, ResponseImpl rresponse ) {
+    public void service( Request rrequest, ResponseImpl rresponse ) {
 	try {
 	    rrequest.setResponse(rresponse);
 	    rresponse.setRequest(rrequest);

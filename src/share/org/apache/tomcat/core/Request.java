@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.3 1999/10/24 16:53:18 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/24 16:53:18 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.4 1999/10/24 17:34:01 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/24 17:34:01 $
  *
  * ====================================================================
  *
@@ -64,165 +64,485 @@
 
 package org.apache.tomcat.core;
 
+import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
+import java.net.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-/* XXX
-   - add comments
-   - more clean-up
-   - make it minimal!
-*/
 
 /**
- * Server neutral form of the request from a client. Subclasses can
- * be specialized for socket or plug-in use.
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
- * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
+ * @author Jason Hunter [jch@eng.sun.com]
  * @author Harish Prabandham
  */
+public class Request  {
+    // RequestAdapterImpl
+    protected String scheme = Constants.Request.HTTP;
+    protected String method;
+    protected String requestURI;
+    protected String protocol;
+    protected MimeHeaders headers = new MimeHeaders();
+    protected String serverName = "";
+    protected int serverPort;
+    protected String remoteAddr;
+    protected String remoteHost;
+    protected ServletInputStream in;
+    // End RequestAdapterImpl
+    //  RequestAdapterImpl Hints
+    protected Vector cookies = new Vector();
 
-public interface Request {
-    // Core parts of the request
-    public String getMethod();
+    protected String contextPath;
+    protected String lookupPath;
+    protected String servletPath;
+    protected String pathInfo;
+    protected String queryString;
     
-    public String getRequestURI();
+    protected Hashtable parameters = new Hashtable();
+    protected String reqSessionId;
+    protected int contentLength = -1;
+    protected String contentType = "";
+    protected String charEncoding = null;
+    protected String authType;
+    protected String remoteUser;
 
-    public String getProtocol();
+
+    // Request 
+    protected Response response;
+    protected HttpServletRequestFacade requestFacade;
+    protected Context context;
+    protected Hashtable attributes = new Hashtable();
+    protected ServerSession serverSession;
+    protected boolean didReadFormData;
+    // end "Request" variables    
+
+    protected StringManager sm =
+        StringManager.getManager(Constants.Package);
+
+    public Request() {
+        requestFacade = new HttpServletRequestFacade(this);
+    }
+
+    // Begin Adapter
+    public String getScheme() {
+        return scheme;
+    }
     
-    public String getQueryString();
-
-    public String getScheme();
+    public String getMethod() {
+        return method;
+    }
     
-    public String getServerName();
+    public String getRequestURI() {
+        return requestURI;
+    }
     
-    public int getServerPort();
-
-    public String getRemoteAddr();
+    public String getProtocol() {
+        return protocol;
+    }
     
-    public String getRemoteHost();
+    public String getHeader(String name) {
+        return headers.getHeader(name);
+    }
 
-    public  ServletInputStream getInputStream() throws IOException;
+    public Enumeration getHeaderNames() {
+        return headers.names();
+    }
     
-    public  BufferedReader getReader() throws IOException;
+    public ServletInputStream getInputStream()
+    throws IOException {
+    	if (in == null) {
+            String msg = sm.getString("serverRequest.inputStream.npe");
 
+    	    throw new IOException(msg);
+    	}
 
+    	return in;    
+    }
+
+    public String getServerName() {
+	return serverName;
+    }
+
+    public int getServerPort() {
+        return serverPort;
+    }
     
-    // Attributes - we can have the attribute stuff in a
-    // separate class
-    public Object getAttribute(String name);
-
-    public void setAttribute(String name, Object value);
-
-    public void removeAttribute(String name);
-
-    public Enumeration getAttributeNames();
-
-
-    // Parameters
-    public String[] getParameterValues(String name);
-
-    public Enumeration getParameterNames();
-
+    public String getRemoteAddr() {
+        return remoteAddr;
+    }
     
-    /** Return the parsed Cookies
-     */
-    public Cookie[] getCookies();
-    // Original:    public Vector getCookies();
-
-    // Context
-    // after it is found, allow as to recalculate all other "gets"
-    public void setContext(Context context); 
+    public String getRemoteHost() {
+	return remoteHost;
+    }    
     
-    public String getLookupPath();
+    // End Adapter
 
-    public Context getContext();
-
-    public String getPathInfo();
-    
-    public void setPathInfo(String pathInfo);
-
-    public String getServletPath();
-
-
-    // Session
-    // XXX right now the code assume ServerSessionManager will be
-    // used, need to figure out how to use the session Id passed from Apache
-    public ApplicationSession getSession();
-
-    public ApplicationSession getSession(boolean create);
-    
-    public String getRequestedSessionId();
-
-    public ServerSession getServerSession(boolean create);
-    
-    /** Hook required to support getRequestSessionId using ServerSession
-	manager.
-	If getSession use the default ServerSessionManager, it will call back
-	setting requestedSessionId.
-    */
-    public void setRequestedSessionId(String reqSessionId);
-    
-
-
-    // Authentication
-    public String getAuthType();
-    
-    public void setAuthType(String authType);
-
-
-    // Headers and special Headers
-    public String getCharacterEncoding();
-
-    public int getContentLength();
-    
-    public String getContentType();
-
-    public String getRemoteUser();
-
-    public  long getDateHeader(String name);
-    
-    public  String getHeader(String name);
-
-    public  Enumeration getHeaders(String name);
-    
-    public  int getIntHeader(String name);
-    
-    public  Enumeration getHeaderNames();
+    // Adapter hints
+    public String getLookupPath() {
+	return lookupPath;
+    }
     
 
-    // Setters - should go away
-//     public void setCharacterEncoding(String charEncoding);
+    public String[] getParameterValues(String name) {
+	if (!didReadFormData) {
+	    readFormData();
+	}
+
+        return (String[])parameters.get(name);
+    }
     
-    public void setQueryString(String queryString);// used in ForwardRequest
-    
-//     public void setScheme(String scheme);
+    public Enumeration getParameterNames() {
+	if (!didReadFormData) {
+	    readFormData();
+	}
+
+        return parameters.keys();
+    }
     
 
-//     // ????
-    public void setServerSession(ServerSession serverSession);// Used by Context.handleRequest ?
+    public String getAuthType() {
+    	return authType;    
+    }
     
-    public void setServletPath(String servletPath);// Used by Context.handleRequest ?
+    public String getCharacterEncoding() {
+        return charEncoding;
+    }
+
+    public int getContentLength() {
+        return contentLength;
+    }
     
-//     // Internal 
-//     // Does Request needs to know the Response?
-    public void setResponse(Response response);// XXX used only in ServletWrapper - shouldn't
-    public  void setURI(String requestURI); // XXX used in ServletWrapper, need to clean up 
-
-    // One to one Request - Facade
-    public HttpServletRequestFacade getFacade();
-
-
-    // Removed methods:
+    public String getContentType() {
+    	return contentType;   
+    }
     
-    // Should go to RequestUtil
-    //public  void readFormData();
-    //public Hashtable mergeParameters(Hashtable one, Hashtable two);
+    
+    public String getPathInfo() {
+        return pathInfo;
+    }
+    
+    public String getQueryString() {
+        return queryString;
+    }
 
-    // Connector-specific, maybe in a separate interface
-    public  void recycle(); // used in strange places - ServletWrapper
+    public String getRemoteUser() {
+        return remoteUser;
+    }
+    
+    
+    public String getRequestedSessionId() {
+        return reqSessionId;
+    }
+
+    public String getServletPath() {
+        return servletPath;
+    }
+    
+    // End hints
+    
+    // -------------------- Request methods ( high level )
+    public HttpServletRequestFacade getFacade() {
+	return requestFacade;
+    }
+
+    public Context getContext() {
+	return context;
+    }
+
+    public void setResponse(Response response) {
+	this.response = response;
+    }
+
+    // Called after a Context is found, adjust all other paths.
+    // XXX XXX XXX
+    public void setContext(Context context) {
+	this.context = context;
+	contextPath = context.getPath();
+	lookupPath = requestURI.substring(contextPath.length(),
+            requestURI.length());
+
+	// check for ? string on lookuppath
+	int qindex = lookupPath.indexOf("?");
+
+	if (qindex > -1) {
+	    lookupPath = lookupPath.substring(0, qindex);
+	}
+
+	if (lookupPath.length() < 1) {
+	    lookupPath = "/";
+	}
+    }
+
+
+    public Cookie[] getCookies() {
+	// XXX need to use Cookie[], Vector is not needed
+	Cookie[] cookieArray = new Cookie[cookies.size()];
+	
+	for (int i = 0; i < cookies.size(); i ++) {
+	    cookieArray[i] = (Cookie)cookies.elementAt(i);    
+	}
+	
+	return cookieArray;
+	//        return cookies;
+    }
+
+
+    public ApplicationSession getSession() {
+        return getSession(true);
+    }
+
+    // XXX XXX XXX
+    public ServerSession getServerSession(boolean create) {
+	if (context == null) {
+	    System.out.println("CONTEXT WAS NEVER SET");
+	    return null;
+	}
+
+	if (serverSession == null && create) {
+            serverSession =
+		ServerSessionManager.getManager()
+		    .getServerSession(this, response, create);
+            serverSession.accessed();
+	}
+
+	return serverSession;
+    }
+    
+    public ApplicationSession getSession(boolean create) {
+	getServerSession(create);
+	ApplicationSession appSession = null;
+	if (serverSession != null) {
+	    appSession = serverSession.getApplicationSession(context, create);
+	}
+
+	return appSession;
+
+	//  if (reqSessionId != null) {
+//  	    //Session session = context.getSession(reqSessionId);
+//  	    //if (session == null) {
+//  	    //session = context.createSession(reqSessionId);
+//  	    //}
+//  	    //return session;
+//  	    System.out.println("DANGER, SESSIONS ARE NOT WORKING");
+//  	} else {
+//  	    if (create) {
+//  		Session session = serverSession.createSession(response);
+//  		return session;
+//  	    } else {
+//  		return null;
+//  	    }
+//  	}
+    }
+
+    // -------------------- Setters
+    public void setURI(String requestURI) {
+        this.requestURI = requestURI;
+    }
+
+
+    public void setHeaders( MimeHeaders h ) {
+	headers=h;
+    }
+
+    public void setServletInputStream( ServletInputStream in ) {
+	this.in=in;
+    }
+
+    public void setServerPort( int port ) {
+	serverPort=port;
+    }
+    
+    public void setRemoteAddress(String addr) {
+	this.remoteAddr = addr;
+    }
+
+    public void setRemoteHost( String host ) {
+	this.remoteHost=host;
+    }
+
+    public void setMethod( String meth ) {
+	this.method=meth;
+    }
+
+    public void setProtocol( String protocol ) {
+	this.protocol=protocol;
+    }
+
+    public void setRequestURI( String r ) {
+	this.requestURI=r;
+    }
+
+    public void setParameters( Hashtable h ) {
+	this.parameters=h;
+    }
+        
+    public void setContentLength( int  len ) {
+	this.contentLength=len;
+    }
+        
+    public void setContentType( String type ) {
+	this.contentType=type;
+    }
+
+    public void setCharEncoding( String enc ) {
+	this.charEncoding=enc;
+    }
+
+    public void setAuthType(String authType) {
+        this.authType = authType;
+    }
+    public void setCharacterEncoding(String charEncoding) {
+	this.charEncoding = charEncoding;
+    }
+    
+    
+    public void setPathInfo(String pathInfo) {
+        this.pathInfo = pathInfo;
+    }
+    public void setQueryString(String queryString) {
+        this.queryString = queryString;
+    }
+    
+    public void setScheme(String scheme) {
+        this.scheme = scheme;
+    }
+    
+    public void setRequestedSessionId(String reqSessionId) {
+	this.reqSessionId = reqSessionId;
+    }
+    
+    public void setServerSession(ServerSession serverSession) {
+	this.serverSession = serverSession;
+    }
+    
+    public void setServletPath(String servletPath) {
+	this.servletPath = servletPath;
+    }
+
+    
+    // XXX
+    // the server name should be pulled from a server object of some
+    // sort, not just set and got.
+    
+    public void setServerName(String serverName) {
+	this.serverName = serverName;
+    }
+
+    // -------------------- Attributes
+    public Object getAttribute(String name) {
+        return attributes.get(name);
+    }
+
+    public void setAttribute(String name, Object value) {
+        attributes.put(name, value);
+    }
+
+    public void removeAttribute(String name) {
+	attributes.remove(name);
+    }
+    
+    public Enumeration getAttributeNames() {
+        return attributes.keys();
+    }
+    // End Attributes
+
+    // -------------------- Facade for MimeHeaders
+    public long getDateHeader(String name) {
+        return headers.getDateHeader(name);
+    }
+    
+    public Enumeration getHeaders(String name) {
+        Vector v = this.headers.getHeadersVector(name);
+	return v.elements();
+    }
+    
+    public int getIntHeader(String name)  {
+        return headers.getIntHeader(name);
+    }
+    
+    // -------------------- Utils - facade for RequestUtil
+    public BufferedReader getReader()
+	throws IOException {
+	return RequestUtil.getReader( this );
+    }
+
+    
+    private void readFormData() {
+	didReadFormData = true;
+
+	Hashtable postParameters=RequestUtil.readFormData( this );
+	if(postParameters!=null)
+	    parameters = RequestUtil.mergeParameters(parameters, postParameters);
+    }
+
+    public void processCookies() {
+	RequestUtil.processCookies( this, cookies );
+    }
+    
+    // XXX
+    // general comment -- we've got one form of this method that takes
+    // a string, another that takes an inputstream -- they don't work
+    // well together. FIX
+    
+    public void processFormData(String data) {
+	RequestUtil.processFormData( data, parameters );
+    }
+
+    public void processFormData(InputStream in, int contentLength) {
+        byte[] buf = new byte[contentLength]; // XXX garbage collection!
+	int read = RequestUtil.readData( in, buf, contentLength );
+        String s = new String(buf, 0, read);
+        processFormData(s);
+    }
+
+
+    // XXX is it used???
+    public String unUrlDecode(String data) {
+	try {
+	    return RequestUtil.URLDecode( data );
+	} catch (NumberFormatException e) {
+	    String msg=sm.getString("serverRequest.urlDecode.nfe", data);
+	    throw new IllegalArgumentException(msg);
+	} catch (StringIndexOutOfBoundsException e) {
+	    String msg=sm.getString("serverRequest.urlDecode.nfe", data);
+	    throw new IllegalArgumentException(msg);
+	}
+
+    }           
+
+    // XXX This method is duplicated in core/Response.java
+    public String getCharsetFromContentType(String type) {
+        return RequestUtil.getCharsetFromContentType( type );
+    }
+
+    // -------------------- End utils
+
+    public void recycle() {
+	response = null;
+	scheme = Constants.Request.HTTP;
+	context = null;
+        attributes.clear();
+        parameters.clear();
+        cookies.removeAllElements();
+        method = null;
+	protocol = null;
+        requestURI = null;
+        queryString = null;
+        contentLength = -1;
+        contentType = "";
+        charEncoding = null;
+        authType = null;
+        remoteUser = null;
+        reqSessionId = null;
+	serverSession = null;
+	didReadFormData = false;
+	//	moreRequests = false;
+	in = null;
+    	headers.clear();
+	serverName = "";
+    }
 }

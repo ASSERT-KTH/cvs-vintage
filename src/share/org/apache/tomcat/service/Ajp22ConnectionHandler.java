@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp22ConnectionHandler.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp22ConnectionHandler.java,v 1.2 1999/10/24 17:34:03 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/24 17:34:03 $
  *
  * ====================================================================
  *
@@ -285,7 +285,7 @@ class MessageConnector implements Ajp22Constants {
 }
 
 
-class Ajp22Request extends RequestImpl {
+class Ajp22Request extends Request {
     MessageConnector proto;
     Hashtable env_vars;
 
