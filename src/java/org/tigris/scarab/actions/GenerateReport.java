@@ -46,44 +46,19 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Date;
 
 // Turbine Stuff 
-import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 
-import org.apache.torque.util.Criteria;
 import org.apache.torque.om.NumberKey;
-import org.apache.fulcrum.intake.Retrievable;
-import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.intake.model.Field;
-import org.apache.fulcrum.util.parser.ValueParser;
-import org.apache.fulcrum.util.parser.BaseValueParser;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.RModuleOption;
-import org.tigris.scarab.om.IssuePeer;
-import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.ActivitySet;
-import org.tigris.scarab.attribute.OptionAttribute;
-import org.tigris.scarab.attribute.UserAttribute;
-import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.RModuleAttributePeer;
-import org.tigris.scarab.om.ActivitySetTypePeer;
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.om.Report;
@@ -94,7 +69,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.23 2002/10/08 15:57:41 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.24 2002/10/23 21:21:48 jon Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -105,7 +80,6 @@ public class GenerateReport
     public void doStep1( RunData data, TemplateContext context )
         throws Exception
     {
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Report report = populateReport("reports,Step1.vm", data, context);
         Intake intake = getIntakeTool(context);
@@ -415,7 +389,6 @@ public class GenerateReport
     public void doSavereport( RunData data, TemplateContext context )
         throws Exception
     {
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Report report = populateReport("reports,SaveReport.vm", data, context);
         Intake intake = getIntakeTool(context);
@@ -524,13 +497,13 @@ public class GenerateReport
     {
         Report report = populateReport("reports,Report_1.vm", data, context);
         setTarget(data, "reports,Report_1.vm");
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         getScarabRequestTool(context)
             .setInfoMessage(l10n.get("UseBrowserPrintReport"));
     }
 
-    private Report populateReport( String template, 
+    // FIXME: template variable not used!!
+    private Report populateReport( String template,
                                    RunData data, TemplateContext context)
        throws Exception
     {

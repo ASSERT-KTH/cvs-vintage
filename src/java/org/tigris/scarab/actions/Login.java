@@ -49,12 +49,9 @@ package org.tigris.scarab.actions;
 import java.util.List;
 
 // Turbine Stuff 
-import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
-import org.apache.fulcrum.security.entity.User;
-import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
@@ -75,7 +72,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.39 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: Login.java,v 1.40 2002/10/23 21:24:08 jon Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -87,8 +84,6 @@ public class Login extends ScarabTemplateAction
     {
         data.setACL(null);
         IntakeTool intake = getIntakeTool(context);
-        Group login = intake.get("Login", IntakeTool.DEFAULT_KEY);
-
         if (intake.isAllValid() && checkUser(data, context))
         {
             ScarabUser user = (ScarabUser)data.getUser();

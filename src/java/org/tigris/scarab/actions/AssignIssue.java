@@ -46,58 +46,32 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-import javax.mail.SendFailedException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Locale;
-import java.math.BigDecimal;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.tool.IntakeTool;
 import org.apache.turbine.modules.ContextAdapter;
-import org.apache.turbine.ParameterParser;
 
-import org.apache.torque.util.Criteria;
 import org.apache.torque.om.NumberKey;
-import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.intake.model.Field;
-import org.apache.fulcrum.template.TemplateEmail;
-import org.apache.fulcrum.template.DefaultTemplateContext;
 import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.fulcrum.localization.Localization;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.BaseModifyIssue;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.AttributeValuePeer;
-import org.tigris.scarab.attribute.OptionAttribute;
-import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributePeer;
-import org.tigris.scarab.attribute.UserAttribute;
-import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.ActivitySet;
-import org.tigris.scarab.om.Activity;
-import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -106,7 +80,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.64 2002/10/17 19:12:02 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.65 2002/10/23 21:15:35 jon Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -122,7 +96,7 @@ public class AssignIssue extends BaseModifyIssue
         if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
                                user.getCurrentModule()))
         {
-            List tempList = getWorkingList(data, context, "temp");
+            List tempList = getWorkingList(data, "temp");
             ValueParser params = data.getParameters();
             Object[] keys =  params.getKeys();
             for (int i =0; i<keys.length; i++)
@@ -159,7 +133,7 @@ public class AssignIssue extends BaseModifyIssue
         if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
                                user.getCurrentModule()))
         {
-            List tempList = getWorkingList(data, context, "temp");
+            List tempList = getWorkingList(data, "temp");
             ValueParser params = data.getParameters();
             Object[] keys =  params.getKeys();
             for (int i =0; i<keys.length; i++)
@@ -213,9 +187,8 @@ public class AssignIssue extends BaseModifyIssue
     {
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         List issues = scarabR.getIssues();
-        List finalList = getWorkingList(data, context, "final");
+        List finalList = getWorkingList(data, "final");
         String action = null;
-        Attachment attachment = null;
         ScarabUser assigner = (ScarabUser)data.getUser();
         String reason = data.getParameters().getString("reason", "");
 
@@ -234,8 +207,7 @@ public class AssignIssue extends BaseModifyIssue
                 Attribute newUserAttribute = AttributeManager
                     .getInstance(new NumberKey(attrId));
                 boolean alreadyAssigned = false;
-                boolean userSwitched = false;
-            
+
                 for (int k=0; k < oldAssignees.size(); k++)
                 {
                     AttributeValue oldAttVal = (AttributeValue)oldAssignees.get(k);
@@ -293,7 +265,7 @@ public class AssignIssue extends BaseModifyIssue
                 for (int n=0; n<finalList.size();n++)
                 {
                     List pair = (List)finalList.get(n);
-                    String attrId = (String)pair.get(0);
+//                    String attrId = (String)pair.get(0);
                     String assigneeId = (String)pair.get(1);
                     if (assigneeId.equals(oldAttVal.getUserId().toString()))
                     {
@@ -345,8 +317,8 @@ public class AssignIssue extends BaseModifyIssue
     /**
      * Gets temporary working list of assigned users.
      */
-    private List getWorkingList(RunData data, TemplateContext contexti,
-                                String whichList) 
+    private List getWorkingList(RunData data,
+                                String whichList)
         throws Exception
     {
         List workingList =  new ArrayList();
@@ -379,8 +351,8 @@ public class AssignIssue extends BaseModifyIssue
      *
      * @param issue a <code>Issue</code> to notify users about being assigned to.
      * @param assignee a <code>ScarabUser</code> user being assigned.
-     * @param userAction <code>String</code> text to email to the assigned user.
-     * @param othersAction <code>String</code> text to email to others.
+     * @param assigner a <code>ScarabUser</code> user assigned.
+     * @param action <code>String</code> text to email to others.
      */
     private boolean notify(TemplateContext context, Issue issue, 
                            ScarabUser assignee, ScarabUser assigner,
