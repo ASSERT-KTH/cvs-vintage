@@ -147,7 +147,6 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 #end
   </tr>
 
-<tr><td colspan="2">$scarabR.reportTimer("Starting issue loop")</td></tr>
 #set ($showModule = $mitlist && !$mitlist.isSingleModule())
 #set ($showIssueType = $mitlist && !$mitlist.isSingleIssueType())
 #foreach ($result in $queryResults)
@@ -188,7 +187,6 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 #end
   </tr>
 #end
-<tr><td colspan="2">$scarabR.reportTimer("Ended issue loop")</td></tr>
   </table>
 
 <div class="axial">
