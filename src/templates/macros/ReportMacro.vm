@@ -246,13 +246,13 @@
    <tr>
 
 #if ($template == "reports,Step1.vm")
-   <th>1: $l10n.SummaryInfo</th>
+   <th>1: $l10n.Summary</th>
 #else
     #set ($wizardLink = $link.setPage("reports,Step1.vm"))
     #if ($reportParameters)
         #set ($wizardLink = $wizardLink.addPathInfo($reportParameters))
     #end
-   <td><a href="$wizardLink">1: $l10n.SummaryInfo</a></td>
+   <td><a href="$wizardLink">1: $l10n.Summary</a></td>
 #end
 
 #if ($template == "reports,Step2.vm" || $template == "reports,Step2b.vm")

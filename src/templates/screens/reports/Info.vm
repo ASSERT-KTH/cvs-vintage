@@ -31,7 +31,7 @@
 $data.User.setCurrentMITList($report.getMITList())
 #showMITList($l10n.MITListReportHeading $data.User true)
 
-<h3>$l10n.SummaryInfo</h3>
+<h3>$l10n.Summary</h3>
 <p><strong>$l10n.Saving</strong> $l10n.EditInfo</p>
 
 <div class="axial">
