@@ -68,7 +68,7 @@ import org.tigris.scarab.util.word.SearchIndex;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: UpdateSearchIndex.java,v 1.6 2002/12/20 21:04:58 jon Exp $
+ * @version $Id: UpdateSearchIndex.java,v 1.7 2002/12/20 21:09:56 jon Exp $
  */
 public class UpdateSearchIndex extends RequireLoginFirstAction
 {
@@ -144,10 +144,10 @@ public class UpdateSearchIndex extends RequireLoginFirstAction
         {
             try
             {
-                log().debug("Update index started!")
+                log().debug("Update index started!");
                 SearchIndex indexer = SearchFactory.getInstance();
                 indexer.updateIndex();
-                log().debug("Update index completed!")
+                log().debug("Update index completed!");
             }
             catch (Exception e)
             {
