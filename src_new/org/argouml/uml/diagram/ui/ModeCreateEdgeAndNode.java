@@ -24,7 +24,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.7 2000/10/19 14:43:19 1sturm Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.8 2001/01/03 12:57:58 boger Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -240,7 +240,7 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 				if (portFigs.size() > 0)
 					foundPort = ((Fig)portFigs.elementAt(0)).getOwner();
 			}
-			System.out.println("fignode "+_startPort+" "+foundPort);
+			
 			FigPoly p = (FigPoly) _newItem;
 			editor.damaged(p);
 			p._isComplete = true;
@@ -293,6 +293,8 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 					done();
 					//me.consume();
 					_newItem = null;
+                                        
+                                         if (_fe instanceof MouseListener) ((MouseListener) _fe).mouseReleased(me);
 
                                         // set the new edge in place
                                         if (_sourceFigNode != null) _sourceFigNode.updateEdges();
