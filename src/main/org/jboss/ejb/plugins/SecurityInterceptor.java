@@ -17,7 +17,6 @@ import org.jboss.security.AnybodyPrincipal;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.RunAsIdentity;
-import org.jboss.security.SecurityAssociation;
 import org.jboss.security.SecurityRolesAssociation;
 
 import javax.ejb.EJBException;
@@ -32,7 +31,7 @@ import java.util.Set;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -100,10 +99,7 @@ public class SecurityInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if (runAsIdentity != null)
-      {
-         SecurityAssociation.pushRunAsIdentity(runAsIdentity);
-      }
+      SecurityActions.pushRunAsIdentity(runAsIdentity);
 
       try
       {
@@ -112,10 +108,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if (runAsIdentity != null)
-         {
-            SecurityAssociation.popRunAsIdentity();
-         }
+         SecurityActions.popRunAsIdentity();
       }
    }
 
@@ -128,10 +121,7 @@ public class SecurityInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if (runAsIdentity != null)
-      {
-         SecurityAssociation.pushRunAsIdentity(runAsIdentity);
-      }
+      SecurityActions.pushRunAsIdentity(runAsIdentity);
 
       try
       {
@@ -140,10 +130,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if (runAsIdentity != null)
-         {
-            SecurityAssociation.popRunAsIdentity();
-         }
+         SecurityActions.popRunAsIdentity();
       }
    }
 
@@ -163,8 +150,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       if (mi.getMethod() == null || securityManager == null || container == null)
       {
          // Allow for the progatation of caller info to other beans
-         SecurityAssociation.setPrincipal(principal);
-         SecurityAssociation.setCredential(credential);
+         SecurityActions.setPrincipalInfo(principal, credential);
          return;
       }
 
@@ -175,7 +161,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       }
 
       // authenticate the current principal
-      RunAsIdentity callerRunAsIdentity = SecurityAssociation.peekRunAsIdentity();
+      RunAsIdentity callerRunAsIdentity = SecurityActions.peekRunAsIdentity();
       if (callerRunAsIdentity == null)
       {
          // Check the security info from the method invocation
@@ -189,8 +175,7 @@ public class SecurityInterceptor extends AbstractInterceptor
          }
          else
          {
-            SecurityAssociation.setPrincipal(principal);
-            SecurityAssociation.setCredential(credential);
+            SecurityActions.setPrincipalInfo(principal, credential);
             if (trace)
             {
                log.trace("Authenticated  principal=" + principal);
