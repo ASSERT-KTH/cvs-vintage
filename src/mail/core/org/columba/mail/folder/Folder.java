@@ -318,11 +318,7 @@ public abstract class Folder extends FolderTreeNode {
 		if (getFilterList() == null)
 			return false;
 
-		if (getFilterList().count() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return getFilterList().count() > 0;
 	}
 
 	/**
