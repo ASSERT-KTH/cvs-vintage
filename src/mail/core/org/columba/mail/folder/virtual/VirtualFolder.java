@@ -522,6 +522,15 @@ public class VirtualFolder extends Folder {
 		FolderCommandReference[] newReference = null;
 
 		Object[] uids = r[0].getUids();
+		
+		// if we didn't pass uid array here, use all message in this virtual folder
+		try {
+			if ( uids == null ) uids = getUids();
+		} catch (Exception e1) {
+			
+			e1.printStackTrace();
+		}
+		
 		if (uids == null)
 			return r;
 
@@ -564,6 +573,7 @@ public class VirtualFolder extends Folder {
 			newReference[i].setUids(uidArray);
 			newReference[i].setMarkVariant(r[0].getMarkVariant());
 			newReference[i].setMessage(r[0].getMessage());
+			newReference[i].setDestFile(r[0].getDestFile());
 
 			i++;
 		}
@@ -596,8 +606,8 @@ public class VirtualFolder extends Folder {
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.Folder#getUids(org.columba.core.command.WorkerStatusController)
 	 */
-	public Object[] getUids(WorkerStatusController worker) throws Exception {
-
+	public Object[] getUids() throws Exception {
+		
 		int count = headerList.count();
 		Object[] uids = new Object[count];
 		int i = 0;

@@ -573,7 +573,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getUids(org.columba.core.command.WorkerStatusController)
 	 */
-	public Object[] getUids(WorkerStatusController worker) throws Exception {
+	public Object[] getUids() throws Exception {
 		headerList = cache.getHeaderList();
 		Object[] uids = new Object[headerList.size()];
 		int i = 0;
