@@ -59,8 +59,8 @@ public class UMLTextProperty  {
         if(_setMethod != null) {
             Object element = container.getTarget();
             if(element != null) {
-                try {
-                    String oldValue = getProperty(container);
+               					
+                    	String oldValue = getProperty(container);					
                     //
                     //  if one or the other is null or they are not equal
                     if(newValue == null || oldValue == null || !newValue.equals(oldValue)) {
@@ -72,10 +72,8 @@ public class UMLTextProperty  {
                             	_setMethod.invoke(element,args);                            	// Mark the project as having been changed                             	Project p = ProjectBrowser.TheInstance.getProject(); 								if (p != null) p.setNeedsSave(true);                             }                            catch (InvocationTargetException inv) {                            	Throwable targetException = inv.getTargetException();                            	if (!(targetException instanceof PropertyVetoException)) {                            		Argo.log.error(inv);                            		Argo.log.error(targetException);                            	}                   				if (targetException instanceof Exception) {                   					throw (Exception)targetException;                   				}                   				System.exit(-1); // we have a real error                             	                            	        		                            }                            
                         }
                     }
-                }
-                catch(Exception e) {
-                    System.out.println(e.toString() + " in UMLTextProperty.setProperty()");
-                }
+               
+               
             }
         }
     }
