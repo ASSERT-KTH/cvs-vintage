@@ -930,9 +930,14 @@ public class ContextManager implements LogAware {
 	Context ctx = req.getContext();
 	if(ctx==null) ctx=getContext("");
 
-	ctx.log( "Status code:" + code + " request:"  + req + " msg:" +
-		 req.getAttribute("javax.servlet.error.message"));  // tuneme
-
+	// don't log normal cases ( redirect and need_auth ), they are not
+	// error
+	// XXX this log was intended to debug the status code generation.
+	// it can be removed for all cases.
+	if( code != 302 && code != 401 ) // tuneme
+	    ctx.log( "Status code:" + code + " request:"  + req + " msg:" +
+		     req.getAttribute("javax.servlet.error.message"));
+	
 	errorPath = ctx.getErrorPage( code );
 	if( errorPath != null ) {
 	    errorServlet=getHandlerForPath( ctx, errorPath );
