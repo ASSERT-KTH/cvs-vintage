@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.227 2004/12/21 22:30:41 mvw Exp $
+// $Id: ModelFacade.java,v 1.228 2004/12/22 21:39:42 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2945,7 +2945,7 @@ public class ModelFacade {
     /**
      * Get the modelelement that were commented.
      *
-     * @param handle the comment that we are getting the model elemets of
+     * @param handle the comment that we are getting the model elements of
      * @return the modelelements (or null)
      */
     public static Collection getAnnotatedElements(Object handle) {
