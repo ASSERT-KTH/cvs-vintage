@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.5 2005/01/26 16:02:15 mvw Exp $
+// $Id: StateMachinesHelper.java,v 1.6 2005/01/29 16:44:15 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,7 +104,7 @@ public interface StateMachinesHelper {
      * statemachines for.
      * @return Collection The collection with found statemachines.
      */
-    Collection getAllPossibleStatemachines(Object model, 
+    Collection getAllPossibleStatemachines(Object model,
             Object oSubmachineState);
 
     /**
@@ -176,14 +176,14 @@ public interface StateMachinesHelper {
 
     /**
      * Sets the Bound of some SynchState.
-     * 
+     *
      * @param handle Synch State
-     * @param bound A positive integer or the value “unlimited” specifying 
-     *              the maximal count of the SynchState. The count is the 
-     *              difference between the number of times the incoming 
+     * @param bound A positive integer or the value “unlimited” specifying
+     *              the maximal count of the SynchState. The count is the
+     *              difference between the number of times the incoming
      *              and outgoing transitions of the synch state are fired.
      */
-    public void setBound(Object handle, int bound);
+    void setBound(Object handle, int bound);
 
     /**
      * Makes a Composite State concurrent.
