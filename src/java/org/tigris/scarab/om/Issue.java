@@ -839,7 +839,6 @@ public class Issue
 
     /**
      * Returns users assigned to all user attributes.
-     */
     public List getAssociatedUsers() throws Exception
     {
         List result = null;
@@ -891,6 +890,7 @@ public class Issue
         }
         return result;
     }
+     */
 
 
     /**
@@ -2011,7 +2011,6 @@ public class Issue
      * @param attachmentText a <code>String</code> value
      * @param assigner a <code>ScarabUser</code> value
      * @exception Exception if an error occurs
-     */
     public void assignUsers(List newAssignees, String attachmentText, 
                             ScarabUser assigner, Attribute attribute)
         throws Exception
@@ -2078,6 +2077,7 @@ public class Issue
         }
         save();
     }
+     */
 
  
     /**
