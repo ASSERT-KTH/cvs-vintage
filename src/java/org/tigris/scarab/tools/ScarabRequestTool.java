@@ -1258,6 +1258,30 @@ try{
      * Returns all queries that are global, 
      * Plus those that are personal and created by logged-in user.
     */
+    public List getPrivateQueries()
+        throws Exception
+    {
+        return QueryPeer.getQueries(getCurrentModule(),
+               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               "avail", "desc", "private");
+    }
+
+    /**
+     * Returns all queries that are global, 
+     * Plus those that are personal and created by logged-in user.
+    */
+    public List getGlobalQueries()
+        throws Exception
+    {
+        return QueryPeer.getQueries(getCurrentModule(),
+               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               "avail", "desc", "global");
+    }
+
+    /**
+     * Returns all queries that are global, 
+     * Plus those that are personal and created by logged-in user.
+    */
     public List getQueries()
         throws Exception
     {
@@ -1265,15 +1289,15 @@ try{
         String sortPolarity = data.getParameters().getString("sortPolarity");
         if (sortColumn == null)
         {
-            sortColumn = "name";
+            sortColumn = "avail";
         }
         if (sortPolarity == null)
         {
-            sortPolarity = "asc";
+            sortPolarity = "desc";
         }
-        return QueryPeer.getAllQueries(getCurrentModule(),
+        return QueryPeer.getQueries(getCurrentModule(),
                getCurrentIssueType(), (ScarabUser)data.getUser(), 
-               sortColumn, sortPolarity);
+               sortColumn, sortPolarity, "all");
     }
 
     /**
