@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.86 2002/02/28 00:15:05 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.87 2002/03/05 17:28:12 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -503,7 +503,7 @@
         This field could be null for the normal instance where the issue
         is local to this database.
     -->
-    <column name="ID_DOMAIN"  type="VARCHAR" size="15"/>
+    <column name="ID_DOMAIN"  type="VARCHAR" size="127"/>
     <!--
         Type : Issue, or Enter Issue Template
     -->
@@ -751,7 +751,7 @@
     <!--
         The instance name of scarab the module is located within.
     -->
-    <column name="DOMAIN"  type="VARCHAR" size="15"/>
+    <column name="DOMAIN"  type="VARCHAR" size="127"/>
     <!--
         Abbreviation whose primary use to identify related issues.
     -->

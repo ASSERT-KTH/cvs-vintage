@@ -13,7 +13,7 @@
 <!-- users and security.                                                  -->
 <!-- ==================================================================== -->
 <!-- @author: <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>       -->
-<!-- @version $Id: turbine-schema.xml,v 1.2 2002/02/26 19:38:48 jon Exp $     -->
+<!-- @version $Id: turbine-schema.xml,v 1.3 2002/03/05 17:28:12 jmcnally Exp $     -->
 <!-- ==================================================================== -->
 
 <database name="@DATABASE_NAME@">
@@ -63,7 +63,7 @@
     
   <table name="TURBINE_USER" idMethod="idbroker">
     <column name="USER_ID" required="true" primaryKey="true" type="INTEGER"/>
-    <column name="LOGIN_NAME" required="true" size="32" type="VARCHAR" javaName="UserName"/>
+    <column name="LOGIN_NAME" required="true" size="99" type="VARCHAR" javaName="UserName"/>
     <column name="PASSWORD_VALUE" required="true" size="32" type="VARCHAR" javaName="Password"/>
     <column name="FIRST_NAME" required="true" size="99" type="VARCHAR"/>
     <column name="LAST_NAME" required="true" size="99" type="VARCHAR"/>
