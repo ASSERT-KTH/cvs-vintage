@@ -75,6 +75,7 @@
 
 	<!-- pack the files into one jar file with automatic manifest file -->
 	<target name="jar" depends="compile">
+		<delete file="${dest}/columba.jar"/>
 		<echo message="the jar file are going to ${dest}/columba.jar "/> 
 		<jar basedir="${dest}" jarfile="${dest}/columba.jar">
 			<include name="**"/>
@@ -185,6 +186,13 @@ else echo "cannot find columba.jar in `pwd`"; fi
 		</javadoc>
 	</target>
 	
+	<!-- to run the application via ant, this is good for testing and coding in xemacs -->
+	<target name="run" depends="jar">
+		<java jar="${dest}/columba.jar" fork="yes">
+			<arg value="--debug"/>
+		</java>
+	</target>
+
 	<!-- to clean up the dest-directory -->
 	<target name="clean">
 		<delete dir="${dest}"/>
