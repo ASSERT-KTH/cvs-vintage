@@ -1,4 +1,4 @@
-// $Id: TestUmlModelEventPump.java,v 1.11 2003/06/29 23:18:53 linus Exp $
+// $Id: TestUmlModelEventPump.java,v 1.12 2003/08/25 14:03:10 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.util.Date;
 import junit.framework.TestCase;
 
 import org.argouml.application.security.ArgoSecurityManager;
+import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 
@@ -43,6 +44,7 @@ import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MOperationImpl;
 import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.core.MParameterImpl;
+import ru.novosoft.uml.model_management.MModel;
 
 /**
  * @since Oct 15, 2002
@@ -121,12 +123,9 @@ public class TestUmlModelEventPump extends TestCase {
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         UmlFactory.getFactory().setGuiEnabled(false);
         elem = CoreFactory.getFactory().createClass();
-        ProjectManager
-            .getManager()
-            .getCurrentProject()
-            .getRoot()
-            .addOwnedElement(
-			     elem);
+        Project project = ProjectManager.getManager().getCurrentProject();
+        MModel model = (MModel)project.getRoot();
+        model.addOwnedElement(elem);
         listener = new MockModelEventListener();
         eventcalled = false;
         listener2 = new TestListener();

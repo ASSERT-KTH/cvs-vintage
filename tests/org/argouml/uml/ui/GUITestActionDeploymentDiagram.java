@@ -1,4 +1,4 @@
-// $Id: GUITestActionDeploymentDiagram.java,v 1.1 2003/05/11 14:13:51 linus Exp $
+// $Id: GUITestActionDeploymentDiagram.java,v 1.2 2003/08/25 14:03:10 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,7 @@ public class GUITestActionDeploymentDiagram
      * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getNamespace()
      */
     protected MNamespace getNamespace() {
-        return ProjectManager.getManager().getCurrentProject().getModel();
+        return (MNamespace)(ProjectManager.getManager().getCurrentProject().getModel());
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: TestProject.java,v 1.6 2003/06/29 23:18:53 linus Exp $
+// $Id: TestProject.java,v 1.7 2003/08/25 14:03:10 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import org.argouml.application.security.ArgoSecurityManager;
 import org.argouml.model.uml.UmlFactory;
 
 import junit.framework.TestCase;
+import org.argouml.model.ModelFacade;
 
 /**
  * @since Nov 17, 2002
@@ -47,7 +48,7 @@ public class TestProject extends TestCase {
     public void testMakeUntitledProject() {
         Project p = ProjectManager.getManager().getCurrentProject();
         assertEquals(2, p.getDiagrams().size());
-        assertEquals("untitledModel", p.getModel().getName());
+        assertEquals("untitledModel", ModelFacade.getName(p.getModel()));
         // maybe next test is going to change in future
         assertEquals(p.getRoot(), p.getModel());
     }

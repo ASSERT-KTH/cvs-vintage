@@ -1,4 +1,4 @@
-// $Id: TestXMIReader.java,v 1.6 2003/07/01 06:49:59 linus Exp $
+// $Id: TestXMIReader.java,v 1.7 2003/08/25 14:03:10 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,10 +35,12 @@ import org.argouml.application.security.ArgoSecurityManager;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.IllegalFormatException;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 
 import ru.novosoft.uml.foundation.core.MClass;
+import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MOperation;
 import ru.novosoft.uml.foundation.core.MParameter;
 
@@ -80,8 +82,7 @@ public class TestXMIReader extends TestCase {
         Project p = ProjectManager.getManager().makeEmptyProject();
         MClass clazz = CoreFactory.getFactory().buildClass(p.getModel());
         MOperation oper = CoreFactory.getFactory().buildOperation(clazz);
-        MParameter param = oper.getParameter(0);
-        param.setType(p.findType("String"));
+        ModelFacade.setType(oper.getParameter(0), p.findType("String"));
         File file = new File("test.zargo");
 
 	p.save(true, file);
