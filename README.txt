@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.58 2003/07/18 18:37:54 dlr Exp $
+$Id: README.txt,v 1.59 2003/07/25 16:47:48 thierrylach Exp $
 
 Welcome to Scarab!
 
@@ -132,6 +132,10 @@ scarab/
                     and compile the source code for Scarab.
     /lib        <-- These are the .jar files used by Scarab.
     /src        <-- This where the source files are stored.
+    /extensions <-- This where the builder can place modifications to the standard
+                    distribution that will be incorporated into the build.
+                    This simplifies the process of replacing *.vm files,
+                    among other things.
     /target     <-- This is the output directory where the sandbox will be 
                     created. It doesn't exist until you run the build script.
     /www        <-- This is where the website is stored.
@@ -251,6 +255,24 @@ relative path or an absolute path.
 NOTE: Please see the documentation above for instructions on how to set
       properties and rebuild Scarab.
 
+-------------------------------------------------------------------------
+| R U N N I N G   W I T H   S E R V L E T   2 . 2                        |
+-------------------------------------------------------------------------
+Non-current versions of some commonly used application servers may not
+support the servlet 2.3 specification.  One such server is Websphere 4.0
+which only supports the servlet 2.2 specification.
+
+While the Scarab project does not intend to officially maintain
+compatibility with the servlet 2.2 specification, there currently is only
+a single problem area, involving the HttpRequest.setCharacterEncoding()
+call in DetermineCharsetValve.  Removing this call weakens Scarab's
+support for character set encoding, but it allows running Scarab with
+Websphere 4.0 application server.
+
+To implement this feature, add the following line to one of the custom
+build properties files as documented above:
+
+scarab.default.pipeline.descriptor=org/tigris/scarab/pipeline/scarab-pipeline22.xml
 
 -------------------------------------------------------------------------
 | B U I L D I N G  T H E  S A N D B O X                                 |
@@ -422,6 +444,29 @@ NOTE: Substitute 'my.server.com' for the DNS name that the server is
 
 NOTE: You can define your own URL by editing src/conf/web.xml and defining
       a different servlet mapping and then rebuilding.
+
+-------------------------------------------------------------------------
+| C U S T O M I Z I N G   S C A R A B                                   |
+-------------------------------------------------------------------------
+At times it may be useful to make minor modifications to Scarab without
+applying those changes directly to the Scarab sources (since this
+will cause CVS to report those differences, and even worse, the custom
+modifications might get unintentionally checked into the Scarab CVS
+repository by a Scarab developer).
+
+The extensions directory structure allows this to be done fairly simply.
+
+It contains two directories, lib and templates.  Any files in either
+of those directories will be copied into the appropriate target
+directory _after_ any such files in the standard distribution,
+and will replace the standard distribution files.
+
+NOTE: It is the responsibility of the builder to ensure that any
+      subsequent changes to modified Velocity macros are transferred
+      to these replacements.
+
+
+
 
 -------------------------------------------------------------------------
 | Q U E S T I O N S  /  P R O B L E M S                                 |
