@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * have set methods.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;
@@ -142,7 +142,7 @@ public final class JDBCRelationMetaData {
     * Constructs relation meta data with the data contained in the ejb-relation
     * element or the defaults element from a jbosscmp-jdbc xml file. Optional
     * values of the xml element that are not present are loaded from the
-    * defalutValues parameter.
+    * defaultValues parameter.
     *
     * @param jdbcApplication used to retrieve type mappings in table mapping
     * style
@@ -309,7 +309,7 @@ public final class JDBCRelationMetaData {
          right.init(left, rightElement);
       }
 
-      // atleast one side of a fk relation must have keys
+      // at least one side of a fk relation must have keys
       if(isForeignKeyMappingStyle() && 
             left.getKeyFields().isEmpty() &&
             right.getKeyFields().isEmpty()) {
@@ -333,7 +333,7 @@ public final class JDBCRelationMetaData {
 
       // if defaults check for preferred-relation-mapping
       if("defaults".equals(element.getTagName())) {
-         // set mapping style based on perferred-relation-mapping (if possible) 
+         // set mapping style based on preferred-relation-mapping (if possible) 
          String perferredRelationMapping = MetaData.getOptionalChildContent(
                element, "preferred-relation-mapping");
 
@@ -393,16 +393,19 @@ public final class JDBCRelationMetaData {
 
       String roleName = defaultRole.getRelationshipRoleName();
 
+      if(roleName == null)
+         throw new DeploymentException("No ejb-relationship-role-name element found");
+
       Iterator iter = MetaData.getChildrenByTagName(
             element, "ejb-relationship-role");
       if(!iter.hasNext()) {
          throw new DeploymentException("No ejb-relationship-role " + 
                "elements found");
       }
-      
+
       Element roleElement = null;
       for(int i=0; iter.hasNext(); i++) {
-         // only 2 roles are allow 
+         // only 2 roles are allowed
          if(i > 1) {
             throw new DeploymentException("Expected only 2 " +
                   "ejb-relationship-role but found more then 2");
@@ -454,7 +457,7 @@ public final class JDBCRelationMetaData {
    /** 
     * Gets the relationship role related to the specified role.
     * @param role the relationship role that the related role is desired
-    * @return the elationship role related to the specified role.
+    * @return the relationship role related to the specified role.
     * @throws DeploymentException if the role parameter is not the left or
     * right role of this relation
     */
@@ -512,7 +515,7 @@ public final class JDBCRelationMetaData {
    }
    
    /** 
-    * Does the table exists yet? This does not mean that table has been created
+    * Does the table exist yet? This does not mean that table has been created
     * by the appilcation, or the the database metadata has been checked for the
     * existance of the table, but that at this point the table is assumed to 
     * exist.
