@@ -13,16 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.menu;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.menu.MenuBarGenerator;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.MenuPluginHandler;
-
 
 /**
  * @author frd
@@ -42,8 +41,7 @@ public class ComposerMenu extends Menu {
             ((MenuPluginHandler) MainInterface.pluginManager.getHandler(
                 "org.columba.mail.composer.menu")).insertPlugins(this);
         } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
+            throw new RuntimeException(ex);
         }
     }
 
