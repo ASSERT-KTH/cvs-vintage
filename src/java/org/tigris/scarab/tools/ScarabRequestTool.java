@@ -47,6 +47,7 @@ package org.tigris.scarab.tools;
  */ 
 
 import java.text.DateFormat;
+//import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.List;
 import java.util.ArrayList;
@@ -55,8 +56,10 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Hashtable;
+import java.util.TimeZone;
 
 // Turbine
+import org.apache.turbine.Turbine;
 import org.apache.commons.lang.Strings;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.ObjectKey;
@@ -126,6 +129,9 @@ public class ScarabRequestTool
     extends RecyclableSupport
     implements ScarabRequestScope
 {
+    private static final String TIME_ZONE =
+        Turbine.getConfiguration().getString("scarab.timezone");
+
     /** the object containing request specific data */
     private RunData data;
 
@@ -235,12 +241,20 @@ public class ScarabRequestTool
     private String infoMessage;
     private String alertMessage;
 
+    /** The time zone that will be used when formatting dates */
+    private final TimeZone timezone;
     
     /**
      * Constructor does initialization stuff
      */    
     public ScarabRequestTool()
     {
+        TimeZone tmpTimeZone = null;
+        if (TIME_ZONE != null) 
+        {
+            tmpTimeZone = TimeZone.getTimeZone(TIME_ZONE);
+        }
+        timezone = tmpTimeZone;
     }
 
     /**
@@ -1936,13 +1950,18 @@ try{
     public DateFormat getDateFormat()
     {
         Locale locale = Localization.getLocale(data.getRequest());
-        return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, 
-            DateFormat.MEDIUM, locale);
+        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, 
+                                                       DateFormat.MEDIUM, locale);
+        if (timezone != null) 
+        {
+            df.setTimeZone(timezone);
+        }
+        return df;
 // We may want to eventually format the date other than default, 
 // this is how you would do it.
-//        SimpleDateFormat sdf = new SimpleDateFormat(
-//            "yyyy/MM/dd hh:mm:ss a z", locale);
-//        return (DateFormat) sdf;
+        //SimpleDateFormat sdf = new SimpleDateFormat(
+        //    "yyyy/MM/dd hh:mm:ss a z", locale);
+        //return (DateFormat) sdf;
     }
 
     /**
