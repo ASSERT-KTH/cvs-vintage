@@ -58,7 +58,7 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.7 2002/03/19 02:02:00 elicia Exp $
+ * @version $Id: QueryTest.java,v 1.8 2002/03/19 22:52:49 elicia Exp $
  */
 public class QueryTest extends BaseTestCase
 {
@@ -185,9 +185,9 @@ public class QueryTest extends BaseTestCase
         {
             caught = true;
         }
-        assert(!caught);
+        assertTrue(!caught);
         query.approve(getUser1(), true);
-        assert(query.getApproved());
+        assertTrue(query.getApproved());
     }
 
     private void testSubscribe() throws Exception
@@ -196,7 +196,7 @@ public class QueryTest extends BaseTestCase
         query.subscribe(getUser2(), "1");
         RQueryUser rqu = query.getRQueryUser(getUser2());
         query.subscribe(getUser2(), "1");
-        assert(rqu.getIsSubscribed());
+        assertTrue(rqu.getIsSubscribed());
         // Now if unsubscribed, should fail to return RQueryUser
         query.unSubscribe(getUser2());
         boolean caught = false;
@@ -208,7 +208,7 @@ public class QueryTest extends BaseTestCase
         {
             caught = true;
         }
-        assert(!caught);
+        assertTrue(!caught);
     }
 
     private void testCopy() throws Exception
@@ -240,11 +240,11 @@ public class QueryTest extends BaseTestCase
             caught = true;
         }
         Query retQuery = QueryManager.getInstance(query.getQueryId(), false);
-        assert(!retQuery.getDeleted());
-        assert(caught);
+        assertTrue(!retQuery.getDeleted());
+        assertTrue(caught);
         // user 2 should succeed in deleting, as the owner.
         query1.delete(getUser2());
         retQuery = QueryManager.getInstance(query1.getQueryId(), false);
-        assert(retQuery.getDeleted());
+        assertTrue(retQuery.getDeleted());
     }
 }
