@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.5 2004/12/30 17:32:31 bobtarling Exp $
+// $Id: PGMLParser.java,v 1.6 2005/01/02 07:54:42 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -450,8 +450,8 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
 
 	case PRIVATE_EDGE_STATE:
 	    if (_currentEdge instanceof FigEdgeModelElement) {
-		((FigEdgeModelElement) _currentEdge)
-		    .setItemUID(new ItemUID(id));
+            ((FigEdgeModelElement) _currentEdge)
+                .setItemUID(new ItemUID(id));
 	    }
 	    //cat.debug("SetUID: edge: " + _currentEdge);
 	    break;
@@ -622,6 +622,14 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
             own = _currentEdge.getOwner();
             if (!_diagram.getEdges(null).contains(own)) {
                 _diagram.getEdges(null).add(own);
+            }
+            break;
+        case POLY_EDGE_STATE:
+            if ("path".equals(name) 
+                    && _currentPoly != null
+                    && _currentPoly.getPointsList().size() == 1) {
+                LOG.warn("An edge has been detected with only one point");
+                _currentPoly.addPoint(0,0);
             }
             break;
         }
