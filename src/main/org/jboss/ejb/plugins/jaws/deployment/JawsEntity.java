@@ -29,7 +29,7 @@ import com.dreambean.ejx.ejb.CMPField;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class JawsEntity
    extends com.dreambean.ejx.ejb.Entity
@@ -93,12 +93,6 @@ public class JawsEntity
       return Util.getChildrenByClass(iterator(),Finder.class);
    }
    
-	public Iterator iterator()
-	{
-		// Don't show children
-		return new ArrayList().iterator();
-	}
-	
    // BeanContextChildComponentProxy implementation -----------------
    public Container getContainer()
    {
