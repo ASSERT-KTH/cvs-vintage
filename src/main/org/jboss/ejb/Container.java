@@ -33,8 +33,6 @@ import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.management.MalformedObjectNameException;
@@ -99,7 +97,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.94 $
+ * @version $Revision: 1.95 $
  */
 public abstract class Container
    extends ServiceMBeanSupport
