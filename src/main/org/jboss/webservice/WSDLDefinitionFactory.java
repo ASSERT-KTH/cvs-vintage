@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.7 2004/06/09 13:41:40 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.8 2004/06/13 11:08:24 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -30,20 +30,42 @@ import java.net.URL;
  * @author Thomas.Diesler@jboss.org
  * @since 15-April-2004
  */
-public final class WSDLDefinitionFactory
+public class WSDLDefinitionFactory
 {
    // provide logging
    private static final Logger log = Logger.getLogger(WSDLDefinitionFactory.class);
 
-   // hide constructor
-   private WSDLDefinitionFactory()
+   // This feature is set by default in wsdl4j, it means the object structore contains the imported arguments
+   public static final String FEATURE_IMPORT_DOCUMENTS = "javax.wsdl.importDocuments";
+   // Set this feature for additional debugging output
+   public static final String FEATURE_VERBOSE = "javax.wsdl.verbose";
+
+   // The WSDLReader that is used by this factory
+   private WSDLReader wsdlReader;
+
+   // Hide constructor
+   private WSDLDefinitionFactory() throws WSDLException
    {
+      WSDLFactory wsdlFactory = WSDLFactory.newInstance();
+      wsdlReader = wsdlFactory.newWSDLReader();
+   }
+
+   /** Create a new instance of a wsdl factory */
+   public static WSDLDefinitionFactory newInstance() throws WSDLException
+   {
+      return new WSDLDefinitionFactory();
+   }
+
+   /** Set a feature on the underlying reader */
+   public void setFeature(String name, boolean value) throws IllegalArgumentException
+   {
+      wsdlReader.setFeature(name, value);
    }
 
    /**
     * Read the wsdl document from the given URL
     */
-   public static Definition parse(URL wsdlLocation) throws WSDLException
+   public Definition parse(URL wsdlLocation) throws WSDLException
    {
       // wsdl4j is quite noisy on system out, we swallow the output
       PrintStream out = System.out;
@@ -53,8 +75,6 @@ public final class WSDLDefinitionFactory
       Definition wsdlDefinition = null;
       try
       {
-         WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-         WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
          wsdlDefinition = wsdlReader.readWSDL(new WSDLLocatorImpl(wsdlLocation));
       }
       finally
@@ -68,7 +88,7 @@ public final class WSDLDefinitionFactory
          baos.close();
          BufferedReader br = new BufferedReader(new StringReader(new String(baos.toByteArray())));
          String line = br.readLine();
-         while(line != null)
+         while (line != null)
          {
             log.trace(line);
             line = br.readLine();

@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMappingFactory.java,v 1.6 2004/06/11 16:23:47 tdiesler Exp $
+// $Id: JavaWsdlMappingFactory.java,v 1.7 2004/06/13 11:08:25 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.xml.binding.ContentNavigator;
@@ -31,17 +31,27 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
    // provide logging
    private static final Logger log = Logger.getLogger(JavaWsdlMappingFactory.class);
 
+   // Hide constructor
+   private JavaWsdlMappingFactory()
+   {
+   }
+
+   /** Create a new instance of a jaxrpc-mapping factory */
+   public static JavaWsdlMappingFactory newInstance()
+   {
+      return new JavaWsdlMappingFactory();
+   }
+
    /** Factory method for JavaWsdlMapping
     */
-   public static JavaWsdlMapping parse(URL jaxrpcMappingFile) throws Exception
+   public JavaWsdlMapping parse(URL jaxrpcMappingFile) throws Exception
    {
       // setup the XML binding Unmarshaller
       Unmarshaller unmarshaller = new Unmarshaller();
-      JavaWsdlMappingFactory factory = new JavaWsdlMappingFactory();
       InputStream is = jaxrpcMappingFile.openStream();
       try
       {
-         JavaWsdlMapping javaWsdlMapping = (JavaWsdlMapping)unmarshaller.unmarshal(is, factory, null);
+         JavaWsdlMapping javaWsdlMapping = (JavaWsdlMapping)unmarshaller.unmarshal(is, this, null);
          return javaWsdlMapping;
       }
       finally

@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.12 2004/06/09 13:41:39 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.13 2004/06/13 11:08:23 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.webservice.WSDLDefinitionFactory;
@@ -30,7 +30,7 @@ import java.util.Iterator;
 /** The metdata data from service-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class ServiceRefMetaData implements Serializable
 {
@@ -100,10 +100,9 @@ public class ServiceRefMetaData implements Serializable
          try
          {
             // setup the XML binding Unmarshaller
-            Unmarshaller unmarshaller = new Unmarshaller();
-            JavaWsdlMappingFactory factory = new JavaWsdlMappingFactory();
-            InputStream is = resourceCL.getResourceAsStream(jaxrpcMappingFile);
-            javaWsdlMapping = (JavaWsdlMapping)unmarshaller.unmarshal(is, factory, null);
+            URL location = resourceCL.findResource(jaxrpcMappingFile);
+            JavaWsdlMappingFactory mappingFactory = JavaWsdlMappingFactory.newInstance();
+            javaWsdlMapping = mappingFactory.parse(location);
          }
          catch (Exception e)
          {
@@ -167,7 +166,8 @@ public class ServiceRefMetaData implements Serializable
       try
       {
          URL wsdlLocation = resourceCL.findResource(wsdlFile);
-         wsdlDefinition = WSDLDefinitionFactory.parse(wsdlLocation);
+         WSDLDefinitionFactory factory = WSDLDefinitionFactory.newInstance();
+         wsdlDefinition = factory.parse(wsdlLocation);
       }
       catch (WSDLException e)
       {
