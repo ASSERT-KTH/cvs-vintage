@@ -89,7 +89,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.60 2002/02/26 00:24:40 elicia Exp $
+    @version $Id: Search.java,v 1.61 2002/03/01 20:01:01 elicia Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -244,6 +244,15 @@ public class Search extends RequireLoginFirstAction
     public void doViewall(RunData data, TemplateContext context)
          throws Exception
     {        
+        String[] allIssueIds = null;
+        if (data.getParameters().getStrings("all_issue_ids") != null)
+        {
+            allIssueIds = data.getParameters().getStrings("all_issue_ids");
+        }
+        for (int i =0; i< allIssueIds.length; i++)
+        {
+            data.getParameters().add("issue_ids", allIssueIds[i]);
+        }
         setTarget(data, "ViewIssueLong.vm");            
     }
 
