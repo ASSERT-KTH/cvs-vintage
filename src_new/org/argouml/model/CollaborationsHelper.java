@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelper.java,v 1.4 2005/01/21 21:00:34 linus Exp $
+// $Id: CollaborationsHelper.java,v 1.5 2005/01/25 21:34:44 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,11 +172,19 @@ public interface CollaborationsHelper {
     Collection getAllPossibleBases(Object role);
 
     /**
-     * Sets the base of some associationrole, including the attached
-     * assocationendroles.  Checks for wellformedness first.
+     * Sets the base checking for wellformedness according to
+     * 2.10.3 in the UML 1.3 specification.<p>
      *
-     * @param arole  the given associationrole
-     * @param abase all possible bases
+     * Either the role can be an AssociationRole in which case the given
+     * base must be an Association.
+     * Or the role can be an AssocationEndRole in which case the given base
+     * must be an AssociationEnd.<p>
+     *
+     * To set the base(s) of a ClassifierRole use
+     * {@link #setBases(Object, Collection)}.
+     *
+     * @param arole The given role.
+     * @param abase The base to set (or <code>null</code> to clear).
      */
     void setBase(Object arole, Object abase);
 

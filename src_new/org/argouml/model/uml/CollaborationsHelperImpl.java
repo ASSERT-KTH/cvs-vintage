@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelperImpl.java,v 1.8 2005/01/22 22:32:20 linus Exp $
+// $Id: CollaborationsHelperImpl.java,v 1.9 2005/01/25 21:34:44 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -635,56 +635,60 @@ class CollaborationsHelperImpl implements CollaborationsHelper {
     }
 
     /**
-     * Sets the base of some associationrole, including the attached
-     * assocationendroles.  Checks for wellformedness first.
-     *
-     * @param arole  the given associationrole
-     * @param abase all possible bases
+     * @see org.argouml.model.CollaborationsHelper#setBase(
+     *         java.lang.Object, java.lang.Object)
      */
     public void setBase(Object arole, Object abase) {
         if (arole == null) {
             throw new IllegalArgumentException("role is null");
         }
-        if (!(arole instanceof MAssociationRole)) {
-            throw new IllegalArgumentException("role");
+        if (arole instanceof MAssociationRole) {
+            MAssociationRole role = (MAssociationRole) arole;
+            MAssociation base = (MAssociation) abase;
+
+            // TODO: Must we calculate the whole list?
+            if (base != null && !getAllPossibleBases(role).contains(base)) {
+                throw new IllegalArgumentException("base is not allowed for "
+                        + "this role");
+            }
+            role.setBase(base);
+            MClassifierRole sender =
+                (MClassifierRole) nsmodel.getCoreHelper().getSource(role);
+            MClassifierRole receiver =
+                (MClassifierRole) nsmodel.getCoreHelper().getDestination(role);
+            Collection senderBases = sender.getBases();
+            Collection receiverBases = receiver.getBases();
+
+            MAssociationEndRole senderRole =
+                (MAssociationEndRole)
+                nsmodel.getCoreHelper().getAssociationEnd(sender, role);
+            MAssociationEndRole receiverRole =
+                (MAssociationEndRole)
+                nsmodel.getCoreHelper().getAssociationEnd(receiver, role);
+
+            if (base != null) {
+                Collection baseConnections = base.getConnections();
+                Iterator it = baseConnections.iterator();
+                while (it.hasNext()) {
+                    MAssociationEnd end = (MAssociationEnd) it.next();
+                    if (senderBases.contains(end.getType())) {
+                        senderRole.setBase(end);
+                    } else if (receiverBases.contains(end.getType())) {
+                        receiverRole.setBase(end);
+                    }
+                }
+            }
+            return;
+        } else if (arole instanceof MAssociationEndRole) {
+            MAssociationEndRole role = (MAssociationEndRole) arole;
+            MAssociationEnd base = (MAssociationEnd) abase;
+
+            role.setBase(base);
+            return;
         }
-        MAssociationRole role = (MAssociationRole) arole;
-        MAssociation base = (MAssociation) abase;
 
-        // TODO: Must we calculate the whole list?
-        if (base != null && !getAllPossibleBases(role).contains(base)) {
-            throw new IllegalArgumentException("base is not allowed for "
-					       + "this role");
-        }
-        role.setBase(base);
-        MClassifierRole sender =
-	    (MClassifierRole) nsmodel.getCoreHelper().getSource(role);
-        MClassifierRole receiver =
-	    (MClassifierRole) nsmodel.getCoreHelper().getDestination(role);
-        Collection senderBases = sender.getBases();
-        Collection receiverBases = receiver.getBases();
-
-	MAssociationEndRole senderRole =
-	    (MAssociationEndRole)
-	    nsmodel.getCoreHelper().getAssociationEnd(sender, role);
-	MAssociationEndRole receiverRole =
-	    (MAssociationEndRole)
-	    nsmodel.getCoreHelper().getAssociationEnd(receiver, role);
-
-	if (base != null) {
-	    Collection baseConnections = base.getConnections();
-	    Iterator it = baseConnections.iterator();
-	    while (it.hasNext()) {
-	        MAssociationEnd end = (MAssociationEnd) it.next();
-	        if (senderBases.contains(end.getType())) {
-	            senderRole.setBase(end);
-	        } else if (receiverBases.contains(end.getType())) {
-	            receiverRole.setBase(end);
-	        }
-	    }
-	}
+        throw new IllegalArgumentException("role");
     }
-
 
     /**
      * Returns true if a collaboration may be added to the given context. To
