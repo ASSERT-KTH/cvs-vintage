@@ -721,6 +721,16 @@ try{
         return users;
     }
 
+    /**
+     * Returns list of queries needing approval.
+     */
+    public Vector getUnapprovedQueries() throws Exception
+    {
+        Criteria crit = new Criteria(3);
+        crit.add(QueryPeer.APPROVED, 0)
+           .add(QueryPeer.DELETED, 0);
+        return QueryPeer.doSelect(crit);
+    }
 
     /**
      * Saves the module into the database
