@@ -35,8 +35,6 @@ import org.jboss.ejb.Interceptor;
 import org.jboss.ejb.ContainerInvoker;
 import org.jboss.ejb.DeploymentException;
 
-import org.jboss.tm.TxManager;
-
 import org.jboss.logging.Logger;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
@@ -60,7 +58,7 @@ import javax.management.ObjectName;
  *      @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *      @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.13 $
+ *      @version $Revision: 1.14 $
  */
 public class JMSContainerInvoker implements
 ContainerInvoker, XmlLoadable
@@ -96,7 +94,7 @@ ContainerInvoker, XmlLoadable
     
     protected Connection connection;
     protected ConnectionConsumer connectionConsumer;
-    protected TxManager tm;
+    protected TransactionManager tm;
     protected ServerSessionPool pool;
     protected ExceptionListenerImpl exListener;
 
@@ -167,7 +165,7 @@ ContainerInvoker, XmlLoadable
    {
 
        // Store TM reference locally - should we test for CMT Required
-        tm = (TxManager) container.getTransactionManager();
+        tm = container.getTransactionManager();
 
        /*
 	* Get configuration information - from EJB-xml
