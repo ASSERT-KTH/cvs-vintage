@@ -22,36 +22,104 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IIOPContextWrapperFactory.java,v 1.3 2005/02/14 15:09:19 benoitf Exp $
+ * $Id: IIOPContextWrapperFactory.java,v 1.4 2005/03/10 10:05:02 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
-// java import
 import java.util.Hashtable;
 
-import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
+
+import org.omg.CORBA.ORB;
+import org.omg.PortableServer.POA;
+
+import org.objectweb.carol.jndi.ns.IIOPCosNaming;
+import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
 
 /**
  * Class <code> IIOPRemoteReferenceContextWrapperFactory </code> is the CAROL
  * JNDI Context factory. This context factory build the iiop context for
  * reference wrapping to/from a remote object
- * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
+ * @author Guillaume Riviere
+ * @author Florent Benoit (refactoring)
  * @see javax.naming.spi.InitialContextFactory
  */
-public class IIOPContextWrapperFactory implements InitialContextFactory {
+public class IIOPContextWrapperFactory extends AbsInitialContextFactory implements InitialContextFactory {
 
     /**
-     * Get/Build the IIOP Wrapper InitialContext
-     * @param env the inital IIOP environement
-     * @return a <code>Context</code> coresponding to the inital IIOP
-     *         environement with IIOP Serializable ressource wrapping
-     * @throws NamingException if a naming exception is encountered
+     * Referencing factory
      */
-    public Context getInitialContext(Hashtable env) throws NamingException {
-        return IIOPContext.getSingleInstance(env);
+    public static final String REFERENCING_FACTORY = "com.sun.jndi.cosnaming.CNCtxFactory";
+
+    /**
+     * @return the real factory of this wrapper
+     */
+    protected String getReferencingFactory() {
+        return REFERENCING_FACTORY;
     }
 
+    /**
+     * @return class of the wrapper (to be instantiated + pool).
+     */
+    protected Class getWrapperClass() {
+        return IIOPContext.class;
+    }
+
+    /**
+     * Unique instance of the ORB running in the JVM
+     */
+    private static ORB orb = null;
+
+    /**
+     * The orb was started or not ?
+     */
+    private static boolean orbStarted = false;
+
+    /**
+     * Root POA used by Carol
+     */
+    private static POA rootPOA = null;
+
+    /**
+     * For some protocols, there are some initialization stuff to do
+     * @throws NamingException if there is an exception
+     */
+    protected void init() throws NamingException {
+        // Initialize ORB if null
+        if (orb == null) {
+            orb = IIOPCosNaming.getOrb();
+        }
+
+        if (!orbStarted) {
+            // Start ORB if it was not run.
+            new Thread(new Runnable() {
+
+                public void run() {
+                    orb.run();
+                }
+            }).start();
+            orbStarted = true;
+        }
+
+        // activate root POA
+        if (rootPOA == null) {
+            try {
+                rootPOA = org.omg.PortableServer.POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+                rootPOA.the_POAManager().activate();
+            } catch (Exception e) {
+                throw NamingExceptionHelper.create("Cannot get a single instance of rootPOA : " + e.getMessage(), e);
+            }
+        }
+
+    }
+
+    /**
+     * Store orb in the environment
+     * @param environment hashtable containing the environment
+     */
+    protected void addExtraConfInEnvironment(Hashtable environment) {
+        environment.put("java.naming.corba.orb", orb);
+    }
 }

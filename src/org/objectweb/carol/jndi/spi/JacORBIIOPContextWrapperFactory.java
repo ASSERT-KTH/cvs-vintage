@@ -1,7 +1,7 @@
 /**
- * JOnAS: Java(TM) Open Application Server
- * Copyright (C) 2004,2005 Bull S.A.
- * Contact: jonas-team@objectweb.org
+ * Copyright (C) 2004-2005 - Bull S.A.
+ *
+ * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBIIOPContextWrapperFactory.java,v 1.2 2005/02/08 09:45:57 benoitf Exp $
+ * $Id: JacORBIIOPContextWrapperFactory.java,v 1.3 2005/03/10 10:05:01 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -30,6 +30,13 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
+import org.omg.CORBA.ORB;
+import org.omg.PortableServer.POA;
+
+import org.objectweb.carol.jndi.ns.JacORBCosNaming;
+import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
+import org.objectweb.carol.util.csiv2.SasComponent;
+
 /**
  * Class <code> JacORBIIOPContextWrapperFactory </code> is the CAROL JNDI
  * Context factory for JacORB. This context factory build the iiop context for
@@ -37,17 +44,105 @@ import javax.naming.spi.InitialContextFactory;
  * @author Florent BENOIT
  * @see javax.naming.spi.InitialContextFactory
  */
-public class JacORBIIOPContextWrapperFactory implements InitialContextFactory {
+public class JacORBIIOPContextWrapperFactory extends AbsInitialContextFactory implements InitialContextFactory {
 
     /**
-     * Get/Build the IIOP Wrapper InitialContext
-     * @param env the inital IIOP environement
-     * @return a <code>Context</code> coresponding to the inital IIOP
-     *         environement with IIOP Serializable ressource wrapping
-     * @throws NamingException if a naming exception is encountered
+     * Object to use (specific POA) when using csiv2
      */
-    public Context getInitialContext(Hashtable env) throws NamingException {
-        return JacORBIIOPContext.getSingleInstance(env);
+    public static final String SAS_COMPONENT = "org.objectweb.carol.util.csiv2.SasComponent";
+
+
+    /**
+     * Referencing factory
+     */
+    public static final String REFERENCING_FACTORY = "com.sun.jndi.cosnaming.CNCtxFactory";
+
+    /**
+     * @return the real factory of this wrapper
+     */
+    protected String getReferencingFactory() {
+        return REFERENCING_FACTORY;
     }
 
+    /**
+     * @return class of the wrapper (to be instantiated + pool).
+     */
+    protected Class getWrapperClass() {
+        return JacORBIIOPContext.class;
+    }
+
+    /**
+     * Unique instance of the ORB running in the JVM
+     */
+    private static ORB orb = null;
+
+    /**
+     * The orb was started or not ?
+     */
+    private static boolean orbStarted = false;
+
+    /**
+     * Root POA used by Carol
+     */
+    private static POA rootPOA = null;
+
+    /**
+     * Store orb in the environment
+     * @param environment hashtable containing the environment
+     */
+    protected void addExtraConfInEnvironment(Hashtable environment) {
+        environment.put("java.naming.corba.orb", orb);
+    }
+
+    /**
+     * For some protocols, there are some initialization stuff to do
+     * @throws NamingException if there is an exception
+     */
+    protected void init() throws NamingException {
+        // Initialize ORB if null
+        if (orb == null) {
+            orb = JacORBCosNaming.getOrb();
+        }
+
+        if (!orbStarted) {
+            // Start ORB if it was not run.
+            new Thread(new Runnable() {
+
+                public void run() {
+                    orb.run();
+                }
+            }).start();
+            orbStarted = true;
+        }
+
+        if (rootPOA == null) {
+            try {
+                rootPOA = org.omg.PortableServer.POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+                rootPOA.the_POAManager().activate();
+            } catch (Exception e) {
+                throw NamingExceptionHelper.create("Cannot get a single instance of rootPOA : " + e.getMessage(), e);
+            }
+        }
+
+    }
+
+
+    /**
+     * @param environment env to determine the key
+     * @return the key or null if we don't want to cache it
+     */
+    protected String getKey(Hashtable environment) {
+        String key = null;
+        SasComponent sasComponent = null;
+        if (environment != null) {
+            key = (String) environment.get(Context.PROVIDER_URL);
+            sasComponent = (SasComponent) environment.get(SAS_COMPONENT);
+        }
+        // there is a key (and need to cache) only if sas component is not present.
+        if (sasComponent == null) {
+            return key;
+        } else {
+            return null;
+        }
+    }
 }

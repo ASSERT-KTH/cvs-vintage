@@ -22,23 +22,28 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiOrbInitialContextFactory.java,v 1.7 2005/03/08 17:24:29 benoitf Exp $
+ * $Id: MultiOrbInitialContextFactory.java,v 1.8 2005/03/10 10:05:02 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
 import java.util.Hashtable;
+import java.util.Properties;
 
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
+import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Class <code> MultiOrbInitialContextFactory </code> is the CAROL JNDI SPI
  * Context Factory for multi Context management.
  * @author Guillaume Riviere
+ * @author Florent Benoit (Refactoring)
  * @see javax.naming.spi.InitialContextFactory
  */
 public class MultiOrbInitialContextFactory implements InitialContextFactory {
@@ -53,10 +58,39 @@ public class MultiOrbInitialContextFactory implements InitialContextFactory {
      * @exception NamingException If cannot create an initial context.
      */
     public Context getInitialContext(Hashtable env) throws NamingException {
-        if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContextFactory.getInitialContext(Hashtable env)");
+        // Need to know if we want a multiprotocol context or the context for the given PROVIDER_URL
+        String providerURL = null;
+        if (env != null) {
+            providerURL = (String) env.get(Context.PROVIDER_URL);
         }
-        return new ContextWrapper(env);
+
+        //  No provider URL, do multi context
+        if (providerURL == null) {
+            if (TraceCarol.isDebugJndiCarol()) {
+                TraceCarol.debugJndiCarol("No provider URL, use multiprotocol context");
+            }
+            return new MultiContext(env);
+        } else {
+            //if user has provided a PROVIDER_URL, don't do a multiprocol context
+            if (TraceCarol.isDebugJndiCarol()) {
+                TraceCarol.debugJndiCarol("Use provider URL of the environment '" + providerURL + "'.");
+            }
+            // Need to know the factory to use if it is not provided
+            String initFactory = (String) env.get(Context.INITIAL_CONTEXT_FACTORY);
+            if (initFactory == null) {
+                String protocolName = CarolDefaultValues.getRMIProtocol(providerURL);
+                Properties protocolConfig = CarolCurrentConfiguration.getCurrent().getRMIProperties(protocolName);
+                if (protocolConfig == null) {
+                    throw new IllegalArgumentException("No configuration in carol for protocol '" + protocolName + "'.");
+                }
+                initFactory = (String) protocolConfig.get(Context.INITIAL_CONTEXT_FACTORY);
+                env.put(Context.INITIAL_CONTEXT_FACTORY, initFactory);
+                if (TraceCarol.isDebugJndiCarol()) {
+                    TraceCarol.debugJndiCarol("No INITIAL_CONTEXT_FACTORY, use '" + initFactory + "' as InitialContex factory.");
+                }
+            }
+            return new InitialContext(env);
+        }
     }
 
 }

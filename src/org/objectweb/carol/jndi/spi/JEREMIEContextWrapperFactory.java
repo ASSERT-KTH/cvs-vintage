@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,37 +22,40 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JEREMIEContextWrapperFactory.java,v 1.2 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JEREMIEContextWrapperFactory.java,v 1.3 2005/03/10 10:05:02 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
-// java import
-import java.util.Hashtable;
-
-import javax.naming.Context;
-import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
 /**
- * Class <code> IIOPRemoteReferenceContextWrapperFactory </code> is the CAROL
- * JNDI Context factory. This context factory build the iiop context for
- * reference wrapping to/from a remote object @author Guillaume Riviere
- * (Guillaume.Riviere@inrialpes.fr)
+ * Class <code> JEREMIEContextWrapperFactory </code> is the CAROL
+ * JNDI Context factory. This context factory build the jeremie context for
+ * reference wrapping to/from a remote object
+ * @author Guillaume Riviere
+ * @author Florent Benoit (refactoring)
  * @see javax.naming.spi.InitialContextFactory
- * @version 1.0, 15/07/2002
  */
-public class JEREMIEContextWrapperFactory implements InitialContextFactory {
+public class JEREMIEContextWrapperFactory extends AbsInitialContextFactory implements InitialContextFactory {
 
     /**
-     * Get/Build the IIOP Wrapper InitialContext
-     * @param env the inital IIOP environement
-     * @return a <code>Context</code> coresponding to the inital IIOP
-     *         environement with IIOP Serializable ressource wrapping
-     * @throws NamingException if a naming exception is encountered
+     * Referencing factory
      */
-    public Context getInitialContext(Hashtable env) throws NamingException {
-        return JEREMIEContext.getSingleInstance(env);
+    public static final String REFERENCING_FACTORY = "org.objectweb.jeremie.services.registry.jndi.JRMIInitialContextFactory";
+
+    /**
+     * @return the real factory of this wrapper
+     */
+    protected String getReferencingFactory() {
+        return REFERENCING_FACTORY;
+    }
+
+    /**
+     * @return class of the wrapper (to be instantiated + pool).
+     */
+    protected Class getWrapperClass() {
+        return JEREMIEContext.class;
     }
 
 }

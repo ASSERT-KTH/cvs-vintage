@@ -22,42 +22,48 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPContextWrapperFactory.java,v 1.4 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JRMPContextWrapperFactory.java,v 1.5 2005/03/10 10:05:01 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
-import java.util.Hashtable;
-
-import javax.naming.Context;
-import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
 import org.objectweb.carol.jndi.ns.JRMPRegistry;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
 
 /**
- * @author riviereg To change the template for this generated type comment go to
- *         Window - Preferences - Java - Code Generation - Code and Comments
+ * Class <code> JRMPContextWrapperFactory </code> is the CAROL
+ * JNDI Context factory. This context factory build the jrmp context for
+ * reference wrapping to/from a remote object
+ * @author Guillaume Riviere
+ * @author Florent Benoit (refactoring)
+ * @see javax.naming.spi.InitialContextFactory
  */
-public class JRMPContextWrapperFactory implements InitialContextFactory {
+public class JRMPContextWrapperFactory extends AbsInitialContextFactory implements InitialContextFactory {
 
     /**
-     * Get/Build the JRMP Wrapper InitialContext
-     * @param env the inital JRMP environement
-     * @return a <code>Context</code> coresponding to the inital JRMP
-     *         environement with JRMP Serializable ressource wrapping
-     * @throws NamingException if a naming exception is encountered
+     * Referencing factory
      */
-    public Context getInitialContext(Hashtable env) throws NamingException {
+    public static final String REFERENCING_FACTORY = "com.sun.jndi.rmi.registry.RegistryContextFactory";
 
-        boolean localO = new Boolean(System.getProperty(CarolDefaultValues.LOCAL_JRMP_PROPERTY, "false"))
-                .booleanValue();
+    /**
+     * @return the real factory of this wrapper
+     */
+    protected String getReferencingFactory() {
+        return REFERENCING_FACTORY;
+    }
 
-        if ((JRMPRegistry.isLocal()) && (localO)) {
-            return JRMPLocalContext.getSingleInstance(JRMPRegistry.registry, env);
+    /**
+     * @return class of the wrapper (to be instantiated + pool).
+     */
+    protected Class getWrapperClass() {
+        boolean localO = new Boolean(System.getProperty(CarolDefaultValues.LOCAL_JRMP_PROPERTY, "false")).booleanValue();
+        if ((localO) && JRMPRegistry.isLocal()) {
+            return JRMPLocalContext.class;
         } else {
-            return JRMPContext.getSingleInstance(env);
+            return JRMPContext.class;
         }
     }
+
 }
