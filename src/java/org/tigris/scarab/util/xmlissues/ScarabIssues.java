@@ -62,7 +62,6 @@ import org.apache.commons.collections.SequencedHashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.fulcrum.localization.Localization;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.ActivityManager;
 import org.tigris.scarab.om.ActivitySet;
@@ -115,7 +114,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ScarabIssues.java,v 1.57 2003/10/17 10:02:07 dep4b Exp $
+ * @version $Id: ScarabIssues.java,v 1.58 2003/12/19 21:18:39 dep4b Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
