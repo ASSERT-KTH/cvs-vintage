@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.24 2003/04/13 00:17:12 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.25 2003/04/14 02:41:01 spestov Exp $
  */
 public class DisplayManager
 {
@@ -686,10 +686,10 @@ public class DisplayManager
 
 			if(!isLineVisible(physicalLine))
 			{
-				if(physicalLine > getLastVisibleLine())
-					physicalLine = getPrevVisibleLine(physicalLine);
-				else
+				if(physicalLine < getFirstVisibleLine())
 					physicalLine = getNextVisibleLine(physicalLine);
+				else
+					physicalLine = getPrevVisibleLine(physicalLine);
 			}
 
 			int screenLines = getScreenLineCount(physicalLine);
