@@ -37,7 +37,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.44 2003/01/12 03:08:24 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.45 2003/01/19 21:03:33 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -488,19 +488,19 @@ public class DockableWindowManager extends JPanel
 		if(!view.isPlainView())
 		{
 			String lastTop = jEdit.getProperty("view.dock.top.last");
-			if(lastTop != null)
+			if(lastTop != null && lastTop.length() != 0)
 				showDockableWindow(lastTop);
 
 			String lastLeft = jEdit.getProperty("view.dock.left.last");
-			if(lastLeft != null)
+			if(lastLeft != null && lastLeft.length() != 0)
 				showDockableWindow(lastLeft);
 
 			String lastBottom = jEdit.getProperty("view.dock.bottom.last");
-			if(lastBottom != null)
+			if(lastBottom != null && lastBottom.length() != 0)
 				showDockableWindow(lastBottom);
 
 			String lastRight = jEdit.getProperty("view.dock.right.last");
-			if(lastRight != null)
+			if(lastRight != null && lastRight.length() != 0)
 				showDockableWindow(lastRight);
 		}
 	} //}}}

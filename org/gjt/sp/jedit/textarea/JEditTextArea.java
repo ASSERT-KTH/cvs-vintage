@@ -47,7 +47,7 @@ import org.gjt.sp.jedit.syntax.*;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.175 2003/01/14 20:05:20 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.176 2003/01/19 21:03:34 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5845,7 +5845,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	/**
 	 * Note that in this class we take great care to defer complicated
 	 * calculations to the end of the current transaction if the buffer
-	 * informs us an involved edit is in progress
+	 * informs us a compound edit is in progress
 	 * (<code>isTransactionInProgress()</code>).
 	 *
 	 * This greatly speeds up replace all for example, by only doing certain

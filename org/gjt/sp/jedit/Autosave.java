@@ -26,7 +26,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: Autosave.java,v 1.5 2003/01/15 00:36:02 spestov Exp $
+ * @version $Id: Autosave.java,v 1.6 2003/01/19 21:03:28 spestov Exp $
  */
 class Autosave implements ActionListener
 {
@@ -69,7 +69,7 @@ class Autosave implements ActionListener
 		int usedMemory = (totalMemory - freeMemory);
 
 		Log.log(Log.DEBUG,this,"Java heap: " + usedMemory + "Kb / "
-			+ totalMemory + "Kb, " + (totalMemory * 100 / usedMemory)
+			+ totalMemory + "Kb, " + (usedMemory * 100 / totalMemory)
 			+ "%");
 
 		// save list of open files
