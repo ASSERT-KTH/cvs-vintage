@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.68 2003/12/20 20:34:44 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.69 2003/12/31 15:42:39 ejort Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -714,7 +714,7 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
          </mapping>
          <mapping>
             <java-type>java.lang.Short</java-type>
-            <jdbc-type>NUMERIC</jdbc-type>
+            <jdbc-type>SMALLINT</jdbc-type>
             <sql-type>NUMBER(5)</sql-type>
          </mapping>
          <mapping>
