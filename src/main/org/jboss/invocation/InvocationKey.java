@@ -16,7 +16,7 @@ import java.io.ObjectStreamException;
  * update the MAX_KEY_ID value.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class InvocationKey implements Serializable
 {
@@ -27,7 +27,7 @@ public final class InvocationKey implements Serializable
     * new key enum value you must assign it an ordinal value of the current
     * MAX_KEY_ID+1 and update the MAX_KEY_ID value.
     */
-   private static final int MAX_KEY_ID = 15;
+   private static final int MAX_KEY_ID = 16;
 
    /** The array of InvocationKey indexed by ordinal value of the key */
    private static final InvocationKey[] values = new InvocationKey[MAX_KEY_ID+1];
@@ -112,14 +112,18 @@ public final class InvocationKey implements Serializable
       new InvocationKey("JNDI_NAME", 12);
 
    /** 
-    * The EJB meta-data for the {@link EJBHome} reference. 
+    * The EJB meta-data for the {@link javax.ejb.EJBHome} reference.
     */
    public final static InvocationKey EJB_METADATA = 
          new InvocationKey("EJB_METADATA", 13);
 
    /** The EJB home proxy bound for use by getEJBHome */
-   public final static InvocationKey EJB_HOME = 
+   public final static InvocationKey EJB_HOME =
          new InvocationKey("EJB_HOME", 14);
+
+   /** Should the bean use by value call semeantics */
+   public final static InvocationKey CALL_BY_VALUE =
+         new InvocationKey("CALL_BY_VALUE", 15);
 
    /** The key enum symbolic value */
    private final transient String name;
