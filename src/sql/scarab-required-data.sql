@@ -122,8 +122,3 @@ insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_CODE, MODULE_DESCRIPTIO
  */
 insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (0, 'GLO', 0, 1);
 
-/*
- * Create a mapping for the global module and root issue type.
- */
-insert into SCARAB_R_MODULE_ISSUE_TYPE (MODULE_ID, ISSUE_TYPE_ID, ACTIVE, DISPLAY) 
-    VALUES (0, 0, 1, 1);
