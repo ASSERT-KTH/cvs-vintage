@@ -24,7 +24,7 @@
 // File: SelectionInterface.java
 // Classes: SelectionInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionInterface.java,v 1.9 2002/11/24 15:21:59 kataka Exp $
+// $Id: SelectionInterface.java,v 1.10 2002/12/01 14:50:23 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -180,12 +180,31 @@ public class SelectionInterface extends SelectionWButtons {
 					 Math.max(0, fc.getY() - 200),
 					 fc.getWidth() + 400,
 					 fc.getHeight() + 400);
-    if (buttonCode == 11) {
-      newFC.setLocation(fc.getX(), fc.getY() + fc.getHeight() + 100);
-      outputRect.y = fc.getY() + fc.getHeight() + 100;
-      outputRect.height = 200;
-      lay.bumpOffOtherNodesIn(newFC, outputRect, false, false);
-    }
+    // handle the case that it is not a self association
+        if (buttonCode >=10 && buttonCode <= 13) {
+            int x = 0;
+            int y = 0; 
+            if (buttonCode == 10) {
+                // superclass
+                x = fc.getX();
+                y = Math.max(0, fc.getY() - 200);
+            }
+            else if (buttonCode == 11) {
+                x = fc.getX();
+                y = fc.getY() + fc.getHeight() + 100;
+            }
+            else if (buttonCode == 12) {
+                x = fc.getX() + fc.getWidth() + 100;
+                y = fc.getY();
+            }
+            else if (buttonCode == 13) {
+                x = Math.max(0, fc.getX() - 200);
+                y = fc.getY();
+                
+            }        
+            // place the fig if it is not a selfassociation       
+            if (!placeFig(newFC, lay, x, y, outputRect)) return;
+        }
     ce.add(newFC);
     mgm.addNode(newNode);
 
