@@ -29,29 +29,62 @@ import java.util.Map;
 
 
 /**
+ * Controller used by {@link TableController} to handle all
+ * folder-related option plugins.
+ * <p>
+ * Note, that every {@link MailFrameMediator} keeps its own
+ * <code>FolderOptionsController<code>, which makes sure that
+ * all plugins are singletons.
+ *
  * @author fdietz
  */
 public class FolderOptionsController {
+    /**
+     * mail frame mediator
+     */
     private MailFrameMediator mediator;
+
+    /**
+     * Stores all instanciated plugins for later re-use
+     */
     private Map map;
+
+    /**
+     * plugin handler for instanciating folder options plugins
+     */
     private FolderOptionsPluginHandler handler;
 
+    /**
+     * Constructor
+     *
+     * @param mediator      mail frame mediator
+     */
     public FolderOptionsController(MailFrameMediator mediator) {
         this.mediator = mediator;
+
+        // init map
         map = new HashMap();
 
+        // init plugin handler
         try {
             handler = (FolderOptionsPluginHandler) MainInterface.pluginManager.getHandler(
                     "org.columba.mail.folderoptions");
         } catch (PluginHandlerNotFoundException e) {
-            // TODO Auto-generated catch block
+            // TODO: show error dialoghere
             e.printStackTrace();
         }
     }
 
+    /**
+     * Get plugin with specific name.
+     *
+     * @param name      name of plugin
+     * @return          instance of plugin
+     */
     public AbstractFolderOptionsPlugin getPlugin(String name) {
+        // check if this plugin was already loaded
         if (map.containsKey(name)) {
-            // already loaded
+            // already loaded -> re-use it
             return (AbstractFolderOptionsPlugin) map.get(name);
         } else {
             AbstractFolderOptionsPlugin plugin = null;
@@ -60,17 +93,24 @@ public class FolderOptionsController {
                 plugin = (AbstractFolderOptionsPlugin) handler.getPlugin(name,
                         new Object[] { mediator });
             } catch (Exception e) {
-                // TODO Auto-generated catch block
+                // TODO: add error dialog
                 e.printStackTrace();
             }
 
+            // save plugin instance in map
             map.put(name, plugin);
 
             return plugin;
         }
     }
 
+    /**
+     * Load all folder options for this folder.
+     *
+     * @param folder        selected folder
+     */
     public void load(Folder folder) {
+        // get list of plugins
         String[] ids = handler.getPluginIdList();
 
         for (int i = 0; i < ids.length; i++) {
@@ -79,7 +119,13 @@ public class FolderOptionsController {
         }
     }
 
+    /**
+     * Save all folder options for this folder.
+     *
+     * @param folder        selected folder
+     */
     public void save(Folder folder) {
+        // get list of plugins
         String[] ids = handler.getPluginIdList();
 
         for (int i = 0; i < ids.length; i++) {
@@ -88,7 +134,12 @@ public class FolderOptionsController {
         }
     }
 
+    /**
+     * Load all folder options globally.
+     *
+     */
     public void load() {
+        // get list of plugins
         String[] ids = handler.getPluginIdList();
 
         for (int i = 0; i < ids.length; i++) {
@@ -97,14 +148,30 @@ public class FolderOptionsController {
         }
     }
 
+    /**
+     * Get parent configuration node of plugin.
+     * <p>
+     * Example for the sorting plugin configuration node. This is
+     * how it can be found in options.xml and tree.xml:<br>
+     * <pre>
+     *  <sorting column="Date" order="true" />
+     * </pre>
+     * <p>
+     *
+     * @param folder        selected folder
+     * @param name          name of plugin
+     * @return              parent configuration node
+     */
     public static XmlElement getConfigNode(Folder folder, String name) {
         XmlElement parent = null;
         boolean global = false;
 
         if (folder == null) {
+            // if no folder was passed as argument, use global options
             parent = FolderItem.getGlobalOptions();
             global = true;
         } else {
+            // use folder specific options
             parent = folder.getFolderItem().getFolderOptions();
             global = false;
         }
@@ -117,6 +184,7 @@ public class FolderOptionsController {
 
         String overwrite = child.getAttribute("overwrite");
 
+        // check if this folder is overwriting global options
         if ((overwrite != null) && (overwrite.equals("true"))) {
             // use folder-based options
             return child;

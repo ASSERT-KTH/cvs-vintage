@@ -25,12 +25,15 @@ import org.columba.mail.gui.table.TableController;
 
 
 /**
+ * Handles enabled/disabled state of threaded-view.
+ * 
  * @author fdietz
  */
 public class ThreadedViewOptionsPlugin extends AbstractFolderOptionsPlugin {
     /**
-     * @param name
-     * @param mediator
+     * Constructor
+     * 
+     * @param mediator      mail framemediator
      */
     public ThreadedViewOptionsPlugin(MailFrameMediator mediator) {
         super("threadedview", mediator);
@@ -59,8 +62,14 @@ public class ThreadedViewOptionsPlugin extends AbstractFolderOptionsPlugin {
         boolean enableThreadedView = item.getBoolean("enabled", false);
 
         TableController tableController = ((TableViewOwner) getMediator()).getTableController();
+        
+        // enable threaded-view in threaded-table-model
         tableController.getTableModelThreadedView().setEnabled(enableThreadedView);
+        
+        // enable threaded-view mode in table model
         tableController.getHeaderTableModel().enableThreadedView(enableThreadedView);
+        
+        // enable custom renderer of view
         tableController.getView().enableThreadedView(enableThreadedView);
     }
 

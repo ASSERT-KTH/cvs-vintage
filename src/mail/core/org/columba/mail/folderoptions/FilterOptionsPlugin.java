@@ -17,6 +17,7 @@ package org.columba.mail.folderoptions;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.MailFrameView;
@@ -27,12 +28,17 @@ import org.columba.mail.gui.table.model.TableModelFilter;
 
 
 /**
+ * Covers all filter options offered by the message list
+ * filter toolbar.
+ * <p>
+ *
  * @author fdietz
  */
 public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
     /**
-     * @param name
-     * @param mediator
+     * Constructor
+     *
+     * @param mediator  mail frame mediator
      */
     public FilterOptionsPlugin(MailFrameMediator mediator) {
         super("filter", mediator);
@@ -46,17 +52,16 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
         DefaultItem item = new DefaultItem(parent);
 
         TableController tableController = ((TableViewOwner) getMediator()).getTableController();
-        
-        
+
         TableModelFilter model = tableController.getTableModelFilteredView();
 
         item.set("new_state", model.getNewFlag());
-        
+
         item.set("answered_state", model.getAnsweredFlag());
         item.set("flagged_state", model.getFlaggedFlag());
         item.set("attachment_state", model.getAttachmentFlag());
         item.set("expunged_state", model.getExpungedFlag());
-        
+
         item.set("pattern", model.getPatternString());
     }
 
@@ -69,20 +74,20 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         TableController tableController = ((TableViewOwner) getMediator()).getTableController();
         TableModelFilter model = tableController.getTableModelFilteredView();
-        FilterToolbar toolbar = ((MailFrameView)getMediator().getView()).getFilterToolbar();
-        
+        FilterToolbar toolbar = ((MailFrameView) getMediator().getView()).getFilterToolbar();
+
         model.setNewFlag(item.getBoolean("new_state"));
         toolbar.enableNew(item.getBoolean("new_state"));
-        
+
         model.setAnsweredFlag(item.getBoolean("answered_state"));
         toolbar.enableAnswered(item.getBoolean("answered_state"));
-        
+
         model.setFlaggedFlag(item.getBoolean("flagged_state"));
         toolbar.enableFlagged(item.getBoolean("flagged_state"));
-        
+
         model.setAttachmentFlag(item.getBoolean("attachment_state"));
         toolbar.enableAttachment(item.getBoolean("attachment_state"));
-        
+
         model.setExpungedFlag(item.getBoolean("expunged_state"));
         toolbar.enableExpunged(item.getBoolean("expunged_state"));
 
@@ -94,7 +99,8 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         model.setPatternString(t);
         toolbar.setPattern(t);
-        
+
+        // enable filtering
         model.setDataFiltering(true);
     }
 

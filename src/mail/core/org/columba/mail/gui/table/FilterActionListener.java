@@ -38,7 +38,7 @@ public class FilterActionListener implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-
+        /*
         try {
             if (action.equals("ALL")) {
                 TableModelFilter model = tableController.getTableModelFilteredView();
@@ -84,5 +84,6 @@ public class FilterActionListener implements ActionListener {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        */
     }
 }

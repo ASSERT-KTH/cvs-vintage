@@ -18,6 +18,7 @@ package org.columba.mail.folderoptions;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -26,13 +27,22 @@ import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.TableView;
 
+
 /**
- * @author fdietz
+ * Handles selecting message after folder selection changes.
+ * <p>
+ * This implementation remembers the the selected message, and
+ * tries to reselect it again.
+ * As default fall back it selects the first or last message,
+ * depending on the sorting order.
+ *
+ * @author fdietz, waffel
  */
 public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
+    
     /**
-     * @param name
-     * @param mediator
+     * Constructor
+     * @param mediator  mail frame mediator
      */
     public SelectionOptionsPlugin(MailFrameMediator mediator) {
         super("selection", mediator);
@@ -45,8 +55,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
         XmlElement parent = getConfigNode(folder);
         DefaultItem item = new DefaultItem(parent);
 
-        TableController tableController =
-            ((TableViewOwner) getMediator()).getTableController();
+        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
     }
 
     /**
@@ -56,17 +65,17 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
         XmlElement parent = getConfigNode(folder);
         DefaultItem item = new DefaultItem(parent);
 
-        TableController tableController =
-            ((TableViewOwner) getMediator()).getTableController();
+        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
 
         TableView view = tableController.getView();
-        
+
         // should we re-use the last remembered selection?
         boolean remember = item.getBoolean("remember_last_selection", true);
-              
+
         // sorting order
-        boolean ascending = tableController.getTableModelSorter().getSortingOrder();
-        
+        boolean ascending = tableController.getTableModelSorter()
+                                           .getSortingOrder();
+
         // row count
         int row = view.getTree().getRowCount();
 
@@ -80,11 +89,11 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         // if the last selection for the current folder is null, then we show the
         // first/last message in the table and scroll to it.
-        if ( (remember == false ) || (folder.getLastSelection() == null)) {
+        if ((!remember) || (folder.getLastSelection() == null)) {
             // changing the selection to the first/last row based on ascending state
             Object uid = null;
 
-            if (ascending == true) {
+            if (ascending) {
                 uid = view.selectLastRow();
             } else {
                 uid = view.selectFirstRow();
@@ -99,8 +108,8 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
             refNew[0] = new FolderCommandReference(folder, new Object[] {uid});
 
             // view the message under the new node
-            MainInterface.processor.addOp(
-                new ViewMessageCommand(getMediator(), refNew));
+            MainInterface.processor.addOp(new ViewMessageCommand(
+                    getMediator(), refNew));
         } else {
             // if a lastSelection for this folder is set
             // getting the last selected uid
@@ -116,7 +125,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
             if (tableController.getHeaderTableModel().getMessageNode(lastSelUids[0]) == null) {
                 Object uid = null;
 
-                if (ascending == true) {
+                if (ascending) {
                     uid = view.selectLastRow();
                 } else {
                     uid = view.selectFirstRow();
@@ -137,8 +146,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
             int selRow = view.getSelectedRow();
 
             // scroll to the position of the selection
-            view.scrollRectToVisible(
-            view.getCellRect(selRow, 0, false));
+            view.scrollRectToVisible(view.getCellRect(selRow, 0, false));
             view.requestFocus();
 
             // create command reference
@@ -146,8 +154,8 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
             refNew[0] = new FolderCommandReference(folder, lastSelUids);
 
             // view the message under the new node
-            MainInterface.processor.addOp(
-                new ViewMessageCommand(getMediator(), refNew));
+            MainInterface.processor.addOp(new ViewMessageCommand(
+                    getMediator(), refNew));
         }
     }
 

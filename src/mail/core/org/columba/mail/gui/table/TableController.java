@@ -15,25 +15,23 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import org.columba.core.config.DefaultItem;
-import org.columba.core.config.HeaderItem;
-import org.columba.core.config.OptionsSerializer;
+import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.tree.TreePath;
+
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.util.treetable.Tree;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.MailFrameView;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
-import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.action.CopyAction;
 import org.columba.mail.gui.table.action.CutAction;
 import org.columba.mail.gui.table.action.DeleteAction;
@@ -50,79 +48,142 @@ import org.columba.mail.gui.table.model.TableModelUpdateManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.message.HeaderList;
 
-import javax.swing.JComponent;
-import javax.swing.JPopupMenu;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumn;
-import javax.swing.tree.TreePath;
-
 
 /**
- * This class shows the messageheaderlist
+ * Shows the message list. By default, this is the read/unread state
+ * if a message, Subject:, Date:, From: and Size headerfields.
+ * <p>
+ * Folder-specific configuration options are handled by
+ * {@link FolderOptionsController} and can be configured
+ * by the user in the Folder Options Dialog.
  *
- *
- * @version 0.9.1
- * @author Frederik
+ * @author fdietz
  */
 public class TableController implements FocusOwner, ListSelectionListener {
+    
+    /**
+     * table model
+     */
     private HeaderTableModel headerTableModel;
-    private FilterToolbar filterToolbar;
+   
+    
+    /**
+     * mouse listener responsible for sorting actions fired
+     * by the user selecting the column headers of the table
+     */
     private HeaderTableMouseListener headerTableMouseListener;
+    
+    /**
+     * Drag'n'drop handling of messages
+     */
     private HeaderTableDnd headerTableDnd;
+    
+    /**
+     * filter action which should be accessible from the menu 
+     * only
+     */
     private FilterActionListener filterActionListener;
-    private TableItem headerTableItem;
+    
+    /**
+     * table view
+     */
     protected TableView view;
+    
+    /**
+     * reference to mail framemediator
+     */
     protected AbstractMailFrameController mailFrameController;
+    
+    /**
+     * timer which marks a message as read after a certain amount
+     * of time.
+     */
     protected MarkAsReadTimer markAsReadTimer;
+    
+    /**
+     * table view context menu
+     */
     protected TableMenu menu;
+    
+    /**
+     * filter model
+     */
     protected TableModelFilter tableModelFilteredView;
+    
+    /**
+     * sorting model
+     */
     protected TableModelSorter tableModelSorter;
+    
+    /**
+     * threaded-view model
+     */
     protected TableModelThreadedView tableModelThreadedView;
+    
+    /**
+     * update manager should handle all update requests
+     * <p>
+     * Don't update the models directly.
+     */
     protected TableModelUpdateManager updateManager;
+    
+    /**
+     * previously selected rows
+     */
     protected int[] previouslySelectedRows;
+    
+    /**
+     * previously selected folder
+     */
     private Folder previouslySelectedFolder;
 
+
+    /**
+     * Constructor
+     * 
+     * @param mailFrameController      mail framemediator
+     */
     public TableController(AbstractMailFrameController mailFrameController) {
         this.mailFrameController = mailFrameController;
 
-        headerTableItem = (TableItem) MailConfig.getMainFrameOptionsConfig()
-                                                .getTableItem();
-
+        // init table model
         headerTableModel = new HeaderTableModel();
 
+        // init filter model
         tableModelFilteredView = new TableModelFilter(headerTableModel);
 
+        // init threaded-view model
         tableModelThreadedView = new TableModelThreadedView(tableModelFilteredView);
-
+        
+        // init sorting model
         tableModelSorter = new TableModelSorter(tableModelThreadedView);
 
+        // now, init update manager
+        // -> sorting is applied at the end after all other
+        // -> operations like filtering
         updateManager = new TableModelUpdateManager(tableModelSorter);
 
+        // init view
         view = new TableView(headerTableModel);
 
-        /*
-        XmlElement tableElement = MailConfig.get("options").getElement("/options/gui/table");
-        getMailFrameController().getFolderOptionsController().load();
-        */
+        // pass tree to model, used by the threaded-view
         headerTableModel.setTree((Tree) view.getTree());
 
+        // init mouse listener for the column header
         headerTableMouseListener = new HeaderTableMouseListener(this);
         view.addMouseListener(headerTableMouseListener);
 
+        // not used currently
         filterActionListener = new FilterActionListener(this);
 
         // create a new markAsReadTimer
         markAsReadTimer = new MarkAsReadTimer(this);
 
+        // not used currently
         getView().setTransferHandler(new MessageTransferHandler(this));
-
         getView().setDragEnabled(false);
 
-        // FIXME
-        /*
-        getTableModelSorter().loadConfig(getView());
-        */
+       
         // MouseListener sorts table when clicking on a column header
         new TableHeaderMouseListener(getView(), getTableModelSorter());
 
@@ -133,88 +194,34 @@ public class TableController implements FocusOwner, ListSelectionListener {
         getView().getSelectionModel().addListSelectionListener(this);
     }
 
+    /**
+     * Get view of table controller
+     * 
+     * @return table view
+     */
     public TableView getView() {
         return view;
     }
 
+   
     /**
-     * return FilterToolbar
-     */
-    public FilterToolbar getFilterToolbar() {
-        return filterToolbar;
-    }
-
-    /**
-     * return HeaderTableItem
-     */
-    public TableItem getHeaderTableItem() {
-        return headerTableItem;
-    }
-
-    /**
-     * save the column state:
-     *  - position
-     *  - size
-     *  - appearance
-     * of every column
-     */
-
-    /*
-    public void saveColumnConfig() {
-        TableItem tableItem = (TableItem) MailConfig.getMainFrameOptionsConfig()
-                                                    .getTableItem();
-
-        if (MainInterface.DEBUG) {
-            ColumbaLogger.log.fine("save table column config");
-        }
-
-        getTableModelSorter().saveConfig();
-
-        //.clone();
-        //v.removeEnabledItem();
-        for (int i = 0; i < tableItem.getChildCount(); i++) {
-            HeaderItem v = tableItem.getHeaderItem(i);
-            boolean enabled = v.getBoolean("enabled");
-
-            if (enabled == false) {
-                continue;
-            }
-
-            String c = v.get("name");
-            ColumbaLogger.log.info("name=" + c);
-
-            TableColumn tc = getView().getColumn(c);
-
-            v.set("size", tc.getWidth());
-
-            if (MainInterface.DEBUG) {
-                ColumbaLogger.log.info("size" + tc.getWidth());
-            }
-
-            try {
-                int index = getView().getColumnModel().getColumnIndex(c);
-                v.set("position", index);
-            } catch (IllegalArgumentException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-    */
-
-    /**
-     * return the Model which contains a HeaderList
+     * Get table model
+     * 
+     * @return      table model
      */
     public HeaderTableModel getHeaderTableModel() {
         return headerTableModel;
     }
 
+   
     /**
-     * return ActionListener for FilterToolbar
+     * Select messages with UIDs.
+     * <p>
+     * Message UIDs are converted to {@link MessageNode}
+     * objects.
+     * 
+     * @param uids      array of message UIDs
      */
-    public FilterActionListener getFilterActionListener() {
-        return filterActionListener;
-    }
-
     public void setSelected(Object[] uids) {
         MessageNode[] nodes = new MessageNode[uids.length];
 
@@ -240,14 +247,23 @@ public class TableController implements FocusOwner, ListSelectionListener {
     }
 
     /**
-     * return the PopupMenu for the table
+     * Get popup menu
+     * @return      popup menu
      */
     public JPopupMenu getPopupMenu() {
         return menu;
     }
 
-    // method is called when folder data changed
-    // the method updates the model
+        
+    
+   
+    /**
+     * Method is called if folder data changed.
+     * <p>
+     * It is responsible for updating the correct underlying model.
+     * 
+     * @param event     update event
+     */
     public void tableChanged(TableModelChangedEvent event)
         throws Exception {
         // selected rows before updating the model

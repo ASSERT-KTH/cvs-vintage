@@ -33,17 +33,27 @@ import javax.swing.table.TableColumn;
 
 
 /**
+ * Stores all visible columns of the message list.
+ *
  * @author fdietz
  */
 public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
     /**
-     * @param name
-     * @param mediator
+     * Constructor
+     *
+     * @param mediator      mail frame mediator
      */
     public ColumnOptionsPlugin(MailFrameMediator mediator) {
         super("columns", mediator);
     }
 
+    /**
+     * Find xml element with attribute name.
+     * 
+     * @param parent        parent element
+     * @param name          name of attribute
+     * @return              child element
+     */
     private XmlElement findColumn(XmlElement parent, String name) {
         for (int i = 0; i < parent.count(); i++) {
             XmlElement child = parent.getElement(i);
@@ -64,7 +74,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         TableController tableController = ((TableViewOwner) getMediator()).getTableController();
         TableView view = tableController.getView();
-       
+
         // for each column
         int c = view.getColumnCount();
 
@@ -86,7 +96,6 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
             int position = tc.getModelIndex();
             column.addAttribute("position", Integer.toString(position));
             */
-            
         }
     }
 
@@ -133,10 +142,14 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
                 String name = columnItem.get("name");
                 int size = columnItem.getInteger("width");
                 int position = columnItem.getInteger("position");
-                
+
                 TableColumn tc = view.getColumn(name);
+
                 // resize column width
                 tc.setPreferredWidth(size);
+
+                // TODO: fix position handling
+
                 /*
                 // move column to new position
                 view.moveColumn(tc.getModelIndex(), position);
@@ -183,6 +196,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
      *
      * @param name      name of column
      * @param width     column width
+     * @param position  column position
      * @return          parent xml element
      */
     private static XmlElement createColumn(String name, String width,

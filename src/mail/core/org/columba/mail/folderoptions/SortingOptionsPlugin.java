@@ -25,9 +25,18 @@ import org.columba.mail.gui.table.TableController;
 
 
 /**
+ * Handles sorting state, including sorting order, which can
+ * be ascending or descending and the actual column.
+ * 
  * @author fdietz
  */
 public class SortingOptionsPlugin extends AbstractFolderOptionsPlugin {
+    
+    /**
+     * Constructor
+     * 
+     * @param mediator      mail framemediator
+     */
     public SortingOptionsPlugin(MailFrameMediator mediator) {
         super("sorting", mediator);
     }

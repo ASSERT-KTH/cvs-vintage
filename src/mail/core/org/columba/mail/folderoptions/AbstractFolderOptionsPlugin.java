@@ -17,26 +17,56 @@ package org.columba.mail.folderoptions;
 
 import org.columba.core.plugin.PluginInterface;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 
+
 /**
+ * Folder options plugin abstract class.
+ * <p>
+ * Plugins implementing this abstract class can load/save
+ * their configuration data. They don't need to take care
+ * if this data is applied globally or on a per-folder basis.
+ * <p>
+ * The most interest methods which you need to implement are:
+ * <ul>
+ *  <li>createDefaultElement(boolean)</li>
+ *  <li>loadOptionsFromXml(Folder)</li>
+ *  <li>saveOptionsToXml(Folder)</li>
+ * </ul>
+ * <p>
+ * Note, that every {@link MailFrameMediator} keeps its own
+ * {@link FolderOptionsController}, which makes sure that
+ * all plugins are singletons.
+ *
  * @author fdietz
  */
 public abstract class AbstractFolderOptionsPlugin implements PluginInterface {
+    /**
+     * mail frame mediator
+     */
     private MailFrameMediator mediator;
+
+    /**
+     * name of plugin
+     */
     private String name;
 
-    public AbstractFolderOptionsPlugin(
-        String name,
-        MailFrameMediator mediator) {
+    /**
+     * Constructor
+     *
+     * @param name      name of plugin
+     * @param mediator  mail frame mediator
+     */
+    public AbstractFolderOptionsPlugin(String name, MailFrameMediator mediator) {
         this.name = name;
         this.mediator = mediator;
     }
 
     /**
-    * Get xml configuration of this plugin.
+    * Save configuration of this plugin.
     * <p>
     *
     * Following a simple example of a toolbar configuration:<br>
@@ -50,21 +80,14 @@ public abstract class AbstractFolderOptionsPlugin implements PluginInterface {
     * </toolbar>
     * </pre>
     *
-    * <p>
-    * So, this method will return the the top-level xml element
-    * <b>toolbar</b>.
-    *
-    * @return      top-level xml treenode
+    * @param folder     selected folder
     */
     public abstract void saveOptionsToXml(Folder folder);
 
     /**
-     * Load options of this plugin from xml element.
-     * <p>
-     * Following the example used above, this element should
-     * have the name <b>toolbar</b>.
-     * <p>
-     * @param element       configuration options node
+     * Load options of this plugin.
+     *
+     * @param folder       selected folder
      */
     public abstract void loadOptionsFromXml(Folder folder);
 
@@ -85,7 +108,13 @@ public abstract class AbstractFolderOptionsPlugin implements PluginInterface {
      * <p>
      * This way, plugins don't have to know, if they work
      * on global or local options.
-     * 
+     * <p>
+     * Example for the sorting plugin configuration node. This is
+     * how it can be found in options.xml and tree.xml:<br>
+     * <pre>
+     *  <sorting column="Date" order="true" />
+     * </pre>
+     *
      * @param folder        currently selected folder
      * @return              xml node
      */
@@ -94,9 +123,11 @@ public abstract class AbstractFolderOptionsPlugin implements PluginInterface {
         boolean global = false;
 
         if (folder == null) {
+            //          if no folder was passed as argument, use global options
             parent = FolderItem.getGlobalOptions();
             global = true;
         } else {
+            // use folder specific options
             parent = folder.getFolderItem().getFolderOptions();
             global = false;
         }
@@ -112,6 +143,7 @@ public abstract class AbstractFolderOptionsPlugin implements PluginInterface {
             return child;
         }
 
+        //      check if this folder is overwriting global options
         if (child.getAttribute("overwrite").equals("true")) {
             // use folder-based options
             return child;
@@ -119,6 +151,7 @@ public abstract class AbstractFolderOptionsPlugin implements PluginInterface {
             // use global options
             parent = FolderItem.getGlobalOptions();
             child = parent.getElement(getName());
+
             if (child == null) {
                 child = createDefaultElement(true);
                 parent.addElement(child);
@@ -130,22 +163,28 @@ public abstract class AbstractFolderOptionsPlugin implements PluginInterface {
 
     /**
      * Create default node.
-     * 
-     * @return      xml node
+     * <p>
+     * Overwrite this method to add plugin-specific information
+     * to the parent node.
+     * <p>
+     * @param  global       true, if this is a global options. False, otherwise
+     *
+     * @return              xml node
      */
     public XmlElement createDefaultElement(boolean global) {
         XmlElement parent = new XmlElement(getName());
 
         // only local options have overwrite attribute
-        if (!global)
+        if (!global) {
             parent.addAttribute("overwrite", "false");
+        }
 
         return parent;
     }
 
     /**
      * Get name of configuration
-     * 
+     *
      * @return     config name
      */
     public String getName() {

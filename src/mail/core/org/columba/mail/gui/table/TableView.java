@@ -109,54 +109,7 @@ public class TableView extends TreeTable implements OptionsSerializer {
         }
     }
 
-    /**
-     * Recalculate width of every column to match configuration
-     *
-     */
-    protected void adjustColumn() {
-        /*
-        TableItem tableItem = (TableItem) MailConfig.getMainFrameOptionsConfig()
-                                                    .getTableItem();
-
-        //.clone();
-        //v.removeEnabledItem();
-        for (int i = 0; i < tableItem.count(); i++) {
-            HeaderItem v = tableItem.getHeaderItem(i);
-            boolean enabled = v.getBoolean("enabled");
-
-            if (enabled == false) {
-                continue;
-            }
-
-            String name = v.get("name");
-            int size = v.getInteger("size");
-            int position = v.getInteger("position");
-
-            TableColumn tc = null;
-
-            //ColumbaLogger.log.info("name=" + name);
-            try {
-                tc = getColumn(name);
-            } catch (Exception ex) {
-                System.out.println("headerTable->registerRenderer: " +
-                    ex.getMessage());
-            }
-
-            if (tc == null) {
-                continue;
-            }
-
-            tc.setPreferredWidth(size);
-
-            try {
-                int index = getColumnModel().getColumnIndex(name);
-                getColumnModel().moveColumn(index, position);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-        */
-    }
+   
 
     /**
      * Create table column using plugin extension point
