@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.98 2002/05/18 16:50:48 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.99 2002/05/21 21:54:17 jon Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -1251,6 +1251,11 @@
     -->
     <column name="ISDEFAULT" required="false" type="BOOLEANINT" 
             default="0" size="1"></column>
+    <!--
+        The order in which the user wants to see the queries in the home page
+    -->
+    <column name="PREFERRED_ORDER" javaName="Order" required="false"
+            default="-1" type="INTEGER"></column>
 
     <foreign-key foreignTable="SCARAB_QUERY">
         <reference local="QUERY_ID" foreign="QUERY_ID"/>
