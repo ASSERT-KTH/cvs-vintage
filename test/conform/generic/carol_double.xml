@@ -127,12 +127,11 @@
     <mkdir dir="${test.tmp.registry2}"/>
     <mkdir dir="${test.tmp.server}"/>
 
-    <copy file="${test.ext}/${client.properties.file.name1}" tofile="${test.tmp.client1}/jndi.properties" /> 
-    <copy file="${test.ext}/${client.properties.file.name2}" tofile="${test.tmp.client2}/jndi.properties" /> 
+    <copy file="${test.ext}/${client.properties.file.name1}" tofile="${test.tmp.client1}/carol.properties" /> 
+    <copy file="${test.ext}/${client.properties.file.name2}" tofile="${test.tmp.client2}/carol.properties" /> 
     <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.server}/trace.properties" />  
 
-    <copy file="${test.ext}/${server.properties.file.name1}" tofile="${test.tmp.server}/carol.properties" />  
-    <copy file="${test.ext}/${server.properties.file.name2}" tofile="${test.tmp.server}/jndi.properties" /> 
+    <copy file="${test.ext}/${server.properties.file.name}" tofile="${test.tmp.server}/carol.properties" />  
     <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.server}/trace.properties" /> 
 
   </target>
@@ -179,7 +178,7 @@
 	  <formatter type="xml"/>
 	  <batchtest fork="yes" todir="${report.dir}">
 	    <fileset dir="${test.src}">
-	      <include name="${test.client.pkg1}/*Test.java" />
+	      <include name="${test.client.pkg1}/*Tests.java" />
 	    </fileset>
 	  </batchtest>
 	</junit>
@@ -197,7 +196,7 @@
 	  <formatter type="xml"/>
 	  <batchtest fork="yes" todir="${report.dir}">
 	    <fileset dir="${test.src}">
-	      <include name="${test.client.pkg2}/*Test.java" />
+	      <include name="${test.client.pkg2}/*Tests.java" />
 	    </fileset>
 	  </batchtest>
 	</junit>

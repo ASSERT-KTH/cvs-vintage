@@ -31,6 +31,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.objectweb.carol.jndi.registry.ManageableRegistry;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 
@@ -64,7 +65,7 @@ public class JRMPRegistry implements NameService {
 	try {
 	    if (!isStarted()) {
 		if (port >= 0) {
-		    registry = LocateRegistry.createRegistry(port);
+		    registry = ManageableRegistry.createManagableRegistry(port);
 		    // add a shudown hook for this process
 		    Runtime.getRuntime().addShutdownHook(new Thread() {
 			    public void run() {
@@ -125,6 +126,7 @@ public class JRMPRegistry implements NameService {
 	public boolean isStarted() {
 	if (registry != null) return true;
 	try {
+		//TODO: Warning LocateRegistry Problem we are not in case of local computer registry ....
 		LocateRegistry.getRegistry(port).list();   
 	} catch (RemoteException re) {
 		return false;

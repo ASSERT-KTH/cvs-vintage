@@ -116,7 +116,11 @@
       classname="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper">
       <classpath refid="carol.classpath"/>
     </rmic>
-    
+    <!-- The registry -->
+    <rmic base="${build}/classes" compiler="sun"
+      classname="org.objectweb.carol.jndi.registry.RegistryManagerImpl">
+      <classpath refid="carol.classpath"/>
+    </rmic>
      <!-- for sun iiop  -->
     <rmic base="${build}/classes" iiop="true" compiler="sun"
       classname="org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper">
