@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.44 2002/06/25 23:04:48 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.45 2002/06/28 16:41:46 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -149,25 +149,25 @@ public class ScarabLink extends TemplateLink
     protected TemplateLink setPage(String t, String moduleid)
     {
         currentModuleId = moduleid;
-        if (moduleid != null && moduleid.length() > 0)
+        if (isSet(moduleid))
         {
             addPathInfo(ScarabConstants.CURRENT_MODULE, moduleid);
         }
         String issuetypeid = data.getParameters()
             .getString(ScarabConstants.CURRENT_ISSUE_TYPE);
-        if (issuetypeid != null && issuetypeid.length() > 0)
+        if (isSet(issuetypeid))
         {
             addPathInfo(ScarabConstants.CURRENT_ISSUE_TYPE, issuetypeid);
         }
         String issueKey = data.getParameters()
             .getString(ScarabConstants.REPORTING_ISSUE);
-        if (issueKey != null && issueKey.length() > 0)
+        if (isSet(issueKey))
         {
             addPathInfo(ScarabConstants.REPORTING_ISSUE, issueKey);
         }
         String reportKey = data.getParameters()
             .getString(ScarabConstants.CURRENT_REPORT);
-        if (reportKey != null && reportKey.length() > 0)
+        if (isSet(reportKey))
         {
             if (t.startsWith("report")) 
             {
@@ -181,21 +181,21 @@ public class ScarabLink extends TemplateLink
         // if a screen is to be passed along, add it
         String historyScreen = data.getParameters()
             .getString(ScarabConstants.HISTORY_SCREEN);
-        if (historyScreen != null && historyScreen.length() > 0)
+        if (isSet(historyScreen))
         {
             addPathInfo(ScarabConstants.HISTORY_SCREEN, historyScreen);
         }
         // if a admin menu is to be passed along, add it
         String adminMenu = data.getParameters()
             .getString(ScarabConstants.CURRENT_ADMIN_MENU);
-        if (adminMenu != null && adminMenu.length() > 0)
+        if (isSet(adminMenu))
         {
             addPathInfo(ScarabConstants.CURRENT_ADMIN_MENU, adminMenu);
         }
         // if a debug is set, add it
         String debug = data.getParameters()
             .getString(ScarabConstants.DEBUG);
-        if (debug != null && debug.length() > 0)
+        if (isSet(debug))
         {
             addPathInfo(ScarabConstants.DEBUG, debug);
         }
@@ -203,7 +203,11 @@ public class ScarabLink extends TemplateLink
         super.setPage(t);
         return this;
     }
-    
+
+    private boolean isSet(String s)
+    {
+        return s != null && s.length() > 0;
+    }
 
     /**
      * Returns the name of the template that is being being processed
