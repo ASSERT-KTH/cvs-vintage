@@ -145,23 +145,47 @@
 		
 		<p class="functnbar"><input type="submit" value="save" />&#160;<input type="submit" value="cancel" />&#160;<input type="submit" value="reset to defaults" /></p>
 		
-		<h3>Votes are added to an issue</h3>
 		
-		<p><input type="radio" name="vote" />when user manually votes on issue.</p>
-		
-		<p><input type="radio" name="vote" />whenever an issue is identified as a duplicate.</p>
-		
-		<h3>Priority change threshold</h3>
-		
-		<p><select>
-		<option>No priority change</option>
+		<h3>Vote controls</h3>
+			<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">change threshold</th>	
+			<td><select>
+		<option>No change (off)</option>
 		<option>5 votes</option>
 		<option>10 votes</option>
 		<option>20 votes</option>
-		</select>
-		</p>
+		</select></td>
+			</tr>
+
+			<tr>
+			<th width="120">select attribute</th>	
+			<td><select>
+		<option>Default</option>
+		<option>priority</option>
+		<option>severity</option>
+		<option>os</option>
+		<option>platform</option>
+		<option>attribute A</option>
+		<option>attribute B</option>
+		<option>attribute C</option>
+		<option>attribute D</option>
+		</select></td>
+			</tr>
+
+
+			<tr>
+			<th width="120">change direction</th>	
+			<td><select>
+		<option>inclease in weight</option>
+		<option>decrease in weight</option>
+		</select></td>
+			</tr>			
+			</table>
+		</div>
 		
-		<h3>Automated email (vote report) recipients</h3>
+		<h3>Automated email (vote report) delivery preferences</h3>
 		
 		<p><select>
 		<option>entire team</option>
@@ -176,11 +200,11 @@
 		<option>weekly</option>
 		<option>on methodist feast days</option>
 		</select>
-		with all priority changes</p>
+		with all vote induced changes</p>
 		
-		<p><input type="checkbox" />one email per priority change.</p>
+		<p><input type="checkbox" />one email per vote induced change.</p>
 		
-		<h3>Automated email (vote report) Content</h3>
+		<h3>Automated email (vote report) content</h3>
 		
 		<p><textarea rows="4" cols="40">default content</textarea></p>
 
