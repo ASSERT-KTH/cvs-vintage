@@ -46,7 +46,7 @@ public class CommandProcessor implements Runnable {
 
 	private int timeStamp;
 	
-	private static CommandProcessor instance;
+	private static CommandProcessor instance = new CommandProcessor();
 
 	public CommandProcessor() {
 		this(true);
