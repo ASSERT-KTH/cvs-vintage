@@ -24,7 +24,7 @@
 // File: NavPerspective.java
 // Classes: NavPerspective
 // Original Author: your email address here
-// $Id: NavPerspective.java,v 1.8 2002/09/02 22:15:52 kataka Exp $
+// $Id: NavPerspective.java,v 1.9 2002/09/02 23:12:47 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extends/includes and extension points in the package centric
@@ -152,6 +152,17 @@ implements Serializable, TreeModel, Cloneable {
       new GoFilteredChildren("misc.package.collaborations",
 			     new GoModelToElements(),
 			     new PredInstanceOf(MCollaboration.class));
+	
+	GoFilteredChildren modelToComponentInstance = 
+		new GoFilteredChildren("misc.package.componentinstance",
+			     new GoModelToElements(),
+			     new PredInstanceOf(MComponentInstance.class));
+			     
+	GoFilteredChildren modelToNodeInstance = 
+		new GoFilteredChildren("misc.package.nodeinstance",
+			     new GoModelToElements(),
+			     new PredInstanceOf(MNodeInstance.class));
+	
 
     packageCentric.addSubTreeModel(new GoProjectModel());
     packageCentric.addSubTreeModel(new GoModelToDiagram());
@@ -162,6 +173,8 @@ implements Serializable, TreeModel, Cloneable {
     packageCentric.addSubTreeModel(modelToInstances);
     packageCentric.addSubTreeModel(modelToLinks);
     packageCentric.addSubTreeModel(modelToCollaboration);
+    packageCentric.addSubTreeModel(modelToComponentInstance);
+    packageCentric.addSubTreeModel(modelToNodeInstance);
     packageCentric.addSubTreeModel(new GoUseCaseToExtensionPoint());
     packageCentric.addSubTreeModel(new GoClassifierToStr());
     packageCentric.addSubTreeModel(new GoClassifierToBeh());
