@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.185 2003/06/16 05:57:56 spestov Exp $
+ * @version $Id: Buffer.java,v 1.186 2003/06/18 05:03:51 spestov Exp $
  */
 public class Buffer
 {
@@ -2120,7 +2120,7 @@ public class Buffer
 			TokenMarker.LineContext context = lineMgr.getLineContext(i);
 			ParserRule oldRule;
 			ParserRuleSet oldRules;
-			String oldSpanEndSubst;
+			char[] oldSpanEndSubst;
 			if(context == null)
 			{
 				//System.err.println(i + ": null context");
