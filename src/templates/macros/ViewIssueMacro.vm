@@ -260,15 +260,17 @@
 #if ($tab.equals("4") || $tab.equals("all"))
 ## URLS
 #if (!$currentIssue.Urls.isEmpty() || $canEdit)
-<h3>Related links</h3>
+<h3>Related links $currentIssue.Urls.isEmpty()</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
+     #if (!$currentIssue.Urls.isEmpty())
      <th>&#160;</th>
      <th>Link</th>
-     #if ($canEdit)
-     <th>Edit Link</th>
      #end
-     <th>Link description</th>
+     #if ($canEdit)
+     <th>URI</th>
+     #end
+     <th>Description</th>
    </tr>
    #foreach ($url in $currentIssue.Urls)
     #indexedRows($velocityCount)
@@ -279,7 +281,7 @@
        &#160;
      #end
      </td>
-     <td><a href="$url.Name">$url.Name</a> </td>
+     <td><a href="$url.Name">$url.DataAsString</a> </td>
       #set ($urlGroup = $intake.Attachment.mapTo($url))
      #if ($canEdit)
          <td><input type="text" size="25" name="$urlGroup.Name.Key" value="$url.Name" /> </td>
@@ -291,8 +293,10 @@
    #end
    #if ($canEdit)
    <tr class="b">
+     #if (!$currentIssue.Urls.isEmpty())
      <td>&#160;</td>
      <td>&#160;</td>
+     #end
      #set ($urlGroup = $intake.Attachment.setKey("urlKey"))
      <td>
      <input type="text" size="25" name="$urlGroup.Name.Key" value="$!urlGroup.Name" />
@@ -365,7 +369,7 @@
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
     <tr>
-      <th>Attachment path</th>
+      <th>Path</th>
       <td>
        <input type="file" name="$intakeAttachment.File.Key" size="45"
             value="$!intakeAttachment.File.Value.FileName" />
@@ -377,14 +381,14 @@
       </td>
     </tr>
     <tr>
-       <th>Attachment description</th>
+       <th>Description</th>
        <td>
         #textAreaMedium("$intakeAttachment.Name.Key" "$intakeAttachment.Name")
         #fieldErrorMsg($intakeAttachment.Name "")
        </td>
     </tr>
     <tr>
-      <th>Attachment type</th>
+      <th>Type</th>
       <td>
         <select name="$intakeAttachment.MimeTypeA.Key" class="select">
         #if ($intakeAttachment.MimeTypeA)
@@ -421,7 +425,7 @@
  <th> &nbsp; </th>
  <th>Issue ID #</th>
  <th>Relationship</th>
- <th>Dependency type</th>
+ <th>Dependency</th>
 </tr>
 
 #foreach ($depend in $currentIssue.Parents)
