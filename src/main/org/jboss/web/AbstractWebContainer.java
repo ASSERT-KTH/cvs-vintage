@@ -38,7 +38,7 @@ import java.util.Set;
  @author  Scott.Stark@jboss.org
  @author  Christoph.Jung@infor.de
  @author  Thomas.Diesler@arcor.de
- @version $Revision: 1.85 $
+ @version $Revision: 1.86 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -194,24 +194,26 @@ public abstract class AbstractWebContainer
 
          // Make sure the war is unpacked if unpackWars is true
          File warFile = new File(di.localUrl.getFile());
-         if (warFile.isDirectory() == false && (unpackWars == true || hasWebservices))
+         if (warFile.isDirectory() == false && (unpackWars || hasWebservices))
          {
-            File tmp = new File(warFile.getAbsolutePath()+".tmp");
-            if( warFile.renameTo(tmp) == false )
-               throw new DeploymentException("Was unable to move war to: "+tmp);
-            if( warFile.mkdir() == false )
-               throw new DeploymentException("Was unable to mkdir: "+warFile);
-            log.debug("Unpacking war to: "+warFile);
-            FileInputStream fis = new FileInputStream(tmp);
-            JarUtils.unjar(fis, warFile);
+            // After findResource we cannot rename the WAR anymore, because
+            // some systems keep an open reference to the file :(  
+            String prefix = warFile.getCanonicalPath();
+            prefix = prefix.substring(0, prefix.lastIndexOf(".war"));
+            File expWarFile = new File(prefix + "-exp.war");
+            if( expWarFile.mkdir() == false )
+               throw new DeploymentException("Was unable to mkdir: "+expWarFile);
+            log.debug("Unpacking war to: "+expWarFile);
+            FileInputStream fis = new FileInputStream(warFile);
+            JarUtils.unjar(fis, expWarFile);
             fis.close();
             log.debug("Replaced war with unpacked contents");
-            if( tmp.delete() == false )
-               log.debug("Was unable to delete war tmp file");
+            if( warFile.delete() == false )
+               log.debug("Was unable to delete war file");
             else
                log.debug("Deleted war archive");
             // Reset the localUrl to end in a '/'
-            di.localUrl = warFile.toURL();
+            di.localUrl = expWarFile.toURL();
             // Reset the localCl to point to the file
             URL[] localCl = new URL[]{di.localUrl};
             di.localCl = new URLClassLoader(localCl);
