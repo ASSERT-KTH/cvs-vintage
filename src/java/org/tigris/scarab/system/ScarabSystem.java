@@ -46,8 +46,13 @@ package org.tigris.scarab.system;
  * individuals on behalf of Collab.Net.
  */ 
 
+// Turbine
 import org.apache.turbine.om.security.User;
+// Scarab
 import org.tigris.scarab.om.ScarabUser;
+// Velocity
+import org.apache.velocity.util.FieldMethodizer;
+
 /**
  * This class is used by the Scarab API
  */
@@ -58,6 +63,28 @@ public class ScarabSystem
      */
     private User user = null;
     
+    /**
+     * holds the Scarab constants
+     */
+    private FieldMethodizer constants = null;
+
+    /**
+     * Constructor does initialization stuff
+     */    
+    public ScarabSystem()
+    {
+        constants = new FieldMethodizer("org.tigris.scarab.util.ScarabConstants");
+    }
+
+    /**
+     * holds the Scarab constants. it will be available to the template system
+     * as $scarab.Constants.CONSTANT_NAME
+     */
+    public FieldMethodizer getConstants()
+    {
+        return constants;
+    }
+
     /**
      * A User object for use within the Scarab API.
      */
