@@ -111,6 +111,7 @@ public class Jdk12Interceptor extends  BaseInterceptor implements RequestInterce
     /** Called before service method is invoked. 
      */
     public int preService(Request request, Response response) {
+	if( request.getContext() == null ) return 0;
 	fixJDKContextClassLoader(request.getContext().getServletLoader().getClassLoader());
 	//	System.out.println("Setting class loader for service()");
 	return 0;

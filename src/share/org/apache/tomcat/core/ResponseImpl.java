@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.21 2000/04/17 21:02:27 costin Exp $
- * $Revision: 1.21 $
- * $Date: 2000/04/17 21:02:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.22 2000/04/21 20:45:03 costin Exp $
+ * $Revision: 1.22 $
+ * $Date: 2000/04/21 20:45:03 $
  *
  * ====================================================================
  *
@@ -182,7 +182,7 @@ public class ResponseImpl implements Response {
 	    return;  // munch
 	} catch (IOException ex) {
 	    if( "Broken pipe".equals(ex.getMessage())) {
-		if(request!=null) request.getContext().log("Broken pipe " + request.getRequestURI());
+		//		if(request!=null) request.getContext().log("Broken pipe " + request.getRequestURI());
 		return;
 	    }
 	    throw ex;

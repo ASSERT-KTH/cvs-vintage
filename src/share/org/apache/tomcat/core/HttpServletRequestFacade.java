@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.9 2000/04/18 23:04:29 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/04/18 23:04:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.10 2000/04/21 20:45:02 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/04/21 20:45:02 $
  *
  * ====================================================================
  *
@@ -286,7 +286,14 @@ public class HttpServletRequestFacade implements HttpServletRequest {
 	    return null;
 
 	if (! path.startsWith("/")) {
-	    path= FileUtil.catPath( request.getLookupPath(), path );
+	    // The original implementation returned that RD relative
+	    // to lookupPath, which is RequestPath + PathInfo
+	    String pI= request.getPathInfo();
+	    if( pI == null ) 
+		path= FileUtil.catPath( request.getServletPath(), path );
+	    else
+		path= FileUtil.catPath( request.getServletPath() + pI,
+					path);
 	    if( path==null) return null;
 	}
 

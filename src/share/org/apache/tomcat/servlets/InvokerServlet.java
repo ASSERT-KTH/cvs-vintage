@@ -155,6 +155,9 @@ public class InvokerServlet extends HttpServlet {
 	*/
 
         // try the easy one -- lookup by name
+	if( context == null ) {
+	    System.out.println("Servlet called before init. Need to keep it disabled, sync at startup");
+	}
         ServletWrapper wrapper = context.getServletByName(servletName);
 
         if (wrapper == null) {
@@ -166,7 +169,7 @@ public class InvokerServlet extends HttpServlet {
 	    // it's a much cleaner way to construct the servlet and
 	    // make sure all interceptors are up to date.
 	    try {
-		context.addServletMapping( newServletPath , servletName );
+		context.addServletMapping( newServletPath + "/*" , servletName );
 		wrapper = context.getServletByName( servletName);
 		wrapper.setOrigin( ServletWrapper.ORIGIN_INVOKER );
 	    } catch( TomcatException ex ) {

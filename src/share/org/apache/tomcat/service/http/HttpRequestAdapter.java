@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.9 2000/04/18 19:36:05 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/04/18 19:36:05 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.10 2000/04/21 20:45:07 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/04/21 20:45:07 $
  *
  * ====================================================================
  *
@@ -114,11 +114,10 @@ public class HttpRequestAdapter extends RequestImpl {
 	int count = in.readLine(buf, 0, buf.length);
 	if (count < 0 ) {
 	    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	    return;
 	}
-
-	String line=new String(buf, 0, count, Constants.CharacterEncoding.Default);
-
-	processRequestLine(response,line);
+	
+	processRequestLine(response, buf, 0, count );
 
 	// XXX
 	//    return if an error was detected in processing the
@@ -145,6 +144,30 @@ public class HttpRequestAdapter extends RequestImpl {
     public int getServerPort() {
         return socket.getLocalPort();
     }
+
+    public String getServerName() {
+	if(serverName!=null) return serverName;
+
+	// XXX Move to interceptor!!!
+	String hostHeader = this.getHeader("host");
+	if (hostHeader != null) {
+	    int i = hostHeader.indexOf(':');
+	    if (i > -1) {
+		hostHeader = hostHeader.substring(0,i);
+	    }
+	    serverName=hostHeader;
+	    return serverName;
+	}
+
+	if (hostHeader == null) {
+		// XXX
+		// we need a better solution here
+		InetAddress localAddress = socket.getLocalAddress();
+		serverName = localAddress.getHostName();
+	}
+	return serverName;
+    }
+    
     
     public String getRemoteAddr() {
         return socket.getInetAddress().getHostAddress();
@@ -154,7 +177,11 @@ public class HttpRequestAdapter extends RequestImpl {
 	return socket.getInetAddress().getHostName();
     }    
     
-    public void processRequestLine(Response response, String line) {
+    public void processRequestLine(Response response, byte bug[], int start, int count)
+	throws IOException
+    {
+
+	String line=new String(buf, 0, count, Constants.CharacterEncoding.Default);
         String buffer = line.trim();
 	int firstDelim = buffer.indexOf(' ');
 	int lastDelim = buffer.lastIndexOf(' ');

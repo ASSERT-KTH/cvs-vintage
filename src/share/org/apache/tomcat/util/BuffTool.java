@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/BuffTool.java,v 1.4 2000/02/14 04:59:42 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/14 04:59:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/BuffTool.java,v 1.5 2000/04/21 20:45:11 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/04/21 20:45:11 $
  *
  * ====================================================================
  *
@@ -68,8 +68,6 @@ import org.apache.tomcat.util.StringManager;
 import org.apache.tomcat.core.Constants;
 import java.io.*;
 import javax.servlet.ServletOutputStream;
-
-// XXX Find a better name, move to util
 
 /**
  *

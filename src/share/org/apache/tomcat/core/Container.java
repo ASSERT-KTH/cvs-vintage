@@ -113,6 +113,13 @@ public class Container implements Cloneable {
     // The handler
     ServletWrapper handler;
 
+    public static final int UNKNOWN_MAP=0;
+    public static final int PATH_MAP=1;
+    public static final int PREFIX_MAP=2;
+    public static final int EXTENSION_MAP=3;
+    public static final int DEFAULT_MAP=3;
+    int mapType=0;
+    
     // XXX Per method constraints not implemented.
     String transport;
     String roles[]=null;
@@ -130,7 +137,28 @@ public class Container implements Cloneable {
     public void setContextManager(ContextManager cm) {
 	contextM=cm;
     }
-    
+
+    public int getMapType() {
+	if( mapType!=0) return mapType;
+	// What happens with "" or null ?
+	// XXX Which one is default servlet ? API doesn't say,
+	// but people expect it to work.
+	if(path==null ||
+	   path.equals("") ||
+	   path.equals( "/") ||
+	   path.equals("/*" ) ) {
+	    mapType=DEFAULT_MAP;
+	} else if (path.startsWith("/") &&
+	    path.endsWith("/*")) {
+	    mapType=PREFIX_MAP;
+	} else if (path.startsWith("*.")) {
+	    mapType=EXTENSION_MAP;
+	} else {
+	    mapType=PATH_MAP;
+	}
+	return mapType;
+    }
+
     public void setContext( Context ctx ) {
 	this.context=ctx;
     }
@@ -139,9 +167,14 @@ public class Container implements Cloneable {
 	return context;
     }
     
-
+    /** The mapping string that creates this Container
+     */
     public void setPath( String path ) {
-	this.path=path;
+	// XXX use a better name - setMapping for example
+	if( path==null)
+	    this.path=""; // default mapping
+	else
+	    this.path=path.trim();
     }
 
     public String getPath() {
@@ -263,5 +296,16 @@ public class Container implements Cloneable {
 	} catch( CloneNotSupportedException ex ) {
 	    return this;
 	}
-    } 
+    }
+
+    // -------------------- Per-Container "notes"
+    Object notes[]=new Object[ContextManager.MAX_NOTES];
+
+    public void setNote( int pos, Object value ) {
+	notes[pos]=value;
+    }
+
+    public Object getNote( int pos ) {
+	return notes[pos];
+    }
 }

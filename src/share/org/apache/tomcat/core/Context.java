@@ -133,6 +133,9 @@ public class Context {
 
     Hashtable containers=new Hashtable();
 
+    Container defaultContainer = null; // generalization, will replace most of the
+    // functionality. By using a default container we avoid a lot of checkings
+    // and speed up searching, and we can get rid of special properties.
     private ServletWrapper defaultServlet = null;
 
     // Authentication properties
@@ -148,6 +151,9 @@ public class Context {
     public Context() {
 	//	System.out.println("New Context ");
 	// XXX  customize it per context
+	defaultContainer=new Container();
+	defaultContainer.setContext( this );
+	defaultContainer.setPath( null ); // default container
     }
 
     ServletContextFacade getFacade() {
@@ -509,6 +515,12 @@ public class Context {
 	return (Container)containers.get(path);
     }
 
+    // return the container associated with this context -
+    // which is also the default container
+    public Container getContainer() {
+	return defaultContainer;
+    }
+
     public void removeContainer( Container ct ) {
 	containers.remove(ct.getPath());
     }
@@ -711,8 +723,14 @@ public class Context {
 	if( mappedPath == null ) {
 	    mappedPath=lr.getPathInfo();
 	}
-	if(mappedPath == null )
-	    mappedPath=lr.getLookupPath();
+	if(mappedPath == null ) {
+	    String pI=lr.getPathInfo();
+	    if( pI == null ) 
+		mappedPath=lr.getServletPath();
+	    else
+		mappedPath=lr.getServletPath() + pI;
+	}
+
 
 	try {
 	    String contextHome=new File( docBase ).getCanonicalPath();
@@ -765,9 +783,14 @@ public class Context {
 	// XXX workaround - need to fix mapper to return mapped path
 	if( mappedPath == null )
 	    mappedPath=req.getPathInfo();
-	if(mappedPath == null )
-	    mappedPath=req.getLookupPath();
-
+	if(mappedPath == null ) {
+	    String pI=req.getPathInfo();
+	    if( pI == null ) 
+		mappedPath=req.getServletPath();
+	    else
+		mappedPath=req.getServletPath() + pI;
+	}
+	
 	// All paths have to be relative to the context - it's not so
 	// logical ( IMHO - costin ), but that's the spec.
 	// 

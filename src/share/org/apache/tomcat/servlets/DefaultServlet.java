@@ -132,7 +132,7 @@ public class DefaultServlet extends HttpServlet {
 
 	// Clean up pathInfo
 	File file = null;
-	if ((pathInfo == null) || (pathInfo.length() < 1))
+	if (pathInfo == null) // pathInfo can't be "" ( spec )
 	    file = new File(docBase);
 	else		// Avoid double slashes because docBase ends with one
 	    file = new File(docBase + pathInfo.substring(1));

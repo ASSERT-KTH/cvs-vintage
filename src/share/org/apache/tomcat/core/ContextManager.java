@@ -578,7 +578,7 @@ public class ContextManager {
      *  the Context. This is used by Dispatcher and getResource - where the Context
      *  is already known.
      */
-    int processRequest( Request req ) {
+    public int processRequest( Request req ) {
 	if(debug>9) log("ProcessRequest: "+req.toString());
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
@@ -591,6 +591,7 @@ public class ContextManager {
 
 	if(debug>9) log("After processing: "+req.toString());
 
+	
 	return 0;
     }
 
@@ -768,7 +769,7 @@ public class ContextManager {
 
     /** Create a new sub-request, deal with query string
      */
-    Request createRequest( String urlPath ) {
+    public Request createRequest( String urlPath ) {
 	String queryString=null;
 	int i = urlPath.indexOf("?");
 	int len=urlPath.length();
@@ -806,6 +807,71 @@ public class ContextManager {
 	req.setResponse( resp );
 	req.setContextManager( this );
     }
+
+    // -------------------- Support for notes
+        
+    // used to allow interceptors to set specific per/request, per/container
+    // and per/CM informations.
+    
+    // This will allow us to remove all "specialized" methods in
+    // Request and Container/Context, without losing the functionality.
+    
+    // Remember - Interceptors are not supposed to have internal state
+    // and minimal configuration, all setup is part of the "core", under
+    // central control.
+
+    // We use indexed notes instead of attributes for performance -
+    // this is internal to tomcat and most of the time in critical path
+
+    /** Note id counters. Synchronized access is not necesarily needed
+     *  ( the initialization is in one thread ), but anyway we do it
+     */
+    private  int noteId[]=new int[3];
+
+    /** Maximum number of notes supported
+     */
+    public static final int MAX_NOTES=32;
+
+    public static final int SERVER_NOTE=0;
+    public static final int CONTAINER_NOTE=1;
+    public static final int REQUEST_NOTE=2;
+    
+    String noteDescription[][]=new String[3][MAX_NOTES];
+
+    /** Create a new note id. Interceptors will get an Id at init time for
+     *  all notes that it needs. 
+     *
+     *  Throws exception if too many notes are set ( shouldn't happen in normal use ).
+     *  @param description of the note
+     */
+    public synchronized int getNoteId( int noteType, String description )
+	throws TomcatException
+    {
+	if( noteId[noteType] >= MAX_NOTES ) throw new TomcatException( "Too many notes ");
+	noteDescription[noteType][ noteId[noteType] ]=description;
+	return noteId[noteType]++;
+    }
+
+    public String getNoteDescription( int noteType, int noteId ) {
+	return noteDescription[noteType][noteId];
+    }
+    
+    // -------------------- Per-server notes
+    Object notes[]=new Object[MAX_NOTES];
+
+    public void setNote( int pos, Object value ) {
+	notes[pos]=value;
+    }
+
+    public Object getNote( int pos ) {
+	return notes[pos];
+    }
+
+    // -------------------- Logging and debug --------------------
+    boolean firstLog = true;
+    Logger cmLog = null;
+
+    
     
     public void setDebug( int level ) {
 	if( level != 0 ) System.out.println( "Setting level to " + level);
@@ -823,9 +889,6 @@ public class ContextManager {
 	//doLog("<l:tc>" + msg + "</l:tc>");
     }
 
-    boolean firstLog = true;
-    Logger cmLog = null;
-    
     public final void doLog(String msg) {
 	doLog( msg, null);
     }
@@ -850,4 +913,6 @@ public class ContextManager {
 	}
     }
 
+    
+    
 }

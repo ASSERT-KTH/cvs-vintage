@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.20 2000/04/18 19:36:05 costin Exp $
- * $Revision: 1.20 $
- * $Date: 2000/04/18 19:36:05 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.21 2000/04/21 20:45:07 costin Exp $
+ * $Revision: 1.21 $
+ * $Date: 2000/04/21 20:45:07 $
  *
  * ====================================================================
  *
@@ -143,26 +143,8 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	    
 	    reqA.setSocket( socket );
 	    resA.setOutputStream( out );
-	    //	    System.out.print("7");
+
 	    reqA.readNextRequest(resA);
-	    //	    System.out.print("8");
-	    // XXX temporary fix for getServerName
-	    String hostHeader = reqA.getHeader("host");
-	    //  if it's not null, Request.getServerName() will take care
-	    if (hostHeader == null) {
-		// XXX
-		// we need a better solution here
-		InetAddress localAddress = socket.getLocalAddress();
-		reqA.setServerName(localAddress.getHostName());
-	    } else {
-		// strip out the port information
-		int i = hostHeader.indexOf(":");
-		
-		if (i > -1)
-		    hostHeader = hostHeader.substring(0, i);
-		
-		reqA.setServerName(hostHeader);
-             }
 
 	    int contentLength = reqA.getFacade().getIntHeader("content-length");
 	    if (contentLength != -1) {
@@ -194,6 +176,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	    //	    System.out.print("5");
 	} catch (Exception e) {
 	    contextM.log( "Error reading request " + e.getMessage());
+	    e.printStackTrace();
 	} finally {
 	    // recycle kernel sockets ASAP
 	    try { if (socket != null) socket.close (); }

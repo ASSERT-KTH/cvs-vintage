@@ -142,9 +142,12 @@ public interface Request  {
     public Context getContext() ;
 
     /** Everything after context path ( servletPath + pathInfo + queryInfo )
+     * @deprecated - artificial construct in tomcat implementation
      */
     public void setLookupPath( String l ) ;
 
+    /** @deprecated - artificial construct in tomcat implementation
+     */
     public String getLookupPath() ;
 
     /** Real Path - should be implemented as a callback ( override it in adapters).

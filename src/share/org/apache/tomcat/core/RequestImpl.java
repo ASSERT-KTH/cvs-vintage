@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.28 2000/04/18 23:04:30 costin Exp $
- * $Revision: 1.28 $
- * $Date: 2000/04/18 23:04:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.29 2000/04/21 20:45:03 costin Exp $
+ * $Revision: 1.29 $
+ * $Date: 2000/04/21 20:45:03 $
  *
  * ====================================================================
  *
@@ -188,7 +188,10 @@ public class RequestImpl  implements Request {
         return protocol;
     }
 
-    // XXX server IP and/or Host:
+    /** Return the server name. If none was set,
+     *  extract it from the host header.
+     *  
+     */
     public String getServerName() {
 	if(serverName!=null) return serverName;
 
@@ -740,6 +743,7 @@ public class RequestImpl  implements Request {
     }
 
     // -------------------- Accounting --------------------
+    // XXX Will be implemented as a note !
     public static final int ACC_PRE_CMAP=0;
     public static final int ACC_PRE_RMAP=1;
     public static final int ACC_POST_MAP=2;
@@ -758,4 +762,16 @@ public class RequestImpl  implements Request {
     public long getAccount( int pos ) {
 	return accTable[pos];
     }
+
+    // -------------------- Per-Container "notes"
+    Object notes[]=new Object[ContextManager.MAX_NOTES];
+
+    public void setNote( int pos, Object value ) {
+	notes[pos]=value;
+    }
+
+    public Object getNote( int pos ) {
+	return notes[pos];
+    }
+
 }
