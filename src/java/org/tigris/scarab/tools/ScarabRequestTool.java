@@ -1133,6 +1133,11 @@ try{
                    id = code + id;
 	           issue = Issue.getIssueById(id);
 	        }
+            if (issue.getDeleted())
+            {
+                setAlertMessage("That id is not valid.");
+                issue = null;
+             }
 	    }        
 	    catch (Exception e)
 	    {
