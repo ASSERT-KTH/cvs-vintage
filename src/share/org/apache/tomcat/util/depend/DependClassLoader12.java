@@ -124,9 +124,9 @@ public class DependClassLoader12 extends DependClassLoader {
                 Attributes pkg = mf.getAttributes(
                   pkgname.replace('.', '/').concat("/")
                 );
-                boolean sealed = Boolean.getBoolean(
+                boolean sealed = Boolean.valueOf(
                   getAttribute(Attributes.Name.SEALED, main, pkg)
-                );
+                  ).booleanValue();
                 definePackage(
                   pkgname, 
                   getAttribute(Attributes.Name.SPECIFICATION_TITLE, main, pkg),
