@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html.action;
 
-import org.columba.core.action.CheckBoxAction;
+import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
@@ -36,13 +37,12 @@ import java.util.Observer;
 
 import javax.swing.text.StyleConstants;
 
-
 /**
  * Right justify selected paragraph "align="right" in <p>-tag
  *
  * @author fdietz, Karl Peder Olesen (karlpeder)
  */
-public class RightJustifyAction extends CheckBoxAction implements Observer,
+public class RightJustifyAction extends AbstractSelectableAction implements Observer,
     ContainerListener {
     /**
      * @param frameMediator
@@ -100,7 +100,7 @@ public class RightJustifyAction extends CheckBoxAction implements Observer,
             boolean isAlignRight = info.isAlignRight();
 
             // notify all observers to change their selection state
-            getObservable().setSelected(isAlignRight);
+            setState(isAlignRight);
         } else if (arg0 instanceof XmlElement) {
             // possibly change btw. html and text
             XmlElement e = (XmlElement) arg0;

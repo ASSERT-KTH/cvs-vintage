@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
@@ -21,7 +22,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.CheckBoxAction;
+import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -46,7 +47,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation.
  */
 public class ThreadedViewAction
-    extends CheckBoxAction
+    extends AbstractSelectableAction
     implements SelectionListener {
     /**
      * Constructor for ThreadedViewAction.
@@ -136,23 +137,17 @@ public class ThreadedViewAction
      * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent e) {
-
         FolderTreeNode[] selection =
             ((TreeSelectionChangedEvent) e).getSelected();
             
-        if ( !( selection[0] instanceof Folder)) return;
+        if (!( selection[0] instanceof Folder)) return;
         
         if (selection.length == 1) {
             XmlElement threadedview =
 			((MailFrameMediator) getFrameMediator()).getFolderOptionsController().getConfigNode(
-                    (Folder) selection[0],
-                    "ThreadedViewOptions");
-            if (threadedview.getAttribute("enabled").equals("true")) {
-                getCheckBoxMenuItem().setSelected(true);
-            } else {
-                getCheckBoxMenuItem().setSelected(false);
-            }
+                    (Folder) selection[0], "ThreadedViewOptions");
+            String attribute = threadedview.getAttribute("enabled");
+            setState(Boolean.valueOf(attribute).booleanValue());
         }
-
     }
 }

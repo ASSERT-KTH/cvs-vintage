@@ -20,6 +20,7 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.toolbar.ToggleToolbarButton;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.logging.ColumbaLogger;
@@ -137,21 +138,28 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
         // TODO: sizeComboBox can be enabled as paragraphComboBox when implemented
         sizeComboBox.setEnabled(false);
 
-        ToggleToolbarButton boldFormatButton = new ToggleToolbarButton(handler.getAction(
-                    "BoldFormatAction", getFrameController()));
-        ToggleToolbarButton italicFormatButton = new ToggleToolbarButton(handler.getAction(
-                    "ItalicFormatAction", getFrameController()));
-        ToggleToolbarButton underlineFormatButton = new ToggleToolbarButton(handler.getAction(
-                    "UnderlineFormatAction", getFrameController()));
-        ToggleToolbarButton strikeoutFormatButton = new ToggleToolbarButton(handler.getAction(
-                    "StrikeoutFormatAction", getFrameController()));
+        ToggleToolbarButton boldFormatButton = new ToggleToolbarButton(
+                (AbstractSelectableAction)handler.getAction("BoldFormatAction",
+                getFrameController()));
+        ToggleToolbarButton italicFormatButton = new ToggleToolbarButton(
+                (AbstractSelectableAction)handler.getAction("ItalicFormatAction",
+                getFrameController()));
+        ToggleToolbarButton underlineFormatButton = new ToggleToolbarButton(
+                (AbstractSelectableAction)handler.getAction("UnderlineFormatAction",
+                getFrameController()));
+        ToggleToolbarButton strikeoutFormatButton = new ToggleToolbarButton(
+                (AbstractSelectableAction)handler.getAction("StrikeoutFormatAction",
+                getFrameController()));
 
-        ToggleToolbarButton leftJustifyButton = new ToggleToolbarButton(handler.getAction(
-                    "LeftJustifyAction", getFrameController()));
-        ToggleToolbarButton centerJustifyButton = new ToggleToolbarButton(handler.getAction(
-                    "CenterJustifyAction", getFrameController()));
-        ToggleToolbarButton rightJustifyButton = new ToggleToolbarButton(handler.getAction(
-                    "RightJustifyAction", getFrameController()));
+        ToggleToolbarButton leftJustifyButton = new ToggleToolbarButton(
+                (AbstractSelectableAction)handler.getAction("LeftJustifyAction",
+                getFrameController()));
+        ToggleToolbarButton centerJustifyButton = new ToggleToolbarButton(
+                (AbstractSelectableAction)handler.getAction("CenterJustifyAction",
+                getFrameController()));
+        ToggleToolbarButton rightJustifyButton = new ToggleToolbarButton(
+                (AbstractSelectableAction)handler.getAction("RightJustifyAction",
+                getFrameController()));
 
         builder.add(paraLabel, cc.xy(1, 7));
 

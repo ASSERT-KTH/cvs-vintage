@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.action;
 
-import org.columba.core.action.CheckBoxAction;
+import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.frame.FrameMediator;
 
@@ -23,32 +24,19 @@ import org.columba.mail.gui.composer.ComposerView;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JCheckBoxMenuItem;
-
-
 /**
  * @author frd
  *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ViewAccountInfoPanelAction extends CheckBoxAction {
+public class ViewAccountInfoPanelAction extends AbstractSelectableAction {
     public ViewAccountInfoPanelAction(FrameMediator frameMediator) {
         super(frameMediator, "AccountInfoPanel");
+        setState(frameMediator.isToolbarEnabled(ComposerView.ACCOUNTINFOPANEL));
     }
 
     public void actionPerformed(ActionEvent evt) {
         ((ComposerView) frameMediator.getView()).showAccountInfoPanel();
-    }
-
-    protected boolean getInitState() {
-        return frameMediator.isToolbarEnabled(ComposerView.ACCOUNTINFOPANEL);
-    }
-
-    public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem,
-        AbstractFrameView frameView) {
-        super.setCheckBoxMenuItem(checkBoxMenuItem);
-
-        getCheckBoxMenuItem().setSelected(getInitState());
     }
 }

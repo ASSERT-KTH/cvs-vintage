@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html.action;
 
-import org.columba.core.action.CheckBoxAction;
+import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
@@ -31,7 +32,6 @@ import java.util.Observer;
 
 import javax.swing.JCheckBoxMenuItem;
 
-
 /**
  * CheckBox menu item for switching between HTML and text messages.
  * <br>
@@ -40,7 +40,7 @@ import javax.swing.JCheckBoxMenuItem;
  *
  * @author fdietz, Karl Peder Olesen
  */
-public class EnableHtmlAction extends CheckBoxAction implements ActionListener,
+public class EnableHtmlAction extends AbstractSelectableAction implements ActionListener,
     Observer {
     /**
      * @param frameMediator
@@ -50,24 +50,7 @@ public class EnableHtmlAction extends CheckBoxAction implements ActionListener,
         super(frameMediator,
             MailResourceLoader.getString("menu", "composer",
                 "menu_format_enable_html"));
-    }
-
-    /**
-     * Overwritten to initialize the selection state of the
-     * CheckBoxMenuItem.
-     *
-     * @see org.columba.core.action.CheckBoxAction#setCheckBoxMenuItem(javax.swing.JCheckBoxMenuItem)
-     */
-    public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem) {
-        /* *20030912, karlpeder* Method signature changed from
-         * setCheckBoxMenuItem(JCheckBoxMenuItem,AbstractFrameView).
-         * Else it doesn't get called during creation of menu
-         */
-        super.setCheckBoxMenuItem(checkBoxMenuItem);
-
-        ColumbaLogger.log.info(
-            "Initializing selected state of EnableHtmlAction");
-
+        
         // enable/disable menuitem, based on configuration text/html state
         XmlElement optionsElement = MailConfig.get("composer_options")
                                               .getElement("/options");
@@ -79,12 +62,7 @@ public class EnableHtmlAction extends CheckBoxAction implements ActionListener,
         }
 
         String enableHtml = htmlElement.getAttribute("enable", "false");
-
-        if (enableHtml.equals("true")) {
-            getCheckBoxMenuItem().setSelected(true);
-        } else {
-            getCheckBoxMenuItem().setSelected(false);
-        }
+        setState(Boolean.valueOf(enableHtml).booleanValue());
 
         // let the menu item listen for changes btw. html and text
         htmlElement.addObserver(this);
@@ -101,8 +79,7 @@ public class EnableHtmlAction extends CheckBoxAction implements ActionListener,
 
         if (e.getName().equals("html")) {
             String enableHtml = e.getAttribute("enable", "false");
-            getCheckBoxMenuItem().setSelected(Boolean.valueOf(enableHtml)
-                                                     .booleanValue());
+            setState(Boolean.valueOf(enableHtml).booleanValue());
         }
     }
 
@@ -110,8 +87,6 @@ public class EnableHtmlAction extends CheckBoxAction implements ActionListener,
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        boolean selection = getCheckBoxMenuItem().isSelected();
-
         XmlElement optionsElement = MailConfig.get("composer_options")
                                               .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
@@ -122,7 +97,7 @@ public class EnableHtmlAction extends CheckBoxAction implements ActionListener,
         }
 
         // change configuration based on menuitem selection	 
-        htmlElement.addAttribute("enable", Boolean.toString(selection));
+        htmlElement.addAttribute("enable", Boolean.toString(getState()));
         htmlElement.notifyObservers(); // notify everyone listening to this option
     }
 }

@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.action;
 
-import org.columba.core.action.CheckBoxAction;
+import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 
@@ -25,14 +26,13 @@ import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
 
-
 /**
  * @author frd
  *
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class EncryptMessageAction extends CheckBoxAction {
+public class EncryptMessageAction extends AbstractSelectableAction {
     public EncryptMessageAction(ComposerController composerController) {
         super(composerController,
             MailResourceLoader.getString("menu", "composer",
@@ -56,6 +56,6 @@ public class EncryptMessageAction extends CheckBoxAction {
         ColumbaLogger.log.info("start encryption...");
 
         ComposerModel model = (ComposerModel) ((ComposerController) getFrameMediator()).getModel();
-        model.setEncryptMessage(getCheckBoxMenuItem().isSelected());
+        model.setEncryptMessage(getState());
     }
 }

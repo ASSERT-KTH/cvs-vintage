@@ -13,23 +13,23 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.toolbar;
 
-import org.columba.core.action.CheckBoxAction;
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.action.SelectionStateObservable;
+import org.columba.core.action.AbstractSelectableAction;
+import org.columba.core.gui.util.ButtonStateAdapter;
 import org.columba.core.gui.util.ImageUtil;
 
 import java.awt.Insets;
 
-import java.util.Observable;
-import java.util.Observer;
+import java.beans.PropertyChangeListener;
+
+import java.lang.reflect.Proxy;
 
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
-
 
 /**
  * Customized JToogleButton for a Toolbar.
@@ -43,7 +43,7 @@ import javax.swing.JToggleButton;
  *
  * @author fdietz
  */
-public class ToggleToolbarButton extends JToggleButton implements Observer {
+public class ToggleToolbarButton extends JToggleButton {
     /**
      *
      */
@@ -63,7 +63,7 @@ public class ToggleToolbarButton extends JToggleButton implements Observer {
     /**
      * @param action
      */
-    public ToggleToolbarButton(Action action) {
+    public ToggleToolbarButton(AbstractSelectableAction action) {
         super(action);
         setRequestFocusEnabled(false);
         setMargin(new Insets(1, 1, 1, 1));
@@ -71,7 +71,7 @@ public class ToggleToolbarButton extends JToggleButton implements Observer {
         // no text!
         setText("");
 
-        ImageIcon icon = (ImageIcon) action.getValue(AbstractColumbaAction.SMALL_ICON);
+        ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
 
         if (icon != null) {
             setIcon(icon);
@@ -79,22 +79,37 @@ public class ToggleToolbarButton extends JToggleButton implements Observer {
             // apply transparent icon
             setDisabledIcon(ImageUtil.createTransparentIcon((ImageIcon) icon));
         }
-
-        //setToolTipText(((AbstractColumbaAction) action).getTooltipText());
-        ((CheckBoxAction) getAction()).getObservable().addObserver(this);
     }
 
     public boolean isFocusTraversable() {
         return isRequestFocusEnabled();
     }
-
-    /* (non-Javadoc)
-     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+    
+    /**
+     * Overridden to react to state changes of the underlying action.
      */
-    public void update(Observable obs, Object arg1) {
-        SelectionStateObservable o = (SelectionStateObservable) obs;
+    protected PropertyChangeListener createActionPropertyChangeListener(Action a) {
+        return (PropertyChangeListener)Proxy.newProxyInstance(
+                getClass().getClassLoader(),
+                new Class[]{PropertyChangeListener.class},
+                new ButtonStateAdapter(this, super.createActionPropertyChangeListener(a)));
+    }
+    
+    /**
+     * Overridden to initialize selection state according to action
+     */
+    protected void configurePropertiesFromAction(Action a) {
+        super.configurePropertiesFromAction(a);
+        setSelected(((AbstractSelectableAction)a).getState());
+    }
 
-        boolean selectionState = o.isSelected();
-        setSelected(selectionState);
+    /**
+     * Overridden to pass state information to the underlying action.
+     */
+    public void setSelected(boolean b) {
+        AbstractSelectableAction a = (AbstractSelectableAction)getAction();
+        if (a != null) {
+            a.setState(b);
+        }
     }
 }

@@ -13,18 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.menu;
 
-import org.columba.core.action.CheckBoxAction;
-import org.columba.core.action.SelectionStateObservable;
+import org.columba.core.action.AbstractSelectableAction;
+import org.columba.core.gui.util.ButtonStateAdapter;
 import org.columba.core.gui.util.MnemonicSetter;
 
-import java.util.Observable;
-import java.util.Observer;
+import java.beans.PropertyChangeListener;
+
+import java.lang.reflect.Proxy;
 
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
-
 
 /**
  * Adds an Observer to JCheckBoxMenuItem in order to make it possible
@@ -32,7 +33,7 @@ import javax.swing.JCheckBoxMenuItem;
  *
  * @author fdietz
  */
-public class CCheckBoxMenuItem extends JCheckBoxMenuItem implements Observer {
+public class CCheckBoxMenuItem extends JCheckBoxMenuItem {
     /**
      * default constructor
      */
@@ -49,26 +50,39 @@ public class CCheckBoxMenuItem extends JCheckBoxMenuItem implements Observer {
      *
      * @param action        The action to attach to the menu item
      */
-    public CCheckBoxMenuItem(Action action) {
+    public CCheckBoxMenuItem(AbstractSelectableAction action) {
         super(action);
-
-        CheckBoxAction cbAction = (CheckBoxAction) getAction();
-
-        // register as observer on the action
-        cbAction.getObservable().addObserver(this);
 
         // Set text, possibly with a mnemonic if defined using &
         MnemonicSetter.setTextWithMnemonic(this,
-            (String) cbAction.getValue(Action.NAME));
+            (String) action.getValue(Action.NAME));
+    }
+    
+    /**
+     * Overridden to react to state changes of the underlying action.
+     */
+    protected PropertyChangeListener createActionPropertyChangeListener(Action a) {
+        return (PropertyChangeListener)Proxy.newProxyInstance(
+                getClass().getClassLoader(),
+                new Class[]{PropertyChangeListener.class},
+                new ButtonStateAdapter(this, super.createActionPropertyChangeListener(a)));
     }
 
-    /* (non-Javadoc)
-     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+    /**
+     * Overridden to initialize selection state according to action
      */
-    public void update(Observable obs, Object arg1) {
-        SelectionStateObservable o = (SelectionStateObservable) obs;
+    protected void configurePropertiesFromAction(Action a) {
+        super.configurePropertiesFromAction(a);
+        setSelected(((AbstractSelectableAction)a).getState());
+    }
 
-        boolean selectionState = o.isSelected();
-        setSelected(selectionState);
+    /**
+     * Overridden to pass state information to the underlying action.
+     */
+    public void setSelected(boolean b) {
+        AbstractSelectableAction a = (AbstractSelectableAction)getAction();
+        if (a != null) {
+            a.setState(b);
+        }
     }
 }

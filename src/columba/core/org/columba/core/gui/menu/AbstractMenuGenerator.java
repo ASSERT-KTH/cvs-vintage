@@ -16,7 +16,7 @@
 
 package org.columba.core.gui.menu;
 
-import org.columba.core.action.CheckBoxAction;
+import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
@@ -205,7 +205,7 @@ public abstract class AbstractMenuGenerator {
                     }
                 } else if (next.getAttribute("checkboxaction") != null) {
                     try {
-                        CheckBoxAction action = (CheckBoxAction) ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+                        AbstractSelectableAction action = (AbstractSelectableAction) ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
                                 "org.columba.core.action")).getAction(next.getAttribute(
                                     "checkboxaction"), frameController);
 
@@ -215,8 +215,6 @@ public abstract class AbstractMenuGenerator {
                             // display tooltip in statusbar
                             menuitem.addMouseListener(frameController.getMouseTooltipHandler());
                             menu.add(menuitem);
-
-                            action.setCheckBoxMenuItem(menuitem);
 
                             lastWasSeparator = false;
                         }

@@ -15,9 +15,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html.action;
 
-import org.columba.core.action.CheckBoxAction;
+import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
@@ -39,13 +40,12 @@ import java.util.Observer;
 
 import javax.swing.KeyStroke;
 
-
 /**
  * Format selected text as underline "<u>"
  *
  * @author fdietz
  */
-public class UnderlineFormatAction extends CheckBoxAction implements Observer,
+public class UnderlineFormatAction extends AbstractSelectableAction implements Observer,
     ContainerListener {
     /**
      * @param frameMediator
@@ -108,7 +108,7 @@ public class UnderlineFormatAction extends CheckBoxAction implements Observer,
             boolean isUnderline = info.isUnderline();
 
             // notify all observers to change their selection state
-            getObservable().setSelected(isUnderline);
+            setState(isUnderline);
         } else if (arg0 instanceof XmlElement) {
             // possibly change btw. html and text
             XmlElement e = (XmlElement) arg0;

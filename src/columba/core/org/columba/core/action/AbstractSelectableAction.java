@@ -14,26 +14,26 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.gui.action;
+package org.columba.core.action;
 
-import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.frame.FrameMediator;
 
-import org.columba.mail.gui.frame.MailFrameView;
-import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
-
-public class ViewFolderInfoPanelAction extends AbstractSelectableAction {
-    public ViewFolderInfoPanelAction(FrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_view_folderinfopanel"));
-        setState(frameMediator.isToolbarEnabled(MailFrameView.FOLDERINFOPANEL));
+public abstract class AbstractSelectableAction extends AbstractColumbaAction {
+    protected boolean state = false;
+    
+    public AbstractSelectableAction(FrameMediator controller, String name) {
+        super(controller, name);
     }
-
-    public void actionPerformed(ActionEvent evt) {
-        ((MailFrameView) frameMediator.getView()).showFolderInfoPanel();
+    
+    public boolean getState() {
+        return state;
+    }
+    
+    public void setState(boolean state) {
+        if (this.state != state) {
+            Boolean oldValue = this.state ? Boolean.TRUE : Boolean.FALSE;
+            this.state = state;
+            firePropertyChange("selected", oldValue, state ? Boolean.TRUE : Boolean.FALSE);
+        }
     }
 }

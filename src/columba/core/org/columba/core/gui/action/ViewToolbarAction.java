@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.action;
 
-import org.columba.core.action.CheckBoxAction;
+import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
@@ -23,15 +24,10 @@ import org.columba.mail.gui.frame.MailFrameView;
 
 import java.awt.event.ActionEvent;
 
-import java.util.Observable;
-import java.util.Observer;
-
-import javax.swing.JCheckBoxMenuItem;
-
 /**
  * Columba action for hiding/showing the toolbar action.
  */
-public class ViewToolbarAction extends CheckBoxAction implements Observer {
+public class ViewToolbarAction extends AbstractSelectableAction {
     /**
      * Creates a view toolbar action.
      * @param controller the frame controller
@@ -44,6 +40,8 @@ public class ViewToolbarAction extends CheckBoxAction implements Observer {
         putValue(SHORT_DESCRIPTION,
             GlobalResourceLoader.getString(null, null, "menu_view_showtoolbar")
                                 .replaceAll("&", ""));
+        
+        setState(frameMediator.isToolbarEnabled(MailFrameView.MAIN_TOOLBAR));
     }
 
     /**
@@ -52,30 +50,5 @@ public class ViewToolbarAction extends CheckBoxAction implements Observer {
      */
     public void actionPerformed(ActionEvent evt) {
         frameMediator.getView().showToolbar();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected boolean getInitState() {
-        return frameMediator.isToolbarEnabled(MailFrameView.MAIN_TOOLBAR);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem, AbstractFrameView frameView) {
-        super.setCheckBoxMenuItem(checkBoxMenuItem);
-
-        getCheckBoxMenuItem().setSelected(getInitState());
-    }
-
-    /**
-     * Update checked state of menu item if change occured
-     *
-     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-     */
-    public void update(Observable o, Object arg) {
-        // TODO: implement ViewToolbar->update()
     }
 }

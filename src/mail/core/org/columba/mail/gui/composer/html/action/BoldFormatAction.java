@@ -15,9 +15,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html.action;
 
-import org.columba.core.action.CheckBoxAction;
+import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
@@ -45,7 +46,7 @@ import javax.swing.KeyStroke;
  *
  * @author fdietz
  */
-public class BoldFormatAction extends CheckBoxAction implements Observer,
+public class BoldFormatAction extends AbstractSelectableAction implements Observer,
     ContainerListener {
     /**
      * @param frameMediator
@@ -104,7 +105,7 @@ public class BoldFormatAction extends CheckBoxAction implements Observer,
             boolean isBold = info.isBold();
 
             // notify all observers to change their selection state
-            getObservable().setSelected(isBold);
+            setState(isBold);
         } else if (arg0 instanceof XmlElement) {
             // possibly change btw. html and text
             XmlElement e = (XmlElement) arg0;
