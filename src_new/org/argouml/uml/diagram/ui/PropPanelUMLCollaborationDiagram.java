@@ -1,5 +1,5 @@
-// $Id: PropPanelUMLCollaborationDiagram.java,v 1.4 2003/11/25 10:58:15 jhraigniac Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: PropPanelUMLCollaborationDiagram.java,v 1.5 2004/10/13 05:52:21 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -37,7 +37,7 @@ public class PropPanelUMLCollaborationDiagram extends PropPanelDiagram {
      * Constructor for PropPanelUMLCollaborationDiagram.
      */
     public PropPanelUMLCollaborationDiagram() {
-        super(Translator.localize("UMLMenu", "label.collaboration-diagram"));
+        super(Translator.localize("label.collaboration-diagram"));
     }
 
 }

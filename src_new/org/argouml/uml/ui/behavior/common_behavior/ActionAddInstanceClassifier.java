@@ -1,4 +1,4 @@
-// $Id: ActionAddInstanceClassifier.java,v 1.3 2004/09/19 19:29:57 mvw Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.4 2004/10/13 05:52:10 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddInstanceClassifier.java,v 1.3 2004/09/19 19:29:57 mvw Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.4 2004/10/13 05:52:10 linus Exp $
 package org.argouml.uml.ui.behavior.common_behavior;
 
 import org.argouml.i18n.Translator;
@@ -86,8 +86,7 @@ public class ActionAddInstanceClassifier extends AbstractActionAddModelElement {
      * @see org.argouml.uml.ui.AbstractActionAddModelElement#getDialogTitle()
      */
     protected String getDialogTitle() {
-        return Translator.localize("UMLMenu", 
-                "dialog.title.add-specifications");
+        return Translator.localize("dialog.title.add-specifications");
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ActionAddExistingNode.java,v 1.14 2004/08/14 15:26:11 mvw Exp $
+// $Id: ActionAddExistingNode.java,v 1.15 2004/10/13 05:52:21 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,6 @@ public class ActionAddExistingNode extends UMLAction
 
     ////////////////////////////////////////////////////////////////
     // instance variables
-    private String tabName;
     private Object object;
 
     ////////////////////////////////////////////////////////////////
@@ -62,7 +61,6 @@ public class ActionAddExistingNode extends UMLAction
      */
     public ActionAddExistingNode(String myTabName) {
         super(myTabName, NO_ICON);
-        tabName = myTabName;
     }
 
     /**
@@ -73,7 +71,6 @@ public class ActionAddExistingNode extends UMLAction
      */
     public ActionAddExistingNode(String myTabName, Object o) {
         super(myTabName, NO_ICON);
-        tabName = myTabName;
         object = o;
     }
 
@@ -100,8 +97,7 @@ public class ActionAddExistingNode extends UMLAction
         String instructions = null;
         if (object != null) {
             instructions =
-		Translator.localize ("Tree", 
-                    "misc.message.click-on-diagram-to-add") 
+		Translator.localize("misc.message.click-on-diagram-to-add") 
                     + object.toString();
             Globals.showStatus(instructions);
         }

@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.10 2004/09/05 16:57:50 bobtarling Exp $
+// $Id: ActionExportXMI.java,v 1.11 2004/10/13 05:52:24 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -216,7 +216,6 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
                     } catch (Exception ex) {
                         String sMessage =
                             MessageFormat.format(Translator.localize(
-				  "Actions",
 				  "optionpane.save-project-general-exception"),
 						 new Object[] {
 						     ex.getMessage()
@@ -224,7 +223,6 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
 
 			String sTitle =
 			    Translator.localize(
-				"Actions",
 				"optionpane."
 				+ "save-project-general-exception-title"
 			    );

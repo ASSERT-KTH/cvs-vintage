@@ -1,4 +1,4 @@
-// $Id: AbstractActionNavigate.java,v 1.4 2004/08/16 19:30:57 mvw Exp $
+// $Id: AbstractActionNavigate.java,v 1.5 2004/10/13 05:52:28 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,8 +45,7 @@ public abstract class AbstractActionNavigate extends UMLAction {
      * The constructor.
      */
     public AbstractActionNavigate() {
-        this(Translator.localize(
-                "UMLMenu", "button.go-up"), true);
+        this(Translator.localize("button.go-up"), true);
     }
 
     /**
@@ -55,8 +54,8 @@ public abstract class AbstractActionNavigate extends UMLAction {
      */
     public AbstractActionNavigate(String name, boolean hasIcon) {
         super(name, true, hasIcon);
-        putValue(Action.SMALL_ICON, ResourceLoaderWrapper
-                .lookupIconResource("NavigateUp"));
+        putValue(Action.SMALL_ICON,
+                 ResourceLoaderWrapper.lookupIconResource("NavigateUp"));
     }
     
     /**

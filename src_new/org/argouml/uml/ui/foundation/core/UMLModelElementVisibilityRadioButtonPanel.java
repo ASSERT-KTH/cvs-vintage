@@ -1,4 +1,4 @@
-// $Id: UMLModelElementVisibilityRadioButtonPanel.java,v 1.8 2004/09/19 21:06:25 mvw Exp $
+// $Id: UMLModelElementVisibilityRadioButtonPanel.java,v 1.9 2004/10/13 05:52:18 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLModelElementVisibilityRadioButtonPanel.java,v 1.8 2004/09/19 21:06:25 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -43,13 +42,13 @@ public class UMLModelElementVisibilityRadioButtonPanel
     private static Map labelTextsAndActionCommands = new HashMap();
 
     static {
-        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", 
+        labelTextsAndActionCommands.put(Translator.localize(
                 "label.visibility-public"), 
                 ActionSetModelElementVisibility.PUBLIC_COMMAND);
-        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", 
+        labelTextsAndActionCommands.put(Translator.localize(
                 "label.visibility-protected"), 
                 ActionSetModelElementVisibility.PROTECTED_COMMAND);
-        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", 
+        labelTextsAndActionCommands.put(Translator.localize(
                 "label.visibility-private"), 
                 ActionSetModelElementVisibility.PRIVATE_COMMAND);
     }

@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.44 2004/08/24 06:33:45 linus Exp $
+// $Id: ActionRemoveFromModel.java,v 1.45 2004/10/13 05:52:28 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -217,14 +217,12 @@ public class ActionRemoveFromModel extends UMLChangeAction {
                 // he/she is sure
                 String confirmStr =
                     MessageFormat.format(Translator.localize(
-			    "Actions",
 			    "optionpane.remove-from-model-confirm-delete"),
 					 new Object[] {
 					     diagram.getName(), "" 
 					 });
 		String text =
 		    Translator.localize(
-			"Actions",
 			"optionpane.remove-from-model-confirm-delete-title");
                 int response =
                     JOptionPane.showConfirmDialog(ProjectBrowser.getInstance(),
@@ -265,7 +263,6 @@ public class ActionRemoveFromModel extends UMLChangeAction {
         if (count > 1) {
             confirmStr +=
 		Translator.localize(
-		    "Actions",
 		    "optionpane.remove-from-model-will-remove-from-diagrams");
             doAsk = true;
         }
@@ -274,7 +271,6 @@ public class ActionRemoveFromModel extends UMLChangeAction {
         if (beh != null && beh.size() > 0) {
             confirmStr +=
 		Translator.localize(
-			"Actions",
 			"optionpane.remove-from-model-will-remove-subdiagram");
             doAsk = true;
         }
@@ -287,14 +283,12 @@ public class ActionRemoveFromModel extends UMLChangeAction {
         if (name == null || name.equals("")) {
             name =
 		Translator.localize(
-			"Actions",
 			"optionpane.remove-from-model-anon-element-name");
         }
 
         confirmStr =
             MessageFormat.format(
                     Translator.localize(
-			    "Actions",
 			    "optionpane.remove-from-model-confirm-delete"),
 		    new Object[] {
 			name, confirmStr 
@@ -304,7 +298,6 @@ public class ActionRemoveFromModel extends UMLChangeAction {
 		    pb,
 		    confirmStr,
 		    Translator.localize(
-			"Actions",
 			"optionpane.remove-from-model-confirm-delete-title"),
 		    JOptionPane.YES_NO_OPTION);
 

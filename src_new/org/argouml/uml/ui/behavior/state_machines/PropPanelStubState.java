@@ -1,5 +1,5 @@
-// $Id: PropPanelStubState.java,v 1.11 2004/09/22 17:27:45 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: PropPanelStubState.java,v 1.12 2004/10/13 05:52:20 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.behavior.state_machines;
 
 import org.argouml.i18n.Translator;
@@ -42,24 +41,23 @@ public class PropPanelStubState extends PropPanelStateVertex {
         super("Stub State", lookupIcon("State"), 
                 ConfigLoader.getTabPropsOrientation());
 
-        addField(Translator.localize("UMLMenu", "label.name"), 
+        addField(Translator.localize("label.name"), 
                 getNameTextField());
-        // addField(Translator.localize("UMLMenu", "label.stereotype"), 
-        //     new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", 
+        // addField(Translator.localize("label.stereotype"), 
+        //     new UMLComboBoxNavigator(this, Translator.localize( 
         //     "tooltip.nav-stereo"), getStereotypeBox()));
-        addField(Translator.localize("UMLMenu", "label.stereotype"), 
+        addField(Translator.localize("label.stereotype"), 
                 getStereotypeBox());
-        addField(Translator.localize("UMLMenu", "label.container"), 
+        addField(Translator.localize("label.container"), 
                 getContainerScroll());
         // TODO: add the referenced state. 
         //       This is a string which is IMHO not necessary.
 
         addSeperator();
 
-        addField(Translator.localize("UMLMenu", "label.incoming"), 
+        addField(Translator.localize("label.incoming"), 
                 getIncomingScroll());
-        addField(Translator.localize("UMLMenu", "label.outgoing"), 
+        addField(Translator.localize("label.outgoing"), 
                 getOutgoingScroll());
     }
-
 }

@@ -1,4 +1,4 @@
-// $Id: ExplorerPopup.java,v 1.7 2004/03/26 13:04:45 linus Exp $
+// $Id: ExplorerPopup.java,v 1.8 2004/10/13 05:52:30 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -207,7 +207,7 @@ public class ExplorerPopup extends JPopupMenu {
      * @return The localized string.
      */
     private final String menuLocalize(String key) {
-        return Translator.localize("Tree", key);
+        return Translator.localize(key);
     }
     
 }

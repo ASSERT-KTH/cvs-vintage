@@ -1,4 +1,4 @@
-// $Id: ModuleLoader2.java,v 1.2 2004/10/11 06:00:55 linus Exp $
+// $Id: ModuleLoader2.java,v 1.3 2004/10/13 05:52:30 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -565,7 +565,7 @@ public class ModuleLoader2 {
      * Only add it as a module if it is a module (i.e. it implements the
      * {@link ModuleInterface} interface.
      *
-     * @param classloader The ClassLoader to load from.
+     * @param classLoader The ClassLoader to load from.
      * @param classname The name.
      */
     private void addClass(ClassLoader classLoader, String classname) {

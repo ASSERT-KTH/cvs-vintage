@@ -1,4 +1,4 @@
-// $Id: ActionRevertToSaved.java,v 1.4 2004/07/22 20:17:25 linus Exp $
+// $Id: ActionRevertToSaved.java,v 1.5 2004/10/13 05:52:29 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,6 @@ public class ActionRevertToSaved extends UMLAction {
         String message =
             MessageFormat.format(
                     Translator.localize(
-                       "Actions",
                        "optionpane.revert-to-saved-confirm"),
 		    new Object[] {
 			p.getName()
@@ -80,8 +79,7 @@ public class ActionRevertToSaved extends UMLAction {
             JOptionPane.showConfirmDialog(
                   pb,
                   message,
-				  Translator.localize(
-                      "Actions", 
+                  Translator.localize(
                       "optionpane.revert-to-saved-confirm-title"),
                   JOptionPane.YES_NO_OPTION);
 

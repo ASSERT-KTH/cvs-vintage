@@ -1,4 +1,4 @@
-// $Id: PropPanelActionState.java,v 1.20 2004/09/22 17:27:46 mvw Exp $
+// $Id: PropPanelActionState.java,v 1.21 2004/10/13 05:52:30 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.20 2004/09/22 17:27:46 mvw Exp $
+// $Id: PropPanelActionState.java,v 1.21 2004/10/13 05:52:30 linus Exp $
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
@@ -63,23 +63,23 @@ public class PropPanelActionState extends PropPanelState {
 
         super(name, icon, orientation);
 
-        addField(Translator.localize("UMLMenu", "label.name"),
+        addField(Translator.localize("label.name"),
                 getNameTextField());
-        //        addField(Translator.localize("UMLMenu", "label.stereotype"),
+        //        addField(Translator.localize("label.stereotype"),
         //		 new UMLComboBoxNavigator(this,
-        //					  Translator.localize("UMLMenu",
+        //					  Translator.localize(
         //						"tooltip.nav-stereo"),
         //					  getStereotypeBox()));
-        addField(Translator.localize("UMLMenu", "label.stereotype"),
+        addField(Translator.localize("label.stereotype"),
                 getStereotypeBox());
 
-        addField(Translator.localize("UMLMenu", "label.entry"), 
+        addField(Translator.localize("label.entry"), 
                 getEntryScroll());
         addSeperator();
 
-        addField(Translator.localize("UMLMenu", "label.incoming"),
+        addField(Translator.localize("label.incoming"),
                 getIncomingScroll());
-        addField(Translator.localize("UMLMenu", "label.outgoing"),
+        addField(Translator.localize("label.outgoing"),
                 getOutgoingScroll());
 
     }

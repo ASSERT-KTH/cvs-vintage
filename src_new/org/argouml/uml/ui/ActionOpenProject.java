@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.42 2004/09/28 19:45:07 mvw Exp $
+// $Id: ActionOpenProject.java,v 1.43 2004/10/13 05:52:29 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,7 +95,6 @@ public class ActionOpenProject
             String t =
                 MessageFormat.format(
                         Translator.localize(
-			        "Actions",
 				"optionpane.open-project-save-changes-to"),
 			new Object[] {
 			    p.getName()
@@ -147,8 +146,7 @@ public class ActionOpenProject
             }
 
             chooser.setDialogTitle(
-                    Translator.localize("Actions",
-						 "filechooser.open-project"));
+                    Translator.localize("filechooser.open-project"));
             
             FileFilter allFiles = chooser.getFileFilter();
             chooser.removeChoosableFileFilter(allFiles);
@@ -226,7 +224,6 @@ public class ActionOpenProject
 
             ProjectBrowser.getInstance().showStatus(
 		    MessageFormat.format(Translator.localize(
-			    "Actions",
 			    "label.open-project-status-read"),
 					 new Object[] {
 					     url.toString()

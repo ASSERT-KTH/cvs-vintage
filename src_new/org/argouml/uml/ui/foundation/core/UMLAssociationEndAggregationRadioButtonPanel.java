@@ -1,5 +1,5 @@
-// $Id: UMLAssociationEndAggregationRadioButtonPanel.java,v 1.7 2004/09/19 21:06:25 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: UMLAssociationEndAggregationRadioButtonPanel.java,v 1.8 2004/10/13 05:52:14 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndAggregationRadioButtonPanel.java,v 1.7 2004/09/19 21:06:25 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -44,13 +43,13 @@ public class UMLAssociationEndAggregationRadioButtonPanel
 
     static {
         labelTextsAndActionCommands.put(
-            Translator.localize("UMLMenu", "label.aggregationkind-aggregate"), 
+            Translator.localize("label.aggregationkind-aggregate"), 
             ActionSetAssociationEndAggregation.AGGREGATE_COMMAND);
         labelTextsAndActionCommands.put(
-            Translator.localize("UMLMenu", "label.aggregationkind-composite"), 
+            Translator.localize("label.aggregationkind-composite"), 
             ActionSetAssociationEndAggregation.COMPOSITE_COMMAND);
         labelTextsAndActionCommands.put(
-            Translator.localize("UMLMenu", "label.aggregationkind-none"), 
+            Translator.localize("label.aggregationkind-none"), 
             ActionSetAssociationEndAggregation.NONE_COMMAND);
     }
 

@@ -1,4 +1,4 @@
-// $Id: UMLConnectionListModel.java,v 1.20 2004/09/14 20:12:16 mvw Exp $
+// $Id: UMLConnectionListModel.java,v 1.21 2004/10/13 05:52:28 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,7 +78,7 @@ public class UMLConnectionListModel extends UMLBinaryRelationListModel  {
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getAddDialogTitle()
      */
     protected String getAddDialogTitle() {
-	return Translator.localize("UMLMenu", "dialog.add-associations");
+	return Translator.localize("dialog.add-associations");
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.25 2004/09/16 20:50:04 mvw Exp $
+// $Id: ActionSaveProjectAs.java,v 1.26 2004/10/13 05:52:29 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,9 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.util.osdep.OsUtil;
 
-/** Action to save project under name.
+/**
+ * Action to save project under name.
+ *
  * @stereotype singleton
  */
 public class ActionSaveProjectAs extends ActionSaveProject {
@@ -111,7 +113,7 @@ public class ActionSaveProjectAs extends ActionSaveProject {
         }
 
         String sChooserTitle =
-	    Translator.localize("Actions", "filechooser.save-as-project");
+	    Translator.localize("filechooser.save-as-project");
         chooser.setDialogTitle(sChooserTitle + " " + p.getName());
 
         FileFilter allFiles = chooser.getFileFilter();

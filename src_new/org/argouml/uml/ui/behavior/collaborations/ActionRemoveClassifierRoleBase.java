@@ -1,4 +1,4 @@
-// $Id: ActionRemoveClassifierRoleBase.java,v 1.6 2004/09/19 19:29:58 mvw Exp $
+// $Id: ActionRemoveClassifierRoleBase.java,v 1.7 2004/10/13 05:52:22 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class ActionRemoveClassifierRoleBase
      * Constructor for ActionRemoveClassifierRoleBase.
      */
     protected ActionRemoveClassifierRoleBase() {
-        super(Translator.localize("UMLMenu", "menu.popup.remove"));
+        super(Translator.localize("menu.popup.remove"));
     }
 
     

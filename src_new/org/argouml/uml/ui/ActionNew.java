@@ -1,5 +1,5 @@
-// $Id: ActionNew.java,v 1.23 2004/09/16 20:50:04 mvw Exp $
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: ActionNew.java,v 1.24 2004/10/13 05:52:27 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -38,7 +38,9 @@ import org.argouml.ui.FindDialog;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 
-/** Action to trigger creation of a new project.
+/**
+ * Action to trigger creation of a new project.
+ *
  * @stereotype singleton
  */
 public class ActionNew extends UMLAction {
@@ -71,7 +73,7 @@ public class ActionNew extends UMLAction {
 
 	if (p != null && p.needsSave()) {
 	    String t =
-		MessageFormat.format(Translator.localize("Actions",
+		MessageFormat.format(Translator.localize(
 				"optionpane.new-project-save-changes-to"),
 				new Object[] {p.getName()} );
 	    int response =
@@ -90,7 +92,9 @@ public class ActionNew extends UMLAction {
 		if (!safe) {
 		    safe = ActionSaveProjectAs.SINGLETON.trySave (false);
 		}          
-		if (!safe) return;
+		if (!safe) {
+		    return;
+		}
 	    }
 	    //TODO: if you cancel the save it should cancel open
 	    //Steffen Zschaler 01/10/2002 - Well, it does, doesn't it?

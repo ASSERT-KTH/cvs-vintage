@@ -1,4 +1,4 @@
-// $Id: ActionNewReception.java,v 1.2 2004/09/19 14:13:01 mvw Exp $
+// $Id: ActionNewReception.java,v 1.3 2004/10/13 05:52:10 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,8 +53,7 @@ public class ActionNewReception extends AbstractActionNewModelElement {
      */
     public ActionNewReception() { 
         super();
-        putValue(Action.NAME, Translator.localize("UMLMenu", 
-                                                  "button.new-reception"));
+        putValue(Action.NAME, Translator.localize("button.new-reception"));
     }
     
     /**

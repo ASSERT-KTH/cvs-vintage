@@ -1,4 +1,4 @@
-// $Id: PropPanelComponentInstance.java,v 1.33 2004/09/22 17:27:45 mvw Exp $
+// $Id: PropPanelComponentInstance.java,v 1.34 2004/10/13 05:52:10 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,8 +59,6 @@ public class PropPanelComponentInstance extends PropPanelInstance {
         super("Component Instance", lookupIcon("ComponentInstance"), 
                 ConfigLoader.getTabPropsOrientation());
 
-        Class mclass = (Class) ModelFacade.COMPONENT_INSTANCE;
-
         Class[] namesToWatch = {(Class) ModelFacade.STEREOTYPE,
             (Class) ModelFacade.NAMESPACE, (Class) ModelFacade.CLASSIFIER };
 
@@ -81,7 +79,7 @@ public class PropPanelComponentInstance extends PropPanelInstance {
         addField("Stimuli received:", getStimuliReceiverScroll());
         
         JList resList = new UMLLinkedList(new UMLContainerResidentListModel());
-        addField(Translator.localize("UMLMenu", "label.residents"), 
+        addField(Translator.localize("label.residents"), 
                 new JScrollPane(resList));
 
         addSeperator();
@@ -90,7 +88,7 @@ public class PropPanelComponentInstance extends PropPanelInstance {
         JScrollPane classifierScroll = new JScrollPane(
                 new UMLMutableLinkedList(new UMLInstanceClassifierListModel(),
                         action, null, null, true));
-        addField(Translator.localize("UMLMenu", "label.classifiers"),
+        addField(Translator.localize("label.classifiers"),
                 classifierScroll);
 
         addButton(new PropPanelButton2(this,

@@ -1,4 +1,4 @@
-// $Id: UMLAddDialog.java,v 1.11 2004/09/07 18:50:05 mvw Exp $
+// $Id: UMLAddDialog.java,v 1.12 2004/10/13 05:52:29 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -176,8 +176,8 @@ public class UMLAddDialog extends JPanel implements ActionListener {
 	}
 	choicesList.setVisibleRowCount(15);
 	JScrollPane choicesScroll = new JScrollPane(choicesList);
-	panelChoices.add(new JLabel(Translator.localize(
-            "UMLMenu", "label.choices")), BorderLayout.NORTH);
+	panelChoices.add(new JLabel(Translator.localize("label.choices")), 
+	        BorderLayout.NORTH);
 	panelChoices.add(choicesScroll, BorderLayout.CENTER);
 		
 	addButton = new JButton(ResourceLoaderWrapper.lookupIconResource(
@@ -201,8 +201,8 @@ public class UMLAddDialog extends JPanel implements ActionListener {
             .MULTIPLE_INTERVAL_SELECTION);
 	selectedList.setVisibleRowCount(15);
 	JScrollPane selectedScroll = new JScrollPane(selectedList);
-	panelSelected.add(new JLabel(Translator.localize(
-            "UMLMenu", "label.selected")), BorderLayout.NORTH);
+	panelSelected.add(new JLabel(Translator.localize("label.selected")),
+	        BorderLayout.NORTH);
 	panelSelected.add(selectedScroll, BorderLayout.CENTER);
 		
 	upperPanel.add(panelChoices);	
@@ -217,10 +217,10 @@ public class UMLAddDialog extends JPanel implements ActionListener {
 		
 	JPanel okCancelPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		
-	okButton = new JButton(Translator.localize("UMLMenu", "button.ok"));
+	okButton = new JButton(Translator.localize("button.ok"));
 	okButton.addActionListener(this);
 	cancelButton =
-	    new JButton(Translator.localize("UMLMenu", "button.cancel"));
+	    new JButton(Translator.localize("button.cancel"));
 	cancelButton.addActionListener(this);		
 	okCancelPanel.add(okButton);
 	okCancelPanel.add(cancelButton);

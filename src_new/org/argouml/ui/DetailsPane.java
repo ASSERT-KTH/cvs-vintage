@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.43 2004/09/04 07:47:51 mvw Exp $
+// $Id: DetailsPane.java,v 1.44 2004/10/13 05:52:24 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -159,7 +159,7 @@ public class DetailsPane
             JPanel t = (JPanel) tabPanelList.elementAt(i);
             if (t instanceof TabSpawnable)
                 title = ((TabSpawnable) t).getTitle();
-            title = Translator.localize("UMLMenu", title);
+            title = Translator.localize(title);
             if (t instanceof TabToDoTarget) {
                 topLevelTabbedPane.addTab(title, leftArrowIcon, t);
             } else if (t instanceof TabModelTarget) {

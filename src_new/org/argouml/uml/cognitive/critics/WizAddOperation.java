@@ -1,4 +1,4 @@
-// $Id: WizAddOperation.java,v 1.5 2004/09/27 18:31:27 mvw Exp $
+// $Id: WizAddOperation.java,v 1.6 2004/10/13 05:52:25 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,13 +42,11 @@ import org.argouml.kernel.Wizard;
 public class WizAddOperation extends Wizard {
     
     private WizStepTextField step1 = null;
-    private String label = Translator.localize("UMLMenu", "label.name");
+    private String label = Translator.localize("label.name");
     private String instructions =
 	"Please change the name of the offending model element.";
     private String suggestion = "suggestion";
-    private String origSuggest = "suggestion";
-    //private boolean mustEdit = false;
-    
+
     /** Creates a new instance of WizAddOperation */
     public WizAddOperation() {
         super();
@@ -108,7 +106,6 @@ public class WizAddOperation extends Wizard {
      */
     public void setSuggestion(String s) {
 	suggestion = s;
-	origSuggest = s;
     }
     
     /**

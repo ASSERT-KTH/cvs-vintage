@@ -1,5 +1,5 @@
-// $Id: ActionAddAssociationSpecification.java,v 1.7 2004/09/19 19:29:59 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ActionAddAssociationSpecification.java,v 1.8 2004/10/13 05:52:14 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddAssociationSpecification.java,v 1.7 2004/09/19 19:29:59 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
@@ -72,8 +71,7 @@ public class ActionAddAssociationSpecification
      * @see org.argouml.uml.ui.AbstractActionAddModelElement#getDialogTitle()
      */
     protected String getDialogTitle() {
-        return Translator.localize("UMLMenu", 
-                "dialog.title.add-specifications");
+        return Translator.localize("dialog.title.add-specifications");
     }
 
     /**

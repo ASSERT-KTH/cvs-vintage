@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.21 2004/03/20 07:33:36 linus Exp $
+// $Id: Translator.java,v 1.22 2004/10/13 05:52:25 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -140,7 +140,9 @@ public class Translator {
 
     /** 
      * Helper for localization to eliminate the need to import
-     * the gef util library. 
+     * the gef util library.<p>
+     *
+     * This is only used when retrieving the strings localized in GEF.
      *
      * @param bundle a binding to a bundle of i18n resources
      * @param key the key to loacalize

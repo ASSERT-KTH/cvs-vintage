@@ -1,4 +1,4 @@
-// $Id: PropPanelCollaboration.java,v 1.20 2004/09/12 16:47:13 mvw Exp $
+// $Id: PropPanelCollaboration.java,v 1.21 2004/10/13 05:52:22 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,29 +48,29 @@ public class PropPanelCollaboration extends PropPanelNamespace {
     public PropPanelCollaboration() {
         super("Collaboration", ConfigLoader.getTabPropsOrientation());
 
-        addField(Translator.localize("UMLMenu", "label.name"), 
+        addField(Translator.localize("label.name"), 
                 getNameTextField());
 //        addField(Translator.localize("UMLMenu", "label.stereotype"),
 //            new UMLComboBoxNavigator(this, Translator.localize("UMLMenu",
 //							 "tooltip.nav-stereo"),
 //				     getStereotypeBox()));
-        addField(Translator.localize("UMLMenu", "label.stereotype"), 
+        addField(Translator.localize("label.stereotype"), 
                 getStereotypeBox());
-        addField(Translator.localize("UMLMenu", "label.namespace"), 
+        addField(Translator.localize("label.namespace"), 
                getNamespaceScroll());
 
         UMLLinkedList classifierList =
 	    new UMLLinkedList(
                 new UMLCollaborationRepresentedClassifierListModel());
         classifierList.setVisibleRowCount(1);
-        addField(Translator.localize("UMLMenu", "label.represented-classifier"),
+        addField(Translator.localize("label.represented-classifier"),
             new JScrollPane(classifierList));
 
         UMLLinkedList operationList =
 	    new UMLLinkedList(
                 new UMLCollaborationRepresentedOperationListModel());
         operationList.setVisibleRowCount(1);
-        addField(Translator.localize("UMLMenu", "label.represented-operation"),
+        addField(Translator.localize("label.represented-operation"),
             new JScrollPane(operationList));
 
         addSeperator();
@@ -78,13 +78,13 @@ public class PropPanelCollaboration extends PropPanelNamespace {
         UMLLinkedList interactionList =
 	    new UMLLinkedList(new UMLCollaborationInteractionListModel());
         interactionList.setVisibleRowCount(1);
-        addField(Translator.localize("UMLMenu", "label.interaction"),
+        addField(Translator.localize("label.interaction"),
             new JScrollPane(interactionList));
 
         UMLLinkedList constrainingList =
 	    new UMLLinkedList(
                 new UMLCollaborationConstrainingElementListModel());
-        addField(Translator.localize("UMLMenu", "label.constraining-elements"),
+        addField(Translator.localize("label.constraining-elements"),
             new JScrollPane(constrainingList));
 
         // we do not add the owned-elements since they are not of real interest

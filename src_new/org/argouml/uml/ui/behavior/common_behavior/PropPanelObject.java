@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.40 2004/09/22 17:27:45 mvw Exp $
+// $Id: PropPanelObject.java,v 1.41 2004/10/13 05:52:10 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,13 +51,6 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  */
 public class PropPanelObject extends PropPanelInstance {
 
-    private JScrollPane stimuliSenderScroll;
-    private JScrollPane stimuliReceiverScroll;
-    
-    private static UMLInstanceSenderStimulusListModel 
-        stimuliSenderListModel;
-    private static UMLInstanceReceiverStimulusListModel 
-        stimuliReceiverListModel;
     /**
      * Constructor.
      */
@@ -65,11 +58,9 @@ public class PropPanelObject extends PropPanelInstance {
 	super("Object", lookupIcon("Object"), 
             ConfigLoader.getTabPropsOrientation());
 
-	Class mclass = (Class) ModelFacade.OBJECT;
-
 	addField(Translator.localize("label.name"), getNameTextField());
 
-	addField(Translator.localize("UMLMenu", "label.stereotype"), 
+	addField(Translator.localize("label.stereotype"), 
 	    getStereotypeBox());
 
 	addField(Translator.localize("label.namespace"),
@@ -90,7 +81,7 @@ public class PropPanelObject extends PropPanelInstance {
             new UMLMutableLinkedList(
 	    new UMLInstanceClassifierListModel(), 
 	            action, null, null, true));
-	addField(Translator.localize("UMLMenu", "label.classifiers"), 
+	addField(Translator.localize("label.classifiers"), 
             classifierScroll);
 
 

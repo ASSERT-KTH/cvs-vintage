@@ -1,4 +1,4 @@
-// $Id: PropPanelCallEvent.java,v 1.21 2004/09/22 17:27:45 mvw Exp $
+// $Id: PropPanelCallEvent.java,v 1.22 2004/10/13 05:52:20 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public class PropPanelCallEvent extends PropPanelEvent {
         // TODO: make the next list into a scrollbox (issue 2288)
         JList operationList =
 	    new UMLLinkedList(new UMLCallEventOperationListModel());
-        addField(Translator.localize("UMLMenu", "label.operations"),
+        addField(Translator.localize("label.operations"),
 		 new JScrollPane(operationList));
     }
 

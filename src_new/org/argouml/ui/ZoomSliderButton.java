@@ -1,4 +1,4 @@
-// $Id: ZoomSliderButton.java,v 1.10 2004/08/23 20:53:48 mvw Exp $
+// $Id: ZoomSliderButton.java,v 1.11 2004/10/13 05:52:24 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,12 +63,7 @@ public class ZoomSliderButton extends PopupButton {
      * Used for loading the zoom icon from the Zoom Reset action.
      */
     private static final String RESOURCE_NAME = "Zoom Reset";
-    
-    /**
-     * The localization bundle.
-     */
-    private static final String BUNDLE = "Cognitive";
-    
+
     /**
      * Font used for the slider tick labels and for the current magnification
      * value label.
@@ -111,7 +106,7 @@ public class ZoomSliderButton extends PopupButton {
 			       Translator.localize(RESOURCE_NAME));
                 
         setIcon(icon);
-        setToolTipText(Translator.localize(BUNDLE, "button.zoom"));
+        setToolTipText(Translator.localize("button.zoom"));
     }
 
     /**
@@ -136,8 +131,8 @@ public class ZoomSliderButton extends PopupButton {
             ((Component) components.nextElement()).setFont(LABEL_FONT);
         }
         
-        slider.setToolTipText(Translator.localize(BUNDLE, 
-            "button.zoom.slider-tooltip"));   
+        slider.setToolTipText(Translator.localize(
+                "button.zoom.slider-tooltip"));   
         
         slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -155,7 +150,7 @@ public class ZoomSliderButton extends PopupButton {
         currentValue.setHorizontalAlignment(JLabel.CENTER);
         currentValue.setFont(LABEL_FONT);
         currentValue.setToolTipText(Translator.localize(
-            BUNDLE, "button.zoom.current-zoom-magnification"));
+            "button.zoom.current-zoom-magnification"));
         updateCurrentValueLabel();
         currentValue.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

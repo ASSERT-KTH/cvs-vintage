@@ -1,4 +1,4 @@
-// $Id: ActionNewSendAction.java,v 1.4 2004/09/19 19:29:57 mvw Exp $
+// $Id: ActionNewSendAction.java,v 1.5 2004/10/13 05:52:09 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ public class ActionNewSendAction extends ActionNewAction {
      */
     protected ActionNewSendAction() {
         super();
-        putValue(Action.NAME, Translator.localize("UMLMenu", 
+        putValue(Action.NAME, Translator.localize(
                 "button.new-sendaction"));
     }
     

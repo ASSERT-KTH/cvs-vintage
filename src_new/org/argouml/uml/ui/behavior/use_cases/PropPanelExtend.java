@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.38 2004/09/22 17:27:46 mvw Exp $
+// $Id: PropPanelExtend.java,v 1.39 2004/10/13 05:52:10 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,17 +68,17 @@ public class PropPanelExtend extends PropPanelModelElement {
     public PropPanelExtend() {
         super("Extend", ConfigLoader.getTabPropsOrientation());
 
-        addField(Translator.localize("UMLMenu", "label.name"),
+        addField(Translator.localize("label.name"),
 		 getNameTextField());
-//        addField(Translator.localize("UMLMenu", "label.stereotype"),
+//        addField(Translator.localize("label.stereotype"),
 //		 new UMLComboBoxNavigator(this,
 //					  Translator.localize(
 //					      "UMLMenu",
 //					      "tooltip.nav-stereo"),
 //					  getStereotypeBox()));
-        addField(Translator.localize("UMLMenu", "label.stereotype"), 
+        addField(Translator.localize("label.stereotype"), 
                 getStereotypeBox());
-        addField(Translator.localize("UMLMenu", "label.namespace"),
+        addField(Translator.localize("label.namespace"),
 		 getNamespaceScroll());
 
         addSeperator();
@@ -87,11 +87,11 @@ public class PropPanelExtend extends PropPanelModelElement {
         // Link to the two ends. This is done as a drop down. First for the
         // base use case.
 
-        addField(Translator.localize("UMLMenu", "label.usecase-base"),
+        addField(Translator.localize("label.usecase-base"),
 		 new UMLComboBox2(new UMLExtendBaseComboBoxModel(),
 				  ActionSetExtendBase.getInstance()));
 
-        addField(Translator.localize("UMLMenu", "label.extension"),
+        addField(Translator.localize("label.extension"),
 		 new UMLComboBox2(new UMLExtendExtensionComboBoxModel(),
 				  ActionSetExtendExtension.getInstance()));
 
@@ -99,7 +99,7 @@ public class PropPanelExtend extends PropPanelModelElement {
 	    new UMLMutableLinkedList(new UMLExtendExtensionPointListModel(),
 		ActionAddExtendExtensionPoint.getInstance(),
 		ActionNewExtendExtensionPoint.SINGLETON);
-        addField(Translator.localize("UMLMenu", "label.extension-points"),
+        addField(Translator.localize("label.extension-points"),
 		new JScrollPane(extensionPointList));
 
         addSeperator();

@@ -1,4 +1,4 @@
-// $Id: PropPanelUMLUseCaseDiagram.java,v 1.4 2004/02/29 12:35:45 linus Exp $
+// $Id: PropPanelUMLUseCaseDiagram.java,v 1.5 2004/10/13 05:52:21 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ public class PropPanelUMLUseCaseDiagram extends PropPanelDiagram {
      * Constructor for PropPanelUMLUseCaseDiagram.
      */
     public PropPanelUMLUseCaseDiagram() {
-        super(Translator.localize("UMLMenu", "label.usecase-diagram"));
+        super(Translator.localize("label.usecase-diagram"));
     }
 
 }

@@ -1,5 +1,5 @@
-// $Id: ActionNewTimeEvent.java,v 1.6 2004/08/14 21:47:20 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ActionNewTimeEvent.java,v 1.7 2004/10/13 05:52:20 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.behavior.state_machines;
 
 import org.argouml.i18n.Translator;
@@ -41,7 +40,7 @@ public class ActionNewTimeEvent extends ActionNewEvent {
      */
     protected ActionNewTimeEvent() {
         super();
-        putValue(NAME, Translator.localize("UMLMenu", "button.new-timeevent"));
+        putValue(NAME, Translator.localize("button.new-timeevent"));
     }
 
     /**
