@@ -1,16 +1,44 @@
-$Id: README.txt,v 1.5 2000/12/21 22:31:39 jon Exp $
+$Id: README.txt,v 1.6 2000/12/22 04:24:19 jon Exp $
 
 Welcome to Scarab!
+
+The installation and configuration of Scarab is intended to be as simple as 
+possible. This document outlines the directory structure of the distribution 
+(currently it mirrors the CVS tree), the requirements for running Scarab,
+the instructions for building and running an installation as well as 
+requirements for setting up the database.
+
+We appreciate your deciding to try Scarab out and appreciate constructive 
+feedback on your success (or failure...we hope not!) in getting the 
+system running.
+
+
+-------------------------------------------------------------------------
+| R E Q U I R E M E N T S                                               |
+-------------------------------------------------------------------------
+
+JDK 1.2 or higher.
+
+You must have the JAVA_HOME environment variable properly set to be the 
+location of your JDK installation directory.
+
+MySQL is assumed to be installed and running with appropriately configured 
+access control setup (see below for more detail). We will be supporting a
+wide range of databases in the released version of Scarab, however, we are
+currently doing development primarily on MySQL.
 
 If you are on a Windows machine, we require you to first have Cygwin installed 
 and you must run the .sh shell scripts from within the Cygwin bash shell. You 
 can very easily download and install Cygwin from here:
-
 <http://sources.redhat.com/cygwin/>
+
+All of the necessary .jar files for building and running Scarab are included 
+in the /lib directory and the build system is setup to include these into 
+your classpath for you.
 
 
 -------------------------------------------------------------------------
-| D I R E C T O R Y  S T R U C T U R E
+| D I R E C T O R Y  S T R U C T U R E                                  |
 -------------------------------------------------------------------------
 
 Here is a description of the Scarab directory tree:
@@ -26,21 +54,8 @@ scarab/
 
 
 -------------------------------------------------------------------------
-| B U I L D I N G  T H E  S A N D B O X
+| B U I L D I N G  T H E  S A N D B O X                                 |
 -------------------------------------------------------------------------
-
-Preparation:
-
-You MUST have the JAXP 1.0.1 jar files in your classpath before you can execute 
-the build scripts. This means that you need to have jaxp.jar and parser.jar in 
-your classpath. You can download these files from:
-
-<http://java.sun.com/xml/download.html>
-
-You also MUST have the JAVA_HOME environment variable properly set to be the 
-location of your JDK 1.2 or higher installation directory.
-
-Building:
 
 To build the sandbox on your machine, you simply need to do the following:
 
@@ -62,12 +77,13 @@ equating the variable build.dir to the path to Tomcat. For example:
 
 build.dir=/usr/local/jakarta-tomcat
 
-NOTE: There are problems running Scarab with Tomcat 3.2.1. If your current 
-Tomcat installation is not 4.0, you can either compile to the default 
-target/ directory or wait until 4.0 is formally released.
+NOTE: There may be problems building and running Scarab with Tomcat 3.2.1. 
+If your current Tomcat installation is not 4.0, you can either compile to 
+the default target/ directory or wait until 4.0 is formally released.
+
 
 -------------------------------------------------------------------------
-| I N S T A L L I N G  T H E  D A T A B A S E
+| I N S T A L L I N G  T H E  D A T A B A S E                           |
 -------------------------------------------------------------------------
 
 To install the database schema's, right now, you will need to install
@@ -85,7 +101,7 @@ data will be lost without warning!
 
 
 -------------------------------------------------------------------------
-| R U N N I N G  T H E  S A N D B O X
+| R U N N I N G  T H E  S A N D B O X                                   |
 -------------------------------------------------------------------------
 
 To run Tomcat from within the target directory, all you need to do is:
@@ -106,10 +122,10 @@ have a not so secure RNG for development purposes that loads very quickly.
 
 
 -------------------------------------------------------------------------
-| Q U E S T I O N S  /  P R O B L E M S
+| Q U E S T I O N S  /  P R O B L E M S                                 |
 -------------------------------------------------------------------------
 
-If you have problems or questions, please join the Scarab developer mailing list 
-and post a detailed message describing your issues. :-)
+If you have problems or questions, please join the Scarab developer mailing 
+list and post a detailed message describing your issues. :-)
 
 <http://scarab.tigris.org/>
