@@ -13,41 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui.util;
 
-import java.lang.reflect.Field;
+package org.columba.core.gui.util;
 
 import javax.swing.JTabbedPane;
 
-import org.columba.core.util.Compatibility;
-
-public class CTabbedPane extends JTabbedPane
-{
-	public CTabbedPane()
-	{
-		setLayoutPolicy();
+public class CTabbedPane extends JTabbedPane {
+	public CTabbedPane() {
+		super();
+                setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
 	}
-	
-	protected void setLayoutPolicy()
-	{
-        Integer fieldValue = null;
-
-        // Get the value of SCROLL_TAB_LAYOUT layout (if it exists)
-		Field layoutField = Compatibility.getObjectField(this, "SCROLL_TAB_LAYOUT");
-
-        // If the field is available we can use it 8-)
-        if (layoutField != null)
-        {
-            try
-            {
-                fieldValue = new Integer(layoutField.getInt(this));
-                Compatibility.simpleSetterInvoke(this, "setTabLayoutPolicy", Integer.TYPE, fieldValue);
-            }
-            catch (Exception e)
-            {
-                System.err.println("Failed to get a value for SCROLL_TAB_LAYOUT");
-            }
+        
+        public CTabbedPane(int tabPlacement) {
+                super(tabPlacement);
+                setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
         }
-	}
-
 }
