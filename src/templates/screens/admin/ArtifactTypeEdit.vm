@@ -5,8 +5,8 @@
 <div class="app" id="div2-1-4-0">
 
 #if (!$issueTypeId && $issueTypeId.length() == 0)
-<p class="alert">Issue type not found. Please click 
-$link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
+<p class="alert">$l10n.IssueTypeNotFound
+$link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 </p>
 #else
 #set ($groups = $module.getAttributeGroups($issueType, false))
@@ -22,11 +22,11 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
 
 <div class="functnbar">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>
 
-<h3>Issue type information</h3>
+<h3>$l10n.IssueTypeInfo</h3>
 <div class="axial">
     <table border="0" cellspacing="2" cellpadding="3">
     <tr>
@@ -40,42 +40,42 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
     </td>
     </tr>
     <tr>
-    <th>Description</th>
+    <th>$l10n.Description</th>
     <td><textarea cols="55" rows="5" wrap="virtual" name="$rmitGroup.DisplayDesc.Key">#if($rmitGroup.DisplayDesc.Value)$rmitGroup.DisplayDesc.Value#else$!issueType.Description#end</textarea></td>
     </tr>
     </table>
 </div>
 
 <div class="functnbar3">
-<input type="submit" value="Save"  name="eventSubmit_doSaveinfo" />
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveinfo" />
 </div>        
 
 #* Commenting out for now, later will implement as part of User Prefs
-<h3>Issue view display options</h3>
+<h3>l10n.IssueViewDisplayOptions</h3>
 
 <div class="axial">
 <table border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>Comments</th>
+<th>$l10n.Comments</th>
 <td><select class="select" name="$rmitGroup.Comments.Key">
 <option #if ($rmitGroup.Comments.Value == 5) selected="selected" #end>5</option>
 <option #if ($rmitGroup.Comments.Value == 10) selected="selected" #end>10</option>
 <option #if ($rmitGroup.Comments.Value == 15) selected="selected" #end>15</option>
 <option #if ($rmitGroup.Comments.Value == 20) selected="selected" #end>20</option>
 </select>&#160;most recent.
-<p>Full list on separate screen</p>
+<p>$l10n.FullListOnSeparateScreen</p>
 </td>
 </tr>
 
 <tr>
-<th>Change history entries</th>
+<th>$l10n.ChangeHistoryEntries</th>
 <td><select class="select" name="$rmitGroup.History.Key">
 <option #if ($rmitGroup.History.Value == 5) selected="selected" #end>5</option>
 <option #if ($rmitGroup.History.Value == 10) selected="selected" #end>10</option>
 <option #if ($rmitGroup.History.Value == 15) selected="selected" #end>15</option>
 <option #if ($rmitGroup.History.Value == 20) selected="selected" #end>20</option>
 </select>&#160;most recent.
-<p>Full list on separate screen</p>
+<p>$l10n.FullListOnSeparateScreen</p>
 </td>
 </tr>
 </table>
@@ -84,14 +84,14 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 
 ## LIST GROUPS
 
-<h3>Attribute groups</h3>
+<h3>$l10n.AttributeGroups</h3>
 #set ($maxNum = $groups.size()+1)
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">Select</th>
-<th>Name</th>
-<th>Active</th>
-<th>Sequence #</th>
+<th nowrap="nowrap">$l10n.Select</th>
+<th>$l10n.Name</th>
+<th>$l10n.Active</th>
+<th>$l10n.Sequence</th>
 </tr>
 
 #set ($issueDedupeSequence = $module.getDedupeSequence($issueType))
@@ -101,7 +101,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
  #if ($velocityCount == $issueDedupeSequence && $module.getAttributeGroups($issueType, true).size() > 1)
  <tr>
    <td>&#160;</td>
-   <td>Duplicate check</td>
+   <td>$l10n.DuplicateCheck</td>
    <td>#booleanCheckbox ($rmitGroup.Dedupe)</td>
    <td>#numericSelect("dupe_order" 1 $maxNum $issueDedupeSequence 1)</td>
  </tr>
@@ -123,26 +123,26 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 #end
 
 <div class="functnbar3">
-<input type="submit" value="Save"  name="eventSubmit_doSave" />&#160;
-<input type="submit" value="Add new"  name="eventSubmit_doCreatenewgroup" />&#160;
-<input type="submit" value="Delete selected" name="eventSubmit_doDeletegroup" />&#160;
-<input type="submit" value="Resort" name="eventSubmit_doSave" />
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSave" />&#160;
+<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletegroup" />&#160;
+<input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
 </div>
 
-<h3>User attributes</h3>
+<h3>$l10n.UserAttributes</h3>
 #set ($userAttrs = $module.getUserAttributes($issueType, false))
 #if ($userAttrs.isEmpty())
-  <p class="alert">There are no user attributes for this issue type.</p>
+  <p class="alert">$l10n.NoUserAttributesForType</p>
 
 <div class="functnbar3">
-<input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
 </div>
 
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">Select</th>
-<th>User Attribute name</th>
+<th nowrap="nowrap">$l10n.Select</th>
+<th>$l10n.UserAttributeName</th>
 <th>Per project name</th>
 <th>Active</th>
 <th>Sequence #</th>
@@ -170,16 +170,16 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 </table>
 
 <div class="functnbar3">
-<input type="submit" value="Save"  name="eventSubmit_doSaveuserattributes" />&#160;
-<input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate" />&#160;
-<input type="submit" value="Delete selected" name="eventSubmit_doDeleteuserattribute" />&#160;
-<input type="submit" value="Resort" name="eventSubmit_doSaveuserattributes" />
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveuserattributes" />&#160;
+<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteuserattribute" />&#160;
+<input type="submit" value="$l10n.Resort" name="eventSubmit_doSaveuserattributes" />
 </div>
 #end
 
 <div class="functnbar2">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>        
 
 $intake.declareGroups()
