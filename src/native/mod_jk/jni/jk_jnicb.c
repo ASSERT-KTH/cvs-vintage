@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: JNI callbacks implementation for the JNI in process adapter*
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.4 $                                           *
+ * Version:     $Revision: 1.1 $                                           *
  ***************************************************************************/
 
 #include "jk_jnicb.h"

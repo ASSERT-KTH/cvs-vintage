@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: NT System service for Jakarta/Tomcat                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                           *
+ * Version:     $Revision: 1.1 $                                           *
  ***************************************************************************/
 
 #include "jk_global.h"

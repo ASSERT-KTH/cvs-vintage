@@ -87,19 +87,19 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\jk\jk_ajp13.c
+SOURCE=..\common\jk_ajp13.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_connect.c
+SOURCE=..\common\jk_connect.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_map.c
+SOURCE=..\common\jk_map.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_msg_buff.c
+SOURCE=..\common\jk_msg_buff.c
 # End Source File
 # Begin Source File
 
@@ -107,11 +107,11 @@ SOURCE=.\jk_nt_service.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_pool.c
+SOURCE=..\common\jk_pool.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_util.c
+SOURCE=..\common\jk_util.c
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -119,35 +119,35 @@ SOURCE=..\jk\jk_util.c
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\jk\jk_ajp12_worker.h
+SOURCE=..\common\jk_ajp12_worker.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_connect.h
+SOURCE=..\common\jk_connect.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_global.h
+SOURCE=..\common\jk_global.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_logger.h
+SOURCE=..\common\jk_logger.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_map.h
+SOURCE=..\common\jk_map.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_pool.h
+SOURCE=..\common\jk_pool.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_service.h
+SOURCE=..\common\jk_service.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_util.h
+SOURCE=..\common\jk_util.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.5 $                                               *
+ * Version:     $Revision: 1.1 $                                               *
  ***************************************************************************/
 
 #include <httpext.h>

@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "NSAPI_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\jk" /I "$(NS_HOME)\include" /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "NSAPI_EXPORTS" /D "XP_WIN32" /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\common" /I "$(NS_HOME)\include" /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "NSAPI_EXPORTS" /D "XP_WIN32" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -69,7 +69,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "NSAPI_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\jk" /I "$(NS_HOME)\include" /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "NSAPI_EXPORTS" /D "XP_WIN32" /D "MCC_HTTPD" /D "SPAPI20" /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\common" /I "$(NS_HOME)\include" /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "NSAPI_EXPORTS" /D "XP_WIN32" /D "MCC_HTTPD" /D "SPAPI20" /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -92,35 +92,35 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\jk\jk_ajp12_worker.c
+SOURCE=..\common\jk_ajp12_worker.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_ajp13.c
+SOURCE=..\common\jk_ajp13.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_ajp13_worker.c
+SOURCE=..\common\jk_ajp13_worker.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_connect.c
+SOURCE=..\common\jk_connect.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_jni_worker.c
+SOURCE=..\common\jk_jni_worker.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_lb_worker.c
+SOURCE=..\common\jk_lb_worker.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_map.c
+SOURCE=..\common\jk_map.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_msg_buff.c
+SOURCE=..\common\jk_msg_buff.c
 # End Source File
 # Begin Source File
 
@@ -128,23 +128,23 @@ SOURCE=.\jk_nsapi_plugin.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_pool.c
+SOURCE=..\common\jk_pool.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_sockbuf.c
+SOURCE=..\common\jk_sockbuf.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_uri_worker_map.c
+SOURCE=..\common\jk_uri_worker_map.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_util.c
+SOURCE=..\common\jk_util.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_worker.c
+SOURCE=..\common\jk_worker.c
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -152,75 +152,75 @@ SOURCE=..\jk\jk_worker.c
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\jk\jk_ajp12_worker.h
+SOURCE=..\common\jk_ajp12_worker.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_ajp13.h
+SOURCE=..\common\jk_ajp13.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_ajp13_worker.h
+SOURCE=..\common\jk_ajp13_worker.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_connect.h
+SOURCE=..\common\jk_connect.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_global.h
+SOURCE=..\common\jk_global.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_jni_worker.h
+SOURCE=..\common\jk_jni_worker.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_lb_worker.h
+SOURCE=..\common\jk_lb_worker.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_logger.h
+SOURCE=..\common\jk_logger.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_map.h
+SOURCE=..\common\jk_map.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_msg_buff.h
+SOURCE=..\common\jk_msg_buff.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_mt.h
+SOURCE=..\common\jk_mt.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_pool.h
+SOURCE=..\common\jk_pool.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_service.h
+SOURCE=..\common\jk_service.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_sockbuf.h
+SOURCE=..\common\jk_sockbuf.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_uri_worker_map.h
+SOURCE=..\common\jk_uri_worker_map.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_util.h
+SOURCE=..\common\jk_util.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_worker.h
+SOURCE=..\common\jk_worker.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_worker_list.h
+SOURCE=..\common\jk_worker_list.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
