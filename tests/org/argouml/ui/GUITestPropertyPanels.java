@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GUITestPropertyPanels.java,v 1.2 2003/12/14 14:29:19 mkl Exp $
+// $Id: GUITestPropertyPanels.java,v 1.3 2004/01/01 23:04:28 bobtarling Exp $
 package org.argouml.ui;
 
 import com.sun.image.codec.jpeg.JPEGCodec;
@@ -250,8 +250,8 @@ class ChildGenModelElements implements ChildGenerator {
         }
         
         if (o instanceof Diagram) {
-            Vector figs = ((Diagram) o).getLayer().getContents();
-            if (figs != null) return figs.elements();
+            Collection figs = ((Diagram) o).getLayer().getContents(null);
+            if (figs != null) return new Vector(figs).elements();
         }
         
         if (!ModelFacade.isAModelElement(o))

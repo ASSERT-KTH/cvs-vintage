@@ -1,4 +1,4 @@
-// $Id: GoDiagramToEdge.java,v 1.4 2003/12/22 23:00:15 alexb Exp $
+// $Id: GoDiagramToEdge.java,v 1.5 2004/01/01 23:04:28 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ public class GoDiagramToEdge extends AbstractPerspectiveRule{
 
     public Collection getChildren(Object parent) { 
 	if (parent instanceof Diagram) {
-	    return ((Diagram) parent).getEdges();
+	    return ((Diagram) parent).getEdges(null);
 	}
 	return null;
     }

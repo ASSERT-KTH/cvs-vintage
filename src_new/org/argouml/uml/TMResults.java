@@ -1,4 +1,4 @@
-// $Id: TMResults.java,v 1.9 2003/11/25 10:58:16 jhraigniac Exp $
+// $Id: TMResults.java,v 1.10 2004/01/01 23:04:27 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,8 +130,8 @@ public class TMResults extends AbstractTableModel {
 		return "N/A";
 	    case 3 :
 		//GraphModel gm = d.getGraphModel();
-		int numNodes = d.getNodes().size();
-		int numEdges = d.getEdges().size();
+		int numNodes = d.getNodes(null).size();
+		int numEdges = d.getEdges(null).size();
 		return numNodes + " nodes and " + numEdges + " edges";
             }
         }

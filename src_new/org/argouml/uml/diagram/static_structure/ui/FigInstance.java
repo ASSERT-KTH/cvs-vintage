@@ -1,4 +1,4 @@
-// $Id: FigInstance.java,v 1.4 2003/06/29 23:52:19 linus Exp $
+// $Id: FigInstance.java,v 1.5 2004/01/01 23:04:28 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,14 @@
 // File: FigInstance.java
 // Classes: FigInstance
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigInstance.java,v 1.4 2003/06/29 23:52:19 linus Exp $
+// $Id: FigInstance.java,v 1.5 2004/01/01 23:04:28 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
@@ -90,10 +91,10 @@ public class FigInstance extends FigNodeModelElement {
 
     public Object clone() {
 	FigInstance figClone = (FigInstance) super.clone();
-	Vector v = figClone.getFigs();
-	figClone._bigPort = (FigRect) v.elementAt(0);
-	figClone._name = (FigText) v.elementAt(1);
-	figClone._attr = (FigText) v.elementAt(2);
+	Iterator iter = figClone.getFigs(null).iterator();
+	figClone._bigPort = (FigRect)iter.next();
+	figClone._name = (FigText)iter.next();
+	figClone._attr = (FigText)iter.next();
 	return figClone;
     }
 

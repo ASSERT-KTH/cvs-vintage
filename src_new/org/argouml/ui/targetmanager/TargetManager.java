@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.25 2003/12/09 14:35:21 mkl Exp $
+// $Id: TargetManager.java,v 1.26 2004/01/01 23:04:27 bobtarling Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -243,11 +243,11 @@ public final class TargetManager {
 
         private void removeHistoryTarget(Object o) {
             if (ModelFacade.isADiagram(o)) {
-                ListIterator it = ((Diagram) o).getEdges().listIterator();
+                Iterator it = ((Diagram) o).getEdges(null).iterator();
                 while (it.hasNext()) {
                     removeHistoryTarget(it.next());
                 }
-                it = ((Diagram) o).getNodes().listIterator();
+                it = ((Diagram) o).getNodes(null).iterator();
                 while (it.hasNext()) {
                     removeHistoryTarget(it.next());
                 }

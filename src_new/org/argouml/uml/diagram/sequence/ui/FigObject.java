@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigObject.java,v 1.11 2003/12/06 11:17:04 kataka Exp $
+// $Id: FigObject.java,v 1.12 2004/01/01 23:04:28 bobtarling Exp $
 package org.argouml.uml.diagram.sequence.ui;
 
 import java.awt.Color;
@@ -748,7 +748,7 @@ public class FigObject extends FigNodeModelElement implements MouseListener {
      * @return
      */
     public FigLink getFigLink(FigLinkPort portFig) {
-        Iterator it = getFigEdges().iterator();
+        Iterator it = getFigEdges(null).iterator();
         while (it.hasNext()) {
             FigEdge figEdge = (FigEdge) it.next();
             if (figEdge instanceof FigLink
