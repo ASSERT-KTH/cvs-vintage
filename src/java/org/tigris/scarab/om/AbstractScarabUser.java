@@ -78,7 +78,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.22 2002/04/30 06:58:19 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.23 2002/05/01 00:27:23 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -211,7 +211,7 @@ public abstract class AbstractScarabUser
     {
         List userModules = getModules(true);
         List editModules = new ArrayList();
-        
+
         if (currEditModule != null)
         {
             editModules.add(currEditModule.getParent());
@@ -222,7 +222,7 @@ public abstract class AbstractScarabUser
             Module parent = module.getParent();
 
 //System.out.println ("Module: " + module.getModuleId() + ": " + module.getName());
-            if (!editModules.contains(module))
+            if (!editModules.contains(module) && parent != currEditModule)
             {
                 if (hasPermission(ScarabSecurity.MODULE__EDIT, module))
                 {

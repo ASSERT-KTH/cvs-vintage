@@ -76,7 +76,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.23 2002/04/26 23:34:51 jmcnally Exp $
+ * @version $Id: ModifyModule.java,v 1.24 2002/05/01 00:31:45 jon Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -129,8 +129,17 @@ public class ModifyModule extends RequireLoginFirstAction
                 Module origParent = me.getParent();
                 moduleGroup.setProperties(me);
                 Module newParent = me.getParent();
-                
-                if (!user.hasPermission(ScarabSecurity.MODULE__EDIT, origParent) && 
+
+                if (newParent.getParent() == me)
+                {
+                    getScarabRequestTool(context).setAlertMessage(
+                        "Circular parent/child relationship! " +
+                        "You can't do that!");
+                    intake.remove(moduleGroup);
+                    setTarget(data, template);
+                    return;
+                }
+                else if (!user.hasPermission(ScarabSecurity.MODULE__EDIT, origParent) && 
                     origParent.getModuleId() != newParent.getModuleId())
                 {
                     getScarabRequestTool(context).setAlertMessage(

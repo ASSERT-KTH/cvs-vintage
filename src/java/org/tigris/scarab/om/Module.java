@@ -69,7 +69,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.42 2002/04/30 19:51:35 elicia Exp $
+ * @version $Id: Module.java,v 1.43 2002/05/01 00:27:23 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -260,6 +260,12 @@ public interface Module
      * It does not return the 0 parent though.
      */
     public List getAncestors() throws Exception;
+
+    /**
+     * check for endless loops where Module A > Module B > Module A
+     */
+    public boolean isEndlessLoop(Module parent)
+        throws Exception;
     
     public Issue getNewIssue(IssueType issueType)
         throws Exception;

@@ -104,7 +104,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.108 2002/04/30 06:58:19 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.109 2002/05/01 00:27:23 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -265,15 +265,22 @@ public class ScarabModule
      * Wrapper method to perform the proper cast to the BaseModule method
      * of the same name. FIXME: find a better way
      */
-    public void setParent(Module v) throws Exception
+    public void setParent(Module v)
+        throws Exception
     {
+        if (isEndlessLoop(v))
+        {
+            throw new Exception("Endless parent/child relationship detected!");
+        }
         super.setModuleRelatedByParentId((ScarabModule)v);
+        resetAncestors();
     }
 
     /**
      * Cast the getScarabModuleRelatedByParentId() to a Module
      */
-    public Module getParent() throws Exception
+    public Module getParent()
+        throws Exception
     {
         return (Module) super.getModuleRelatedByParentId();
     }
@@ -286,7 +293,20 @@ public class ScarabModule
     public void setParentId(NumberKey id)
         throws TorqueException
     {
+        try
+        {
+            Module parent = ModuleManager.getInstance(id).getParent();
+            if (isEndlessLoop(parent))
+            {
+                throw new TorqueException("Endless parent/child relationship detected!");
+            }
+        }
+        catch (Exception e)
+        {
+            log().error("Problem checking endless loop", e);
+        }
         super.setParentId(id);
+        // FIXME: why are we setting the name to be null? (jss)
         setName(null);
         resetAncestors();
     }
