@@ -20,19 +20,19 @@ import org.jboss.management.JBossJVM;
 import org.jboss.management.JBossNode;
 import org.jboss.management.JBossPort;
 
-import management.IpAddress;
-import management.JVM;
-import management.Node;
-import management.Port;
-import management.StatisticsProvider;
-import management.Stats;
+import javax.management.j2ee.IpAddress;
+import javax.management.j2ee.JVM;
+import javax.management.j2ee.Node;
+import javax.management.j2ee.Port;
+import javax.management.j2ee.StatisticsProvider;
+import javax.management.j2ee.Stats;
 
 /**
  * Node Data Collector
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  **/
 public class NodeDataCollector
    implements DataCollector

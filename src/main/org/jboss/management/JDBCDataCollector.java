@@ -18,18 +18,18 @@ import org.jboss.management.JBossJDBC;
 import org.jboss.management.JBossJDBCConnectionPool;
 import org.jboss.management.JBossJDBCDriver;
 
-import management.JDBC;
-import management.JDBCConnectionPool;
-import management.JDBCDriver;
-import management.StatisticsProvider;
-import management.Stats;
+import javax.management.j2ee.JDBC;
+import javax.management.j2ee.JDBCConnectionPool;
+import javax.management.j2ee.JDBCDriver;
+import javax.management.j2ee.StatisticsProvider;
+import javax.management.j2ee.Stats;
 
 /**
  * JDBC Data Collector
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  **/
 public class JDBCDataCollector
    implements DataCollector

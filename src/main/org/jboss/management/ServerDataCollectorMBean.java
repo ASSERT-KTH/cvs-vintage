@@ -10,9 +10,9 @@ import java.util.Collection;
 
 import org.jboss.util.ServiceMBean;
 
-import management.J2EEApplication;
-import management.StatisticsProvider;
-import management.Stats;
+import javax.management.j2ee.J2EEApplication;
+import javax.management.j2ee.StatisticsProvider;
+import javax.management.j2ee.Stats;
 
 /**
  * This interface defines the manageable interface for the JBoss Server
@@ -21,7 +21,7 @@ import management.Stats;
  * @author  <a href="mailto:marc.fleury@jboss.org">  Marc Fleury  </a>
  * @author  <a href="mailto:andreas.schaefer@madplanet.com">  Andreas Schaefer  </a>
  * @created July 1, 2001
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface ServerDataCollectorMBean
      extends ServiceMBean {
@@ -83,14 +83,14 @@ public interface ServerDataCollectorMBean
 
   /**
    * @return All the registered resources of this server. All are of type
-   * {@link management.J2EEResource J2EEResource}.
+   * {@link javax.management.j2ee.J2EEResource J2EEResource}.
    */
   public Collection getResources();
 
 
   /**
    * @return All the nodes of this server running. All are of type
-   * {@link management.Node Node}.
+   * {@link javax.management.j2ee.Node Node}.
    */
   public Collection getNodes();
 

@@ -27,23 +27,23 @@ import org.jboss.management.JBossMessageDrivenBean;
 import org.jboss.management.JBossStatefulSessionBean;
 import org.jboss.management.JBossStatelessSessionBean;
 
-import management.CountStatistic;
-import management.EjbModule;
-import management.EJB;
-import management.EntityBean;
-import management.EntityBeanStats;
-import management.J2EEApplication;
-import management.J2EEModule;
-import management.Statistic;
-import management.Stats;
-import management.TimeStatistic;
+import javax.management.j2ee.CountStatistic;
+import javax.management.j2ee.EjbModule;
+import javax.management.j2ee.EJB;
+import javax.management.j2ee.EntityBean;
+import javax.management.j2ee.EntityBeanStats;
+import javax.management.j2ee.J2EEApplication;
+import javax.management.j2ee.J2EEModule;
+import javax.management.j2ee.Statistic;
+import javax.management.j2ee.Stats;
+import javax.management.j2ee.TimeStatistic;
 
 /**
 * EJB Data Collector collects the management data about EJBs.
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010718 andreas schaefer:</b>
@@ -118,6 +118,7 @@ public class EJBDataCollector
             // Only to test the Statistics Gathering
             if( lContainer instanceof EntityContainer ) {
                Map lStatistics = ( (EntityContainer) lContainer ).retrieveStatistic();
+               System.out.println( "Statistics: " + lStatistics );
             }
          }
          i = lApplications.keySet().iterator();
@@ -143,7 +144,7 @@ public class EJBDataCollector
       return lReturn;
    }
 
-  public Stats getStatistics( management.StatisticsProvider pProvider, MBeanServer pServer )
+  public Stats getStatistics( javax.management.j2ee.StatisticsProvider pProvider, MBeanServer pServer )
   {
     try {
       if( pProvider instanceof EJB )
@@ -184,7 +185,7 @@ public class EJBDataCollector
     return null;
   }
   
-  public void resetStatistics( management.StatisticsProvider pProvider, MBeanServer pServer )
+  public void resetStatistics( javax.management.j2ee.StatisticsProvider pProvider, MBeanServer pServer )
   {
   }
 }

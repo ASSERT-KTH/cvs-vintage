@@ -10,9 +10,9 @@ import java.util.Collection;
 
 import javax.management.MBeanServer;
 
-import management.J2EEManagedObject;
-import management.StatisticsProvider;
-import management.Stats;
+import javax.management.j2ee.J2EEManagedObject;
+import javax.management.j2ee.StatisticsProvider;
+import javax.management.j2ee.Stats;
 
 /**
  * Collector Interface which must be implemented by
@@ -20,7 +20,7 @@ import management.Stats;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  **/
 public interface DataCollector {
 

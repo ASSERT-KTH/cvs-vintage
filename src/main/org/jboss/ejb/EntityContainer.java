@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.util.SerializableEnumeration;
 
-import management.CountStatistic;
+import javax.management.j2ee.CountStatistic;
 
 /**
  * This is a Container for EntityBeans (both BMP and CMP).
@@ -46,7 +46,7 @@ import management.CountStatistic;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  *
  * <p><b>Revisions:</b>
  *

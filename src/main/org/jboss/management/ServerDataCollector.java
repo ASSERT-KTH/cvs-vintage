@@ -32,17 +32,17 @@ import org.jboss.logging.Log;
 import org.jboss.naming.NonSerializableFactory;
 import org.jboss.util.ServiceMBeanSupport;
 
-import management.EJB;
-import management.J2EEApplication;
-import management.StatisticsProvider;
-import management.Stats;
+import javax.management.j2ee.EJB;
+import javax.management.j2ee.J2EEApplication;
+import javax.management.j2ee.StatisticsProvider;
+import javax.management.j2ee.Stats;
 
 /**
  * JBoss Management MBean Wrapper
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  **/
 public class ServerDataCollector
    extends ServiceMBeanSupport
