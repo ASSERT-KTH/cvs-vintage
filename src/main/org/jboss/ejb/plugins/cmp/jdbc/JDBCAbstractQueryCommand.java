@@ -13,6 +13,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -29,6 +30,7 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge; 
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.logging.Logger;
 import org.jboss.util.FinderResults;
@@ -42,7 +44,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;
@@ -51,8 +53,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
 
    private JDBCEntityBridge selectEntity;
    private JDBCCMPFieldBridge selectField;
+   private List preloadFields = new ArrayList(0);
    private String sql;
-   private List parameters = new ArrayList();
+   private List parameters = new ArrayList(0);
 
    public JDBCAbstractQueryCommand(
          JDBCStoreManager manager, JDBCQueryMetaData q) {
@@ -74,7 +77,12 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
          Object[] args,
          EntityEnterpriseContext ctx) throws FinderException {
 
-      boolean debug = log.isDebugEnabled();
+      JDBCStoreManager selectManager = null;
+      ReadAheadCache selectReadAheadCache = null;
+      if(selectEntity != null) {
+         selectManager = selectEntity.getManager();
+         selectReadAheadCache = selectManager.getReadAheadCache();
+      }
 
       Collection results = new ArrayList();
 
@@ -100,12 +108,26 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
 
          // load the results
          if(selectEntity != null) {
-            // load the pks
-            Object[] pkRef = new Object[1];
+            Object[] ref = new Object[1];
+            
             while(rs.next()) {
-               pkRef[0] = null;
-               selectEntity.loadPrimaryKeyResults(rs, 1, pkRef);
-               results.add(pkRef[0]);
+               int index = 1;
+               ref[0] = null;
+   
+               // get the pk
+               index = selectEntity.loadPrimaryKeyResults(rs, index, ref);
+               Object pk = ref[0];
+               results.add(ref[0]);
+
+               // read the preload fields
+               for(Iterator iter=preloadFields.iterator(); iter.hasNext();) {
+                  JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
+                  ref[0] = null;
+
+                  // read the value and store it in the readahead cache
+                  index = field.loadArgumentResults(rs, index, ref);
+                  selectReadAheadCache.addPreloadData(pk, field, ref[0]);
+               }
             }
          } else {
             // load the field
@@ -117,8 +139,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
             }
          }
       } catch(Exception e) {
-         if (debug)
-            log.debug(e);
+         log.debug("Find failed", e);
          throw new FinderException("Find failed: " + e);
       } finally {
          JDBCUtil.safeClose(ps);
@@ -131,15 +152,12 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
       }
 
       // Convert the pk collection into finder results
-      boolean readAheadOnLoad = queryMetaData.getReadAhead().isOnLoadUsed();
       FinderResults finderResults = new FinderResults(
-            results, null, null, null, readAheadOnLoad);
+            results, queryMetaData.getReadAhead(), null, null);
 
-      // If read ahead is on, store the finder results for optimized loading.
-      if(readAheadOnLoad) {
-         // add to the cache
-         manager.getReadAheadCache().insert(
-               new Long(finderResults.getListId()), finderResults);
+      // add to the cache
+      if(!queryMetaData.getReadAhead().isNone()) {
+         selectReadAheadCache.addFinderResult(finderResults);
       }
 
       // If this is a finder, we're done.
@@ -148,18 +166,16 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
       }
 
       // This is an ejbSelect, so we need to convert the pks to real ejbs.
-      EntityContainer container = manager.getContainer();
+      EntityContainer selectContainer = selectManager.getContainer();
       if(queryMetaData.isResultTypeMappingLocal()) {
-         JDBCStoreManager selectManager = selectEntity.getManager();
-
          LocalContainerInvoker localInvoker;
-         localInvoker = selectManager.getContainer().getLocalContainerInvoker();
+         localInvoker = selectContainer.getLocalContainerInvoker();
 
          return localInvoker.getEntityLocalCollection(finderResults);
       } else {
          ContainerInvoker invoker;
-         invoker = container.getContainerInvoker();
-            return invoker.getEntityCollection(finderResults);
+         invoker = selectContainer.getContainerInvoker();
+         return invoker.getEntityCollection(finderResults);
       }
    }
 
@@ -200,6 +216,14 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    protected void setSelectField(JDBCCMPFieldBridge selectField) {
       this.selectEntity = null;
       this.selectField = selectField;
+   }
+ 
+   protected List getPreloadFields() {
+      return preloadFields;
+   }
+
+   protected void setPreloadFields(List preloadFields) {
+      this.preloadFields = preloadFields;
    }
  
    /**
