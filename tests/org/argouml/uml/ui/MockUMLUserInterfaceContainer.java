@@ -1,4 +1,4 @@
-// $Id: MockUMLUserInterfaceContainer.java,v 1.3 2004/01/29 07:41:42 linus Exp $
+// $Id: MockUMLUserInterfaceContainer.java,v 1.4 2004/04/27 08:41:26 thn Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ public class MockUMLUserInterfaceContainer
     implements UMLUserInterfaceContainer {
 
     private Object _target;
-    
+
     /**
      * Constructor for MockUMLUserInterfaceContainer.
      */
@@ -56,7 +56,7 @@ public class MockUMLUserInterfaceContainer
     /**
      * @see org.argouml.uml.ui.UMLUserInterfaceContainer#getModelElement()
      */
-    public MModelElement getModelElement() {
+    public Object getModelElement() {
         return null;
     }
 
@@ -70,7 +70,7 @@ public class MockUMLUserInterfaceContainer
     /**
      * @see org.argouml.uml.ui.UMLUserInterfaceContainer#formatElement(ru.novosoft.uml.foundation.core.MModelElement)
      */
-    public String formatElement(MModelElement element) {
+    public String formatElement(/*MModelElement*/Object element) {
         return null;
     }
 
@@ -84,7 +84,7 @@ public class MockUMLUserInterfaceContainer
     /**
      * @see org.argouml.uml.ui.UMLUserInterfaceContainer#formatNamespace(ru.novosoft.uml.foundation.core.MNamespace)
      */
-    public String formatNamespace(MNamespace ns) {
+    public String formatNamespace(/*MNamespace*/Object ns) {
         return null;
     }
 
@@ -134,7 +134,7 @@ public class MockUMLUserInterfaceContainer
     public boolean isNavigateForwardEnabled() {
         return false;
     }
-    
+
     public void setTarget(Object target) {
         _target = target;
     }
