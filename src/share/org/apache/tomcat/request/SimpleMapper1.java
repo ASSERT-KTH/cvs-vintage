@@ -70,11 +70,6 @@ import java.util.*;
  *  This class will set up the data structures used by a simple patern matching
  *  alghoritm and use it to extract the path components from the request URI.
  *
- *  The interceptor will be called in standalone case, for "integrated" mode
- *  we should have all the data from the web server - that means the
- * performance of this code is not relevant for production mode if a web
- * server is used.
- * 
  *  This particular implementation does the following:
  *  - extract the information that is relevant to matching from the Request
  *   object. The current implementation deals with the Host header and the
@@ -82,13 +77,16 @@ import java.util.*;
  *  - Use an external mapper to find the best match.
  *  - Adjust the request paths
  * 
+ *  SimpleMapper1 will set 2 context notes - "map.extensions" is a
+ *  SimpleHashtable containing the extension mappings, and "tomcat.map.default"
+ *  for the default map, if defined explicitely.
+ *
+ *  It will also maintain a global mapping structure for all prefix mappings,
+ *  including contexts. 
+ * 
  *  The execution time is proportional with the number of hosts, number of
  *  context, number of mappings and with the length of the request.
  *
- *  Security mappings are more complex ( method, transport are also part of the
- *  matching ). We can share the same mapping alghoritm or even the mapper -
- *  but until security code will be stable it's better to keep it separated.
- *  
  */
 public class SimpleMapper1 extends  BaseInterceptor  {
     ContextManager cm;
@@ -352,8 +350,9 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     Container matchExtension( Request req ) {
 	Context ctx=req.getContext();
 	String ctxP=ctx.getPath();
-
-	String path = req.getServletPath(); // we haven't matched any prefix,
+	
+	// we haven't matched any prefix,
+	String path = req.servletPath().toString(); 
 	if( path == null ) return null;
 
 	String extension=FileUtil.getExtension( path );
@@ -423,10 +422,10 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    pathI=null;
 
 	}
-	req.setServletPath( s );
+	req.servletPath().setString( s );
 
 	if( ! "".equals(pathI)) 
-	    req.setPathInfo(pathI);
+	    req.pathInfo().setString(pathI);
 	Context ctx=container.getContext();
 	req.setContext(ctx);
 	req.setHandler( container.getHandler() );
