@@ -1,0 +1,45 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B.Robertson</a>
+@version $Id: ManagePermissions.vm,v 1.1 2001/12/04 23:39:59 dr Exp $
+*#
+
+
+$page.setTitle("Permission Administration")
+
+<div id="managePermissions" class="app">
+
+<h2>$page.Title</h2>
+
+<h3>Permission List</h3>
+
+<form action="admin%2CManagePermissions.vm" method="post">
+  <input type="hidden" name="action" value="admin.ManagePermissions">
+
+<table cellspacing="0" cellpadding="2">
+<tr>
+  <th>Select</th>
+  <th>Permission</th>
+</tr>
+
+#foreach ($permission in $securityAdmin.Permissions)
+#indexedRows ($velocityCount)
+  <td><center><input type="radio" name="name" value="$permission.Name"></center></td>
+  <td>$permission.Name</td>
+</tr>
+#end
+</table>
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+   <input type="submit" name="eventSubmit_doGotodeletepermission" value="Delete Permission" />
+   &nbsp;&nbsp;&nbsp;
+   <input type="submit" name="eventSubmit_doGotoaddpermission" value="Add New Permission" />
+  </td>
+ </tr>
+</table>
+</div>
+
+</form>
+
