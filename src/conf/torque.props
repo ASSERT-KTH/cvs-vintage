@@ -37,7 +37,7 @@ project=scarab
 # db2
 # hypersonic
 # mysql
-# oracle,
+# oracle
 # postgresql
 #
 # Default: none
