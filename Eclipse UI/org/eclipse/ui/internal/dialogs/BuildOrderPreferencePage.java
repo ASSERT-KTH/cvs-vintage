@@ -65,7 +65,6 @@ public class BuildOrderPreferencePage
 	private Label buildLabel;
 	private List buildList;
 	private Composite buttonComposite;
-	private Label noteLabel;
 	private IntegerFieldEditor maxItersField;
 
 	private String[] defaultBuildOrder;
@@ -78,15 +77,11 @@ public class BuildOrderPreferencePage
 	private final String DOWN_LABEL = WorkbenchMessages.getString("BuildOrderPreference.down"); //$NON-NLS-1$
 	private final String ADD_LABEL = WorkbenchMessages.getString("BuildOrderPreference.add"); //$NON-NLS-1$
 	private final String REMOVE_LABEL = WorkbenchMessages.getString("BuildOrderPreference.remove"); //$NON-NLS-1$
-	private final String UNSELECTED_PROJECTS = WorkbenchMessages.getString("BuildOrderPreference.selectProject"); //$NON-NLS-1$
 	private final String PROJECT_SELECTION_MESSAGE = WorkbenchMessages.getString("BuildOrderPreference.selectOtherProjects"); //$NON-NLS-1$
 	private final String DEFAULTS_LABEL = WorkbenchMessages.getString("BuildOrderPreference.useDefaults"); //$NON-NLS-1$
 	private final String LIST_LABEL = WorkbenchMessages.getString("BuildOrderPreference.projectBuildOrder"); //$NON-NLS-1$
 	private final String NOTE_LABEL = WorkbenchMessages.getString("Preference.note"); //$NON-NLS-1$
 	private final String REMOVE_MESSAGE = WorkbenchMessages.getString("BuildOrderPreference.removeNote"); //$NON-NLS-1$
-
-	// marks projects with unspecified build orders
-	private static final String MARKER = "*"; //$NON-NLS-1$
 
 	// whether or not the use defaults option was selected when Apply (or OK) was last pressed
 	// (or when the preference page was opened). This represents the most recent applied state.
@@ -376,7 +371,7 @@ public class BuildOrderPreferencePage
 		maxItersComposite.setLayoutData(gd);
 		maxItersComposite.setFont(composite.getFont());
 
-		maxItersField = new IntegerFieldEditor("", WorkbenchMessages.getString("BuildOrderPreference.maxIterationsLabel"), maxItersComposite) {
+		maxItersField = new IntegerFieldEditor("", WorkbenchMessages.getString("BuildOrderPreference.maxIterationsLabel"), maxItersComposite) { //$NON-NLS-1$ //$NON-NLS-2$
 			protected void doLoad() {
 				Text text = getTextControl();
 				if (text != null) {
