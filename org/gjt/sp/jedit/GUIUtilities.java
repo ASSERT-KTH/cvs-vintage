@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.24 2002/01/25 04:50:23 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.25 2002/01/31 05:35:48 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -210,6 +210,13 @@ public class GUIUtilities
 				{
 					if(menuItemName.startsWith("%"))
 						menu.add(loadMenu(menuItemName.substring(1)));
+					// for backwards compatibility with
+					// 3.2.2 properties
+					else if(menuItemName.startsWith("play-macro@"))
+					{
+						menu.add(loadMenuItem(menuItemName
+							.substring(11),false));
+					}
 					else
 						menu.add(loadMenuItem(menuItemName,false));
 				}
@@ -288,6 +295,15 @@ public class GUIUtilities
 				String button = st.nextToken();
 				if(button.equals("-"))
 					toolBar.addSeparator();
+				// for backwards compatibility with
+				// 3.2.2 properties
+				else if(button.startsWith("play-macro@"))
+				{
+					button = button.substring(11);
+					JButton b = loadToolButton(button);
+					if(b != null)
+						toolBar.add(b);
+				}
 				else
 				{
 					JButton b = loadToolButton(button);

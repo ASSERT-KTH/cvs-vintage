@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * This class records and runs macros.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.10 2002/01/30 08:06:40 spestov Exp $
+ * @version $Id: Macros.java,v 1.11 2002/01/31 05:35:48 spestov Exp $
  */
 public class Macros
 {
@@ -293,7 +293,17 @@ public class Macros
 			}
 			finally
 			{
-				buffer.endCompoundEdit();
+				/* this is probably a bad way to fix this,
+				 * ...DAMN jEdit's source code is getting full
+				 * of stuff like 'this is a hack', 'this sucks',
+				 * etc... ok, back on track,
+				 * EditPane.setBuffer() calls endCompoundEdit()
+				 * if the buffer has a * compound edit pending;
+				 * but if a macro switches buffers, the below
+				 * call will print a warning to the activity
+				 * log. so we check for a pending edit first. */
+				if(buffer.insideCompoundEdit())
+					buffer.endCompoundEdit();
 			}
 		} //}}}
 
@@ -434,7 +444,10 @@ public class Macros
 		}
 		finally
 		{
-			buffer.endCompoundEdit();
+			/* I already wrote a comment expaining this in
+			 * Macro.invoke(). */
+			if(buffer.insideCompoundEdit())
+				buffer.endCompoundEdit();
 		}
 	} //}}}
 

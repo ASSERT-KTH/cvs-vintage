@@ -22,7 +22,7 @@
  * Version 1.0
  * requires JDK 1.1, jEdit3.1
  *
- * $Id: Show_Threads.bsh,v 1.1 2001/11/24 03:56:51 jgellene Exp $
+ * $Id: Show_Threads.bsh,v 1.2 2002/01/31 05:35:48 spestov Exp $
  */
 
 
@@ -140,7 +140,7 @@ Macro index data (in DocBook format)
   <listitem>
     <para><filename>Show_Threads.bsh</filename></para>
     <abstract><para>
-      Displays all threads in a tree.
+      Displays all running Java threads in a tree.
     </para></abstract>
   </listitem>
 
