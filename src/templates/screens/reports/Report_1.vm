@@ -36,7 +36,9 @@ Report
 #end
 
 <p>
-#reportTable($report.Model $report.IssueType)
+#set ($reportModel = $report.Model)
+#set ($reportIssueType = $report.IssueType)
+#reportTable($reportModel $reportIssueType)
 </p>
 
 <div class="functnbar2">
