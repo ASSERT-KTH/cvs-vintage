@@ -22,9 +22,9 @@ import java.io.FileReader;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
+import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 
-public class MBOXMailImportFilter extends DefaultMailboxImporter {
+public class MBOXMailImportFilter extends AbstractMailboxImporter {
 
 	public MBOXMailImportFilter() {
 		super();

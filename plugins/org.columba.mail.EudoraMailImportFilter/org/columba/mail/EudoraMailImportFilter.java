@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
+import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 import org.columba.ristretto.coder.EncodedWord;
 
 /**
@@ -42,7 +42,7 @@ import org.columba.ristretto.coder.EncodedWord;
  * @author Karl Peder Olesen
  * @version 1.0
  */
-public class EudoraMailImportFilter extends DefaultMailboxImporter {
+public class EudoraMailImportFilter extends AbstractMailboxImporter {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail");
