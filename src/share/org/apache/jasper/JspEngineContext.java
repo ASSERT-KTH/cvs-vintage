@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.7 2000/02/27 02:01:23 rubys Exp $
- * $Revision: 1.7 $
- * $Date: 2000/02/27 02:01:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.8 2000/06/27 20:59:39 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/06/27 20:59:39 $
  *
  * ====================================================================
  * 
@@ -68,10 +68,12 @@ package org.apache.jasper;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 import org.apache.jasper.compiler.JspReader;
 import org.apache.jasper.compiler.ServletWriter;
-import org.apache.jasper.runtime.JspLoader;
+//import org.apache.jasper.runtime.JspLoader;
+import org.apache.jasper.servlet.JasperLoader;
 import org.apache.jasper.compiler.TagLibraries;
 
 import org.apache.jasper.compiler.Compiler;
@@ -80,7 +82,6 @@ import org.apache.jasper.compiler.SunJavaCompiler;
 import org.apache.jasper.compiler.JavaCompiler;
 
 import org.apache.tomcat.logging.Logger;
-
 /**
  * A place holder for various things that are used through out the JSP
  * engine. This is a per-request/per-context data structure. Some of
@@ -96,7 +97,7 @@ public class JspEngineContext implements JspCompilationContext {
     JspReader reader;
     ServletWriter writer;
     ServletContext context;
-    JspLoader loader;
+    JasperLoader loader;
     String classpath; // for compiling JSPs.
     boolean isErrPage;
     String jspFile;
@@ -109,7 +110,7 @@ public class JspEngineContext implements JspCompilationContext {
     HttpServletResponse res;
     
 
-    public JspEngineContext(JspLoader loader, String classpath, 
+    public JspEngineContext(JasperLoader loader, String classpath, 
                             ServletContext context, String jspFile, 
                             boolean isErrPage, Options options, 
                             HttpServletRequest req, HttpServletResponse res) 
@@ -171,10 +172,14 @@ public class JspEngineContext implements JspCompilationContext {
      * What class loader to use for loading classes while compiling
      * this JSP? I don't think this is used right now -- akv. 
      */
-    public JspLoader getClassLoader() {
+    public ClassLoader getClassLoader() {
         return loader;
     }
-    
+
+    public void addJar( String jar ) throws IOException  {
+	loader.addJar( jar );
+    }
+
     /**
      * Are we processing something that has been declared as an
      * errorpage? 

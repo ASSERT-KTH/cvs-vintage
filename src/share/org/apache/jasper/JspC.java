@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.14 2000/06/23 21:37:16 costin Exp $
- * $Revision: 1.14 $
- * $Date: 2000/06/23 21:37:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.15 2000/06/27 20:59:39 costin Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/06/27 20:59:39 $
  *
  * ====================================================================
  * 
@@ -70,7 +70,8 @@ import org.apache.jasper.compiler.TagLibraries;
 import org.apache.jasper.compiler.Compiler;
 import org.apache.jasper.compiler.CommandLineCompiler;
 
-import org.apache.jasper.runtime.JspLoader;
+//import org.apache.jasper.runtime.JspLoader;
+import org.apache.jasper.servlet.JasperLoader;
 
 import org.apache.tomcat.logging.Logger;
 import org.apache.tomcat.logging.TomcatLogger;
@@ -320,8 +321,8 @@ public class JspC implements Options { //, JspCompilationContext {
   public boolean parseFile(PrintStream log, String file, Writer mapout)
     {
         try {
-            JspLoader loader =
-                    new org.apache.jasper.servlet.JasperLoader();
+            JasperLoader loader =
+                    new JasperLoader();
 	    loader.setParentClassLoader(getClass().getClassLoader());
 	    loader.setOptions( this);
             CommandLineContext clctxt = new CommandLineContext(

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.21 2000/06/14 22:51:53 mandar Exp $
- * $Revision: 1.21 $
- * $Date: 2000/06/14 22:51:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.22 2000/06/27 20:59:40 costin Exp $
+ * $Revision: 1.22 $
+ * $Date: 2000/06/27 20:59:40 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -86,7 +86,7 @@ import org.xml.sax.*;
 import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
-import org.apache.jasper.runtime.JspLoader;
+//import org.apache.jasper.runtime.JspLoader;
 
 import org.apache.tomcat.logging.Logger;
 
@@ -273,7 +273,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 		else
 		    copy(url.openStream(), jarFileName);
 	    
-	        ctxt.getClassLoader().addJar(jarFileName);
+	        ctxt.addJar(jarFileName);
 	    }
 	    
 	    

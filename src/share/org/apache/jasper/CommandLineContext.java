@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/CommandLineContext.java,v 1.4 2000/03/04 06:29:10 shemnon Exp $
- * $Revision: 1.4 $
- * $Date: 2000/03/04 06:29:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/CommandLineContext.java,v 1.5 2000/06/27 20:59:39 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/06/27 20:59:39 $
  *
  * ====================================================================
  * 
@@ -73,7 +73,9 @@ import org.apache.jasper.compiler.TagLibraries;
 import org.apache.jasper.compiler.CommandLineCompiler;
 import org.apache.jasper.compiler.Compiler;
 
-import org.apache.jasper.runtime.JspLoader;
+//import org.apache.jasper.runtime.JspLoader;
+// Use the jasper loader - the only function used is to add a jar
+import org.apache.jasper.servlet.JasperLoader;
 
 /**
  * Holds data used on a per-page compilation context that would otherwise spill
@@ -87,7 +89,7 @@ public class CommandLineContext implements JspCompilationContext {
     String classPath;
     JspReader reader;
     ServletWriter writer;
-    JspLoader loader;
+    JasperLoader loader;
     boolean errPage;
     String jspFile;
     String servletClassName;
@@ -103,7 +105,7 @@ public class CommandLineContext implements JspCompilationContext {
     boolean classNameLocked;
     boolean outputInDirs;
 
-    public CommandLineContext(JspLoader newLoader, String newClassPath,
+    public CommandLineContext(JasperLoader newLoader, String newClassPath,
                               String newJspFile, String newUriBase,
                               String newUriRoot, boolean newErrPage,
                               Options newOptions)
@@ -165,9 +167,13 @@ public class CommandLineContext implements JspCompilationContext {
      * What class loader to use for loading classes while compiling
      * this JSP? I don't think this is used right now -- akv. 
      */
-    public JspLoader getClassLoader() {
+    public ClassLoader getClassLoader() {
         return loader;
     };
+
+    public void addJar( String jar ) throws IOException  {
+	loader.addJar( jar );
+    }
     
     /**
      * Are we processing something that has been declared as an

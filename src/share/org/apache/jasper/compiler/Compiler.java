@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.18 2000/06/27 17:16:22 costin Exp $
- * $Revision: 1.18 $
- * $Date: 2000/06/27 17:16:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.19 2000/06/27 20:59:40 costin Exp $
+ * $Revision: 1.19 $
+ * $Date: 2000/06/27 20:59:40 $
  *
  * ====================================================================
  * 
@@ -90,7 +90,7 @@ public class Compiler {
     protected Mangler mangler;
     protected JspCompilationContext ctxt;
 
-    protected Compiler(JspCompilationContext ctxt) {
+    public Compiler(JspCompilationContext ctxt) {
         this.ctxt = ctxt;
     }
     

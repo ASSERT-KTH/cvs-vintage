@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspCompilationContext.java,v 1.2 2000/01/24 19:14:06 rubys Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/24 19:14:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspCompilationContext.java,v 1.3 2000/06/27 20:59:39 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/06/27 20:59:39 $
  *
  * ====================================================================
  * 
@@ -67,9 +67,9 @@ package org.apache.jasper;
 
 import org.apache.jasper.compiler.JspReader;
 import org.apache.jasper.compiler.ServletWriter;
-import org.apache.jasper.runtime.JspLoader;
+//import org.apache.jasper.runtime.JspLoader;
 import org.apache.jasper.compiler.TagLibraries;
-
+import java.io.IOException;
 import org.apache.jasper.compiler.Compiler;
 
 /**
@@ -104,8 +104,12 @@ public interface JspCompilationContext {
      * What class loader to use for loading classes while compiling
      * this JSP? I don't think this is used right now -- akv. 
      */
-    public JspLoader getClassLoader();
-    
+    public ClassLoader getClassLoader();
+
+    /** Add a jar to the classpath used by the loader
+     */
+    public void addJar( String jar ) throws IOException ;
+
     /**
      * Are we processing something that has been declared as an
      * errorpage? 
