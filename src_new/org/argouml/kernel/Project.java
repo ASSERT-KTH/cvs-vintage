@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.118 2004/10/29 19:37:03 mvw Exp $
+// $Id: Project.java,v 1.119 2004/10/31 08:52:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,8 +161,6 @@ public class Project implements java.io.Serializable, TargetListener {
         this();
         url = Util.fixURLExtension(theProjectUrl, 
                 FileConstants.COMPRESSED_FILE_EXT);
-        saveRegistry = new UMLChangeRegistry();
-
     }
 
     /**
