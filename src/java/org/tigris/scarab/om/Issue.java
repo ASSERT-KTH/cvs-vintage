@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.222 2002/12/04 22:45:41 jon Exp $
+ * @version $Id: Issue.java,v 1.223 2002/12/05 00:13:05 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1709,7 +1709,7 @@ public class Issue
             activitySet.save();
         }
 
-        depend.setActivitySet(activitySet);
+//        depend.setActivitySet(activitySet);
         depend.save();
 
         // Save activitySet record for parent
@@ -2775,7 +2775,7 @@ public class Issue
             activitySet.save();
         }
 
-        depend.setActivitySet(activitySet);
+//        depend.setActivitySet(activitySet);
         depend.setDeleted(true);
         depend.save();
 
@@ -2826,7 +2826,7 @@ public class Issue
                 activitySet.save();
             }
             
-            depend.setActivitySet(activitySet);
+//            depend.setActivitySet(activitySet);
             depend.save();
 
             ActivityManager
