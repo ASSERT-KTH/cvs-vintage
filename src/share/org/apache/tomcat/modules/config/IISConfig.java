@@ -154,10 +154,13 @@ public class IISConfig extends BaseInterceptor  {
                     uri_worker.println();            
 
                     uri_worker.println("#");		    
-                    uri_worker.println("# If you want tomcat to serve all the resources (including static) that");
-                    uri_worker.println("# are part of the " + path + " context, uncomment the following line");
+                    uri_worker.println("# The following line specifies that tomcat should serve all the resources");
+                    uri_worker.println("# (including static) that are port of the " + path + " context.  This insures");
+                    uri_worker.println("# that behavior specified in the web.xml functions correctly.  If you want");
+                    uri_worker.println("# IIS to serve static resources, comment out this line and replace with");
+                    uri_worker.println("# appropriate mappings.  Then update the IIS configuration as needed.");
                     uri_worker.println("#");                        
-		            uri_worker.println("# " + path +"/*=$(default.worker)");
+                    uri_worker.println(path +"/*=$(default.worker)");
 
                     uri_worker.println("#######################################################");		    
                     uri_worker.println("# Auto configuration for the " + path + " context ends.");
