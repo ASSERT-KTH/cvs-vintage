@@ -26,7 +26,7 @@
 // File: Agency.java
 // Classes: Agency, Trigger
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Agency.java,v 1.3 2002/07/14 23:44:58 linus Exp $
+// $Id: Agency.java,v 1.4 2002/10/08 20:04:21 kataka Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -34,7 +34,7 @@ import java.util.*;
 
 import org.tigris.gef.util.*;
 
-import org.argouml.cognitive.*;
+import org.apache.log4j.Category;import org.argouml.cognitive.*;
 
 /** Agency manages Critics.  Since classes are not really first class
  *  objects in java, a singleton instance of Agency is made and passed
@@ -54,7 +54,7 @@ import org.argouml.cognitive.*;
  *  still half done.  Trigger's are the critiquing requests.  The code
  *  for triggers is currently dormant (latent?). */
 
-public class Agency extends Observable { //implements java.io.Serialization
+public class Agency extends Observable { //implements java.io.Serialization     protected static Category cat = Category.getInstance(Agency.class);
 
   ////////////////////////////////////////////////////////////////
   // instance variables
@@ -129,25 +129,21 @@ public class Agency extends Observable { //implements java.io.Serialization
   public static void register(String crClassName, String dmClassName) {
     Class dmClass;
     try { dmClass = Class.forName(dmClassName); }
-    catch (java.lang.ClassNotFoundException e) {
-	System.out.println("Error loading dm " + dmClassName);
+    catch (java.lang.ClassNotFoundException e) {        cat.error("Error loading dm " + dmClassName, e);
 	return;
     }
     Critic cr = (Critic) _singletonCritics.get(crClassName);
     if (cr == null) {
       Class crClass;
       try { crClass = Class.forName(crClassName); }
-      catch (java.lang.ClassNotFoundException e) {
-	System.out.println("Error loading cr " + crClassName);
+      catch (java.lang.ClassNotFoundException e) {        cat.error("Error loading cr " + crClassName, e);
 	return;
       }
       try { cr = (Critic) crClass.newInstance(); }
-      catch (java.lang.IllegalAccessException e) {
-	System.out.println("Error instancating cr " + crClassName);
+      catch (java.lang.IllegalAccessException e) {        cat.error("Error instancating cr " + crClassName, e);
 	return;
       }
-      catch (java.lang.InstantiationException e) {
-	System.out.println("Error instancating cr " + crClassName);
+      catch (java.lang.InstantiationException e) {        cat.error("Error instancating cr " + crClassName, e);
 	return;
       }
       _singletonCritics.put(crClassName, cr);
@@ -162,7 +158,6 @@ public class Agency extends Observable { //implements java.io.Serialization
    * the design material class. But additional (after-market) critics
    * could added thorugh a menu command in some control panel...*/
   public static void register(Critic cr, Class clazz) {
-    //System.out.println("registering critic " + c.toString());
     Vector critics = (Vector) getCriticRegistry().get(clazz);
     if (critics == null) {
        critics = new Vector();
@@ -222,49 +217,27 @@ public class Agency extends Observable { //implements java.io.Serialization
    * I would call this critique, but it causes a compilation error
    * because it conflicts with the instance method critique! */
   public static void applyAllCritics(Object dm, Designer d, long reasonCode) {
-    //System.out.println("applyAllCritics for reason:" + dm);
     Class dmClazz = dm.getClass();
     Vector critics = criticsForClass(dmClazz);
-    //System.out.println("critics=" + critics);
     applyCritics(dm, d, critics, reasonCode);
   }
 
   public static void applyAllCritics(Object dm, Designer d) {
-    //System.out.println("applyAllCritics for no reason:" + dm);
-    //System.out.println("applying all critics ====================");
     Class dmClazz = dm.getClass();
     Vector critics = criticsForClass(dmClazz);
-    //System.out.println("critics=" + critics);
     applyCritics(dm, d, critics, -1L);
   }
 
   public static void applyCritics(Object dm, Designer d, Vector
 				  critics, long reasonCode) {
     int size = critics.size();
-//     if (_hot) System.out.println("----------");
-//     if (_hot) System.out.println("HOT: " +
-// 				 Long.toBinaryString(reasonCode) +
-// 				 " " +  dm);
     for (int i = 0; i < size; i++) {
       Critic c = (Critic) critics.elementAt(i);
       if (c.isActive() && c.matchReason(reasonCode)) {
-// 	if (_hot) System.out.println("hot: " +
-// 				     Long.toBinaryString(c.getTriggerMask()) +
-// 				     " " + c.getClass().getName());
 	try {
-	  //_numCriticsApplied++;
 	  c.critique(dm, d);
 	}
-	catch (Exception ex) {
-	  System.out.println("Disabling critique due to exception");
-	  System.out.println(c.toString());
-	  System.out.println(dm.toString());
-	  ex.printStackTrace();
-	  System.out.println("----------");
-          //
-          //   if the critic is going to throw exceptions,
-          //       disable it
-          //
+	catch (Exception ex) {            cat.error("Disabling critique due to exception\n" + c + "\n" + dm, ex);
           c.setEnabled(false);
 	}
       }
@@ -287,13 +260,9 @@ public class Agency extends Observable { //implements java.io.Serialization
     while (criticEnum.hasMoreElements()) {
       Critic c = (Critic)(criticEnum.nextElement());
       if (_controlMech.isRelevant(c, d)) {
-	//System.out.println("Activated: " + c.toString());
-	//Dbg.log("debugActivation","Activated: " + c.toString());
 	c.beActive();
       }
       else {
-	//System.out.println("Deactivated: " + c.toString());
-	//Dbg.log("debugActivation","Deactivated: " + c.toString());
 	c.beInactive();
       }
     }

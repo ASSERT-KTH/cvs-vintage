@@ -24,7 +24,7 @@
 // File: ActionCreatePseudostate.java
 // Classes: ActionCreatePseudostate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ActionCreatePseudostate.java,v 1.2 2002/08/19 20:43:49 kataka Exp $
+// $Id: ActionCreatePseudostate.java,v 1.3 2002/10/08 20:04:30 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -62,13 +62,9 @@ public class ActionCreatePseudostate extends CmdCreateNode {
   // needs-more-work: should call super, reduce code volume!
   public Object makeNode() {
     Object newNode = super.makeNode();
-    // try {
     MPseudostateKind kind = (MPseudostateKind) _args.get("kind");
     ((MPseudostate)newNode).setKind(kind);
-	// }
-	//catch (PropertyVetoException pve) {
-    //  System.out.println("PropertyVetoException in seting pseudo kind");
-    //}
+
     return newNode;
   }
 

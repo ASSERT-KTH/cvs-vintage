@@ -26,7 +26,7 @@
 // File: CrNameConfusion.java
 // Classes: CrNameConfusion
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.3 2002/08/11 06:52:15 linus Exp $
+// $Id: CrNameConfusion.java,v 1.4 2002/10/08 20:04:27 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -104,9 +104,6 @@ public class CrNameConfusion extends CrUML {
     if (!predicate(dm, dsgr)) return false;
     VectorSet newOffs = computeOffenders(dm);
     boolean res = offs.equals(newOffs);
-//      System.out.println("offs="+ offs.toString() +
-//  		       " newOffs="+ newOffs.toString() +
-//  		       " res = " + res);
     return res;
   }
 

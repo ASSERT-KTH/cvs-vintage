@@ -26,7 +26,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.12 2002/08/20 22:48:45 kataka Exp $
+// $Id: PropPanelStimulus.java,v 1.13 2002/10/08 20:04:38 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -137,12 +137,6 @@ public class PropPanelStimulus extends PropPanelModelElement {
     }
 
     public void removed(MElementEvent mee) {
-	/*
-	System.out.println("PropPanel.removed: event.name:" + mee.getName() + " event.type: " + mee.getType());
-        UMLChangeDispatch dispatch = new UMLChangeDispatch(this,0);
-        dispatch.removed(mee);
-        SwingUtilities.invokeLater(dispatch);
-	*/
     }
 
 
@@ -232,18 +226,13 @@ public class PropPanelStimulus extends PropPanelModelElement {
     }
 
     public void removeElement() {
-	System.out.println("PropPanelStimulus.removeElement");
         MStimulus target = (MStimulus) getTarget();        
 	MModelElement newTarget = (MModelElement) target.getNamespace();
                 
-        target.remove();
+       UmlFactory.getFactory().delete(target);
 		if(newTarget != null) { 
 			navigateTo(newTarget);
 		}
-			 // 2002-07-15
-            // Jaap Branderhorst
-            // Force an update of the navigation pane to solve issue 323
-            ProjectBrowser.TheInstance.getNavPane().forceUpdate();
             
     }
 

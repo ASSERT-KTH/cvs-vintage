@@ -23,20 +23,20 @@
 
 package org.argouml.uml.ui;
 import javax.swing.event.*;
-import javax.swing.*;
+import javax.swing.*;import org.apache.log4j.Category;
 import java.lang.reflect.*;
 import ru.novosoft.uml.*;
 import ru.novosoft.uml.foundation.core.*;
 import java.awt.event.*;
 import java.awt.*;
-import java.lang.*;
+
 
 /**
  *   This class extends JMenuItem to invoke a method upon selection.
  *   The method must have the form of "void method(MModelElement );".
  *   @author Curt Arnold
  */
-public class UMLTreeMenuItem extends JMenuItem implements ActionListener {
+public class UMLTreeMenuItem extends JMenuItem implements ActionListener {            protected static Category cat = Category.getInstance(UMLTreeMenuItem.class);
 
     private Object _actionObj;
     private MModelElement _element;
@@ -65,9 +65,7 @@ public class UMLTreeMenuItem extends JMenuItem implements ActionListener {
             _action = _actionObj.getClass().
                     getMethod(action,new Class[] { MModelElement.class });
         }
-        catch(Exception e) {
-            System.out.println("Exception in " + _action + " popup.");
-            System.out.println(e.toString());
+        catch(Exception e) {            cat.error("Exception in " + _action + " popup.", e);
             setEnabled(false);
         }
         
@@ -83,8 +81,7 @@ public class UMLTreeMenuItem extends JMenuItem implements ActionListener {
              Object[] argValue = { _element };
             _action.invoke(_actionObj,argValue);
         }
-        catch(Exception e) {
-            System.out.println(e.toString() + " in UMLListMenuItem.actionPerformed()");
+        catch(Exception e) {            cat.error(e.toString() + " in UMLListMenuItem.actionPerformed()", e);
         }
     }
     

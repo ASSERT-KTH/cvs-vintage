@@ -26,7 +26,7 @@
 // File: WizAssocComposite.java
 // Classes: WizAssocComposite
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizAssocComposite.java,v 1.2 2002/03/15 10:34:44 jeremybennett Exp $
+// $Id: WizAssocComposite.java,v 1.3 2002/10/08 20:04:27 kataka Exp $
 
 // 12 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Code corrected and
 // tidied up as part of fix to issue 619.
@@ -38,7 +38,7 @@ import java.util.*;
 import java.beans.*;
 import javax.swing.*;
 
-import org.argouml.cognitive.ui.*;
+import org.apache.log4j.Category;import org.argouml.cognitive.ui.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.model_management.*;
@@ -61,7 +61,7 @@ import org.tigris.gef.util.*;
  */
 
 
-public class WizAssocComposite extends Wizard {
+public class WizAssocComposite extends Wizard {    protected static Category cat = Category.getInstance(WizAssocComposite.class);    
 
     /**
      * <p>The initial instructions on the Step 1 screen. May be set to a
@@ -308,7 +308,7 @@ public class WizAssocComposite extends Wizard {
             }
 
             if (choice == -1) {
-                System.out.println("WizAssocComposite: nothing selected, " +
+                cat.warn("WizAssocComposite: nothing selected, " +
                                    "should not get here");
                 return;
             }
@@ -373,8 +373,8 @@ public class WizAssocComposite extends Wizard {
 
                 // Someone took our association away.
 
-                System.out.println("WizAssocComposite: could not set " +
-                                   "aggregation."); 
+                cat.error("WizAssocComposite: could not set " +
+                                   "aggregation.", pve); 
             }
         }
     }

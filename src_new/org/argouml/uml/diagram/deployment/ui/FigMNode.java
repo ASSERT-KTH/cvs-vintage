@@ -24,7 +24,7 @@
 // File: FigMNode.java
 // Classes: FigMNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigMNode.java,v 1.5 2002/06/04 05:25:27 mkl Exp $
+// $Id: FigMNode.java,v 1.6 2002/10/08 20:04:29 kataka Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -155,10 +155,11 @@ public class FigMNode extends FigNodeModelElement {
 
   public void setEnclosingFig(Fig encloser) {
     super.setEnclosingFig(encloser);
+    
     Vector figures = getEnclosedFigs();
    
     if (getLayer() != null) {
-      elementOrdering(figures); 
+      // elementOrdering(figures); 
       Vector contents = getLayer().getContents();
       int contentsSize = contents.size();
       for (int j=0; j<contentsSize; j++) {
@@ -169,6 +170,7 @@ public class FigMNode extends FigNodeModelElement {
         }
       }
     }
+    
   }
 
   protected void updateStereotypeText() {

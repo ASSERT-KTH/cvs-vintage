@@ -23,7 +23,7 @@
 
 // File: FigMessage.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigMessage.java,v 1.11 2002/09/17 14:11:14 kataka Exp $
+// $Id: FigMessage.java,v 1.12 2002/10/08 20:04:31 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -47,6 +47,7 @@ import org.argouml.application.api.*;
 import org.argouml.kernel.*;
 import org.argouml.ui.*;
 import org.argouml.uml.generator.*;
+import org.argouml.util.Trash;
 import org.argouml.uml.diagram.collaboration.ui.FigAssociationRole;
 
 /** Class to display graphics for a UML collaboration in a diagram. */
@@ -242,6 +243,7 @@ public class FigMessage extends FigNodeModelElement {
     MClassifierRole receiver = mes.getReceiver();
     Fig senderPort = getLayer().presentationFor(sender);
     Fig receiverPort = getLayer().presentationFor(receiver);
+    if (senderPort == null || receiverPort == null) return;
     int sx = senderPort.getX();
     int sy = senderPort.getY();
     int rx = receiverPort.getX();
@@ -256,14 +258,6 @@ public class FigMessage extends FigNodeModelElement {
     	setArrow(1);
     } else
     	setArrow(4);
-  }
-
-  public void dispose() {
-    if (!(getOwner() instanceof MElement)) return;
-    MElement elmt = (MElement) getOwner();
-    Project p = ProjectBrowser.TheInstance.getProject();
-    p.moveToTrash(elmt);
-    super.dispose();
   }
 
   /** add the FigMessage to the Path Items of its FigAssociationRole */
@@ -293,13 +287,6 @@ public class FigMessage extends FigNodeModelElement {
 		super.paint(g);
 	}
 
-	/**
-	 * @see org.tigris.gef.presentation.Fig#setOwner(Object)
-	 */
-	public void setOwner(Object own) {
-		super.setOwner(own);
-		((MModelElement)own).removeMElementListener(this);
-		((MModelElement)own).addMElementListener(this);
-	}
+    
 
 } /* end class FigMessage */

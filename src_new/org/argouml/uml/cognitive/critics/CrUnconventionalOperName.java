@@ -26,7 +26,7 @@
 // File: CrUnconventionalOperName.java
 // Classes: CrUnconventionalOperName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalOperName.java,v 1.5 2002/03/29 09:04:37 linus Exp $
+// $Id: CrUnconventionalOperName.java,v 1.6 2002/10/08 20:04:27 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -87,9 +87,6 @@ public class CrUnconventionalOperName extends CrUML {
     if (!predicate(f, dsgr)) return false;
     VectorSet newOffs = computeOffenders(f);
     boolean res = offs.equals(newOffs);
-//      System.out.println("offs="+ offs.toString() +
-//  		       " newOffs="+ newOffs.toString() +
-//  		       " res = " + res);
     return res;
   }
 

@@ -24,7 +24,7 @@
 // File: PropPanelObject.java
 // Classes: PropPanelObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelObject.java,v 1.11 2002/08/20 22:48:45 kataka Exp $
+// $Id: PropPanelObject.java,v 1.12 2002/10/08 20:04:38 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -172,7 +172,7 @@ public class PropPanelObject extends PropPanelModelElement {
         MObject target = (MObject) getTarget();        
 	MModelElement newTarget = (MModelElement) target.getNamespace();
                 
-        target.remove();
+        UmlFactory.getFactory().delete(target);
 	if(newTarget != null) navigateTo(newTarget);
     }
 

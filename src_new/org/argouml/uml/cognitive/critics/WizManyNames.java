@@ -26,7 +26,7 @@
 // File: WizManyNames.java
 // Classes: WizManyNames
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizManyNames.java,v 1.2 2002/07/16 09:02:50 jhraigniac Exp $
+// $Id: WizManyNames.java,v 1.3 2002/10/08 20:04:27 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -34,7 +34,7 @@ import java.util.*;
 import java.beans.*;
 import javax.swing.*;
 
-import org.argouml.application.api.*;
+import org.apache.log4j.Category;import org.argouml.application.api.*;
 import org.argouml.cognitive.ui.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
@@ -45,7 +45,7 @@ import org.argouml.kernel.*;
 /** A non-modal wizard to help the user change the name of a
  *  MModelElement to a better name. */
 
-public class WizManyNames extends Wizard {
+public class WizManyNames extends Wizard {    protected static Category cat = Category.getInstance(WizManyNames.class);
 
   protected String _instructions =
   "Please change the name of the offending model element.";
@@ -86,7 +86,7 @@ public class WizManyNames extends Wizard {
    *  they do along, as soon as possible, they should not wait until
    *  the final step. */
   public void doAction(int oldStep) {
-    //System.out.println("doAction " + oldStep);
+    cat.debug("doAction " + oldStep);
     switch (oldStep) {
     case 1:
       Vector newNames = null;
@@ -99,7 +99,7 @@ public class WizManyNames extends Wizard {
 	}
       }
       catch (Exception pve) {
-	System.out.println("could not set name");
+	cat.error("could not set name", pve);
       }
     }
   }

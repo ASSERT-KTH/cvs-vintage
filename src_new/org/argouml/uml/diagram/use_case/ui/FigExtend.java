@@ -24,7 +24,7 @@
 // File: FigExtend.java
 // Classes: FigExtend
 // Original Author: mail@jeremybennett.com
-// $Id: FigExtend.java,v 1.4 2002/09/13 08:12:59 kataka Exp $
+// $Id: FigExtend.java,v 1.5 2002/10/08 20:04:33 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Extend relationships.
@@ -57,31 +57,6 @@ import org.tigris.gef.presentation.*;
  */
 
 public class FigExtend extends FigEdgeModelElement {
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // Constants
-    //
-    ///////////////////////////////////////////////////////////////////////////
-
-    
-
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // Static initialiser
-    //
-    ///////////////////////////////////////////////////////////////////////////
-
-    
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // Instance varibles
-    //
-    ///////////////////////////////////////////////////////////////////////////
-
 
     /**
      * <p>The &laquo;extend&raquo; label.</p>
@@ -275,6 +250,8 @@ public class FigExtend extends FigEdgeModelElement {
         else {
             _condition.setText(Notation.generate(this, condition));
         }
+        
+        
 
         // Let the group recalculate its bounds and then tell GEF we've
         // finished.

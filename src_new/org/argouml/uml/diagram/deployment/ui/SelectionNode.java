@@ -24,7 +24,7 @@
 // File: SelectionNode.java
 // Classes: SelectionNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionNode.java,v 1.5 2002/08/22 12:47:34 kataka Exp $
+// $Id: SelectionNode.java,v 1.6 2002/10/08 20:04:29 kataka Exp $
 
 
 package org.argouml.uml.diagram.deployment.ui;
@@ -43,10 +43,13 @@ import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
 import org.tigris.gef.util.*;
 
+import org.apache.log4j.Category;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.diagram.ui.*;
 
 public class SelectionNode extends SelectionWButtons {
+    protected static Category cat = 
+        Category.getInstance(SelectionNode.class);
   ////////////////////////////////////////////////////////////////
   // constants
   public static Icon dep = ResourceLoader.lookupIconResource("Association");
@@ -150,7 +153,7 @@ public class SelectionNode extends SelectionWButtons {
       bx = cx;
       break;
     default:
-      System.out.println("invalid handle number");
+      cat.warn("invalid handle number");
       break;
     }
     if (edgeClass != null && nodeClass != null) {

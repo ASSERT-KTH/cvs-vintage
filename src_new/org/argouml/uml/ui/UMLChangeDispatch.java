@@ -25,7 +25,7 @@
 // File: UMLChangeDispatch.java
 // Classes: UMLChangeDispatch
 // Original Author:
-// $Id: UMLChangeDispatch.java,v 1.9 2002/07/18 09:47:04 kataka Exp $
+// $Id: UMLChangeDispatch.java,v 1.10 2002/10/08 20:04:35 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added named constants
 
@@ -226,7 +226,7 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
            PropPanel propPanel = (PropPanel) _container;
             Object target = propPanel.getTarget();
 
-            if(target instanceof MBase) {            	            	// 2002-07-15            	// Jaap Branderhorst            	// added next statement to prevent PropPanel getting added again and again to the target's listeners      			propPanel.removeMElementListener((MBase) target);
+            if(target instanceof MBase) {            	            	// 2002-07-15            	// Jaap Branderhorst            	// added next statement to prevent PropPanel getting added again and again to the target's listeners      		propPanel.removeMElementListener((MBase) target);
                 propPanel.addMElementListener((MBase) target);
             }
         }

@@ -26,7 +26,7 @@
 // File: CrUnconventionalAttrName.java
 // Classes: CrUnconventionalAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalAttrName.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.3 2002/10/08 20:04:27 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -91,9 +91,6 @@ public class CrUnconventionalAttrName extends CrUML {
     if (!predicate(f, dsgr)) return false;
     VectorSet newOffs = computeOffenders(f);
     boolean res = offs.equals(newOffs);
-//      System.out.println("offs="+ offs.toString() +
-//  		       " newOffs="+ newOffs.toString() +
-//  		       " res = " + res);
     return res;
   }
 

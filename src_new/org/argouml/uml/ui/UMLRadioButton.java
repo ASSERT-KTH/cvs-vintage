@@ -25,7 +25,8 @@ package org.argouml.uml.ui;
 
 import java.awt.event.*;import java.beans.PropertyVetoException;
 import javax.swing.*;
-import javax.swing.event.*;import org.argouml.ui.ProjectBrowser;
+import javax.swing.event.*;import org.apache.log4j.Category;
+import org.argouml.ui.ProjectBrowser;
 import java.lang.reflect.*;
 
 import ru.novosoft.uml.*;
@@ -33,7 +34,9 @@ import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 
 public class UMLRadioButton extends JRadioButton implements ItemListener, 
-                                                            UMLUserInterfaceComponent {        
+                                                            UMLUserInterfaceComponent {
+    protected static Category cat = Category.getInstance(UMLRadioButton.class);
+                                                                        
 	private class BooleanSetter implements Runnable {		JRadioButton _field = null;		boolean _newValue = false;		public BooleanSetter(JRadioButton field, boolean newValue) {			_field = field;			_newValue = newValue;		}		/**         * @see java.lang.Runnable#run()         */        public void run() {        	_field.setSelected(_newValue);        }	}			
     private UMLUserInterfaceContainer _container;
     private UMLBooleanProperty _property;    private ButtonGroup _group = null;
@@ -56,7 +59,7 @@ public class UMLRadioButton extends JRadioButton implements ItemListener,
         update();
     }
     public void itemStateChanged(final ItemEvent event) {
-//		System.out.println(getAccessibleContext().getAccessibleName()+" itemStateChanged "+event.getStateChange());		try {
+		cat.debug(getAccessibleContext().getAccessibleName()+" itemStateChanged "+event.getStateChange());		try {
         	_property.setProperty(_container.getTarget(),event.getStateChange() == ItemEvent.SELECTED);		}		catch (PropertyVetoException ve) {			ProjectBrowser.TheInstance.getStatusBar().showStatus(ve.getMessage());			setSelected(_property.getProperty(_container.getTarget()));    	}        // yes we should update        update();
     }
 

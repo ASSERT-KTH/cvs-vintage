@@ -24,7 +24,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.4 2002/08/19 08:41:40 kataka Exp $
+// $Id: FigObject.java,v 1.5 2002/10/08 20:04:29 kataka Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -125,8 +125,7 @@ public class FigObject extends FigNodeModelElement {
 
   public void setOwner(Object node) {
     super.setOwner(node);
-    Object onlyPort = node;
-    bindPort(onlyPort, _bigPort);
+    bindPort(node, _bigPort);
   }
 
   public Dimension getMinimumSize() {

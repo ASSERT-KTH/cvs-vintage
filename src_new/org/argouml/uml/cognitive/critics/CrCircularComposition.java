@@ -26,7 +26,7 @@
 // File: CrCircularComposition.java
 // Classes: CrCircularComposition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularComposition.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrCircularComposition.java,v 1.3 2002/10/08 20:04:27 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -36,13 +36,13 @@ import ru.novosoft.uml.foundation.core.*;
 
 import org.tigris.gef.util.*;
 
-import org.argouml.cognitive.*;
+import org.apache.log4j.Category;import org.argouml.cognitive.*;
 import org.argouml.cognitive.critics.*;
 import org.argouml.uml.*;
 
 /**  */
 
-public class CrCircularComposition extends CrUML {
+public class CrCircularComposition extends CrUML {    protected static Category cat = Category.getInstance(CrCircularComposition.class);
 
   public CrCircularComposition() {
     setHeadline("Remove Circular Composition");
@@ -84,9 +84,9 @@ public class CrCircularComposition extends CrUML {
     if (!predicate(dm, dsgr)) return false;
     VectorSet newOffs = computeOffenders(dm);
     boolean res = offs.equals(newOffs);
-//      System.out.println("offs="+ offs.toString() +
-//  		       " newOffs="+ newOffs.toString() +
-//  		       " res = " + res);
+      cat.debug("offs="+ offs.toString() +
+  		       " newOffs="+ newOffs.toString() +
+  		       " res = " + res);
     return res;
   }
 

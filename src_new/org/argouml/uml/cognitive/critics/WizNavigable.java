@@ -26,7 +26,7 @@
 // File: WizNavigable.java
 // Classes: WizNavigable
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.2 2002/08/10 14:57:45 linus Exp $
+// $Id: WizNavigable.java,v 1.3 2002/10/08 20:04:27 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -34,7 +34,7 @@ import java.util.*;
 import java.beans.*;
 import javax.swing.*;
 
-import org.argouml.cognitive.ui.*;
+import org.apache.log4j.Category;import org.argouml.cognitive.ui.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.model_management.*;
@@ -46,7 +46,7 @@ import org.argouml.kernel.*;
 /** A non-modal wizard to help the user change navigability
  *  of an association. */
 
-public class WizNavigable extends Wizard {
+public class WizNavigable extends Wizard {    protected static Category cat = Category.getInstance(WizNavigable.class);
 
   protected String _instructions =
   "Please select one of the following navigability options.";
@@ -113,7 +113,7 @@ public class WizNavigable extends Wizard {
    *  they do along, as soon as possible, they should not wait until
    *  the final step. */
   public void doAction(int oldStep) {
-    //System.out.println("doAction " + oldStep);
+    cat.debug("doAction " + oldStep);
     switch (oldStep) {
     case 1:
       int choice = -1;
@@ -129,7 +129,7 @@ public class WizNavigable extends Wizard {
 	ae1.setNavigable(choice == 1 || choice == 2);
       }
       catch (Exception pve) {
-	System.out.println("could not set navigablity");
+	cat.error("could not set navigablity", pve);
       }
     }
   }

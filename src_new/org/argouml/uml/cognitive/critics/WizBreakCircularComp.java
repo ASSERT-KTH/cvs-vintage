@@ -26,7 +26,7 @@
 // File: WizBreakCircularComp.java
 // Classes: WizBreakCircularComp
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizBreakCircularComp.java,v 1.2 2002/08/10 14:57:45 linus Exp $
+// $Id: WizBreakCircularComp.java,v 1.3 2002/10/08 20:04:27 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -34,7 +34,7 @@ import java.util.*;
 import java.beans.*;
 import javax.swing.*;
 
-import org.argouml.cognitive.ui.*;
+import org.apache.log4j.Category;import org.argouml.cognitive.ui.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.model_management.*;
@@ -47,7 +47,7 @@ import org.argouml.uml.generator.*;
 /** A non-modal wizard to help the user change select an association
  *  to make non-aggregate. */
 
-public class WizBreakCircularComp extends Wizard {
+public class WizBreakCircularComp extends Wizard {    protected static Category cat = Category.getInstance(WizBreakCircularComp.class);
 
   protected String _instructions1 =
   "Please select one of the following classes. "+
@@ -141,7 +141,7 @@ public class WizBreakCircularComp extends Wizard {
    *  they do along, as soon as possible, they should not wait until
    *  the final step. */
   public void doAction(int oldStep) {
-    //System.out.println("doAction " + oldStep);
+    cat.debug("doAction " + oldStep);
     int choice = -1;
     VectorSet offs = _item.getOffenders();
     switch (oldStep) {
@@ -175,7 +175,7 @@ public class WizBreakCircularComp extends Wizard {
 	  ae1.setAggregation(MAggregationKind.NONE);
 	}
 	catch (Exception pve) {
-	  System.out.println("could not set aggregation");
+	  cat.error("could not set aggregation", pve);
 	}
       }
       break;

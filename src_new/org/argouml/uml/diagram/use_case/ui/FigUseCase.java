@@ -24,7 +24,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.7 2002/08/20 21:21:01 kataka Exp $
+// $Id: FigUseCase.java,v 1.8 2002/10/08 20:04:33 kataka Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -45,6 +45,7 @@ import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
 
+import org.apache.log4j.Category;
 import org.argouml.application.api.*;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.ui.*;
@@ -408,7 +409,7 @@ public class FigUseCase extends FigNodeModelElement {
                                                      "setAbstract",
                                                      useCase));
 
-        modifierMenu.addCheckItem(new ActionModifier("Final",
+        modifierMenu.addCheckItem(new ActionModifier("Leaf",
                                                      "isLeaf",
                                                      "isLeaf",
                                                      "setLeaf",
@@ -872,6 +873,7 @@ public class FigUseCase extends FigNodeModelElement {
      */
 
     public class FigMyCircle extends FigCircle {
+        protected Category cat = Category.getInstance(FigMyCircle.class);
 
         /**
          * <p>Constructor just invokes the parent constructor.</p>
@@ -916,7 +918,7 @@ public class FigUseCase extends FigNodeModelElement {
             double mu = rx*ry/Math.sqrt(dd);
 
             Point res = new Point((int)(mu*dx+_x+rx),(int)(mu*dy+_y+ry));
-            //System.out.println("    returns "+res.x+','+res.y+')');
+            cat.debug("    returns "+res.x+','+res.y+')');
             return res;
         }
     }

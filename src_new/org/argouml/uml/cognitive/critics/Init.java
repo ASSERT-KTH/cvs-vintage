@@ -24,7 +24,7 @@
 // File: Init.java
 // Classes: Init
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Init.java,v 1.8 2002/09/14 06:06:51 linus Exp $
+// $Id: Init.java,v 1.9 2002/10/08 20:04:27 kataka Exp $
 
 // 8 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). CrCrossNamespaceAssoc
 // registration corrected to Association, rather than AssociationClass
@@ -341,18 +341,6 @@ public class Init {
 
       Agency.register(crNodesOverlap, diagramCls);
       Agency.register(crZeroLengthEdge, edgeCls);
-
-
-      
-      
-      //Agency.register(crTooMuchFeedback, project);
-      //Agency.register(crTooManyDisabled, project);
-      //Agency.dumpRegistry();
-      
-//     }
-//     catch (java.lang.ClassNotFoundException e) {
-// 	System.out.println("!!!! Error while registering " + e.toString());
-//     }
   }
 
       

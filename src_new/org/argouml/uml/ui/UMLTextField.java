@@ -23,7 +23,7 @@
 // File: UMLTextField.java
 // Classes: UMLTextField
 // Original Author: not known
-// $Id: UMLTextField.java,v 1.18 2002/09/17 13:46:45 kataka Exp $
+// $Id: UMLTextField.java,v 1.19 2002/10/08 20:04:36 kataka Exp $
 // 25 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the FigUseCase.
 // 3 May 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to mark the
@@ -162,7 +162,7 @@ public class UMLTextField
             if ((eventSource == null || eventSource == _target) && 
             	((event.getOldValue() == null && event.getNewValue() != null) ||
             	(event.getNewValue() == null && event.getOldValue() != null) ||
-            	(!event.getOldValue().equals(event.getNewValue())))) {
+            	(event.getOldValue()!= null && !event.getOldValue().equals(event.getNewValue())))) {
                 update();
                 // TextSetter textSetter = new TextSetter((String)event.getNewValue(), this);
 	            // SwingUtilities.invokeLater(textSetter);

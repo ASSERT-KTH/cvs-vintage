@@ -24,7 +24,7 @@
 // File: SelectionActionState.java
 // Classes: SelectionState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionActionState.java,v 1.6 2002/08/22 12:49:08 kataka Exp $
+// $Id: SelectionActionState.java,v 1.7 2002/10/08 20:04:28 kataka Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -44,11 +44,14 @@ import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
 import org.tigris.gef.util.*;
 
+import org.apache.log4j.Category;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.diagram.ui.*;
 import org.argouml.uml.diagram.state.ui.*;
 
 public class SelectionActionState extends SelectionWButtons {
+    protected static Category cat = 
+        Category.getInstance(SelectionActionState.class);
   ////////////////////////////////////////////////////////////////
   // constants
   public static Icon trans = 
@@ -201,7 +204,7 @@ public class SelectionActionState extends SelectionWButtons {
       bx = cx + cw/2;
       break;
     default:
-      System.out.println("invalid handle number");
+      cat.warn("invalid handle number");
       break;
     }
     if (edgeClass != null && nodeClass != null) {

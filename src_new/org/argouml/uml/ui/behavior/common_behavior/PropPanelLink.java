@@ -26,7 +26,7 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.9 2002/08/20 22:48:45 kataka Exp $
+// $Id: PropPanelLink.java,v 1.10 2002/10/08 20:04:38 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -95,7 +95,7 @@ public class PropPanelLink extends PropPanelModelElement {
 	MLink target = (MLink) getTarget();        
 	MModelElement newTarget = (MModelElement) target.getNamespace();
                 
-        target.remove();
+        UmlFactory.getFactory().delete(target);
 	if(newTarget != null) navigateTo(newTarget);
     }
 

@@ -24,7 +24,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.10 2002/09/15 06:55:26 linus Exp $
+// $Id: FigClassifierRole.java,v 1.11 2002/10/08 20:04:28 kataka Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -325,8 +325,7 @@ public class FigClassifierRole extends FigNodeModelElement {
 
     public void setOwner(Object node) {
         super.setOwner(node);
-        bindPort((Object) node, _bigPort);
-	modelChanged();
+        bindPort(node, _bigPort);
     }
 
 
@@ -527,28 +526,6 @@ public class FigClassifierRole extends FigNodeModelElement {
         // Now recalculate all the bounds, using our old bounds.
 
 	setBounds(oldBounds.x, oldBounds.y, oldBounds.width, oldBounds.height);
-    }
-
-
-    /**
-     * <p>Handle the deletion of the owner of this fig.</p>
-     *
-     * <p>Not clear that this does anything beyond the default.</p>
-     */
-
-    public void dispose() {
-
-        // Give up if no owner
-
-        if (!(getOwner() instanceof MElement)) {
-            return;
-        }
-
-        MElement elmt = (MElement) getOwner();
-        Project  p    = ProjectBrowser.TheInstance.getProject();
-
-        p.moveToTrash(elmt);
-        super.dispose();
     }
 
 

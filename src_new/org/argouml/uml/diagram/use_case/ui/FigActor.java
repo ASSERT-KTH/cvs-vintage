@@ -24,7 +24,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.3 2002/09/12 15:37:06 kataka Exp $
+// $Id: FigActor.java,v 1.4 2002/10/08 20:04:33 kataka Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -120,7 +120,7 @@ public class FigActor extends FigNodeModelElement {
     return new SelectionActor(this);
   }
 
-  public void setOwner(Object node) {
+  public void setOwner(Object node) {  
     super.setOwner(node);
     bindPort(node, _bigPort);
   }

@@ -24,7 +24,7 @@
 // File: FigHistoryState.java
 // Classes: FigHistoryState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigDeepHistoryState.java,v 1.3 2002/08/19 09:02:12 kataka Exp $
+// $Id: FigDeepHistoryState.java,v 1.4 2002/10/08 20:04:30 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -113,9 +113,6 @@ public class FigDeepHistoryState extends FigStateVertex {
   public void setOwner(Object node) {
     super.setOwner(node);
     bindPort(node, _bigPort);
-    // if it is a UML meta-model object, register interest in any change events
-    if (node instanceof MElement)
-      ((MElement)node).addMElementListener(this);
   }
 
   /** History states are fixed size. */

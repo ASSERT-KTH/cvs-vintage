@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.16 2002/09/22 10:28:20 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.17 2002/10/08 20:04:30 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -46,12 +46,14 @@ import org.tigris.gef.ui.*;
 import org.argouml.ui.*;
 import org.argouml.uml.diagram.ui.*;
 import org.argouml.uml.diagram.state.*;
+import org.apache.log4j.Category;
 import org.argouml.application.api.*;
 // get the note from the class diagram
 import org.argouml.uml.ui.*;
 import org.argouml.uml.diagram.static_structure.ui.FigComment;
 
 public class UMLStateDiagram extends UMLDiagram {
+    protected static Category cat = Category.getInstance(UMLStateDiagram.class);
 
   ////////////////
   // actions for toolbar
@@ -139,7 +141,7 @@ public class UMLStateDiagram extends UMLDiagram {
 		if (context != null && context instanceof MClass)
 			setup((MClass)context, sm);
 		else
-			System.out.println("Statemachine without context not yet possible :-(");
+			cat.warn("Statemachine without context not yet possible :-(");
 	}
 
     /** method to perform a number of important initializations of a StateDiagram. 
@@ -182,7 +184,7 @@ public MStateMachine getStateMachine() {
 
   /** initialize the toolbar for this diagram type */
   protected void initToolBar() {
-    //System.out.println("making state toolbar");
+    cat.debug("making state toolbar");
     _toolBar = new ToolBar();
     _toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 //     _toolBar.add(Actions.Cut);

@@ -24,7 +24,7 @@
 // File: FigMNodeInstance.java
 // Classes: FigMNodeInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigMNodeInstance.java,v 1.5 2002/06/04 05:25:27 mkl Exp $
+// $Id: FigMNodeInstance.java,v 1.6 2002/10/08 20:04:29 kataka Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -173,7 +173,7 @@ public class FigMNodeInstance extends FigNodeModelElement {
     Vector figures = getEnclosedFigs();
 
     if (getLayer() != null) {
-      elementOrdering(figures);
+      // elementOrdering(figures);
       Vector contents = getLayer().getContents();
       int contentsSize = contents.size();
       for (int j=0; j<contentsSize; j++) {

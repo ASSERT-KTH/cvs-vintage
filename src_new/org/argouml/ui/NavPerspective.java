@@ -24,7 +24,7 @@
 // File: NavPerspective.java
 // Classes: NavPerspective
 // Original Author: your email address here
-// $Id: NavPerspective.java,v 1.13 2002/09/10 15:31:07 kataka Exp $
+// $Id: NavPerspective.java,v 1.14 2002/10/08 20:04:26 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extends/includes and extension points in the package centric
@@ -145,6 +145,12 @@ implements Serializable, TreeModel, Cloneable {
 			     new GoModelToElements(),
 			     new PredOR(new PredInstanceOf(MExtend.class),
                                         new PredInstanceOf(MInclude.class)));
+    
+     GoFilteredChildren modelToDependencies = 
+        new GoFilteredChildren("misc.package.dependencies",
+                new GoModelToElements(),
+                new PredInstanceOf(MDependency.class));
+    
 
     GoFilteredChildren modelToInstances =
       new GoFilteredChildren("misc.package.instances",
@@ -178,10 +184,11 @@ implements Serializable, TreeModel, Cloneable {
     packageCentric.addSubTreeModel(modelToExtendsAndIncludes);
     packageCentric.addSubTreeModel(modelToInstances);
     packageCentric.addSubTreeModel(modelToLinks);
-    packageCentric.addSubTreeModel(modelToCollaboration);
+    packageCentric.addSubTreeModel(new GoModelToCollaboration());
     packageCentric.addSubTreeModel(modelToComponentInstance);
     packageCentric.addSubTreeModel(modelToNodeInstance);
     packageCentric.addSubTreeModel(modelToGeneralizations);
+    packageCentric.addSubTreeModel(modelToDependencies);
     packageCentric.addSubTreeModel(new GoUseCaseToExtensionPoint());
     packageCentric.addSubTreeModel(new GoClassifierToStr());
     packageCentric.addSubTreeModel(new GoClassifierToBeh());
@@ -192,6 +199,9 @@ implements Serializable, TreeModel, Cloneable {
     packageCentric.addSubTreeModel(new GoSignalToReception());
     packageCentric.addSubTreeModel(new GoLinkStimuli());
     packageCentric.addSubTreeModel(new GoStimulusAction());
+    packageCentric.addSubTreeModel(new GoClassifierToCollaboration());
+    packageCentric.addSubTreeModel(new GoOperationToCollaboration());
+    packageCentric.addSubTreeModel(new GoOperationToCollaborationDiagram());
     
     // rules for statemachinediagram and activitydiagram
     packageCentric.addSubTreeModel(new GoBehavioralFeatureToStateMachine());
@@ -391,7 +401,7 @@ implements Serializable, TreeModel, Cloneable {
     return _registeredPerspectives;
   }
 
-  public static void registerRule(TreeModel rule) {
+  public static void registerRule(AbstractGoRule rule) {
     _rules.addElement(rule);
   }
 
@@ -420,7 +430,6 @@ implements Serializable, TreeModel, Cloneable {
    * @param newValue the new value from the TreeCellEditor.
    */
   public void valueForPathChanged(TreePath path, Object newValue) {
-    System.out.println("valueForPathChanged NavPerspective");
   }
 
 

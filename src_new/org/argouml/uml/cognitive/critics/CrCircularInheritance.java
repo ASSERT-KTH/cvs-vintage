@@ -26,7 +26,7 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrCircularInheritance.java,v 1.3 2002/10/08 20:04:27 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -36,14 +36,14 @@ import ru.novosoft.uml.foundation.core.*;
 
 import org.tigris.gef.util.*;
 
-import org.argouml.cognitive.*;
+import org.apache.log4j.Category;import org.argouml.cognitive.*;
 import org.argouml.cognitive.critics.*;
 import org.argouml.uml.*;
 
 /** Well-formedness rule [2] for MGeneralizableElement. See page 31 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
 
-public class CrCircularInheritance extends CrUML {
+public class CrCircularInheritance extends CrUML {    protected static Category cat = Category.getInstance(CrCircularInheritance.class);
 
   public CrCircularInheritance() {
     setHeadline("Remove <ocl>self</ocl>'s Circular Inheritance");
@@ -87,9 +87,7 @@ public class CrCircularInheritance extends CrUML {
     if (!predicate(dm, dsgr)) return false;
     VectorSet newOffs = computeOffenders(dm);
     boolean res = offs.equals(newOffs);
-//      System.out.println("offs="+ offs.toString() +
-//  		       " newOffs="+ newOffs.toString() +
-//  		       " res = " + res);
+    cat.debug("offs="+ offs.toString() +  		       " newOffs="+ newOffs.toString() +  		       " res = " + res);
     return res;
   }
 

@@ -24,7 +24,7 @@
 // File: FigStylePanelFig.java
 // Classes: FigStylePanelFig
 // Original Author: your email address here
-// $Id: StylePanelFig.java,v 1.6 2002/07/31 12:55:15 kataka Exp $
+// $Id: StylePanelFig.java,v 1.7 2002/10/08 20:04:26 kataka Exp $
 
 // 13 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Problem with cursor
 // jumping around in the boundary box fixed (a problem with double refreshing
@@ -48,12 +48,14 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.tigris.gef.ui.*;
 
+import org.apache.log4j.Category;
 import org.argouml.application.api.*;
-import org.argouml.ui.*;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 
 public class StylePanelFig extends StylePanel
 implements ItemListener, DocumentListener {
+    protected static Category cat = 
+        Category.getInstance(StylePanelFig.class);
 
   ////////////////////////////////////////////////////////////////
   // constants
@@ -355,9 +357,9 @@ implements ItemListener, DocumentListener {
             res.height = Integer.parseInt(st.nextToken());
         }
         catch (Exception ex) {
-            System.out.println(getClass().toString() + 
+            cat.error(getClass().toString() + 
                                ": parseBBox - could not parse bounds '" +
-                               bboxStr + "'");
+                               bboxStr + "'", ex);
             return null;
         }
 

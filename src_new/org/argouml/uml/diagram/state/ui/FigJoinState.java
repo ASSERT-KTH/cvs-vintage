@@ -24,7 +24,7 @@
 // File: FigJoinState.java
 // Classes: FigJoinState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigJoinState.java,v 1.3 2002/08/19 09:02:12 kataka Exp $
+// $Id: FigJoinState.java,v 1.4 2002/10/08 20:04:30 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -92,9 +92,6 @@ public class FigJoinState extends FigStateVertex {
   public void setOwner(Object node) {
     super.setOwner(node);
     bindPort(node, _bigPort);
-    // if it is a UML meta-model object, register interest in any change events
-    if (node instanceof MElement)
-      ((MElement)node).addMElementListener(this);
   }
 
   /** Initial states are fixed size. */

@@ -24,7 +24,7 @@
 // File: CrMultipleInitialStates.java
 // Classes: CrMultipleInitialStates
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInitialStates.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrMultipleInitialStates.java,v 1.3 2002/10/08 20:04:27 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -36,11 +36,11 @@ import ru.novosoft.uml.behavior.state_machines.*;
 
 import org.tigris.gef.util.*;
 
-import org.argouml.cognitive.*;
+import org.apache.log4j.Category;import org.argouml.cognitive.*;
 
 /** A critic to detect when a state has no outgoing transitions. */
 
-public class CrMultipleInitialStates extends CrUML {
+public class CrMultipleInitialStates extends CrUML {    protected static Category cat = Category.getInstance(CrMultipleInitialStates.class);
 
   public CrMultipleInitialStates() {
     setHeadline("Remove Extra Initial States");
@@ -54,7 +54,7 @@ public class CrMultipleInitialStates extends CrUML {
     MPseudostate ps = (MPseudostate) dm;
     if (ps.getKind() != MPseudostateKind.INITIAL) return NO_PROBLEM;
     MCompositeState cs = ps.getContainer();
-    if (cs == null) { System.out.println("null parent state"); return NO_PROBLEM; }
+    if (cs == null) { cat.debug("null parent state"); return NO_PROBLEM; }
     Collection peers = cs.getSubvertices();
     int initialStateCount = 0;
     int size = peers.size();
@@ -77,7 +77,7 @@ public class CrMultipleInitialStates extends CrUML {
   protected VectorSet computeOffenders(MPseudostate ps) {
     VectorSet offs = new VectorSet(ps);
     MCompositeState cs = ps.getContainer();
-    if (cs == null) { System.out.println("null parent in still valid"); return offs; }
+    if (cs == null) { cat.debug("null parent in still valid"); return offs; }
     Collection peers = cs.getSubvertices();
     for (Iterator iter = peers.iterator(); iter.hasNext();) {
       Object sv = iter.next();
@@ -94,10 +94,7 @@ public class CrMultipleInitialStates extends CrUML {
     MPseudostate dm = (MPseudostate) offs.firstElement();
     //if (!predicate(dm, dsgr)) return false;
     VectorSet newOffs = computeOffenders(dm);
-    boolean res = offs.equals(newOffs);
-//      System.out.println("offs="+ offs.toString() +
-//  		       " newOffs="+ newOffs.toString() +
-//  		       " res = " + res);
+    boolean res = offs.equals(newOffs);
     return res;
   }
 
