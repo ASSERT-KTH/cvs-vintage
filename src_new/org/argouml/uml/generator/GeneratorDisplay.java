@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.21 2002/08/13 10:16:33 kataka Exp $
+// $Id: GeneratorDisplay.java,v 1.22 2002/08/13 12:58:06 kataka Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -604,8 +604,13 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
     Iterator rangeIter = v.iterator();
     while (rangeIter.hasNext()) {
       MMultiplicityRange mr = (MMultiplicityRange) rangeIter.next();
-      s += generateMultiplicityRange(mr);
-      if (rangeIter.hasNext()) s += ",";
+      if (!(mr.getLower() == 1 && mr.getUpper() == 1 && v.size() == 1)) {
+        s += generateMultiplicityRange(mr);
+        s += ",";
+      }
+    }
+    if (s.length() > 0 && s.lastIndexOf(',') == s.length()-1) {
+        s = s.substring(0, s.length()-1);
     }
     return s;
   }
