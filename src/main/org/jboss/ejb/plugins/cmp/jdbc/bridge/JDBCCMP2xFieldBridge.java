@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
+
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
 import java.lang.reflect.Field;
@@ -21,7 +21,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 
 /**
- * JDBCCMP2xFieldBridge is a concrete implementation of JDBCCMPFieldBridge for 
+ * JDBCCMP2xFieldBridge is a concrete implementation of JDBCCMPFieldBridge for
  * CMP version 2.x. Instance data is stored in the entity persistence context.
  * Whenever a field is changed it is compared to the current value and sets
  * a dirty flag if the value has changed.
@@ -29,19 +29,23 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  * Life-cycle:
  *      Tied to the EntityBridge.
  *
- * Multiplicity:   
- *      One for each entity bean cmp field.       
+ * Multiplicity:
+ *      One for each entity bean cmp field.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.16 $
- */                            
+ * @version $Revision: 1.17 $
+ */
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
+
+   /** indicates whether this field is FK field mapped to a PK field */
+   private final boolean fkFieldMappedToPkField;
 
    public JDBCCMP2xFieldBridge(
          JDBCStoreManager manager,
          JDBCCMPFieldMetaData metadata) throws DeploymentException {
 
       super(manager, metadata);
+      fkFieldMappedToPkField = false;
    }
 
    public JDBCCMP2xFieldBridge(
@@ -50,6 +54,7 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
          JDBCType jdbcType) throws DeploymentException {
 
       super(manager, metadata, jdbcType);
+      fkFieldMappedToPkField = false;
    }
 
    /**
@@ -80,6 +85,11 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
          primaryKeyField,
          isUnknownPk
       );
+      fkFieldMappedToPkField = true;
+   }
+
+   public boolean isFkFieldMappedToPkField() {
+      return fkFieldMappedToPkField;
    }
 
    public Object getInstanceValue(EntityEnterpriseContext ctx) {
@@ -97,18 +107,20 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
 
       return fieldState.value;
    }
-   
+
    public void setInstanceValue(EntityEnterpriseContext ctx, Object value) {
       FieldState fieldState = getFieldState(ctx);
 
       // short-circuit to avoid repetive comparisons
-      // if it is not currently loaded or it is already dirty or 
-      // if it has changed
-      // but keep version field clean to avoid race conditions and appearing
-      // twice in UPDATE SET clause when entity is shared between transactions
+      // The field is considered dirty if it is
+      // not loaded yet
+      // OR it is already dirty
+      // OR it is changed
+      // The above doesn't touch version field (to avoid races in UPDATE sql)
+      // and FK field mapped to a PK field
       fieldState.isDirty =
          (!fieldState.isLoaded || fieldState.isDirty || changed(fieldState.value, value))
-         && (getManager().getEntityBridge().getVersionField() != this);
+         && (getManager().getEntityBridge().getVersionField() != this) && !fkFieldMappedToPkField;
 
       // notify optimistic lock, but only if the bean is created
       if(ctx.getId() != null && fieldState.isLoaded())
@@ -124,20 +136,20 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
    public boolean isLoaded(EntityEnterpriseContext ctx) {
       return getFieldState(ctx).isLoaded;
    }
-   
+
    /**
     * Has the value of this field changes since the last time clean was called.
     */
    public boolean isDirty(EntityEnterpriseContext ctx) {
       // read only and primary key fields are never dirty
       if(isReadOnly() || isPrimaryKeyMember()) {
-         return false; 
+         return false;
       }
       return getFieldState(ctx).isDirty;
    }
-   
+
    /**
-    * Mark this field as clean. Saves the current state in context, so it 
+    * Mark this field as clean. Saves the current state in context, so it
     * can be compared when isDirty is called.
     */
    public void setClean(EntityEnterpriseContext ctx) {
@@ -149,18 +161,14 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
          fieldState.lastRead = System.currentTimeMillis();
       }
    }
-   
+
    public void resetPersistenceContext(EntityEnterpriseContext ctx) {
       if(isReadTimedOut(ctx)) {
          JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
          jdbcCtx.put(this, new FieldState());
-
-         // notify optimistic lock
-         // not used
-         //getManager().fieldStateEventCallback(ctx, CMPMessage.RESETTED, this, null);
       }
    }
-   
+
    public boolean isReadTimedOut(EntityEnterpriseContext ctx) {
       // if we are read/write then we are always timed out
       if(!isReadOnly()) {
@@ -172,8 +180,8 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
          return false;
       }
 
-      long readInterval = System.currentTimeMillis() - 
-            getFieldState(ctx).lastRead; 
+      long readInterval = System.currentTimeMillis() -
+            getFieldState(ctx).lastRead;
       return readInterval >= getReadTimeOut();
    }
 
@@ -192,7 +200,7 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
       private boolean isLoaded = false;
       private boolean isDirty = false;
       private long lastRead = -1;
-      
+
       public Object getValue() {
          return value;
       }
