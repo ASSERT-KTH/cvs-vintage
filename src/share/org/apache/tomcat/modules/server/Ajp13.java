@@ -66,7 +66,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Enumeration;
 
-import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.http.MimeHeaders;
 import org.apache.tomcat.util.buf.MessageBytes;
 import org.apache.tomcat.util.http.HttpMessages;
@@ -182,7 +183,9 @@ public class Ajp13
 	
     Ajp13Packet outBuf = new Ajp13Packet( MAX_PACKET_SIZE );
     Ajp13Packet inBuf  = new Ajp13Packet( MAX_PACKET_SIZE );
-
+    OutputBuffer headersWriter=new OutputBuffer(MAX_PACKET_SIZE);
+    Ajp13Packet hBuf=new Ajp13Packet(headersWriter);
+    
     // Holds incoming reads of request body data (*not* header data)
     byte []bodyBuff = new byte[MAX_READ_SIZE];
     
@@ -199,6 +202,7 @@ public class Ajp13
       // This is a touch cargo-cultish, but I think wise.
       blen = 0; 
       pos = 0;
+      headersWriter.recycle();
     }
     
     /**
@@ -264,13 +268,13 @@ public class Ajp13
         byte methodCode = msg.getByte();
         req.method().setString( methodTransArray[(int)methodCode - 1] );
 
-        req.protocol().setString( msg.getString());
-        req.requestURI().setString( msg.getString());
+        msg.getMessageBytes( req.protocol()); 
+        msg.getMessageBytes( req.requestURI());
 
-        req.setRemoteAddr(          msg.getString());
-        req.setRemoteHost(          msg.getString());
-        req.serverName().setString( msg.getString());
-        req.setServerPort(          msg.getInt());
+        msg.getMessageBytes( req.remoteAddr());
+        msg.getMessageBytes( req.remoteHost());
+        msg.getMessageBytes( req.serverName());
+        req.setServerPort( msg.getInt());
 
 	isSSL = msg.getBool();
 
@@ -286,16 +290,19 @@ public class Ajp13
             int isc = msg.peekInt();
             int hId = isc & 0xFF;
 
+	    MessageBytes vMB=null;
             isc &= 0xFF00;
             if(0xA000 == isc) {
                 msg.getInt(); // To advance the read position
                 hName = headerTransArray[hId - 1];
+		vMB= headers.addValue( hName );
             } else {
-                hName = msg.getString().toLowerCase();
+		// XXX Not very elegant
+		vMB=msg.addHeader( headers );
+		if( vMB==null) return 500; // wrong packet
             }
 
-            String hValue = msg.getString();
-            headers.addValue( hName ).setString( hValue );
+            msg.getMessageBytes( vMB ); 
         }
 
 	byte attributeCode;
@@ -320,7 +327,7 @@ public class Ajp13
                 break;
 		
 	    case SC_A_QUERY_STRING :
-		req.queryString().setString( msg.getString());
+		msg.getMessageBytes( req.queryString());
                 break;
 		
 	    case SC_A_JVM_ROUTE    :
@@ -486,28 +493,30 @@ public class Ajp13
      */
     public void sendHeaders(int status, MimeHeaders headers) throws IOException 
     {
-	// XXX if more headers that MAX_SIZE, send 2 packets!   
-	outBuf.reset();
-        outBuf.appendByte(JK_AJP13_SEND_HEADERS);
-        outBuf.appendInt(status);
-        outBuf.appendString(HttpMessages.getMessage( status ));
+	// XXX if more headers that MAX_SIZE, send 2 packets!
+
+	hBuf.reset();
+        hBuf.appendByte(JK_AJP13_SEND_HEADERS);
+        hBuf.appendInt(status);
+	
+	hBuf.appendString(HttpMessages.getMessage( status ));
         
 	int numHeaders = headers.size();
-        outBuf.appendInt(numHeaders);
+        hBuf.appendInt(numHeaders);
         
 	for( int i=0 ; i < numHeaders ; i++ ) {
 	    String headerName = headers.getName(i).toString();
 	    int sc = headerNameToSc(headerName);
             if(-1 != sc) {
-                outBuf.appendInt(sc);
+                hBuf.appendInt(sc);
             } else {
-                outBuf.appendString(headerName);
+                hBuf.appendString(headerName);
             }
-            outBuf.appendString(headers.getValue(i).toString());
+            hBuf.appendString(headers.getValue(i).toString() );
         }
 
-        outBuf.end();
-        send(outBuf);
+        hBuf.end();
+        send(hBuf);
     } 
 
     /**
@@ -686,6 +695,7 @@ public class Ajp13
     public static class Ajp13Packet {
 	byte buff[]; // Holds the bytes of the packet
 	int pos;     // The current read or write position in the buffer
+	OutputBuffer ob;
 
 	int len; 
 	// This actually means different things depending on whether the
@@ -700,6 +710,15 @@ public class Ajp13
 	    buff = new byte[size];
 	}
 
+	public Ajp13Packet( byte b[] ) {
+	    buff = b;
+	}
+
+	public Ajp13Packet( OutputBuffer ob ) {
+	    this.ob=ob;
+	    buff=ob.getBuffer();
+	}
+	
 	public byte[] getBuff() {
 	    return buff;
 	}
@@ -708,6 +727,14 @@ public class Ajp13
 	    return len;
 	}
 	
+	public int getByteOff() {
+	    return pos;
+	}
+
+	public void setByteOff(int c) {
+	    pos=c;
+	}
+
 	/** 
 	 * Parse the packet header for a packet sent from the web server to
 	 * the container.  Set the read position to immediately after
@@ -789,21 +816,38 @@ public class Ajp13
 	 * encoded as a string with length 0.  
 	 */
 	public void appendString( String str ) {
-	    if(str != null) {
-		int strLen = str.length();
-		setInt( pos, strLen );
-		System.arraycopy( str.getBytes(), 0, buff, pos+2, strLen);
-		buff[pos + strLen + 2] = 0; // The \0 terminator
-		pos += strLen + 3;
-	    }
-	    else {
+	    // Dual use of the buffer - as Ajp13Packet and as OutputBuffer
+	    // The idea is simple - fewer buffers, smaller footprint and less
+	    // memcpy. The code is a bit tricky, but only local to this
+	    // function.
+	    if(str == null) {
 		setInt( pos, 0);
 		buff[pos + 2] = 0;
 		pos += 3;
-	    }     
+		return;
+	    }
 
+	    int strStart=pos;
+
+	    // This replaces the old ( buggy and slow ) str.length()
+	    // and str.getBytes(). str.length() is chars, may be != bytes
+	    // and getBytes is _very_ slow.
+	    // XXX setEncoding !!!
+	    ob.setByteOff( pos+2 ); 
+	    try {
+		ob.write( str );
+		ob.flushChars();
+	    } catch( IOException ex ) {
+		ex.printStackTrace();
+	    }
+	    int strEnd=ob.getByteOff();
+		
+	    buff[strEnd]=0; // The \0 terminator
+	    int strLen=strEnd-strStart;
+	    setInt( pos, strEnd - strStart );
+	    pos += strLen + 3; 
 	}
-	
+
 	/** 
 	 * Copy a chunk of bytes into the packet, starting at the current
 	 * write position.  The chunk of bytes is encoded with the length
@@ -868,6 +912,29 @@ public class Ajp13
 
 	public static final String DEFAULT_CHAR_ENCODING = "8859_1";
 
+	public void getMessageBytes( MessageBytes mb ) {
+	    int length = getInt();
+	    if( (length == 0xFFFF) || (length == -1) ) {
+		mb.setString( null );
+		return;
+	    }
+	    mb.setBytes( buff, pos, length );
+	    pos += length;
+	    pos++; // Skip the terminating \0
+	}
+
+	public MessageBytes addHeader( MimeHeaders headers ) {
+	    int length = getInt();
+	    if( (length == 0xFFFF) || (length == -1) ) {
+		return null;
+	    }
+	    MessageBytes vMB=headers.addValue( buff, pos, length );
+	    pos += length;
+	    pos++; // Skip the terminating \0
+	    
+	    return vMB;
+	}
+	
 	/**
 	 * Read a String from the packet, and advance the read position
 	 * past it.  See appendString for details on string encoding.
