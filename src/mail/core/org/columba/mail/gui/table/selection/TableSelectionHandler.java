@@ -61,11 +61,11 @@ public class TableSelectionHandler
 	private Folder folder;
 
 	private final static MessageNode[] messageNodeArray = { null };
-	
+
 	// if this is set to true, we use the local selection, instead
 	// of using the table selection
 	private boolean useLocalSelection;
-	
+
 	private FolderCommandReference[] local;
 
 	/**
@@ -78,7 +78,7 @@ public class TableSelectionHandler
 		view.getSelectionModel().addListSelectionListener(this);
 
 		messages = new LinkedList();
-		
+
 		useLocalSelection = false;
 	}
 
@@ -86,12 +86,11 @@ public class TableSelectionHandler
 	 * @see org.columba.core.gui.util.SelectionHandler#getSelection()
 	 */
 	public DefaultCommandReference[] getSelection() {
-		
-		if ( useLocalSelection )
-			{
-				return local;
-			}
-			
+
+		if (useLocalSelection == true) {
+			return local;
+		}
+
 		FolderCommandReference[] references = new FolderCommandReference[1];
 
 		references[0] = new FolderCommandReference(folder, getUidArray());
@@ -106,6 +105,8 @@ public class TableSelectionHandler
 		FolderCommandReference ref = (FolderCommandReference) selection[0];
 
 		folder = (Folder) ref.getFolder();
+
+		useLocalSelection = false;
 
 	}
 
@@ -132,6 +133,8 @@ public class TableSelectionHandler
 	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
 	 */
 	public void valueChanged(ListSelectionEvent e) {
+		useLocalSelection = false;
+
 		// user is still manipulating the selection
 		if (e.getValueIsAdjusting() == true)
 			return;
@@ -153,18 +156,12 @@ public class TableSelectionHandler
 
 		fireSelectionChanged(
 			new TableSelectionChangedEvent(folder, getUidArray()));
-			
-		useLocalSelection = false;
 
 	}
-	
-	
-	public void setLocalReference(FolderCommandReference[] r )
-	{
+
+	public void setLocalReference(FolderCommandReference[] r) {
 		this.local = r;
-		
-		setFolder( (Folder) r[0].getFolder() );
-		
+
 		useLocalSelection = true;
 	}
 
