@@ -53,13 +53,12 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.tools.ScarabGlobalTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.util.ScarabLink;
 
 /**
  * This class is a velocity Context used in email templates
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: EmailContext.java,v 1.4 2003/04/30 01:12:43 jon Exp $
+ * @version $Id: EmailContext.java,v 1.5 2003/05/01 00:33:43 jon Exp $
  */
 public class EmailContext
     extends DefaultTemplateContext
@@ -76,7 +75,7 @@ public class EmailContext
         put("l10n", l10n);
     }
 
-    public void setLinkTool(EmailLink link)
+    public void setLinkTool(Object link)
     {
         put("link", link);
     }
