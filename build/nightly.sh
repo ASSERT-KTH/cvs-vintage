@@ -183,13 +183,5 @@ cd ${DIR}; cd ${SCARAB}/src/sql
 
 StartTomcat
 
-echo "Hitting the Login page..."
-${WGET} -q -O /dev/null -T 30 \
-"http://127.0.0.1:8080/scarab/servlet/scarab/curmodule/5/template/Login.vm"
-
-StopTomcat
-
-StartTomcat
-
 echo "Runbox update finished:"
 date
