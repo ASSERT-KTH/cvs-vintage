@@ -1226,6 +1226,7 @@ try{
         return path.replace('/',',');
     }
 
+
     /**
      * a report helper class
      */
@@ -1287,9 +1288,7 @@ try{
                .getString("searchString"); 
         String searchField = data.getParameters()
                .getString("searchField"); 
-        String[] assigneeIds = 
-            data.getParameters().getStrings("addedusers");
-  
+        ModuleEntity module = getCurrentModule();  
         if (searchField == null)
         {
             data.setMessage("Please enter a search field.");
@@ -1297,23 +1296,13 @@ try{
         }
 
         // Build list of eligible assignees for this issue
-        List eligibleAssignees = getIssue().getEligibleAssignees();
+        ScarabUser[] eligibleUsers = module.getUsers(module.getUserPermissions(getCurrentIssueType()));
         List userIds = new ArrayList();
-        for (int i = 0; i < eligibleAssignees.size(); i++)
+        for (int i = 0; i < eligibleUsers.length; i++)
         {
-            userIds.add(((ScarabUser)eligibleAssignees.get(i)).getUserId());
+            userIds.add(eligibleUsers[i].getUserId());
         }
 
-        // Remove already-added users from search results
-        if (assigneeIds != null)
-        {
-            ArrayList assigneeIdList = new ArrayList();
-            for (int i = 0; i < assigneeIds.length; i++)
-            {
-                assigneeIdList.add(assigneeIds[i]);
-            }
-            userIds.remove(assigneeIdList);
-        }             
         Criteria crit = new Criteria();
         crit.addIn(ScarabUserImplPeer.USER_ID, userIds);
         String searchTerm = "%" + searchString + "%";
