@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.1 2002/02/28 02:01:10 jon Exp $
+# $Id: create-db.sh,v 1.2 2002/02/28 20:47:57 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -75,10 +75,10 @@ fi
 ####### Sanity checks
 
 if [ "$usage" ] ; then
-        echo
-        echo "$CMDNAME creates a database and populates it with data."
-        echo "             Currently only works with MySQL and Postgresql."
-        echo
+    echo
+    echo "$CMDNAME creates a database and populates it with data."
+    echo "             Currently only works with MySQL and Postgresql."
+    echo
     echo "Usage:"
         echo "  $CMDNAME [options] (mysql | postgresql)"
         echo
@@ -86,15 +86,15 @@ if [ "$usage" ] ; then
         echo "  $CMDNAME -h localhost -u scarab mysql"
         echo        
     echo "Options:"
-    echo "  -n, --name=DBNAME               Database name          (${name})"
-    echo "  -h, --host=HOSTNAME             Database server host   (localhost)"
-    echo "  -p, --port=PORT                 Database server port   (3306 M | 5432 P)"
-    echo "  -u, --username=USERNAME         Username to connect as (${username})"
-    echo "  -W, --password                  Prompt for password"
-    echo "  -l, --loadorder=FILE            SQL file load order    (LoadOrder.lst)"
-    echo "  -s, --scripts=DIR               SQL file directory"
-    echo "                                    (${POPULATION_SCRIPT_DIR})"
-    echo "  -q, --quiet                     Don't write any messages"
+    echo "  -n, --name=DBNAME          Database name          (${name})"
+    echo "  -h, --host=HOSTNAME        Database server host   (localhost)"
+    echo "  -p, --port=PORT            Database server port   (3306 M | 5432 P)"
+    echo "  -u, --username=USERNAME    Username to connect as (${username})"
+    echo "  -W, --password             Prompt for password"
+    echo "  -l, --loadorder=FILE       SQL file load order    (LoadOrder.lst)"
+    echo "  -s, --scripts=DIR          SQL file directory"
+    echo "                               (${POPULATION_SCRIPT_DIR})"
+    echo "  -q, --quiet                Don't write any messages"
     echo
     exit 0
 fi
@@ -111,7 +111,7 @@ echo ""
 fi
 
 # If user wants password, then...
-if [ ! -z "$password" ] ; then
+if [ ! -z "$password" -a "$dbname" = "mysql" ] ; then
     # Don't want to leave the user blind if he breaks
     # during password entry.
     trap 'stty echo >/dev/null 2>&1' 1 2 3 15
@@ -147,7 +147,7 @@ if [ ! -x "${MYSQL}" ] ; then
     echo
     echo "The MySQL binary needs to be in your PATH!"
     echo
-    exit 0
+    exit 1
 fi
 
 QUIETCMD=
@@ -203,10 +203,63 @@ done
 ############### Postgresql
 ###############
 elif [ "$dbtype" = 'postgresql' ] ; then
-    port=5432
+
+PSQL=`which psql`
+PSQLCREATEDB=`which createdb`
+PSQLDROPDB=`which dropdb`
+
+if [ ! -x "${PSQL}" ] ; then
     echo
-    echo "NOT YET IMPLEMENTED!"
+    echo "The psql binary needs to be in your PATH!"
     echo
+    exit 1
+fi
+
+QUIETCMD=
+if [ "${quiet}" = "t" ] ; then
+    QUIETCMD="-q"
+fi
+
+PASSCMD=
+if [ ! -z "${password}" ] ; then
+    PASSCMD="-W"
+fi
+
+PORTCMD=
+if [ "${port}" != "" ] ; then
+    PORTCMD="-p ${port}"
+fi
+HOSTCMD="-h ${HOSTNAME}"
+
+USERCMD=
+if [ "${username}" != "" ] ; then
+    USERCMD="-U ${username}"
+fi
+
+PSQLCMD="${QUIETCMD} ${HOSTCMD} ${PORTCMD} ${USERCMD} ${PASSCMD}"
+
+# drop the database
+${PSQLDROPDB} ${PSQLCMD} ${name}
+
+# Creating new database and inputting default data
+if [ -z "${quiet}" ] ; then
+    echo "Creating Database ${name}..."
+fi
+
+# create the database
+${PSQLCREATEDB} ${PSQLCMD} ${name}
+
+FILES=`cat ${loadorder}`
+for i in ${FILES} ; do
+    if [ -z "${quiet}" ] ; then
+        echo "Importing ${i}..."
+        ${PSQL} -f ${POPULATION_SCRIPT_DIR}/${i} ${PSQLCMD} ${name}
+    else
+        ${PSQL} -f ${POPULATION_SCRIPT_DIR}/${i} ${PSQLCMD} ${name} 2> /dev/null
+    fi
+done
+
+
 fi
 
 exit 0
