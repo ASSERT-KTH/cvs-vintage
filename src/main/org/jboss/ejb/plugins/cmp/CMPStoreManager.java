@@ -8,8 +8,6 @@ package org.jboss.ejb.plugins.cmp;
 
 import java.lang.reflect.Method;
 
-import java.rmi.RemoteException;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +16,7 @@ import javax.ejb.RemoveException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityPersistenceStore2;
+import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
 
 
@@ -58,10 +56,10 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */                            
 public abstract class CMPStoreManager 
-   implements EntityPersistenceStore2
+   implements EntityPersistenceStore
 {
    // Attributes ----------------------------------------------------
 
@@ -157,7 +155,7 @@ public abstract class CMPStoreManager
 
    // EJB Commands -------------------------
 
-   public void initEntity(EntityEnterpriseContext ctx) throws RemoteException
+   public void initEntity(EntityEnterpriseContext ctx)
    {
       initEntityCommand.execute(ctx);
    }
@@ -165,7 +163,7 @@ public abstract class CMPStoreManager
    public Object createEntity(Method m,
                             Object[] args,
                             EntityEnterpriseContext ctx)
-      throws RemoteException, CreateException
+      throws CreateException
    {
       return createEntityCommand.execute(m, args, ctx);
    }
@@ -187,37 +185,32 @@ public abstract class CMPStoreManager
    }
 
    public void activateEntity(EntityEnterpriseContext ctx)
-      throws RemoteException
    {
       activateEntityCommand.execute(ctx);
    }
 
    public void loadEntity(EntityEnterpriseContext ctx)
-      throws RemoteException
    {
       loadEntityCommand.execute(ctx);
    }
    
    public void loadEntities(FinderResults keys) 
-      throws RemoteException
    {
       loadEntitiesCommand.execute(keys);
    }
 
    public void storeEntity(EntityEnterpriseContext ctx)
-      throws RemoteException
    {
       storeEntityCommand.execute(ctx);
    }
 
    public void passivateEntity(EntityEnterpriseContext ctx)
-      throws RemoteException
    {
       passivateEntityCommand.execute(ctx);
    }
 
    public void removeEntity(EntityEnterpriseContext ctx)
-      throws RemoteException, RemoveException
+      throws RemoveException
    {
       removeEntityCommand.execute(ctx);
    }

@@ -6,12 +6,15 @@
  */
 package org.jboss.ejb.plugins.jaws;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import java.rmi.RemoteException;
 
+import java.util.Iterator;
 
 import javax.ejb.CreateException;
+import javax.ejb.EJBException;
 import javax.ejb.RemoveException;
 
 import org.apache.log4j.Category;
@@ -22,6 +25,8 @@ import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.ejb.plugins.jaws.jdbc.JDBCCommandFactory;
+
+import org.jboss.metadata.EntityMetaData;
 
 import org.jboss.util.FinderResults;
 
@@ -34,13 +39,17 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  *
  *   <p><b>Revisions:</b>
  *
  *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
  *   <ul>
  *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *   <p><b>20011201 Dain Sundstrom:</b>
+ *   <ul>
+ *   <li> Added createBeanInstance and initEntity methods
  *   </ul>
  *
  */
@@ -122,6 +131,92 @@ public class JAWSPersistenceManager
    {
       if(destroyCommand != null) // On deploy errors, sometimes JAWS was never initialized!
          destroyCommand.execute();
+   }
+
+   public Object createBeanClassInstance() throws Exception {
+      return container.getBeanClass().newInstance();
+   }
+
+   /**
+    * Reset all attributes to default value
+    *
+    * The EJB 1.1 specification is not entirely clear about this,
+    * the EJB 2.0 spec is, see page 169.
+    * Robustness is more important than raw speed for most server
+    * applications, and not resetting atrribute values result in
+    * *very* weird errors (old states re-appear in different instances and the
+    * developer thinks he's on drugs).
+    */
+   public void initEntity(EntityEnterpriseContext ctx)
+   {
+      // first get cmp metadata of this entity
+      Object instance = ctx.getInstance();
+      Class ejbClass = instance.getClass();
+      Field cmpField;
+      Class cmpFieldType;
+
+      EntityMetaData metaData = (EntityMetaData)container.getBeanMetaData();
+      Iterator i= metaData.getCMPFields();
+
+      while(i.hasNext())
+      {
+         try
+         {
+            // get the field declaration
+            try
+            {
+               cmpField = ejbClass.getField((String)i.next());
+               cmpFieldType = cmpField.getType();
+               // find the type of the field and reset it
+               // to the default value
+               if (cmpFieldType.equals(boolean.class))
+               {
+                  cmpField.setBoolean(instance,false);
+               }
+               else if (cmpFieldType.equals(byte.class))
+               {
+                  cmpField.setByte(instance,(byte)0);
+               }
+               else if (cmpFieldType.equals(int.class))
+               {
+                  cmpField.setInt(instance,0);
+               }
+               else if (cmpFieldType.equals(long.class))
+               {
+                  cmpField.setLong(instance,0L);
+               }
+               else if (cmpFieldType.equals(short.class))
+               {
+                  cmpField.setShort(instance,(short)0);
+               }
+               else if (cmpFieldType.equals(char.class))
+               {
+                  cmpField.setChar(instance,'\u0000');
+               }
+               else if (cmpFieldType.equals(double.class))
+               {
+                  cmpField.setDouble(instance,0d);
+               }
+               else if (cmpFieldType.equals(float.class))
+               {
+                  cmpField.setFloat(instance,0f);
+               }
+               else
+               {
+                  cmpField.set(instance,null);
+               }
+            }
+            catch (NoSuchFieldException e)
+            {
+               // will be here with dependant value object's private attributes
+               // should not be a problem
+            }
+         }
+         catch (Exception e)
+         {
+            throw new EJBException(e);
+         }
+      }
    }
 
    public Object createEntity(Method m,

@@ -8,7 +8,6 @@
 package org.jboss.ejb.plugins.cmp;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import java.rmi.RemoteException;
 
 /**
  * ActivateEntityCommand handles the EntityBean activate message.
@@ -25,12 +24,11 @@ import java.rmi.RemoteException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface ActivateEntityCommand
 {
    // Public --------------------------------------------------------
    
-   public void execute(EntityEnterpriseContext ctx)
-      throws RemoteException;
+   public void execute(EntityEnterpriseContext ctx);
 }

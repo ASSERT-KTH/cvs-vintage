@@ -17,14 +17,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 import javax.ejb.CreateException;
 import javax.ejb.DuplicateKeyException;
+import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 
@@ -32,20 +32,22 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.metadata.EntityMetaData;
 import org.jboss.util.FinderResults;
 
 /**
-*	<description> 
-*      
-*   @see <related>
-*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-*   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.13 $
-*   <p><b>20010801 marc fleury:</b>
-*   <ul>
-*   <li>- insertion in cache upon create in now done in the instance interceptor
-*   </ul>
-*/
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @version $Revision: 1.14 $
+ * <p><b>20010801 marc fleury:</b>
+ * <ul>
+ * <li>- insertion in cache upon create in now done in the instance interceptor
+ * </ul>
+ * <p><b>20011201 Dain Sundstrom:</b>
+ * <ul>
+ * <li>- added createBeanInstance and initiEntity methods
+ * </ul>
+ */
 public class CMPFilePersistenceManager
    implements EntityPersistenceStore
 {
@@ -53,14 +55,6 @@ public class CMPFilePersistenceManager
     
    // Attributes ----------------------------------------------------
    EntityContainer con;
-   
-   /* The Methods are taken care of by CMPPersistenceManager
-   Method ejbStore;
-   Method ejbLoad;
-   Method ejbActivate;
-   Method ejbPassivate;
-   Method ejbRemove;
-   */
    File dir;
    Field idField;
     
@@ -77,15 +71,6 @@ public class CMPFilePersistenceManager
    public void init()
       throws Exception
    {
-	   // The methods are now taken care of by CMPPersistenceManager
-	  /*
-      ejbStore = EntityBean.class.getMethod("ejbStore", new Class[0]);
-      ejbLoad = EntityBean.class.getMethod("ejbLoad", new Class[0]);
-      ejbActivate = EntityBean.class.getMethod("ejbActivate", new Class[0]);
-      ejbPassivate = EntityBean.class.getMethod("ejbPassivate", new Class[0]);
-      ejbRemove = EntityBean.class.getMethod("ejbRemove", new Class[0]);
-	  */
-       
       String ejbName = con.getBeanMetaData().getEjbName();
       dir = new File(getClass().getResource("/db/"+ejbName+"/db.properties").getFile()).getParentFile();
       idField = con.getBeanClass().getField("id");
@@ -103,7 +88,94 @@ public class CMPFilePersistenceManager
    {
    }
    
-   public Object createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
+   public Object createBeanClassInstance() throws Exception {
+      return con.getBeanClass().newInstance();
+   }
+
+   /**
+    * Reset all attributes to default value
+    *
+    * The EJB 1.1 specification is not entirely clear about this,
+    * the EJB 2.0 spec is, see page 169.
+    * Robustness is more important than raw speed for most server
+    * applications, and not resetting atrribute values result in
+    * *very* weird errors (old states re-appear in different instances and the
+    * developer thinks he's on drugs).
+    */
+   public void initEntity(EntityEnterpriseContext ctx)
+   {
+      // first get cmp metadata of this entity
+      Object instance = ctx.getInstance();
+      Class ejbClass = instance.getClass();
+      Field cmpField;
+      Class cmpFieldType;
+
+      EntityMetaData metaData = (EntityMetaData)con.getBeanMetaData();
+      Iterator i= metaData.getCMPFields();
+
+      while(i.hasNext())
+      {
+         try
+         {
+            // get the field declaration
+            try
+            {
+               cmpField = ejbClass.getField((String)i.next());
+               cmpFieldType = cmpField.getType();
+               // find the type of the field and reset it
+               // to the default value
+               if (cmpFieldType.equals(boolean.class))
+               {
+                  cmpField.setBoolean(instance,false);
+               }
+               else if (cmpFieldType.equals(byte.class))
+               {
+                  cmpField.setByte(instance,(byte)0);
+               }
+               else if (cmpFieldType.equals(int.class))
+               {
+                  cmpField.setInt(instance,0);
+               }
+               else if (cmpFieldType.equals(long.class))
+               {
+                  cmpField.setLong(instance,0L);
+               }
+               else if (cmpFieldType.equals(short.class))
+               {
+                  cmpField.setShort(instance,(short)0);
+               }
+               else if (cmpFieldType.equals(char.class))
+               {
+                  cmpField.setChar(instance,'\u0000');
+               }
+               else if (cmpFieldType.equals(double.class))
+               {
+                  cmpField.setDouble(instance,0d);
+               }
+               else if (cmpFieldType.equals(float.class))
+               {
+                  cmpField.setFloat(instance,0f);
+               }
+               else
+               {
+                  cmpField.set(instance,null);
+               }
+            }
+            catch (NoSuchFieldException e)
+            {
+               // will be here with dependant value object's private attributes
+               // should not be a problem
+            }
+         }
+         catch (Exception e)
+         {
+            throw new EJBException(e);
+         }
+      }
+   }
+
+   public Object createEntity(
+         Method m, Object[] args, EntityEnterpriseContext ctx)
       throws Exception
 	{                      
 		try { 
@@ -125,8 +197,9 @@ public class CMPFilePersistenceManager
 		}
 	}
 
-   public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
-      throws RemoteException, FinderException
+   public Object findEntity(
+         Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+      throws FinderException
    {
       if (finderMethod.getName().equals("findByPrimaryKey"))
       {
@@ -139,23 +212,19 @@ public class CMPFilePersistenceManager
          return null;
    }
      
-   public FinderResults findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
-      throws RemoteException
+   public FinderResults findEntities(
+         Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
    {
       if (finderMethod.getName().equals("findAll"))
       {
-//DEBUG         Logger.debug("Find all entities");
-         
          String[] files = dir.list();
          ArrayList result = new ArrayList();
          for (int i = 0; i < files.length; i++)
             if (files[i].endsWith(".ser"))
             {
-//DEBUG               Logger.debug("Found entity");
                result.add(files[i].substring(0,files[i].length()-4));
             }
             
-//         Logger.debug("Find all entities done");
          return new FinderResults(result,null,null,null);
       } else
       {
@@ -164,18 +233,17 @@ public class CMPFilePersistenceManager
    }
 
    public void activateEntity(EntityEnterpriseContext ctx)
-      throws RemoteException
    {
       //Nothing to do
    }
    
    public void loadEntity(EntityEnterpriseContext ctx)
-      throws RemoteException
    {
       try
       {
          // Read fields
-         ObjectInputStream in = new CMPObjectInputStream(new FileInputStream(getFile(ctx.getId())));
+         ObjectInputStream in = new CMPObjectInputStream(
+               new FileInputStream(getFile(ctx.getId())));
          
          Object obj = ctx.getInstance();
          
@@ -189,7 +257,7 @@ public class CMPFilePersistenceManager
          
       } catch (Exception e)
       {
-         throw new ServerException("Load failed", e);
+         throw new EJBException("Load failed", e);
       }
    }
       
@@ -198,12 +266,12 @@ public class CMPFilePersistenceManager
    }
    
    private void storeEntity(Object id, Object obj) 
-   	throws RemoteException {
-	  
+   {
       try
       {
          // Store fields
-         ObjectOutputStream out = new CMPObjectOutputStream(new FileOutputStream(getFile(id)));
+         ObjectOutputStream out = new CMPObjectOutputStream(
+               new FileOutputStream(getFile(id)));
                
          Field[] f = obj.getClass().getFields();
          for (int i = 0; i < f.length; i++)
@@ -214,32 +282,28 @@ public class CMPFilePersistenceManager
          out.close();
       } catch (Exception e)
       {
-         throw new ServerException("Store failed", e);
+         throw new EJBException("Store failed", e);
       }
    }
    
    public void storeEntity(EntityEnterpriseContext ctx)
-      throws RemoteException
    {
-//      Logger.debug("Store entity");
-     
 	   storeEntity(ctx.getId(), ctx.getInstance());
    }
 
    public void passivateEntity(EntityEnterpriseContext ctx)
-      throws RemoteException
    {
      // This plugin doesn't do anything specific
 	}
       
    public void removeEntity(EntityEnterpriseContext ctx)
-      throws RemoteException, RemoveException
+      throws RemoveException
    {
       
       // Remove file
       if (!getFile(ctx.getId()).delete())
-         throw new RemoveException("Could not remove file:"+getFile(ctx.getId()));
-//      Logger.debug("Removed file for"+ctx.getId());
+         throw new RemoveException("Could not remove file:" +
+               getFile(ctx.getId()));
    }
    
    // Z implementation ----------------------------------------------

@@ -26,7 +26,6 @@ import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityPersistenceStore;
-import org.jboss.ejb.EntityPersistenceStore2;
 import org.jboss.metadata.EntityMetaData;
 
 import org.jboss.util.Sync;
@@ -35,24 +34,24 @@ import org.jboss.management.j2ee.CountStatistic;
 import org.jboss.management.j2ee.TimeStatistic;
 
 /**
- *   The CMP Persistence Manager implements the semantics of the CMP
- *  EJB 1.1 call back specification.
+ * The CMP Persistence Manager implements the semantics of the CMP
+ * EJB 1.1 call back specification.
  *
- *  This Manager works with a "EntityPersistenceStore" that takes care of the
- *  physical storing of instances (JAWS, JDBC O/R, FILE, Object).
+ * This Manager works with a "EntityPersistenceStore" that takes care of the
+ * physical storing of instances (JAWS, JDBC O/R, FILE, Object).
  *
- *   @see <related>
- *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- *   @version $Revision: 1.35 $
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ * @version $Revision: 1.36 $
  *
- *   Revisions:
- *   20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
- *   done directly by the finder.
- *   20010709 Andreas Schaefer: added statistics gathering
- *
+ * Revisions:
+ * 20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
+ * done directly by the finder.
+ * 20010709 Andreas Schaefer: added statistics gathering
+ * 20011201 Dain Sundstrom: moved createBeanInstance and initEntity back into
+ * the persistence store.
  */
 public class CMPPersistenceManager
    implements EntityPersistenceManager
@@ -141,11 +140,7 @@ public class CMPPersistenceManager
     */
    public Object createBeanClassInstance() throws Exception
    {
-      if(store instanceof EntityPersistenceStore2)
-      {
-         return ((EntityPersistenceStore2)store).createBeanClassInstance();
-      }
-      return con.getBeanClass().newInstance();
+      return store.createBeanClassInstance();
    }
 
    private void createMethodCache( Method[] methods )
@@ -197,16 +192,7 @@ public class CMPPersistenceManager
       Method postCreateMethod = (Method)postCreateMethods.get(m);
       
       // Deligate initialization of bean to persistence store
-      // if the store can handle initialization.
-      if(store instanceof EntityPersistenceStore2)
-      {
-         ((EntityPersistenceStore2)store).initEntity(ctx);
-      }
-      else
-      {
-         // for backwards compatibility
-         initEntity(ctx);
-      }
+      store.initEntity(ctx);
 
       // Call ejbCreate on the target bean
       try
@@ -377,8 +363,9 @@ public class CMPPersistenceManager
       }
       
       long lStart = System.currentTimeMillis();
-      // The implementation of the call can be left absolutely empty, the propagation of the call
-      // is just a notification for stores that would need to know that an instance is being activated
+      // The implementation of the call can be left absolutely empty, the 
+      // propagation of the call is just a notification for stores that would
+      // need to know that an instance is being activated
       store.activateEntity(ctx);
       mActivation.add( System.currentTimeMillis() - lStart );
    }
@@ -550,88 +537,6 @@ public class CMPPersistenceManager
          {
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
-         }
-      }
-   }
-
-   /**
-    * Reset all attributes to default value
-    *
-    * This method is supplied for backwards compatibility.
-    * New versions of the PersistenceStore handle this for us.
-    *
-    * The EJB 1.1 specification is not entirely clear about this,
-    * the EJB 2.0 spec is, see page 169.
-    * Robustness is more important than raw speed for most server
-    * applications, and not resetting atrribute values result in
-    * *very* weird errors (old states re-appear in different instances and the
-    * developer thinks he's on drugs).
-    */
-   protected void initEntity(EntityEnterpriseContext ctx)
-   {
-      // first get cmp metadata of this entity
-      Object instance = ctx.getInstance();
-      Class ejbClass = instance.getClass();
-      Field cmpField;
-      Class cmpFieldType;
-      Iterator i= ((EntityMetaData)ctx.getContainer().getBeanMetaData()).getCMPFields();
-      while(i.hasNext())
-      {
-         try
-         {
-            // get the field declaration
-            try
-            {
-               cmpField = ejbClass.getField((String)i.next());
-               cmpFieldType = cmpField.getType();
-               // find the type of the field and reset it
-               // to the default value
-               if (cmpFieldType.equals(boolean.class))
-               {
-                  cmpField.setBoolean(instance,false);
-               }
-               else if (cmpFieldType.equals(byte.class))
-               {
-                  cmpField.setByte(instance,(byte)0);
-               }
-               else if (cmpFieldType.equals(int.class))
-               {
-                  cmpField.setInt(instance,0);
-               }
-               else if (cmpFieldType.equals(long.class))
-               {
-                  cmpField.setLong(instance,0L);
-               }
-               else if (cmpFieldType.equals(short.class))
-               {
-                  cmpField.setShort(instance,(short)0);
-               }
-               else if (cmpFieldType.equals(char.class))
-               {
-                  cmpField.setChar(instance,'\u0000');
-               }
-               else if (cmpFieldType.equals(double.class))
-               {
-                  cmpField.setDouble(instance,0d);
-               }
-               else if (cmpFieldType.equals(float.class))
-               {
-                  cmpField.setFloat(instance,0f);
-               }
-               else
-               {
-                  cmpField.set(instance,null);
-               }
-            }
-            catch (NoSuchFieldException e)
-            {
-               // will be here with dependant value object's private attributes
-               // should not be a problem
-            }
-         }
-         catch (Exception e)
-         {
-            throw new EJBException(e);
          }
       }
    }

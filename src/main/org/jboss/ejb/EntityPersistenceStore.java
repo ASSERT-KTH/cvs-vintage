@@ -26,11 +26,32 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public interface EntityPersistenceStore
    extends ContainerPlugin
 {
+   /**
+    * Returns a new instance of the bean class or a subclass of the bean class.
+    * 
+    * @return   the new instance
+    *
+    * @throws Exception
+    */
+   Object createBeanClassInstance() throws Exception;
+
+   /**
+    * Initializes the instance context.
+    * 
+    * <p>This method is called before createEntity, and should
+    *    reset the value of all cmpFields to 0 or null.
+    *
+    * @param ctx
+    * 
+    * @throws RemoteException
+    */
+   void initEntity(EntityEnterpriseContext ctx);
+
    /**
     * This method is called whenever an entity is to be created.
     * The persistence manager is responsible for handling the results properly

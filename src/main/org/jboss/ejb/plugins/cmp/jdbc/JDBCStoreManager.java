@@ -27,7 +27,7 @@ import javax.transaction.TransactionManager;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityPersistenceStore2;
+import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.ListCacheKey;
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridgeInvocationHandler;
@@ -61,9 +61,9 @@ import org.jboss.proxy.InvocationHandler;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
-public class JDBCStoreManager implements EntityPersistenceStore2 {
+public class JDBCStoreManager implements EntityPersistenceStore {
 
    /**
     * To simplify null values handling in the preloaded data pool we use 

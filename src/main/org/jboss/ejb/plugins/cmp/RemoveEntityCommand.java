@@ -8,7 +8,6 @@
 package org.jboss.ejb.plugins.cmp;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import java.rmi.RemoteException;
 import javax.ejb.RemoveException;
 
 /**
@@ -24,12 +23,11 @@ import javax.ejb.RemoveException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface RemoveEntityCommand
 {
    // Public --------------------------------------------------------
    
-   public void execute(EntityEnterpriseContext ctx)
-      throws RemoteException, RemoveException;
+   public void execute(EntityEnterpriseContext ctx) throws RemoveException;
 }

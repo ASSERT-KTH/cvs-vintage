@@ -8,7 +8,6 @@
 package org.jboss.ejb.plugins.cmp;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import java.rmi.RemoteException;
 
 /**
  * InitEntityCommand informs the store that a new entity is about
@@ -23,12 +22,11 @@ import java.rmi.RemoteException;
  *      One per CMPStoreManager.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface InitEntityCommand
 {
    // Public --------------------------------------------------------
 
-   public void execute(EntityEnterpriseContext ctx)
-      throws RemoteException;
+   public void execute(EntityEnterpriseContext ctx);
 }
