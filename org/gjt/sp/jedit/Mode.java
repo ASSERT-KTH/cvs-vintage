@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * One instance of this class is created for each supported edit mode.
  *
  * @author Slava Pestov
- * @version $Id: Mode.java,v 1.4 2002/01/09 07:21:53 spestov Exp $
+ * @version $Id: Mode.java,v 1.5 2002/08/12 16:28:35 spestov Exp $
  */
 public class Mode
 {
@@ -82,6 +82,14 @@ public class Mode
 				+ " globs in mode " + name);
 			Log.log(Log.ERROR,this,re);
 		}
+
+		// Fix for this bug:
+		// -- Put a mode into the user dir with the same name as one
+		//    on the system dir.
+		// -- Reload edit modes.
+		// -- Old mode from system dir still used for highlighting
+		//    until jEdit restart.
+		marker = null;
 	} //}}}
 
 	//{{{ getTokenMarker() method

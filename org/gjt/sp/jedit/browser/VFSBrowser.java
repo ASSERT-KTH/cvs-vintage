@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.53 2002/08/09 21:24:12 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.54 2002/08/12 16:28:35 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -227,8 +227,8 @@ public class VFSBrowser extends JPanel implements EBComponent
 		filterCheckbox.setMargin(new Insets(0,0,0,0));
 		filterCheckbox.setRequestFocusEnabled(false);
 		filterCheckbox.setBorder(new EmptyBorder(0,0,0,12));
-		filterCheckbox.setSelected(mode != BROWSER ||
-			jEdit.getBooleanProperty("vfs.browser.filter-enabled"));
+		filterCheckbox.setSelected(jEdit.getBooleanProperty(
+			"vfs.browser.filter-enabled"));
 
 		filterCheckbox.addActionListener(actionHandler);
 
