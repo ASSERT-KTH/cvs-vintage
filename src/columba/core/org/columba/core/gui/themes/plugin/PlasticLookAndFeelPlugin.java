@@ -10,6 +10,8 @@ import java.awt.Dimension;
 
 import javax.swing.UIManager;
 
+import com.jgoodies.clearlook.ClearLookManager;
+import com.jgoodies.clearlook.ClearLookMode;
 import com.jgoodies.plaf.FontSizeHints;
 import com.jgoodies.plaf.LookUtils;
 import com.jgoodies.plaf.Options;
@@ -40,6 +42,8 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
 		Options.setGlobalFontSizeHints(FontSizeHints.MIXED);
 		Options.setDefaultIconSize(new Dimension(16, 16));
 
+		ClearLookManager.setMode(ClearLookMode.ON);
+		ClearLookManager.setPolicy("com.jgoodies.clearlook.DefaultClearLookPolicy");
 		// use this when using the cross-platform version of 
 		// jGoodies, which contains also a windows-xp like theme
 		/*
