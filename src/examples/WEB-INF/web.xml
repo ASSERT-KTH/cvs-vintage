@@ -87,11 +87,9 @@
     </login-config>
     -->
 
-    <!-- If you want to experiment with form-based logins, comment
-         out the <login-config> element above and replace it with
-         this one.  Note that we are currently using a nonstandard
-         authentication method, because the code to support form
-         based login is incomplete and only lightly tested.  -->
+    <!-- Form-based login is enabled by default.  If you wish to
+         try Basic authentication, comment out the <login-config>
+         section below and uncomment the one above. -->
     <login-config>
       <auth-method>FORM</auth-method>
       <realm-name>Example Form-Based Authentication Area</realm-name>
