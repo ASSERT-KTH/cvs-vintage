@@ -1,4 +1,4 @@
-// $Id: UMLSearchableComboBox.java,v 1.9 2003/11/11 21:54:08 linus Exp $
+// $Id: UMLSearchableComboBox.java,v 1.10 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class UMLSearchableComboBox extends UMLEditableComboBox {
      * @param selectAction
      */
     public UMLSearchableComboBox(UMLComboBoxModel2 arg0, UMLAction selectAction) {
-        this(arg0, selectAction, false);
+        this(arg0, selectAction, true);
     }
 
     /**

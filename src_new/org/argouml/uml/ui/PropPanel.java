@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.85 2004/07/26 22:43:51 mkl Exp $
+// $Id: PropPanel.java,v 1.86 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -242,6 +242,7 @@ public abstract class PropPanel
      *     the field is a link.
      *   @param label the required string label
      *   @param component Component to be added
+     *   @deprecated replaced by according widgets as of version 0.17.1
      */
     public final void addLinkField(String label, JComponent component) {
         component.setBackground(getBackground());

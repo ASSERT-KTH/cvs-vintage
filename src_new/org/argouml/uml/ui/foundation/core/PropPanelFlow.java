@@ -1,4 +1,4 @@
-// $Id: PropPanelFlow.java,v 1.10 2004/07/17 13:10:41 kataka Exp $
+// $Id: PropPanelFlow.java,v 1.11 2004/07/31 08:31:58 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,6 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
-
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.util.ConfigLoader;
 
 /**

@@ -1,4 +1,4 @@
-// $Id: PropPanelActionState.java,v 1.16 2004/07/25 16:14:59 mkl Exp $
+// $Id: PropPanelActionState.java,v 1.17 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,40 +25,51 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.16 2004/07/25 16:14:59 mkl Exp $
+// $Id: PropPanelActionState.java,v 1.17 2004/07/31 08:31:57 mkl Exp $
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
+import javax.swing.ImageIcon;
+
 import org.argouml.i18n.Translator;
+import org.argouml.swingext.Orientation;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelState;
 import org.argouml.util.ConfigLoader;
 
-/** User interface panel shown at the bottom of the screen that allows
- *  the user to edit the properties of the selected UML model
- *  element. */
+/**
+ * User interface panel shown at the bottom of the screen that allows the user
+ * to edit the properties of the selected UML model element.
+ */
 
 public class PropPanelActionState extends PropPanelState {
 
-    ////////////////////////////////////////////////////////////////
-    // contructors
     public PropPanelActionState() {
+        this("Action State", _actionStateIcon, ConfigLoader
+                .getTabPropsOrientation());
+    }
 
-        super("Action State", _actionStateIcon,
-	      ConfigLoader.getTabPropsOrientation());
+    public PropPanelActionState(String name, ImageIcon icon,
+            Orientation orientation) {
 
-        addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-//        addField(Translator.localize("UMLMenu", "label.stereotype"),
-//		 new UMLComboBoxNavigator(this,
-//					  Translator.localize("UMLMenu",
-//							"tooltip.nav-stereo"),
-//					  getStereotypeBox()));
-        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
+        super("Action State", _actionStateIcon, orientation);
 
-        addField(Translator.localize("UMLMenu", "label.entry"), entryScroll);       
+        addField(Translator.localize("UMLMenu", "label.name"),
+                getNameTextField());
+        //        addField(Translator.localize("UMLMenu", "label.stereotype"),
+        //		 new UMLComboBoxNavigator(this,
+        //					  Translator.localize("UMLMenu",
+        //							"tooltip.nav-stereo"),
+        //					  getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"),
+                getStereotypeBox());
+
+        addField(Translator.localize("UMLMenu", "label.entry"), entryScroll);
         addSeperator();
 
-        addField(Translator.localize("UMLMenu", "label.incoming"), incomingScroll);
-        addField(Translator.localize("UMLMenu", "label.outgoing"), outgoingScroll);        
+        addField(Translator.localize("UMLMenu", "label.incoming"),
+                incomingScroll);
+        addField(Translator.localize("UMLMenu", "label.outgoing"),
+                outgoingScroll);
 
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.38 2004/07/25 16:08:56 mkl Exp $
+// $Id: PropPanelClassifierRole.java,v 1.39 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.38 2004/07/25 16:08:56 mkl Exp $
+// $Id: PropPanelClassifierRole.java,v 1.39 2004/07/31 08:31:57 mkl Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -34,7 +34,10 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.ui.ActionNavigateContainerElement;
+import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLList;
@@ -112,16 +115,10 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 	addField(Translator.localize("UMLMenu", "label.available-features"),
 		 new JScrollPane(availableFeaturesList));
 
-	new PropPanelButton(this, buttonPanel, _navUpIcon,
-			    Translator.localize("UMLMenu",
-					  "button.go-up"),
-			    "navigateUp",
-			    null);
+	buttonPanel.add(new PropPanelButton2(this,
+                new ActionNavigateContainerElement()));
 	new PropPanelButton(this, buttonPanel, _receptionIcon, Translator.localize("UMLMenu", "button.new-reception"), getActionNewReception());
-	new PropPanelButton(this, buttonPanel, _deleteIcon,
-			    localize("Delete"),
-			    "removeElement",
-			    null);
+	buttonPanel.add(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
     /**

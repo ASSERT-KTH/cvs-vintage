@@ -1,16 +1,16 @@
-// $Id: PropPanelTransition.java,v 1.25 2004/07/26 08:40:34 mkl Exp $
+// $Id: PropPanelTransition.java,v 1.26 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
-// and this paragraph appear in all copies.  This software program and
+// and this paragraph appear in all copies. This software program and
 // documentation are copyrighted by The Regents of the University of
 // California. The software program and documentation are supplied "AS
 // IS", without any accompanying services from The Regents. The Regents
 // does not warrant that the operation of the program will be
 // uninterrupted or error-free. The end-user understands that the program
 // was developed for research purposes and is advised not to rely
-// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
 // UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
 // SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
 // ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -25,7 +25,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.25 2004/07/26 08:40:34 mkl Exp $
+// $Id: PropPanelTransition.java,v 1.26 2004/07/31 08:31:57 mkl Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -34,13 +34,16 @@ import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
-import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.ActionNavigateContainerElement;
+import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
 public class PropPanelTransition extends PropPanelModelElement {
+
     protected static Logger cat = Logger.getLogger(PropPanelTransition.class);
 
     ////////////////////////////////////////////////////////////////
@@ -48,36 +51,54 @@ public class PropPanelTransition extends PropPanelModelElement {
     public PropPanelTransition() {
         super("Transition", ConfigLoader.getTabPropsOrientation());
 
-        addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-        // addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
-        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
-        JList statemachineList = new UMLLinkedList(new UMLTransitionStatemachineListModel());
+        addField(Translator.localize("UMLMenu", "label.name"),
+                getNameTextField());
+        // addField(Translator.localize("UMLMenu", "label.stereotype"), new
+        // UMLComboBoxNavigator(this, Translator.localize("UMLMenu",
+        // "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"),
+                getStereotypeBox());
+        JList statemachineList = new UMLLinkedList(
+                new UMLTransitionStatemachineListModel());
         statemachineList.setVisibleRowCount(1);
-        addField(Translator.localize("UMLMenu", "label.statemachine"), new JScrollPane(statemachineList));
+        addField(Translator.localize("UMLMenu", "label.statemachine"),
+                new JScrollPane(statemachineList));
         JList stateList = new UMLLinkedList(new UMLTransitionStateListModel());
         stateList.setVisibleRowCount(1);
-        addField(Translator.localize("UMLMenu", "label.state"), new JScrollPane(stateList));
+        addField(Translator.localize("UMLMenu", "label.state"),
+                new JScrollPane(stateList));
 
         addSeperator();
 
         JList sourceList = new UMLLinkedList(new UMLTransitionSourceListModel());
         sourceList.setVisibleRowCount(1);
-        addField(Translator.localize("UMLMenu", "label.source"), new JScrollPane(sourceList));
+        addField(Translator.localize("UMLMenu", "label.source"),
+                new JScrollPane(sourceList));
         JList targetList = new UMLLinkedList(new UMLTransitionTargetListModel());
         targetList.setVisibleRowCount(1);
-        addField(Translator.localize("UMLMenu", "label.target"), new JScrollPane(targetList));
-        JList triggerList = new UMLTransitionTriggerList(new UMLTransitionTriggerListModel());
+        addField(Translator.localize("UMLMenu", "label.target"),
+                new JScrollPane(targetList));
+        JList triggerList = new UMLTransitionTriggerList(
+                new UMLTransitionTriggerListModel());
         triggerList.setVisibleRowCount(1);
-        addField(Translator.localize("UMLMenu", "label.trigger"), new JScrollPane(triggerList));
-        JList guardList = new UMLMutableLinkedList(new UMLTransitionGuardListModel(), null, ActionNewGuard.SINGLETON);
+        addField(Translator.localize("UMLMenu", "label.trigger"),
+                new JScrollPane(triggerList));
+        JList guardList = new UMLMutableLinkedList(
+                new UMLTransitionGuardListModel(), null,
+                ActionNewGuard.SINGLETON);
         guardList.setVisibleRowCount(1);
-        addField(Translator.localize("UMLMenu", "label.guard"), new JScrollPane(guardList));
-        JList effectList = new UMLTransitionEffectList(new UMLTransitionEffectListModel());
+        addField(Translator.localize("UMLMenu", "label.guard"),
+                new JScrollPane(guardList));
+        JList effectList = new UMLTransitionEffectList(
+                new UMLTransitionEffectListModel());
         effectList.setVisibleRowCount(1);
-        addField(Translator.localize("UMLMenu", "label.effect"), new JScrollPane(effectList));
+        addField(Translator.localize("UMLMenu", "label.effect"),
+                new JScrollPane(effectList));
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-        new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete"), "removeElement", null);
+        buttonPanel.add(new PropPanelButton2(this,
+                new ActionNavigateContainerElement()));
+        buttonPanel
+                .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
 } /* end class PropPanelTransition */

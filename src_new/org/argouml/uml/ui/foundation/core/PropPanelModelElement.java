@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.76 2004/07/24 15:47:16 mkl Exp $
+// $Id: PropPanelModelElement.java,v 1.77 2004/07/31 08:31:58 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,6 @@ import org.argouml.application.api.Pluggable;
 import org.argouml.application.api.PluggablePropertyPanel;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
 import org.argouml.swingext.Orientation;
@@ -231,9 +230,8 @@ public abstract class PropPanelModelElement extends PropPanel {
         this("ModelElement", null, ConfigLoader.getTabPropsOrientation());
         addField(Translator.localize("UMLMenu", "label.name"),
                 getNameTextField());
-        addField(Translator.localize("UMLMenu", "label.stereotype"),
-                new UMLComboBoxNavigator(this, Translator.localize("UMLMenu",
-                        "tooltip.nav-stereo"), getStereotypeComboBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
+
         addField(Translator.localize("UMLMenu", "label.namespace"),
                 getNamespaceScroll());
 
@@ -266,16 +264,6 @@ public abstract class PropPanelModelElement extends PropPanel {
                 UmlHelper.getHelper().getOwner(getTarget()));
     }
 
-    public void navigateNamespace() {
-        Object target = getTarget();
-        if (ModelFacade.isAModelElement(target)) {
-            Object elem = /* (MModelElement) */target;
-            Object ns = ModelFacade.getNamespace(elem);
-            if (ns != null) {
-                TargetManager.getInstance().setTarget(ns);
-            }
-        }
-    }
 
     //
     // Pluggable Property Panel support
@@ -487,7 +475,7 @@ public abstract class PropPanelModelElement extends PropPanel {
      * @return an ImageIcon corresponding to the given resource name.
      */
     private static ImageIcon lookupIcon(String name) {
-        return ResourceLoaderWrapper.getResourceLoaderWrapper()
+        return ResourceLoaderWrapper
                 .lookupIconResource(name);
     }
 }

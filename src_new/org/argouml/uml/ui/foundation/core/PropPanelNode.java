@@ -1,4 +1,4 @@
-// $Id: PropPanelNode.java,v 1.29 2004/07/24 10:30:47 mkl Exp $
+// $Id: PropPanelNode.java,v 1.30 2004/07/31 08:31:58 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: PropPanelNode.java
 // Classes: PropPanelNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNode.java,v 1.29 2004/07/24 10:30:47 mkl Exp $
+// $Id: PropPanelNode.java,v 1.30 2004/07/31 08:31:58 mkl Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -37,7 +37,6 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import java.awt.Color;
 import java.util.Collection;
 
 import javax.swing.JList;
@@ -45,9 +44,11 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.ui.ActionNavigateContainerElement;
+import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLList;
-import org.argouml.uml.ui.UMLReflectionListModel;
+import org.argouml.uml.ui.PropPanelButton2;
+import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.util.ConfigLoader;
 
 /**
@@ -81,14 +82,13 @@ public class PropPanelNode extends PropPanelClassifier {
 
         addSeperator();
 
-        JList compList = new UMLList(new UMLReflectionListModel(this, "component", true, "getResidents", "setResidents", null, null), true);
-        compList.setForeground(Color.blue);
-        addField(Translator.localize("UMLMenu", "label.components"), new JScrollPane(compList));
+        JList resList = new UMLLinkedList(new UMLContainerResidentListModel());
+        addField(Translator.localize("UMLMenu", "label.residents"), new JScrollPane(resList));
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-        new PropPanelButton(this, buttonPanel, _receptionIcon, Translator.localize("UMLMenu", "button.new-reception"), getActionNewReception());
-        new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete Node"), "removeElement", null);
-    }
+        buttonPanel.add(new PropPanelButton2(this, new ActionNavigateContainerElement()));
+                new PropPanelButton(this, buttonPanel, _receptionIcon, Translator.localize("UMLMenu", "button.new-reception"), getActionNewReception());
+        buttonPanel
+        .add(new PropPanelButton2(this, new ActionRemoveFromModel()));   }
 
     public Collection getResidents() {
         Collection components = null;

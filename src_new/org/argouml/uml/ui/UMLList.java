@@ -1,4 +1,4 @@
-// $Id: UMLList.java,v 1.12 2004/07/28 13:15:07 mkl Exp $
+// $Id: UMLList.java,v 1.13 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class UMLList extends JList implements UMLUserInterfaceComponent, MouseLi
         super(listModel);
         _umlListModel = listModel;
         setFont(LookAndFeelMgr.getInstance().getSmallFont());
-        setBackground(Color.GREEN.brighter());
+        setBackground(Color.green.brighter());
 
         if (navigate) {
             addMouseListener(this);

@@ -1,4 +1,4 @@
-// $Id: UMLStimulusReceiverListModel.java,v 1.1 2004/07/26 08:35:12 mkl Exp $
+// $Id: UMLStimulusReceiverListModel.java,v 1.2 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,13 +29,15 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
- * @since Oct 3, 2002
- * @author jaap.branderhorst@xs4all.nl
+ * ListModel for the stimuli an instance receives
+ * 
+ * @author mkl
+ *
  */
 public class UMLStimulusReceiverListModel extends UMLModelElementListModel2 {
 
     /**
-     * Constructor for UMLMessageReceiverListModel.
+     * Constructor.
      */
     public UMLStimulusReceiverListModel() {
         super("receiver");
@@ -47,6 +49,7 @@ public class UMLStimulusReceiverListModel extends UMLModelElementListModel2 {
     protected void buildModelList() {
         removeAllElements();
         addElement(ModelFacade.getReceiver(getTarget()));
+        
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: PropPanelPartition.java,v 1.2 2004/07/18 10:00:54 linus Exp $
+// $Id: PropPanelPartition.java,v 1.3 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ public class PropPanelPartition extends PropPanelModelElement {
      * constructor.
      */
     public PropPanelPartition() {
-        super("Swimlane", // TODO: Fix! _partitionIcon,
+        super("Swimlane",  _partitionIcon,
       	      ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"), getNameTextField());

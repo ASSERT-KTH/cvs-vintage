@@ -1,4 +1,4 @@
-// $Id: UMLFeatureOwnerScopeCheckBox.java,v 1.8 2004/02/08 12:45:27 mvw Exp $
+// $Id: UMLFeatureOwnerScopeCheckBox.java,v 1.9 2004/07/31 08:31:58 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,8 @@ public class UMLFeatureOwnerScopeCheckBox extends UMLCheckBox2 {
      * Constructor for UMLFeatureOwnerScopeCheckBox.
      */
     public UMLFeatureOwnerScopeCheckBox() {
-        super(Translator.localize("UMLMenu", "static"), ActionSetFeatureOwnerScope.SINGLETON, "ownerScope");
+        super(Translator.localize("UMLMenu", "label.static"),
+                ActionSetFeatureOwnerScope.SINGLETON, "ownerScope");
     }
 
     /**

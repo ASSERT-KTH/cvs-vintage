@@ -1,4 +1,4 @@
-// $Id: AbstractActionNavigate.java,v 1.2 2004/07/27 22:38:30 mkl Exp $
+// $Id: AbstractActionNavigate.java,v 1.3 2004/07/31 08:31:56 mkl Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,10 +68,15 @@ public abstract class AbstractActionNavigate extends UMLAction {
      * @return the object to navigate to
      */
     protected abstract Object navigateTo(Object source);
+    
+    public boolean isEnabled() {
+        Object target = TargetManager.getInstance().getModelTarget();
+        return ((target != null) && (navigateTo(target) != null));
+    }
 
     /** Perform the work the action is supposed to do. */
     public void actionPerformed(ActionEvent e) {
-        Object target = TargetManager.getInstance().getTarget();
+        Object target = TargetManager.getInstance().getModelTarget();
         if (ModelFacade.isAModelElement(target)) {
             Object elem = /* (MModelElement) */target;
             Object nav = navigateTo(elem);

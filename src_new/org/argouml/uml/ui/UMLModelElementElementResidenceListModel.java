@@ -1,5 +1,5 @@
-// $Id: UMLBehavioralFeatureQueryCheckBox.java,v 1.2 2004/07/31 08:31:58 mkl Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: UMLModelElementElementResidenceListModel.java,v 1.1 2004/07/31 08:31:57 mkl Exp $
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,30 +22,37 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLBehavioralFeatureQueryCheckBox.java,v 1.2 2004/07/31 08:31:58 mkl Exp $
-package org.argouml.uml.ui.foundation.core;
+package org.argouml.uml.ui;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLCheckBox2;
+import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
+ * @since Oct 12, 2002
+ * @author jaap.branderhorst@xs4all.nl
  */
-public class UMLBehavioralFeatureQueryCheckBox extends UMLCheckBox2 {
+public class UMLModelElementElementResidenceListModel
+    extends UMLModelElementListModel2 {
 
     /**
-     * Constructor.
+     * Constructor for UMLModelElementElementResidenceListModel.
      */
-    public UMLBehavioralFeatureQueryCheckBox() {
-        super(Translator.localize("UMLMenu", "label.query"),
-                ActionSetBehavioralFeatureQuery.SINGLETON, "isQuery");
+    public UMLModelElementElementResidenceListModel() {
+        super("elementResidence");
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLCheckBox2#buildModel()
+     * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
-    public void buildModel() {
-        if (getTarget() != null) setSelected(ModelFacade.isQuery(getTarget()));
+    protected void buildModelList() {
+        setAllElements(ModelFacade.getElementResidences(getTarget()));
+    }
+
+    /**
+     * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
+     */
+    protected boolean isValidElement(Object/*MBase*/ o) {
+        return ModelFacade.isAElementResidence(o) && ModelFacade.getElementResidences(getTarget()).contains(o);
     }
 
 }

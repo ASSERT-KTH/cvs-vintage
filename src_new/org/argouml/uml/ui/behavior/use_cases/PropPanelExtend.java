@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.33 2004/07/26 08:38:41 mkl Exp $
+// $Id: PropPanelExtend.java,v 1.34 2004/07/31 08:31:58 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,10 +32,14 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.behavioralelements.usecases.UseCasesFactory;
+import org.argouml.uml.ui.ActionNavigateNamespace;
+import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
+import org.argouml.uml.ui.UMLConditionExpressionModel;
 import org.argouml.uml.ui.UMLExpressionBodyField;
-import org.argouml.uml.ui.UMLExpressionModel;
+import org.argouml.uml.ui.UMLExpressionModel2;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
@@ -99,13 +103,15 @@ public class PropPanelExtend extends PropPanelModelElement {
 
         addSeperator();
 
-        UMLExpressionModel conditionModel =
-            new UMLExpressionModel(this, 
-                                   (Class) ModelFacade.EXTEND,
-                                   "condition",
-				   (Class) ModelFacade.BOOLEAN_EXPRESSION,
-                                   "getCondition", 
-                                   "setCondition");
+//        UMLExpressionModel conditionModel =
+//            new UMLExpressionModel(this, 
+//                                   (Class) ModelFacade.EXTEND,
+//                                   "condition",
+//				   (Class) ModelFacade.BOOLEAN_EXPRESSION,
+//                                   "getCondition", 
+//                                   "setCondition");
+        UMLExpressionModel2 conditionModel =
+            new UMLConditionExpressionModel(this, "condition");
 
         JTextArea conditionArea = new UMLExpressionBodyField(conditionModel,
 							     true);
@@ -117,17 +123,14 @@ public class PropPanelExtend extends PropPanelModelElement {
 
         // Add the toolbar.
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon,
-			    Translator.localize("UMLMenu", "button.go-up"),
-			    "navigateNamespace",
-			    null);
+        buttonPanel.add(new PropPanelButton2(this, new ActionNavigateNamespace()));
         new PropPanelButton(this, buttonPanel, _extensionPointIcon,
                             localize("New Extension Point"),
                             "newExtensionPoint",
                             null);
-        new PropPanelButton(this, buttonPanel, _deleteIcon,
-                            localize("Delete"), "removeElement", null);
-    }
+        buttonPanel
+        .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+   }
 
 
     /**

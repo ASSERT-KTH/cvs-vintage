@@ -1,5 +1,5 @@
-// $Id: UMLBehavioralFeatureQueryCheckBox.java,v 1.2 2004/07/31 08:31:58 mkl Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: UMLContainerResidentListModel.java,v 1.1 2004/07/31 08:31:58 mkl Exp $
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,30 +22,40 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLBehavioralFeatureQueryCheckBox.java,v 1.2 2004/07/31 08:31:58 mkl Exp $
 package org.argouml.uml.ui.foundation.core;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLCheckBox2;
+import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
+ * ListModel for resient relations and containers, such as Node,
+ * ComponentInstance, NodeInstance
+ * 
+ * @author mkl
+ *
  */
-public class UMLBehavioralFeatureQueryCheckBox extends UMLCheckBox2 {
+public class UMLContainerResidentListModel
+    extends UMLModelElementListModel2 {
 
     /**
      * Constructor.
      */
-    public UMLBehavioralFeatureQueryCheckBox() {
-        super(Translator.localize("UMLMenu", "label.query"),
-                ActionSetBehavioralFeatureQuery.SINGLETON, "isQuery");
+    public UMLContainerResidentListModel() {
+        super("resident");
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLCheckBox2#buildModel()
+     * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
-    public void buildModel() {
-        if (getTarget() != null) setSelected(ModelFacade.isQuery(getTarget()));
+    protected void buildModelList() {
+        setAllElements(ModelFacade.getResidents(getTarget()));
+    }
+
+    /**
+     * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
+     */
+    protected boolean isValidElement(Object/*MBase*/ o) {
+        return (ModelFacade.isAComponent(o) || ModelFacade.isAInstance(o));
     }
 
 }

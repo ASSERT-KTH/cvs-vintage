@@ -1,4 +1,4 @@
-// $Id: PropPanelUsage.java,v 1.9 2004/07/17 13:10:42 kataka Exp $
+// $Id: PropPanelUsage.java,v 1.10 2004/07/31 08:31:58 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,9 +25,9 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
-
-import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
+import org.argouml.uml.ui.ActionNavigateNamespace;
+import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.util.ConfigLoader;
 
 public class PropPanelUsage extends PropPanelDependency {
@@ -46,9 +46,9 @@ public class PropPanelUsage extends PropPanelDependency {
         addField(Translator.localize("UMLMenu", "label.clients"), _clientScroll);
 
         // TODO: add Mapping
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
-        new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-association"), "removeElement", null);
-    }
+        buttonPanel.add(new PropPanelButton2(this, new ActionNavigateNamespace()));
+        buttonPanel
+        .add(new PropPanelButton2(this, new ActionRemoveFromModel()));    }
 
 
 

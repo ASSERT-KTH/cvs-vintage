@@ -1,4 +1,4 @@
-// $Id: PropPanelButton2.java,v 1.8 2004/07/28 13:15:07 mkl Exp $
+// $Id: PropPanelButton2.java,v 1.9 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class PropPanelButton2 extends JButton implements UMLUserInterfaceCompone
     public PropPanelButton2(UMLUserInterfaceContainer container, Action a) {
         super(a);
         setText(""); // just the icon and possibly a tooltip
-        setBackground(Color.RED);
+        setBackground(Color.red);
         setContainer(container);
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelLinkEnd.java,v 1.1 2004/07/22 11:13:04 mkl Exp $
+// $Id: PropPanelLinkEnd.java,v 1.2 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@
 package org.argouml.uml.ui.behavior.common_behavior;
 
 import org.argouml.i18n.Translator;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
@@ -44,9 +43,9 @@ public class PropPanelLinkEnd extends PropPanelModelElement {
         super("Linkend", _assocEndIcon, ConfigLoader.getTabPropsOrientation());
         addField(Translator.localize("UMLMenu", "label.name"),
                 getNameTextField());
-        addField(Translator.localize("UMLMenu", "label.stereotype"),
-                new UMLComboBoxNavigator(this, Translator.localize("UMLMenu",
-                        "tooltip.nav-stereo"), getStereotypeComboBox()));
+        
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
+                
         addField(Translator.localize("UMLMenu", "label.namespace"),
                 getNamespaceScroll());
         addSeperator();

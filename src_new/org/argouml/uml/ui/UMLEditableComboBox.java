@@ -1,4 +1,4 @@
-// $Id: UMLEditableComboBox.java,v 1.4 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLEditableComboBox.java,v 1.5 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLEditableComboBox.java,v 1.4 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLEditableComboBox.java,v 1.5 2004/07/31 08:31:57 mkl Exp $
 
 package org.argouml.uml.ui;
 
@@ -241,7 +241,7 @@ public abstract class UMLEditableComboBox extends UMLComboBox2 {
      * @see org.argouml.uml.ui.UMLComboBox2#UMLComboBox2(UMLComboBoxModel2, UMLAction)
      */
     public UMLEditableComboBox(UMLComboBoxModel2 arg0, UMLAction selectAction) {
-        this(arg0, selectAction, false);
+        this(arg0, selectAction, true);
     }
 
     /**

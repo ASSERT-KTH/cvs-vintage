@@ -1,4 +1,4 @@
-// $Id: UMLExpressionLanguageField.java,v 1.8 2004/02/28 12:29:44 linus Exp $
+// $Id: UMLExpressionLanguageField.java,v 1.9 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,8 +23,10 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-import javax.swing.event.*;
-import javax.swing.*;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import ru.novosoft.uml.MElementEvent;
 
 /**
@@ -38,7 +40,7 @@ public class UMLExpressionLanguageField
     extends JTextField
     implements DocumentListener, UMLUserInterfaceComponent {
 
-    private UMLExpressionModel _model;
+    private UMLExpressionModel2 _model;
     private boolean _notifyModel;
 
     /**
@@ -49,7 +51,7 @@ public class UMLExpressionLanguageField
      * @param notifyModel Only one of Language and Body fields should
      * forward events to model
      */
-    public UMLExpressionLanguageField(UMLExpressionModel model,
+    public UMLExpressionLanguageField(UMLExpressionModel2 model,
 				      boolean notifyModel) {
         _model = model;
         _notifyModel = notifyModel;

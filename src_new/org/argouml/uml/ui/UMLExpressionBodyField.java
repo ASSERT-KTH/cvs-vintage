@@ -1,4 +1,4 @@
-// $Id: UMLExpressionBodyField.java,v 1.14 2004/07/28 13:15:07 mkl Exp $
+// $Id: UMLExpressionBodyField.java,v 1.15 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,10 +49,10 @@ public class UMLExpressionBodyField
     protected static Logger cat = 
         Logger.getLogger(UMLExpressionBodyField.class);
 
-    private UMLExpressionModel _model;
+    private UMLExpressionModel2 _model;
     private boolean _notifyModel;
     
-    public UMLExpressionBodyField(UMLExpressionModel model,
+    public UMLExpressionBodyField(UMLExpressionModel2 model,
 				  boolean notifyModel) {
         _model = model;
         _notifyModel = notifyModel;

@@ -1,4 +1,4 @@
-// $Id: PropPanelCollaboration.java,v 1.18 2004/07/17 13:10:31 kataka Exp $
+// $Id: PropPanelCollaboration.java,v 1.19 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,6 @@ package org.argouml.uml.ui.behavior.collaborations;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelNamespace;
 import org.argouml.util.ConfigLoader;

@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationRole.java,v 1.26 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: PropPanelAssociationRole.java,v 1.27 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,9 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-
-import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.ActionNavigateContainerElement;
+import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelAssociation;
@@ -71,16 +72,10 @@ public class PropPanelAssociationRole extends PropPanelAssociation {
         addField(Translator.localize("UMLMenu", "label.messages"),
 		 new JScrollPane(messageList));
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon,
-                Translator.localize("UMLMenu",
-					  "button.go-up"),
-			    "navigateUp",
-			    null);
-        new PropPanelButton(this, buttonPanel, _deleteIcon,
-			    localize("Delete"),
-			    "removeElement",
-			    null);
-
+        buttonPanel.add(new PropPanelButton2(this,
+                new ActionNavigateContainerElement()));
+        buttonPanel
+                .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
 } /* end class PropPanelAssociationRole */

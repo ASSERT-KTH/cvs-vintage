@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.37 2004/07/17 13:10:31 kataka Exp $
+// $Id: PropPanelSignal.java,v 1.38 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,10 @@ import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.ui.ActionNavigateNamespace;
+import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLAddDialog;
 import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLModelElementListModel;
@@ -72,10 +75,10 @@ public class PropPanelSignal extends PropPanelModelElement {
         JScrollPane contextScroll = new JScrollPane(contextList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         addField(Translator.localize("UMLMenu", "label.contexts"), contextScroll);        
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
+        buttonPanel.add(new PropPanelButton2(this, new ActionNavigateNamespace()));
         new PropPanelButton(this, buttonPanel, _signalIcon, Translator.localize("UMLMenu", "button.new-signal"), "newSignal", null);
-        new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-signal"), "removeElement", null);
-    }
+        buttonPanel
+        .add(new PropPanelButton2(this, new ActionRemoveFromModel()));   }
 
     public void newSignal() {
         Object target = getTarget();

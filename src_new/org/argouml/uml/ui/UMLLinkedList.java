@@ -1,4 +1,4 @@
-// $Id: UMLLinkedList.java,v 1.15 2004/07/28 13:15:07 mkl Exp $
+// $Id: UMLLinkedList.java,v 1.16 2004/07/31 08:31:57 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,8 +52,8 @@ public class UMLLinkedList extends UMLList2 implements ListSelectionListener {
         UMLModelElementListModel2 dataModel, boolean showIcon) {
         super(dataModel, new UMLLinkedListCellRenderer(showIcon));
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        setForeground(Color.BLUE);
-        setSelectionForeground(Color.BLUE.darker());
+        setForeground(Color.blue);
+        setSelectionForeground(Color.blue.darker());
         _mouseListener = new UMLLinkMouseListener(this);
         addMouseListener(_mouseListener);
         addListSelectionListener(this);

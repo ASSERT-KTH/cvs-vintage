@@ -1,4 +1,4 @@
-// $Id: PropPanelComponent.java,v 1.33 2004/07/24 10:30:47 mkl Exp $
+// $Id: PropPanelComponent.java,v 1.34 2004/07/31 08:31:58 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,13 +26,16 @@ package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.ui.ActionNavigateNamespace;
+import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.util.ConfigLoader;
 
 /**
  * PropPanel for a UML component.
  *
- * <p>$Id: PropPanelComponent.java,v 1.33 2004/07/24 10:30:47 mkl Exp $
+ * <p>$Id: PropPanelComponent.java,v 1.34 2004/07/31 08:31:58 mkl Exp $
  *
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -61,10 +64,10 @@ public class PropPanelComponent extends PropPanelClassifier {
 	addField(Translator.localize("UMLMenu", "label.client-dependencies"), getClientDependencyScroll());
 	addField(Translator.localize("UMLMenu", "label.supplier-dependencies"), getSupplierDependencyScroll());
 
-	new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
+        buttonPanel.add(new PropPanelButton2(this, new ActionNavigateNamespace()));
 	new PropPanelButton(this, buttonPanel, _receptionIcon, Translator.localize("UMLMenu", "button.new-reception"), getActionNewReception());
-	new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-class"), "removeElement", null);
-
+	buttonPanel
+        .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
 
 	//    addCaption(Translator.localize("UMLMenu", "label.name"),1,0,0);
 	//    addField(getNameTextField(),1,0,0);
