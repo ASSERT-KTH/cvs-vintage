@@ -107,15 +107,6 @@ public class RModuleOption
         return comparator;
     }
 
-    public RModuleOption copy() throws Exception
-    {
-        RModuleOption rmo2 = new RModuleOption();
-        rmo2.setOptionId(getOptionId());
-        rmo2.setDisplayValue(getDisplayValue());
-        rmo2.setActive(getActive());
-        rmo2.setOrder(getOrder());
-        return rmo2;
-    }
 
     /**
      * Get the AttributeOption associated with this Module
@@ -123,8 +114,7 @@ public class RModuleOption
     public AttributeOption getAttributeOption()
         throws Exception
     {
-        return (AttributeOption)AttributeOptionPeer.retrieveByPK(getOptionId());
-        //return Attribute.getAttributeForOption(getOptionId()).getAttributeOption(getOptionId());
+        return AttributeOption.getInstance(getOptionId());
     }
 
     /**
