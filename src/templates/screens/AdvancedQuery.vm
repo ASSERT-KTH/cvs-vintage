@@ -9,7 +9,7 @@ $page.setTitle("Advanced query")
 #else
 <form action="$link.setPage("AdvancedQuery.vm")" method="post">
 <input type="hidden" name="nextTemplate" value="IssueList.vm" />
-<input type="hidden" name="action" value="Search" />
+<input type="hidden" name="action" value="search" />
 <input type="hidden" name="searchType" value="advanced" />
 <input type="hidden" name="pageNum" value="1" />
 <div class="functnbar">
