@@ -7,6 +7,9 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jboss.deployment.DeploymentException;
 
 import org.jboss.ejb.Container;
@@ -16,6 +19,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDeclaredQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 
 /**
  * This class generates a query based on the delcared-sql xml specification.
@@ -27,7 +31,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDeclaredQueryMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
    
@@ -44,10 +48,18 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
 
       metadata = (JDBCDeclaredQueryMetaData) q;
       
+      // set the select object (either selectEntity or selectField)
       initSelectObject(manager);
 
-      String sql = buildSQL();
+      // set the preload fields
+      JDBCReadAheadMetaData readAhead = metadata.getReadAhead();
+      if(getSelectEntity() != null && !readAhead.isOnFind()) {
+         String eagerLoadGroupName = readAhead.getEagerLoadGroup();
+         setPreloadFields(getSelectEntity().getLoadGroup(eagerLoadGroupName));
+      }
 
+      // set the sql and parameters 
+      String sql = buildSQL();
       setSQL(parseParameters(sql));
     }
  
@@ -120,18 +132,25 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
       
       String from = metadata.getFrom();
       if(getSelectField() == null) {
-         JDBCEntityBridge selectEntity = getSelectEntity();
-         String table = selectEntity.getMetaData().getTableName();
+
+         // we are selecting a full entity
+         String table = getSelectEntity().getMetaData().getTableName();
+
+         // get a list of all fields to be loaded
+         List loadFields = new ArrayList();
+         loadFields.addAll(getSelectEntity().getPrimaryKeyFields());
+         loadFields.addAll(getPreloadFields());
+
          if(from != null && from.trim().length()>0) {
-            sql.append(SQLUtil.getColumnNamesClause(
-                  selectEntity.getJDBCPrimaryKeyFields(), table));
+            sql.append(SQLUtil.getColumnNamesClause(loadFields, table));
             sql.append(" FROM ").append(table).append(" ").append(from);
          } else {
-            sql.append(SQLUtil.getColumnNamesClause(
-                  selectEntity.getJDBCPrimaryKeyFields()));
+            sql.append(SQLUtil.getColumnNamesClause(loadFields));
             sql.append(" FROM ").append(table);
          }
       } else {
+
+         // we are just selecting one field
          JDBCCMPFieldBridge selectField = getSelectField();
          String table = selectField.getMetaData().getEntity().getTableName();
          if(from != null && from.trim().length()>0) {
