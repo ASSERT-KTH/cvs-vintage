@@ -52,7 +52,7 @@ JBOSS_CONSOLE=${JBOSS_CONSOLE:-"/dev/null"}
 JBOSSUS=${JBOSSUS:-"jboss"}
 
 CMD_START="cd $JBOSS_HOME/bin; $JBOSSSH" 
-CMD_STOP="java -classpath $JBOSSCP org.jboss.Shutdown"
+CMD_STOP="java -classpath $JBOSSCP org.jboss.Shutdown --shutdown"
 
 if [ "$JBOSSUS" = "RUNASIS" ]; then
   SUBIT=""
