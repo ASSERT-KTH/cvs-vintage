@@ -137,7 +137,8 @@
              directory.  -->
         <!-- Tomcat Root Context -->
         <Context path="" docBase="scarab" reloadable="true">
-           <Loader checkInterval="3"/>
+            <Loader checkInterval="3"
+                className="org.apache.catalina.loader.StandardLoader"/>
         </Context>
 
       </Host>
