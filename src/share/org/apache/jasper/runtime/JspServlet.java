@@ -175,6 +175,7 @@ public class JspServlet extends HttpServlet {
 		}
 
             } catch (FileNotFoundException ex) {
+		ex.printStackTrace();
 		try {
 		    response.sendError(HttpServletResponse.SC_NOT_FOUND, 
 				       Constants.getString
@@ -374,7 +375,6 @@ public class JspServlet extends HttpServlet {
     {
 	try {
             String includeUri 
-		//  = (String) request.getAttribute(Constants.INC_REQUEST_URI);
                 = (String) request.getAttribute(Constants.INC_SERVLET_PATH);
 
             String jspUri;
@@ -384,12 +384,17 @@ public class JspServlet extends HttpServlet {
             else
                 jspUri = includeUri;
 
-	    //	    System.out.println("JspServletWrapper: " + includeUri + " " + jspUri );
+//	    System.out.println("JspServletWrapper: " + includeUri + " " +
+//                            jspUri + 
+// 			       (String) request.getAttribute(
+//                                  Constants.INC_REQUEST_URI));
+
             boolean precompile = preCompile(request);
 
 	    Logger jasperLog = Constants.jasperLog;
 	    
-            if (jasperLog != null && jasperLog.matchVerbosityLevel(Logger.INFORMATION))
+            if (jasperLog != null &&
+		jasperLog.matchVerbosityLevel(Logger.INFORMATION))
 		{
 		    jasperLog.log("JspEngine --> "+jspUri);
 		    jasperLog.log("\t     ServletPath: "+request.getServletPath());

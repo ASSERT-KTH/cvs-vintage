@@ -223,7 +223,8 @@ public class ServletWrapper extends Handler {
 	    }
 
 	    try {
-		servlet.destroy();
+		if( servlet!=null) 
+		    servlet.destroy();
 	    } catch(Exception ex) {
 		// Should never come here...
 		context.log( "Error in destroy ", ex );
@@ -326,7 +327,13 @@ public class ServletWrapper extends Handler {
 
 	// <servlet><jsp-file> case
 	if( path!=null ) {
-	    req.setAttribute( "javax.servlet.include.request_uri", path );
+	    if( path.startsWith("/"))
+		req.setAttribute( "javax.servlet.include.request_uri",
+				  req.getContext().getPath()  + path );
+	    else
+		req.setAttribute( "javax.servlet.include.request_uri",
+				  req.getContext().getPath()  + "/" + path );
+	    req.setAttribute( "javax.servlet.include.servlet_path", path );
 	}
 
 	if( unavailable!=null  ) {

@@ -215,7 +215,8 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	if( ctx.getDebug() > 0 ) ctx.log("Removing sessions from " + ctx );
 	StandardManager sm=getManager(ctx);
 	try {
-	    sm.stop();
+	    if( sm != null )
+		sm.stop();
 	} catch(IllegalStateException ex ) {
 	    throw new TomcatException( ex );
 	}

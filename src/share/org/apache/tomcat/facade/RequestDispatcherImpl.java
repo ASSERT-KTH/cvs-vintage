@@ -178,9 +178,11 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// not that this is a very particular case of forwarding
 	context.getContextManager().processRequest(realRequest);
 
-	// unset "included" attribute if any - we may be in a servlet included from another servlet,
+	// unset "included" attribute if any - we may be in a servlet
+	// included from another servlet,
 	// in which case the attribute will create problems
 	realRequest.removeAttribute( "javax.servlet.include.request_uri");
+	realRequest.removeAttribute( "javax.servlet.include.servlet_path");
 
 
 	// CM should have set the wrapper - call it

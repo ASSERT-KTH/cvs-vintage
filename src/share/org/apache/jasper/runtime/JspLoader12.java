@@ -165,10 +165,14 @@ public class JspLoader12 extends JspLoader {
 		});
 	    return b.booleanValue();
 	} catch( Exception ex ) {
+	    if( ex instanceof PrivilegedActionException ) 
+		ex=((PrivilegedActionException)ex).getException();
+	    
 	    if( ex instanceof JasperException )
 		throw (JasperException)ex;
 	    if( ex instanceof FileNotFoundException )
 		throw (FileNotFoundException) ex;
+	    ex.printStackTrace();
 	    throw new JasperException( ex );
 	}
     }
