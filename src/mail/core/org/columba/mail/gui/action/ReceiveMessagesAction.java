@@ -49,6 +49,6 @@ public class ReceiveMessagesAction extends AbstractColumbaAction {
 			ConnectionStateImpl.getInstance().setOnline(true);
 		}
 
-		MailInterface.mailCheckingManager.check();
+		MailInterface.mailCheckingManager.checkAll();
 	}
 }

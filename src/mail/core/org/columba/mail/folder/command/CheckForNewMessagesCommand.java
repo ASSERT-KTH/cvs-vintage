@@ -15,11 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import java.awt.Toolkit;
+
+import javax.swing.Action;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameMediator;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
@@ -29,8 +31,6 @@ import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
-
-import java.awt.Toolkit;
 
 
 /**
@@ -43,21 +43,17 @@ public class CheckForNewMessagesCommand extends FolderCommand {
     FolderCommandAdapter adapter;
     IMAPFolder inboxFolder;
     boolean needGUIUpdate;
-
+    private Action action;
+    
     /**
+     * @param action
      * @param references
      */
-    public CheckForNewMessagesCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
-
-    /**
-     * @param frame
-     * @param references
-     */
-    public CheckForNewMessagesCommand(FrameMediator frame,
+    public CheckForNewMessagesCommand(Action action,
         DefaultCommandReference[] references) {
-        super(frame, references);
+         	super(references);
+         	this.action = action;
+        
     }
 
     /* (non-Javadoc)
@@ -148,6 +144,8 @@ public class CheckForNewMessagesCommand extends FolderCommand {
      * @see org.columba.core.command.Command#updateGUI()
      */
     public void updateGUI() throws Exception {
+    	if(action != null ) action.setEnabled(true);
+    	
         // send update event to table
         TableModelChangedEvent ev = new TableModelChangedEvent(TableModelChangedEvent.UPDATE,
                 inboxFolder);

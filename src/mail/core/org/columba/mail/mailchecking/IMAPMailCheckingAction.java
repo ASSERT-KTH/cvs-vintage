@@ -48,10 +48,20 @@ public class IMAPMailCheckingAction extends AbstractMailCheckingAction {
  * @see org.columba.mail.mailchecking.AbstractMailCheckingAction#check()
  */
     public void check() {
+    	setEnabled(false);
         IMAPRootFolder imapRootFolder = (IMAPRootFolder) MailInterface.treeModel.getImapFolder(accountUid);
         FolderCommandReference[] r = new FolderCommandReference[1];
         r[0] = new FolderCommandReference(imapRootFolder);
 
-        MainInterface.processor.addOp(new CheckForNewMessagesCommand(r));
+        MainInterface.processor.addOp(new CheckForNewMessagesCommand(this, r));
     }
+
+    /**
+	 * @see org.columba.mail.mailchecking.AbstractMailCheckingAction#isCheckAll()
+	 */
+	public boolean isCheckAll() {
+        IMAPRootFolder imapRootFolder = (IMAPRootFolder) MailInterface.treeModel.getImapFolder(accountUid);
+        return imapRootFolder.getAccountItem().getImapItem().getBoolean("exclude_from_checkall",
+                false);
+	}
 }

@@ -15,25 +15,26 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
+import java.text.MessageFormat;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.swing.Action;
+
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.text.MessageFormat;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * @author freddy
@@ -47,6 +48,8 @@ public class FetchNewMessagesCommand extends Command {
 	POP3Server server;
 	int totalMessageCount;
 	int newMessageCount;
+	
+	Action action;
 
 	/**
 	 * Constructor for FetchNewMessages.
@@ -54,12 +57,16 @@ public class FetchNewMessagesCommand extends Command {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public FetchNewMessagesCommand(DefaultCommandReference[] references) {
+	public FetchNewMessagesCommand(Action action, DefaultCommandReference[] references) {
 		super(references);
 
 		POP3CommandReference[] r = (POP3CommandReference[]) getReferences(FIRST_EXECUTION);
 
 		server = r[0].getServer();
+		
+		priority = Command.DAEMON_PRIORITY;
+		
+		this.action = action;
 	}
 
 	/**
@@ -255,6 +262,14 @@ public class FetchNewMessagesCommand extends Command {
 		if (newMessageCount == 0) {
 			log(MailResourceLoader.getString("statusbar", "message",
 					"no_new_messages"));
+		}
+	}
+	/**
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		if( action != null ) {
+			action.setEnabled(true);
 		}
 	}
 }

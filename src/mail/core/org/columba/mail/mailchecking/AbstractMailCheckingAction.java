@@ -124,4 +124,9 @@ public abstract class AbstractMailCheckingAction extends AbstractColumbaAction {
 	public AccountItem getAccountItem() {
 		return accountItem;
 	}
+
+	/**
+	 * @return
+	 */
+	public abstract boolean isCheckAll();
 }

@@ -127,13 +127,13 @@ public class MailCheckingManager extends Observable {
      * Check for new messages in all accounts
      *
      */
-    public void check() {
+    public void checkAll() {
         Iterator it = list.iterator();
 
         // for each account
         while (it.hasNext()) {
             AbstractMailCheckingAction action = (AbstractMailCheckingAction) it.next();
-            action.check();
+            if( action.isCheckAll()) action.check();
         }
     }
 

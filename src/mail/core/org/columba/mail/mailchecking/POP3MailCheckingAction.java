@@ -49,20 +49,24 @@ public class POP3MailCheckingAction extends AbstractMailCheckingAction {
  */
     public void check() {
         POP3Server controller = MailInterface.popServerCollection.uidGet(accountUid);
-
-        boolean excludeFromCheckAll = controller.getAccountItem().getPopItem()
-                                                .getBoolean("exclude_from_checkall",
-                false);
-
-        if (excludeFromCheckAll) {
-            return;
-        }
-
+        
+        setEnabled( false );
+        
         POP3CommandReference[] r = new POP3CommandReference[1];
         r[0] = new POP3CommandReference(controller);
 
-        FetchNewMessagesCommand c = new FetchNewMessagesCommand(r);
+        FetchNewMessagesCommand c = new FetchNewMessagesCommand(this, r);
 
         MainInterface.processor.addOp(c);
     }
+	/**
+	 * @see org.columba.mail.mailchecking.AbstractMailCheckingAction#isCheckAll()
+	 */
+	public boolean isCheckAll() {
+        POP3Server controller = MailInterface.popServerCollection.uidGet(accountUid);
+
+        return controller.getAccountItem().getPopItem()
+        .getBoolean("exclude_from_checkall",
+                false);
+	}
 }
