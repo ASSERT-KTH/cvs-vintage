@@ -30,7 +30,10 @@ package org.objectweb.carol.jndi.iiop;
 import java.util.Hashtable;
 
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
+import org.omg.CORBA.ORB;
 
 import com.sun.jndi.cosnaming.CNCtxFactory;
 /*
@@ -42,7 +45,7 @@ import com.sun.jndi.cosnaming.CNCtxFactory;
  * @version 1.0, 15/07/2002
  */
 public class IIOPReferenceContextWrapperFactory extends CNCtxFactory {
-
+	
     /**
      * Get/Build the IIOP Wrapper InitialContext
      *
@@ -53,8 +56,7 @@ public class IIOPReferenceContextWrapperFactory extends CNCtxFactory {
      * @throws NamingException if a naming exception is encountered
      */   
     public Context getInitialContext(Hashtable env) throws NamingException {
-	env.put("java.naming.factory.initial","com.sun.jndi.cosnaming.CNCtxFactory");
-	return new IIOPReferenceContextWrapper(super.getInitialContext(env));
+	return IIOPReferenceContextWrapper.getSingleInstance(env);
     }
 
 

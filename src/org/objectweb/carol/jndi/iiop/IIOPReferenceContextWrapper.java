@@ -33,6 +33,7 @@ import java.util.Hashtable;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.Name;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
@@ -54,12 +55,19 @@ import org.objectweb.carol.util.multi.ProtocolCurrent;
  */
 public class IIOPReferenceContextWrapper implements Context {
     
-    /**
-     * the IIOP JNDI context
-     * @see #IIOPReferenceContextWrapper
-     */
-     private static Context iiopContext = null;
-
+	/**
+	 * the IIOP JNDI context
+	 * @see #IIOPReferenceContextWrapper
+	 */
+	 private static Context iiopContext = null;
+	
+	/**
+	 * the IIOP Wrapper JNDI context
+	 * @see #IIOPReferenceContextWrapper
+	 */
+	 private static Context single = null;
+	 
+	 
     /**
      * the Exported Wrapper Hashtable
      *
@@ -73,11 +81,25 @@ public class IIOPReferenceContextWrapper implements Context {
      *
      * @throws NamingException if a naming exception is encountered
      */
-    public IIOPReferenceContextWrapper (Context iiopCtx ) throws NamingException {
+    private IIOPReferenceContextWrapper (Context iiopCtx ) throws NamingException {
 	iiopContext = iiopCtx;
 	wrapperHash = new Hashtable();
     }
 
+	/**
+ 	* 
+ 	* @param o
+ 	* @param name
+ 	* @return
+ 	* @throws NamingException
+ 	*/
+	public static Context getSingleInstance(Hashtable env) throws NamingException {
+		if (single==null) {
+			env.put("java.naming.factory.initial","com.sun.jndi.cosnaming.CNCtxFactory");
+			single = new IIOPReferenceContextWrapper (new InitialContext(env));
+		}
+		return single;
+	}
 
     /**
      * Resolve a Remote Object: 
@@ -306,7 +328,10 @@ public class IIOPReferenceContextWrapper implements Context {
     }
 
     public void close() throws NamingException {
-	iiopContext.close();
+    	if (iiopContext!=null) {
+			iiopContext.close();	
+    	}
+    	single=null;
     }
 
     public String getNameInNamespace() throws NamingException {
