@@ -79,7 +79,7 @@ $l10n.NoIssueTypeSelected
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
     <th nowrap="nowrap">$l10n.Select</th>
-    <th>$l10n.Module</th>
+    <th>$l10n.CapModule</th>
     <th>$l10n.IssueType</th>
     <th>$l10n.NumberOfIssues</th>
     <th>$l10n.Description</th>
@@ -221,7 +221,7 @@ $l10n.NoMoreIssueTypes
   #end
 #end
 
-	  <th>#rmitSort("module" "$l10n.Module")</th>
+	  <th>#rmitSort("module" "$l10n.CapModule")</th>
 	  <th>#rmitSort("issuetype" "$l10n.IssueType")</th>
 	  <th>Description</th>
     </tr>
