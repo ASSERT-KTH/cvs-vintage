@@ -36,7 +36,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.31 $
+*   @version $Revision: 1.32 $
 */
 public class EntityContainer
 extends Container
@@ -495,7 +495,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
          {
             try // Try home method
             {
-               map.put(m[i], beanClass.getMethod("ejbHome"+m[i].getName(), m[i].getParameterTypes()));
+               String methodName = "ejbHome" + Character.toUpperCase(m[i].getName().charAt(0)) + m[i].getName().substring(1);
+               map.put(m[i], beanClass.getMethod(methodName, m[i].getParameterTypes()));
 
                continue;
             } catch (NoSuchMethodException e)
