@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.util;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -31,7 +32,7 @@ import javax.swing.ImageIcon;
 public class StartUpFrame extends Frame {
 
 	private ImageIcon[] anim = new ImageIcon[4];
-	private StartUpWindow window;
+	private Window window;
 
 	public StartUpFrame() {
 		super();
@@ -43,12 +44,20 @@ public class StartUpFrame extends Frame {
 		anim[2] = ImageLoader.getImageIcon("dove01.gif");
 		anim[3] = ImageLoader.getImageIcon("dove02.gif");
 
-		window = new StartUpWindow(this, anim);
+		try {
+			window = new TransparentWindow(ImageLoader.getImageIcon("startup.png"));
+			Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
+			window.setLocation(
+							(screenDim.width - window.getWidth()) / 2,
+							(screenDim.height - window.getHeight()) / 2);
+		} catch (AWTException e) {
+			e.printStackTrace();
+		}
 
 	}
 
 	public void advance() {
-		window.advance();
+		//window.advance();
 		window.repaint();
 	}
 
