@@ -3,7 +3,7 @@ rem -------------------------------------------------------------------------
 rem JBoss Bootstrap Script for Win32
 rem -------------------------------------------------------------------------
 
-rem $Id: deployer.bat,v 1.2 2002/05/14 00:06:46 user57 Exp $
+rem $Id: deployer.bat,v 1.3 2003/05/05 15:09:06 starksm Exp $
 
 @if not "%ECHO%" == ""  echo %ECHO%
 @if "%OS%" == "Windows_NT"  setlocal
@@ -52,7 +52,7 @@ set JBOSS_HOME=%DIRNAME%\..
 rem JPDA options. Uncomment and modify as appropriate to enable remote debugging.
 rem set JAVA_OPTS=-classic -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y %JAVA_OPTS%
 
-%JAVA% %JAVA_OPTS% -classpath "%JBOSS_CLASSPATH%" org.jboss.jmx.service.RemoteDeployer %ARGS%
+"%JAVA%" %JAVA_OPTS% -classpath "%JBOSS_CLASSPATH%" org.jboss.jmx.service.RemoteDeployer %ARGS%
 
 :END
 if "%NOPAUSE%" == "" pause
