@@ -568,6 +568,7 @@
             <or>
                 <equals arg1="${scarab.database.type}" arg2="oracle"/>
                 <equals arg1="${scarab.database.type}" arg2="db2"/>
+                <equals arg1="${scarab.database.type}" arg2="mssql"/>
             </or>
         </not>
         </condition>
