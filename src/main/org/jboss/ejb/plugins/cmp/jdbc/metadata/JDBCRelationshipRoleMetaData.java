@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
  * ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class JDBCRelationshipRoleMetaData {
 	/**
@@ -267,7 +267,6 @@ public final class JDBCRelationshipRoleMetaData {
 		
 		// no field overrides, we're done
 		if(foreignKeysElement == null) {
-			System.out.println("NO FOREIGN KEY OVERRIDE");
 			return;
 		}
 		
@@ -276,14 +275,12 @@ public final class JDBCRelationshipRoleMetaData {
 		
 		// if empty foreign-key-fields element, no fk should be used
 		if(!fkIter.hasNext()) {
-			System.out.println("NO FOREIGN KEY FOR THIS RELATION");
 			foreignKeyFields.clear();
 		}
 		
 		while(fkIter.hasNext()) {
 			Element foreignKeyElement = (Element)fkIter.next();
 			String foreignKeyName = MetaData.getUniqueChildContent(foreignKeyElement, "field-name");
-			System.out.println("OVERRIDE foreignKeyName="+foreignKeyName);
 			JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)foreignKeyFields.get(foreignKeyName);
 			if(cmpField == null) {
 				throw new DeploymentException("CMP field for foreign key not found: field name="+foreignKeyName);
@@ -299,10 +296,8 @@ public final class JDBCRelationshipRoleMetaData {
 	 */
 	private void loadTableKeyFields(Element element) throws DeploymentException {
 		// load all pks of entity into tableKeys map
-		System.out.println("Entity cmp field count" + entity.getCMPFields().size());
 		for(Iterator i = entity.getCMPFields().iterator(); i.hasNext(); ) {
 			JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
-			System.out.println("TableKeyField : name="+cmpField.getFieldName()+" isPk="+cmpField.isPrimaryKeyMember());
 			if(cmpField.isPrimaryKeyMember()) {
 				cmpField = new JDBCCMPFieldMetaData(entity, cmpField, entity.getName() + "_" + cmpField.getFieldName(), false);
 				tableKeyFields.put(cmpField.getFieldName(), cmpField);
