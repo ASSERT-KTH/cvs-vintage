@@ -14,7 +14,8 @@ import javax.transaction.Transaction;
 import javax.transaction.Status;
 
 import org.jboss.invocation.Invocation;
-
+import org.jboss.ejb.Container;
+import org.jboss.ejb.EntityContainer;
 
 /**
  * This class is holds threads awaiting the transactional lock to be free
@@ -30,18 +31,28 @@ import org.jboss.invocation.Invocation;
  * When the reference count goes to 0, the lock is released from the
  * id -> lock mapping.
  *
+ * As of 04/10/2002, you can now specify in jboss.xml method attributes that define
+ * methods as read-only.  read-only methods(and read-only beans) will release transactional
+ * locks at the end of the invocation.  This decreases likelyhood of deadlock and increases
+ * performance.
+ *
  * FIXME marcf: we should get solid numbers on this locking, bench in multi-thread environments
  * We need someone with serious SUN hardware to run this lock into the ground
  *
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
+ * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/03: billb</b>
  *  <ol>
  *  <li>Initial revision
+ *  </ol>
+ * <p><b>2002/04/10: billb </b>
+ *  <ol>
+ *  <li>Applied Peter Murray's read-only locking mechanisms.
  *  </ol>
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
@@ -50,6 +61,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
 
    private HashMap txLocks = new HashMap();
    private LinkedList txWaitQueue = new LinkedList();
+   private boolean isReadOnlyTxLock = true;
 
    private int txIdGen = 0;
    private class TxLock
@@ -135,6 +147,13 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       {
          /* loop on lock wakeup and restart trying to schedule */
          threadScheduled = doSchedule(mi);
+      }
+      // Only set isReadOnlyTxLock if there was a transactional lock
+      if (mi.getTransaction() != null)
+      {
+         // Promote the txlock into a writeLock if we're not a readonly method
+         // isReadOnlyTxLock will be reset in nextTransaction()
+         isReadOnlyTxLock = isReadOnlyTxLock && (((EntityContainer)container).isReadOnly() || container.getBeanMetaData().isMethodReadOnly(mi.getMethod().getName()));
       }
    }
    /**
@@ -382,7 +401,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       }
 
       this.tx = null;
-      
+      this.isReadOnlyTxLock = true;
       // is there a waiting list?
       if (!txWaitQueue.isEmpty())
       {
@@ -422,48 +441,31 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
     * if we reach the count of zero it means the instance is free from threads (and reentrency)
     * we wake up the next thread in the currentLock
     */
-   public void releaseMethodLock() 
+   public void endInvocation(Invocation mi)
    { 
       numMethodLocks--;
       if (numMethodLocks == 0)
       {
          synchronized(methodLock) {methodLock.notify();}
-      } 
-   }
-   
-   /*
-    * For debugging purposes
-   private static int filecount = 0;
-   
-   private static synchronized void saveStackTrace(String msg)
-   {
-      System.out.println("saving stack trace");
-      try
-      {
-         FileOutputStream fp = new FileOutputStream("d:/tmp/stacktraces/" + Integer.toString(filecount++) + ".txt");
-         PrintStream ps = new PrintStream(fp);
-         ps.println(msg);
-         new Throwable().printStackTrace(ps);
-         ps.close();
-         fp.close();
+         if (isReadOnlyTxLock && mi.getTransaction() != null)
+         {
+            if (isReadOnlyTxLock)
+            {
+               endTransaction(mi.getTransaction());
+            }
+         }
       }
-      catch (Exception ignored) {}
-      System.out.println("done saving stack trace");
-
    }
-   */
-
+   
    public void removeRef() 
    { 
       refs--;
       if (refs == 0 && txWaitQueue.size() > 0) 
       {
-         //         saveStackTrace("****removing bean lock and it has tx's in QUEUE!***");
          throw new IllegalStateException("removing bean lock and it has tx's in QUEUE!");
       }
       else if (refs == 0 && this.tx != null) 
       {
-         //         saveStackTrace("****removing bean lock and it has tx set!***");
          throw new IllegalStateException("removing bean lock and it has tx set!");
       }
       /*      else if (refs == 0)
