@@ -271,19 +271,37 @@
         </uptodate>
     </target>
 
+  	<!-- ================================================================== -->
+    <!-- Generate SQL from Torque for all databases                         -->
+    <!-- ================================================================== -->
+    <target name="sql-all" depends="schema-check" description="Generate SQL DDL for all databases"
+    	unless="schema.uptodate">
+    	<antcall target="sql-specific-db">
+    		<param name="generatesql.database.type" value="mysql"/>    			    		
+    	</antcall>
+    	<antcall target="sql-specific-db">
+    		<param name="generatesql.database.type" value="mssql"/>    			    		
+    	</antcall>   
+    	<antcall target="sql-specific-db">
+    		<param name="generatesql.database.type" value="oracle"/>    			    		
+    	</antcall>     	 	
+    	<antcall target="sql-specific-db">
+    		<param name="generatesql.database.type" value="db2"/>    			    		
+    	</antcall>     	
+    	<antcall target="sql-specific-db">
+    		<param name="generatesql.database.type" value="hypersonic"/>    			    		
+    	</antcall>     	
+    	<antcall target="sql-specific-db">
+    		<param name="generatesql.database.type" value="postgresql"/>    			    		
+    	</antcall>       	
+    </target>
+    
     <!-- ================================================================== -->
     <!-- Generate SQL from Torque                                           -->
     <!-- ================================================================== -->
-    <!-- Temporarily replaced by sql-specific-db -->
-    <target name="sql-OFF" depends="prepare-build-dir,schema-check,torque-copy-all-schema" 
-            unless="schema.uptodate">
+    <target name="sql-specific-db" depends="prepare-build-dir,torque-copy-all-schema">
 
-        <filter token="DATABASE_TYPE" value="${scarab.database.type}"/>
-        <filter token="DATABASE_URL" value="${scarab.database.url}"/>
-        <filter token="DATABASE_ADMIN_URL" 
-                value="${scarab.database.admin.url}"/>
-        <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
-        <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
+        <filter token="DATABASE_TYPE" value="${generatesql.database.type}"/>
         <!-- copy the scarab specific build.properties over -->
         <copy file="${src.conf.dir}/torque.props" 
               tofile="${torque.dir.scarab}/build.properties"
@@ -301,16 +319,18 @@
                       value="${torque.dir.scarab}/build.properties"/>
             <property name="idTableXMLFile" value=""/>
         </ant>
-
+		
+		<mkdir dir="${build.sql.scarab}/${generatesql.database.type}/"/>
+		
         <move file="${src.sql.dir}/${project}-schema.sql"
-            tofile="${build.sql.scarab}/${project}.sql"/>
+            tofile="${build.sql.scarab}/${generatesql.database.type}/${project}.sql"/>
         <move file="${src.sql.dir}/turbine-schema.sql"
-            tofile="${build.sql.scarab}/turbine.sql"/>
+            tofile="${build.sql.scarab}/${generatesql.database.type}/turbine.sql"/>
         <move file="${src.sql.dir}/scheduler-schema.sql"
-            tofile="${build.sql.scarab}/scheduler.sql"/>
+            tofile="${build.sql.scarab}/${generatesql.database.type}/scheduler.sql"/>
         <move file="${src.sql.dir}/id-table-schema.sql"
-            tofile="${build.sql.scarab}/id-table.sql"/>
-    </target>
+            tofile="${build.sql.scarab}/${generatesql.database.type}/id-table.sql"/>
+    </target>       
 
     <!-- ================================================================== -->
     <!-- Generate OM/Peer classes from Torque                               -->
@@ -803,61 +823,7 @@
 
     </target>
     
-    <!-- ================================================================== -->
-    <!-- Generate SQL from Torque for all databases                         -->
-    <!-- ================================================================== -->
-    <target name="sql-all" description="Generate SQL DDL for all databases">
-    	<antcall target="sql-specific-db">
-    		<param name="generatesql.database.type" value="mysql"/>    			    		
-    	</antcall>
-    	<antcall target="sql-specific-db">
-    		<param name="generatesql.database.type" value="mssql"/>    			    		
-    	</antcall>   
-    	<antcall target="sql-specific-db">
-    		<param name="generatesql.database.type" value="oracle"/>    			    		
-    	</antcall>     	 	
-    	<antcall target="sql-specific-db">
-    		<param name="generatesql.database.type" value="db2"/>    			    		
-    	</antcall>     	
-    	<antcall target="sql-specific-db">
-    		<param name="generatesql.database.type" value="hypersonic"/>    			    		
-    	</antcall>     	
-    	<antcall target="sql-specific-db">
-    		<param name="generatesql.database.type" value="postgresql"/>    			    		
-    	</antcall>       	
-    </target>
-    <target name="sql-specific-db" depends="prepare-build-dir,torque-copy-all-schema">
-
-        <filter token="DATABASE_TYPE" value="${generatesql.database.type}"/>
-        <!-- copy the scarab specific build.properties over -->
-        <copy file="${src.conf.dir}/torque.props" 
-              tofile="${torque.dir.scarab}/build.properties"
-              filtering="true" overwrite="true"/>
-
-        <!-- move the generated .sql files into the target directory -->
-        <ant antfile="build-torque.xml"
-             target="sql"
-             inheritAll="false">
-            <!-- See the Torque tasks' build.properties for options -->
-            <property name="torque.home" value="${torque.dir.scarab}"/>
-            <property name="lib.dir" value="${lib.dir}"/>
-            <property name="torque.output.dir" value="${src.dir}"/>
-            <property name="build.properties"
-                      value="${torque.dir.scarab}/build.properties"/>
-            <property name="idTableXMLFile" value=""/>
-        </ant>
-		
-		<mkdir dir="${build.sql.scarab}/${generatesql.database.type}/"/>
-		
-        <move file="${src.sql.dir}/${project}-schema.sql"
-            tofile="${build.sql.scarab}/${generatesql.database.type}/${project}.sql"/>
-        <move file="${src.sql.dir}/turbine-schema.sql"
-            tofile="${build.sql.scarab}/${generatesql.database.type}/turbine.sql"/>
-        <move file="${src.sql.dir}/scheduler-schema.sql"
-            tofile="${build.sql.scarab}/${generatesql.database.type}/scheduler.sql"/>
-        <move file="${src.sql.dir}/id-table-schema.sql"
-            tofile="${build.sql.scarab}/${generatesql.database.type}/id-table.sql"/>
-    </target>    
+ 
     
 </project>
 
