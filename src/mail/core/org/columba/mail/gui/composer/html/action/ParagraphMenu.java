@@ -181,10 +181,10 @@ public class ParagraphMenu extends IMenu implements Observer, ActionListener,
      * If such a sub menu does not exist - nothing happens
      */
     private void selectMenuItem(HTML.Tag tag) {
-        Enumeration enum = group.getElements();
+        Enumeration e = group.getElements();
 
-        while (enum.hasMoreElements()) {
-            JRadioButtonMenuItem item = (JRadioButtonMenuItem) enum.nextElement();
+        while (e.hasMoreElements()) {
+            JRadioButtonMenuItem item = (JRadioButtonMenuItem) e.nextElement();
 
             if (item.getActionCommand().equals(tag.toString())) {
                 item.setSelected(true);
