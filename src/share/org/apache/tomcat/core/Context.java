@@ -69,11 +69,23 @@ import java.util.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
 
+
+/* Right now we have all the properties defined in web.xml.
+   The interceptors will  go into Container ( every request will
+   be associated with the final container, which will point back to the
+   context). That will allow us to use a simpler and more "targeted"
+   object model.
+
+   The only "hard" part is moving getResource() and getRealPath() in
+   a different class, using a filesystem independent abstraction. 
+   
+*/
+   
+
 /**
  * Context represent a Web Application as specified by Servlet Specs.
  * The implementation is a repository for all the properties
- * defined in web.xml and tomcat specific properties, with all the
- * functionality delegated to interceptors.
+ * defined in web.xml and tomcat specific properties.
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
@@ -151,8 +163,6 @@ public class Context {
     Vector vhostAliases=new Vector();
     
     public Context() {
-	//	System.out.println("New Context ");
-	// XXX  customize it per context
 	defaultContainer=new Container();
 	defaultContainer.setContext( this );
 	defaultContainer.setPath( null ); // default container
@@ -175,10 +185,14 @@ public class Context {
 	contextM=cm;
     }
 
+    /** Base URL for this context
+     */
     public String getPath() {
 	return path;
     }
 
+    /** Base URL for this context
+     */
     public void setPath(String path) {
 	// config believes that the root path is called "/",
 	//
@@ -187,19 +201,14 @@ public class Context {
 	this.path = path;
     }
 
-    /* NOTE: if docBase is a URL to a remote location, we should download
-       the context and unpack it. It is _very_ inefficient to serve
-       files from a remote location ( at least 2x slower )
-    */
-
     /** DocBase points to the web application files.
      *
      *  There is no restriction on the syntax and content of DocBase,
      *  it's up to the various modules to interpret this and use it.
-     *  For example, to server from a war file you can use war: protocol,
+     *  For example, to serve from a war file you can use war: protocol,
      *  and set up War interceptors.
      *
-     *  "Basic" tomcat treats it is a file ( either absolute or relative to
+     *  "Basic" tomcat treats it as a file ( either absolute or relative to
      *  the CM home ).
      *
      *  If docBase is relative assume it is relative  to the context manager home.
@@ -775,12 +784,11 @@ public class Context {
      */
     String getRealPath( String path) {
 	//	Real Path is the same as PathTranslated for a new request
-
-	Context base=this; // contextM.getContext("");
 	String normP=FileUtil.normPath(path);
 
-	Request req=contextM.createRequest( base , normP );
+	Request req=contextM.createRequest( this , normP );
 	contextM.processRequest(req);
+
 	String mappedPath = req.getMappedPath();
 
 	// XXX workaround - need to fix mapper to return mapped path

@@ -72,63 +72,81 @@ import javax.servlet.*;
  * A group of resources, with some common properties.
  * Container is similar with Apache "dir_conf" structue.
  *
+ * A container will be selected by best-matching using the
+ * alghoritms described in the servlet API.
+
+ * The matching container will determine the handler and the
+ * security properties associated with the request.
+ * It will also have a chance to add a number of per/container
+ * interceptors.
+ *
  * In Servlet terminology there are many types of containers:
  * virtual host, context, prefix map, extension map, security
  * prefix and extension maps.
  * 
- * The most expensive operation is parsing the request and finding
- * the match. With ad-literam interpreation of the spec, we need to
- * parse at least 3 times: find context, find servlet, check security
- * constraints. There is no difference in those steps - except
- * the result of the mapping.
- *
- * Each Interceptor has the chance to alter the Container for a particular
- * map via addMapping() callback. It can set private informations as
- * attributes ( the Mapper or security interceptors will probably do so ).
+ * It is possible to add/remove containers at runtime (usefull
+ * for Invoker or Jsp servlet - if they want to avoid double
+ * servlet call overhead ). To make this possible for Jsps we
+ * also need to factor out the dependency check and reloading.
  */
 public class Container implements Cloneable {
-
-    // The main difference between this container and Catalina
-    // is that in Catalina, Container has an invoke() method.
+    /* It is not yet finalized - it is possible to use more
+     * "rules" for matching ( if future APIs will define that ).
+     * You can use notes or attributes to extend the model -
+     * the attributes that are defined and have get/set methods
+     * are the one defined in the API and with wide use.
+     */
 
     // The "controler"
     private ContextManager contextM;
 
-    // The context including this container, if any
+    // The webapp including this container, if any
     Context context;
 
-    // Location where this container is mapped
-    String path;
-    String proto;
-    
-    // Container attributes
-    private Hashtable attributes = new Hashtable();
-
-    // Interceptors. 
-    private Vector contextInterceptors = new Vector();
-    ContextInterceptor cInterceptors[];
-    private Vector requestInterceptors = new Vector();
-    RequestInterceptor rInterceptors[];
-    
-    // The handler
-    ServletWrapper handler;
-
+    // The type of the mapping
     public static final int UNKNOWN_MAP=0;
     public static final int PATH_MAP=1;
     public static final int PREFIX_MAP=2;
     public static final int EXTENSION_MAP=3;
     public static final int DEFAULT_MAP=4;
     int mapType=0;
+
     
-    // XXX Per method constraints not implemented.
+    // Common map parameters ( path prefix, ext, etc)
     String transport;
+    String path;
+    String proto;
+    String vhosts[];
+    
+    // Container attributes - it's better to use
+    // notes, as the access time is much smaller
+    private Hashtable attributes = new Hashtable();
+
+    /** Per/container interceptors.
+	XXX Not implemented, it's easy to wire it in ( 2-3 h).
+     */
+    Vector contextInterceptors = new Vector();
+    Vector requestInterceptors = new Vector();
+    // interceptor cache - avoid Vector enumeration
+    ContextInterceptor cInterceptors[];
+    RequestInterceptor rInterceptors[];
+
+    /** The handler associated with this container.
+     */
+    ServletWrapper handler;
+    
+    /** Security constraints associated with this Container
+     */
     String roles[]=null;
     
     public Container() {
     }
-	
+
+    /** Get the context manager
+     */
     public ContextManager getContextManager() {
 	if( contextM==null ) {
+	    /* assert */ throw new RuntimeException( "Assert: container.contextM==null" );
 	    if(context!=null) contextM=context.getContextManager();
 	}
 	return contextM;
@@ -138,6 +156,24 @@ public class Container implements Cloneable {
 	contextM=cm;
     }
 
+    /** Set the context, if this container is part of a web application.
+     *  Right now all container in use have a context.
+     */
+    public void setContext( Context ctx ) {
+	this.context=ctx;
+    }
+
+    /** The parent web application, if any. 
+     */
+    public Context getContext() {
+	return context;
+    }
+    
+    // -------------------- Mapping LHS --------------------
+       
+    
+    /** Return the type of the mapping ( extension, prefix, default, etc)
+     */
     public int getMapType() {
 	if( mapType!=0) return mapType;
 	// What happens with "" or null ?
@@ -159,15 +195,8 @@ public class Container implements Cloneable {
 	return mapType;
     }
 
-    public void setContext( Context ctx ) {
-	this.context=ctx;
-    }
-
-    public Context getContext() {
-	return context;
-    }
-    
-    /** The mapping string that creates this Container
+    /** The mapping string that creates this Container.
+     *  Not that this is an un-parsed string, like a regexp.
      */
     public void setPath( String path ) {
 	// XXX use a better name - setMapping for example
@@ -177,29 +206,100 @@ public class Container implements Cloneable {
 	    this.path=path.trim();
     }
 
+    /** Return the path
+     */
     public String getPath() {
 	return path;
     }
 
+    /** Set the protocol - if it's set it will be used
+     *  in mapping
+     */
     public void setProtocol( String protocol ) {
 	this.proto=protocol;
     }
 
+    /** Protocol matching. With Servlet 2.2 the protocol
+     * can be used only with security mappings, not with
+     * handler ( servlet ) maps
+    */
     public String getProtocol() {
 	return proto;
     }
+
+    /** The transport - another component of the matching.
+     *  Defined only for security mappings.
+     */
+    public void setTransport(String transport ) {
+	this.transport=transport;
+    }
+
+    /** The transport - another component of the matching.
+     *  Defined only for security mappings.
+     */
+    public String getTransport() {
+	return transport;
+    }
+
+    /** Any alias that can match a particular vhost
+     */
+    public String[] getVhosts() {
+	return vhosts;
+    }
+
+    /** Any alias that can match a particular vhost
+     */
+    public void setVhosts(String vhosts[]) {
+	this.vhosts=vhosts;
+    }
     
+    // -------------------- Mapping RHS --------------------
+    
+    /** The handler for this container
+     */
+    public ServletWrapper getHandler() {
+        if (handler == null) {
+	    /* assert */ throw new RuntimeException( "Assert: container.getHandler==null");
+	    handler=context.getDefaultServlet();
+	}
+	return handler;
+    }
+
+    /** The handler ( servlet ) for this container
+     */
+    public void setHandler(ServletWrapper h) {
+	handler=h;
+    }
+
+    /** If not null, this container can only be accessed by users
+     *  in roles.
+     */
+    public String []getRoles() {
+	return roles;
+    }
+
+    /** If not null, this container can only be accessed by users
+	in roles.
+    */
+    public void setRoles( String roles[] ) {
+	this.roles=roles;
+    }
+
+    /** Add a per/container context interceptor. It will be notified
+     *  of all context events happening inside this container.
+     *   XXX incomplete implementation
+     */
     public void addContextInterceptor( ContextInterceptor ci) {
 	contextInterceptors.addElement( ci );
     }
 
 
     /** Return the context interceptors as an array.
-	For performance reasons we use an array instead of
-	returning the vector - the interceptors will not change at
-	runtime and array access is faster and easier than vector
-	access
-    */
+     *	For performance reasons we use an array instead of
+     *  returning the vector - the interceptors will not change at
+     *	runtime and array access is faster and easier than vector
+     *	access
+     */
     public ContextInterceptor[] getContextInterceptors() {
 	if( cInterceptors == null || cInterceptors.length != contextInterceptors.size()) {
 	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
@@ -210,6 +310,11 @@ public class Container implements Cloneable {
 	return cInterceptors;
     }
 
+    /** Add a per/container request interceptor. It will be called back for
+     *  all operations for requests that are mapped to this container.
+     *  Note that all global interceptors will be called first.
+     *   XXX incomplete implementation.
+     */
     public void addRequestInterceptor( RequestInterceptor ci) {
 	requestInterceptors.addElement( ci );
     }
@@ -230,53 +335,37 @@ public class Container implements Cloneable {
 	return rInterceptors;
     }
 
+    /** Per container attributes. Not used - can be removed
+     *  ( it's here for analogy with the other components )
+     */
     public Object getAttribute(String name) {
             return attributes.get(name);
     }
 
+    /** Per container attributes. Not used - can be removed
+     *  ( it's here for analogy with the other components )
+     */
     public Enumeration getAttributeNames() {
         return attributes.keys();
     }
 
+    /** Per container attributes. Not used - can be removed
+     *  ( it's here for analogy with the other components )
+     */
     public void setAttribute(String name, Object object) {
         attributes.put(name, object);
     }
 
+    /** Per container attributes. Not used - can be removed
+     *  ( it's here for analogy with the other components )
+     */
     public void removeAttribute(String name) {
         attributes.remove(name);
     }
-    
-    public ServletWrapper getHandler() {
-        if (handler == null) handler=context.getDefaultServlet();
-	return handler;
-    }
-    
-    public void setHandler(ServletWrapper h) {
-	handler=h;
-    }
 
-    public void setTransport(String transport ) {
-	this.transport=transport;
-    }
-
-    public String getTransport() {
-	return transport;
-    }
-    
-    /** If not null, this container can only be accessed by users
-	in roles.
-    */
-    public String []getRoles() {
-	return roles;
-    }
-
-    /** If not null, this container can only be accessed by users
-	in roles.
-    */
-    public void setRoles( String roles[] ) {
-	this.roles=roles;
-    }
-
+    // -------------------- Utils --------------------
+    /** Print a short string describing the mapping
+     */
     public String toString() {
 	StringBuffer sb=new StringBuffer();
 	sb.append( "Ct (" );
@@ -301,6 +390,8 @@ public class Container implements Cloneable {
     // -------------------- Per-Container "notes"
     Object notes[]=new Object[ContextManager.MAX_NOTES];
 
+    /** See ContextManager comments.
+     */
     public void setNote( int pos, Object value ) {
 	notes[pos]=value;
     }
