@@ -4,7 +4,7 @@
  *
  * Copyright 2004 Ollie Rutherfurd <oliver@jedit.org>
  *
- * $Id: Display_Character_Code.bsh,v 1.1 2004/05/24 19:20:59 orutherfurd Exp $
+ * $Id: Display_Character_Code.bsh,v 1.2 2004/05/24 19:24:56 orutherfurd Exp $
  */
 
 void displayCharacterCode(View view)
@@ -12,7 +12,7 @@ void displayCharacterCode(View view)
 	JEditTextArea textArea = view.getTextArea();
 	int caret = textArea.getCaretPosition();
 	int line = textArea.getCaretLine();
-	if(caret < textArea.getLineEndOffset(line))
+	if(caret < textArea.getLineEndOffset(line)-1)
 	{
 		char c = buffer.getText(caret,1).charAt(0);
 		StringBuffer buf = new StringBuffer();
