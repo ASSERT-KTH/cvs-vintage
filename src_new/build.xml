@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.148 2004/03/01 07:15:51 linus Exp $
+<!-- $Id: build.xml,v 1.149 2004/03/08 06:55:48 linus Exp $
 This requires ANT 1.4.1
 
 if you get a message like:
@@ -208,10 +208,6 @@ Property files to be searched:
     <echo message="Using ${ant.version}"/>
 
     <property name="version.package" value="org/argouml/application"/>
-
-    <!-- TODO:  Change name to javadoc.packages -->
-    
-    <property name="packages" value="org.argouml.*"/>
 
     <available classname="org.tigris.gef.base.Globals"
                classpathref="argo.compile.classpath" 
@@ -555,7 +551,7 @@ Property files to be searched:
              destdir="${argo.javadocs.dir}"
              maxmemory="128M"
              overview="org/argouml/overview-argo.html"
-             packagenames="${packages}"
+             packagenames="org.argouml.*"
              private="true"
              sourcepath="${argo.src.dir}"
              splitindex="${javadoc.splitindex}"
