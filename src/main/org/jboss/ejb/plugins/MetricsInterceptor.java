@@ -30,7 +30,7 @@ import javax.jms.JMSException;
 
 // jboss imports
 import org.jboss.ejb.Container;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.monitor.MetricsConstants;
 
 /**
@@ -90,7 +90,7 @@ public class MetricsInterceptor extends AbstractInterceptor
     }
 
     // Interceptor implementation ------------------------------------
-    public Object invokeHome(MethodInvocation mi) throws Exception {
+    public Object invokeHome(Invocation mi) throws Exception {
      
         long begin = System.currentTimeMillis();
      
@@ -102,7 +102,7 @@ public class MetricsInterceptor extends AbstractInterceptor
         }
    }
 
-    public Object invoke(MethodInvocation mi) throws Exception {
+    public Object invoke(Invocation mi) throws Exception {
 
         long begin = System.currentTimeMillis();
         
@@ -117,10 +117,10 @@ public class MetricsInterceptor extends AbstractInterceptor
    /**
     * Starts the JMS publisher thread.
     */
-   public void init() {
+   public void create() {
        
         /*
-         * looks like init() is called after setContainer().
+         * looks like create() is called after setContainer().
          * wonder if container method callback order is documented somewhere, it should be.. 
          */
          
@@ -146,7 +146,7 @@ public class MetricsInterceptor extends AbstractInterceptor
      * @param   begin   invocation begin time in ms
      * @param   end     invocation end time in ms
      */
-    private final void addEntry(MethodInvocation mi, long begin, long end) {
+    private final void addEntry(Invocation mi, long begin, long end) {
         
         /* this gets called by the interceptor */
         

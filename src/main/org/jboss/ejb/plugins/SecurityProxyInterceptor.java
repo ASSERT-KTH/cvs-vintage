@@ -16,7 +16,7 @@ import org.apache.log4j.Category;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvokerContainer;
 import org.jboss.ejb.EnterpriseContext;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.SecurityProxy;
@@ -30,7 +30,7 @@ import org.jboss.security.SecurityProxyFactory;
  * interceptor has access to the EJB instance and context.
  * 
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class SecurityProxyInterceptor
    extends AbstractInterceptor
@@ -123,13 +123,13 @@ public class SecurityProxyInterceptor
       super.start();
    }
 
-   public Object invokeHome(MethodInvocation mi) throws Exception
+   public Object invokeHome(Invocation mi) throws Exception
    {
       // Apply any custom security checks
       if( securityProxy != null )
       {
          EJBContext ctx = null;
-         EnterpriseContext ectx = mi.getEnterpriseContext();
+         EnterpriseContext ectx = (EnterpriseContext)mi.getEnterpriseContext();
          if( ectx != null )
             ctx = ectx.getEJBContext();
          Object[] args = mi.getArguments();
@@ -150,13 +150,13 @@ public class SecurityProxyInterceptor
       return getNext().invokeHome(mi);
    }
    
-   public Object invoke(MethodInvocation mi) throws Exception
+   public Object invoke(Invocation mi) throws Exception
    {
       // Apply any custom security checks
       if( securityProxy != null )
       {
-         Object bean = mi.getEnterpriseContext().getInstance();
-         EJBContext ctx = mi.getEnterpriseContext().getEJBContext();
+         Object bean = ((EnterpriseContext) mi.getEnterpriseContext()).getInstance();
+         EJBContext ctx = ((EnterpriseContext) mi.getEnterpriseContext()).getEJBContext();
          Object[] args = mi.getArguments();
          securityProxy.setEJBContext(ctx);
          try

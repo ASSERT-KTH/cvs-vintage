@@ -15,7 +15,7 @@ import org.jboss.ejb.plugins.EnterpriseContextCachePolicy;
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class NoPassivationCachePolicy 
 	implements EnterpriseContextCachePolicy
@@ -38,7 +38,7 @@ public class NoPassivationCachePolicy
 	// Public --------------------------------------------------------
 
 	// Z implementation ----------------------------------------------
-	public void init() throws Exception 
+	public void create() throws Exception 
 	{
 		m_map = new HashMap();
 	}

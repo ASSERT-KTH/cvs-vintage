@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jboss.ejb.Container;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityIdentityMetaData;
 import org.jboss.security.AnybodyPrincipal;
@@ -27,7 +27,7 @@ is enforced. This is where the caller identity propagation is controlled as well
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.27 $
+@version $Revision: 1.28 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -85,7 +85,7 @@ public class SecurityInterceptor extends AbstractInterceptor
         super.start();
     }
 
-    public Object invokeHome(MethodInvocation mi) throws Exception
+    public Object invokeHome(Invocation mi) throws Exception
     {
         // Authenticate the subject and apply any declarative security checks
         checkSecurityAssociation(mi, true);
@@ -110,7 +110,7 @@ public class SecurityInterceptor extends AbstractInterceptor
             }
         }
     }
-    public Object invoke(MethodInvocation mi) throws Exception
+    public Object invoke(Invocation mi) throws Exception
     {
         // Authenticate the subject and apply any declarative security checks
         checkSecurityAssociation(mi, false);
@@ -141,7 +141,7 @@ public class SecurityInterceptor extends AbstractInterceptor
      2. Validate access to the method by checking the principal's roles against
         those required to access the method.
      */
-    private void checkSecurityAssociation(MethodInvocation mi, boolean home)
+    private void checkSecurityAssociation(Invocation mi, boolean home)
         throws Exception
     {
         Principal principal = mi.getPrincipal();

@@ -9,7 +9,7 @@ package org.jboss.ejb.plugins;
 import java.util.Map;
 import java.rmi.ServerException;
 
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 
 
 /**
@@ -19,18 +19,18 @@ import org.jboss.ejb.MethodInvocation;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class MessageDrivenTxInterceptorBMT
    extends AbstractTxInterceptorBMT
 {
-   public Object invokeHome(MethodInvocation mi)
+   public Object invokeHome(Invocation mi)
       throws Exception
    {
       throw new ServerException("No home methods for message beans.");
    }
 
-   public Object invoke(MethodInvocation mi)
+   public Object invoke(Invocation mi)
       throws Exception
    {
       return invokeNext(true, mi);

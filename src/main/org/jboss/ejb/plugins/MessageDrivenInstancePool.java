@@ -18,7 +18,7 @@ import org.jboss.ejb.MessageDrivenEnterpriseContext;
  *      @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -44,10 +44,10 @@ public class MessageDrivenInstancePool
    // Public --------------------------------------------------------
    
    // Z implementation ----------------------------------------------
-   public void init()
+   public void create()
       throws Exception
    {
-      super.init();
+      super.create();
       // for MDB, we *do* pool
       this.reclaim = true;
    }
