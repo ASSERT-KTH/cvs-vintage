@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.56 2003/03/24 02:42:27 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.57 2003/03/24 02:54:53 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -772,16 +772,15 @@ public class PanelWindowContainer implements DockableWindowContainer
 		{
 			boolean canDrag;
 			Point dragStart;
+			int resizePos;
 
 			//{{{ mousePressed() method
 			public void mousePressed(MouseEvent evt)
 			{
 				if(canDrag)
 				{
-					wm.resizing = PanelWindowContainer.this;
-					wm.resizePos = dimension;
+					wm.setResizePos(PanelWindowContainer.this,dimension);
 					dragStart = evt.getPoint();
-					wm.repaint();
 				}
 			} //}}}
 
@@ -790,11 +789,10 @@ public class PanelWindowContainer implements DockableWindowContainer
 			{
 				if(canDrag)
 				{
-					wm.resizing = null;
-					dimension = wm.resizePos;
+					dimension = resizePos;
+					wm.finishResizing();
 					dragStart = null;
 					wm.revalidate();
-					wm.repaint();
 				}
 			} //}}}
 
@@ -863,27 +861,27 @@ public class PanelWindowContainer implements DockableWindowContainer
 				//{{{ Top...
 				if(position.equals(DockableWindowManager.TOP))
 				{
-					wm.resizePos = evt.getY()
-						- (getHeight() - dragStart.y);
+					wm.setResizePos(PanelWindowContainer.this,
+						evt.getY() - (getHeight() - dragStart.y));
 				} //}}}
 				//{{{ Left...
 				else if(position.equals(DockableWindowManager.LEFT))
 				{
-					wm.resizePos = evt.getX()
-						- (getWidth() - dragStart.x);
+					wm.setResizePos(PanelWindowContainer.this,
+						evt.getX() - (getWidth() - dragStart.x));
 				} //}}}
 				//{{{ Bottom...
 				else if(position.equals(DockableWindowManager.BOTTOM))
 				{
-					wm.resizePos = (getHeight() - evt.getY());
+					wm.setResizePos(PanelWindowContainer.this,
+						(getHeight() - evt.getY()));
 				} //}}}
 				//{{{ Right...
 				else if(position.equals(DockableWindowManager.RIGHT))
 				{
-					wm.resizePos = (getWidth() - evt.getX());
+					wm.setResizePos(PanelWindowContainer.this,
+						(getWidth() - evt.getX()));
 				} //}}}
-
-				wm.repaint();
 			} //}}}
 
 			//{{{ mouseExited() method
