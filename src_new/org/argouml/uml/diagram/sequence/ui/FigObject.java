@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.23 2005/01/30 20:48:32 linus Exp $
+// $Id: FigObject.java,v 1.24 2005/03/17 19:05:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -524,10 +524,12 @@ public class FigObject extends FigNodeModelElement implements MouseListener {
      * @see FigNodeModelElement#updateListeners(java.lang.Object)
      */
     protected void updateListeners(Object newOwner) {
-        if (Model.getFacade().isAInstance(newOwner)) {
-            Object oldOwner = getOwner();
-            ModelEventPump pump = Model.getPump();
+        Object oldOwner = getOwner();
+        ModelEventPump pump = Model.getPump();
+        if (oldOwner != null) {
             pump.removeModelEventListener(this, oldOwner);
+        }
+        if (Model.getFacade().isAInstance(newOwner)) {
             pump.addModelEventListener(this,
 				       newOwner,
 				       new String[] {
