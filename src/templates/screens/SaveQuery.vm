@@ -7,10 +7,11 @@
 
       <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
 
-#if ($queryString)
    
 <form method="post" action="$action" >
 <input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
+
+#if ($queryString)
 
 <p class="functnbar"><input type="submit" value="save" name="eventSubmit_doSavequery" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel"  /></p>
 
@@ -19,20 +20,26 @@
         <tr>
          <th width="120">query name:</th>
 
-         <td><input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
+         <td>#fieldErrorMsg($queryGroup.Name "")<input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
         </tr>
 
         <tr>
          <th width="120">query description:</th>
 
-         <td><textarea name="$queryGroup.Description.Key" value="$!queryGroup.Description" rows="4" cols="40"></textarea></td>
+         <td><textarea name="$queryGroup.Description.Key" rows="4" cols="40">$!queryGroup.Description</textarea></td>
         </tr>
 
         <tr>
          <th width="120">location:</th>
-
-         <td><input type="radio" name="$queryGroup.TypeId.Key" value="1"/> global&#160;&#160; 
-             <input type="radio" name="$queryGroup.TypeId.Key" value="2"/> project level &#160;&#160
+         <td>#fieldErrorMsg($queryGroup.ModuleId "")
+         <input type="radio" name="$queryGroup.TypeId.Key" value="1"
+                   #if(  (!$queryGroup.TypeId.Value) || ($queryGroup.TypeId.toString().equals("1")) )
+                      checked="checked"
+                   #end   /> global&#160;&#160; 
+             <input type="radio" name="$queryGroup.TypeId.Key" value="2" 
+                   #if( $queryGroup.TypeId.toString().equals("2") )
+                      checked="checked"
+                   #end   /> project level &#160;&#160
     #set ( $group = $intake.Query.mapTo($object) ) 
     <select name="$queryGroup.ModuleId.Key" >
     	<option value="">Choose...</option>
@@ -44,7 +51,10 @@
 		<option$selected value="$module.ModuleId">$module.Name</option>
 	    #end
       </select>&#160;&#160; 
-           <input type="radio" name="$queryGroup.TypeId.Key" value="3" /> personal account level
+           <input type="radio" name="$queryGroup.TypeId.Key" value="3" 
+                   #if( $queryGroup.TypeId.toString().equals("3") )
+                      checked="checked"
+                   #end  /> personal account level
           </td>
         </tr>
        </table>
@@ -55,8 +65,10 @@
     </tr>
    </table>
 $intake.declareGroups()
-  </form>
 
 #else
   <p class="alert">No query to save. Please <a href="Search.vm">enter a query.</a>
 #end
+
+
+</form>
