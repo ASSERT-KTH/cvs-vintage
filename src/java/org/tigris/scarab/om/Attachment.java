@@ -147,7 +147,9 @@ public class Attachment
     public String getFileName()
     {
         String filePath = getFilePath();
-        return filePath.substring(filePath.lastIndexOf('_') + 1);
+        String fileName = filePath.substring(filePath.lastIndexOf(File.separator) + 1,
+                                             filePath.lastIndexOf('_') );
+        return (fileName + filePath.substring(filePath.lastIndexOf('.')));
     }
     
     
