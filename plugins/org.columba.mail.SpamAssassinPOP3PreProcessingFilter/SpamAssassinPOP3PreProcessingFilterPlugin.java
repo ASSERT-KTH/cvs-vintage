@@ -37,6 +37,8 @@ public class SpamAssassinPOP3PreProcessingFilterPlugin
 	 */
 	public String modify(String rawString) {
 
+		long start = System.currentTimeMillis();
+		
 		// this is for gathering configuration
 		// but we don't need this right now
 		String version = rootElement.getAttribute("version");
@@ -55,6 +57,9 @@ public class SpamAssassinPOP3PreProcessingFilterPlugin
 
 			errorStream.start();
 			outputStream.start();
+			
+			long startThread = System.currentTimeMillis();
+			System.out.println("threads started (ms): "+ (startThread-start));
 
 			ColumbaLogger.log.debug("sending to stdin..");
 			sendToStdin(p, rawString);
@@ -62,12 +67,18 @@ public class SpamAssassinPOP3PreProcessingFilterPlugin
 			exitVal = p.waitFor();
 			ColumbaLogger.log.debug("exitcode=" + exitVal);
 
+			long waitFor = System.currentTimeMillis();
+			System.out.println("waitFor (ms): "+(waitFor-startThread));
+			
 			ColumbaLogger.log.debug("retrieving output..");
 			result = getOutputString();
 
 			// wait for stream threads to die
 			outputStream.join();
 			errorStream.join();
+			
+			long joinThread = System.currentTimeMillis();
+			System.out.println("threads joined (ms): "+ (joinThread-waitFor));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -91,6 +102,9 @@ public class SpamAssassinPOP3PreProcessingFilterPlugin
 		// free memory
 		rawString=null;
 		result=null;
+		
+		long end = System.currentTimeMillis();
+		System.out.println("complete task (ms): "+(end-start));
 
 		return buf.toString();
 		//return result;
