@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.7 2003/05/04 14:38:06 kataka Exp $
+// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.8 2003/05/05 08:57:49 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,13 +29,7 @@ import java.util.Iterator;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
-import org
-    .argouml
-    .model
-    .uml
-    .behavioralelements
-    .collaborations
-    .CollaborationsHelper;
+import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 import org.tigris.gef.presentation.Fig;
 
@@ -129,7 +123,12 @@ public class UMLClassifierRoleAvailableContentsListModel
             }
             if (_target != null) {
                 removeAllElements();
+                _buildingModel = true;
                 buildModelList();
+                _buildingModel = false;
+                if (getSize() > 0) {
+                    fireIntervalAdded(this, 0, getSize() - 1);
+                }
             }
         }
     }
