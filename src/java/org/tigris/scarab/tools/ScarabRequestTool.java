@@ -1356,15 +1356,11 @@ try{
         // Don't bother running search
         StringValueParser parser = new StringValueParser();
         parser.parse(currentQueryString, '&', '=', true);
-System.out.println(currentQueryString);
         String[] userList = parser.getStrings("user_list");
-System.out.println(userList);
         if ( userList != null && userList.length > 0)
         {
 
-System.out.println("not null");
             List issueIdsFromUserSearch = getIssueIdsFromUserSearch(parser);
-System.out.println(getIssueIdsFromUserSearch(parser));
             if (issueIdsFromUserSearch.size() > 0)
             {
                 search.setIssueIdsFromUserSearch(issueIdsFromUserSearch);
