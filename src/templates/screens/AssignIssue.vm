@@ -1,7 +1,5 @@
 <div class="app" id="viewissue">
 
-$page.setTitle("Assign users")
-
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($userAttrs = $module.getUserAttributes($issueType)) 

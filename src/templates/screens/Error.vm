@@ -1,5 +1,3 @@
-$page.setTitle("Scarab Error")
-
 <div class="app" id="error">
 
 <h2>$page.Title</h2>

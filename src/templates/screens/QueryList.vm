@@ -1,5 +1,3 @@
-$page.setTitle("Saved query list")
-
 <div class="app" id="querylist">
 
 <h2>$page.Title</h2>

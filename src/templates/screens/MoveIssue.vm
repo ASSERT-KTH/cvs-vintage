@@ -1,4 +1,3 @@
-$page.setTitle("Copy/move issue")
 <div class="app" id="moveissue">
 
 <h2>$page.Title</h2>

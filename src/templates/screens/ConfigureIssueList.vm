@@ -1,5 +1,3 @@
-$page.setTitle("Add/remove attributes from view")
-
 <div class="app" id="configureissuelist">
 
 <h2>$page.Title</h2>

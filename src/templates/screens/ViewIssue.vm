@@ -1,5 +1,3 @@
-$page.setTitle("View Issue")
-
 <div class="app" id="viewissue">
 
 #set ($currentIssueId = $data.Parameters.getString("id"))

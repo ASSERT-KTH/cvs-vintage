@@ -1,5 +1,3 @@
-$page.setTitle("Save/edit template")
-
 #set ($module = $scarabR.CurrentModule)
 #set ($templateId = $data.Parameters.getString("templateId"))
 #set ($currentTemplate = $scarabR.getIssueTemplate())

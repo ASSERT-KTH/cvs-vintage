@@ -1,5 +1,3 @@
-$page.setTitle("Query results")
-
 <div class="app" id="issuelist">
 
 <h2>$page.Title</h2>

@@ -1,5 +1,3 @@
-$page.setTitle("Select Issue type")
-
 #set ($nextTemplate = $data.Parameters.getString("nextTemplate"))
 #if (!$nextTemplate || $nextTemplate.equals("SelectArtifactType.vm"))
    #set ($nextTemplate = "entry,Wizard1.vm")

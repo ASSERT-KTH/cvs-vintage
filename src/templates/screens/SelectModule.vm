@@ -1,5 +1,3 @@
-#set ($page.Title = $l10n.Title)
-
 #set ($userModules = $data.User.Modules)
 #if ($scarabR.CurrentModule)
   #set ($currentModule = $scarabR.CurrentModule)

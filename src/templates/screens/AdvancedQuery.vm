@@ -1,5 +1,3 @@
-$page.setTitle("Advanced query")
-
 <div class="app" id="advancedquery">
 <h2>$page.Title</h2>
 

@@ -1,5 +1,3 @@
-$page.setTitle("Edit query")
-
 <div class="app" id="editquery">
 
 #set ($queryId = $data.Parameters.getString("queryId"))

@@ -1,4 +1,3 @@
-$page.setTitle("Login to Scarab")
 <div class="app" id="loginDONOTCHANGETHISID">
 
 <h2>$page.Title</h2>

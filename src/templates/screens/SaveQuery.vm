@@ -1,5 +1,3 @@
-$page.setTitle("Save query")
-
 <h2>$page.Title</h2>
 
 #set ($query = $scarabR.Query)

@@ -1,5 +1,3 @@
-$page.setTitle("Confirm Your Email Address")
-
 <div class="app" id="confirm">
 
 <h2>$page.Title</h2>

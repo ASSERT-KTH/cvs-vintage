@@ -1,5 +1,3 @@
-$page.setTitle("Scarab functions index")
-
 <div class="app" id="index">
 
 <h3>Welcome to Scarab</h3>
