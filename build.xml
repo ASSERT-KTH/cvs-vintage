@@ -511,7 +511,7 @@
           unless="jdk12.present"/>
       <exclude
           name="org/apache/tomcat/modules/config/MxInterceptor.java"
-          unless="jmx.present"/>
+          unless="jmx-present"/>
 
       <exclude
           name="org/apache/tomcat/modules/aaa/PooledJDBCRealm.java"
