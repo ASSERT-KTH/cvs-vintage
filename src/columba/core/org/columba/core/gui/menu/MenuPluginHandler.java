@@ -17,51 +17,65 @@
 package org.columba.core.gui.menu;
 
 import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
+import java.util.ListIterator;
 
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
 
 public class MenuPluginHandler extends AbstractPluginHandler {
 
-	List menuPlugins;
 
-	public MenuPluginHandler( String handlerName ) {
-		super(handlerName,null);
-		
-		menuPlugins=new Vector();
+
+	public MenuPluginHandler(String handlerName) {
+		super(handlerName, "org/columba/core/plugin/menus.xml");
+
+	
+		parentNode = new XmlElement("menus");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.plugin.AbstractPluginHandler#getDefaultNames()
-	 */
-	public String[] getPluginIdList() {
-		return null;
-	}
+	
 
 	public void insertPlugins(Menu menu) {
-		for (Iterator it = menuPlugins.iterator(); it.hasNext();) {
+		for (Iterator it = parentNode.getElements().listIterator();
+			it.hasNext();
+			) {
 			menu.extendMenu((XmlElement) it.next());
-		// for( int i=0; i<menuPlugins.size(); i++) {
-			// menu.extendMenu((XmlElement)menuPlugins.get(i));
 		}
 	}
-	
+
 	public void insertPlugins(ContextMenu menu) {
-		for (Iterator it = menuPlugins.iterator(); it.hasNext();) {
+		for (Iterator it = parentNode.getElements().listIterator();
+			it.hasNext();
+			) {
+
 			menu.extendMenu((XmlElement) it.next());
-			// for( int i=0; i<menuPlugins.size(); i++) {
-				// menu.extendMenu((XmlElement)menuPlugins.get(i));
+
+		}
+	}
+
+	public void addExtension(String id, XmlElement extension) {
+			// add external plugin to list
+			// --> this is used to distinguish internal/external plugins
+			externalPlugins.add(id);
+
+			ListIterator iterator = extension.getElements().listIterator();
+			XmlElement action;
+			while (iterator.hasNext()) {
+				action = (XmlElement) iterator.next();
+				action.addAttribute("uservisiblename", action.getAttribute("name"));
+				/*
+				String newName = id + '$' + action.getAttribute("name");
+				String userVisibleName = action.getAttribute("name");
+				
+				// associate id with newName for later reference
+				//transformationTable.put(id, newName);
+
+				action.addAttribute("name", newName);
+				action.addAttribute("uservisiblename", userVisibleName);
+				*/
+				
+				parentNode.addElement(action);
 			}
 		}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
-	 */
-	public void addExtension(String id, XmlElement extension) {
-		
-		menuPlugins.add(extension.getElement("menu"));
-	}
 
 }

@@ -141,6 +141,8 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 		ColumbaLogger.log.debug("class=" + className);
 
 		if (className == null) {
+			XmlElement.printNode(parentNode, " ");
+			
 			// if className isn't specified show error dialog
 			NotifyDialog dialog = new NotifyDialog();
 			dialog.showDialog(
@@ -201,13 +203,14 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 			XmlElement action = parentNode.getElement(i);
 
 			String s = action.getAttribute("name");
+			/*
 			if (s.indexOf('$') != -1) {
 				// this is an external plugin
 				// -> extract the correct id
 				s = s.substring(0, s.indexOf('$'));
 
 			}
-
+			*/
 			if (name.equals(s)) {
 
 				String clazz = action.getAttribute(id);

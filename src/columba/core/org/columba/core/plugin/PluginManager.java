@@ -141,6 +141,7 @@ public class PluginManager {
 		// loop through all extensions this plugin uses
 		// -> search the corresponding plugin handler
 		// -> register the plugin at the plugin handler
+		
 		for (int j = 0; j < element.count(); j++) {
 			extension = element.getElement(j);
 			if (extension.getName().equals("extension")) {
@@ -161,15 +162,16 @@ public class PluginManager {
 
 						handler.addExtension(id, extension);
 
-						return id;
+						
 					} catch (Exception ex) {
 						ColumbaLogger.log.error(ex.getMessage());
 					}
 				}
 			}
 		}
+		
+		return id;
 
-		return null;
 	}
 
 	/**
