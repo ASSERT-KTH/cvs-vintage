@@ -27,7 +27,7 @@
 ## PAGINATION
 ## if results exceed limit, get subset list
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
-#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
+#set ($pageNum = $scarabR.AdjustedPageNum)
 #if ($resultsPerPage > 0 && $queries.size() > $resultsPerPage)
  #set ($paginated = "true")
  #set ($pagList = $scarabR.getPaginatedList($queries, $pageNum, $resultsPerPage))

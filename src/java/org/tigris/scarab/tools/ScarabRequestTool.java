@@ -2591,6 +2591,35 @@ e.printStackTrace();
     {
         this.issueList = v;
     }
+
+    /**
+     * Checks for a query parameter "oldResultsPerPage" and compares it
+     * to the current "resultsPerPage" parameter.  If they are different,
+     * it returns 1 to avoid returning a value larger than the maximum
+     * number of pages; otherwise it returns the value of the query parameter 
+     * "pageNum".
+     * Preferrable optimization would be to adjust the page number to
+     * keep a set of the old displayed items on the new page.
+     */
+    public int getAdjustedPageNum()
+    {
+        ValueParser parameters = data.getParameters();
+        int resultsPerPage = parameters.getInt("resultsPerPage", 0);
+        int oldResultsPerPage = parameters.getInt("oldResultsPerPage", 0);
+        int pageNum = parameters.getInt("pageNum", 1);
+        // I seem to be too braindead to come up with a formula to return the
+        // new page that will contain the first item on the last page we 
+        // viewed.
+        // forget it and start over
+
+        // Note that -1 -> All results
+        if (oldResultsPerPage != 0 && oldResultsPerPage != resultsPerPage)
+        {
+            pageNum = 1;
+        }
+        return pageNum;
+    }
+
     
     /**
      * Return the number of paginated pages.

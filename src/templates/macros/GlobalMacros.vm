@@ -664,7 +664,7 @@ selected the radio button.
 ## PAGINATION
 ## if results exceed limit, get subset list
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
-#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
+#set ($pageNum = $scarabR.AdjustedPageNum)
 
 ## USER SEARCH
 <h3><a name="add">$l10n.Users</a></h3> 
@@ -745,6 +745,7 @@ selected the radio button.
        <td>
            #resultsPerPageRadioSelect($resultsPerPage false)
            &#160;<input type="submit"  name="eventSubmit_doRefresh" value="$l10n.Refresh" />
+           <input type="hidden" name="oldResultsPerPage" value="$resultsPerPage" />
        </td>
      </tr>
   </table>

@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
  * here. 
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.31 2003/06/25 06:17:03 venkatesh Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.32 2003/07/24 17:26:50 jmcnally Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -125,6 +125,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                     scarabR.setCurrentIssueType(null);
                 }
                 
+                // TODO: document the reason for this
                 String pageNum = data.getParameters().getString("pageNum","1");
                 data.getParameters().add("pageNum", pageNum);
             }

@@ -44,7 +44,7 @@
 </div>
 
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
-#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
+#set ($pageNum = $scarabR.AdjustedPageNum)
 #set ($sortPolarity = $data.Parameters.getInt("sortPolarity", 1))
 #set ($searchString = $data.Parameters.getString("searchString", ""))
 #set ($paginated = ($resultsPerPage > 0 && $moduleList.size() > $resultsPerPage))

@@ -142,7 +142,7 @@ $l10n.NoMoreIssueTypes
 ## PAGINATION
 ## if results exceed limit, get subset list
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
-#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
+#set ($pageNum = $scarabR.AdjustedPageNum)
 
 
 #set ($isAddPagination = $resultsPerPage > 0 && $searchableRMITs.size() > $resultsPerPage)
@@ -193,7 +193,9 @@ $l10n.NoMoreIssueTypes
        <th>$l10n.MaxPerPage</th>
        <td>
         #resultsPerPageRadioSelect($resultsPerPage true)
-        &#160;<input type="submit" value="$l10n.Refresh" />
+        &#160;<input type="submit" name="eventSubmit_doRefresh" 
+                  value="$l10n.Refresh" />
+        <input type="hidden" name="oldResultsPerPage" value="$resultsPerPage" />
        </td>
      </tr>
   </table>

@@ -11,7 +11,7 @@
 
 ## if results exceed limit, get subset list
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",25))
-#set ($pageNum = $data.Parameters.getInt("pageNum",1))
+#set ($pageNum = $scarabR.AdjustedPageNum)
 #if ($resultsPerPage > 0 && $issueListSize > $resultsPerPage)
  #set ($paginated = "true")
  #set ($queryResults = $scarabR.getPaginatedList($queryResults, $pageNum, $resultsPerPage))
@@ -222,6 +222,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
  <td>
      #resultsPerPageRadioSelect($resultsPerPage true)
      <input type="submit" name="eventSubmit_doRefresh" value="$l10n.Refresh" />
+     <input type="hidden" name="oldResultsPerPage" value="$resultsPerPage" />
  </td>
    </tr>
   </table>
