@@ -49,7 +49,7 @@ public class WebXmlReader extends BaseInterceptor {
     {
 	//	addServlet( ctx, "default", "org.apache.tomcat.servlets.DefaultServlet");
 // 	addServlet( ctx, "invoker", "org.apache.tomcat.servlets.InvokerServlet");
-	ServletWrapper sw=addServlet( ctx, "jsp", "org.apache.jasper.runtime.JspServlet");
+	ServletWrapper sw=addServlet( ctx, "jsp", "org.apache.jasper.servlet.JspServlet");
 	//	sw.addInitParam("jspCompilerPlugin", "org.apache.jasper.compiler.JikesJavaCompiler");
 
 // 	ctx.addServletMapping( "/servlet/*", "invoker");
