@@ -33,6 +33,10 @@ insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DE
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
         values(9, 'Severity', 5, 'Severity', '2002-01-01 00:30:00');
 
+/* cc attribute */
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
+       ATTRIBUTE_TYPE_ID, PERMISSION, ACTION, DESCRIPTION, CREATED_DATE)
+       values(13, 'cc', 8, 'Issue | View', 'cc', 'cc attribute', '2002-01-01 00:30:00');
 /* Tracking */
 /* 
  * removing until further discussion
