@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.1 2001/08/31 04:26:39 chirino Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.2 2001/10/13 18:54:51 peter_f Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -44,8 +44,8 @@
 	 crimson.jar,
 	 cryptix-sasl-jetty.jar,
 	 gnu-regexp.jar,
-	 hsql.jar, 
-	 hsql-plugin.jar,
+	 hsqldb.jar,
+	 hsqldb-plugin.jar,
 	 jaas.jar,
 	 JavaGroups.jar,
 	 javax-sasl.jar,
