@@ -29,12 +29,13 @@ import org.jboss.system.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class Main
 {
    // Constants -----------------------------------------------------
-    
+   
+    String versionIdentifier = "BETA-PROD-01";
    // Attributes ----------------------------------------------------
    
    // Static --------------------------------------------------------
@@ -76,10 +77,10 @@ public class Main
          {
             if (args.length > 0)
             {
-					new Main(args);
+              new Main(args);
             } else
             {
-	            new Main();
+                new Main();
             }
             return null;
          }
@@ -87,163 +88,163 @@ public class Main
    }
 
    // Constructors --------------------------------------------------
-	public Main()
-	{
-		this(new String[] { "jboss" });
-	}
-	
-	public Main(String[] configurations)
-	{
+    public Main()
+    {
+       this(new String[] { "jboss" });
+    }
+    
+    public Main(String[] configurations)
+    {
       try
       {
          final PrintStream err = System.err;
          
          com.sun.management.Trace.parseTraceProperties();
          
-			// Load all configurations - one MBeanServer for each configuration
-			for (int i = 0; i < configurations.length; i++)
-			{
-	         final MBeanServer server = new MBeanServer();
+         // Load all configurations - one MBeanServer for each configuration
+         for (int i = 0; i < configurations.length; i++)
+         {
+             final MBeanServer server = new MBeanServer();
       
-	         // Create MLet
-	         MLet mlet = new MLet();
-	         server.registerMBean(mlet, new ObjectName(server.getDefaultDomain(), "service", "MLet"));
-	         
-	         // Set MLet as classloader for this app
-	         Thread.currentThread().setContextClassLoader(mlet);
-	         
-	         // Read configuration
-	         URL mletConf = getClass().getClassLoader().getResource(configurations[i]+".conf");
-	         Set beans = (Set)mlet.getMBeansFromURL(mletConf);
-	         Iterator enum = beans.iterator();
-	         while (enum.hasNext())
-	         {
-	            Object obj = enum.next();
-	            if (obj instanceof RuntimeOperationsException)
-	               ((RuntimeOperationsException)obj).getTargetException().printStackTrace(err);
-	            else if (obj instanceof RuntimeErrorException)
-	               ((RuntimeErrorException)obj).getTargetError().printStackTrace(err);
-	            else if (obj instanceof MBeanException)
-	               ((MBeanException)obj).getTargetException().printStackTrace(err);
-	            else if (obj instanceof RuntimeMBeanException)
-	               ((RuntimeMBeanException)obj).getTargetException().printStackTrace(err);
-		         else if (obj instanceof Throwable)
-	   	         ((Throwable)obj).printStackTrace(err);
-	         }
-	         
-				// Load settings from XML
-				InputStream conf = getClass().getClassLoader().getResourceAsStream(configurations[i]+".jcml");
-				byte[] arr = new byte[conf.available()];
-				conf.read(arr);
-				String cfg = new String(arr);
-				
-	         // Invoke configuration loader
-	         server.invoke(new ObjectName(":service=Configuration"), "load", new Object[] { cfg }, new String[] { "java.lang.String" });
-	
-	         // Get configuration from service
-	         cfg = (String)server.invoke(new ObjectName(":service=Configuration"), "save", new Object[0] , new String[0]);
-				
-				// Store config
-				// This way, the config will always contain a complete mirror of what's in the server
-	         URL confUrl = getClass().getClassLoader().getResource(configurations[i]+".jcml");
-				PrintWriter out = new PrintWriter(new FileWriter(confUrl.getFile()));
-				out.println(cfg);
-				out.close();
-				
-	         // Start MBeans
+             // Create MLet
+             MLet mlet = new MLet();
+             server.registerMBean(mlet, new ObjectName(server.getDefaultDomain(), "service", "MLet"));
+             
+             // Set MLet as classloader for this app
+             Thread.currentThread().setContextClassLoader(mlet);
+             
+             // Read configuration
+             URL mletConf = getClass().getClassLoader().getResource(configurations[i]+".conf");
+             Set beans = (Set)mlet.getMBeansFromURL(mletConf);
+             Iterator enum = beans.iterator();
+             while (enum.hasNext())
+             {
+                Object obj = enum.next();
+                if (obj instanceof RuntimeOperationsException)
+                   ((RuntimeOperationsException)obj).getTargetException().printStackTrace(err);
+                else if (obj instanceof RuntimeErrorException)
+                   ((RuntimeErrorException)obj).getTargetError().printStackTrace(err);
+                else if (obj instanceof MBeanException)
+                   ((MBeanException)obj).getTargetException().printStackTrace(err);
+                else if (obj instanceof RuntimeMBeanException)
+                   ((RuntimeMBeanException)obj).getTargetException().printStackTrace(err);
+                else if (obj instanceof Throwable)
+                    ((Throwable)obj).printStackTrace(err);
+             }
+             
+          // Load settings from XML
+          InputStream conf = getClass().getClassLoader().getResourceAsStream(configurations[i]+".jcml");
+          byte[] arr = new byte[conf.available()];
+          conf.read(arr);
+          String cfg = new String(arr);
+          
+             // Invoke configuration loader
+             server.invoke(new ObjectName(":service=Configuration"), "load", new Object[] { cfg }, new String[] { "java.lang.String" });
+    
+             // Get configuration from service
+             cfg = (String)server.invoke(new ObjectName(":service=Configuration"), "save", new Object[0] , new String[0]);
+          
+          // Store config
+          // This way, the config will always contain a complete mirror of what's in the server
+             URL confUrl = getClass().getClassLoader().getResource(configurations[i]+".jcml");
+          PrintWriter out = new PrintWriter(new FileWriter(confUrl.getFile()));
+          out.println(cfg);
+          out.close();
+          
+             // Start MBeans
 //				Iterator mbeans = server.queryNames(null, null).iterator();
-				Iterator mbeans = beans.iterator();
-				while (mbeans.hasNext())
-				{
-					ObjectName name = ((ObjectInstance)mbeans.next()).getObjectName();
-					try
-					{
-						server.invoke(name, "start", new Object[0], new String[0]);
-					} catch (Exception e)
-					{
-						// Ignore
-					}
-				}
-	         
-	         // Add shutdown hook
-	         try
-	         {
-	            Runtime.getRuntime().addShutdownHook(new Thread()
-	            {
-	               public void run()
-	               {
-	                  err.println("Shutdown");
-	                  Set mBeans = server.queryNames(null, null);
-	                  Iterator names = mBeans.iterator();
-	                  err.println("Shutting down "+mBeans.size() +" MBeans");
-	                  while (names.hasNext())
-	                  {
-	                     ObjectName name = (ObjectName)names.next();
-	                     try
-	                     {
-	                        server.invoke(name, "destroy", new Object[0], new String[0]);
-	                     } catch (Throwable e)
-	                     {
+          Iterator mbeans = beans.iterator();
+          while (mbeans.hasNext())
+          {
+              ObjectName name = ((ObjectInstance)mbeans.next()).getObjectName();
+              try
+              {
+                 server.invoke(name, "start", new Object[0], new String[0]);
+              } catch (Exception e)
+              {
+                 // Ignore
+              }
+          }
+             
+             // Add shutdown hook
+             try
+             {
+                Runtime.getRuntime().addShutdownHook(new Thread()
+                {
+                   public void run()
+                   {
+                      err.println("Shutdown");
+                      Set mBeans = server.queryNames(null, null);
+                      Iterator names = mBeans.iterator();
+                      err.println("Shutting down "+mBeans.size() +" MBeans");
+                      while (names.hasNext())
+                      {
+                         ObjectName name = (ObjectName)names.next();
+                         try
+                         {
+                            server.invoke(name, "destroy", new Object[0], new String[0]);
+                         } catch (Throwable e)
+                         {
 //	                        err.println(e);
-	                     }
-	                  }
-	                  err.println("Shutting done");
-	               }
-	            });
-		         System.out.println ("Shutdown hook added");
-	         } catch (Throwable e)
-	         {
-	            System.out.println("Could not add shutdown hook");
-	            // JDK 1.2.. ignore!
-	         }
+                         }
+                      }
+                      err.println("Shutting done");
+                   }
+                });
+                System.out.println ("Shutdown hook added");
+             } catch (Throwable e)
+             {
+                System.out.println("Could not add shutdown hook");
+                // JDK 1.2.. ignore!
+             }
 
-	/*         
-	         // Command tool
-	         // Should be replaced with a MBean?
-	         
-	         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-	         String line;
-	         while (true)
-	         {
-	            // Get command
-	            line = reader.readLine();
-	            
-	            if (line.equals("shutdown"))
-	            {
-	               Set mBeans = server.queryNames(null, null);
-	               Iterator names = mBeans.iterator();
-	               while (names.hasNext())
-	               {
-	                  ObjectName name = (ObjectName)names.next();
-	                  try
-	                  {
-	                     server.invoke(name, "stop", new Object[0], new String[0]);
-	                  } catch (Throwable e)
-	                  {
-	                     // Ignore
-	                  }
-	               }
-	               
-	               System.exit(0);
-	            } else
-	            {
-	               Set mBeans = server.queryNames(null, null);
-	               Iterator names = mBeans.iterator();
-	               while (names.hasNext())
-	               {
-	                  ObjectName name = (ObjectName)names.next();
-	                  try
-	                  {
-	                     server.invoke(name, line, new Object[0], new String[0]);
-	                  } catch (Throwable e)
-	                  {
-	                     // Ignore
-	                  }
-	               }
-	            }
-	         }
-	*/         
-			}
+    /*         
+             // Command tool
+             // Should be replaced with a MBean?
+             
+             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+             String line;
+             while (true)
+             {
+                // Get command
+                line = reader.readLine();
+                
+                if (line.equals("shutdown"))
+                {
+                   Set mBeans = server.queryNames(null, null);
+                   Iterator names = mBeans.iterator();
+                   while (names.hasNext())
+                   {
+                      ObjectName name = (ObjectName)names.next();
+                      try
+                      {
+                         server.invoke(name, "stop", new Object[0], new String[0]);
+                      } catch (Throwable e)
+                      {
+                         // Ignore
+                      }
+                   }
+                   
+                   System.exit(0);
+                } else
+                {
+                   Set mBeans = server.queryNames(null, null);
+                   Iterator names = mBeans.iterator();
+                   while (names.hasNext())
+                   {
+                      ObjectName name = (ObjectName)names.next();
+                      try
+                      {
+                         server.invoke(name, line, new Object[0], new String[0]);
+                      } catch (Throwable e)
+                      {
+                         // Ignore
+                      }
+                   }
+                }
+             }
+    */         
+         }
       } catch (RuntimeOperationsException e)
       {
          System.out.println("Runtime error");
@@ -258,8 +259,8 @@ public class Main
       {
          e.printStackTrace();
       }
-		
-		// Done
-		System.out.println("jBoss 2.0 Started");
-	}
+       
+       // Done
+       System.out.println("jBoss 2.0 "+versionIdentifier+" Started");
+    }
 }
