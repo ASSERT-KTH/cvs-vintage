@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashSet;
+import java.util.Set;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
@@ -80,7 +81,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.92 2003/04/15 16:01:44 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.93 2003/04/15 20:20:11 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -117,7 +118,7 @@ public class AssignIssue extends BaseModifyIssue
                 {
                     Issue issue = (Issue)issues.get(j);
                     Long issueId = issue.getIssueId();
-                    HashSet userList = (HashSet)userMap.get(issueId);
+                    Set userList = (Set) userMap.get(issueId);
                     if (userList == null)
                     {
                         userList = new HashSet();
@@ -144,7 +145,7 @@ public class AssignIssue extends BaseModifyIssue
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context); 
-        HashSet userList = (HashSet)user.getAssociatedUsersMap().get(issueId);
+        Set userList = (Set) user.getAssociatedUsersMap().get(issueId);
         ValueParser params = data.getParameters();
         String[] userIds =  params.getStrings(SELECTED_USER);
         if (userIds != null && userIds.length > 0) 
@@ -179,7 +180,7 @@ public class AssignIssue extends BaseModifyIssue
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        HashSet userList = (HashSet)user.getAssociatedUsersMap().get(issueId);
+        Set userList = (Set) user.getAssociatedUsersMap().get(issueId);
         ValueParser params = data.getParameters();
         String[] userIds =  params.getStrings(SELECTED_USER);
         if (userIds != null && userIds.length > 0) 
@@ -233,7 +234,7 @@ public class AssignIssue extends BaseModifyIssue
             Issue issue = (Issue)issues.get(i);
             IssueType issueType = issue.getIssueType();
             Module module = issue.getModule();
-            HashSet userList = (HashSet)userMap.get(issue.getIssueId());
+            Set userList = (Set) userMap.get(issue.getIssueId());
             List oldAssignees = issue.getUserAttributeValues();
            
             // save attachment with user-provided reason
@@ -248,8 +249,7 @@ public class AssignIssue extends BaseModifyIssue
             }
 
             // loops through users in temporary working list
-            Iterator iter = userList.iterator();
-            while (iter.hasNext()) 
+            for (Iterator iter = userList.iterator(); iter.hasNext();)
             {
                 List item = (List)iter.next();
                 Attribute newAttr = (Attribute)item.get(0);
@@ -291,8 +291,7 @@ public class AssignIssue extends BaseModifyIssue
                 boolean userStillAssigned = false;
                 AttributeValue oldAttVal = (AttributeValue)oldAssignees.get(m);
                 Attribute oldAttr = oldAttVal.getAttribute();
-                iter = userList.iterator();
-                while (iter.hasNext()) 
+                for (Iterator iter = userList.iterator(); iter.hasNext();)
                 {
                     List item = (List)iter.next();
                     ScarabUser assignee = (ScarabUser)item.get(1);
