@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.113 2005/02/02 21:18:09 mvw Exp $
+// $Id: GeneratorJava.java,v 1.114 2005/02/08 20:45:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1942,7 +1942,16 @@ public class GeneratorJava
      * @see org.argouml.application.api.NotationProvider2#generateActionState(java.lang.Object)
      */
     public String generateActionState(Object actionState) {
-        return generateState(actionState);
+        String ret = "";
+        Object action = Model.getFacade().getEntry(actionState);
+        if (action != null) {
+            Object expression = Model.getFacade().getScript(action);
+            if (expression != null) {
+                ret = generateExpression(expression);
+            }
+        }
+        return ret;
     }
+
 
 }
