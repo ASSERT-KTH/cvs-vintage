@@ -19,7 +19,7 @@ package org.columba.mail.pop3;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.columba.core.command.CommandCancelledException;
+import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.util.ListTools;
@@ -40,10 +41,22 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.io.Source;
+import org.columba.ristretto.io.TempSourceFactory;
+import org.columba.ristretto.message.Header;
+import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.pop3.MessageNotOnServerException;
 import org.columba.ristretto.pop3.POP3Exception;
 
 
+/**
+ * Highest Abstraction Layer of the POP3 Protocol. Its responsabilities
+ * are the synchornization of already downloaded mails, deletion of mails
+ * after x days and parsing of the headers to maintain a headerCache of
+ * the downloaded mails.
+ * 
+ * @author tstich
+ */
 public class POP3Server {
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -129,7 +142,7 @@ public class POP3Server {
         // Get the list of the uids on the server
         // Important: Use a clone of the List since
         // we must not change it!
-        List newUids = new ArrayList(store.getUIDList());
+        List newUids = store.getUIDList();
         
         // substract the uids that we already downloaded ->
         // newUids contains all uids to fetch from the server
@@ -200,33 +213,43 @@ public class POP3Server {
     }
 
     public ColumbaMessage getMessage(Object uid, WorkerStatusController worker) throws Exception {
-        ColumbaMessage message = getStore().fetchMessage(uid,worker);
+        InputStream messageStream = new ProgressObservedInputStream( getStore().fetchMessage(store.getIndex(uid)), worker, true);
 
-        if (message == null) {
-            return null;
-        }
+		Source source = TempSourceFactory.createTempSource(messageStream, messageStream.available());
+		
+		// pipe through preprocessing filter
+		//if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
+		//	rawString = modifyMessage(rawString);
+		//TODO: Activate PreProcessor again with Source instead of String
+		Header header = HeaderParser.parse(source);
 
-        ColumbaHeader header = (ColumbaHeader) message.getHeader();
+		ColumbaMessage m = new ColumbaMessage(header);
+		ColumbaHeader h = (ColumbaHeader) m.getHeader();
 
-        // set the attachment flag
+		m.setSource(source);
+		h.getAttributes().put("columba.pop3uid", uid);
+		h.getAttributes().put("columba.size",
+				new Integer(source.length() / 1024));
+
+		// set the attachment flag
         String contentType = (String) header.get("Content-Type");
 
-        header.set("columba.attachment", header.hasAttachments());
-        header.getAttributes().put("columba.fetchstate", Boolean.TRUE);
-        header.getAttributes().put("columba.accountuid",
+        h.set("columba.attachment", h.hasAttachments());
+        h.getAttributes().put("columba.fetchstate", Boolean.TRUE);
+        h.getAttributes().put("columba.accountuid",
             new Integer(accountItem.getInteger("uid")));
 
         
-        headerCache.getHeaderList().add(header, uid);
+        headerCache.add(h);
         
         // set headercache dirty flag
         setCacheChanged(true);
 
-        return message;
+        return m;
     }
 
     public int getMessageSize(Object uid) throws Exception {
-        return store.getSize(uid);
+        return store.getSize(store.getIndex(uid));
     }
 
     public String getFolderName() {
