@@ -785,3 +785,120 @@ Prints out a date entry form.
 #end
 
 ## ---------------------------------------------------------------------------
+
+
+
+#macro(entryTemplateAndAttributes $issue $moduleAttributeGroups $buttonName $buttonEvent $showTemplates)
+#set ($module = $issue.Module)
+#set ($issueType = $issue.IssueType)
+#set ($magSize = $moduleAttributeGroups.size())
+
+#if ($magSize == 0)
+<h3>$title</h3>
+<p><em>$l10n.NoAttributesDefinedForIssueType</em></p>
+#else
+
+#if ($showTemplates)
+#set ($allTemplates = $scarabR.IssueTemplates)
+#if ($allTemplates.size() > 0)
+<h3>$l10n.format("ApplyTemplate", $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase())</h3>
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+ <tr>
+ <th>$l10n.Templates</th>
+ <td>
+<select name="templateId">
+   <option value="">$l10n.Choose</option>
+#foreach ($template in $allTemplates)
+   <option value="$template.Issue.IssueId"#if ($template.IssueId.toString().equals($data.Parameters.getString("templateId"))) selected="selected"#end>$template.Name</option>
+#end
+</select>
+&#160;
+<input type="submit" value="$l10n.Select" name="eventSubmit_doUsetemplates" />
+&#160;
+$link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTemplates", $scarabR.CurrentIssueType.Name.toLowerCase()))
+ </td>
+ </tr>
+ </table>
+</div>
+#end
+#end
+
+
+<div class="functnbar">
+<input type="submit" value="$buttonName"  name="$buttonEvent" />&#160;
+<input type="reset" value="$l10n.Reset" name="eventSubmit_doRefresh" />
+</div>
+
+#asterisk()
+
+#set ($templateId = $data.Parameters.getString("templateId"))
+#if ($templateId && $templateId.trim().length() > 0)
+  #set ($templ = $scarabR.getIssueTemplate($templateId))
+  <input type="hidden" name="templateId" value="$templateId"/>
+#end
+
+<div class="axial">
+#foreach ($group in $moduleAttributeGroups)
+ #if (!$group.Attributes.isEmpty())
+  <h3>$group.Name</h3>
+  <table cellpadding="3" cellspacing="2" border="0">
+  #foreach ($att in $group.Attributes)
+    #set ($rma = $module.getRModuleAttribute($att, $issueType))
+      #if ($rma.Active)
+        ## reset to a new $attVal in the event the issue/template does not 
+        ## have it defined 
+        #set ($attVal = $scarabR.getNewAttributeValue($att, $issue))
+        ## this may leave the previous value, if RHS is null
+        #set ($attVal = $issue.getAttributeValue($att))
+
+        #if (!$attVal.Attribute.isUserAttribute())
+          #if ($attVal.Attribute.AttributeType.ValidationKey)
+            #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
+          #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
+            #set ($field = "OptionId")
+          #else
+            #set ($field = "Value")
+          #end
+          <tr>
+            <th> #if ($attVal.isRequired())*#end 
+                 $attVal.RModuleAttribute.DisplayValue
+            </th>
+            <td>
+
+          #if ($attVal.Attribute.isOptionAttribute())
+           #if ($templ)
+            #set ($templAttVal = $scarabR.getNewAttributeValue($att, $templ))
+            ## this may leave the previous value, if RHS is null
+            #set ($templAttVal = $templ.getAttributeValue($att))
+            #templateAttrValueLeafSelect ($attVal $templAttVal $field "" false)
+           #else
+            #attrValueLeafSelect ($attVal $field "" false)
+           #end
+          #else
+           #if ($templ)
+            #set ($templAttVal = $scarabR.getNewAttributeValue($att, $templ))
+            ## this may leave the previous value, if RHS is null
+            #set ($templAttVal = $templ.getAttributeValue($att))
+            #if ($templAttVal.Value)
+              #templateAttrValueText ( $attVal "70" $templAttVal )
+            #else
+               #attrValueText ( $attVal "70" )
+            #end
+           #else
+             #attrValueText ( $attVal "70" )
+           #end
+          #end
+              #attrValueErrorMsg ($attVal $field)
+            </td>
+          </tr>
+        #end
+      #end
+  #end
+  </table>
+ #end
+#end
+</div>
+#end
+
+#end

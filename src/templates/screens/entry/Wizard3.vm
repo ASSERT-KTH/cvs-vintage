@@ -1,107 +1,19 @@
 #set ($issue = $scarabR.ReportingIssue)
-#set ($attrValues = $issue.ModuleAttributeValuesMap)
 #set ($module = $issue.Module)
 #set ($issueType = $issue.IssueType)
-#set ($user = $data.User)
-#if ($data.Parameters.getString("templateId"))
-  #set ($templateId = $data.Parameters.getString("templateId"))
-#end
-#if ($templateId && $templateId.trim().length() > 0)
-  #set ($templ = $scarabR.getIssueTemplate($templateId))
-#end
 
 <div class="app" id="div2-1-0">
-
 <form method="post" action="$link.setPage("entry,Wizard3.vm")" enctype="multipart/form-data">
 <input type="hidden" name="action" value="ReportIssue" />
 <input type="hidden" name="$scarabG.Constant.CURRENT_ISSUE_TYPE" 
     value="$issueType.QueryKey" />
 
-## Only show templates if user has not come through the wizard.
-#if (!$data.Parameters.getString("oldscreen"))
-    #set ($allTemplates = $scarabR.IssueTemplates)
-    #if ($allTemplates.size() > 0 )
-     <h3>$l10n.format("ApplyTemplate", $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase())</h3>
-     <div class="axial">
-       <table width="100%" cellpadding="3" cellspacing="2" border="1">
-          <tr>
-          <th width="120">$l10n.Templates</th>
-          <td>
-          <select name="select_template_id">
-     #foreach ($template in $allTemplates)
-     <option value="$template.IssueId">$template.TemplateInfo.Name</option>
-     #end
-          </select> 
-          &#160;<input type="submit" value="$l10n.Select" name="eventSubmit_doUsetemplates" /> 
-      &#160;$link.setPage("TemplateList.vm").setLabel("template list")
-          </td>
-          </tr>
-       </table>
-     </div>
-    #end
+#set ($moduleAttributeGroups = $module.getAttributeGroups($issueType))
+#set ($showTemplates = true)
+#if ($data.Parameters.getString("oldscreen"))
+  #set ($showTemplates = false)
 #end
-
-<div class="functnbar">
-<input type="submit" value="$l10n.SubmitIssue"  name="eventSubmit_doEnterissue" />&#160;
-<input type="reset" value="$l10n.Reset" name="eventSubmit_doRefresh" />
-</div>
- 
-#asterisk()
-    
-<div class="axial">
-#foreach ($group in $module.getAttributeGroups($issueType))
-  #if (!$group.Attributes.isEmpty())
-    <h3>$group.Name</h3>
-    <table cellpadding="3" cellspacing="2" border="0">
-  #foreach ($att in $group.Attributes)
-    #set ($rma = $module.getRModuleAttribute($att, $issueType))
-      #if ($rma.Active)
-        #set ($attVal = $issue.getAttributeValue($att))
-        ## If templAttVal is null, set to ""
-        #if ( $templ.getAttributeValue($att))   
-            #set ($templAttVal = $templ.getAttributeValue($att))
-        #else
-            #set ($templAttVal = "")
-        #end
-        #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
-        #if ($attVal.Attribute.AttributeType.ValidationKey)
-           #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
-        #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
-           #set ($field = "OptionId")
-        #else
-          #set ($field = "Value")
-        #end
-        #if (!$attVal.Attribute.isUserAttribute())
-          <tr>
-            <th> #if ($attVal.isRequired())*#end 
-                 $attVal.RModuleAttribute.DisplayValue
-            </th>
-            <td>
-              #if ($attVal.Attribute.isUserAttribute())
-                 #userSelectBox ($attVal "3" "true") 
-              #elseif ($attVal.Attribute.isOptionAttribute())
-                 #if ($templ)
-                   #templateAttrValueLeafSelect ($attVal $templAttVal $field "" false )
-                 #else
-                   #attrValueLeafSelect ($attVal $field "" false)
-                 #end
-              #else
-               #if ($templAttVal.Value)
-                  #templateAttrValueText ( $attVal "70" $templAttVal)  
-               #else
-                  #attrValueText ( $attVal "70" )
-               #end
-              #end
-              #attrValueErrorMsg ($attVal $field)
-            </td>
-          </tr>
-        #end
-      #end
-    #end
-</table>
- #end
- #end
-</div>
+#entryTemplateAndAttributes ($issue $moduleAttributeGroups $l10n.SubmitIssue "eventSubmit_doEnterissue" $showTemplates)
 
 ## ATTACHMENT
 #set ($atch = $scarabR.Attachment)
@@ -205,7 +117,7 @@
    </td>
  </tr>
 
-#set ($userPref = $user.EnterIssueRedirect)
+#set ($userPref = $data.User.EnterIssueRedirect)
 #if (!$userPref)
   #set ($userPref = 2)
 #end

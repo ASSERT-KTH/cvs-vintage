@@ -42,7 +42,7 @@
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<h3>$l10n.Templates</h3>
+<h3>$l10n.EditTemplates</h3>
 
 #if ($templates.size() < 1)
 <p><em>

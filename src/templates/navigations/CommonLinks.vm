@@ -5,7 +5,7 @@
   #end
   #if (!$module.isGlobalModule())
     <div>$link.setPage("QueryList.vm").setLabel("$l10n.Queries")</div>
-    <div>$link.setPage("TemplateList.vm").setLabel("$l10n.Templates")</div>
+    <div>$link.setPage("TemplateList.vm").setLabel("$l10n.EditTemplates")</div>
     <div>$link.setPage("reports,ReportList.vm").setLabel("$l10n.Reports")</div>
   #end
 #end
