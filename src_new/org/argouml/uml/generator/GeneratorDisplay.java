@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.33 2002/10/20 21:11:17 linus Exp $
+// $Id: GeneratorDisplay.java,v 1.34 2002/10/23 14:56:30 mkl Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -63,7 +63,9 @@ import org.argouml.uml.MMUtil;
  * looks a lot like (invalid) Java.  The idea is that other generators
  * could be written for outher languages.  This code is just a
  * placeholder for future development, I expect it to be totally
- * replaced. */
+ * replaced. 
+ * @stereotype singleton
+ */
 
 // TODO: always check for null!!!
 

@@ -24,7 +24,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.42 2002/10/20 21:11:17 linus Exp $
+// $Id: ParserDisplay.java,v 1.43 2002/10/23 14:56:30 mkl Exp $
 
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
@@ -155,7 +155,8 @@ class PropertySpecialString {
     return true;
   }
 }
-
+/** @stereotype singleton
+ */
 public class ParserDisplay extends Parser {
 
   public static ParserDisplay SINGLETON = new ParserDisplay();
