@@ -15,7 +15,8 @@
         "main" or "apache" targets, tomcat may not start fast enough to avoid failing some of the
         early tests.
     -->
-  
+
+     <property name="revision" value="$Revision: 1.9 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
