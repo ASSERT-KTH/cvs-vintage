@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.60 2005/01/09 14:58:38 linus Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.61 2005/01/10 19:22:23 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,6 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     ////////////////////////
     // actions for toolbar
 
-    private Action actionMessage;
     private Action actionClassifierRole;
     private Action actionGeneralize;
 
@@ -81,7 +80,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     private Action actionUniComposition;
 
     private Action actionDepend;
-    private Action actionMesasage;
+    private Action actionMessage;
 
     ////////////////////////////////////////////////////////////////
     // contructors
@@ -182,7 +181,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
 	    getActionGeneralize(),
 	    getActionDepend(),
             null,
-            getActionMesage(), //this one behaves differently, hence seperated!
+            getActionMessage(), //this one behaves differently, hence seperated!
         };
         return actions;
     }
@@ -320,12 +319,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         }
         return actionGeneralize;
     }
-    /**
-     * @return Returns the actionMessage.
-     */
-    protected Action getActionMessage() {
-        return actionMessage;
-    }
+
     /**
      * @return Returns the actionUniAggregation.
      */
@@ -381,12 +375,12 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     }
 
     /**
-     * @return Returns the actionMesasage.
+     * @return Returns the actionMessage.
      */
-    private Action getActionMesage() {
-        if (actionMesasage == null) {
-            actionMesasage = ActionAddMessage.getSingleton();
+    private Action getActionMessage() {
+        if (actionMessage == null) {
+            actionMessage = ActionAddMessage.getSingleton();
         }
-        return actionMesasage;
+        return actionMessage;
     }
 } /* end class UMLCollaborationDiagram */
