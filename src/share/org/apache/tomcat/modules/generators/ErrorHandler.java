@@ -67,7 +67,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.security.*;
-
+import java.lang.reflect.*;
 
 import org.apache.tomcat.util.log.*;
 
@@ -299,6 +299,28 @@ public final class ErrorHandler extends BaseInterceptor {
 	    String name = clazz.getName();
 	    errorPath = ctx.getErrorPage(name);
 	    clazz = clazz.getSuperclass();
+	}
+
+	// Bug 3233, ps@psncc.at (Peter Stamfest)
+	if (errorPath == null ) {
+	    // Use introspection - the error handler is at a lower level,
+	    // doesn't depend on servlet api
+	    Throwable t2=null;
+	    try {
+		Method m=t.getClass().getMethod( "getRootCause", new Class[] {} );
+		t2 = (Throwable)m.invoke( t, new Object[] {} );
+	    } catch(Exception ex) {
+	    }
+
+	    if (t2 != null) {
+		clazz = t2.getClass();
+		while (errorPath == null && clazz != null) {
+		    String name = clazz.getName();
+		    errorPath = ctx.getErrorPage(name);
+		    clazz = clazz.getSuperclass();
+		}
+	    }
+	    if (errorPath != null) t = t2;
 	}
 
 	if( errorPath != null ) {
