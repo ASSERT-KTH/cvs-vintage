@@ -919,7 +919,7 @@ public class EJBQLParser {
                if(param1.equalsIgnoreCase("LOCATE")) {
                   param1 = param2;
                   param2 = param3;
-                  param3 = "0";
+                  param3 = "1";
                } else {
                   a.pop(); // pop the token "LOCATE"
                }
