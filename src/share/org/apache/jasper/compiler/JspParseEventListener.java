@@ -355,7 +355,12 @@ public class JspParseEventListener extends BaseJspListener {
 	writer.pushIndent();
 	/* Do stuff here for finally actions... */
         //writer.println("out.close();");
-	writer.println("if (out != null) out.flush();");
+	//	writer.println("System.out.println(JspWriterImpl.class.getClassLoader());");
+	//	writer.println("System.out.println(out.getClass().getClassLoader());");
+	//writer.println("if (out instanceof JspWriterImpl) { ");
+        //writer.println("    ((JspWriterImpl)out).flushBuffer();");
+	//writer.println("}");
+	writer.println("out.flush();");
 	writer.println("if (_jspxFactory != null) _jspxFactory.releasePageContext(pageContext);");
 	writer.popIndent();
 	writer.println("}");
@@ -372,7 +377,7 @@ public class JspParseEventListener extends BaseJspListener {
     public void handleComment(Mark start, Mark stop) throws JasperException {
         Constants.message("jsp.message.htmlcomment",
                           new Object[] { reader.getChars(start, stop) },
-                          Logger.DEBUG);
+                          Log.DEBUG);
     }
 
     interface PageDirectiveHandler {
@@ -673,7 +678,7 @@ public class JspParseEventListener extends BaseJspListener {
     {
         Constants.message("jsp.message.handling_directive",
                           new Object[] { directive, attrs },
-                          Logger.DEBUG);
+                          Log.DEBUG);
 
 	if (directive.equals("page")) {
 	    Enumeration e = attrs.keys();
@@ -847,7 +852,7 @@ public class JspParseEventListener extends BaseJspListener {
     {
         Constants.message("jsp.message.handling_plugin",
                           new Object[] { attrs },
-                          Logger.DEBUG);
+                          Log.DEBUG);
 
 	Generator gen = new GeneratorWrapper (new PluginGenerator (start, attrs,
 					      param, fallback), start, stop);

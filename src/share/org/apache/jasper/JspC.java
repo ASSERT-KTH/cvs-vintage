@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.20 2001/02/20 03:36:00 costin Exp $
- * $Revision: 1.20 $
- * $Date: 2001/02/20 03:36:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.21 2001/03/02 04:51:25 costin Exp $
+ * $Revision: 1.21 $
+ * $Date: 2001/03/02 04:51:25 $
  *
  * ====================================================================
  * 
@@ -322,10 +322,10 @@ public class JspC implements Options { //, JspCompilationContext {
             }
         }
 
-	QueueLogger ql = new QueueLogger();
-	ql.setVerbosityLevel(verbosityLevel);
+// 	QueueLogger ql = new QueueLogger();
+// 	ql.setVerbosityLevel(verbosityLevel);
         Constants.jasperLog = Log.getLog("JASPER_LOG", this );
-        Constants.jasperLog.setLogger( ql );
+//         Constants.jasperLog.setLogger( ql );
 
     }
     

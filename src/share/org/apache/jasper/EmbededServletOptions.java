@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/EmbededServletOptions.java,v 1.7 2001/01/14 20:45:39 larryi Exp $
- * $Revision: 1.7 $
- * $Date: 2001/01/14 20:45:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/EmbededServletOptions.java,v 1.8 2001/03/02 04:51:24 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2001/03/02 04:51:24 $
  *
  * ====================================================================
  * 
@@ -239,7 +239,7 @@ public final class EmbededServletOptions implements Options {
                 this.keepGenerated = true;
             else if (keepgen.equalsIgnoreCase("false"))
                 this.keepGenerated = false;
-            else Constants.message ("jsp.warning.keepgen", Logger.WARNING);
+            else Constants.message ("jsp.warning.keepgen", Log.WARNING);
         }
             
 
@@ -249,7 +249,7 @@ public final class EmbededServletOptions implements Options {
                 this.largeFile = true;
             else if (largeFile.equalsIgnoreCase("false"))
                 this.largeFile = false;
-            else Constants.message ("jsp.warning.largeFile", Logger.WARNING);
+            else Constants.message ("jsp.warning.largeFile", Log.WARNING);
         }
 	
         String mapFile = config.getInitParameter("mappedfile"); 
@@ -258,7 +258,7 @@ public final class EmbededServletOptions implements Options {
                 this.mappedFile = true;
             else if (mapFile.equalsIgnoreCase("false"))
                 this.mappedFile = false;
-            else Constants.message ("jsp.warning.mappedFile", Logger.WARNING);
+            else Constants.message ("jsp.warning.mappedFile", Log.WARNING);
         }
 	
         String senderr = config.getInitParameter("sendErrToClient");
@@ -267,7 +267,7 @@ public final class EmbededServletOptions implements Options {
                 this.sendErrorToClient = true;
             else if (senderr.equalsIgnoreCase("false"))
                 this.sendErrorToClient = false;
-            else Constants.message ("jsp.warning.sendErrToClient", Logger.WARNING);
+            else Constants.message ("jsp.warning.sendErrToClient", Log.WARNING);
         }
 
         String debugInfo = config.getInitParameter("classdebuginfo");
@@ -276,7 +276,7 @@ public final class EmbededServletOptions implements Options {
                 this.classDebugInfo  = true;
             else if (debugInfo.equalsIgnoreCase("false"))
                 this.classDebugInfo  = false;
-            else Constants.message ("jsp.warning.classDebugInfo", Logger.WARNING);
+            else Constants.message ("jsp.warning.classDebugInfo", Log.WARNING);
         }
 
         String ieClassId = config.getInitParameter("ieClassId");
@@ -307,7 +307,7 @@ public final class EmbededServletOptions implements Options {
         // we are using a SecurityManager
         protectionDomain = context.getAttribute(Constants.ATTRIB_JSP_ProtectionDomain);
         if (this.scratchDir == null) {
-            Constants.message("jsp.error.no.scratch.dir", Logger.FATAL);
+            Constants.message("jsp.error.no.scratch.dir", Log.FATAL);
             return;
         }
             
@@ -316,7 +316,7 @@ public final class EmbededServletOptions implements Options {
             Constants.message("jsp.error.bad.scratch.dir",
                               new Object[] {
                                   scratchDir.getAbsolutePath()
-                              }, Logger.FATAL);
+                              }, Log.FATAL);
                                   
         String jspCompilerPath = config.getInitParameter("jspCompilerPath");
         if (jspCompilerPath != null) {
@@ -325,7 +325,7 @@ public final class EmbededServletOptions implements Options {
             } else { 
                 Constants.message("jsp.warning.compiler.path.notfound",
                                   new Object[] { jspCompilerPath }, 
-                                  Logger.FATAL);
+                                  Log.FATAL);
             }
         }
 
@@ -336,7 +336,7 @@ public final class EmbededServletOptions implements Options {
             } catch (ClassNotFoundException cnfe) {
                 Constants.message("jsp.warning.compiler.class.notfound",
                                   new Object[] { jspCompilerPlugin },
-                                  Logger.FATAL);
+                                  Log.FATAL);
             }
         }
 

@@ -94,7 +94,7 @@ import org.apache.tomcat.util.log.*;
  */
 public class PageContextImpl extends PageContext {
 
-    Log loghelper = new Log("JASPER_LOG", "JspFactoryImpl");
+    Log loghelper = Log.getLog("JASPER_LOG", "JspFactoryImpl");
 
     PageContextImpl(JspFactory factory) {
         this.factory = factory;

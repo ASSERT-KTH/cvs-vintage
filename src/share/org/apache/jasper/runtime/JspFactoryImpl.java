@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.8 2001/02/11 06:33:49 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2001/02/11 06:33:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.9 2001/03/02 04:51:40 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2001/03/02 04:51:40 $
  *
  * ====================================================================
  * 
@@ -81,7 +81,7 @@ public class JspFactoryImpl extends JspFactory {
     private SimplePool pool=new SimplePool( 100 );
     private static final boolean usePool=true;
     
-    Log loghelper = new Log("JASPER_LOG", "JspFactoryImpl");
+    Log loghelper = Log.getLog("JASPER_LOG", "JspFactoryImpl");
     
     public PageContext getPageContext(Servlet servlet, ServletRequest request,
                                       ServletResponse response, 

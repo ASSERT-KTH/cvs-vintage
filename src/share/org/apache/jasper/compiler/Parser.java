@@ -1077,7 +1077,7 @@ public class Parser {
 		if (c.accept(listener, reader, this)) {
                     Constants.message("jsp.message.accepted",
                                       new Object[] { c.getClass().getName(), m },
-                                      Logger.DEBUG);
+                                      Log.DEBUG);
 		    accepted = true;
 		    noJspElement = false;
 		    break;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.22 2001/01/14 20:45:40 larryi Exp $
- * $Revision: 1.22 $
- * $Date: 2001/01/14 20:45:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.23 2001/03/02 04:51:30 costin Exp $
+ * $Revision: 1.23 $
+ * $Date: 2001/03/02 04:51:30 $
  *
  * ====================================================================
  * 
@@ -111,10 +111,10 @@ public class Compiler {
         Constants.message("jsp.message.package_name_is",
                           new Object[] { (pkgName==null)?
                                           "[default package]":pkgName },
-                          Logger.DEBUG);
+                          Log.DEBUG);
         Constants.message("jsp.message.class_file_name_is",
                           new Object[] { classFileName },
-                          Logger.DEBUG);
+                          Log.DEBUG);
 
 	if (!isOutDated())
             return false;
@@ -127,13 +127,13 @@ public class Compiler {
 
         Constants.message("jsp.message.java_file_name_is",
                           new Object[] { javaFileName },
-                          Logger.DEBUG);
+                          Log.DEBUG);
 
 	String className = mangler.getClassName();
         ctxt.setServletClassName(className);
         Constants.message("jsp.message.class_name_is",
                           new Object[] { className },
-                          Logger.DEBUG);
+                          Log.DEBUG);
 
         
         
@@ -241,7 +241,7 @@ public class Compiler {
 
         Constants.message("jsp.message.compiling_with",
                           new Object[] { b.toString() },
-                          Logger.DEBUG);
+                          Log.DEBUG);
 
         /**
          * 256 chosen randomly. The default is 32 if you don't pass
@@ -313,7 +313,7 @@ public class Compiler {
         ctxt.setServletClassName(className);
         Constants.message("jsp.message.class_name_is",
                           new Object[] { className },
-                          Logger.DEBUG);
+                          Log.DEBUG);
     }
     
     /**

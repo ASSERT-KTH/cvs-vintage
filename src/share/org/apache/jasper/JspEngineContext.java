@@ -301,7 +301,7 @@ public class JspEngineContext implements JspCompilationContext {
             } catch (Exception ex) {
 		Constants.message("jsp.warning.compiler.class.cantcreate",
 				  new Object[] { jspCompilerPlugin, ex }, 
-				  Logger.FATAL);
+				  Log.FATAL);
                 javac = new SunJavaCompiler();
 	    }
 	} else {

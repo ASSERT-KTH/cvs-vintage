@@ -267,7 +267,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    
 		Constants.message("jsp.message.copyinguri", 
 	                          new Object[] { uri, jarFileName },
-				  Logger.DEBUG);
+				  Log.DEBUG);
 	    
 		if (relativeURL)
 		    copy(getResourceAsStream(uri),
@@ -384,7 +384,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                                   new Object[] {
                                       e.getTagName()
                                   },
-                                  Logger.WARNING
+                                  Log.WARNING
                                   );
         }
 
@@ -431,7 +431,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                                   new Object[] {
                                       e.getTagName()
                                   },
-                                  Logger.WARNING
+                                  Log.WARNING
                                   );
         }
 	TagAttributeInfo[] tagAttributeInfo 
@@ -449,21 +449,21 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                                   new Object[] {
                                       teiclass, cex.getMessage()
                                   },
-                                  Logger.WARNING
+                                  Log.WARNING
                                   );
             } catch (IllegalAccessException iae) {
                 Constants.message("jsp.warning.teiclass.is.null",
                                   new Object[] {
                                       teiclass, iae.getMessage()
                                   },
-                                  Logger.WARNING
+                                  Log.WARNING
                                   );
             } catch (InstantiationException ie) {
                 Constants.message("jsp.warning.teiclass.is.null",
                                   new Object[] {
                                       teiclass, ie.getMessage()
                                   },
-                                  Logger.WARNING
+                                  Log.WARNING
                                   );
             }
 
@@ -512,7 +512,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                                   new Object[] {
                                       e.getTagName()
                                   },
-                                  Logger.WARNING
+                                  Log.WARNING
                                   );
         }
         

@@ -88,7 +88,7 @@ public class JspCompiler extends Compiler implements Mangler {
     boolean outDated;
     static final int JSP_TOKEN_LEN= Constants.JSP_TOKEN.length();
 
-    Log loghelper = new Log("JASPER_LOG", "JspCompiler");
+    Log loghelper = Log.getLog("JASPER_LOG", "JspCompiler");
     
     public JspCompiler(JspCompilationContext ctxt) throws JasperException {
         super(ctxt);

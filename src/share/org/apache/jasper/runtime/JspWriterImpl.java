@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspWriterImpl.java,v 1.5 2001/02/11 19:27:32 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2001/02/11 19:27:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspWriterImpl.java,v 1.6 2001/03/02 04:51:41 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2001/03/02 04:51:41 $
  *
  * ====================================================================
  * 
@@ -148,7 +148,7 @@ public class JspWriterImpl extends JspWriter {
      * flushing the stream itself.  This method is non-private only so that it
      * may be invoked by PrintStream.
      */
-    protected final void flushBuffer() throws IOException {
+    public final void flushBuffer() throws IOException {
 	synchronized (lock) {
             if (bufferSize == 0)
                 return;

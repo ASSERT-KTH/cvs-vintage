@@ -93,7 +93,7 @@ public class JspReader {
     
     private JspCompilationContext context;
 
-    Log loghelper = new Log("JASPER_LOG", "JspReader");
+    Log loghelper = Log.getLog("JASPER_LOG", "JspReader");
     //    LogHelper loghelper = new LogHelper("JASPER_LOG", "JspReader");
     
     /*
