@@ -25,7 +25,7 @@ import org.jboss.security.SecurityAssociationAuthenticator;
 /** Common client utility methods
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
 */
 public class Util
 {
@@ -33,6 +33,8 @@ public class Util
    private static String REQUEST_CONTENT_TYPE =
       "application/x-java-serialized-object; class=org.jboss.invocation.MarshalledInvocation";
    private static Logger log = Logger.getLogger(Util.class);
+   /** The type of the HTTPS connection class */
+   private static Class httpsConnClass;
 
    static
    {
@@ -44,6 +46,24 @@ public class Util
       catch(Exception e)
       {
          log.warn("Failed to install SecurityAssociationAuthenticator", e);
+      }
+      // Determine the type of the HttpsURLConnection in this runtime
+      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      try
+      {
+         // First look for the JDK 1.4 JSSE Https connection
+         httpsConnClass = loader.loadClass("javax.net.ssl.HttpsURLConnection");
+      }
+      catch(Exception e)
+      {
+         // Next try the JSSE external dist Https connection
+         try
+         {
+            httpsConnClass = loader.loadClass("com.sun.net.ssl.HttpsURLConnection");
+         }
+         catch(Exception e2)
+         {
+         }
       }
    }
 
@@ -69,14 +89,13 @@ public class Util
        full usage of HTTP 1.1 features, pooling, etc.
        */
       HttpURLConnection conn = (HttpURLConnection) externalURL.openConnection();
-      if( conn instanceof com.sun.net.ssl.HttpsURLConnection )
+      boolean isAssignable = httpsConnClass.isAssignableFrom(conn.getClass());
+      if( isAssignable )
       {
          // See if the org.jboss.security.ignoreHttpsHost property is set
          if( Boolean.getBoolean("org.jboss.security.ignoreHttpsHost") == true )
          {
-            com.sun.net.ssl.HttpsURLConnection sconn = (com.sun.net.ssl.HttpsURLConnection) conn;
-            AnyhostVerifier verifier = new AnyhostVerifier();
-            sconn.setHostnameVerifier(verifier);
+            AnyhostVerifier.setHostnameVerifier(conn);
          }
       }
       conn.setDoInput(true);
