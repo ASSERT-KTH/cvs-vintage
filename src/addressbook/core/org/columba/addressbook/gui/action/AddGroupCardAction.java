@@ -76,7 +76,6 @@ public class AddGroupCardAction extends DefaultTreeAction {
 
             // TODO:move this code to dialog
             dialog.updateComponents(card, null, false);
-            dialog.setVisible(true);
 
             // add new group to folder
             folder.add(card);

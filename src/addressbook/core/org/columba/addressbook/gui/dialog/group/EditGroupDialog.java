@@ -104,6 +104,8 @@ public class EditGroupDialog extends JDialog implements ActionListener,
         pack();
 
         setLocationRelativeTo(null);
+        
+        setVisible(true);
     }
 
     private JPanel createGroupNamePanel() {
