@@ -172,7 +172,7 @@
     <P>If you want to make your pools more accessible, you can do that in two
       ways.  The first is to call setJNDIName to register the pool in JNDI.
       The second is to use the JDBC driver org.jboss.minerva.datasource.PoolDriver
-      and a URL of the form "jdbc:minervaxa:<I>PoolName</I>".  In this way, you
+      and a URL of the form "jdbc:minerva:<I>PoolName</I>".  In this way, you
       get pooled database connections in the same way you'd normally get
       connections - DriverManager.getConnection(url).  There's no need to supply
       a user, password, or any properties - all that is set by the pool itself.
@@ -400,12 +400,12 @@ Connection con = ds.getConnection();
     <H4><A NAME="ex8">Getting a JDBC S.E. Pool connection from the DriverManager</A></H4>
     <PRE>
 XAPoolDataSource = ...
-Connection con = DriverManager.getConnection("jdbc:minervaxa:PoolName");
+Connection con = DriverManager.getConnection("jdbc:minerva:PoolName");
     </PRE>
 
     <H4><A NAME="ex9">Configuring a JDBC S.E. Pool with jBoss and a JDBC S.E. Driver</A></H4>
     <P>This will result in the pool's DataSource living in JNDI under the name
-      <B>xa.PoolName</B>.</P>
+      <B>PoolName</B>.</P>
     <P>In <B>jboss.conf</B>:</P>
     <PRE>
 &lt;MLET CODE="org.jboss.jdbc.XADataSourceLoader" ARCHIVE="jboss.jar,vendor.jar" CODEBASE="../lib/ext/"&gt;
@@ -430,7 +430,7 @@ Connection con = DriverManager.getConnection("jdbc:minervaxa:PoolName");
 
     <H4><A NAME="ex10">Configuring a JDBC S.E. Pool with jBoss and a JDBC 1/2 Driver</A></H4>
     <P>This will result in the pool's DataSource living in JNDI under the name
-      <B>xa.PoolName</B>.</P>
+      <B>PoolName</B>.</P>
     <P>In <B>jboss.conf</B>:</P>
     <PRE>
 &lt;MLET CODE="org.jboss.jdbc.XADataSourceLoader" ARCHIVE="jboss.jar,vendor.jar" CODEBASE="../lib/ext/"&gt;
@@ -476,7 +476,7 @@ Connection con = DriverManager.getConnection("jdbc:minervaxa:PoolName");
     <P>The easiest way to do this is to use EJX.  You need to add a resource
       manager that links the EJB ref-name (<A HREF="#ex11">see example above</A>)
       to the database pool JNDI name (<A HREF="#ex9">see example above</A>).
-      Since the database pool JNDI name is <I>xa.PoolName</I> that should be
+      Since the database pool JNDI name is <I>PoolName</I> that should be
       your resource jndi name, and the name in ejb-jar.xml should be the
       resource name.</P>
     <P>If you don't use EJX, you will need to add the reference manually in two
@@ -491,7 +491,7 @@ Connection con = DriverManager.getConnection("jdbc:minervaxa:PoolName");
 &lt;resource-managers&gt;
     &lt;resource-manager res-class="org.jboss.ejb.deployment.JDBCResource"&gt;
         &lt;res-name&gt;TestDB&lt;/res-name&gt;
-        &lt;res-jndi-name&gt;xa.TestPool&lt;/res-jndi-name&gt;
+        &lt;res-jndi-name&gt;TestPool&lt;/res-jndi-name&gt;
     &lt;/resource-manager&gt;
 &lt;/resource-managers&gt;
 

@@ -26,12 +26,11 @@ import org.jboss.logging.Logger;
  * <CODE>Class.forName("org.minerva.datasource.PoolDriver");</CODE></P>
  * @see org.jboss.minerva.datasource.JDBCPoolDataSource
  * @see org.jboss.minerva.datasource.XAPoolDataSource
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class PoolDriver implements Driver {
     private final static String URL_START = "jdbc:minerva:";
-    private final static String XA_URL_START = "jdbc:minervaxa:";
     private final static PoolDriver instance;
     static {
         instance = new PoolDriver();
@@ -57,26 +56,28 @@ public class PoolDriver implements Driver {
      * Tells which URLs this driver can handle.
      */
     public boolean acceptsURL(String url) throws java.sql.SQLException {
-        return url.startsWith(URL_START) || url.startsWith(XA_URL_START);
+        return url.startsWith(URL_START);
     }
 
     /**
      * Retrieves a connection from a connection pool.
      */
     public Connection connect(String url, Properties props) throws java.sql.SQLException {
-        if(url.startsWith(URL_START))
-            return getJDBCConnection(url.substring(URL_START.length()));
-        else if(url.startsWith(XA_URL_START))
-            return getXAConnection(url.substring(XA_URL_START.length()));
-        else
-            return null;  // No SQL Exception here!
+        if(url.startsWith(URL_START)) {
+            Connection con = getXAConnection(url.substring(URL_START.length()));
+            if(con == null)
+                con = getJDBCConnection(url.substring(URL_START.length()));
+            return con;
+        }
+        return null;  // No SQL Exception here!
     }
 
     private Connection getJDBCConnection(String name) {
         Connection con = null;
         try {
             DataSource source = JDBCPoolDataSource.getDataSource(name);
-            con = source.getConnection();
+            if(source != null)
+                con = source.getConnection();
         } catch(Exception e) {
             Logger.exception(e);
         }
@@ -87,7 +88,8 @@ public class PoolDriver implements Driver {
         Connection con = null;
         try {
             DataSource source = XAPoolDataSource.getDataSource(name);
-            con = source.getConnection();
+            if(source != null)
+                con = source.getConnection();
         } catch(Exception e) {
             Logger.exception(e);
         }
