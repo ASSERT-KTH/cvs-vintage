@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.200 2004/07/24 16:58:50 mvw Exp $
+// $Id: ModelFacade.java,v 1.201 2004/07/25 11:04:21 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3915,10 +3915,13 @@ public class ModelFacade {
 
     /**
      * Returns the transitions belonging to the given handle. The handle can be
-     * a statemachine or a composite state. If it's a statemachine the
+     * a statemachine or a composite state or an event. 
+     * If it's a statemachine the
      * transitions will be given back belonging to that statemachine. If it's a
      * compositestate the internal transitions of that compositestate will be
-     * given back.
+     * given back. 
+     * If it's an event, all transitions triggered by this event 
+     * will be given back.
      *
      * @param handle is the model element
      * @return Collection
