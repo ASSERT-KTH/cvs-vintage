@@ -33,6 +33,7 @@
 <!ELEMENT old-value (#PCDATA)>
 <!ELEMENT new-value (#PCDATA)>
 <!ELEMENT activity-attribute (#PCDATA)>
+<!ELEMENT issue-attribute (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
 
 
