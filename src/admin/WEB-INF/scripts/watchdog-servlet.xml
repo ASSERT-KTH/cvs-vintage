@@ -16,10 +16,6 @@
 	<pathelement 
 		path="../lib/ant.jar" />
 	<pathelement 
-		path="${stests.home}/WEB-INF/lib/moo.jar" />
-	<pathelement 
-		path="${stests.home}/WEB-INF/lib/client.jar" />
-	<pathelement 
 		path="${stests.home}/WEB-INF/classes" />
 	<pathelement 
 		path="${tomcat.home}/lib/container/jaxp.jar" />
