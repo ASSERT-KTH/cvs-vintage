@@ -33,7 +33,7 @@ import org.jboss.invocation.Invocation;
  *
  *   @see <related>
  *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- *   @version $Revision: 1.15 $
+ *   @version $Revision: 1.16 $
  *   Revisions:
  *
  *   <p><b>Revisions:</b>
@@ -78,10 +78,12 @@ public class MarshalledInvocation
    static Map hashMap = new WeakHashMap();
 
    /**
-    * Calculate method hashes. This algo is taken from RMI.
+    * Calculate method hashes. This algo is taken from RMI with the full
+    * method string taken from the method.toString to include the declaring
+    * class.
     *
-    * @param   intf
-    * @return
+    * @param intf 
+    * @return Map<Method.toString(), Long> mapping of method string to its hash. 
     */
    public static Map getInterfaceHashes(Class intf)
    {
@@ -91,13 +93,7 @@ public class MarshalledInvocation
       for (int i = 0; i < methods.length; i++)
       {
          Method method = methods[i];
-         Class[] parameterTypes = method.getParameterTypes();
-         String methodDesc = method.getName() + "(";
-         for (int j = 0; j < parameterTypes.length; j++)
-         {
-            methodDesc += getTypeString(parameterTypes[j]);
-         }
-         methodDesc += ")" + getTypeString(method.getReturnType());
+         String methodDesc = method.toString();
 
          try
          {
@@ -110,7 +106,47 @@ public class MarshalledInvocation
             byte abyte0[] = messagedigest.digest();
             for (int j = 0; j < Math.min(8, abyte0.length); j++)
                hash += (long) (abyte0[j] & 0xff) << j * 8;
-            map.put(method.toString(), new Long(hash));
+            map.put(methodDesc, new Long(hash));
+         }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+         }
+      }
+
+      return map;
+   }
+
+   
+   /** Calculate method hashes. This algo is taken from RMI with the full
+    * method string taken from the method.toString to include the declaring
+    * class.
+    *
+    * @param c the class/interface to calculate method hashes for. 
+    * @return Map<Long, Method> mapping of method hash to the Method object. 
+    */
+   public static Map methodToHashesMap(Class c)
+   {
+      // Create method hashes
+      Method[] methods = c.getDeclaredMethods();
+      HashMap map = new HashMap();
+      for (int i = 0; i < methods.length; i++)
+      {
+         Method method = methods[i];
+         String methodDesc = method.toString();
+
+         try
+         {
+            long hash = 0;
+            ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(512);
+            MessageDigest messagedigest = MessageDigest.getInstance("SHA");
+            DataOutputStream dataoutputstream = new DataOutputStream(new DigestOutputStream(bytearrayoutputstream, messagedigest));
+            dataoutputstream.writeUTF(methodDesc);
+            dataoutputstream.flush();
+            byte abyte0[] = messagedigest.digest();
+            for (int j = 0; j < Math.min(8, abyte0.length); j++)
+               hash += (long) (abyte0[j] & 0xff) << j * 8;
+            map.put(new Long(hash), method);
          }
          catch (Exception e)
          {
