@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.149 2003/11/22 19:35:38 tdiesler Exp $ -->
+<!-- $Id: build.xml,v 1.150 2004/01/30 05:49:40 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -121,7 +121,6 @@
     <property name="build.bin" value="${module.output}/bin"/>
     <property name="build.docs" value="${module.output}/docs"/>
     <property name="build.parsers" value="${module.output}/parsers"/>
-    <property name="build.beans" value="${module.output}/beans"/>
     <property name="build.gen-src" value="${module.output}/gen-src"/>
     <property name="build.gen" value="${module.output}/gen"/>
     <property name="build.resources" value="${module.output}/resources"/>
@@ -210,7 +209,6 @@
     -->
   <target name="compile" 
 	  depends="generate-parsers,
-                   compile-bean-sources, 
                    compile-mbean-sources,
                    compile-classes, 
                    compile-rmi, 
@@ -252,7 +250,8 @@
 
   <!-- Compile mbeans with XDoclet -->
   <target name="compile-mbean-sources" depends="init">
-    <taskdef name="jmxdoclet" classname="xdoclet.modules.jmx.JMXDocletTask" classpathref="xdoclet.task.classpath"/>
+    <taskdef name="jmxdoclet" classname="xdoclet.modules.jmx.JMXDocletTask"
+      classpathref="xdoclet.task.classpath"/>
 
     <mkdir dir="${build.gen-src}"/>
     <jmxdoclet
@@ -282,29 +281,6 @@
     </jmxdoclet>
   </target>
 
-  <!-- Compile EJB beans with XDoclet -->
-  <target name="compile-bean-sources" depends="init">
-    <taskdef name="ejbdoclet" classname="xdoclet.modules.ejb.EjbDocletTask" classpathref="xdoclet.task.classpath"/>
-
-    <mkdir dir="${build.beans}/ejbadaptor"/>
-    <ejbdoclet
-	     destdir="${build.beans}/ejbadaptor"
-	     ejbspec="1.1"
-	     excludedtags="@version,@author">
-      <fileset dir="${source.java}">
-        <include name="org/jboss/jmx/adaptor/ejb/*Bean.java"/>
-        <exclude name="org/jboss/jmx/adaptor/ejb/*MBean.java"/>
-      </fileset>
-      <packageSubstitution packages="ejb" substituteWith="interfaces"/>
-      <remoteinterface/>
-      <homeinterface/>
-      <session/>
-      <deploymentdescriptor xmlencoding="UTF-8" destdir="${build.beans}/ejbadaptor/META-INF"/>
-      <jboss xmlencoding="UTF-8" version="3.0" destdir="${build.beans}/ejbadaptor/META-INF"/>
-    </ejbdoclet>
-
-  </target>
-
   <!-- Compile all class files -->
   <target name="compile-classes" depends="init">
     <mkdir dir="${build.classes}"/>
@@ -322,7 +298,6 @@
 
        <src path="${source.java}"/>
        <src path="${build.parsers}"/>
-       <src path="${build.beans}"/>
        <src path="${build.gen-src}"/>
 
        <include name="${javac.includes}"/>
@@ -510,13 +485,6 @@
         <include name="org/jboss/jmx/**"/>
       </fileset>
     </jar>
-    <!-- jmx-rmi-adaptor.sar --> 
-    <jar jarfile="${build.lib}/jmx-rmi-adaptor.sar"
-         manifest="${build.etc}/default.mf">
-      <fileset dir="${build.resources}/jmx-rmi-adapter">
-        <include name="**/*"/>
-      </fileset>
-    </jar>
 
     <!-- jmx-invoker-adaptor-client.jar --> 
     <jar jarfile="${build.lib}/jmx-invoker-adaptor-client.jar"
@@ -531,65 +499,6 @@
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.resources}/jmx-invoker-adaptor">
         <include name="**/*"/>
-      </fileset>
-    </jar>
-
-    <!-- jmx-ejb-connector-client.jar -->
-    <jar jarfile="${build.lib}/jmx-ejb-connector-client.jar"
-         manifest="${build.etc}/default.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/ObjectHandler**"/>
-        <include name="org/jboss/jmx/connector/notification/**"/>
-        <include name="org/jboss/jmx/connector/ejb/**"/>
-        <include name="org/jboss/jmx/adaptor/ejb/*Exception.class"/>
-        <include name="org/jboss/jmx/adaptor/ejb/AdaptorSession.class"/>
-        <include name="org/jboss/jmx/adaptor/interfaces/**"/>
-      </fileset>
-    </jar>
-
-    <!-- jmx-ejb-connector-server.sar --> 
-    <jar jarfile="${build.lib}/jmx-ejb-connector-server.sar"
-         manifest="${build.etc}/default.mf">
-      <fileset dir="${build.resources}/jmx-ejb-connector-server">
-        <include name="**/*"/>
-      </fileset>
-    </jar>
-
-    <!-- jmx-rmi-adaptor.jar -->
-    <jar jarfile="${build.lib}/jmx-rmi-adaptor.jar"
-         manifest="${build.etc}/manifest/rmi-adaptor.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/adaptor/rmi/**"/>
-        <include name="org/jboss/jmx/connector/RemoteMBeanServer**"/>
-        <include name="org/jboss/jmx/connector/notification/**"/>
-        <include name="org/jboss/jmx/connector/rmi/**"/>
-        <include name="org/jboss/system/Service**"/>
-        <include name="org/jboss/naming/**"/>
-
-        <!-- why ? AS Because it allows the user to test the JAR file by "java -jar" -->
-        <include name="org/jboss/jmx/connector/rmi/TestServer**"/>
-      </fileset>
-    </jar>
-
-    <!-- jmx-rmi-connector-client.jar -->
-    <jar jarfile="${build.lib}/jmx-rmi-connector-client.jar"
-         manifest="${build.etc}/default.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/adaptor/rmi/*Stub.class"/>
-        <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptor*.class"/>
-        <include name="org/jboss/jmx/adaptor/rmi/RMINotificationListener.class"/>
-        <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
-        <include name="org/jboss/jmx/connector/notification/*"/>
-        <include name="org/jboss/jmx/connector/rmi/**"/>
-      </fileset>
-    </jar>
-
-    <!-- jmx-connector-client-factory.jar -->
-    <jar jarfile="${build.lib}/jmx-connector-client-factory.jar"
-         manifest="${build.etc}/manifest/connector-client-factory.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/connector/ConnectorFactory*.class"/>
-        <include name="org/jboss/jmx/connector/TestClient*.class"/>
       </fileset>
     </jar>
 
