@@ -82,7 +82,7 @@ import org.gjt.sp.util.Log;
  * @see VFSManager#getVFSForProtocol(String)
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.33 2003/04/29 03:31:43 spestov Exp $
+ * @author $Id: VFS.java,v 1.34 2003/04/30 05:28:55 spestov Exp $
  */
 public abstract class VFS
 {
@@ -272,9 +272,11 @@ public abstract class VFS
 		if(path.equals("/"))
 			return path;
 
-		int count = Math.max(0,path.length() - 2);
-		int index = Math.max(path.lastIndexOf('/',count),
-			path.lastIndexOf(File.separatorChar,count));
+		if(path.endsWith("/") || path.endsWith(File.separator))
+			path = path.substring(0,path.length() - 1);
+
+		int index = Math.max(path.lastIndexOf('/'),
+			path.lastIndexOf(File.separatorChar));
 		if(index == -1)
 			index = path.indexOf(':');
 

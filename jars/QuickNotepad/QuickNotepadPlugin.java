@@ -18,16 +18,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: QuickNotepadPlugin.java,v 1.6 2002/04/11 09:42:14 spestov Exp $
+ * $Id: QuickNotepadPlugin.java,v 1.7 2003/04/30 05:28:54 spestov Exp $
  */
 
-import java.util.Vector;
-import java.awt.*;
-import java.awt.event.*;
-import org.gjt.sp.jedit.*;
-import org.gjt.sp.util.Log;
-import org.gjt.sp.jedit.gui.*;
-
+import org.gjt.sp.jedit.EditPlugin;
 
 /**
  * The QuickNotepad plugin
@@ -37,21 +31,5 @@ import org.gjt.sp.jedit.gui.*;
 public class QuickNotepadPlugin extends EditPlugin
 {
 	public static final String NAME = "quicknotepad";
-	public static final String MENU = "quicknotepad.menu";
-	public static final String PROPERTY_PREFIX = "plugin.QuickNotepadPlugin.";
 	public static final String OPTION_PREFIX = "options.quicknotepad.";
-
-
-	public void createMenuItems(Vector menuItems)
-	{
-		menuItems.addElement(GUIUtilities.loadMenu(MENU));
-	}
-
-
-	public void createOptionPanes(OptionsDialog od)
-	{
-		od.addOptionPane(new QuickNotepadOptionPane());
-	}
-
 }
-

@@ -67,7 +67,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.48 2003/04/26 20:05:12 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.49 2003/04/30 05:28:54 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -140,7 +140,7 @@ public class MiscUtilities
 	{
 		if(isURL(path))
 			return true;
-		else if(path.startsWith("~/") || path.startsWith("~" + File.separator))
+		else if(path.startsWith("~/") || path.startsWith("~" + File.separator) || path.equals("~"))
 			return true;
 		else if(OperatingSystem.isDOSDerived())
 		{

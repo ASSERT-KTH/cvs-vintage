@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.9 2003/04/29 01:05:43 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.10 2003/04/30 05:28:54 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -290,11 +290,26 @@ public class VFSDirectoryEntryTable extends JTable
 			if(evt.isShiftDown() && evt.getKeyChar() == '\n')
 				return;
 
+			VFSBrowser browser = browserView.getBrowser();
+
 			switch(evt.getKeyChar())
 			{
 			case '~':
+				if(browser.getMode() == VFSBrowser.BROWSER)
+					browser.setDirectory(System.getProperty(
+						"user.home"));
+				break;
 			case '/':
+				if(browser.getMode() == VFSBrowser.BROWSER)
+					browser.rootDirectory();
+				break;
 			case '-':
+				if(browser.getMode() == VFSBrowser.BROWSER)
+				{
+					browser.setDirectory(
+						browser.getView().getBuffer()
+						.getDirectory());
+				}
 				break;
 			default:
 				typeSelectBuffer.append(evt.getKeyChar());
