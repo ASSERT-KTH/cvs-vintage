@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Juha Lindfors (jplindfo@helsinki.fi)
  *
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public interface ContainerFactoryMBean
 	extends org.jboss.util.ServiceMBean
@@ -119,5 +119,19 @@ public interface ContainerFactoryMBean
     * Set the JMS monitoring of the bean cache.
     */
    public void setBeanCacheJMSMonitoringEnabled(boolean enable);
-}
 
+   /** Get the flag indicating that ejb-jar.dtd, jboss.dtd &
+    jboss-web.dtd conforming documents should be validated
+    against the DTD.
+    */
+   public boolean getValidateDTDs();
+   /** Set the flag indicating that ejb-jar.dtd, jboss.dtd &
+    jboss-web.dtd conforming documents should be validated
+    against the DTD.
+    */
+   public void setValidateDTDs(boolean validate);
+}
+/* Change log.
+ * Author: starksm, Date: Thu Jun 14 17:14:14  2001 GMT
+ Added getValidateDTDs/setValidateDTDs methods.
+ */

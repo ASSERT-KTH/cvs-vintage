@@ -82,7 +82,7 @@ import org.jboss.web.WebServiceMBean;
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Scott Stark(Scott.Stark@jboss.org)
 *
-*   @version $Revision: 1.75 $
+*   @version $Revision: 1.76 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -117,6 +117,8 @@ public class ContainerFactory
   boolean metricsEnabled = false;
   /* Enable JMS monitoring of the bean cache */
   private boolean m_beanCacheJMSMonitoring;
+  // A flag indicating if deployment descriptors should be validated
+  private boolean validateDTDs;
 
   // Public --------------------------------------------------------
 
@@ -257,6 +259,23 @@ public class ContainerFactory
     m_beanCacheJMSMonitoring = enable;
     }
 
+   /** Get the flag indicating that ejb-jar.dtd, jboss.dtd &
+    jboss-web.dtd conforming documents should be validated
+    against the DTD.
+    */
+   public boolean getValidateDTDs()
+   {
+       return validateDTDs;
+   }
+   /** Set the flag indicating that ejb-jar.dtd, jboss.dtd &
+    jboss-web.dtd conforming documents should be validated
+    against the DTD.
+    */
+   public void setValidateDTDs(boolean validate)
+   {
+       this.validateDTDs = validate;
+   }
+
   /**
   *   Deploy the file at this URL. This method is typically called from remote administration
   *   tools that cannot handle java.net.URL's as parameters to methods
@@ -388,7 +407,7 @@ public class ContainerFactory
     throws NamingException, Exception
     {
       // Create a file loader with which to load the files
-      XmlFileLoader efm = new XmlFileLoader();
+      XmlFileLoader efm = new XmlFileLoader(validateDTDs);
 
       // the file manager gets its file from the classloader
       // create a classloader that to access the metadata
@@ -931,3 +950,9 @@ public class ContainerFactory
     return ic;
     }
   }
+
+/* Change log:
+
+* Thu Jun 14 23:28:58  2001 UTC, starksm
+ Added support for validation of the j2ee related deployment descriptors.
+ */
