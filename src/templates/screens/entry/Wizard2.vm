@@ -1,6 +1,6 @@
 <div id="wizard2" class="app">
 $page.setTitle("Identified as duplicate")
-#set ( $action = $link.setPage("entry,Wizard2.vm").setAction("ReportIssue").addPathInfo($data.Parameters).addPathInfo("nextTemplate", "entry,Wizard3.vm") )
+#set ( $action = $link.setPage("entry,Wizard2.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm") )
 #set ($module = $scarabR.CurrentModule)
 #set ($currentIssue = $data.User.ReportingIssue)
 
@@ -58,13 +58,6 @@ $page.setTitle("Identified as duplicate")
 			alt="sort" border="0" /></a></th>
 
 <th><a href="#">issue ID #:</a></th>
-
-#foreach ( $attVal in $currentIssue.OrderedModuleAttributeValues )
-#if ($attVal.isDedupeAttribute())
-
-
-#end
-#end
 
 
 #set( $attrValues = $currentIssue.ModuleAttributeValuesMap )

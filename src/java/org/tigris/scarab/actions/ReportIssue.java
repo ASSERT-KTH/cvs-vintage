@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.51 2001/10/05 16:35:31 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.52 2001/10/05 21:11:50 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -165,9 +165,11 @@ public class ReportIssue extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
+        Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
 
-        List matchingIssues = searchIssues(scarabR.getCurrentModule(), 
-                                           intake, 25);                  
+        // search on the option attributes and keywords
+        IssueSearch search = new IssueSearch(issue);                
+        List matchingIssues = search.getMatchingIssues(25);
                 
         // set the template to dedupe unless none exist, then skip
         // to final entry screen
@@ -189,30 +191,6 @@ public class ReportIssue extends RequireLoginFirstAction
 
         setTarget(data, template);
         return beatThreshold;
-    }
-
-    private List searchIssues( ModuleEntity module, 
-                               IntakeTool intake, int maxResults)
-        throws Exception
-    { 
-        // search on the option attributes and keywords
-        IssueSearch search = new IssueSearch();        
-        search.setModuleCast(module);
-
-        SequencedHashtable avMap = search.getModuleAttributeValuesMap(); 
-        Iterator i = avMap.iterator();
-        while (i.hasNext()) 
-        {
-            AttributeValue aval = (AttributeValue)avMap.get(i.next());
-            Group group = 
-                intake.get("AttributeValue", aval.getQueryKey(), false);
-            if ( group != null ) 
-            {
-                group.setProperties(aval);
-            }
-        }
-        
-        return search.getMatchingIssues(maxResults);
     }
 
     /**
@@ -334,7 +312,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 // need to not hardcode summary here. !FIXME!
                 String summary = 
                     ((AttributeValue)avMap.get("SUMMARY")).getValue();
-                summary = summary == null ? "" : " - " + summary;
+                summary = (summary == null) ? "" : " - " + summary;
                 StringBuffer subj = new StringBuffer("[");
                 subj.append(issue.getScarabModule().getRealName().toUpperCase());
                 subj.append("] Issue #").append(issue.getUniqueId());

@@ -142,6 +142,24 @@ public class IssueSearch
         DATE_FORMATTER = new SimpleDateFormat("MM/dd/yy");
     }
 
+    public IssueSearch(Issue issue)
+        throws Exception
+    {
+        setTypeId(issue.getTypeId());
+        setModuleId(issue.getModuleId());
+
+        List avs = issue.getAttributeValues();
+        List newAvs = getAttributeValues();
+        for (int i=0; i<avs.size(); i++)
+        {
+            newAvs.add(avs.get(i));
+        }
+    }
+
+    public IssueSearch()
+    {
+    }
+
     /**
      * Get the value of searchWords.
      * @return value of searchWords.
