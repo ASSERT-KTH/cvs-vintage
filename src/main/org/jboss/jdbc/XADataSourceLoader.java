@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XADataSourceLoader extends ServiceMBeanSupport
@@ -37,7 +37,10 @@ public class XADataSourceLoader extends ServiceMBeanSupport
     private XAPoolDataSource source;
     private String url;
 
+/*
+// RO: This seems like a dangerous constructor, since the instance would be inconsistently init.-ed    
     public XADataSourceLoader() {}
+*/
 
     public XADataSourceLoader(String poolName, String xaDataSourceClass) {
         source = new XAPoolDataSource();
@@ -237,14 +240,15 @@ public class XADataSourceLoader extends ServiceMBeanSupport
     }
 
     public ObjectName getObjectName(MBeanServer parm1, ObjectName parm2) throws javax.management.MalformedObjectNameException {
-        return new ObjectName(OBJECT_NAME+",name="+source.getPoolName());
+        return (parm2 == null) ? new ObjectName(OBJECT_NAME+",name="+source.getPoolName()) : parm2;
     }
 
     public String getName() {
-        return "XADataSource";
+        return source.getPoolName();
     }
 
     public void startService() throws Exception {
+    
         initializePool();
     }
 
@@ -252,7 +256,7 @@ public class XADataSourceLoader extends ServiceMBeanSupport
         // Unbind from JNDI
         try {
             String name = source.getPoolName();
-            new InitialContext().unbind(name);
+            new InitialContext().unbind("java:/"+name);
             log.log("XA Connection pool "+name+" removed from JNDI");
             source.close();
             log.log("XA Connection pool "+name+" shut down");
@@ -266,19 +270,19 @@ public class XADataSourceLoader extends ServiceMBeanSupport
     private void initializePool() throws NamingException, SQLException {
         Context ctx = null;
         Object mgr = null;
-        source.setTransactionManagerJNDIName("TransactionManager");
+        source.setTransactionManagerJNDIName("java:/TransactionManager");
         try {
             ctx = new InitialContext();
-            mgr = ctx.lookup("TransactionManager");
+            mgr = ctx.lookup("java:/TransactionManager");
         } catch(NamingException e) {
             throw new IllegalStateException("Cannot start XA Connection Pool; there is no TransactionManager in JNDI!");
         }
         source.initialize();
 
         // Bind in JNDI
-        bind(new InitialContext(), source.getPoolName(), source);
+        bind(new InitialContext(), "java:/"+source.getPoolName(), source);
 
-        log.log("XA Connection pool "+source.getPoolName()+" bound to "+source.getPoolName());
+        log.log("XA Connection pool "+source.getPoolName()+" bound to java:/"+source.getPoolName());
 
         // Test database
         source.getConnection().close();
