@@ -46,6 +46,7 @@ import org.jboss.system.ServiceControllerMBean;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.mx.util.MBeanProxyExt;
 import org.jboss.mx.util.ObjectNameFactory;
+import org.jboss.util.loading.DelegatingClassLoader;
 import org.jboss.web.WebClassLoader;
 import org.jboss.web.WebServiceMBean;
 
@@ -61,12 +62,12 @@ import org.w3c.dom.Element;
  * @see Container
  * @see EJBDeployer
  *
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Ã–berg</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -632,7 +633,7 @@ public class EjbModule
       container.setWebClassLoader(wcl);
       // Create classloader for this container
       // Only used to unique the bean ENC and does not augment class loading
-      container.setClassLoader(new URLClassLoader(new URL[0], wcl));
+      container.setClassLoader(new DelegatingClassLoader(wcl));
 
       // Set transaction manager
       InitialContext iniCtx = new InitialContext();
