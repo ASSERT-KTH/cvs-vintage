@@ -81,7 +81,7 @@ import javax.servlet.http.*;
 /* Deprecated - must be rewriten to the connector model.
  */
 public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
-    StringManager sm = StringManager.getManager("org.apache.tomcat.service");
+    static StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
 
     ContextManager contextM;
 
@@ -173,7 +173,7 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 }
 
 class AJP12RequestAdapter extends RequestImpl {
-    StringManager sm = StringManager.getManager("org.apache.tomcat.service");
+    static StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
     Socket socket;
     InputStream sin;
     BufferedInputStream ajpin;

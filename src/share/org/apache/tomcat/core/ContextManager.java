@@ -118,12 +118,6 @@ import org.apache.tomcat.service.PoolTcpConnector;
  * @author Hans Bergsten [hans@gefionsoftware.com]
  */
 public class ContextManager implements LogAware {
-
-    /**
-     * The string constants for this ContextManager.
-     */
-    private StringManager sm = StringManager.getManager("org.apache.tomcat.core");
-
     /** Global interceptors - all requests that will be served by this
 	engine will pass those filters
     */

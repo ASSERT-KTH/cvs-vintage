@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.11 2000/06/18 20:14:13 jon Exp $
- * $Revision: 1.11 $
- * $Date: 2000/06/18 20:14:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.12 2000/08/11 21:20:41 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/08/11 21:20:41 $
  *
  * ====================================================================
  *
@@ -102,7 +102,7 @@ import org.apache.tomcat.core.Request;
  * @author Craig R. McClanahan
  * @author costin@eng.sun.com
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.11 $ $Date: 2000/06/18 20:14:13 $
+ * @version $Revision: 1.12 $ $Date: 2000/08/11 21:20:41 $
  */
 public final class StandardManager implements Runnable  {
     // ----------------------------------------------------- Instance Variables
@@ -144,7 +144,7 @@ public final class StandardManager implements Runnable  {
      * The string manager for this package.
      */
     private static StringManager sm =
-        StringManager.getManager("org.apache.tomcat.session");
+        StringManager.getManager("org.apache.tomcat.resources");
 
     /**
      * The background thread.

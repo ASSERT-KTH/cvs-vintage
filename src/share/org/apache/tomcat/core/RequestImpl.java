@@ -158,10 +158,6 @@ public class RequestImpl  implements Request {
     Request parent;
     Request child;
 
-    // ResourceBundle
-    protected static StringManager sm =
-        StringManager.getManager("org.apache.tomcat.core");
-
     // @deprecated
     protected String method;
     protected String requestURI;

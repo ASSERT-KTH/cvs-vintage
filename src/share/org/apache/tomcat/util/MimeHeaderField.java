@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.11 2000/08/11 06:14:19 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/08/11 06:14:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.12 2000/08/11 21:20:55 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/08/11 21:20:55 $
  *
  * ====================================================================
  *
@@ -85,7 +85,7 @@ public class MimeHeaderField {
     };
 
     private StringManager sm =
-        StringManager.getManager("org.apache.tomcat.util");
+        StringManager.getManager("org.apache.tomcat.resources");
 
     /**
      * The header field name.

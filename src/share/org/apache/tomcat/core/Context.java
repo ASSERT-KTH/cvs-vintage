@@ -99,8 +99,6 @@ import javax.servlet.*;
  * @author Gal Shachor shachor@il.ibm.com
  */
 public class Context implements LogAware {
-    private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
-
     // -------------------- internal properties
     // context "id"
     private String path = "";

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpoint.java,v 1.4 2000/07/11 03:48:54 alex Exp $
- * $Revision: 1.4 $
- * $Date: 2000/07/11 03:48:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpoint.java,v 1.5 2000/08/11 21:20:25 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/08/11 21:20:25 $
  *
  * ====================================================================
  *
@@ -80,7 +80,7 @@ import org.apache.tomcat.service.connector.*;
  */
 public class JNIEndpoint {
 
-    private StringManager sm =StringManager.getManager("org.apache.tomcat.service");
+    private StringManager sm =StringManager.getManager("org.apache.tomcat.resources");
 
     JNIConnectionHandler handler;
 

@@ -385,8 +385,7 @@ class RedirectHandler extends Handler {
 	    // Throws an exception if the location is relative
             url = new URL(location);
 	} catch (MalformedURLException e) {
-	    String requrl = HttpUtils.getRequestURL(req.getFacade()).
-		toString();
+	    String requrl = getRequestURL(req);
 	    try {
 	        url = new URL(new URL(requrl), location);
 	    }
@@ -396,5 +395,23 @@ class RedirectHandler extends Handler {
 	    }
 	}
         return url.toString();
+    }
+
+    static String getRequestURL( Request req )  {
+ 	StringBuffer url = new StringBuffer ();
+	String scheme = req.getScheme ();
+	int port = req.getServerPort ();
+	String urlPath = req.getRequestURI();
+	
+	url.append (scheme);		// http, https
+	url.append ("://");
+	url.append (req.getServerName ());
+	if ((scheme.equals ("http") && port != 80)
+		|| (scheme.equals ("https") && port != 443)) {
+	    url.append (':');
+	    url.append (req.getServerPort ());
+	}
+	url.append(urlPath);
+	return url.toString();
     }
 }

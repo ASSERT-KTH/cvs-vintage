@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.23 2000/08/11 16:24:26 costin Exp $
- * $Revision: 1.23 $
- * $Date: 2000/08/11 16:24:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.24 2000/08/11 21:20:36 costin Exp $
+ * $Revision: 1.24 $
+ * $Date: 2000/08/11 21:20:36 $
  *
  * ====================================================================
  *
@@ -74,6 +74,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 public class HttpRequestAdapter extends RequestImpl {
+    static StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
     private Socket socket;
     private boolean moreRequests = false;
     RecycleBufferedInputStream sin;

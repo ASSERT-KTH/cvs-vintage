@@ -128,7 +128,7 @@ public interface Response {
      */
 //     public ServletOutputStream getOutputStream() throws IOException;
 
-    public void setServletOutputStream(ServletOutputStream s );
+    //    public void setServletOutputStream(ServletOutputStream s );
 //     public void setWriter( PrintWriter w );
     
     public void doWrite( byte buffer[], int pos, int count) throws IOException;

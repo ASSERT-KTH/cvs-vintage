@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.12 2000/08/11 06:14:09 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/08/11 06:14:09 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.13 2000/08/11 21:20:09 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/08/11 21:20:09 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ import javax.servlet.http.*;
 final class HttpServletResponseFacade  implements HttpServletResponse
 {
     // Use the strings from core
-    private static StringManager sm =  StringManager.getManager("org.apache.tomcat.core");
+    private static StringManager sm =  StringManager.getManager("org.apache.tomcat.resources");
 
     private Response response;
     private boolean usingStream = false;

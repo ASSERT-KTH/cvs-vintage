@@ -169,11 +169,6 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	request.getSession(true);
 
 	cm.service( request, response );
-// 	    RequestDispatcher rd = context.getFacade().getRequestDispatcher(requestURI);
-	
-// 	    rd.forward(request.getFacade(), response.getFacade());
-// 	} catch (IOException ioe) {
-// 	}
     }
     // -------------------- 
     // Old logic from Context - probably something cleaner can replace it.

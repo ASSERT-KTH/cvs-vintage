@@ -187,7 +187,6 @@ public class Tomcat extends Logger.Helper {
 
     public void execute(String args[] ) throws Exception {
 	if( ! processArgs( args ) ) {
-	    // System.out.println(sm.getString("tomcat.wrongargs"));	    
 	    printUsage();
 	    return;
 	}

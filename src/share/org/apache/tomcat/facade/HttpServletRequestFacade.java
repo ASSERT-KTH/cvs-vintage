@@ -83,7 +83,7 @@ import org.apache.tomcat.core.Constants;
  */
 final class HttpServletRequestFacade implements HttpServletRequest {
     // Use the strings from core
-    private static StringManager sm = StringManager.getManager("org.apache.tomcat.core");
+    private static StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
 
     private Request request;
 

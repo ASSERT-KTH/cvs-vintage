@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.12 2000/08/10 20:44:49 glenn Exp $
- * $Revision: 1.12 $
- * $Date: 2000/08/10 20:44:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.13 2000/08/11 21:20:27 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/08/11 21:20:27 $
  *
  * ====================================================================
  *
@@ -95,7 +95,7 @@ import java.util.*;
  */
 public class PoolTcpEndpoint extends Logger.Helper  { // implements Endpoint {
 
-    private StringManager sm = StringManager.getManager("org.apache.tomcat.service");
+    private StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
 
     private static final int BACKLOG = 100;
     private static final int TIMEOUT = 1000;

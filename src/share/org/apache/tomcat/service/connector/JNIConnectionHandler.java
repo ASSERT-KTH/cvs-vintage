@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.12 2000/08/11 06:14:13 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/08/11 06:14:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.13 2000/08/11 21:20:33 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/08/11 21:20:33 $
  *
  * ====================================================================
  *
@@ -203,7 +203,7 @@ public class JNIConnectionHandler {
 }
 
 class JNIRequestAdapter extends RequestImpl {
-    StringManager sm = StringManager.getManager("org.apache.tomcat.service");
+    static StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
     ContextManager contextM;
     boolean shutdown=false;
 

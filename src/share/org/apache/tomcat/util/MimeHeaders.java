@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.9 2000/06/23 02:16:30 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/06/23 02:16:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.10 2000/08/11 21:20:55 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/08/11 21:20:55 $
  *
  * ====================================================================
  *
@@ -209,8 +209,8 @@ public class MimeHeaders {
     // Please avoid using any of the methods following this line. 
     // ( most of them will generate GC, or are http sepecific )
     // ------------------------------------------------------------
-    private StringManager sm =
-        StringManager.getManager("org.apache.tomcat.util");
+    private static StringManager sm =
+        StringManager.getManager("org.apache.tomcat.resources");
     int bufSize=512; // default
     /**
      * A buffer used when parsing headers.
@@ -489,8 +489,8 @@ public class MimeHeaders {
 }
 
 class MimeHeadersEnumerator implements Enumeration {
-    private StringManager sm =
-        StringManager.getManager("org.apache.tomcat.util");
+    private static StringManager sm =
+        StringManager.getManager("org.apache.tomcat.resources");
     private Hashtable hash;
     private Enumeration delegate;
 
