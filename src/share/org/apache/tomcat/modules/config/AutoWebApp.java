@@ -182,13 +182,10 @@ public class AutoWebApp extends BaseInterceptor {
 	    loaded.put( ctx.getPath(), ctx );
 	}
 	
-	String home=cm.getHome();
-	File webappD;
-	
-	if( appsD.startsWith( "/" ) ) 
-	    webappD=new File(appsD);
-	else
-	    webappD=new File(home + "/" + appsD);
+        File webappD=new File(appsD);
+        if( !webappD.isAbsolute() ) {
+            webappD=new File( cm.getHome(), appsD);
+        }
 	
 	if (! webappD.exists() || ! webappD.isDirectory()) {
 	    log("No autoconf directory " + webappD );
