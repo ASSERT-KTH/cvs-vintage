@@ -81,6 +81,7 @@
 
   <property name="jaxp.home" location="bin" />
 
+  <property name="tomcat-jk.home" location="${jakarta-tomcat-connectors}/jk" />
   <property name="jtc.util.home" location="${jakarta-tomcat-connectors}/util"/>
   <property name="jtc.util.build" location="${jtc.util.home}/build"/>
   <property name="tomcat-util.jar"
@@ -844,6 +845,13 @@
     <copy todir="${tomcat.build}/webapps/ROOT/doc">
       <fileset dir="src/doc"/>
     </copy>
+    <mkdir dir="${tomcat.build}/webapps/ROOT/doc/jk2" />
+    <mkdir dir="${tomcat.build}/webapps/ROOT/doc/jk2/printer" />    
+    <ant dir="${tomcat-jk.home}" target="docs"/>
+    <copy todir="${tomcat.build}/webapps/ROOT/doc/jk2">
+      <fileset dir="${tomcat-jk.home}/build/docs"/>
+    </copy>
+
 
       <!-- admin context -->
     <mkdir dir="${tomcat.build}/webapps/admin"/>
