@@ -80,7 +80,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.12 $
+ *	@version $Revision: 1.13 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -535,7 +535,7 @@ public class JAWSPersistenceManager
 		}
 	}
    
-   	public Object findByPrimaryKey(EntityEnterpriseContext ctx) throws Exception {
+   	public Object findByPrimaryKey(EntityEnterpriseContext ctx) throws FinderException {
 	   
         //Tracer.trace("PrimaryKey is "+beanWrapper.getPrimaryKey().getDataBasePrimaryKey());
 
