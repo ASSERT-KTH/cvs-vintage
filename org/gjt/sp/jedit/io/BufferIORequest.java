@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.20 2002/03/10 05:55:06 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.21 2002/04/01 23:45:24 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -370,7 +370,7 @@ public class BufferIORequest extends WorkRequest
 		SegmentBuffer seg = new SegmentBuffer((int)length + 1);
 
 		InputStreamReader in = new InputStreamReader(_in,
-			(String)buffer.getProperty(Buffer.ENCODING));
+			buffer.getStringProperty(Buffer.ENCODING));
 		char[] buf = new char[IOBUFSIZE];
 
 		// Number of characters in 'buf' array.
@@ -755,10 +755,10 @@ public class BufferIORequest extends WorkRequest
 	{
 		BufferedWriter out = new BufferedWriter(
 			new OutputStreamWriter(_out,
-				(String)buffer.getProperty(Buffer.ENCODING)),
+				buffer.getStringProperty(Buffer.ENCODING)),
 				IOBUFSIZE);
 		Segment lineSegment = new Segment();
-		String newline = (String)buffer.getProperty(Buffer.LINESEP);
+		String newline = buffer.getStringProperty(Buffer.LINESEP);
 		if(newline == null)
 			newline = System.getProperty("line.separator");
 

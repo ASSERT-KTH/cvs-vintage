@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.59 2002/03/27 00:37:52 spestov Exp $
+ * @version $Id: jEdit.java,v 1.60 2002/04/01 23:45:24 spestov Exp $
  */
 public class jEdit
 {
@@ -1642,7 +1642,7 @@ public class jEdit
 
 			BufferHistory.setEntry(buffer.getPath(),caret,
 				(Selection[])buffer.getProperty(Buffer.SELECTION),
-				(String)buffer.getProperty(Buffer.ENCODING));
+				buffer.getStringProperty(Buffer.ENCODING));
 		}
 
 		removeBufferFromList(buffer);
@@ -1716,7 +1716,7 @@ public class jEdit
 				int caret = (_caret == null ? 0 : _caret.intValue());
 				BufferHistory.setEntry(buffer.getPath(),caret,
 					(Selection[])buffer.getProperty(Buffer.SELECTION),
-					(String)buffer.getProperty(Buffer.ENCODING));
+					buffer.getStringProperty(Buffer.ENCODING));
 			}
 
 			buffer.close();
