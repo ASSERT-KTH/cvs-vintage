@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.16 2000/05/30 06:16:51 costin Exp $
- * $Revision: 1.16 $
- * $Date: 2000/05/30 06:16:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.17 2000/07/11 03:48:58 alex Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/07/11 03:48:58 $
  *
  * ====================================================================
  *
@@ -66,6 +66,7 @@ package org.apache.tomcat.service.http;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -82,6 +83,7 @@ public class HttpRequestAdapter extends RequestImpl {
     int count=0;
     public static final String DEFAULT_CHARACTER_ENCODING = "8859_1";
     
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
     
     public HttpRequestAdapter() {
         super();
@@ -225,7 +227,7 @@ public class HttpRequestAdapter extends RequestImpl {
 
 	while ((c = b[off++]) != ':' && c != ' ') {
 	    if (c == '\n') {
-		System.out.println("Parse error, empty line: " + new String( b, off, len ));
+		loghelper.log("Parse error, empty line: " + new String( b, off, len ), Logger.ERROR);
 		return false;
 	    }
 	}
@@ -237,8 +239,8 @@ public class HttpRequestAdapter extends RequestImpl {
 	}
 
 	if (c != ':') {
-	    System.out.println("Parse error, missing : in  " + new String( b, off, len ));
-	    System.out.println("Full  " + new String( b, 0, b.length ));
+	    loghelper.log("Parse error, missing : in  " + new String( b, off, len ), Logger.ERROR);
+	    loghelper.log("Full  " + new String( b, 0, b.length ), Logger.ERROR);
 	    return false;
 	}
 
@@ -371,7 +373,7 @@ public class HttpRequestAdapter extends RequestImpl {
 	    queryString = new String( buf, qryIdx+1, endReq - qryIdx -1 );
 	}
 
-	//	System.out.println("XXX " + method + " " + requestURI + " " + queryString + " " + protocol );
+	//	loghelper.log("XXX " + method + " " + requestURI + " " + queryString + " " + protocol );
 
     }
 

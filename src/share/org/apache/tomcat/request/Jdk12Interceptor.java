@@ -110,7 +110,7 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
     public int preService(Request request, Response response) {
 	if( request.getContext() == null ) return 0;
 	fixJDKContextClassLoader(request.getContext());
-	//	System.out.println("Setting class loader for service()");
+	//	log("Setting class loader for service()");
 	return 0;
     }
 
@@ -127,7 +127,7 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
     final private void fixJDKContextClassLoader( Context ctx ) {
 	final ClassLoader cl=ctx.getServletLoader().getClassLoader();
 	if( cl==null ) {
-	    System.out.println("ERROR: Jdk12Interceptor: classloader==null");
+	    log("ERROR: Jdk12Interceptor: classloader==null");
 	    return;
 	}
 	// this may be called from include(), in which case we
@@ -144,9 +144,9 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
 // 	try {
 // 	    Thread t=Thread.currentThread();
 // 	    t.setContextClassLoader( cl );
-// 	    //	    System.out.println("Jdk12Interceptor: Setting CL " + cl );
+// 	    //	    log("Jdk12Interceptor: Setting CL " + cl );
 // 	} catch( Throwable t ) {
-// 	    t.printStackTrace();
+// 	    t.print Stack Trace();
 // 	}
     }
     

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.9 2000/06/12 09:45:22 shachor Exp $
- * $Revision: 1.9 $
- * $Date: 2000/06/12 09:45:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.10 2000/07/11 03:48:56 alex Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/07/11 03:48:56 $
  *
  * ====================================================================
  *
@@ -74,6 +74,10 @@ public class JNIConnectionHandler {
 
     ContextManager contextM;
 
+    // Note: I don't really understand JNI and its use of output
+    // streams, but this should really be changed to use
+    // tomcat.logging.Logger and not merely System.out  -Alex
+    
     public JNIConnectionHandler() {
     }
 

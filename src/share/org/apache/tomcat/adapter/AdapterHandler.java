@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/adapter/Attic/AdapterHandler.java,v 1.2 2000/06/23 02:16:13 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/06/23 02:16:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/adapter/Attic/AdapterHandler.java,v 1.3 2000/07/11 03:48:39 alex Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/07/11 03:48:39 $
  *
  * ====================================================================
  *
@@ -68,6 +68,7 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 
 public class AdapterHandler  implements  TcpConnectionHandler {
     
@@ -75,19 +76,22 @@ public class AdapterHandler  implements  TcpConnectionHandler {
     SimplePool pool = new SimplePool(60);
     public static boolean usePool=true;
 
-    
+    Logger.Helper loghelper = new Logger.Helper("tc_log", "AdapterHandler");
+        
     public AdapterHandler() {
 	super();
     }
 
     public void setAttribute(String name, Object value ) {
 	if("context.manager".equals(name) ) {
-	    contextM=(ContextManager)value;
+	    setServer((ContextManager)value);
 	}
     }
     
     public void setServer( Object  contextM ) {
 	this.contextM=(ContextManager)contextM;
+	// set this adapter's logger to that of its new context manager
+	loghelper.setLogger(this.contextM.getLogger());
     }
 
     public Object[] init() {
@@ -98,7 +102,6 @@ public class AdapterHandler  implements  TcpConnectionHandler {
     }
 
     HttpAdapter createAdapter() {
-	//System.out.println("XXX REQUEST_IMPL new " + pool.size());
 	HttpAdapter httpA=new HttpAdapter();
 	httpA.init(contextM);
 	return httpA;
@@ -110,7 +113,6 @@ public class AdapterHandler  implements  TcpConnectionHandler {
 	Response resA=null;
 	HttpAdapter httpA=null;
 
-	//	System.out.println("New Connection");
 	try {
 	    if (connection == null)
 		return;
@@ -148,13 +150,13 @@ public class AdapterHandler  implements  TcpConnectionHandler {
 		// do nothing - we are just cleaning up, this is
 		// a workaround for Netscape \n\r in POST - it is supposed
 		// to be ignored
+		loghelper.log("Shutting down socket", npe, Logger.DEBUG);
 	    } catch(java.net.SocketException ex) {
-		// do nothing - same
+		// do nothing - socketexceptions are normal
+		loghelper.log("Shutting down socket", ex, Logger.DEBUG);
 	    }
-	    //	    System.out.print("5");
 	} catch (Exception e) {
-	    contextM.log( "Error reading request " + e.getMessage());
-	    e.printStackTrace();
+	    loghelper.log( "Error reading request, ignored", e ); // Logger.ERROR
 	} finally {
 	    // recycle kernel sockets ASAP
 	    try { if (socket != null) socket.close (); }
@@ -164,7 +166,6 @@ public class AdapterHandler  implements  TcpConnectionHandler {
 	    pool.put( httpA );
 	}
 
-	//	System.out.print("6");
     }
 
 

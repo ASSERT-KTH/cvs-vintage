@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/SSLSocketFactory.java,v 1.2 2000/07/01 00:43:25 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/07/01 00:43:25 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/SSLSocketFactory.java,v 1.3 2000/07/11 03:48:49 alex Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/07/11 03:48:49 $
  *
  * ====================================================================
  *
@@ -213,9 +213,15 @@ public class SSLSocketFactory
 	    istream = new FileInputStream(keystoreFile);
 	    kstore.load(istream, keyPass.toCharArray());
 	    return kstore;
-	} catch(Exception ex) {
-	    //	    ex.printStackTrace();
-	    throw new IOException( "Can't load server certificate" );
+	}
+	catch (FileNotFoundException fnfe) {
+	    throw fnfe;
+	}
+	catch (IOException ioe) {
+	    throw ioe;	    
+	}
+	catch(Exception ex) {
+	    throw new IOException( "Exception trying to load keystore " + keystoreFile + ": " + ex.getMessage() );
 	}
     }
 }

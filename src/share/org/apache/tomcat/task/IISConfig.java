@@ -60,6 +60,7 @@ package org.apache.tomcat.task;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -81,6 +82,8 @@ public class IISConfig  { // implements XXX
     {
     }
 
+    Logger.Helper loghelper = new Logger.Helper("tc_log", "IISConfig");
+    
     public void execute(ContextManager cm) throws TomcatException 
     {
 	    try {
@@ -162,8 +165,7 @@ public class IISConfig  { // implements XXX
 	        uri_worker.close();
 	        
 	    } catch(Exception ex) {
-	        System.out.println("Error generating automatic IIS configuration " + ex);
-	        ex.printStackTrace(System.out);
+	        loghelper.log("Error generating automatic IIS configuration", ex);
 	    }
     }
     

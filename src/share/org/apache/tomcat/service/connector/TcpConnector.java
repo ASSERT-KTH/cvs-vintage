@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/TcpConnector.java,v 1.2 2000/06/12 09:45:22 shachor Exp $
- * $Revision: 1.2 $
- * $Date: 2000/06/12 09:45:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/TcpConnector.java,v 1.3 2000/07/11 03:48:56 alex Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/07/11 03:48:56 $
  *
  * ====================================================================
  *
@@ -70,6 +70,7 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 //import org.apache.tomcat.server.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -123,6 +124,7 @@ class TcpConnector implements MsgConnector
 	rd=in.read( b, 4, len );
 	if( rd != len ) {
 	    System.out.println( "Incomplete read, deal with it " + len + " " + rd);
+	    // ??? log
 	}
 	// 	msg.dump( "Incoming");
 	return rd;

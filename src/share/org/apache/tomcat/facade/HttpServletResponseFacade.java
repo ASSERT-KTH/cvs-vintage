@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.7 2000/07/03 09:03:42 bergsten Exp $
- * $Revision: 1.7 $
- * $Date: 2000/07/03 09:03:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.8 2000/07/11 03:48:45 alex Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/07/11 03:48:45 $
  *
  * ====================================================================
  *
@@ -92,6 +92,8 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     ServletOutputStreamFacade osFacade=null;
     PrintWriter writer = null; // XXX will go away when we add the convertor
 
+    // Logger.Helper loghelper = new Logger.Helper("tc_log", "HttpServletResponseFacade");    
+    
     /** Package
      */
     HttpServletResponseFacade(Response response) {
@@ -199,8 +201,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     public void sendError(int sc, String msg) throws IOException {
 	if (isCommitted()) {
 	    Context ctx=response.getRequest().getContext();
-	    ctx.log( "Servlet API error: sendError with commited buffer ");
-	    // 	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	    ctx.log( "Servlet API error: sendError with commited buffer ", new Throwable("Trace"));
 	    throw new IllegalStateException(sm.
 					    getString("hsrf.error.ise"));
 	}

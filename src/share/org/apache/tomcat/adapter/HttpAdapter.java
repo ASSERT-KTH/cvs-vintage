@@ -60,6 +60,7 @@ package org.apache.tomcat.adapter;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -94,8 +95,7 @@ public final class HttpAdapter implements BufferListener {
     private Socket socket;
 
     public static final String DEFAULT_CHARACTER_ENCODING = "8859_1";
-    
-    
+
     public HttpAdapter() {
         super();
     }
@@ -149,10 +149,6 @@ public final class HttpAdapter implements BufferListener {
 	readCount=0;
     }
 
-    void log( String s ) {
-	System.out.println("HttpAdapter: " + s );
-    }
-
     public void setDebug(int debug) {
 	this.debug=debug;
     }
@@ -185,7 +181,7 @@ public final class HttpAdapter implements BufferListener {
 	    readCount +=n;
 	    if( debug > 0 ) log( "Read: " + readLimit + " " + readCount + " " + n + " " + len + " " + ev.getLength());
 	} catch( IOException ex ) {
-	    ex.printStackTrace();
+	    log("reading to fill empty buffer", ex);
 	}
     }
 
@@ -206,8 +202,8 @@ public final class HttpAdapter implements BufferListener {
 	    }
 	    sout.write( ev.getByteBuffer(), ev.getOffset(), ev.getLength() );
 	} catch( IOException ex ) {
-	    if( ! "Broken pipe".equals(ex.getMessage())) {
-		ex.printStackTrace();
+	    if (Logger.canIgnore(ex)) {
+		log("sending buffer data", ex);
 	    }
 	}
     }
@@ -294,7 +290,7 @@ public final class HttpAdapter implements BufferListener {
 	    //
 	    if ((c & 0xff00) != 0) {	// high order byte must be zero
 		// XXX will go away after we change the I/O system
-		System.out.println("Header character is not iso8859_1, not supported yet: " + c ) ;
+		log("Header character is not iso8859_1, not supported yet: " + c, Logger.ERROR ) ;
 	    }
 	    if( bufferCount >= headBuffer.length ) {
 		byte bufferNew[]=new byte[ headBuffer.length * 2 ];
@@ -315,8 +311,8 @@ public final class HttpAdapter implements BufferListener {
 	count = BuffTool.readLine(in, buf, 0, buf.length);
 	
 	if (count < 0  ) {
-	    //	    System.out.println("No request");
-	    // 	    System.out.println("Request too long ");
+	    //      log("No request");
+	    // 	    log("Request too long ");
 	    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	    return;
 	}
@@ -421,7 +417,7 @@ public final class HttpAdapter implements BufferListener {
 
 	int nameEnd= BuffTool.findChars( b, start, end, NAME_DELIMS );
 	if( nameEnd < 0 || b[nameEnd]=='\r' || b[nameEnd]=='\n' ) {
-	    System.out.println("Parse error, empty line: " + new String( b, off, len ));
+	    log("Parse error, empty line: " + new String( b, off, len ), Logger.ERROR);
 	    return HttpServletResponse.SC_BAD_REQUEST;
 	}
 	
@@ -431,16 +427,16 @@ public final class HttpAdapter implements BufferListener {
 	int sepIdx= BuffTool.findNotChars( b, nameEnd, end, SPACE_DELIMS );
 
 	if (b[sepIdx] != ':') {
-	    System.out.println("Parse error, missing : in  " + new String( b, off, len ));
-	    System.out.println("Full  " + new String( b, 0, b.length ));
+	    log("Parse error, missing : in  " + new String( b, off, len ), Logger.ERROR);
+	    log("Full  " + new String( b, 0, b.length ), Logger.ERROR);
 	    return  HttpServletResponse.SC_BAD_REQUEST;
 	}
 
 	// skip spaces
 	int valueStart= BuffTool.findNotChars( b, sepIdx + 1, end, SPACE_DELIMS);
 	if( valueStart < 0 ) {
-	    System.out.println("Parse error, no value after : " + new String( b, off, len ));
-	    System.out.println("Full  " + new String( b, 0, b.length ));
+	    log("Parse error, no value after : " + new String( b, off, len ), Logger.ERROR);
+	    log("Full  " + new String( b, 0, b.length ), Logger.ERROR);
 	    return  HttpServletResponse.SC_BAD_REQUEST;
 	}
 
@@ -505,5 +501,23 @@ public final class HttpAdapter implements BufferListener {
 	return 0;
     }
 
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    
+    protected void log( String s ) {
+	loghelper.log(s, Logger.ERROR);
+    }
+    
+    protected void log( String s, Throwable t ) {
+	loghelper.log(s, t);
+    }
+    
+    protected void log( String s, int level ) {
+	loghelper.log(s, level);
+    }
+    
+    protected void log( String s, Throwable t, int level ) {
+	loghelper.log(s, t, level);
+    }
+    
     
 }

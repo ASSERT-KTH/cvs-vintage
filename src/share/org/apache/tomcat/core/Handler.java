@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.7 2000/06/28 15:42:54 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/06/28 15:42:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.8 2000/07/11 03:48:43 alex Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/07/11 03:48:43 $
  *
  * ====================================================================
  *
@@ -64,6 +64,7 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.facade.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -298,20 +299,23 @@ public class Handler {
     }
 
     // -------------------- Debug --------------------
+
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    
     public void setDebug( int d ) {
 	debug=d;
     }
 
     protected void log( String s ) {
-	if( debugHead == null ) {
-	    String cname=this.getClass().getName();
-	    debugHead=cname.substring( cname.lastIndexOf(".") +1);
-	    debugHead += ": ";
-	}
-	if( context!= null )
-	    context.log( debugHead + s );
-	else 
-	    System.out.println(debugHead + s ); 
+	if (context != null)
+	    loghelper.setLogger(context.getLoggerHelper().getLogger());
+	loghelper.log(s);
+    }
+
+    protected void log( String s, Throwable t ) {
+	if (context != null)
+	    loghelper.setLogger(context.getLoggerHelper().getLogger());
+	loghelper.log(s, t);
     }
 
 

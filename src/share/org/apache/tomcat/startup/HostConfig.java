@@ -32,8 +32,14 @@ public class HostConfig {
 	    ctx.setHost( hostName );
 	    cm.addContext( ctx );
 	} catch(Exception ex ) {
-	    ex.printStackTrace();
+	    if (cm != null) {
+		cm.log("exception adding context " + ctx);
+	    } else if (ctx != null) {
+		ctx.log("exception adding context " + ctx);
+	    }
+	    else {
+		ex.printStackTrace();
+	    }
 	}
     }
 }
-    

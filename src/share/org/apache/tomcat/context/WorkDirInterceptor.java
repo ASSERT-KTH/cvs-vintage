@@ -95,7 +95,7 @@ public class WorkDirInterceptor extends BaseInterceptor {
 	    setWorkDir(ctx);
 
 	if (! ctx.getWorkDir().exists()) {
-	    //log  System.out.println("Creating work dir " + ctx.getWorkDir() );
+	    log("Creating work dir " + ctx.getWorkDir());
 	    ctx.getWorkDir().mkdirs();
 	}
 	ctx.setAttribute(Constants.ATTRIB_WORKDIR1, ctx.getWorkDir());

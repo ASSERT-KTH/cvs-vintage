@@ -63,6 +63,7 @@ package org.apache.tomcat.context;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -80,7 +81,7 @@ import org.apache.tomcat.task.Expand;
 public class AutoSetup extends BaseInterceptor {
     int debug=0;
     Hashtable definedContexts=new Hashtable();
-    
+
     public AutoSetup() {
     }
 
@@ -110,13 +111,13 @@ public class AutoSetup extends BaseInterceptor {
 	String home=cm.getHome();
 	File webappD=new File(home + "/webapps");
 	if (! webappD.exists() || ! webappD.isDirectory()) {
-	    System.out.println("No webapps/ directory " + webappD );
+	    log("No webapps/ directory " + webappD );
 	    return ; // nothing to set up
 	}
 	
 	String[] list = webappD.list();
 	if( list.length==0 ) {
-	    System.out.println("No apps in webapps/ ");
+	    log("No apps in webapps/ ");
 	}
 	for (int i = 0; i < list.length; i++) {
 	    String name = list[i];
@@ -134,7 +135,7 @@ public class AutoSetup extends BaseInterceptor {
 		    try {
 			expand.execute();
 		    } catch( IOException ex) {
-			ex.printStackTrace();
+			log("expanding webapp " + name, ex);
 			// do what ?
 		    }
 		}
@@ -153,7 +154,7 @@ public class AutoSetup extends BaseInterceptor {
 	    // Current code supports only one level, we
 	    // need to decide an encoding scheme for multi-level
 	    String path="/" + name; // decode(name)
-	    //	    System.out.println("XXX : " + path );
+	    //	    log("XXX : " + path );
 	    if( path.equals("/ROOT") )
 		    path="";
 
@@ -183,7 +184,4 @@ public class AutoSetup extends BaseInterceptor {
 	debug=i;
     }
 
-    public void log(String s ) {
-	cm.log("AutoSetup: " + s );
-    }
 }

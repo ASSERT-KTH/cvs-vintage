@@ -61,6 +61,7 @@ package org.apache.tomcat.request;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.facade.*;
+import org.apache.tomcat.logging.*;
 import org.apache.tomcat.core.Constants;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -84,6 +85,8 @@ public class InvokerInterceptor extends BaseInterceptor {
     String prefix="/servlet/";
     int prefixLen=prefix.length();
 
+    Logger.Helper loghelper = new Logger.Helper("tc_log", "InvokerInterceptor");
+    
     public int requestMap(Request req) {
 	// If we have an explicit mapper - return
 	Container ct=req.getContainer();
@@ -158,7 +161,7 @@ public class InvokerInterceptor extends BaseInterceptor {
 		log( "Added mapping " + wrapper +
 		     " path=" + newServletPath + "/*" );
 	} catch( TomcatException ex ) {
-	    ex.printStackTrace();
+	    loghelper.log("dynamically adding wrapper for " + servletName, ex);
 	    return 404;
 	}
 

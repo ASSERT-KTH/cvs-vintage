@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.13 2000/06/30 20:21:04 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/06/30 20:21:04 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.14 2000/07/11 03:48:36 alex Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/07/11 03:48:36 $
  *
  * ====================================================================
  *
@@ -87,7 +87,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
 
 import org.apache.jasper.Constants;
-
+import org.apache.tomcat.logging.Logger;
 
 /**
  * Implementation of the PageContext class from the JSP spec.
@@ -99,6 +99,9 @@ import org.apache.jasper.Constants;
  * @author Hans Bergsten
  */
 public class PageContextImpl extends PageContext {
+
+    Logger.Helper loghelper = new Logger.Helper("JASPER_LOG", "JspFactoryImpl");
+
     PageContextImpl(JspFactory factory) {
         this.factory = factory;
     }
@@ -132,7 +135,7 @@ public class PageContextImpl extends PageContext {
 	    try {
 		pci._initialize(servlet, request, response, errorPageURL, needsSession, bufferSize, autoFlush);
 	    } catch( Throwable t ) {
-		t.printStackTrace();
+		t. print Stack Trace();
 	    }
 	    return null;
 	}
@@ -444,7 +447,6 @@ public class PageContextImpl extends PageContext {
 		throw (IOException)e;
 	    if( e instanceof ServletException )
 		throw (ServletException) e;
-	    //	    e.printStackTrace();
 	    throw new ServletException(e);
 	}
 
@@ -456,7 +458,7 @@ public class PageContextImpl extends PageContext {
 	try {
 	    return new JspWriterImpl(response, bufferSize, autoFlush);
 	} catch( Throwable t ) {
-	    t.printStackTrace();
+	    loghelper.log("creating out", t);
 	    return null;
 	}
     }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.9 2000/06/23 21:49:06 nacho Exp $
- * $Revision: 1.9 $
- * $Date: 2000/06/23 21:49:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.10 2000/07/11 03:49:03 alex Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/07/11 03:49:03 $
  *
  * ====================================================================
  *
@@ -67,6 +67,8 @@ package org.apache.tomcat.util;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.tomcat.logging.Logger;
+
 /*
  * FileUtil contains utils for dealing with Files. Some of these are 
  * already present in JDK 1.2 but since we can rely on that and need 
@@ -124,6 +126,8 @@ public class FileUtil {
 	return lookupPath + "/" + path;
     }
 
+    static Logger.Helper loghelper = new Logger.Helper("tc_log", "FileUtil");
+    
     /** All the safety checks from getRealPath() and
 	DefaultServlet.
 
@@ -145,7 +149,8 @@ public class FileUtil {
 	try {
 	    canPath=new File(realPath).getCanonicalPath();
 	} catch( IOException ex ) {
-	    ex.printStackTrace();
+	    //log("safePath: " + realPath, ex);
+	    loghelper.log("in safePath(" + base +", "+path + "), realPath=" + realPath, ex);
 	    return null;
 	}
 
@@ -253,6 +258,7 @@ public class FileUtil {
         try {
             return  f.getCanonicalPath();
         } catch (IOException ioe) {
+	    System.err.println("getCanonicalPath(" + name + ")");
 	    ioe.printStackTrace();
 	    return name; // oh well, we tried...
         }

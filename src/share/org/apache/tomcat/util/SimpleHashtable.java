@@ -97,7 +97,7 @@ import java.util.*;
  * it makes a significant difference when normalizing attributes,
  * which is done for each start-element construct.
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class SimpleHashtable implements Enumeration
 {
@@ -248,7 +248,7 @@ public final class SimpleHashtable implements Enumeration
 	table = newMap;
 
 	/*
-	System.out.println("rehash old=" + oldCapacity
+	System.out.pr intln("rehash old=" + oldCapacity
 		+ ", new=" + newCapacity
 		+ ", thresh=" + threshold
 		+ ", count=" + count);

@@ -104,14 +104,14 @@ public class PolicyInterceptor extends BaseInterceptor {
 	    Class c=Class.forName(securityManagerClass);
 	    Object o=c.newInstance();
 	    System.setSecurityManager((SecurityManager)o);
-	    // 	    System.out.println("Security Manager set to " +
-	    // 			       securityManagerClass);
+	    if (debug>0) log("Security Manager set to " +
+		securityManagerClass, Logger.DEBUG);
 	} catch( ClassNotFoundException ex ) {
-	    System.out.println("SecurityManager Class not found: " +
-			       securityManagerClass);
+	    log("SecurityManager Class not found: " +
+			       securityManagerClass, Logger.ERROR);
 	} catch( Exception ex ) {
-            System.out.println("SecurityManager Class could not be loaded: " +
-			       securityManagerClass);
+            log("SecurityManager Class could not be loaded: " +
+			       securityManagerClass, Logger.ERROR);
 	}
     }
 
@@ -181,7 +181,7 @@ public class PolicyInterceptor extends BaseInterceptor {
 	    context.setPermissions( p );
 
 	} catch(Exception ex) {
-	    System.out.println("Security init for Context " + base + " failed");
+	    log("Security init for Context " + base + " failed", ex);
 	}
 
     }

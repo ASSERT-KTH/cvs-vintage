@@ -9,6 +9,7 @@ import org.apache.tomcat.service.*;
 import org.apache.tomcat.service.http.*;
 import org.apache.tomcat.session.StandardSessionInterceptor;
 import org.apache.tomcat.context.*;
+import org.apache.tomcat.logging.*;
 import java.security.*;
 import javax.servlet.ServletContext;
 import java.util.*;
@@ -48,6 +49,8 @@ public class EmbededTomcat { // extends WebService
     Vector connectors=new Vector();
 
     String workDir;
+
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
     
     // configurable properties
     int debug=0;
@@ -128,7 +131,7 @@ public class EmbededTomcat { // extends WebService
 
 	sc.setAttribute( "socketFactory",
 			 "org.apache.tomcat.net.SSLSocketFactory");
-	//	System.out.println("XXX " + keyFile + " " + keyPass);
+	//	log("XXX " + keyFile + " " + keyPass);
 	sc.setTcpConnectionHandler( new HttpConnectionHandler());
 	// XXX add the secure socket
 	
@@ -161,7 +164,7 @@ public class EmbededTomcat { // extends WebService
 	    if( facadeM == null ) facadeM=ctx.getFacadeManager();
 	    return ctx.getFacade();
 	} catch( Exception ex ) {
-	    ex.printStackTrace();
+	    log("exception adding context " + ctxPath + "/" + docRoot, ex);
 	}
 	return null;
     }
@@ -172,13 +175,13 @@ public class EmbededTomcat { // extends WebService
 	if(debug>0) log( "remove context " + sctx );
 	try {
 	    if( facadeM==null ) {
-		System.out.println("XXX ERROR: no facade manager");
+		log("ERROR removing context " + sctx + ": no facade manager", Logger.ERROR);
 		return;
 	    }
 	    Context ctx=facadeM.getRealContext( sctx );
 	    contextM.removeContext( ctx );
 	} catch( Exception ex ) {
-	    ex.printStackTrace();
+	    log("exception removing context " + sctx, ex);
 	}
     }
 
@@ -199,7 +202,7 @@ public class EmbededTomcat { // extends WebService
 	    }
 	    cp.addElement( cpath );
 	} catch( Exception ex ) {
-	    ex.printStackTrace();
+	    log("exception adding classpath " + cpath + " to context " + context, ex);
 	}
 	
 	// XXX This functionality can be achieved by setting it in the parent
@@ -227,16 +230,16 @@ public class EmbededTomcat { // extends WebService
     public void initContext( ServletContext sctx ) {
 	try {
 	    if( facadeM==null ) {
-		System.out.println("XXX ERROR: no facade manager");
+		log("XXX ERROR: no facade manager");
 		return;
 	    }
 	    Context ctx=facadeM.getRealContext( sctx );
 	    contextM.initContext( ctx );
 
 	    ServletLoader sl=ctx.getServletLoader();
-	    //	    System.out.println("ServletLoader: " + sl );
+	    //	    log("ServletLoader: " + sl );
 	    Object pd=ctx.getProtectionDomain();
-	    //	    System.out.println("Ctx.pd " + pd);
+	    //	    log("Ctx.pd " + pd);
 
 	    // Add any extra cpaths
 	    Vector cp=(Vector)extraClassPaths.get( sctx );
@@ -249,7 +252,7 @@ public class EmbededTomcat { // extends WebService
 
 
 	} catch( Exception ex ) {
-	    ex.printStackTrace();
+	    log("exception initializing context " + sctx, ex);
 	}
     }
 
@@ -263,9 +266,9 @@ public class EmbededTomcat { // extends WebService
 	try {
 	    contextM.start();
 	} catch( IOException ex ) {
-	    System.out.println("Error starting endpoing " + ex.toString());
+	    log("Error starting EmbededTomcat", ex);
 	} catch( Exception ex ) {
-	    ex.printStackTrace();
+	    log("Error starting EmbededTomcat", ex);
 	}
 	if(debug>0) log( "Started" );
     }
@@ -308,7 +311,7 @@ public class EmbededTomcat { // extends WebService
 	try {
 	    contextM.init();
 	} catch( Exception ex ) {
-	    ex.printStackTrace();
+	    log("exception initializing ContextManager", ex);
 	}
 	if(debug>0) log( "ContextManager initialized" );
     }
@@ -378,7 +381,16 @@ public class EmbededTomcat { // extends WebService
 
     // -------------------- Utils --------------------
     private void log( String s ) {
-	System.out.println("WebAdapter: " + s );
+	loghelper.log( s );
+    }
+    private void log( String s, Throwable t ) {
+	loghelper.log( s, t );
+    }
+    private void log( String s, int level ) {
+	loghelper.log( s, level );
+    }
+    private void log( String s, Throwable t, int level ) {
+	loghelper.log( s, t, level );
     }
 
     /** Sample - you can use it to tomcat
@@ -397,15 +409,11 @@ public class EmbededTomcat { // extends WebService
 	    tc.addEndpoint( 8080, null, null);
 	    tc.start();
 	} catch (Throwable t ) {
+	    // this stack trace is ok, i guess, since it's just a
+	    // sample main
 	    t.printStackTrace();
 	}
     }
 	
 
 }
-
-
-
-
-
-

@@ -60,6 +60,7 @@ package org.apache.tomcat.task;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -76,6 +77,8 @@ public class NSConfig  { // implements XXX
     public static final String NS_CONFIG = "/conf/obj.conf";
     public static final String JK_LOG_LOCATION = "/logs/netscape_redirect.log";
 
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    
     public NSConfig() 
     {
     }
@@ -179,8 +182,7 @@ public class NSConfig  { // implements XXX
 	        
 	        objfile.close();	        
 	    } catch(Exception ex) {
-	        System.out.println("Error generating automatic Netscape configuration " + ex);
-	        ex.printStackTrace(System.out);
+	        loghelper.log("Error generating automatic Netscape configuration", ex);
 	    }
     }    
 }

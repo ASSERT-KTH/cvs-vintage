@@ -62,6 +62,7 @@ package org.apache.tomcat.facade;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.security.*;
@@ -81,6 +82,8 @@ import javax.servlet.http.*;
 public final class SimpleFacadeManager implements FacadeManager {
     Context ctx;
 
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    
     private SimpleFacadeManager() {
     }
 
@@ -139,7 +142,7 @@ public final class SimpleFacadeManager implements FacadeManager {
     public Request getRealRequest( HttpServletRequest req ) {
 	Request rreq=((HttpServletRequestFacade)req).getRealRequest();
 	if( rreq==null ) {
-	    System.out.println("XXX XXX null req " + ctx + " " + req );
+	    loghelper.log("XXX XXX null req " + ctx + " " + req , Logger.ERROR);
 	}
 	if( rreq.getContext() == null ) {
 	    // we are in "error" case
@@ -147,9 +150,9 @@ public final class SimpleFacadeManager implements FacadeManager {
 	    return rreq;
 	}
 	// 	if( rreq.getContext() != ctx ) {
-	// 	    System.out.println("XXX " + ctx.getPath() + " " + rreq.getContext() + " " + rreq);
+	// 	    log("XXX " + ctx.getPath() + " " + rreq.getContext() + " " + rreq);
 	// 	    ctx.log( "Attempt to get the real request from wrong context");
-	// 	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	// 	    /*DEBUG*/ log("", new Throwable("trace"));
 	// 	    return null;
 	// 	}
 	return rreq;

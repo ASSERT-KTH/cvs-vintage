@@ -60,6 +60,7 @@ package org.apache.tomcat.task;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -75,6 +76,8 @@ import org.apache.tomcat.service.connector.Ajp12ConnectionHandler;
  */
 public class StopTomcat { 
 
+    Logger.Helper loghelper = new Logger.Helper("tc_log", "StopTomcat");
+    
     public StopTomcat() 
     {
     }
@@ -109,7 +112,7 @@ public class StopTomcat {
 	    os.write( stopMessage );
 	    socket.close();
 	} catch(Exception ex ) {
-	    ex.printStackTrace();
+	    loghelper.log("Error stopping Tomcat with Ajp12", ex);
 	}
     }
     

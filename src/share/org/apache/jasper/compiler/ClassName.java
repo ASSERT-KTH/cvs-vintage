@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ClassName.java,v 1.2 2000/01/18 02:54:57 rubys Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/18 02:54:57 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ClassName.java,v 1.3 2000/07/11 03:48:33 alex Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/07/11 03:48:33 $
  *
  * ====================================================================
  * 
@@ -200,7 +200,7 @@ public class ClassName {
 	    for(int i = 0; i < args.length; i++)
 		System.out.println("Filename: "+ args[i]+" Classname: "+getClassName(args[i]));
 	} catch (Exception ex) {
-	    ex.printStackTrace();
+	    ex.printStackTrace();	// OK
 	}
     }
 }

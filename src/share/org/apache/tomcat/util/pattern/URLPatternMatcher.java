@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/pattern/Attic/URLPatternMatcher.java,v 1.1 1999/11/27 21:45:42 harishp Exp $
- * $Revision: 1.1 $
- * $Date: 1999/11/27 21:45:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/pattern/Attic/URLPatternMatcher.java,v 1.2 2000/07/11 03:49:09 alex Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/07/11 03:49:09 $
  *
  * ====================================================================
  *
@@ -108,7 +108,7 @@ public class URLPatternMatcher implements PatternMatcher {
             p.set(args[0], "works");
             System.out.println("Match: " + p.match(args[1]));
         }catch(Exception e) {
-            e.printStackTrace();
+            e.printStackTrace();	// OK
         }
     }
 }

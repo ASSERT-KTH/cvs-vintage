@@ -62,6 +62,8 @@ import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
 
+import org.apache.tomcat.logging.Logger;
+
 /**
  * JspCompiler is an implementation of Compiler with a funky code
  * mangling and code generation scheme!
@@ -86,6 +88,8 @@ public class JspCompiler extends Compiler implements Mangler {
     boolean outDated;
     static final int JSP_TOKEN_LEN= Constants.JSP_TOKEN.length();
 
+    Logger.Helper loghelper = new Logger.Helper("JASPER_LOG", "JspCompiler");
+    
     public JspCompiler(JspCompilationContext ctxt) throws JasperException {
         super(ctxt);
         
@@ -131,12 +135,12 @@ public class JspCompiler extends Compiler implements Mangler {
     public final String getRealClassName() {
 	if( realClassName!=null ) return realClassName;
 
-	System.out.println("JspCompiler: extract class name and version ");
+	loghelper.log("JspCompiler: extract class name and version ", null, Logger.DEBUG);
         try {
             realClassName = ClassName.getClassName( getClassFileName() );
         } catch( JasperException ex) {
             // ops, getClassName should throw something
-            ex.printStackTrace();
+	    loghelper.log("Exception in getRealClassName", ex);
 	    return null;
         }
 	return realClassName;

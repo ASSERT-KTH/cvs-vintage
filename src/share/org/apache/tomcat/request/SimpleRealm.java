@@ -100,7 +100,7 @@ public class SimpleRealm extends  BaseInterceptor {
 	    reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
 					 "required.roles");
 	} catch( TomcatException ex ) {
-	    ex.printStackTrace();
+	    log("getting note for " + cm, ex);
 	    throw new RuntimeException( "Invalid state ");
 	}
     }
@@ -113,7 +113,7 @@ public class SimpleRealm extends  BaseInterceptor {
 	    try {
 		memoryRealm.readMemoryRealm(ctx);
 	    } catch(Exception ex ) {
-		ex.printStackTrace();
+		log("initting " + ctx, ex);
 		memoryRealm=null;
 	    }
 	}

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.11 2000/05/24 16:34:15 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/05/24 16:34:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.12 2000/07/11 03:48:58 alex Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/07/11 03:48:58 $
  *
  * ====================================================================
  *
@@ -66,6 +66,7 @@ package org.apache.tomcat.service.http;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -85,6 +86,8 @@ public class HttpResponseAdapter extends  ResponseImpl {
     protected static final int DEFAULT_HEAD_BUFFER_SIZE = 1024;
     protected byte[] buffer = new byte[DEFAULT_HEAD_BUFFER_SIZE];
     protected int bufferCount = 0;
+
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
     
     public HttpResponseAdapter() {
         super();
@@ -178,7 +181,7 @@ public class HttpResponseAdapter extends  ResponseImpl {
 	    //
 	    if ((c & 0xff00) != 0) {	// high order byte must be zero
 		// XXX will go away after we change the I/O system
-		System.out.println("Header character is not iso8859_1, not supported yet: " + c ) ;
+		loghelper.log("Header character is not iso8859_1, not supported yet: " + c, Logger.ERROR ) ;
 	    }
 	    if( bufferCount >= buffer.length ) {
 		byte bufferNew[]=new byte[ buffer.length * 2 ];

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpointConnector.java,v 1.3 2000/06/22 23:41:02 alex Exp $
- * $Revision: 1.3 $
- * $Date: 2000/06/22 23:41:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpointConnector.java,v 1.4 2000/07/11 03:48:54 alex Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/07/11 03:48:54 $
  *
  * ====================================================================
  *
@@ -133,7 +133,7 @@ public class JNIEndpointConnector  implements ServerConnector {
         return null;
     }
 
-    private LogHelper loghelper = new LogHelper("tc_log", "JNIEndpointConnector");
+    private Logger.Helper loghelper = new Logger.Helper("tc_log", "JNIEndpointConnector");
 
     /**
      * Set a logger explicitly.

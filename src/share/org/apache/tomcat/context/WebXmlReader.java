@@ -3,6 +3,7 @@ package org.apache.tomcat.context;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.xml.*;
+import org.apache.tomcat.logging.*;
 import java.beans.*;
 import java.io.*;
 import java.io.IOException;
@@ -110,7 +111,7 @@ public class WebXmlReader extends BaseInterceptor {
 
 	} catch (Exception e) {
 	    String msg = sm.getString("context.getConfig.e",ctx.getPath() + " " + ctx.getDocBase());
-	    System.out.println(msg);
+	    log(msg, e);
 	}
 
     }
@@ -201,8 +202,7 @@ public class WebXmlReader extends BaseInterceptor {
 
 	    Object ctx1=xh.readXml(f, ctx);
 	} catch(Exception ex ) {
-	    System.out.println("ERROR reading " + file);
-	    ex.printStackTrace();
+	    log("ERROR reading " + file, ex);
 	    // XXX we should invalidate the context and un-load it !!!
 	}
     }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.4 2000/06/30 20:21:02 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/06/30 20:21:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.5 2000/07/11 03:48:35 alex Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/07/11 03:48:35 $
  *
  * ====================================================================
  * 
@@ -69,6 +69,7 @@ import javax.servlet.jsp.JspEngineInfo;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.tomcat.util.SimplePool;
+import org.apache.tomcat.logging.Logger;
 
 /**
  * Implementation of JspFactory from the spec. Helps create
@@ -79,7 +80,9 @@ import org.apache.tomcat.util.SimplePool;
 public class JspFactoryImpl extends JspFactory {
     private SimplePool pool=new SimplePool( 100 );
     private static final boolean usePool=true;
-
+    
+    Logger.Helper loghelper = new Logger.Helper("JASPER_LOG", "JspFactoryImpl");
+    
     public PageContext getPageContext(Servlet servlet, ServletRequest request,
                                       ServletResponse response, 
 				      String errorPageURL, 
@@ -102,7 +105,7 @@ public class JspFactoryImpl extends JspFactory {
             return pc;
         } catch (Throwable ex) {
             /* FIXME: need to do something reasonable here!! */
-            ex.printStackTrace();
+	    loghelper.log("Exception initializing page context", ex);
             return null;
         }
     }

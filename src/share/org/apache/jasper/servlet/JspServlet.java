@@ -94,6 +94,8 @@ import org.apache.tomcat.logging.Logger;
  */
 public class JspServlet extends HttpServlet {
 
+    Logger.Helper loghelper = new Logger.Helper("JASPER_LOG", "JspServlet");
+
     class JspServletWrapper {
         Servlet theServlet;
 	String jspUri;
@@ -258,7 +260,7 @@ public class JspServlet extends HttpServlet {
 		    Class ld=Class.forName("org.apache.jasper.servlet.JasperLoader12");
 		    loader=(JasperLoader)ld.newInstance();
 		} catch(Throwable t ) {
-		    t.printStackTrace();
+		    loghelper.log("Loading org.apache.jasper.servlet.JasperLoader12", t);
 		}
 	    }
 	    if( loader==null )
@@ -312,7 +314,7 @@ public class JspServlet extends HttpServlet {
             else {
 		    // This is illegal.
 		    throw new ServletException("Can't have request parameter " +
-					       " jsp_precomile set to " + precom);
+					       Constants.PRECOMPILE + " set to " + precom);
 		}
 	    }
         else if (qString != null && (qString.startsWith(Constants.PRECOMPILE) ||

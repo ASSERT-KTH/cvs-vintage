@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectionHandler.java,v 1.4 2000/06/15 10:14:44 shachor Exp $
- * $Revision: 1.4 $
- * $Date: 2000/06/15 10:14:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectionHandler.java,v 1.5 2000/07/11 03:48:55 alex Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/07/11 03:48:55 $
  *
  * ====================================================================
  *
@@ -70,6 +70,7 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -80,6 +81,8 @@ public class Ajp13ConnectionHandler implements  TcpConnectionHandler
 
     public static final byte JK_AJP13_FORWARD_REQUEST   = 2;
     public static final byte JK_AJP13_SHUTDOWN          = 7;
+
+    Logger.Helper loghelper = new Logger.Helper("tc_log", "Ajp13ConnectionHandler");
 
     public Ajp13ConnectionHandler()
     {
@@ -145,7 +148,7 @@ public class Ajp13ConnectionHandler implements  TcpConnectionHandler
                 MsgBuffer msg = con.getMsgBuffer();
                 int err = con.receive(msg);
                 if(err < 0) {
-                    //System.out.println("ERR rec " + err );
+                    //log("ERR rec " + err );
                     moreRequests=false;
                     break;
                 }
@@ -172,10 +175,10 @@ public class Ajp13ConnectionHandler implements  TcpConnectionHandler
                     break;
                 }                
             }
-            //System.out.println("Closing connection");
+            log("Closing connection", Logger.DEBUG);
             socket.close();
         } catch (Exception e) {
-            e.printStackTrace();
+	    log("Processing connection " + connection, e);
         }
     }
 
@@ -206,12 +209,12 @@ public class Ajp13ConnectionHandler implements  TcpConnectionHandler
 				// stopping everything doesn't work - need to figure
 				// out what happens with the threads ( XXX )
 				System.exit(0);
-	        }
-		} catch(Exception ignored) {
-		    System.err.println(ignored);
 	    }
-	    System.err.println("Shutdown command ignored");
-	    return false;
+	} catch(Exception ignored) {
+	    log("Ignored " + ignored);
+	}
+	log("Shutdown command ignored");
+	return false;
     }
     
     /**
@@ -248,5 +251,16 @@ public class Ajp13ConnectionHandler implements  TcpConnectionHandler
 		    return (false);
 	    }
 	    return (true);
-    }    
+    }
+
+    void log(String s) {
+	loghelper.log(s);
+    }
+    void log(String s, Throwable e) {
+	loghelper.log(s, e);
+    }
+    void log(String s, int level) {
+	loghelper.log(s, level);
+    }
+    
 }

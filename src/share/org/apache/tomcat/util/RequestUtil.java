@@ -209,7 +209,7 @@ public class RequestUtil {
      */
     private static String stripQuote( String value )
     {
-	//	System.out.println("Strip quote from " + value );
+	//	log("Strip quote from " + value );
 	if (((value.startsWith("\"")) && (value.endsWith("\""))) ||
 	    ((value.startsWith("'") && (value.endsWith("'"))))) {
 	    try {

@@ -60,6 +60,7 @@ package org.apache.tomcat.task;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -84,12 +85,14 @@ public class ApacheConfig  { // implements XXX
 	return null;
     }
 
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    
     public void execute(ContextManager cm) throws TomcatException {
 	try {
 	    String tomcatHome = cm.getHome();
 	    String apacheHome = findApache();
 
-	    //System.out.println("Tomcat home= " + tomcatHome);
+	    //log("Tomcat home= " + tomcatHome);
 
 	    FileWriter configW=new FileWriter(tomcatHome + APACHE_CONFIG);
 	    PrintWriter pw=new PrintWriter(configW);
@@ -286,10 +289,7 @@ public class ApacheConfig  { // implements XXX
 	    pw.close();
 	    mod_jk.close();        
 	} catch( Exception ex ) {
-	    //	    ex.printStackTrace();
-	    //throw new TomcatException( "Error generating Apache config", ex );
-	    System.out.println("Error generating automatic apache configuration " + ex);
-	    ex.printStackTrace(System.out);
+	    loghelper.log("Error generating automatic apache configuration", ex);
 	}
     }
 }

@@ -91,7 +91,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
     // Required roles attribute
     int reqRolesNote;
     int reqTransportNote;
-    
+
     public AccessInterceptor() {
     }
 
@@ -115,8 +115,8 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    reqTransportNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
 					 "required.transport");
 	} catch( TomcatException ex ) {
-	    ex.printStackTrace();
-	    throw new RuntimeException( "Invalid state ");
+	    log("engineInit(" + cm + ")", ex);  // necessary?
+	    throw new RuntimeException( "Invalid state");
 	}
     }
 

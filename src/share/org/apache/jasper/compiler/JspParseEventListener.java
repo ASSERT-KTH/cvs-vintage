@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.18 2000/07/03 09:11:17 bergsten Exp $
- * $Revision: 1.18 $
- * $Date: 2000/07/03 09:11:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.19 2000/07/11 03:48:34 alex Exp $
+ * $Revision: 1.19 $
+ * $Date: 2000/07/11 03:48:34 $
  *
  * ====================================================================
  *
@@ -708,7 +708,6 @@ public class JspParseEventListener extends BaseJspListener {
                                                                uri);
                 libraries.addTagLibrary(prefix, tl);
             } catch (Exception ex) {
-                ex.printStackTrace();
                 Object[] args = new Object[] { uri, ex.getMessage() };
                 throw new CompileException(start, Constants.getString("jsp.error.badtaglib",
                                                               args));

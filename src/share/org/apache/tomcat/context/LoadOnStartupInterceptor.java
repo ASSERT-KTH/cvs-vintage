@@ -63,6 +63,7 @@ package org.apache.tomcat.context;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -121,7 +122,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 
 		if( ctx.getDebug() > 0 ) ctx.log("Loading " + key + " "  + servletName );
 		if(result==null)
-		    System.out.println("Warning: we try to load an undefined servlet " + servletName);
+		    log("Warning: we try to load an undefined servlet " + servletName, Logger.WARNING);
 		else {
 		    try {
 			if( result.getPath() != null )
@@ -132,7 +133,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 		    } catch (Exception ee) {
 			String msg = sm.getString("context.loadServlet.e",
 						  servletName);
-			System.out.println(msg);
+			log(msg, ee);
 		    } 
 		}
 	    }
@@ -144,7 +145,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 
 	// Log ( since I never saw this code called, let me know if it does
 	// for you )
-	System.out.println("Initializing JSP with JspWrapper");
+	log("Initializing JSP with JspWrapper");
 	
 	// Ugly code to trick JSPServlet into loading this.
 	ContextManager cm=context.getContextManager();

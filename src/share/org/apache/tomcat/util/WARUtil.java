@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/WARUtil.java,v 1.3 2000/01/12 06:35:21 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/12 06:35:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/WARUtil.java,v 1.4 2000/07/11 03:49:06 alex Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/07/11 03:49:06 $
  *
  * ====================================================================
  *
@@ -65,6 +65,7 @@
 package org.apache.tomcat.util;
 
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.logging.*;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
 import java.io.File;
@@ -80,6 +81,9 @@ import java.io.FileNotFoundException;
  */
 
 public class WARUtil {
+
+    static Logger.Helper log = new Logger.Helper("tc_log", "WARUtil");
+    
     /** Expand a WAR/Jar file in a directory.
      *  @param dir destination directory
      *  @param war URL for the source WAR/JAR/ZIP file. Starting
@@ -111,8 +115,8 @@ public class WARUtil {
 		    fos.close();
 		}
 	    } catch( FileNotFoundException ex ) {
-		// XXX replace with a call to log() when available
-		System.out.println("WARUtil: FileNotFoundException: " +  ze.getName() + " / " + s );
+		// ???
+		log.log("FileNotFoundException: " +  ze.getName() + " / " + s, Logger.ERROR );
 	    }
 	}
 

@@ -70,6 +70,7 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import org.apache.tomcat.service.http.*;
 import org.apache.tomcat.service.http.HttpResponseAdapter;
 import org.apache.tomcat.service.http.HttpRequestAdapter;
@@ -84,6 +85,8 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 
     ContextManager contextM;
 
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    
     public Ajp12ConnectionHandler() {
     }
 
@@ -167,13 +170,14 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 	    //resA.finish(); // is part of contextM !
 	    socket.close();
 	} catch (Exception e) {
-            // XXX
-	    // this isn't what we want, we want to log the problem somehow
-	    System.out.println("HANDLER THREAD PROBLEM: " + e);
-	    e.printStackTrace();
+	    log("HANDLER THREAD PROBLEM", e);
 	}
     }
 
+    void log(String s, Throwable e) {
+	loghelper.log(s,e);
+    }
+    
 }
 
 class AJP12RequestAdapter extends RequestImpl {
@@ -193,10 +197,6 @@ class AJP12RequestAdapter extends RequestImpl {
 	return ajpin.read(b,off,len);
     }
 
-    void log( String s ) {
-	contextM.log( s );
-    }
-    
     public AJP12RequestAdapter() {
     }
 
@@ -380,7 +380,7 @@ class AJP12RequestAdapter extends RequestImpl {
 			    socket.getOutputStream().write(0); // PING reply
 			    sin.close();
 			} catch (IOException ignored) {
-			    System.err.println(ignored);
+			    log("Exception closing, ignored", ignored);
 			}
                         isPing = true;
                         return;
@@ -404,9 +404,8 @@ class AJP12RequestAdapter extends RequestImpl {
 				return;
 			    }
 			} catch (Exception ignored) {
-			    System.err.println(ignored);
+			    log("Ignored exception processing signal " + signal, ignored);
 			}
-			System.err.println("Signal ignored: " + signal);
 		    }
 		    return;
 		    
@@ -428,8 +427,7 @@ class AJP12RequestAdapter extends RequestImpl {
 	} catch (IOException ioe) {
 	    throw ioe;
         } catch (Exception e) {
-	    System.err.println("Uncaught exception" + e);
-	    e.printStackTrace();
+	    log("Uncaught exception handling request", e);
         }
 	
 	// REQUEST_URI includes query string

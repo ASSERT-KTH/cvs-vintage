@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpoint.java,v 1.3 2000/06/22 23:39:51 alex Exp $
- * $Revision: 1.3 $
- * $Date: 2000/06/22 23:39:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpoint.java,v 1.4 2000/07/11 03:48:54 alex Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/07/11 03:48:54 $
  *
  * ====================================================================
  *
@@ -86,6 +86,10 @@ public class JNIEndpoint {
 
     boolean running = false;
 
+    // Note: I don't really understand JNI and its use of output
+    // streams, but this should really be changed to use
+    // tomcat.logging.Logger and not merely System.out  -Alex
+    
     public JNIEndpoint() {
     }
 
@@ -202,7 +206,7 @@ class StartupThread extends Thread {
             org.apache.tomcat.startup.Tomcat.main(cmdLine);
             failed = false;
         } catch(Throwable t) {
-            t.printStackTrace();
+            t.printStackTrace(); // OK
         } finally {
             if(failed) {
 		System.out.println("Failed ??");

@@ -90,7 +90,7 @@ public class StaticInterceptor extends BaseInterceptor {
 	    realFileNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
 				       "static.realFile");
 	} catch( TomcatException ex ) {
-	    ex.printStackTrace();
+	    log("getting note for " + cm, ex);
 	    throw new RuntimeException( "Invalid state ");
 	}
     }

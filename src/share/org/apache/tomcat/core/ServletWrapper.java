@@ -60,6 +60,7 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.facade.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -204,7 +205,7 @@ public class ServletWrapper extends Handler {
 	    try {
 		loadServlet();
 	    } 	catch( Exception ex ) {
-		ex.printStackTrace();
+		log("in loadServlet()", ex);
 	    }
 	}
 	return servlet;
@@ -233,7 +234,7 @@ public class ServletWrapper extends Handler {
 		    servlet.destroy();
 	    } catch(Exception ex) {
 		// Should never come here...
-		context.log( "Error in destroy ", ex );
+		log( "Error in destroy ", ex );
 	    }
 	}
     }
@@ -246,7 +247,7 @@ public class ServletWrapper extends Handler {
     {
 	// XXX Move this to an interceptor, so it will be configurable.
 	// ( and easier to read )
-	// 	System.out.println("LoadServlet " + servletClass + " "
+	// 	log("LoadServlet " + servletClass + " "
 	// 			   + servletClassName);
 	if (servletClass == null) {
 	    if (servletClassName == null) {
@@ -269,10 +270,10 @@ public class ServletWrapper extends Handler {
     public void init()
     	throws Exception
     {
-	// make sure the servlet in loaded before calling preInit
+	// make sure the servlet is loaded before calling preInit
 	// Jsp case - maybe another Jsp engine is used
 	if( servlet==null && path != null &&  servletClassName == null) {
-	    System.out.println("Handle Jsp init " + servletClassName);
+	    log("Calling handleJspInit " + servletClassName);
 	    handleJspInit();
 	}
 	// Will throw exception if it can't load, let upper
@@ -327,7 +328,8 @@ public class ServletWrapper extends Handler {
 	try {
 	    handleReload(req);
 	} catch( TomcatException ex ) {
-	    ex.printStackTrace();// what to do ?
+	    // what to do ?
+	    log("in handleReload request=" + req, ex);
 	}
 
 	// <servlet><jsp-file> case
@@ -388,7 +390,7 @@ public class ServletWrapper extends Handler {
 		    try {
 			destroy();
 		    } catch(Exception ex ) {
-			context.log( "Error in destroy ", ex );
+			log( "Error in destroy ", ex );
 		    }
 		    initialized=false;
 		    loader.reload();
@@ -444,7 +446,7 @@ public class ServletWrapper extends Handler {
 	    // we can try again
 	    unavailable=null;
 	    unavailableTime=-1;
-	    context.log(getServletName() + " unavailable time expired," +
+	    log(getServletName() + " unavailable time expired," +
 			" try again ");
 	    return false;
 	} else {
@@ -466,7 +468,7 @@ public class ServletWrapper extends Handler {
 
 	String msg=unavailable.getMessage();
 	long moreWaitTime=unavailableTime - System.currentTimeMillis();
-	context.log( "Error in " + getServletName() +
+	log( "Error in " + getServletName() +
 		     "init(), error happened at " +
 		     unavailableTime + " wait " + moreWaitTime +
 		     " : " + msg, unavailable);
@@ -480,7 +482,7 @@ public class ServletWrapper extends Handler {
 
     // -------------------- Not found
     private void handleNotFound( Request req, Response res) {
-	context.log( "Can't find servet " + getServletName() + " " +
+	log( "Can't find servet " + getServletName() + " " +
 		     getServletClass() );
 	res.setStatus( 404 );
 	contextM.handleStatus( req, res,  404 );

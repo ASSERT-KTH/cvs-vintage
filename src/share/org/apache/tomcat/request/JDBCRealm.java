@@ -61,7 +61,7 @@ package org.apache.tomcat.request;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.xml.*;
-
+import org.apache.tomcat.logging.*;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -465,7 +465,7 @@ public final class JDBCRealm extends BaseInterceptor {
           reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE
                 , "required.roles");
       } catch( TomcatException ex ) {
-          ex.printStackTrace();
+          log("setting up note for " + cm, ex);
           throw new RuntimeException( "Invalid state ");
       }
     }
