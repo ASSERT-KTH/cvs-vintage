@@ -24,9 +24,12 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.config.Config;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.Main;
+import org.columba.core.plugin.PluginManager;
+import org.columba.mail.main.MailMain;
 
 /**
  * Abstract testcase creates a folder in setUp and removes it in tearDown.
@@ -89,6 +92,14 @@ public class AbstractFolderTst extends TestCase {
 		Main.DEBUG = true;
 		ColumbaLogger.createDefaultHandler();
 
+//		 init mail component
+		MailMain.getInstance();
+		
+		AddressbookMain.getInstance();
+
+		// now load all available plugins
+		PluginManager.getInstance().initPlugins();
+		
 		folders = new HashSet();
 		sourceFolder = factory.createFolder(folderId++);
 		folders.add(sourceFolder);
@@ -108,6 +119,8 @@ public class AbstractFolderTst extends TestCase {
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	protected void tearDown() throws Exception {
+		if ( folders == null ) return;
+		
 		for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
 			MessageFolder folder = (MessageFolder) iterator.next();
 			File f = folder.getDirectoryFile();

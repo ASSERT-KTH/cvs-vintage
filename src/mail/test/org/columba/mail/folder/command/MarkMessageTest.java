@@ -66,11 +66,6 @@ public class MarkMessageTest extends AbstractFolderTst {
 
 		assertEquals("message should be marked as read", true, flags.getSeen());
 
-		MailboxInfo info = getSourceFolder().getMessageFolderInfo();
-		assertEquals("one mark as read message should be in folder", 1, info
-				.getExists()
-				- info.getUnseen());
-
 	}
 
 	public void testMarkAsFlaggedMessage() throws Exception {

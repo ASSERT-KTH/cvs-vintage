@@ -50,14 +50,8 @@ public class AbstractComposerTst extends AbstractFolderTst {
      */
     protected void setUp() throws Exception {
 
-        super.setUp();
-
-        // create config-folder
-        file = new File("test_config");
-        file.mkdir();
-
-        new Config(file);
-    
+    	super.setUp();
+    	    
         AccountList list = MailConfig.getInstance().getAccountList();
         list.addEmptyAccount("pop3");
     }
@@ -70,6 +64,7 @@ public class AbstractComposerTst extends AbstractFolderTst {
         super.tearDown();
 
         // remove configuration directory
-        DiskIO.deleteDirectory(file);
+        if ( file != null)
+        	DiskIO.deleteDirectory(file);
     }
 }

@@ -26,7 +26,7 @@ import org.columba.addressbook.model.VCARD;
  * @author fdietz
  *  
  */
-public class GetHeaderItemListTest extends AbstractFolderTestCase {
+public class GetHeaderItemListTest extends AbstractFolderTstCase {
 
 	/**
 	 * @param arg0

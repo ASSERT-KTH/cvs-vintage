@@ -24,7 +24,7 @@ import org.columba.addressbook.model.VCARD;
  * @author fdietz
  *
  */
-public class ModifyContactTest extends AbstractFolderTestCase {
+public class ModifyContactTest extends AbstractFolderTstCase {
 
 	/**
 	 * @param arg0

@@ -24,15 +24,22 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.columba.addressbook.main.AddressbookMain;
+import org.columba.core.config.Config;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.Main;
+import org.columba.core.plugin.PluginManager;
 import org.columba.mail.folder.FolderTstHelper;
+import org.columba.mail.main.MailMain;
 
 /**
  * @author fdietz
  *  
  */
-public class AbstractFolderTestCase extends TestCase {
+public class AbstractFolderTstCase extends TestCase {
 
 	private AddressbookFolder sourceFolder;
+
 	private AddressbookFolder destFolder;
 
 	/** A set with all created folders. */
@@ -45,7 +52,7 @@ public class AbstractFolderTestCase extends TestCase {
 	 * 
 	 * @param arg0
 	 */
-	public AbstractFolderTestCase(String arg0) {
+	public AbstractFolderTstCase(String arg0) {
 		super(arg0);
 
 	}
@@ -54,6 +61,24 @@ public class AbstractFolderTestCase extends TestCase {
 	 * @see TestCase#setUp()
 	 */
 	protected void setUp() throws Exception {
+
+		//		 create config-folder
+		File file = new File("test_config");
+		file.mkdir();
+
+		new Config(file);
+
+		Main.DEBUG = true;
+		ColumbaLogger.createDefaultHandler();
+
+		//		 init mail component
+		MailMain.getInstance();
+
+		AddressbookMain.getInstance();
+
+		// now load all available plugins
+		PluginManager.getInstance().initPlugins();
+
 		folders = new HashSet();
 		sourceFolder = FolderTstFactory.createFolder(folderId++);
 		folders.add(sourceFolder);
@@ -72,10 +97,10 @@ public class AbstractFolderTestCase extends TestCase {
 			// delete all mails in folder
 			File[] list = f.listFiles();
 
-			if ( list != null) {
-			for (int i = 0; i < list.length; i++) {
-				list[i].delete();
-			}
+			if (list != null) {
+				for (int i = 0; i < list.length; i++) {
+					list[i].delete();
+				}
 			}
 
 			// delete folder
@@ -90,6 +115,7 @@ public class AbstractFolderTestCase extends TestCase {
 	public AddressbookFolder getDestFolder() {
 		return destFolder;
 	}
+
 	/**
 	 * @return Returns the sourceFolder.
 	 */
