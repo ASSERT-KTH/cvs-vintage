@@ -1,4 +1,4 @@
-// $Id: WizMEName.java,v 1.19 2005/02/13 12:55:15 mvw Exp $
+// $Id: WizMEName.java,v 1.20 2005/02/13 15:12:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,7 +88,7 @@ public class WizMEName extends UMLWizard {
      */
     public void setSuggestion(String s) {
         origSuggest = s;
-        setSuggestion(s);
+        super.setSuggestion(s);
     }
 
 
@@ -121,7 +121,9 @@ public class WizMEName extends UMLWizard {
 	switch (oldStep) {
 	case 1:
 	    String newName = getSuggestion();
-	    if (step1 != null) newName = step1.getText();
+	    if (step1 != null) {
+	        newName = step1.getText();
+	    }
 	    try {
 		Object me = getModelElement();
 		Model.getCoreHelper().setName(me, newName);
