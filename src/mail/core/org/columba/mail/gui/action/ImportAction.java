@@ -23,6 +23,7 @@ import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.config.mailboximport.ImportWizardLauncher;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -44,9 +45,18 @@ public class ImportAction extends FrameAction implements ActionListener {
 	 */
 	public ImportAction(AbstractFrameController frameController) {
 		super(frameController,
-			"Import Mailbox...",
-			"Import Mailbox...",
-			"Import Mailbox...",
+			MailResourceLoader.getString(
+                                "menu",
+                                "mainframe",
+                                "menu_utilities_importmailbox"),
+			MailResourceLoader.getString(
+                                "menu",
+                                "mainframe",
+                                "menu_utilities_importmailbox"),
+			MailResourceLoader.getString(
+                                "menu",
+                                "mainframe",
+                                "menu_utilities_importmailbox"),
 			"IMPORT",
 			ImageLoader.getImageIcon("stock_convert-16.png"),
 			null,
