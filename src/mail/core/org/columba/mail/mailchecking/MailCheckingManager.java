@@ -130,10 +130,10 @@ public class MailCheckingManager extends Observable {
     public void checkAll() {
         Iterator it = list.iterator();
 
-        // for each account
+        // for each account that is enabled and in the fetchalllist
         while (it.hasNext()) {
             AbstractMailCheckingAction action = (AbstractMailCheckingAction) it.next();
-            if( action.isCheckAll()) action.check();
+            if( action.isCheckAll() && action.isEnabled()) action.check();
         }
     }
 
