@@ -1,4 +1,4 @@
-// $Id: FigUsage.java,v 1.7 2003/09/14 18:51:33 alexb Exp $
+// $Id: FigUsage.java,v 1.8 2004/07/26 13:33:08 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,10 +55,10 @@ public class FigUsage extends FigDependency {
     protected void modelChanged(MElementEvent e) {
 	super.modelChanged(e);
 	
-	String stereoTypeStr = _stereo.getText();
+	String stereoTypeStr = getStereotypeFig().getText();
 
 	if (stereoTypeStr == null || "".equals(stereoTypeStr)) {
-	    _stereo.setText(NotationHelper.getLeftGuillemot() + "use"
+	    getStereotypeFig().setText(NotationHelper.getLeftGuillemot() + "use"
 			    + NotationHelper.getRightGuillemot());
 	}
     } 

@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.66 2004/07/23 17:53:47 linus Exp $
+// $Id: FigAssociation.java,v 1.67 2004/07/26 13:33:08 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,8 +93,8 @@ public class FigAssociation extends FigEdgeModelElement {
     
         // lets use groups to construct the different text sections at
         // the association
-        _middleGroup.addFig(_name);
-        _middleGroup.addFig(_stereo);
+        _middleGroup.addFig(getNameFig());
+        _middleGroup.addFig(getStereotypeFig());
         addPathItem(_middleGroup, new PathConvPercent(this, 50, 25));
     
         _srcMult = new FigText(10, 10, 90, 20);
@@ -477,9 +477,9 @@ public class FigAssociation extends FigEdgeModelElement {
             return;
         Object assoc =  getOwner();
         if (ModelFacade.isAbstract(assoc))
-            _name.setFont(ITALIC_LABEL_FONT);
+            getNameFig().setFont(ITALIC_LABEL_FONT);
         else
-            _name.setFont(LABEL_FONT);
+            getNameFig().setFont(LABEL_FONT);
         super.updateNameText();
         setBounds(rect.x, rect.y, rect.width, rect.height);
     }

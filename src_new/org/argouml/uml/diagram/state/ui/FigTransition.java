@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.23 2004/07/23 17:53:46 linus Exp $
+// $Id: FigTransition.java,v 1.24 2004/07/26 13:33:08 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class FigTransition extends FigEdgeModelElement {
     // constructors
     public FigTransition() {
         super();
-        addPathItem(_name, new PathConvPercent(this, 50, 10));
+        addPathItem(getNameFig(), new PathConvPercent(this, 50, 10));
         _fig.setLineColor(Color.black);
         setDestArrowHead(endArrow);
     }
@@ -216,7 +216,7 @@ public class FigTransition extends FigEdgeModelElement {
      * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#updateNameText()
      */
     protected void updateNameText() {
-        _name.setText(Notation.generate(this, getOwner()));
+        getNameFig().setText(Notation.generate(this, getOwner()));
     }
 
 } /* end class FigTransition */

@@ -1,4 +1,4 @@
-// $Id: FigDependency.java,v 1.11 2004/05/20 11:12:24 linus Exp $
+// $Id: FigDependency.java,v 1.12 2004/07/26 13:33:08 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class FigDependency extends FigEdgeModelElement {
     protected ArrowHeadGreater endArrow;
 
     public FigDependency() {
-        addPathItem(_stereo, new PathConvPercent(this, 50, 10));
+        addPathItem(getStereotypeFig(), new PathConvPercent(this, 50, 10));
         endArrow = new ArrowHeadGreater();
         endArrow.setFillColor(Color.red);
         setDestArrowHead(endArrow);

@@ -1,4 +1,4 @@
-// $Id: FigAssociationRole.java,v 1.18 2004/07/22 20:55:09 linus Exp $
+// $Id: FigAssociationRole.java,v 1.19 2004/07/26 13:33:08 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,7 +77,7 @@ public class FigAssociationRole extends FigAssociation {
         // String asNameStr = ((ar.getName() == null) && (ar.getBase()
         // == null)) ? "" : Notation.generate(this, ar);
         String asNameStr = Notation.generate(this, ar);
-        _name.setText(asNameStr);
+        getNameFig().setText(asNameStr);
     }
     
     public void addMessage(FigMessage message) {

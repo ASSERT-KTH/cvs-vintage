@@ -1,4 +1,4 @@
-// $Id: FigRealization.java,v 1.5 2004/05/27 07:54:31 mkl Exp $
+// $Id: FigRealization.java,v 1.6 2004/07/26 13:33:08 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigRealization.java
 // Classes: FigRealization
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigRealization.java,v 1.5 2004/05/27 07:54:31 mkl Exp $
+// $Id: FigRealization.java,v 1.6 2004/07/26 13:33:08 bobtarling Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -46,12 +46,12 @@ public class FigRealization extends FigEdgeModelElement {
     ArrowHeadTriangle endArrow;
 
     public FigRealization() {
-        addPathItem(_stereo, new PathConvPercent(this, 50, 10));
+        addPathItem(getStereotypeFig(), new PathConvPercent(this, 50, 10));
         endArrow = new ArrowHeadTriangle();
         endArrow.setFillColor(Color.white);
         setDestArrowHead(endArrow);
         setBetweenNearestPoints(true);
-        _stereo.setText("");
+        getStereotypeFig().setText("");
         getFig().setDashed(true);
     }
 
