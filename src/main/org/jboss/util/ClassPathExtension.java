@@ -20,7 +20,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class ClassPathExtension
    implements ClassPathExtensionMBean, MBeanRegistration
@@ -63,13 +63,16 @@ public class ClassPathExtension
    
       MLet mlet = (MLet)Thread.currentThread().getContextClassLoader();
       
+      URL u = null;
+      
       if (url.endsWith("/"))
       {
          // Add all libs in directory
          File dir;
          try
          {
-            URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
+//            URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
+			u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
             dir = new File(u.getFile());
          } catch (MalformedURLException e)
          {
@@ -100,7 +103,8 @@ public class ClassPathExtension
                // Add dir
                try
                {
-                  URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
+//                  URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
+                  u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
                   mlet.addURL(u);
                
                   // Add to java.class.path
@@ -109,7 +113,8 @@ public class ClassPathExtension
                   log.debug("Added directory:"+u);
                } catch (MalformedURLException e)
                {
-                  URL u = new File(url).toURL();
+//                  URL u = new File(url).toURL();
+                  u = new File(url).toURL();
                   mlet.addURL(u);
                
                   // Add to java.class.path
@@ -120,13 +125,15 @@ public class ClassPathExtension
             }
          } catch (Throwable ex)
          {
+         	log.warning("Classpath extension "+u+" is invalid.");
             ex.printStackTrace();
          }
       } else
       {
          try
          {
-            URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
+//            URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
+            u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
             mlet.addURL(u);
          
             // Add to java.class.path
@@ -137,7 +144,8 @@ public class ClassPathExtension
          {
             try
             {
-               URL u = new File(url).toURL();
+//               URL u = new File(url).toURL();
+               u = new File(url).toURL();
                mlet.addURL(u);
          
                // Add to java.class.path
@@ -146,6 +154,7 @@ public class ClassPathExtension
                log.debug("Added library:"+url);
             } catch (MalformedURLException ex)
             {
+               log.warning("Classpath extension "+u+" is invalid.");
                log.exception(ex);
             }
          }
