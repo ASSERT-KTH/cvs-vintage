@@ -133,11 +133,11 @@ ul.tasks li {
  margin-left: 2px;
  }
 .tabs th {
-	background: url(images/nw_min.gif) no-repeat top left;
+	background: url(../images/nw_min.gif) no-repeat top left;
 	border-right: 1px solid #666;
 	}
 .tabs td {
-	background: url(images/nw_min.gif) no-repeat top left;
+	background: url(../images/nw_min.gif) no-repeat top left;
 	border-bottom: 1px solid #ccc;
 	border-right: 1px solid #666;
 	}
@@ -152,13 +152,13 @@ ul.tasks li {
 
 /* Scarab/App - styles start here */
 .functnbar {
-	background: #666 url(images/nw_min.gif) no-repeat top left;
+	background: #666 url(../images/nw_min.gif) no-repeat top left;
 	}
 .functnbar2 {
-	background: #666 url(images/sw_min.gif) no-repeat bottom left;
+	background: #666 url(../images/sw_min.gif) no-repeat bottom left;
 	}
 .functnbar3 {
-	background: #ccc url(images/sw_min.gif) no-repeat bottom left;
+	background: #ccc url(../images/sw_min.gif) no-repeat bottom left;
 	}
 .functnbar, .functnbar2, {
  padding: 2px;
