@@ -52,7 +52,7 @@
     <li><strong>$l10n.Next</strong> $l10n.NextDesc</li>
   </ul>
   <p><strong>$l10n.NavP10Head</strong></p>
-  <p>$l10n.NavP10</p>
+  <p>$l10n.NavP10S1</p>
   <p>$l10n.NavP11 <strong>$l10n.Selectlc</strong> $l10n.NavP11S2</p>
   <p>$l10n.NavP12</p>
   <h3><a name="results" id="results">$l10n.NavP13Head</a></h3>

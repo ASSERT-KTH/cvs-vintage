@@ -40,7 +40,7 @@
     <li>$l10n.ClickThe <strong>$l10n.Done</strong> $l10n.UITP9</li>
   </ol>
   <h3><strong><a name="using" id="using">$l10n.UsingTemplates</a></strong></h3>
-  <p>$l10n.UITP10S1<strong>$l10n.EnterNew</strong> $l10n.UITP10S2<strong>$l10n.Select</strong> $l10n.UITP10S2<em>$l10n.ViewAllTemplates</em> $l10n.UITP10S3<strong>$l10n.Done</strong> $l10n.UITP10S4</p>
+  <p>$l10n.UITP10S1<strong>$l10n.EnterNew</strong> $l10n.UITP10S2<strong>$l10n.Select</strong> $l10n.UITP10S3<em>$l10n.ViewAllTemplates</em> $l10n.UITP10S4<strong>$l10n.Done</strong> $l10n.UITP10S5</p>
  
 <div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
   
