@@ -24,7 +24,7 @@
 // File: Parser.java
 // Classes: Parser
 // Original Author:
-// $Id: Parser.java,v 1.5 2002/08/04 17:44:20 thierrylach Exp $
+// $Id: Parser.java,v 1.6 2002/08/16 23:51:36 d00mst Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -44,12 +44,13 @@ import ru.novosoft.uml.behavior.common_behavior.*;
 import ru.novosoft.uml.behavior.state_machines.*;
 import ru.novosoft.uml.model_management.*;
 import java.util.*;
+import java.text.ParseException;
 
 public abstract class Parser {
 
   public abstract MExtensionPoint parseExtensionPoint(String s);
   public abstract MOperation parseOperation(String s);
-  public abstract MAttribute parseAttribute(String s);
+  public abstract void parseAttribute(String s, MAttribute attr) throws ParseException;
   public abstract MParameter parseParameter(String s);
 //   public abstract Package parsePackage(String s);
 //   public abstract MClassImpl parseClassifier(String s);
