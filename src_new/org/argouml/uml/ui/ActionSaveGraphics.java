@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.19 2004/02/29 12:35:46 linus Exp $
+// $Id: ActionSaveGraphics.java,v 1.20 2004/04/21 20:49:47 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -241,7 +241,7 @@ public class ActionSaveGraphics
 	    int response =
 		JOptionPane.showConfirmDialog(pb, t, t,
 					      JOptionPane.YES_NO_OPTION);
-	    if (response == JOptionPane.NO_OPTION) {
+	    if (response != JOptionPane.YES_OPTION) {
 		return false;
 	    }
 	}
