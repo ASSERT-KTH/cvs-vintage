@@ -9,7 +9,10 @@ package org.jboss.metadata;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.Collection;
+
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -21,7 +24,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -132,14 +135,21 @@ public abstract class BeanMetaData extends MetaData {
 		return TX_UNKNOWN;
 	}
 
+   // d.s.> PERFORMANCE !!! 
 	public Set getMethodPermissions(String methodName, Class[] params, boolean remote) {
-		Iterator iterator = getPermissionMethods();
+		Set result = new HashSet ();
+      Iterator iterator = getPermissionMethods();
 		while (iterator.hasNext()) {
 			MethodMetaData m = (MethodMetaData)iterator.next();
-			if (m.patternMatches(methodName, params, remote)) return m.getRoles();
+			if (m.patternMatches(methodName, params, remote))
+         {
+            Iterator i = m.getRoles().iterator ();
+            while (i.hasNext ())
+               result.add (i.next ());
+         }
 		}
 		// not found
-		return null;
+		return result;
 	}
 
 	public void importEjbJarXml(Element element) throws DeploymentException {
