@@ -57,7 +57,7 @@ public class MethodConf {
     }
 
     public String getReturnTypeName() {
-        return method.getReturnType().getName();
+        return MethodProto.getName(method.getReturnType());
     }
 
     private String paramString;
@@ -70,9 +70,9 @@ public class MethodConf {
         String s = "";
         for (int i=0; i<params.length; i++) {
             if (s.equals("")) {
-                s = params[i].getName() + " param" + (i + 1);
+                s = MethodProto.getName(params[i]) + " param" + (i + 1);
             } else {
-                s += ", " + params[i].getName() + " param" + (i + 1);
+                s += ", " + MethodProto.getName(params[i]) + " param" + (i + 1);
             }
         }
         paramString = s;
@@ -108,9 +108,9 @@ public class MethodConf {
         String s = "";
         for (int i=0; i<ex.length; i++) {
             if (s.equals("")) {
-                s = ex[i].getName();
+                s = MethodProto.getName(ex[i]);
             } else {
-                s += ", " + ex[i].getName();
+                s += ", " + MethodProto.getName(ex[i]);
             }
         }
         throwsString = s;
@@ -118,7 +118,7 @@ public class MethodConf {
     }
 
     public String getDeclItfName() {
-        return method.getDeclaringClass().getName();
+        return MethodProto.getName(method.getDeclaringClass());
     }
 
     public boolean returnsVoid() {

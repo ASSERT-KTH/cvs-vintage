@@ -77,14 +77,23 @@ public class MethodProto {
     }
 
     public MethodProto(Method m) {
-        returnType = m.getReturnType().getName();
+        returnType = getName(m.getReturnType());
         methodName = m.getName();
         Class[] params = m.getParameterTypes();
         paramTypes = new String[params.length];
         for (int i=0; i<params.length; i++) {
-            paramTypes[i] = params[i].getName();
+            paramTypes[i] = getName(params[i]);
         }
         doHash();
+    }
+
+    public static String getName(Class c) {
+        String name;
+        if (c.isArray()) {
+            return getName(c.getComponentType()) + "[]";
+        } else {
+            return c.getName().replace('$', '.');
+        }
     }
 
     /**

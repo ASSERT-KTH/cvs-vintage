@@ -167,14 +167,14 @@ public class Compiler {
                 } catch (ClassNotFoundException e1) {
                     throw new CompilerException("class not found " + className, e1);
                 }
-                f.write("<class>\n\t<name>" + className + "</name>\n");
+                f.write("<class>\n\t<name>" + className + "</name>\n\t<random>\n");
                 Method[] remMths = getRemoteMethods(cl);
                 for (int j = 0; j < remMths.length; j++) {
                     f.write("\t<method>\n\t\t<signature>");
                     f.write(new MethodProto(remMths[j]).toString());
-                    f.write("</signature>\n\t\t<rr/>\n\t</method>\n");
+                    f.write("</signature>\n\t</method>\n");
                 }
-                f.write("</class>\n\n");
+                f.write("\t</random>\n</class>\n\n");
             }
             f.write("</cluster-config>\n");
             f.close();
@@ -236,7 +236,7 @@ public class Compiler {
             Class[] p2 = m2.getParameterTypes();
             int i = 0;
             while ((i < p1.length) && (i < p2.length)) {
-                r = p1[i].getName().compareTo(p2[i].getName());
+                r = MethodProto.getName(p1[i]).compareTo(MethodProto.getName(p2[i]));
                 if (r != 0) return r;
                 i++;
             }
@@ -329,7 +329,7 @@ public class Compiler {
     public static void usage() {
         System.out.println(
             "Usage: java "
-                + Compiler.class.getName()
+                + MethodProto.getName(Compiler.class)
                 + " [options] [class names]");
         System.out.println();
         System.out.println(

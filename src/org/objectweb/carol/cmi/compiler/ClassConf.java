@@ -37,7 +37,7 @@ public class ClassConf {
     }
 
     public String getClassName() {
-        return cl.getName();
+        return MethodProto.getName(cl);
     }
 
     public boolean containsMethod(MethodProto mp) {
@@ -75,9 +75,9 @@ public class ClassConf {
         while (it.hasNext()) {
             Class itf = (Class) it.next();
             if (s.equals("")) {
-                s = itf.getName();
+                s = MethodProto.getName(itf);
             } else {
-                s += ", " + itf.getName();
+                s += ", " + MethodProto.getName(itf);
             }
         }
         return s;
