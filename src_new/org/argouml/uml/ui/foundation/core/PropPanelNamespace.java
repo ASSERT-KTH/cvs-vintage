@@ -1,4 +1,4 @@
-// $Id: PropPanelNamespace.java,v 1.13 2003/05/10 13:23:19 bobtarling Exp $
+// $Id: PropPanelNamespace.java,v 1.14 2003/05/16 13:51:19 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
     /**
      *    @deprecated As of ArgoUml version 0.13.5 (10-May-2003),
      *                {@link #PropPanelNamespace(String title, ImageIcon icon, Orientation orientation)}
-     *                I propose to remove this by version 0.13.7 (Bob Tarling)
+     *                I propose to remove this by version 0.15 (Bob Tarling)
      */
     public PropPanelNamespace(String panelName, ImageIcon icon, int columns) {
         super(panelName, icon, columns);
@@ -66,7 +66,7 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
     /**
      *    @deprecated As of ArgoUml version 0.13.5 (10-May-2003),
      *                {@link #PropPanelNamespace(String title, ImageIcon icon, Orientation orientation)}
-     *                I propose to remove this by version 0.13.7 (Bob Tarling)
+     *                I propose to remove this by version 0.15 (Bob Tarling)
      */
     public PropPanelNamespace(String panelName,int columns) {
         this(panelName, null, columns);
