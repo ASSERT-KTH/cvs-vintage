@@ -31,7 +31,7 @@ import javax.xml.rpc.handler.MessageContext;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -214,6 +214,7 @@ public class StatelessSessionEnterpriseContext
 
       public MessageContext getMessageContext() throws IllegalStateException
       {
+         assertAllowedIn("getMessageContext", IN_SERVICE_ENDPOINT_METHOD);
          return null;
       }
    }

@@ -39,7 +39,7 @@ import java.io.Serializable;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.67 $
+ * @version $Revision: 1.68 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -50,28 +50,28 @@ public abstract class EnterpriseContext
 {
    // Constants -----------------------------------------------------
 
-   /** These constants are used to validate method access,
-    *  make sure they are OR-able */
+   /** These constants are used to validate method access */
    public static final int NOT_ALLOWED = 0;
-   public static final int IN_INTERCEPTOR_METHOD = 1;
-   public static final int IN_EJB_ACTIVATE = 2;
-   public static final int IN_EJB_PASSIVATE = 4;
-   public static final int IN_EJB_REMOVE = 8;
-   public static final int IN_EJB_CREATE = 16;
-   public static final int IN_EJB_POST_CREATE = 32;
-   public static final int IN_EJB_FIND = 64;
-   public static final int IN_EJB_HOME = 128;
-   public static final int IN_EJB_TIMEOUT = 256;
-   public static final int IN_EJB_LOAD = 512;
-   public static final int IN_EJB_STORE = 1024;
-   public static final int IN_SET_ENTITY_CONTEXT = 2048;
-   public static final int IN_UNSET_ENTITY_CONTEXT = 4096;
-   public static final int IN_SET_SESSION_CONTEXT = 8192;
-   public static final int IN_SET_MESSAGE_DRIVEN_CONTEXT = 16384;
-   public static final int IN_AFTER_BEGIN = 32768;
-   public static final int IN_BEFORE_COMPLETION = 65536;
-   public static final int IN_AFTER_COMPLETION = 131072;
-   public static final int IN_BUSINESS_METHOD = 262144;
+   public static final int IN_INTERCEPTOR_METHOD = (int) Math.pow(2, 0);
+   public static final int IN_EJB_ACTIVATE = (int) Math.pow(2, 1);
+   public static final int IN_EJB_PASSIVATE = (int) Math.pow(2, 2);
+   public static final int IN_EJB_REMOVE = (int) Math.pow(2, 3);
+   public static final int IN_EJB_CREATE = (int) Math.pow(2, 4);
+   public static final int IN_EJB_POST_CREATE = (int) Math.pow(2, 5);
+   public static final int IN_EJB_FIND = (int) Math.pow(2, 6);
+   public static final int IN_EJB_HOME = (int) Math.pow(2, 7);
+   public static final int IN_EJB_TIMEOUT = (int) Math.pow(2, 8);
+   public static final int IN_EJB_LOAD = (int) Math.pow(2, 9);
+   public static final int IN_EJB_STORE = (int) Math.pow(2, 10);
+   public static final int IN_SET_ENTITY_CONTEXT = (int) Math.pow(2, 11);
+   public static final int IN_UNSET_ENTITY_CONTEXT = (int) Math.pow(2, 12);
+   public static final int IN_SET_SESSION_CONTEXT = (int) Math.pow(2, 13);
+   public static final int IN_SET_MESSAGE_DRIVEN_CONTEXT = (int) Math.pow(2, 14);
+   public static final int IN_AFTER_BEGIN = (int) Math.pow(2, 15);
+   public static final int IN_BEFORE_COMPLETION = (int) Math.pow(2, 16);
+   public static final int IN_AFTER_COMPLETION = (int) Math.pow(2, 17);
+   public static final int IN_BUSINESS_METHOD = (int) Math.pow(2, 18);
+   public static final int IN_SERVICE_ENDPOINT_METHOD = (int) Math.pow(2, 19);
 
    private static HashMap methodMap = new LinkedHashMap();
    static {
@@ -94,6 +94,7 @@ public abstract class EnterpriseContext
       methodMap.put(new Integer(IN_BEFORE_COMPLETION), "IN_BEFORE_COMPLETION");
       methodMap.put(new Integer(IN_AFTER_COMPLETION), "IN_AFTER_COMPLETION");
       methodMap.put(new Integer(IN_BUSINESS_METHOD), "IN_BUSINESS_METHOD");
+      methodMap.put(new Integer(IN_SERVICE_ENDPOINT_METHOD), "IN_SERVICE_ENDPOINT_METHOD");
    }
 
    // Attributes ----------------------------------------------------
