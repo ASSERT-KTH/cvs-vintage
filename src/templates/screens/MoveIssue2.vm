@@ -12,14 +12,13 @@
 #else
 
 #set ($selectAction = $moveIssueGroup.Action.Value)
-#set ($moduleId = $context.get("ModuleId"))
-#set ($issueTypeId = $context.get("issueTypeId"))
-#set ($module = $scarabR.CurrentModule)
-#set ($newModule = $scarabR.getModule("$moduleId"))
-#set ($newIssueType = $scarabR.getIssueType("$issueTypeId"))
+#set ($newModuleId = $context.get("newModuleId"))
+#set ($newIssueTypeId = $context.get("newIssueTypeId"))
+#set ($newModule = $scarabR.getModule("$newModuleId"))
+#set ($newIssueType = $scarabR.getIssueType("$newIssueTypeId"))
 
-#set ($matchingAttributes = $issue.getMatchingAttributeValuesList("$moduleId", "$issueTypeId"))
-#set ($orphanAttributes = $issue.getOrphanAttributeValuesList("$moduleId", "$issueTypeId"))
+#set ($matchingAttributes = $issue.getMatchingAttributeValuesList("$newModuleId", "$newIssueTypeId"))
+#set ($orphanAttributes = $issue.getOrphanAttributeValuesList("$newModuleId", "$newIssueTypeId"))
 
 #if ($selectAction.toString().equals("move"))
  #set ($actionText = "move")
@@ -33,8 +32,8 @@
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="MoveIssue.vm" />
 <input type="hidden" name="id" value="$issueId" />
 <input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issueId" />
-<input type="hidden" name="$moveIssueGroup.ModuleId.key" value="$moduleId" />
-<input type="hidden" name="$moveIssueGroup.IssueTypeId.key" value="3" />
+<input type="hidden" name="$moveIssueGroup.ModuleId.key" value="$newModuleId" />
+<input type="hidden" name="$moveIssueGroup.IssueTypeId.key" value="$newIssueTypeId" />
 <input type="hidden" name="$moveIssueGroup.Action.key" value="$selectAction" />
 
 <div class="functnbar">
