@@ -1,4 +1,4 @@
-// $Id: SelectionActor.java,v 1.19 2004/08/28 15:01:09 mvw Exp $
+// $Id: SelectionActor.java,v 1.20 2004/10/03 17:50:18 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,11 +52,12 @@ import org.tigris.gef.presentation.Handle;
 public class SelectionActor extends SelectionWButtons {
 
     private static final Logger LOG = Logger.getLogger(SelectionActor.class);
-    ////////////////////////////////////////////////////////////////
-    // constants
-    public static Icon assoc =
-	ResourceLoaderWrapper
-	    .lookupIconResource("Association");
+
+    /**
+     * The icon for an association.
+     */
+    private static Icon assoc =
+	ResourceLoaderWrapper.lookupIconResource("Association");
 
 
 

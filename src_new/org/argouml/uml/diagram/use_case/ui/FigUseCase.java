@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.45 2004/09/27 21:18:23 mvw Exp $
+// $Id: FigUseCase.java,v 1.46 2004/10/03 17:50:18 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1074,8 +1074,7 @@ public class FigUseCase extends FigNodeModelElement {
      * We check that it is one of the extension point compartments and then
      * parse accordingly.<p>
      *
-     * @param ft  The text that has been edited.
-     * @throws PropertyVetoException
+     * The parameter ft is the text that has been edited.
      *
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEdited(org.tigris.gef.presentation.FigText)
      */

@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.121 2004/09/29 17:02:52 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.122 2004/10/03 17:50:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -618,9 +618,9 @@ public abstract class FigNodeModelElement
     }
 
     /**
-     * @param x
-     * @param y
-     * @return
+     * @param x the x of the hit
+     * @param y the y of the hit
+     * @return the todo item of which the clarifier has been hit
      */
     public ToDoItem hitClarifier(int x, int y) {
         int iconX = getX();
@@ -978,10 +978,8 @@ public abstract class FigNodeModelElement
     }
 
     /**
-     * TODO: Document this! What does it do? What do the params mean?
-     * 
-     * @param o
-     * @return
+     * @param o the given object
+     * @return true if one of my figs has the given object as owner
      */
     protected boolean isPartlyOwner(Object o) {
         if (o == null || o == getOwner()) {
@@ -998,11 +996,9 @@ public abstract class FigNodeModelElement
     }
 
     /**
-     * TODO: Document this! What does it do? What do the params mean?
-     * 
-     * @param fig
-     * @param o
-     * @return
+     * @param fig the given fig (may be a group)
+     * @param o the given object
+     * @return true if one of the given figs has the given object as owner
      */
     protected boolean isPartlyOwner(Fig fig, Object o) {
         if (o == null) {
