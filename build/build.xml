@@ -83,6 +83,8 @@
             <fileset dir="${tomcat.dist.dir}/common"/>
         </copy>
         <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
+        <filter token="TOMCAT_SHUTDOWN_PORT" value="${scarab.tomcat.shutdown.port}"/>
+        <filter token="TOMCAT_HTTP_PORT" value="${scarab.tomcat.http.port}"/>
         <copy todir="${build.dir}/conf" filtering="yes">
             <fileset dir="${tomcat.dist.dir}/conf"/>
         </copy>
@@ -637,7 +639,7 @@
         </copy>
     </target>
 
-    <target name="upgrade-tomcat">
+    <target name="upgrade-tomcat-bin">
         <echo>
         Upgrading Tomcat from: ${tomcat.binary.dir}
         </echo>
@@ -938,7 +940,7 @@
     <!-- ================================================================== -->
     <!-- Creates the API documentation                                      -->
     <!-- ================================================================== -->
-    <target name="javadocs" depends="prepare">
+    <target name="javadocs" depends="om-peer,prepare">
         <mkdir dir="${javadoc.destdir}"/>
         <javadoc
             sourcepath="${build.src.scarab}"
