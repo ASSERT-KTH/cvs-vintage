@@ -28,6 +28,9 @@ mysql scarab < mysql-turbine-security.sql
 echo "Importing mysql-scarab.sql..."
 mysql scarab < mysql-scarab.sql
 
+echo "Importing mysql-scarab-id-table-init.sql..."
+mysql scarab < mysql-scarab-id-table-init.sql
+
 echo "Importing mysql-scarab-default-data.sql..."
 mysql scarab < mysql-scarab-default-data.sql
 
