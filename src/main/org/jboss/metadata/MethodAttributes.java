@@ -8,12 +8,13 @@ package org.jboss.metadata;
  * <method-name>get*</method-name>
  * <read-only>true</read-only>
  * <idempotent>true</idempotent>
+ * <transaction-timeout>100</tranaction-timeout>
  * </method>
  * </method-attributes>
  *
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/04/10: peter</b>
@@ -23,47 +24,54 @@ package org.jboss.metadata;
  */
 public class MethodAttributes
 {
-    String pattern;
-    boolean readOnly;
-    boolean idempotent;
+   String pattern;
+   boolean readOnly;
+   boolean idempotent;
+   int txTimeout;
 
-    public static MethodAttributes kDefaultMethodAttributes;
+   public static MethodAttributes kDefaultMethodAttributes;
 
-    static
-    {
-	kDefaultMethodAttributes = new MethodAttributes();
-	kDefaultMethodAttributes.pattern = "*";
-	kDefaultMethodAttributes.readOnly = false;
-	kDefaultMethodAttributes.idempotent = false;
-    }
+   static
+   {
+      kDefaultMethodAttributes = new MethodAttributes();
+      kDefaultMethodAttributes.pattern = "*";
+      kDefaultMethodAttributes.readOnly = false;
+      kDefaultMethodAttributes.idempotent = false;
+      kDefaultMethodAttributes.txTimeout = 0;
+   }
 
-    public boolean patternMatches(String methodName)
-    {
-	int ct, end;
+   public boolean patternMatches(String methodName)
+   {
+      int ct, end;
 
-	end = pattern.length();
+      end = pattern.length();
 
-	if(end > methodName.length())
-	    return false;
+      if(end > methodName.length())
+          return false;
 
-	for(ct = 0; ct < end; ct ++)
-	{
-	    char c = pattern.charAt(ct);
-	    if(c == '*')
-		return true;
-	    if(c != methodName.charAt(ct))
-		return false;
-	}
-	return ct == methodName.length();
-    }
+      for(ct = 0; ct < end; ct ++)
+      {
+         char c = pattern.charAt(ct);
+         if(c == '*')
+        return true;
+         if(c != methodName.charAt(ct))
+        return false;
+      }
+      return ct == methodName.length();
+   }
 
-    public boolean isReadOnly()
-    {
-	return readOnly;
-    }
+   public boolean isReadOnly()
+   {
+      return readOnly;
+   }
 
-    public boolean isIdempotent()
-    {
-	return idempotent;
-    }
+   public boolean isIdempotent()
+   {
+      return idempotent;
+   }
+
+   public int getTransactionTimeout()
+   {
+      return txTimeout;
+   }
 }

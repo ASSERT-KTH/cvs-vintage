@@ -13,6 +13,7 @@ import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.tm.JBossTransactionRolledbackException;
 import org.jboss.tm.JBossTransactionRolledbackLocalException;
+import org.jboss.tm.TransactionTimeoutConfiguration;
 import org.jboss.util.NestedException;
 import org.jboss.util.deadlock.ApplicationDeadlockException;
 import org.w3c.dom.Element;
@@ -44,10 +45,9 @@ import java.util.ArrayList;
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- *  @version $Revision: 1.42 $
+ *  @version $Revision: 1.43 $
  */
-public class TxInterceptorCMT
-extends AbstractTxInterceptor implements XmlLoadable
+public class TxInterceptorCMT extends AbstractTxInterceptor implements XmlLoadable
 {
 
    // Attributes ----------------------------------------------------
@@ -118,6 +118,7 @@ extends AbstractTxInterceptor implements XmlLoadable
       }
       return null;
    }
+   
    public Object invokeHome(Invocation invocation) throws Exception
    {
       Transaction oldTransaction = invocation.getTransaction();
@@ -215,17 +216,17 @@ extends AbstractTxInterceptor implements XmlLoadable
       }
 
       String methodName;
-      if(m != null) {
+      if(m != null)
          methodName = m.getName();
-      }
       else
-      {
          methodName ="<no method>";
-      }
 
       if (log.isTraceEnabled())
       {
-         log.trace(txName + " for " + methodName);
+         if (m != null && (type == MetaData.TX_REQUIRED || type == MetaData.TX_REQUIRES_NEW))
+            log.trace(txName + " for " + methodName + " timeout=" + container.getBeanMetaData().getTransactionTimeout(methodName));
+         else
+            log.trace(txName + " for " + methodName);
       }
    }
 
@@ -288,10 +289,11 @@ extends AbstractTxInterceptor implements XmlLoadable
             }
             case MetaData.TX_REQUIRED:
             {
+               int oldTimeout = 0;
                if (oldTransaction == null)
                { // No tx running
                   // Create tx
-                  tm.begin();
+                  oldTimeout = startTransaction(invocation);
 
                   // get the tx
                   newTransaction = tm.getTransaction();
@@ -320,13 +322,9 @@ extends AbstractTxInterceptor implements XmlLoadable
 
                   // Only do something if we started the transaction
                   if (newTransaction != null)
-                  {
-                     endTransaction(invocation, newTransaction, oldTransaction);
-                  }
+                     endTransaction(invocation, newTransaction, oldTransaction, oldTimeout);
                   else
-                  {
                      tm.suspend();
-                  } // end of else
                }
             }
             case MetaData.TX_SUPPORTS:
@@ -354,7 +352,7 @@ extends AbstractTxInterceptor implements XmlLoadable
             case MetaData.TX_REQUIRES_NEW:
             {
                // Always begin a transaction
-               tm.begin();
+               int oldTimeout = startTransaction(invocation);
 
                // get it
                newTransaction = tm.getTransaction();
@@ -369,7 +367,7 @@ extends AbstractTxInterceptor implements XmlLoadable
                finally
                {
                   // We started the transaction for sure so we commit or roll back
-                  endTransaction(invocation, newTransaction, oldTransaction);
+                  endTransaction(invocation, newTransaction, oldTransaction, oldTimeout);
                }
             }
             case MetaData.TX_MANDATORY:
@@ -421,7 +419,21 @@ extends AbstractTxInterceptor implements XmlLoadable
       return null;
    }
 
-   private void endTransaction(final Invocation invocation, final Transaction tx, final Transaction oldTx) 
+   private int startTransaction(final Invocation invocation) throws Exception
+   {
+      // Get the old timeout and set any new timeout
+      int oldTimeout = -1;
+      if (tm instanceof TransactionTimeoutConfiguration)
+      {
+         oldTimeout = ((TransactionTimeoutConfiguration) tm).getTransactionTimeout();
+         int newTimeout = container.getBeanMetaData().getTransactionTimeout(invocation.getMethod());
+         tm.setTransactionTimeout(newTimeout);
+      }
+      tm.begin();
+      return oldTimeout;
+   }
+
+   private void endTransaction(final Invocation invocation, final Transaction tx, final Transaction oldTx, final int oldTimeout) 
       throws TransactionRolledbackException, SystemException
    {
       // Assert the correct transaction association
@@ -474,8 +486,10 @@ extends AbstractTxInterceptor implements XmlLoadable
          // interface)
          //tx has committed, so we can't throw txRolledbackException.
          tm.suspend();
+         // Reset the transaction timeout (unless we didn't set it)
+         if (oldTimeout != -1)
+            tm.setTransactionTimeout(oldTimeout);
       }
-
    }
 
 

@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.12 2004/03/19 20:58:23 loubyansky Exp $
-$Revision: 1.12 $
+$Id: jboss_3_2.dtd,v 1.13 2004/04/14 18:12:24 ejort Exp $
+$Revision: 1.13 $
 
 Overview of the architecture of jboss.xml
 
@@ -512,7 +512,7 @@ container or ejb depends.
   The method element is used to specify attributes for one method or all those
   matching a pattern startingstring*.
 -->
-<!ELEMENT method (method-name, read-only?, idempotent?)>
+<!ELEMENT method (method-name, read-only?, idempotent?, transaction-timeout?)>
 
 <!--
   The method-name element specifies a complete method name or a pattern consisting of an
@@ -525,6 +525,14 @@ container or ejb depends.
   is completely stateless. Really the same as read-only and should be dropped.
 -->
 <!ELEMENT idempotent (#PCDATA)>
+
+<!--
+  The transaction timeout in seconds (overriding the default timeout).
+  This will only work for Required (where the method starts the transaction) and RequiresNew.
+  The special value of 0 (zero) uses the default timeout configured on jboss:service=TransactionManager
+  NOTE: any subsequent use of RequiresNew that is not explicitly overridden will use this value.
+-->
+<!ELEMENT transaction-timeout (#PCDATA)>
 
 <!--
   The clustered element indicates if this bean will run in a cluster of JBoss instances.

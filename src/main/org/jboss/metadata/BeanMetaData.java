@@ -32,7 +32,7 @@ import java.util.*;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.59 $
+ * @version $Revision: 1.60 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -481,6 +481,21 @@ public abstract class BeanMetaData
    }
 
    /**
+    * Get the transaction timeout for the method
+   */
+   public int getTransactionTimeout(String methodName)
+   {
+      return methodAttributesForMethod(methodName).txTimeout;
+   }
+   
+   public int getTransactionTimeout(Method method)
+   {
+      if (method == null)
+        return 0;
+      return getTransactionTimeout(method.getName());
+   }
+
+   /**
     *  A somewhat tedious method that builds a Set<Principal> of the roles
     *  that have been assigned permission to execute the indicated method. The
     *  work performed is tedious because of the wildcard style of declaring
@@ -804,12 +819,18 @@ public abstract class BeanMetaData
          {
             MethodAttributes ma = new MethodAttributes();
             Element maNode = (Element) iterator.next();
-            ma.pattern = getElementContent(getUniqueChild(maNode,
-                    "method-name"));
-            ma.readOnly = getOptionalChildBooleanContent(maNode,
-                    "read-only");
-            ma.idempotent = getOptionalChildBooleanContent(maNode,
-                    "idempotent");
+            ma.pattern = getElementContent(getUniqueChild(maNode, "method-name"));
+            ma.readOnly = getOptionalChildBooleanContent(maNode, "read-only");
+            ma.idempotent = getOptionalChildBooleanContent(maNode, "idempotent");
+            String txTimeout = getOptionalChildContent(maNode, "transaction-timeout");
+            try
+            {
+               ma.txTimeout = Integer.parseInt(txTimeout);
+            }
+            catch (Exception ignore)
+            {
+               log.debug("Ignoring transaction-timeout '" + txTimeout + "'", ignore);
+            }
             methodAttributes.add(ma);
          }
       }
