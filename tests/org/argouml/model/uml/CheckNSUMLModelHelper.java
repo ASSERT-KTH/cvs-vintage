@@ -1,4 +1,4 @@
-// $Id: CheckNSUMLModelHelper.java,v 1.1 2005/01/06 23:04:51 linus Exp $
+// $Id: CheckNSUMLModelHelper.java,v 1.2 2005/01/07 22:43:39 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -274,8 +274,9 @@ public final class CheckNSUMLModelHelper {
                 (MNamespace) Model.getCoreFactory().createNamespace();
             MClass clazz = (MClass) Model.getCoreFactory().buildClass(ns);
             MStereotype stereo1 =
-                Model.getExtensionMechanismsFactory()
-                	.buildStereotype(clazz, "test1", ns);
+                (MStereotype)
+                	Model.getExtensionMechanismsFactory()
+                		.buildStereotype(clazz, "test1", ns);
             for (int i = 0; i < names.length; i++) {
                 try {
                     Method m =
@@ -284,8 +285,9 @@ public final class CheckNSUMLModelHelper {
                     Object base = m.invoke(f, new Object[] {});
                     if (base instanceof MModelElement) {
                         MStereotype stereo2 =
-                            Model.getExtensionMechanismsFactory()
-                                .buildStereotype(base, "test2", ns);
+                            (MStereotype)
+                            	Model.getExtensionMechanismsFactory()
+                            		.buildStereotype(base, "test2", ns);
                         TestCase.assertTrue(
                             "Unexpected invalid stereotype",
                             Model.getExtensionMechanismsHelper()
@@ -298,9 +300,10 @@ public final class CheckNSUMLModelHelper {
                         } else {
                             Object inter =
                                 Model.getCoreFactory().createInterface();
-                            Object stereo3 =
-                                Model.getExtensionMechanismsFactory()
-                                	.buildStereotype(inter, "test3", ns);
+                            MStereotype stereo3 =
+                                (MStereotype)
+                                	Model.getExtensionMechanismsFactory()
+                                		.buildStereotype(inter, "test3", ns);
                             TestCase.assertTrue(
                                 "Unexpected invalid stereotype",
                                 !Model.getExtensionMechanismsHelper()
