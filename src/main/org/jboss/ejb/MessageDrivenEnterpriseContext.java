@@ -17,6 +17,7 @@ import java.rmi.ServerException;
 
 import javax.transaction.UserTransaction;
 
+import javax.ejb.EJBContext;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.ejb.MessageDrivenContext;
@@ -37,7 +38,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  *   @author Peter Antman (peter.antman@tim.se)
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class MessageDrivenEnterpriseContext
    extends EnterpriseContext
@@ -108,6 +109,10 @@ public class MessageDrivenEnterpriseContext
       throws RemoteException
    {
       ((MessageDrivenBean)instance).ejbRemove();
+   }
+   public EJBContext getEJBContext()
+   {
+       return ctx;
    }
    // Package protected ---------------------------------------------
     

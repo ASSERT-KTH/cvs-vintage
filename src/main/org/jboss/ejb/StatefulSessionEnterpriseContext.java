@@ -9,6 +9,7 @@ package org.jboss.ejb;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
+import javax.ejb.EJBContext;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.ejb.SessionBean;
@@ -19,7 +20,7 @@ import javax.ejb.SessionContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -51,7 +52,11 @@ public class StatefulSessionEnterpriseContext
    {
 		// Do nothing
    }
-   
+   public EJBContext getEJBContext()
+   {
+       return ctx;
+   }
+
    // During activation of stateful session beans we replace the instance by the one read from the file
    public void setInstance(Object instance) 
     { 

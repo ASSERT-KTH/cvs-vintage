@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.24 $
+ *  @version $Revision: 1.25 $
  */
 public abstract class EnterpriseContext
 {
@@ -92,7 +92,11 @@ public abstract class EnterpriseContext
    
    public abstract void discard()
       throws RemoteException;
-      
+
+   /** Get the EJBContext object
+   */
+   public abstract EJBContext getEJBContext();
+
    public void setId(Object id) { 
        this.id = id; 
     }

@@ -8,6 +8,7 @@ package org.jboss.ejb;
 
 import java.rmi.RemoteException;
 
+import javax.ejb.EJBContext;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.ejb.EntityBean;
@@ -21,13 +22,14 @@ import javax.transaction.Transaction;
 *	@see EnterpriseContext
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.12 $
+*	@version $Revision: 1.13 $
 */
 public class EntityEnterpriseContext
 extends EnterpriseContext
 {
     // Attributes ----------------------------------------------------
     EJBObject ejbObject;
+    EntityContext ctx;
 
     // True if this instance has been invoked since it was synchronized with DB
     // If true, then we have to store it to synch back to DB
@@ -52,7 +54,8 @@ extends EnterpriseContext
     throws RemoteException
     {
        super(instance, con);
-       ((EntityBean)instance).setEntityContext(new EntityContextImpl());
+       ctx = new EntityContextImpl();
+       ((EntityBean)instance).setEntityContext(ctx);
     }
 
     // Public --------------------------------------------------------
@@ -70,6 +73,11 @@ extends EnterpriseContext
     throws RemoteException
     {
        ((EntityBean)instance).unsetEntityContext();
+    }
+
+    public EJBContext getEJBContext()
+    {
+        return ctx;
     }
 
     public void setEJBObject(EJBObject eo)

@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
 
+import javax.ejb.EJBContext;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.ejb.SessionContext;
@@ -23,7 +24,7 @@ import javax.ejb.EJBException;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -76,6 +77,10 @@ public class StatelessSessionEnterpriseContext
       throws RemoteException
    {
       ((SessionBean)instance).ejbRemove();
+   }
+   public EJBContext getEJBContext()
+   {
+      return ctx;
    }
    // Package protected ---------------------------------------------
     
