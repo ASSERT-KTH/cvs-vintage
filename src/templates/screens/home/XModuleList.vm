@@ -25,7 +25,7 @@
 
 <div class="colbar">
   <select name="list_id">
-    <option value="">Select a saved x-module query...</option>
+    <option value="">Select a saved cross module query...</option>
   #foreach ($list in $user.MITLists)
     <option value="$list.QueryKey"#if($list.QueryKey == $data.Parameters.getString("list_id", "")) selected="selected"#end>$list.Name</option>
   #end
