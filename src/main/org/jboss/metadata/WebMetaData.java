@@ -22,7 +22,7 @@ import org.jboss.deployment.DeploymentException;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class WebMetaData implements XmlLoadable
 {
@@ -32,8 +32,11 @@ public class WebMetaData implements XmlLoadable
    private HashMap ejbReferences = new HashMap();
    private HashMap ejbLocalReferences = new HashMap();
    private ArrayList securityRoleReferences = new ArrayList();
+   /** The war context root as specified as the jboss-web.xml
+    descriptor level. */
+   private String contextRoot;
    private String securityDomain;
-   
+
    public WebMetaData()
    {
    }
@@ -73,6 +76,14 @@ public class WebMetaData implements XmlLoadable
    public Iterator getResourceEnvReferences()
    {
       return resourceEnvReferences.values().iterator();
+   }
+
+   /** This the the jboss-web.xml descriptor context-root and it
+    *is only meaningful if a war is deployed outside of an ear.
+    */
+   public String getContextRoot()
+   {
+      return contextRoot;
    }
 
    /** Return the optional security-domain jboss-web.xml element.
@@ -158,7 +169,12 @@ public class WebMetaData implements XmlLoadable
     */
    protected void importJBossWebXml(Element jbossWeb) throws Exception
    {
-      // Parse the jboss-web/securityDomain element
+      // Parse the jboss-web/root-context element
+      Element contextRootElement = MetaData.getOptionalChild(jbossWeb, "context-root");
+      if( contextRootElement != null )
+         contextRoot = MetaData.getElementContent(contextRootElement);
+
+      // Parse the jboss-web/security-domain element
       Element securityDomainElement = MetaData.getOptionalChild(jbossWeb, "security-domain");
       if( securityDomainElement != null )
          securityDomain = MetaData.getElementContent(securityDomainElement);
