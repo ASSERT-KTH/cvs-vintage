@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.52 2002/10/31 23:38:01 scoy Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.53 2002/12/18 07:36:32 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -1690,7 +1690,7 @@
     
          <mapping> 
             <java-type>java.lang.Object</java-type> 
-            <jdbc-type>JAVA_OBJECT</jdbc-type> 
+            <jdbc-type>LONGVARBINARY</jdbc-type> 
             <sql-type>IMAGE</sql-type> 
          </mapping> 
     
