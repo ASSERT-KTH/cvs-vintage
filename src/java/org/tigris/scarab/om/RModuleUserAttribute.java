@@ -57,7 +57,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: RModuleUserAttribute.java,v 1.9 2002/11/01 00:58:52 jon Exp $
+ * @version $Id: RModuleUserAttribute.java,v 1.10 2003/06/20 21:28:10 elicia Exp $
  */
 public  class RModuleUserAttribute 
     extends org.tigris.scarab.om.BaseRModuleUserAttribute
@@ -76,6 +76,7 @@ public  class RModuleUserAttribute
                 .add(RModuleUserAttributePeer.MODULE_ID, getModuleId())
                 .add(RModuleUserAttributePeer.USER_ID, getUserId())
                 .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, getIssueTypeId())
+                .add(RModuleUserAttributePeer.LIST_ID, getListId())
                 .add(RModuleUserAttributePeer.ATTRIBUTE_ID, getAttributeId());
             RModuleUserAttributePeer.doDelete(c);
         }

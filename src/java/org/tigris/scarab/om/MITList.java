@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.29 2003/06/17 20:59:18 jmcnally Exp $
+ * @version $Id: MITList.java,v 1.30 2003/06/20 21:28:10 elicia Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -573,11 +573,15 @@ public  class MITList
      * potential assignee must have at least one of the permissions
      * for the user attributes in all the modules.
      */
-    public List getPotentialAssignees()
+    public List getPotentialAssignees(boolean includeCommitters)
         throws Exception
     {
         List users = new ArrayList();
         List perms = getUserAttributePermissions();
+        if (includeCommitters && !perms.contains(ScarabSecurity.ISSUE__ENTER))
+        {
+            perms.add(ScarabSecurity.ISSUE__ENTER);
+        }
         if (isSingleModule()) 
         {
             ScarabUser[] userArray = getModule().getUsers(perms);
@@ -634,65 +638,89 @@ public  class MITList
     {
         List matchingRMUAs = new ArrayList();
         List rmuas = getSavedRMUAs();
-        int sizeGoal = rmuas.size();
-        if (sizeGoal == 0) 
+        Iterator i = rmuas.iterator();
+        ScarabUser user = getScarabUser();
+        while (i.hasNext())
         {
-            sizeGoal = 3;
+            RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+            Attribute att = rmua.getAttribute();
+            if (isCommon(att, false))
+            {
+                matchingRMUAs.add(rmua);   
+            }
         }
         
-        if (rmuas.isEmpty()) 
+        // None of the saved RMUAs are common for these pairs
+        // Delete them and seek new ones.
+        if (matchingRMUAs.isEmpty()) 
         {
+            i = rmuas.iterator();
+            while (i.hasNext())
+            {
+                RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+                rmua.delete(user);
+            }
+            int sizeGoal = 3;
+            int moreAttributes = sizeGoal;
+
+            // First try saved RMUAs for first module-issuetype pair
             MITListItem item = getFirstItem();
             Module module = getModule(item);
             IssueType issueType = getIssueType(item);
-            rmuas = getScarabUser()
-                .getRModuleUserAttributes(module, issueType);
+            rmuas = user.getRModuleUserAttributes(module, issueType);
+            // Next try default RMUAs for first module-issuetype pair
             if (rmuas.isEmpty())
             {
                 rmuas = module.getDefaultRModuleUserAttributes(issueType);
             }
-        }
-        
-        Iterator i = rmuas.iterator();
-        while (i.hasNext()) 
-        {
-            RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-            Attribute att = rmua.getAttribute();
-            if (isCommon(att, false)) 
+
+            // Loop through these and if find common ones, save the RMUAs
+            i = rmuas.iterator();
+            while (i.hasNext() && moreAttributes > 0) 
             {
-                matchingRMUAs.add(rmua);   
-            }            
-        }
-        // if nothing better, go with random common attributes
-        int moreAttributes = sizeGoal - matchingRMUAs.size();
-        if (moreAttributes > 0) 
-        {
-            Iterator attributes = getCommonAttributes(false).iterator();
-            int k=1;
-            while (attributes.hasNext() && moreAttributes > 0) 
-            {
-                Attribute attribute = (Attribute)attributes.next();
-                boolean isInList = false;
-                i = matchingRMUAs.iterator();
-                while (i.hasNext()) 
+                RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+                Attribute att = rmua.getAttribute();
+                if (isCommon(att, false) && !matchingRMUAs.contains(rmua)) 
                 {
-                    RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-                    if (rmua.getAttribute().equals(attribute)) 
+                    RModuleUserAttribute newRmua = getNewRModuleUserAttribute(att);
+                    newRmua.setOrder(1);
+                    newRmua.save();
+                    matchingRMUAs.add(rmua);   
+                    moreAttributes--;
+                }            
+            }
+
+            // if nothing better, go with random common attributes
+            moreAttributes = sizeGoal - matchingRMUAs.size();
+            if (moreAttributes > 0) 
+            {
+                Iterator attributes = getCommonAttributes(false).iterator();
+                int k=1;
+                while (attributes.hasNext() && moreAttributes > 0) 
+                {
+                    Attribute att = (Attribute)attributes.next();
+                    boolean isInList = false;
+                    i = matchingRMUAs.iterator();
+                    while (i.hasNext()) 
                     {
-                        isInList = true;
-                        break;
+                        RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+                        if (rmua.getAttribute().equals(att)) 
+                        {
+                            isInList = true;
+                            break;
+                        }
+                    }
+                    if (!isInList) 
+                    {
+                        RModuleUserAttribute rmua = 
+                            getNewRModuleUserAttribute(att);
+                        rmua.setOrder(k++);
+                        rmua.save();
+                        matchingRMUAs.add(rmua);
+                        moreAttributes--;
                     }
                 }
-                if (!isInList) 
-                {
-                    RModuleUserAttribute rmua = 
-                        getNewRModuleUserAttribute(attribute);
-                    rmua.setOrder(k++);
-                    rmua.save();
-                    matchingRMUAs.add(rmua);
-                    moreAttributes--;
-                }
-            }
+            } 
         }
         
         return matchingRMUAs;
@@ -708,17 +736,6 @@ public  class MITList
         if (!isNew()) 
         {
             result.setListId(getListId());
-        }
-        else 
-        {
-            if (isSingleModule()) 
-            {
-                result.setModuleId(getModule().getModuleId());
-            }
-            if (isSingleIssueType()) 
-            {
-                result.setIssueTypeId(getIssueType().getIssueTypeId());
-            }
         }
         return result;
     }
@@ -738,20 +755,6 @@ public  class MITList
             crit.add(RModuleUserAttributePeer.LIST_ID, null);
             crit.add(RModuleUserAttributePeer.MODULE_ID, 
                      getModule().getModuleId());
-            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
-                     getIssueType().getIssueTypeId());
-        }
-        else if (isSingleModule())
-        {
-            crit.add(RModuleUserAttributePeer.LIST_ID, null);
-            crit.add(RModuleUserAttributePeer.MODULE_ID, 
-                     getModule().getModuleId());
-            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, null);
-        }
-        else if (isSingleIssueType())
-        {
-            crit.add(RModuleUserAttributePeer.LIST_ID, null);
-            crit.add(RModuleUserAttributePeer.MODULE_ID, null);
             crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
                      getIssueType().getIssueTypeId());
         }

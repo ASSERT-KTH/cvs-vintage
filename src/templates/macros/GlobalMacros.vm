@@ -667,10 +667,6 @@ selected the radio button.
 <h3><a name="add">$l10n.Users</a></h3> 
 <div class="axial">
 
-#if (!$userAttrs || $userAttrs.isEmpty())
-  <p class="infomark"><em>$l10n.NoUserAttributesInCommon</em></p>
-#else
-
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
    <th>$l10n.FilterThisList</th>
@@ -750,7 +746,6 @@ selected the radio button.
      </tr>
   </table>
 </div>
-#end
 
 ## keep track of state of the list, resultsPerPage should come after the
 ## chance to change it, because we will use the first value

@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.139 2003/05/01 21:36:09 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.140 2003/06/20 21:28:10 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -348,9 +348,7 @@ public class ScarabModule
 
         try 
         {
-            // FIXME! need to handle the includeCommitters flag here, PotentialAssignees
-            // only returns users who could be assigned to an attribute
-            potential = mitList.getPotentialAssignees();
+            potential = mitList.getPotentialAssignees(includeCommitters);
         }
         catch ( Exception e) 
         {

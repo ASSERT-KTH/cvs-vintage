@@ -115,7 +115,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.100 2003/06/12 21:17:49 dlr Exp $
+ * @version $Id: IssueSearch.java,v 1.101 2003/06/20 21:28:10 elicia Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -376,7 +376,7 @@ public class IssueSearch
     {
         SequencedHashMap result = null;
 
-        List attributes = mitList.getCommonAttributes();
+        List attributes = mitList.getCommonAttributes(false);
         Map siaValuesMap = getAttributeValuesMap();
         if (attributes != null) 
         {
@@ -412,11 +412,11 @@ public class IssueSearch
         List result = null;
         if (isXMITSearch()) 
         {
-            result = mitList.getCommonUserAttributes();
+            result = mitList.getCommonUserAttributes(false);
         }
         else 
         {
-            result = getModule().getUserAttributes(getIssueType());
+            result = getModule().getUserAttributes(getIssueType(), false);
         }
         return result;        
     } 
