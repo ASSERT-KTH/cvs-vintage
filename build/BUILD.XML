@@ -84,13 +84,17 @@
   <!-- =================================================================== -->
   <!-- Compiles the source code                                            -->
   <!-- =================================================================== -->
-  <target name="compile" depends="check_for_optional_packages, delete_dependants">
+  <target name="compile" 
+          depends="check_for_optional_packages, delete_dependants,compileFramework" 
+          description="Compiles the source code">
     <javac srcdir="${src.dir}"
            destdir="${build.classes}"
            debug="${javac.debug}"
            deprecation="${javac.deprecation}"
-           optimize="${javac.optimize}">
+           optimize="${javac.optimize}"
+           fork="${javac.fork}">
       <include name="${javac.includes}"/>
+      <exclude name="CH/ifa/draw/framework/**"/>
       <exclude name="${needs.batik.src}" unless="batik.available"/>
       <exclude name="${needs.jdo.src}" unless="jdo.available"/>
       <exclude name="${needs.junit.src}"/>
@@ -99,6 +103,20 @@
         <pathelement path="${jdo.class.path}"/>
         <pathelement path="${batik.class.path}"/>
       </classpath>
+    </javac>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Compiles the interfaces code                                        -->
+  <!-- =================================================================== -->
+  <target name="compileFramework" 
+          description="Compiles the interfaces code">
+     <javac srcdir="${src.dir}"
+           destdir="${build.classes}"
+           debug="${javac.debug}"
+           deprecation="${javac.deprecation}"
+           optimize="${javac.optimize}"
+           fork="${javac.fork}">
+      <include name="CH/ifa/draw/framework/**"/>
     </javac>
   </target>
 
@@ -257,7 +275,7 @@
   <!-- =================================================================== -->
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->
-  <target name="clean">
+  <target name="clean" description="Cleans up generated stuff.">
     <delete dir="${dest.dir}/CH"/>
     <delete dir="${javadoc.dir}"/>
     <delete file="${build.jar}"/>
