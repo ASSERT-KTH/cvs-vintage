@@ -23,7 +23,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */                            
 public interface EntityBridge {
    public String getEntityName();
@@ -36,13 +36,17 @@ public interface EntityBridge {
    public SelectorBridge[] getSelectors();
    
    /**
-   * Mark each field every as clean.
-   */
+    * Has the instance in the context passed through ejbCreate?
+    */
+   public boolean isCreated(EntityEnterpriseContext ctx);
+
+   /**
+    * Mark each field every as clean.
+    */
    public void setClean(EntityEnterpriseContext ctx);
    
    /**
-   * Get every field that isDirty
-   */
+    * Get every field that isDirty
+    */
    public CMPFieldBridge[] getDirtyFields(EntityEnterpriseContext ctx);
-
 }
