@@ -87,7 +87,7 @@ import org.tigris.scarab.util.export.ExportFormat;
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.25 2003/08/19 23:56:35 jmcnally Exp $
+ * @version $Id: ConfigureReport.java,v 1.26 2003/09/04 00:51:16 jmcnally Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -183,19 +183,33 @@ public class ConfigureReport
         {
             ScarabRequestTool scarabR = getScarabRequestTool(context);
             ReportBridge report = scarabR.getReport();
-            ReportHeading heading = report.getReportDefinition()
-                .getAxis(axis).getHeading(level);
-            if (type != heading.calculateType()) 
+            ReportDefinition reportDefn = report.getReportDefinition();
+            ReportAxis reportAxis = reportDefn.getAxis(axis);
+            ReportHeading heading = reportAxis.getHeading(level);
+            int currentType = heading.calculateType();
+            if (type != currentType) 
             {
                 ScarabLocalizationTool l10n = getLocalizationTool(context);
-                if (heading.size() > 0) 
+                if (currentType == 2 && 
+                    !reportDefn.allowMoreHeadings(reportAxis)) 
                 {
-                    heading.reset();
-                    scarabR.setConfirmMessage(l10n.get("HeadingTypeChangedOldDataDiscarded"));
+                    scarabR.setAlertMessage(l10n.get(
+                        "ThisAxisMustBeDatesUnlessHeadingsAreRemoved"));
+                    params.setString("headingtype", "2");
                 }
-                else
+                else 
                 {
-                    scarabR.setConfirmMessage(l10n.get("HeadingTypeChanged"));
+                    if (heading.size() > 0) 
+                    {
+                        heading.reset();
+                        scarabR.setConfirmMessage(l10n.get(
+                            "HeadingTypeChangedOldDataDiscarded"));
+                    }
+                    else
+                    {
+                        scarabR.setConfirmMessage(
+                            l10n.get("HeadingTypeChanged"));
+                    }
                 }
             }
         }
@@ -1120,6 +1134,13 @@ public class ConfigureReport
             getScarabRequestTool(context)
                 .setInfoMessage(getLocalizationTool(context)
                                  .get("ReportDefinitionModified"));
+        }
+        else if (report.getReportDefinition().reportQueryIsExpensive() ) 
+        {
+            getScarabRequestTool(context)
+                .setAlertMessage(getLocalizationTool(context)
+                     .format("ReportIsTooExpensive", String.valueOf( 
+                             report.getReportDefinition().maximumHeadings())));
         }
         else 
         {

@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
  * Handles export of a report to non-web formats.
  *
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ReportExport.java,v 1.4 2003/06/26 20:04:46 ed Exp $
+ * @version $Id: ReportExport.java,v 1.5 2003/09/04 00:51:16 jmcnally Exp $
  * @see org.tigris.scarab.screens.DataExport
  * @since Scarab 1.0
  */
@@ -105,7 +105,7 @@ public class ReportExport extends DataExport
         // --------------------------------------------------------
         // This code is not generally excercised as the action will 
         // not redirect to this screen if the following conditions are 
-        // present.  
+        // present.  But is here to protect against url hacking.
         try 
         {
             String message = (String)scarabR.getInfoMessage();
@@ -122,6 +122,13 @@ public class ReportExport extends DataExport
         if (!report.isReadyForCalculation()) 
         {
             printer.print(l10n.get("IncompleteReportDefinition"));
+            return;
+        }
+
+        if (report.getReportDefinition().reportQueryIsExpensive()) 
+        {
+            printer.print(l10n.format("ReportIsTooExpensive", String.valueOf(
+                report.getReportDefinition().maximumHeadings())));
             return;
         }
         // --------------------------------------------------------

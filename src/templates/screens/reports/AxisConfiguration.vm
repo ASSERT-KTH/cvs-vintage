@@ -45,7 +45,8 @@
 #set($booldummy = $parameters.add($param))
 
 #set ($headingIndex = $data.Parameters.getInt("heading", -1))
-#set ($headings = $reportDefn.getAxis($axisIndex).ReportHeadings)
+#set ($reportAxis = $reportDefn.getAxis($axisIndex))
+#set ($headings = $reportAxis.ReportHeadings)
 #set ($singleHeading = $headings && $headings.size() == 1)
 #set ($multiHeading = $headings && $headings.size() > 1)
 
@@ -59,11 +60,19 @@
     #set ($headingIndex = 0)
   #end
   <h3>$l10n.get("${rowCol}Headings")</h3>
-  #if ($multiHeading)
   <div class="colbar">
+  #if ($multiHeading)
     $l10n.format('DefineHeaderSelectionOptionsAndHeadingSummaryInstructions', $l10n.EditSelectedHeading, $l10n.format('SelectOptionsHeader', $axisIndex), $l10n.HeadingSummary.toLowerCase())
-  </div>
   #end
+  #if ($isNotDateAxis)
+    #if ($reportDefn.allowMoreHeadings($reportAxis))
+      $l10n.format('AvailableNumberHeadings', $reportDefn.availableNumberOfHeadings($reportAxis))
+    #else  
+      $l10n.NoMoreHeadings
+    #end
+  #end
+  </div>
+
   <div>
     <table width="100%" cellpadding="3" cellspacing="2" border="1">		
       <tr>
@@ -110,8 +119,10 @@
         value="$l10n.EditSelectedHeading" />
     <input type="submit" name="eventSubmit_doRemoveHeading" 
         value="$l10n.RemoveSelectedHeading" />
+   #if ( $reportDefn.allowMoreHeadings($reportAxis))
     <input type="submit" name="eventSubmit_doAddHeading" 
         value="$l10n.AddNewHeading" />
+   #end
   </div>
 #elseif ($singleHeading)
     #set ($headingIndex = 0)
@@ -119,7 +130,7 @@
     #set($booldummy = $parameters.add($param))
     <input type="hidden" name="heading" value="0" />
     #set ($selectedHeading = $headings.get(0))
-  #if ($isNotDateAxis && $selectedHeading.size() > 0)
+  #if ($isNotDateAxis && $selectedHeading.size() > 0 && $reportDefn.allowMoreHeadings($reportAxis))
   <div class="functnbar3">
     <input type="submit" name="eventSubmit_doAddHeading" 
         value="$l10n.AddNewHeading" />
@@ -134,6 +145,7 @@
     <tr>
       <th width="120">$l10n.SelectContentType</th>
       <td>
+
 #if ($selectedHeading && $selectedHeading.size() > 0)
   #set ($selectedType = $selectedHeading.calculateType())
 #end

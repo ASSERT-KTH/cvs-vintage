@@ -48,12 +48,13 @@ package org.tigris.scarab.util;
 
 import java.util.Locale;
 import org.apache.fulcrum.localization.Localization;
+import org.apache.turbine.Turbine;
 
 /**
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.59 2003/09/03 22:15:01 dlr Exp $
+ * @version $Id: ScarabConstants.java,v 1.60 2003/09/04 00:51:16 jmcnally Exp $
  */
 public interface ScarabConstants
 {
@@ -270,4 +271,11 @@ public interface ScarabConstants
      */
     int ISSUE_MAX_MOVE =
         Turbine.getConfiguration().getInt("scarab.issue.max.move", 250);
+
+    /**
+     * The maximumn number of report headings
+     */
+    int REPORT_MAX_CRITERIA = 
+        Turbine.getConfiguration().getInt("scarab.report.max.criteria", 5);
+
 }    

@@ -51,6 +51,12 @@ $l10n.Report
 #end
 </h3>
 
+#if ($reportDefn.reportQueryIsExpensive())
+
+<p>$l10n.format("ReportIsTooExpensive", $reportDefn.maximumHeadings())</p>
+
+#else
+
 #if ($reportIsEditable && $reportDefn.ReportAxisList.size() > 0)
 <div class="colbar"><a href="$link.setPage("reports,Report_1.vm").addPathInfo("action", "ConfigureReport").addPathInfo("eventSubmit_doSwapRowCol", "foo")">$l10n.SwapRowCol</a></div>
 #end
@@ -73,6 +79,8 @@ $l10n.Report
  #exportFormats('eventSubmit_doGenerateReport')
 </div>
 </form>
+
+#end
 
 </div>
 #if ($data.Parameters.getString($scarabG.Constant.DEBUG))

@@ -63,6 +63,7 @@ import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.RModuleOptionManager;
 import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.AttributeManager;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * This class is the container for the information used to generate a
@@ -72,13 +73,19 @@ import org.tigris.scarab.om.AttributeManager;
  * (please see this file for an example).
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ReportDefinition.java,v 1.11 2003/06/11 01:32:56 dlr Exp $
+ * @version $Id: ReportDefinition.java,v 1.12 2003/09/04 00:51:16 jmcnally Exp $
  * @see <a href="http://scarab.tigris.org/source/browse/scarab/src/dtd/report.dtd?rev=1&content-type=text/x-cvsweb-markup">report.dtd</a>
  */
 public class ReportDefinition
     implements java.io.Serializable
                //Retrievable
 {
+    /** 
+     * A report can be expensive, so limit the criteria (which translates
+     * to headings) to a number that mysql can handle safely
+     */
+    private static final int MAX_CRITERIA = ScarabConstants.REPORT_MAX_CRITERIA;
+
     private String name;
 
     private String description;
@@ -557,6 +564,91 @@ public class ReportDefinition
             summary = "Dates";
         }
         return summary;
+    }
+
+    public int maximumHeadings()
+    {
+        return MAX_CRITERIA;
+    }
+
+    public boolean allowMoreHeadings(ReportAxis axis)
+    {
+        return availableNumberOfHeadings(axis) > 0;
+    }
+
+    public boolean reportQueryIsExpensive()
+    {
+        return totalNumberOfNonDateHeadings() > MAX_CRITERIA;
+    }
+
+    public int totalAvailableNumberOfHeadings()
+    {
+        return maximumHeadings() - totalNumberOfNonDateHeadings();
+    }
+
+    public int availableNumberOfHeadings(ReportAxis axis)
+    {
+        // the following assumes two axes
+        int result = maximumHeadings() - totalNumberOfNonDateHeadings() - 1;
+        List axes = getReportAxisList();
+        if (axes != null) 
+        {
+            ReportAxis tmpAxis;
+            for (Iterator i = axes.iterator(); i.hasNext();) 
+            {
+                tmpAxis = (ReportAxis)i.next();
+                if (tmpAxis != null && !tmpAxis.equals(axis)) 
+                {
+                    List headings = tmpAxis.getReportHeadings();
+                    if (headings != null && headings.size() > 0 &&  
+                        (((ReportHeading)headings.get(0)).size() > 0)) 
+                    {
+                        result++;
+                    }
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    private int totalNumberOfNonDateHeadings()
+    {
+        int count = 0;
+        List axes = getReportAxisList();
+        if (axes != null) 
+        {
+            ReportAxis axis;
+            for (Iterator i = axes.iterator(); i.hasNext();) 
+            {
+                axis = (ReportAxis)i.next();
+                if (axis != null) 
+                {
+                    count += numberOfNonDateHeadings(axis);
+                }
+            }
+        }
+        return count;
+    }
+
+    private int numberOfNonDateHeadings(ReportAxis axis)
+    { 
+        int count = 0;
+        List headings = axis.getReportHeadings();
+        if (headings != null) 
+        {
+            int size = headings.size();
+            if (size > 0)
+            {
+                if ( size != 1 || 
+                     !(((ReportHeading)headings.get(0))
+                       .get(0) instanceof ReportDate)) 
+                {
+                    count += size;                                
+                }
+            }                        
+        }
+        return count;
     }
 }
 
