@@ -14,7 +14,6 @@ $page.setTitle("Enter new: $scarabR.CurrentIssueType.Name")
    #set ($templ = $scarabR.IssueTemplate)
 #end
 
-
 <h2>$page.Title</h2>
 
 <form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
@@ -33,27 +32,26 @@ $page.setTitle("Enter new: $scarabR.CurrentIssueType.Name")
  <tr>
  <th>Templates</th>
  <td>
-<select name="select_template_id">
+<select name="templateId">
 #foreach ($template in $allTemplates)
+#if ($template.IssueId.toString().equals($data.Parameters.getString("templateId")))
+ <option value="$template.IssueId" selected="selected">$template.TemplateInfo.Name</option>
+#else
  <option value="$template.IssueId">$template.TemplateInfo.Name</option>
 #end
+#end
 </select>
-      &#160;<input type="submit" value="Select" name="eventSubmit_doUsetemplates" /> 
-      &#160;$link.setPage("TemplateList.vm").setLabel("View all patch templates")
+&#160;
+<input type="submit" value="Select" name="eventSubmit_doUsetemplates" />
+&#160;
+$link.setPage("TemplateList.vm").setLabel("View all $scarabR.CurrentIssueType.Name.toLowerCase() templates")
  </td>
  </tr>
  </table>
  </div>
 #end
 
-#if ($templateId)
-<input type="hidden" name="templateId" value="$templateId" />
-#end
-
-<p>
-<small>"<strong>*</strong>" indicates required fields</small>
-</p>
-
+#asterisk()
 
 <div class="axial">
 #foreach ($group in $module.getAttributeGroups($issueType))

@@ -47,10 +47,7 @@
 <input type="reset" value="Reset" name="eventSubmit_doRefresh" />&#160;
 </div>
  
-<p>
-<small>"<strong>*</strong>" indicates required fields</small>
-</p>
-
+#asterisk()
     
 <div class="axial">
 #foreach ($group in $module.getAttributeGroups($issueType))

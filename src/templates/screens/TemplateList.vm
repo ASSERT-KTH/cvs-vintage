@@ -74,7 +74,7 @@
 #end
   <td>
     #if ($permItemDelete || $isCreatedBy)
-      <a href="$link.setPathInfo("templateId", $template.IssueId.toString()).setPage("SaveTemplate.vm")">
+      <a href="$link.setPathInfo("templateId", "$template.IssueId").setPage("SaveTemplate.vm")">
       $template.TemplateInfo.Name</a>
     #else
       $template.TemplateInfo.Name
