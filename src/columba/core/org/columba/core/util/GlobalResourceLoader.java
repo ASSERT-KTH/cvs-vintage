@@ -174,8 +174,8 @@ public class GlobalResourceLoader {
             }
              //does not occur
         } else {
-            LOG.severe("No language pack found for " + Locale.getDefault().toString());
-
+            // using default english language, shipped with Columba
+            
             // we can't use SystemClassLoader here, because that
             // wouldn't work with java webstart,
             // ResourceBundle uses its own internal classloader
