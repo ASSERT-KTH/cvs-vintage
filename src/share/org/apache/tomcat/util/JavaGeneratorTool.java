@@ -61,7 +61,8 @@ import java.io.*;
  *  classes
  */
 public class JavaGeneratorTool {
-
+    static org.apache.commons.logging.Log logger = 
+	    org.apache.commons.logging.LogFactory.getLog(JavaGeneratorTool.class);
     /** Mangle Package names to avoid reserver words
      **/
     public static final String manglePackage( String s ) {
@@ -160,7 +161,7 @@ public class JavaGeneratorTool {
             }
 	    fis.close();
 	} catch( Exception ex ) {
-	    System.out.println("readVersion() mapPath=" + mapFile + ex);
+	    logger.info("readVersion() mapPath=" + mapFile, ex);
 	    return -1;
 	}
 
@@ -192,7 +193,7 @@ public class JavaGeneratorTool {
 	    fis.write(version);
 	    fis.close();
 	} catch( Exception ex ) {
-	    System.out.println("writeVersion() " + mapFile + ex);
+	    logger.info("writeVersion() " + mapFile , ex);
 	}
     }
 

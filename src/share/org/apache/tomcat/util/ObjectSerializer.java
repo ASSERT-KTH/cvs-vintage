@@ -90,6 +90,8 @@ import java.util.*;
  */
 public final class ObjectSerializer
 {
+    static org.apache.commons.logging.Log logger = 
+	org.apache.commons.logging.LogFactory.getLog(ObjectSerializer.class);
     /**
        This is the method that does the serialization.
     */
@@ -121,7 +123,7 @@ public final class ObjectSerializer
 	    // XXX We should call Logger.log - this is a problem, but
 	    // it's better to have a bug ( writing to out instead of log)
 	    // than adding dependencies to context.
-	    System.out.println( "SessionSerializer: " + e );
+	    logger.error( "SessionSerializer: " , e );
 	}
 	return sessions;
     }
