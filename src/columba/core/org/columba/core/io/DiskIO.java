@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.io;
 
 import java.io.BufferedReader;
@@ -29,6 +30,7 @@ import java.net.URL;
 
 import org.columba.core.config.ConfigPath;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 
 /**
  * The startup default for installation directory is the system propertry "user.dir".
@@ -63,18 +65,13 @@ public class DiskIO {
 
 		if (!dir.isDirectory()) {
 			success = !dir.isFile() && dir.mkdirs();
-			if (success) {
-				System.out.println("created directory: " + dir.toString());
-				// the same goes to the logging-factory
-				ColumbaLogger.log.debug("created directory: " + dir.toString());
-			} else {
-				System.err.println(
-					"failed while trying to create directory: "
+                        if (MainInterface.DEBUG) {
+                                if (success) {
+                                        ColumbaLogger.log.debug("created directory: " + dir.toString());
+                                } else {
+                                        ColumbaLogger.log.error("failed while trying to create directory: "
 						+ dir.toString());
-				// the same goes to the logging-factory
-				ColumbaLogger.log.error(
-					"failed while trying to create directory: "
-						+ dir.toString());
+                                }
 			}
 		}
 
@@ -122,22 +119,20 @@ public class DiskIO {
 			if ((f = files[i]).isDirectory()) {
 				deleteDirectory(f);
 			} else if (!f.delete()) {
-				System.err.println(
-					"*** failed to delete file " + f.getAbsolutePath());
-				// the same goes to the logging-factory
-				ColumbaLogger.log.error(
-					"*** failed to delete file " + f.getAbsolutePath());
+				if (MainInterface.DEBUG) {
+                                        ColumbaLogger.log.error("*** failed to delete file "
+                                                + f.getAbsolutePath());
+                                }
 			}
 		}
 
 		success = dir.delete();
 
 		if (!success) {
-			System.err.println(
-				"*** failed to delete directory " + dir.getAbsolutePath());
-			// the same goes to the logging-factory
-			ColumbaLogger.log.error(
-				"*** failed to delete directory " + dir.getAbsolutePath());
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.error("*** failed to delete directory "
+                                        + dir.getAbsolutePath());
+                        }
 		}
 
 		return success;
@@ -166,9 +161,9 @@ public class DiskIO {
 		boolean success;
 
 		if (!(success = f.delete())) {
-			System.err.println("*** failed to delete file " + path);
-			// the same goes to the logging-factory
-			ColumbaLogger.log.error("*** failed to delete file " + path);
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.error("*** failed to delete file " + path);
+                        }
 		}
 
 		return success;
@@ -210,20 +205,13 @@ public class DiskIO {
 			path = resourceFolder + path.substring(1);
 
 		//url = ClassLoader.getSystemResource(path);
-		url = org.columba.core.io.DiskIO.class.getResource("/" + path);
+		url = DiskIO.class.getResource("/" + path);
 		if (url == null) {
-			System.err.println("*** failed locating resource: " + path);
-			if (ColumbaLogger.log != null) {
-				// the same goes to the logging-factory
+			if (MainInterface.DEBUG) {
 				ColumbaLogger.log.error(
 					"*** failed locating resource: " + path);
 			}
 			return null;
-		}
-
-		if (ColumbaLogger.log != null) {
-			//System.out.println( "resource: " +url.getProtocol() + ", url:"+url.getPath() );
-			//ColumbaLogger.log.debug("resource: " + url.getProtocol() + ", url:" + url.getPath());
 		}
 
 		return url;
@@ -272,13 +260,10 @@ public class DiskIO {
 			in.close();
 			out.close();
 		} catch (IOException e) {
-			System.err.println(
-				"*** error during file copy: " + outputFile.getAbsolutePath());
-			System.err.println(e);
-			// the same goes to the logging-factory
-			ColumbaLogger.log.debug(
-				"*** error during file copy: " + outputFile.getAbsolutePath(),
-				e);
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.debug("*** error during file copy: "
+                                        + outputFile.getAbsolutePath(), e);
+                        }
 			throw e;
 		}
 
@@ -315,24 +300,14 @@ public class DiskIO {
 			out.close();
 			in.close();
 
-			System.out.println("created : " + outputFile.getAbsolutePath());
-			if (ColumbaLogger.log != null) {
-
-				// the same goes to the logging-factory
+			if (MainInterface.DEBUG) {
 				ColumbaLogger.log.info(
 					"created : " + outputFile.getAbsolutePath());
 			}
 		} catch (IOException e) {
-			System.err.println(
-				"*** error during res. file copy: "
-					+ outputFile.getAbsolutePath());
-			System.err.println(e);
-			if (ColumbaLogger.log != null) {
-				// the same goes to the logging-factory
-				ColumbaLogger.log.error(
-					"*** error during res. file copy: "
-						+ outputFile.getAbsolutePath(),
-					e);
+			if (MainInterface.DEBUG) {
+				ColumbaLogger.log.error("*** error during res. file copy: "
+						+ outputFile.getAbsolutePath(), e);
 			}
 			throw e;
 		}
