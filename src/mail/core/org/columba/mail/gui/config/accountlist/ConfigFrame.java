@@ -35,6 +35,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -53,7 +54,6 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.config.account.AccountDialog;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
@@ -369,6 +369,20 @@ public class ConfigFrame
 
 		} else if (action.equals("REMOVE")) //$NON-NLS-1$
 			{
+				// TODO: i18n
+			Object[] options = { "Delete", "No" };
+			int n =
+				JOptionPane.showOptionDialog(
+					null,
+					"Would you really like to delete this account?",
+					"Question",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE,
+					null,
+					options,
+					options[1]);
+			if ( n == JOptionPane.NO_OPTION ) return;
+			
 			AccountItem item = accountList.remove(index);
 
 			if (item.isPopAccount()) {
@@ -376,8 +390,8 @@ public class ConfigFrame
 					item.getUid());
 
 			} else {
-				Folder folder =
-					(Folder) MainInterface.treeModel.getImapFolder(
+				FolderTreeNode folder =
+					(FolderTreeNode) MainInterface.treeModel.getImapFolder(
 						item.getUid());
 				try {
 
