@@ -635,10 +635,12 @@ selected the radio button.
   </em></p>
   #foreach ($obj in $lastActivities)
     #set ($issue = $obj.get(0))
-    <p>Issue $issue.UniqueId last modified by 
-    <a href="mailto:$issue.CreatedBy.Email">$issue.CreatedBy.Name</a></p> 
+    #set ($activitySet = $obj.get(1))
+    #set ($user = $scarabR.getUser($activitySet.CreatedBy))
+    <p>$l10n.format('IssueLastModifiedBy', "$issue.UniqueId")
+      <a href="mailto:$user.Email">$!user.Name</a> </p>
     <ul>
-    #foreach ($activity in $obj.get(1))
+    #foreach ($activity in $activitySet.Activitys)
       <li>$activity.Description</li>
     #end
     </ul>

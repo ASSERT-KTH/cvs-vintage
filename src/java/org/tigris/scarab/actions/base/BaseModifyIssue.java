@@ -69,7 +69,7 @@ import org.tigris.scarab.util.ScarabException;
  * for collisions between different changes.
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: BaseModifyIssue.java,v 1.7 2003/02/13 02:14:06 jon Exp $
+ * @version $Id: BaseModifyIssue.java,v 1.8 2003/06/27 17:54:19 venkatesh Exp $
  */
 public class BaseModifyIssue extends RequireLoginFirstAction
 {
@@ -98,16 +98,15 @@ public class BaseModifyIssue extends RequireLoginFirstAction
                     scarabR.setAlertMessage(
                         l10n.get("MultiIssueChangeCollision"));
                     ActivitySet lastActivitySet = issue.getLastActivitySet();
-                    List activities = lastActivitySet.getActivitys();
                     ArrayList objs = new ArrayList(2);
                     objs.add(issue);
-                    objs.add(activities);
+                    objs.add(lastActivitySet);
                     conflictIssues.add(objs);
                 }
             }
             context.put("lastActivities", conflictIssues);
         }
-        else 
+        else
         {
             Issue issue = IssueManager.getIssueById(id);
             List conflictIssues = new ArrayList(1);
@@ -117,10 +116,9 @@ public class BaseModifyIssue extends RequireLoginFirstAction
             {
                 scarabR.setAlertMessage(l10n.get("IssueChangeCollision"));
                 ActivitySet lastActivitySet = issue.getLastActivitySet();
-                List activities = lastActivitySet.getActivitys();
                 ArrayList objs = new ArrayList(2);
                 objs.add(issue);
-                objs.add(activities);
+                objs.add(lastActivitySet);
                 conflictIssues.add(objs);
                 context.put("lastActivities", conflictIssues);
             }
