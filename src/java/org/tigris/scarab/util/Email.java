@@ -71,7 +71,7 @@ import org.tigris.scarab.om.GlobalParameterManager;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.19 2003/03/07 16:39:53 jmcnally Exp $
+ * @version $Id: Email.java,v 1.20 2003/03/12 18:52:17 jmcnally Exp $
  */
 public class Email
 {
@@ -192,7 +192,7 @@ public class Email
         else if (fromUser instanceof String[])
         {
             String[] s = (String[])fromUser;
-            te.addReplyTo(s[0], s[1]);
+            te.setFrom(s[0], s[1]);
         }
         else
         {
