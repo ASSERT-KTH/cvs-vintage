@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.19 2000/07/18 01:34:00 craigmcc Exp $
- * $Revision: 1.19 $
- * $Date: 2000/07/18 01:34:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.20 2000/07/25 12:44:05 nacho Exp $
+ * $Revision: 1.20 $
+ * $Date: 2000/07/25 12:44:05 $
  *
  * ====================================================================
  *
@@ -382,20 +382,10 @@ public class HttpRequestAdapter extends RequestImpl {
 	    ((requestURI.indexOf('%') >= 0) || (requestURI.indexOf('+') >= 0))) {
 
 	    try {
-		requestURI = RequestUtil.URLDecode(requestURI);
+		    requestURI = RequestUtil.URLDecode(requestURI);
 	    } catch (Exception e) {
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		return;
-	    }
-	}
-	if ((queryString != null) &&
-	    ((queryString.indexOf('%') >= 0) || (queryString.indexOf('+') >= 0))) {
-
-	    try {
-		queryString = RequestUtil.URLDecode(queryString);
-	    } catch (Exception e) {
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		return;
+		    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		    return;
 	    }
 	}
 
