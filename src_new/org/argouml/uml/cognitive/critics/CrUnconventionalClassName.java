@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalClassName.java,v 1.14 2004/11/01 10:55:23 mkl Exp $
+// $Id: CrUnconventionalClassName.java,v 1.15 2004/11/02 08:29:46 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,11 +27,12 @@
 // File: CrUnconventionalClassName.java
 // Classes: CrUnconventionalClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalClassName.java,v 1.14 2004/11/01 10:55:23 mkl Exp $
+// $Id: CrUnconventionalClassName.java,v 1.15 2004/11/02 08:29:46 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import javax.swing.Icon;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
@@ -40,7 +41,7 @@ import org.argouml.model.ModelFacade;
 
 /** Critic to detect whether a class name obeys to certain rules.
  **/
-public class CrUnconventionalClassName extends CrUML {
+public class CrUnconventionalClassName extends AbstractCrUnconventionalName {
 
     /**
      * The constructor.
@@ -85,7 +86,7 @@ public class CrUnconventionalClassName extends CrUML {
 	    ToDoItem item = (ToDoItem) w.getToDoItem();
 	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
 	    String sug = ModelFacade.getName(me);
-	    sug = sug.substring(0, 1).toUpperCase() + sug.substring(1);
+	    sug = computeSuggestion(sug);
 	    String ins = "Change the class name to start with an " 
 		+ "uppercase letter.";
 	    ((WizMEName) w).setInstructions(ins);
@@ -93,6 +94,16 @@ public class CrUnconventionalClassName extends CrUML {
 	}
     }
     
+    /**
+     * 
+     * @see org.argouml.uml.cognitive.critics.AbstractCrUnconventionalName#computeSuggestion(java.lang.String)
+     */
+    public String computeSuggestion(String sug) {
+        if (sug == null) return "";
+        sug = sug.substring(0, 1).toUpperCase() + sug.substring(1);
+        return sug;
+    }
+
     /**
      * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
      */
