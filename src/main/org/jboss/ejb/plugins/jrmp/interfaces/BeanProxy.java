@@ -19,7 +19,7 @@ import javax.naming.NamingException;
  * An abstract base proxy class from which all bean proxys extend from.
  *
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public abstract class BeanProxy
    extends GenericProxy
@@ -48,8 +48,10 @@ public abstract class BeanProxy
    /**
     * Initialize {@link EJBObject} method references.
     */
-   static {
-      try {
+   static
+   {
+      try
+      {
          final Class[] empty = {};
          final Class type = EJBObject.class;
          
@@ -58,7 +60,8 @@ public abstract class BeanProxy
          GET_EJB_HOME = type.getMethod("getEJBHome", empty);
          IS_IDENTICAL = type.getMethod("isIdentical", new Class[] { type });
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          e.printStackTrace();
          throw new ExceptionInInitializerError(e);
       }
@@ -101,14 +104,17 @@ public abstract class BeanProxy
     * @throws NamingException    Failed to create InitalContext or lookup
     *                            EJBHome reference.
     */
-   protected EJBHome getEJBHome() throws NamingException {
+   protected EJBHome getEJBHome() throws NamingException
+   {
       // get a reference to the correct context
       final InitialContext ctx = createInitialContext();
 
-      try {
+      try
+      {
          return (EJBHome)ctx.lookup(name);
       }
-      finally {
+      finally
+      {
          ctx.close();
       }
    }
@@ -126,6 +132,9 @@ public abstract class BeanProxy
    protected Boolean isIdentical(final Object a, final Object b)
       throws RemoteException
    {
+      if( a == null )
+         return false;
+
       final EJBObject ejb = (EJBObject)a;
       final Object pk = ejb.getPrimaryKey();
       return new Boolean(pk.equals(b));
