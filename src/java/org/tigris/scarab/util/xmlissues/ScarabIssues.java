@@ -116,7 +116,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ScarabIssues.java,v 1.52 2003/08/14 21:59:16 elicia Exp $
+ * @version $Id: ScarabIssues.java,v 1.53 2003/08/14 22:01:53 dlr Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -799,7 +799,8 @@ public class ScarabIssues implements java.io.Serializable
         }
         catch (ParseException e)
         {
-            String errorMsg = (e.getErrorOffset() != -1 ? ": " + e.getMessage() : "");
+            String errorMsg =
+                (e.getErrorOffset() != -1 ? ": " + e.getMessage() : "");
             String[] args = { xmlDate.getTimestamp(), xmlDate.getFormat(),
                               errorMsg };
             String error = Localization.format
@@ -813,7 +814,9 @@ public class ScarabIssues implements java.io.Serializable
         throws Exception
     {
         // get the instance of the module
-        Module moduleOM = ModuleManager.getInstance(module.getDomain(), module.getName(), module.getCode());
+        Module moduleOM = ModuleManager.getInstance(module.getDomain(),
+                                                    module.getName(),
+                                                    module.getCode());
         // get the instance of the issue type
         IssueType issueTypeOM = IssueType.getInstance(issue.getArtifactType());
         issueTypeOM.setName(issue.getArtifactType());
