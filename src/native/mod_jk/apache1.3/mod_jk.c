@@ -845,7 +845,8 @@ static int jk_handler(request_rec *r)
                                       l, 
                                       &is_recoverable_error);
                 
-                    if (s.content_read < s.content_length || s.is_chunked) {
+                    if (s.content_read < s.content_length || 
+			(s.is_chunked && ! s.no_more_chunks)) {
                         /*
                          * If the servlet engine didn't consume all of the
                          * request data, consume and discard all further
