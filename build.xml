@@ -25,7 +25,7 @@
   <!-- External packages we depend on -->
 
   <property name="ant.home" value="../jakarta-ant"/>
-  <property name="watchdog.home" value="../../build/watchdog"/>
+  <property name="watchdog.home" value="../build/watchdog"/>
   <property name="jaxp" value="../jaxp-1.0.1"/>
 
   <property name="servlet22.jar" value="bin/servlet22.jar"/>
