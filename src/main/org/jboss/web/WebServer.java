@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.14 $
+ *   @version $Revision: 1.15 $
  *
  *   Revisions:
  *   
@@ -312,7 +312,7 @@ public class WebServer
                     else
                     {
                        // Retrieve bytes
-                       category.trace("resourceURL = "+resourceURL);
+                       log.trace("resourceURL = "+resourceURL);
                        bytes = getBytes(resourceURL);
                     }
                 }
