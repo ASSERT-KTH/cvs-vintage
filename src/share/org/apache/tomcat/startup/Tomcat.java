@@ -76,10 +76,10 @@ public class Tomcat extends Log {
 	sxmlConf.setConfig( configFile );
 	tcat.addInterceptor( sxmlConf );
         ClassLoader cl=(ClassLoader)attributes.get("parentClassLoader");
-        System.out.println("parentClassLoader:"+cl);
-        System.out.println("thisClassLoader:"+this.getClass().getClassLoader());
+        //System.out.println("parentClassLoader:"+cl);
+        //System.out.println("thisClassLoader:"+this.getClass().getClassLoader());
         if (cl==null) cl=this.getClass().getClassLoader();
-        System.out.println("parentClassLoader:"+cl);
+        //System.out.println("parentClassLoader:"+cl);
         tcat.getContextManager().setParentLoader(cl);
 	tcat.initContextManager();
 
