@@ -1,4 +1,4 @@
-// $Id: PropPanelInteraction.java,v 1.27 2004/12/18 14:36:57 mvw Exp $
+// $Id: PropPanelInteraction.java,v 1.28 2004/12/20 23:15:07 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
+import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
 
 /**
@@ -72,6 +73,8 @@ public class PropPanelInteraction extends PropPanelModelElement {
                 messagesScroll);
 
         addButton(new PropPanelButton2(new ActionNavigateContext()));
+        addButton(new PropPanelButton2(new ActionNewStereotype(), 
+                lookupIcon("Stereotype")));
         addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
                 lookupIcon("Delete")));;
     }

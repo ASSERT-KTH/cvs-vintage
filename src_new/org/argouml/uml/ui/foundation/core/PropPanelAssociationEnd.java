@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.55 2004/12/18 19:21:46 mvw Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.56 2004/12/20 23:15:10 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,6 +43,7 @@ import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMultiplicityComboBox2;
 import org.argouml.uml.ui.UMLMultiplicityComboBoxModel;
 import org.argouml.uml.ui.UMLMutableLinkedList;
+import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
 import org.tigris.swidgets.GridLayout2;
 import org.tigris.swidgets.Orientation;
@@ -217,9 +218,10 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         addButton(new PropPanelButton2(new ActionNavigateAssociation()));
         addButton(new PropPanelButton2(new ActionNavigateOppositeAssocEnd(),
                 lookupIcon("AssociationEnd")));
+        addButton(new PropPanelButton2(new ActionNewStereotype(), 
+                lookupIcon("Stereotype")));
         addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
                 lookupIcon("Delete")));;
-
     }
 
     /**

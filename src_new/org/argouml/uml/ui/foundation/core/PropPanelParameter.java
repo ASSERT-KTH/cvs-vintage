@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.53 2004/12/18 14:36:58 mvw Exp $
+// $Id: PropPanelParameter.java,v 1.54 2004/12/20 23:15:10 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLInitialValueComboBox;
 import org.argouml.uml.ui.UMLLinkedList;
+import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
 
 /**
@@ -86,6 +87,10 @@ public class PropPanelParameter extends PropPanelModelElement {
         addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
         addButton(new PropPanelButton2(new ActionAddParameter(), 
                 lookupIcon("Parameter")));
+        addButton(new PropPanelButton2(new ActionAddDataType(), 
+                lookupIcon("DataType")));
+        addButton(new PropPanelButton2(new ActionNewStereotype(), 
+                lookupIcon("Stereotype")));
         addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
                 lookupIcon("Delete")));
     }

@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.88 2004/12/18 14:36:58 mvw Exp $
+// $Id: PropPanelModelElement.java,v 1.89 2004/12/20 23:15:10 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +24,11 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import java.awt.event.ActionEvent;
 import java.util.Vector;
 
-import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JList;
@@ -41,7 +38,6 @@ import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
-import org.argouml.model.uml.ExtensionMechanismsFactory;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanel;
@@ -294,26 +290,6 @@ public abstract class PropPanelModelElement extends PropPanel {
             stereotypeBox.add(new UMLComboBoxNavigator(this,
                     Translator.localize("label.stereotype.navigate.tooltip"),
                     getStereotypeComboBox()));
-            JButton stereoTypeButton = new JButton(new AbstractAction(null,
-                    lookupIcon("Stereotype")) {
-
-                public void actionPerformed(ActionEvent e) {
-                    Object newTarget = ExtensionMechanismsFactory.getFactory()
-                            .buildStereotype(getTarget(), null);
-                    TargetManager.getInstance().setTarget(newTarget);
-                }
-
-            });
-            // we don't want to 'see' the button
-            // stereoTypeButton.setBorderPainted(false);
-            // stereoTypeButton.setContentAreaFilled(false);
-            stereoTypeButton.setSize(stereoTypeButton.getWidth() - 10,
-                    stereoTypeButton.getHeight());
-            //JToolBar toolbar = new JToolBar();
-            //toolbar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
-            //toolbar.add(stereoTypeButton);
-            //_stereotypeBox.add(toolbar);
-            stereotypeBox.add(stereoTypeButton);
         }
         return stereotypeBox;
     }
