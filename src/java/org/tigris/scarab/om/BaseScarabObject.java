@@ -51,7 +51,7 @@ import java.util.Date;
 
 // Turbine
 import org.apache.turbine.RunData;
-import org.apache.turbine.TemplateContext;
+import org.apache.turbine.services.template.TemplateContext;
 import org.apache.turbine.services.security.TurbineSecurity;
 import org.apache.turbine.services.db.om.BaseObject;
 import org.apache.turbine.services.db.om.NumberKey;
@@ -66,7 +66,7 @@ import org.tigris.scarab.services.module.ModuleManager;
     across all of the Scarab db objects.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: BaseScarabObject.java,v 1.8 2001/07/11 07:33:47 jon Exp $    
+    @version $Id: BaseScarabObject.java,v 1.9 2001/07/17 01:40:43 jmcnally Exp $    
 */
 public class BaseScarabObject extends BaseObject
 {

@@ -55,16 +55,18 @@ import org.apache.turbine.services.db.om.*;
 import org.tigris.scarab.util.*;
 import org.tigris.scarab.services.module.ModuleEntity;
 
-import org.apache.turbine.util.security.RoleSet;
-import org.apache.turbine.util.security.TurbineSecurityException;
-import org.apache.turbine.om.security.*;
+import org.apache.turbine.services.security.util.RoleSet;
+import org.apache.turbine.services.security.util.TurbineSecurityException;
+import org.apache.turbine.services.security.entity.User;
+import org.apache.turbine.services.security.entity.Group;
+import org.apache.turbine.services.security.entity.Role;
 
 /**
  * Implementation of a ScarabModule. For now, we just extend Module
  * so there isn't much here.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabModule.java,v 1.8 2001/07/06 19:00:54 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.9 2001/07/17 01:40:43 jmcnally Exp $
  */
 public class ScarabModule extends Module
     implements Group, Comparable

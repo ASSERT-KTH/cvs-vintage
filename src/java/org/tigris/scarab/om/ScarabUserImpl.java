@@ -52,8 +52,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.turbine.RunData;
-import org.apache.turbine.om.security.User;
-import org.apache.turbine.om.security.Role;
+import org.apache.turbine.services.security.entity.User;
+import org.apache.turbine.services.security.entity.Role;
 import org.apache.turbine.services.security.TurbineSecurity;
 import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.services.db.om.BaseObject;
@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.5 2001/07/13 20:18:55 elicia Exp $
+    @version $Id: ScarabUserImpl.java,v 1.6 2001/07/17 01:40:43 jmcnally Exp $
 */
 public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 {    
