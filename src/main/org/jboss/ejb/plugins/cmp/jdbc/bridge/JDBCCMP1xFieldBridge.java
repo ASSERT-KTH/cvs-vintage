@@ -34,7 +34,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge
 {
@@ -85,6 +85,7 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge
          field.set(ctx.getInstance(), value);
          FieldState fieldState = getFieldState(ctx);
          fieldState.setLoaded();
+         fieldState.setCheckDirty();
       }
       catch(Exception e)
       {
@@ -171,7 +172,7 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge
 
    protected void setDirtyAfterGet(EntityEnterpriseContext ctx)
    {
-      getFieldState(ctx).setDirtyAfterGet();
+      getFieldState(ctx).setCheckDirty();
    }
 
    private FieldState getFieldState(EntityEnterpriseContext ctx)
@@ -207,7 +208,7 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge
          entityState.setLoaded(tableIndex);
       }
 
-      public void setDirtyAfterGet()
+      public void setCheckDirty()
       {
          entityState.setCheckDirty(tableIndex);
       }
