@@ -118,7 +118,7 @@ public class PageContextImpl extends PageContext {
 	    request=req;
 	    response=res;
 	    errorPageURL=err;
-	    needsSession=n;;
+	    needsSession=n;
 	    bufferSize=b;
 	    autoFlush=a;
 	}
@@ -367,7 +367,9 @@ public class PageContextImpl extends PageContext {
 	try {
 	    removeAttribute(name, PAGE_SCOPE);
 	    removeAttribute(name, REQUEST_SCOPE);
-	    removeAttribute(name, SESSION_SCOPE);
+	    if( session != null ) {
+		removeAttribute(name, SESSION_SCOPE);
+	    }
 	    removeAttribute(name, APPLICATION_SCOPE);
 	} catch (Exception ex) {
 	    // we remove as much as we can, and
