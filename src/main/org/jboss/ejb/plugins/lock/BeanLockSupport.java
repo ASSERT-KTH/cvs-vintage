@@ -7,19 +7,14 @@
 
 package org.jboss.ejb.plugins.lock;
 
-import java.lang.reflect.Method;
-
 import javax.transaction.Transaction;
-import javax.ejb.EJBObject;
 
 import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.Container;
+import org.jboss.ejb.BeanLockExt;
 import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
-import org.jboss.util.deadlock.ApplicationDeadlockException;
 import org.jboss.util.deadlock.Resource;
-import java.util.HashMap;
-import java.util.HashSet;
 
 
 /**
@@ -27,9 +22,9 @@ import java.util.HashSet;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
-public abstract class BeanLockSupport implements Resource, BeanLock
+public abstract class BeanLockSupport implements Resource, BeanLockExt
 {
    protected Container container = null;
    
@@ -60,6 +55,35 @@ public abstract class BeanLockSupport implements Resource, BeanLock
    public void setContainer(Container container) { this.container = container; }
    public Object getResourceHolder() { return tx; }
 
+   /**
+    * A non-blocking method that checks if the calling thread will be able to acquire
+    * the sync lock based on the calling thread.
+    *
+    * @return true if the calling thread can obtain the sync lock in which
+    * case it will, false if another thread already has the lock.
+    */
+   public boolean attemptSync()
+   {
+      boolean didSync = false;
+      synchronized(this)
+      {
+         Thread thread = Thread.currentThread();
+         if(synched == null || synched.equals(thread) == true)
+         {
+            synched = thread;
+            ++ synchedDepth;
+            didSync = true;
+         }
+      }
+      return didSync;
+   }
+
+   /**
+    * A method that checks if the calling thread has the lock, and if it
+    * does not blocks until the lock is available. If there is no current owner
+    * of the lock, or the calling thread already owns the lock then the
+    * calling thread will immeadiately acquire the lock.
+    */ 
    public void sync()
    {
       synchronized(this)
