@@ -24,7 +24,8 @@
 
 <div class="colbar">
   #set ($checked = false)
-  #if (!$data.Parameters.getString("querytype") || $data.Parameters.getString("querytype") == "custom")
+  #set ($queryType = $data.Parameters.getString("querytype",""))
+  #if ($queryType == "custom")
       #set ($checked = true)
   #end
   <div><input type="radio" name="querytype" value="custom" 
@@ -32,11 +33,11 @@
     <strong>$l10n.QuerySelected</strong> $l10n.QuerySelectedDesc
   </div>
   <div><input type="radio" name="querytype" value="all"
-       #if ($data.Parameters.getString("querytype") == "all")checked="checked"#end />&nbsp;
+       #if ($queryType == "all")checked="checked"#end />&nbsp;
     <strong>$l10n.AllIssues</strong> $l10n.AllIssuesDesc
   </div>
   <div><input type="radio" name="querytype" value="my"
-       #if ($data.Parameters.getString("querytype") == "my")checked="checked"#end />&nbsp;
+       #if ($queryType == "my")checked="checked"#end />&nbsp;
     <strong>$l10n.MyIssues</strong>
   </div>
 </div>
@@ -53,7 +54,8 @@
   </tr>
  #if ($isMoreThanOne)
   <tr class="a">
-  #set ($checked = !$data.Parameters.getString("rmit_id"))
+  #set ($rmitId = $data.Parameters.getString("rmit_id"))
+  #set ($checked = !$rmitId)
     <td><input type="checkbox" name="allit" value="true"
         #checked($checked) /></td>
     <td>$l10n.AllIssueTypes</td>
@@ -68,7 +70,7 @@
     #indexedRows($velocityCount)
   #end
     <td>
-  #if ($data.Parameters.getString("rmit_id") == $rmit.QueryKey)
+  #if ($rmitId && $rmitId == $rmit.QueryKey)
       #set ($checked = true)
   #end
       <input type="checkbox" name="rmit_id" value="$rmit.QueryKey" 
