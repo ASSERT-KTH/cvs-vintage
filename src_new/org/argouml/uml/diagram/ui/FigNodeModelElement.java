@@ -25,7 +25,7 @@
 // Classes: FigNodeModelElement
 // Original Author: abonner
 
-// $Id: FigNodeModelElement.java,v 1.35 2002/11/06 07:44:27 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.36 2002/11/09 19:55:22 kataka Exp $
 
 
 package org.argouml.uml.diagram.ui;
@@ -518,7 +518,14 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 
 	public void propertySet(MElementEvent mee) {
 	    //if (_group != null) _group.propertySet(mee);
-	    modelChanged();
+            if (mee.getName().equals("name")) {
+                if (_readyToEdit) {
+                    MModelElement me = (MModelElement) getOwner();
+                    String nameStr = Notation.generate(this, me.getName());
+                     _name.setText(nameStr);
+                }
+            } else
+	       modelChanged();
 	    damage();
 	}
 	public void listRoleItemSet(MElementEvent mee) {

@@ -27,7 +27,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.17 2002/11/06 07:44:27 kataka Exp $
+// $Id: FigEdgeModelElement.java,v 1.18 2002/11/09 19:55:22 kataka Exp $
 
 
 package org.argouml.uml.diagram.ui;
@@ -421,7 +421,10 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 	public void propertySet(MElementEvent mee) {
 	    //if (_group != null) _group.propertySet(mee);
 	    if (mee.getOldValue() != mee.getNewValue()) {
-	    	modelChanged();
+                if (mee.getName().equals("name")) {
+                    updateNameText();
+                } else
+        	    	modelChanged();
 	    	damage();
 	    }
 	}
