@@ -24,7 +24,9 @@ package org.gjt.sp.jedit;
 
 import javax.swing.JMenuItem;
 import java.util.*;
-import org.gjt.sp.jedit.gui.*;
+import org.gjt.sp.jedit.browser.VFSBrowser;
+import org.gjt.sp.jedit.gui.EnhancedMenu;
+import org.gjt.sp.jedit.gui.OptionsDialog;
 
 /**
  * The abstract base class that every plugin must implement.<p>
@@ -86,7 +88,7 @@ import org.gjt.sp.jedit.gui.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EditPlugin.java,v 1.24 2003/04/28 21:17:39 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.25 2003/04/29 03:31:42 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin
@@ -194,6 +196,7 @@ public abstract class EditPlugin
 
 	//{{{ createMenuItems() method
 	/**
+	 * Called by the view when constructing its <b>Plugins</b> menu.
 	 * Loads menu items from one of these two properties:
 	 *
 	 * <ul>
@@ -230,6 +233,59 @@ public abstract class EditPlugin
 			String pluginName = jEdit.getProperty("plugin." +
 				getClassName() + ".name");
 			return new EnhancedMenu(menuProperty,pluginName);
+		}
+
+		return null;
+	} //}}}
+
+	//{{{ createBrowserMenuItems() method
+	/**
+	 * Called by the filesystem browser when constructing its
+	 * <b>Plugins</b> menu.
+	 * Loads menu items from one of these two properties:
+	 *
+	 * <ul>
+	 * <li><code>plugin.<i>class name</i>.browser-menu-item</code>
+	 * <li><code>plugin.<i>class name</i>.browser-menu</code>
+	 * </ul>
+	 *
+	 * If the former is set, then the menu item specified within is loaded
+	 * using
+	 * {@link GUIUtilities#loadMenuItem(String,ActionContext,boolean)}.
+	 * If the latter is
+	 * set, then each whitespace-separated token is loaded as a menu item,
+	 * and assembled into a menu whose label is taken from the
+	 * <code>plugin.<i>class name</i>.name</code> property.<p>
+	 *
+	 * If the property is not defined, this method returns null.<p>
+	 *
+	 * Do not override this method; define the above mentioned properties
+	 * instead.
+	 *
+	 * @since jEdit 4.2pre1
+	 */
+	public final JMenuItem createBrowserMenuItems()
+	{
+		if(this instanceof Broken)
+			return null;
+
+		String menuItemName = jEdit.getProperty("plugin." +
+			getClassName() + ".browser-menu-item");
+		if(menuItemName != null)
+		{
+			return GUIUtilities.loadMenuItem(
+				VFSBrowser.getActionContext(),
+				menuItemName,
+				false);
+		}
+
+		String menuProperty = "plugin." + getClassName() + ".browser-menu";
+		if(jEdit.getProperty(menuProperty) != null)
+		{
+			String pluginName = jEdit.getProperty("plugin." +
+				getClassName() + ".name");
+			return new EnhancedMenu(menuProperty,pluginName,
+				VFSBrowser.getActionContext());
 		}
 
 		return null;
