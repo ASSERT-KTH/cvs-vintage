@@ -9,12 +9,16 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
+import org.columba.core.externaltools.ExternalToolsNotFoundException;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.ExternalToolsPluginHandler;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.main.MailInterface;
 
@@ -28,23 +32,28 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-
 /**
- * @author waffel
- * The <code>JSCFController</code> controls JSCFDrivers and Connections. It chaches for each account the connection to
- * JSCFDrivers. The <code>JSCFController</code> uses the "singleton pattern", which mean, that you should access it, using
+ * The <code>JSCFController</code> controls JSCFDrivers and Connections. It
+ * chaches for each account the connection to JSCFDrivers. The <code>JSCFController</code>
+ * uses the "singleton pattern", which mean, that you should access it, using
  * the <code>getInstcane</code> method.
+ * 
+ * @author waffel
  */
 public class JSCFController {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.pgp");
+    private static final Logger   LOG        = Logger
+                                                     .getLogger("org.columba.mail.pgp");
 
     private static JSCFController myInstance = null;
-    private static Map connectionMap;
+
+    private static Map            connectionMap;
 
     /**
-     * Gives a instance of the <code>JSCFController</code> back. If no instance was created before, a new instance will be created.
+     * Gives a instance of the <code>JSCFController</code> back. If no
+     * instance was created before, a new instance will be created.
+     * 
      * @return A Instance of <code>JSCFController</code>
      */
     public static JSCFController getInstance() {
@@ -59,7 +68,8 @@ public class JSCFController {
 
     private static void registerDrivers() {
         try {
-            // at the moment we are only supporting gpg. So let us code hard here the gpg driver
+            // at the moment we are only supporting gpg. So let us code hard
+            // here the gpg driver
             JSCFDriverManager.registerJSCFDriver(new GPGDriver());
         } catch (JSCFException e) {
             // TODO Auto-generated catch block
@@ -68,26 +78,57 @@ public class JSCFController {
     }
 
     /**
-     * Creates a new Connection to the gpg driver, if the connection for the given <code>userID</code> are not exists. Properties
-     * for the connection are created by using the PGPItem from the <code>AccountItem</code>. Properties like PATH and the
-     * GPG USERID are stored for the connection, if the connection are not exists.
-     * @param userID UserID from which the connection should give back
-     * @return a alrady etablished connection for this user or a newly created connection for this userID, if no connection exists for
-     * the userID
-     * @throws JSCFException If there are several Driver problems
+     * Creates a new Connection to the gpg driver, if the connection for the
+     * given <code>userID</code> are not exists. Properties for the
+     * connection are created by using the PGPItem from the <code>AccountItem</code>.
+     * Properties like PATH and the GPG USERID are stored for the connection,
+     * if the connection are not exists.
+     * 
+     * @param userID
+     *                     UserID from which the connection should give back
+     * @return a alrady etablished connection for this user or a newly created
+     *                connection for this userID, if no connection exists for the
+     *                userID
+     * @throws JSCFException
+     *                      If there are several Driver problems
      */
-    public JSCFConnection getConnection(String userID)
-        throws JSCFException {
+    public JSCFConnection getConnection(String userID) throws JSCFException {
         PGPItem pgpItem = MailInterface.config.getAccountList()
-                                              .getDefaultAccount().getPGPItem();
+                .getDefaultAccount().getPGPItem();
         JSCFConnection con = (JSCFConnection) connectionMap.get(userID);
 
         if (con == null) {
-            // let us hard coding the gpg for each connection. Later we should support also other variants (like smime)
+            // let us hard coding the gpg for each connection. Later we should
+            // support also other variants (like smime)
             con = JSCFDriverManager.getConnection("jscf:gpg:");
+            
+            // getting the path to gpg
+            
+            ExternalToolsPluginHandler handler = null;
+            String path = null;
+            try {
+                handler = (ExternalToolsPluginHandler) MainInterface.pluginManager.getHandler(
+                        "org.columba.core.externaltools");
 
+                path=handler.getLocationOfExternalTool("gpg").getPath();
+                LOG.fine("setting path: "+path);
+            } catch (Exception e) {
+                LOG.fine("path problem:"+e);
+                if (e instanceof ExternalToolsNotFoundException) {
+                    throw new ProgramNotFoundException(e.getMessage());
+                }
+
+                if (MainInterface.DEBUG) {
+                    e.printStackTrace();
+                }
+            }
+            
+            if (path == null) {
+                throw new ProgramNotFoundException("invalid path");
+            }
             Properties props = con.getProperties();
-            props.put("PATH", pgpItem.get("path"));
+            props.put("PATH", path);
+            LOG.fine("gpg userId: "+handler.getAttribute("gpg", "id"));
             LOG.info("gpg path: " + props.get("PATH"));
             props.put("USERID", pgpItem.get("id"));
             LOG.info("current gpg userID: " + props.get("USERID"));
@@ -99,15 +140,20 @@ public class JSCFController {
     }
 
     /**
-     * Creates a new JSCFConnection for the current used Account. The current used Account is determind from the AccountItem.
-     * This method calls only {@link #getConnection(String)} with the <code>id</code> from the PGPItem.
-     * @return  a alrady etablished connection for the current account or a newly created connection for the current account, if no
-     * connection exists for the current account
-     * @throws JSCFException If there are several Driver problems
+     * Creates a new JSCFConnection for the current used Account. The current
+     * used Account is determind from the AccountItem. This method calls only
+     * {@link #getConnection(String)}with the <code>id</code> from the
+     * PGPItem.
+     * 
+     * @return a alrady etablished connection for the current account or a
+     *                newly created connection for the current account, if no
+     *                connection exists for the current account
+     * @throws JSCFException
+     *                      If there are several Driver problems
      */
     public JSCFConnection getConnection() throws JSCFException {
         PGPItem pgpItem = MailInterface.config.getAccountList()
-                                              .getDefaultAccount().getPGPItem();
+                .getDefaultAccount().getPGPItem();
 
         return getConnection(pgpItem.get("id"));
     }

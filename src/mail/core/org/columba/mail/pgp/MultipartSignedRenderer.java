@@ -93,24 +93,14 @@ public class MultipartSignedRenderer extends MimePartRenderer {
 
         signatureMimePart = null;
 
-        /*
-        PGPController controller = PGPController.getInstance();
-
-        signatureMimePart = new InputStreamMimePart(signatureHeader,
-                controller.sign(signedPartCloneModel.getClone(), pgpItem));
-
-        JSCFDriverManager.registerJSCFDriver(new GPGDriver());
-        JSCFConnection con = JSCFDriverManager.getConnection("jscf:gpg:"+pgpItem.get("path"));
-        */
         JSCFController controller = JSCFController.getInstance();
         JSCFConnection con = controller.getConnection();
 
-        //con.getProperties().put("USERID", pgpItem.get("id"));
         PGPPassChecker passCheck = PGPPassChecker.getInstance();
         boolean check = passCheck.checkPassphrase(con);
 
         if (!check) {
-            throw new WrongPassphraseException();
+            throw new WrongPassphraseException("wrong passphrase");
         }
 
         JSCFStatement stmt = con.createStatement();

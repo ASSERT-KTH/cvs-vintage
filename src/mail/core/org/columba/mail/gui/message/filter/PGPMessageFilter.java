@@ -170,14 +170,8 @@ public class PGPMessageFilter extends AbstractFilter {
         InputStream decryptedStream = null;
 
         try {
-            /*
-             * JSCFDriverManager.registerJSCFDriver(new GPGDriver());
-             * JSCFConnection con =
-             * JSCFDriverManager.getConnection("jscf:gpg:"+(String)pgpItem.get("path"));
-             */
             JSCFController controller = JSCFController.getInstance();
             JSCFConnection con = controller.getConnection();
-            //con.getProperties().put("USERID", pgpItem.get("id"));
             JSCFStatement stmt = con.createStatement();
             PGPPassChecker passCheck = PGPPassChecker.getInstance();
             boolean check = passCheck.checkPassphrase(con);
@@ -258,18 +252,7 @@ public class PGPMessageFilter extends AbstractFilter {
 
         // Get the mailaddress and use it as the id
         Address fromAddress = new BasicHeader(header.getHeader()).getFrom();
-        /*
-         * PGPItem pgpItem =null; // we need the pgpItem, to extract the path
-         * to gpg pgpItem =
-         * MailInterface.config.getAccountList().getDefaultAccount().getPGPItem();
-         */
         try {
-            /*
-             * // TODO this should be only once, after starting columba!
-             * JSCFDriverManager.registerJSCFDriver(new GPGDriver());
-             * JSCFConnection con =
-             * JSCFDriverManager.getConnection("jscf:gpg:"+(String)pgpItem.get("path"));
-             */
             JSCFController controller = JSCFController.getInstance();
             JSCFConnection con = controller.getConnection();
             JSCFStatement stmt = con.createStatement();

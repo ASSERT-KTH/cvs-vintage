@@ -36,11 +36,11 @@ import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.gui.util.SendMessageDialog;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.pgp.CancelledException;
-import org.columba.mail.pgp.PGPException;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
 
 import org.columba.ristretto.smtp.SMTPException;
+import org.waffel.jscf.JSCFException;
 
 import java.io.IOException;
 
@@ -108,7 +108,7 @@ public class SendMessageCommand extends FolderCommand {
         try {
             // compose the message suitable for sending
             message = new MessageComposer(((ComposerModel) composerController.getModel())).compose(worker);
-        } catch (PGPException e1) {
+        } catch (JSCFException e1) {
             if (e1 instanceof CancelledException) {
                 // user cancelled sending operation
                 // open composer view
