@@ -160,7 +160,7 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.57 $
+@version $Revision: 1.58 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -209,6 +209,13 @@ public abstract class AbstractWebContainer
       throws DeploymentException 
    {
       log.debug("Begin init");
+      //super.init registers di as an mbean and calls
+      //processNestedDeployments, which we override to do nothing.
+      if (!super.init(di)) 
+      {
+         return false;
+      } // end of if ()
+      
       try 
       {
          // resolve the watch
@@ -243,6 +250,8 @@ public abstract class AbstractWebContainer
       log.debug("End init");
       return true;
    }
+
+   protected void processNestedDeployments(DeploymentInfo di) {}
 
    public void create(DeploymentInfo di) throws DeploymentException
    {
