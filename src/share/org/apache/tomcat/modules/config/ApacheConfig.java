@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.23 2001/08/11 03:37:28 larryi Exp $
+/* $Id: ApacheConfig.java,v 1.24 2001/08/16 00:27:07 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -118,7 +118,7 @@ import java.util.*;
      <li><b>jkLog</b> - path to log file to be used by mod_jk.</li>
      <li><b>jkDebug</b> - JK Loglevel setting.  May be debug, info, error, or emerg.
                           If not set, defaults to emerg.</li>
-     <li><b>jkProtocol</b> The desired protocal, "ajp12" or "ajp13". If not
+     <li><b>jkProtocol</b> The desired protocal, "ajp12" or "ajp13" or "inprocess". If not
                            specified, defaults to "ajp13" if an Ajp13Interceptor
                            is in use, otherwise it defaults to "ajp12".</li>
      <li><b>forwardAll</b> - If true, forward all requests to Tomcat. This helps
@@ -146,7 +146,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Mel Martinez
-	@version $Revision: 1.23 $ $Date: 2001/08/11 03:37:28 $
+	@version $Revision: 1.24 $ $Date: 2001/08/16 00:27:07 $
  */
 public class ApacheConfig  extends BaseJkConfig { 
     
