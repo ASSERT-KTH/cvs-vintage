@@ -22,18 +22,23 @@ import org.apache.log4j.Category;
 import org.apache.log4j.NDC;
 import org.apache.log4j.PropertyConfigurator;
 
-/** This is a JMX MBean that provides two features:
+/** This is a JMX MBean that provides three features:
 1., It initalizes the log4j framework from the log4j properties format file
     specified by the ConfigurationPath attribute to that the log4j may be
     used by JBoss components.
 2., It collects JMX notification events fired by the "service=Log" mbean
-    and logs the msgs to the log4j root Category. This allows the Log4jService
+    and logs the msgs to log4j. This allows the Log4jService
     to replace all other JBoss logging services like ConsoleLogging and
     FileLogging.
+    
+3,  It uses the log name as the category to log under, allowing you to turn 
+    individual components on and off using the log4j configuration file
+    (automatically reloaded frequently).
 
 @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.3 $
+@author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
+@version $Revision: 1.4 $
 */
 public class Log4jService implements Log4jServiceMBean, NotificationListener,
     MBeanRegistration
@@ -146,21 +151,22 @@ public class Log4jService implements Log4jServiceMBean, NotificationListener,
         String source = (String) n.getUserData();
         if( source == null || source.length() == 0 )
             source = "Default";
-
+        //get a category based on the source name, so we can turn on and off pieces of logging.
+        Category localCategory = category.getInstance(source);
         NDC.push(source);
         switch( type )
         {
             case 'W':
-                category.warn(msg);
+                localCategory.warn(msg);
             break;
             case 'D':
-                category.debug(msg);
+                localCategory.debug(msg);
             break;
             case 'E':
-                category.error(msg);
+                localCategory.error(msg);
             break;
             default:
-                category.info(msg);
+                localCategory.info(msg);
             break;
         }
         NDC.pop();
