@@ -37,7 +37,7 @@ import org.apache.log4j.Category;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.14 $
+ * @version   $Revision: 1.15 $
  */
 public class StdServerSessionPool
        implements ServerSessionPool
@@ -112,11 +112,11 @@ public class StdServerSessionPool
    /**
     * Construct a <tt>StdServerSessionPool</tt> using the default pool size.
     *
-    * @param con
-    * @param transacted
-    * @param ack
-    * @param listener
-    * @param maxSession
+    * @param con connection to get sessions from
+    * @param transacted transaction mode when not XA (
+    * @param ack ackmode when not XA
+    * @param listener the listener the sessions will call
+    * @param maxSession maximum number of sessions in the pool
     * @param isuseLocalTX  Description of Parameter
     * @exception JMSException    Description of Exception
     */
@@ -360,16 +360,27 @@ public class StdServerSessionPool
             throw new JMSException("Connection was not reconizable: " + con);
          }
 
+
+
+         // create the server session and add it to the pool - it is up to the
+	 // server session to set the listener
+         StdServerSession serverSession = new StdServerSession(this, ses, xaSes, listener, useLocalTX);
+
+
          // This might not be totaly spec compliant since it says that app
          // server should create as many message listeners its needs.
-         log.debug("setting session listener: " + listener);
-         ses.setMessageListener(listener);
+         //log.debug("setting session listener: " + listener);
+	 //if(xaSession
+	 //ses.setMessageListener(serverSession);
+	 //FIXME, it seems as if Sonic is using ites XaSession to do all work
+	 //if (xaSes != null)
+	 //   xaSes.setMessageListener(serverSession);
 
-         // create the server session and add it to the pool
-         ServerSession serverSession = new StdServerSession(this, ses, xaSes, useLocalTX);
          sessionPool.add(serverSession);
          numServerSessions++;
          log.debug("added server session to the pool: " + serverSession);
       }
    }
 }
+
+

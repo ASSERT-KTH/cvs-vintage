@@ -19,9 +19,9 @@ import javax.transaction.xa.Xid;
  *  @see TransactionImpl
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
-class XidImpl
+public class XidImpl
    implements Xid, java.io.Serializable
 {
    // Constants -----------------------------------------------------
