@@ -59,7 +59,6 @@ import org.apache.fulcrum.security.TurbineSecurity;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.om.PendingGroupUserRole;
 import org.tigris.scarab.tools.SecurityAdminTool;
@@ -161,7 +160,7 @@ public class HandleRoleRequests extends RequireLoginFirstAction
             getUsers(ScarabSecurity.USER__APPROVE_ROLES));
 
         // Which potential approvers has any role in this module?
-        ArrayList approversWithRole = new ArrayList();
+        List approversWithRole = new ArrayList();
         for(Iterator i = approvers.iterator(); i.hasNext();)
         {
             ScarabUser u = (ScarabUser)i.next();
