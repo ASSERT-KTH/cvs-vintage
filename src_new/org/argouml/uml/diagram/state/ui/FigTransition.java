@@ -24,7 +24,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.6 2002/08/20 07:10:55 kataka Exp $
+// $Id: FigTransition.java,v 1.7 2002/08/23 07:16:50 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -157,10 +157,6 @@ public class FigTransition extends FigEdgeModelElement {
         // we have to find all transitions that have equal points
         int[] xs = getXs();
         int[] ys = getYs();
-        for (int i = 0; i < xs.length; i++) {
-            System.out.println("Point " + i + " x coor: " + xs[i]);
-            System.out.println("Point " + i + " y coor: " + ys[i]);
-        }
         for (int i = 0; i < transitions.size(); i++) {
             FigEdge fig = ((FigEdge)getLayer().presentationFor(transitions.get(i)));
             // next lines patch for loading old 0.10.1 projects in 0.11.1 and further
