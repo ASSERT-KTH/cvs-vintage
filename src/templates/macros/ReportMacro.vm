@@ -60,6 +60,7 @@
 #set ($multiplier = 1)
 #foreach ($columnHeadingLevel in $model.ColumnHeadings)
    #set ($level = $velocityCount - 1)
+   #set ($colspan = $model.getColspan($level))
  <tr>
    #foreach ($foo in [1..$model.RowHeadings.size()])
      <th>&nbsp;</th>
@@ -68,9 +69,14 @@
    #foreach ($indexPlusOne in [1..$columnHeadingLevel.size()])
      #set ($index = $indexPlusOne - 1)
      #set ($columnHeading = $columnHeadingLevel.get($index))
-     <th colspan="$model.getColspan($level)">
+     <th>
        #reportLabel($model $columnHeading)
      </th>
+     #if ($colspan > 1)
+     #foreach ($dummy in [2..$colspan])
+           <th>&nbsp;</th>
+     #end
+     #end
    #end
    #end
    #set ($multiplier = $multiplier * $columnHeadingLevel.size())   
@@ -89,22 +95,11 @@
        #set ($prevRowspan = $model.getRowspan($prevLevel))
     #end
     #if (($rowIndex % $rowspan) == 0)
-#*
-      #set ($multiplier = 1)
-      #foreach ($rowHeadingLevel2 in $model.RowHeadings)
-        #set ($level2 = $velocityCount - 1)
-        #if ($level2 > $level)
-          #set ($multiplier = $multiplier * $rowHeadingLevel2.size())   
-        #end
-      #end
-      #set ($index = $rowIndex/$multiplier)
-      #if ($level > 0)
-          #set ($index = $index % $rowspan)
-      #end
-*#
-    #set ($curHeading = $model.RowHeadings.get($level))
-    #set ($index = ($rowIndex / $rowspan) % $curHeading.size())
-     <th rowspan="$rowspan">#reportLabel($model $curHeading.get($index) )</th>
+      #set ($curHeading = $model.RowHeadings.get($level))
+      #set ($index = ($rowIndex / $rowspan) % $curHeading.size())
+         <th>#reportLabel($model $curHeading.get($index) )</th>
+    #else
+         <th>&nbsp;</th>
     #end
   #end
 
