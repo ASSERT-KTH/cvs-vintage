@@ -53,7 +53,7 @@ import org.apache.torque.om.NumberKey;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.48 2002/10/08 16:36:08 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.49 2002/10/09 18:26:01 jmcnally Exp $
  */
 public interface ScarabConstants
 {
@@ -223,4 +223,9 @@ public interface ScarabConstants
      * Encoding used to send emails.
      */
     String DEFAULT_EMAIL_ENCODING_KEY = "scarab.email.encoding";
+
+    /**
+     * The default base for resolving ResourceBundles.
+     */
+    String DEFAULT_BUNDLE_NAME = "ScarabBundle";
 }    
