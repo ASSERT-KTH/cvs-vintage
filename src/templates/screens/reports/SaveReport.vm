@@ -42,8 +42,7 @@ Go to your $link.setPage("ReportList.vm").setLabel("Stored Reports List").
   <tr>
    <th width="120">Query description</th>
    <td>
-        <#textAreaMedium() name="$intakeReport.Description.Key" 
-            >$intakeReport.Description</textarea>
+     #textAreaMedium("$intakeReport.Description.Key" $intakeReport.Description)
    </td>
   </tr>
 #*

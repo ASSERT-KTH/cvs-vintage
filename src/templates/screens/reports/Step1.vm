@@ -42,8 +42,7 @@ later).</p>
   <tr>
    <th width="120">Report description (optional)</th>
    <td>
-     <#textAreaMedium() name="$intakeReport.Description.Key"
-          >$intakeReport.Description</textarea>
+     #textAreaMedium("$intakeReport.Description.Key" $intakeReport.Description)
    </td>
   </tr>
  </table>
