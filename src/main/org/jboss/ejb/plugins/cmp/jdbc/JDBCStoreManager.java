@@ -58,7 +58,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.60 $
+ * @version $Revision: 1.61 $
  */
 public final class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -585,6 +585,14 @@ public final class JDBCStoreManager implements EntityPersistenceStore
    public void activateEntity(EntityEnterpriseContext ctx)
    {
       activateEntityCommand.execute(ctx);
+
+      // looad at the cache for preloaded data
+      boolean loaded = readAheadCache.load(ctx);
+
+      // if there was some preloaded (in this current tx) data, we can set valid to true
+      // and avoid executing load command when the instance is accessed.
+      if(loaded)
+         ctx.setValid(true);
    }
 
    /**

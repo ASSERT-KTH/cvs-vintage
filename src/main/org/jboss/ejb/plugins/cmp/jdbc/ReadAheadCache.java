@@ -34,7 +34,7 @@ import java.util.Map;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public final class ReadAheadCache
 {
@@ -294,7 +294,7 @@ public final class ReadAheadCache
     * Loads all of the preloaded data for the ctx into it.
     * @param ctx the context that will be loaded
     */
-   public void load(EntityEnterpriseContext ctx)
+   public boolean load(EntityEnterpriseContext ctx)
    {
       if(log.isTraceEnabled())
       {
@@ -305,7 +305,7 @@ public final class ReadAheadCache
 
       // get the preload data map
       Map preloadDataMap = getPreloadDataMap(ctx.getId(), false);
-      if(preloadDataMap == null)
+      if(preloadDataMap == null || preloadDataMap.isEmpty())
       {
          // no preloaded data for this entity
          if(log.isTraceEnabled())
@@ -314,7 +314,7 @@ public final class ReadAheadCache
                " entity=" + manager.getEntityBridge().getEntityName() +
                " pk=" + ctx.getId());
          }
-         return;
+         return false;
       }
 
       // iterate over the keys in the preloaded map
@@ -413,6 +413,8 @@ public final class ReadAheadCache
 
       // remove all preload data map as all of the data has been loaded
       manager.removeEntityTxData(new PreloadKey(ctx.getId()));
+
+      return true;
    }
 
    /**
