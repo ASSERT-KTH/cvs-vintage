@@ -1,8 +1,8 @@
 @echo off
 rem build.bat -- Build Script for the "Hello, World" Application
-rem $Id: build.bat,v 1.1 2000/04/04 22:01:13 craigmcc Exp $
+rem $Id: build.bat,v 1.2 2000/04/24 19:36:48 craigmcc Exp $
 
-if %CLASSPATH% == "" goto noclasspath
+if "%CLASSPATH%" == "" goto noclasspath
 
 :haveclasspath
 set _CLASSPATH=%CLASSPATH%
