@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.31 2002/01/09 00:03:12 patriot1burke Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.32 2002/01/14 01:59:48 patriot1burke Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -110,7 +110,7 @@
       <container-configuration>
 	 <container-name>Clustered CMP 2.x EntityBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactoryHA</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -158,7 +158,7 @@
       <container-configuration>
 	 <container-name>Clustered CMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactoryHA</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -318,7 +318,7 @@
       <container-configuration>
 	 <container-name>Clustered Stateless SessionBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactoryHA</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -448,7 +448,7 @@
       <container-configuration>
 	 <container-name>Clustered Stateful SessionBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactoryHA</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <!-- CMT -->
@@ -543,7 +543,7 @@
       <container-configuration>
 	 <container-name>Clustered BMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactoryHA</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
