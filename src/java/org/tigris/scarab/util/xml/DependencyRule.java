@@ -49,6 +49,7 @@ package org.tigris.scarab.util.xml;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.Depend;
+import org.tigris.scarab.om.DependManager;
 
 /**
  * Handler for the xpath "scarab/module/issue/dependency"
@@ -113,7 +114,7 @@ public class DependencyRule extends BaseRule
         DependencyTree dt = getImportBean().getDependencyTree();
 
         String issueXmlId = dt.getIssueXmlId(issue.getIssueId());
-        Depend depend = Depend.getInstance();
+        Depend depend = DependManager.getInstance();
         depend.setDependType(dependType);
 
         if (nodeType.equals(DependencyNode.NODE_TYPE_PARENT)) 

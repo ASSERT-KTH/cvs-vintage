@@ -52,6 +52,7 @@ import java.util.Enumeration;
 import org.apache.log4j.Category;
 import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.Depend;
+import org.tigris.scarab.om.DependManager;
 
 import org.apache.torque.om.NumberKey;
 
@@ -252,7 +253,7 @@ public class DependencyTree
                 for (int j = 0; j < unresolvedDependencies.size(); j++)
                 {
                     DependencyNode node = (DependencyNode)unresolvedDependencies.get(j);
-                    Depend depend = Depend.getInstance();
+                    Depend depend = DependManager.getInstance();
                     depend.setDependType(node.getDependType());
                     if (node.getNodeType().equals(DependencyNode.NODE_TYPE_PARENT))
                     {

@@ -691,7 +691,7 @@ try{
                     .get("Depend", IntakeTool.DEFAULT_KEY).get("Id").toString();
                 if ( dependId == null || dependId.length() == 0 )
                 {
-                    depend = Depend.getInstance();
+                    depend = DependManager.getInstance();
                 }
                 else 
                 {
