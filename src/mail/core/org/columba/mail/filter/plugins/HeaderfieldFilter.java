@@ -19,7 +19,7 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.MessageFolder;
-
+import org.columba.ristretto.coder.EncodedWord;
 import org.columba.ristretto.message.Header;
 
 
@@ -69,6 +69,9 @@ public class HeaderfieldFilter extends AbstractFilter {
 
         String headerItem = (String) header.get(headerfield);
 
+        // decode headerfield
+        headerItem = EncodedWord.decode( headerItem ).toString();
+        
         // get condition and convert it to constant as defined in
         // FilterCriteria
         int condition = FilterCriteria.getCriteria(criteria);
