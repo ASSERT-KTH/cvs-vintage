@@ -14,7 +14,7 @@ import javax.naming.NamingException;
 /** A static utility class for common JNDI operations.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class Util
 {
@@ -106,5 +106,36 @@ public class Util
         String atom = name.get(size-1);
         Context parentCtx = createSubcontext(ctx, name.getPrefix(size-1));
         parentCtx.rebind(atom, value);
+    }
+
+    /** Unbinds a name from ctx, and removes parents if they are empty
+     @param ctx, the parent JNDI Context under which the name will be unbound
+     @param name, The name to unbind
+     */
+    public static void unbind(Context ctx, String name)
+        throws NamingException
+    {
+        unbind(ctx,ctx.getNameParser("").parse(name));
+    }
+    
+    /** Unbinds a name from ctx, and removes parents if they are empty
+     @param ctx, the parent JNDI Context under which the name will be unbound
+     @param name, The name to unbind
+     */
+    public static void unbind(Context ctx, Name name)
+       throws NamingException
+    {
+       ctx.unbind(name); //unbind the end node in the name
+       int sz = name.size();
+       //walk the list backwards, stopping at the domain since I don't know if
+       //a domain can be unbound this way.
+       while (--sz > 0) //walk the tree backwards, stopping at the domain
+       {
+          Name pname = name.getPrefix(sz);
+          if (ctx.listBindings(pname).hasMore()) //if we have more children stop now
+             break;
+          else
+             ctx.unbind(pname); //must be no children, nuke it and continue
+       }
     }
 }
