@@ -116,17 +116,29 @@ public class ScarabLocalizationTool
 
     public String get(String key)
     {
-        String value = super.get(key);
-        if (value == null)
+        String value = null;
+        try 
         {
-            value = super.get(DEFAULT_SCOPE + '.', key);
+            super.get(key);
+            if (value == null)
+            {
+                value = super.get(DEFAULT_SCOPE + '.', key);
+            }
+            if (value == null) 
+            {
+                value = "ERROR! Missing resource (" + key + ")";
+                Log.get().error(
+                    "ScarabLocalizationTool: ERROR! Missing resource: " + key);
+            }
         }
-        if (value == null) 
+        catch (Exception e)
         {
-            value = "ERROR! Missing resource (" + key + ")";
-            Log.get().error("ScarabLocalizationTool: ERROR! Missing resource: "
-                            + key);            
+            value = "ERROR! Bad resource (" + key + ")";
+            Log.get().error(
+                "ScarabLocalizationTool: ERROR! Bad resource: " + key + 
+                ".  See log for details.", e);
         }
+
         return value;
     }
 
@@ -255,6 +267,14 @@ public class ScarabLocalizationTool
             }
             setPrefix(prefix);
         }
+        catch (Exception e)
+        {
+            value = "ERROR! Bad resource (" + key + ")";
+            Log.get().error(
+                "ScarabLocalizationTool: ERROR! Bad resource: " + key + 
+                ".  See log for details.", e);
+        }
+
         return value;
     }
 
