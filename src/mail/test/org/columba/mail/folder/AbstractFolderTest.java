@@ -15,13 +15,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.folder.mh;
+package org.columba.mail.folder;
+
+import java.io.File;
 
 import junit.framework.TestCase;
 
-import org.columba.mail.folder.FolderTestHelper;
-
-import java.io.File;
+import org.columba.mail.folder.mh.CachedMHFolder;
 
 
 /**
@@ -33,8 +33,8 @@ import java.io.File;
  * @author fdietz
  */
 public abstract class AbstractFolderTest extends TestCase {
-    protected CachedMHFolder sourceFolder;
-    protected CachedMHFolder destFolder;
+    protected Folder sourceFolder;
+    protected Folder destFolder;
 
     /**
  * Constructor for CachedMHFolderTest.
@@ -62,7 +62,7 @@ public abstract class AbstractFolderTest extends TestCase {
     /**
  * @return Returns the folder.
  */
-    public CachedMHFolder getSourceFolder() {
+    public Folder getSourceFolder() {
         return sourceFolder;
     }
 
@@ -98,7 +98,7 @@ public abstract class AbstractFolderTest extends TestCase {
     /**
  * @return Returns the destFolder.
  */
-    public CachedMHFolder getDestFolder() {
+    public Folder getDestFolder() {
         return destFolder;
     }
 }

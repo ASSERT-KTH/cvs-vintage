@@ -15,7 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.folder.mh;
+package org.columba.mail.folder;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -28,7 +28,10 @@ public class AllTests {
 
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for org.columba.mail.folder.mh");
+        
+        
         //$JUnit-BEGIN$
+        suite.addTest(new AddMessageFolderTest("df"));
         suite.addTestSuite(AddMessageFolderTest.class);
         suite.addTestSuite(CopyMessageFolderTest.class);
         suite.addTestSuite(MoveMessageFolderTest.class);
