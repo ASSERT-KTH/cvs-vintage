@@ -1,7 +1,9 @@
 $page.setTitle("Select Artifact Type")
 
 #set ($nextTemplate = $data.Parameters.getString("nextTemplate"))
-
+#if (!$nextTemplate)
+   #set ($nextTemplate = "SelectArtifactType.vm")
+#end
      <div class="app" id="divselect_module">
         <h3>Artifact types: The '$scarabR.CurrentModule.Name' module</h3>
         
@@ -13,7 +15,7 @@ $page.setTitle("Select Artifact Type")
 
 #foreach ($issueType in $scarabR.CurrentModule.IssueTypes)
         #indexedRows($velocityCount)
-        <td><a href="$link.setPage("SelectIssueType.vm").setAction("SelectIssueType").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "$nextTemplate").addPathInfo("newissuetype", "$issueType.IssueTypeId")">$issueType.Name</a></td>
+        <td><a href="$link.setPage("SelectArtifactType.vm").setAction("SelectIssueType").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "$nextTemplate").addPathInfo("newissuetype", "$issueType.IssueTypeId")">$issueType.Name</a></td>
         <td>$!issueType.Description</td>
         </tr>
 #end        
