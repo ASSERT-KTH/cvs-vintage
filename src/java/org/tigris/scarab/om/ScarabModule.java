@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.146 2003/12/04 14:27:26 mpoeschl Exp $
+ * @version $Id: ScarabModule.java,v 1.147 2003/12/20 13:33:19 pledbrook Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -458,7 +458,7 @@ public class ScarabModule
                 }
                 result = limitedResult;
                 paginated = new ScarabPaginatedList(result, totalResultSize,
-                                                    offset / resultsPerPage,
+                                                    pageNum,
                                                     resultsPerPage);
             }
             else 
