@@ -58,7 +58,7 @@ import org.tigris.scarab.test.BaseScarabOMTestCase;
  * A Testing Suite for the om.Attachment class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttachmentTest.java,v 1.15 2004/04/07 20:12:22 dep4b Exp $
+ * @version $Id: AttachmentTest.java,v 1.16 2004/11/04 10:53:31 dep4b Exp $
  */
 public class AttachmentTest extends BaseScarabOMTestCase
 {
@@ -77,7 +77,6 @@ public class AttachmentTest extends BaseScarabOMTestCase
 
     public void testSaveComment() throws Exception
     {
-        System.out.println("\ntestSaveComment()");
         // save comment
         comment.setName("comment");
         comment.setData("Test comment");
@@ -92,9 +91,8 @@ public class AttachmentTest extends BaseScarabOMTestCase
 
     }
 
-    public void testSaveFile() throws Exception
+    public void saveFile() throws Exception
     {
-        System.out.println("\ntestSaveFile()");
         FileItem fileItem = DefaultFileItem.newInstance("scarab/images/", "logo.gif", "image/jpeg", 6480, 10000);
         fileAttachment.setFile(fileItem);
         fileAttachment.setName(fileItem.getName());
@@ -109,15 +107,16 @@ public class AttachmentTest extends BaseScarabOMTestCase
 
     public void testGetRepositoryDirectory() throws Exception
     {
-        System.out.println("\ntestGetRepositoryDirectory()");
-        String control = new String("\\src\\test\\WEB-INF\\attachments");
+        String control = new String(File.separator + "src" + 
+                File.separator + "test" + File.separator + "WEB-INF" + File.separator + 
+                "attachments");
         File testPath = new File(Attachment.getRepositoryDirectory());
         assertTrue("testpath was:" + testPath.getPath(),testPath.getPath().endsWith(control));
     }
 
     public void testGetRelativePath() throws Exception
     {
-        testSaveFile();
+        saveFile();
         File control = new File("mod" + issue.getModuleId().toString() 
                       + "/" + issue.getIdCount()/1000 + "/" 
                       + issue.getUniqueId() + "_" 
@@ -129,7 +128,7 @@ public class AttachmentTest extends BaseScarabOMTestCase
 
     public void testGetFullPath() throws Exception
     {
-        testSaveFile();
+        saveFile();
         File control = new File(fileAttachment.getFullPath());
         File testPath = new File(Attachment.getRepositoryDirectory(),
                                  fileAttachment.getRelativePath());
@@ -138,7 +137,6 @@ public class AttachmentTest extends BaseScarabOMTestCase
 
     public void testSaveUrl() throws Exception
     {
-        System.out.println("\ntestSaveUrl()");
         // save comment
         Attachment url = AttachmentManager.getInstance();
         url.setIssue(issue);

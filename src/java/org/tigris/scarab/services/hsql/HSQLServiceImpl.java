@@ -97,11 +97,10 @@ import org.hsqldb.Server;
  *  ...
  * 
  * @author <a href="mailto:pti@elex.be">Peter Tillemans</a>
- * @version $Id: HSQLServiceImpl.java,v 1.1 2004/10/27 11:19:46 dep4b Exp $
+ * @version $Id: HSQLServiceImpl.java,v 1.2 2004/11/04 10:53:31 dep4b Exp $
  */
 public class HSQLServiceImpl extends AbstractLogEnabled implements HSQLService, Configurable  {
 
-	private boolean started = false;
 	private Server server;
 	private Logger logger;
 	
@@ -111,7 +110,24 @@ public class HSQLServiceImpl extends AbstractLogEnabled implements HSQLService, 
 	 */
 	public void start() {
 		server.start();
-		started = true;
+
+        int retries = 15;
+        while((!isStarted()) && (retries-- > 0)) {
+                try {
+                        System.out.println("Waiting for HSQL to start");
+                        Thread.sleep(1000);
+                } catch (InterruptedException e){
+                        System.out.println("wait interrupted in HSQLServerImpl.start()");
+                }
+                retries--;
+        }
+        if (retries < 0) {
+                System.out.println("HSQL has not started on time.");
+        } else {
+                System.out.println("HSQL has started");
+        }
+
+
 	}
 
 	/* (non-Javadoc)
@@ -119,14 +135,14 @@ public class HSQLServiceImpl extends AbstractLogEnabled implements HSQLService, 
 	 */
 	public void stop() {
 		server.stop();
-		started = false;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.tigris.scarab.test.HSQLService#isStarted()
 	 */
 	public boolean isStarted() {
-		return started;
+        // return true id server is online
+        return server.getState() == 1;
 	}
 
 

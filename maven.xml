@@ -244,12 +244,7 @@
     </goal>
     <!-- ===================================================== -->
     <!-- END  R E P O S I T O R Y  -  M A I N T E N A N C E    -->    
-    <!-- ===================================================== -->    
-    
-    <goal name="scarab:fix_linefeeds">
-        <ant:fixcrlf srcDir="${maven.src.dir}" eol="lf" eof="remove" 
-            includes="**/*.java" />
-    </goal>    
+    <!-- ===================================================== -->         
     
     <goal name="scarab:inplace-clean" prereqs="war:load">
         <j:set var="warWebappBuildDir" value="${maven.war.src}"/>
@@ -272,7 +267,13 @@
         <attainGoal name="clean"/>
     </goal>    
     
-   <goal name="scarab:fix_hsql_schema">
+    <goal name="scarab:fix_linefeeds">
+        <ant:fixcrlf srcDir="${maven.src.dir}" eol="lf" eof="remove" 
+            includes="**/*.java" />
+    </goal>      
+    
+    
+    <goal name="scarab:fix_hsql_schema">		
        <bsh:script>
        // fix the illegal column widths from torque-3.1.1 for hsqldb 1.7.2+
        System.out.println("Fixing hsqldb schema.");
@@ -281,7 +282,9 @@
            java.io.BufferedWriter wrtr = new java.io.BufferedWriter(new java.io.FileWriter("target/sql/scarab-schema-filtered.sql"));
            
            while ((str = rdr.readLine()) != null) {
-               String fstr = str.replaceAll("integer \\(\\d+\\)","integer");
+               String fstr = str.replaceAll("integer \\(\\d+\\)", "integer");
+               fstr = fstr.replaceAll("DELETED\\s+integer[^,]*,", "DELETED integer DEFAULT 0,");
+
                wrtr.write(fstr);
                wrtr.newLine();
            }
