@@ -1,4 +1,4 @@
-// $Id: ActionLayout.java,v 1.7 2004/01/04 20:17:43 bobtarling Exp $
+// $Id: ActionLayout.java,v 1.8 2004/01/04 23:38:55 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,7 +97,6 @@ public class ActionLayout extends UMLAction {
             // Select all the figures in the diagram.
         }
 
-        sm.startTrans();
         // Notify the selection manager that selected figures will be moved now.
         layouter.layout(); // Compute a new layout.
         sm.endTrans(); // Finish the transition.

@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.23 2003/12/26 16:46:29 alexb Exp $
+// $Id: DiagramInterface.java,v 1.24 2004/01/04 23:38:55 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.beans.PropertyVetoException;
 import java.util.Vector;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
@@ -165,7 +164,7 @@ public class DiagramInterface {
 	if (currentDiagram == null)
             return false;
         else
-            return currentDiagram.getNodes().contains(p);
+            return currentDiagram.getNodes(null).contains(p);
     }
     
     /**

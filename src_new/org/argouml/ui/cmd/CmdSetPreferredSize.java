@@ -1,4 +1,4 @@
-// $Id: CmdSetPreferredSize.java,v 1.12 2003/11/25 10:58:17 jhraigniac Exp $
+// $Id: CmdSetPreferredSize.java,v 1.13 2004/01/04 23:38:55 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,7 +104,6 @@ public class CmdSetPreferredSize extends Cmd {
     
         for (int i = 0; i < size; i++) {
             Fig fi = (Fig) figs.elementAt(i);
-            fi.startTrans();
             // only resize elements which the user would also be able 
             // to resize.
             if (fi.isResizable() == true
