@@ -100,6 +100,19 @@ public class IIOPReferenceContextWrapper implements Context {
 		}
 		return single;
 	}
+	
+	/**
+	* 
+	* @param iiopCtx
+	* @return the IIOP Wrapper JNDI Context
+	* @throws NamingException
+	*/
+	public static Context getSingleInstance(Context iiopCtx) throws NamingException {
+		if (single==null) {
+			single = new IIOPReferenceContextWrapper (iiopCtx);
+		}
+		return single;
+	}
 
     /**
      * Resolve a Remote Object: 

@@ -54,7 +54,7 @@ public class OpenOrbReferenceContextWrapperFactory extends CNCtxFactory {
      */   
     public Context getInitialContext(Hashtable env) throws NamingException {
 	env.put("java.naming.factory.initial","org.openorb.rmi.jndi.CtxFactory");
-	return new IIOPReferenceContextWrapper(super.getInitialContext(env));
+	return  IIOPReferenceContextWrapper.getSingleInstance(super.getInitialContext(env));
     }
 
 
