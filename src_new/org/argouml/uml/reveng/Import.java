@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.51 2004/02/29 12:35:45 linus Exp $
+// $Id: Import.java,v 1.52 2004/04/05 08:02:54 lepekhine Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,6 +56,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
@@ -142,6 +143,8 @@ public class Import {
     //import detail level var:
     private int importLevel;
     
+	private JTextField inputSourceEncoding;
+
     private JDialog dialog;
     
     private ImportStatusScreen iss;
@@ -201,11 +204,16 @@ public class Import {
         attributes.put(key, value);
     }
     
+	public String getInputSourceEncoding() {
+		return inputSourceEncoding.getText();
+	}
+
     /**
      * Close dialog window.
      *
      */
     public void disposeDialog() {
+        Configuration.setString(Argo.KEY_INPUT_SOURCE_ENCODING, getInputSourceEncoding());
         dialog.getParent().setEnabled(true);
         dialog.setVisible(false);
         dialog.dispose();
@@ -222,7 +230,7 @@ public class Import {
         // build the configPanel:
         if (configPanel == null) {
             JPanel general = new JPanel();
-            general.setLayout(new GridLayout(10, 1));
+            general.setLayout(new GridLayout(12, 1));
             
             general.add(new JLabel("Select language for import:"));
             
@@ -308,7 +316,15 @@ public class Import {
             general.add(classOnly);
             general.add(classAndFeatures);
             general.add(fullImport);
-                
+
+        general.add(new JLabel("Input source file encoding:"));
+        if ( Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING) == null 
+			|| Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING).trim().equals(""))
+			inputSourceEncoding = new JTextField(System.getProperty("file.encoding"));
+		else
+			inputSourceEncoding = new JTextField(Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING));
+		general.add(inputSourceEncoding);
+		
 	    tab.add(general, "General");
 	    tab.add(module.getConfigPanel(), module.getModuleName());
 	    configPanel = tab;
