@@ -77,12 +77,12 @@
               #set ($activityDepend = $activity.Depend)
               #if ($activityDepend)
 
-              <depend>
+              <dependency>
                 <id>$activityDepend.DependId</id>
                 <parent>$activityDepend.ObservedId</parent>
                 <child>$activityDepend.ObserverId</child>
                 <type>$activityDepend.DependType.Name</type>
-              </depend>
+              </dependency>
               #end
               #set ($activityDepend = false)
 
