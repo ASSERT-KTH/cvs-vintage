@@ -1,4 +1,4 @@
-// $Id: ChildGenUML.java,v 1.13 2003/12/05 09:18:16 mkl Exp $
+// $Id: ChildGenUML.java,v 1.14 2003/12/11 22:11:52 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,9 +25,11 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.13 2003/12/05 09:18:16 mkl Exp $
+// $Id: ChildGenUML.java,v 1.14 2003/12/11 22:11:52 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
+
+import org.apache.log4j.Logger;
 
 import java.util.Enumeration;
 import java.util.Vector;
@@ -46,14 +48,19 @@ import org.tigris.gef.util.EnumerationSingle;
  *  of any given part of the UML model.  Basically, it goes from
  *  Project, to Models, to ModelElements.  Argo's critic Agency uses
  *  this to apply critics where appropriate.
- * @stereotype singleton
- * @see org.argouml.cognitive.critics.Agency */
+ * @see org.argouml.cognitive.critics.Agency 
+ * @see org.argouml.cognitive.Designer
+ */
 
 public class ChildGenUML implements ChildGenerator {
-    public static ChildGenUML SINGLETON = new ChildGenUML();
 
+    private static Logger cat = Logger.getLogger(ChildGenUML.class);
+    
     /** Reply a java.util.Enumeration of the children of the given Object */
     public Enumeration gen(Object o) {
+        
+        if (o == null) cat.debug("Object is null");
+        else cat.debug("Findin g children for " + o.getClass());
         
 	if (o instanceof Project) {
 	    Project p = (Project) o;
@@ -83,12 +90,14 @@ public class ChildGenUML implements ChildGenerator {
 	if (ModelFacade.isAClassifier(o)) {
 	    EnumerationComposite res = new EnumerationComposite();
 	    res.addSub(new Vector(ModelFacade.getFeatures(o)));
-
+            
 	    Vector sms = new Vector(ModelFacade.getBehaviors(o));
-	    Object sm = null;
-	    if (sms != null && sms.size() > 0)
-		sm = sms.elementAt(0);
-	    if (sm != null) res.addSub(new EnumerationSingle(sm));
+	    //Object sm = null;
+	    //if (sms != null && sms.size() > 0)
+		//sm = sms.elementAt(0);
+	    //if (sm != null) res.addSub(new EnumerationSingle(sm));
+            if (sms != null)
+                    res.addSub(sms.elements());
 	    return res;
 	}
 
@@ -124,6 +133,7 @@ public class ChildGenUML implements ChildGenerator {
 	}
 
 	// tons more cases
+        cat.debug("No children found for: " +o.getClass());
 
 	return EnumerationEmpty.theInstance();
     }
