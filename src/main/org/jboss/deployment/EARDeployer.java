@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -92,16 +92,23 @@ public class EARDeployer
          {
             Element jbossApp = xfl.getDocument(in, "META-INF/jboss-app.xml").getDocumentElement();
             in.close();
-            //add service archives to metadata
+            // Import module/service archives to metadata
             metaData.importXml(jbossApp, true);
+            // Check for a loader-repository for scoping
+            Element loader = MetaData.getOptionalChild(jbossApp, "loader-repository");
             String repositoryName = MetaData.getOptionalChildContent(jbossApp, "loader-repository");
             if( repositoryName != null )
             {
+               // Check for an implementation class
+               String repositoryClassName = loader.getAttribute("loaderRepositoryClass");
+               if( repositoryClassName.length() == 0 )
+                  repositoryClassName = null;
+               di.repositoryClassName = repositoryClassName;
                // Get the required object name of the repository
-               di.repositoryClassName = MetaData.getOptionalChildContent(jbossApp, "loader-repository-class");
                di.repositoryName = new ObjectName(repositoryName);
-	    }
-	 }
+            }
+         }
+
          // resolve the watch
          if (di.url.getProtocol().equals("file"))
          {
