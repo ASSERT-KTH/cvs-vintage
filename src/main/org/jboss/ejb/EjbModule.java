@@ -80,7 +80,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -344,7 +344,7 @@ public class EjbModule
       ObjectName lModule = 
          EJBModule.create(
             server,
-            ( deploymentInfo.parent == null ? lName : deploymentInfo.parent.shortName ),
+            ( deploymentInfo.parent == null ? null : deploymentInfo.parent.shortName ),
             lName,
             deploymentInfo.localUrl,
             getServiceName()
