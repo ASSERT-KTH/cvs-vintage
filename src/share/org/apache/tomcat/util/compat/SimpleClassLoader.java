@@ -328,8 +328,15 @@ public class SimpleClassLoader extends ClassLoader {
      */
     public URL getResource(String name) {
         if( debug > 0 ) log( "getResource() " + name );
+	URL u = null;
 
-	URL u = getSystemResource(name);
+	if (parent != null) {
+	    u = parent.getResource(name);
+	    if (u != null)
+		return u;
+	}
+
+	u = getSystemResource(name);
 	if (u != null) {
 	    return u;
 	}
@@ -390,6 +397,13 @@ public class SimpleClassLoader extends ClassLoader {
         if( debug > 0 ) log( "getResourceAsStream() " + name );
 	//	InputStream s = getSystemResourceAsStream(name);
 	InputStream s = null;
+
+	if (parent != null) {
+	    s = parent.getResourceAsStream(name);
+	    if( debug>0 ) log( "Found resource in parent " + s );
+	    if (s != null)
+		return s;
+	}
 
 	// Get this resource from system class loader 
 	s = getSystemResourceAsStream(name);
@@ -475,7 +489,6 @@ public class SimpleClassLoader extends ClassLoader {
                 try {
                     ZipFile zf = new ZipFile(file.getAbsolutePath());
                     ZipEntry ze = zf.getEntry(name);
-		    zf.close();
 					
                     if (ze != null) {
 			r.zipEntry=ze;
@@ -483,6 +496,7 @@ public class SimpleClassLoader extends ClassLoader {
 			r.repository=file;
 			return r;
                     }
+		    zf.close();
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
 		    System.out.println("Name= " + name + " " + file );
