@@ -32,7 +32,7 @@ import org.jboss.ejb.EntityPersistenceStore;
 *      
 *	@see <related>
 *	@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.1 $
+*	@version $Revision: 1.2 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -101,7 +101,6 @@ implements EntityPersistenceManager {
 		// Get methods
 		try {
 			
-			System.out.println(":LSDKFJ:LSDKJFD:SLKJF:DSLKJF:::::::::LDSKJF:DLSKJF:DSLKJF:DSLKJF:LDSKJF:LDSKJF:DSLKJF:DSLFKJ");
 			Method createMethod = con.getBeanClass().getMethod("ejbCreate", m.getParameterTypes());
 			Method postCreateMethod = con.getBeanClass().getMethod("ejbPostCreate", m.getParameterTypes());
 			
