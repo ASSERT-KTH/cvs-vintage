@@ -153,6 +153,7 @@ public class ContextXmlReader extends BaseInterceptor {
 	
 	// Virtual host support - if Context is inside a <Host>
 	xh.addRule( "Host", xh.setVar( "current_host", "name"));
+	xh.addRule( "Host", xh.setVar( "current_address", "address"));
 	xh.addRule( "Host", xh.setProperties());
 	xh.addRule( "Alias", new XmlAction() {
 		public void start( SaxContext xctx) throws Exception {
@@ -171,10 +172,12 @@ public class ContextXmlReader extends BaseInterceptor {
 		public void end( SaxContext xctx) throws Exception {
 		    Context tcCtx=(Context)xctx.currentObject();
 		    String host=(String)xctx.getVariable("current_host");
+		    String address=(String)xctx.getVariable("current_address");
 		    Vector aliases=(Vector)xctx.getVariable( "host_aliases" );
 		    
 		    if( host!=null && ! "DEFAULT".equals( host )) {
 			    tcCtx.setHost( host );
+			    tcCtx.setHostAddress( address );
 			    if( aliases!=null ) {
 				Enumeration alE=aliases.elements();
 				while( alE.hasMoreElements() ) {
