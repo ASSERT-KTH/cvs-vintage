@@ -1,0 +1,27 @@
+<!DOCTYPE connector PUBLIC '-//Sun Microsystems, Inc.//DTD Connector 1.0//EN' 'http://java.sun.com/j2ee/dtds/connector_1_0.dtd'>
+
+<connector>
+    <display-name>JMS Adapter</display-name>
+    <vendor-name>JBoss org</vendor-name>
+    <spec-version>1.0</spec-version>
+    <version>1.0</version>
+    <eis-type>JMS</eis-type>
+    <resourceadapter>
+        <managedconnectionfactory-class>org.jboss.jms.ra.JmsManagedConnectionFactory</managedconnectionfactory-class>
+        <connectionfactory-interface>org.jboss.jms.ra.client.JmsConnectionFactory</connectionfactory-interface>
+        <connectionfactory-impl-class>org.jboss.jms.ra.JmsConnectionFactoryImp</connectionfactory-impl-class>
+        <connection-interface>javax.jms.Session</connection-interface>
+        <connection-impl-class>org.jboss.jms.ra.JmsSession</connection-impl-class>
+        <transaction-support>xa_transaction</transaction-support>
+        <config-property>
+            <config-property-name>JmsProviderAdapterJNDI</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+            <config-property-value>java:DefaultJMSProvider</config-property-value>
+        </config-property>
+        <auth-mechanism>
+            <auth-mech-type>basic-password</auth-mech-type>
+            <credential-interface>javax.resource.security.PasswordCredential</credential-interface>
+        </auth-mechanism>
+        <reauthentication-support>false</reauthentication-support>
+    </resourceadapter>
+</connector>
