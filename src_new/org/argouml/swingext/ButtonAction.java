@@ -1,4 +1,4 @@
-// $Id: ButtonAction.java,v 1.2 2003/06/29 23:47:53 linus Exp $
+// $Id: ButtonAction.java,v 1.3 2004/08/19 19:27:20 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,8 +35,25 @@ package org.argouml.swingext;
  * @author ButtonAction
  */
 public interface ButtonAction {
+   
+    /**
+     * @param modal the modal of the action
+     */
     public void setModal(boolean modal);
+    
+    /**
+     * @return true if the action is modal
+     */
     public boolean isModal();
+    
+    /**
+     * @param lockMethod  purpose: action buttons can remain depressed 
+     *                    so that they can be used multiple times
+     */
     public void setLockMethod(int lockMethod);
+    
+    /**
+     * @return the int lockMethod
+     */
     public int getLockMethod();
 }

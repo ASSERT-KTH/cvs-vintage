@@ -1,4 +1,4 @@
-// $Id: ArrowIcon.java,v 1.6 2004/06/23 07:02:43 linus Exp $
+// $Id: ArrowIcon.java,v 1.7 2004/08/19 19:27:20 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,9 +71,9 @@ public class ArrowIcon implements Icon, Serializable, SwingConstants {
 	{0, 0, 0, 0, 3, 3, 0, 0, 0}
     };
 
-    int direction;
-    int width = SIZE;
-    int height = SIZE;
+    private int direction;
+    private int width = SIZE;
+    private int height = SIZE;
 
     /** Construct an ArrowIcon pointing in the given direction
      *
@@ -163,9 +163,16 @@ public class ArrowIcon implements Icon, Serializable, SwingConstants {
         return SIZE;
     }
     
+    /**
+     * @param h the height for the icon
+     */
     public void setIconHeight(int h) {
         height = h;
     }
+    
+    /**
+     * @param w the width of the icon
+     */
     public void setIconWidth(int w) {
         width = w;
     }

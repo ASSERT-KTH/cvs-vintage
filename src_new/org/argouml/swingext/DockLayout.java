@@ -1,4 +1,4 @@
-// $Id: DockLayout.java,v 1.3 2003/06/30 18:00:23 linus Exp $
+// $Id: DockLayout.java,v 1.4 2004/08/19 19:27:20 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,17 +28,16 @@
  * Created on 23 February 2003, 17:14
  */
 
-/**
- * Layout Manager to control positions of docked toolbars
- * @author Christopher Bach
- */
-
 package org.argouml.swingext;
 
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.SwingConstants;
 
+/**
+ * Layout Manager to control positions of docked toolbars
+ * @author Christopher Bach
+ */
 public class DockLayout extends BorderLayout {
     private ArrayList north = new ArrayList(1);
     private ArrayList south = new ArrayList(1);
@@ -46,12 +45,19 @@ public class DockLayout extends BorderLayout {
     private ArrayList west = new ArrayList(1);
     private Component center = null;
 
-    public static final int VERTICAL = SwingConstants.VERTICAL;
-    public static final int HORIZONTAL = SwingConstants.HORIZONTAL;
+    private static final int VERTICAL = SwingConstants.VERTICAL;
+    private static final int HORIZONTAL = SwingConstants.HORIZONTAL;
     
+    /**
+     * The constructor. 
+     */
     public DockLayout() {
     }
     
+    /**
+     * @see java.awt.LayoutManager2#addLayoutComponent(java.awt.Component, 
+     * java.lang.Object)
+     */
     public void addLayoutComponent(Component c, Object con)   {
         synchronized (c.getTreeLock()) {
             if (con != null)         {
@@ -65,6 +71,9 @@ public class DockLayout extends BorderLayout {
         }
     }
     
+    /**
+     * @see java.awt.LayoutManager#removeLayoutComponent(java.awt.Component)
+     */
     public void removeLayoutComponent(Component c)   {
         north.remove(c);
         south.remove(c);
@@ -75,6 +84,9 @@ public class DockLayout extends BorderLayout {
         }
     }   
 
+    /**
+     * @see java.awt.LayoutManager#layoutContainer(java.awt.Container)
+     */
     public void layoutContainer(Container target) {
         synchronized (target.getTreeLock()) {
             Insets insets = target.getInsets();

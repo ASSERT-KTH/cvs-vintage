@@ -1,4 +1,4 @@
-// $Id: Horizontal.java,v 1.6 2004/02/29 12:35:41 linus Exp $
+// $Id: Horizontal.java,v 1.7 2004/08/19 19:27:20 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,8 +60,11 @@ import javax.swing.border.Border;
  */
 public class Horizontal extends Orientation {
 
-    private static final Horizontal horizontal = new Horizontal();
+    private static final Horizontal HORIZONTAL = new Horizontal();
 
+    /**
+     * The constructor.
+     */
     protected Horizontal() {
     }
 
@@ -71,7 +74,7 @@ public class Horizontal extends Orientation {
      * @return An instance of <code>Orientation</code>.
      */
     public static Orientation getInstance() {
-        return horizontal;
+        return HORIZONTAL;
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: DropDownIcon.java,v 1.4 2004/06/23 07:02:43 linus Exp $
+// $Id: DropDownIcon.java,v 1.5 2004/08/19 19:27:20 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import javax.swing.ImageIcon;
  */
 public class DropDownIcon extends DecoratedIcon {
 
-    private static final int[][] standardBuffer = {
+    private static final int[][] STANDARDBUFFER = {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -61,6 +61,6 @@ public class DropDownIcon extends DecoratedIcon {
     /** Creates a new instance of DropDownIcon */
     DropDownIcon(ImageIcon imageIcon) {
         super(imageIcon);
-        init(standardBuffer);
+        init(STANDARDBUFFER);
     }
 }

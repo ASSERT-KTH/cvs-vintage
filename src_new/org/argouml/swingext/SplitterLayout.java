@@ -1,4 +1,4 @@
-// $Id: SplitterLayout.java,v 1.6 2003/06/30 18:00:23 linus Exp $
+// $Id: SplitterLayout.java,v 1.7 2004/08/19 19:27:20 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,7 +114,7 @@ public class SplitterLayout extends ProportionalLayout {
             Component comp = (Component) enumKeys.nextElement();
             String size = (String) (componentTable.get(comp));
             if (size.length() != 0) {
-                totalProportionalLength += _orientation.getLength(comp);
+                totalProportionalLength += orientation.getLength(comp);
             }
         }
 
@@ -124,7 +124,7 @@ public class SplitterLayout extends ProportionalLayout {
             String size = (String) (componentTable.get(comp));
             if (size.length() != 0) {
                 double proportionalLength =
-		    _orientation.getLength(comp) * 100
+		    orientation.getLength(comp) * 100
 		    / totalProportionalLength;
                 componentTable.put(comp, Double.toString(proportionalLength));
             }
@@ -142,8 +142,8 @@ public class SplitterLayout extends ProportionalLayout {
         String eastProportionalLength =
 	    (String) (componentTable.get(eastComponent));
 
-        double westComponentLength = _orientation.getLength(westComponent);
-        double eastComponentLength = _orientation.getLength(eastComponent);
+        double westComponentLength = orientation.getLength(westComponent);
+        double eastComponentLength = orientation.getLength(eastComponent);
         double totalProportionalLength =
 	    Double.parseDouble(westProportionalLength)
 	    + Double.parseDouble(eastProportionalLength);

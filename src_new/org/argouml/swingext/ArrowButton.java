@@ -1,4 +1,4 @@
-// $Id: ArrowButton.java,v 1.6 2003/10/22 12:52:13 bobtarling Exp $
+// $Id: ArrowButton.java,v 1.7 2004/08/19 19:27:20 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,8 @@ public class ArrowButton extends javax.swing.JButton {
      *
      * @param direction the direction the arrow will point, this being
      * one of the constants NORTH, SOUTH, EAST, WEST
-     */    
+     * @param border the border for the arrow
+     */
     public ArrowButton(int direction, Border border) {
         this(direction);
         setBorder(border);
@@ -65,6 +66,9 @@ public class ArrowButton extends javax.swing.JButton {
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
     
+    /**
+     * @see java.awt.Component#getPreferredSize()
+     */
     public Dimension getPreferredSize() {
         return new Dimension(getIcon().getIconWidth(),
 			     getIcon().getIconHeight());
