@@ -1,0 +1,35 @@
+$Id: readme,v 1.1 2002/03/22 03:24:32 larryi Exp $
+
+                           Release Notes for:
+                           =================
+                           StreamHandler 1.0
+                           =================
+
+0.  TABLE OF CONTENTS:
+
+    1.  Introduction
+    2.  Installation
+
+
+=============================================================================
+1.  INTRODUCTION
+
+StreamHandler is an add-on module for Tomcat 3.3(a) and later (i.e Tomcat
+3.3.x versions).  The purpose of this add-on module is to register a
+URLStreamHandlerFactory that:
+
+    1. Loads defined handlers from the ContextClassLoader.  This allows
+       handlers from the web application's classloader to be used by
+       the factory.
+
+    2. Returns a SteamHandler that doesn't support connections for protocols
+       that don't have a defined handler.  This allows for URL manipulation.
+
+
+=============================================================================
+2.  INSTALLATION
+
+To install simply place the StreamHandler.war in Tomcat's "modules"
+directory.  When Tomcat is started, this War file will be expanded and the
+StreamHandler module defined in the WEB-INF/interceptor.xml file will be
+added to the server.  This allows it to participate in how Tomcat behaves.
