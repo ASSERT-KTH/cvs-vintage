@@ -41,7 +41,7 @@ import org.jboss.util.NullArgumentException;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public class MessageDrivenContainer extends Container
    implements EJBProxyFactoryContainer
@@ -157,7 +157,7 @@ public class MessageDrivenContainer extends Container
             EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
             ci.start();
          }
-         
+
          // Start the instance pool
          getInstancePool().start();
 
@@ -172,7 +172,7 @@ public class MessageDrivenContainer extends Container
    protected void stopService() throws Exception
    {
       log.info("Stopping");
-      
+
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
@@ -295,7 +295,7 @@ public class MessageDrivenContainer extends Container
    }
 
    // StatisticsProvider implementation ------------------------------------
-   
+
    public void retrieveStatistics( List container, boolean reset ) {
       // Loop through all Interceptors and add statistics
       getInterceptor().retrieveStatistics( container, reset );
@@ -314,7 +314,7 @@ public class MessageDrivenContainer extends Container
       ClassLoader cl = getDeploymentInfo().ucl;
       ClassLoader localCl = getDeploymentInfo().localCl;
       int transType = getBeanMetaData().isContainerManagedTx() ? CMT : BMT;
-      
+
       genericInitialize(transType, cl, localCl );
       createProxyFactories(cl);
       ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
@@ -323,7 +323,7 @@ public class MessageDrivenContainer extends Container
 
 
    //end moved from EjbModule---------------
-   
+
    /**
     * This is the last step before invocation - all interceptors are done
     */
@@ -333,11 +333,19 @@ public class MessageDrivenContainer extends Container
        * FIXME Design problem, who will do the acknowledging for
        * beans with bean managed transaction?? Probably best done in the
        * listener "proxys"
+       *
+       * NO! (david jencks 3/15/2003)
+       *
+       * According to the jca 1.5 spec pfd 2 12.5.7 p. 164, the
+       * resource adapter delivering the message relies on successful
+       * return from message delivery to determine that delivery took
+       * place and is responsible for notifications and
+       * acknowledgements.
        */
       public InvocationResponse invoke(Invocation mi) throws Exception
       {
          EnterpriseContext ctx = (EnterpriseContext)mi.getEnterpriseContext();
-         
+
          // wire the transaction on the context,
          // this is how the instance remember the tx
          if (ctx.getTransaction() == null) {
@@ -356,7 +364,7 @@ public class MessageDrivenContainer extends Container
          }
 
          // We will never get this far, but the compiler does not know that
-         throw new org.jboss.util.UnreachableStatementException();         
+         throw new org.jboss.util.UnreachableStatementException();
       }
    }
 }
