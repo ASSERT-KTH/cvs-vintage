@@ -49,7 +49,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */
 class TxCapsule
 implements TimeoutTarget
@@ -1706,8 +1706,13 @@ implements TimeoutTarget
       for (int i = 0; i < resourceCount; i++)
       {
          if (resourceState[i] == RS_VOTE_READONLY)
+         {
             continue;
-         
+         }
+         if (resourceSameRM[i] != -1)
+         {
+            continue; // This RM already rolled back.
+         }
          try
          {
             unlock();
