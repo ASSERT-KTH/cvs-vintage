@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/CookieTools.java,v 1.2 2000/04/05 02:52:16 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/04/05 02:52:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/CookieTools.java,v 1.3 2000/04/06 22:31:04 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/04/06 22:31:04 $
  *
  * ====================================================================
  *
@@ -189,7 +189,7 @@ public class CookieTools {
 	}
 	// Wdy, DD-Mon-YYYY HH:MM:SS GMT
 	void append (StringBuffer buf) {
-	    String pattern = "EEE, dd-MMM-yyyyy HH:mm:ss z";
+	    String pattern = "EEE, dd-MMM-yyyy HH:mm:ss z";
 	    Locale loc = Locale.US;
 	    SimpleDateFormat df = new SimpleDateFormat(pattern, loc);
 	    TimeZone zone = TimeZone.getTimeZone("GMT");
