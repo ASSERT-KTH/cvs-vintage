@@ -24,13 +24,13 @@
  <tr valign="top">
   <th>$l10n.Username</th>
   <td nowrap="nowrap"><input name="$loginGroup.Username.Key" value="$!loginGroup.Username.Value" size="25" type="text" /></td>
-  <td nowrap="nowrap">#fieldHint ($loginGroup.Username)</td>
+  <td width="100%" nowrap="nowrap">#fieldHint ($loginGroup.Username)</td>
  </tr>
 
  <tr valign="top">
   <th>$l10n.Password</th>
   <td nowrap="nowrap"><input name="$loginGroup.Password.Key" value="" size="25" type="password" /></td>
-  <td nowrap="nowrap">#fieldHint ($loginGroup.Password)</td>
+  <td width="100%" nowrap="nowrap">#fieldHint ($loginGroup.Password)</td>
  </tr>
 
 
