@@ -38,7 +38,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.21 2002/08/27 22:31:39 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.22 2002/12/28 05:04:01 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -413,6 +413,10 @@ public class VFSFileChooserDialog extends EnhancedDialog
 		{
 			switch(evt.getKeyCode())
 			{
+			case KeyEvent.VK_LEFT:
+				if(filenameField.getCaretPosition() == 0)
+					browser.getBrowserView().getTree().processKeyEvent(evt);
+				break;
 			case KeyEvent.VK_UP:
 			case KeyEvent.VK_DOWN:
 				browser.getBrowserView().getTree().processKeyEvent(evt);

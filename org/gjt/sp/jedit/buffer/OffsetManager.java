@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.30 2002/12/24 17:35:22 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.31 2002/12/28 05:04:01 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -508,7 +508,7 @@ public class OffsetManager
 			gapWidth = newGapWidth;
 		else if(newGapLine == -1)
 		{
-			if(gapWidth != 0)
+			//if(gapWidth != 0)
 			{
 				//if(DEBUG && gapLine != lineCount)
 				//	System.err.println(method + ": update from " + gapLine + " to " + lineCount);
@@ -520,7 +520,7 @@ public class OffsetManager
 		}
 		else if(newGapLine < gapLine)
 		{
-			if(gapWidth != 0)
+			//if(gapWidth != 0)
 			{
 				//if(DEBUG && newGapLine != gapLine)
 				//	System.err.println(method + ": update from " + newGapLine + " to " + gapLine);
@@ -531,7 +531,7 @@ public class OffsetManager
 		}
 		else //if(newGapLine >= gapLine)
 		{
-			if(gapWidth != 0)
+			//if(gapWidth != 0)
 			{
 				//if(DEBUG && gapLine != newGapLine)
 				//	System.err.println(method + ": update from " + gapLine + " to " + newGapLine);
