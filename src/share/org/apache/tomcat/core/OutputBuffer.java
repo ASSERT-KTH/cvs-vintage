@@ -140,9 +140,10 @@ public final class OutputBuffer extends Writer {
 
 	// fit in buffer, great.
 	if( len <= avail ) {
+	  // ??? should be < since if it's just barely full, we still
+	  // want to flush now
 	    System.arraycopy(b, off, buf, count, len);
 	    count += len;
-	    return;
 	}
 
 	// Optimization:
@@ -152,7 +153,7 @@ public final class OutputBuffer extends Writer {
 	// and still have some space for more. We'll still have 2 writes, but
 	// we write more on the first.
 
-	if (len - avail < buf.length) {
+	else if (len - avail < buf.length) {
 	    /* If the request length exceeds the size of the output buffer,
     	       flush the output buffer and then write the data directly.
 	       We can't avoid 2 writes, but we can write more on the second
@@ -164,12 +165,19 @@ public final class OutputBuffer extends Writer {
 	    System.arraycopy(b, off+avail, buf, count, len - avail);
 	    count+= len - avail;
 	    bytesWritten += len - avail;
-	    return;
 	}
 
 	// len > buf.length + avail
-	flushBytes();
-	cm.doWrite( req, resp, b, off, len );
+	else {
+	  flushBytes();
+	  cm.doWrite( req, resp, b, off, len );
+	}
+
+	// if called from within flush(), then immediately flush
+	// remaining bytes
+	if (doFlush) {
+	  flushBytes();
+	}
 
 	return;
     }
@@ -219,6 +227,8 @@ public final class OutputBuffer extends Writer {
 
 	// fit in buffer, great.
 	if( len <= avail ) {
+	  // ??? should be < since if it's just barely full, we still
+	  // want to flush now
 	    System.arraycopy(c, off, cbuf, ccount, len);
 	    ccount += len;
 	    return;
@@ -307,12 +317,21 @@ public final class OutputBuffer extends Writer {
     }
 
     public void close() throws IOException {
-	//nothing
+      flush();
     }
 
-    public void flush() throws IOException {
-	System.out.println("No flush ");
-    }
+  private boolean doFlush = false;
+
+  synchronized public void flush() throws IOException {
+    doFlush = true;
+    if( state==CHAR_STATE )
+      flushChars();
+    else if (state==BYTE_STATE)
+      flushBytes();
+    else if (state==INITIAL_STATE)
+      ;       // nothing written yet
+    doFlush = false;
+  }
     
     Hashtable encoders=new Hashtable();
     WriteConvertor conv;
@@ -322,7 +341,7 @@ public final class OutputBuffer extends Writer {
 	if( !gotEnc ) setConverter();
 
 	conv.write(c, off, len);
-	conv.flush();
+	conv.flush();	// ???
     }
 
     private void setConverter() {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.29 2000/08/22 06:56:40 costin Exp $
- * $Revision: 1.29 $
- * $Date: 2000/08/22 06:56:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.30 2000/08/25 22:35:57 alex Exp $
+ * $Revision: 1.30 $
+ * $Date: 2000/08/25 22:35:57 $
  *
  * ====================================================================
  *
@@ -482,8 +482,8 @@ public class Response {
 	// 	if (usingWriter == true && writer != null)
 	// 	    writer.flush();
 
-	oBuffer.flushChars();
-	oBuffer.flushBytes();
+      oBuffer.flush();
+
 	// 	if( out!=null ) out.reallyFlush();
 	// 	if(bBuffer!=null) bBuffer.flush();
 	    //} 
