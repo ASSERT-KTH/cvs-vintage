@@ -636,11 +636,31 @@
     <chmod perm="+x" file="${tomcat.dist}/bin/shutdown.sh"/>
   </target>
 
+  <path id="javadoc.classpath">
+    <pathelement location="${servlet22.jar}"/>
+    <fileset dir="${jaxp.home}">
+      <include name="jaxp.jar"/>
+      <include name="parser.jar"/>
+      <include name="crimson.jar"/>
+      <include name="xerces.jar"/>
+    </fileset>
+    <fileset dir="${java.home}/..">
+      <include name="lib/tools.jar"/>
+    </fileset>
+    <fileset dir="${java.home}">
+      <include name="lib/classes.zip"/>
+    </fileset>
+    <fileset dir="${jsse.lib}">
+      <include name="*.jar" if="jdk12.present"/>
+    </fileset>
+  </path>
+
   <target name="javadoc" depends="main,webapps,tomcat-jars">
     <!-- Add Tomcat internal javadoc -->
     <mkdir dir="${tomcat.build}/webapps/ROOT/javadoc"/>
     <javadoc packagenames="org.apache.*"
-             sourcepath="src/share;src/facade22"
+             sourcepath="src/share;src/facade22;${jakarta-tomcat-connectors}/util/java"
+             classpathref="javadoc.classpath"
              destdir="${tomcat.build}/webapps/ROOT/javadoc"
              author="true"
              version="true"
@@ -652,7 +672,8 @@
   </target>
   <target name="javadoc.tomcat" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.tomcat.*"
-             sourcepath="src/share;src/facade22"
+             sourcepath="src/share;src/facade22;${jakarta-tomcat-connectors}/util/java"
+             classpathref="javadoc.classpath"
              destdir="${tomcat.build}/webapps/ROOT/javadoc"
              author="true"
              version="true"
@@ -663,7 +684,8 @@
   </target>
   <target name="javadoc.tomcat.core" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.tomcat.core"
-             sourcepath="src/share;src/facade22"
+             sourcepath="src/share;src/facade22;${jakarta-tomcat-connectors}/util/java"
+             classpathref="javadoc.classpath"
              destdir="${tomcat.build}/webapps/ROOT/javadoc"
              author="true"
              version="true"
@@ -674,7 +696,8 @@
   </target>
   <target name="javadoc.tomcat.facade" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.tomcat.facade"
-             sourcepath="src/share;src/facade22"
+             sourcepath="src/share;src/facade22;${jakarta-tomcat-connectors}/util/java"
+             classpathref="javadoc.classpath"
              destdir="${tomcat.build}/webapps/ROOT/javadoc"
              author="true"
              version="true"
@@ -685,7 +708,8 @@
   </target>
   <target name="javadoc.tomcat.modules" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.tomcat.modules.*"
-             sourcepath="src/share;src/facade22"
+             sourcepath="src/share;src/facade22;${jakarta-tomcat-connectors}/util/java"
+             classpathref="javadoc.classpath"
              destdir="${tomcat.build}/webapps/ROOT/javadoc"
              author="true"
              version="true"
@@ -696,7 +720,8 @@
   </target>
   <target name="javadoc.tomcat.startup" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.tomcat.startup"
-             sourcepath="src/share;src/facade22"
+             sourcepath="src/share;src/facade22;${jakarta-tomcat-connectors}/util/java"
+             classpathref="javadoc.classpath"
              destdir="${tomcat.build}/webapps/ROOT/javadoc"
              author="true"
              version="true"
@@ -707,7 +732,8 @@
   </target>
   <target name="javadoc.tomcat.util" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.tomcat.util.*"
-             sourcepath="src/share;src/facade22"
+             sourcepath="src/share;src/facade22;${jakarta-tomcat-connectors}/util/java"
+             classpathref="javadoc.classpath"
              destdir="${tomcat.build}/webapps/ROOT/javadoc"
              author="true"
              version="true"
@@ -718,7 +744,8 @@
   </target>
   <target name="javadoc.jasper" depends="main,webapps,tomcat-jars">
     <javadoc packagenames="org.apache.jasper.*"
-             sourcepath="src/share;src/facade22"
+             sourcepath="src/share;src/facade22;${jakarta-tomcat-connectors}/util/java"
+             classpathref="javadoc.classpath"
              destdir="${tomcat.build}/webapps/ROOT/javadoc"
              author="true"
              version="true"
