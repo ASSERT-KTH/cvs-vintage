@@ -119,6 +119,61 @@ public class Http10 {
 	return sin.read(b, off, len);
     }
 
+    static class Location {
+	int off;
+	int end;
+	Location(  int start , int end ) {
+	    this.off=start;
+	    this.end=end;
+	}
+    }
+
+    private int readLine( Location line )
+	throws IOException
+    {
+	while (true) {
+	    line.end=line.off;
+	    
+	    int len = buf.length - line.off;
+	    
+	    if (len > 0) {
+		len = readLine(sin, buf, line.off, len);
+
+		if (len == -1) {
+		    return 400;
+		}
+	    }
+	    
+	    line.end += len;
+	    
+	    if (len == 0 || buf[line.end-1] == '\n') {
+		// strip \n
+		if( line.end> line.off && buf[line.end-1]=='\n' )
+		    --line.end;
+		
+		// strip off trailing "\r\n"
+		if (line.end > line.off && buf[line.end-1] == '\r') {
+		    --line.end;
+		}
+		return 0; // Empty line || end of line
+	    }
+	    
+	    // overflowed buffer, so temporarily expand and continue
+	    
+	    // XXX DOS - if the length is too big - stop and throw exception
+	    byte[] tmp = new byte[buf.length * 2];
+	    
+	    System.arraycopy(buf, 0, tmp, 0, buf.length);
+	    buf = tmp;
+	    // read more ( the buffer was resized )
+	}
+    }
+
+    Location headerArea=new Location(  off, -1 );
+
+    Location line=new Location(  off, -1 );
+    Location nextLine=new Location( off, -1);
+    
     /**
      * Reads header fields from the specified servlet input stream until
      * a blank line is encountered.
@@ -129,48 +184,62 @@ public class Http10 {
     public int readHeaders( MimeHeaders headers )  throws IOException {
 	// use pre-allocated buffer if possible
 	off = count; // where the request line ended
-	
+	headerArea.off=off;
+	boolean firstLine=true;
+			
 	while (true) {
-	    int start = off;
+	    if( firstLine ) {
+		// first line
+		line.off=off;
+		
+		int status=readLine( line );
+		if( status != 0 ) return status;
+		
+		off=line.end;
+		
+		if( d > 0 ) debug( "Read1: " + new String( buf, line.off,
+							   line.end-line.off));
+		firstLine=false;
+	    } else {
+		line.off=nextLine.off;
+		line.end=nextLine.end;
+	    }
 
-	    while (true) {
-		int len = buf.length - off;
+	    if (line.off == line.end) {
+		// Empty line, end of headers
+		break;
+	    }
+	    
+	    // Read next lines, maybe we have a multi-line header
+	    while( true ) {
+		nextLine.off=line.end;
+		int status=readLine( nextLine );
+		if( status!= 0 ) return status;
+		if( d > 0 ) debug( "Read2: " +
+				   new String( buf, nextLine.off,
+					       nextLine.end-nextLine.off));
 
-		if (len > 0) {
-		    len = readLine(sin,buf, off, len);
+		off=nextLine.end;
 
-		    if (len == -1) {
-			return 400;
-		    }
-		}
-
-		off += len;
-
-		if (len == 0 || buf[off-1] == '\n') {
+		// if continuation, concat with line, and continue
+		// if a not - break, the current line will be parsed and
+		// then nextLine will take it's place
+		if (nextLine.off == nextLine.end) {
+		    // Empty line, end of headers
 		    break;
 		}
-
-		// overflowed buffer, so temporarily expand and continue
-
-		// XXX DOS - if the length is too big - stop and throw exception
-		byte[] tmp = new byte[buf.length * 2];
-
-		System.arraycopy(buf, 0, tmp, 0, buf.length);
-		buf = tmp;
-	    }
-
-	    // strip off trailing "\r\n"
-	    if (--off > start && buf[off-1] == '\r') {
-		--off;
-	    }
-
-	    if (off == start) {
-		break;
+		char firstB=(char)buf[nextLine.off];
+		if( firstB != ' ' && firstB != '\t' )
+		    break; // normal line
+		line.end=nextLine.end;
+		if(d>0) debug("Continuation: " + firstB  + " " +
+			      new String( buf, line.off, line.end-line.off));
+		// continue reading the next line
 	    }
 	    
 	    // XXX this does not currently handle headers which
 	    // are folded to take more than one line.
-	    if( ! parseHeaderField(headers, buf, start, off - start) ) {
+	    if( ! parseHeaderField(headers, buf, line.off, line.end - line.off) ) {
 		// error parsing header
 		return 200;
 	    }
@@ -482,5 +551,9 @@ public class Http10 {
 	}
     }    
 
+    private static final int d=0;
+    private static void debug(String s ) {
+	System.out.println("Http10: " +s );
+    }
 
 }
