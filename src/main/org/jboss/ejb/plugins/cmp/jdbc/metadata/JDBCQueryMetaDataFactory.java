@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Collection;
 
 import org.w3c.dom.Element;
 
@@ -25,13 +26,13 @@ import org.jboss.logging.Logger;
 /**
  * JDBCQueryMetaDataFactory constructs a JDBCQueryMetaData object based
  * on the query specifiection type.
- *
+ * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class JDBCQueryMetaDataFactory
 {
-   private final static Logger log = Logger.getLogger(JDBCQueryMetaDataFactory.class);
+   private static final Logger log = Logger.getLogger(JDBCQueryMetaDataFactory.class);
 
    private JDBCEntityMetaData entity;
 
@@ -48,15 +49,17 @@ public class JDBCQueryMetaDataFactory
       Map queries = new HashMap(methods.length);
       for(int i = 0; i < methods.length; i++)
       {
-         queries.put(methods[i], new JDBCQlQueryMetaData(queryData, methods[i], entity.getQLCompiler()));
+         queries.put(
+            methods[i],
+            new JDBCQlQueryMetaData(queryData, methods[i], entity.getQLCompiler(), false)
+         );
       }
       return queries;
    }
 
-   public Map createJDBCQueryMetaData(
-      Element queryElement,
-      Map defaultValues,
-      JDBCReadAheadMetaData readAhead) throws DeploymentException
+   public Map createJDBCQueryMetaData(Element queryElement,
+                                      Map defaultValues,
+                                      JDBCReadAheadMetaData readAhead) throws DeploymentException
    {
 
       // get the query methods
@@ -86,24 +89,24 @@ public class JDBCQueryMetaDataFactory
             defaultValue,
             queryElement,
             methods[i],
-            readAhead);
+            readAhead
+         );
 
          queries.put(methods[i], jdbcQueryData);
       }
       return queries;
    }
 
-   public static JDBCQueryMetaData createJDBCQueryMetaData(
-      JDBCQueryMetaData jdbcQueryMetaData,
-      JDBCReadAheadMetaData readAhead,
-      Class qlCompiler)
+   public static JDBCQueryMetaData createJDBCQueryMetaData(JDBCQueryMetaData jdbcQueryMetaData,
+                                                           JDBCReadAheadMetaData readAhead,
+                                                           Class qlCompiler)
       throws DeploymentException
    {
 
       // RAW-SQL
       if(jdbcQueryMetaData instanceof JDBCRawSqlQueryMetaData)
       {
-         return new JDBCRawSqlQueryMetaData(jdbcQueryMetaData.getMethod(), qlCompiler);
+         return new JDBCRawSqlQueryMetaData(jdbcQueryMetaData.getMethod(), qlCompiler, false);
       }
 
       // JBOSS-QL
@@ -111,7 +114,8 @@ public class JDBCQueryMetaDataFactory
       {
          return new JDBCJBossQLQueryMetaData(
             (JDBCJBossQLQueryMetaData) jdbcQueryMetaData,
-            readAhead, qlCompiler);
+            readAhead, qlCompiler, false
+         );
       }
 
       // DYNAMIC-SQL
@@ -119,7 +123,8 @@ public class JDBCQueryMetaDataFactory
       {
          return new JDBCDynamicQLQueryMetaData(
             (JDBCDynamicQLQueryMetaData) jdbcQueryMetaData,
-            readAhead, qlCompiler);
+            readAhead, qlCompiler, false
+         );
       }
 
       // DECLARED-SQL
@@ -127,7 +132,8 @@ public class JDBCQueryMetaDataFactory
       {
          return new JDBCDeclaredQueryMetaData(
             (JDBCDeclaredQueryMetaData) jdbcQueryMetaData,
-            readAhead, qlCompiler);
+            readAhead, qlCompiler, false
+         );
       }
 
       // EJB-QL: default
@@ -135,13 +141,16 @@ public class JDBCQueryMetaDataFactory
       {
          return new JDBCQlQueryMetaData(
             (JDBCQlQueryMetaData) jdbcQueryMetaData,
-            readAhead, qlCompiler);
+            readAhead, qlCompiler, false
+         );
       }
 
       throw new DeploymentException(
          "Error in query specification for method " +
-         jdbcQueryMetaData.getMethod().getName());
+         jdbcQueryMetaData.getMethod().getName()
+      );
    }
+
 
    private JDBCQueryMetaData createJDBCQueryMetaData(JDBCQueryMetaData jdbcQueryMetaData,
                                                      Element queryElement,
@@ -149,21 +158,23 @@ public class JDBCQueryMetaDataFactory
                                                      JDBCReadAheadMetaData readAhead)
       throws DeploymentException
    {
+      final Class qlCompiler = JDBCQueryManager.getQLCompiler(queryElement, entity);
+      final boolean isResultTypeMappingLocal = (jdbcQueryMetaData == null ?
+         false : jdbcQueryMetaData.isResultTypeMappingLocal());
+
+      final boolean lazyResultSetLoading = Collection.class.isAssignableFrom(method.getReturnType()) &&
+         MetaData.getOptionalChildBooleanContent(queryElement, "lazy-resultset-loading");
 
       // RAW-SQL
       Element rawSql = MetaData.getOptionalChild(queryElement, "raw-sql");
       if(rawSql != null)
       {
-         return new JDBCRawSqlQueryMetaData(method, entity.getQLCompiler());
+         return new JDBCRawSqlQueryMetaData(method, qlCompiler, lazyResultSetLoading);
       }
 
-      final Class qlCompiler = JDBCQueryManager.getQLCompiler(queryElement, entity);
-
-      final boolean isResultTypeMappingLocal = (jdbcQueryMetaData == null ?
-         false : jdbcQueryMetaData.isResultTypeMappingLocal());
-
       // JBOSS-QL
-      Element jbossQL = MetaData.getOptionalChild(queryElement, "jboss-ql");
+      Element jbossQL =
+         MetaData.getOptionalChild(queryElement, "jboss-ql");
       if(jbossQL != null)
       {
          return new JDBCJBossQLQueryMetaData(
@@ -171,18 +182,16 @@ public class JDBCQueryMetaDataFactory
             jbossQL,
             method,
             readAhead,
-            qlCompiler);
+            qlCompiler,
+            lazyResultSetLoading
+         );
       }
 
       // DYNAMIC-SQL
       Element dynamicQL = MetaData.getOptionalChild(queryElement, "dynamic-ql");
       if(dynamicQL != null)
       {
-         return new JDBCDynamicQLQueryMetaData(
-            isResultTypeMappingLocal,
-            method,
-            readAhead,
-            qlCompiler);
+         return new JDBCDynamicQLQueryMetaData(isResultTypeMappingLocal, method, readAhead, qlCompiler, lazyResultSetLoading);
       }
 
       // DECLARED-SQL
@@ -194,7 +203,9 @@ public class JDBCQueryMetaDataFactory
             delcaredSql,
             method,
             readAhead,
-            qlCompiler);
+            qlCompiler,
+            lazyResultSetLoading
+         );
       }
 
       // EJB-QL: default
@@ -203,20 +214,18 @@ public class JDBCQueryMetaDataFactory
          return new JDBCQlQueryMetaData(
             (JDBCQlQueryMetaData) jdbcQueryMetaData,
             method,
-            readAhead);
+            readAhead
+         );
       }
 
-      throw new DeploymentException(
-         "Error in query specification for method " + method.getName());
+      throw new DeploymentException("Error in query specification for method " + method.getName());
    }
 
    private Method[] getQueryMethods(Element queryElement)
       throws DeploymentException
    {
-
       // query-method sub-element
-      Element queryMethod =
-         MetaData.getUniqueChild(queryElement, "query-method");
+      Element queryMethod = MetaData.getUniqueChild(queryElement, "query-method");
 
       // method name
       String methodName =
@@ -235,8 +244,7 @@ public class JDBCQueryMetaDataFactory
 
       try
       {
-         Class[] parameters = Classes.convertToJavaClasses(
-            methodParams.iterator(), entity.getClassLoader());
+         Class[] parameters = Classes.convertToJavaClasses(methodParams.iterator(), entity.getClassLoader());
 
          return getQueryMethods(methodName, parameters);
       }
@@ -254,8 +262,7 @@ public class JDBCQueryMetaDataFactory
 
       try
       {
-         Class[] parameters = Classes.convertToJavaClasses(
-            queryData.getMethodParams(), entity.getClassLoader());
+         Class[] parameters = Classes.convertToJavaClasses(queryData.getMethodParams(), entity.getClassLoader());
 
          return getQueryMethods(methodName, parameters);
       }
@@ -265,9 +272,8 @@ public class JDBCQueryMetaDataFactory
       }
    }
 
-   private Method[] getQueryMethods(
-      String methodName,
-      Class parameters[]) throws DeploymentException
+   private Method[] getQueryMethods(String methodName,
+                                    Class parameters[]) throws DeploymentException
    {
 
       // find the query and load the xml
@@ -275,8 +281,7 @@ public class JDBCQueryMetaDataFactory
       if(methodName.startsWith("ejbSelect"))
       {
          // bean method
-         Method method = getQueryMethod(
-            methodName, parameters, entity.getEntityClass());
+         Method method = getQueryMethod(methodName, parameters, entity.getEntityClass());
          if(method != null)
          {
             methods.add(method);
@@ -298,8 +303,7 @@ public class JDBCQueryMetaDataFactory
          Class localHomeClass = entity.getLocalHomeClass();
          if(localHomeClass != null)
          {
-            Method method = getQueryMethod(
-               methodName, parameters, localHomeClass);
+            Method method = getQueryMethod(methodName, parameters, localHomeClass);
             if(method != null)
             {
                methods.add(method);
@@ -315,7 +319,9 @@ public class JDBCQueryMetaDataFactory
          for(int i = 0; i < parameters.length; i++)
          {
             if(i > 0)
+            {
                sb.append(',');
+            }
             sb.append(parameters[i].getName());
          }
          sb.append(')');
@@ -324,10 +330,9 @@ public class JDBCQueryMetaDataFactory
       return (Method[]) methods.toArray(new Method[methods.size()]);
    }
 
-   private static Method getQueryMethod(
-      String queryName,
-      Class[] parameters,
-      Class clazz)
+   private static Method getQueryMethod(String queryName,
+                                        Class[] parameters,
+                                        Class clazz)
    {
 
       try

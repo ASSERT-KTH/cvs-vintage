@@ -18,7 +18,7 @@ import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
  * This abstract syntax node represents a path declaration.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public final class ASTPath extends SimpleNode
 {
@@ -137,7 +137,9 @@ public final class ASTPath extends SimpleNode
       return getPath().hashCode();
    }
 
-   /** Accept the visitor. **/
+   /**
+    * Accept the visitor. *
+    */
    public Object jjtAccept(JBossQLParserVisitor visitor, Object data)
    {
       return visitor.visit(this, data);

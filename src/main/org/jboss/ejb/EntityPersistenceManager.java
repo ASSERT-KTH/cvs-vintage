@@ -12,7 +12,6 @@ import java.util.Collection;
 
 import javax.ejb.RemoveException;
 
-import org.jboss.monitor.StatisticsProvider;
 
 /**
  *	This interface is implemented by any EntityBean persistence managers plugins.
@@ -26,7 +25,7 @@ import org.jboss.monitor.StatisticsProvider;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public interface EntityPersistenceManager extends ContainerPlugin
 {
@@ -84,7 +83,8 @@ public interface EntityPersistenceManager extends ContainerPlugin
     */
    Object findEntity(Method finderMethod,
                      Object[] args,
-                     EntityEnterpriseContext instance)
+                     EntityEnterpriseContext instance,
+                     GenericEntityObjectFactory factory)
       throws Exception;
 
    /**
@@ -103,7 +103,8 @@ public interface EntityPersistenceManager extends ContainerPlugin
     */
    Collection findEntities(Method finderMethod,
                            Object[] args,
-                           EntityEnterpriseContext instance)
+                           EntityEnterpriseContext instance,
+                           GenericEntityObjectFactory factory)
       throws Exception;
 
    /**

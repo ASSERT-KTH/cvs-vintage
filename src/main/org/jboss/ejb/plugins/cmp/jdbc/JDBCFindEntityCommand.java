@@ -14,6 +14,7 @@ import javax.ejb.FinderException;
 import javax.ejb.ObjectNotFoundException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.GenericEntityObjectFactory;
 
 /**
  * JDBCFindEntityCommand finds a single entity, by deligating to
@@ -24,10 +25,12 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class JDBCFindEntityCommand
 {
+   private static final String NO_SUCH_ENTITY = "No such entity!";
+
    private final JDBCStoreManager manager;
 
    public JDBCFindEntityCommand(JDBCStoreManager manager)
@@ -35,15 +38,16 @@ public final class JDBCFindEntityCommand
       this.manager = manager;
    }
 
-   public Object execute(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+   public Object execute(Method finderMethod, Object[] args, EntityEnterpriseContext ctx, GenericEntityObjectFactory factory)
       throws FinderException
    {
+
       JDBCQueryCommand query = manager.getQueryManager().getQueryCommand(finderMethod);
 
-      Collection result = query.execute(finderMethod, args, ctx);
+      Collection result = query.execute(finderMethod, args, ctx, factory);
       if(result.isEmpty())
       {
-         throw new ObjectNotFoundException("No such entity!");
+         throw new ObjectNotFoundException(NO_SUCH_ENTITY);
       }
       else if(result.size() == 1)
       {

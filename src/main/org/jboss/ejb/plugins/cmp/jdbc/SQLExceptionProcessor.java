@@ -19,7 +19,7 @@ import java.sql.SQLException;
  *
  * @jmx.mbean
  */
-public class SQLExceptionProcessor extends ServiceMBeanSupport implements SQLExceptionProcessorMBean
+public final class SQLExceptionProcessor extends ServiceMBeanSupport implements SQLExceptionProcessorMBean
 {
    private static final String DUPLICATE_CODE = "23000";
 

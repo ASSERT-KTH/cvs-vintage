@@ -6,20 +6,17 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCEJBQLCompiler;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
-
 import java.lang.reflect.Method;
 
 /**
- *   This immutable class contains information about an automatically generated
+ * This immutable class contains information about an automatically generated
  * query. This class is a place holder used to make an automaticlly generated
  * query look more like a user specified query.  This class only contains a
  * referance to the method used to invoke this query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.11 $
+ * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @version $Revision: 1.12 $
  */
 public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData
 {
@@ -35,17 +32,21 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData
 
    private final Class compiler;
 
+   private final boolean lazyResultSetLoading;
+
    /**
     * Constructs a JDBCAutomaticQueryMetaData which is invoked by the specified
     * method.
+    *
     * @param method the method which invokes this query
     * @readAhead Read ahead meta data.
     */
-   public JDBCAutomaticQueryMetaData(Method method, JDBCReadAheadMetaData readAhead, Class compiler)
+   public JDBCAutomaticQueryMetaData(Method method, JDBCReadAheadMetaData readAhead, Class qlCompiler, boolean lazyResultSetLoading)
    {
       this.method = method;
       this.readAhead = readAhead;
-      this.compiler = compiler;
+      this.compiler = qlCompiler;
+      this.lazyResultSetLoading = lazyResultSetLoading;
    }
 
    public Method getMethod()
@@ -60,6 +61,7 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData
 
    /**
     * Gets the read ahead metadata for the query.
+    *
     * @return the read ahead metadata for the query.
     */
    public JDBCReadAheadMetaData getReadAhead()
@@ -72,10 +74,16 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData
       return compiler;
    }
 
+   public boolean isLazyResultSetLoading()
+   {
+      return lazyResultSetLoading;
+   }
+
    /**
     * Compares this JDBCAutomaticQueryMetaData against the specified object. Returns
     * true if the objects are the same. Two JDBCAutomaticQueryMetaData are the same
     * if they are both invoked by the same method.
+    *
     * @param o the reference object with which to compare
     * @return true if this object is the same as the object argument; false otherwise
     */
@@ -91,6 +99,7 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData
    /**
     * Returns a hashcode for this JDBCAutomaticQueryMetaData. The hashcode is computed
     * by the method which invokes this query.
+    *
     * @return a hash code value for this object
     */
    public int hashCode()
@@ -102,7 +111,7 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData
     * Returns a string describing this JDBCAutomaticQueryMetaData. The exact details
     * of the representation are unspecified and subject to change, but the following
     * may be regarded as typical:
-    *
+    * <p/>
     * "[JDBCAutomaticQueryMetaData: method=public org.foo.User findByName(java.lang.String)]"
     *
     * @return a string representation of the object

@@ -21,10 +21,10 @@ import javax.ejb.EJBLocalObject;
  * @see EJBProxyFactory
  * 
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface LocalProxyFactory
-   extends ContainerPlugin
+   extends GenericEntityObjectFactory, ContainerPlugin
 {
    /**
     * This method is called whenever the EJBLocalHome implementation for this

@@ -1,31 +1,21 @@
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
-import org.jboss.invocation.LocalEJBInvocation;
 import org.jboss.ejb.plugins.lock.Entrancy;
-
-import javax.transaction.Transaction;
-import java.lang.reflect.Method;
-import java.security.Principal;
+import org.jboss.invocation.LocalEJBInvocation;
 
 /**
  * Optimized invocation object for local CMR invocations
  *
  * @author  <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public class CMRInvocation extends LocalEJBInvocation
+public final class CMRInvocation extends LocalEJBInvocation
 {
    private Entrancy entrancy;
    private CMRMessage cmrMessage;
 
    public CMRInvocation()
    {
-   }
-
-   public CMRInvocation(Object id, Method m, Object[] args, Transaction tx,
-                        Principal identity, Object credential)
-   {
-      super(id, m, args, tx, identity, credential);
    }
 
    public Entrancy getEntrancy()
@@ -47,5 +37,4 @@ public class CMRInvocation extends LocalEJBInvocation
    {
       this.cmrMessage = cmrMessage;
    }
-
 }

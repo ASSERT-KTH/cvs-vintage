@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Collection;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
@@ -19,7 +20,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public final class JDBCTypeMappingMetaData
 {
@@ -40,7 +41,6 @@ public final class JDBCTypeMappingMetaData
    public static final String LENGTH = "length";
    public static final String LOCATE = "locate";
    public static final String ABS = "abs";
-   public static final String MOD = "mod";
    public static final String SQRT = "sqrt";
    public static final String COUNT = "count";
 
@@ -87,6 +87,9 @@ public final class JDBCTypeMappingMetaData
    private JDBCFunctionMappingMetaData fkConstraint = null;
    private JDBCFunctionMappingMetaData pkConstraint = null;
    private JDBCFunctionMappingMetaData autoIncrement = null;
+   private JDBCFunctionMappingMetaData addColumn = null;
+   private JDBCFunctionMappingMetaData dropColumn = null;
+   private JDBCFunctionMappingMetaData alterColumn = null;
 
    /**
     * Constructs a mapping with the data contained in the type-mapping xml
@@ -122,6 +125,35 @@ public final class JDBCTypeMappingMetaData
          fkConstraint = new JDBCFunctionMappingMetaData("fk-constraint", fkConstraintSQL);
       }
 
+      // alter table templates
+      String alterColumnSQL = MetaData.getOptionalChildContent(element, "add-column-template");
+      if(alterColumnSQL != null && !alterColumnSQL.trim().equals(""))
+      {
+         addColumn = new JDBCFunctionMappingMetaData("add-column-template", alterColumnSQL);
+      }
+      else
+      {
+         addColumn = new JDBCFunctionMappingMetaData("add-column-template", "ALTER TABLE ?1 ADD ?2 ?3");
+      }
+      alterColumnSQL = MetaData.getOptionalChildContent(element, "alter-column-template");
+      if(alterColumnSQL != null && !alterColumnSQL.trim().equals(""))
+      {
+         alterColumn = new JDBCFunctionMappingMetaData("alter-column-template", alterColumnSQL);
+      }
+      else
+      {
+         alterColumn = new JDBCFunctionMappingMetaData("alter-column-template", "ALTER TABLE ?1 ALTER ?2 TYPE ?3");
+      }
+      alterColumnSQL = MetaData.getOptionalChildContent(element, "drop-column-template");
+      if(alterColumnSQL != null && !alterColumnSQL.trim().equals(""))
+      {
+         dropColumn = new JDBCFunctionMappingMetaData("drop-column-template", alterColumnSQL);
+      }
+      else
+      {
+         dropColumn = new JDBCFunctionMappingMetaData("drop-column-template", "ALTER TABLE ?1 DROP ?2");
+      }
+
       // auto increment
       // WARN: it's optional
       String autoIncrementSQL = MetaData.getOptionalChildContent(element, "auto-increment-template");
@@ -134,7 +166,7 @@ public final class JDBCTypeMappingMetaData
       Iterator iterator = MetaData.getChildrenByTagName(element, "mapping");
       while(iterator.hasNext())
       {
-         Element mappingElement = (Element) iterator.next();
+         Element mappingElement = (Element)iterator.next();
          JDBCMappingMetaData mapping = new JDBCMappingMetaData(mappingElement);
          mappings.put(mapping.getJavaType(), mapping);
       }
@@ -145,7 +177,7 @@ public final class JDBCTypeMappingMetaData
       Iterator functions = MetaData.getChildrenByTagName(element, "function-mapping");
       while(functions.hasNext())
       {
-         Element mappingElement = (Element) functions.next();
+         Element mappingElement = (Element)functions.next();
          JDBCFunctionMappingMetaData functionMapping = new JDBCFunctionMappingMetaData(mappingElement);
          functionMappings.put(functionMapping.getFunctionName().toLowerCase(), functionMapping);
       }
@@ -242,15 +274,7 @@ public final class JDBCTypeMappingMetaData
       return falseMapping;
    }
 
-   /**
-    * Gets the jdbc type which this class has mapped to the specified java
-    * class. The jdbc type is used to retrieve data from a result set and to
-    * set parameters in a prepared statement.
-    *
-    * @param type the Class for which the jdbc type will be returned
-    * @return the jdbc type which is mapped to the type
-    */
-   public int getJdbcTypeForJavaType(Class type)
+   public JDBCMappingMetaData getTypeMappingMetaData(Class type)
    {
       String javaType = type.getName();
 
@@ -266,54 +290,20 @@ public final class JDBCTypeMappingMetaData
       }
 
       // Check other types
-      JDBCMappingMetaData mapping = (JDBCMappingMetaData) mappings.get(javaType);
+      JDBCMappingMetaData mapping = (JDBCMappingMetaData)mappings.get(javaType);
 
       // if not found, return mapping for java.lang.object
       if(mapping == null)
       {
-         mapping = (JDBCMappingMetaData) mappings.get("java.lang.Object");
+         mapping = (JDBCMappingMetaData)mappings.get("java.lang.Object");
       }
 
-      return mapping.getJdbcType();
-   }
-
-   /**
-    * Gets the sql type which this class has mapped to the java class. The sql
-    * type is the sql column data type, and is used in CREATE TABLE statements.
-    *
-    * @param type the Class for which the sql type will be returned
-    * @return the sql type which is mapped to the type
-    */
-   public String getSqlTypeForJavaType(Class type)
-   {
-      String javaType = type.getName();
-
-      // if the type is a primitive convert it to it's wrapper class
-      for(int i = 0; i < PRIMITIVES.length; i++)
-      {
-         if(javaType.equals(PRIMITIVES[i]))
-         {
-            // Translate into class
-            javaType = PRIMITIVE_CLASSES[i];
-            break;
-         }
-      }
-
-      // Check other types
-      JDBCMappingMetaData mapping = (JDBCMappingMetaData) mappings.get(javaType);
-
-      // if not found, return mapping for java.lang.object
-      if(mapping == null)
-      {
-         mapping = (JDBCMappingMetaData) mappings.get("java.lang.Object");
-      }
-
-      return mapping.getSqlType();
+      return mapping;
    }
 
    public JDBCFunctionMappingMetaData getFunctionMapping(String name)
    {
-      JDBCFunctionMappingMetaData funcMapping = (JDBCFunctionMappingMetaData) functionMappings.get(name.toLowerCase());
+      JDBCFunctionMappingMetaData funcMapping = (JDBCFunctionMappingMetaData)functionMappings.get(name.toLowerCase());
       if(funcMapping == null)
          throw new IllegalStateException("Function " + name + " is not defined for " + this.name);
       return funcMapping;
@@ -350,6 +340,35 @@ public final class JDBCTypeMappingMetaData
    public JDBCFunctionMappingMetaData getAutoIncrementTemplate()
    {
       return autoIncrement;
+   }
+
+   /**
+    * Returns add column SQL template.
+    */
+   public JDBCFunctionMappingMetaData getAddColumnTemplate()
+   {
+      return addColumn;
+   }
+
+   /**
+    * Returns auto increment SQL template.
+    */
+   public JDBCFunctionMappingMetaData getDropColumnTemplate()
+   {
+      return dropColumn;
+   }
+
+   /**
+    * Returns auto increment SQL template.
+    */
+   public JDBCFunctionMappingMetaData getAlterColumnTemplate()
+   {
+      return alterColumn;
+   }
+
+   public Collection getMappings()
+   {
+      return mappings.values();
    }
 
    private void addDefaultFunctionMapping()

@@ -15,6 +15,8 @@ import javax.ejb.FinderException;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.GenericEntityObjectFactory;
+import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.ejbql.SelectFunction;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
@@ -28,7 +30,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
 {
@@ -43,7 +45,7 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
       metadata = (JDBCDynamicQLQueryMetaData)q;
    }
 
-   public Collection execute(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+   public Collection execute(Method finderMethod, Object[] args, EntityEnterpriseContext ctx, GenericEntityObjectFactory factory)
       throws FinderException
    {
       String dynamicQL = (String)args[0];
@@ -91,7 +93,7 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
             dynamicQL,
             finderMethod.getReturnType(),
             parameterTypes,
-            metadata.getReadAhead());
+            metadata);
       }
       catch(Throwable t)
       {
@@ -107,11 +109,11 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
       SelectFunction selectFunction = null;
       if(compiler.isSelectEntity())
       {
-         selectEntity = (JDBCEntityBridge)compiler.getSelectEntity();
+         selectEntity = (JDBCEntityBridge) compiler.getSelectEntity();
       }
       else if(compiler.isSelectField())
       {
-         selectField = (JDBCCMPFieldBridge)compiler.getSelectField();
+         selectField = (JDBCCMPFieldBridge) compiler.getSelectField();
       }
       else
       {
@@ -135,6 +137,9 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
       // get the parameter order
       setParameterList(compiler.getInputParameters());
 
+      EntityContainer con = ((JDBCStoreManager)compiler.getStoreManager()).getContainer();
+      factory = metadata.isResultTypeMappingLocal() ? (GenericEntityObjectFactory)con.getLocalProxyFactory() : con.getProxyFactory();
+
       return execute(
          compiler.getSQL(),
          parameters,
@@ -143,11 +148,12 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
          selectEntity,
          selectField,
          selectFunction,
-         (JDBCStoreManager)compiler.getStoreManager(),
+         (JDBCStoreManager) compiler.getStoreManager(),
          mask,
          compiler.getInputParameters(),
          leftJoinCMRList,
          metadata,
+         factory,
          log
       );
    }

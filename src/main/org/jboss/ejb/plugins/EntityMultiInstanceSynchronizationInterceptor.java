@@ -15,6 +15,18 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.metadata.ConfigurationMetaData;
 
 /**
+ * @deprecated this interceptor was used with Instance Per Transaction containers which do not use a global cache
+ * but cache instances per transaction and always passivate instances at commit time (commit option C).
+ * The only difference from the EntityInstanceInterceptor is that it uses specific instance Synchronization implementation
+ * which always passivates the instance at commit time which is equivalent to commit option C in standard container.
+ * Now, the differences between IPT and standard container are:
+ * <ul>
+ *    <li>org.jboss.ejb.plugins.PerTxEntityInstanceCache as the cache implementation;</li>
+ *    <li>NoLock as the locking policy;</li>
+ *    <li>empty container-cache-conf element.</li>
+ * </ul>
+ * (alex@jboss.org)
+ * 
  * The role of this interceptor is to synchronize the state of the cache with
  * the underlying storage.  It does this with the ejbLoad and ejbStore
  * semantics of the EJB specification.  In the presence of a transaction this
@@ -28,7 +40,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class EntityMultiInstanceSynchronizationInterceptor
         extends EntitySynchronizationInterceptor

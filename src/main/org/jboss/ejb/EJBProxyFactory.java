@@ -6,12 +6,9 @@
  */
 package org.jboss.ejb;
 
-import java.rmi.RemoteException;
 import java.util.Collection;
 
 import javax.ejb.EJBMetaData;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBObject;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
@@ -33,7 +30,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
  *<p><b>20011219 marc fleury:</b>
 * <ul>
@@ -43,7 +40,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
 *</ul>
  */
 public interface EJBProxyFactory
-extends ContainerPlugin
+extends GenericEntityObjectFactory, ContainerPlugin
 {
    /**
     * Set the invoker meta data so that the ProxyFactory can initialize properly
@@ -109,7 +106,7 @@ extends ContainerPlugin
     * This method is called whenever a collection of EJBObjects for a
     * collection of primary keys is needed.
     *
-    * @param enum    Enumeration of primary keys.
+    * @param en      Enumeration of primary keys.
     * @return        A collection of EJBObjects implementing the remote
     *                interface for this container.
     */

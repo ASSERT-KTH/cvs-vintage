@@ -11,24 +11,27 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.AbstractCollection;
+import java.util.NoSuchElementException;
 import javax.ejb.FinderException;
+import javax.ejb.EJBException;
+import javax.transaction.Synchronization;
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.ejb.EJBProxyFactory;
-import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.LocalProxyFactory;
+import org.jboss.ejb.GenericEntityObjectFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCLeftJoinMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.ejb.plugins.cmp.ejbql.SelectFunction;
@@ -37,20 +40,17 @@ import org.jboss.logging.Logger;
 /**
  * Abstract superclass of finder commands that return collections.
  * Provides the handleResult() implementation that these all need.
- *
+ * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- *
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 {
-   // todo: get rid of it
-   private static final String FINDER_PREFIX = "find";
    private JDBCQueryMetaData queryMetaData;
    protected Logger log;
 
@@ -67,20 +67,24 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
    private int limitValue;
    private List parameters = new ArrayList(0);
    private List onFindCMRList = Collections.EMPTY_LIST;
+   private QueryCollectionFactory collectionFactory;
 
    public JDBCAbstractQueryCommand(JDBCStoreManager manager, JDBCQueryMetaData q)
    {
-      this.log = Logger.getLogger(
-         this.getClass().getName() +
+      this.log = Logger.getLogger(this.getClass().getName() +
          "." +
          manager.getMetaData().getName() +
          "#" +
          q.getMethod().getName());
 
       queryMetaData = q;
+      collectionFactory = q.isLazyResultSetLoading() ?
+         new LazyCollectionFactory() :
+         (QueryCollectionFactory) new EagerCollectionFactory();
+
 //      setDefaultOffset(q.getOffsetParam());
 //      setDefaultLimit(q.getLimitParam());
-      setSelectEntity(manager.getEntityBridge());
+      setSelectEntity((JDBCEntityBridge) manager.getEntityBridge());
    }
 
    public void setOffsetValue(int offsetValue)
@@ -108,13 +112,20 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       this.onFindCMRList = onFindCMRList;
    }
 
-   public Collection execute(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+   public JDBCStoreManager getSelectManager()
+   {
+      return selectManager;
+   }
+
+   public Collection execute(Method finderMethod,
+                             Object[] args,
+                             EntityEnterpriseContext ctx,
+                             GenericEntityObjectFactory factory)
       throws FinderException
    {
       int offset = toInt(args, offsetParam, offsetValue);
       int limit = toInt(args, limitParam, limitValue);
-      return execute(
-         sql,
+      return execute(sql,
          args,
          offset,
          limit,
@@ -126,44 +137,41 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          parameters,
          onFindCMRList,
          queryMetaData,
-         log
-      );
+         factory,
+         log);
    }
 
    protected static int toInt(Object[] params, int paramNumber, int defaultValue)
    {
       if(paramNumber == 0)
+      {
          return defaultValue;
-      Integer arg = (Integer)params[paramNumber - 1];
+      }
+      Integer arg = (Integer) params[paramNumber - 1];
       return arg.intValue();
    }
 
-   protected static Collection execute(String sql,
-                                     Object[] args,
-                                     int offset,
-                                     int limit,
-                                     JDBCEntityBridge selectEntity,
-                                     JDBCCMPFieldBridge selectField,
-                                     SelectFunction selectFunction,
-                                     JDBCStoreManager selectManager,
-                                     boolean[] eagerLoadMask,
-                                     List parameters,
-                                     List onFindCMRList,
-                                     JDBCQueryMetaData queryMetaData,
-                                     Logger log)
+   protected Collection execute(String sql,
+                                Object[] args,
+                                int offset,
+                                int limit,
+                                JDBCEntityBridge selectEntity,
+                                JDBCCMPFieldBridge selectField,
+                                SelectFunction selectFunction,
+                                JDBCStoreManager selectManager,
+                                boolean[] eagerLoadMask,
+                                List parameters,
+                                List onFindCMRList,
+                                JDBCQueryMetaData queryMetaData,
+                                GenericEntityObjectFactory factory,
+                                Logger log)
       throws FinderException
    {
-      ReadAheadCache selectReadAheadCache = null;
-      if(selectEntity != null)
-      {
-         selectReadAheadCache = selectManager.getReadAheadCache();
-      }
-
-      List results = new ArrayList();
-
+      int count = offset;
       Connection con = null;
       PreparedStatement ps = null;
       ResultSet rs = null;
+
       try
       {
          // create the statement
@@ -177,19 +185,20 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          }
 
          // get the connection
-         con = selectManager.getEntityBridge().getDataSource().getConnection();
+         final JDBCEntityBridge entityBridge = (JDBCEntityBridge)selectManager.getEntityBridge();
+         con = entityBridge.getDataSource().getConnection();
          ps = con.prepareStatement(sql);
 
          // Set the fetch size of the statement
-         if(selectManager.getEntityBridge().getFetchSize() > 0)
+         if(entityBridge.getFetchSize() > 0)
          {
-            ps.setFetchSize(selectManager.getEntityBridge().getFetchSize());
+            ps.setFetchSize(entityBridge.getFetchSize());
          }
 
          // set the parameters
          for(int i = 0; i < parameters.size(); i++)
          {
-            QueryParameter parameter = (QueryParameter)parameters.get(i);
+            QueryParameter parameter = (QueryParameter) parameters.get(i);
             parameter.set(log, ps, i + 1, args);
          }
 
@@ -197,124 +206,34 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          rs = ps.executeQuery();
 
          // skip 'offset' results
-         int count = offset;
          while(count > 0 && rs.next())
          {
             count--;
          }
 
          count = limit;
-
-         // load the results
-         if(selectEntity != null)
-         {
-            boolean loadOnFindCmr = !onFindCMRList.isEmpty();
-            Object[] ref = new Object[1];
-            Object prevPk = null;
-            while((limit == 0 || count-- > 0) && rs.next())
-            {
-               int index = 1;
-
-               // get the pk
-               index = selectEntity.loadPrimaryKeyResults(rs, index, ref);
-               Object pk = ref[0];
-
-               // note: loaded pk might be null
-               boolean addPk = (loadOnFindCmr ? !pk.equals(prevPk) : true);
-               if(addPk)
-               {
-                  results.add(pk);
-                  prevPk = pk;
-               }
-
-               // read the preload fields
-               if(eagerLoadMask != null)
-               {
-                  JDBCCMPFieldBridge[] tableFields = (JDBCCMPFieldBridge[])selectEntity.getTableFields();
-                  for(int i = 0; i < eagerLoadMask.length; i++)
-                  {
-                     if(eagerLoadMask[i])
-                     {
-                        JDBCCMPFieldBridge field = tableFields[i];
-                        ref[0] = null;
-
-                        // read the value and store it in the readahead cache
-                        index = field.loadArgumentResults(rs, index, ref);
-
-                        if(addPk)
-                           selectReadAheadCache.addPreloadData(pk, field, ref[0]);
-                     }
-                  }
-
-                  if(!onFindCMRList.isEmpty())
-                  {
-                     index = loadOnFindCMRFields(pk, onFindCMRList, rs, index, log);
-                  }
-               }
-            }
-         }
-         else if(selectField != null)
-         {
-            // load the field
-            Object[] valueRef = new Object[1];
-            while((limit == 0 || count-- > 0) && rs.next())
-            {
-               valueRef[0] = null;
-               selectField.loadArgumentResults(rs, 1, valueRef);
-               results.add(valueRef[0]);
-            }
-         }
-         else
-         {
-            while(rs.next())
-               results.add(selectFunction.readResult(rs));
-         }
-
-         if(log.isDebugEnabled() && limit != 0 && count == 0)
-         {
-            log.debug("Query result was limited to " + limit + " row(s)");
-         }
       }
       catch(Exception e)
-      {
-         log.debug("Find failed", e);
-         throw new FinderException("Find failed: " + e);
-      }
-      finally
       {
          JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(ps);
          JDBCUtil.safeClose(con);
+
+         log.error("Find failed", e);
+         throw new FinderException("Find failed: " + e);
       }
 
-      // If we were just selecting a field, we're done.
-      if(selectField != null || selectFunction != null)
-      {
-         return results;
-      }
-
-      // add the results list to the cache
-      JDBCReadAheadMetaData readAhead = queryMetaData.getReadAhead();
-      selectReadAheadCache.addFinderResults(results, readAhead);
-
-      // If this is a finder, we're done.
-      if(queryMetaData.getMethod().getName().startsWith(FINDER_PREFIX))
-      {
-         return results;
-      }
-
-      // This is an ejbSelect, so we need to convert the pks to real ejbs.
-      EntityContainer selectContainer = selectManager.getContainer();
-      if(queryMetaData.isResultTypeMappingLocal())
-      {
-         LocalProxyFactory localFactory = selectContainer.getLocalProxyFactory();
-         return localFactory.getEntityLocalCollection(results);
-      }
-      else
-      {
-         EJBProxyFactory factory = selectContainer.getProxyFactory();
-         return factory.getEntityCollection(results);
-      }
+      return collectionFactory.createCollection(con,
+         ps,
+         rs,
+         limit,
+         count,
+         selectEntity,
+         selectField,
+         selectFunction,
+         selectManager,
+         eagerLoadMask,
+         factory);
    }
 
    protected Logger getLog()
@@ -337,7 +256,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       {
          if(!(p.get(i) instanceof QueryParameter))
          {
-            throw new IllegalArgumentException("Element " + i + " of list " +
+            throw new IllegalArgumentException("Element " +
+               i +
+               " of list " +
                "is not an instance of QueryParameter, but " +
                p.get(i).getClass().getName());
          }
@@ -355,7 +276,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       this.selectField = null;
       this.selectFunction = null;
       this.selectEntity = selectEntity;
-      this.selectManager = (JDBCStoreManager)selectEntity.getManager();
+      this.selectManager = (JDBCStoreManager) selectEntity.getManager();
    }
 
    protected JDBCCMPFieldBridge getSelectField()
@@ -368,7 +289,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       this.selectEntity = null;
       this.selectFunction = null;
       this.selectField = selectField;
-      this.selectManager = (JDBCStoreManager)selectField.getManager();
+      this.selectManager = (JDBCStoreManager) selectField.getManager();
    }
 
    protected void setSelectFunction(SelectFunction func, JDBCStoreManager manager)
@@ -399,9 +320,10 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
     * Replaces the parameters in the specifiec sql with question marks, and
     * initializes the parameter setting code. Parameters are encoded in curly
     * brackets use a zero based index.
+    * 
     * @param sql the sql statement that is parsed for parameters
     * @return the original sql statement with the parameters replaced with a
-    *    question mark
+    *         question mark
     * @throws DeploymentException if a error occures while parsing the sql
     */
    protected String parseParameters(String sql) throws DeploymentException
@@ -423,15 +345,13 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
                token = tokens.nextToken();
                if(Character.isDigit(token.charAt(0)))
                {
-                  QueryParameter parameter = new QueryParameter(
-                     selectManager,
-                     queryMetaData.getMethod(),
-                     token);
+                  QueryParameter parameter = new QueryParameter(selectManager, queryMetaData.getMethod(), token);
 
                   // of if we are here we can assume that we have
                   // a parameter and not a function
                   sqlBuf.append("?");
                   params.add(parameter);
+
                   if(!tokens.nextToken().equals("}"))
                   {
                      throw new DeploymentException("Invalid parameter - missing closing '}' : " + sql);
@@ -453,6 +373,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       }
 
       parameters = params;
+
       return sqlBuf.toString();
    }
 
@@ -468,14 +389,12 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          leftJoinCMRNodes = new ArrayList();
          while(leftJoinIter.hasNext())
          {
-            JDBCLeftJoinMetaData leftJoin = (JDBCLeftJoinMetaData)leftJoinIter.next();
+            JDBCLeftJoinMetaData leftJoin = (JDBCLeftJoinMetaData) leftJoinIter.next();
             JDBCCMRFieldBridge cmrField = entity.getCMRFieldByName(leftJoin.getCmrField());
             if(cmrField == null)
             {
-               throw new DeploymentException(
-                  "cmr-field in left-join was not found: cmr-field=" +
-                  leftJoin.getCmrField() + ", entity=" + entity.getEntityName()
-               );
+               throw new DeploymentException("cmr-field in left-join was not found: cmr-field=" +
+                  leftJoin.getCmrField() + ", entity=" + entity.getEntityName());
             }
 
             List subNodes;
@@ -503,7 +422,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
    {
       for(int i = 0; i < onFindCMRNodes.size(); ++i)
       {
-         LeftJoinCMRNode node = (LeftJoinCMRNode)onFindCMRNodes.get(i);
+         LeftJoinCMRNode node = (LeftJoinCMRNode) onFindCMRNodes.get(i);
          JDBCCMRFieldBridge cmrField = node.cmrField;
          JDBCEntityBridge relatedEntity = cmrField.getRelatedJDBCEntity();
          String relatedAlias = aliasManager.getAlias(node.path);
@@ -534,12 +453,10 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
                .append(' ')
                .append(relatedAlias)
                .append(" ON ");
-            SQLUtil.getJoinClause(
-               cmrField,
+            SQLUtil.getJoinClause(cmrField,
                alias,
                relatedAlias,
-               sb
-            );
+               sb);
          }
 
          List subNodes = node.onFindCMRNodes;
@@ -556,27 +473,23 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
    {
       for(int i = 0; i < onFindCMRNodes.size(); ++i)
       {
-         LeftJoinCMRNode node = (LeftJoinCMRNode)onFindCMRNodes.get(i);
+         LeftJoinCMRNode node = (LeftJoinCMRNode) onFindCMRNodes.get(i);
          JDBCCMRFieldBridge cmrField = node.cmrField;
          JDBCEntityBridge relatedEntity = cmrField.getRelatedJDBCEntity();
          String childAlias = aliasManager.getAlias(node.path);
 
          // primary key fields
-         SQLUtil.appendColumnNamesClause(
-            relatedEntity.getPrimaryKeyFields(),
+         SQLUtil.appendColumnNamesClause(relatedEntity.getPrimaryKeyFields(),
             childAlias,
-            sb
-         );
+            sb);
 
          // eager load group
          if(node.eagerLoadMask != null)
          {
-            SQLUtil.appendColumnNamesClause(
-               relatedEntity.getTableFields(),
+            SQLUtil.appendColumnNamesClause(relatedEntity.getTableFields(),
                node.eagerLoadMask,
                childAlias,
-               sb
-            );
+               sb);
          }
 
          List subNodes = node.onFindCMRNodes;
@@ -592,7 +505,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       Object[] ref = new Object[1];
       for(int nodeInd = 0; nodeInd < onFindCMRNodes.size(); ++nodeInd)
       {
-         LeftJoinCMRNode node = (LeftJoinCMRNode)onFindCMRNodes.get(nodeInd);
+         LeftJoinCMRNode node = (LeftJoinCMRNode) onFindCMRNodes.get(nodeInd);
          JDBCCMRFieldBridge cmrField = node.cmrField;
          ReadAheadCache myCache = cmrField.getJDBCStoreManager().getReadAheadCache();
          JDBCEntityBridge relatedEntity = cmrField.getRelatedJDBCEntity();
@@ -609,11 +522,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
             if(cmrField.getMetaData().getRelatedRole().isMultiplicityOne())
             {
                // cacheRelatedData the value
-               myCache.addPreloadData(
-                  pk,
+               myCache.addPreloadData(pk,
                   cmrField,
-                  relatedId == null ? Collections.EMPTY_LIST : Collections.singletonList(relatedId)
-               );
+                  relatedId == null ? Collections.EMPTY_LIST : Collections.singletonList(relatedId));
             }
             else
             {
@@ -641,12 +552,12 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          // load eager load group
          if(node.eagerLoadMask != null)
          {
-            JDBCCMPFieldBridge[] tableFields = (JDBCCMPFieldBridge[])relatedEntity.getTableFields();
+            JDBCFieldBridge[] tableFields = relatedEntity.getTableFields();
             for(int fieldInd = 0; fieldInd < tableFields.length; ++fieldInd)
             {
                if(node.eagerLoadMask[fieldInd])
                {
-                  JDBCCMPFieldBridge field = tableFields[fieldInd];
+                  JDBCFieldBridge field = tableFields[fieldInd];
                   ref[0] = null;
                   index = field.loadArgumentResults(rs, index, ref);
 
@@ -654,11 +565,12 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
                   {
                      if(log.isTraceEnabled())
                      {
-                        log.trace(
-                           "Caching " + relatedEntity.getEntityName() +
-                           '[' + relatedId + "]." +
-                           field.getFieldName() + "=" + ref[0]
-                        );
+                        log.trace("Caching " +
+                           relatedEntity.getEntityName() +
+                           '[' +
+                           relatedId +
+                           "]." +
+                           field.getFieldName() + "=" + ref[0]);
                      }
                      relatedCache.addPreloadData(relatedId, field, ref[0]);
                   }
@@ -700,7 +612,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          }
          else if(o instanceof LeftJoinCMRNode)
          {
-            LeftJoinCMRNode other = (LeftJoinCMRNode)o;
+            LeftJoinCMRNode other = (LeftJoinCMRNode) o;
             result = cmrField == other.cmrField;
          }
          else
@@ -718,6 +630,439 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       public String toString()
       {
          return '[' + cmrField.getFieldName() + ": " + onFindCMRNodes + ']';
+      }
+   }
+
+
+   interface QueryCollectionFactory
+   {
+      Collection createCollection(Connection con,
+                                  PreparedStatement ps,
+                                  ResultSet rs,
+                                  int limit, int count,
+                                  JDBCEntityBridge selectEntity,
+                                  JDBCCMPFieldBridge selectField,
+                                  SelectFunction selectFunction,
+                                  JDBCStoreManager selectManager,
+                                  boolean[] eagerLoadMask,
+                                  GenericEntityObjectFactory factory)
+         throws FinderException;
+   }
+
+   class EagerCollectionFactory
+      implements QueryCollectionFactory
+   {
+      public Collection createCollection(Connection con,
+                                         PreparedStatement ps,
+                                         ResultSet rs,
+                                         int limit, int count,
+                                         JDBCEntityBridge selectEntity,
+                                         JDBCCMPFieldBridge selectField,
+                                         SelectFunction selectFunction,
+                                         JDBCStoreManager selectManager,
+                                         boolean[] eagerLoadMask,
+                                         GenericEntityObjectFactory factory)
+         throws FinderException
+      {
+         try
+         {
+            List results = new ArrayList();
+
+            if(selectEntity != null)
+            {
+               ReadAheadCache selectReadAheadCache = selectManager.getReadAheadCache();
+               List ids = new ArrayList();
+
+               boolean loadOnFindCmr = !onFindCMRList.isEmpty();
+               Object[] ref = new Object[1];
+               Object prevPk = null;
+
+               while((limit == 0 || count-- > 0) && rs.next())
+               {
+                  int index = 1;
+
+                  // get the pk
+                  index = selectEntity.loadPrimaryKeyResults(rs, index, ref);
+                  Object pk = ref[0];
+
+                  boolean addPk = (loadOnFindCmr ? !pk.equals(prevPk) : true);
+                  if(addPk)
+                  {
+                     ids.add(pk);
+                     results.add(factory.getEntityEJBObject(pk));
+                     prevPk = pk;
+                  }
+
+                  // read the preload fields
+                  if(eagerLoadMask != null)
+                  {
+                     JDBCFieldBridge[] tableFields = selectEntity.getTableFields();
+                     for(int i = 0; i < eagerLoadMask.length; i++)
+                     {
+                        if(eagerLoadMask[i])
+                        {
+                           JDBCFieldBridge field = tableFields[i];
+                           ref[0] = null;
+
+                           // read the value and store it in the readahead cache
+                           index = field.loadArgumentResults(rs, index, ref);
+
+                           if(addPk)
+                           {
+                              selectReadAheadCache.addPreloadData(pk, field, ref[0]);
+                           }
+                        }
+                     }
+
+                     if(!onFindCMRList.isEmpty())
+                     {
+                        index = loadOnFindCMRFields(pk, onFindCMRList, rs, index, log);
+                     }
+                  }
+               }
+
+               // add the results list to the cache
+               selectReadAheadCache.addFinderResults(ids, queryMetaData.getReadAhead());
+            }
+            else if(selectField != null)
+            {
+               // load the field
+               Object[] valueRef = new Object[1];
+               while((limit == 0 || count-- > 0) && rs.next())
+               {
+                  valueRef[0] = null;
+                  selectField.loadArgumentResults(rs, 1, valueRef);
+                  results.add(valueRef[0]);
+               }
+            }
+            else
+            {
+               while(rs.next())
+               {
+                  results.add(selectFunction.readResult(rs));
+               }
+            }
+
+            if(log.isDebugEnabled() && limit != 0 && count == 0)
+            {
+               log.debug("Query result was limited to " + limit + " row(s)");
+            }
+
+            return results;
+         }
+         catch(Exception e)
+         {
+            log.error("Find failed", e);
+            throw new FinderException("Find failed: " + e);
+         }
+         finally
+         {
+            JDBCUtil.safeClose(rs);
+            JDBCUtil.safeClose(ps);
+            JDBCUtil.safeClose(con);
+         }
+      }
+
+   }
+
+   class LazyCollectionFactory
+      implements QueryCollectionFactory
+   {
+      public Collection createCollection(Connection con,
+                                         PreparedStatement ps,
+                                         ResultSet rs,
+                                         int limit, int count,
+                                         JDBCEntityBridge selectEntity,
+                                         JDBCCMPFieldBridge selectField,
+                                         SelectFunction selectFunction,
+                                         JDBCStoreManager selectManager,
+                                         boolean[] eagerLoadMask,
+                                         GenericEntityObjectFactory factory)
+         throws FinderException
+      {
+         return new LazyCollection(con,
+            ps,
+            rs,
+            limit,
+            count,
+            selectEntity,
+            selectField,
+            selectFunction,
+            selectManager,
+            eagerLoadMask,
+            factory);
+      }
+
+      private class LazyCollection extends AbstractCollection
+      {
+         private final Connection con;
+         private final PreparedStatement ps;
+         private final ResultSet rs;
+         private final int limit;
+         private int count;
+         private final JDBCEntityBridge selectEntity;
+         private final JDBCCMPFieldBridge selectField;
+         private final SelectFunction selectFunction;
+         private final JDBCStoreManager selectManager;
+         private final boolean[] eagerLoadMask;
+         private final GenericEntityObjectFactory factory;
+
+         private Object prevPk;
+         private Object curPk;
+         private Object currentResult;
+
+         Object[] ref = new Object[1];
+
+         boolean loadOnFindCmr;
+
+         private List results = null;
+         private Iterator firstIterator;
+         private int size;
+         private boolean resourcesClosed;
+
+         public LazyCollection(final Connection con,
+                               final PreparedStatement ps,
+                               final ResultSet rs,
+                               int limit,
+                               int count,
+                               JDBCEntityBridge selectEntity,
+                               JDBCCMPFieldBridge selectField,
+                               SelectFunction selectFunction,
+                               JDBCStoreManager selectManager,
+                               boolean[] eagerLoadMask,
+                               GenericEntityObjectFactory factory)
+         {
+            this.con = con;
+            this.ps = ps;
+            this.rs = rs;
+            this.limit = limit;
+            this.count = count;
+            this.selectEntity = selectEntity;
+            this.selectField = selectField;
+            this.selectFunction = selectFunction;
+            this.selectManager = selectManager;
+            this.eagerLoadMask = eagerLoadMask;
+            this.factory = factory;
+            loadOnFindCmr = !onFindCMRList.isEmpty();
+
+            firstIterator = getFirstIterator();
+            if(firstIterator.hasNext())
+            {
+               try
+               {
+                  size = rs.getInt(1);
+               }
+               catch(SQLException e)
+               {
+                  throw new EJBException("Failed to read ResultSet.", e);
+               }
+
+               if(limit > 0 && size > limit)
+               {
+                  size = limit;
+               }
+            }
+
+            if(size < 1)
+            {
+               firstIterator = null;
+               results = new ArrayList(0);
+               closeResources();
+            }
+            else
+            {
+               results = new ArrayList(size);
+               try
+               {
+                  selectManager.getContainer().getTransactionManager().getTransaction().registerSynchronization(new Synchronization()
+                  {
+                     public void beforeCompletion()
+                     {
+                        closeResources();
+                     }
+
+                     public void afterCompletion(int status)
+                     {
+                        closeResources();
+                     }
+                  });
+               }
+               catch(Exception e)
+               {
+                  throw new EJBException("Failed to obtain current transaction", e);
+               }
+            }
+         }
+
+         private void closeResources()
+         {
+            if(!resourcesClosed)
+            {
+               JDBCUtil.safeClose(rs);
+               JDBCUtil.safeClose(ps);
+               JDBCUtil.safeClose(con);
+               resourcesClosed = true;
+            }
+         }
+
+         public Iterator iterator()
+         {
+            return firstIterator != null ? firstIterator : results.iterator();
+         }
+
+         public int size()
+         {
+            return firstIterator != null ? size : results.size();
+         }
+
+         public boolean add(Object o)
+         {
+            if(firstIterator == null)
+            {
+               return results.add(o);
+            }
+            throw new IllegalStateException("Can't modify collection while the first iterator is not exhausted.");
+         }
+
+         public boolean remove(Object o)
+         {
+            if(firstIterator == null)
+            {
+               return results.remove(o);
+            }
+            throw new IllegalStateException("Can't modify collection while the first iterator is not exhausted.");
+         }
+
+         private boolean hasNextResult()
+         {
+            try
+            {
+               boolean has = (limit == 0 || count-- > 0) && rs.next();
+               if(!has)
+               {
+                  if(log.isTraceEnabled())
+                  {
+                     log.trace("first iterator exhausted!");
+                  }
+                  firstIterator = null;
+                  closeResources();
+               }
+               return has;
+            }
+            catch(Exception e)
+            {
+               log.error("Failed to read ResultSet.", e);
+               throw new EJBException("Failed to read ResultSet: " + e.getMessage());
+            }
+         }
+
+         private Object readNext()
+         {
+            try
+            {
+               if(selectEntity != null)
+               {
+                  ReadAheadCache selectReadAheadCache = selectManager.getReadAheadCache();
+
+                  // first one is size
+                  int index = 2;
+
+                  // get the pk
+                  index = selectEntity.loadPrimaryKeyResults(rs, index, ref);
+                  curPk = ref[0];
+
+                  boolean addPk = (loadOnFindCmr ? !curPk.equals(prevPk) : true);
+                  if(addPk)
+                  {
+                     prevPk = curPk;
+                     currentResult = factory.getEntityEJBObject(curPk);
+                  }
+
+                  // read the preload fields
+                  if(eagerLoadMask != null)
+                  {
+                     JDBCFieldBridge[] tableFields = selectEntity.getTableFields();
+                     for(int i = 0; i < eagerLoadMask.length; i++)
+                     {
+                        if(eagerLoadMask[i])
+                        {
+                           JDBCFieldBridge field = tableFields[i];
+                           ref[0] = null;
+
+                           // read the value and store it in the readahead cache
+                           index = field.loadArgumentResults(rs, index, ref);
+
+                           if(addPk)
+                           {
+                              selectReadAheadCache.addPreloadData(curPk, field, ref[0]);
+                           }
+                        }
+                     }
+
+                     if(!onFindCMRList.isEmpty())
+                     {
+                        index = loadOnFindCMRFields(curPk, onFindCMRList, rs, index, log);
+                     }
+                  }
+               }
+               else if(selectField != null)
+               {
+                  // load the field
+                  selectField.loadArgumentResults(rs, 2, ref);
+                  currentResult = ref[0];
+               }
+               else
+               {
+                  currentResult = selectFunction.readResult(rs);
+               }
+
+               if(log.isTraceEnabled() && limit != 0 && count == 0)
+               {
+                  log.trace("Query result was limited to " + limit + " row(s)");
+               }
+
+               return currentResult;
+            }
+            catch(Exception e)
+            {
+               log.error("Failed to read ResultSet", e);
+               throw new EJBException("Failed to read ResultSet: " + e.getMessage());
+            }
+         }
+
+         private Iterator getFirstIterator()
+         {
+            return new Iterator()
+            {
+               private boolean hasNext;
+               private Object cursor;
+
+               public boolean hasNext()
+               {
+                  return hasNext ? hasNext : (hasNext = hasNextResult());
+               }
+
+               public Object next()
+               {
+                  if(!hasNext())
+                  {
+                     throw new NoSuchElementException();
+                  }
+                  hasNext = false;
+
+                  cursor = readNext();
+                  results.add(cursor);
+
+                  return cursor;
+               }
+
+               public void remove()
+               {
+                  --size;
+                  results.remove(cursor);
+               }
+            };
+         }
       }
    }
 }

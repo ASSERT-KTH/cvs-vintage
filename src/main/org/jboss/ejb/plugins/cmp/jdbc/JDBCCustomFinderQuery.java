@@ -19,6 +19,7 @@ import java.util.List;
 import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.GenericEntityObjectFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.logging.Logger;
 
@@ -32,7 +33,7 @@ import org.jboss.logging.Logger;
  * @see org.jboss.ejb.plugins.cmp.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="mailto:john-jboss@freeborg.com">John Freeborg</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class JDBCCustomFinderQuery implements JDBCQueryCommand
 {
@@ -40,7 +41,7 @@ public final class JDBCCustomFinderQuery implements JDBCQueryCommand
    private final Method finderMethod;
    private final JDBCReadAheadMetaData readAheadMetaData;
    private final ReadAheadCache readAheadCache;
-
+   private final JDBCStoreManager manager;
    /**
     * Constructs a command which can handle multiple entity finders
     * that are BMP implemented.
@@ -49,8 +50,19 @@ public final class JDBCCustomFinderQuery implements JDBCQueryCommand
    public JDBCCustomFinderQuery(JDBCStoreManager manager, Method finderMethod)
    {
       this.finderMethod = finderMethod;
-      this.readAheadMetaData = manager.getMetaData().getReadAhead();
-      this.readAheadCache = manager.getReadAheadCache();
+      this.manager = manager;
+
+      JDBCReadAheadMetaData readAheadMetaData = manager.getMetaData().getReadAhead();
+      if((readAheadMetaData != null) && readAheadMetaData.isOnLoad())
+      {
+         this.readAheadCache = manager.getReadAheadCache();
+         this.readAheadMetaData = readAheadMetaData;
+      }
+      else
+      {
+         this.readAheadCache = null;
+         this.readAheadMetaData = null;
+      }
 
       this.log = Logger.getLogger(
          this.getClass().getName() +
@@ -63,9 +75,15 @@ public final class JDBCCustomFinderQuery implements JDBCQueryCommand
          log.debug("Finder: Custom finder " + finderMethod.getName());
    }
 
+   public JDBCStoreManager getSelectManager()
+   {
+      return manager;
+   }
+
    public Collection execute(Method unused,
                              Object[] args,
-                             EntityEnterpriseContext ctx)
+                             EntityEnterpriseContext ctx,
+                             GenericEntityObjectFactory factory)
       throws FinderException
    {
       try
@@ -77,29 +95,29 @@ public final class JDBCCustomFinderQuery implements JDBCQueryCommand
          // if expected return type is not Collection, wrap value in Collection
          if(value instanceof Enumeration)
          {
-            Enumeration enum = (Enumeration) value;
+            Enumeration enum = (Enumeration)value;
             List result = new ArrayList();
             while(enum.hasMoreElements())
             {
                result.add(enum.nextElement());
             }
             cacheResults(result);
-            return result;
+            return GenericEntityObjectFactory.UTIL.getEntityCollection(factory, result);
          }
          else if(value instanceof Collection)
          {
             List result;
-            if(value instanceof List)
-               result = (List) value;
+            if (value instanceof List)
+               result = (List)value;
             else
-               result = new ArrayList((Collection) value);
+               result = new ArrayList((Collection)value);
             cacheResults(result);
-            return (Collection) value;
+            return GenericEntityObjectFactory.UTIL.getEntityCollection(factory, result);
          }
          else
          {
             // Don't bother trying to cache this
-            return Collections.singleton(value);
+            return Collections.singleton(factory.getEntityEJBObject(value));
          }
       }
       catch(IllegalAccessException e)
@@ -128,9 +146,7 @@ public final class JDBCCustomFinderQuery implements JDBCQueryCommand
       // the on-load read ahead cache strategy is the only one that makes
       // sense to support for custom finders since all we have is a list of
       // primary keys.
-      if((readAheadMetaData != null) &&
-         (readAheadMetaData.isOnLoad()) &&
-         (readAheadCache != null))
+      if(readAheadCache != null)
       {
          readAheadCache.addFinderResults(listOfPKs, readAheadMetaData);
       }

@@ -42,12 +42,6 @@ public interface JDBCFieldBridge extends FieldBridge
    public boolean isReadTimedOut(EntityEnterpriseContext ctx);
 
    /**
-    * Should an index in the database be generated for this field?
-    * @return true if an index should be generated in the database
-    */
-   public boolean isIndexed();
-
-   /**
     * Has the data been loaded?
     */
    public boolean isLoaded(EntityEnterpriseContext ctx);

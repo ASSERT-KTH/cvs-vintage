@@ -10,26 +10,25 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.sql.DataSource;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractCMRFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
+import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
 import org.jboss.logging.Logger;
 
 /**
@@ -41,10 +40,10 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @author <a href="heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @author <a href="joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.46 $
+ * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
+ * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
+ * @author <a href="mailto:joachim@cabsoft.be">Joachim Van der Auwera</a>
+ * @version $Revision: 1.47 $
  */
 public final class JDBCStartCommand
 {
@@ -52,39 +51,40 @@ public final class JDBCStartCommand
    private static final String COULDNT_SUSPEND = "Could not suspend current transaction before ";
    private static final String COULDNT_REATTACH = "Could not reattach original transaction after ";
    private final static Object CREATED_TABLES_KEY = new Object();
-   private final JDBCStoreManager manager;
-   private final JDBCEntityBridge entity;
+   private final JDBCEntityPersistenceStore manager;
+   private final JDBCAbstractEntityBridge entity;
    private final JDBCEntityMetaData entityMetaData;
    private final Logger log;
    private static int idxCount = 0;
 
-   public JDBCStartCommand(JDBCStoreManager manager)
+   public JDBCStartCommand(JDBCEntityPersistenceStore manager)
    {
       this.manager = manager;
       entity = manager.getEntityBridge();
-      entityMetaData = entity.getMetaData();
+      entityMetaData = manager.getMetaData();
 
       // Create the Log
-      log = Logger.getLogger(
-         this.getClass().getName() +
+      log = Logger.getLogger(this.getClass().getName() +
          "." +
          manager.getMetaData().getName());
 
       // Create the created tables set
-      Map applicationData = manager.getApplicationDataMap();
-      synchronized(applicationData)
+      Set tables = (Set) manager.getApplicationData(CREATED_TABLES_KEY);
+      if(tables == null)
       {
-         if(!applicationData.containsKey(CREATED_TABLES_KEY))
-         {
-            applicationData.put(CREATED_TABLES_KEY, Collections.synchronizedSet(new HashSet()));
-         }
+         manager.putApplicationData(CREATED_TABLES_KEY, new HashSet());
       }
    }
 
    public void execute() throws DeploymentException
    {
+      Set existedTables = getExistedTables(manager);
+
       boolean tableExisted = SQLUtil.tableExists(entity.getTableName(), entity.getDataSource());
-      entity.setTableExisted(tableExisted);
+      if(tableExisted)
+      {
+         existedTables.add(entity.getEntityName());
+      }
 
       if(tableExisted)
       {
@@ -97,8 +97,8 @@ public final class JDBCStartCommand
             SQLUtil.OldIndexes oldIndexes = null;
             ArrayList newNames = new ArrayList();
             JDBCFieldBridge fields[] = entity.getTableFields();
-            String tableName=entity.getTableName();
-            for (int i=0 ; i<fields.length ;  i++)
+            String tableName = entity.getTableName();
+            for(int i = 0; i < fields.length; i++)
             {
                JDBCFieldBridge field = fields[i];
                JDBCType jdbcType = field.getJDBCType();
@@ -108,56 +108,64 @@ public final class JDBCStartCommand
 
                for(int j = 0; j < columnNames.length; j++)
                {
-                  String name=columnNames[j].toUpperCase();
+                  String name = columnNames[j];
+                  String ucName = name.toUpperCase();
 
-                  newNames.add(name);
+                  newNames.add( ucName );
 
-                  int oldIndex = oldNames.indexOf(name);
-                  if (oldIndex == -1)
+                  int oldIndex = oldNames.indexOf( ucName );
+                  if(oldIndex == -1)
                   {
                      // add new column
-                     StringBuffer buf = new StringBuffer();
-                     buf.append(columnNames[j]).append(' ').append(sqlTypes[j]);
-                     if(notNull[j])
+                     StringBuffer buf = new StringBuffer( sqlTypes[j] );
+                     if( notNull[j] )
+                     {
                         buf.append(SQLUtil.NOT).append(SQLUtil.NULL);
-                     alterTable(entity.getDataSource(), SQLUtil.ADD, tableName, name, buf.toString());
+                     }
+                     alterTable(entity.getDataSource(),
+                           entityMetaData.getTypeMapping().getAddColumnTemplate(),
+                           tableName, name, buf.toString());
                   }
                   else
                   {
                      // alter existing columns
                      // only CHAR and VARCHAR fields are altered, and only when they are longer then before
                      String type = (String) oldTypes.get(oldIndex);
-                     if (type.equals("CHAR") || type.equals("VARCHAR"))
+                     if(type.equals("CHAR") || type.equals("VARCHAR"))
                      {
                         try
                         {
                            // get new length
                            String l = sqlTypes[j];
-                           l = l.substring(l.indexOf('(')+1,l.length()-1);
-                           Integer oldLength = (Integer)oldSizes.get(oldIndex);
-                           if (Integer.parseInt(l) > oldLength.intValue()) {
-                              StringBuffer buf = new StringBuffer();
-                              buf.append(columnNames[j]).append(SQLUtil.TYPE).append(sqlTypes[j]);
-                              alterTable(entity.getDataSource(), SQLUtil.ALTER, tableName, name, buf.toString());
+                           l = l.substring(l.indexOf('(') + 1, l.length() - 1);
+                           Integer oldLength = (Integer) oldSizes.get(oldIndex);
+                           if(Integer.parseInt(l) > oldLength.intValue())
+                           {
+                              alterTable(entity.getDataSource(),
+                                    entityMetaData.getTypeMapping().getAlterColumnTemplate(),
+                                    tableName, name, sqlTypes[j] );
                            }
                         }
-                        catch (Exception e)
+                        catch(Exception e)
                         {
-                              log.warn("EXCEPTION ALTER :" + e.toString());
+                           log.warn("EXCEPTION ALTER :" + e.toString());
                         }
                      }
                   }
                }
 
                // see if we have to add an index for the field
-               if ( field.isIndexed() )
+               JDBCCMPFieldMetaData fieldMD = entity.getMetaData().getCMPFieldByName(field.getFieldName());
+               if(fieldMD.isIndexed())
                {
-                     if ( oldIndexes == null )
-                     {
-                        oldIndexes = SQLUtil.getOldIndexes(entity.getTableName(), entity.getDataSource());
-                     }
-                     if ( !hasIndex( oldIndexes, field ) )
-                        createCMPIndex( entity.getDataSource(), field );
+                  if(oldIndexes == null)
+                  {
+                     oldIndexes = SQLUtil.getOldIndexes(entity.getTableName(), entity.getDataSource());
+                  }
+                  if(!hasIndex(oldIndexes, field))
+                  {
+                     createCMPIndex(entity.getDataSource(), field);
+                  }
 
                }
             } // for  int i;
@@ -166,70 +174,76 @@ public final class JDBCStartCommand
             Iterator it = oldNames.iterator();
             while(it.hasNext())
             {
-               String name = (String) ( it.next() );
+               String name = (String) (it.next());
                if(!newNames.contains(name))
                {
-                  alterTable(entity.getDataSource(), SQLUtil.DROP, tableName, name, name);
+                  alterTable(entity.getDataSource(),
+                        entityMetaData.getTypeMapping().getDropColumnTemplate(),
+                        tableName, name, "");
                }
             }
 
          }
       }
+
       // Create table if necessary
-      if(!entity.getTableExists())
+      Set createdTables = getCreatedTables(manager);
+
+      if(entityMetaData.getCreateTable() && !createdTables.contains(entity.getEntityName()))
       {
-         if(entityMetaData.getCreateTable())
+         DataSource dataSource = entity.getDataSource();
+         createTable(dataSource, entity.getTableName(), getEntityCreateTableSQL(dataSource));
+
+         // create indices only if table did not yet exist.
+         if(!tableExisted)
          {
-            DataSource dataSource = entity.getDataSource();
-            createTable(dataSource, entity.getTableName(), getEntityCreateTableSQL(dataSource));
-
-            // create indices only if table did not yet exist.
-            if(!tableExisted)
-            {
-               createCMPIndices(dataSource);
-            }
-            else
-            {
-               if(log.isDebugEnabled())
-                  log.debug("Indices for table " + entity.getTableName() + "not created as table existed");
-            }
-
-
-            // issue extra (user-defined) sql for table
-            if(!tableExisted)
-            {
-               issuePostCreateSQL(dataSource, entity.getTablePostCreateCmd(), entity.getTableName());
-            }
-            else
-            {
-               log.debug("Did not issue user-defined SQL for existing table " + entity.getTableName());
-            }
-
+            createCMPIndices(dataSource);
          }
          else
          {
-            log.debug("Table not create as requested: " + entity.getTableName());
+            if(log.isDebugEnabled())
+            {
+               log.debug("Indices for table " + entity.getTableName() + "not created as table existed");
+            }
          }
-         entity.setTableExists(true);
+
+
+         // issue extra (user-defined) sql for table
+         if(!tableExisted)
+         {
+            issuePostCreateSQL(dataSource,
+               entity.getMetaData().getDefaultTablePostCreateCmd(),
+               entity.getTableName());
+         }
+         else
+         {
+            log.debug("Did not issue user-defined SQL for existing table " + entity.getTableName());
+         }
+
+         createdTables.add(entity.getEntityName());
+      }
+      else
+      {
+         log.debug("Table not create as requested: " + entity.getTableName());
       }
 
       // create relation tables
-      JDBCCMRFieldBridge[] cmrFields = entity.getCMRFields();
+      JDBCAbstractCMRFieldBridge[] cmrFields = entity.getCMRFields();
       for(int i = 0; i < cmrFields.length; ++i)
       {
-         JDBCCMRFieldBridge cmrField = cmrFields[i];
-         JDBCRelationMetaData relationMetaData = cmrField.getRelationMetaData();
+         JDBCAbstractCMRFieldBridge cmrField = cmrFields[i];
+         JDBCRelationMetaData relationMetaData = cmrField.getMetaData().getRelationMetaData();
 
          // if the table for the related entity has been created
-         if(cmrField.getRelatedJDBCEntity().getTableExists())
+         final EntityBridge relatedEntity = cmrField.getRelatedEntity();
+         if(relationMetaData.isTableMappingStyle() && createdTables.contains(relatedEntity.getEntityName()))
          {
             DataSource dataSource = relationMetaData.getDataSource();
 
-            boolean relTableExisted = SQLUtil.tableExists( cmrField.getTableName(), entity.getDataSource() );
+            boolean relTableExisted = SQLUtil.tableExists(cmrField.getTableName(), entity.getDataSource());
 
             if(relTableExisted)
             {
-
                if(relationMetaData.getAlterTable())
                {
                   ArrayList oldNames = SQLUtil.getOldColumns(cmrField.getTableName(), dataSource).getColumnNames();
@@ -237,25 +251,23 @@ public final class JDBCStartCommand
                   JDBCFieldBridge[] leftKeys = cmrField.getTableKeyFields();
                   JDBCFieldBridge[] rightKeys = cmrField.getRelatedCMRField().getTableKeyFields();
                   JDBCFieldBridge[] fields = new JDBCFieldBridge[leftKeys.length + rightKeys.length];
-                  System.arraycopy( leftKeys, 0, fields, 0, leftKeys.length );
-                  System.arraycopy( rightKeys, 0, fields, leftKeys.length, rightKeys.length );
+                  System.arraycopy(leftKeys, 0, fields, 0, leftKeys.length);
+                  System.arraycopy(rightKeys, 0, fields, leftKeys.length, rightKeys.length);
                   // have to append field names to leftKeys, rightKeys...
 
                   boolean different = false;
-                  for(int j = 0 ; j < fields.length ; j++)
+                  for(int j = 0; j < fields.length; j++)
                   {
                      JDBCFieldBridge field = fields[j];
 
                      String name = field.getJDBCType().getColumnNames()[0].toUpperCase();
-                     newNames.add( name );
+                     newNames.add(name);
 
-                     if(!oldNames.contains( name ))
+                     if(!oldNames.contains(name))
                      {
                         different = true;
                         break;
                      }
-
-
                   } // for int j;
 
                   if(!different)
@@ -263,8 +275,8 @@ public final class JDBCStartCommand
                      Iterator it = oldNames.iterator();
                      while(it.hasNext())
                      {
-                        String name = (String) ( it.next() );
-                        if(!newNames.contains( name ))
+                        String name = (String) (it.next());
+                        if(!newNames.contains(name))
                         {
                            different = true;
                            break;
@@ -275,7 +287,7 @@ public final class JDBCStartCommand
                   if(different)
                   {
                      // only log, don't drop table is this can cause data loss
-                     log.error("CMR table structure is incorrect for "+cmrField.getTableName());
+                     log.error("CMR table structure is incorrect for " + cmrField.getTableName());
                      //SQLUtil.dropTable(entity.getDataSource(), cmrField.getTableName());
                   }
 
@@ -301,89 +313,123 @@ public final class JDBCStartCommand
                if(relationMetaData.getCreateTable())
                {
                   issuePostCreateSQL(dataSource,
-                     cmrField.getRelatedJDBCEntity().getTablePostCreateCmd(),
+                     ((JDBCAbstractEntityBridge) relatedEntity).getMetaData()
+                     .getDefaultTablePostCreateCmd(),
                      cmrField.getTableName());
                }
-
-            }
-
-            // Only generate indices on foreign key columns if
-            // the table was freshly created. If not, we risk
-            // creating an index twice and get an exception from the DB
-            if(relationMetaData.isForeignKeyMappingStyle() &&
-               !cmrField.getRelatedJDBCEntity().getTableExisted())
-            {
-               createCMRIndex(dataSource, cmrField);
-            }
-
-            // Create my fk constraint
-            addForeignKeyConstraint(cmrField);
-
-            // Create related fk constraint
-            if(!entity.equals(cmrField.getRelatedJDBCEntity()))
-            {
-               addForeignKeyConstraint((JDBCCMRFieldBridge)cmrField.getRelatedCMRField());
             }
          }
       }
    }
 
+   public void addForeignKeyConstraints() throws DeploymentException
+   {
+      // Create table if necessary
+      Set createdTables = getCreatedTables(manager);
+
+      JDBCAbstractCMRFieldBridge[] cmrFields = entity.getCMRFields();
+      for(int i = 0; i < cmrFields.length; ++i)
+      {
+         JDBCAbstractCMRFieldBridge cmrField = cmrFields[i];
+         JDBCRelationMetaData relationMetaData = cmrField.getMetaData().getRelationMetaData();
+
+         // if the table for the related entity has been created
+         final EntityBridge relatedEntity = cmrField.getRelatedEntity();
+
+         // Only generate indices on foreign key columns if
+         // the table was freshly created. If not, we risk
+         // creating an index twice and get an exception from the DB
+         if(relationMetaData.isForeignKeyMappingStyle() && createdTables.contains(relatedEntity.getEntityName()))
+         {
+            createCMRIndex(((JDBCAbstractEntityBridge)relatedEntity).getDataSource(), cmrField);
+         }
+
+         // Create my fk constraint
+         addForeignKeyConstraint(cmrField);
+      }
+   }
+
+   public static Set getCreatedTables(JDBCEntityPersistenceStore manager)
+   {
+      final String key = "CREATED_TABLES";
+      Set createdTables = (Set) manager.getApplicationData(key);
+      if(createdTables == null)
+      {
+         createdTables = new HashSet();
+         manager.putApplicationData(key, createdTables);
+      }
+      return createdTables;
+   }
+
+   public static Set getExistedTables(JDBCEntityPersistenceStore manager)
+   {
+      final String key = "EXISTED_TABLES";
+      Set existedTables = (Set) manager.getApplicationData(key);
+      if(existedTables == null)
+      {
+         existedTables = new HashSet();
+         manager.putApplicationData(key, existedTables);
+      }
+      return existedTables;
+   }
+
    /**
     * Check whether a required index already exists on a table
+    *
     * @param oldIndexes list of existing indexes
-    * @param field field for we test the existence of an index
+    * @param field      field for we test the existence of an index
     * @return
     */
    private boolean hasIndex(SQLUtil.OldIndexes oldIndexes, JDBCFieldBridge field)
    {
       JDBCType jdbcType = field.getJDBCType();
-      String[] columns= jdbcType.getColumnNames();
+      String[] columns = jdbcType.getColumnNames();
       ArrayList idxNames = oldIndexes.getIndexNames();
       ArrayList idxColumns = oldIndexes.getColumnNames();
       ArrayList idxAscDesc = oldIndexes.getColumnAscDesc();
 
       // search for for column in index
-      for ( int i = 0 ;  i < idxColumns.size() ; i++ )
+      for(int i = 0; i < idxColumns.size(); i++)
       {
          // only match ascending columns
-         if ( idxAscDesc.get( i ).equals( "A" ) )
+         if(idxAscDesc.get(i).equals("A"))
          {
-            String name =  columns[ 0 ];
-            String testCol = (String)idxColumns.get( i );
-            if ( testCol.equalsIgnoreCase( name ) )
+            String name = columns[0];
+            String testCol = (String) idxColumns.get(i);
+            if(testCol.equalsIgnoreCase(name))
             {
                // first column matches, now check the others
-               String idxName = (String)idxNames.get( i );
+               String idxName = (String) idxNames.get(i);
                int j = 1;
-               for ( ; j < columns.length ; j++ )
+               for(; j < columns.length; j++)
                {
-                  name = columns[ j ];
-                  testCol = (String)idxColumns.get( i + j );
-                  String testName = (String)idxNames.get( i + j );
-                  if ( ! ( testName.equals( idxName )
-                           && testCol.equalsIgnoreCase( name )
-                           && idxAscDesc.get( i + j ).equals( "A" ) ) )
+                  name = columns[j];
+                  testCol = (String) idxColumns.get(i + j);
+                  String testName = (String) idxNames.get(i + j);
+                  if(!(testName.equals(idxName)
+                     &&
+                     testCol.equalsIgnoreCase(name)
+                     && idxAscDesc.get(i + j).equals("A")))
                   {
                      break;
                   }
                }
                // if they all matched -> found
-               if ( j == columns.length ) return true;
+               if(j == columns.length) return true;
             }
          }
       }
       return false;
    }
 
-   private void alterTable(DataSource dataSource, String action, String tableName, String fieldName, String sqlEnd)
+   private void alterTable(DataSource dataSource, JDBCFunctionMappingMetaData mapping, String tableName, String fieldName, String fieldStructure)
       throws DeploymentException
    {
-      StringBuffer sql=new StringBuffer(SQLUtil.ALTER_TABLE);
-      sql.append(tableName);
-      sql.append(action);
-      sql.append(sqlEnd);
+      StringBuffer sqlBuf = new StringBuffer();
+      mapping.getFunctionSql( new String[]{tableName, fieldName, fieldStructure}, sqlBuf );
+      String sql = sqlBuf.toString();
 
-      log.warn("Altering table " + tableName + " " + action + " field " + fieldName);
+      log.warn( sql );
 
       // suspend the current transaction
       TransactionManager tm = manager.getContainer().getTransactionManager();
@@ -403,14 +449,11 @@ public final class JDBCStartCommand
          Statement statement = null;
          try
          {
-            // execute sql
-            if(log.isDebugEnabled())
-               log.debug("Executing SQL: " + sql);
-
             con = dataSource.getConnection();
             statement = con.createStatement();
             statement.executeUpdate(sql.toString());
-         } finally
+         }
+         finally
          {
             // make sure to close the connection and statement before
             // comitting the transaction or XA will break
@@ -420,7 +463,7 @@ public final class JDBCStartCommand
       }
       catch(Exception e)
       {
-         log.error("Could not alter table " + tableName);
+         log.error("Could not alter table " + tableName + ": " + e.getMessage());
          throw new DeploymentException("Error while alter table " + tableName + " " + sql, e);
       }
       finally
@@ -440,7 +483,8 @@ public final class JDBCStartCommand
       }
 
       // success
-      log.info("Alter table '" + tableName + " " + action + " " + fieldName + "' successfully.");
+      if ( log.isDebugEnabled() )
+         log.debug("Table altered successfully.");
    }
 
    private void createTable(DataSource dataSource, String tableName, String sql)
@@ -449,7 +493,7 @@ public final class JDBCStartCommand
       // does this table already exist
       if(SQLUtil.tableExists(tableName, dataSource))
       {
-         log.info("Table '" + tableName + "' already exists");
+         log.debug("Table '" + tableName + "' already exists");
          return;
       }
 
@@ -464,7 +508,7 @@ public final class JDBCStartCommand
       }
       catch(Exception e)
       {
-         throw new DeploymentException(COULDNT_SUSPEND +"creating table.", e);
+         throw new DeploymentException(COULDNT_SUSPEND + "creating table.", e);
       }
 
       try
@@ -475,7 +519,9 @@ public final class JDBCStartCommand
          {
             // execute sql
             if(log.isDebugEnabled())
+            {
                log.debug("Executing SQL: " + sql);
+            }
 
             con = dataSource.getConnection();
             statement = con.createStatement();
@@ -506,22 +552,22 @@ public final class JDBCStartCommand
          }
          catch(Exception e)
          {
-            throw new DeploymentException(COULDNT_REATTACH +  "create table");
+            throw new DeploymentException(COULDNT_REATTACH + "create table");
          }
       }
 
       // success
-      log.info("Created table '" + tableName + "' successfully.");
-      Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
+      Set createdTables = (Set) manager.getApplicationData(CREATED_TABLES_KEY);
       createdTables.add(tableName);
    }
 
    /**
     * Create an index on a field. Does the create
+    *
     * @param dataSource
-    * @param tableName In which table is the index?
-    * @param indexName Which is the index?
-    * @param sql       The SQL statement to issue
+    * @param tableName  In which table is the index?
+    * @param indexName  Which is the index?
+    * @param sql        The SQL statement to issue
     * @throws DeploymentException
     */
    private void createIndex(DataSource dataSource, String tableName, String indexName, String sql)
@@ -549,7 +595,9 @@ public final class JDBCStartCommand
          {
             // execute sql
             if(log.isDebugEnabled())
+            {
                log.debug("Executing SQL: " + sql);
+            }
             con = dataSource.getConnection();
             statement = con.createStatement();
             statement.executeUpdate(sql);
@@ -582,9 +630,6 @@ public final class JDBCStartCommand
             throw new DeploymentException(COULDNT_REATTACH + "create index");
          }
       }
-
-      // success
-      log.info("Created index '" + indexName + "' on '" + tableName + "' successfully.");
    }
 
 
@@ -592,6 +637,7 @@ public final class JDBCStartCommand
     * Send (user-defined) SQL commands to the server.
     * The commands can be found in the &lt;sql-statement&gt; elements
     * within the &lt;post-table-create&gt; tag in jbossjdbc-cmp.xml
+    *
     * @param dataSource
     */
    private void issuePostCreateSQL(DataSource dataSource, List sql, String table)
@@ -603,7 +649,7 @@ public final class JDBCStartCommand
          return;
       }
 
-      log.info("issuePostCreateSQL::sql: " + sql.toString() + " on table " + table);
+      log.debug("issuePostCreateSQL::sql: " + sql.toString() + " on table " + table);
 
       TransactionManager tm = manager.getContainer().getTransactionManager();
       Transaction oldTransaction;
@@ -631,13 +677,13 @@ public final class JDBCStartCommand
             // execute sql
             for(int i = 0; i < sql.size(); i++)
             {
-               currentCmd = (String)sql.get(i);
+               currentCmd = (String) sql.get(i);
                /*
                 * Replace %%t in the sql command with the current table name
                 */
                currentCmd = replaceTable(currentCmd, table);
                currentCmd = replaceIndexCounter(currentCmd);
-               log.info("Executing SQL: " + currentCmd);
+               log.debug("Executing SQL: " + currentCmd);
                statement.executeUpdate(currentCmd);
             }
          }
@@ -671,7 +717,7 @@ public final class JDBCStartCommand
       }
 
       // success
-      log.info("Issued SQL  " + sql + " successfully.");
+      log.debug("Issued SQL  " + sql + " successfully.");
    }
 
    private String getEntityCreateTableSQL(DataSource dataSource)
@@ -688,24 +734,27 @@ public final class JDBCStartCommand
          JDBCFieldBridge field = fields[i];
          JDBCType type = field.getJDBCType();
          if(comma)
+         {
             sql.append(SQLUtil.COMMA);
+         }
          else
+         {
             comma = true;
+         }
          addField(type, sql);
       }
 
       // add a pk constraint
       if(entityMetaData.hasPrimaryKeyConstraint())
       {
-         JDBCFunctionMappingMetaData pkConstraint =
-            manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
+         JDBCFunctionMappingMetaData pkConstraint = manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
          if(pkConstraint == null)
          {
             throw new IllegalStateException("Primary key constraint is " +
                "not allowed for this type of data source");
          }
 
-         String name = "pk_" + entity.getMetaData().getDefaultTableName();
+         String name = "pk_" + entity.getManager().getMetaData().getDefaultTableName();
          name = SQLUtil.fixConstraintName(name, dataSource);
          String[] args = new String[]{
             name,
@@ -721,6 +770,7 @@ public final class JDBCStartCommand
    /**
     * Create indices for the fields in the table that have a
     * &lt;dbindex&gt; tag in jbosscmp-jdbc.xml
+    *
     * @param dataSource
     * @throws DeploymentException
     */
@@ -732,19 +782,40 @@ public final class JDBCStartCommand
       for(int i = 0; i < cmpFields.length; ++i)
       {
          JDBCFieldBridge field = cmpFields[i];
-         boolean isIndexed = field.isIndexed();
+         JDBCCMPFieldMetaData fieldMD = entity.getMetaData().getCMPFieldByName(field.getFieldName());
 
-         if (isIndexed)
+         if(fieldMD != null && fieldMD.isIndexed())
          {
             createCMPIndex(dataSource, field);
+         }
+      }
+
+      final JDBCAbstractCMRFieldBridge[] cmrFields = entity.getCMRFields();
+      if(cmrFields != null)
+      {
+         for(int i = 0; i < cmrFields.length; ++i)
+         {
+            JDBCAbstractCMRFieldBridge cmrField = cmrFields[i];
+            if(cmrField.getRelatedCMRField().getMetaData().isIndexed())
+            {
+               final JDBCFieldBridge[] fkFields = cmrField.getForeignKeyFields();
+               if(fkFields != null)
+               {
+                  for(int fkInd = 0; fkInd < fkFields.length; ++fkInd)
+                  {
+                     createCMPIndex(dataSource, fkFields[fkInd]);
+                  }
+               }
+            }
          }
       }
    }
 
    /**
     * Create indix for one specific field
+    *
     * @param dataSource
-    * @param field to create index for
+    * @param field      to create index for
     * @throws DeploymentException
     */
    private void createCMPIndex(DataSource dataSource, JDBCFieldBridge field)
@@ -767,13 +838,13 @@ public final class JDBCStartCommand
       idxCount++;
    }
 
-   private void createCMRIndex(DataSource dataSource, JDBCCMRFieldBridge field)
+   private void createCMRIndex(DataSource dataSource, JDBCAbstractCMRFieldBridge field)
       throws DeploymentException
    {
       JDBCRelationMetaData rmd;
       String tableName;
 
-      rmd = field.getRelationMetaData();
+      rmd = field.getMetaData().getRelationMetaData();
 
       if(rmd.isTableMappingStyle())
       {
@@ -781,8 +852,7 @@ public final class JDBCStartCommand
       }
       else
       {
-         JDBCCMRFieldBridge relatedCMRField = (JDBCCMRFieldBridge)field.getRelatedCMRField();
-         tableName = relatedCMRField.getEntity().getTableName();
+         tableName = field.getRelatedCMRField().getEntity().getTableName();
       }
 
       JDBCRelationshipRoleMetaData left, right;
@@ -796,7 +866,7 @@ public final class JDBCStartCommand
 
       while(it.hasNext())
       {
-         fi = (JDBCCMPFieldMetaData)it.next();
+         fi = (JDBCCMPFieldMetaData) it.next();
          if(left.isIndexed())
          {
             createIndex(dataSource, tableName, fi.getFieldName(), createIndexSQL(fi, tableName));
@@ -808,7 +878,7 @@ public final class JDBCStartCommand
       it = kfr.iterator();
       while(it.hasNext())
       {
-         fi = (JDBCCMPFieldMetaData)it.next();
+         fi = (JDBCCMPFieldMetaData) it.next();
          if(right.isIndexed())
          {
             createIndex(dataSource, tableName, fi.getFieldName(), createIndexSQL(fi, tableName));
@@ -850,9 +920,9 @@ public final class JDBCStartCommand
       }
    }
 
-   private String getRelationCreateTableSQL(
-      JDBCCMRFieldBridge cmrField,
-      DataSource dataSource) throws DeploymentException
+   private String getRelationCreateTableSQL(JDBCAbstractCMRFieldBridge cmrField,
+                                            DataSource dataSource)
+      throws DeploymentException
    {
       JDBCFieldBridge[] leftKeys = cmrField.getTableKeyFields();
       JDBCFieldBridge[] rightKeys = cmrField.getRelatedCMRField().getTableKeyFields();
@@ -867,22 +937,21 @@ public final class JDBCStartCommand
          .append(SQLUtil.getCreateTableColumnsClause(fieldsArr));
 
       // add a pk constraint
-      if(cmrField.getRelationMetaData().hasPrimaryKeyConstraint())
+      final JDBCRelationMetaData relationMetaData = cmrField.getMetaData().getRelationMetaData();
+      if(relationMetaData.hasPrimaryKeyConstraint())
       {
          JDBCFunctionMappingMetaData pkConstraint =
             manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
          if(pkConstraint == null)
          {
-            throw new IllegalStateException(
-               "Primary key constraint is not allowed for this type of data store");
+            throw new IllegalStateException("Primary key constraint is not allowed for this type of data store");
          }
 
-         String name = "pk_" + cmrField.getRelationMetaData().getDefaultTableName();
+         String name = "pk_" + relationMetaData.getDefaultTableName();
          name = SQLUtil.fixConstraintName(name, dataSource);
          String[] args = new String[]{
             name,
-            SQLUtil.getColumnNamesClause(
-               fieldsArr, new StringBuffer(100).toString(), new StringBuffer()).toString()
+            SQLUtil.getColumnNamesClause(fieldsArr, new StringBuffer(100).toString(), new StringBuffer()).toString()
          };
          sql.append(SQLUtil.COMMA);
          pkConstraint.getFunctionSql(args, sql);
@@ -891,15 +960,15 @@ public final class JDBCStartCommand
       return sql.toString();
    }
 
-   private void addForeignKeyConstraint(JDBCCMRFieldBridge cmrField)
+   private void addForeignKeyConstraint(JDBCAbstractCMRFieldBridge cmrField)
       throws DeploymentException
    {
-      if(cmrField.getMetaData().hasForeignKeyConstraint())
+      JDBCRelationshipRoleMetaData metaData = cmrField.getMetaData();
+      if(metaData.hasForeignKeyConstraint())
       {
-         if(cmrField.getRelationMetaData().isTableMappingStyle())
+         if(metaData.getRelationMetaData().isTableMappingStyle())
          {
-            addForeignKeyConstraint(
-               cmrField.getRelationMetaData().getDataSource(),
+            addForeignKeyConstraint(metaData.getRelationMetaData().getDataSource(),
                cmrField.getTableName(),
                cmrField.getFieldName(),
                cmrField.getTableKeyFields(),
@@ -909,51 +978,46 @@ public final class JDBCStartCommand
          }
          else if(cmrField.hasForeignKey())
          {
-            addForeignKeyConstraint(
-               cmrField.getEntity().getDataSource(),
+            JDBCAbstractEntityBridge relatedEntity = (JDBCAbstractEntityBridge) cmrField.getRelatedEntity();
+            addForeignKeyConstraint(cmrField.getEntity().getDataSource(),
                cmrField.getEntity().getTableName(),
                cmrField.getFieldName(),
                cmrField.getForeignKeyFields(),
-               cmrField.getRelatedJDBCEntity().getTableName(),
-               cmrField.getRelatedJDBCEntity().getPrimaryKeyFields());
+               relatedEntity.getTableName(),
+               relatedEntity.getPrimaryKeyFields());
          }
       }
       else
       {
-         log.debug("Foreign key constraint not added as requested: relationshipRolename=" +
-            cmrField.getMetaData().getRelationshipRoleName());
+         log.debug("Foreign key constraint not added as requested: relationshipRolename=" + metaData.getRelationshipRoleName());
       }
    }
 
-   private void addForeignKeyConstraint(
-      DataSource dataSource,
-      String tableName,
-      String cmrFieldName,
-      JDBCFieldBridge[] fields,
-      String referencesTableName,
-      JDBCFieldBridge[] referencesFields) throws DeploymentException
+   private void addForeignKeyConstraint(DataSource dataSource,
+                                        String tableName,
+                                        String cmrFieldName,
+                                        JDBCFieldBridge[] fields,
+                                        String referencesTableName,
+                                        JDBCFieldBridge[] referencesFields) throws DeploymentException
    {
       // can only alter tables we created
-      Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
+      Set createdTables = (Set) manager.getApplicationData(CREATED_TABLES_KEY);
       if(!createdTables.contains(tableName))
       {
          return;
       }
 
-      JDBCFunctionMappingMetaData fkConstraint =
-         manager.getMetaData().getTypeMapping().getFkConstraintTemplate();
+      JDBCFunctionMappingMetaData fkConstraint = manager.getMetaData().getTypeMapping().getFkConstraintTemplate();
       if(fkConstraint == null)
       {
-         throw new IllegalStateException("Foreign key constraint is not " +
-            "allowed for this type of datastore");
+         throw new IllegalStateException("Foreign key constraint is not allowed for this type of datastore");
       }
       String a = SQLUtil.getColumnNamesClause(fields, new StringBuffer(50)).toString();
       String b = SQLUtil.getColumnNamesClause(referencesFields, new StringBuffer(50)).toString();
 
       String[] args = new String[]{
          tableName,
-         SQLUtil.fixConstraintName(
-            "fk_" + tableName + "_" + cmrFieldName, dataSource),
+         SQLUtil.fixConstraintName("fk_" + tableName + "_" + cmrFieldName, dataSource),
          a,
          referencesTableName,
          b};
@@ -980,7 +1044,9 @@ public final class JDBCStartCommand
          try
          {
             if(log.isDebugEnabled())
+            {
                log.debug("Executing SQL: " + sql);
+            }
             con = dataSource.getConnection();
             statement = con.createStatement();
             statement.executeUpdate(sql);
@@ -996,8 +1062,7 @@ public final class JDBCStartCommand
       catch(Exception e)
       {
          log.warn("Could not add foreign key constraint: table=" + tableName);
-         throw new DeploymentException("Error while adding foreign key " +
-            "constraint", e);
+         throw new DeploymentException("Error while adding foreign key constraint", e);
       }
       finally
       {
@@ -1014,16 +1079,13 @@ public final class JDBCStartCommand
             throw new DeploymentException(COULDNT_REATTACH + "create table");
          }
       }
-
-      // success
-      log.info("Added foreign key constraint to table '" + tableName + "'");
    }
 
 
    /**
     * Replace %%t in the sql command with the current table name
     *
-    * @param in sql statement with possible %%t to substitute with table name
+    * @param in    sql statement with possible %%t to substitute with table name
     * @param table the table name
     * @return String with sql statement
     */
@@ -1034,7 +1096,9 @@ public final class JDBCStartCommand
       pos = in.indexOf("%%t");
       // No %%t -> return input
       if(pos == -1)
+      {
          return in;
+      }
 
       String first = in.substring(0, pos);
       String last = in.substring(pos + 3);
@@ -1044,6 +1108,7 @@ public final class JDBCStartCommand
 
    /**
     * Replace %%n in the sql command with a running (index) number
+    *
     * @param in
     * @return
     */
@@ -1054,7 +1119,9 @@ public final class JDBCStartCommand
       pos = in.indexOf("%%n");
       // No %%n -> return input
       if(pos == -1)
+      {
          return in;
+      }
 
       String first = in.substring(0, pos);
       String last = in.substring(pos + 3);

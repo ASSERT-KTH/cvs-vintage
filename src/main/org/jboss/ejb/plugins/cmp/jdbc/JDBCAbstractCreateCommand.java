@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.CreateException;
-import javax.ejb.DuplicateKeyException;
 import javax.management.MalformedObjectNameException;
 import javax.sql.DataSource;
 
@@ -62,7 +61,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
       debug = log.isDebugEnabled();
       trace = log.isTraceEnabled();
 
-      entity = manager.getEntityBridge();
+      entity = (JDBCEntityBridge) manager.getEntityBridge();
       securityManager = manager.getContainer().getSecurityManager();
 
       insertAfterEjbPostCreate = manager.getContainer()
@@ -158,7 +157,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
       for(int i = 0; i < pkFields.length; ++i)
       {
          if(pkField != null)
-            throw new DeploymentException("Generation only supported with single PK field.");
+            throw new DeploymentException("Generation only supported with single PK field");
          pkField = (JDBCCMPFieldBridge)pkFields[i];
       }
       return pkField;
@@ -185,7 +184,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
       // Audit principal fields
       if(securityManager != null)
       {
-         String principalName = ctx.getCallerPrincipal().getName();
+         String principalName = ctx.getEJBContext().getCallerPrincipal().getName();
          if(createdPrincipal != null && createdPrincipal.getInstanceValue(ctx) == null)
          {
             createdPrincipal.setInstanceValue(ctx, principalName);
@@ -295,7 +294,10 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
       {
          if(exceptionProcessor != null && exceptionProcessor.isDuplicateKey(e))
          {
-            throw new DuplicateKeyException("Entity with primary key already exists");
+            log.error("Failed to create instance.", e);
+            throw new CreateException(
+               "Integrity constraint violation. Possibly unique key violation or invalid foreign key value."
+            );
          }
          else
          {

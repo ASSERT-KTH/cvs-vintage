@@ -16,9 +16,9 @@ import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 
 /**
  * This class provides a way to find out what entities are contained in
@@ -30,69 +30,101 @@ import java.util.Set;
  * Entities are stored in an ArrayList to ensure specific ordering.
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.11 $
- *
- * <p><b>Revisions:</b>
- *
- * <p><b>20021121 Steve Coy:</b>
- * <ul>
- * <li>Backport David J's fixes from HEAD.
- * <li>Fix a performance bottleneck by adding a parallel map of sets of
- *     entities so that we can check for their existence in the trx in
- *     O(log N) time instead of O(N) time.
+ * @author <a href="alex@jboss.org">Alexey Loubyansky</a>
+ * @version $Revision: 1.12 $
  */
 public class GlobalTxEntityMap
 {
+   private static final Logger log = Logger.getLogger(GlobalTxEntityMap.class);
 
-   private final Logger log = Logger.getLogger(getClass());
+   private final TransactionLocal txSynch = new TransactionLocal();
 
-   protected final TransactionLocal entitiesFifoMap = new TransactionLocal();       // map of fifo ordered entity lists
-   protected final TransactionLocal entitiesSetMap = new TransactionLocal();        // map of entity sets for quick lookups
    /**
-    * associate entity with transaction
+    * An instance can be in one of the three states:
+    * <ul>
+    * <li>not associated with the tx and, hence, does not need to be synchronized</li>
+    * <li>associated with the tx and needs to be synchronized</li>
+    * <li>associated with the tx but does not need to be synchronized</li>
+    * </ul>
+    * Implementations of TxAssociation implement these states.
     */
-   public void associate(
-         Transaction tx,
-         EntityEnterpriseContext entity)
-      throws RollbackException, SystemException
+   public static interface TxAssociation
    {
-      List entityFifoList = (List)entitiesFifoMap.get(tx);
-      Set entitySet;
-         if (entityFifoList == null)
-         {
-            entityFifoList = new ArrayList();
-            entitySet = new HashSet();
-            entitiesFifoMap.set(tx, entityFifoList);
-            entitiesSetMap.set(tx, entitySet);
-            tx.registerSynchronization(new GlobalTxEntityMapSynchronize(tx));
-         }
-         else
-         {
-            entitySet = (Set)entitiesSetMap.get(tx);
-         }
-      //Release lock on txToEntitiesFifoMap to avoid waiting for possibly long scans of
-      //entityFifoList.
+      /**
+       * Schedules the instance for synchronization. The instance might or might not be associated with the tx.
+       *
+       * @param tx       the transaction the instance should be associated with if not yet associated
+       * @param instance the instance to be scheduled for synchronization
+       * @throws SystemException
+       * @throws RollbackException
+       */
+      void scheduleSync(Transaction tx, EntityEnterpriseContext instance)
+         throws SystemException, RollbackException;
 
-      //if all tx only modify one or two entities, the two synchs here will be
-      //slower than doing all work in one synch block on txToEntityMap.
-      //However, I (david jencks) think the risk of waiting for scans of long
-      //entityLists is greater than the risk of waiting for 2 synchs.
-
-      // On the other hand, I (steve coy) have found that these long scans are a
-      // significant performance bottleneck.
-      // The overhead of maintaining the parallel HashSet MORE than makes up for
-      // itself.
-
-      //There should be only one thread associated with this tx at a time.
-      //Therefore we should not need to synchronize on entityFifoList to ensure exclusive
-      //access.  entityFifoList is correct since it was obtained in a synch block.
-
-      if (!entitySet.contains(entity))
-      {
-            entityFifoList.add(entity);
-            entitySet.add(entity);
-      }
+      /**
+       * Synchronizes the instance if it is needed.
+       * @param thread  current thread
+       * @param tx  current transaction
+       * @param instance  the instance to be synchronized
+       * @throws Exception  thrown if synchronization failed
+       */
+      void synchronize(Thread thread, Transaction tx, EntityEnterpriseContext instance)
+         throws Exception;
    }
+
+   public static final TxAssociation NONE = new TxAssociation()
+   {
+      public void scheduleSync(Transaction tx, EntityEnterpriseContext instance)
+         throws SystemException, RollbackException
+      {
+         EntityContainer.getGlobalTxEntityMap().associate(tx, instance);
+         instance.setTxAssociation(SYNC_SCHEDULED);
+      }
+
+      public void synchronize(Thread thread, Transaction tx, EntityEnterpriseContext instance)
+         throws Exception
+      {
+         throw new UnsupportedOperationException();
+      }
+   };
+
+   public static final TxAssociation SYNC_SCHEDULED = new TxAssociation()
+   {
+      public void scheduleSync(Transaction tx, EntityEnterpriseContext instance)
+      {
+      }
+
+      public void synchronize(Thread thread, Transaction tx, EntityEnterpriseContext instance)
+         throws Exception
+      {
+         // only synchronize if the id is not null.  A null id means
+         // that the entity has been removed.
+         if(instance.getId() != null)
+         {
+            EntityContainer container = (EntityContainer) instance.getContainer();
+
+            // set the context class loader before calling the store method
+            SetTCLAction.setContextClassLoader(container.getClassLoader(), thread);
+
+            // store it
+            container.storeEntity(instance);
+
+            instance.setTxAssociation(SYNCHRONIZED);
+         }
+      }
+   };
+
+   public static final TxAssociation SYNCHRONIZED = new TxAssociation()
+   {
+      public void scheduleSync(Transaction tx, EntityEnterpriseContext instance)
+      {
+         instance.setTxAssociation(SYNC_SCHEDULED);
+      }
+
+      public void synchronize(Thread thread, Transaction tx, EntityEnterpriseContext instance)
+      {
+      }
+   };
 
    /**
     * sync all EntityEnterpriseContext that are involved (and changed)
@@ -100,127 +132,180 @@ public class GlobalTxEntityMap
     */
    public void synchronizeEntities(Transaction tx)
    {
-      ArrayList entities = (ArrayList)entitiesFifoMap.get(tx);
+      GlobalTxSynchronization globalSync = (GlobalTxSynchronization) txSynch.get(tx);
+      if(globalSync != null)
+      {
+         globalSync.synchronize();
+      }
+   }
+
+   /**
+    * associate instance with transaction
+    */
+   private void associate(Transaction tx, EntityEnterpriseContext entity)
+      throws RollbackException, SystemException
+   {
+      GlobalTxSynchronization globalSync = (GlobalTxSynchronization) txSynch.get(tx);
+      if(globalSync == null)
+      {
+         globalSync = new GlobalTxSynchronization(tx);
+         txSynch.set(tx, globalSync);
+         tx.registerSynchronization(globalSync);
+      }
 
       //There should be only one thread associated with this tx at a time.
       //Therefore we should not need to synchronize on entityFifoList to ensure exclusive
       //access.  entityFifoList is correct since it was obtained in a synch block.
 
-      // if there are there no entities associated with this tx we are done
-      if (entities == null)
-      {
-         return;
-      }
-
-      // reset tx associations
-      // logically it should be at the end of the method when the synchronization is complete.
-      // but in case of BMP, a finder could be called in ejbStore and if tx associations are not cleared before
-      // ejbStore, we will get StackOverflowError.
-      entitiesFifoMap.set(tx, null);
-      entitiesSetMap.set(tx, null);
-
-      // This is an independent point of entry. We need to make sure the
-      // thread is associated with the right context class loader
-      final Thread currentThread = Thread.currentThread();
-      ClassLoader oldCl = currentThread.getContextClassLoader();
-
-      EntityEnterpriseContext ctx = null;
-      try
-      {
-         for (int i = 0; i < entities.size(); i++)
-         {
-            // any one can mark the tx rollback at any time so check
-            // before continuing to the next store
-            if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
-            {
-               // nothing else to do here
-               return;
-            }
-
-            // read-only entities will never get into this list.
-            ctx = (EntityEnterpriseContext)entities.get(i);
-
-            // only synchronize if the id is not null.  A null id means
-            // that the entity has been removed.
-            if(ctx.getId() != null)
-            {
-               EntityContainer container = (EntityContainer)ctx.getContainer();
-
-               // set the context class loader before calling the store method
-               currentThread.setContextClassLoader(
-                  container.getClassLoader());
-
-               // store it
-               container.storeEntity(ctx);
-            }
-         }
-      }
-      catch (Exception causeByException)
-      {
-         // EJB 1.1 section 12.3.2 and EJB 2 section 18.3.3
-         // exception during store must log exception, mark tx for
-         // rollback and throw a TransactionRolledback[Local]Exception
-         // if using caller's transaction.  All of this is handled by
-         // the AbstractTxInterceptor and LogInterceptor.
-         //
-         // All we need to do here is mark the transacction for rollback
-         // and rethrow the causeByException.  The caller will handle logging
-         // and wraping with TransactionRolledback[Local]Exception.
-         try
-         {
-            tx.setRollbackOnly();
-         }
-         catch(Exception e)
-         {
-            log.warn("Exception while trying to rollback tx: " + tx, e);
-         }
-
-         // Rethrow cause by exception
-         if(causeByException instanceof EJBException)
-         {
-            throw (EJBException)causeByException;
-         }
-         throw new EJBException("Exception in store of entity:" +
-                                ((ctx == null)? "<null>": ctx.getId().toString()), causeByException);
-      }
-      finally
-      {
-         currentThread.setContextClassLoader(oldCl);
-      }
+      globalSync.associate(entity);
    }
 
-
-
+   // Inner
 
    /**
-    * Store changed entities to resource manager in this Synchronization
+    * A list of instances associated with the transaction.
     */
-   private class GlobalTxEntityMapSynchronize implements Synchronization
+   private class GlobalTxSynchronization implements Synchronization
    {
-      Transaction tx;
+      private Transaction tx;
+      private List instances = new ArrayList();
+      private boolean synchronizing;
 
-      public GlobalTxEntityMapSynchronize(Transaction tx)
+      public GlobalTxSynchronization(Transaction tx)
       {
          this.tx = tx;
+      }
+
+      public void associate(EntityEnterpriseContext ctx)
+      {
+         instances.add(ctx);
+      }
+
+      public void synchronize()
+      {
+         if(synchronizing || instances.isEmpty())
+         {
+            return;
+         }
+
+         synchronizing = true;
+
+         // This is an independent point of entry. We need to make sure the
+         // thread is associated with the right context class loader
+         Thread currentThread = Thread.currentThread();
+         ClassLoader oldCl = GetTCLAction.getContextClassLoader();
+
+         EntityEnterpriseContext instance = null;
+         try
+         {
+            for(int i = 0; i < instances.size(); i++)
+            {
+               // any one can mark the tx rollback at any time so check
+               // before continuing to the next store
+               if(tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
+               {
+                  // nothing else to do here
+                  return;
+               }
+
+               // read-only instances will never get into this list.
+               instance = (EntityEnterpriseContext) instances.get(i);
+               instance.getTxAssociation().synchronize(currentThread, tx, instance);
+            }
+         }
+         catch(Exception causeByException)
+         {
+            // EJB 1.1 section 12.3.2 and EJB 2 section 18.3.3
+            // exception during store must log exception, mark tx for
+            // rollback and throw a TransactionRolledback[Local]Exception
+            // if using caller's transaction.  All of this is handled by
+            // the AbstractTxInterceptor and LogInterceptor.
+            //
+            // All we need to do here is mark the transacction for rollback
+            // and rethrow the causeByException.  The caller will handle logging
+            // and wraping with TransactionRolledback[Local]Exception.
+            try
+            {
+               tx.setRollbackOnly();
+            }
+            catch(Exception e)
+            {
+               log.warn("Exception while trying to rollback tx: " + tx, e);
+            }
+
+            // Rethrow cause by exception
+            if(causeByException instanceof EJBException)
+            {
+               throw (EJBException) causeByException;
+            }
+            throw new EJBException("Exception in store of entity:" +
+               ((instance == null) ? "<null>" : instance.getId().toString()), causeByException);
+         }
+         finally
+         {
+            SetTCLAction.setContextClassLoader(oldCl);
+            synchronizing = false;
+         }
       }
 
       // Synchronization implementation -----------------------------
 
       public void beforeCompletion()
       {
-         if (log.isTraceEnabled())
+         if(log.isTraceEnabled())
          {
             log.trace("beforeCompletion called for tx " + tx);
          }
 
          // let the runtime exceptions fall out, so the committer can determine
          // the root cause of a rollback
-         synchronizeEntities(tx);
+         synchronize();
       }
 
       public void afterCompletion(int status)
       {
          //no-op
+      }
+   }
+
+   private static class GetTCLAction implements PrivilegedAction
+   {
+      static PrivilegedAction ACTION = new GetTCLAction();
+      public Object run()
+      {
+         ClassLoader loader = Thread.currentThread().getContextClassLoader();
+         return loader;
+      }
+      static ClassLoader getContextClassLoader()
+      {
+         ClassLoader loader = (ClassLoader) AccessController.doPrivileged(ACTION);
+         return loader;
+      }
+   }
+   private static class SetTCLAction implements PrivilegedAction
+   {
+      ClassLoader loader;
+      Thread t;
+      SetTCLAction(ClassLoader loader, Thread t)
+      {
+         this.loader = loader;
+         this.t = t;
+      }
+      public Object run()
+      {
+         t.setContextClassLoader(loader);
+         t = null;
+         loader = null;
+         return null;
+      }
+      static void setContextClassLoader(ClassLoader loader)
+      {
+         setContextClassLoader(loader, Thread.currentThread());
+      }
+      static void setContextClassLoader(ClassLoader loader, Thread t)
+      {
+         PrivilegedAction action = new SetTCLAction(loader, t);
+         AccessController.doPrivileged(action);
       }
    }
 }

@@ -20,7 +20,7 @@ import org.jboss.deployment.DeploymentException;
 public class JDBCCMP2xUpdatedTimeFieldBridge extends JDBCCMP2xAutoUpdatedFieldBridge
 {
    public JDBCCMP2xUpdatedTimeFieldBridge(JDBCStoreManager manager,
-                                          JDBCCMPFieldMetaData metadata)
+                                               JDBCCMPFieldMetaData metadata)
       throws DeploymentException
    {
       super(manager, metadata);

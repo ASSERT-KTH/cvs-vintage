@@ -6,8 +6,6 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
-
 import java.lang.reflect.Method;
 
 /**
@@ -15,7 +13,7 @@ import java.lang.reflect.Method;
  * A raw sql query allows you to do anything sql allows you to do.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData
 {
@@ -23,15 +21,19 @@ public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData
 
    private final Class compiler;
 
+   private final boolean lazyResultSetLoading;
+
    /**
     * Constructs a JDBCRawSqlQueryMetaData which is invoked by the specified
     * method.
+    *
     * @param method the method which invokes this query
     */
-   public JDBCRawSqlQueryMetaData(Method method, Class compiler)
+   public JDBCRawSqlQueryMetaData(Method method, Class qlCompiler, boolean lazyResultSetLoading)
    {
       this.method = method;
-      this.compiler = compiler;
+      this.compiler = qlCompiler;
+      this.lazyResultSetLoading = lazyResultSetLoading;
    }
 
    public Method getMethod()
@@ -44,8 +46,14 @@ public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData
       return false;
    }
 
+   public Class getQLCompilerClass()
+   {
+      return compiler;
+   }
+
    /**
     * Gets the read ahead metadata for the query.
+    *
     * @return the read ahead metadata for the query.
     */
    public JDBCReadAheadMetaData getReadAhead()
@@ -53,15 +61,16 @@ public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData
       return JDBCReadAheadMetaData.DEFAULT;
    }
 
-   public Class getQLCompilerClass()
+   public boolean isLazyResultSetLoading()
    {
-      return compiler;
+      return lazyResultSetLoading;
    }
-   
+
    /**
     * Compares this JDBCRawSqlQueryMetaData against the specified object. Returns
     * true if the objects are the same. Two JDBCRawSqlQueryMetaData are the same
     * if they are both invoked by the same method.
+    *
     * @param o the reference object with which to compare
     * @return true if this object is the same as the object argument; false otherwise
     */
@@ -77,6 +86,7 @@ public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData
    /**
     * Returns a hashcode for this JDBCRawSqlQueryMetaData. The hashcode is computed
     * by the method which invokes this query.
+    *
     * @return a hash code value for this object
     */
    public int hashCode()
@@ -88,7 +98,7 @@ public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData
     * Returns a string describing this JDBCRawSqlQueryMetaData. The exact details
     * of the representation are unspecified and subject to change, but the following
     * may be regarded as typical:
-    *
+    * <p/>
     * "[JDBCRawSqlQueryMetaData: method=public org.foo.User findByName(java.lang.String)]"
     *
     * @return a string representation of the object

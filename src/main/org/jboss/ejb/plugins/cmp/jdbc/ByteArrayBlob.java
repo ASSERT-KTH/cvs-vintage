@@ -17,16 +17,16 @@ import java.sql.Blob;
  * programming language of an SQL <code>BLOB</code> value to an array of bytes.
  * A ByteArrayBlob contains an internal buffer that contains bytes that may be
  * read from the stream. The <code>Blob</code> interface provides methods for
- * getting the length of an SQL <code>BLOB</code> (Binary Large Object) value,
- * for materializing a <code>BLOB</code> value on the client, and for
- * determining the position of a pattern of bytes within a <code>BLOB</code>
- * value. The ByteArrayBlob has static factory methods for construting an
- * <code>BLOB</code> using either an existing serializable object, or an array
- * of bytes. This is a nice way to store serialized objects in a relational
+ * getting the length of an SQL <code>BLOB</code> (Binary Large Object) value, 
+ * for materializing a <code>BLOB</code> value on the client, and for 
+ * determining the position of a pattern of bytes within a <code>BLOB</code> 
+ * value. The ByteArrayBlob has static factory methods for construting an 
+ * <code>BLOB</code> using either an existing serializable object, or an array 
+ * of bytes. This is a nice way to store serialized objects in a relational 
  * field of type SQL <code>BLOB</code>.
- *
+ * 
  * @author <a href="mailto:amccullo@sourceforge.new">Andrew McCulloch</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class ByteArrayBlob implements Blob
 {
@@ -37,7 +37,7 @@ public final class ByteArrayBlob implements Blob
 
    public ByteArrayBlob(byte[] bytes)
    {
-      if(bytes == null)
+      if (bytes == null)
       {
          bytes = new byte[0];
       }
@@ -53,19 +53,19 @@ public final class ByteArrayBlob implements Blob
    public byte[] getBytes(long pos, int length) throws SQLException
    {
       // Defensive code, parameter checks.
-      if(length < 0 || length > mBytes.length || pos > mBytes.length)
+      if (length < 0 || length > mBytes.length || pos > mBytes.length)
       {
          return new byte[0];
       }
 
-      if(pos <= 0)
+      if (pos <= 0)
       {
          pos = 1; // One since the copy starts at pos.
       }
 
       byte[] buffer = new byte[length];
 
-      System.arraycopy(mBytes, (int) pos - 1, buffer, 0, length);
+      System.arraycopy(mBytes, (int)pos - 1, buffer, 0, length);
       return buffer;
    }
 
@@ -74,42 +74,41 @@ public final class ByteArrayBlob implements Blob
       return mBytes.length;
    }
 
-   public long position(Blob pattern, long start) throws SQLException
+   public long position(Blob pattern , long start) throws SQLException
    {
-      return position(pattern.getBytes(0, (int) pattern.length()), start);
+      return position(pattern.getBytes(0, (int)pattern.length()), start);
    }
 
    public long position(byte pattern[], long start) throws SQLException
    {
       // Small optimization, no need to look beyond this.
-      int max = mBytes.length - pattern.length;
+      int max = mBytes.length - pattern.length; 
 
-      if(start < 0)
+      if (start < 0)
       {
          start = 0; // Cannot start negative, so put it at the beginning.
-      }
-      else if(start >= mBytes.length)
+      } else if (start >= mBytes.length)
       {
          return -1; // Out of bounds, start was past the end of the buffer.
       }
 
-      if(pattern.length == 0)
+      if (pattern.length == 0)
       {
          return -1; // Indicate that the pattern was not found.
       }
 
-      byte first = pattern[0];
-      int i = (int) start;
+      byte first  = pattern[0];
+      int i = (int)start;
 
-      while(true)
+      while (true)
       {
          // Look for the first character.
-         while(i <= max && mBytes[i] != first)
+         while (i <= max && mBytes[i] != first)
          {
             i++;
          }
 
-         if(i > max)
+         if (i > max)
          {
             return -1; // Went to far, reject the pattern.
          }
@@ -122,16 +121,16 @@ public final class ByteArrayBlob implements Blob
 
          // While the bytes remain equal and the end of v1 is not reached
          // continue the either rejecting this match, or accepting it.
-         while(cont && j < end)
+         while (cont && j < end)
          {
-            if(mBytes[j++] != pattern[k++])
+            if (mBytes[j++] != pattern[k++])
             {
                i++;
                cont = false;
             }
          } // If cont == false then the pattern was found.
 
-         if(cont)
+         if (cont)
          {
             return i;
          }
@@ -143,19 +142,16 @@ public final class ByteArrayBlob implements Blob
    {
       throw new UnsupportedOperationException("ByteArrayBlob is immutable");
    }
-
    public int setBytes(long pos, byte[] bytes)
       throws SQLException
    {
       throw new UnsupportedOperationException("ByteArrayBlob is immutable");
    }
-
    public int setBytes(long pos, byte[] bytes, int offset, int length)
       throws SQLException
    {
       throw new UnsupportedOperationException("ByteArrayBlob is immutable");
    }
-
    public void truncate(long length)
       throws SQLException
    {

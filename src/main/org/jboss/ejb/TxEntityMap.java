@@ -13,9 +13,13 @@ import javax.transaction.SystemException;
 
 import org.jboss.tm.TransactionLocal;
 
-import org.jboss.tm.TransactionLocal;
 
 /**
+ * @deprecated this class was useful only for Instance Per Transaction containers and was used to check whether
+ * the instance is associated with the tx. There is org.jboss.ejb.plugins.PerTxEntityInstanceCache which is
+ * a per tx implementation of org.jboss.ejb.EntityCache which should be used with IPT containers.
+ * (alex@jboss.org)
+ *
  * This class provides a way to find out what entities of a certain type that are contained in
  * within a transaction.  It is attached to a specific instance of a container.
  *<no longer - global only holds possibly dirty> This class interfaces with the static GlobalTxEntityMap.  EntitySynchronizationInterceptor
@@ -23,7 +27,7 @@ import org.jboss.tm.TransactionLocal;
  * Used in EntitySynchronizationInterceptor.
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  *
  * Revisions:
  *

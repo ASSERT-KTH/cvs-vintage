@@ -21,7 +21,7 @@ import java.util.ArrayList;
  *       <left-join cmr-field="product" eager-load-group="product"/>
  *    </left-join>
  *
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
  */
 public final class JDBCLeftJoinMetaData
@@ -49,6 +49,16 @@ public final class JDBCLeftJoinMetaData
          leftJoinList = Collections.EMPTY_LIST;
       }
       return leftJoinList;
+   }
+
+   /**
+    * Used only from the testsuite.
+    */ 
+   public JDBCLeftJoinMetaData(String cmrField, String eagerLoadGroup, List leftJoinList)
+   {
+      this.cmrField = cmrField;
+      this.eagerLoadGroup = eagerLoadGroup;
+      this.leftJoinList = leftJoinList;
    }
 
    public JDBCLeftJoinMetaData(Element element) throws DeploymentException

@@ -38,6 +38,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.GenericEntityObjectFactory;
 import org.jboss.metadata.EntityMetaData;
 
 import org.jboss.system.server.ServerConfigLocator;
@@ -64,7 +65,7 @@ import org.jboss.util.file.FilenameSuffixFilter;
  * jason: disabled because XDoclet can not handle \u0000 right now
  * _@_jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
- * @version <tt>$Revision: 1.21 $</tt>
+ * @version <tt>$Revision: 1.22 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -97,7 +98,6 @@ public class CMPFilePersistenceManager
     * entity data is stored.
     *
     * @see #DEFAULT_STORE_DIRECTORY_NAME
-    * @see setStoreDirectoryName
     */
    private String storeDirName = DEFAULT_STORE_DIRECTORY_NAME;
    
@@ -362,7 +362,8 @@ public class CMPFilePersistenceManager
 
    public Object findEntity(final Method finderMethod,
                             final Object[] args,
-                            final EntityEnterpriseContext ctx)
+                            final EntityEnterpriseContext ctx,
+                            GenericEntityObjectFactory factory)
       throws FinderException
    {
       if (finderMethod.getName().equals("findByPrimaryKey"))
@@ -370,7 +371,7 @@ public class CMPFilePersistenceManager
          if (!getFile(args[0]).exists())
             throw new FinderException(args[0]+" does not exist");
             
-         return args[0];
+         return factory.getEntityEJBObject(args[0]);
       }
 
       return null;
@@ -378,14 +379,16 @@ public class CMPFilePersistenceManager
      
    public Collection findEntities(final Method finderMethod,
                                   final Object[] args,
-                                  final EntityEnterpriseContext ctx)
+                                  final EntityEnterpriseContext ctx,
+                                  GenericEntityObjectFactory factory)
    {
       if (finderMethod.getName().equals("findAll"))
       {
          String[] files = storeDir.list(new FilenameSuffixFilter(".ser"));
          ArrayList result = new ArrayList(files.length);
          for (int i = 0; i < files.length; i++) {
-            result.add(files[i].substring(0,files[i].length()-4));
+            final String key = files[i].substring(0,files[i].length()-4);
+            result.add(factory.getEntityEJBObject(key));
          }
          
          return result;

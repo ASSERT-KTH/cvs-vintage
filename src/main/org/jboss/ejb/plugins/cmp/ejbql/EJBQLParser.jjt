@@ -46,7 +46,7 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */                            
 public class EJBQLParser {
    private Catalog catalog;
@@ -112,7 +112,7 @@ public class EJBQLParser {
       }
       return i;
    }
-   
+
    private final void clear(char[] c, int beginIndex, int endIndex) {
       for(int i=beginIndex; i < endIndex; i++) {
          if(c[i]!='\r' && c[i]!='\n' && c[i]!='\t') {

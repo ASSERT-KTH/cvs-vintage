@@ -15,7 +15,7 @@ import java.io.ObjectStreamException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class CMRMessage implements Serializable
 {
@@ -27,6 +27,7 @@ public final class CMRMessage implements Serializable
    public static final CMRMessage REMOVE_RELATION = new CMRMessage("REMOVE_RELATION");
    public static final CMRMessage SCHEDULE_FOR_CASCADE_DELETE = new CMRMessage("CASCADE_DELETE");
    public static final CMRMessage SCHEDULE_FOR_BATCH_CASCADE_DELETE = new CMRMessage("BATCH_CASCADE_DELETE");
+
 
    private final transient String name;
    private final int ordinal;

@@ -7,6 +7,7 @@
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
@@ -19,7 +20,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public interface QLCompiler
 {
@@ -27,14 +28,14 @@ public interface QLCompiler
       String ejbql,
       Class returnType,
       Class[] parameterTypes,
-      JDBCReadAheadMetaData readAhead
+      JDBCQueryMetaData metadata
       ) throws Exception;
 
    void compileJBossQL(
       String ejbql,
       Class returnType,
       Class[] parameterTypes,
-      JDBCReadAheadMetaData readAhead
+      JDBCQueryMetaData metadata
       )
       throws Exception;
 

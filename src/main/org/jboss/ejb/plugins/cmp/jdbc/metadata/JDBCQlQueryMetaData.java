@@ -14,7 +14,7 @@ import org.jboss.metadata.QueryMetaData;
  * Immutable class which contains information about an EJB QL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
 {
@@ -40,49 +40,59 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
 
    private final Class compiler;
 
+   private final boolean lazyResultSetLoading;
+
    /**
     * Constructs a JDBCQlQueryMetaData which is defined by the queryMetaData
     * and is invoked by the specified method.
+    *
     * @param queryMetaData the metadata about this query which was loaded
-    *    from the ejb-jar.xml file
-    * @param method the method which invokes this query
+    *                      from the ejb-jar.xml file
+    * @param method        the method which invokes this query
     */
-   public JDBCQlQueryMetaData(QueryMetaData queryMetaData, Method method, Class qlCompiler)
+   public JDBCQlQueryMetaData(QueryMetaData queryMetaData, Method method, Class qlCompiler, boolean lazyResultSetLoading)
    {
       this.method = method;
       this.readAhead = JDBCReadAheadMetaData.DEFAULT;
       ejbQl = queryMetaData.getEjbQl();
-      resultTypeMappingLocal =
-         (queryMetaData.getResultTypeMapping() == QueryMetaData.LOCAL);
+      resultTypeMappingLocal = (queryMetaData.getResultTypeMapping() == QueryMetaData.LOCAL);
+
       compiler = qlCompiler;
+      this.lazyResultSetLoading = lazyResultSetLoading;
    }
 
    /**
     * Constructs a JDBCQlQueryMetaData with data from the jdbcQueryMetaData
     * and additional data from the xml element
-    * @param defaults the metadata about this query
     */
-   public JDBCQlQueryMetaData(JDBCQlQueryMetaData defaults, JDBCReadAheadMetaData readAhead, Class compiler)
+   public JDBCQlQueryMetaData(JDBCQlQueryMetaData defaults,
+                              JDBCReadAheadMetaData readAhead,
+                              Class compiler,
+                              boolean lazyResultSetLoading)
    {
       this.method = defaults.getMethod();
       this.readAhead = readAhead;
       this.ejbQl = defaults.getEjbQl();
       this.resultTypeMappingLocal = defaults.resultTypeMappingLocal;
       this.compiler = compiler;
+      this.lazyResultSetLoading = lazyResultSetLoading;
    }
+
 
    /**
     * Constructs a JDBCQlQueryMetaData with data from the jdbcQueryMetaData
     * and additional data from the xml element
-    * @param jdbcQueryMetaData the metadata about this query
     */
-   public JDBCQlQueryMetaData(JDBCQlQueryMetaData jdbcQueryMetaData, Method method, JDBCReadAheadMetaData readAhead)
+   public JDBCQlQueryMetaData(JDBCQlQueryMetaData jdbcQueryMetaData,
+                              Method method,
+                              JDBCReadAheadMetaData readAhead)
    {
       this.method = method;
       this.readAhead = readAhead;
       ejbQl = jdbcQueryMetaData.getEjbQl();
       resultTypeMappingLocal = jdbcQueryMetaData.resultTypeMappingLocal;
       compiler = jdbcQueryMetaData.compiler;
+      lazyResultSetLoading = jdbcQueryMetaData.lazyResultSetLoading;
    }
 
    // javadoc in parent class
@@ -91,8 +101,14 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
       return method;
    }
 
+   public Class getQLCompilerClass()
+   {
+      return compiler;
+   }
+
    /**
     * Gets the EJB QL query which will be invoked.
+    *
     * @return the ejb ql String for this query
     */
    public String getEjbQl()
@@ -108,6 +124,7 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
 
    /**
     * Gets the read ahead metadata for the query.
+    *
     * @return the read ahead metadata for the query.
     */
    public JDBCReadAheadMetaData getReadAhead()
@@ -115,18 +132,19 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
       return readAhead;
    }
 
-   public Class getQLCompilerClass()
+   public boolean isLazyResultSetLoading()
    {
-      return compiler;
+      return lazyResultSetLoading;
    }
-   
+
    /**
     * Compares this JDBCQlQueryMetaData against the specified object. Returns
     * true if the objects are the same. Two JDBCQlQueryMetaData are the same
     * if they are both invoked by the same method.
+    *
     * @param o the reference object with which to compare
     * @return true if this object is the same as the object argument;
-    *    false otherwise
+    *         false otherwise
     */
    public boolean equals(Object o)
    {
@@ -140,6 +158,7 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
    /**
     * Returns a hashcode for this JDBCQlQueryMetaData. The hashcode is computed
     * by the method which invokes this query.
+    *
     * @return a hash code value for this object
     */
    public int hashCode()
@@ -151,9 +170,9 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
     * Returns a string describing this JDBCQlQueryMetaData. The exact details
     * of the representation are unspecified and subject to change, but the
     * following may be regarded as typical:
-    *
+    * <p/>
     * "[JDBCQlQueryMetaData: method=public org.foo.User
-    *       findByName(java.lang.String)]"
+    * findByName(java.lang.String)]"
     *
     * @return a string representation of the object
     */

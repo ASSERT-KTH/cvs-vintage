@@ -18,7 +18,7 @@ import java.util.LinkedList;
  * StringBuffer are append, length, and toString.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */                            
 public final class BlockStringBuffer {
    private LinkedList list = new LinkedList();

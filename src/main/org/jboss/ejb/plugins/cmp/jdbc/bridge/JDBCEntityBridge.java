@@ -64,7 +64,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  */
 public class JDBCEntityBridge implements JDBCAbstractEntityBridge
 {
@@ -82,12 +82,6 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
    private JDBCStoreManager manager;
    private DataSource dataSource;
    private String tableName;
-   private List tablePostCreateCmd;
-
-   /** is the table assumed to exist */
-   private boolean tableExists;
-   /** did the table previously exist? */
-   private boolean tableExisted;
 
    /** primary key fields (not added to cmpFields) */
    private final String primaryKeyFieldName;
@@ -145,8 +139,6 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
       }
 
       tableName = SQLUtil.fixTableName(metadata.getDefaultTableName(), dataSource);
-
-      tablePostCreateCmd = metadata.getDefaultTablePostCreateCmd();
 
       // CMP fields
       loadCMPFields(metadata);
@@ -365,50 +357,9 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
       return dataSource;
    }
 
-   /**
-    * Does the table exists yet? This does not mean that table has been created
-    * by the appilcation, or the the database metadata has been checked for the
-    * existance of the table, but that at this point the table is assumed to
-    * exist.
-    * @return true if the table exists
-    */
-   public boolean getTableExists()
-   {
-      return tableExists;
-   }
-
-   /**
-    * Sets table exists flag.
-    */
-   public void setTableExists(boolean tableExists)
-   {
-      this.tableExists = tableExists;
-   }
-
-   /**
-    * Did the table already exist in the db?
-    * We need to remember this in order to only
-    * create indices on foreign-key-columns when the
-    * table was initally created.
-    */
-   public boolean getTableExisted()
-   {
-      return tableExisted;
-   }
-
-   public void setTableExisted(boolean existed)
-   {
-      tableExisted = existed;
-   }
-
    public String getTableName()
    {
       return tableName;
-   }
-
-   public List getTablePostCreateCmd()
-   {
-      return tablePostCreateCmd;
    }
 
    public Class getPrimaryKeyClass()
@@ -590,7 +541,7 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
       return null;
    }
 
-   public JDBCCMRFieldBridge[] getCMRFields()
+   public JDBCAbstractCMRFieldBridge[] getCMRFields()
    {
       return cmrFields;
    }
@@ -1062,7 +1013,7 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
             JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)field;
             if(cmrField.hasForeignKey())
             {
-               JDBCCMPFieldBridge[] fkFields = (JDBCCMPFieldBridge[])cmrField.getForeignKeyFields();
+               JDBCCMPFieldBridge[] fkFields = (JDBCCMPFieldBridge[]) cmrField.getForeignKeyFields();
                for(int i = 0; i < fkFields.length; ++i)
                {
                   group[fkFields[i].getTableIndex()] = true;

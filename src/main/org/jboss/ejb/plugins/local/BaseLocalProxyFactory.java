@@ -253,6 +253,11 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       }
    }
 
+   public Object getEntityEJBObject(Object id)
+   {
+      return getEntityEJBLocalObject(id);
+   }
+
    public EJBLocalObject getEntityEJBLocalObject(Object id)
    {
       EJBLocalObject result;

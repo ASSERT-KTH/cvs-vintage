@@ -7,7 +7,8 @@
 
 package org.jboss.ejb.plugins.cmp.ejbql;
 
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCResultSetReader;
+import org.jboss.logging.Logger;
 
 import java.sql.SQLException;
 import java.sql.ResultSet;
@@ -17,15 +18,18 @@ import java.sql.ResultSet;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class ASTLength
    extends SimpleNode
    implements SelectFunction
 {
+   private final Logger log;
+
    public ASTLength(int id)
    {
       super(id);
+      log = Logger.getLogger(getClass());
    }
 
    /** Accept the visitor. **/
@@ -42,6 +46,6 @@ public final class ASTLength
     */
    public Object readResult(ResultSet rs) throws SQLException
    {
-      return JDBCUtil.LONG_READER.getFirst(rs, Long.class);
+      return JDBCResultSetReader.LONG_READER.get(rs, 1, Long.class, log);
    }
 }

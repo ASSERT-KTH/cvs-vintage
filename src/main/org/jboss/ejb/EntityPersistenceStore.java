@@ -12,7 +12,6 @@ import java.util.Collection;
 
 import javax.ejb.RemoveException;
 
-import org.jboss.ejb.ContainerPlugin;
 
 /**
  * This interface is implemented by any EntityBean persistence Store.
@@ -26,7 +25,7 @@ import org.jboss.ejb.ContainerPlugin;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public interface EntityPersistenceStore
    extends ContainerPlugin
@@ -47,8 +46,6 @@ public interface EntityPersistenceStore
     *    resetStats the value of all cmpFields to 0 or null.
     *
     * @param ctx
-    * 
-    * @throws RemoteException
     */
    void initEntity(EntityEnterpriseContext ctx);
 
@@ -101,11 +98,12 @@ public interface EntityPersistenceStore
     * @return                a primary key representing the found entity
     * 
     * @throws RemoteException    thrown if some system exception occurs
-    * @throws FinderException    thrown if some heuristic problem occurs
+    * @throws Exception      thrown if some heuristic problem occurs
     */
    Object findEntity(Method finderMethod,
                      Object[] args,
-                     EntityEnterpriseContext instance)
+                     EntityEnterpriseContext instance,
+                     GenericEntityObjectFactory factory)
       throws Exception;
    
    /**
@@ -122,11 +120,12 @@ public interface EntityPersistenceStore
     *                        entities
     *                        
     * @throws RemoteException    thrown if some system exception occurs
-    * @throws FinderException    thrown if some heuristic problem occurs
+    * @throws Exception      thrown if some heuristic problem occurs
     */
    Collection findEntities(Method finderMethod,
-                              Object[] args,
-                              EntityEnterpriseContext instance)
+                           Object[] args,
+                           EntityEnterpriseContext instance,
+                           GenericEntityObjectFactory factory)
       throws Exception;
 
    /**

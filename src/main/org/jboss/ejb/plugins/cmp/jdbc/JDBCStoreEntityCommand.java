@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public final class JDBCStoreEntityCommand
 {
@@ -39,7 +39,7 @@ public final class JDBCStoreEntityCommand
 
    public JDBCStoreEntityCommand(JDBCStoreManager manager)
    {
-      entity = manager.getEntityBridge();
+      entity = (JDBCEntityBridge) manager.getEntityBridge();
       primaryKeyFields = entity.getPrimaryKeyFields();
 
       // Create the Log

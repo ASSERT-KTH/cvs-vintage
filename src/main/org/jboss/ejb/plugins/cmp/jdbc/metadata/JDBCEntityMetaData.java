@@ -30,8 +30,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- *
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  */
 public final class JDBCEntityMetaData
 {
@@ -108,8 +107,8 @@ public final class JDBCEntityMetaData
    /**
     * Should we alter the table when deployed?
     */
-   private final boolean alterTable;    
-    
+   private final boolean alterTable;
+
 
    /**
     * What command should be issued directly after creation
@@ -188,7 +187,7 @@ public final class JDBCEntityMetaData
 
    /**
     * clean-read-ahead-on-load
-    * Previously, read ahead cache was cleaned after loading.
+    * Since 3.2.5RC1, previously read ahead cache was cleaned after loading.
     */
    private final boolean cleanReadAheadOnLoad;
 
@@ -204,21 +203,26 @@ public final class JDBCEntityMetaData
     */
    private final int fetchSize;
 
-   /** entity command meta data */
+   /**
+    * entity command meta data
+    */
    private final JDBCEntityCommandMetaData entityCommand;
 
 
-   /** optimistic locking metadata */
+   /**
+    * optimistic locking metadata
+    */
 
    private final JDBCOptimisticLockingMetaData optimisticLocking;
 
 
-   /** audit metadata */
+   /**
+    * audit metadata
+    */
 
    private final JDBCAuditMetaData audit;
 
    private final Class qlCompiler;
-
 
    /**
     * Constructs jdbc entity meta data defined in the jdbcApplication and
@@ -226,11 +230,11 @@ public final class JDBCEntityMetaData
     * ejb-jar.xml file.
     *
     * @param jdbcApplication the application in which this entity is defined
-    * @param entity the entity meta data for this entity that is loaded
-    *    from the ejb-jar.xml file
+    * @param entity          the entity meta data for this entity that is loaded
+    *                        from the ejb-jar.xml file
     * @throws DeploymentException if an problem occures while loading the
-    *    classes or if data in the ejb-jar.xml is inconsistent with data
-    *    from jbosscmp-jdbc.xml file
+    *                             classes or if data in the ejb-jar.xml is inconsistent with data
+    *                             from jbosscmp-jdbc.xml file
     */
    public JDBCEntityMetaData(JDBCApplicationMetaData jdbcApplication,
                              EntityMetaData entity)
@@ -256,15 +260,16 @@ public final class JDBCEntityMetaData
       }
       catch(ClassNotFoundException e)
       {
-         throw new DeploymentException("could not load primary key class: " +
-            entity.getPrimaryKeyClass());
+         throw new DeploymentException(
+            "could not load primary key class: " +
+            entity.getPrimaryKeyClass()
+         );
       }
 
       isCMP1x = entity.isCMP1x();
       if(isCMP1x)
       {
-         abstractSchemaName = (entity.getAbstractSchemaName() == null ?
-            entityName : entity.getAbstractSchemaName());
+         abstractSchemaName = (entity.getAbstractSchemaName() == null ? entityName : entity.getAbstractSchemaName());
       }
       else
       {
@@ -290,8 +295,10 @@ public final class JDBCEntityMetaData
          }
          catch(ClassNotFoundException e)
          {
-            throw new DeploymentException("remote class not found: " +
-               entity.getRemote());
+            throw new DeploymentException(
+               "remote class not found: " +
+               entity.getRemote()
+            );
          }
       }
       else
@@ -309,8 +316,10 @@ public final class JDBCEntityMetaData
          }
          catch(ClassNotFoundException e)
          {
-            throw new DeploymentException("local home class not found: " +
-               localHome);
+            throw new DeploymentException(
+               "local home class not found: " +
+               localHome
+            );
          }
          try
          {
@@ -318,8 +327,10 @@ public final class JDBCEntityMetaData
          }
          catch(ClassNotFoundException e)
          {
-            throw new DeploymentException("local class not found: " +
-               entity.getLocal());
+            throw new DeploymentException(
+               "local class not found: " +
+               entity.getLocal()
+            );
          }
       }
       else
@@ -327,8 +338,10 @@ public final class JDBCEntityMetaData
          // we must have a home or local home
          if(home == null)
          {
-            throw new DeploymentException("Entity must have atleast a home " +
-               "or local home: " + entityName);
+            throw new DeploymentException(
+               "Entity must have atleast a home " +
+               "or local home: " + entityName
+            );
          }
 
          localHomeClass = null;
@@ -358,12 +371,14 @@ public final class JDBCEntityMetaData
       List nonPkFieldNames = new ArrayList();
       for(Iterator i = entity.getCMPFields(); i.hasNext();)
       {
-         String cmpFieldName = (String)i.next();
+         String cmpFieldName = (String) i.next();
          JDBCCMPFieldMetaData cmpField = new JDBCCMPFieldMetaData(this, cmpFieldName);
          cmpFields.add(cmpField);
          cmpFieldsByName.put(cmpFieldName, cmpField);
          if(!cmpField.isPrimaryKeyMember())
+         {
             nonPkFieldNames.add(cmpFieldName);
+         }
       }
 
       // AL: add unknown primary key if primaryKeyClass is Object
@@ -387,7 +402,7 @@ public final class JDBCEntityMetaData
 
       for(Iterator queriesIterator = entity.getQueries(); queriesIterator.hasNext();)
       {
-         QueryMetaData queryData = (QueryMetaData)queriesIterator.next();
+         QueryMetaData queryData = (QueryMetaData) queriesIterator.next();
          Map newQueries = queryFactory.createJDBCQueryMetaData(queryData);
          // overrides defaults added above
          queries.putAll(newQueries);
@@ -409,10 +424,10 @@ public final class JDBCEntityMetaData
     * that are not present are loaded from the defalutValues parameter.
     *
     * @param jdbcApplication the application in which this entity is defined
-    * @param element the xml Element which contains the metadata about
-    *       this entity
-    * @param defaultValues the JDBCEntityMetaData which contains the values
-    *       for optional elements of the element
+    * @param element         the xml Element which contains the metadata about
+    *                        this entity
+    * @param defaultValues   the JDBCEntityMetaData which contains the values
+    *                        for optional elements of the element
     * @throws DeploymentException if the xml element is not semantically correct
     */
    public JDBCEntityMetaData(JDBCApplicationMetaData jdbcApplication,
@@ -465,9 +480,13 @@ public final class JDBCEntityMetaData
          datasourceMapping = jdbcApplication.getTypeMappingByName(datasourceMappingString);
          if(datasourceMapping == null)
          {
-            throw new DeploymentException("Error in jbosscmp-jdbc.xml : " +
-               "datasource-mapping " + datasourceMappingString +
-               " not found");
+            throw new DeploymentException(
+               "Error in jbosscmp-jdbc.xml : "
+               +
+               "datasource-mapping "
+               + datasourceMappingString +
+               " not found"
+            );
          }
       }
       else
@@ -513,10 +532,12 @@ public final class JDBCEntityMetaData
       if(alterStr != null)
       {
          alterTable = Boolean.valueOf(alterStr).booleanValue();
-      } else {
-          alterTable=defaultValues.getAlterTable();
       }
-      
+      else
+      {
+         alterTable = defaultValues.getAlterTable();
+      }
+
 
       // get the SQL command to execute after table creation
       Element posttc = MetaData.getOptionalChild(element, "post-table-create");
@@ -526,7 +547,7 @@ public final class JDBCEntityMetaData
          tablePostCreateCmd = new ArrayList();
          while(it.hasNext())
          {
-            Element etmp = (Element)it.next();
+            Element etmp = (Element) it.next();
             tablePostCreateCmd.add(MetaData.getElementContent(etmp));
          }
       }
@@ -556,8 +577,10 @@ public final class JDBCEntityMetaData
          }
          catch(NumberFormatException e)
          {
-            throw new DeploymentException("Invalid number format in " +
-               "read-time-out '" + readTimeOutStr + "': " + e);
+            throw new DeploymentException(
+               "Invalid number format in " +
+               "read-time-out '" + readTimeOutStr + "': " + e
+            );
          }
       }
       else
@@ -596,13 +619,17 @@ public final class JDBCEntityMetaData
          }
          catch(NumberFormatException e)
          {
-            throw new DeploymentException("Invalid number format in read-" +
-               "ahead list-cache-max '" + listCacheMaxStr + "': " + e);
+            throw new DeploymentException(
+               "Invalid number format in read-" +
+               "ahead list-cache-max '" + listCacheMaxStr + "': " + e
+            );
          }
          if(listCacheMax < 0)
          {
-            throw new DeploymentException("Negative value for read ahead " +
-               "list-cache-max '" + listCacheMaxStr + "'.");
+            throw new DeploymentException(
+               "Negative value for read ahead " +
+               "list-cache-max '" + listCacheMaxStr + "'."
+            );
          }
       }
       else
@@ -620,13 +647,17 @@ public final class JDBCEntityMetaData
          }
          catch(NumberFormatException e)
          {
-            throw new DeploymentException("Invalid number format in " +
-               "fetch-size '" + fetchSizeStr + "': " + e);
+            throw new DeploymentException(
+               "Invalid number format in " +
+               "fetch-size '" + fetchSizeStr + "': " + e
+            );
          }
          if(fetchSize < 0)
          {
-            throw new DeploymentException("Negative value for fetch size " +
-               "fetch-size '" + fetchSizeStr + "'.");
+            throw new DeploymentException(
+               "Negative value for fetch size " +
+               "fetch-size '" + fetchSizeStr + "'."
+            );
          }
       }
       else
@@ -657,11 +688,10 @@ public final class JDBCEntityMetaData
 
       // update all existing queries with the new read ahead value
       for(Iterator cmpFieldIterator = defaultValues.cmpFields.iterator();
-          cmpFieldIterator.hasNext();)
+         cmpFieldIterator.hasNext();)
       {
 
-         JDBCCMPFieldMetaData cmpField = new JDBCCMPFieldMetaData(
-            this, (JDBCCMPFieldMetaData)cmpFieldIterator.next());
+         JDBCCMPFieldMetaData cmpField = new JDBCCMPFieldMetaData(this, (JDBCCMPFieldMetaData) cmpFieldIterator.next());
          cmpFields.add(cmpField);
          cmpFieldsByName.put(cmpField.getFieldName(), cmpField);
       }
@@ -669,10 +699,10 @@ public final class JDBCEntityMetaData
       // apply new configurations to the cmpfields
       for(Iterator i = MetaData.getChildrenByTagName(element, "cmp-field"); i.hasNext();)
       {
-         Element cmpFieldElement = (Element)i.next();
+         Element cmpFieldElement = (Element) i.next();
          String fieldName = MetaData.getUniqueChildContent(cmpFieldElement, "field-name");
 
-         JDBCCMPFieldMetaData oldCMPField = (JDBCCMPFieldMetaData)cmpFieldsByName.get(fieldName);
+         JDBCCMPFieldMetaData oldCMPField = (JDBCCMPFieldMetaData) cmpFieldsByName.get(fieldName);
          if(oldCMPField == null)
          {
             throw new DeploymentException("CMP field not found : fieldName=" + fieldName);
@@ -680,7 +710,8 @@ public final class JDBCEntityMetaData
          JDBCCMPFieldMetaData cmpFieldMetaData = new JDBCCMPFieldMetaData(
             this,
             cmpFieldElement,
-            oldCMPField);
+            oldCMPField
+         );
 
          // replace the old cmp meta data with the new
          cmpFieldsByName.put(fieldName, cmpFieldMetaData);
@@ -699,7 +730,7 @@ public final class JDBCEntityMetaData
             JDBCCMPFieldMetaData oldUpkField = null;
             for(Iterator iter = cmpFields.iterator(); iter.hasNext();)
             {
-               JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)iter.next();
+               JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData) iter.next();
                if(cmpField.isUnknownPkField())
                {
                   oldUpkField = cmpField;
@@ -709,7 +740,9 @@ public final class JDBCEntityMetaData
 
             // IMO, this is a redundant check
             if(oldUpkField == null)
+            {
                oldUpkField = new JDBCCMPFieldMetaData(this);
+            }
 
             JDBCCMPFieldMetaData upkField = new JDBCCMPFieldMetaData(this, upkElement, oldUpkField);
 
@@ -740,8 +773,10 @@ public final class JDBCEntityMetaData
             && !eagerLoadGroupTmp.equals("*")
             && !loadGroups.containsKey(eagerLoadGroupTmp))
          {
-            throw new DeploymentException("Eager load group not found: " +
-               "eager-load-group=" + eagerLoadGroupTmp);
+            throw new DeploymentException(
+               "Eager load group not found: " +
+               "eager-load-group=" + eagerLoadGroupTmp
+            );
          }
          eagerLoadGroup = eagerLoadGroupTmp;
       }
@@ -755,12 +790,10 @@ public final class JDBCEntityMetaData
       loadLazyLoadGroupsXml(element);
 
       // read-ahead
-      Element readAheadElement =
-         MetaData.getOptionalChild(element, "read-ahead");
+      Element readAheadElement =  MetaData.getOptionalChild(element, "read-ahead");
       if(readAheadElement != null)
       {
-         readAhead = new JDBCReadAheadMetaData(
-            readAheadElement, defaultValues.getReadAhead());
+         readAhead = new JDBCReadAheadMetaData(readAheadElement, defaultValues.getReadAhead());
       }
       else
       {
@@ -773,7 +806,7 @@ public final class JDBCEntityMetaData
          cleanReadAheadOnLoad = true;
       }
       else if("false".equalsIgnoreCase(value))
-      {
+      {           
          cleanReadAheadOnLoad = false;
       }
       else if(value == null)
@@ -800,31 +833,37 @@ public final class JDBCEntityMetaData
       // audit
       Element auditElement = MetaData.getOptionalChild(element, "audit");
       if(auditElement != null)
+      {
          audit = new JDBCAuditMetaData(this, auditElement);
+      }
       else
+      {
          audit = defaultValues.getAudit();
+      }
 
       // queries
 
       // update all existing queries with the new read ahead value
       for(Iterator queriesIterator = defaultValues.queries.values().iterator();
-          queriesIterator.hasNext();)
+         queriesIterator.hasNext();)
       {
          JDBCQueryMetaData query = JDBCQueryMetaDataFactory.createJDBCQueryMetaData(
-            (JDBCQueryMetaData)queriesIterator.next(),
-            readAhead, qlCompiler);
+            (JDBCQueryMetaData) queriesIterator.next(),
+            readAhead, qlCompiler
+         );
          queries.put(query.getMethod(), query);
       }
 
       // apply new configurations to the queries
       for(Iterator queriesIterator = MetaData.getChildrenByTagName(element, "query");
-          queriesIterator.hasNext();)
+         queriesIterator.hasNext();)
       {
-         Element queryElement = (Element)queriesIterator.next();
+         Element queryElement = (Element) queriesIterator.next();
          Map newQueries = queryFactory.createJDBCQueryMetaData(
             queryElement,
             defaultValues.queries,
-            readAhead);
+            readAhead
+         );
 
          // overrides defaults added above
          queries.putAll(newQueries);
@@ -886,27 +925,33 @@ public final class JDBCEntityMetaData
       // only allowed for cmp 2.x
       if(isCMP1x)
       {
-         throw new DeploymentException("load-groups are only allowed " +
-            "for CMP 2.x");
+         throw new DeploymentException(
+            "load-groups are only allowed " +
+            "for CMP 2.x"
+         );
       }
 
       // load each group
       Iterator groups = MetaData.getChildrenByTagName(loadGroupsElement, "load-group");
       while(groups.hasNext())
       {
-         Element groupElement = (Element)groups.next();
+         Element groupElement = (Element) groups.next();
 
          // get the load-group-name
          String loadGroupName = MetaData.getUniqueChildContent(groupElement, "load-group-name");
          if(loadGroups.containsKey(loadGroupName))
          {
-            throw new DeploymentException("Load group already defined: " +
-               " load-group-name=" + loadGroupName);
+            throw new DeploymentException(
+               "Load group already defined: " +
+               " load-group-name=" + loadGroupName
+            );
          }
          if(loadGroupName.equals("*"))
          {
-            throw new DeploymentException("The * load group is automatically " +
-               "defined and can't be overriden");
+            throw new DeploymentException(
+               "The * load group is automatically " +
+               "defined and can't be overriden"
+            );
          }
          ArrayList group = new ArrayList();
 
@@ -914,16 +959,21 @@ public final class JDBCEntityMetaData
          Iterator fields = MetaData.getChildrenByTagName(groupElement, "field-name");
          while(fields.hasNext())
          {
-            String fieldName = MetaData.getElementContent((Element)fields.next());
+            String fieldName = MetaData.getElementContent((Element) fields.next());
 
             // check if the field is a cmp field that it is not a pk memeber
             JDBCCMPFieldMetaData field = getCMPFieldByName(fieldName);
             if(field != null && field.isPrimaryKeyMember())
             {
-               throw new DeploymentException("Primary key fields can not be" +
-                  " a member of a load group: " +
-                  " load-group-name=" + loadGroupName +
-                  " field-name=" + fieldName);
+               throw new DeploymentException(
+                  "Primary key fields can not be"
+                  +
+                  " a member of a load group: "
+                  +
+                  " load-group-name="
+                  + loadGroupName +
+                  " field-name=" + fieldName
+               );
             }
 
             group.add(fieldName);
@@ -957,11 +1007,13 @@ public final class JDBCEntityMetaData
       Iterator loadGroupNames = MetaData.getChildrenByTagName(lazyLoadGroupsElement, "load-group-name");
       while(loadGroupNames.hasNext())
       {
-         String loadGroupName = MetaData.getElementContent((Element)loadGroupNames.next());
+         String loadGroupName = MetaData.getElementContent((Element) loadGroupNames.next());
          if(!loadGroupName.equals("*") && !loadGroups.containsKey(loadGroupName))
          {
-            throw new DeploymentException("Lazy load group not found: " +
-               "load-group-name=" + loadGroupName);
+            throw new DeploymentException(
+               "Lazy load group not found: " +
+               "load-group-name=" + loadGroupName
+            );
          }
 
          lazyLoadGroups.add(loadGroupName);
@@ -971,6 +1023,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the meta data for the application of which this entity is a member.
+    *
     * @return the meta data for the application that this entity is a memeber
     */
    public JDBCApplicationMetaData getJDBCApplication()
@@ -980,6 +1033,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the name of the datasource in jndi for this entity
+    *
     * @return the name of datasource in jndi
     */
    public String getDataSourceName()
@@ -989,6 +1043,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the jdbc type mapping for this entity
+    *
     * @return the jdbc type mapping for this entity
     */
    public JDBCTypeMappingMetaData getTypeMapping()
@@ -998,6 +1053,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the name of this entity. The name come from the ejb-jar.xml file.
+    *
     * @return the name of this entity
     */
    public String getName()
@@ -1008,6 +1064,7 @@ public final class JDBCEntityMetaData
    /**
     * Gets the abstract shcema name of this entity. The name come from
     * the ejb-jar.xml file.
+    *
     * @return the abstract schema name of this entity
     */
    public String getAbstractSchemaName()
@@ -1018,8 +1075,9 @@ public final class JDBCEntityMetaData
    /**
     * Gets the class loaded which is used to load all classes used by this
     * entity
+    *
     * @return the class loader which is used to load all classes used by
-    *    this entity
+    *         this entity
     */
    public ClassLoader getClassLoader()
    {
@@ -1028,6 +1086,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the implementation class of this entity
+    *
     * @return the implementation class of this entity
     */
    public Class getEntityClass()
@@ -1037,6 +1096,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the home class of this entity
+    *
     * @return the home class of this entity
     */
    public Class getHomeClass()
@@ -1046,6 +1106,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the remote class of this entity
+    *
     * @return the remote class of this entity
     */
    public Class getRemoteClass()
@@ -1055,6 +1116,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the local home class of this entity
+    *
     * @return the local home class of this entity
     */
    public Class getLocalHomeClass()
@@ -1064,6 +1126,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the local class of this entity
+    *
     * @return the local class of this entity
     */
    public Class getLocalClass()
@@ -1073,6 +1136,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Does this entity use CMP version 1.x
+    *
     * @return true if this entity used CMP version 1.x; otherwise false
     */
    public boolean isCMP1x()
@@ -1082,6 +1146,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the cmp fields of this entity
+    *
     * @return an unmodifiable collection of JDBCCMPFieldMetaData objects
     */
    public List getCMPFields()
@@ -1092,6 +1157,7 @@ public final class JDBCEntityMetaData
    /**
     * Gets the name of the eager load group. This name can be used to
     * look up the load group.
+    *
     * @return the name of the eager load group
     */
    public String getEagerLoadGroup()
@@ -1101,6 +1167,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the collection of lazy load group names.
+    *
     * @return an unmodifiable collection of load group names
     */
    public List getLazyLoadGroups()
@@ -1111,6 +1178,7 @@ public final class JDBCEntityMetaData
    /**
     * Gets the map from load grou name to a List of field names, which
     * forms a logical load group.
+    *
     * @return an unmodifiable map of load groups (Lists) by group name.
     */
    public Map getLoadGroups()
@@ -1120,12 +1188,13 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the load group with the specified name.
+    *
     * @return the load group with the specified name
     * @throws DeploymentException if group with the specified name is not found
     */
    public List getLoadGroup(String name) throws DeploymentException
    {
-      List group = (List)loadGroups.get(name);
+      List group = (List) loadGroups.get(name);
       if(group == null)
       {
          throw new DeploymentException("Unknown load group: name=" + name);
@@ -1151,16 +1220,18 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the cmp field with the specified name
+    *
     * @param name the name of the desired field
     * @return the cmp field with the specified name or null if not found
     */
    public JDBCCMPFieldMetaData getCMPFieldByName(String name)
    {
-      return (JDBCCMPFieldMetaData)cmpFieldsByName.get(name);
+      return (JDBCCMPFieldMetaData) cmpFieldsByName.get(name);
    }
 
    /**
     * Gets the name of the table to which this entity is persisted
+    *
     * @return the name of the table to which this entity is persisted
     */
    public String getDefaultTableName()
@@ -1171,6 +1242,7 @@ public final class JDBCEntityMetaData
    /**
     * Gets the flag used to determine if the store manager should attempt to
     * create database table when the entity is deployed.
+    *
     * @return true if the store manager should attempt to create the table
     */
    public boolean getCreateTable()
@@ -1181,6 +1253,7 @@ public final class JDBCEntityMetaData
    /**
     * Gets the flag used to determine if the store manager should attempt to
     * remove database table when the entity is undeployed.
+    *
     * @return true if the store manager should attempt to remove the table
     */
    public boolean getRemoveTable()
@@ -1194,12 +1267,13 @@ public final class JDBCEntityMetaData
     */
    public boolean getAlterTable()
    {
-       return alterTable;
+      return alterTable;
    }
 
    /**
     * Get the (user-defined) SQL commands that sould be issued after table
     * creation
+    *
     * @return the SQL command to issue to the DB-server
     */
    public ArrayList getDefaultTablePostCreateCmd()
@@ -1210,8 +1284,9 @@ public final class JDBCEntityMetaData
    /**
     * Gets the flag used to determine if the store manager should add a
     * priary key constraint when creating the table
+    *
     * @return true if the store manager should add a primary key constraint to
-    *       the create table sql statement
+    *         the create table sql statement
     */
    public boolean hasPrimaryKeyConstraint()
    {
@@ -1221,8 +1296,9 @@ public final class JDBCEntityMetaData
    /**
     * Gets the flag used to determine if the store manager should do row locking
     * when loading entity beans
+    *
     * @return true if the store manager should add a row locking
-    *       clause when selecting data from the table
+    *         clause when selecting data from the table
     */
    public boolean hasRowLocking()
    {
@@ -1249,6 +1325,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the queries defined on this entity
+    *
     * @return an unmodifiable collection of JDBCQueryMetaData objects
     */
    public Collection getQueries()
@@ -1257,19 +1334,20 @@ public final class JDBCEntityMetaData
    }
 
    /**
-    * @param method  finder method name.
-    * @return  corresponding query metadata or null.
+    * @param method finder method name.
+    * @return corresponding query metadata or null.
     */
    public JDBCQueryMetaData getQueryMetaDataForMethod(Method method)
    {
-      return (JDBCQueryMetaData)queries.get(method);
+      return (JDBCQueryMetaData) queries.get(method);
    }
 
    /**
     * Get the relationsip roles of this entity.
     * Items are instance of JDBCRelationshipRoleMetaData.
+    *
     * @return an unmodifiable collection of the relationship roles defined
-    *    for this entity
+    *         for this entity
     */
    public Collection getRelationshipRoles()
    {
@@ -1278,6 +1356,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the primary key class for this entity
+    *
     * @return the primary key class for this entity
     */
    public Class getPrimaryKeyClass()
@@ -1287,6 +1366,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the entity command metadata
+    *
     * @return the entity command metadata
     */
    public JDBCEntityCommandMetaData getEntityCommand()
@@ -1297,6 +1377,7 @@ public final class JDBCEntityMetaData
    /**
     * Is this entity read only? A readonly entity will never be stored into
     * the database.
+    *
     * @return true if this entity is read only
     */
    public boolean isReadOnly()
@@ -1311,8 +1392,9 @@ public final class JDBCEntityMetaData
     * the database. If the value is -1 and the entity is not using commit
     * option a, the read is only valid for the length of the transaction in
     * which it was loaded.
+    *
     * @return the length of time that a read is valid or -1 if the read is only
-    *       valid for the length of the transaction
+    *         valid for the length of the transaction
     */
    public int getReadTimeOut()
    {
@@ -1322,8 +1404,9 @@ public final class JDBCEntityMetaData
    /**
     * Gets the name of the primary key field of this entity or null if
     * the primary key is multivalued
+    *
     * @return the name of the primary key field of this entity or null
-    *    if the primary key is multivalued
+    *         if the primary key is multivalued
     */
    public String getPrimaryKeyFieldName()
    {
@@ -1333,6 +1416,7 @@ public final class JDBCEntityMetaData
 
    /**
     * Gets the read ahead meta data for this entity.
+    *
     * @return the read ahead meta data for this entity.
     */
    public JDBCReadAheadMetaData getReadAhead()
@@ -1349,20 +1433,21 @@ public final class JDBCEntityMetaData
    {
       return cleanReadAheadOnLoad;
    }
-   
+
    /**
     * Compares this JDBCEntityMetaData against the specified object. Returns
     * true if the objects are the same. Two JDBCEntityMetaData are the same
     * if they both have the same name and are defined in the same application.
+    *
     * @param o the reference object with which to compare
     * @return true if this object is the same as the object argument;
-    *    false otherwise
+    *         false otherwise
     */
    public boolean equals(Object o)
    {
       if(o instanceof JDBCEntityMetaData)
       {
-         JDBCEntityMetaData entity = (JDBCEntityMetaData)o;
+         JDBCEntityMetaData entity = (JDBCEntityMetaData) o;
          return entityName.equals(entity.entityName) &&
             jdbcApplication.equals(entity.jdbcApplication);
       }
@@ -1373,6 +1458,7 @@ public final class JDBCEntityMetaData
     * Returns a hashcode for this JDBCEntityMetaData. The hashcode is computed
     * based on the hashCode of the declaring application and the hashCode of
     * the entityName
+    *
     * @return a hash code value for this object
     */
    public int hashCode()
@@ -1387,7 +1473,7 @@ public final class JDBCEntityMetaData
     * Returns a string describing this JDBCEntityMetaData. The exact details
     * of the representation are unspecified and subject to change, but the
     * following may be regarded as typical:
-    *
+    * <p/>
     * "[JDBCEntityMetaData: entityName=UserEJB]"
     *
     * @return a string representation of the object

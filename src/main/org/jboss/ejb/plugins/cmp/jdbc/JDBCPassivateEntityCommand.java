@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-
+ 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -13,24 +13,19 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 /**
  * JDBCPassivateEntityCommand deletes the entity persistence context,
  * where data about the instence is keeps.
- *
+ *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
+ 
+public final class JDBCPassivateEntityCommand {
 
-public final class JDBCPassivateEntityCommand
-{
-   private final JDBCEntityBridge entity;
-
-   public JDBCPassivateEntityCommand(JDBCStoreManager manager)
-   {
-      entity = manager.getEntityBridge();
+   public JDBCPassivateEntityCommand(JDBCStoreManager manager) {
    }
-
-   public void execute(EntityEnterpriseContext ctx)
-   {
-      entity.destroyPersistenceContext(ctx);
+   
+   public void execute(EntityEnterpriseContext ctx) {
+      JDBCEntityBridge.destroyPersistenceContext(ctx);
    }
 }

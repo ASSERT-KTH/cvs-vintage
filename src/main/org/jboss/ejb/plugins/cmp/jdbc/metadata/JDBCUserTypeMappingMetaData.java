@@ -12,7 +12,7 @@ import org.w3c.dom.Element;
 
 
 /**
- * Immutable class instances of which represent user type mappings.
+ * Immutable class, instances of which represent user type mappings.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  */

@@ -11,7 +11,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.1 $</tt>
+ * @version <tt>$Revision: 1.2 $</tt>
  */
 public abstract class JDBCAbstractCMRFieldBridge
    implements JDBCFieldBridge, CMRFieldBridge

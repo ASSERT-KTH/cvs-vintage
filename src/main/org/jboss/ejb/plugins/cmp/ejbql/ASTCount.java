@@ -12,9 +12,9 @@ package org.jboss.ejb.plugins.cmp.ejbql;
  * This abstract syntax node represents a count function.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
-public class ASTCount
+public final class ASTCount
    extends AggregateFunction
    implements SelectFunction
 {
@@ -27,8 +27,10 @@ public class ASTCount
    {
       return Long.class;
    }
-
-   /** Accept the visitor. **/
+   
+   /**
+    * Accept the visitor. *
+    */
    public Object jjtAccept(JBossQLParserVisitor visitor, Object data)
    {
       return visitor.visit(this, data);

@@ -22,9 +22,9 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
-public final class JDBCReadAheadMetaData
+public class JDBCReadAheadMetaData
 {
    public static final JDBCReadAheadMetaData DEFAULT = new JDBCReadAheadMetaData();
 
@@ -52,11 +52,6 @@ public final class JDBCReadAheadMetaData
    private final List leftJoinList;
 
    /**
-    * add this to a deeper left joined query
-    */
-   private boolean deepReadAhead = false;
-
-   /**
     * Constructs default read ahead meta data: no read ahead.
     */
    private JDBCReadAheadMetaData()
@@ -74,6 +69,11 @@ public final class JDBCReadAheadMetaData
     */
    public JDBCReadAheadMetaData(String strategy, int pageSize, String eagerLoadGroup)
    {
+      this(strategy, pageSize, eagerLoadGroup, Collections.EMPTY_LIST);
+   }
+
+   public JDBCReadAheadMetaData(String strategy, int pageSize, String eagerLoadGroup, List leftJoins)
+   {
       this.strategy = (byte)STRATEGIES.indexOf(strategy);
       if(this.strategy < 0)
       {
@@ -81,7 +81,7 @@ public final class JDBCReadAheadMetaData
       }
       this.pageSize = pageSize;
       this.eagerLoadGroup = eagerLoadGroup;
-      leftJoinList = Collections.EMPTY_LIST;
+      leftJoinList = leftJoins;
    }
 
    /**
@@ -164,11 +164,6 @@ public final class JDBCReadAheadMetaData
    public boolean isOnFind()
    {
       return (strategy == ON_FIND);
-   }
-
-   public boolean isDeepReadAhead()
-   {
-      return deepReadAhead;
    }
 
    /**

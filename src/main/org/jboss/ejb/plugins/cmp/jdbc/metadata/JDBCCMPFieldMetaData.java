@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
  *
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public final class JDBCCMPFieldMetaData
 {
@@ -179,8 +179,7 @@ public final class JDBCCMPFieldMetaData
             // verify field type
             if(!entity.getPrimaryKeyClass().equals(fieldType))
             {
-               throw new DeploymentException("primkey-field must be the " +
-                  "same type as prim-key-class");
+               throw new DeploymentException("primkey-field must be the same type as prim-key-class");
             }
             // we are the pk
             primaryKeyMember = true;
@@ -202,10 +201,11 @@ public final class JDBCCMPFieldMetaData
             final Field field = fields[i];
             if(field.getName().equals(fieldName))
             {
+
                // verify field type
                if(!field.getType().equals(fieldType))
                {
-                  throw new DeploymentException("Field " + fieldName + " in prim-key-class must be the same type");
+                  throw new DeploymentException("Field " + fieldName + " in prim-key-class must be of the same type.");
                }
 
                if(pkField != null)
@@ -412,7 +412,6 @@ public final class JDBCCMPFieldMetaData
       else
          stateFactory = stateFactoryStr;
    }
-
 
    /**
     * Constructs cmp field meta data with the data contained in the cmp-field

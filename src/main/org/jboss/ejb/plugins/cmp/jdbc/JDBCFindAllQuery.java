@@ -20,7 +20,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCFindAllQuery extends JDBCAbstractQueryCommand
 {
@@ -29,7 +29,7 @@ public final class JDBCFindAllQuery extends JDBCAbstractQueryCommand
    {
       super(manager, q);
 
-      JDBCEntityBridge entity = manager.getEntityBridge();
+      JDBCEntityBridge entity = (JDBCEntityBridge) manager.getEntityBridge();
 
       // set the preload fields
       JDBCReadAheadMetaData readAhead = q.getReadAhead();

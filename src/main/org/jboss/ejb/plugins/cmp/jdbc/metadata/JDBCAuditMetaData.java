@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  * Audit field meta data
  *
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class JDBCAuditMetaData
 {
@@ -51,7 +51,7 @@ public final class JDBCAuditMetaData
 
       Element workElement;
 
-      if((workElement = MetaData.getOptionalChild(element, "created-by")) != null)
+      if ((workElement = MetaData.getOptionalChild(element, "created-by")) != null)
       {
          createdPrincipalField = constructAuditField(entityMetaData, workElement, "audit_created_by");
 
@@ -60,7 +60,7 @@ public final class JDBCAuditMetaData
       else
          createdPrincipalField = null;
 
-      if((workElement = MetaData.getOptionalChild(element, "created-time")) != null)
+      if ((workElement = MetaData.getOptionalChild(element, "created-time")) != null)
       {
          createdTimeField = constructAuditField(entityMetaData, workElement, "audit_created_time");
 
@@ -69,7 +69,7 @@ public final class JDBCAuditMetaData
       else
          createdTimeField = null;
 
-      if((workElement = MetaData.getOptionalChild(element, "updated-by")) != null)
+      if ((workElement = MetaData.getOptionalChild(element, "updated-by")) != null)
       {
          updatedPrincipalField = constructAuditField(entityMetaData, workElement, "audit_updated_by");
 
@@ -78,7 +78,7 @@ public final class JDBCAuditMetaData
       else
          updatedPrincipalField = null;
 
-      if((workElement = MetaData.getOptionalChild(element, "updated-time")) != null)
+      if ((workElement = MetaData.getOptionalChild(element, "updated-time")) != null)
       {
          updatedTimeField = constructAuditField(entityMetaData, workElement, "audit_updated_time");
 
@@ -116,7 +116,7 @@ public final class JDBCAuditMetaData
     * Constructs an audit locking field metadata from
     * XML element
     */
-   private JDBCCMPFieldMetaData constructAuditField(
+   private static JDBCCMPFieldMetaData constructAuditField(
       JDBCEntityMetaData entity,
       Element element,
       String defaultName)
@@ -124,23 +124,22 @@ public final class JDBCAuditMetaData
    {
       // field name
       String fieldName = MetaData.getOptionalChildContent(element, "field-name");
-      if(fieldName == null || fieldName.trim().length() < 1)
+      if (fieldName == null || fieldName.trim().length() < 1)
          fieldName = defaultName;
 
       // column name
       String columnName = MetaData.getOptionalChildContent(element, "column-name");
-      if(columnName == null || columnName.trim().length() < 1)
+      if (columnName == null || columnName.trim().length() < 1)
          columnName = defaultName;
 
       // field type
-      Class fieldType = null;
+      Class fieldType;
       String fieldTypeStr = MetaData.getOptionalChildContent(element, "field-type");
-      if(fieldTypeStr != null)
+      if (fieldTypeStr != null)
       {
          try
          {
-            fieldType = Thread.currentThread().
-               getContextClassLoader().loadClass(fieldTypeStr);
+            fieldType = Thread.currentThread().getContextClassLoader().loadClass(fieldTypeStr);
          }
          catch(ClassNotFoundException e)
          {
@@ -151,7 +150,7 @@ public final class JDBCAuditMetaData
       }
       else
       {
-         if(defaultName.endsWith("by"))
+         if (defaultName.endsWith("by"))
             fieldType = String.class;
          else
             fieldType = java.util.Date.class;
@@ -159,9 +158,9 @@ public final class JDBCAuditMetaData
 
       // JDBC/SQL Type
       int jdbcType;
-      String sqlType = null;
+      String sqlType;
       String jdbcTypeName = MetaData.getOptionalChildContent(element, "jdbc-type");
-      if(jdbcTypeName != null)
+      if (jdbcTypeName != null)
       {
          jdbcType = JDBCMappingMetaData.getJdbcTypeFromName(jdbcTypeName);
          sqlType = MetaData.getUniqueChildContent(element, "sql-type");
@@ -175,7 +174,7 @@ public final class JDBCAuditMetaData
       // Is the field exposed?
       JDBCCMPFieldMetaData result = entity.getCMPFieldByName(fieldName);
 
-      if(result == null)
+      if (result == null)
          result = new JDBCCMPFieldMetaData(entity, fieldName, fieldType, columnName, jdbcType, sqlType);
 
       return result;

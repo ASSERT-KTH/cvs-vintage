@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractCMRFieldBridge;
 import org.jboss.logging.Logger;
 
 import java.util.Vector;
@@ -31,7 +31,7 @@ import java.util.Vector;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @author <a href="joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public final class SQLUtil
 {
@@ -84,10 +84,6 @@ public final class SQLUtil
    public static final String LIMIT = " LIMIT ";
    public static final String UPDATE = "UPDATE ";
    public static final String SET = " SET ";
-   public static final String ALTER_TABLE = "ALTER TABLE ";
-   public static final String ALTER = " ALTER ";
-   public static final String DROP = " DROP ";
-   public static final String ADD = " ADD ";
    public static final String TYPE = " TYPE ";
    private static final String DOT = ".";
 
@@ -958,6 +954,16 @@ public final class SQLUtil
             else if(dmd.storesUpperCaseIdentifiers())
                tableName = tableName.toUpperCase();
          }
+
+         // Patch #927759: Split tablename into "schema" and "table" separated by '.'
+         int dotIndex;
+         if ((dotIndex = tableName.indexOf('.')) != -1)
+         {
+            // Yank out schema name ...
+            schema = tableName.substring(0, dotIndex);
+            tableName = tableName.substring(dotIndex + 1);
+         }
+
          rs = dmd.getTables(catalog, schema, tableName, null);
          return rs.next();
       }
@@ -1012,6 +1018,16 @@ public final class SQLUtil
             else if (dmd.storesUpperCaseIdentifiers())
                tableName = tableName.toUpperCase();
          }
+
+         // Patch #927759: Split tablename into "schema" and "table" separated by '.'
+         int dotIndex;
+         if ((dotIndex = tableName.indexOf('.')) != -1)
+         {
+            // Yank out schema name ...
+            schema = tableName.substring(0, dotIndex);
+            tableName = tableName.substring(dotIndex + 1);
+         }
+
          rs = dmd.getColumns(catalog, schema, tableName, null);
          while (rs.next())
          {
@@ -1066,6 +1082,16 @@ public final class SQLUtil
             tableName = tableName.toLowerCase();
          else if (dmd.storesUpperCaseIdentifiers())
             tableName = tableName.toUpperCase();
+
+         // Patch #927759: Split tablename into "schema" and "table" separated by '.'
+         int dotIndex;
+         if ((dotIndex = tableName.indexOf('.')) != -1)
+         {
+            // Yank out schema name ...
+            schema = tableName.substring(0, dotIndex);
+            tableName = tableName.substring(dotIndex + 1);
+         }
+
          rs = dmd.getIndexInfo(catalog, schema, tableName, false, false);
          while (rs.next())
          {

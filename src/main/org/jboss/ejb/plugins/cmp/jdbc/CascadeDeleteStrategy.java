@@ -10,12 +10,12 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.EntityCache;
 import org.jboss.logging.Logger;
 import org.jboss.deployment.DeploymentException;
-import org.jboss.security.SecurityAssociation;
 import org.jboss.invocation.InvocationType;
+import org.jboss.security.SecurityAssociation;
 
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
@@ -26,11 +26,14 @@ import java.util.HashMap;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.Principal;
 
 /**
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public abstract class CascadeDeleteStrategy
 {
@@ -309,21 +312,21 @@ public abstract class CascadeDeleteStrategy
 
    public void invokeRemoveRelated(Object relatedId)
    {
-      Thread thread = Thread.currentThread();
-      ClassLoader oldCL = thread.getContextClassLoader();
       EntityContainer container = relatedManager.getContainer();
-      thread.setContextClassLoader(container.getClassLoader());
+      final Thread thread = Thread.currentThread();
+      ClassLoader curCl = thread.getContextClassLoader();
 
       try
       {
+         thread.setContextClassLoader(container.getClassLoader());
          EntityCache instanceCache = (EntityCache) container.getInstanceCache();
 
          org.jboss.invocation.Invocation invocation = new org.jboss.invocation.Invocation();
          invocation.setId(instanceCache.createCacheKey(relatedId));
          invocation.setArguments(new Object[]{});
          invocation.setTransaction(container.getTransactionManager().getTransaction());
-         invocation.setPrincipal(SecurityAssociation.getPrincipal());
-         invocation.setCredential(SecurityAssociation.getCredential());
+         invocation.setPrincipal(GetPrincipalAction.getPrincipal());
+         invocation.setCredential(GetCredentialAction.getCredential());
          invocation.setType(invocationType);
          invocation.setMethod(removeMethod);
 
@@ -339,7 +342,37 @@ public abstract class CascadeDeleteStrategy
       }
       finally
       {
-         thread.setContextClassLoader(oldCL);
+         thread.setContextClassLoader(curCl);
+      }
+   }
+
+   private static class GetPrincipalAction implements PrivilegedAction
+   {
+      static PrivilegedAction ACTION = new GetPrincipalAction();
+      public Object run()
+      {
+         Principal principal = SecurityAssociation.getPrincipal();
+         return principal;
+      }
+      static Principal getPrincipal()
+      {
+         Principal principal = (Principal) AccessController.doPrivileged(ACTION);
+         return principal;
+      }
+   }
+
+   private static class GetCredentialAction implements PrivilegedAction
+   {
+      static PrivilegedAction ACTION = new GetCredentialAction();
+      public Object run()
+      {
+         Object credential = SecurityAssociation.getCredential();
+         return credential;
+      }
+      static Object getCredential()
+      {
+         Object credential = AccessController.doPrivileged(ACTION);
+         return credential;
       }
    }
 }

@@ -18,7 +18,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * committed these list are retrieved and used to update the relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class RelationData
 {
@@ -29,9 +29,9 @@ public final class RelationData
    public final Set removedRelations = new HashSet();
    public final Set notRelatedPairs = new HashSet();
 
-   public RelationData(JDBCCMRFieldBridge leftCMRField,
-                       JDBCCMRFieldBridge rightCMRField)
+   public RelationData(JDBCCMRFieldBridge leftCMRField, JDBCCMRFieldBridge rightCMRField)
    {
+
       this.leftCMRField = leftCMRField;
       this.rightCMRField = rightCMRField;
    }
@@ -124,17 +124,17 @@ public final class RelationData
                                            JDBCCMRFieldBridge rightCMRField,
                                            Object rightId)
    {
-      if(this.leftCMRField == leftCMRField &&
-         this.rightCMRField == rightCMRField)
+      if(this.leftCMRField == leftCMRField && this.rightCMRField == rightCMRField)
       {
          return new RelationPair(leftCMRField, leftId, rightCMRField, rightId);
       }
 
-      if(this.leftCMRField == rightCMRField &&
-         this.rightCMRField == leftCMRField)
+      if(this.leftCMRField == rightCMRField && this.rightCMRField == leftCMRField)
       {
          return new RelationPair(rightCMRField, rightId, leftCMRField, leftId);
       }
       throw new EJBException("Error: cmrFields are of wrong type");
    }
 }
+
+

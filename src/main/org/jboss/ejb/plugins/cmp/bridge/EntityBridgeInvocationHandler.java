@@ -21,16 +21,16 @@ import org.jboss.proxy.compiler.InvocationHandler;
  * dynamic proxy. This class only interacts with the EntityBridge. The main
  * job of this class is to deligate invocation of abstract methods to the
  * appropriate EntityBridge method.
- *
+ * <p/>
  * Life-cycle:
- *      Tied to the life-cycle of an entity bean instance.
- *
+ * Tied to the life-cycle of an entity bean instance.
+ * <p/>
  * Multiplicity:
- *      One per cmp entity bean instance, including beans in pool.
+ * One per cmp entity bean instance, including beans in pool.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class EntityBridgeInvocationHandler implements InvocationHandler
 {

@@ -22,11 +22,11 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 import org.jboss.ejb.plugins.cmp.jdbc.CMPFieldStateFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCTypeFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.LockingStrategy;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCEntityPersistenceStore;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCResultSetReader;
 
 import org.jboss.logging.Logger;
 
@@ -36,24 +36,24 @@ import org.jboss.logging.Logger;
  * by JDBCUtil. It is left to subclasses to implement the logic for getting
  * and setting instance values and dirty checking, as this is dependent on
  * the CMP version used.
- * <p/>
+ *
  * Life-cycle:
- * Tied to the EntityBridge.
- * <p/>
+ *      Tied to the EntityBridge.
+ *
  * Multiplicity:
- * One for each entity bean cmp field.
+ *      One for each entity bean cmp field.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.24 $
- *          <p/>
- *          <p><b>Revisions:</b>
- *          <p/>
- *          <p><b>20021023 Steve Coy:</b>
- *          <ul>
- *          <li>Changed {@link #loadArgumentResults} so that it passes the jdbc type to
- *          </ul>
+ * @version $Revision: 1.25 $
+ *
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20021023 Steve Coy:</b>
+ * <ul>
+ * <li>Changed {@link #loadArgumentResults} so that it passes the jdbc type to
+ * </ul>
  */
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
 {
@@ -67,7 +67,6 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
    protected final boolean primaryKeyMember;
    private final Class primaryKeyClass;
    private final Field primaryKeyField;
-   private final boolean indexed;
    protected final int jdbcContextIndex;
    protected final int tableIndex;
    protected CMPFieldStateFactory stateFactory;
@@ -98,23 +97,22 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       this.primaryKeyMember = metadata.isPrimaryKeyMember();
       this.primaryKeyClass = metadata.getEntity().getPrimaryKeyClass();
       this.primaryKeyField = metadata.getPrimaryKeyField();
-      this.indexed = metadata.isIndexed();
-      this.jdbcContextIndex = manager.getEntityBridge().getNextJDBCContextIndex();
+
+      final JDBCEntityBridge entityBridge = (JDBCEntityBridge)manager.getEntityBridge();
+      this.jdbcContextIndex = entityBridge.getNextJDBCContextIndex();
 
       if(!metadata.isRelationTableField())
-      {
-         tableIndex = manager.getEntityBridge().addTableField(this);
-      }
+         tableIndex = entityBridge.addTableField(this);
       else
-      {
          tableIndex = -1;
-      }
 
       final JDBCTypeFactory typeFactory = manager.getJDBCTypeFactory();
-      stateFactory = JDBCTypeFactory.getCMPFieldStateFactory(typeFactory, metadata.getStateFactory(), fieldType);
-      checkDirtyAfterGet = JDBCTypeFactory.checkDirtyAfterGet(typeFactory,
-         metadata.getCheckDirtyAfterGet(),
-         fieldType);
+      stateFactory = JDBCTypeFactory.getCMPFieldStateFactory(
+         typeFactory, metadata.getStateFactory(), fieldType
+      );
+      checkDirtyAfterGet = JDBCTypeFactory.checkDirtyAfterGet(
+         typeFactory, metadata.getCheckDirtyAfterGet(), fieldType
+      );
 
       this.log = createLogger(manager, fieldName);
    }
@@ -141,7 +139,6 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       this.primaryKeyMember = false;
       this.primaryKeyClass = primaryKeyClass;
       this.primaryKeyField = primaryKeyField;
-      this.indexed = false;
       this.jdbcContextIndex = jdbcContextIndex;
       this.tableIndex = tableIndex;
       this.stateFactory = stateFactory;
@@ -154,9 +151,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       return defaultFlags;
    }
 
-   /**
-    * get rid of it later
-    */
+   /** get rid of it later */
    public void addDefaultFlag(byte flag)
    {
       defaultFlags |= flag;
@@ -200,11 +195,6 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
    public long getReadTimeOut()
    {
       return readTimeOut;
-   }
-
-   public boolean isIndexed()
-   {
-      return indexed;
    }
 
    public Object getValue(EntityEnterpriseContext ctx)
@@ -318,43 +308,24 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       if(!readOnly)
       {
          Object value;
-         boolean notNull = jdbcType.getNotNull()[0];
-         if(fieldType == boolean.class || (fieldType == Boolean.class && notNull))
-         {
+         if(fieldType == boolean.class)
             value = Boolean.FALSE;
-         }
-         else if(fieldType == byte.class || (fieldType == Byte.class && notNull))
-         {
-            value = new Byte((byte) 0);
-         }
-         else if(fieldType == int.class || (fieldType == Integer.class && notNull))
-         {
+         else if(fieldType == byte.class)
+            value = new Byte((byte)0);
+         else if(fieldType == int.class)
             value = new Integer(0);
-         }
-         else if(fieldType == long.class || (fieldType == Long.class && notNull))
-         {
+         else if(fieldType == long.class)
             value = new Long(0L);
-         }
-         else if(fieldType == short.class || (fieldType == Short.class && notNull))
-         {
-            value = new Short((short) 0);
-         }
-         else if(fieldType == char.class || (fieldType == Character.class && notNull))
-         {
+         else if(fieldType == short.class)
+            value = new Short((short)0);
+         else if(fieldType == char.class)
             value = new Character('\u0000');
-         }
-         else if(fieldType == double.class || (fieldType == Double.class && notNull))
-         {
+         else if(fieldType == double.class)
             value = new Double(0d);
-         }
-         else if(fieldType == float.class || (fieldType == Float.class && notNull))
-         {
+         else if(fieldType == float.class)
             value = new Float(0f);
-         }
          else
-         {
             value = null;
-         }
          setInstanceValue(ctx, value);
       }
    }
@@ -380,7 +351,8 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
          for(int i = 0; i < jdbcTypes.length; i++)
          {
             Object columnValue = jdbcType.getColumnValue(i, arg);
-            JDBCUtil.setParameter(log, ps, parameterIndex++, jdbcTypes[i], columnValue);
+            jdbcType.getParameterSetter()[i].set(ps, parameterIndex++, jdbcTypes[i], columnValue, log);
+            //JDBCUtil.setParameter(log, ps, parameterIndex++, jdbcTypes[i], columnValue);
          }
          return parameterIndex;
       }
@@ -447,15 +419,10 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
 
          // update the value from the result set
          Class[] javaTypes = jdbcType.getJavaTypes();
-         JDBCUtil.ResultSetReader[] rsReaders = jdbcType.getResultSetReaders();
+         JDBCResultSetReader[] rsReaders = jdbcType.getResultSetReaders();
          for(int i = 0; i < javaTypes.length; i++)
          {
-            if(log.isTraceEnabled())
-            {
-               log.debug("reading: " + javaTypes[i].getName() + ' ' + getFieldName() + " index=" + parameterIndex);
-            }
-
-            Object columnValue = rsReaders[i].get(rs, parameterIndex++, javaTypes[i]);
+            Object columnValue = rsReaders[i].get(rs, parameterIndex++, javaTypes[i], log);
             argumentRef[0] = jdbcType.setColumnValue(i, argumentRef[0], columnValue);
          }
 
@@ -468,11 +435,6 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
          throw new EJBException("Internal error getting results " +
             "for field member " + getFieldName(), e);
       }
-   }
-
-   public boolean isCMPField()
-   {
-      return true;
    }
 
    public boolean isRelationTableField()
@@ -503,9 +465,15 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
 
    protected abstract void setDirtyAfterGet(EntityEnterpriseContext ctx);
 
+   public boolean isCMPField()
+   {
+      return true;
+   }
+
    private Logger createLogger(JDBCStoreManager manager, String fieldName)
    {
-      return Logger.getLogger(this.getClass().getName() +
+      return Logger.getLogger(
+         this.getClass().getName() +
          "." +
          manager.getMetaData().getName() +
          "#" +

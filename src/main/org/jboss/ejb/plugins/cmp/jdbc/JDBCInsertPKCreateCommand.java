@@ -15,10 +15,6 @@ import java.sql.ResultSet;
 import javax.ejb.CreateException;
 import javax.ejb.DuplicateKeyException;
 
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCAbstractCreateCommand;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
-import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.deployment.DeploymentException;
 

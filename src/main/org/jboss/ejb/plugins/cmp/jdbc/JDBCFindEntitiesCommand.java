@@ -12,6 +12,7 @@ import java.util.Collection;
 import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.GenericEntityObjectFactory;
 
 /**
  * Delegates to the specific query command.
@@ -21,7 +22,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public final class JDBCFindEntitiesCommand
 {
@@ -32,12 +33,10 @@ public final class JDBCFindEntitiesCommand
       this.manager = manager;
    }
 
-   public Collection execute(Method finderMethod,
-                             Object[] args,
-                             EntityEnterpriseContext ctx) throws FinderException
+   public Collection execute(Method finderMethod, Object[] args, EntityEnterpriseContext ctx, GenericEntityObjectFactory factory)
+      throws FinderException
    {
-
       JDBCQueryCommand query = manager.getQueryManager().getQueryCommand(finderMethod);
-      return query.execute(finderMethod, args, ctx);
+      return query.execute(finderMethod, args, ctx, factory);
    }
 }

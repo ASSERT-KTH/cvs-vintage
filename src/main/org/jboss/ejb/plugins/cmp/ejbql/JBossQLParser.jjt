@@ -47,7 +47,7 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class JBossQLParser {
    private Catalog catalog;

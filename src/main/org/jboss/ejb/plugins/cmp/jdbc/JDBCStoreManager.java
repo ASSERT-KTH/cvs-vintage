@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Iterator;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
@@ -28,10 +29,12 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EjbModule;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.GenericEntityObjectFactory;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCApplicationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCXmlFileLoader;
@@ -55,7 +58,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.67 $
+ * @version $Revision: 1.68 $
  */
 public final class JDBCStoreManager implements JDBCEntityPersistenceStore
 {
@@ -151,7 +154,7 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
       }
    }
 
-   public JDBCEntityBridge getEntityBridge()
+   public JDBCAbstractEntityBridge getEntityBridge()
    {
       return entityBridge;
    }
@@ -194,14 +197,9 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
       return ejbModule.getModuleData(key);
    }
 
-   private void putApplicationData(Object key, Object value)
+   public void putApplicationData(Object key, Object value)
    {
       ejbModule.putModuleData(key, value);
-   }
-
-   private void removeApplicationData(Object key)
-   {
-      ejbModule.removeModuleData(key);
    }
 
    private Map getApplicationTxDataMap()
@@ -270,7 +268,7 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
       CascadeDeleteRegistry registry = (CascadeDeleteRegistry)cascadeDeleteSet.get();
       return registry.wasCascadeDeleted(pk);
    }
-
+   
    public Object getApplicationTxData(Object key)
    {
       Map map = getApplicationTxDataMap();
@@ -375,9 +373,6 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
          // Make a copy of the managers (for safty)
          ArrayList managers = new ArrayList(managersMap.values());
 
-         // remove the managers list (it is no longer needed)
-         removeApplicationData(CREATED_MANAGERS);
-
          //
          //
          // Start Phase 2: resolve relationships
@@ -394,6 +389,13 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
          {
             JDBCStoreManager manager = (JDBCStoreManager)managers.get(i);
             manager.startStoreManager();
+         }
+
+         // add foreign key constraints
+         for(int i = 0; i < managers.size(); ++i)
+         {
+            JDBCStoreManager manager = (JDBCStoreManager)managers.get(i);
+            manager.startCommand.addForeignKeyConstraints();
          }
       }
    }
@@ -498,9 +500,6 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
       queryManager.start();
 
       readAheadCache.start();
-
-      //if(log.isDebugEnabled())
-      //   log.debug(entityBridge.getDebugInfo().toString());
    }
 
    public void stop()
@@ -508,7 +507,25 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
       // On deploy errors, sometimes CMPStoreManager was never initialized!
       if(stopCommand != null)
       {
-         stopCommand.execute();
+         Map managersMap = (HashMap)getApplicationData(CREATED_MANAGERS);
+         while(!managersMap.isEmpty())
+         {
+            int stoppedInIteration = 0;
+            for(Iterator i = managersMap.values().iterator(); i.hasNext();)
+            {
+               JDBCStoreManager manager = (JDBCStoreManager)i.next();
+               if(manager.stopCommand.execute())
+               {
+                  i.remove();
+                  ++stoppedInIteration;
+               }
+            }
+
+            if(stoppedInIteration == 0)
+            {
+               break;
+            }
+         }
       }
       readAheadCache.stop();
    }
@@ -569,41 +586,31 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
    }
 
    public Object postCreateEntity(Method createMethod, Object[] args, EntityEnterpriseContext ctx)
-      throws CreateException
    {
       return postCreateEntityCommand.execute(createMethod, args, ctx);
    }
 
    public Object findEntity(Method finderMethod,
                             Object[] args,
-                            EntityEnterpriseContext ctx)
+                            EntityEnterpriseContext ctx,
+                            GenericEntityObjectFactory factory)
       throws FinderException
    {
-      return findEntityCommand.execute(finderMethod, args, ctx);
+      return findEntityCommand.execute(finderMethod, args, ctx, factory);
    }
 
    public Collection findEntities(Method finderMethod,
                                   Object[] args,
-                                  EntityEnterpriseContext ctx)
+                                  EntityEnterpriseContext ctx,
+                                  GenericEntityObjectFactory factory)
       throws FinderException
    {
-      return findEntitiesCommand.execute(finderMethod, args, ctx);
+      return findEntitiesCommand.execute(finderMethod, args, ctx, factory);
    }
 
    public void activateEntity(EntityEnterpriseContext ctx)
    {
       activateEntityCommand.execute(ctx);
-
-      // looad at the cache for preloaded data
-      boolean loaded = readAheadCache.load(ctx);
-
-      // if there was some preloaded (in this current tx) data, we can set valid to true
-      // and avoid executing load command when the instance is accessed.
-      if(loaded)
-      {
-         ctx.setValid(true);
-         JDBCEntityBridge.setCreated(ctx);
-      }
    }
 
    /**
@@ -652,7 +659,7 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
 
    private void synchronizeRelationData()
    {
-      final JDBCCMRFieldBridge[] cmrFields = entityBridge.getCMRFields();
+      final JDBCCMRFieldBridge[] cmrFields = (JDBCCMRFieldBridge[]) entityBridge.getCMRFields();
       for(int i = 0; i < cmrFields.length; ++i)
       {
          final JDBCCMRFieldBridge.RelationDataManager relationManager = cmrFields[i].getRelationDataManager();

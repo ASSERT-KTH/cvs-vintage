@@ -12,6 +12,7 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.AllowedOperationsAssociation;
+import org.jboss.ejb.GenericEntityObjectFactory;
 import org.jboss.logging.Logger;
 
 import javax.ejb.CreateException;
@@ -37,7 +38,7 @@ import java.util.Iterator;
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-*  @version $Revision: 1.51 $
+*  @version $Revision: 1.52 $
 */
 public class BMPPersistenceManager
    implements EntityPersistenceManager
@@ -236,16 +237,6 @@ public class BMPPersistenceManager
 
       // Give it to the context
       ctx.setCacheKey(cacheKey);
-
-      // Create EJBObject
-      if (con.getProxyFactory() != null)
-      {
-         ctx.setEJBObject((EJBObject) con.getProxyFactory().getEntityEJBObject(cacheKey));
-      }
-      if (con.getLocalHomeClass() != null)
-      {
-         ctx.setEJBLocalObject(con.getLocalProxyFactory().getEntityEJBLocalObject(cacheKey));
-      }
    }
 
    public void postCreateEntity(
@@ -300,7 +291,7 @@ public class BMPPersistenceManager
       }
    }
 
-   public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+   public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx, GenericEntityObjectFactory factory)
    throws Exception
    {
       try
@@ -310,8 +301,8 @@ public class BMPPersistenceManager
          // call the finder method
          Object objectId = callFinderMethod(finderMethod, args, ctx);
 
-         // get the cache, create a new key and return this new key
-         return ((EntityCache)con.getInstanceCache()).createCacheKey( objectId );
+         final Object cacheKey = ((EntityCache)con.getInstanceCache()).createCacheKey( objectId );
+         return factory.getEntityEJBObject(cacheKey);
       }
       finally
       {
@@ -319,7 +310,7 @@ public class BMPPersistenceManager
       }
    }
 
-   public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+   public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx, GenericEntityObjectFactory factory)
    throws Exception
    {
       // call the finder method
@@ -350,7 +341,9 @@ public class BMPPersistenceManager
          while (enum.hasMoreElements() == true)
          {
             // Wrap a cache key around the given object id/primary key
-            array.add(((EntityCache) con.getInstanceCache()).createCacheKey(enum.nextElement()));
+            final Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey(enum.nextElement());
+            Object o = factory.getEntityEJBObject(cacheKey);
+            array.add(o);
          }
          return array;
       }
@@ -362,7 +355,9 @@ public class BMPPersistenceManager
          while (enum.hasNext())
          {
             // Wrap a cache key around the given object id/primary key
-            array.add(((EntityCache) con.getInstanceCache()).createCacheKey(enum.next()));
+            final Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey(enum.next());
+            Object o = factory.getEntityEJBObject(cacheKey);
+            array.add(o);
          }
          return array;
       }
@@ -384,16 +379,6 @@ public class BMPPersistenceManager
 
       // Give it to the context
       ctx.setCacheKey(cacheKey);
-
-      // Create EJBObject
-      if (con.getProxyFactory() != null)
-      {
-         ctx.setEJBObject((EJBObject) con.getProxyFactory().getEntityEJBObject(cacheKey));
-      }
-      if (con.getLocalHomeClass() != null)
-      {
-         ctx.setEJBLocalObject(con.getLocalProxyFactory().getEntityEJBLocalObject(cacheKey));
-      }
 
       try
       {

@@ -17,10 +17,9 @@ import java.lang.reflect.Method;
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="danch@nvisia.com">danch</a>
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
-public interface JDBCQueryMetaData
-{
+public interface JDBCQueryMetaData {
    /**
     * Gets the method which invokes this query.
     * @return the Method object which invokes this query
@@ -28,7 +27,7 @@ public interface JDBCQueryMetaData
    public Method getMethod();
 
    /**
-    * Is the result set of ejbSelect is mapped to local ejb objects or
+    * Is the result set of ejbSelect is mapped to local ejb objects or 
     * remote ejb objects.
     * @return true, if the result set is to be local objects
     */
@@ -40,5 +39,10 @@ public interface JDBCQueryMetaData
     */
    public JDBCReadAheadMetaData getReadAhead();
 
+   /**
+    * @return EJBQL compiler implementation
+    */
    public Class getQLCompilerClass();
+
+   public boolean isLazyResultSetLoading();
 }

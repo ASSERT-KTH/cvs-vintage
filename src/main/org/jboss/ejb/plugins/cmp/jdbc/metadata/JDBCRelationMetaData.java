@@ -12,7 +12,6 @@ import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.RelationMetaData;
@@ -20,742 +19,710 @@ import org.jboss.metadata.RelationshipRoleMetaData;
 import org.w3c.dom.Element;
 
 /**
- * This class represents one ejb-relation element in the ejb-jar.xml file.
- * Most properties of this class are immutable.  The mutable properties
- * have set methods.
- *
- * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.23 $
+ * This class represents one ejb-relation element in the ejb-jar.xml file. Most
+ * properties of this class are immutable. The mutable properties have set
+ * methods.
+ * 
+ * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom </a>
+ * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp </a>
+ * @version $Revision: 1.24 $
  */
 public final class JDBCRelationMetaData
 {
-   private final static int TABLE = 1;
-   private final static int FOREIGN_KEY = 2;
+	private final static int TABLE = 1;
 
-   /** Name of the relation. Loaded from the ejb-relation-name element. */
-   private final String relationName;
+	private final static int FOREIGN_KEY = 2;
 
-   /**
-    * The left jdbc relationship role. Loaded from an ejb-relationship-role.
-    * Left/right assignment is completely arbitrary.
-    */
-   private final JDBCRelationshipRoleMetaData left;
+	/** Name of the relation. Loaded from the ejb-relation-name element. */
+	private final String relationName;
 
-   /**
-    * The right relationship role. Loaded from an ejb-relationship-role.
-    * Left/right assignment is completely arbitrary.
-    */
-   private final JDBCRelationshipRoleMetaData right;
+	/**
+	 * The left jdbc relationship role. Loaded from an ejb-relationship-role.
+	 * Left/right assignment is completely arbitrary.
+	 */
+	private final JDBCRelationshipRoleMetaData left;
 
-   /**
-    * The mapping style for this relation (i.e., TABLE or FOREIGN_KEY).
-    */
-   private final int mappingStyle;
+	/**
+	 * The right relationship role. Loaded from an ejb-relationship-role.
+	 * Left/right assignment is completely arbitrary.
+	 */
+	private final JDBCRelationshipRoleMetaData right;
 
-   /** data source name in jndi */
-   private final String dataSourceName;
+	/**
+	 * The mapping style for this relation (i.e., TABLE or FOREIGN_KEY).
+	 */
+	private final int mappingStyle;
 
-   /** This is a cache of the datasource object. */
-   private transient DataSource dataSource;
+	/** data source name in jndi */
+	private final String dataSourceName;
 
-   /** type mapping used for the relation table */
-   private final JDBCTypeMappingMetaData datasourceMapping;
+	/** This is a cache of the datasource object. */
+	private transient DataSource dataSource;
 
-   /** the name of the table to use for this bean */
-   private final String tableName;
+	/** type mapping used for the relation table */
+	private final JDBCTypeMappingMetaData datasourceMapping;
 
-   /** is table created */
-   private boolean tableCreated;
+	/** the name of the table to use for this bean */
+	private final String tableName;
 
-   /** is table dropped */
-   private boolean tableDropped;
+	/** is table created */
+	private boolean tableCreated;
 
-   /** should we create the table when deployed */
-   private final boolean createTable;
+	/** is table dropped */
+	private boolean tableDropped;
 
-   /** should we drop the table when deployed */
-   private final boolean removeTable;
+	/** should we create the table when deployed */
+	private final boolean createTable;
 
-    /** should we alter the table when deployed */
-    private final boolean alterTable;
+	/** should we drop the table when deployed */
+	private final boolean removeTable;
 
-   /**
-	* What commands should be issued directly after creation
-	* of a table?
-	*/
-   private final ArrayList tablePostCreateCmd;
+	/** should we alter the table when deployed */
+	private final boolean alterTable;
 
-   /** should we use 'SELECT ... FOR UPDATE' syntax? */
-   private final boolean rowLocking;
+	/**
+	 * What commands should be issued directly after creation of a table?
+	 */
+	private final ArrayList tablePostCreateCmd;
 
-   /** should the table have a primary key constraint? */
-   private final boolean primaryKeyConstraint;
+	/** should we use 'SELECT ... FOR UPDATE' syntax? */
+	private final boolean rowLocking;
 
-   /** is the relationship read-only? */
-   private final boolean readOnly;
+	/** should the table have a primary key constraint? */
+	private final boolean primaryKeyConstraint;
 
-   /** how long is read valid */
-   private final int readTimeOut;
+	/** is the relationship read-only? */
+	private final boolean readOnly;
 
-   /**
-    * Constructs jdbc relation meta data with the data from the relation
-    * metadata loaded from the ejb-jar.xml file.
-    *
-    * @param jdbcApplication used to retrieve the entities of this relation
-    * @param relationMetaData relation meta data loaded from the ejb-jar.xml
-    * file
-    */
-   public JDBCRelationMetaData(
-      JDBCApplicationMetaData jdbcApplication,
-      RelationMetaData relationMetaData) throws DeploymentException
-   {
+	/** how long is read valid */
+	private final int readTimeOut;
 
-      relationName = relationMetaData.getRelationName();
+	/**
+	 * Constructs jdbc relation meta data with the data from the relation
+	 * metadata loaded from the ejb-jar.xml file.
+	 * 
+	 * @param jdbcApplication used to retrieve the entities of this relation
+	 * @param relationMetaData relation meta data loaded from the ejb-jar.xml
+	 *           file
+	 */
+	public JDBCRelationMetaData(JDBCApplicationMetaData jdbcApplication, RelationMetaData relationMetaData)
+			throws DeploymentException
+	{
 
-      RelationshipRoleMetaData leftRole =
-         relationMetaData.getLeftRelationshipRole();
-      RelationshipRoleMetaData rightRole =
-         relationMetaData.getRightRelationshipRole();
+		relationName = relationMetaData.getRelationName();
 
-      // set the default mapping style
-      if(leftRole.isMultiplicityMany() && rightRole.isMultiplicityMany())
-      {
-         mappingStyle = TABLE;
-      }
-      else
-      {
-         mappingStyle = FOREIGN_KEY;
-      }
+		RelationshipRoleMetaData leftRole = relationMetaData.getLeftRelationshipRole();
+		RelationshipRoleMetaData rightRole = relationMetaData.getRightRelationshipRole();
 
-      dataSourceName = null;
-      datasourceMapping = null;
-      createTable = false;
-      removeTable = false;
-      alterTable = false;
-      rowLocking = false;
-      primaryKeyConstraint = false;
-      readOnly = false;
-      readTimeOut = -1;
-
-      left = new JDBCRelationshipRoleMetaData(
-         this,
-         jdbcApplication,
-         leftRole);
-
-      right = new JDBCRelationshipRoleMetaData(
-         this,
-         jdbcApplication,
-         rightRole);
-      left.init(right);
-      right.init(left);
-
-      if(mappingStyle == TABLE) {
-         tableName = createDefaultTableName();
-         tablePostCreateCmd = getDefaultTablePostCreateCmd();
-      } else {
-         tableName = null;
-         tablePostCreateCmd = null;
-      }
-   }
-
-   /**
-    * Constructs relation meta data with the data contained in the ejb-relation
-    * element or the defaults element from a jbosscmp-jdbc xml file. Optional
-    * values of the xml element that are not present are loaded from the
-    * defaultValues parameter.
-    *
-    * @param jdbcApplication used to retrieve type mappings in table mapping
-    * style
-    * @param element the xml Element which contains the metadata about this
-    * relation
-    * @param defaultValues the JDBCApplicationMetaData which contains the values
-    * for optional elements of the element
-    * @throws DeploymentException if the xml element is not semantically correct
-    */
-   public JDBCRelationMetaData(
-      JDBCApplicationMetaData jdbcApplication,
-      Element element,
-      JDBCRelationMetaData defaultValues) throws DeploymentException
-   {
-
-      relationName = defaultValues.getRelationName();
-      mappingStyle = loadMappingStyle(element, defaultValues);
-
-      // post-table-create commands
-	  Element posttc = MetaData.getOptionalChild(element,"post-table-create");
-	  if (posttc!=null) {
-	 	Iterator it = MetaData.getChildrenByTagName(posttc,"sql-statement");
-		tablePostCreateCmd = new ArrayList();
-		while (it.hasNext()) {
-		  Element etmp = (Element)it.next();
-		  tablePostCreateCmd.add(MetaData.getElementContent(etmp));
+		// set the default mapping style
+		if (leftRole.isMultiplicityMany() && rightRole.isMultiplicityMany())
+		{
+			mappingStyle = TABLE;
+		}
+		else
+		{
+			mappingStyle = FOREIGN_KEY;
 		}
 
-	  }
-	  else {
-		 tablePostCreateCmd = defaultValues.getDefaultTablePostCreateCmd();
-	  }
+		dataSourceName = null;
+		datasourceMapping = null;
+		createTable = false;
+		removeTable = false;
+		alterTable = false;
+		rowLocking = false;
+		primaryKeyConstraint = false;
+		readOnly = false;
+		readTimeOut = -1;
 
+		left = new JDBCRelationshipRoleMetaData(this, jdbcApplication, leftRole);
 
+		right = new JDBCRelationshipRoleMetaData(this, jdbcApplication, rightRole);
+		left.init(right);
+		right.init(left);
 
+		if (mappingStyle == TABLE)
+		{
+			tableName = createDefaultTableName();
+			tablePostCreateCmd = getDefaultTablePostCreateCmd();
+		}
+		else
+		{
+			tableName = null;
+			tablePostCreateCmd = null;
+		}
+	}
 
-      // read-only
-      String readOnlyString = MetaData.getOptionalChildContent(
-         element, "read-only");
-      if(readOnlyString != null)
-      {
-         readOnly = Boolean.valueOf(readOnlyString).booleanValue();
-      }
-      else
-      {
-         readOnly = defaultValues.isReadOnly();
-      }
+	/**
+	 * Constructs relation meta data with the data contained in the ejb-relation
+	 * element or the defaults element from a jbosscmp-jdbc xml file. Optional
+	 * values of the xml element that are not present are loaded from the
+	 * defaultValues parameter.
+	 * 
+	 * @param jdbcApplication used to retrieve type mappings in table mapping
+	 *           style
+	 * @param element the xml Element which contains the metadata about this
+	 *           relation
+	 * @param defaultValues the JDBCApplicationMetaData which contains the
+	 *           values for optional elements of the element
+	 * @throws DeploymentException if the xml element is not semantically
+	 *            correct
+	 */
+	public JDBCRelationMetaData(JDBCApplicationMetaData jdbcApplication, Element element,
+			JDBCRelationMetaData defaultValues) throws DeploymentException
+	{
 
-      // read-time-out
-      String readTimeOutString = MetaData.getOptionalChildContent(
-            element, "read-time-out");
-      if(readTimeOutString != null) {
-         try {
-            readTimeOut = Integer.parseInt(readTimeOutString);
-         } catch (NumberFormatException e) {
-            throw new DeploymentException("Invalid number format in " +
-                  "read-time-out '" + readTimeOutString + "': " + e);
-         }
-      } else {
-         readTimeOut = defaultValues.getReadTimeOut();
-      }
+		relationName = defaultValues.getRelationName();
+		mappingStyle = loadMappingStyle(element, defaultValues);
 
+		// post-table-create commands
+		Element posttc = MetaData.getOptionalChild(element, "post-table-create");
+		if (posttc != null)
+		{
+			Iterator it = MetaData.getChildrenByTagName(posttc, "sql-statement");
+			tablePostCreateCmd = new ArrayList();
+			while (it.hasNext())
+			{
+				Element etmp = (Element) it.next();
+				tablePostCreateCmd.add(MetaData.getElementContent(etmp));
+			}
 
-      //
-      // Load all of the table options. defaults and relation-table-mapping
-      // will have these elements, and foreign-key will get the default values.
-      //
-      Element mappingElement = getMappingElement(element);
+		}
+		else
+		{
+			tablePostCreateCmd = defaultValues.getDefaultTablePostCreateCmd();
+		}
 
-      // datasource name
-      String dataSourceNameString = MetaData.getOptionalChildContent(
-            mappingElement, "datasource");
-      if(dataSourceNameString != null) {
+		// read-only
+		String readOnlyString = MetaData.getOptionalChildContent(element, "read-only");
+		if (readOnlyString != null)
+		{
+			readOnly = Boolean.valueOf(readOnlyString).booleanValue();
+		}
+		else
+		{
+			readOnly = defaultValues.isReadOnly();
+		}
+
+		// read-time-out
+		String readTimeOutString = MetaData.getOptionalChildContent(element, "read-time-out");
+		if (readTimeOutString != null)
+		{
+			try
+			{
+				readTimeOut = Integer.parseInt(readTimeOutString);
+			}
+			catch (NumberFormatException e)
+			{
+				throw new DeploymentException("Invalid number format in " + "read-time-out '" + readTimeOutString + "': "
+						+ e);
+			}
+		}
+		else
+		{
+			readTimeOut = defaultValues.getReadTimeOut();
+		}
+
+		//
+		// Load all of the table options. defaults and relation-table-mapping
+		// will have these elements, and foreign-key will get the default values.
+		//
+		Element mappingElement = getMappingElement(element);
+
+		// datasource name
+		String dataSourceNameString = MetaData.getOptionalChildContent(mappingElement, "datasource");
+		if (dataSourceNameString != null)
          dataSourceName = dataSourceNameString;
-      } else {
-         dataSourceName = defaultValues.getDataSourceName();
-      }
+		else
+			dataSourceName = defaultValues.getDataSourceName();
 
-      // get the type mapping for this datasource (optional, but always
-      // set in standardjbosscmp-jdbc.xml)
-      String datasourceMappingString = MetaData.getOptionalChildContent(
-            mappingElement, "datasource-mapping");
-      if(datasourceMappingString != null) {
+		// get the type mapping for this datasource (optional, but always
+		// set in standardjbosscmp-jdbc.xml)
+		String datasourceMappingString = MetaData.getOptionalChildContent(mappingElement, "datasource-mapping");
+		if (datasourceMappingString != null)
+		{
+			datasourceMapping = jdbcApplication.getTypeMappingByName(datasourceMappingString);
+			if (datasourceMapping == null)
+			{
+				throw new DeploymentException("Error in jbosscmp-jdbc.xml : " + "datasource-mapping "
+						+ datasourceMappingString + " not found");
+			}
+		}
+		else
+		{
+			datasourceMapping = defaultValues.getTypeMapping();
+		}
 
-         datasourceMapping = jdbcApplication.getTypeMappingByName(
-            datasourceMappingString);
+		// get table name
+		String tableNameString = MetaData.getOptionalChildContent(mappingElement, "table-name");
+		if (tableNameString == null)
+		{
+			tableNameString = defaultValues.getDefaultTableName();
+			if (tableNameString == null)
+			{
+				// use defaultValues to create default, because left/right
+				// have not been assigned yet, and values used to generate
+				// default table name never change
+				tableNameString = defaultValues.createDefaultTableName();
+			}
+		}
+		tableName = tableNameString;
 
-         if(datasourceMapping == null)
-         {
-            throw new DeploymentException("Error in jbosscmp-jdbc.xml : " +
-               "datasource-mapping " + datasourceMappingString +
-               " not found");
-         }
-      }
-      else
-      {
-         datasourceMapping = defaultValues.getTypeMapping();
-      }
+		// create table? If not provided, keep default.
+		String createString = MetaData.getOptionalChildContent(mappingElement, "create-table");
+		if (createString != null)
+		{
+			createTable = Boolean.valueOf(createString).booleanValue();
+		}
+		else
+		{
+			createTable = defaultValues.getCreateTable();
+		}
 
-      // get table name
-      String tableNameString = MetaData.getOptionalChildContent(
-         mappingElement, "table-name");
-      if(tableNameString == null)
-      {
-         tableNameString = defaultValues.getDefaultTableName();
-         if(tableNameString == null)
-         {
-            // use defaultValues to create default, because left/right
-            // have not been assigned yet, and values used to generate
-            // default table name never change
-            tableNameString = defaultValues.createDefaultTableName();
-         }
-      }
-      tableName = tableNameString;
+		// remove table? If not provided, keep default.
+		String removeString = MetaData.getOptionalChildContent(mappingElement, "remove-table");
+		if (removeString != null)
+		{
+			removeTable = Boolean.valueOf(removeString).booleanValue();
+		}
+		else
+		{
+			removeTable = defaultValues.getRemoveTable();
+		}
 
-      // create table?  If not provided, keep default.
-      String createString = MetaData.getOptionalChildContent(
-         mappingElement, "create-table");
-      if(createString != null)
-      {
-         createTable = Boolean.valueOf(createString).booleanValue();
-      }
-      else
-      {
-         createTable = defaultValues.getCreateTable();
-      }
+		// alter table? If not provided, keep default.
+		String alterString = MetaData.getOptionalChildContent(mappingElement, "alter-table");
+		if (alterString != null)
+		{
+			alterTable = Boolean.valueOf(alterString).booleanValue();
+		}
+		else
+		{
+			alterTable = defaultValues.getAlterTable();
+		}
 
-      // remove table?  If not provided, keep default.
-      String removeString = MetaData.getOptionalChildContent(
-         mappingElement, "remove-table");
-      if(removeString != null)
-      {
-         removeTable = Boolean.valueOf(removeString).booleanValue();
-      }
-      else
-      {
-         removeTable = defaultValues.getRemoveTable();
-      }
+		// select for update
+		String sForUpString = MetaData.getOptionalChildContent(mappingElement, "row-locking");
+		if (sForUpString != null)
+		{
+			rowLocking = !isReadOnly() && (Boolean.valueOf(sForUpString).booleanValue());
+		}
+		else
+		{
+			rowLocking = defaultValues.hasRowLocking();
+		}
 
-        // alter table? If not provided, keep default.
-      String alterString = MetaData.getOptionalChildContent(mappingElement, "alter-table");
-      if (alterString!=null)
-      {
-         alterTable = Boolean.valueOf(alterString).booleanValue();
-      }
-      else
-      {
-         alterTable = defaultValues.getAlterTable();
-      }
+		// primary key constraint? If not provided, keep default.
+		String pkString = MetaData.getOptionalChildContent(mappingElement, "pk-constraint");
+		if (pkString != null)
+		{
+			primaryKeyConstraint = Boolean.valueOf(pkString).booleanValue();
+		}
+		else
+		{
+			primaryKeyConstraint = defaultValues.hasPrimaryKeyConstraint();
+		}
 
-      // select for update
-      String sForUpString = MetaData.getOptionalChildContent(
-         mappingElement, "row-locking");
-      if(sForUpString != null)
-      {
-         rowLocking = !isReadOnly() &&
-            (Boolean.valueOf(sForUpString).booleanValue());
-      }
-      else
-      {
-         rowLocking = defaultValues.hasRowLocking();
-      }
+		//
+		// load metadata for each specified role
+		//
+		JDBCRelationshipRoleMetaData defaultLeft = defaultValues.getLeftRelationshipRole();
+		JDBCRelationshipRoleMetaData defaultRight = defaultValues.getRightRelationshipRole();
 
-      // primary key constraint?  If not provided, keep default.
-      String pkString = MetaData.getOptionalChildContent(
-         mappingElement, "pk-constraint");
-      if(pkString != null)
-      {
-         primaryKeyConstraint = Boolean.valueOf(pkString).booleanValue();
-      }
-      else
-      {
-         primaryKeyConstraint = defaultValues.hasPrimaryKeyConstraint();
-      }
+		if (!MetaData.getChildrenByTagName(element, "ejb-relationship-role").hasNext())
+		{
 
-      //
-      // load metadata for each specified role
-      //
-      JDBCRelationshipRoleMetaData defaultLeft =
-         defaultValues.getLeftRelationshipRole();
-      JDBCRelationshipRoleMetaData defaultRight =
-         defaultValues.getRightRelationshipRole();
+			// no roles specified use the defaults
+			left = new JDBCRelationshipRoleMetaData(this, jdbcApplication, element, defaultLeft);
 
-      if(!MetaData.getChildrenByTagName(
-         element, "ejb-relationship-role").hasNext())
-      {
+			right = new JDBCRelationshipRoleMetaData(this, jdbcApplication, element, defaultRight);
 
-         // no roles specified use the defaults
-         left = new JDBCRelationshipRoleMetaData(
-            this,
-            jdbcApplication,
-            element,
-            defaultLeft);
+			left.init(right);
+			right.init(left);
+		}
+		else
+		{
+			Element leftElement = getEJBRelationshipRoleElement(element, defaultLeft);
+			left = new JDBCRelationshipRoleMetaData(this, jdbcApplication, leftElement, defaultLeft);
 
-         right = new JDBCRelationshipRoleMetaData(
-            this,
-            jdbcApplication,
-            element,
-            defaultRight);
+			Element rightElement = getEJBRelationshipRoleElement(element, defaultRight);
+			right = new JDBCRelationshipRoleMetaData(this, jdbcApplication, rightElement, defaultRight);
 
-         left.init(right);
-         right.init(left);
-      }
-      else
-      {
-         Element leftElement =
-            getEJBRelationshipRoleElement(element, defaultLeft);
-         left = new JDBCRelationshipRoleMetaData(
-            this,
-            jdbcApplication,
-            leftElement,
-            defaultLeft);
+			left.init(right, leftElement);
+			right.init(left, rightElement);
+		}
 
-         Element rightElement =
-            getEJBRelationshipRoleElement(element, defaultRight);
-         right = new JDBCRelationshipRoleMetaData(
-            this,
-            jdbcApplication,
-            rightElement,
-            defaultRight);
+		// at least one side of a fk relation must have keys
+		if (isForeignKeyMappingStyle() && left.getKeyFields().isEmpty() && right.getKeyFields().isEmpty())
+		{
+			throw new DeploymentException("Atleast one role of a foreign-key "
+					+ "mapped relationship must have key fields " + "(or <primkey-field> is missing from ejb-jar.xml): "
+					+ "ejb-relation-name=" + relationName);
+		}
 
-         left.init(right, leftElement);
-         right.init(left, rightElement);
-      }
+		// both sides of a table relation must have keys
+		if (isTableMappingStyle() && (left.getKeyFields().isEmpty() || right.getKeyFields().isEmpty()))
+		{
+			throw new DeploymentException("Both roles of a relation-table " + "mapped relationship must have key fields: "
+					+ "ejb-relation-name=" + relationName);
+		}
+	}
 
-      // at least one side of a fk relation must have keys
-      if(isForeignKeyMappingStyle() &&
-         left.getKeyFields().isEmpty() &&
-         right.getKeyFields().isEmpty())
-      {
-         throw new DeploymentException("Atleast one role of a foreign-key " +
-               "mapped relationship must have key fields " +
-               "(or <primkey-field> is missing from ejb-jar.xml): " +
-               "ejb-relation-name=" + relationName);
-      }
+	private int loadMappingStyle(Element element, JDBCRelationMetaData defaultValues) throws DeploymentException
+	{
 
-      // both sides of a table relation must have keys
-      if(isTableMappingStyle() &&
-         (left.getKeyFields().isEmpty() ||
-         right.getKeyFields().isEmpty()))
-      {
-         throw new DeploymentException("Both roles of a relation-table " +
-            "mapped relationship must have key fields: " +
-            "ejb-relation-name=" + relationName);
-      }
-   }
+		// if defaults check for preferred-relation-mapping
+		if ("defaults".equals(element.getTagName()))
+		{
+			// set mapping style based on preferred-relation-mapping (if possible)
+			String perferredRelationMapping = MetaData.getOptionalChildContent(element, "preferred-relation-mapping");
 
-   private int loadMappingStyle(Element element,
-                                JDBCRelationMetaData defaultValues) throws DeploymentException
-   {
+			if ("relation-table".equals(perferredRelationMapping) || defaultValues.isManyToMany())
+			{
+				return TABLE;
+			}
+			else
+			{
+				return FOREIGN_KEY;
+			}
+		}
 
-      // if defaults check for preferred-relation-mapping
-      if("defaults".equals(element.getTagName()))
-      {
-         // set mapping style based on preferred-relation-mapping (if possible)
-         String perferredRelationMapping = MetaData.getOptionalChildContent(
-            element, "preferred-relation-mapping");
+		// check for table mapping style
+		if (MetaData.getOptionalChild(element, "relation-table-mapping") != null)
+		{
+			return TABLE;
+		}
 
-         if("relation-table".equals(perferredRelationMapping) ||
-            defaultValues.isManyToMany())
-         {
-            return TABLE;
-         }
-         else
-         {
-            return FOREIGN_KEY;
-         }
-      }
+		// check for foreign-key mapping style
+		if (MetaData.getOptionalChild(element, "foreign-key-mapping") != null)
+		{
+			if (defaultValues.isManyToMany())
+			{
+				throw new DeploymentException("Foreign key mapping-style "
+						+ "is not allowed for many-to-many relationsips.");
+			}
+			return FOREIGN_KEY;
+		}
 
-      // check for table mapping style
-      if(MetaData.getOptionalChild(element, "relation-table-mapping") != null)
-      {
-         return TABLE;
-      }
+		// no mapping style element, will use defaultValues
+		return defaultValues.mappingStyle;
+	}
 
-      // check for foreign-key mapping style
-      if(MetaData.getOptionalChild(element, "foreign-key-mapping") != null)
-      {
-         if(defaultValues.isManyToMany())
-         {
-            throw new DeploymentException("Foreign key mapping-style " +
-               "is not allowed for many-to-many relationsips.");
-         }
-         return FOREIGN_KEY;
-      }
+	private static Element getMappingElement(Element element) throws DeploymentException
+	{
 
-      // no mapping style element, will use defaultValues
-      return defaultValues.mappingStyle;
-   }
+		// if defaults check for preferred-relation-mapping
+		if ("defaults".equals(element.getTagName()))
+		{
+			return element;
+		}
 
-   private static Element getMappingElement(Element element)
-         throws DeploymentException {
+		// check for table mapping style
+		Element tableMappingElement = MetaData.getOptionalChild(element, "relation-table-mapping");
+		if (tableMappingElement != null)
+		{
+			return tableMappingElement;
+		}
 
-      // if defaults check for preferred-relation-mapping
-      if("defaults".equals(element.getTagName()))
-      {
-         return element;
-      }
+		// check for foreign-key mapping style
+		Element foreignKeyMappingElement = MetaData.getOptionalChild(element, "foreign-key-mapping");
+		if (foreignKeyMappingElement != null)
+		{
+			return foreignKeyMappingElement;
+		}
+		return null;
+	}
 
-      // check for table mapping style
-      Element tableMappingElement =
-         MetaData.getOptionalChild(element, "relation-table-mapping");
-      if(tableMappingElement != null)
-      {
-         return tableMappingElement;
-      }
+	private static Element getEJBRelationshipRoleElement(Element element, JDBCRelationshipRoleMetaData defaultRole)
+			throws DeploymentException
+	{
 
-      // check for foreign-key mapping style
-      Element foreignKeyMappingElement =
-         MetaData.getOptionalChild(element, "foreign-key-mapping");
-      if(foreignKeyMappingElement != null)
-      {
-         return foreignKeyMappingElement;
-      }
-      return null;
-   }
+		String roleName = defaultRole.getRelationshipRoleName();
 
-   private static Element getEJBRelationshipRoleElement(
-         Element element,
-         JDBCRelationshipRoleMetaData defaultRole) throws DeploymentException {
+		if (roleName == null)
+			throw new DeploymentException("No ejb-relationship-role-name element found");
 
-      String roleName = defaultRole.getRelationshipRoleName();
+		Iterator iter = MetaData.getChildrenByTagName(element, "ejb-relationship-role");
+		if (!iter.hasNext())
+		{
+			throw new DeploymentException("No ejb-relationship-role " + "elements found");
+		}
 
-      if(roleName == null)
-         throw new DeploymentException("No ejb-relationship-role-name element found");
+		Element roleElement = null;
+		for (int i = 0; iter.hasNext(); i++)
+		{
+			// only 2 roles are allowed
+			if (i > 1)
+			{
+				throw new DeploymentException("Expected only 2 " + "ejb-relationship-role but found more then 2");
+			}
 
-      Iterator iter = MetaData.getChildrenByTagName(
-         element, "ejb-relationship-role");
-      if(!iter.hasNext())
-      {
-         throw new DeploymentException("No ejb-relationship-role " +
-            "elements found");
-      }
+			Element tempElement = (Element) iter.next();
+			if (roleName.equals(MetaData.getUniqueChildContent(tempElement, "ejb-relationship-role-name")))
+			{
+				roleElement = tempElement;
+			}
+		}
 
-      Element roleElement = null;
-      for(int i = 0; iter.hasNext(); i++)
-      {
-         // only 2 roles are allowed
-         if(i > 1)
-         {
-            throw new DeploymentException("Expected only 2 " +
-               "ejb-relationship-role but found more then 2");
-         }
+		if (roleElement == null)
+		{
+			throw new DeploymentException("An ejb-relationship-role element was " + "not found for role '" + roleName
+					+ "'");
+		}
+		return roleElement;
+	}
 
-         Element tempElement = (Element) iter.next();
-         if(roleName.equals(MetaData.getUniqueChildContent(
-            tempElement, "ejb-relationship-role-name")))
-         {
-            roleElement = tempElement;
-         }
-      }
+	/**
+	 * Gets the relation name. Relation name is loaded from the
+	 * ejb-relation-name element.
+	 * 
+	 * @return the name of this relation
+	 */
+	public String getRelationName()
+	{
+		return relationName;
+	}
 
-      if(roleElement == null)
-      {
-         throw new DeploymentException("An ejb-relationship-role element was " +
-            "not found for role '" + roleName + "'");
-      }
-      return roleElement;
-   }
+	/**
+	 * Gets the left jdbc relationship role. The relationship role is loaded
+	 * from an ejb-relationship-role. Left/right assignment is completely
+	 * arbitrary.
+	 * 
+	 * @return the left JDBCRelationshipRoleMetaData
+	 */
+	public JDBCRelationshipRoleMetaData getLeftRelationshipRole()
+	{
+		return left;
+	}
 
-   /**
-    * Gets the relation name.
-    * Relation name is loaded from the ejb-relation-name element.
-    * @return the name of this relation
-    */
-   public String getRelationName()
-   {
-      return relationName;
-   }
+	/**
+	 * Gets the right jdbc relationship role. The relationship role is loaded
+	 * from an ejb-relationship-role. Left/right assignment is completely
+	 * arbitrary.
+	 * 
+	 * @return the right JDBCRelationshipRoleMetaData
+	 */
+	public JDBCRelationshipRoleMetaData getRightRelationshipRole()
+	{
+		return right;
+	}
 
-   /**
-    * Gets the left jdbc relationship role.
-    * The relationship role is loaded from an ejb-relationship-role.
-    * Left/right assignment is completely arbitrary.
-    * @return the left JDBCRelationshipRoleMetaData
-    */
-   public JDBCRelationshipRoleMetaData getLeftRelationshipRole()
-   {
-      return left;
-   }
+	/**
+	 * Gets the relationship role related to the specified role.
+	 * 
+	 * @param role the relationship role that the related role is desired
+	 * @return the relationship role related to the specified role. right role
+	 *         of this relation
+	 */
+	public JDBCRelationshipRoleMetaData getOtherRelationshipRole(JDBCRelationshipRoleMetaData role)
+	{
 
-   /**
-    * Gets the right jdbc relationship role.
-    * The relationship role is loaded from an ejb-relationship-role.
-    * Left/right assignment is completely arbitrary.
-    * @return the right JDBCRelationshipRoleMetaData
-    */
-   public JDBCRelationshipRoleMetaData getRightRelationshipRole()
-   {
-      return right;
-   }
+		if (left == role)
+		{
+			return right;
+		}
+		else if (right == role)
+		{
+			return left;
+		}
+		else
+		{
+			throw new IllegalArgumentException("Specified role is not the left " + "or right role. role=" + role);
+		}
+	}
 
-   /**
-    * Gets the relationship role related to the specified role.
-    * @param role the relationship role that the related role is desired
-    * @return the relationship role related to the specified role.
-    * right role of this relation
-    */
-   public JDBCRelationshipRoleMetaData getOtherRelationshipRole(
-      JDBCRelationshipRoleMetaData role) {
+	/**
+	 * Should this relation be mapped to a relation table.
+	 * 
+	 * @return true if this relation is mapped to a table
+	 */
+	public boolean isTableMappingStyle()
+	{
+		return mappingStyle == TABLE;
+	}
 
-      if(left == role)
-      {
-         return right;
-      }
-      else if(right == role)
-      {
-         return left;
-      }
-      else
-      {
-         throw new IllegalArgumentException("Specified role is not the left " +
-            "or right role. role=" + role);
-      }
-   }
+	/**
+	 * Should this relation use foreign keys for storage.
+	 * 
+	 * @return true if this relation is mapped to foreign keys
+	 */
+	public boolean isForeignKeyMappingStyle()
+	{
+		return mappingStyle == FOREIGN_KEY;
+	}
 
-   /**
-    * Should this relation be mapped to a relation table.
-    * @return true if this relation is mapped to a table
-    */
-   public boolean isTableMappingStyle()
-   {
-      return mappingStyle == TABLE;
-   }
+	/**
+	 * Gets the name of the datasource in jndi for this entity
+	 * 
+	 * @return the name of datasource in jndi
+	 */
+	private String getDataSourceName()
+	{
+		return dataSourceName;
+	}
 
-   /**
-    * Should this relation use foreign keys for storage.
-    * @return true if this relation is mapped to foreign keys
-    */
-   public boolean isForeignKeyMappingStyle()
-   {
-      return mappingStyle == FOREIGN_KEY;
-   }
+	/**
+	 * Gets the jdbc type mapping for this entity
+	 * 
+	 * @return the jdbc type mapping for this entity
+	 */
+	public JDBCTypeMappingMetaData getTypeMapping()
+	{
+		return datasourceMapping;
+	}
 
-   /**
-    * Gets the name of the datasource in jndi for this entity
-    * @return the name of datasource in jndi
-    */
-   private String getDataSourceName() {
-      return dataSourceName;
-   }
+	/**
+	 * Gets the name of the relation table.
+	 * 
+	 * @return the name of the relation table to which is relation is mapped
+	 */
+	public String getDefaultTableName()
+	{
+		return tableName;
+	}
 
-   /**
-    * Gets the jdbc type mapping for this entity
-    * @return the jdbc type mapping for this entity
-    */
-   public JDBCTypeMappingMetaData getTypeMapping()
-   {
-      return datasourceMapping;
-   }
+	/**
+	 * Gets the (user-defined) SQL commands that should be issued to the db
+	 * after table creation.
+	 * 
+	 * @return the SQL command
+	 */
+	private ArrayList getDefaultTablePostCreateCmd()
+	{
+		return tablePostCreateCmd;
+	}
 
-   /**
-    * Gets the name of the relation table.
-    * @return the name of the relation table to which is relation is mapped
-    */
-   public String getDefaultTableName()
-   {
-      return tableName;
-   }
+	/**
+	 * Does the table exist yet? This does not mean that table has been created
+	 * by the appilcation, or the the database metadata has been checked for the
+	 * existance of the table, but that at this point the table is assumed to
+	 * exist.
+	 * 
+	 * @return true if the table exists
+	 */
+	public boolean isTableCreated()
+	{
+		return tableCreated;
+	}
 
-   /**
-    * Gets the (user-defined) SQL commands that should be
-    * issued to the db after table creation.
-    * @return the SQL command
-    */
-   private ArrayList getDefaultTablePostCreateCmd() {
-   		return tablePostCreateCmd;
-   }
+	public void setTableCreated()
+	{
+		tableCreated = true;
+	}
 
-   /**
-    * Does the table exist yet? This does not mean that table has been created
-    * by the appilcation, or the the database metadata has been checked for the
-    * existance of the table, but that at this point the table is assumed to
-    * exist.
-    * @return true if the table exists
-    */
-   public boolean isTableCreated() {
-      return tableCreated;
-   }
+	/**
+	 * Sets table dropped flag.
+	 */
+	public void setTableDropped()
+	{
+		this.tableDropped = true;
+	}
 
-   public void setTableCreated() {
-      tableCreated = true;
-   }
+	public boolean isTableDropped()
+	{
+		return tableDropped;
+	}
 
-   /**
-    * Sets table dropped flag.
-    */
-   public void setTableDropped() {
-      this.tableDropped = true;
-   }
+	/**
+	 * Should the relation table be created on startup.
+	 * 
+	 * @return true if the store mananager should attempt to create the relation
+	 *         table
+	 */
+	public boolean getCreateTable()
+	{
+		return createTable;
+	}
 
-   public boolean isTableDropped() {
-      return tableDropped;
-   }
+	/**
+	 * Should the relation table be removed on shutdown.
+	 * 
+	 * @return true if the store mananager should attempt to remove the relation
+	 *         table
+	 */
+	public boolean getRemoveTable()
+	{
+		return removeTable;
+	}
 
-   /**
-    * Should the relation table be created on startup.
-    * @return true if the store mananager should attempt to create the
-    * relation table
-    */
-   public boolean getCreateTable()
-   {
-      return createTable;
-   }
+	/**
+	 * Should the relation table be altered on deploy.
+	 */
+	public boolean getAlterTable()
+	{
+		return alterTable;
+	}
 
-   /**
-    * Should the relation table be removed on shutdown.
-    * @return true if the store mananager should attempt to remove the
-    * relation table
-    */
-   public boolean getRemoveTable()
-   {
-      return removeTable;
-   }
+	/**
+	 * When the relation table is created, should it have a primary key
+	 * constraint.
+	 * 
+	 * @return true if the store mananager should add a primary key constraint
+	 *         to the the create table sql statement
+	 */
+	public boolean hasPrimaryKeyConstraint()
+	{
+		return primaryKeyConstraint;
+	}
 
-   /**
-     * Should the relation table be altered on deploy.
-     */
-    public boolean getAlterTable() {
-        return alterTable;
-    }
+	/**
+	 * Is this relation read-only?
+	 */
+	public boolean isReadOnly()
+	{
+		return readOnly;
+	}
 
-    /**
-    * When the relation table is created, should it have a primary key
-    * constraint.
-    * @return true if the store mananager should add a primary key constraint
-    * to the the create table sql statement
-    */
-   public boolean hasPrimaryKeyConstraint()
-   {
-      return primaryKeyConstraint;
-   }
+	/**
+	 * Gets the read time out length.
+	 */
+	public int getReadTimeOut()
+	{
+		return readTimeOut;
+	}
 
-   /**
-    * Is this relation read-only?
-    */
-   public boolean isReadOnly()
-   {
-      return readOnly;
-   }
+	/**
+	 * Should select queries do row locking
+	 */
+	public boolean hasRowLocking()
+	{
+		return rowLocking;
+	}
 
-   /**
-    * Gets the read time out length.
-    */
-   public int getReadTimeOut()
-   {
-      return readTimeOut;
-   }
+	private String createDefaultTableName()
+	{
+		String defaultTableName = left.getEntity().getName();
+		if (left.getCMRFieldName() != null)
+		{
+			defaultTableName += "_" + left.getCMRFieldName();
+		}
+		defaultTableName += "_" + right.getEntity().getName();
+		if (right.getCMRFieldName() != null)
+		{
+			defaultTableName += "_" + right.getCMRFieldName();
+		}
+		return defaultTableName;
+	}
 
-   /**
-    * Should select queries do row locking
-    */
-   public boolean hasRowLocking()
-   {
-      return rowLocking;
-   }
+	private boolean isManyToMany()
+	{
+		return left.isMultiplicityMany() && right.isMultiplicityMany();
+	}
 
-   private String createDefaultTableName()
-   {
-      String defaultTableName = left.getEntity().getName();
-      if(left.getCMRFieldName() != null)
-      {
-         defaultTableName += "_" + left.getCMRFieldName();
-      }
-      defaultTableName += "_" + right.getEntity().getName();
-      if(right.getCMRFieldName() != null)
-      {
-         defaultTableName += "_" + right.getCMRFieldName();
-      }
-      return defaultTableName;
-   }
-
-   private boolean isManyToMany()
-   {
-      return left.isMultiplicityMany() && right.isMultiplicityMany();
-   }
-
-   public synchronized DataSource getDataSource()
-   {
-      if(dataSource == null)
-      {
-         try
-         {
-            InitialContext context = new InitialContext();
-            dataSource = (DataSource) context.lookup(dataSourceName);
-         }
-         catch(NamingException e)
-         {
-            throw new EJBException("Data source for relationship named " +
-               relationName + " not found " + dataSourceName);
-         }
-      }
-      return dataSource;
-   }
+	public synchronized DataSource getDataSource()
+	{
+		if (dataSource == null)
+		{
+			try
+			{
+				InitialContext context = new InitialContext();
+				dataSource = (DataSource) context.lookup(dataSourceName);
+			}
+			catch (NamingException e)
+			{
+				throw new EJBException("Data source for relationship named " + relationName + " not found "
+						+ dataSourceName);
+			}
+		}
+		return dataSource;
+	}
 }

@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-
+ 
 package org.jboss.ejb.plugins.cmp.ejbql;
 
 import java.util.ArrayList;
@@ -15,30 +15,25 @@ import java.util.List;
  * opperations.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
- */
-public final class ASTPlusMinus extends SimpleNode
-{
+ * @version $Revision: 1.3 $
+ */                            
+public final class ASTPlusMinus extends SimpleNode {
    public final List opps = new ArrayList();
-
-   public ASTPlusMinus(int id)
-   {
+   
+   public ASTPlusMinus(int id) {
       super(id);
    }
 
-   public void addOpp(String opp)
-   {
+   public void addOpp(String opp) {
       opps.add(opp);
    }
 
-   public String toString()
-   {
+   public String toString() {
       return "PlusMinus " + opps;
    }
 
    /** Accept the visitor. **/
-   public Object jjtAccept(JBossQLParserVisitor visitor, Object data)
-   {
+   public Object jjtAccept(JBossQLParserVisitor visitor, Object data) {
       return visitor.visit(this, data);
    }
 }

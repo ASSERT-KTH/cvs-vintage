@@ -33,12 +33,12 @@ public class JDBCCMP2xUpdatedPrincipalFieldBridge extends JDBCCMP2xAutoUpdatedFi
 
    public void setFirstVersion(EntityEnterpriseContext ctx)
    {
-      setInstanceValue(ctx, ctx.getCallerPrincipal().getName());
+      setInstanceValue(ctx, ctx.getEJBContext().getCallerPrincipal().getName());
    }
 
    public Object updateVersion(EntityEnterpriseContext ctx)
    {
-      Object value = ctx.getCallerPrincipal().getName();
+      Object value = ctx.getEJBContext().getCallerPrincipal().getName();
       setInstanceValue(ctx, value);
       return value;
    }

@@ -21,20 +21,20 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
 
-import org.jboss.logging.Logger;
-
 /**
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky and others</a>
  */
+import org.jboss.logging.Logger;
+
 public final class QueryParameter
 {
-   public static List createParameters(int argNum, JDBCCMPFieldBridge field)
+   public static List createParameters(int argNum, JDBCFieldBridge field)
    {
       List parameters;
       JDBCType type = field.getJDBCType();
       if(type instanceof JDBCTypeComplex)
       {
-         JDBCTypeComplexProperty[] props = ((JDBCTypeComplex) type).getProperties();
+         JDBCTypeComplexProperty[] props = ((JDBCTypeComplex)type).getProperties();
          parameters = new ArrayList(props.length);
          for(int i = 0; i < props.length; i++)
          {
@@ -72,7 +72,7 @@ public final class QueryParameter
          if(type instanceof JDBCTypeComplex)
          {
             JDBCTypeComplexProperty[] props =
-               ((JDBCTypeComplex) type).getProperties();
+               ((JDBCTypeComplex)type).getProperties();
             for(int j = 0; j < props.length; j++)
             {
                QueryParameter param = new QueryParameter(
@@ -109,7 +109,7 @@ public final class QueryParameter
          JDBCType type = pkField.getJDBCType();
          if(type instanceof JDBCTypeComplex)
          {
-            JDBCTypeComplexProperty[] props = ((JDBCTypeComplex) type).getProperties();
+            JDBCTypeComplexProperty[] props = ((JDBCTypeComplex)type).getProperties();
             for(int j = 0; j < props.length; j++)
             {
                QueryParameter param = new QueryParameter(
@@ -236,7 +236,7 @@ public final class QueryParameter
          {
             propertyName.append('.').append(tok.nextToken());
          }
-         property = ((JDBCTypeComplex) type).getProperty(propertyName.toString());
+         property = ((JDBCTypeComplex)type).getProperty(propertyName.toString());
          jdbcType = property.getJDBCType();
       }
    }
@@ -251,7 +251,7 @@ public final class QueryParameter
 
       this.argNum = argNum;
       this.isPrimaryKeyParameter = isPrimaryKeyParameter;
-      this.field = (JDBCFieldBridge)field;
+      this.field = field;
       this.property = property;
       this.jdbcType = jdbcType;
 
@@ -272,17 +272,18 @@ public final class QueryParameter
       throws Exception
    {
       Object arg = args[argNum];
+      JDBCParameterSetter param;
       if(field != null)
       {
          if(!isPrimaryKeyParameter)
          {
             if(arg instanceof EJBObject)
             {
-               arg = ((EJBObject) arg).getPrimaryKey();
+               arg = ((EJBObject)arg).getPrimaryKey();
             }
             else if(arg instanceof EJBLocalObject)
             {
-               arg = ((EJBLocalObject) arg).getPrimaryKey();
+               arg = ((EJBLocalObject)arg).getPrimaryKey();
             }
             else
             {
@@ -292,12 +293,24 @@ public final class QueryParameter
             }
          }
          arg = field.getPrimaryKeyValue(arg);
+
+         // use mapper
+         final JDBCType jdbcType = field.getJDBCType();
+         arg = jdbcType.getColumnValue(0, arg);
+         param = jdbcType.getParameterSetter()[0];
       }
-      if(property != null)
+      else if(property != null)
       {
          arg = property.getColumnValue(arg);
+         param = property.getParameterSetter();
       }
-      JDBCUtil.setParameter(log, ps, index, jdbcType, arg);
+      else
+      {
+         param = JDBCUtil.getParameterSetter(jdbcType, arg == null ? null : arg.getClass());
+      }
+
+      param.set(ps, index, jdbcType, arg, log);
+      //JDBCUtil.setParameter(log, ps, index, jdbcType, arg);
    }
 
    private static JDBCCMPFieldBridge getCMPField(
@@ -306,7 +319,7 @@ public final class QueryParameter
       String fieldName)
    {
       Catalog catalog = manager.getCatalog();
-      JDBCEntityBridge entityBridge = (JDBCEntityBridge) catalog.getEntityByInterface(intf);
+      JDBCEntityBridge entityBridge = (JDBCEntityBridge)catalog.getEntityByInterface(intf);
       if(entityBridge == null)
       {
          throw new IllegalArgumentException("Entity not found in application " +

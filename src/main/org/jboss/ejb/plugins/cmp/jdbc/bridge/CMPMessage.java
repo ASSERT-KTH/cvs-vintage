@@ -15,7 +15,7 @@ import java.io.ObjectStreamException;
  * on the strategy used.
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class CMPMessage
    implements Serializable

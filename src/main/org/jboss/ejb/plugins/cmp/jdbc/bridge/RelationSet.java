@@ -27,7 +27,7 @@ import org.jboss.ejb.LocalProxyFactory;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class RelationSet implements Set
 {
@@ -117,7 +117,7 @@ public class RelationSet implements Set
          throw new IllegalArgumentException(msg);
       }
 
-      Object id = getPrimaryKey((EJBLocalObject)o);
+      Object id = getPrimaryKey((EJBLocalObject) o);
       if(idList.contains(id))
       {
          return false;
@@ -134,7 +134,8 @@ public class RelationSet implements Set
       }
       if(cmrField.isReadOnly())
       {
-         throw new EJBException("Field is read-only: " + cmrField.getFieldName());
+         throw new EJBException("Field is read-only: " +
+            cmrField.getFieldName());
       }
 
       if(c == null)
@@ -161,7 +162,8 @@ public class RelationSet implements Set
       }
       if(cmrField.isReadOnly())
       {
-         throw new EJBException("Field is read-only: " + cmrField.getFieldName());
+         throw new EJBException("Field is read-only: " +
+            cmrField.getFieldName());
       }
 
       checkForPKChange();
@@ -189,7 +191,8 @@ public class RelationSet implements Set
       }
       if(cmrField.isReadOnly())
       {
-         throw new EJBException("Field is read-only: " + cmrField.getFieldName());
+         throw new EJBException("Field is read-only: " +
+            cmrField.getFieldName());
       }
 
       if(c == null)
@@ -218,7 +221,8 @@ public class RelationSet implements Set
       }
       if(cmrField.isReadOnly())
       {
-         throw new EJBException("Field is read-only: " + cmrField.getFieldName());
+         throw new EJBException("Field is read-only: " +
+            cmrField.getFieldName());
       }
 
       Iterator iterator = (new ArrayList(idList)).iterator();
@@ -396,7 +400,8 @@ public class RelationSet implements Set
             }
             if(cmrField.isReadOnly())
             {
-               throw new EJBException("Field is read-only: " + cmrField.getFieldName());
+               throw new EJBException("Field is read-only: " +
+                  cmrField.getFieldName());
             }
 
             checkForPKChange();

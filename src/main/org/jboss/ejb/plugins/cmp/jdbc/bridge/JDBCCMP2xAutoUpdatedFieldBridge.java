@@ -18,7 +18,7 @@ import java.sql.PreparedStatement;
  * The base class for all automatically updated fields such as audit and version.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class JDBCCMP2xAutoUpdatedFieldBridge extends JDBCCMP2xFieldBridge
 {
@@ -36,16 +36,16 @@ public abstract class JDBCCMP2xAutoUpdatedFieldBridge extends JDBCCMP2xFieldBrid
       throws DeploymentException
    {
       super(
-         (JDBCStoreManager)cmpField.getManager(),
+         (JDBCStoreManager) cmpField.getManager(),
          cmpField.getFieldName(),
          cmpField.getFieldType(),
          cmpField.getJDBCType(),
-         cmpField.isReadOnly(), // should always be false?
+         cmpField.isReadOnly(),               // should always be false?
          cmpField.getReadTimeOut(),
          cmpField.getPrimaryKeyClass(),
          cmpField.getPrimaryKeyField(),
          cmpField,
-         null, // it should not be a foreign key
+         null,                                // it should not be a foreign key
          cmpField.getColumnName()
       );
       defaultFlags |= JDBCEntityBridge.ADD_TO_SET_ON_UPDATE; // it should be redundant
@@ -77,6 +77,5 @@ public abstract class JDBCCMP2xAutoUpdatedFieldBridge extends JDBCCMP2xFieldBrid
    }
 
    public abstract void setFirstVersion(EntityEnterpriseContext ctx);
-
    public abstract Object updateVersion(EntityEnterpriseContext ctx);
 }

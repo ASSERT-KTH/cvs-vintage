@@ -22,7 +22,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public final class JDBCPostCreateEntityCommand
 {
@@ -33,12 +33,12 @@ public final class JDBCPostCreateEntityCommand
    // Constructors ----------------------------------
    public JDBCPostCreateEntityCommand(JDBCStoreManager manager)
    {
-      entity = manager.getEntityBridge();
+      entity = (JDBCEntityBridge) manager.getEntityBridge();
       JDBCFieldBridge[] cmrFields = entity.getCMRFields();
       List fkToCMPList = new ArrayList(4);
       for(int i = 0; i < cmrFields.length; ++i)
       {
-         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge) cmrFields[i];
+         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)cmrFields[i];
          JDBCCMRFieldBridge relatedCMRField = (JDBCCMRFieldBridge)cmrField.getRelatedCMRField();
          if(cmrField.hasFKFieldsMappedToCMPFields()
             || relatedCMRField.hasFKFieldsMappedToCMPFields())
@@ -49,7 +49,7 @@ public final class JDBCPostCreateEntityCommand
       if(fkToCMPList.isEmpty())
          cmrWithFKMappedToCMP = null;
       else
-         cmrWithFKMappedToCMP = (JDBCCMRFieldBridge[]) fkToCMPList
+         cmrWithFKMappedToCMP = (JDBCCMRFieldBridge[])fkToCMPList
             .toArray(new JDBCCMRFieldBridge[fkToCMPList.size()]);
    }
 

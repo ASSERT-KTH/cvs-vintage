@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public final class JDBCEJBQLQuery extends JDBCAbstractQueryCommand
 {
@@ -44,7 +44,7 @@ public final class JDBCEJBQLQuery extends JDBCAbstractQueryCommand
             metadata.getEjbQl(),
             metadata.getMethod().getReturnType(),
             metadata.getMethod().getParameterTypes(),
-            metadata.getReadAhead());
+            metadata);
       }
       catch(Throwable t)
       {
@@ -57,7 +57,7 @@ public final class JDBCEJBQLQuery extends JDBCAbstractQueryCommand
       // set select object
       if(compiler.isSelectEntity())
       {
-         JDBCEntityBridge selectEntity = (JDBCEntityBridge)compiler.getSelectEntity();
+         JDBCEntityBridge selectEntity = (JDBCEntityBridge) compiler.getSelectEntity();
 
          // set the select entity
          setSelectEntity(selectEntity);

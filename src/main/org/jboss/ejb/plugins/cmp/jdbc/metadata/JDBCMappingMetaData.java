@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class JDBCMappingMetaData
 {
@@ -43,7 +43,7 @@ public final class JDBCMappingMetaData
 
       try
       {
-         Integer constant = (Integer) Types.class.getField(name).get(null);
+         Integer constant = (Integer)Types.class.getField(name).get(null);
          return constant.intValue();
 
       }
@@ -60,6 +60,10 @@ public final class JDBCMappingMetaData
    private final int jdbcType;
    /** SQL type */
    private final String sqlType;
+   /** parameter setter */
+   private final String paramSetter;
+   /** result set reader */
+   private final String resultReader;
 
    /**
     * Constructs a mapping with the data contained in the mapping xml element
@@ -74,6 +78,8 @@ public final class JDBCMappingMetaData
       javaType = MetaData.getUniqueChildContent(element, "java-type");
       jdbcType = getJdbcTypeFromName(MetaData.getUniqueChildContent(element, "jdbc-type"));
       sqlType = MetaData.getUniqueChildContent(element, "sql-type");
+      paramSetter = MetaData.getOptionalChildContent(element, "param-setter");
+      resultReader = MetaData.getOptionalChildContent(element, "result-reader");
    }
 
    /**
@@ -107,5 +113,15 @@ public final class JDBCMappingMetaData
    public String getSqlType()
    {
       return sqlType;
+   }
+
+   public String getParamSetter()
+   {
+      return paramSetter;
+   }
+
+   public String getResultReader()
+   {
+      return resultReader;
    }
 }

@@ -16,7 +16,7 @@ import org.jboss.metadata.MetaData;
  * Immutable class which contains information about an JBossQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
 {
@@ -42,29 +42,36 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
 
    private final Class compiler;
 
+   private final boolean lazyResultSetLoading;
+
    /**
     * Constructs a JDBCJBossQLQueryMetaData with JBossQL declared in the
     * jboss-ql elemnt and is invoked by the specified method.
-    * @param defaults the metadata about this query
     */
-   public JDBCJBossQLQueryMetaData(JDBCJBossQLQueryMetaData defaults, JDBCReadAheadMetaData readAhead, Class compiler)
+   public JDBCJBossQLQueryMetaData(JDBCJBossQLQueryMetaData defaults,
+                                   JDBCReadAheadMetaData readAhead,
+                                   Class qlCompiler,
+                                   boolean lazyResultSetLoading)
+      throws DeploymentException
    {
       this.method = defaults.getMethod();
       this.readAhead = readAhead;
       this.jbossQL = defaults.getJBossQL();
       this.resultTypeMappingLocal = defaults.isResultTypeMappingLocal();
-      this.compiler = compiler;
+      this.compiler = qlCompiler;
+      this.lazyResultSetLoading = lazyResultSetLoading;
    }
 
    /**
     * Constructs a JDBCJBossQLQueryMetaData with JBossQL declared in the
     * jboss-ql elemnt and is invoked by the specified method.
     */
-   public JDBCJBossQLQueryMetaData(boolean isResultTypeMappingLocal,
+   public JDBCJBossQLQueryMetaData(boolean resultTypeMappingLocal,
                                    Element element,
                                    Method method,
                                    JDBCReadAheadMetaData readAhead,
-                                   Class compiler)
+                                   Class compiler,
+                                   boolean lazyResultSetLoading)
       throws DeploymentException
    {
       this.method = method;
@@ -74,9 +81,9 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
       {
          throw new DeploymentException("jboss-ql element is empty");
       }
-      this.resultTypeMappingLocal = isResultTypeMappingLocal;
-
+      this.resultTypeMappingLocal = resultTypeMappingLocal;
       this.compiler = compiler;
+      this.lazyResultSetLoading = lazyResultSetLoading;
    }
 
    // javadoc in parent class
@@ -85,8 +92,14 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
       return method;
    }
 
+   public Class getQLCompilerClass()
+   {
+      return compiler;
+   }
+
    /**
     * Gets the JBossQL query which will be invoked.
+    *
     * @return the ejb ql String for this query
     */
    public String getJBossQL()
@@ -102,6 +115,7 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
 
    /**
     * Gets the read ahead metadata for the query.
+    *
     * @return the read ahead metadata for the query.
     */
    public JDBCReadAheadMetaData getReadAhead()
@@ -109,18 +123,19 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
       return readAhead;
    }
 
-   public Class getQLCompilerClass()
+   public boolean isLazyResultSetLoading()
    {
-      return compiler;
+      return lazyResultSetLoading;
    }
 
    /**
     * Compares this JDBCJBossQLQueryMetaData against the specified object.
     * Returns true if the objects are the same. Two JDBCJBossQLQueryMetaData
     * are the same if they are both invoked by the same method.
+    *
     * @param o the reference object with which to compare
     * @return true if this object is the same as the object argument;
-    *    false otherwise
+    *         false otherwise
     */
    public boolean equals(Object o)
    {
@@ -134,6 +149,7 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
    /**
     * Returns a hashcode for this JDBCJBossQLQueryMetaData. The hashcode is
     * computed by the method which invokes this query.
+    *
     * @return a hash code value for this object
     */
    public int hashCode()
@@ -145,9 +161,9 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
     * Returns a string describing this JDBCJBossQLQueryMetaData. The exact
     * details of the representation are unspecified and subject to change, but
     * the following may be regarded as typical:
-    *
+    * <p/>
     * "[JDBCJBossQLQueryMetaData: method=public org.foo.User
-    *       findByName(java.lang.String)]"
+    * findByName(java.lang.String)]"
     *
     * @return a string representation of the object
     */

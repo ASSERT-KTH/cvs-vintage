@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public final class JDBCDeleteRelationsCommand
 {
@@ -98,12 +98,12 @@ public final class JDBCDeleteRelationsCommand
       {
          StringBuffer whereClause = new StringBuffer(20);
          whereClause.append('(');
-         // left keys
-         SQLUtil.getWhereClause(left.getTableKeyFields(), whereClause)
-            .append(SQLUtil.AND);
-         // right keys
-         SQLUtil.getWhereClause(right.getTableKeyFields(), whereClause)
-            .append(')');
+            // left keys
+            SQLUtil.getWhereClause(left.getTableKeyFields(), whereClause)
+               .append(SQLUtil.AND);
+            // right keys
+            SQLUtil.getWhereClause(right.getTableKeyFields(), whereClause)
+               .append(')');
          String whereClauseStr = whereClause.toString();
          sql.append(whereClauseStr);
          for(int i = 1; i < removedRelations; ++i)
@@ -123,7 +123,7 @@ public final class JDBCDeleteRelationsCommand
       JDBCCMPFieldBridge[] rightFields = (JDBCCMPFieldBridge[])relationData.getRightCMRField().getTableKeyFields();
       while(pairs.hasNext())
       {
-         RelationPair pair = (RelationPair) pairs.next();
+         RelationPair pair = (RelationPair)pairs.next();
 
          // left keys
          Object leftId = pair.getLeftId();

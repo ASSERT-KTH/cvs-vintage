@@ -24,6 +24,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.logging.Logger;
 
@@ -31,7 +32,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -75,7 +76,7 @@ public final class EJBQLToSQL92Compiler
       this.catalog = catalog;
    }
 
-   public void compileEJBQL(String ejbql, Class returnType, Class[] parameterTypes, JDBCReadAheadMetaData readAhead)
+   public void compileEJBQL(String ejbql, Class returnType, Class[] parameterTypes, JDBCQueryMetaData metadata)
       throws Exception
    {
       // reset all state variables
@@ -84,7 +85,7 @@ public final class EJBQLToSQL92Compiler
       // set input arguemts
       this.returnType = returnType;
       this.parameterTypes = parameterTypes;
-      this.readAhead = readAhead;
+      this.readAhead = metadata.getReadAhead();
 
       // get the parser
       EJBQLParser parser = new EJBQLParser(new StringReader(""));
@@ -111,7 +112,7 @@ public final class EJBQLToSQL92Compiler
       }
    }
 
-   public void compileJBossQL(String ejbql, Class returnType, Class[] parameterTypes, JDBCReadAheadMetaData readAhead)
+   public void compileJBossQL(String ejbql, Class returnType, Class[] parameterTypes, JDBCQueryMetaData metadata)
       throws Exception
    {
       // reset all state variables
@@ -120,7 +121,7 @@ public final class EJBQLToSQL92Compiler
       // set input arguemts
       this.returnType = returnType;
       this.parameterTypes = parameterTypes;
-      this.readAhead = readAhead;
+      this.readAhead = metadata.getReadAhead();
 
       // get the parser
       JBossQLParser parser = new JBossQLParser(new StringReader(""));

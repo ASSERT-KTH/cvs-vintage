@@ -16,8 +16,8 @@ import javax.sql.DataSource;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractCMRFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.logging.Logger;
@@ -30,16 +30,16 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public final class JDBCStopCommand
 {
-   private final JDBCStoreManager manager;
-   private final JDBCEntityBridge entity;
+   private final JDBCEntityPersistenceStore manager;
+   private final JDBCAbstractEntityBridge entity;
    private final JDBCEntityMetaData entityMetaData;
    private final Logger log;
 
-   public JDBCStopCommand(JDBCStoreManager manager)
+   public JDBCStopCommand(JDBCEntityPersistenceStore manager)
    {
       this.manager = manager;
       entity = manager.getEntityBridge();
@@ -52,33 +52,48 @@ public final class JDBCStopCommand
          manager.getMetaData().getName());
    }
 
-   public void execute()
+   public boolean execute()
    {
+      boolean success = true;
+
       // drop relation tables
-      JDBCCMRFieldBridge[] cmrFields = entity.getCMRFields();
+      JDBCAbstractCMRFieldBridge[] cmrFields = entity.getCMRFields();
       for(int i = 0; i < cmrFields.length; ++i)
       {
-         JDBCCMRFieldBridge cmrField = cmrFields[i];
-         JDBCRelationMetaData relationMetaData = cmrField.getRelationMetaData();
+         JDBCAbstractCMRFieldBridge cmrField = cmrFields[i];
+         JDBCRelationMetaData relationMetaData = cmrField.getMetaData().getRelationMetaData();
          if(relationMetaData.isTableMappingStyle() && !relationMetaData.isTableDropped())
          {
             if(relationMetaData.getRemoveTable())
             {
-               dropTable(relationMetaData.getDataSource(), cmrField.getTableName());
+               final boolean dropped = dropTable(relationMetaData.getDataSource(), cmrField.getTableName());
+               if(!dropped)
+               {
+                  success = false;
+               }
+               else
+               {
+                  relationMetaData.setTableDropped();
+               }
             }
-            relationMetaData.setTableDropped();
          }
       }
 
       if(entityMetaData.getRemoveTable())
       {
-         log.debug("Dropping table for entity " + entity.getEntityName());
-         dropTable(entity.getDataSource(), entity.getTableName());
+         boolean dropped = dropTable(entity.getDataSource(), entity.getTableName());
+         if(!dropped)
+         {
+            success = false;
+         }
       }
+
+      return success;
    }
 
-   private void dropTable(DataSource dataSource, String tableName)
+   private boolean dropTable(DataSource dataSource, String tableName)
    {
+      boolean success;
       Connection con = null;
       ResultSet rs = null;
 
@@ -90,14 +105,14 @@ public final class JDBCStopCommand
          rs = dmd.getTables(con.getCatalog(), null, tableName, null);
          if(!rs.next())
          {
-            return;
+            return true;
          }
       }
       catch(SQLException e)
       {
          log.debug("Error getting database metadata for DROP TABLE command. " +
             " DROP TABLE will not be executed. ", e);
-         return;
+         return true;
       }
       finally
       {
@@ -132,6 +147,7 @@ public final class JDBCStopCommand
             String sql = SQLUtil.DROP_TABLE + tableName;
             log.debug("Executing SQL: " + sql);
             statement.executeUpdate(sql);
+            success = true;
          }
          finally
          {
@@ -141,7 +157,8 @@ public final class JDBCStopCommand
       }
       catch(Exception e)
       {
-         log.debug("Could not drop table " + tableName);
+         log.debug("Could not drop table " + tableName + ": " + e.getMessage());
+         success = false;
       }
       finally
       {
@@ -158,5 +175,7 @@ public final class JDBCStopCommand
             log.error("Could not reattach original transaction after drop table");
          }
       }
+
+      return success;
    }
 }

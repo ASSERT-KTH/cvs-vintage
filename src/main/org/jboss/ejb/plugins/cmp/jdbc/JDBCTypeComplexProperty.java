@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
  * the Java Bean.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class JDBCTypeComplexProperty
 {
@@ -30,7 +30,8 @@ public final class JDBCTypeComplexProperty
    private final int jdbcType;
    private final String sqlType;
    private final boolean notNull;
-   private final JDBCUtil.ResultSetReader resulSetReader;
+   private final JDBCResultSetReader resulSetReader;
+   private final JDBCParameterSetter paramSetter;
 
    private final Method[] getters;
    private final Method[] setters;
@@ -55,6 +56,7 @@ public final class JDBCTypeComplexProperty
       this.getters = getters;
       this.setters = setters;
       this.resulSetReader = JDBCUtil.getResultSetReader(jdbcType, javaType);
+      this.paramSetter = JDBCUtil.getParameterSetter(jdbcType, javaType);
    }
 
    public JDBCTypeComplexProperty(
@@ -74,6 +76,7 @@ public final class JDBCTypeComplexProperty
       this.getters = defaultProperty.getters;
       this.setters = defaultProperty.setters;
       this.resulSetReader = JDBCUtil.getResultSetReader(jdbcType, javaType);
+      this.paramSetter = JDBCUtil.getParameterSetter(jdbcType, javaType);
    }
 
    public String getPropertyName()
@@ -106,9 +109,14 @@ public final class JDBCTypeComplexProperty
       return notNull;
    }
 
-   public JDBCUtil.ResultSetReader getResulSetReader()
+   public JDBCResultSetReader getResulSetReader()
    {
       return resulSetReader;
+   }
+
+   public JDBCParameterSetter getParameterSetter()
+   {
+      return paramSetter;
    }
 
    public Object getColumnValue(Object value) throws Exception

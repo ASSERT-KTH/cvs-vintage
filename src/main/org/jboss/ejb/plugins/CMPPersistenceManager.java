@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import javax.ejb.EntityBean;
-import javax.ejb.EJBObject;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
 
@@ -24,6 +23,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.AllowedOperationsAssociation;
+import org.jboss.ejb.GenericEntityObjectFactory;
 import org.jboss.metadata.ConfigurationMetaData;
 
 /**
@@ -39,7 +39,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  */
 public class CMPPersistenceManager
    implements EntityPersistenceManager
@@ -234,16 +234,6 @@ public class CMPPersistenceManager
 
       // Give it to the context
       ctx.setCacheKey(cacheKey);
-
-      // Create EJBObject
-      if(con.getProxyFactory() != null)
-      {
-         ctx.setEJBObject((EJBObject) con.getProxyFactory().getEntityEJBObject(cacheKey));
-      }
-      if(con.getLocalHomeClass() != null)
-      {
-         ctx.setEJBLocalObject(con.getLocalProxyFactory().getEntityEJBLocalObject(cacheKey));
-      }
    }
 
    public void postCreateEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
@@ -298,30 +288,30 @@ public class CMPPersistenceManager
       }
    }
 
-   public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+   public Object findEntity(Method finderMethod,
+                            Object[] args,
+                            EntityEnterpriseContext ctx,
+                            GenericEntityObjectFactory factory)
       throws Exception
    {
-      Object id;
       try
       {
          AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_FIND);
-
-         // The store will find the entity and return the primaryKey
-         id = store.findEntity(finderMethod, args, ctx);
+         return store.findEntity(finderMethod, args, ctx, factory);
       }
       finally
       {
          AllowedOperationsAssociation.popInMethodFlag();
       }
-
-      // We return the cache key
-      return ((EntityCache) con.getInstanceCache()).createCacheKey(id);
    }
 
    /**
     * find multiple entities
     */
-   public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+   public Collection findEntities(Method finderMethod,
+                                  Object[] args,
+                                  EntityEnterpriseContext ctx,
+                                  GenericEntityObjectFactory factory)
       throws Exception
    {
       try
@@ -329,7 +319,7 @@ public class CMPPersistenceManager
          // return the finderResults so that the invoker layer can extend this back
          // giving the client an OO 'cursor'
          AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_FIND);
-         return store.findEntities(finderMethod, args, ctx);
+         return store.findEntities(finderMethod, args, ctx, factory);
       }
       finally
       {
@@ -357,16 +347,6 @@ public class CMPPersistenceManager
 
       // Give it to the context
       ctx.setCacheKey(cacheKey);
-
-      // Create EJBObject
-      if(con.getProxyFactory() != null)
-      {
-         ctx.setEJBObject((EJBObject) con.getProxyFactory().getEntityEJBObject(cacheKey));
-      }
-      if(con.getLocalHomeClass() != null)
-      {
-         ctx.setEJBLocalObject(con.getLocalProxyFactory().getEntityEJBLocalObject(cacheKey));
-      }
 
       try
       {
@@ -424,42 +404,51 @@ public class CMPPersistenceManager
    {
       boolean modified = false;
 
-      // if call-ejb-store-for-clean=true then invoke ejbStore first (the last chance to modify the instance)
-      if(ejbStoreForClean)
-      {
-         invokeEjbStore(ctx);
+      AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_STORE);
 
-         try
-         {
-            modified = isModified(ctx);
-         }
-         catch(Exception e)
-         {
-            throwRemoteException(e);
-         }
-      }
-      else
+      try
       {
-         // else check whether the instance dirty and invoke ejbStore only if it is really dirty
-         try
-         {
-            modified = isModified(ctx);
-         }
-         catch(Exception e)
-         {
-            throwRemoteException(e);
-         }
-
-         if(modified)
+         // if call-ejb-store-for-clean=true then invoke ejbStore first (the last chance to modify the instance)
+         if(ejbStoreForClean)
          {
             invokeEjbStore(ctx);
+
+            try
+            {
+               modified = isModified(ctx);
+            }
+            catch(Exception e)
+            {
+               throwRemoteException(e);
+            }
+         }
+         else
+         {
+            // else check whether the instance dirty and invoke ejbStore only if it is really dirty
+            try
+            {
+               modified = isModified(ctx);
+            }
+            catch(Exception e)
+            {
+               throwRemoteException(e);
+            }
+
+            if(modified)
+            {
+               invokeEjbStore(ctx);
+            }
+         }
+
+         // update the db only if the instance is dirty
+         if(modified)
+         {
+            store.storeEntity(ctx);
          }
       }
-
-      // update the db only if the instance is dirty
-      if(modified)
+      finally
       {
-         store.storeEntity(ctx);
+         AllowedOperationsAssociation.popInMethodFlag();
       }
    }
 
@@ -541,17 +530,12 @@ public class CMPPersistenceManager
    {
       try
       {
-         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_STORE);
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbStore();
       }
       catch(Exception e)
       {
          throwRemoteException(e);
-      }
-      finally
-      {
-         AllowedOperationsAssociation.popInMethodFlag();
       }
    }
 

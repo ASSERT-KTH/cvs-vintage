@@ -22,6 +22,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.GenericEntityObjectFactory;
 
 import org.jboss.ejb.plugins.jaws.jdbc.JDBCCommandFactory;
 
@@ -38,7 +39,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -263,7 +264,7 @@ public class JAWSPersistenceManager
     * @param m           the ejbPostCreate method in the bean class that was
     *                    called
     * @param args        any create parameters
-    * @param instance    the instance being used for this create call
+    * @param ctx         the instance being used for this create call
     * @return            null
     *
     * @throws Exception
@@ -278,18 +279,22 @@ public class JAWSPersistenceManager
 
    public Object findEntity(Method finderMethod,
                             Object[] args,
-                            EntityEnterpriseContext ctx)
+                            EntityEnterpriseContext ctx,
+                            GenericEntityObjectFactory factory)
       throws Exception
    {
-      return findEntityCommand.execute(finderMethod, args, ctx);
+      final Object id = findEntityCommand.execute(finderMethod, args, ctx);
+      return factory.getEntityEJBObject(id);
    }
 
    public Collection findEntities(Method finderMethod,
                                   Object[] args,
-                                  EntityEnterpriseContext ctx)
+                                  EntityEnterpriseContext ctx,
+                                  GenericEntityObjectFactory factory)
       throws Exception
    {
-      return findEntitiesCommand.execute(finderMethod, args, ctx);
+      final Collection col = findEntitiesCommand.execute(finderMethod, args, ctx);
+      return GenericEntityObjectFactory.UTIL.getEntityCollection(factory, col);
    }
 
    public void activateEntity(EntityEnterpriseContext ctx)

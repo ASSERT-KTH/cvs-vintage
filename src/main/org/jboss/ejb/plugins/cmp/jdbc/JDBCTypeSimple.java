@@ -12,7 +12,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class JDBCTypeSimple implements JDBCType
 {
@@ -22,7 +22,8 @@ public final class JDBCTypeSimple implements JDBCType
    private final String[] sqlTypes;
    private final boolean[] notNull;
    private final boolean[] autoIncrement;
-   private final JDBCUtil.ResultSetReader[] resultSetReader;
+   private final JDBCResultSetReader[] resultSetReader;
+   private final JDBCParameterSetter[] paramSetter;
 
    private final Mapper mapper;
 
@@ -33,7 +34,9 @@ public final class JDBCTypeSimple implements JDBCType
       String sqlType,
       boolean notNull,
       boolean autoIncrement,
-      Mapper mapper
+      Mapper mapper,
+      JDBCParameterSetter paramSetter,
+      JDBCResultSetReader resultReader
       )
    {
       columnNames = new String[]{columnName};
@@ -43,7 +46,8 @@ public final class JDBCTypeSimple implements JDBCType
       this.notNull = new boolean[]{notNull};
       this.autoIncrement = new boolean[]{autoIncrement};
       this.mapper = mapper;
-      resultSetReader = new JDBCUtil.ResultSetReader[]{JDBCUtil.getResultSetReader(jdbcType, javaType)};
+      resultSetReader = new JDBCResultSetReader[]{resultReader};
+      this.paramSetter = new JDBCParameterSetter[]{paramSetter};
    }
 
    public final String[] getColumnNames()
@@ -94,8 +98,13 @@ public final class JDBCTypeSimple implements JDBCType
       return mapper == null ? columnValue : mapper.toFieldValue(columnValue);
    }
 
-   public final JDBCUtil.ResultSetReader[] getResultSetReaders()
+   public final JDBCResultSetReader[] getResultSetReaders()
    {
       return resultSetReader;
+   }
+
+   public JDBCParameterSetter[] getParameterSetter()
+   {
+      return paramSetter;
    }
 }

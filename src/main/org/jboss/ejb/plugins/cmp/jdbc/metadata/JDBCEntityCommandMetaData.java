@@ -8,7 +8,6 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.util.Iterator;
 import java.util.HashMap;
-
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
@@ -17,10 +16,11 @@ import org.w3c.dom.Element;
  * This immutable class contains information about entity command
  *
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCEntityCommandMetaData
 {
+
    // Attributes -----------------------------------------------------
 
    /** The name (alias) of the command. */
@@ -31,35 +31,34 @@ public final class JDBCEntityCommandMetaData
 
    /** Command attributes */
    private final HashMap attributes = new HashMap();
+  
 
    // Constructor ----------------------------------------------------
 
    /**
     * Constructs a JDBCEntityCommandMetaData reading the entity-command element
-    * @param element entity-command element
+    * @param element - entity-command element
     */
-   public JDBCEntityCommandMetaData(Element element)
+   public JDBCEntityCommandMetaData( Element element )
       throws DeploymentException
    {
       // command name
-      commandName = element.getAttribute("name");
-      if(commandName.trim().length() < 1)
+      commandName = element.getAttribute( "name" );
+      if( commandName.trim().length() < 1 )
       {
-         throw new DeploymentException("entity-command element must have "
-            + " not empty name attribute");
+         throw new DeploymentException( "entity-command element must have "
+            + " not empty name attribute" );
       }
 
-      String commandClassStr = element.getAttribute("class");
+      String commandClassStr = element.getAttribute( "class" );
       if(commandClassStr != null)
       {
          try
          {
             commandClass = Thread.currentThread().
-               getContextClassLoader().loadClass(commandClassStr);
-         }
-         catch(ClassNotFoundException e)
-         {
-            throw new DeploymentException("Could not load class: "
+               getContextClassLoader().loadClass( commandClassStr );
+         } catch (ClassNotFoundException e) {
+            throw new DeploymentException( "Could not load class: "
                + commandClassStr);
          }
       }
@@ -69,23 +68,23 @@ public final class JDBCEntityCommandMetaData
       }
 
       // attributes
-      for(Iterator iter = MetaData.getChildrenByTagName(element, "attribute");
-          iter.hasNext();)
+      for( Iterator iter = MetaData.getChildrenByTagName( element, "attribute" );
+         iter.hasNext(); )
       {
          Element attrEl = (Element) iter.next();
 
          // attribute name
-         String attrName = attrEl.getAttribute("name");
-         if(attrName == null)
+         String attrName = attrEl.getAttribute( "name" );
+         if( attrName == null )
          {
-            throw new DeploymentException("entity-command " + commandName
-               + " has an attribute with no name");
+            throw new DeploymentException( "entity-command " + commandName
+               + " has an attribute with no name" );
          }
 
          // attribute value
-         String attrValue = MetaData.getElementContent(attrEl);
+         String attrValue = MetaData.getElementContent( attrEl );
 
-         attributes.put(attrName, attrValue);
+         attributes.put( attrName, attrValue );
       }
    }
 
@@ -94,25 +93,23 @@ public final class JDBCEntityCommandMetaData
     * and default values
     * @param element entity-command element
     */
-   public JDBCEntityCommandMetaData(Element element,
-                                    JDBCEntityCommandMetaData defaultValues)
+   public JDBCEntityCommandMetaData( Element element,
+                                     JDBCEntityCommandMetaData defaultValues )
       throws DeploymentException
    {
       // command name
       commandName = defaultValues.getCommandName();
 
-      String commandClassStr = element.getAttribute("class");
-      if((commandClassStr != null)
-         && (commandClassStr.trim().length() > 0))
+      String commandClassStr = element.getAttribute( "class" );
+      if( (commandClassStr != null)
+         && (commandClassStr.trim().length() > 0) )
       {
          try
          {
             commandClass = Thread.currentThread().
-               getContextClassLoader().loadClass(commandClassStr);
-         }
-         catch(ClassNotFoundException e)
-         {
-            throw new DeploymentException("Could not load class: "
+               getContextClassLoader().loadClass( commandClassStr );
+         } catch (ClassNotFoundException e) {
+            throw new DeploymentException( "Could not load class: "
                + commandClassStr);
          }
       }
@@ -122,24 +119,24 @@ public final class JDBCEntityCommandMetaData
       }
 
       // attributes
-      attributes.putAll(defaultValues.attributes);
-      for(Iterator iter = MetaData.getChildrenByTagName(element, "attribute");
-          iter.hasNext();)
+      attributes.putAll( defaultValues.attributes );
+      for( Iterator iter = MetaData.getChildrenByTagName( element, "attribute" );
+         iter.hasNext(); )
       {
          Element attrEl = (Element) iter.next();
 
          // attribute name
-         String attrName = attrEl.getAttribute("name");
-         if(attrName == null)
+         String attrName = attrEl.getAttribute( "name" );
+         if( attrName == null )
          {
-            throw new DeploymentException("entity-command " + commandName
-               + " has an attribute with no name");
+            throw new DeploymentException( "entity-command " + commandName
+               + " has an attribute with no name" );
          }
 
          // attribute value
-         String attrValue = MetaData.getElementContent(attrEl);
+         String attrValue = MetaData.getElementContent( attrEl );
 
-         attributes.put(attrName, attrValue);
+         attributes.put( attrName, attrValue );
       }
    }
 
@@ -148,34 +145,32 @@ public final class JDBCEntityCommandMetaData
    /**
     * @return the name of the command
     */
-   public String getCommandName()
-   {
+   public String getCommandName() {
       return commandName;
    }
 
    /**
     * @return the class of the command
     */
-   public Class getCommandClass()
-   {
+   public Class getCommandClass() {
       return commandClass;
    }
 
    /**
     * @return value for the passed in parameter name
     */
-   public String getAttribute(String name)
+   public String getAttribute( String name )
    {
-      return (String) attributes.get(name);
+      return (String) attributes.get( name );
    }
 
    // Object overrides --------------------------------------------------
 
    public String toString()
    {
-      return new StringBuffer("[commandName=").append(commandName).
-         append(",commandClass=").append(commandClass).
-         append(",attributes=").append(attributes.toString()).
-         append("]").toString();
+      return new StringBuffer( "[commandName=" ).append( commandName ).
+         append( ",commandClass=" ).append( commandClass ).
+         append( ",attributes=" ).append( attributes.toString() ).
+         append( "]" ).toString();
    }
 }

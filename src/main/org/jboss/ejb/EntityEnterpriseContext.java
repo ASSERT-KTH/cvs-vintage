@@ -11,8 +11,6 @@ import java.rmi.RemoteException;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 import javax.ejb.*;
 import javax.transaction.UserTransaction;
@@ -30,7 +28,7 @@ import org.jboss.ejb.plugins.lock.NonReentrantLock;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  */
 public class EntityEnterpriseContext extends EnterpriseContext
 {
@@ -43,7 +41,12 @@ public class EntityEnterpriseContext extends EnterpriseContext
     * demarcation.
     */
    private boolean hasTxSynchronization = false;
-	
+
+   /**
+    * Specifies whether the instance is associated with a transaction and should be synchronized.
+    */
+   private GlobalTxEntityMap.TxAssociation txAssociation = GlobalTxEntityMap.NONE;
+
    /**
     * True if this instances' state is valid when a bean is called the state
     * is not synchronized with the DB but "valid" as long as the transaction
@@ -103,6 +106,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
       key = null;
       persistenceCtx = null;
       ejbObject = null;
+      txAssociation = GlobalTxEntityMap.NONE;
    }
 	
    public void discard() throws RemoteException
@@ -124,6 +128,10 @@ public class EntityEnterpriseContext extends EnterpriseContext
    {
       // Context can have no EJBObject (created by finds) in which case
       // we need to wire it at call time
+      if(ejbObject == null && con.getProxyFactory() != null)
+      {
+         ejbObject = (EJBObject)con.getProxyFactory().getEntityEJBObject(id);
+      }
       return ejbObject;
    }
 	
@@ -134,6 +142,10 @@ public class EntityEnterpriseContext extends EnterpriseContext
 	
    public EJBLocalObject getEJBLocalObject()
    {
+      if(ejbLocalObject == null && con.getLocalHomeClass() != null)
+      {
+         ejbLocalObject = ((EntityContainer)con).getLocalProxyFactory().getEntityEJBLocalObject(id);
+      }
       return ejbLocalObject;
    }
 	
@@ -166,7 +178,17 @@ public class EntityEnterpriseContext extends EnterpriseContext
    {
       return hasTxSynchronization;
    }
-	
+
+   public GlobalTxEntityMap.TxAssociation getTxAssociation()
+   {
+      return txAssociation;
+   }
+
+   public void setTxAssociation(GlobalTxEntityMap.TxAssociation txAssociation)
+   {
+      this.txAssociation = txAssociation;
+   }
+
    public void setValid(boolean valid)
    {
       this.valid = valid;
@@ -338,12 +360,12 @@ public class EntityEnterpriseContext extends EnterpriseContext
    public class TimerServiceWrapper implements TimerService
    {
 
-      private EnterpriseContext.EJBContextImpl context;
+      //private EnterpriseContext.EJBContextImpl context;
       private TimerService timerService;
 
       public TimerServiceWrapper(EnterpriseContext.EJBContextImpl ctx, TimerService timerService)
       {
-         this.context = ctx;
+         //this.context = ctx;
          this.timerService = timerService;
       }
 

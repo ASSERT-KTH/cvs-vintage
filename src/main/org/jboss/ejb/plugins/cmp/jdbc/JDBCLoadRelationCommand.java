@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public final class JDBCLoadRelationCommand
 {
@@ -43,7 +43,7 @@ public final class JDBCLoadRelationCommand
    public JDBCLoadRelationCommand(JDBCStoreManager manager)
    {
       this.manager = manager;
-      this.entity = manager.getEntityBridge();
+      this.entity = (JDBCEntityBridge) manager.getEntityBridge();
 
       // Create the Log
       log = Logger.getLogger(
@@ -54,7 +54,7 @@ public final class JDBCLoadRelationCommand
 
    public Collection execute(JDBCCMRFieldBridge cmrField, Object pk)
    {
-      JDBCCMRFieldBridge relatedCMRField = (JDBCCMRFieldBridge)cmrField.getRelatedCMRField();
+      JDBCCMRFieldBridge relatedCMRField = (JDBCCMRFieldBridge) cmrField.getRelatedCMRField();
 
       // get the read ahead cahces
       ReadAheadCache readAheadCache = manager.getReadAheadCache();
@@ -82,9 +82,9 @@ public final class JDBCLoadRelationCommand
          ps = con.prepareStatement(sql.toString());
 
          // Set the fetch size of the statement
-         if(manager.getEntityBridge().getFetchSize() > 0)
+         if(entity.getFetchSize() > 0)
          {
-            ps.setFetchSize(manager.getEntityBridge().getFetchSize());
+            ps.setFetchSize(entity.getFetchSize());
          }
 
          // get the load fields
@@ -143,7 +143,7 @@ public final class JDBCLoadRelationCommand
             if(loadedFk != null)
             {
                // add this value to the list for loadedPk
-               List results = (List) resultsMap.get(loadedPk);
+               List results = (List)resultsMap.get(loadedPk);
                results.add(loadedFk);
 
                // if the related cmr field is single valued we can pre-load
@@ -159,7 +159,7 @@ public final class JDBCLoadRelationCommand
                // read the preload fields
                if(preloadMask != null)
                {
-                  JDBCCMPFieldBridge[] relatedFields = (JDBCCMPFieldBridge[])cmrField.getRelatedJDBCEntity().getTableFields();
+                  JDBCFieldBridge[] relatedFields = cmrField.getRelatedJDBCEntity().getTableFields();
                   for(int i = 0; i < relatedFields.length; ++i)
                   {
                      if(preloadMask[i])
@@ -183,7 +183,7 @@ public final class JDBCLoadRelationCommand
             Object key = iter.next();
 
             // get the results for this key
-            List results = (List) resultsMap.get(key);
+            List results = (List)resultsMap.get(key);
 
             // store the results list for readahead on-load
             relatedReadAheadCache.addFinderResults(results, readAhead);
@@ -276,12 +276,12 @@ public final class JDBCLoadRelationCommand
       if(cmrField.getRelationMetaData().isTableMappingStyle())
       {
          // relation table
-         return (JDBCCMPFieldBridge[])cmrField.getTableKeyFields();
+         return (JDBCCMPFieldBridge[]) cmrField.getTableKeyFields();
       }
       else if(cmrField.getRelatedCMRField().hasForeignKey())
       {
          // related has foreign key
-         return (JDBCCMPFieldBridge[])cmrField.getRelatedCMRField().getForeignKeyFields();
+         return (JDBCCMPFieldBridge[]) cmrField.getRelatedCMRField().getForeignKeyFields();
       }
       else
       {
@@ -295,7 +295,7 @@ public final class JDBCLoadRelationCommand
       if(cmrField.getRelationMetaData().isTableMappingStyle())
       {
          // relation table
-         return (JDBCCMPFieldBridge[])cmrField.getRelatedCMRField().getTableKeyFields();
+         return (JDBCCMPFieldBridge[]) cmrField.getRelatedCMRField().getTableKeyFields();
       }
       else if(cmrField.getRelatedCMRField().hasForeignKey())
       {
@@ -305,7 +305,7 @@ public final class JDBCLoadRelationCommand
       else
       {
          // i have foreign key
-         return (JDBCCMPFieldBridge[])cmrField.getForeignKeyFields();
+         return (JDBCCMPFieldBridge[]) cmrField.getForeignKeyFields();
       }
    }
 
@@ -342,6 +342,7 @@ public final class JDBCLoadRelationCommand
 
    private JDBCFunctionMappingMetaData getSelectTemplate(JDBCCMRFieldBridge cmrField)
    {
+
       JDBCFunctionMappingMetaData selectTemplate = null;
       if(cmrField.getRelationMetaData().isTableMappingStyle())
       {

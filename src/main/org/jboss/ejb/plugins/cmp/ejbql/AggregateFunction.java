@@ -7,6 +7,8 @@
 package org.jboss.ejb.plugins.cmp.ejbql;
 
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCResultSetReader;
+import org.jboss.logging.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,13 +16,14 @@ import java.util.Collection;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public abstract class AggregateFunction
    extends SimpleNode
    implements SelectFunction
 {
-   private JDBCUtil.ResultSetReader resultReader;
+   private final Logger log;
+   private JDBCResultSetReader resultReader;
    private Class resultType;
 
    public String distinct = "";
@@ -28,6 +31,7 @@ public abstract class AggregateFunction
    public AggregateFunction(int i)
    {
       super(i);
+      log = Logger.getLogger(getClass());
    }
 
    public void setResultType(Class type)
@@ -52,6 +56,6 @@ public abstract class AggregateFunction
 
    public Object readResult(ResultSet rs) throws SQLException
    {
-      return resultReader.getFirst(rs, resultType);
+      return resultReader.get(rs, 1, resultType, log);
    }
 }

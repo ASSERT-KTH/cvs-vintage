@@ -25,11 +25,11 @@ import org.jboss.deployment.DeploymentException;
  * JDBCBeanClassInstanceCommand creates instance of the bean class. For
  * CMP 2.0 it creates an instance of a subclass of the bean class, as the
  * bean class is abstract.
- *
+ * <p/>
  * <FIX-ME>should not generat a subclass for ejb 1.1</FIX-ME>
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 
 public final class JDBCCreateBeanClassInstanceCommand
@@ -44,7 +44,7 @@ public final class JDBCCreateBeanClassInstanceCommand
       throws Exception
    {
       EntityContainer theContainer = manager.getContainer();
-      entityBridge = manager.getEntityBridge();
+      entityBridge = (JDBCEntityBridge) manager.getEntityBridge();
       beanClass = theContainer.getBeanClass();
       fieldMap = createFieldMap();
       selectorMap = createSelectorMap();
@@ -116,11 +116,11 @@ public final class JDBCCreateBeanClassInstanceCommand
          // getters and setters must come in pairs
          if(getterMethod != null && setterMethod == null)
          {
-            throw new DeploymentException("Getter was found but, no setter was found for field: " + fieldName);
+            throw new DeploymentException("Getter was found but no setter was found for field: " + fieldName);
          }
          else if(getterMethod == null && setterMethod != null)
          {
-            throw new DeploymentException("Setter was found but, no getter was found for field: " + fieldName);
+            throw new DeploymentException("Setter was found but no getter was found for field: " + fieldName);
          }
          else if(getterMethod != null && setterMethod != null)
          {

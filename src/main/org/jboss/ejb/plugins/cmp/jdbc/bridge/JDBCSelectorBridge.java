@@ -7,7 +7,6 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,27 +15,28 @@ import java.util.Set;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.ejb.ObjectNotFoundException;
-import javax.transaction.TransactionManager;
 import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
 import org.jboss.ejb.plugins.cmp.bridge.SelectorBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
-import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.GenericEntityObjectFactory;
 
 /**
  * JDBCSelectorBridge represents one ejbSelect method.
- *
+ * <p/>
  * Life-cycle:
- *      Tied to the EntityBridge.
- *
+ * Tied to the EntityBridge.
+ * <p/>
  * Multiplicity:
- *      One for each entity bean ejbSelect method.
+ * One for each entity bean ejbSelect method.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCSelectorBridge implements SelectorBridge
 {
@@ -93,7 +93,10 @@ public class JDBCSelectorBridge implements SelectorBridge
       try
       {
          JDBCQueryCommand query = manager.getQueryManager().getQueryCommand(getMethod());
-         retVal = query.execute(getMethod(), args, null);
+         GenericEntityObjectFactory factory = (queryMetaData.isResultTypeMappingLocal() ?
+            (GenericEntityObjectFactory)query.getSelectManager().getContainer().getLocalProxyFactory() :
+            query.getSelectManager().getContainer().getProxyFactory());
+         retVal = query.execute(getMethod(), args, null, factory);
       }
       catch(FinderException e)
       {
@@ -131,7 +134,7 @@ public class JDBCSelectorBridge implements SelectorBridge
          }
          else
          {
-            return new ArrayList(retVal);
+            return retVal;
          }
       }
    }

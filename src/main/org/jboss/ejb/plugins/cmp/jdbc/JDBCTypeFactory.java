@@ -27,7 +27,9 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCValueClassMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCValuePropertyMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCUserTypeMappingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCMappingMetaData;
 import org.jboss.deployment.DeploymentException;
+import org.jboss.logging.Logger;
 
 /**
  * JDBCTypeFactory mapps Java Classes to JDBCType objects.  The main job of
@@ -35,10 +37,12 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public final class JDBCTypeFactory
 {
+   private static final Logger log = Logger.getLogger(JDBCTypeFactory.class);
+
    //
    // Default CMPFieldStateFactory implementations
    //
@@ -313,13 +317,14 @@ public final class JDBCTypeFactory
 
    // all known complex types by java class type
    private final Map complexTypes = new HashMap();
+   private final Map mappedSimpleTypes = new HashMap();
 
    /** user types mappings */
    private final Map userTypeMappings;
 
    public JDBCTypeFactory(JDBCTypeMappingMetaData typeMapping,
                           Collection valueClasses,
-                          Map userTypeMappings)
+                          Map userTypeMappings) throws DeploymentException
    {
       this.typeMapping = typeMapping;
       this.userTypeMappings = userTypeMappings;
@@ -336,9 +341,45 @@ public final class JDBCTypeFactory
       for(Iterator i = valueClasses.iterator(); i.hasNext();)
       {
          JDBCValueClassMetaData valueClass = (JDBCValueClassMetaData)i.next();
-         JDBCTypeComplex type =
-            createTypeComplex(valueClass, valueClassesByType);
+         JDBCTypeComplex type = createTypeComplex(valueClass, valueClassesByType);
          complexTypes.put(valueClass.getJavaType(), type);
+      }
+
+      Iterator i = typeMapping.getMappings().iterator();
+      while(i.hasNext())
+      {
+         JDBCMappingMetaData mapping = (JDBCMappingMetaData)i.next();
+
+         String sqlType = mapping.getSqlType();
+         int jdbcType = mapping.getJdbcType();
+         Class javaType = loadClass(mapping.getJavaType());
+         boolean notNull = javaType.isPrimitive();
+         boolean autoIncrement = false;
+
+         JDBCParameterSetter paramSetter;
+         if(mapping.getParamSetter() != null)
+         {
+            paramSetter = (JDBCParameterSetter)newInstance(mapping.getParamSetter());
+         }
+         else
+         {
+            paramSetter = JDBCUtil.getParameterSetter(jdbcType, javaType);
+         }
+
+         JDBCResultSetReader resultReader;
+         if(mapping.getResultReader() != null)
+         {
+            resultReader = (JDBCResultSetReader)newInstance(mapping.getResultReader());
+         }
+         else
+         {
+            resultReader = JDBCUtil.getResultSetReader(jdbcType, javaType);
+         }
+
+         JDBCTypeSimple type = new JDBCTypeSimple(
+            null, javaType, jdbcType, sqlType, notNull, autoIncrement, null, paramSetter, resultReader
+         );
+         mappedSimpleTypes.put(javaType, type);
       }
    }
 
@@ -350,12 +391,56 @@ public final class JDBCTypeFactory
       }
       else
       {
-         String sqlType = typeMapping.getSqlTypeForJavaType(javaType);
-         int jdbcType = typeMapping.getJdbcTypeForJavaType(javaType);
-         boolean notNull = javaType.isPrimitive();
-         boolean autoIncrement = false;
-         return new JDBCTypeSimple(
-            null, javaType, jdbcType, sqlType, notNull, autoIncrement, null);
+         JDBCTypeSimple type = (JDBCTypeSimple)mappedSimpleTypes.get(javaType);
+         if(type == null)
+         {
+            log.warn("Type not mapped: " + javaType.getName());
+
+            JDBCMappingMetaData typeMappingMD = typeMapping.getTypeMappingMetaData(javaType);
+            String sqlType = typeMappingMD.getSqlType();
+            int jdbcType = typeMappingMD.getJdbcType();
+            boolean notNull = javaType.isPrimitive();
+            boolean autoIncrement = false;
+
+            JDBCParameterSetter paramSetter;
+            if(typeMappingMD.getParamSetter() != null)
+            {
+               try
+               {
+                  paramSetter = (JDBCParameterSetter)newInstance(typeMappingMD.getParamSetter());
+               }
+               catch(DeploymentException e)
+               {
+                  throw new IllegalStateException(e.getMessage());
+               }
+            }
+            else
+            {
+               paramSetter = JDBCUtil.getParameterSetter(jdbcType, javaType);
+            }
+
+            JDBCResultSetReader resultReader;
+            if(typeMappingMD.getResultReader() != null)
+            {
+               try
+               {
+                  resultReader = (JDBCResultSetReader)newInstance(typeMappingMD.getResultReader());
+               }
+               catch(DeploymentException e)
+               {
+                  throw new IllegalStateException(e.getMessage());
+               }
+            }
+            else
+            {
+               resultReader = JDBCUtil.getResultSetReader(jdbcType, javaType);
+            }
+
+            type = new JDBCTypeSimple(
+               null, javaType, jdbcType, sqlType, notNull, autoIncrement, null, paramSetter, resultReader
+            );
+         }
+         return type;
       }
    }
 
@@ -376,7 +461,7 @@ public final class JDBCTypeFactory
 
    public int getJDBCTypeForJavaType(Class clazz)
    {
-      return typeMapping.getJdbcTypeForJavaType(clazz);
+      return typeMapping.getTypeMappingMetaData(clazz).getJdbcType();
    }
 
    public JDBCTypeMappingMetaData getTypeMapping()
@@ -388,14 +473,11 @@ public final class JDBCTypeFactory
       JDBCValueClassMetaData valueClass,
       HashMap valueClassesByType)
    {
-
       // get the properties
-      ArrayList propertyList = createComplexProperties(valueClass,
-         valueClassesByType, new PropertyStack());
+      ArrayList propertyList = createComplexProperties(valueClass, valueClassesByType, new PropertyStack());
 
       // transform properties into an array
-      JDBCTypeComplexProperty[] properties =
-         new JDBCTypeComplexProperty[propertyList.size()];
+      JDBCTypeComplexProperty[] properties = new JDBCTypeComplexProperty[propertyList.size()];
       properties = (JDBCTypeComplexProperty[])propertyList.toArray(properties);
 
       return new JDBCTypeComplex(properties, valueClass.getJavaType());
@@ -406,6 +488,10 @@ public final class JDBCTypeFactory
       String columnName = cmpField.getColumnName();
       Class javaType = cmpField.getFieldType();
 
+      JDBCMappingMetaData typeMappingMD = typeMapping.getTypeMappingMetaData(javaType);
+      String paramSetter = typeMappingMD.getParamSetter();
+      String resultReader = typeMappingMD.getResultReader();
+
       int jdbcType;
       String sqlType = cmpField.getSQLType();
       if(sqlType != null)
@@ -415,16 +501,15 @@ public final class JDBCTypeFactory
       else
       {
          // get jdbcType and sqlType from typeMapping
-         sqlType = typeMapping.getSqlTypeForJavaType(javaType);
-         jdbcType = typeMapping.getJdbcTypeForJavaType(javaType);
+         sqlType = typeMappingMD.getSqlType();
+         jdbcType = typeMappingMD.getJdbcType();
       }
 
       boolean notNull = cmpField.isNotNull();
       boolean autoIncrement = cmpField.isAutoIncrement();
 
       Mapper mapper = null;
-      JDBCUserTypeMappingMetaData userTypeMapping =
-         (JDBCUserTypeMappingMetaData)userTypeMappings.get(javaType.getName());
+      JDBCUserTypeMappingMetaData userTypeMapping = (JDBCUserTypeMappingMetaData)userTypeMappings.get(javaType.getName());
       if(userTypeMapping != null)
       {
          String mappedTypeStr = userTypeMapping.getMappedType();
@@ -436,8 +521,11 @@ public final class JDBCTypeFactory
             javaType = contextClassLoader.loadClass(mappedTypeStr);
             if(cmpField.getSQLType() == null)
             {
-               sqlType = typeMapping.getSqlTypeForJavaType(javaType);
-               jdbcType = typeMapping.getJdbcTypeForJavaType(javaType);
+               JDBCMappingMetaData mappingMD = typeMapping.getTypeMappingMetaData(javaType);
+               sqlType = mappingMD.getSqlType();
+               jdbcType = mappingMD.getJdbcType();
+               paramSetter = mappingMD.getParamSetter();
+               resultReader = mappingMD.getResultReader();
             }
          }
          catch(ClassNotFoundException e)
@@ -449,6 +537,27 @@ public final class JDBCTypeFactory
             throw new DeploymentException("Could not instantiate mapper: " + userTypeMapping.getMapper(), e);
          }
       }
+
+      JDBCParameterSetter paramSetterImpl;
+      if(paramSetter == null)
+      {
+         paramSetterImpl = JDBCUtil.getParameterSetter(jdbcType, javaType);
+      }
+      else
+      {
+         paramSetterImpl = (JDBCParameterSetter)newInstance(paramSetter);
+      }
+
+      JDBCResultSetReader resultReaderImpl;
+      if(resultReader == null)
+      {
+         resultReaderImpl = JDBCUtil.getResultSetReader(jdbcType, javaType);
+      }
+      else
+      {
+         resultReaderImpl = (JDBCResultSetReader)newInstance(resultReader);
+      }
+
       return new JDBCTypeSimple(
          columnName,
          javaType,
@@ -456,15 +565,16 @@ public final class JDBCTypeFactory
          sqlType,
          notNull,
          autoIncrement,
-         mapper
+         mapper,
+         paramSetterImpl,
+         resultReaderImpl
       );
    }
 
    private JDBCTypeComplex createTypeComplex(JDBCCMPFieldMetaData cmpField)
    {
       // get the default properties for a field of its type
-      JDBCTypeComplex type =
-         (JDBCTypeComplex)complexTypes.get(cmpField.getFieldType());
+      JDBCTypeComplex type = (JDBCTypeComplex)complexTypes.get(cmpField.getFieldType());
       JDBCTypeComplexProperty[] defaultProperties = type.getProperties();
 
       // create a map of the overrides based on flat property name
@@ -472,23 +582,19 @@ public final class JDBCTypeFactory
 
       for(int i = 0; i < cmpField.getPropertyOverrides().size(); ++i)
       {
-         JDBCCMPFieldPropertyMetaData p =
-            (JDBCCMPFieldPropertyMetaData)cmpField.getPropertyOverrides().get(i);
+         JDBCCMPFieldPropertyMetaData p = (JDBCCMPFieldPropertyMetaData)cmpField.getPropertyOverrides().get(i);
          overrides.put(p.getPropertyName(), p);
       }
 
       // array that will hold the final properites after overrides
-      JDBCTypeComplexProperty[] finalProperties =
-         new JDBCTypeComplexProperty[defaultProperties.length];
+      JDBCTypeComplexProperty[] finalProperties = new JDBCTypeComplexProperty[defaultProperties.length];
 
       // override property default values
       for(int i = 0; i < defaultProperties.length; i++)
       {
-
          // pop off the override, if present
          JDBCCMPFieldPropertyMetaData override;
-         override = (JDBCCMPFieldPropertyMetaData)overrides.remove(
-            defaultProperties[i].getPropertyName());
+         override = (JDBCCMPFieldPropertyMetaData)overrides.remove(defaultProperties[i].getPropertyName());
 
          if(override == null)
          {
@@ -507,8 +613,7 @@ public final class JDBCTypeFactory
             String columnName = override.getColumnName();
             if(columnName == null)
             {
-               columnName = cmpField.getColumnName() + "_" +
-                  defaultProperties[i].getColumnName();
+               columnName = cmpField.getColumnName() + "_" + defaultProperties[i].getColumnName();
             }
 
             // sql and jdbc type
@@ -599,8 +704,9 @@ public final class JDBCTypeFactory
          else
          {
             // get jdbcType and sqlType from typeMapping
-            sqlType = typeMapping.getSqlTypeForJavaType(javaType);
-            jdbcType = typeMapping.getJdbcTypeForJavaType(javaType);
+            JDBCMappingMetaData typeMappingMD = typeMapping.getTypeMappingMetaData(javaType);
+            sqlType = typeMappingMD.getSqlType();
+            jdbcType = typeMappingMD.getJdbcType();
          }
 
          boolean notNull = propertyStack.isNotNull();
@@ -654,6 +760,7 @@ public final class JDBCTypeFactory
       public final void pushPropertyMetaData(
          JDBCValuePropertyMetaData propertyMetaData)
       {
+
          propertyNames.add(propertyMetaData.getPropertyName());
          columnNames.add(propertyMetaData.getColumnName());
          notNulls.add(new Boolean(propertyMetaData.isNotNull()));
@@ -727,6 +834,32 @@ public final class JDBCTypeFactory
       public final Method[] getSetters()
       {
          return (Method[])setters.toArray(new Method[setters.size()]);
+      }
+   }
+
+
+   private Object newInstance(String className) throws DeploymentException
+   {
+      Class clazz = loadClass(className);
+      try
+      {
+         return clazz.newInstance();
+      }
+      catch(Exception e)
+      {
+         throw new DeploymentException("Failed to instantiate " + className, e);
+      }
+   }
+   private Class loadClass(String className) throws DeploymentException
+   {
+      try
+      {
+         final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+         return contextClassLoader.loadClass(className);
+      }
+      catch(ClassNotFoundException e)
+      {
+         throw new DeploymentException("Failed to load class: " + className, e);
       }
    }
 }

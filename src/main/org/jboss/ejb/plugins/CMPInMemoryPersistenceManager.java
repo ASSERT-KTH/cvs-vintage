@@ -13,7 +13,6 @@ import java.lang.reflect.Method;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Collection;
@@ -25,6 +24,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.GenericEntityObjectFactory;
 
 import org.jboss.metadata.EntityMetaData;
 
@@ -37,7 +37,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @see org.jboss.ejb.EntityPersistenceStore
  * @see org.jboss.ejb.plugins.CMPFilePersistenceManager
  *
- * @version <tt>$Revision: 1.6 $</tt>
+ * @version <tt>$Revision: 1.7 $</tt>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  *
@@ -140,8 +140,6 @@ public class CMPInMemoryPersistenceManager
     *   reset the value of all cmpFields to 0 or null.
     *
     * @param ctx
-    *
-    * @throws RemoteException
     */
    public void initEntity (EntityEnterpriseContext ctx)
    {
@@ -221,7 +219,7 @@ public class CMPInMemoryPersistenceManager
     * @param m           the create method in the home interface that was
     *                   called
     * @param args        any create parameters
-    * @param instance    the instance being used for this create call
+    * @param ctx         the instance being used for this create call
     * @return            The primary key computed by CMP PM or null for BMP
     *
     * @throws Exception
@@ -255,7 +253,7 @@ public class CMPInMemoryPersistenceManager
     * @param m           the ejbPostCreate method in the bean class that was
     *                    called
     * @param args        any create parameters
-    * @param instance    the instance being used for this create call
+    * @param ctx         the instance being used for this create call
     * @return            null
     *
     * @throws Exception
@@ -280,10 +278,9 @@ public class CMPInMemoryPersistenceManager
     * @param instance        the instance to use for the finder call
     * @return                a primary key representing the found entity
     *
-    * @throws RemoteException    thrown if some system exception occurs
-    * @throws FinderException    thrown if some heuristic problem occurs
+    * @throws Exception    thrown if some heuristic problem occurs
     */
-   public Object findEntity (Method finderMethod, Object[] args, EntityEnterpriseContext instance)
+   public Object findEntity (Method finderMethod, Object[] args, EntityEnterpriseContext instance, GenericEntityObjectFactory factory)
       throws Exception
    {
       if (finderMethod.getName ().equals ("findByPrimaryKey"))
@@ -291,7 +288,7 @@ public class CMPInMemoryPersistenceManager
          if (!this.beans.containsKey (args[0]))
             throw new javax.ejb.FinderException (args[0]+" does not exist");
          
-         return args[0];
+         return factory.getEntityEJBObject(args[0]);
       }
 
       return null;
@@ -310,17 +307,17 @@ public class CMPInMemoryPersistenceManager
     * @return                an primary key collection representing the found
     *                       entities
     *
-    * @throws RemoteException    thrown if some system exception occurs
-    * @throws FinderException    thrown if some heuristic problem occurs
+    * @throws Exception    thrown if some heuristic problem occurs
     */
    public Collection findEntities(final Method finderMethod,
                                   final Object[] args,
-                                  final EntityEnterpriseContext instance)
+                                  final EntityEnterpriseContext instance,
+                                  GenericEntityObjectFactory factory)
       throws Exception
    {
       if (finderMethod.getName ().equals ("findAll"))
       {
-         return new ArrayList(this.beans.keySet());
+         return GenericEntityObjectFactory.UTIL.getEntityCollection(factory, this.beans.keySet());
       }
       else
       {
@@ -342,9 +339,7 @@ public class CMPInMemoryPersistenceManager
     * underlying storage. The persistence manager must load the state from
     * the underlying storage and then call ejbLoad on the supplied instance.
     *
-    * @param instance    the instance to synchronize
-    *
-    * @throws RemoteException    thrown if some system exception occurs
+    * @param ctx    the instance to synchronize
     */
    public void loadEntity (EntityEnterpriseContext ctx)
    {
@@ -374,7 +369,7 @@ public class CMPInMemoryPersistenceManager
    /**
     * This method is used to determine if an entity should be stored.
     *
-    * @param instance    the instance to check
+    * @param ctx    the instance to check
     * @return true, if the entity has been modified
     * @throws Exception    thrown if some system exception occurs
     */
@@ -394,9 +389,7 @@ public class CMPInMemoryPersistenceManager
     * underlying storage. The persistence manager must call ejbStore on the
     * supplied instance and then store the state to the underlying storage.
     *
-    * @param instance    the instance to synchronize
-    *
-    * @throws RemoteException    thrown if some system exception occurs
+    * @param ctx    the instance to synchronize
     */
    public void storeEntity (EntityEnterpriseContext ctx)
    {
@@ -416,10 +409,9 @@ public class CMPInMemoryPersistenceManager
     * underlying storage. The persistence manager must call ejbRemove on the
     * instance and then remove its state from the underlying storage.
     *
-    * @param instance    the instance to remove
+    * @param ctx    the instance to remove
     *
-    * @throws RemoteException    thrown if some system exception occurs
-    * @throws RemoveException    thrown if the instance could not be removed
+    * @throws javax.ejb.RemoveException    thrown if the instance could not be removed
     */
    public void removeEntity (EntityEnterpriseContext ctx) throws javax.ejb.RemoveException
    {

@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public final class JDBCJBossQLQuery extends JDBCAbstractQueryCommand
 {
@@ -44,7 +44,7 @@ public final class JDBCJBossQLQuery extends JDBCAbstractQueryCommand
             metadata.getJBossQL(),
             metadata.getMethod().getReturnType(),
             metadata.getMethod().getParameterTypes(),
-            metadata.getReadAhead());
+            metadata);
       }
       catch(Throwable t)
       {
@@ -62,7 +62,7 @@ public final class JDBCJBossQLQuery extends JDBCAbstractQueryCommand
       // set select object
       if(compiler.isSelectEntity())
       {
-         JDBCEntityBridge selectEntity = (JDBCEntityBridge)compiler.getSelectEntity();
+         JDBCEntityBridge selectEntity = (JDBCEntityBridge) compiler.getSelectEntity();
 
          // set the select entity
          setSelectEntity(selectEntity);
@@ -77,11 +77,11 @@ public final class JDBCJBossQLQuery extends JDBCAbstractQueryCommand
       }
       else if(compiler.isSelectField())
       {
-         setSelectField((JDBCCMPFieldBridge)compiler.getSelectField());
+         setSelectField((JDBCCMPFieldBridge) compiler.getSelectField());
       }
       else
       {
-         setSelectFunction(compiler.getSelectFunction(), (JDBCStoreManager)compiler.getStoreManager());
+         setSelectFunction(compiler.getSelectFunction(), (JDBCStoreManager) compiler.getStoreManager());
       }
 
       // get the parameter order

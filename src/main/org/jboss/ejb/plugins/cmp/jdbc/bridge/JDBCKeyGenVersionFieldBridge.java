@@ -45,8 +45,7 @@ public class JDBCKeyGenVersionFieldBridge extends JDBCCMP2xVersionFieldBridge
       try
       {
          InitialContext ctx = new InitialContext();
-         KeyGeneratorFactory keygenFactory = (KeyGeneratorFactory)
-            ctx.lookup(keygenFactoryName);
+         KeyGeneratorFactory keygenFactory = (KeyGeneratorFactory)ctx.lookup(keygenFactoryName);
          return keygenFactory.getKeyGenerator();
       }
       catch(NamingException e)

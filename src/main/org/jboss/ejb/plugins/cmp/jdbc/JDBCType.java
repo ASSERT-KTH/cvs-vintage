@@ -6,7 +6,6 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-
 /**
  * This interface represents a mapping between a Java type and JDBC type.
  * The properties all return arrays, because this type system supports the
@@ -14,7 +13,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public interface JDBCType
 {
@@ -30,7 +29,9 @@ public interface JDBCType
 
    boolean[] getAutoIncrement();
 
-   JDBCUtil.ResultSetReader[] getResultSetReaders();
+   JDBCResultSetReader[] getResultSetReaders();
+
+   JDBCParameterSetter[] getParameterSetter();
 
    Object getColumnValue(int index, Object value);
 

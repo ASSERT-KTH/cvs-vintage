@@ -8,25 +8,30 @@ package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCEntityPersistenceStore;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 
 import javax.sql.DataSource;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.1 $</tt>
+ * @version <tt>$Revision: 1.2 $</tt>
  */
 public interface JDBCAbstractEntityBridge
    extends EntityBridge
 {
-   public abstract JDBCFieldBridge[] getPrimaryKeyFields();
+   JDBCFieldBridge[] getPrimaryKeyFields();
 
-   public abstract JDBCFieldBridge[] getTableFields();
+   JDBCAbstractCMRFieldBridge[] getCMRFields();
 
-   public abstract JDBCEntityPersistenceStore getManager();
+   JDBCFieldBridge[] getTableFields();
 
-   public abstract String getTableName();
+   JDBCEntityPersistenceStore getManager();
 
-   public abstract DataSource getDataSource();
+   String getTableName();
 
-   public abstract boolean[] getLoadGroupMask(String eagerLoadGroupName);
+   DataSource getDataSource();
+
+   boolean[] getLoadGroupMask(String eagerLoadGroupName);
+
+   JDBCEntityMetaData getMetaData();
 }

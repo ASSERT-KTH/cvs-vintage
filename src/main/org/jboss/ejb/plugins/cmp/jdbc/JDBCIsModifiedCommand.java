@@ -16,15 +16,16 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
+
 public final class JDBCIsModifiedCommand
 {
    private final JDBCEntityBridge bridge;
 
    public JDBCIsModifiedCommand(JDBCStoreManager manager)
    {
-      bridge = manager.getEntityBridge();
+      bridge = (JDBCEntityBridge) manager.getEntityBridge();
    }
 
    public boolean execute(EntityEnterpriseContext ctx)

@@ -10,7 +10,6 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.InstancePool;
-import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.AllowedOperationsAssociation;
 import org.jboss.invocation.Invocation;
 
@@ -19,11 +18,22 @@ import javax.ejb.Timer;
 import java.lang.reflect.Method;
 
 /**
+ * @deprecated this interceptor was used with Instance Per Transaction containers which do not use a global cache
+ * but cache instances per transaction and always passivate instances at commit time (commit option C).
+ * This interceptor used org.jboss.ejb.TxEntityMap to compensate the absence of a real per transaction cache implementation.
+ * Now, the differences between IPT and standard container are:
+ * <ul>
+ *    <li>org.jboss.ejb.plugins.PerTxEntityInstanceCache as the cache implementation;</li>
+ *    <li>NoLock as the locking policy;</li>
+ *    <li>empty container-cache-conf element.</li>
+ * </ul>
+ * (alex@jboss.org)
+ *
  * The instance interceptors role is to acquire a context representing
  * the target object from the cache.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class EntityMultiInstanceInterceptor
    extends AbstractInterceptor
@@ -105,7 +115,7 @@ public class EntityMultiInstanceInterceptor
       EntityContainer ec = (EntityContainer) container;
       if (mi.getTransaction() != null)
       {
-         ctx = ec.getTxEntityMap().getCtx(mi.getTransaction(), key);
+         //ctx = ec.getTxEntityMap().getCtx(mi.getTransaction(), key);
       }
       if (ctx == null)
       {

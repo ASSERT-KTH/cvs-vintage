@@ -52,9 +52,7 @@ public interface LockingStrategy
       }
    };
 
-   LockingStrategy NONE = new AbstractStrategy()
-   {
-   };
+   LockingStrategy NONE = new AbstractStrategy(){};
 
    class AbstractStrategy implements LockingStrategy
    {
@@ -69,11 +67,9 @@ public interface LockingStrategy
       public void changed(JDBCCMPFieldBridge field, EntityEnterpriseContext ctx)
       {
       }
-   };
+   }
 
    void loaded(JDBCCMPFieldBridge field, EntityEnterpriseContext ctx);
-
    void accessed(JDBCCMPFieldBridge field, EntityEnterpriseContext ctx);
-
    void changed(JDBCCMPFieldBridge field, EntityEnterpriseContext ctx);
 }

@@ -15,7 +15,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  * The base class for optimistic locking version fields (sequence and timestamp).
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class JDBCCMP2xVersionFieldBridge extends JDBCCMP2xAutoUpdatedFieldBridge
 {

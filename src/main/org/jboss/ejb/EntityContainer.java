@@ -37,7 +37,6 @@ import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.ConfigurationMetaData;
-import org.jboss.util.NestedRuntimeException;
 import org.jboss.util.collection.SerializableEnumeration;
 
 /**
@@ -53,7 +52,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.120 $
+ * @version $Revision: 1.121 $
  *
  * @jmx.mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -82,8 +81,6 @@ public class EntityContainer
 
    /** This is the instancepool that is to be used */
    protected InstancePool instancePool;
-
-   protected TxEntityMap txEntityMap = new TxEntityMap();
 
    /**
     * This is the first interceptor in the chain. The last interceptor must
@@ -150,11 +147,6 @@ public class EntityContainer
    public InstancePool getInstancePool()
    {
       return instancePool;
-   }
-
-   public TxEntityMap getTxEntityMap()
-   {
-      return txEntityMap;
    }
 
    public void setInstanceCache(InstanceCache ic)
@@ -654,26 +646,21 @@ public class EntityContainer
          }
 
          // Iterator finder
-         Collection c = getPersistenceManager().findEntities(method, args, instance);
-
-         // Get the EJBObjects with that
-         Collection ec = localProxyFactory.getEntityLocalCollection(c);
+         Collection c = getPersistenceManager().findEntities(method, args, instance, localProxyFactory);
 
          // BMP entity finder methods are allowed to return java.util.Enumeration.
          if (returnType == Enumeration.class)
          {
-            return java.util.Collections.enumeration(ec);
+            return java.util.Collections.enumeration(c);
          }
          else
          {
-            return ec;
+            return c;
          }
       }
       else
       {
-         Object id = findSingleObject(tx, method, args, instance);
-         //create the EJBObject
-         return localProxyFactory.getEntityEJBLocalObject(id);
+         return findSingleObject(tx, method, args, instance, localProxyFactory);
       }
    }
 
@@ -710,27 +697,22 @@ public class EntityContainer
          }
 
          // Iterator finder
-         Collection c = getPersistenceManager().findEntities(method, args, instance);
-
-         // Get the EJBObjects with that
-         Collection ec = ci.getEntityCollection(c);
+         Collection c = getPersistenceManager().findEntities(method, args, instance, ci);
 
          // BMP entity finder methods are allowed to return java.util.Enumeration.
          // We need a serializable Enumeration, so we can't use Collections.enumeration()
          if (returnType == Enumeration.class)
          {
-            return new SerializableEnumeration(ec);
+            return new SerializableEnumeration(c);
          }
          else
          {
-            return ec;
+            return c;
          }
       }
       else
       {
-         Object id = findSingleObject(tx, method, args, instance);
-         //create the EJBObject
-         return (EJBObject)ci.getEntityEJBObject(id);
+         return findSingleObject(tx, method, args, instance, ci);
       }
    }
 
@@ -1054,7 +1036,11 @@ public class EntityContainer
       }
    }
 
-   private Object findSingleObject(Transaction tx, Method method, Object[] args, EntityEnterpriseContext instance)
+   private Object findSingleObject(Transaction tx,
+                                   Method method,
+                                   Object[] args,
+                                   EntityEnterpriseContext instance,
+                                   GenericEntityObjectFactory factory)
       throws Exception
    {
       if(method.getName().equals("findByPrimaryKey"))
@@ -1072,7 +1058,7 @@ public class EntityContainer
 
             if(instanceCache.isActive(key))
             {
-               return key;
+               return factory.getEntityEJBObject(key);
             }
          }
       }
@@ -1081,9 +1067,9 @@ public class EntityContainer
          EntityContainer.synchronizeEntitiesWithinTransaction(tx);
       }
 
-      return getPersistenceManager().findEntity(method, args, instance);
+      return getPersistenceManager().findEntity(method, args, instance, factory);
    }
-   
+
    // Inner classes -------------------------------------------------
 
    /**

@@ -28,7 +28,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
  * @author <a href="alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand
 {
@@ -44,7 +44,7 @@ public final class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand
    {
       super(manager, q);
 
-      metadata = (JDBCDeclaredQueryMetaData) q;
+      metadata = (JDBCDeclaredQueryMetaData)q;
 
       // set the select object (either selectEntity or selectField)
       initSelectObject(manager);
@@ -80,7 +80,7 @@ public final class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand
 
       Catalog catalog = manager.getCatalog();
 
-      JDBCEntityBridge entity = (JDBCEntityBridge) catalog.getEntityByEJBName(entityName);
+      JDBCEntityBridge entity = (JDBCEntityBridge)catalog.getEntityByEJBName(entityName);
       if(entity == null)
       {
          throw new DeploymentException("Unknown entity: " + entityName);
@@ -137,10 +137,10 @@ public final class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand
          if(getEagerLoadGroup() != null)
          {
             selectList += SQLUtil.appendColumnNamesClause(
-               getSelectEntity(),
-               getEagerLoadGroup(),
-               tableAlias,
-               new StringBuffer(35));
+            getSelectEntity(),
+            getEagerLoadGroup(),
+            tableAlias,
+            new StringBuffer(35));
          }
       }
       else

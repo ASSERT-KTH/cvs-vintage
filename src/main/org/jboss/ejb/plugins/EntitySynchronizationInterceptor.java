@@ -19,6 +19,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.GlobalTxEntityMap;
 import org.jboss.invocation.Invocation;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.util.NestedRuntimeException;
@@ -39,7 +40,7 @@ import org.jboss.util.NestedRuntimeException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.81 $
+ * @version $Revision: 1.82 $
  */
 public class EntitySynchronizationInterceptor
         extends AbstractInterceptor
@@ -147,17 +148,12 @@ public class EntitySynchronizationInterceptor
             // We want to be notified when the transaction commits
             tx.registerSynchronization(synch);
 
-            // associate the entity bean with the transaction so that
-            // we can do things like synchronizeEntitiesWithinTransaction
-            // do this after registerSynchronization, just in case there was an exception
-            ctxContainer.getTxEntityMap().associate(tx, ctx);
-
             ctx.hasTxSynchronization(true);
          }
          //mark it dirty in global tx entity map if it is not read only
          if(!ctxContainer.isReadOnly())
          {
-            EntityContainer.getGlobalTxEntityMap().associate(tx, ctx);
+            ctx.getTxAssociation().scheduleSync(tx, ctx);
          }
       }
       catch(RollbackException e)
@@ -168,6 +164,7 @@ public class EntitySynchronizationInterceptor
             ctx.setValid(false);
             ctx.hasTxSynchronization(false);
             ctx.setTransaction(null);
+            ctx.setTxAssociation(GlobalTxEntityMap.NONE);
          }
          throw new EJBException(e);
       }
@@ -175,6 +172,7 @@ public class EntitySynchronizationInterceptor
       {
          // If anything goes wrong with the association remove the ctx-tx association
          ctx.hasTxSynchronization(false);
+         ctx.setTxAssociation(GlobalTxEntityMap.NONE);
          if(t instanceof RuntimeException)
             throw (RuntimeException)t;
          else if(t instanceof Error)
@@ -230,6 +228,9 @@ public class EntitySynchronizationInterceptor
          log.trace("invoke called for ctx " + ctx + ", tx=" + tx);
 
       // TODO: refactor it
+      // the synchronization on persistent context is required because pessimistic locking is not working
+      // in case of NotSupported and if the container/invocation is reentrant we don't lock even for the
+      // duration of invocation.
       Object pctx = ctx.getPersistenceContext();
       if(pctx != null)
       {
@@ -469,6 +470,7 @@ public class EntitySynchronizationInterceptor
          lock.sync();
          // The context is no longer synchronized on the TX
          ctx.hasTxSynchronization(false);
+         ctx.setTxAssociation(GlobalTxEntityMap.NONE);
          ctx.setTransaction(null);
          try
          {

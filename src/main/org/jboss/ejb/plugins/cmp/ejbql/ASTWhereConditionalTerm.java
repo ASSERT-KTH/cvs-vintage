@@ -10,7 +10,7 @@ package org.jboss.ejb.plugins.cmp.ejbql;
 /**
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class ASTWhereConditionalTerm extends SimpleNode
 {

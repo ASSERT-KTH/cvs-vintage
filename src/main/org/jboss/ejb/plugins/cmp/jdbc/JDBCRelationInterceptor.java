@@ -26,8 +26,7 @@ import org.jboss.logging.Logger;
  * relationship.  This interceptor also manages the relation table data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public final class JDBCRelationInterceptor extends AbstractInterceptor
 {
@@ -107,6 +106,7 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
          cmrField.addRelation(ctx, relatedId);
 
          return null;
+
       }
       else if(CMRMessage.REMOVE_RELATION == relationshipMessage)
       {
@@ -120,17 +120,18 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
          }
 
          cmrField.removeRelation(ctx, relatedId);
+
          return null;
       }
       else if(CMRMessage.SCHEDULE_FOR_CASCADE_DELETE == relationshipMessage)
       {
-         JDBCEntityBridge entity = ((JDBCEntityBridge)cmrField.getEntity());
+         JDBCEntityBridge entity = (JDBCEntityBridge)cmrField.getEntity();
          entity.scheduleForCascadeDelete(ctx);
          return null;
       }
       else if(CMRMessage.SCHEDULE_FOR_BATCH_CASCADE_DELETE == relationshipMessage)
       {
-         JDBCEntityBridge entity = ((JDBCEntityBridge)cmrField.getEntity());
+         JDBCEntityBridge entity = (JDBCEntityBridge)cmrField.getEntity();
          entity.scheduleForBatchCascadeDelete(ctx);
          return null;
       }
