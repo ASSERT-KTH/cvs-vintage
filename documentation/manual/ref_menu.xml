@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_menu.xml,v 1.25 2003/11/09 09:16:47 mvw Exp $ -->
+<!-- $Id: ref_menu.xml,v 1.26 2003/12/12 18:29:55 mvw Exp $ -->
 
 <!--
 
@@ -1552,7 +1552,7 @@ but not on any diagram. See issue ... -->
 
     <!-- Sub-menu to zoom the diagram -->
 
-    <sect2>
+    <sect2 id="s2.ref.menu_zoom">
       <title>The Zoom Sub-Menu</title>
 
       <para>This entry brings up a sub-entry, which allows scaling the view of
