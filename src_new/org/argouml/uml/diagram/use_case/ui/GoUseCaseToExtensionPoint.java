@@ -24,7 +24,7 @@
 // File: GoUseCaseToExtensionPoint.java
 // Classes: GoUseCaseToExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: GoUseCaseToExtensionPoint.java,v 1.3 2002/08/10 14:57:47 linus Exp $
+// $Id: GoUseCaseToExtensionPoint.java,v 1.4 2002/08/18 17:52:19 jhraigniac Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // display of extension points in the navigator pane.
@@ -41,8 +41,8 @@ import ru.novosoft.uml.model_management.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.behavior.use_cases.*;
 
+import org.argouml.application.api.Argo;
 import org.argouml.ui.*;
-import org.tigris.gef.util.Localizer;
 import org.argouml.uml.MMUtil;
 
 
@@ -63,7 +63,7 @@ public class GoUseCaseToExtensionPoint implements TreeModel {
      */
 
     public String toString() {
-        return Localizer.localize ("Tree", "Use Case->Extension Point");
+        return Argo.localize ("Tree", "Use Case->Extension Point");
     }
   
 
