@@ -22,14 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
@@ -39,6 +32,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
+import org.columba.mail.util.MailResourceLoader;
 
 public class SelectFolderDialog
 	implements ActionListener, TreeSelectionListener {
@@ -50,7 +44,7 @@ public class SelectFolderDialog
 
 	private JTree tree;
 
-	private JButton okButton, cancelButton, newButton;
+	private JButton okButton, newButton;
 
 	//private TreeController treeController;
 	//private TreeModel treeModel;
@@ -60,13 +54,9 @@ public class SelectFolderDialog
 	//private JFrame frame;
 
 	protected JDialog dialog;
-	
-	
 
 	public SelectFolderDialog( ) {
-		
-		
-		dialog = DialogStore.getDialog("Select Folder...");
+		dialog = DialogStore.getDialog(MailResourceLoader.getString("dialog", "folder", "select_folder"));
 
 		//this.treeController = treeController;
 		//this.frame = frame;
@@ -74,24 +64,14 @@ public class SelectFolderDialog
 		name = new String("name");
 
 		init();
-
 	}
 
 	public void init() {
-
-		JPanel contentPane = new JPanel(new BorderLayout());
+		JPanel contentPane = (JPanel)dialog.getContentPane();
 		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 
 		//tree = new SelectFolderTree( mainInterface, MainInterface.config.getFolderConfig().getRootNode()  );
 		//tree.getTree().addTreeSelectionListener( this );
-
-		JPanel centerPanel = new JPanel(new BorderLayout());
-		centerPanel.setBorder(
-			BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(
-					BorderFactory.createEtchedBorder(),
-					" Choose Folder "),
-				BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
 		tree = new JTree(MainInterface.treeModel);
 		tree.putClientProperty("JTree.lineStyle", "Angled");
@@ -102,30 +82,27 @@ public class SelectFolderDialog
 		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer(true);
 		tree.setCellRenderer(renderer);
 		
-		
-		centerPanel.add(new JScrollPane(tree), BorderLayout.CENTER);
-		contentPane.add(centerPanel, BorderLayout.CENTER);
+		contentPane.add(new JScrollPane(tree));
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 0, 0));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 5, 0));
-		okButton = new JButton("Ok");
+		okButton = new JButton(MailResourceLoader.getString("", "ok"));
 		okButton.setEnabled(true);
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 		buttonPanel.add(okButton);
-		newButton = new JButton("New Subfolder...");
+		newButton = new JButton(MailResourceLoader.getString("dialog", "folder", "new_folder"));
 		newButton.setEnabled(true);
 		newButton.setActionCommand("NEW");
 		newButton.addActionListener(this);
 		buttonPanel.add(newButton);
-		cancelButton = new JButton("Cancel");
+		JButton cancelButton = new JButton(MailResourceLoader.getString("", "cancel"));
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
 		buttonPanel.add(cancelButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		contentPane.add(bottomPanel, BorderLayout.SOUTH);
-		dialog.setContentPane(contentPane);
 		dialog.getRootPane().setDefaultButton(okButton);
 		dialog.getRootPane().registerKeyboardAction(
 			this,
@@ -154,7 +131,6 @@ public class SelectFolderDialog
 		return 101;
 
 		//return item.getUid();
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -171,8 +147,7 @@ public class SelectFolderDialog
 
 			dialog.dispose();
 		} else if (action.equals("NEW")) {
-
-			EditFolderDialog dialog = new EditFolderDialog("New Folder");
+			EditFolderDialog dialog = new EditFolderDialog(MailResourceLoader.getString("dialog", "folder", "new_folder_name"));
 			dialog.showDialog();
 
 			String name;
