@@ -2,22 +2,55 @@
 This is the XML DTD for the JAWS deployment descriptor.
 -->
 
-<!ELEMENT jaws (datasource,type-mapping,enterprise-beans)>
+<!-- The jaws element is always the root (document) node of the jaws.xml
+ deployment descriptor or the standardjaws.xml defaults document. All elements
+ are declared as optional - if not given in jaws.xml, defaults will be read 
+ from standardjaws.xml -->
+<!ELEMENT jaws (datasource?,type-mapping?,debug?,default-entity?,enterprise-beans?,type-mappings?)>
 
+<!-- the datasource element is used to indicate to JAWS which datasource
+ should be used for persistence of the CMP entities in this ejb-jar. It 
+ should be the datasource named as it appears in jboss' global naming 
+ context. The default is java:/DefaultDS -->
 <!ELEMENT datasource (#PCDATA)>
 
+<!-- the type-mapping element is used to indicate to JAWS which set of mappings
+ from java types to jdbc and SQL types to be used for CMP beans in this jar.
+ type-mappings are defined withing the type-mappings element with a type-mapping
+ element that carries a separate meaning: This DTD wil not parse! -->
 <!ELEMENT type-mapping (#PCDATA)>
 
+<!-- the enterpris-beans tag contains overridden attribute mappings for any
+ CMP bean in this ejb-jar that requires non-default column mapping behavior -->
 <!ELEMENT enterprise-beans (entity*)>
 
+<!-- the entity element defines a non-default column mapping for a CMP entity
+ bean in this ejb-jar. This includes query specifications for any finders that
+ either do not correspond to a single cmp-field or that require a specific 
+ ordering. it must contain an ejb-name element, can contain 0 or more cmp-field
+ elements and my contain 0 or more finder elements. -->
 <!ELEMENT entity (ejb-name,cmp-field*,finder*)>
 
+<!-- ejb-name within an entity element must contain the ejb-name as specified
+ in ejb-jar.xml. -->
 <!ELEMENT ejb-name (#PCDATA)>
 
+<!-- the finder element overrides JAWS default behavior for a finder, or
+ specifies JAWS behavior for finders requiring multi-column where clauses or
+ a specific ordering. it must contain name and query elements and my contain
+ 1 order element -->
 <!ELEMENT finder (name,query,order?)>
 
+<!-- the name within a finder element must contain the name of the finder 
+ method from the bean's home interface -->
 <!ELEMENT name (#PCDATA)>
 
+<!-- the query element must contain the where clause that will select the 
+ proper rows to be returned by the finder. If this query begins with an
+ inner join clause, it may specify multiple tables. -->
 <!ELEMENT query (#PCDATA)>
 
+<!-- the order element should contain a SQL order by clause (without the 
+ initial 'order by' verb!) that should be used to order the results of the 
+ query for the finder -->
 <!ELEMENT order (#PCDATA)>
