@@ -32,7 +32,7 @@ import org.jboss.system.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.23 $
+ *   @version $Revision: 1.24 $
  */
 public class Main
 {
@@ -102,6 +102,13 @@ public class Main
             final PrintStream err = System.err;
 
          com.sun.management.jmx.Trace.parseTraceProperties();
+
+	 // Give feedback about from where jndi.properties is read
+	 URL jndiLocation = this.getClass().getResource("/jndi.properties");
+	 if (jndiLocation instanceof URL) {
+	     System.out.println("Please make sure the following is intended (check your CLASSPATH):");
+	     System.out.println(" jndi.properties is read from "+jndiLocation);
+	 }
 
          // Create MBeanServer
          final MBeanServer server = MBeanServerFactory.createMBeanServer();
