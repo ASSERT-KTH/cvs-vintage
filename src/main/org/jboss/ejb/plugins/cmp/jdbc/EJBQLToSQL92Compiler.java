@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -702,7 +702,6 @@ public final class EJBQLToSQL92Compiler
    {
       Node member = node.jjtGetChild(0);
       ASTPath colPath = (ASTPath) node.jjtGetChild(1);
-      String colAlias = aliasManager.getAlias(colPath.getPath());
       JDBCAbstractEntityBridge colEntity = (JDBCAbstractEntityBridge) colPath.getEntity();
 
       StringBuffer sql = (StringBuffer) data;
@@ -721,7 +720,7 @@ public final class EJBQLToSQL92Compiler
          inputParameters.addAll(QueryParameter.createParameters(toParam.number - 1, colEntity));
 
          String parentAlias = aliasManager.getAlias(colPath.getPath(0));
-         String localParentAlias = parentAlias + "_local";
+         String localParentAlias = aliasManager.getAlias(colPath.getPath(0) + "_local");
          JDBCAbstractEntityBridge parentEntity = (JDBCAbstractEntityBridge) colPath.getEntity(0);
          SQLUtil.getColumnNamesClause(parentEntity.getPrimaryKeyFields(), localParentAlias, sql);
          sql.append(SQLUtil.FROM)
@@ -733,7 +732,9 @@ public final class EJBQLToSQL92Compiler
          JDBCAbstractEntityBridge col0 = (JDBCAbstractEntityBridge)colPath.getEntity(0);
          SQLUtil.getSelfCompareWhereClause(col0.getPrimaryKeyFields(), parentAlias, localParentAlias, sql);
          sql.append(SQLUtil.AND);
-         SQLUtil.getWhereClause(colEntity.getPrimaryKeyFields(), colAlias + "_local", sql);
+
+         String localColAlias = aliasManager.getAlias(colPath.getPath() + "_local");
+         SQLUtil.getWhereClause(colEntity.getPrimaryKeyFields(), localColAlias, sql);
       }
       else
       {
@@ -752,7 +753,7 @@ public final class EJBQLToSQL92Compiler
 
          if(memberPath.size() > 1)
          {
-            String parentAlias = aliasManager.getAlias(memberPath.getPath(0)) + "_local";
+            String parentAlias = aliasManager.getAlias(memberPath.getPath(0) + "_local");
             JDBCAbstractEntityBridge parentEntity = (JDBCAbstractEntityBridge) memberPath.getEntity(0);
             SQLUtil.getColumnNamesClause(parentEntity.getPrimaryKeyFields(), parentAlias, sql);
             sql.append(SQLUtil.FROM)
@@ -762,7 +763,7 @@ public final class EJBQLToSQL92Compiler
          }
          else if(colPath.size() > 1)
          {
-            String parentAlias = aliasManager.getAlias(colPath.getPath(0)) + "_local";
+            String parentAlias = aliasManager.getAlias(colPath.getPath(0) + "_local");
             JDBCAbstractEntityBridge parentEntity = (JDBCAbstractEntityBridge) colPath.getEntity(0);
             SQLUtil.getColumnNamesClause(parentEntity.getPrimaryKeyFields(), parentAlias, sql);
             sql.append(SQLUtil.FROM)
@@ -778,23 +779,27 @@ public final class EJBQLToSQL92Compiler
          sql.append(SQLUtil.WHERE);
 
          JDBCAbstractEntityBridge member0 = (JDBCAbstractEntityBridge)memberPath.getEntity(0);
-         String member0Alias = aliasManager.getAlias(memberPath.getPath(0));
+         String colAliasLocal = aliasManager.getAlias(colPath.getPath() + "_local");
          if(memberPath.size() > 1)
          {
+            String memberAliasLocal = aliasManager.getAlias(memberPath.getPath() + "_local");
             SQLUtil.getSelfCompareWhereClause(colEntity.getPrimaryKeyFields(),
-               memberAlias + "_local",
-               colAlias + "_local",
+               memberAliasLocal,
+               colAliasLocal,
                sql);
 
             sql.append(SQLUtil.AND);
+
+            String member0Alias = aliasManager.getAlias(memberPath.getPath(0));
+            String member0AliasLocal = aliasManager.getAlias(memberPath.getPath(0) + "_local");
             SQLUtil.getSelfCompareWhereClause(member0.getPrimaryKeyFields(),
                member0Alias,
-               member0Alias + "_local",
+               member0AliasLocal,
                sql);
          }
          else
          {
-            SQLUtil.getSelfCompareWhereClause(member0.getPrimaryKeyFields(), memberAlias, colAlias + "_local", sql);
+            SQLUtil.getSelfCompareWhereClause(member0.getPrimaryKeyFields(), memberAlias, colAliasLocal, sql);
          }
       }
 
@@ -810,12 +815,12 @@ public final class EJBQLToSQL92Compiler
          return;
       }
 
-      String parentAlias = aliasManager.getAlias(path.getPath(0)) + "_local";
+      String parentAlias = aliasManager.getAlias(path.getPath(0) + "_local");
       String leftAlias = parentAlias;
       for(int i = 1; i < path.size(); ++i)
       {
          String curPath = path.getPath(i);
-         final String joinAlias = aliasManager.getAlias(curPath) + "_local";
+         final String joinAlias = aliasManager.getAlias(curPath + "_local");
 
          final JDBCAbstractCMRFieldBridge cmrField = (JDBCAbstractCMRFieldBridge) path.getCMRField(i);
          final JDBCAbstractEntityBridge joinEntity = (JDBCAbstractEntityBridge) cmrField.getRelatedEntity();
@@ -826,7 +831,7 @@ public final class EJBQLToSQL92Compiler
 
          if(relation.isTableMappingStyle())
          {
-            String relTableAlias = aliasManager.getRelationTableAlias(curPath) + "_local";
+            String relTableAlias = aliasManager.getRelationTableAlias(curPath + "_local");
             sql.append(join)
                .append(cmrField.getQualifiedTableName())
                .append(' ')
