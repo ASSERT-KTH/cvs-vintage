@@ -76,7 +76,7 @@ public class AttachmentRule extends BaseRule
     public void begin(Attributes attributes) throws Exception
     {
         log().debug("(" + getState() + ") attachment begin()");
-        if(getState().equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             Attachment attachment = new Attachment();
             digester.push(attachment);
@@ -90,7 +90,7 @@ public class AttachmentRule extends BaseRule
     public void end() throws Exception
     {
         log().debug("(" + getState() + ") attachment end()");
-        if(getState().equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             Attachment attachment = (Attachment)digester.pop();
             Transaction transaction = (Transaction)digester.pop();

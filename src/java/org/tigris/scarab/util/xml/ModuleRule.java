@@ -78,11 +78,11 @@ public class ModuleRule extends BaseRule
     public void begin(Attributes attributes) throws Exception
     {
         log().debug("(" + getState() + ") module begin()");
-        if(getState().equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             doInsertionAtBegin(attributes);
         }
-        else if (getState().equals(DBImport.STATE_DB_VALIDATION))
+        else if (getState().equals(XMLImport.STATE_DB_VALIDATION))
         {
             doValidationAtBegin(attributes);
         }
@@ -132,11 +132,11 @@ public class ModuleRule extends BaseRule
     public void end() throws Exception
     {
         log().debug("(" + getState() + ") module end()");
-        if(getState().equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             ScarabModule module = (ScarabModule)digester.pop();
         }
-        else if (getState().equals(DBImport.STATE_DB_VALIDATION))
+        else if (getState().equals(XMLImport.STATE_DB_VALIDATION))
         {
             String moduleCode = (String)digester.pop();
         }

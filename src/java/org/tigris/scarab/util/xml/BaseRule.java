@@ -95,7 +95,7 @@ public abstract class BaseRule extends Rule
 
     private void initLogging()
     {
-        cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
+        cat = Category.getInstance(org.tigris.scarab.util.xml.XMLImport.class);
     }
 
     public Category log()
@@ -133,7 +133,7 @@ public abstract class BaseRule extends Rule
     protected void digesterPush(String text)
         throws Exception
     {
-        if(getState().equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             digester.push(text);
         }
@@ -149,11 +149,11 @@ public abstract class BaseRule extends Rule
     protected void doInsertionOrValidationAtBody(String text)
         throws Exception
     {
-        if(getState().equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             doInsertionAtBody(text);
         }
-        else if (getState().equals(DBImport.STATE_DB_VALIDATION))
+        else if (getState().equals(XMLImport.STATE_DB_VALIDATION))
         {
             doValidationAtBody(text);
         }
@@ -166,11 +166,11 @@ public abstract class BaseRule extends Rule
     protected void doInsertionOrValidationAtEnd()
         throws Exception
     {
-        if(getState().equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             doInsertionAtEnd();
         }
-        else if (getState().equals(DBImport.STATE_DB_VALIDATION))
+        else if (getState().equals(XMLImport.STATE_DB_VALIDATION))
         {
             doValidationAtEnd();
         }

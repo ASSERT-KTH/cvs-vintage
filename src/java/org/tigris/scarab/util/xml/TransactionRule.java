@@ -74,7 +74,7 @@ public class TransactionRule extends BaseRule
     public void begin(Attributes attributes) throws Exception
     {
         log().debug("(" + getState() + ") transaction begin()");
-        if(getState().equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             Transaction transaction = new Transaction();
             log().debug("transaction id: " + attributes.getValue("id"));
@@ -89,7 +89,7 @@ public class TransactionRule extends BaseRule
     public void end() throws Exception
     {
         log().debug("(" + getState() + ") transaction end()");
-        if(getState().equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             Transaction transaction = (Transaction)digester.pop();
         }

@@ -86,12 +86,12 @@ public class IssueRule extends BaseRule
     {
         log().debug("(" + getState() + ") issue end()");
         
-        if(getState().equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             Transaction transaction = (Transaction)digester.pop();
             Issue issue = (Issue)digester.pop();
         }
-        else if(getState().equals(DBImport.STATE_DB_VALIDATION))
+        else if(getState().equals(XMLImport.STATE_DB_VALIDATION))
         {
             //push the issueXmlId out
             digester.pop();

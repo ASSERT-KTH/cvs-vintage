@@ -72,7 +72,7 @@ public class DependencyTree
         moduleDependTree = new Hashtable();
         issueDependTree = new Hashtable();
         issueIdTable = new Hashtable();
-        cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
+        cat = Category.getInstance(org.tigris.scarab.util.xml.XMLImport.class);
     }
     
     public void addModuleDependency(NumberKey childModuleId, NumberKey parentModuleId)

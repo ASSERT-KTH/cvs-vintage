@@ -73,7 +73,7 @@ public class AttachmentNameRule extends BaseRule
     public void body(String text) throws Exception
     {
         log().debug("(" + getState() + ") attachment type body()");
-        if(getState().equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             Attachment attachment = (Attachment)digester.pop();
             attachment.setName(text);

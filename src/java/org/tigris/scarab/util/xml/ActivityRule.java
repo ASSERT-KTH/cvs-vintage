@@ -78,7 +78,7 @@ public class ActivityRule extends BaseRule
     public void end() throws Exception
     {
         log().debug("(" + getState() + ") activity end()");
-        if(getState().equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             Activity activity = new Activity();
             String description = (String)digester.pop();
