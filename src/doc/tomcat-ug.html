@@ -1,979 +1,933 @@
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+
 <html>
-<head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-   <meta name="GENERATOR" content="Mozilla/4.7 [en] (X11; I; SunOS 5.7 i86pc) [Netscape]">
-   <title>Tomcat User's Guide</title>
-<!-- $Id: tomcat-ug.html,v 1.3 2000/08/24 22:00:50 glenn Exp $ -->
-<!-- Copyright 1999, Apache Software Foundation -->
-<link rel="stylesheet" href="style.css">
-<!-- Changed by: Costin Manolache, 20-Mar-2000 -->
-<!-- Changed by: Gal Shachor, 27-Mar-2000 -->
-</head>
-<body link="#0000FF" vlink="#800080">
-<!-- Banner element, all hail the Project! -->
-<table BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH="100%" >
-<tr>
-<td WIDTH="50%"><a href="http://jakarta.apache.org/index.html"><img SRC="banner.gif" ALT="The Jakarta Project" BORDER=0 height=100 width=350></a></td>
+  <head>
+    <!-- $Id: tomcat-ug.html,v 1.4 2000/08/25 22:13:09 alex Exp $ -->
+    <!-- Copyright 1999, Apache Software Foundation -->
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link rel="stylesheet" href="style.css">
+    <title>Tomcat User's Guide</title>
+    <!-- Changed by: Costin Manolache, 20-Mar-2000 -->
+    <!-- Changed by: Gal Shachor, 27-Mar-2000 -->
+  </head>
+  <body link="#0000ff" vlink="#800080">
+    <!-- Banner element, all hail the Project! -->
+    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="50%">
+          <p align="left">
+            <a href="http://jakarta.apache.org/index.html">
+              <img src="images/banner.gif"
+                   width="350" 
+                   height="100" 
+                   alt="The Jakarta Project" 
+                   border="0"></a>
+        </td>
+        <td width="50%">
+          <p align="right"><img border="0" src="images/tomcat.gif" width="100" height="71" alt="The mighty Tomcat - Meow!"></p>
+        </td>
+      </tr>
+    </table>
+    
+    <H1>Tomcat User's Guide</H1>
+    <p>This document is an introduction to the Tomcat servlet container.
+    It should be enough for anyone to install, configure, and deploy
+    Tomcat. As well, it answers many questions common to new users. We encourage all users to add answers to questions into the
+    <a href="http://jakarta.apache.org/faq/faqindex.html">
+      Tomcat FAQ</a> and/or this document, if they don't already exist.
+      If you have any comments or suggestions about this document don't
+      hesitate to send them to the Tomcat
+      <a href="http://jakarta.apache.org/getinvolved/mail.html">mailing lists</a>.
 
-<td WIDTH="50%">
-<div align=right><img SRC="tomcat.gif" ALT="The mighty Tomcat - Meow!" BORDER=0 height=71 width=100></div>
-</td>
-</tr>
-</table>
+      <p>This document began life as <i>Tomcat: A Minimalistic User's
+      Guide</i> by Gal Shachor, and has been revised by many others.
+      It should be considered a <b>work in progress</b>.  Since the
+      Tomcat source tree is constantly changing, the information
+      herein may be out of date.  The only definitive reference at
+      this point is the <a
+      href="http://jakarta.apache.org/downloads/sourceindex.html">source
+      code</a>.</p>
 
-<h1>
-Tomcat User's Guide</h1>
-This document is an introduction to the Tomcat servlet container. It should
-be enough for anyone to install, configure, and deploy Tomcat. As well,
-it answers many questions common to new users. We encourage all users to
-add answers to questions into the <a href="http://jakarta.apache.org/faq/faqindex.html">Tomcat
-FAQ</a> and/or this document, if they don't already exist. If you have
-any comments or suggestions about this document don't hesitate to send
-them to the Tomcat <a href="http://jakarta.apache.org/getinvolved/mail.html">mailing
-lists</a>.
-<p>This document began life as <i>Tomcat: A Minimalistic User's Guide</i>
-by Gal Shachor, and has been revised by many others. It should be considered
-a <b>work in progress</b>. Since the Tomcat source tree is constantly changing,
-the information herein may be out of date. The only definitive reference
-at this point is the <a href="http://jakarta.apache.org/downloads/sourceindex.html">source
-code</a>.
-<p>"???" means I'm not sure if this should go in, or where it should go
-or be referred to as, if it does indeed belong. Other editorial comments
-are surrounded in [square brackets].
-<p>Other important documents:
-<ul>
-<li>
-<a href="http://jakarta.apache.org/faq/faqindex.html">Tomcat FAQ</a></li>
-
-<li>
-<a href="appdev/contents.html">Application Development manual</a> - an
-alternative to the User's Guide, somewhat out-of-date</li>
-
-<li>
-<a href="tomcat-apache-howto.html">Tomcat-Apache HOWTO</a></li>
-
-<li>
-<a href="mod_jk-howto.html">mod_jk HOWTO</a> [??? should be rolled into
-tomcat-apache howto]</li>
-
-<li>
-<a href="tomcat-iis-howto.html">Tomcat-IIS HOWTO</a></li>
-
-<li>
-<a href="tomcat-netscape-howto.html">Tomcat-Netscape HOWTO</a></li>
-
-<li>
-<a href="tomcat_security.txt">Using the Java SecurityManager with Tomcat</a></li>
-
-<li>
-<a href="JDBCRealm.howto">JDBC Realm HOWTO</a></li>
-
-<li>
-<a href="NT-Service-howto.html">NT Service HOWTO</a></li>
-
-<li>
-<a href="Tomcat-Workers-HowTo.html">Tomcat Workers HOWTO</a></li>
-
-<li>
-<a href="in-process-howto.html">In-process HOWTO</a></li>
-
-<li>
-<a href="internal.html">Tomcat Internals documentation</a></li>
+            
+    <p>&quot;???&quot; means I'm not sure if this should go in, or
+	where it should go or be referred to as, if it does indeed
+	belong. Other editorial comments are surrounded in [square brackets].
+    </p>
+		
+	<p>
+	Other important documents: <ul>
+<li><a href="http://jakarta.apache.org/faq/faqindex.html">Tomcat FAQ</a></li>
+<li> <A HREF="appdev/contents.html">Application Development manual</A> -
+ an alternative to the User's Guide, somewhat out-of-date
+</li>
+<li>Other <a href="index.html">Tomcat Documentation</a> including HOWTOs for various web servers</li>
 </ul>
-
-<h3>
-Table of Contents</h3>
-[This section needs to be revised to match current outline. Wouldn't it
-be nice if we used XSL to generate this file from an XML source?]
-<ul>
-<li>
-<a href="#about_tomcat">About Tomcat</a></li>
-
-<br>&nbsp;&nbsp;&nbsp; <a href="#what_is_tomcat">What is Tomcat?</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#where_download">Where can I download Tomcat?</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#just_jserv">Isn't Tomcat just JServ?</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#what_servlets_jsps">What are servlets?
-What are JSPs?</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#contribute">How do/can I contribute?</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#where_help">How come X, Y, or Z isn't
-working? Help!</a>
-<br>&nbsp;
-<li>
-<a href="#installing_tomcat">Installing Tomcat</a></li>
-
-<br>&nbsp;&nbsp;&nbsp; <a href="#file_placement">File placement and environment
-setup</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#starting_and_stopping">Starting and stopping
-Tomcat</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#starting_another_dir">Starting multiple
-instances w/individual server.xml files</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#directory_structure">Tomcat directory
-structure</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#tomcat_scripts">Tomcat scripts</a>
-<br>&nbsp;
-<li>
-<a href="#configuring_tomcat">Configuring Tomcat</a></li>
-
-<br>&nbsp;&nbsp;&nbsp; <a href="#container_types">Types of servlet containers</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#server_xml">server.xml - Tomcat's main
-configuration file</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#web_xml">web.xml - Default deployment
-descriptor</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="tomcat-security.html">Using the Java SecurityManager
-with Tomcat</a>
-<br>&nbsp;&nbsp;&nbsp; Web application/context security and authorization
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tomcat-users.xml
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JDBC realms
-<br>&nbsp;
-<li>
-<a href="#webapps">Deploying Web Applications</a></li>
-
-<br>&nbsp;&nbsp;&nbsp; <a href="#webapp">What is a Web Application?</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#what_is_war">What is a WAR file?</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#deploying_war">Deploying WAR files in
-Tomcat</a>
-<br>&nbsp;
-<li>
-<a href="#tutorials">Tomcat Tutorials</a> - ???</li>
-
-<br>&nbsp;&nbsp;&nbsp; Deploying application
-<br>&nbsp;&nbsp;&nbsp; Creating your first web application ???
-<br>&nbsp;&nbsp;&nbsp; Creating and configuring your first servlet ???
-<br>&nbsp;
-<li>
-<a href="#real_world_tips">Real World Configuration Tips</a></li>
-
-<br>&nbsp;
-<li>
-<a href="#common_errors">Common Installation and Configuration Problems</a></li>
-
-<br>&nbsp;&nbsp;&nbsp; <a href="#error_bad_command">"Bad command or filename"
-when executing Tomcat scripts</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#error_8007">http://webserver:8007/ gives
-an HTTP 500</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#error_ignore_directives">Apache &lt;Directory>
-and &lt;Location> directives ignored</a>
-<br>&nbsp;&nbsp;&nbsp; <a href="#error_web_server">Web server won't start
-when Tomcat is running</a>
-<br>&nbsp;
-<li>
-<a href="#credits">Credits</a></li>
-</ul>
-
-<hr size="5">
-<h3>
-<a NAME="about_tomcat"></a>About Tomcat</h3>
-See also the official <a href="http://jakarta.apache.org/faq/faqindex.html">Tomcat
-FAQ</a>.
-<h4>
-&nbsp;<a NAME="what_is_tomcat"></a>What is Tomcat?</h4>
-
-<blockquote>Tomcat is the official reference implementation of the <a href="http://java.sun.com/products/servlet/">Java
-Servlet 2.2</a> and <a href="http://java.sun.com/products/jsp/">JavaServer
-Pages 1.1</a> technologies. Developed under the Apache license in an open
-and participatory environment, it is intended to be a collaboration of
-the best-of-breed developers from around the world.</blockquote>
-
-<h4>
-&nbsp;<a NAME="where_download"></a>Where can I download Tomcat?</h4>
-
-<blockquote>At the <a href="http://jakarta.apache.org/downloads/binindex.html">Jakarta
-download page</a>!</blockquote>
-
-<h4>
-&nbsp;<a NAME="just_jserv"></a>Isn't Tomcat just JServ?</h4>
-
-<blockquote>This is a common misunderstanding. <a href="http://java.apache.org/jserv">JServ</a>
-is a Servlet API 2.0-compliant container that was created to be used with
-Apache. Tomcat is a complete re-write and is a Servlet API 2.2 and JSP
-1.1-compliant container. Tomcat uses some of the code written for JServ,
-especially JServ's Apache server adapter, but this is where the similarities
-end.</blockquote>
-
-<h4>
-&nbsp;<a NAME="what_servlets_jsps"></a>What are servlets? What are JSPs?</h4>
-
-<blockquote>In a nutshell, servlets are memory-resident Java programs,
-running inside a servlet container (e.g. Tomcat!). Because they're memory-resident,
-they can quickly respond to requests, as they do not incur the overhead
-of process creation and subsequent cleanup, unlike CGI-based scripting,
-e.g. perl, etc.
-<p>From <a href="http://java.sun.com/products/servlet/">Sun's servlet site</a>:
-<blockquote>"The <b>Java<sup><font size=-2>TM</font></sup> Servlet API</b>
-provides web developers with a simple, consistent mechanism for extending
-the functionality of a web server and for accessing existing business systems.
-A servlet can almost be thought of as an applet that runs on the server
-side -- without a face."</blockquote>
-...and about JSPs (JavaServer Pages), again from <a href="http://java.sun.com/products/servlet/">Sun's
-servlet site</a>:
-<blockquote>"JSP technology is an extension of the servlet technology created
-to support authoring of HTML and XML pages. It makes it easier to combine
-fixed or static template data with dynamic content."</blockquote>
-JSP is comparable to other technologies such as PHP and ASP, which combine
-programming/scripting with a markup language like HTML. The key difference
-being the programming language of choice. For example, PHP uses a C/C++/Java
-hybrid, ASP uses VBScript, and JSP utilizes the full power of the Java
-programming language. There have been many comparisons of these technologies,
-and each has its place in the astute developer's toolbox.
-<p>All of the above information is available at <a href="http://java.sun.com/">Sun's
-Java website</a>, which is a starting place for all the ins and outs of
-JSPs, servlets, etc. <b>Your time spent with these technologies will be
-much more rewarding if you first read through the <a href="http://java.sun.com/products/jsp/download.html">JavaServer
-Pages</a> and <a href="http://java.sun.com/products/servlet/download.html">servlet</a>
-specifications!</b></blockquote>
-
-<h4>
-&nbsp;<a NAME="contribute"></a>How do/can I contribute?</h4>
-
-<blockquote>Please do! See the Jakarta project contribution page, right
-<a href="http://jakarta.apache.org/getinvolved/getinvolvedindex.html">here</a>.
-You'll probably want to <a href="mailto:tomcat-dev-subscribe@jakarta.apache.org">subscribe</a>
-to the <b>tomcat-dev</b> mailing list.</blockquote>
-
-<h4>
-&nbsp;<a NAME="where_help"></a>How come X, Y, or Z isn't working? Help!</h4>
-
-<blockquote>While we hope to cater to many common issues, we have undoubtedly
-missed some. For more help, try (in this order):
-<ol>
-<li>
-Your log files, in the <a href="#logs_dir_defn">logs</a> subdirectory of
-your Tomcat installation. These are an untapped resource!</li>
-
-<li>
-The <a href="#common_errors">Common problems</a> section of this document.</li>
-
-<li>
-Have a look through the <a href="http://jakarta.apache.org/faq/faqindex.html">Tomcat
-FAQ</a>. Most installation and configuration questions can be found here.</li>
-
-<li>
-Search the Tomcat <a href="http://mikal.org/interests/java/tomcat/index.html">user</a>
-and <a href="http://www.metronet.com/~wjm/tomcat/">developer</a> list archives.</li>
-
-<li>
-Post a question to the <b>tomcat-user</b> <a href="http://jakarta.apache.org/getinvolved/mail.html">mailing
-list</a>, which you must first <a href="mailto:tomcat-user-subscribe@jakarta.apache.org">subscribe</a>
-to if you'd like to see any replies!</li>
-</ol>
-</blockquote>
-
-<hr size="5">
-<h3>
-<a NAME="installing_tomcat"></a>Installing Tomcat</h3>
-
-<h4>
-&nbsp;<a NAME="file_placement"></a>File placement and environment setup</h4>
-
-<blockquote>
-<ul>
-<li>
-<a href="http://jakarta.apache.org/downloads/binindex.html">Download</a>
-the appropriate jakarta-tomcat [.zip | .gz | .Z] file.</li>
-
-<li>
-Unzip the file into some directory (say /usr/local or C:\). This should
-create a new subdirectory named "tomcat". [Does it still create "jakarta-tomcat"
-instead? If so, just rename it "tomcat".]</li>
-
-<li>
-Change directory to "tomcat" and set a new environment variable (<a NAME="tomcat_home_env"></a>TOMCAT_HOME)
-to point to the root directory of your Tomcat hierarchy. The exact directory
-may change from system to system; check your local filesystem to be sure
-where Tomcat is installed.</li>
-
-<ol>
-<li>
-On Win32 systems you should type:</li>
-
-<br><tt><font size=+1>set TOMCAT_HOME=c:\tomcat</font></tt>
-<li>
-On UNIX (using bash/sh) you should type:</li>
-
-<br><tt><font size=+1>TOMCAT_HOME=/usr/local/tomcat ; export TOMCAT_HOME</font></tt>
-<li>
-On UNIX (using tcsh) you should type:</li>
-
-<br><tt><font size=+1>setenv TOMCAT_HOME=/usr/local/tomcat</font></tt></ol>
-
-<li>
-Set the environment variable JAVA_HOME to point to the root directory of
-your JDK hierarchy, then add the Java interpreter to your PATH environment
-variable. The exact directory may change from system to system; check your
-local filesystem to be sure where Java is installed.</li>
-
-<ol>
-<li>
-Win32:</li>
-
-<br><tt><font size=+1>set JAVA_HOME=c:/jdk1.2</font></tt>
-<br><tt><font size=+1>set PATH=%PATH%;%JAVA_HOME%\bin</font></tt>
-<li>
-Unix (bash/sh):</li>
-
-<br><tt><font size=+1>set JAVA_HOME=/user/local/java/jdk1.2; export JAVA_HOME</font></tt>
-<br><tt><font size=+1>set PATH=$PATH:$JAVA_HOME/bin; export PATH</font></tt>
-<li>
-Unix (tcsh):</li>
-
-<br><tt><font size=+1>setenv JAVA_HOME=/user/local/java/jdk1.2</font></tt>
-<br><tt><font size=+1>setenv PATH=$PATH:$JAVA_HOME/bin</font></tt></ol>
-</ul>
-That's it! You can now <a href="#starting_and_stopping">execute Tomcat</a>
-and it will run as a <a href="#type_1">stand-alone</a> servlet container.
-<p>Once you're sure they work, these environment variables should probably
-be set in a config file: C:/AUTOEXEC.BAT for Windows, ~/bash_profile or
-~/[what is it for tcsh?]</blockquote>
-
-<h4>
-&nbsp;<a NAME="starting_and_stopping"></a>Starting and stopping Tomcat</h4>
-
-<blockquote>You start and stop Tomcat using the scripts in the bin subdirectory
-of <a href="#tomcat_home_env">TOMCAT_HOME</a>.
-<p>To start Tomcat execute:
-<blockquote style="margin-right: 0px">On UNIX: bin/startup.sh
-<p>On Win32: bin\startup</blockquote>
-To stop Tomcat execute:
-<blockquote style="margin-right: 0px">On UNIX: bin/shutdown.sh
-<p>On Win32: bin\shutdown</blockquote>
-</blockquote>
-
-<h4>
-&nbsp;<a NAME="starting_another_dir"></a>Starting multiple instances with
-individual server.xml files</h4>
-
-<blockquote>This might not make a whole lot of sense until you read the
-next section explaining Tomcat's <a href="#directory_structure">directory
-structure</a>, as well as <a href="#configuring_tomcat">Configuring Tomcat</a>.
-You may want to come back here afterwards.
-<p>By default, Tomcat will use TOMCAT_HOME/conf/server.xml for configuration,
-which by default, uses TOMCAT_HOME as its base for the contexts. You can
-change this by using the "-f /path/to/server.xml" option, with a different
-server configuration file and setting the home attribute of the <a href="#context_manager_element">ContextManager</a>
-element. You need to set up the required files inside the home:
-<ul>
-<li>
-webapps/ - all war files will be expanded and all subdirectories added
-as contexts.</li>
-
-<li>
-conf/ directory - you can store a special web.xml and other configuration
-files.</li>
-
-<li>
-logs/ - all logs will go to this directory instead of the main TOMCAT_HOME/logs/.</li>
-
-<li>
-work/ - work directories for the contexts.</li>
-</ul>
-If the home attribute of the ContextManager element in server.xml is relative,
-it will be relative to the current working directory.</blockquote>
-
-<h4>
-&nbsp;<a NAME="directory_structure"></a>The Tomcat directory structure</h4>
-
-<blockquote>Assuming you extracted the Tomcat binary distribution you should
-have the following directory structure under <a href="#tomcat_home_env">TOMCAT_HOME</a>:
-<br>&nbsp;
-<table BORDER WIDTH="75%" valign="MIDDLE" >
-<tr>
-<th WIDTH="15%" BGCOLOR="#C0C0C0">Directory</th>
-
-<th WIDTH="85%" BGCOLOR="#C0C0C0">Contents</th>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%">bin&nbsp;</td>
-
-<td WIDTH="85%">Startup/shutdown scripts and other useful files.</td>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%">conf&nbsp;</td>
-
-<td WIDTH="85%">Configuration files including <a href="#server_xml">server.xml</a>
-(Tomcat's main configuration file) and <a href="#web_xml">web.xml</a> (default
-values for the various web applications deployed in Tomcat.).&nbsp;</td>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%">doc&nbsp;</td>
-
-<td WIDTH="85%">Miscellaneous documents regarding Tomcat.</td>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%">lib&nbsp;</td>
-
-<td WIDTH="85%">Various jar files that are used by Tomcat. Any file in
-this directory is appended to Tomcat's classpath.&nbsp;</td>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%"><a NAME="logs_dir_defn"></a>logs</td>
-
-<td WIDTH="85%">This is where Tomcat places its log files by default.</td>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%">src&nbsp;</td>
-
-<td WIDTH="85%">The servlet API source files. Don't get excited, though;
-these are only the empty interfaces and abstract classes that should be
-implemented by any servlet container.</td>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%">webapps&nbsp;</td>
-
-<td WIDTH="85%">Sample web applications. Any .war files placed here will
-be automatically expanded. See <a href="#deploying_war">Deploying WAR files</a>.&nbsp;</td>
-</tr>
-</table>
-
-<p>Additionally you can, or Tomcat will, create the following directories:
-<br>&nbsp;
-<table BORDER WIDTH="75%" VALIGN="MIDDLE" >
-<tr>
-<td ALIGN=CENTER WIDTH="15%"><a NAME="work_dir_defn"></a>work</td>
-
-<td WIDTH="85%">Where Tomcat places intermediate files (such as compiled
-JSP files) during its work. If you delete this directory while Tomcat is
-running you will not be able to execute JSP pages.&nbsp;</td>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%">classes&nbsp;</td>
-
-<td WIDTH="85%">Any class that you add to this directory will find its
-place in Tomcat's classpath.&nbsp;</td>
-</tr>
-</table>
-</blockquote>
-
-<h4>
-&nbsp;<a NAME="tomcat_scripts"></a>Tomcat scripts</h4>
-
-<blockquote>This section is not required reading, as the default functionality
-provided by the aforementioned startup and shutdown scripts is sufficient
-for most users to get started. If everything is working so far, skip ahead
-to <a href="#configuring_tomcat">Configuring Tomcat</a>. Come back to this
-section when you'd like more information on these scripts, which you undoubtedly
-will.
-<p>Tomcat is a Java program, and therefore it is possible to execute it
-from the command line, after setting several environment variables. However,
-setting each environment variable and following the command line parameters
-used by Tomcat is error prone and tedious. Instead, the Tomcat development
-team provides a few scripts to ease starting and stopping Tomcat.
-<p><b>Note: The scripts are only a convenient way to start/stop. You can
-modify them to customize the CLASSPATH, environment variables such as PATH
-and LD_LIBRARY_PATH, etc., so long as a correct command line is generated
-for Tomcat.</b>
-<p>The following table presents the scripts that are most important for
-the common user:
-<br>&nbsp;
-<table BORDER WIDTH="75%" valign="MIDDLE" >
-<tr>
-<th WIDTH="15%" BGCOLOR="#C0C0C0">Script name&nbsp;</th>
-
-<th WIDTH="85%" BGCOLOR="#C0C0C0">Description&nbsp;</th>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%">tomcat&nbsp;</td>
-
-<td WIDTH="85%">The main script. Sets the proper environment, including
-CLASSPATH, TOMCAT_HOME and JAVA_HOME, and starts Tomcat with the proper
-command line parameters.</td>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%">startup&nbsp;</td>
-
-<td WIDTH="85%">Starts tomcat in the background. Shortcut for "tomcat start"&nbsp;</td>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%">shutdown&nbsp;</td>
-
-<td WIDTH="85%">Stops tomcat (shutting it down). Shortcut for "tomcat stop"&nbsp;</td>
-</tr>
-</table>
-
-<p>The script which has the most significance for users is tomcat (tomcat.sh/tomcat.bat).
-The other Tomcat related scripts serve as a simplified single-task oriented
-entry point to the tomcat script (set different command line parameters
-etc.).</blockquote>
-
-<h4>
-&nbsp;<a NAME="tomcat_scripts_closer"></a>Tomcat scripts: a closer look</h4>
-
-<blockquote>A closer look at tomcat.sh/tomcat.bat yields that it performs
-the following actions:
-<p>These behaviors, especially CLASSPATH setting, have changed with Tomcat
-3.2. It is best to look directly at the scripts for details on what variables
-are set and what class files are loaded. [??? - delete entire section pending
-reexamination?]
-<br>&nbsp;
-<table BORDER WIDTH="75%" valign="MIDDLE" >
-<tr>
-<th WIDTH="15%" BGCOLOR="#C0C0C0">Operating System&nbsp;</th>
-
-<th WIDTH="85%" BGCOLOR="#C0C0C0">Actions&nbsp;</th>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%">Unix&nbsp;</td>
-
-<td WIDTH="85%">
-<ul>
-<li>
-Guessing what is TOMCAT_HOME if it is not specified.&nbsp;</li>
-
-<li>
-Guessing what is JAVA_HOME if it is not specified.&nbsp;</li>
-
-<li>
-Setting up a CLASSPATH that contains -&nbsp;</li>
-
-<ol>
-<li>
-The ${TOMCAT_HOME}/classes directory (if available).</li>
-
-<li>
-All the contents of ${TOMCAT_HOME}/lib.&nbsp;</li>
-
-<li>
-${JAVA_HOME}/lib/tools.jar (this jar file contains the tool javac, we need
-javac for jsp files).</li>
-</ol>
-
-<li>
-Executes java with command line parameters that set up a java system environment,
-called tomcat.home, with org.apache.tomcat.startup.Tomcat as the startup
-class. It also passes command line parameters to org.apache.tomcat.startup.Tomcat,
-such as:&nbsp;</li>
-
-<ol>
-<li>
-The operation to perform start/stop/run/etc.&nbsp;</li>
-
-<li>
-A path to the server.xml used by this Tomcat process.&nbsp;</li>
-</ol>
-For example if server.xml is located in /etc/server_1.xml and the user
-wants to start apache in the background they should provide the following
-command line:&nbsp;bin/tomcat.sh start -f /etc/server_1.xml</ul>
-</td>
-</tr>
-
-<tr>
-<td ALIGN=CENTER WIDTH="15%">Win32&nbsp;</td>
-
-<td WIDTH="85%">
-<ul>
-<li>
-Setting up a CLASSPATH that contains -&nbsp;</li>
-
-<ol>
-<li>
-servlet.jar, webserver.jar, jasper.jar, xml.jar from the %TOMCAT_HOME%\lib
-directory,&nbsp;</li>
-
-<li>
-%TOMCAT_HOME%\classes (even if does not exist),&nbsp;</li>
-
-<li>
-%JAVA_HOME%\lib\tools.jar (this jar file contains the tool javac, we need
-javac for jsp files).</li>
-</ol>
-
-<li>
-Executes java, assuming that it is in the PATH, with command line parameters
-that set up a java system environment, called tomcat.home, with org.apache.tomcat.startup.Tomcat
-as the startup class. It also passes command line parameters to org.apache.tomcat.startup.Tomcat,
-such as:&nbsp;</li>
-
-<ol>
-<li>
-The operation to perform start/stop/run/etc.&nbsp;</li>
-
-<li>
-A path to the server.xml used by this Tomcat process.&nbsp;</li>
-</ol>
-For example if server.xml is located in conf\server_1.xml and the user
-wants to start apache in the background they should provide the following
-command line:&nbsp;bin\tomcat.bat start -f conf\server_1.xml</ul>
-</td>
-</tr>
-</table>
-
-<p>As you can see, the Win32 version of tomcat.bat pales in comparison
-to the Unix one. Especially it does not guess the values of TOMCAT_HOME
-and JAVA_HOME and it also doesn't take add all of the .jar files into the
-classpath.</blockquote>
-
-<hr size="5">
-<h3>
-<a NAME="container_types"></a>Servlet Container Types</h3>
-Tomcat, like any servlet container, is meant to run behind a web server.
-The web server takes care of receiving HTTP requests from client browsers;
-the servlet container takes care of serving Servlets and JSPs for those
-URLs that request them.
-<p>In Tomcat's case, there are three different modes of execution Tomcat
-supports.
-<ol>
-<li>
-<a NAME="type_1"></a><b><u>Stand-alone servlet containers</u></b></li>
-
-<br>These are an integral part of the web server. This is the case when
-using a Java-based web server, for example the servlet container that is
-part of the JavaWebServer. Stand-alone is the default mode used by Tomcat.
-Most web servers, however, are not Java-based, which leads us to the next
-two container types.
-<li>
-<b><u>In-process servlet containers</u></b></li>
-
-<br>The servlet container is a combination of a web server plugin and a
-Java container implementation. The web server plugin opens a JVM inside
-the web server's address space and lets the servlet container run in it.
-If a certain request should execute a servlet, the plugin takes control
-over the request and passes it (using <a href="http://java.sun.com/products/jdk/1.2/docs/guide/jni/index.html">JNI</a>)
-to the servlet container. An in-process container is suitable for multi-threaded
-single-process servers and provides good performance but is limited in
-scalability.
-<li>
-<b><u>Out-of-process servlet containers</u></b></li>
-
-<br>The servlet container is a combination of a web server plugin and a
-Java container implementation that runs in a JVM outside the web server.
-The web server plugin and the Java container JVM communicate using some
-IPC mechanism (usually TCP/IP sockets). If a certain request should execute
-a servlet the plugin takes control over the request and passes it (using
-IPC) to the servlet container. The response time of an out-of-process engine
-is not as good as in the in-process one but the out-of-process engine performs
-better in many measurable ways (scalability, stability, etc.).</ol>
-Tomcat can be used as either a stand-alone container (mainly for development
-and debugging) or as an add-on to an existing web server (currently Apache,
-IIS and Netscape servers are supported). This means that whenever you are
-deploying Tomcat you will have to decide how to use it and, if you select
-options 2 or 3, you will also need to install a web server adapter.
-<p>If this is your first time configuring Tomcat and you plan on integrating
-it with a web server, you're better off initially running it stand-alone.
-You'll be better able to isolate errors during integration with your web
-server when you do so in the future - "Is Tomcat or my web server at fault
-for the error I'm seeing?"
+	</p>
+
+
+    <h3>Table of Contents</h3>
+
+[This section needs to be revised to match current outline. Wouldn't
+it be nice if we used XSL to generate this file from an XML source?]
+
+    <ul>
+      <li><a href="#about_tomcat">About Tomcat</a><br>
+        &nbsp;&nbsp;&nbsp; <a href="#what_is_tomcat">What is Tomcat?</a><br>
+        &nbsp;&nbsp;&nbsp; <a href="#where_download">Where can I download
+        Tomcat?</a><br>
+        &nbsp;&nbsp;&nbsp; <a href="#just_jserv">Isn't Tomcat just JServ?</a><br>
+        &nbsp;&nbsp;&nbsp; <a href="#what_servlets_jsps">What are
+        servlets? What are JSPs?<br>
+        </a>&nbsp;&nbsp;&nbsp; <a href="#contribute">How do/can I contribute?<br>
+        </a>&nbsp;&nbsp;&nbsp; <a href="#where_help">How come X, Y, or Z isn't
+        working? Help!<br>
+        </a>
+        &nbsp;
+      </li>
+      <li><a href="#installing_tomcat">Installing Tomcat</a><br>
+        &nbsp;&nbsp;&nbsp; <a href="#file_placement">File placement and
+        environment setup<br>
+        </a>&nbsp;&nbsp;&nbsp; <a href="#starting_and_stopping">Starting and
+        stopping Tomcat<br>
+        </a> &nbsp;&nbsp;&nbsp; <a href="#starting_another_dir">Starting
+        multiple instances w/individual server.xml files<br>
+        </a>&nbsp;&nbsp;&nbsp; <a href="#directory_structure">Tomcat directory
+        structure<br>
+        </a>&nbsp;&nbsp;&nbsp; <a href="#tomcat_scripts">Tomcat scripts</a><br>
+        &nbsp;
+      </li>
+      <li><a href="#configuring_tomcat">Configuring Tomcat<br>
+        </a>&nbsp;&nbsp;&nbsp; <a href="#container_types">Types of servlet
+        containers</a><br>
+        &nbsp;&nbsp;&nbsp; <a href="#server_xml">server.xml - Tomcat's main configuration
+        file<br>
+        </a>&nbsp;&nbsp;&nbsp; <a href="#web_xml">web.xml - Default
+        deployment descriptor<br>
+        </a>
+        &nbsp;&nbsp;&nbsp; Web application/context security and authorization<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tomcat-users.xml<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JDBC realms<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </li>
+      <li><a href="#webapps">Deploying Web Applications</a><br>
+        &nbsp;&nbsp;&nbsp; <a href="#webapp">What is a Web Application?</a><br>
+        &nbsp;&nbsp;&nbsp; <a href="#what_is_war">What is a WAR file?</a><br>
+        &nbsp;&nbsp;&nbsp; <a href="#deploying_war">Deploying WAR files in Tomcat</a><br>
 <br>
-<hr size="5">
-<h3>
-<a NAME="configuring_tomcat"></a>Configuring Tomcat</h3>
-Tomcat's configuration is based on two files:
-<ol>
-<li>
-<a href="#server_xml">server.xml</a> - Tomcat's global configuration file.</li>
+      </li>
+      <li><a href="#tutorials">Tomcat Tutorials</a> - ???<br>
+        &nbsp;&nbsp;&nbsp; Deploying application<br>
+        &nbsp;&nbsp;&nbsp; Creating your first web application ???<br>
+        &nbsp;&nbsp;&nbsp; Creating and configuring your first servlet ???<br>
+<br>
+        </a>
+      </li>
+      <li><a href="#real_world_tips">Real World Configuration Tips</a><br>
+<br>
+        
+      </li>
+      <li><a href="#common_errors">Common Installation and Configuration
+        Problems<br>
+        </a>&nbsp;&nbsp;&nbsp; <a href="#error_bad_command">&quot;Bad command or
+        filename&quot; when executing Tomcat scripts<br>
+        </a>&nbsp;&nbsp;&nbsp; <a href="#error_8007">http://webserver:8007/
+        gives an HTTP 500<br>
+        </a>&nbsp;&nbsp;&nbsp; <a href="#error_ignore_directives">Apache &lt;Directory&gt;
+        and &lt;Location&gt; directives ignored<br>
+        </a>&nbsp;&nbsp;&nbsp; <a href="#error_web_server">Web server won't
+        start when Tomcat is running<br>
+        </a>
+<br>
+</li>
+      <li><a href="#credits">Credits</a></li>
+    </ul>
 
-<li>
-<a href="#web_xml">web.xml</a> - Default deployment descriptor.</li>
-</ol>
+    <hr size="5">
+    <h3><a name="about_tomcat">About Tomcat</a></h3>
 
-<h4>
-&nbsp;<a NAME="server_xml"></a>server.xml - Tomcat's main configuration
-file</h4>
+    See also the official
+    <a href="http://jakarta.apache.org/faq/faqindex.html">Tomcat FAQ</a>.
 
-<blockquote>The elements in server.xml (found in the conf subdirectory
-of TOMCAT_HOME) are described below. Following along with the default server.xml
-in another window is helpful. The default server.xml file has many comments
-which may supersede the comments below. This is more of a reference section
-than a how-to.
-<br>&nbsp;
-<table BORDER=0 WIDTH="90%" >
-<tr>
-<td VALIGN=TOP WIDTH="10%"><b>&lt;Server></b></td>
+    <h4>&nbsp;&nbsp;&nbsp; <a name="what_is_tomcat">What is Tomcat?</a></h4>
+    <blockquote>
+      <p>Tomcat is the official reference implementation of the <a href="http://java.sun.com/products/servlet/">Java
+      Servlet 2.2</a> and <a href="http://java.sun.com/products/jsp/">JavaServer
+      Pages 1.1</a> technologies. Developed under the Apache license in an
+      open and participatory environment, it is intended to be a collaboration
+      of the best-of-breed developers from around the world.
 
-<td VALIGN=TOP WIDTH="90%">The topmost element. &lt;Server> defines a single
-Tomcat server. Generally you should not bother with it.</td>
-</tr>
+    </blockquote>
+    <h4>&nbsp;&nbsp;&nbsp; <a name="where_download">Where can I download Tomcat?</a></h4>
+    <blockquote>
+      <p>At the <a href="http://jakarta.apache.org/downloads/binindex.html">Jakarta
+      download page</a>!
+    </blockquote>
+    <h4>&nbsp;&nbsp;&nbsp; <a name="just_jserv">Isn't Tomcat just JServ?</a></h4>
+    <blockquote>
+      <p>   
+            This is a common misunderstanding. <a href="http://java.apache.org/jserv">JServ</a> is a Servlet API
+            2.0-compliant container that was created to be used with Apache.
+      Tomcat is a complete re-write and is a Servlet API 2.2 and JSP 
+            1.1-compliant container. Tomcat uses some of the code written for
+      JServ, especially JServ's Apache server adapter, but this is where the 
+            similarities end.
+        </p>
+    </blockquote>
+    <h4>&nbsp;&nbsp;&nbsp; <a name="what_servlets_jsps">What are servlets?
+    What are JSPs?</a></h4>
+    <blockquote>
+      <p>In a nutshell, servlets are memory-resident Java programs, running
+      inside a servlet container (e.g. Tomcat!). Because they're
+      memory-resident, they can quickly respond to requests, as they do not
+      incur the overhead of process creation and subsequent cleanup, unlike
+      CGI-based scripting, e.g. perl, etc.<p>From <a href="http://java.sun.com/products/servlet/">Sun's
+      servlet site</a>:
+      <blockquote>
+        <p>&quot;The <b>Java<sup><font size="-2">TM</font></sup> Servlet API</b>
+        provides web developers with a simple, consistent mechanism for
+        extending the functionality of a web server and for accessing existing
+        business systems. A servlet can almost be thought of as an applet that
+        runs on the server side -- without a face.&quot;
+      </blockquote>
+      <p>...and about JSPs (JavaServer Pages), again from <a href="http://java.sun.com/products/servlet/">Sun's
+      servlet site</a>:
+      <blockquote>
+        <p>&quot;JSP technology is an extension of the servlet technology
+        created to support authoring of HTML and XML pages. It makes it easier
+        to combine fixed or static template data with dynamic content.&quot;
+      </blockquote>
+      <p>JSP is comparable to other technologies such as PHP and ASP, which
+      combine
+      programming/scripting with a markup language like HTML. The key
+      difference being the programming language of choice. For example,
+      PHP uses a C/C++/Java hybrid, ASP uses VBScript, and JSP utilizes the
+      full power of the Java programming language. There have been many
+      comparisons of these technologies, and each has its place in the astute
+      developer's toolbox.<p>All of the above information is available at <a href="http://java.sun.com/">Sun's
+      Java website</a>, which is a starting place for all the ins and outs of JSPs,
+      servlets, etc. <b>Your time spent with these technologies will be much
+      more rewarding if you first read through the <a href="http://java.sun.com/products/jsp/download.html">JavaServer
+      Pages</a> and <a href="http://java.sun.com/products/servlet/download.html">servlet</a>
+      specifications!</b>
+    </blockquote>
+    <h4>&nbsp;&nbsp;&nbsp; <a name="contribute">How do/can I contribute?</a></h4>
+    <blockquote>
+      <p>Please do! See the Jakarta project contribution page, right <a href="http://jakarta.apache.org/getinvolved/getinvolvedindex.html">here</a>.
+      You'll probably want to <a href="mailto:tomcat-dev-subscribe@jakarta.apache.org">subscribe</a>
+      to the <b> tomcat-dev</b> mailing list.</p>
+    </blockquote>
+    <h4>&nbsp;&nbsp;&nbsp; <a name="where_help">How come X, Y, or Z isn't
+    working? Help!</a></h4>
+    <blockquote>
+      While we hope to cater to many common issues, we have undoubtedly missed
+      some. For more help, try (in this order):
+    <ol>
+      <li>Your log files, in the <a href="#logs_dir_defn">logs</a> subdirectory
+        of your Tomcat installation. These are an untapped
+        resource!</li>      
+      <li>The <a href="#common_errors">Common problems</a> section of this
+        document.</li>      
+      <li>Have a look through the <a href="http://jakarta.apache.org/faq/faqindex.html"> Tomcat
+        FAQ</a>. Most installation and configuration questions can be found here.</li>      
+      <li>Search the Tomcat <a href="http://mikal.org/interests/java/tomcat/index.html">user</a>
+        and <a href="http://www.metronet.com/~wjm/tomcat/">developer</a> list
+        archives. </li>
+      <li>Post a question to the <b> tomcat-user</b> <a href="http://jakarta.apache.org/getinvolved/mail.html">
+          mailing list</a>, which you must first <a href="mailto:tomcat-user-subscribe@jakarta.apache.org">subscribe</a>
+        to if you'd like to see any replies!
+    </ol>    
+    </blockquote>
+    <hr size="5">
+    <h3><a name="installing_tomcat">Installing Tomcat</a></h3>
+    <h4>&nbsp;&nbsp;&nbsp; <a name="file_placement">File placement and
+    environment setup</a></h4>
+    <blockquote>
+    
+    <ul>
+      <li><a href="http://jakarta.apache.org/downloads/binindex.html">Download</a> the
+        appropriate jakarta-tomcat [.zip | .gz | .Z] file.
+    
+      <li>Unzip the file into some directory (say /usr/local or C:\). This
+    should create a new subdirectory named "tomcat". [Does it still create "jakarta-tomcat" instead? If so, just rename it "tomcat".] </li>
+    
+    <li>Change directory to "tomcat" and set a new environment
+        variable (<a name="tomcat_home_env">TOMCAT_HOME</a>) to point to the root directory of your 
+        Tomcat hierarchy. The exact directory may change from system to system; check your local filesystem to be sure where Tomcat is installed.
+        <ol>
+            <li>On Win32 systems you should type: <br>
+              <tt><big>set TOMCAT_HOME=c:\tomcat 	
+	      </big></tt></li>
+            <li>On UNIX (using bash/sh) you should type: <br>
+              <tt><big>TOMCAT_HOME=/usr/local/tomcat ; export TOMCAT_HOME
+	      </big></tt></li>
+            <li>On UNIX (using tcsh) you should type: <br>
+              <tt><big>setenv TOMCAT_HOME=/usr/local/tomcat
+	      </big></tt></li>
+        </ol>
+      </li>
 
-<tr>
-<td VALIGN=TOP WIDTH="10%"></td>
+      <li>Set the environment variable JAVA_HOME to point to the root
+        directory of your JDK hierarchy, then add the Java interpreter to your PATH environment variable. The exact directory may change from system to system; check your local filesystem to be sure where Java is installed.
+	<ol>
+	<li>Win32:<br>
+	<tt><big>
+	set JAVA_HOME=c:/jdk1.2<br>
+	set PATH=%PATH%;%JAVA_HOME%\bin
+	</big></tt>
+	</li>
+	<li>Unix (bash/sh):<br>
+	<tt><big>
+	set JAVA_HOME=/user/local/java/jdk1.2; export JAVA_HOME<br>
+	set PATH=$PATH:$JAVA_HOME/bin; export PATH<br>
+	</big></tt>
+	</li>
+	<li>Unix (tcsh):<br>
+	<tt><big>
+	setenv JAVA_HOME=/user/local/java/jdk1.2<br>
+	setenv PATH=$PATH:$JAVA_HOME/bin <br>
+	</big></tt>
+	</li>
+	</ol>
+      </li>
 
-<td VALIGN=TOP WIDTH="90%">
-<table BORDER=0 WIDTH="100%" >
-<tr>
-<td VALIGN=TOP WIDTH="15%"><b>&lt;xmlmapper:debug>&nbsp;</b></td>
+    </ul>
 
-<td WIDTH="85%">You'll most likely never have to touch this, unless you're
-worried about how Tomcat is registering the contents of this server.xml
-file. Even if you are concerned, the startup output found in Tomcat's main
-log file will usually be sufficient for this purpose.&nbsp;
-<p>Attributes:
-<ul>
-<li>
-<b>level</b>. A value of "0" means "no output". "9" meaning "most everything".</li>
-</ul>
-</td>
-</tr>
+    <p> That's it! You can now <a href="#starting_and_stopping"> execute Tomcat</a> and it will run as a
+    <a href="#type_1">
+      stand-alone</a> servlet container.
+    </p>
 
-<tr>
-<td VALIGN=TOP WIDTH="15%"><b>&lt;Logger></b></td>
+    <p>
+      Once you're sure they work, these environment variables should probably be set in a
+      config file: C:/AUTOEXEC.BAT for Windows, ~/bash_profile
+      or ~/[what is it for tcsh?]
+    </p>
 
-<td WIDTH="85%">This element defines a Logger object, equivalent to a log
-file. Currently there are loggers for the servlets (where the ServletContext.log()
-goes), JSP files and the tomcat runtime.&nbsp;
-<p>Attributes:
-<ul>
-<li>
-<b>name. </b>Identifies the logger. One of "tc_log", "servlet_log", or
-"JASPER_LOG".</li>
+    </blockquote>
 
-<li>
-<b>path. </b>Output file, relative to TOMCAT_HOME. If you omit a "path"
-value, then stderr &amp; stdout are used.</li>
+    <h4> &nbsp;&nbsp;&nbsp; <a name="starting_and_stopping">Starting and
+    stopping Tomcat</a>
+    </h4>
 
-<li>
-<b>verbosityLevel.</b> In order of increasing verbosity; one of "FATAL",
-"ERROR", "WARNING", "INFORMATION", or "DEBUG".</li>
-</ul>
-</td>
-</tr>
+    <blockquote>
+      <p>You start and stop Tomcat using the scripts in
+      the bin subdirectory of <a href="#tomcat_home_env">TOMCAT_HOME</a>.</p>
+    <P>To start Tomcat execute:</P>
+    <blockquote style="margin-right: 0px">
+      <p>On UNIX: bin/startup.sh</p>
+      <p>On Win32: bin\startup</p>
+    </blockquote>
+    <p>To stop Tomcat execute: </p>
+    <blockquote style="margin-right: 0px">
+      <p>On UNIX: bin/shutdown.sh </p>
+      <p>On Win32: bin\shutdown</p>
+    </blockquote>
+    
+    </blockquote>
 
-<tr>
-<td VALIGN=TOP WIDTH="15%"><a NAME="context_manager_element"></a><b>&lt;ContextManager></b></td>
+    <h4> &nbsp;&nbsp;&nbsp; <a name="starting_another_dir">Starting multiple
+    instances with individual server.xml files</a>
+    </h4>
 
-<td WIDTH="85%">A ContextManager specifies the configuration and structure
-for a set of ContextInterceptors, RequestInterceptors, Contexts and their
-Connectors.&nbsp;
-<p>Attributes:
-<ul>
-<li>
-<b>debug.</b> A value of "0" means "no output". "9" meaning "most everything".</li>
+    <blockquote>
+    
+    <p>This might not make a whole lot of sense until you read the next section
+    explaining Tomcat's <a href="#directory_structure">directory structure</a>,
+    as well as <a href="#configuring_tomcat">Configuring Tomcat</a>. You
+    may want to come back here afterwards. </p>
+    
+    <p>By default, Tomcat will use TOMCAT_HOME/conf/server.xml for
+    configuration, which by default, uses TOMCAT_HOME as its base for the contexts.
+    You can change this by using the "-f /path/to/server.xml" option, with a
+       different server configuration file and setting the home attribute of
+       the <a href="#context_manager_element">ContextManager</a> element. You need to set up the required files inside the
+       home: </p>
+        <ul>
+          <li>webapps/ - all war files will
+              be expanded and all subdirectories added as contexts.</li>
+          <li>conf/ directory - you can store a special web.xml and other
+              configuration files.</li>
+          <li>logs/ - all logs will go to this directory instead of the main
+              TOMCAT_HOME/logs/.</li>
+          <li>work/ - work directories for the contexts.
+          </li>
+        </ul>
 
-<li>
-<b>home.</b> The base location for the webapps, conf, and logs directories,
-as well as all defined contexts. It is used to start Tomcat from a directory
-other than TOMCAT_HOME. The default value for this attribute is TOMCAT_HOME.</li>
+    <p>If the home attribute of the ContextManager element in server.xml is relative, it
+       will be relative to the current working directory.</p>
 
-<li>
-<b>workDir.</b> The name of the <a href="#work_dir_defn">working directory</a>,
-relative to the above home attribute.</li>
-</ul>
-</td>
-</tr>
+    </blockquote>
 
-<tr>
-<td VALIGN=TOP WIDTH="15%"></td>
+    <h4> &nbsp;&nbsp;&nbsp; <a name="directory_structure">The Tomcat directory
+    structure</a>
+    </h4>
 
-<td WIDTH="85%">
-<table BORDER=0 WIDTH="100%" >
-<tr>
-<td VALIGN=TOP WIDTH="15%"><b>&lt;ContextInterceptor></b>
-<br><b>&lt;RequestInterceptor></b></td>
+    <blockquote>
+      <p>Assuming you extracted the Tomcat binary distribution
+       you should have the following directory structure under <a href="#tomcat_home_env">TOMCAT_HOME</a>:</p>
+    <table border width="75%" valign="MIDDLE">
+      <tr>
+        <th bgcolor="#c0c0c0" WIDTH="15%"> Directory</th>
+        <th bgcolor="#c0c0c0" WIDTH="85%"> Contents</th>
+      </tr>
+      <tr>
+        <td WIDTH="15%" align="center"> bin </td>
+        <td WIDTH="85%"> Startup/shutdown scripts and other useful files.</td>
+      </tr>
+      <tr>
+        <td WIDTH="15%" align="center"> conf </td>
+        <td WIDTH="85%"> Configuration files including <a href="#server_xml">server.xml</a> (Tomcat's main configuration file) and
+          <a href="#web_xml">
+          web.xml</a> (default values for the various web applications deployed in 
+          Tomcat.).
+        </td>
+      </tr>
+      <tr>
+        <td WIDTH="15%" align="center"> doc </td>
+        <td WIDTH="85%">Miscellaneous documents regarding Tomcat.</td>
+      </tr>
+      <tr>
+        <td WIDTH="15%" align="center"> lib </td>
+        <td WIDTH="85%"> Various jar files that are used by Tomcat. 
+             Any file in this directory is appended to Tomcat's classpath.
+        </td>
+      </tr>
+      <tr>
+        <td WIDTH="15%" align="center"> <a name="logs_dir_defn"> logs</a> </td>
+        <td WIDTH="85%"> This is where Tomcat places its log files by default.</td>
+      </tr>
+      <tr>
+    <td WIDTH="15%" align="center"> src </td>
+    <td WIDTH="85%"> The servlet API source files. Don't get excited,
+      though; these are only the empty interfaces and abstract
+      classes that should be implemented by any servlet
+      container.</td>
+      </tr>
+      <tr>
+        <td WIDTH="15%" align="center"> webapps </td>
+        <td WIDTH="85%"> Sample web applications. Any .war files placed
+          here will be automatically expanded.  See <a href="#deploying_war">Deploying WAR files</a>. </td>
+      </tr>
+    </table>
 
-<td WIDTH="85%">These interceptors listen for certain events that happen
-in the ContextManager. For example, the ContextInterceptor listens for
-startup and shutdown events of Tomcat, and the RequestInterceptor watches
-the various phases that user requests need to pass during its service.
-Tomcat's administrator doesn't need to know much about the interceptors;
-a developer on the other hand should know that this is how "global" type
-of operations can be implemented in Tomcat (for example, security and per
-request logging).</td>
-</tr>
+    <p>Additionally you can, or Tomcat will, create the following
+        directories:</p>
+    <table border="1" width="75%" VALIGN="MIDDLE">
+      <tr>
+        <td width="15%" align="center"> <a name="work_dir_defn"> work</a> </td>
+        <td width="85%"> Where Tomcat
+             places intermediate files (such as compiled JSP files) during 
+             its work. If you delete this directory while Tomcat is running 
+             you will not be able to execute JSP pages.
+        </td>
+      </tr>
+      <tr>
+        <td width="15%" align="center"> classes </td>
+        <td width="85%"> Any class that you add to this directory will 
+             find its place in Tomcat's classpath.
+        </td>
+      </tr>
+    </table>
 
-<tr>
-<td VALIGN=TOP WIDTH="15%"><b>&lt;Connector>&nbsp;</b></td>
+    </blockquote>
 
-<td WIDTH="85%">The Connector represents a connection to the user, either
-through a web server or directly to the user's browser (in a <a href="#type_1">stand-alone</a>
-configuration). The Connector object is the one responsible for the management
-of the Tomcat worker threads and for read/write requests/responses from
-the sockets connecting to the various clients.&nbsp;
-<p>Attributes:
-<ul>
-<li>
-<b>className.</b> Which Connector to use.</li>
-</ul>
-We will describe how to use this Connector configuration later in the document.</td>
-</tr>
+      <h4>&nbsp;&nbsp;&nbsp; <a name="tomcat_scripts">Tomcat scripts</a></h4>
+    <blockquote>
+    <p>This section is not required reading, as the default functionality
+    provided by the aforementioned startup and shutdown scripts is sufficient
+    for most users to get started. If everything is working so far, skip ahead to <a href="#configuring_tomcat">Configuring
+    Tomcat</a>. Come back to this section when you'd like more information
+    on these scripts, which you undoubtedly will.</p>
 
-<tr>
-<td VALIGN=TOP WIDTH="15%"></td>
+    <p>Tomcat is a Java program, and therefore it is possible to execute
+       it from the command line, after setting several environment 
+       variables. However, setting each environment variable and following 
+       the command line parameters used by Tomcat is error prone and 
+       tedious. Instead, the Tomcat development team provides a few scripts 
+       to ease starting and stopping Tomcat.</p>
 
-<td WIDTH="85%">
-<table BORDER=0 WIDTH="100%" >
-<tr>
-<td VALIGN=TOP WIDTH="15%"><b>&lt;Parameter></b></td>
+    <p><b>Note: The scripts are only a convenient way to start/stop. You can modify them to customize the
+    CLASSPATH, environment
+        variables such as PATH and LD_LIBRARY_PATH, etc., so long as a
+        correct command line is generated for Tomcat.</b>
+    </p>
 
-<td WIDTH="85%">Connector initialization parameters. You may have as many
-of these elements as required under each Connector.&nbsp;
-<p>Attributes:
-<ul>
-<li>
-<b>name.</b> So far, one of "handler", "port", "socketFactory".</li>
+    <p> The following table presents the scripts that are
+      most important for the common user:</p>
+    <table border width="75%" valign="MIDDLE">
+      <tr>
+        <th bgcolor="#c0c0c0" width="15%"> Script name </th>
+        <th bgcolor="#c0c0c0" width="85%"> Description </th>
+      </tr>
+      <tr>
+        <td width="15%" align="center"> tomcat </td>
+        <td width="85%"> The main script. Sets the proper environment, including
+          CLASSPATH, TOMCAT_HOME and JAVA_HOME, and starts Tomcat with
+          the proper command line parameters.</td>
+      </tr>
+      <tr>
+        <td width="15%" align="center"> startup </td>
+        <td width="85%"> Starts tomcat in the background. Shortcut for "tomcat start" </td>
+      </tr>
+      <tr>
+        <td width="15%" align="center"> shutdown </td>
+        <td width="85%"> Stops tomcat (shutting it down). Shortcut for "tomcat stop" </td>
+      </tr>
+    </table>
 
-<li>
-<b>value.</b> The appropriate value.</li>
-</ul>
-</td>
-</tr>
-</table>
-</td>
-</tr>
+    <p>The script which has the most significance for users is tomcat
+       (tomcat.sh/tomcat.bat). The other Tomcat related scripts serve as a
+       simplified single-task oriented entry point to the tomcat script (set
+       different command line parameters etc.).</p>
+      </blockquote>
 
-<tr>
-<td VALIGN=TOP WIDTH="15%"><b>&lt;Context>&nbsp;</b></td>
+      <h4>&nbsp;&nbsp;&nbsp; <a name="tomcat_scripts_closer">Tomcat scripts: a closer look</a></h4>
+      <blockquote>
+    <p>
+      A closer look at tomcat.sh/tomcat.bat yields that it performs the
+      following actions:</p>
 
-<td WIDTH="85%">Each Context represents a path in the Tomcat hierarchy
-where you place a web application.&nbsp;
-<p>Attributes:
-<ul>
-<li>
-<b>path. </b>The <i>context path</i> for a particular web application,
-which is the prefix of a request URI that tells Tomcat which Context should
-be used to process this request. This attribute is required, and must start
-with a slash ('/') character.</li>
+      <p>These behaviors, especially CLASSPATH setting, have changed
+      with Tomcat 3.2.  It is best to look directly at the scripts for
+      details on what variables are set and what class files are
+      loaded. [??? - delete entire section pending reexamination?]</p>
 
-<li>
-<b>docBase.</b> The root of your web application. This can be a full path
-or relative to the <a href="#context_manager_element">ContextManager's</a>
-home. This is Tomcat's version of Apache's "DocumentRoot" directive.</li>
+    <table border =1 width="75%" valign="MIDDLE">
+      <tr>
+        <th bgcolor="#c0c0c0" width="15%"> Operating System </th>
+        <th bgcolor="#c0c0c0" width="85%"> Actions </th>
+      </tr>
+      <tr>
+    <td width="15%" align="center"> Unix </td>
+    <td width="85%">
+      <ul>
+        <li>Guessing what is TOMCAT_HOME if it is not
+          specified.
+          
+        <li>Guessing what is JAVA_HOME if it is not
+          specified.
+          
+        <li>Setting up a CLASSPATH that contains -
+          
+          <ol>
+            <li>The ${TOMCAT_HOME}/classes directory (if available).</li>
+              
+            <li>All the contents of ${TOMCAT_HOME}/lib. </li>
+          
+            <li>${JAVA_HOME}/lib/tools.jar (this jar file contains the tool
+                javac, we need javac for jsp files).</li>
+          </ol>
+        <li>Executes java with command line parameters that set up a java
+            system environment, called tomcat.home, with
+            org.apache.tomcat.startup.Tomcat as the startup class. It also
+            passes command line parameters to 
+            org.apache.tomcat.startup.Tomcat, such as:
+          
+          <ol>
+            <li>The operation to perform start/stop/run/etc.
+              
+            <li>A path to the server.xml used by this Tomcat process. </li>
+          </ol>
+          <p>For example if server.xml is located in /etc/server_1.xml and
+             the user wants to start apache in the background they should 
+             provide the following command line: 
+             <div>bin/tomcat.sh start -f /etc/server_1.xml</div></p>
+           </li>
+       </ul>
+        </td>
+      </tr>
+      <tr>
+    <td width="15%" align="center"> Win32 </td>
+    <td width="85%">
+      <ul>
+        <li>Setting up a CLASSPATH that contains -
+          
+          <ol>
+            <li> servlet.jar, webserver.jar, jasper.jar, xml.jar from the
+                %TOMCAT_HOME%\lib directory, </li>
+            <li> %TOMCAT_HOME%\classes (even if does not exist), </li>
+            <li> %JAVA_HOME%\lib\tools.jar (this jar file contains the tool
+                 javac, we need javac for jsp files).</li>
+         </ol>
+        <li>Executes java, assuming that it is in the PATH, with command line
+        parameters that set up a java system environment, called tomcat.home,
+        with org.apache.tomcat.startup.Tomcat as the startup class. It also
+        passes command line parameters to org.apache.tomcat.startup.Tomcat,
+        such as:
+          
+        <ol>
+            <li>The operation to perform start/stop/run/etc.
 
-<li>
-<b>reloadable.</b> When developing a servlet it is very convenient to have
-Tomcat automatically reload it, allowing you to fix bugs and have Tomcat
-test the new code without the need to restart the container. To turn on
-servlet reloading set the reloadable flag to true. Detecting changes however
-is time consuming; moreover, since the new servlets are getting loaded
-in a new class-loader object there are cases where this class-reloading
-trigger casts errors. To avoid these problems you can set the reloadable
-flag to false; this will disable the autoreload feature.</li>
+            <li>A path to the server.xml used by this Tomcat process. </li>
+        </ol>
+        <p>For example if server.xml is located in conf\server_1.xml and
+           the user wants to start apache in the background they should 
+           provide the following command line: 
+           <div>bin\tomcat.bat start -f conf\server_1.xml</div>
 
-<li>
-<b>trusted.</b> Trusted allows you to access tomcat internal objects with
-FacadeManager.</li>
+        </li></ul>
+        </td>
+      </tr>
+    </table>
 
-<li>
-<b>debug.</b> A value of "0" means "no output". "9" meaning "most everything".</li>
-</ul>
-</td>
-</tr>
+    <p>As you can see, the Win32 version of tomcat.bat pales in comparison to the Unix
+      one. Especially it does not guess the values of TOMCAT_HOME and
+      JAVA_HOME and it also doesn't take add all of the .jar files into the classpath.</p>
 
-<tr>
-<td VALIGN=TOP WIDTH="15%"><b>&lt;Host>&nbsp;</b></td>
+    </blockquote>
 
-<td WIDTH="85%">Contains &lt;Context> elements. The &lt;Host> element is
-used to configure per-virtual host Contexts.&nbsp;
-<p>Attributes:
-<ul>
-<li>
-<b>name</b>: The fully-qualified hostname or IP address of the virtual
-host.</li>
-</ul>
-</td>
-</tr>
-</table>
-</td>
-</tr>
+    <hr size="5">
+    <h3><a name="container_types">Servlet Container Types</a></h3>
 
-<tr>
-<td VALIGN=TOP WIDTH="15%"><b>&lt;/ContextManager></b></td>
+    Tomcat, like any servlet container, is meant to run behind a web
+    server.  The web server takes care of receiving HTTP requests from
+    client browsers; the servlet container takes care of serving
+    Servlets and JSPs for those URLs that request them.
+ <p>
+    In Tomcat's case, there are three different modes of execution
+    Tomcat supports.
 
-<td WIDTH="85%"></td>
-</tr>
-</table>
-</td>
-</tr>
+    <ol>
+      <li><strong><u><a name="type_1">Stand-alone servlet containers</a></u></strong><br>
+        These are an integral part of the web server. This
+        is the case when using a Java-based web server, for example the
+        servlet container that is part of the JavaWebServer. Stand-alone
+        is the default mode used by Tomcat. Most web servers, however, are not Java-based, which leads us to
+        the next two container types.<br>
+ </li>
+        
+      <li><strong><u>In-process servlet containers</u></strong><br> 
+        The servlet container is a combination of a web server plugin and a 
+        Java container implementation. The web server plugin opens a JVM 
+        inside the web server's address space and lets the servlet container 
+        run in it. If a certain request should execute a servlet, the plugin 
+        takes control over the request and passes it (using <a href="http://java.sun.com/products/jdk/1.2/docs/guide/jni/index.html">JNI</a>) to the
+        servlet 
+        container. An in-process container is suitable for multi-threaded 
+        single-process servers and provides good performance but is limited 
+        in scalability.<br>
+ </li>
+            
+      <li><strong><u>Out-of-process servlet containers</u></strong><br>
+        The servlet container is a combination of a
+        web server plugin and a Java container implementation that runs
+        in a JVM outside the web server. The web server plugin and the
+        Java container JVM communicate using some IPC mechanism (usually
+        TCP/IP sockets).
+        If a certain request should execute a servlet the plugin takes
+        control over the request and passes it (using IPC) to the servlet container.
+        The response time of an out-of-process engine is not as good as
+        in the in-process one but the out-of-process engine performs
+        better in many measurable ways (scalability, stability, etc.).
+      </li>   
+    </ol>
 
-<tr>
-<td VALIGN=TOP WIDTH="10%"><b>&lt;/Server></b></td>
+    <p>Tomcat can be used as either a stand-alone container
+      (mainly for development and debugging) or as an add-on to an
+      existing web server (currently Apache, IIS and Netscape servers are 
+      supported). This means that whenever you are deploying Tomcat you will 
+      have to decide how to use it and, if you select options 2 or 3, you
+      will also need to install a web server adapter.</p>
 
-<td VALIGN=TOP WIDTH="90%"></td>
-</tr>
-</table>
-</blockquote>
+      <p>If this is your first time configuring Tomcat and you plan on integrating
+      it with a web server, you're better off initially running it
+      stand-alone. You'll be better able to isolate errors during
+      integration with your web server when you do so in the future - &quot;Is
+      Tomcat or my web server at fault for the error I'm seeing?&quot;</p>
 
-<h4>
-&nbsp;<a NAME="web_xml"></a>web.xml - Default deployment descriptor</h4>
 
-<blockquote>A detailed description of web.xml and the web application structure
-(including directory structure and configuration) is available in chapters
-9, 10 and 13 of the <a href="http://java.sun.com/products/servlet/download.html">Servlet
-API Spec</a> and we are not going to write about it. <a href="../appdev/index.html">Developing
-Applications with Tomcat</a> covers web application and deployment with
-Tomcat. <b>It is required reading if you're not going to take the time
-to read through the <a href="http://java.sun.com/products/servlet/download.html">Servlet
-API Spec</a>!</b>
-<p>There is a small Tomcat "feature" that is related to web.xml. Tomcat
-lets the user define default web.xml values for all contexts by putting
-a default web.xml file in the conf subdirectory of TOMCAT_HOME. When constructing
-a new Context, Tomcat uses the default web.xml file as the base configuration,
-and then applies the application specific web.xml (the application's WEB-INF/web.xml
-file) settings. This means that in Tomcat, you can get away with an empty
+    <hr size="5">
+    <h3><a name="configuring_tomcat">Configuring Tomcat</a></h3>
+    <p> Tomcat's configuration is based on two files:
+    <ol>
+      <li> <a href="#server_xml"> server.xml</a> - Tomcat's global configuration file. </li>
+      <li> <a href="#web_xml"> web.xml</a> - Default deployment descriptor. </li>
+    </ol>
+
+    <h4>&nbsp;&nbsp;&nbsp; <a name="server_xml">server.xml - Tomcat's main configuration
+    file</a></h4>
+    <blockquote>
+    <p>
+    The elements in server.xml (found in the conf subdirectory of
+      TOMCAT_HOME) are described below. Following along with the
+      default server.xml in another window is helpful. The default
+      server.xml file has many comments which may supersede the
+      comments below.  This is more of a reference section than a
+      how-to.</p>
+      <table border="0" width="90%">
+        <tr>
+          <td width="10%" valign="top"><b>&lt;Server&gt;</b></td>
+          <td width="90%" valign="top">The topmost element. &lt;Server&gt;
+            defines a single Tomcat server. Generally you should not bother with
+            it.<br>
+            </td>
+        </tr>
+        <tr>
+          <td width="10%" valign="top"></td>
+          <td width="90%" valign="top">
+            <table border="0" width="100%">
+              <tr>
+                <td width="15%" valign="top"><b>&lt;xmlmapper:debug&gt;
+              </b></td>
+                <td width="85%">You'll most likely never have to touch this, unless you're
+              worried about how Tomcat is registering the contents of this server.xml file. Even if you are concerned, the startup output
+              found in Tomcat's main log
+              file will usually be sufficient for this purpose.
+                  <p>Attributes:</p>
+                  <ul>
+                    <li> <b>level</b>. A value of &quot;0&quot;
+              means &quot;no output&quot;. &quot;9&quot; meaning
+              &quot;most everything&quot;.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td width="15%" valign="top"><b>&lt;Logger&gt;</b></td>
+                <td width="85%">
+ This element defines a Logger object, equivalent to a log file. Currently there are loggers for the servlets (where the
+              ServletContext.log() goes),
+      JSP files and the  tomcat runtime.
+                  <p>Attributes:</p>
+                  <ul>
+                    <li><b>name. </b> Identifies
+              the logger. One of &quot;tc_log&quot;, &quot;servlet_log&quot;,
+              or &quot;JASPER_LOG&quot;.</li>
+                    <li><b>path. </b>Output file, relative to
+              TOMCAT_HOME. If you omit a "path" value, then stderr &amp;
+                      stdout are used.</li>
+                    <li><b>verbosityLevel.</b> In order of increasing verbosity; one of &quot;FATAL&quot;, &quot;ERROR&quot;,
+              &quot;WARNING&quot;, &quot;INFORMATION&quot;, or &quot;DEBUG&quot;.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td width="15%" valign="top"><b><a name="context_manager_element">&lt;ContextManager&gt;</a></b></td>
+                <td width="85%">
+ A ContextManager specifies the configuration and structure for a set of
+              ContextInterceptors, RequestInterceptors, Contexts and their Connectors.
+                  <p>
+              Attributes:</p>
+                  <ul>
+                    <li><b>debug.</b> A value of &quot;0&quot;
+              means &quot;no output&quot;. &quot;9&quot; meaning
+              &quot;most everything&quot;.</li>
+                    <li><b>home.</b> The base location for the
+              webapps, conf, and logs directories, as well as all defined contexts.
+                 It is used to start Tomcat from a directory other than
+              TOMCAT_HOME. The default value for this attribute is
+              TOMCAT_HOME.</li>
+                    <li><b>workDir.</b> The name of the <a href="#work_dir_defn"> working
+              directory</a>, relative to the above home attribute.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td width="15%" valign="top"></td>
+                <td width="85%">
+                  <table border="0" width="100%">
+                    <tr>
+                      <td width="15%" valign="top"><b>&lt;ContextInterceptor&gt;<br>
+                        &lt;RequestInterceptor&gt;</b></td>
+                      <td width="85%"> These interceptors listen for certain events that happen in
+         the ContextManager. For example, the ContextInterceptor listens for
+         startup and shutdown events of Tomcat, and the RequestInterceptor
+         watches the various phases that user requests need to pass during its service.
+                        Tomcat's administrator doesn't need to know much about the 
+		 interceptors; a developer on the other hand should know that this 
+		 is how "global" type of operations can be implemented in Tomcat 
+		 (for example, security and per request logging).<br>
+                        </td>
+                    </tr>
+                    <tr>
+                      <td width="15%" valign="top"><b>&lt;Connector&gt;
+                  </b></td>
+                      <td width="85%">The Connector represents a connection to the user, either
+            through a web server or directly to the user's browser (in a <a href="#type_1">
+            stand-alone</a> configuration).
+            The Connector object is the one responsible for the management of
+            the Tomcat worker threads and for read/write requests/responses
+            from the sockets connecting to the various clients.
+                        <p>Attributes:</p>
+                        <ul>
+                          <li><b>className.</b> Which Connector to use.</li>
+                        </ul>
+          We will describe how to use this Connector configuration later in the document.<br>
+                        </td>
+                    </tr>
+                    <tr>
+                      <td width="15%" valign="top"></td>
+                      <td width="85%">
+                        <table border="0" width="100%">
+                          <tr>
+                            <td width="15%" valign="top"><b>&lt;Parameter&gt;</b></td>
+                            <td width="85%">Connector initialization
+                              parameters. You may have as many of these
+                              elements as required under each Connector.
+                              <p>Attributes:</p>
+                              <ul>
+                                <li><b>name.</b> So far, one of
+                                  &quot;handler&quot;, &quot;port&quot;, &quot;socketFactory&quot;.</li>
+                                <li><b>value.</b> The appropriate value.</li>
+                              </ul>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="15%" valign="top"><b>&lt;Context&gt;
+                  </b> </td>
+                      <td width="85%"> Each Context represents a path in the Tomcat hierarchy where you
+         place a web application.
+                        <p>
+                  Attributes:</p>
+                        <ul>
+                          <li><b>path. </b>The <i>context path</i> for a
+                            particular web application, which
+        is the prefix of a request URI that tells Tomcat which Context
+        should be used to process this request. This attribute is
+                            required,
+        and must start with a slash ('/') character.</li>
+                          <li><b>docBase.</b> The root of your web
+                  application. This can be a full path or relative to the <a href="#context_manager_element">
+                  ContextManager's</a> home. This is Tomcat's version of
+                            Apache's &quot;DocumentRoot&quot; directive.</li>
+                          <li><b>reloadable.</b> When developing a servlet it is very 
+		     convenient to have Tomcat automatically reload it, allowing you to fix bugs and have Tomcat test the new code without the need to
+                            restart the container. To turn on servlet reloading set the 
+			 reloadable flag to true. Detecting changes however is time 
+			 consuming; moreover, since the new servlets are getting loaded 
+			 in a new class-loader object there are cases where this 
+			 class-reloading trigger casts errors. To avoid these problems 
+			 you can set the reloadable flag to false; this will disable the 
+			 autoreload feature.</li>
+                          <li><b>trusted.</b> Trusted allows you to access tomcat internal objects              with FacadeManager.</li>
+                          <li><b>debug.</b> A value of &quot;0&quot;
+              means &quot;no output&quot;. &quot;9&quot; meaning
+              &quot;most everything&quot;.</li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="15%" valign="top"><b>&lt;Host&gt;
+                  </b></td>
+                      <td width="85%">Contains &lt;Context&gt; elements. The &lt;Host&gt;
+                  element is used to configure per-virtual host Contexts.
+                        <p>
+                  Attributes:</p>
+                        <ul>
+                          <li><b>name</b>: The fully-qualified hostname
+                  or IP address of the virtual host.</li>
+                        </ul>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td width="15%" valign="top"><b>&lt;/ContextManager&gt;</b></td>
+                <td width="85%"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td width="10%" valign="top"><b>&lt;/Server&gt;</b></td>
+          <td width="90%" valign="top"></td>
+        </tr>
+      </table>
+    </blockquote>
+    <h4>&nbsp;&nbsp;&nbsp; <a name="web_xml">web.xml - Default deployment descriptor</a></h4>
+    <blockquote>
+    <p>
+      A detailed description of web.xml and the web application structure
+      (including directory structure and configuration) is available in
+      chapters 9, 10 and 13 of the <a href="http://java.sun.com/products/servlet/download.html">Servlet API Spec</a>
+      and we are not going to write about it. <a href="../appdev/index.html">Developing Applications with Tomcat</a>
+      covers web application and deployment with Tomcat. <b>It is required reading if you're not going to
+      take the time to read through the <a href="http://java.sun.com/products/servlet/download.html">Servlet API Spec</a>!</b> </p>
+    <p>
+      There is a small Tomcat "feature" that is related
+      to web.xml. Tomcat lets the user define default web.xml values for all
+      contexts by putting a default web.xml file in the conf subdirectory of
+      TOMCAT_HOME. When
+      constructing a new Context, Tomcat uses the default web.xml file as the
+      base configuration, and then applies the application specific web.xml (the
+      application's WEB-INF/web.xml file) settings.
+
+This means that in Tomcat, you can get away with an empty
 web.xml file, containing only the element
-<tt><font size=+1>&lt;web-app/></font></tt>,
-or (more realistically) containing only the elements (e.g. mappings and
-mime-types) you need. However, this will limit your webapp's portability,
-so it is recommended to use a full web.xml file. You may instead want to
-copy TOMCAT_HOME/conf/web.xml and modify it.
-<p>We cover certain aspects of web.xml in subsequent sections, where it
-pertains to application deployment and interaction with Tomcat.</blockquote>
+<tt><big>&lt;web-app/&gt;</big></tt>, or (more realistically)
+containing only the elements (e.g. mappings and mime-types) you need.  However, this will limit your
+webapp's portability, so it is recommended to use a full web.xml
+file.  You may instead want to copy TOMCAT_HOME/conf/web.xml and modify it. 
 
-<hr size="5"><a NAME="webapps"></a>
-<h3>
-Deploying Web Applications</h3>
-<a NAME="webapp"></a>
-<h4>
-What is a Web Application?</h4>
+    </p>
+
+    <p>
+      We cover certain aspects of web.xml in subsequent sections, where it
+      pertains to application deployment and interaction with Tomcat.
+    </p>
+
+    </blockquote>
+
+    <hr size="5">
+    <a name="webapps">
+    <h3>Deploying Web Applications</h3>
+
+    <a name="webapp">
+    <h4>What is a Web Application?</h4>
+
 [??? - move this section up above the Configuring Tomcat section? It's
-not clear whether we should teach about webapps before or after we introduce
-server.xml et al.]
-<p>A Web Application (or "webapp") is a concept that was introduced in
-the <a href="http://java.sun.com/products/servlet/2.2/">Servlet Specification</a>
-version 2.2. [2.1?] You should definitely read the spec for the full story.
-From the spec (chapter 9):
-<blockquote>A web application is a collection of servlets, html pages,
-classes, and other resources that can be bundled and run on multiple containers
-from multiple vendors. A web application is rooted at a specific path within
-a web server. For example, a catalog application could be located at http://
-www.mycorp.com/catalog. All requests that start with this prefix will be
-routed to the ServletContext which represents the catalog application.
-<p>A servlet container can also establish rules for automatic generation
-of web applications. For example a ~user/ mapping could be used to map
-to a web application based at /home/user/ public_html/.
-<p>[...]
-<p>A web application exists as a structured hierarchy of directories. The
-root of this hierarchy serves as a document root for serving files that
-are part of this context. For example, for a web application located at
-/catalog in a web server, the index.html file located at the base of the
-web application hierarchy can be served to satisfy a request to /catalog/index.html.
-<p>A special directory exists within the application hierarchy named "WEB-INF".
-This directory contains all things related to the application that aren't
-in the document root of the application. It is important to note that the
-WEB-INF node is not part of the public document tree of the application.
-No file contained in the WEB-INF directory may be served directly to a
-client.
-<p>The contents of the WEB-INF directory are:
-<ul>
-<li>
-/WEB-INF/web.xml deployment descriptor</li>
-
-<li>
-/WEB-INF/classes/* directory for servlet and utility classes. The classes
-in this directory are used by the application class loader to load classes
-from.</li>
-
-<li>
-/WEB-INF/lib/*.jar area for Java ARchive files which contain servlets,
-beans, and other utility classes useful to the web application. All such
-archive files are used by the web application class loader to load classes
-from.</li>
-</ul>
-
-<h3>
-Sample Web Application Directory Structure</h3>
-Illustrated here is a listing of all the files in a sample web application:
+not clear whether we should teach about webapps before or after we
+introduce server.xml et al.]
+<p>
+A Web Application (or "webapp") is a concept that was introduced in
+the <a href="http://java.sun.com/products/servlet/2.2/">Servlet
+Specification</a> version 2.2. [2.1?] You should definitely read the
+spec for the full story. From the spec (chapter 9):
 <blockquote>
-<pre><font size=+1>/index.html
+<p>
+A web application is a collection of servlets, html pages, classes, and other resources that can be
+bundled and run on multiple containers from multiple vendors. A web application is rooted at a
+specific path within a web server. For example, a catalog application could be located at http://
+www.mycorp.com/catalog. All requests that start with this prefix will be routed to the
+ServletContext which represents the catalog application.
+</p>
+<p>
+A servlet container can also establish rules for automatic generation of web applications. For
+example a ~user/ mapping could be used to map to a web application based at /home/user/
+public_html/.
+</p>
+<p>[...]</p>
+<p>
+A web application exists as a structured hierarchy of directories. The
+root of this hierarchy serves as a document root for serving files
+that are part of this context. For example, for a web application
+located at /catalog in a web server, the index.html file located at
+the base of the web application hierarchy can be served to satisfy a
+request to /catalog/index.html.
+</p>
+<p>
+A special directory exists within the application hierarchy named "WEB-INF". This directory
+contains all things related to the application that aren't in the document root of the application. It is
+important to note that the WEB-INF node is not part of the public document tree of the application.
+No file contained in the WEB-INF directory may be served directly to a client.
+</p>
+<p>
+The contents of the WEB-INF directory are:
+<ul>
+<li> /WEB-INF/web.xml deployment descriptor </li>
+<li> /WEB-INF/classes/* directory for servlet and utility classes. The classes in this directory
+are used by the application class loader to load classes from. </li>
+<li> /WEB-INF/lib/*.jar area for Java ARchive files which contain servlets, beans, and other
+utility classes useful to the web application. All such archive files are used by the web
+application class loader to load classes from. </li>
+</ul>
+</p>
+<h3>Sample Web Application Directory Structure</h3>
+<p>
+Illustrated here is a listing of all the files in a sample web application:
+<blockquote><pre><big>/index.html
 /howto.jsp
 /feedback.jsp
 /images/banner.gif
@@ -981,372 +935,413 @@ Illustrated here is a listing of all the files in a sample web application:
 /WEB-INF/web.xml
 /WEB-INF/lib/jspbean.jar
 /WEB-INF/classes/com/mycorp/servlets/MyServlet.class
-/WEB-INF/classes/com/mycorp/util/MyUtils.class</font></pre>
+/WEB-INF/classes/com/mycorp/util/MyUtils.class
+</big></pre>
 </blockquote>
 </blockquote>
-You can deploy a WAR file that is present on the local filesystem by adding
-a &lt;Context> tag to TOMCAT_HOME/conf/server.xml. For example:
+</p>
+
+<p>
+You can deploy a WAR file that is present on the local filesystem by
+adding a &lt;Context&gt; tag to TOMCAT_HOME/conf/server.xml. For
+example:
+<blockquote><pre><big>&lt;Context path="/mywebapp" 
+  docBase="/home/alex/webapps/mywebapp" 
+  reloadable="true" &gt;
+&lt;/Context&gt;
+</big></pre></blockquote>
+</p>         
+
+<a name="what_is_war">
+    <h4>What is a WAR file?</h4>
+
+<p><i>"WAR. Huh! What is it good for?" - Edwin Starr</i></p>
+
+<p>
+A WAR (or "web archive") file is simply a packaged webapp directory.
+It is created using the standard Java <tt><big>jar</big></tt> tool.
+For example: 
+<blockquote><pre><big>cd /home/alex/webapps/mywebapp 
+jar cf mywebapp.war * </big></pre></blockquote>
+</p>
+
+    <a name="deploying_war">
+    <h4>Deploying WAR files in Tomcat</h4>
+
 <blockquote>
-<pre><font size=+1>&lt;Context path="/mywebapp"&nbsp;
-&nbsp; docBase="/home/alex/webapps/mywebapp"&nbsp;
-&nbsp; reloadable="true" >
-&lt;/Context></font></pre>
+<p>
+Currently (as of version 3.2) the procedure for deploying a new WAR file is:
+<ol>
+<li><b>Stop Tomcat</b>.
+</li>
+<li><b>Delete existing deployment.</b>
+If you have previously deployed &quot;foo.war&quot; in TOMCAT_HOME/webapps, then it has been unpacked into webapps/foo/...  You must delete this directory and all its contents. On Unix, this can be done with <pre><big>rm -r $TOMCAT_HOME/webapps/foo</big></pre>
+</li>
+<li><b>Copy WAR file to TOMCAT_HOME/webapps/</b>.
+</li>
+<li><b>Start Tomcat</b>.
+</li>
+</ol>
+</p>
+
+<p>
+This process may become easier in the future. A &quot;deploy tool&quot; is on the Tomcat &quot;to-do&quot; list.
+</p>
+
+<p>
+Note that if you deploy a WAR file in this manner, you do not need to
+make any changes to <tt><big>server.xml</big></tt> -- it will 
+automatically be recognized and activated when the server starts.
+However, if you wish to specify non-default options for this webapp,
+you may do so by adding an element like <tt><big>&lt;Context
+docBase=&quot;webapps/foo&quot; ...</big></tt> to server.xml.
+</p>
+
+<p>
+See also <a href="http://www.jguru.com/jguru/faq/view.jsp?EID=123229">How do I
+deploy a WAR file in Tomcat?</a> in the jGuru FAQ.
+</p>
+
 </blockquote>
-<a NAME="what_is_war"></a>
-<h4>
-What is a WAR file?</h4>
-<i>"WAR. Huh! What is it good for?" - Edwin Starr</i>
-<p>A WAR (or "web archive") file is simply a packaged webapp directory.
-It is created using the standard Java <tt><font size=+1>jar</font></tt>
-tool. For example:
-<blockquote>
-<pre><font size=+1>cd /home/alex/webapps/mywebapp&nbsp;
-jar cf mywebapp.war *</font></pre>
-</blockquote>
-<a NAME="deploying_war"></a>
-<h4>
-Deploying WAR files in Tomcat</h4>
 
-<blockquote>Currently (as of version 3.2) the procedure for deploying a
-new WAR file is:
-<ol>
-<li>
-<b>Stop Tomcat</b>.</li>
+    <hr size="5">
+    <a name="tutorials">
+    <h3>Tomcat Tutorials</h3>
 
-<li>
-<b>Delete existing deployment.</b> If you have previously deployed "foo.war"
-in TOMCAT_HOME/webapps, then it has been unpacked into webapps/foo/...
-You must delete this directory and all its contents. On Unix, this can
-be done with</li>
+    <p>These tutorials will be run with the assumption that Tomcat is operating
+    as a stand-alone container. Like we said before, it can be helpful to
+    understand Tomcat's functionality, irrespective of the particular web server
+    you're using. Trying to get more than one thing working at once
+    usually leads to more problems than its worth. Integration will be
+    covered later in subsequent sections.</p>
 
-<pre><font size=+1>rm -r $TOMCAT_HOME/webapps/foo</font></pre>
+    [Note: add some tutorials here :-) ]
 
-<li>
-<b>Copy WAR file to TOMCAT_HOME/webapps/</b>.</li>
 
-<li>
-<b>Start Tomcat</b>.</li>
-</ol>
-This process may become easier in the future. A "deploy tool" is on the
-Tomcat "to-do" list.
-<p>Note that if you deploy a WAR file in this manner, you do not need to
-make any changes to <tt><font size=+1>server.xml</font></tt> -- it will
-automatically be recognized and activated when the server starts. However,
-if you wish to specify non-default options for this webapp, you may do
-so by adding an element like <tt><font size=+1>&lt;Context docBase="webapps/foo"
-...</font></tt> to server.xml.
-<p>See also <a href="http://www.jguru.com/jguru/faq/view.jsp?EID=123229">How
-do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</blockquote>
+    <h2> Real World Configuration Tips </h2>
+    <p>
+        By default the Tomcat distribution comes with a naive configuration
+        whose main goal is to promote first time user experience and an "out 
+		of the box" operation... This configuration however is not the best 
+		way to deploy Tomcat on real sites. For example, real sites may 
+		require some performance tuning and site-specific settings 
+		(additional path elements for example). This section will try to get 
+		you started by directing you to the first steps that should be taken 
+		before publishing a Tomcat based site.
+    </p>
 
-<hr size="5"><a NAME="tutorials"></a>
-<h3>
-Tomcat Tutorials</h3>
-These tutorials will be run with the assumption that Tomcat is operating
-as a stand-alone container. Like we said before, it can be helpful to understand
-Tomcat's functionality, irrespective of the particular web server you're
-using. Trying to get more than one thing working at once usually leads
-to more problems than its worth. Integration will be covered later in subsequent
-sections.
-<br>[Note: add some tutorials here :-) ]
-<h2>
-Real World Configuration Tips</h2>
-By default the Tomcat distribution comes with a naive configuration whose
-main goal is to promote first time user experience and an "out of the box"
-operation... This configuration however is not the best way to deploy Tomcat
-on real sites. For example, real sites may require some performance tuning
-and site-specific settings (additional path elements for example). This
-section will try to get you started by directing you to the first steps
-that should be taken before publishing a Tomcat based site.
-<h3>
-Modify and Customize the Batch Files</h3>
-As stated in the previous sections, the startup scripts are here for your
-convenient. Yet, sometimes the scripts that are needed for deployment should
-be modified:
-<ul>
-<li>
-To set resource limits such as maximum number of descriptors.</li>
+    <h3> Modify and Customize the Batch Files </h3>
+    <p>
+        As stated in the previous sections, the startup scripts are here for 
+		your convenient.  Yet, sometimes the scripts that are needed for
+        deployment should be modified:
+        <ul>
+            <li> To set resource limits such as maximum number of
+                 descriptors. </li>
+            <li> To add new CLASSPATH entries (for example, JDBC drivers). </li>
+            <li> To add new PATH/LD_LIBRARY_PATH entries (for example, JDBC
+                 drivers DLLs). </li>
+            <li> To modify the JVM command line settings. </li>
+            <li> Make sure that you are using a specific JVM (out of the two
+                 or three JVMs installed on your machine). </li>
+            <li> To switch user from root to some other user using the "su"
+                 UNIX command. </li>
+            <li> Your pet reason. </li>
+        </ul>
 
-<li>
-To add new CLASSPATH entries (for example, JDBC drivers).</li>
+        Some of these changes can be done without explicit changes to
+        the basic scripts; for example, the tomcat script can use an 
+		environment variable named <tt>TOMCAT_OPTS</tt> to set extra command
+        line parameters to the JVM (such as memory setting etc.).
+        On <em>UNIX</em> you can also create a file named <tt>".tomcatrc"</tt> in
+        your home directory and Tomcat will take environment information such
+        as PATH, JAVA_HOME, TOMCAT_HOME and CLASSPATH from this file. On NT
+        however (and also on UNIX when the modifications are for something
+        such as the JVM command line) you are forced to rewrite some of the
+        startup script... <div><b> Do not hesitate, just do it.</b> </div>
 
-<li>
-To add new PATH/LD_LIBRARY_PATH entries (for example, JDBC drivers DLLs).</li>
+    <h3> Modify the Default JVM Settings </h3>
+    <p>
+        The default JVM settings in the tomcat script are very naïve;
+        everything is left for defaults. There are a few things that you
+        should consider to improve your Tomcat performance:
+        <ol>
+            <li> Modify your JVM memory configuration. Normally the JVM
+           allocates an initial size for the Java heap and that's it, if
+           you need more then this amount of memory you will not get it.<br>
+           Nevertheless, in loaded sites, giving more memory to the JVM
+           improves Tomcat's performance. You should use command line
+           parameters such as -Xms/-Xmx/-ms/-mx to set the minimum/maximum
+           size of the Java heap (and check to see if the performance was
+           improved). </li>
 
-<li>
-To modify the JVM command line settings.</li>
+            <li> Modify your JVM threading configuration. The SUN JDK1.2.2 for
+           Linux comes with support for both, green and native threads. In
+           general native threads are known to provide improved performance
+           for I/O bound applications, green threads on the other hand put
+           less stress on the machine. You should experiment with these two
+           threading models and see which model is better for your site (in
+           general, native threads are better).</li>
 
-<li>
-Make sure that you are using a specific JVM (out of the two or three JVMs
-installed on your machine).</li>
+            <li> Select the best JVM for the task. There are several JVM vendors,
+           for example on Linux there are today (21/03/2000) two product level
+           JVMs: the SUN JDK1.2.2 and the IBM JDK1.1.8. If your application
+           does not require a specific JDK functionality, you should
+           benchmark the two JVMs and select the better one. In my (Gal
+           Shachor) internal tests I found the IBM JVM significantly faster
+           than the one created by SUN, you should check that for yourself
+           and make a calculated decision.
+           </li>
+        </ol>
 
-<li>
-To switch user from root to some other user using the "su" UNIX command.</li>
+    <h3> Modify your Connectors </h3>
+    <p>
+        The Connectors, as configured in Tomcat's default server.xml
+        contains two Connectors configured as in the next server.xml
+        fragment:
 
-<li>
-Your pet reason.</li>
-</ul>
-Some of these changes can be done without explicit changes to the basic
-scripts; for example, the tomcat script can use an environment variable
-named <tt>TOMCAT_OPTS</tt> to set extra command line parameters to the
-JVM (such as memory setting etc.). On <i>UNIX</i> you can also create a
-file named <tt>".tomcatrc"</tt> in your home directory and Tomcat will
-take environment information such as PATH, JAVA_HOME, TOMCAT_HOME and CLASSPATH
-from this file. On NT however (and also on UNIX when the modifications
-are for something such as the JVM command line) you are forced to rewrite
-some of the startup script...<b>Do not hesitate, just do it.</b>
-<h3>
-Modify the Default JVM Settings</h3>
-The default JVM settings in the tomcat script are very na&iuml;ve; everything
-is left for defaults. There are a few things that you should consider to
-improve your Tomcat performance:
-<ol>
-<li>
-Modify your JVM memory configuration. Normally the JVM allocates an initial
-size for the Java heap and that's it, if you need more then this amount
-of memory you will not get it.</li>
+        <p>
+        <table border="1"
+            cellspacing="0"
+            cellpadding="0"
+            valign="middle">
+          <caption valign="bottom" width="100%">
+            <em> The two default Connectors in server.xml </em>
+          </caption>
+          <tr>
+            <td bgcolor="#c0c0c0">
+                <pre>
+        &lt;!-- (1) HTTP Connector for stand-alone operation --&gt;
+        &lt;Connector className=&quot;org.apache.tomcat.service.SimpleTcpConnector&quot;&gt;
+            &lt;Parameter
+                name=&quot;handler&quot;
+                value=&quot;org.apache.tomcat.service.http.HttpConnectionHandler&quot;/&gt;
+            &lt;Parameter
+                name=&quot;port&quot;
+                value=&quot;8080&quot;/&gt;
+        &lt;/Connector&gt;
 
-<br>Nevertheless, in loaded sites, giving more memory to the JVM improves
-Tomcat's performance. You should use command line parameters such as -Xms/-Xmx/-ms/-mx
-to set the minimum/maximum size of the Java heap (and check to see if the
-performance was improved).
-<li>
-Modify your JVM threading configuration. The SUN JDK1.2.2 for Linux comes
-with support for both, green and native threads. In general native threads
-are known to provide improved performance for I/O bound applications, green
-threads on the other hand put less stress on the machine. You should experiment
-with these two threading models and see which model is better for your
-site (in general, native threads are better).</li>
+        &lt;!-- (2) AJPV12 Connector for out-of-process operation --&gt;
+        &lt;Connector className=&quot;org.apache.tomcat.service.SimpleTcpConnector&quot;&gt;
+            &lt;Parameter
+                name=&quot;handler&quot;
+                value=&quot;org.apache.tomcat.service.connector.Ajp12ConnectionHandler&quot;/&gt;
+            &lt;Parameter
+                name=&quot;port&quot;
+                value=&quot;8007&quot;/&gt;
+        &lt;/Connector&gt;
+                </pre>
+            </td>
+          </tr>
+        </table>
 
-<li>
-Select the best JVM for the task. There are several JVM vendors, for example
-on Linux there are today (21/03/2000) two product level JVMs: the SUN JDK1.2.2
-and the IBM JDK1.1.8. If your application does not require a specific JDK
-functionality, you should benchmark the two JVMs and select the better
-one. In my (Gal Shachor) internal tests I found the IBM JVM significantly
-faster than the one created by SUN, you should check that for yourself
-and make a calculated decision.</li>
-</ol>
+        <ol>
+            <li> Is a Connector that listens on port 8080 for incoming HTTP
+                 requests. This connector is needed for stand-alone
+                 operation.
+            <li> Is a Connector that listens on port 8007 for incoming AJPV12
+                 requests. This connector is needed for web-server
+                 integration (out-of-process servlet integration).
+        </ol>
 
-<h3>
-Modify your Connectors</h3>
-The Connectors, as configured in Tomcat's default server.xml contains two
-Connectors configured as in the next server.xml fragment:
-<table BORDER CELLSPACING=0 CELLPADDING=0 valign="middle" >
-<caption valign="bottom" width="100%"><i>The two default Connectors in
-server.xml&nbsp;</i></caption>
+        It is clear that a sane Tomcat deployment will use either an
+        out-of-process servlet integration or a stand-alone operation,
+        removing the unnecessary Connector is important.
+    <h3> Use a Thread Pool in your Connectors </h3>
+    <p>
+        Tomcat is a multi-threaded servlet container this means that each
+        request needs to be executed by some thread. By default when a
+        request arrives Tomcat creates a new thread, starts it and has it
+        serve the request. This behavior is problematic for loaded sites
+        because:
+        <ul>
+            <li>Starting and stopping a thread  for every request puts a
+                needless burden on the operating system and the JVM. </li>
+            <li>It is hard to limit the resource consumption. If 300
+                requests arrive concurrently Tomcat will open 300
+                threads to serve them and allocate all the resources needed
+                to serve all the 300 requests at the same time.  This causes
+                Tomcat to allocate much more resources (CPU, Memory,
+                Descriptors...) than it should and it can lead to low
+                performance and even crashes if resources are exhausted. </li>
+        </ul>
+        The solution for these problems is to use a <b>thread pool</b>.
+        Servlet containers that are using a thread pool relieve themselves
+        from directly managing their threads. Instead of allocating new
+        threads; whenever they need a thread they ask for it from the pool,
+        and when they are done, the thread is returned to the pool. The
+        thread pool can now be used to implement sophisticated thread
+        management techniques, such as:
+        <ol>
+            <li> Keeping threads "open" and reusing them over and over
+                 again. This saves the trouble associated with creating and 
+				 destroying threads continuously.
+                 <ul> <li>
+                 Usually the administrator can instruct the pool not to keep
+                 too many idle threads, freeing them if needed.
+                 </li> </ul>
+            </li>
+            <li> Setting an upper bound on the number of threads used
+                 concurrently. This prevents the resources allocation
+                 problem associated with unlimited thread allocation.
+                 <ul> <li>
+                 If the container maxed out to the threads upper limit, and a new
+                 request arrives, the new request will have to wait for
+                 some other (previous) request to finish and free the thread
+                 used to service it.
+                 </li> </ul>
+            </li>
+        </ol>
+        You can refine the techniques described above in various ways, but
+        these are only refinements. The main contribution of thread pools is
+        thread-reuse and having a concurrency upper bound that limits
+        resource usage.
 
-<tr>
-<td BGCOLOR="#C0C0C0">
-<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- (1) HTTP Connector for stand-alone operation -->
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Connector className="org.apache.tomcat.service.SimpleTcpConnector">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Parameter
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="handler"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Parameter
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="port"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="8080"/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Connector>
+    <p>
+        Using a thread pool in Tomcat is a simple move; all you need to do
+        is to use a <tt>PoolTcpConnector</tt> in your &lt;Connector&gt;
+        configuration. For example the following server.xml fragment defines
+        ajpv12, pooled Connector:
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- (2) AJPV12 Connector for out-of-process operation -->
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Connector className="org.apache.tomcat.service.SimpleTcpConnector">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Parameter
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="handler"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Parameter
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="port"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="8007"/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Connector>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</pre>
-</td>
-</tr>
-</table>
+        <p>
+        <table border="1"
+            cellspacing="0"
+            cellpadding="0"
+            valign="middle">
+          <caption valign="bottom" width="100%">
+            <em> Pooled ajpv12 Connector </em>
+          </caption>
+          <tr>
+            <td bgcolor="#c0c0c0">
+                <pre>
+        &lt;!-- A pooled AJPV12 Connector for out-of-process operation --&gt;
+        &lt;Connector className=&quot;org.apache.tomcat.service.PoolTcpConnector&quot;&gt;
+            &lt;Parameter
+                name=&quot;handler&quot;
+                value=&quot;org.apache.tomcat.service.connector.Ajp12ConnectionHandler&quot;/&gt;
+            &lt;Parameter
+                name=&quot;port&quot;
+                value=&quot;8007&quot;/&gt;
+        &lt;/Connector&gt;
+                </pre>
+            </td>
+          </tr>
+        </table>
 
-<ol>
-<li>
-Is a Connector that listens on port 8080 for incoming HTTP requests. This
-connector is needed for stand-alone operation.</li>
+        This fragment is very simple and the (default) pool behaviour
+        instructed by it is:
+        <ul>
+            <li> Upper bound for concurrency of 50 threads. </li>
+            <li> When the pool has more then 25 threads standing idle it
+                 will start to kill them. </li>
+            <li> The pool will start 10 threads on creation, and it will try
+                 to keep 10 vacant threads (as long as the upper bound is
+                 kept). </li>
+        </ul>
+        The default configuration is suitable for medium load sites with an
+        average of 10-40 concurrent requests. If your site differs you
+        should modify this configuration (for example reduce the upper
+        limit). Configuring the pool can be done through the &lt;Connector&gt;
+        element in server.xml as demonstrated in the next fragment:
+        <p>
+        <table border="1"
+            cellspacing="0"
+            cellpadding="0"
+            valign="middle">
+          <caption valign="bottom" width="100%">
+            <em> Configuring the Thread Pool </em>
+          </caption>
+          <tr>
+            <td bgcolor="#c0c0c0">
+                <pre>
+        &lt;!-- A pooled AJPV12 Connector for out-of-process operation --&gt;
+        &lt;Connector className=&quot;org.apache.tomcat.service.PoolTcpConnector&quot;&gt;
+            &lt;Parameter
+                name=&quot;handler&quot;
+                value=&quot;org.apache.tomcat.service.connector.Ajp12ConnectionHandler&quot;/&gt;
+            &lt;Parameter
+                name=&quot;port&quot;
+                value=&quot;8007&quot;/&gt;
+            &lt;Parameter
+                name=&quot;max_threads&quot;
+                value=&quot;30&quot;/&gt;
+            &lt;Parameter
+                name=&quot;max_spare_threads&quot;
+                value=&quot;20&quot;/&gt;
+            &lt;Parameter
+                name=&quot;min_spare_threads&quot;
+                value=&quot;5&quot; /&gt;
+        &lt;/Connector&gt;
+                </pre>
+            </td>
+          </tr>
+        </table>
+        As can be seen the pool has 3 configuration parameters:
+        <ul>
+            <li> max_threads - defines the upper bound to the for the 
+			     concurrency, the pool will not create more then this number 
+				 of threads. </li>
+            <li> max_spare_threads - defines the maximum number of threads
+                 that the pool will keep idle. If the number of idle threads
+                 passes the value of max_spare_threads the pool will kill
+                 these threads. </li>
+            <li> min_spare_threads - the pool will try to make sure that at
+                 any time there is at least this number of idle threads
+                 waiting for new requests to arrive. min_spare_threads must
+                 be bigger then 0.</li>
+        </ul>
 
-<li>
-Is a Connector that listens on port 8007 for incoming AJPV12 requests.
-This connector is needed for web-server integration (out-of-process servlet
-integration).</li>
-</ol>
-It is clear that a sane Tomcat deployment will use either an out-of-process
-servlet integration or a stand-alone operation, removing the unnecessary
-Connector is important.
-<h3>
-Use a Thread Pool in your Connectors</h3>
-Tomcat is a multi-threaded servlet container this means that each request
-needs to be executed by some thread. By default when a request arrives
-Tomcat creates a new thread, starts it and has it serve the request. This
-behavior is problematic for loaded sites because:
-<ul>
-<li>
-Starting and stopping a thread for every request puts a needless burden
-on the operating system and the JVM.</li>
+        You should use the above parameters to adjust the pool behavior to
+        your needs.
 
-<li>
-It is hard to limit the resource consumption. If 300 requests arrive concurrently
-Tomcat will open 300 threads to serve them and allocate all the resources
-needed to serve all the 300 requests at the same time. This causes Tomcat
-to allocate much more resources (CPU, Memory, Descriptors...) than it should
-and it can lead to low performance and even crashes if resources are exhausted.</li>
-</ul>
-The solution for these problems is to use a <b>thread pool</b>. Servlet
-containers that are using a thread pool relieve themselves from directly
-managing their threads. Instead of allocating new threads; whenever they
-need a thread they ask for it from the pool, and when they are done, the
-thread is returned to the pool. The thread pool can now be used to implement
-sophisticated thread management techniques, such as:
-<ol>
-<li>
-Keeping threads "open" and reusing them over and over again. This saves
-the trouble associated with creating and destroying threads continuously.</li>
+    <h3> Disable Servlet Auto-Reloading </h3>
+    <p>
+        Servlet auto-reloading is really useful for development time.
+        However it is very expensive (in performance degradation terms) and
+        may put your application in strange conflicts when classes that were
+        loaded by a certain classloader cannot co-operate with classes
+        loaded by the current classloader.
+    </p>
+    <p>
+        So, unless you have a real need for class reloading during your
+        deployment you should turn off the reloadable flag in your contexts.
+    </p>
 
-<ul>
-<li>
-Usually the administrator can instruct the pool not to keep too many idle
-threads, freeing them if needed.</li>
-</ul>
+    <h3> Start Tomcat from /etc/inittab </h3>
+    <p>
+        Unfortunately the adapters developed for Apache (or for any of the
+        other servers) cannot start Tomcat yet. On UNIX however, you can
+        use the init table to start Tomcat automatically upon machine
+        startup. FIXME:
+    </p>
 
-<li>
-Setting an upper bound on the number of threads used concurrently. This
-prevents the resources allocation problem associated with unlimited thread
-allocation.</li>
+<a name="credits">
+    <h2>Credits</h2>
+<p>Tomcat was originally written by Sun Microsystems, and has been improved (we hope) by a <a href="http://jakarta.apache.org/credits/whoweare.html">cast of thousands</a>.</p>
+    <p>
+      This document was created by:
+    <ul>
+    <a href="mailto:shachor@il.ibm.com"> Gal Shachor</a>
+    </ul>
+    With help from (in alphabetical order):
+    <ul>
+     Jonathan Bnayahu<br>
+     Alex Chaffee<br>
+     Fiona Czuczman<br>
+     Costin Manolache<br>
+     Rob Slifka<br>
+    </ul>
 
-<ul>
-<li>
-If the container maxed out to the threads upper limit, and a new request
-arrives, the new request will have to wait for some other (previous) request
-to finish and free the thread used to service it.</li>
-</ul>
-</ol>
-You can refine the techniques described above in various ways, but these
-are only refinements. The main contribution of thread pools is thread-reuse
-and having a concurrency upper bound that limits resource usage.
-<p>Using a thread pool in Tomcat is a simple move; all you need to do is
-to use a <tt>PoolTcpConnector</tt> in your &lt;Connector> configuration.
-For example the following server.xml fragment defines ajpv12, pooled Connector:
-<table BORDER CELLSPACING=0 CELLPADDING=0 valign="middle" >
-<caption valign="bottom" width="100%"><i>Pooled ajpv12 Connector&nbsp;</i></caption>
+    <table width="100%" border="0" cellpadding="10" cellspacing="0">
+      <tr>
+        <td>
+          <p class="fineprint">
+            Copyright &copy;1999 The Apache Software Foundation<br>
+            <a href="http://jakarta.apache.org/legal.html">Legal Stuff They Make Us Say</a><br>
+            <a href="http://jakarta.apache.org/contact.html">Contact Information</a> </p>
+        </td>
+      </tr>
+    </table>
 
-<tr>
-<td BGCOLOR="#C0C0C0">
-<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- A pooled AJPV12 Connector for out-of-process operation -->
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Connector className="org.apache.tomcat.service.PoolTcpConnector">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Parameter
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="handler"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Parameter
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="port"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="8007"/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Connector>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</pre>
-</td>
-</tr>
-</table>
-This fragment is very simple and the (default) pool behaviour instructed
-by it is:
-<ul>
-<li>
-Upper bound for concurrency of 50 threads.</li>
-
-<li>
-When the pool has more then 25 threads standing idle it will start to kill
-them.</li>
-
-<li>
-The pool will start 10 threads on creation, and it will try to keep 10
-vacant threads (as long as the upper bound is kept).</li>
-</ul>
-The default configuration is suitable for medium load sites with an average
-of 10-40 concurrent requests. If your site differs you should modify this
-configuration (for example reduce the upper limit). Configuring the pool
-can be done through the &lt;Connector> element in server.xml as demonstrated
-in the next fragment:
-<table BORDER CELLSPACING=0 CELLPADDING=0 valign="middle" >
-<caption valign="bottom" width="100%"><i>Configuring the Thread Pool&nbsp;</i></caption>
-
-<tr>
-<td BGCOLOR="#C0C0C0">
-<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- A pooled AJPV12 Connector for out-of-process operation -->
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Connector className="org.apache.tomcat.service.PoolTcpConnector">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Parameter
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="handler"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Parameter
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="port"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="8007"/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Parameter
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="max_threads"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="30"/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Parameter
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="max_spare_threads"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="20"/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Parameter
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="min_spare_threads"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="5" />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Connector>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</pre>
-</td>
-</tr>
-</table>
-As can be seen the pool has 3 configuration parameters:
-<ul>
-<li>
-max_threads - defines the upper bound to the for the concurrency, the pool
-will not create more then this number of threads.</li>
-
-<li>
-max_spare_threads - defines the maximum number of threads that the pool
-will keep idle. If the number of idle threads passes the value of max_spare_threads
-the pool will kill these threads.</li>
-
-<li>
-min_spare_threads - the pool will try to make sure that at any time there
-is at least this number of idle threads waiting for new requests to arrive.
-min_spare_threads must be bigger then 0.</li>
-</ul>
-You should use the above parameters to adjust the pool behavior to your
-needs.
-<h3>
-Disable Servlet Auto-Reloading</h3>
-Servlet auto-reloading is really useful for development time. However it
-is very expensive (in performance degradation terms) and may put your application
-in strange conflicts when classes that were loaded by a certain classloader
-cannot co-operate with classes loaded by the current classloader.
-<p>So, unless you have a real need for class reloading during your deployment
-you should turn off the reloadable flag in your contexts.
-<h3>
-Start Tomcat from /etc/inittab</h3>
-Unfortunately the adapters developed for Apache (or for any of the other
-servers) cannot start Tomcat yet. On UNIX however, you can use the init
-table to start Tomcat automatically upon machine startup. FIXME:
-<br><a NAME="credits"></a>
-<h2>
-Credits</h2>
-Tomcat was originally written by Sun Microsystems, and has been improved
-(we hope) by a <a href="http://jakarta.apache.org/credits/whoweare.html">cast
-of thousands</a>.
-<p>This document was created by:
-<ul><a href="mailto:shachor@il.ibm.com">Gal Shachor</a></ul>
-With help from (in alphabetical order):
-<ul>Jonathan Bnayahu
-<br>Alex Chaffee
-<br>Fiona Czuczman
-<br>Costin Manolache
-<br>Rob Slifka</ul>
-
-<table BORDER=0 CELLSPACING=0 CELLPADDING=10 WIDTH="100%" >
-<tr>
-<td>
-<div class="fineprint">Copyright &copy;1999 The Apache Software Foundation</div>
-
-<br><a href="http://jakarta.apache.org/legal.html">Legal Stuff They Make
-Us Say</a>
-<br><a href="http://jakarta.apache.org/contact.html">Contact Information</a></td>
-</tr>
-</table>
-
-</body>
+  </body>
 </html>
