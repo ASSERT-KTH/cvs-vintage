@@ -14,7 +14,7 @@ import org.jboss.ejb.DeploymentException;
  * file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class RelationshipRoleMetaData extends MetaData {
 	// one is one
@@ -26,6 +26,11 @@ public class RelationshipRoleMetaData extends MetaData {
 	 * Role name
 	 */
 	private String relationshipRoleName;
+	
+	/**
+	 * The relation to which the role belongs.
+	 */
+	 private RelationMetaData relationMetaData;
 	
 	/**
 	 * Multiplicity of role, ONE or MANY.
@@ -52,6 +57,10 @@ public class RelationshipRoleMetaData extends MetaData {
 	 */
 	private String cmrFieldType;
 
+	public RelationshipRoleMetaData(RelationMetaData relationMetaData) {
+		this.relationMetaData = relationMetaData;
+	}
+	
 	/**
 	 * Gets the relationship role name
 	 */
@@ -59,6 +68,21 @@ public class RelationshipRoleMetaData extends MetaData {
 		return relationshipRoleName;
 	}
 
+	/**
+	 * Gets the relation meta data to which the role belongs.
+	 * @returns the relation to which the relationship role belongs
+	 */
+	public RelationMetaData getRelationMetaData() {
+		return relationMetaData;
+	}
+	
+	/**
+	 * Gets the related role's metadata
+	 */
+	public RelationshipRoleMetaData getRelatedRoleMetaData() {
+		return relationMetaData.getOtherRelationshipRole(this);
+	}
+	
 	/**
 	 * Checks if the multiplicity is one.
 	 */
