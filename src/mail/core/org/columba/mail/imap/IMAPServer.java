@@ -110,6 +110,8 @@ import org.columba.ristretto.parser.ParserException;
 public class IMAPServer implements IMAPListener {
 
 	private static final int STEP_SIZE = 50;
+	private static final int UID_FETCH_STEPS = 500;
+	
 
 	private static final int NOOP_INTERVAL = 30000;
 
@@ -967,9 +969,35 @@ public class IMAPServer implements IMAPListener {
 	public Integer[] fetchUids(SequenceSet set, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
 		try {
+			StatusObservable observable = getObservable();
+			printStatusMessage(MailResourceLoader.getString("statusbar", "message",
+			"fetch_uid_list"));
+
 			ensureSelectedState(folder);
 			if (messageFolderInfo.getExists() > 0) {
-				return protocol.fetchUid(set);
+				SequenceSet[] packs = divide(set);
+				Integer[] result = new Integer[set.getLength(messageFolderInfo.getExists())];
+				
+				// update the progress
+				if( observable != null ) {
+					observable.setCurrent(0);
+					observable.setMax(result.length);					
+				}
+				
+				int pos=0;				
+				
+				for( int i=0; i<packs.length; i++) {
+					int packLength = packs[i].getLength(messageFolderInfo.getExists());
+					System.arraycopy(protocol.fetchUid(packs[i]),0,result, pos, packLength );
+					pos += packLength;
+					
+					// update the progress
+					if( observable != null ) {
+						observable.setCurrent(pos);
+					}					
+				}
+				
+				return result;
 			} else {
 				return new Integer[0];
 			}
@@ -977,6 +1005,32 @@ public class IMAPServer implements IMAPListener {
 			return fetchUids(set, folder);
 		}
 	}
+
+	private SequenceSet[] divide(SequenceSet in) {
+		int length = in.getLength(messageFolderInfo.getExists());
+		
+		if( length > UID_FETCH_STEPS ) {
+			int[] decomposed = in.toArray(messageFolderInfo.getExists());
+			
+			List result = new ArrayList();
+			int pos = 0;
+			// divide in packs
+			while( decomposed.length - pos > UID_FETCH_STEPS ) {
+				result.add(new SequenceSet(decomposed, pos, UID_FETCH_STEPS ));
+				pos += UID_FETCH_STEPS;
+			}
+			//dont forget the rest
+			if( decomposed.length - pos > 0) {
+				result.add(new SequenceSet(decomposed, pos, decomposed.length - pos ));
+			}
+			
+			return (SequenceSet[]) result.toArray(new SequenceSet[0]);
+		} else {
+			return new SequenceSet[] { in }; 
+		}
+		
+	}
+	
 
 	/**
 	 * Fetch list of flags and parse it.
@@ -990,11 +1044,36 @@ public class IMAPServer implements IMAPListener {
 	public IMAPFlags[] fetchFlagsListStartFrom(int startIdx, IMAPFolder folder)
 			throws IOException, IMAPException, CommandCancelledException {
 		try {
+			StatusObservable observable = getObservable();
+			
 			ensureSelectedState(folder);
 			if (messageFolderInfo.getExists() > 0) {
-				SequenceSet seqSet = new SequenceSet();
-				seqSet.addRightOpen(startIdx);
-				return protocol.fetchFlags(seqSet);
+				SequenceSet set = new SequenceSet();
+				set.addRightOpen(startIdx);
+
+				SequenceSet[] packs = divide(set);
+				IMAPFlags[] result = new IMAPFlags[set.getLength(messageFolderInfo.getExists())];
+				
+				// update the progress
+				if( observable != null ) {
+					observable.setCurrent(0);
+					observable.setMax(result.length);					
+				}
+				
+				int pos=0;				
+				
+				for( int i=0; i<packs.length; i++) {
+					int packLength = packs[i].getLength(messageFolderInfo.getExists());
+					System.arraycopy(protocol.fetchFlags(packs[i]),0,result, pos, packLength );
+					pos += packLength;
+					
+					// update the progress
+					if( observable != null ) {
+						observable.setCurrent(pos);
+					}					
+				}
+				
+				return result;
 			} else {
 				return new IMAPFlags[0];
 			}
