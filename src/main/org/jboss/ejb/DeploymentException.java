@@ -7,23 +7,26 @@
 package org.jboss.ejb;
 
 /**
- *	This exception is thrown by the ContainerFactory if an EJB application
- *	could not be deployed
+ * This exception is thrown by the ContainerFactory if an EJB application
+ * could not be deployed.
  *
- *   @see ContainerFactory
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.5 $
+ * @see ContainerFactory
+ * 
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @version $Revision: 1.6 $
  */
 public class DeploymentException
    extends Exception
 {
    // Attributes ----------------------------------------------------
-	// The root cause of this exception
-   Exception cause;
+
+   /** The root cause of this exception */
+   protected Exception cause;
    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
+   
    public DeploymentException(String message)
    {
       super(message);
@@ -32,12 +35,19 @@ public class DeploymentException
    public DeploymentException(String message, Exception e)
    {
       super(message);
-      
       cause = e;
    }
    
    // Public --------------------------------------------------------
-   public Exception getCause() { return cause; }
    
-   public String toString() { return cause == null ? super.toString() : super.toString()+", Cause:"+cause; }
+   public Exception getCause() {
+      return cause;
+   }
+   
+   public String toString() {
+      return
+         cause == null ?
+         super.toString() :
+         super.toString() + ", Cause: " + cause;
+   }
 }
