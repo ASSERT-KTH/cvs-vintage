@@ -178,7 +178,7 @@ public class WebXmlReader extends BaseInterceptor {
 	    xh.addRule("web-app/session-config/session-timeout", xh.methodParam(0));
 
 	    // Servlet
-	    xh.addRule("web-app/servlet", xh.objectCreate("org.apache.tomcat.core.ServletWrapper") ); // servlet-wrapper
+	    xh.addRule("web-app/servlet", xh.objectCreate("org.apache.tomcat.facade.ServletWrapper") ); // servlet-wrapper
 	    xh.addRule("web-app/servlet", xh.setParent( "setContext") ); // remove it from stack when done
 	    xh.addRule("web-app/servlet", xh.addChild("addServlet", "org.apache.tomcat.core.Handler") );
 	    // remove it from stack when done
