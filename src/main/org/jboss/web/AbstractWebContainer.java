@@ -118,7 +118,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.18 $
+@version $Revision: 1.19 $
 */
 public abstract class AbstractWebContainer 
 extends ServiceMBeanSupport 
@@ -177,7 +177,7 @@ implements AbstractWebContainerMBean
          if (di.parent != null && di.parent.metaData instanceof J2eeApplicationMetaData) 
          {
             J2eeApplicationMetaData app = (J2eeApplicationMetaData) di.parent.metaData;
-
+            
             J2eeModuleMetaData mod;
             Iterator it = app.getModules();
             while (it.hasNext())
@@ -187,8 +187,11 @@ implements AbstractWebContainerMBean
                
                if (mod.isWeb())        
                {
-                  //only pick up the context for our war
-                  if (mod.getFileName().indexOf(di.shortName) != -1) di.webContext = mod.getWebContext();
+                  //only pick up the context for our war, the names should match
+                  // The wars come from packages and thus are unpackaged under /tmp/deploy/<intNumber>.myweb.war
+                  if (di.shortName.lastIndexOf(mod.getFileName()) != -1)
+                     di.webContext = mod.getWebContext();
+                  
                }     
             }
          }
@@ -200,7 +203,7 @@ implements AbstractWebContainerMBean
          
          // make sure the context starts with a slash
          if (!di.webContext.startsWith("/")) di.webContext = "/"+di.webContext;
-         
+            
          // resolve the watch
          if (di.url.getProtocol().startsWith("http"))
          {
@@ -551,7 +554,7 @@ implements AbstractWebContainerMBean
             new String[] {"org.jboss.deployment.DeployerMBean"});
       }
       catch (Exception e) {log.error("Could not register with MainDeployer", e);}
-  
+   
    }
    
    
