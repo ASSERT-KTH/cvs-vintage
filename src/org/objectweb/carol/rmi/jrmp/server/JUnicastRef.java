@@ -269,10 +269,12 @@ public class JUnicastRef extends UnicastRef {
         UID uid = UID.read(in);
         RemoteKey rk = new RemoteKey(uid, a);
         localRef = JInterceptorHelper.getRemoteKey().equals(rk);
-        cis =
-            JInterceptorStore.setRemoteInterceptors(
-                rk,
-                (String[]) in.readObject());
+	// write initializers array in UTF
+	String[] ia = new String [in.readInt()];
+	for (int i=0; i< ia.length; i++) {
+	    ia[i] = in.readUTF();
+	}
+        cis = JInterceptorStore.setRemoteInterceptors(rk,ia);
         ref = LiveRef.read(in, newFormat);
     }
 
@@ -287,7 +289,12 @@ public class JUnicastRef extends UnicastRef {
         out.writeInt(rk.getInetA().length);
         out.write(rk.getInetA());
         rk.getUid().write(out);
-	out.writeObject(JInterceptorStore.getJRMPInitializers());
+	// write initializers array in UTF
+	String [] ia = JInterceptorStore.getJRMPInitializers();
+	out.writeInt(ia.length);
+	for (int i=0; i< ia.length; i++) {
+	    out.writeUTF(ia[i]);
+	}
         ref.write(out, newFormat);
     }
 }

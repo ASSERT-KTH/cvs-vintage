@@ -29,6 +29,7 @@ package org.objectweb.carol.jtests.conform.interceptor.jrmp;
 
 // java import 
 import java.io.IOException;
+import java.io.Externalizable;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
@@ -42,13 +43,24 @@ import org.objectweb.carol.rmi.jrmp.interceptor.JServiceContext;
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
-public class DummyServerServiceContext extends  JServiceContext {
+public class DummyServerServiceContext implements JServiceContext, Externalizable {
 
     /**
      * Adress
      */
     String address = null;
 
+    /**
+     * context id
+     */
+    private int context_id;
+
+    /**
+     * the JServiceContext id 
+     */ 
+    public int getContextId() {
+	return context_id;
+    }
 
     /**
      * empty constructor for Externalizable

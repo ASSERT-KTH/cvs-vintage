@@ -75,7 +75,7 @@ public class JRMPServerRequestInfoImpl implements JServerRequestInfo {
 	    scReplyTable = new Hashtable();
 	    scRequestTable = new Hashtable();
 	    for (int i = 0; i < scs.length; i++) {
-		scRequestTable.put(new Integer(scs[i].context_id), scs[i]);
+		scRequestTable.put(new Integer(scs[i].getContextId()), scs[i]);
 		contexts=true;	
 	    }
 	}
@@ -88,7 +88,7 @@ public class JRMPServerRequestInfoImpl implements JServerRequestInfo {
      */
     public void add_reply_service_context(JServiceContext jServiceContext, boolean replace) {
 	if (scReplyTable!=null) {
-	    Integer ctxId = new Integer(jServiceContext.context_id);
+	    Integer ctxId = new Integer(jServiceContext.getContextId());
 	    contexts=true;
 	    if (replace) {
 		scReplyTable.put(ctxId, jServiceContext);

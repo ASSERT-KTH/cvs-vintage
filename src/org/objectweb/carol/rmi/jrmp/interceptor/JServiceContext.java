@@ -28,25 +28,20 @@
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
 //java import
-import java.io.Externalizable;
+import java.io.Serializable;
 
 /** 
- * Class <code>JServiceContext</code> is the CAROL JRMP Service context
- * Unlike IIOP the class isn't static final, you can use inheritance mechanisme for context propagation 
+ * Interface <code>JServiceContext</code> is the CAROL JRMP Service context
+ * Unlike IIOP the class isn't static final class, you can use inheritance 
+ * mechanisme for context propagation. See the carol documentationon propagation 
+ * context for performance issue
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
-public abstract class JServiceContext implements Externalizable {
-
+public interface JServiceContext extends Serializable {
     /**
      * the JServiceContext id 
      */ 
-    public int context_id;
-    
-    /**
-     * Construct an empty service context
-     */
-    public JServiceContext() {
-    }   
+    public int getContextId();  
 }
