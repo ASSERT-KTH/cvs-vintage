@@ -88,7 +88,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * issues.</p>
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.43 2003/07/26 18:38:44 dlr Exp $
+ * @version $Id: ScarabIssues.java,v 1.44 2003/07/27 00:41:39 dlr Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -1325,10 +1325,10 @@ public class ScarabIssues implements java.io.Serializable
     }
 
     /**
-     * TODO: Calling code should push contextual information onto an
-     * instance field stack and use the top of that stack to help
-     * identify exactly where the error occurred, empowering users to
-     * resolve any data formatting problems.
+     * Calling code pushes contextual information onto {@link
+     * #parseContext} to help identify exactly where the error
+     * occurred, empowering users to resolve any data formatting
+     * problems.
      *
      * @param error The error, something which will
      * <code>toString()</code> nicely.
