@@ -665,7 +665,7 @@ public class Issue
     
     /**
      * Returns users assigned to user attributes that get emailed 
-     * When issue is modified.
+     * When issue is modified. Plus creating user.
      */
     public List getUsersToEmail(String action) throws Exception
     {
@@ -689,6 +689,10 @@ public class Issue
            {
                 throw new Exception("Error in retrieving users.");
            }
+       }
+       if (action.equals(AttributePeer.EMAIL_TO))
+       {
+           users.add(getCreatedBy());
        }
        return users;
     }
