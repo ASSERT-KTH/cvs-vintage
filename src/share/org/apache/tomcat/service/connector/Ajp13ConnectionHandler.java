@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectionHandler.java,v 1.3 2000/06/12 09:45:22 shachor Exp $
- * $Revision: 1.3 $
- * $Date: 2000/06/12 09:45:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectionHandler.java,v 1.4 2000/06/15 10:14:44 shachor Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/06/15 10:14:44 $
  *
  * ====================================================================
  *
@@ -160,9 +160,7 @@ public class Ajp13ConnectionHandler implements  TcpConnectionHandler
                         contextM.service(req, res);
 
                         req.recycle();
-                        res.recycle();                    
-                        //System.out.println("Closing connection");
-                        socket.close();                        
+                        res.recycle();                                                                    
                     break;
                     
                     case JK_AJP13_SHUTDOWN:
@@ -174,6 +172,8 @@ public class Ajp13ConnectionHandler implements  TcpConnectionHandler
                     break;
                 }                
             }
+            //System.out.println("Closing connection");
+            socket.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
