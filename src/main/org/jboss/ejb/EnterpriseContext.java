@@ -1,3 +1,4 @@
+<<<<<<< EnterpriseContext.java
 /*
  * jBoss, the OpenSource EJB server
  *
@@ -10,7 +11,6 @@ import java.rmi.RemoteException;
 import java.security.Identity;
 import java.security.Principal;
 import java.util.Properties;
-import java.util.HashSet;
 
 import javax.ejb.EJBHome;
 import javax.ejb.EJBContext;
@@ -35,20 +35,21 @@ import org.jboss.logging.Logger;
  *	@see EntityEnterpriseContext
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.7 $
+ *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ *	@version $Revision: 1.8 $
  */
 public abstract class EnterpriseContext
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-	// The EJB instanfce
+    // The EJB instanfce
    Object instance;
-	
-	// The container using this context
+    
+    // The container using this context
    Container con;
-	
-	// Set to the synchronization currently associated with this context. May be null
+    
+    // Set to the synchronization currently associated with this context. May be null
    Synchronization synch;
    
    // The transaction associated with the instance
@@ -56,10 +57,13 @@ public abstract class EnterpriseContext
    
    // The principal associated with the call
    Principal principal;
-	
-	// Only StatelessSession beans have no Id, stateful and entity do
+    
+    // Only StatelessSession beans have no Id, stateful and entity do
    Object id; 
    
+   // The instance is being used.  This locks it's state
+   int locked = 0;  
+                  
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
@@ -71,34 +75,63 @@ public abstract class EnterpriseContext
    
    // Public --------------------------------------------------------
    public Object getInstance() 
-	{ 
-		return instance; 
-	}
+    { 
+       return instance; 
+    }
    
    public abstract void discard()
       throws RemoteException;
       
    public void setId(Object id) { 
-		this.id = id; 
-	}
-	
+       this.id = id; 
+    }
+    
    public Object getId() { 
-		return id; 
-	}
+       return id; 
+    }
 
-   public void setTransaction(Transaction transaction) { 
-		this.transaction = transaction; 
-	}
-	
+   public void setTransaction(Transaction transaction) {
+       
+       Logger.log("EnterpriseContext.setTransaction "+((transaction == null) ? "null" : Integer.toString(transaction.hashCode()))); 
+       this.transaction = transaction; 
+    }
+    
    public Transaction getTransaction() { 
-		return transaction; 
-	}
-	
-	public void setPrincipal(Principal principal) {
+       return transaction; 
+    }
+    
+    public void setPrincipal(Principal principal) {
+       
+       this.principal = principal;
+    }
+    
+    public synchronized void lock() 
+    {
+        locked ++;
 		
-		this.principal = principal;
-	}
-	
+		//new Exception().printStackTrace();
+		
+		Logger.log("EnterpriseContext.lock() "+hashCode()+" "+locked);
+    }
+    
+    public void unlock() {
+        
+        // release a lock
+        locked --;
+		
+		if (locked <0) new Exception().printStackTrace();
+		
+		Logger.log("EnterpriseContext.unlock() "+hashCode()+" "+locked);
+    }
+    
+    public boolean isLocked() {
+            
+       //DEBUG Logger.log("EnterpriseContext.isLocked() at "+locked);
+       Logger.log("EnterpriseContext.isLocked() at "+locked);
+       
+       return locked != 0;
+   }
+    
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
@@ -115,33 +148,33 @@ public abstract class EnterpriseContext
        * @deprecated
        */
       public Identity getCallerIdentity() 
-		{ 
-			throw new EJBException("Deprecated"); 
-		}
+       { 
+         throw new EJBException("Deprecated"); 
+       }
       
       public Principal getCallerPrincipal() 
-		{ 
-			return principal;
-		}
+       { 
+         return principal;
+       }
       
       public EJBHome getEJBHome() 
       { 
-			if (con instanceof EntityContainer)
-			{
-				return ((EntityContainer)con).getContainerInvoker().getEJBHome(); 
-			} 
-			else if (con instanceof StatelessSessionContainer)
-			{
-				return ((StatelessSessionContainer)con).getContainerInvoker().getEJBHome(); 
-			} 
-			else if (con instanceof StatefulSessionContainer) 
-			{
-			 	return ((StatefulSessionContainer)con).getContainerInvoker().getEJBHome();
-			}
-			{
-				// Should never get here
-				throw new EJBException("No EJBHome available (BUG!)");
-			}
+         if (con instanceof EntityContainer)
+         {
+          return ((EntityContainer)con).getContainerInvoker().getEJBHome(); 
+         } 
+         else if (con instanceof StatelessSessionContainer)
+         {
+          return ((StatelessSessionContainer)con).getContainerInvoker().getEJBHome(); 
+         } 
+         else if (con instanceof StatefulSessionContainer) 
+         {
+              return ((StatefulSessionContainer)con).getContainerInvoker().getEJBHome();
+         }
+         {
+          // Should never get here
+          throw new EJBException("No EJBHome available (BUG!)");
+         }
       }
       
       /**
@@ -150,9 +183,9 @@ public abstract class EnterpriseContext
        * @deprecated
        */
       public Properties getEnvironment() 
-		{ 
-			throw new EJBException("Deprecated"); 
-		}
+       { 
+         throw new EJBException("Deprecated"); 
+       }
       
       public boolean getRollbackOnly() 
       { 
@@ -167,15 +200,15 @@ public abstract class EnterpriseContext
       }
        
       public void setRollbackOnly() 
-		{ 
-			try
-			{
-				con.getTransactionManager().setRollbackOnly();
-			} catch (SystemException e)
-			{
-				Logger.debug(e);
-			}
-		}
+       { 
+         try
+         {
+          con.getTransactionManager().setRollbackOnly();
+         } catch (SystemException e)
+         {
+          Logger.debug(e);
+         }
+       }
    
       /**
        *
@@ -183,28 +216,29 @@ public abstract class EnterpriseContext
        * @deprecated
        */
       public boolean isCallerInRole(Identity id) 
-		{ 
-			throw new EJBException("Deprecated"); 
-		}
+       { 
+         throw new EJBException("Deprecated"); 
+       }
    
       // TODO - how to handle this best?
       public boolean isCallerInRole(String id) 
-		{
-      if (principal == null)
-        return false;
-      HashSet set = new HashSet();
-      set.add( id );
-      return con.getRealmMapping().doesUserHaveRole( principal, set );
-		}
+       { 
+         return false; 
+       }
    
       // TODO - how to handle this best?
       public UserTransaction getUserTransaction() 
-		{ 
-			return new UserTransactionImpl(); 
-		}
+       { 
+         return new UserTransactionImpl(); 
+       }
    }
    
-	// Inner classes -------------------------------------------------
+    // Inner classes -------------------------------------------------
+   
+   
+   // SA MF FIXME: the usertransaction is only used for session beans with BMT.
+   // This does not belong here (getUserTransaction is properly implemented in subclasses)
+   
    class UserTransactionImpl
       implements UserTransaction
    {
@@ -212,6 +246,14 @@ public abstract class EnterpriseContext
          throws NotSupportedException,SystemException
       {
          con.getTransactionManager().begin();
+        
+        // keep track of the transaction in enterprise context for BMT
+        setTransaction(con.getTransactionManager().getTransaction());		 
+        
+        
+        // DEBUG Logger.debug("UserTransactionImpl.begin " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
+        Logger.debug("UserTransactionImpl.begin " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
+        
       }
       
       public void commit()
@@ -222,7 +264,10 @@ public abstract class EnterpriseContext
                    java.lang.IllegalStateException,
                    SystemException
       {
-         con.getTransactionManager().commit();
+         // DEBUG Logger.debug("UserTransactionImpl.commit " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
+        Logger.debug("UserTransactionImpl.commit " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
+        
+        con.getTransactionManager().commit();
       }
        
       public void rollback()
@@ -230,7 +275,10 @@ public abstract class EnterpriseContext
                      java.lang.SecurityException,
                      SystemException
       {
-         con.getTransactionManager().rollback();
+         // DEBUG Logger.debug("UserTransactionImpl.rollback " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
+        Logger.debug("UserTransactionImpl.rollback " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
+        
+        con.getTransactionManager().rollback();
       }
       
       public void setRollbackOnly()
@@ -244,7 +292,7 @@ public abstract class EnterpriseContext
       {
          return con.getTransactionManager().getStatus();
       }
-	  
+      
       public void setTransactionTimeout(int seconds)
          throws SystemException
       {
@@ -252,4 +300,3 @@ public abstract class EnterpriseContext
       }
    }
 }
-
