@@ -63,7 +63,7 @@ import org.apache.velocity.app.FieldMethodizer;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.3 2001/08/02 07:11:42 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.4 2001/08/17 00:42:27 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -71,6 +71,11 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      * holds the Scarab constants
      */
     private FieldMethodizer constant = null;
+
+    /**
+     * Used for formatting dates in the format: M/d/yy
+     */
+    private static final String MDYY_DATE = "M/d/yy";
 
     public void init(Object data)
     {
@@ -96,5 +101,16 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public FieldMethodizer getConstant()
     {
         return constant;
+    }
+    
+    /**
+     * This is used to get the format for a date
+     * right now, it returns "M/d/yy". In the future, we 
+     * can write code to return the correct date based on
+     * Localization needs.
+     */
+    public String getDateFormat()
+    {
+        return MDYY_DATE;
     }
 }
