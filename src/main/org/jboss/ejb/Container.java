@@ -63,7 +63,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *	 @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public abstract class Container
 {
@@ -161,6 +161,12 @@ public abstract class Container
    public InstancePool getInstancePool() 
 	{ 
 		return instancePool; 
+	}
+	
+	
+	public ContainerInvoker getContainerInvoker() 
+	{ 
+		return containerInvoker; 
 	}
 	
    public void addInterceptor(Interceptor in) 

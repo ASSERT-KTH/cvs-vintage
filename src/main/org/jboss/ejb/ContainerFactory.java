@@ -59,7 +59,7 @@ import org.jboss.ejb.plugins.*;
 *   @see Container
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.14 $
+*   @version $Revision: 1.15 $
 */
 public class ContainerFactory
 implements ContainerFactoryMBean, MBeanRegistration
@@ -234,7 +234,7 @@ implements ContainerFactoryMBean, MBeanRegistration
 					{
 						boolean implemented = false;
 						
-						if (!implemented) throw new Error("Stateful Container not implemented yet");
+						//if (!implemented) throw new Error("Stateful Container not implemented yet");
 						
 						// Create container
 						con = new StatefulSessionContainer();
@@ -366,7 +366,14 @@ implements ContainerFactoryMBean, MBeanRegistration
 			for (int i = 0; i < containers.size(); i++)
 			{
 				Container con = (Container)containers.get(i);
-				if (con instanceof EntityContainer)
+				System.out.println("Binding container "+con.getMetaData().getJndiName());
+				if (!(con instanceof StatefulSessionContainer))
+				rebind(ctx, con.getMetaData().getJndiName(), con.getContainerInvoker().getEJBHome());
+					
+				// Done
+				log.log("Bound "+con.getMetaData().getEjbName() + " to " + con.getMetaData().getJndiName());
+				
+				/*if (con instanceof EntityContainer)
 				{
 					rebind(ctx, con.getMetaData().getJndiName(), ((EntityContainer)con).getContainerInvoker().getEJBHome());
 					
@@ -378,7 +385,13 @@ implements ContainerFactoryMBean, MBeanRegistration
 					
 					// Done
 					log.log("Bound "+con.getMetaData().getEjbName() + " to " + con.getMetaData().getJndiName());
+				} else if (con instanceof StatefulSessionContainer) 
+			    {
+				    rebind(ctx, con.getMetaData().getJndiName(), ((StatefulSessionContainer) con).getContainerInvoker().getEJBHome());
+		            log.log("Bound "+con.getMetaData().getEjbName() + " to " + con.getMetaData().getJndiName());
 				}
+				*/
+				
 			}
 			
 			// Add to webserver so client can access classes through dynamic class downloading

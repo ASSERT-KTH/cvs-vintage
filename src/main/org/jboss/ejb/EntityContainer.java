@@ -32,7 +32,8 @@ import org.jboss.logging.Logger;
  *   @see Container
  *   @see EntityEnterpriseContext
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *   @version $Revision: 1.7 $
  */
 public class EntityContainer
    extends Container
@@ -63,11 +64,6 @@ public class EntityContainer
       ci.setContainer(this);
    }
 
-   public ContainerInvoker getContainerInvoker() 
-   { 
-   	return containerInvoker; 
-   }
-	
    public void setInstanceCache(InstanceCache ic)
    { 
       if (ic == null)
