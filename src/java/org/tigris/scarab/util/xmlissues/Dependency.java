@@ -52,6 +52,7 @@ public class Dependency implements java.io.Serializable
     private String type = null;
     private String child = null;
     private String parent = null;
+    private boolean deleted = false;
 
     public Dependency()
     {
@@ -95,6 +96,27 @@ public class Dependency implements java.io.Serializable
     public String getParent()
     {
         return this.parent;
+    }
+
+    public void setDeleted(boolean deleted)
+    {
+        this.deleted = deleted;
+    }
+
+    public boolean getDeleted()
+    {
+        return this.deleted;
+    }
+
+    public boolean equals(Dependency dependency)
+    {
+        if (child.equals(dependency.getChild()) &&
+            parent.equals(dependency.getParent()) &&
+            type.equals(dependency.getType()))
+        {
+            return true;
+        }
+        return false;
     }
 
     public String toString()
