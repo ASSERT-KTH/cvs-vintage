@@ -70,7 +70,7 @@ public abstract class AbstractFrameView
 		this.frameController = frameController;
 
 		this.setIconImage(
-			ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
+			ImageLoader.getImageIcon("icon16.png").getImage());
 
 		setTitle(
 			"Columba - version: "
