@@ -28,7 +28,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -212,7 +212,7 @@ public class MessageDrivenMetaData
    
    public String getDefaultConfigurationName()
    {
-      if (activationConfigProperties.size() != 0 || isJMSMessagingType() == false)
+      if (isJMSMessagingType() == false)
          return ConfigurationMetaData.MESSAGE_INFLOW_DRIVEN;
       else
          return ConfigurationMetaData.MESSAGE_DRIVEN_13;
