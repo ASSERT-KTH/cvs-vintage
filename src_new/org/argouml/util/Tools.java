@@ -1,4 +1,4 @@
-// $Id: Tools.java,v 1.16 2004/06/24 06:25:46 linus Exp $
+// $Id: Tools.java,v 1.17 2004/08/03 18:58:41 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,12 +33,16 @@ import javax.xml.parsers.SAXParserFactory;
 import org.argouml.i18n.Translator;
 import org.apache.log4j.Logger;
 
+/**
+ * Some tools thrown together...
+ *
+ */
 public class Tools {
 
     /** logger */
     private static final Logger LOG = Logger.getLogger(Tools.class);
 
-    static String packageList[] =
+    private static final String PACKAGELIST[] =
 	new String[]{
 	    "org.argouml.application", "ru.novosoft.uml", 
             "org.tigris.gef.base", "org.xml.sax", 
@@ -79,6 +83,9 @@ public class Tools {
         sb.append('\n');
     }
 
+    /**
+     * @return a String containing the version information
+     */
     public static String getVersionInfo()
     {
         try {
@@ -117,8 +124,8 @@ public class Tools {
                         "label.error-sax-factory"));
             }
 
-            for (int i = 0; i < packageList.length; i++) {
-                getComponentVersionInfo(sb, packageList[i]);
+            for (int i = 0; i < PACKAGELIST.length; i++) {
+                getComponentVersionInfo(sb, PACKAGELIST[i]);
             }
 
             if (saxObject != null) {
@@ -154,6 +161,9 @@ public class Tools {
 
     }
 
+    /**
+     * Print out some version info for debugging.
+     */
     public static void logVersionInfo()
     {
         BufferedReader r = 
