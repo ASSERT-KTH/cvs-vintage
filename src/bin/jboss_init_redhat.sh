@@ -63,7 +63,7 @@ case "$1" in
 start)
     cd $JBOSS_HOME/bin
     if [ -z "$SUBIT" ]; then
-        eval $CMD_START >/tmp/jboss.log 2>&1 &
+        eval $CMD_START >/dev/null 2>&1 &
     else
         $SUBIT "$CMD_START >/dev/null 2>&1 &" 
     fi
