@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.155 2005/02/28 19:51:25 bobtarling Exp $
+// $Id: Project.java,v 1.156 2005/03/09 21:29:02 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -967,7 +967,7 @@ public class Project implements java.io.Serializable, TargetListener {
         if (Model.getFacade().isABase(obj)) {
             // an object that can be represented
             Collection allFigs = findAllPresentationsFor(obj, true);
-            removeAllFigs(allFigs);
+            removeFigs(allFigs);
 
             Model.getUmlFactory().delete(obj);
 
@@ -1009,7 +1009,7 @@ public class Project implements java.io.Serializable, TargetListener {
                 obj = ((Fig) obj).getOwner();
             }
             if (obj instanceof CommentEdge) {
-                removeAllFigs(findAllPresentationsFor(obj, false));
+                removeFigs(findAllPresentationsFor(obj, false));
                 ((CommentEdge) obj).delete();
             }
         }
@@ -1032,9 +1032,10 @@ public class Project implements java.io.Serializable, TargetListener {
     }
 
     /**
-     * @param c a collection of figs
+     * Remove this given Figs from their diagrams.
+     * @param c a collection of Figs
      */
-    private void removeAllFigs(Collection c) {
+    private void removeFigs(Collection c) {
         Iterator i = c.iterator();
         while (i.hasNext()) {
             Fig obj = (Fig) i.next();
