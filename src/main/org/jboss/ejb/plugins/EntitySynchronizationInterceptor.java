@@ -12,6 +12,7 @@ import java.rmi.ServerException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javax.ejb.EJBObject;
 import javax.ejb.CreateException;
@@ -48,7 +49,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.31 $
+*   @version $Revision: 1.32 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -72,6 +73,11 @@ extends AbstractInterceptor
     */
     protected Method isModified;
 
+    /**
+     *  For commit option D this is the cache of valid entities
+     */
+    protected HashSet validContexts;
+
     // Static --------------------------------------------------------
 
     // Constructors --------------------------------------------------
@@ -85,16 +91,25 @@ extends AbstractInterceptor
     public void init()
     throws Exception
     {
+
+	try{
+
+       validContexts = new HashSet();
        commitOption = container.getBeanMetaData().getContainerConfiguration().getCommitOption();
-       // Check for isModified method
-       try
-       {
+
+	   //start up the validContexts thread if commit option D
+       if(commitOption == ConfigurationMetaData.D_COMMIT_OPTION){
+	       ValidContextsRefresher vcr = new ValidContextsRefresher(validContexts);
+	       new Thread(vcr).start();
+	   }
+
+
          isModified = container.getBeanClass().getMethod("isModified", new Class[0]);
          if (!isModified.getReturnType().equals(Boolean.TYPE))
           isModified = null; // Has to have "boolean" as return type!
        } catch (Exception e)
        {
-         // Ignore
+         System.out.println(e.getMessage());
        }
     }
 
@@ -181,6 +196,13 @@ extends AbstractInterceptor
 
        // The Tx coming as part of the Method Invocation
        Transaction tx = mi.getTransaction();
+
+       //Commit Option D....
+       if(!validContexts.contains(ctx.getId())){
+		   //bean isn't in cache
+		   //so set valid to false so that we load...
+		   ctx.setValid(false);
+	   }
 
        //Logger.debug("CTX in: isValid():"+ctx.isValid()+" isInvoked():"+ctx.isInvoked());
        //Logger.debug("newTx: "+ tx);
@@ -416,7 +438,6 @@ extends AbstractInterceptor
                    // Invalidate state (there might be other points of entry)
                    ctx.setValid(false);
                  break;
-
                  // Invalidate everything AND Passivate instance
                  case ConfigurationMetaData.C_COMMIT_OPTION:
                    try {
@@ -424,6 +445,12 @@ extends AbstractInterceptor
                    } catch (Exception e) {
                     Logger.debug(e);
                    }
+                 break;
+                 case ConfigurationMetaData.D_COMMIT_OPTION:
+                 	//add to cache....
+                 	//if the cache doesn't time out valid remains true
+                 	//if the cache is emptied then valid is set to false(see invoke() )
+					validContexts.add(ctx.getId());
                  break;
               }
 
@@ -439,5 +466,35 @@ extends AbstractInterceptor
          }
        }
     }
+
+class ValidContextsRefresher implements Runnable{
+	private HashSet validContexts;
+	private long refreshRate;
+	private final int THIRTY_SECS = 30000;
+
+	public ValidContextsRefresher(HashSet validContexts,long refreshRate){
+		this.validContexts = validContexts;
+		this.refreshRate = refreshRate;
+	}
+
+	public ValidContextsRefresher(HashSet validContexts){
+		this(validContexts, THIRTY_SECS);
+
+	}
+
+	public void run(){
+		while(true){
+			validContexts.clear();
+			// debug System.out.println("Flushing the valid contexts");
+			try{
+				Thread.sleep(refreshRate);
+			}catch(Exception e){
+				System.out.println(e.getMessage());
+			}
+		}
+	}
+
+}
+
 }
 
