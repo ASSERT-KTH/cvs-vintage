@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.3 2002/01/15 21:21:22 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.4 2002/01/18 22:06:21 jmcnally Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -112,6 +112,13 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 Group rmaGroup = intake.get("RModuleAttribute", 
                                  rma.getQueryKey(), false);
                 rmaGroup.setProperties(rma);
+                String defaultTextKey = data.getParameters()
+                    .getString("default_text");
+                if ( defaultTextKey != null && 
+                     defaultTextKey.equals(rma.getQueryKey()) ) 
+                {
+                    rma.setIsDefaultText(true);
+                }
                 rma.save();
 
                 // Set properties for attribute-attribute group mapping

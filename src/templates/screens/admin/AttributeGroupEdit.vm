@@ -81,7 +81,17 @@
  <td>#booleanCheckbox ($rmaGroup.QuickSearch)</td>
  <td>
 #if ($rma.Attribute.isTextAttribute())
-    #booleanRadio ($rmaGroup.IsDefaultText)
+    #set ($defaultText = $data.Parameters.getString("default_text",""))
+    #if ($defaultText.length() > 0)
+        #if($defaultText == $rma.Attribute.QueryKey)
+            #set ($checked = true)
+        #end
+    #elseif ($rma.IsDefaultText)
+        #set ($checked = true)
+    #end        
+    <input type="radio"  #if($checked)checked="checked"#end
+        name="default_text" value="$rma.Attribute.QueryKey"/>
+    #set ($checked = false)    
 #else
     N/A
 #end
