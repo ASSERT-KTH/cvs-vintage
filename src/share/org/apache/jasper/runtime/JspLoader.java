@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.3 1999/12/21 12:34:31 rubys Exp $
- * $Revision: 1.3 $
- * $Date: 1999/12/21 12:34:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.4 2000/01/24 05:54:52 shemnon Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/24 05:54:52 $
  *
  * ====================================================================
  * 
@@ -79,6 +79,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
+import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.JspEngineContext;
 import org.apache.jasper.Options;
 import org.apache.jasper.compiler.Compiler;
@@ -165,7 +166,7 @@ public class JspLoader extends ClassLoader {
                 return defClass(className, classBytes);
 	    } else {
                 String fileName = null;
-                String outputDir = options.scratchDir().toString();
+                String outputDir = options.getScratchDir().toString();
             
                 if (className.indexOf('$', end) != -1) {
                     // this means we're loading an inner class
@@ -214,7 +215,7 @@ public class JspLoader extends ClassLoader {
 	Class jspClass = (Class) loadedJSPs.get(name);
 	boolean firstTime = jspClass == null;
 
-        JspEngineContext ctxt = new JspEngineContext(this, classpath,
+        JspCompilationContext ctxt = new JspEngineContext(this, classpath,
                                                      context, name, 
                                                      isErrorPage, options,
                                                      req, res);

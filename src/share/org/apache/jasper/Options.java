@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.7 2000/01/21 04:17:21 rubys Exp $
- * $Revision: 1.7 $
- * $Date: 2000/01/21 04:17:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.8 2000/01/24 05:54:50 shemnon Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/01/24 05:54:50 $
  *
  * ====================================================================
  * 
@@ -72,228 +72,54 @@ import javax.servlet.ServletContext;
  * @author Anil K. Vijendran
  * @author Hans Bergsten
  */
-public final class Options {
-    /**
-     * Do you want to keep the generated Java files around?
-     */
-    public boolean keepGenerated = true;
-
-    /**
-     * Do you want support for "large" files? What this essentially
-     * means is that we generated code so that the HTML data in a JSP
-     * file is stored separately as opposed to those constant string
-     * data being used literally in the generated servlet. 
-     */
-    public boolean largeFile = false;
-
-    /**
-     * Do you want stack traces and such displayed in the client's
-     * browser? If this is false, such messages go to the standard
-     * error or a log file if the standard error is redirected. 
-     */
-    public boolean sendErrorToClient = false;
-
-    /**
-     * Current verbosity level. FIXME: This stuff is duplicated: see
-     * Constants.jspVerbosityLevel. 
-     */
-    public int jspVerbosityLevel = Constants.MED_VERBOSITY;
-
-    /**
-     * I want to see my generated servlets. Which directory are they
-     * in?
-     */
-    public File scratchDir;
-    
-    /**
-     * Need to have this as is for versions 4 and 5 of IE. Can be set from
-     * the initParams so if it changes in the future all that is needed is
-     * to have a jsp initParam of type ieClassId="<value>"
-     */
-    public String ieClassId = "clsid:8AD9C840-044E-11D1-B3E9-00805F499D93";
-
-    /**
-     * What classpath should I use while compiling generated servlets?
-     */
-    public String classpath = null;
-    
-    /**
-     * Plugin class to use to compile JSP pages.
-     */
-    public Class jspCompilerPlugin = null;
-    
-    /**
-     * Path of the compiler to use for compiling JSP pages.
-     */
-    public String jspCompilerPath = null;
-
+public interface Options {
 
     /**
      * Are we keeping generated code around?
      */
-    public boolean keepGenerated() {
-        return keepGenerated;
-    }
+    public boolean getKeepGenerated();
     
     /**
      * Are we supporting large files?
      */
-    public boolean largeFile() {
-        return largeFile;
-    }
+    public boolean getLargeFile();
     
     /**
      * Should errors be sent to client or thrown into stderr?
      */
-    public boolean sendErrorToClient() {
-        return sendErrorToClient;
-    }
+    public boolean getSendErrorToClient();
  
     /**
      * Class ID for use in the plugin tag when the browser is IE. 
      */
-    public String ieClassId() {
-        return ieClassId;
-    }
+    public String getIeClassId();
     
     /**
      * What is the current verbosity level?
      */
-    public int jspVerbosityLevel() {
-        return jspVerbosityLevel;
-    }
+    public int getJspVerbosityLevel();
 
     /**
      * What is my scratch dir?
      */
-    public File scratchDir() {
-        return scratchDir;
-    }
+    public File getScratchDir();
 
     /**
      * What classpath should I use while compiling the servlets
      * generated from JSP files?
      */
-    public String getClassPath() {
-        return classpath;
-    }
+    public String getClassPath();
 
     /**
      * What compiler plugin should I use to compile the servlets
      * generated from JSP files?
      */
-    public Class getJspCompilerPlugin() {
-        return jspCompilerPlugin;
-    }
+    public Class getJspCompilerPlugin();
 
     /**
      * Path of the compiler to use for compiling JSP pages.
      */
-    public String getJspCompilerPath() {
-	return jspCompilerPath;
-    }
+    public String getJspCompilerPath();
 
-    /**
-     * Create an Options object using data available from
-     * ServletConfig and ServletContext. 
-     */
-    public Options(ServletConfig config, ServletContext context) {
-        String keepgen = config.getInitParameter("keepgenerated");
-        if (keepgen != null) {
-            if (keepgen.equalsIgnoreCase("true"))
-                this.keepGenerated = true;
-            else if (keepgen.equalsIgnoreCase("false"))
-                this.keepGenerated = false;
-            else Constants.message ("jsp.warning.keepgen", Constants.FATAL_ERRORS);
-        }
-            
-
-        String largeFile = config.getInitParameter("largefile"); 
-        if (largeFile != null) {
-            if (largeFile.equalsIgnoreCase("true"))
-                this.largeFile = true;
-            else if (largeFile.equalsIgnoreCase("false"))
-                this.largeFile = false;
-            else Constants.message ("jsp.warning.largeFile", Constants.FATAL_ERRORS);
-        }
-
-        String senderr = config.getInitParameter("sendErrToClient");
-        if (senderr != null) {
-            if (senderr.equalsIgnoreCase("true"))
-                this.sendErrorToClient = true;
-            else if (senderr.equalsIgnoreCase("false"))
-                this.sendErrorToClient = false;
-            else Constants.message ("jsp.warning.sendErrToClient", Constants.FATAL_ERRORS);
-        }
-
-        String ieClassId = config.getInitParameter("ieClassId");
-        if (ieClassId != null)
-            this.ieClassId = ieClassId;
-
-        String classpath = config.getInitParameter("classpath");
-        if (classpath != null)
-            this.classpath = classpath;
-
-        String verbosityLevel = config.getInitParameter("jspVerbosityLevel");
-            
-        if (verbosityLevel != null)
-            try {
-                int vl = Integer.parseInt(verbosityLevel);
-                jspVerbosityLevel = vl;
-                Constants.jspVerbosityLevel = jspVerbosityLevel;
-            } catch (NumberFormatException nex) {
-            }
-
-        String dir = config.getInitParameter("scratchdir"); 
-
-        if (dir != null)
-            scratchDir = new File(dir);
-        else {
-            // First we try the Servlet 2.2 javax.servlet.context.tempdir property
-            scratchDir = (File) context.getAttribute(Constants.TMP_DIR);
-            if (scratchDir == null) {
-                // Not running in a Servlet 2.2 container.
-                // Try to get the JDK 1.2 java.io.tmpdir property
-                dir = System.getProperty("java.io.tmpdir");
-		if (dir != null)
-                    scratchDir = new File(dir);
-            }
-        }
-                
-        if (this.scratchDir == null) {
-            Constants.message("jsp.error.no.scratch.dir", Constants.FATAL_ERRORS);
-            return;
-        }
-            
-        if (!(scratchDir.exists() && scratchDir.canRead() &&
-              scratchDir.canWrite() && scratchDir.isDirectory()))
-            Constants.message("jsp.error.bad.scratch.dir",
-                              new Object[] {
-                                  scratchDir.getAbsolutePath()
-                              }, Constants.FATAL_ERRORS);
-				  
-	String jspCompilerPath = config.getInitParameter("jspCompilerPath");
-	if (jspCompilerPath != null) {
-	    if (new File(jspCompilerPath).exists()) {
-		this.jspCompilerPath = jspCompilerPath;
-	    } else { 
-		Constants.message("jsp.warning.compiler.path.notfound",
-				  new Object[] { jspCompilerPath }, 
-				  Constants.FATAL_ERRORS);
-	    }
-	}
-  
-	String jspCompilerPlugin = config.getInitParameter("jspCompilerPlugin");
-	if (jspCompilerPlugin != null) {
-            try {
-                this.jspCompilerPlugin = Class.forName(jspCompilerPlugin);
-            } catch (ClassNotFoundException cnfe) {
-		Constants.message("jsp.warning.compiler.class.notfound",
-				  new Object[] { jspCompilerPlugin }, 
-				  Constants.FATAL_ERRORS);
-	    }
-	}
-  
-    }
 }
 

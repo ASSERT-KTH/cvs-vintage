@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Generator.java,v 1.2 1999/10/20 11:22:53 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:22:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Generator.java,v 1.3 2000/01/24 05:54:50 shemnon Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/24 05:54:50 $
  *
  * ====================================================================
  * 
@@ -61,7 +61,7 @@
 package org.apache.jasper.compiler;
 
 import org.apache.jasper.JasperException;
-import org.apache.jasper.JspEngineContext;
+import org.apache.jasper.JspCompilationContext;
 
 /**
  * Interface that all generators implement. 
@@ -71,5 +71,5 @@ import org.apache.jasper.JspEngineContext;
 public interface Generator {
     void generate (ServletWriter out, Class phase) throws JasperException;
     boolean generateCoordinates(Class phase);
-    void init(JspEngineContext ctxt) throws JasperException;
+    void init(JspCompilationContext ctxt) throws JasperException;
 }

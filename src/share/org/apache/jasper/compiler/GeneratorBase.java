@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/GeneratorBase.java,v 1.2 1999/10/20 11:22:53 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:22:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/GeneratorBase.java,v 1.3 2000/01/24 05:54:51 shemnon Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/24 05:54:51 $
  *
  * ====================================================================
  * 
@@ -61,7 +61,7 @@
 
 package org.apache.jasper.compiler;
 
-import org.apache.jasper.JspEngineContext;
+import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.JasperException;
 
 /**
@@ -70,9 +70,9 @@ import org.apache.jasper.JasperException;
  * @author Anil K. Vijendran
  */
 abstract class GeneratorBase implements Generator {
-    protected JspEngineContext ctxt;
+    protected JspCompilationContext ctxt;
 
-    public void init(JspEngineContext ctxt) throws JasperException {
+    public void init(JspCompilationContext ctxt) throws JasperException {
         this.ctxt = ctxt;
     }
     

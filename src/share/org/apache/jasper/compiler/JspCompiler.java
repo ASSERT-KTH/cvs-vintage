@@ -58,9 +58,7 @@ package org.apache.jasper.compiler;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import javax.servlet.ServletContext;
-
-import org.apache.jasper.JspEngineContext;
+import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
 
@@ -81,7 +79,7 @@ public class JspCompiler extends Compiler implements Mangler {
     boolean outDated;
 
 
-    public JspCompiler(JspEngineContext ctxt) throws JasperException {
+    public JspCompiler(JspCompilationContext ctxt) throws JasperException {
         super(ctxt);
         
         this.jsp = new File(ctxt.getJspFile());
@@ -254,14 +252,14 @@ public class JspCompiler extends Compiler implements Mangler {
     private final void computeClassFileData()
 	throws JasperException
     {
-        ServletContext ctx = ctxt.getServletContext();
-        
 	File jspReal = null;
 
-        if (ctx != null) 
-            jspReal = new File(ctx.getRealPath(jsp.getPath()));
-        else
+        String initPath = jsp.getPath();
+        String convPath = ctxt.getRealPath(initPath);
+        if (convPath.equals(initPath))
             jspReal = jsp;
+        else
+            jspReal = new File(ctxt.getRealPath(jsp.getPath()));
 
         File classFile = new File(classFileName);
         

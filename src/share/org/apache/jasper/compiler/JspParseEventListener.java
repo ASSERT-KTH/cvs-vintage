@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.5 1999/12/21 16:32:31 rubys Exp $
- * $Revision: 1.5 $
- * $Date: 1999/12/21 16:32:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.6 2000/01/24 05:54:51 shemnon Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/01/24 05:54:51 $
  *
  * ====================================================================
  * 
@@ -73,14 +73,12 @@ import java.io.FileOutputStream;
 import java.net.URL;
 import java.net.MalformedURLException;
 
-import javax.servlet.ServletContext;
-
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 
 import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
-import org.apache.jasper.JspEngineContext;
+import org.apache.jasper.JspCompilationContext;
 
 /**
  * JSP code generator "backend". 
@@ -89,7 +87,7 @@ import org.apache.jasper.JspEngineContext;
  */
 public class JspParseEventListener extends BaseJspListener {
 
-    JspEngineContext ctxt;
+    JspCompilationContext ctxt;
     
     String jspServletBase = Constants.JSP_SERVLET_BASE;
     String serviceMethodName = Constants.SERVICE_METHOD_NAME;
@@ -135,14 +133,14 @@ public class JspParseEventListener extends BaseJspListener {
      * Package private since I want everyone to come in through 
      * org.apache.jasper.compiler.Main.
      */ 
-    JspParseEventListener(JspEngineContext ctxt) {
+    JspParseEventListener(JspCompilationContext ctxt) {
 	super(ctxt.getReader(), ctxt.getWriter());
         this.ctxt = ctxt;
 	this.beanInfo = new BeanRepository(ctxt.getClassLoader());
         this.libraries = new TagLibraries(ctxt.getClassLoader());
         
         // FIXME: Is this good enough? (I'm just taking the easy way out - akv)
-        if (ctxt.getOptions().largeFile())
+        if (ctxt.getOptions().getLargeFile())
             dataFile = ctxt.getOutputDir() + File.separatorChar + 
                 ctxt.getServletPackageName() + "_" + 
                 ctxt.getServletClassName() + ".dat";
@@ -159,7 +157,7 @@ public class JspParseEventListener extends BaseJspListener {
 	generateAll(ServiceMethodPhase.class);
 	writer.println();
 	generateFooter();
-        if (ctxt.getOptions().largeFile())
+        if (ctxt.getOptions().getLargeFile())
             try {
                 ObjectOutputStream o 
                     = new ObjectOutputStream(new FileOutputStream(dataFile));
@@ -695,7 +693,7 @@ public class JspParseEventListener extends BaseJspListener {
             return generator.generateCoordinates(phase);
         }
 
-        public void init(JspEngineContext ctxt) 
+        public void init(JspCompilationContext ctxt) 
             throws JasperException 
         {
             generator.init(ctxt);
@@ -833,7 +831,7 @@ public class JspParseEventListener extends BaseJspListener {
     
     public void handleCharData(char[] chars) throws JasperException {
         GeneratorBase cdg;
-        if (ctxt.getOptions().largeFile())
+        if (ctxt.getOptions().getLargeFile())
             cdg = new StoredCharDataGenerator(vector, dataFile, stringId++, chars);
         else
             cdg = new CharDataGenerator(chars);

@@ -68,10 +68,8 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Stack;
 
-import javax.servlet.ServletContext;
-
-
 import org.apache.jasper.Constants;
+import org.apache.jasper.JspCompilationContext;
 
 /**
  * JspReader is an input buffer for the JSP parser. It should allow
@@ -90,8 +88,8 @@ public class JspReader {
     Vector sourceFiles = new Vector();
     int size = 0;
     
-    private ServletContext context;
-
+    private JspCompilationContext context;
+    
     public String getFile(int fileid) {
 	return (String) sourceFiles.elementAt(fileid);
     }
@@ -210,14 +208,14 @@ public class JspReader {
 	return current.popStream();
     }
 	
-    protected JspReader(String file, ServletContext ctx, String encoding) 
+    protected JspReader(String file, JspCompilationContext ctx, String encoding) 
 	throws ParseException, FileNotFoundException
     {
         this.context = ctx;
 	pushFile(file, encoding);
     }
 
-    public static JspReader createJspReader(String file, ServletContext ctx, String encoding) 
+    public static JspReader createJspReader(String file, JspCompilationContext ctx, String encoding) 
 	throws ParseException, FileNotFoundException
     {
 	return new JspReader(file, ctx, encoding);

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.2 1999/10/20 11:22:54 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:22:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.3 2000/01/24 05:54:51 shemnon Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/24 05:54:51 $
  *
  * ====================================================================
  * 
@@ -66,7 +66,7 @@ import java.util.Enumeration;
 
 import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
-import org.apache.jasper.JspEngineContext;
+import org.apache.jasper.JspCompilationContext;
 
 /**
  * Generator for <jsp:plugin>
@@ -90,8 +90,8 @@ public class PluginGenerator
 	this.fallback = fallback;
     }
 
-    public void init(JspEngineContext ctxt) throws JasperException {
-        ieClassId = ctxt.getOptions().ieClassId();
+    public void init(JspCompilationContext ctxt) throws JasperException {
+        ieClassId = ctxt.getOptions().getIeClassId();
     }
     
     public void generate(ServletWriter writer, Class phase) 

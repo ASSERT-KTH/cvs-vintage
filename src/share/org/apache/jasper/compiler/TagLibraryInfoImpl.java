@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.9 1999/11/24 01:11:00 mandar Exp $
- * $Revision: 1.9 $
- * $Date: 1999/11/24 01:11:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.10 2000/01/24 05:54:51 shemnon Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/01/24 05:54:51 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -78,14 +78,13 @@ import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagExtraInfo;
-import javax.servlet.http.HttpServletRequest;
 
 import org.w3c.dom.*;
 import org.xml.sax.*;
 import com.sun.xml.tree.*;
 import com.sun.xml.parser.*;
 
-import org.apache.jasper.JspEngineContext;
+import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
 import org.apache.jasper.runtime.JspLoader;
@@ -105,7 +104,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
     Hashtable jarEntries;
     Hashtable tagCaches = new Hashtable();
     
-    JspEngineContext ctxt;
+    JspCompilationContext ctxt;
 
     
 
@@ -132,7 +131,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
         return sw.toString();
     }
     
-    TagLibraryInfoImpl(JspEngineContext ctxt, String prefix, String uriIn) 
+    TagLibraryInfoImpl(JspCompilationContext ctxt, String prefix, String uriIn) 
         throws IOException, JasperException
     {
 	// XXX. should super be initialized with "dummy" uri?
@@ -147,7 +146,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 
 	if (!uriIn.endsWith("jar")) {
 	    // Parse web.xml.
-	    InputStream is = ctxt.getServletContext().getResourceAsStream(WEBAPP_INF);
+	    InputStream is = ctxt.getResourceAsStream(WEBAPP_INF);
 	    
 	    if (is != null) {
 	    
@@ -195,14 +194,11 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 
 	    // "uri" should point to the correct tld location.
 	    if (!uri.startsWith("/")) {
-		HttpServletRequest request = ctxt.getRequest();
-		String actURI =  request.getServletPath();
-		String baseURI = actURI.substring(0, actURI.lastIndexOf('/'));
-		uri = baseURI + '/' + uri;
+		uri = ctxt.resolveRelativeUri(uri);
 	    }
 	    //else {
 	    //relativeURL = true;
-	    in = ctxt.getServletContext().getResourceAsStream(uri);
+	    in = ctxt.getResourceAsStream(uri);
 	    //}
 	    
 	    if (in == null)
@@ -220,7 +216,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 		in = url.openStream();
 	    } else {
 		relativeURL = true;
-		in = ctxt.getServletContext().getResourceAsStream(uriIn);
+		in = ctxt.getResourceAsStream(uriIn);
 	    }
 	    
 	    zin = new ZipInputStream(in);
@@ -246,7 +242,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 				  Constants.MED_VERBOSITY);
 	    
 		if (relativeURL)
-		    copy(ctxt.getServletContext().getResourceAsStream(uri),
+		    copy(ctxt.getResourceAsStream(uri),
 			 jarFileName);
 		else
 		    copy(url.openStream(), jarFileName);

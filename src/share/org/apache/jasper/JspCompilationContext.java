@@ -1,6 +1,6 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.5 2000/01/24 05:54:50 shemnon Exp $
- * $Revision: 1.5 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspCompilationContext.java,v 1.1 2000/01/24 05:54:50 shemnon Exp $
+ * $Revision: 1.1 $
  * $Date: 2000/01/24 05:54:50 $
  *
  * ====================================================================
@@ -65,10 +65,6 @@
 
 package org.apache.jasper;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.jasper.compiler.JspReader;
 import org.apache.jasper.compiler.ServletWriter;
 import org.apache.jasper.runtime.JspLoader;
@@ -77,7 +73,7 @@ import org.apache.jasper.compiler.TagLibraries;
 import org.apache.jasper.compiler.Compiler;
 import org.apache.jasper.compiler.JspCompiler;
 import org.apache.jasper.compiler.SunJavaCompiler;
-import org.apache.jasper.compiler.JavaCompiler;
+import org.apache.jasper.compiler.PluginJavaCompiler;
 
 /**
  * A place holder for various things that are used through out the JSP
@@ -90,245 +86,113 @@ import org.apache.jasper.compiler.JavaCompiler;
  * @author Anil K. Vijendran
  * @author Harish Prabandham
  */
-public class JspEngineContext implements JspCompilationContext {
-    JspReader reader;
-    ServletWriter writer;
-    ServletContext context;
-    JspLoader loader;
-    String classpath; // for compiling JSPs.
-    boolean isErrPage;
-    String jspFile;
-    String servletClassName;
-    String servletPackageName;
-    String servletJavaFileName;
-    String contentType;
-    Options options;
-    HttpServletRequest req;
-    HttpServletResponse res;
-    
-
-    public JspEngineContext(JspLoader loader, String classpath, 
-                            ServletContext context, String jspFile, 
-                            boolean isErrPage, Options options, 
-                            HttpServletRequest req, HttpServletResponse res) 
-    {
-        this.loader = loader;
-        this.classpath = classpath;
-        this.context = context;
-        this.jspFile = jspFile;
-        this.isErrPage = isErrPage;
-        this.options = options;
-        this.req = req;
-        this.res = res;
-    }
-
-    /**
-     * Get the http request we are servicing now...
-     */
-    public HttpServletRequest getRequest() {
-        return req;
-    }
-    
-
-    /**
-     * Get the http response we are using now...
-     */
-    public HttpServletResponse getResponse() {
-        return res;
-    }
+public interface JspCompilationContext {
 
     /**
      * The classpath that is passed off to the Java compiler. 
      */
-    public String getClassPath() {
-        return loader.getClassPath() + classpath;
-    }
+    public String getClassPath();
     
     /**
      * Get the input reader for the JSP text. 
      */
-    public JspReader getReader() { 
-        return reader;
-    }
+    public JspReader getReader();
     
     /**
      * Where is the servlet being generated?
      */
-    public ServletWriter getWriter() {
-        return writer;
-    }
-    
-    /**
-     * Get the ServletContext for the JSP we're processing now. 
-     */
-    public ServletContext getServletContext() {
-        return context;
-    }
+    public ServletWriter getWriter();
     
     /**
      * What class loader to use for loading classes while compiling
      * this JSP? I don't think this is used right now -- akv. 
      */
-    public JspLoader getClassLoader() {
-        return loader;
-    }
+    public JspLoader getClassLoader();
     
     /**
      * Are we processing something that has been declared as an
      * errorpage? 
      */
-    public boolean isErrorPage() {
-        return isErrPage;
-    }
+    public boolean isErrorPage();
     
     /**
      * What is the scratch directory we are generating code into?
      * FIXME: In some places this is called scratchDir and in some
      * other places it is called outputDir.
      */
-    public String getOutputDir() {
-        return options.getScratchDir().toString();
-    }
+    public String getOutputDir();
     
     /**
      * Path of the JSP URI. Note that this is not a file name. This is
      * the context rooted URI of the JSP file. 
      */
-    public String getJspFile() {
-        return jspFile;
-    }
+    public String getJspFile();
     
     /**
      * Just the class name (does not include package name) of the
      * generated class. 
      */
-    public String getServletClassName() {
-        return servletClassName;
-    }
+    public String getServletClassName();
     
     /**
      * The package name into which the servlet class is generated. 
      */
-    public String getServletPackageName() {
-        return servletPackageName;
-    }
+    public String getServletPackageName();
 
     /**
      * Utility method to get the full class name from the package and
      * class name. 
      */
-    public final String getFullClassName() {
-        if (servletPackageName == null)
-            return servletClassName;
-        return servletPackageName + "." + servletClassName;
-    }
+    public String getFullClassName();
 
     /**
      * Full path name of the Java file into which the servlet is being
      * generated. 
      */
-    public String getServletJavaFileName() {
-        return servletJavaFileName;
-    }
+    public String getServletJavaFileName();
 
     /**
      * Are we keeping generated code around?
      */
-    public boolean keepGenerated() {
-        return options.getKeepGenerated();
-    }
+    public boolean keepGenerated();
 
     /**
      * What's the content type of this JSP? Content type includes
      * content type and encoding. 
      */
-    public String getContentType() {
-        return contentType;
-    }
+    public String getContentType();
 
     /**
      * Get hold of the Options object for this context. 
      */
-    public Options getOptions() {
-        return options;
-    }
+    public Options getOptions();
 
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
+    public void setContentType(String contentType);
 
-    public void setReader(JspReader reader) {
-        this.reader = reader;
-    }
+    public void setReader(JspReader reader);
     
-    public void setWriter(ServletWriter writer) {
-        this.writer = writer;
-    }
+    public void setWriter(ServletWriter writer);
     
-    public void setServletClassName(String servletClassName) {
-        this.servletClassName = servletClassName;
-    }
+    public void setServletClassName(String servletClassName);
     
-    public void setServletPackageName(String servletPackageName) {
-        this.servletPackageName = servletPackageName;
-    }
+    public void setServletPackageName(String servletPackageName);
     
-    public void setServletJavaFileName(String servletJavaFileName) {
-        this.servletJavaFileName = servletJavaFileName;
-    }
+    public void setServletJavaFileName(String servletJavaFileName);
     
-    public void setErrorPage(boolean isErrPage) {
-        this.isErrPage = isErrPage;
-    }
+    public void setErrorPage(boolean isErrPage);
 
     /**
-     * Create a "Compiler" object based on some init param data. If	
-     * jspCompilerPlugin is not specified or is not available, the 
-     * SunJavaCompiler is used.
+     * Create a "Compiler" object based on some init param data. This
+     * is not done yet. Right now we're just hardcoding the actual
+     * compilers that are created. 
      */
-    public Compiler createCompiler() throws JasperException {
-	String compilerPath = options.getJspCompilerPath();
-	Class jspCompilerPlugin = options.getJspCompilerPlugin();
-        JavaCompiler javac;
+    public Compiler createCompiler() throws JasperException;
 
-	if (jspCompilerPlugin != null) {
-            try {
-                javac = (JavaCompiler) jspCompilerPlugin.newInstance();
-            } catch (Exception ex) {
-		Constants.message("jsp.warning.compiler.class.cantcreate",
-				  new Object[] { jspCompilerPlugin, ex }, 
-				  Constants.FATAL_ERRORS);
-                javac = new SunJavaCompiler();
-	    }
-	} else {
-            javac = new SunJavaCompiler();
-	}
 
-        if (compilerPath != null)
-            javac.setCompilerPath(compilerPath);
-
-        Compiler jspCompiler = new JspCompiler(this);
-	jspCompiler.setJavaCompiler(javac);
-         
-        return jspCompiler;
-    }
-    
     /** 
      * Get the full value of a URI relative to this compilations context
      */
-    public String resolveRelativeUri(String uri)
-    {
-        if (uri.charAt(0) == '/')
-        {
-            return uri;
-        }
-        else
-        {
-            String actURI =  req.getServletPath();
-            String baseURI = actURI.substring(0, actURI.lastIndexOf('/'));
-            return baseURI + '/' + uri;
-       };
-    };    
+    public String resolveRelativeUri(String uri);
 
     /**
      * Gets a resource as a stream, relative to the meanings of this
@@ -336,26 +200,13 @@ public class JspEngineContext implements JspCompilationContext {
      *@returns a null if the resource cannot be found or represented 
      *         as an InputStream.
      */
-    public java.io.InputStream getResourceAsStream(String res)
-    {
-        return context.getResourceAsStream(res);
-    };
+    public java.io.InputStream getResourceAsStream(String res);
 
     /** 
      * Gets the actual path of a URI relative to the context of
      * the compilation.
      */
-    public String getRealPath(String path)
-    {
-        if (context != null)
-        {
-            return context.getRealPath(path);
-        }
-        else
-        {
-            return path;
-        };
-    };
+    public String getRealPath(String path);
 
-   
 }
+

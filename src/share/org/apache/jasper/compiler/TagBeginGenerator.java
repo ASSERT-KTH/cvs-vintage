@@ -68,7 +68,7 @@ import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.BodyTag;
 
 import org.apache.jasper.JasperException;
-import org.apache.jasper.JspEngineContext;
+import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.Constants;
 
 import org.apache.jasper.compiler.ServletWriter;
@@ -107,7 +107,7 @@ public class TagBeginGenerator
 	this.thVarName = "_jspx_th_"+baseVarName;
     }
 
-    public void init(JspEngineContext ctxt) throws JasperException {
+    public void init(JspCompilationContext ctxt) throws JasperException {
         validate();
         tc = tli.getTagCache(shortTagName);
         if (tc == null) {

@@ -76,6 +76,7 @@ import java.io.FileNotFoundException;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
 import org.apache.jasper.Options;
+import org.apache.jasper.EmbededServletOptions;
 
 
 /**
@@ -202,7 +203,7 @@ public class JspServlet extends HttpServlet {
         if (engine == null)
             Constants.message("jsp.error.bad-servlet-engine", Constants.FATAL_ERRORS);
         else {
-            options = new Options(config, context);
+            options = new EmbededServletOptions(config, context);
 
             parentClassLoader = (ClassLoader) context.getAttribute(Constants.SERVLET_CLASS_LOADER);
             if (parentClassLoader == null)
@@ -229,7 +230,7 @@ public class JspServlet extends HttpServlet {
                 firstTime = false;
                 Constants.message("jsp.message.scratch.dir.is", 
                                   new Object[] { 
-                                      options.scratchDir().toString() 
+                                      options.getScratchDir().toString() 
                                   }, Constants.LOW_VERBOSITY );
                 Constants.message("jsp.message.dont.modify.servlets", Constants.LOW_VERBOSITY);
             }
@@ -260,7 +261,7 @@ public class JspServlet extends HttpServlet {
     						Throwable t) 
     {
     	PrintWriter writer = new PrintWriter(System.err, true);
-	if (options.sendErrorToClient()) {
+	if (options.getSendErrorToClient()) {
 	    try {
 	        response.setContentType ("text/html");
 	    	writer = response.getWriter ();
@@ -270,7 +271,7 @@ public class JspServlet extends HttpServlet {
 	}
         writer.println(Constants.getString("jsp.error.unknownException"));
 
-        if (options.sendErrorToClient()) {
+        if (options.getSendErrorToClient()) {
             writer.println("<pre>");
         }
 
@@ -281,11 +282,11 @@ public class JspServlet extends HttpServlet {
 	    t.printStackTrace (writer);
 	}
 
-        if (options.sendErrorToClient()) {
+        if (options.getSendErrorToClient()) {
             writer.println("</pre>");
         }
         
-	if (!options.sendErrorToClient()) {
+	if (!options.getSendErrorToClient()) {
             try {
 	        String message = t.getMessage ();
 		if (message == null)
