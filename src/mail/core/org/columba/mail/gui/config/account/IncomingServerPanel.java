@@ -144,11 +144,11 @@ public class IncomingServerPanel
 			}
 
 			secureCheckBox.setSelected(
-				serverItem.getBoolean("enable_ssl", true));
+				serverItem.getBoolean("enable_ssl", false));
 
 			defaultAccountCheckBox.setEnabled(
 				MailConfig.getAccountList().getDefaultAccountUid()
-					== accountItem.getInteger("uid"));
+					!= accountItem.getInteger("uid"));
 
 			if (defaultAccountCheckBox.isEnabled()
 				&& defaultAccountCheckBox.isSelected()) {
@@ -620,7 +620,7 @@ public class IncomingServerPanel
 	}
 
 	public boolean isFinished() {
-		boolean result = false;
+		
 
 		String host = getHost();
 		String login = getLogin();
@@ -633,6 +633,7 @@ public class IncomingServerPanel
 					"account",
 					"You_have_to_enter_a_host_name"));
 			//$NON-NLS-1$
+			return false;
 		} else if (login.length() == 0) {
 			JOptionPane.showMessageDialog(
 				null,
@@ -641,13 +642,11 @@ public class IncomingServerPanel
 					"account",
 					"You_have_to_enter_a_login_name"));
 			//$NON-NLS-1$
+			
+			return false;
+		} 
 
-		} else {
-
-			result = true;
-		}
-
-		return result;
+		return true;
 	}
 
 }

@@ -162,7 +162,7 @@ public class IMAPStore {
 			new IMAPProtocol(
 				item.get("host"),
 				item.getInteger("port"),
-				item.getBoolean("enable_ssl", true));
+				item.getBoolean("enable_ssl", false));
 
 		// register interest on status updates
 		imap.registerInterest((ProgressObserver) root.getObservable());

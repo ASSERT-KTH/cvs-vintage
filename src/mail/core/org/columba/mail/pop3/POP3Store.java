@@ -80,7 +80,7 @@ public class POP3Store {
 				popItem.get("password"),
 				popItem.get("host"),
 				popItem.getInteger("port"),
-				popItem.getBoolean("enable_ssl", true));
+				popItem.getBoolean("enable_ssl", false));
 
 		// add status information observable
 		observable = new StatusObservableImpl();

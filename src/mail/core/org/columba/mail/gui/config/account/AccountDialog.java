@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 
@@ -54,6 +56,8 @@ public class AccountDialog implements ActionListener {
 
 	private JPanel selected = null;
 
+	private JTabbedPane tp;
+
 	public AccountDialog(AccountItem item) {
 		dialog = DialogStore.getDialog();
 		dialog.setTitle(
@@ -94,7 +98,7 @@ public class AccountDialog implements ActionListener {
 		mainPanel.setLayout(new BorderLayout());
 		//mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-		JTabbedPane tp = new JTabbedPane();
+		tp = new JTabbedPane();
 		tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		tp.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
 
@@ -148,7 +152,7 @@ public class AccountDialog implements ActionListener {
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
 
-		bottom.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		bottom.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		ButtonWithMnemonic cancelButton =
 			new ButtonWithMnemonic(
@@ -183,11 +187,44 @@ public class AccountDialog implements ActionListener {
 		return bottom;
 	}
 
+	/**
+	 * Check if user entered valid data in all panels
+	 * <p>
+	 * Note, that we also select the panel.
+	 * 
+	 * @return true, if data is valid. false, otherwise
+	 */
+	protected boolean isFinished() {
+		boolean result = identityPanel.isFinished();
+		if (result == false) {
+			tp.setSelectedComponent(identityPanel);
+			return false;
+		}
+
+		result = incomingServerPanel.isFinished();
+		if (result == false) {
+			tp.setSelectedComponent(incomingServerPanel);
+			return false;
+		}
+
+		result = outgoingServerPanel.isFinished();
+		if (result == false) {
+			tp.setSelectedComponent(outgoingServerPanel);
+			return false;
+		}
+
+		return true;
+	}
+
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
 		if (action.equals("OK")) //$NON-NLS-1$
 			{
+			// check if the user entered valid data
+			boolean isFinished = isFinished();
+			if (isFinished == false)
+				return;
 
 			identityPanel.updateComponents(false);
 			incomingServerPanel.updateComponents(false);

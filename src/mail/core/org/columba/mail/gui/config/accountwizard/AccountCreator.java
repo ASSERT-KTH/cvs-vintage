@@ -71,6 +71,8 @@ class AccountCreator implements WizardModelListener {
             }
         }
         account.getSmtpItem().set("host", (String)data.getData("OutgoingServer.host"));
+        // generally we can just use the same login for both servers
+        account.getSmtpItem().set("user", (String)data.getData("IncomingServer.login"));
     }
     
     public void stepShown(WizardModelEvent e) {}

@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.config.account;
@@ -46,11 +48,10 @@ import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * @author frd
- *
+ * 
  * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Window>Preferences>Java>Templates. To enable and disable the creation of
+ * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class ReceiveOptionsPanel
 	extends DefaultPanel
@@ -104,24 +105,23 @@ public class ReceiveOptionsPanel
 		setLayout(mainLayout);
 
 		/*
-		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
-		mainConstraints.anchor = GridBagConstraints.NORTHWEST;
-		mainConstraints.weightx = 1.0;
-		mainConstraints.insets = new Insets(0, 10, 5, 0);
-		mainLayout.setConstraints(defaultAccountCheckBox, mainConstraints);
-		add(defaultAccountCheckBox);
-		*/
+		 * mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		 * mainConstraints.anchor = GridBagConstraints.NORTHWEST;
+		 * mainConstraints.weightx = 1.0; mainConstraints.insets = new
+		 * Insets(0, 10, 5, 0);
+		 * mainLayout.setConstraints(defaultAccountCheckBox, mainConstraints);
+		 * add(defaultAccountCheckBox);
+		 */
 
 		mainConstraints = new GridBagConstraints();
 		mainConstraints.weighty = 1.0;
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		/*
-		mainConstraints.fill = GridBagConstraints.BOTH;
-		mainConstraints.insets = new Insets(0, 0, 0, 0);
-		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
-		mainConstraints.weightx = 1.0;
-		mainConstraints.weighty = 1.0;
-		*/
+		 * mainConstraints.fill = GridBagConstraints.BOTH;
+		 * mainConstraints.insets = new Insets(0, 0, 0, 0);
+		 * mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		 * mainConstraints.weightx = 1.0; mainConstraints.weighty = 1.0;
+		 */
 
 		JLabel label =
 			new JLabel(
@@ -138,9 +138,10 @@ public class ReceiveOptionsPanel
 
 	protected void layoutComponents() {
 
-		//		Create a FormLayout instance. 
+		//		Create a FormLayout instance.
 		FormLayout layout =
-			new FormLayout("10dlu, 10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow",
+			new FormLayout(
+				"10dlu, 10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow",
 			// 2 columns
 	""); // rows are added dynamically (no need to define them here)
 		//layout.getColumnSpec(6).setResizeWeight(1.0);
@@ -148,8 +149,8 @@ public class ReceiveOptionsPanel
 		// create a form builder
 		DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
 		builder.setLeadingColumnOffset(1);
-		
-		// create EmptyBorder between components and dialog-frame 
+
+		// create EmptyBorder between components and dialog-frame
 		builder.setDefaultDialogBorder();
 
 		// Add components to the panel:
@@ -164,15 +165,12 @@ public class ReceiveOptionsPanel
 
 		//builder.setLeadingColumnOffset(2);
 
-		
 		builder.setLeadingColumnOffset(2);
 		builder.append(autodownloadCheckBox, 3);
 		builder.nextLine();
 
 		builder.append(playsoundCheckBox, 3);
 		builder.nextLine();
-		
-		
 
 		JPanel panel = new JPanel();
 		FormLayout l =
@@ -186,7 +184,7 @@ public class ReceiveOptionsPanel
 
 		builder.append(panel, 3);
 		//b2.nextLine();
-		
+
 		builder.setLeadingColumnOffset(1);
 
 		if (item.isPopAccount()) {
@@ -201,162 +199,125 @@ public class ReceiveOptionsPanel
 		}
 
 		/*
-		setLayout(new BorderLayout());
-		add(builder.getPanel(), BorderLayout.CENTER);
-		*/
+		 * setLayout(new BorderLayout()); add(builder.getPanel(),
+		 * BorderLayout.CENTER);
+		 */
 
 		/*
-		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		
-		GridBagLayout mainLayout = new GridBagLayout();
-		GridBagConstraints mainConstraints = new GridBagConstraints();
-		
-		mainConstraints.anchor = GridBagConstraints.NORTHWEST;
-		mainConstraints.fill = GridBagConstraints.HORIZONTAL;
-		mainConstraints.weightx = 1.0;
-		
-		setLayout(mainLayout);
-		
-		JPanel mailcheckPanel = new JPanel();
-		Border b1 = BorderFactory.createEtchedBorder();
-		Border b2 =
-			BorderFactory.createTitledBorder(
-				b1,
-				MailResourceLoader.getString(
-					"dialog",
-					"account",
-					"automatic_mailchecking"));
-		Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-		Border border = BorderFactory.createCompoundBorder(b2, emptyBorder);
-		mailcheckPanel.setBorder(border);
-		GridBagLayout layout = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-		mailcheckPanel.setLayout(layout);
-		
-		
-		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
-		mainConstraints.insets = new Insets(0, 0, 0, 0);
-		mainLayout.setConstraints(mailcheckPanel, mainConstraints);
-		add(mailcheckPanel);
-		
-		JPanel panel = new JPanel();
-		panel.setLayout(layout);
-		
-		c.fill = GridBagConstraints.NONE;
-		c.anchor = GridBagConstraints.WEST;
-		c.gridx = 0;
-		//c.gridwidth = GridBagConstraints.RELATIVE;
-		c.weightx = 0.0;
-		layout.setConstraints(intervalCheckingLabel, c);
-		panel.add(intervalCheckingLabel);
-		
-		c.weightx = 0.0;
-		c.gridx = 1;
-		c.anchor = GridBagConstraints.WEST;
-		//c.gridwidth = GridBagConstraints.RELATIVE;
-		c.insets = new Insets(0, 5, 0, 0);
-		layout.setConstraints(intervalCheckingTextField, c);
-		panel.add(intervalCheckingTextField);
-		
-		c.weightx = 0.0;
-		c.gridx = 2;
-		c.anchor = GridBagConstraints.WEST;
-		//c.gridwidth = GridBagConstraints.REMAINDER;
-		layout.setConstraints(intervalCheckingLabel2, c);
-		panel.add(intervalCheckingLabel2);
-		
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.insets = new Insets(0, 0, 0, 0);
-		layout.setConstraints(intervalCheckingCheckBox, c);
-		mailcheckPanel.add(intervalCheckingCheckBox);
-		
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.insets = new Insets(0, 20, 0, 0);
-		layout.setConstraints(panel, c);
-		mailcheckPanel.add(panel);
-		
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		//c.gridx = 0;
-		c.insets = new Insets(0, 20, 0, 0);
-		c.weightx = 1.0;
-		layout.setConstraints(autodownloadCheckBox, c);
-		mailcheckPanel.add(autodownloadCheckBox);
-		
-		c.weightx = 1.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.insets = new Insets(0, 20, 0, 0);
-		layout.setConstraints(playsoundCheckBox, c);
-		mailcheckPanel.add(playsoundCheckBox);
-		
-		c.weightx = 1.0;
-		c.insets = new Insets(0, 40, 0, 0);
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		layout.setConstraints(defaultRadioButton, c);
-		mailcheckPanel.add(defaultRadioButton);
-		
-		JPanel panel2 = new JPanel();
-		panel2.setLayout(layout);
-		
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.weightx = 1.0;
-		c.insets = new Insets(0, 40, 0, 0);
-		//c.fill = GridBagConstraints.HORIZONTAL;		
-		layout.setConstraints(panel2, c);
-		mailcheckPanel.add(panel2);
-		
-		c.weightx = 0.1;
-		c.gridx = 0;
-		c.insets = new Insets(0, 0, 0, 0);
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		//c.fill = GridBagConstraints.NONE;
-		c.anchor = GridBagConstraints.WEST;
-		layout.setConstraints(chooseRadioButton, c);
-		panel2.add(chooseRadioButton);
-		
-		c.weightx = 0.9;
-		c.gridx = 1;
-		//c.insets = new Insets(0,5,0,0);
-		//c.gridx = 1;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		layout.setConstraints(chooseButton, c);
-		panel2.add(chooseButton);
-		
-		JPanel attributPanel = new JPanel();
-		b1 = BorderFactory.createEtchedBorder();
-		b2 =
-			BorderFactory.createTitledBorder(
-				b1,
-				MailResourceLoader.getString("dialog", "account", "options"));
-		emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-		border = BorderFactory.createCompoundBorder(b2, emptyBorder);
-		attributPanel.setBorder(border);
-		attributPanel.setLayout(new BorderLayout());
-		
-		if (item.isPopAccount()) {
-			//popPanel = new PopAttributPanel(item.getPopItem());
-			attributPanel.add(popPanel, BorderLayout.CENTER);
-			//mainLayout.setConstraints(popPanel, mainConstraints);
-			//add(popPanel);
-		} else {
-			//imapPanel = new ImapAttributPanel(item.getImapItem());
-			attributPanel.add(imapPanel, BorderLayout.CENTER);
-			//mainLayout.setConstraints(imapPanel, mainConstraints);
-			//add(imapPanel);
-		}
-		
-		mainConstraints.gridheight = GridBagConstraints.REMAINDER;
-		mainConstraints.weightx = 1.0;
-		mainLayout.setConstraints(attributPanel, mainConstraints);
-		add(attributPanel);
-		
-		mainConstraints.gridheight = GridBagConstraints.REMAINDER;
-		mainConstraints.weighty = 1.0;
-		mainConstraints.fill = GridBagConstraints.VERTICAL;
-		Component vglue = Box.createVerticalGlue();
-		mainLayout.setConstraints(vglue, mainConstraints);
-		add(vglue);
-		*/
+		 * setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		 * 
+		 * GridBagLayout mainLayout = new GridBagLayout(); GridBagConstraints
+		 * mainConstraints = new GridBagConstraints();
+		 * 
+		 * mainConstraints.anchor = GridBagConstraints.NORTHWEST;
+		 * mainConstraints.fill = GridBagConstraints.HORIZONTAL;
+		 * mainConstraints.weightx = 1.0;
+		 * 
+		 * setLayout(mainLayout);
+		 * 
+		 * JPanel mailcheckPanel = new JPanel(); Border b1 =
+		 * BorderFactory.createEtchedBorder(); Border b2 =
+		 * BorderFactory.createTitledBorder( b1, MailResourceLoader.getString(
+		 * "dialog", "account", "automatic_mailchecking")); Border emptyBorder =
+		 * BorderFactory.createEmptyBorder(5, 5, 5, 5); Border border =
+		 * BorderFactory.createCompoundBorder(b2, emptyBorder);
+		 * mailcheckPanel.setBorder(border); GridBagLayout layout = new
+		 * GridBagLayout(); GridBagConstraints c = new GridBagConstraints();
+		 * mailcheckPanel.setLayout(layout);
+		 * 
+		 * 
+		 * mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		 * mainConstraints.insets = new Insets(0, 0, 0, 0);
+		 * mainLayout.setConstraints(mailcheckPanel, mainConstraints);
+		 * add(mailcheckPanel);
+		 * 
+		 * JPanel panel = new JPanel(); panel.setLayout(layout);
+		 * 
+		 * c.fill = GridBagConstraints.NONE; c.anchor =
+		 * GridBagConstraints.WEST; c.gridx = 0; //c.gridwidth =
+		 * GridBagConstraints.RELATIVE; c.weightx = 0.0;
+		 * layout.setConstraints(intervalCheckingLabel, c);
+		 * panel.add(intervalCheckingLabel);
+		 * 
+		 * c.weightx = 0.0; c.gridx = 1; c.anchor = GridBagConstraints.WEST;
+		 * //c.gridwidth = GridBagConstraints.RELATIVE; c.insets = new
+		 * Insets(0, 5, 0, 0); layout.setConstraints(intervalCheckingTextField,
+		 * c); panel.add(intervalCheckingTextField);
+		 * 
+		 * c.weightx = 0.0; c.gridx = 2; c.anchor = GridBagConstraints.WEST;
+		 * //c.gridwidth = GridBagConstraints.REMAINDER;
+		 * layout.setConstraints(intervalCheckingLabel2, c);
+		 * panel.add(intervalCheckingLabel2);
+		 * 
+		 * c.gridwidth = GridBagConstraints.REMAINDER; c.insets = new Insets(0, 0, 0,
+		 * 0); layout.setConstraints(intervalCheckingCheckBox, c);
+		 * mailcheckPanel.add(intervalCheckingCheckBox);
+		 * 
+		 * c.gridwidth = GridBagConstraints.REMAINDER; c.insets = new Insets(0,
+		 * 20, 0, 0); layout.setConstraints(panel, c);
+		 * mailcheckPanel.add(panel);
+		 * 
+		 * c.gridwidth = GridBagConstraints.REMAINDER; //c.gridx = 0; c.insets =
+		 * new Insets(0, 20, 0, 0); c.weightx = 1.0;
+		 * layout.setConstraints(autodownloadCheckBox, c);
+		 * mailcheckPanel.add(autodownloadCheckBox);
+		 * 
+		 * c.weightx = 1.0; c.gridwidth = GridBagConstraints.REMAINDER;
+		 * c.insets = new Insets(0, 20, 0, 0);
+		 * layout.setConstraints(playsoundCheckBox, c);
+		 * mailcheckPanel.add(playsoundCheckBox);
+		 * 
+		 * c.weightx = 1.0; c.insets = new Insets(0, 40, 0, 0); c.gridwidth =
+		 * GridBagConstraints.REMAINDER;
+		 * layout.setConstraints(defaultRadioButton, c);
+		 * mailcheckPanel.add(defaultRadioButton);
+		 * 
+		 * JPanel panel2 = new JPanel(); panel2.setLayout(layout);
+		 * 
+		 * c.gridwidth = GridBagConstraints.REMAINDER; c.weightx = 1.0;
+		 * c.insets = new Insets(0, 40, 0, 0); //c.fill =
+		 * GridBagConstraints.HORIZONTAL; layout.setConstraints(panel2, c);
+		 * mailcheckPanel.add(panel2);
+		 * 
+		 * c.weightx = 0.1; c.gridx = 0; c.insets = new Insets(0, 0, 0, 0);
+		 * c.fill = GridBagConstraints.HORIZONTAL; c.gridwidth =
+		 * GridBagConstraints.RELATIVE; //c.fill = GridBagConstraints.NONE;
+		 * c.anchor = GridBagConstraints.WEST;
+		 * layout.setConstraints(chooseRadioButton, c);
+		 * panel2.add(chooseRadioButton);
+		 * 
+		 * c.weightx = 0.9; c.gridx = 1; //c.insets = new Insets(0,5,0,0);
+		 * //c.gridx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+		 * layout.setConstraints(chooseButton, c); panel2.add(chooseButton);
+		 * 
+		 * JPanel attributPanel = new JPanel(); b1 =
+		 * BorderFactory.createEtchedBorder(); b2 =
+		 * BorderFactory.createTitledBorder( b1,
+		 * MailResourceLoader.getString("dialog", "account", "options"));
+		 * emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5); border =
+		 * BorderFactory.createCompoundBorder(b2, emptyBorder);
+		 * attributPanel.setBorder(border); attributPanel.setLayout(new
+		 * BorderLayout());
+		 * 
+		 * if (item.isPopAccount()) { //popPanel = new
+		 * PopAttributPanel(item.getPopItem()); attributPanel.add(popPanel,
+		 * BorderLayout.CENTER); //mainLayout.setConstraints(popPanel,
+		 * mainConstraints); //add(popPanel); } else { //imapPanel = new
+		 * ImapAttributPanel(item.getImapItem()); attributPanel.add(imapPanel,
+		 * BorderLayout.CENTER); //mainLayout.setConstraints(imapPanel,
+		 * mainConstraints); //add(imapPanel); }
+		 * 
+		 * mainConstraints.gridheight = GridBagConstraints.REMAINDER;
+		 * mainConstraints.weightx = 1.0;
+		 * mainLayout.setConstraints(attributPanel, mainConstraints);
+		 * add(attributPanel);
+		 * 
+		 * mainConstraints.gridheight = GridBagConstraints.REMAINDER;
+		 * mainConstraints.weighty = 1.0; mainConstraints.fill =
+		 * GridBagConstraints.VERTICAL; Component vglue =
+		 * Box.createVerticalGlue(); mainLayout.setConstraints(vglue,
+		 * mainConstraints); add(vglue);
+		 */
 
 	}
 
@@ -368,13 +329,12 @@ public class ReceiveOptionsPanel
 					"dialog",
 					"account",
 					"check_for_new_messages_every"));
-		/*intervalCheckingLabel.setDisplayedMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"account",
-				"check_for_new_messages_every"));
-		*/
-		
+		/*
+		 * intervalCheckingLabel.setDisplayedMnemonic(
+		 * MailResourceLoader.getMnemonic( "dialog", "account",
+		 * "check_for_new_messages_every"));
+		 */
+
 		intervalCheckingTextField = new JTextField();
 		intervalCheckingLabel.setLabelFor(intervalCheckingTextField);
 
@@ -388,13 +348,12 @@ public class ReceiveOptionsPanel
 					"dialog",
 					"account",
 					"enable_interval_message_checking"));
-		/*intervalCheckingCheckBox.setMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"account",
-				"enable_interval_message_checking"));
-		*/
-		
+		/*
+		 * intervalCheckingCheckBox.setMnemonic(
+		 * MailResourceLoader.getMnemonic( "dialog", "account",
+		 * "enable_interval_message_checking"));
+		 */
+
 		intervalCheckingCheckBox.setActionCommand("ENABLE");
 		intervalCheckingCheckBox.addActionListener(this);
 
@@ -404,25 +363,21 @@ public class ReceiveOptionsPanel
 					"dialog",
 					"account",
 					"automatically_download_new_messages"));
-		/*autodownloadCheckBox.setMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"account",
-				"automatically_download_new_messages"));
-		*/
-		
+		/*
+		 * autodownloadCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
+		 * "dialog", "account", "automatically_download_new_messages"));
+		 */
+
 		playsoundCheckBox =
 			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"play_sound_when_new_messages_arrive"));
-		/*playsoundCheckBox.setMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"account",
-				"play_sound_when_new_messages_arrive"));
-		*/
+		/*
+		 * playsoundCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
+		 * "dialog", "account", "play_sound_when_new_messages_arrive"));
+		 */
 		playsoundCheckBox.setActionCommand("PLAYSOUND");
 		playsoundCheckBox.addActionListener(this);
 
@@ -458,6 +413,7 @@ public class ReceiveOptionsPanel
 			//mainLayout.setConstraints(imapPanel, mainConstraints);
 			//add(imapPanel);
 		}
+
 	}
 
 	public void updateComponents(boolean b) {
@@ -472,6 +428,18 @@ public class ReceiveOptionsPanel
 
 			intervalCheckingCheckBox.setSelected(
 				receiveItem.getBoolean("enable_mailcheck"));
+
+			if (!intervalCheckingCheckBox.isSelected()) {
+				// disable components
+				defaultRadioButton.setEnabled(false);
+				autodownloadCheckBox.setEnabled(false);
+				playsoundCheckBox.setEnabled(false);
+				chooseButton.setEnabled(false);
+				intervalCheckingLabel.setEnabled(false);
+				intervalCheckingLabel2.setEnabled(false);
+				intervalCheckingTextField.setEnabled(false);
+				chooseRadioButton.setEnabled(false);
+			}
 
 			playsoundCheckBox.setSelected(
 				receiveItem.getBoolean("enable_sound"));
