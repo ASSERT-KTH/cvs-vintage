@@ -13,14 +13,14 @@ import org.jboss.ejb.DeploymentException;
 /** The meta data object for the security-identity element.
 The security-identity element specifies whether the caller’s security
 identity is to be used for the execution of the methods of the enterprise
-bean or whether a specific run-as identity is to be used. It
+bean or whether a specific run-as role is to be used. It
 contains an optional description and a specification of the security
 identity to be used.
 
 Used in: session, entity, message-driven
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public class SecurityIdentityMetaData extends MetaData
 {
@@ -40,10 +40,15 @@ public class SecurityIdentityMetaData extends MetaData
         return description;
     }
 
+    /**
+     */
     public boolean getUseCallerIdentity()
     {
         return useCallerIdentity;
     }
+    /** Get the run-as security identity. This is the principal to be used for
+     the run-as identity of an enterprise bean in terms of its security role.
+     */
     public String getRunAsRoleName()
     {
         return runAsRoleName;
@@ -64,10 +69,12 @@ public class SecurityIdentityMetaData extends MetaData
         if( callerIdent != null )
         {
             useCallerIdentity = true;
+System.out.println("SecurityIdentity, useCallerIdentity");
         }
         else
         {
             runAsRoleName = getElementContent(getUniqueChild(runAs, "role-name"));
+System.out.println("SecurityIdentity, runAsRoleName="+runAsRoleName);
         }
 	}
 

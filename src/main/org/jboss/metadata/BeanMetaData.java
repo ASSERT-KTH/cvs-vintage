@@ -28,7 +28,7 @@ import org.jboss.security.SimplePrincipal;
  *   @author Peter Antman (peter.antman@tim.se)
  *   @author Daniel OConnor (docodan@mvcsoft.com)
  *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.22 $
+ *   @version $Revision: 1.23 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -165,7 +165,7 @@ public abstract class BeanMetaData extends MetaData {
 	}
 
     public String getSecurityProxy() { return securityProxy; }
-    private SecurityIdentityMetaData getSecurityIdentityMetaData()
+    public SecurityIdentityMetaData getSecurityIdentityMetaData()
     {
         return securityIdentity;
     }
