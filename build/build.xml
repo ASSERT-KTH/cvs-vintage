@@ -360,6 +360,51 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Build our version of Turbine easily                                -->
+    <!-- ================================================================== -->
+    <target name="build-turbine">
+        <exec executable="ant" dir="${turbine.dir}/build"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build our version of Torque easily                                -->
+    <!-- ================================================================== -->
+    <target name="build-torque">
+        <exec executable="ant" dir="${torque.dir}/build">
+            <arg line="dist"/>
+        </exec>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Upgrade our version of Turbine easily                              -->
+    <!-- ================================================================== -->
+    <target name="upgrade-turbine" depends="build-turbine">
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${turbine.dir}/bin">
+                <include name="**/turbine*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Upgrade our version of Torque easily                               -->
+    <!-- ================================================================== -->
+    <target name="upgrade-torque" depends="build-torque">
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${torque.dir}/bin">
+                <include name="**/torque.zip"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Upgrade our version of Torque and Turbine easily                   -->
+    <!-- ================================================================== -->
+    <target name="upgrade-torque-turbine" 
+            depends="upgrade-torque,upgrade-turbine">
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Creates the API documentation                                      -->
     <!-- ================================================================== -->
     <target name="javadocs" depends="prepare">
