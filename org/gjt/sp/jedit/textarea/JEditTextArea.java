@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.268 2003/06/11 01:15:35 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.269 2003/06/19 01:28:08 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4328,7 +4328,7 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 
 		if(maxLineLen <= 0)
 		{
-			getToolkit().beep();
+			GUIUtilities.error(view,"format-maxlinelen",null);
 			return;
 		}
 
