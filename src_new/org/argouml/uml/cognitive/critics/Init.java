@@ -24,7 +24,7 @@
 // File: Init.java
 // Classes: Init
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Init.java,v 1.12 2003/01/23 11:01:16 mkl Exp $
+// $Id: Init.java,v 1.13 2003/02/01 06:22:47 mkl Exp $
 
 // 8 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). CrCrossNamespaceAssoc
 // registration corrected to Association, rather than AssociationClass
@@ -323,7 +323,7 @@ public class Init {
       Agency.register(crUnconventionalOperName, operCls);
       Agency.register(crUnconventionalAttrName, attrCls);
       Agency.register(crUnconventionalClassName, classCls);
-      Agency.register(crUnconventionalPackName, modelCls);
+      Agency.register(crUnconventionalPackName, packageCls);
 
       Agency.register(crConsiderSingleton, classCls);
       Agency.register(crSingletonViolatedMSA, classCls);
