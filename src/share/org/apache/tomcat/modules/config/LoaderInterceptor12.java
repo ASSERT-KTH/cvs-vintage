@@ -57,8 +57,7 @@
  *
  */
 
-
-package org.apache.tomcat.context;
+package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.request.*;
@@ -69,20 +68,30 @@ import java.net.*;
 import java.util.*;
 import java.security.*;
 
+
 /**
  * Set class loader based on WEB-INF/classes, lib.
- * Use with JDK1.1.
+ * Uses the protection domain - if any, so PolicyInterceptor
+ * must be called before it.
  *
  * @author costin@dnt.ro
  */
-public class LoaderInterceptor11 extends BaseInterceptor {
-
-    public LoaderInterceptor11() {
+public class LoaderInterceptor12 extends BaseInterceptor {
+    String classLoaderName;
+    
+    public LoaderInterceptor12() {
     }
 
+    public void setClassLoaderName( String name ) {
+	classLoaderName=name;
+    }
+
+    /** The class paths are added when the context is added
+     */
     public void addContext( ContextManager cm, Context context)
 	throws TomcatException
     {
+	if( debug>0) log( "Add context " + context.getPath());
         String base = context.getAbsolutePath();
 
 	// Add "WEB-INF/classes"
@@ -112,20 +121,18 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	    } catch( MalformedURLException ex ) {
 	    }
 	}
-
-	// Add servlet.jar and jasper.jar
     }
-    
+
+    /** The class loader is set when the context us initialized
+     *  or at reload
+     */
     public void contextInit( Context context)
 	throws TomcatException
     {
+	if( debug>0 ) log( "Init context " + context.getPath());
         ContextManager cm = context.getContextManager();
-	
-	URL classP[]=context.getClassPath();
-	if( debug > 0 ) {
-	    for( int i=0; i< classP.length ; i++ )
-		log ( "Set classpath " + classP[i] );
-	}
+	URL urls[]=context.getClassPath();
+
 	DependManager dm=context.getDependManager();
 	if( dm==null ) {
 	    dm=new DependManager();
@@ -136,8 +143,9 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	// select the right parent - it may be CM.getParentLoader()
 	ClassLoader parent=this.getClass().getClassLoader();
 
-	SimpleClassLoader loader=new SimpleClassLoader(classP, parent);
-	DependClassLoader dcl=new DependClassLoader( dm, loader);
+	URLClassLoader urlLoader=URLClassLoader.newInstance( urls, parent );
+	DependClassLoader dcl=new DependClassLoader( dm, urlLoader);
+
 	context.setClassLoader( dcl );
     }
 
@@ -147,22 +155,24 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	ContextManager cm = context.getContextManager();
 	URL urls[]=context.getClassPath();
 
-	DependManager dm=new DependManager();
-	context.setDependManager( dm );
 	ClassLoader oldLoader=context.getClassLoader();
 	int oldLoaderNote=cm.getNoteId( ContextManager.CONTAINER_NOTE,
 					"oldLoader");
 	context.getContainer().setNote( oldLoaderNote, oldLoader);
-	
+
+	DependManager dm=new DependManager();
+	context.setDependManager( dm );
+
 	// XXX Customize this - based on context prefs,
 	// select the right parent - it may be CM.getParentLoader()
 	ClassLoader parent=this.getClass().getClassLoader();
 
-	SimpleClassLoader loader=new SimpleClassLoader(urls, parent);
-	DependClassLoader dcl=new DependClassLoader( dm, loader);
+	URLClassLoader urlLoader=URLClassLoader.newInstance( urls , parent);
+	DependClassLoader dcl=new DependClassLoader( dm, urlLoader);
+	
 	context.setClassLoader( dcl );
     }
-
+    
     private void getJars(Vector v, File f) {
         FilenameFilter jarfilter = new FilenameFilter() {
 		public boolean accept(File dir, String fname) {

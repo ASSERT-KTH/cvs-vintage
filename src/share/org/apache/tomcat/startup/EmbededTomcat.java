@@ -254,23 +254,23 @@ public class EmbededTomcat {
     // no AutoSetup !
 
     protected String moduleSet1[] = {
-	"org.apache.tomcat.context.DefaultCMSetter",
+	"org.apache.tomcat.modules.config.DefaultCMSetter", 
 	"org.apache.tomcat.facade.WebXmlReader",
-	"org.apache.tomcat.context.PolicyInterceptor",
-	"org.apache.tomcat.context.LoaderInterceptor12",
-	"org.apache.tomcat.context.ErrorHandler",
+	"org.apache.tomcat.modules.config.PolicyInterceptor",
+	"org.apache.tomcat.modules.config.LoaderInterceptor12",
+	"org.apache.tomcat.modules.generators.ErrorHandler",
 	"org.apache.tomcat.modules.config.WorkDirSetup",
 	"org.apache.tomcat.modules.session.SessionId",
-	"org.apache.tomcat.request.SimpleMapper1",
-	"org.apache.tomcat.request.InvokerInterceptor",
+	"org.apache.tomcat.modules.mappers.SimpleMapper1",
+	"org.apache.tomcat.modules.generators.InvokerInterceptor",
 	"org.apache.tomcat.facade.JspInterceptor",
-	"org.apache.tomcat.request.StaticInterceptor",
+	"org.apache.tomcat.modules.generators.StaticInterceptor",
 	"org.apache.tomcat.modules.session.SimpleSessionStore",
 	"org.apache.tomcat.facade.LoadOnStartupInterceptor",
 	"org.apache.tomcat.facade.Servlet22Interceptor",
-	"org.apache.tomcat.request.AccessInterceptor",
-	"org.apache.tomcat.request.CredentialsInterceptor",
-	"org.apache.tomcat.request.Jdk12Interceptor"
+	"org.apache.tomcat.modules.aaa.AccessInterceptor",
+	"org.apache.tomcat.modules.aaa.CredentialsInterceptor",
+	"org.apache.tomcat.modules.mappers.Jdk12Interceptor"
     };
     
     protected String moduleSet2[] = {

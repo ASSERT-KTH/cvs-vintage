@@ -57,8 +57,7 @@
  *
  */
 
-
-package org.apache.tomcat.context;
+package org.apache.tomcat.modules.generators;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.request.*;
@@ -70,8 +69,6 @@ import java.security.*;
 
 
 import org.apache.tomcat.util.log.*;
-
-// don't extend - replace !
 
 /**
  * Handle errors - this is the default handler, you can replace it

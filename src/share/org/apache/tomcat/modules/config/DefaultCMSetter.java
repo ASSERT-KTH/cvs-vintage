@@ -57,8 +57,7 @@
  *
  */
 
-
-package org.apache.tomcat.context;
+package org.apache.tomcat.modules.aaa;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.request.*;
@@ -85,7 +84,8 @@ public final class DefaultCMSetter extends BaseInterceptor {
     public DefaultCMSetter() {
     }
 
-    /** Adjust context manager paths
+    /** Adjust context manager paths.
+     *  FIRST
      */
     public void engineInit( ContextManager cm )
     	throws TomcatException

@@ -57,8 +57,7 @@
  *
  */
 
-
-package org.apache.tomcat.context;
+package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.request.*;
