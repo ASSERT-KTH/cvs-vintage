@@ -1,5 +1,5 @@
         
-#set ($action = $link.setPage("SaveTemplate.vm").setAction("SaveTemplate").addPathInfo("nextTemplate", "TemplateList.vm"))
+#set ($action = $link.setPage("SaveTemplate.vm").setAction("TemplateList").addPathInfo("nextTemplate", "TemplateList.vm"))
 #set ($template = $scarabR.IssueTemplate)
 #set ($templateGroup = $intake.IssueTemplate.mapTo($template)) 
 #set ($user = $data.User)
