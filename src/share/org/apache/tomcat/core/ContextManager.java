@@ -544,44 +544,79 @@ public final class ContextManager {
 
 	// deal with contexts that were added before init()
 	// ( by user or modules during engineInit )
+
+	// first trusted apps - they may do special actions
 	Enumeration enum = getContexts();
 	while (enum.hasMoreElements()) {
 	    Context ctx = (Context)enum.nextElement();
-	    ctx.setContextManager( this );
-	    try {
-		for( int i=0; i<existingI.length; i++ ) {
-		    existingI[i].addContext( this, ctx );
+	    if( ctx.isTrusted() )
+		fireAddContext(ctx, existingI );
+	}
+	
+	// Initialize the contexts
+	enum = getContexts();
+	while (enum.hasMoreElements()) {
+	    Context ctx = (Context)enum.nextElement();
+	    if( ctx.isTrusted() ) {
+		try {
+		    ctx.init();
+		} catch( TomcatException ex ) {
+		    // just log the error - the context will not serve requests
+		    log( "Error initializing " + ctx , ex );
+		    continue; 
 		}
-	    } catch( TomcatException ex ) {
-		log( "Error adding context " + ctx , ex );
-		continue; 
 	    }
-	    try {
-		// set state may throw exception
-		ctx.setState( Context.STATE_ADDED );
-		log("Adding  " +  ctx.toString());
-	    } catch( TomcatException ex ) {
-		log( "Error adding context " + ctx , ex );
-		continue; 
-	    }
+	}
+
+	// again - it may change
+	existingI=defaultContainer.getInterceptors();
+
+	// Same thing for untrusted apps 
+	enum = getContexts();
+	while (enum.hasMoreElements()) {
+	    Context ctx = (Context)enum.nextElement();
+	    if( ! ctx.isTrusted() )
+		fireAddContext(ctx, existingI );
 	}
 
 	// Initialize the contexts
 	enum = getContexts();
 	while (enum.hasMoreElements()) {
 	    Context ctx = (Context)enum.nextElement();
-	    try {
-		ctx.init();
-	    } catch( TomcatException ex ) {
-		// just log the error - the context will not serve requests
-		log( "Error initializing " + ctx , ex );
-		continue; 
+	    if( ! ctx.isTrusted() ) {
+		try {
+		    ctx.init();
+		} catch( TomcatException ex ) {
+		    // just log the error - the context will not serve requests
+		    log( "Error initializing " + ctx , ex );
+		    continue; 
+		}
 	    }
 	}
 
 	setState( STATE_INIT );
     }
 
+    private void fireAddContext(Context ctx, BaseInterceptor existingI[] ) {
+	ctx.setContextManager( this );
+	try {
+	    for( int i=0; i<existingI.length; i++ ) {
+		existingI[i].addContext( this, ctx );
+	    }
+	} catch( TomcatException ex ) {
+	    log( "Error adding context " + ctx , ex );
+	    return; 
+	}
+	try {
+	    // set state may throw exception
+	    ctx.setState( Context.STATE_ADDED );
+	    log("Adding  " +  ctx.toString());
+	} catch( TomcatException ex ) {
+	    log( "Error adding context " + ctx , ex );
+	    return; 
+	}
+    }
+    
     /** Will start the connectors and begin serving requests.
      *  It must be called after init.
      */
