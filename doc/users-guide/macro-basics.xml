@@ -4,7 +4,7 @@
 <!-- :indentSize=1:noTabs=yes:maxLineLen=72:tabSize=2:           -->
 <!--                                                             -->
 <!-- This file cover the introductory section of the macro guide -->
-<!-- $Id: macro-basics.xml,v 1.3 2002/02/16 18:19:00 jgellene Exp $
+<!-- $Id: macro-basics.xml,v 1.4 2002/03/17 10:21:56 spestov Exp $
  -->
 
 <chapter id="macro-basics"><title>Introducing BeanShell</title>
@@ -31,7 +31,7 @@
    BeanShell with a program written in Java is that it allows the user to
    customize the program's behavior using the same interfaces
    designed and used by the program itself. BeanShell can
-   turn a well-designed application into a powerful, extendible toolkit.
+   turn a well-designed application into a powerful, extensible toolkit.
   </para>
 
   <para>
