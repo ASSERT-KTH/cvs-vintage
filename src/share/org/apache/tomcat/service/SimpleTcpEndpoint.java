@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.10 2000/02/22 21:06:45 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/02/22 21:06:45 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/SimpleTcpEndpoint.java,v 1.1 2000/02/22 21:06:44 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/02/22 21:06:44 $
  *
  * ====================================================================
  *
@@ -92,7 +92,7 @@ import java.util.*;
  * @author Costin@eng.sun.com
  * @author Gal Shachor [shachor@il.ibm.com]
  */
-public abstract class TcpEndpoint  { // implements Endpoint {
+public class SimpleTcpEndpoint  extends TcpEndpoint { // implements Endpoint {
 
     private StringManager sm = StringManager.getManager("org.apache.tomcat.service");
 
@@ -113,7 +113,11 @@ public abstract class TcpEndpoint  { // implements Endpoint {
     Runnable listener;
     boolean running = true;
 
+    public SimpleTcpEndpoint() {
+    }
+
     // -------------------- Configuration --------------------
+
     public int getPort() {
 	    return port;
     }
@@ -171,8 +175,162 @@ public abstract class TcpEndpoint  { // implements Endpoint {
 	    this.timeout = timeout;
     }
 
-    // -------------------- Abstract methods --------------------
+    // -------------------- Public methods --------------------
 
-    public abstract void startEndpoint() throws IOException, InstantiationException;
-    public abstract void stopEndpoint();
+    public void startEndpoint() throws IOException, InstantiationException {
+	try {
+	    if(factory==null)
+		factory=ServerSocketFactory.getDefault();
+	    if(serverSocket==null) {
+		if (inet != null) {
+		    serverSocket = factory.createSocket(port, backlog);
+		} else {
+		    serverSocket = factory.createSocket(port, backlog, inet);
+		}
+	    }
+	} catch( IOException ex ) {
+	    // throw?
+	    // ex.printStackTrace();
+	    running=false;
+            throw ex;
+	    // throw new HttpServerException(msg);
+	} catch( InstantiationException ex1 ) {
+	    // throw?
+	    // ex1.printStackTrace();
+	    running=false;
+            throw ex1;
+	    // throw new HttpServerException(msg);
+	}
+	running=true;
+	listener = new TcpListenerThread( this );
+	Thread thread = new Thread(listener);
+	thread.start();
+    }
+    
+    public void stopEndpoint() {
+    	running=false;
+	try {
+	    serverSocket.close(); // XXX?
+	} catch(Exception e) {
+	}
+	serverSocket = null;
+    }
+    
+    // -------------------- Private methods
+
+    void processSocket(Socket s) throws IOException
+    {
+    	// XXX reuse, pools, etc
+
+    	// XXX set socket options
+    	// 	s.setSoLinger( true, 100);
+    	//	s.setSoTimeout( 1000 );
+
+    	TcpConnection con=new TcpConnection();
+    	con.setEndpoint(this);
+    	con.setSocket( s );
+    	TcpConnectionHandler handler = getConnectionHandler();
+    	TcpConnectionThread handlerThread=new TcpConnectionThread(handler, con);
+	
+	new Thread(handlerThread).start();
+    }
+
+    void acceptConnections() {
+    	try {
+    	    if(running == false)
+		return;
+	    
+    	    if(null!= serverSocket) {
+		Socket socket = acceptSocket();
+    	    	if(running != false) {
+		    processSocket(socket);
+		}
+    	    }
+    	} catch(Throwable e) {
+    	    running = false;
+    	    String msg = sm.getString("endpoint.err.fatal",
+				      serverSocket, e);
+    	    e.printStackTrace(); // something very wrong happened - better know what
+    	    System.err.println(msg);
+    	}
+    }
+
+    Socket acceptSocket() {
+        Socket accepted = null;
+    	try {
+    	    if(running == true) {
+		if(null!= serverSocket) {
+		    accepted = serverSocket.accept();
+		    if(running == false) {
+			if(null != accepted) {
+			    accepted.close();  // rude, but unlikely!
+			    accepted = null;
+			}
+		    }
+    	        }
+    	    }
+    	} catch(InterruptedIOException iioe) {
+    	    // normal part -- should happen regularly so
+    	    // that the endpoint can release if the server
+    	    // is shutdown.
+    	    // you know, i really wish that there was a
+    	    // way for the socket to timeout without
+    	    // tripping an exception. Exceptions are so
+    	    // 'spensive.
+    	} catch (SocketException e) {
+    	    if (running != false) {
+		running = false;
+		String msg = sm.getString("endpoint.err.fatal",
+					  serverSocket, e);
+    	    	e.printStackTrace(); // something very wrong happened - better know what
+		System.err.println(msg);
+    	    }
+    	} catch(Throwable e) {
+    	    running = false;
+    	    String msg = sm.getString("endpoint.err.fatal",
+				      serverSocket, e);
+    	    e.printStackTrace(); // something very wrong happened - better know what
+    	    System.err.println(msg);
+    	}
+	
+    	return accepted;
+    }
+}
+
+// -------------------- Threads --------------------
+// XXX add a more efficient model - use thread pools, use a Queue, etc
+
+// Keep the thread model in one place !
+
+// Listener thread
+class TcpListenerThread implements Runnable {
+    SimpleTcpEndpoint endpoint;
+    
+    public TcpListenerThread( SimpleTcpEndpoint endpoint) {
+    	this.endpoint=endpoint;
+    }
+    
+    public void run() {
+	while (endpoint.running) {
+	    endpoint.acceptConnections();
+    	}
+	//endpoint.manager.notifyEndpointDown(this);
+    }
+}
+
+// Worker Thread
+// call handleConnection() in a new thread
+// XXX thread reuse!
+class TcpConnectionThread implements Runnable {
+    TcpConnectionHandler handler;
+    TcpConnection connection;
+    
+    public TcpConnectionThread( TcpConnectionHandler handler, TcpConnection connection) {
+    	this.handler=handler;
+	this.connection=connection;
+    }
+    
+    public void run() {
+	handler.processConnection(connection, null);
+    }
 }

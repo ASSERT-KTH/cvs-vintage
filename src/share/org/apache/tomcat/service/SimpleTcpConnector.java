@@ -1,13 +1,13 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpAdapter.java,v 1.5 2000/02/09 23:26:29 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/02/09 23:26:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/SimpleTcpConnector.java,v 1.1 2000/02/22 21:06:44 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/02/22 21:06:44 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -23,15 +23,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -59,14 +59,13 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
-package org.apache.tomcat.service.http;
+package org.apache.tomcat.service;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.service.*;
 import org.apache.tomcat.net.*;
 import java.io.*;
 import java.net.*;
@@ -74,10 +73,23 @@ import java.util.*;
 
 //import org.apache.tomcat.server.HttpServer;
 
+/* Similar with MPM module in Apache2.0. Handles all the details related with
+   "tcp server" functionality - thread management, accept policy, etc.
+   It should do nothing more - as soon as it get a socket ( and all socket options
+   are set, etc), it just handle the stream to ConnectionHandler.processConnection. (costin)
+*/
+
+
+
 /**
+ * Connector for a TCP-based connector using the API in tomcat.service.
+ * You need to set a "connection.handler" property with the class name of
+ * the TCP connection handler
+ *
  * @author costin@eng.sun.com
+ * @author Gal Shachor [shachor@il.ibm.com]
  */
-public class HttpAdapter  implements ServerConnector {
+public class SimpleTcpConnector  extends TcpEndpointConnector implements ServerConnector  {
     // Attributes we accept ( to support the old model of
     // configuration, will be deprecated )
     public static final String VHOST_PORT="vhost_port";
@@ -88,90 +100,112 @@ public class HttpAdapter  implements ServerConnector {
     public static final String VHOST_ADDRESS="vhost_address";
     public static final String SOCKET_FACTORY="socketFactory";
 
+
+    public static final String PORT = "port";
+    public static final String HANDLER = "handler";
+
+    // XXX define ConnectorException
+    // XXX replace strings with sm.get...
+    // XXX replace static strings with constants
     String handlerClassName;
-    TcpEndpoint ep;
-    HttpConnectionHandler con;
+    SimpleTcpEndpoint ep;
+    TcpConnectionHandler con;
 
     ContextManager cm;
-    
+
     private InetAddress address;
-    // default is 8080
-    int vport=8080;
+    private int port;
+
+    int vport;
 
     private ServerSocketFactory socketFactory;
     private ServerSocket serverSocket;
 
     boolean running = true;
-    
-    public HttpAdapter() {
-	ep=new TcpEndpoint();
-	con=new HttpConnectionHandler();
-	ep.setConnectionHandler( con );
+
+    public SimpleTcpConnector() {
+    	ep = new SimpleTcpEndpoint();
     }
 
     public void start() throws Exception {
-	if( con==null) throw new Exception( "Invalid ConnectionHandler");
-	ep.setPort(vport);
-	if( socketFactory != null) {
+    	if(con==null)
+    	    throw new Exception( "Invalid ConnectionHandler");
+
+	con.setAttribute("context.manager",cm );
+    	ep.setPort(port);
+	if(socketFactory != null) {
 	    ep.setServerSocketFactory( socketFactory );
 	}
+	ep.setConnectionHandler( con );
 	ep.startEndpoint();
+	cm.log("<l:startEndpoint port=\"" + port + "\" handler=\"" + con.getClass().getName() + "\" />");
     }
 
     public void stop() throws Exception {
-	ep.stopEndpoint();
+    	ep.stopEndpoint();
     }
 
     public void setContextManager( ContextManager ctx ) {
-	this.cm=ctx;
-	con.setContextManager( ctx );
+	    this.cm=ctx;
     }
 
-    public void setPort( String s ) {
-	vport=string2Int( s );
+    public void setTcpConnectionHandler( TcpConnectionHandler handler) {
+    	this.con=handler;
+    }
+
+    public TcpConnectionHandler getTcpConnectionHandler() {
+	    return con;
+    }
+
+    public void setPort( int port ) {
+    	this.port=port;
+    }
+
+    public void setPort(  String portS ) {
+	    this.port=string2Int( portS );
+    }
+
+    public int getPort() {
+    	return port;
     }
 
     public void setProperty( String prop, String value) {
-	if(VHOST_PORT.equals(prop) ) {
-	    //	    System.out.println("XXX");
-	    vport=string2Int(value);
-	}
+    	if(PORT.equals(prop) ) {
+    	    setPort( value );
+    	} else if(HANDLER.equals(prop)) {
+    	    try {
+		Class chC=Class.forName( value );
+    	    	con=(TcpConnectionHandler)chC.newInstance();
+    	    } catch( Exception ex) {
+		ex.printStackTrace();
+    	    }
+    	}
     }
 
     // XXX use constants, remove dep on HttpServer
     public void setAttribute( String prop, Object value) {
-	if(VHOST_NAME.equals(prop) ) {
-	    //vhost=(String)value;
-	}
-	if(VHOST_PORT.equals(prop) ) {
+    	if(VHOST_NAME.equals(prop) ) {
+	        //vhost=(String)value;
+	} else if(VHOST_PORT.equals(prop) ) {
 	    vport=((Integer)value).intValue();
-	}
-
-	if(VHOST_ADDRESS.equals(prop)) {
+	} else if(VHOST_ADDRESS.equals(prop)) {
 	    address=(InetAddress)value;
-	}
-	if(SERVER.equals(prop)) {
-	    //server=(HttpServer)value;
-	}
-	if(SOCKET_FACTORY.equals(prop)) {
-	    socketFactory=(ServerSocketFactory)value;
+	} else if(SERVER.equals(prop)) {
+    	    //server=(HttpServer)value;
+	} else if(SOCKET_FACTORY.equals(prop)) {
+    	    socketFactory=(ServerSocketFactory)value;
 	}
     }
-
+    
     public Object getAttribute( String prop ) {
-	return null;
+	    return null;
     }
 
     private int string2Int( String val) {
-	try {
-	    return Integer.parseInt(val);
-	} catch (NumberFormatException nfe) {
-	    return 0;
-	}
+    	try {
+	        return Integer.parseInt(val);
+    	} catch (NumberFormatException nfe) {
+	        return 0;
+    	}
     }
-
-
-    
 }
-    
-

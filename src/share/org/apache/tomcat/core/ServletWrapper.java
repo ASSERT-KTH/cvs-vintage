@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.30 2000/02/18 00:17:48 costin Exp $
- * $Revision: 1.30 $
- * $Date: 2000/02/18 00:17:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.31 2000/02/22 21:06:38 costin Exp $
+ * $Revision: 1.31 $
+ * $Date: 2000/02/22 21:06:38 $
  *
  * ====================================================================
  *
@@ -386,7 +386,9 @@ public class ServletWrapper {
 		    servlet.service(req.getFacade(), res.getFacade());
 		}
 	    } else {
+		//System.out.print("X");
 		servlet.service(req.getFacade(), res.getFacade());
+		//System.out.print("Y");
 	    }
 	    
 	    for( int i=cI.length-1; i>=0; i-- ) {

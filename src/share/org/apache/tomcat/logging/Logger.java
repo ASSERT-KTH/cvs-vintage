@@ -89,7 +89,6 @@ public abstract class Logger {
      * @param	verbosityLevel	what type of message is this? 
      *				(WARNING/DEBUG/INFO etc)
      */
-     
     public static void log(String logName, String message, 
 			   int verbosityLevel) 
     {
@@ -105,7 +104,6 @@ public abstract class Logger {
      * @param	name		the name of the logger. 
      * @param	message		the message to log. 
      */
-     
     public static void log(String logName, String message)
     {
 	Logger logger = getLogger(logName);
@@ -285,6 +283,10 @@ public abstract class Logger {
 	    timeStamp = false;
     }
 
+    public  boolean isTimestamp() {
+	return timeStamp;
+    }
+    
     /**
      * Set the default output stream that is used by all logging
      * channels. 
@@ -307,6 +309,14 @@ public abstract class Logger {
 	loggers.remove(logger.getName());
     }
 
+    public void setCustomOutput( String value ) {
+	if ("true".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value))
+	    custom = true;
+	else if ("false".equalsIgnoreCase(value) || "no".equalsIgnoreCase(value))
+	    custom = false;
+    }
+
+    protected boolean custom;
     protected Writer sink = defaultSink;
     protected String name;
     

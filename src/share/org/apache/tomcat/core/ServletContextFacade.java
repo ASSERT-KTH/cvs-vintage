@@ -162,7 +162,7 @@ public class ServletContextFacade implements ServletContext {
     }
 
     public void log(String msg) {
-	context.logServlet( msg );
+	context.logServlet( msg, null );
     }
 
     public String getInitParameter(String name) {

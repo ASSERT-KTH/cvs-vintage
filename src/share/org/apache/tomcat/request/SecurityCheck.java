@@ -80,7 +80,8 @@ import org.xml.sax.*;
  */
 public class SecurityCheck extends  BaseInterceptor {
     MemoryRealm memoryRealm;
-
+    int debug=0;
+    
     public SecurityCheck() {
     }
 	
@@ -108,16 +109,16 @@ public class SecurityCheck extends  BaseInterceptor {
 	    // I don't understand the spec enough, so I can't comment the code 
 
 	    String form=ctx.getFormLoginPage();
-	    ctx.log( "Adding form login " + form );
+	    if( debug > 0 ) ctx.log( "Adding form login " + form );
 	    if( form!= null ) {
 		int lastS=form.lastIndexOf( "/" );
 		if( lastS<=0 ) {
 		    ctx.addServletMapping( "/j_security_check", "tomcat.jcheck" );
-		    ctx.log( "Map  /j_security_check to tomcat.jcheck" );
+		    if( debug > 0 ) ctx.log( "Map  /j_security_check to tomcat.jcheck" );
 		}  else {
 		    String dir=form.substring( 0, lastS);
 		    ctx.addServletMapping( dir + "/j_security_check", "tomcat.jcheck");
-		    ctx.log( "Map " + dir + "/j_security_check to tomcat.jcheck");
+		    if( debug > 0 ) ctx.log( "Map " + dir + "/j_security_check to tomcat.jcheck");
 		}
 	    }
 	}
@@ -218,6 +219,10 @@ public class SecurityCheck extends  BaseInterceptor {
 	// XXX check transport
     }
 
+    public void setDebug( int d ) {
+	debug=d;
+    }
+    
     static int base64[]= {
 	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
 	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
@@ -279,13 +284,14 @@ class MemoryRealm {
     // String role -> Vector users
     Hashtable roles=new Hashtable();
     Context ctx;
+    int debug=0;
     
     MemoryRealm(Context ctx) {
 	this.ctx=ctx;
     }
 
     public void addUser(String name, String pass, String groups ) {
-	ctx.log( "Add user " + name + " " + pass + " " + groups );
+	if( debug > 0 )  ctx.log( "Add user " + name + " " + pass + " " + groups );
 	passwords.put( name, pass );
 	addRole( groups, name );
     }
@@ -300,13 +306,13 @@ class MemoryRealm {
     }
     
     public boolean checkPassword( String user, String pass ) {
-	ctx.log( "check " + user+ " " + pass + " " + passwords.get( user ));
+	if( debug > 0 ) ctx.log( "check " + user+ " " + pass + " " + passwords.get( user ));
 	return pass.equals( (String)passwords.get( user ) );
     }
 
     public boolean userInRole( String user, String role ) {
 	Vector users=(Vector)roles.get(role);
-	ctx.log( "check role " + user+ " " + role + " "  );
+	if( debug > 0 ) ctx.log( "check role " + user+ " " + role + " "  );
 	if(users==null) return false;
 	return users.indexOf( user ) >=0 ;
     }

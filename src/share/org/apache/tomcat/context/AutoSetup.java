@@ -79,10 +79,11 @@ import org.apache.tomcat.task.Expand;
  * @author costin@dnt.ro
  */
 public class AutoSetup extends BaseInterceptor {
-
+    int debug=0;
+    
     public AutoSetup() {
     }
-	
+
     public void engineInit(ContextManager cm) throws TomcatException {
 	String home=cm.getHome();
 	File webappD=new File(home + "/webapps");
@@ -135,13 +136,16 @@ public class AutoSetup extends BaseInterceptor {
 		ctx.setContextManager( cm );
 		ctx.setPath(path);
 		ctx.setDocBase(  "webapps/" + name);
-		ctx.log("Automatic addContext webapps/" + name + ")");
+		if( debug > 0) ctx.log("<l:autoLoadContext docBase=\"webapps/" + name + "\" />");
 		cm.addContext(ctx);
 	    } else {
 		//System.out.println("Already set up: " + path + " " + cm.getContext(path));
 	    }
-
-		
 	}
     }
+
+    public void setDebug( int i ) {
+	debug=i;
+    }
+
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.1 2000/02/17 10:36:48 shachor Exp $
- * $Revision: 1.1 $
- * $Date: 2000/02/17 10:36:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.2 2000/02/22 21:06:47 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/02/22 21:06:47 $
  *
  * ====================================================================
  *
@@ -136,7 +136,7 @@ public class ThreadPool  {
         if(0 == currentThreadCount) {
             throw new IllegalStateException();
         }
-
+	//	System.out.print("K");
         if(currentThreadsUsed == currentThreadCount) {
             if(currentThreadCount < maxThreads) {
                 int toOpen = currentThreadCount + minSpareThreads;
@@ -154,7 +154,7 @@ public class ThreadPool  {
                 }
             }
         }
-
+	//System.out.print("L");
 
         ControlRunnable c = (ControlRunnable)pool.lastElement();
         pool.removeElement(c);

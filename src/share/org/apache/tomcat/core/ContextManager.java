@@ -147,7 +147,9 @@ public class ContextManager {
     public void setDefaults() {
 	if(connectors.size()==0) {
 	    if(debug>5) log("Setting default adapter");
-	    addServerConnector(  new org.apache.tomcat.service.http.HttpAdapter() );
+	    org.apache.tomcat.service.SimpleTcpConnector sc=new org.apache.tomcat.service.SimpleTcpConnector();
+	    sc.setTcpConnectionHandler( new org.apache.tomcat.service.http.HttpConnectionHandler());
+	    addServerConnector(  sc );
 	}
 	
 	if( contextInterceptors.size()==0) {
@@ -181,6 +183,8 @@ public class ContextManager {
      *  and configured. 
      */
     public void init()  throws TomcatException {
+	String cp=System.getProperty( "java.class.path");
+	log( "<l:tomcat home=\"" + home + "\" classPath=\"" + cp + "\" />");
 	//	long time=System.currentTimeMillis();
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
@@ -275,7 +279,7 @@ public class ContextManager {
 	// it will replace existing context - it's better than  IllegalStateException.
 	String path=ctx.getPath();
 	if( getContext( path ) != null ) {
-	    if(debug>0) log("Warning: replacing context for " + path, Logger.WARNING);
+	    if(debug>0) log("Warning: replacing context for " + path);
 	    removeContext(path);
 	}
 
@@ -284,7 +288,7 @@ public class ContextManager {
 	    cI[i].addContext( this, ctx );
 	}
 	
-	log(" adding " + ctx + " " + ctx.getPath() + " " +  ctx.getDocBase(), Logger.INFORMATION);
+	ctx.log("<l:addContext path=\"" +  ctx.getPath() + "\"  docBase=\"" + ctx.getDocBase() + "\" />");
 
 	contexts.put( path, ctx );
     }
@@ -338,7 +342,7 @@ public class ContextManager {
      * @param con The new server connector
      */
     public synchronized void addServerConnector( ServerConnector con ) {
-	log(" adding connector " + con.getClass().getName(), Logger.INFORMATION);
+	if(debug>0) log("<l:addConnector javaClass=\"" + con.getClass().getName() + "\" />");
 	con.setContextManager( this );
 	connectors.addElement( con );
     }
@@ -348,7 +352,7 @@ public class ContextManager {
     }
     
     public void addRequestInterceptor( RequestInterceptor ri ) {
-	if(debug>0) log(" adding request intereptor " + ri.getClass().getName(), Logger.INFORMATION);
+	if(debug>0) log("<l:requestInterceptor javaClass=\"" + ri.getClass().getName() + "\" />");
 	requestInterceptors.addElement( ri );
 	if( ri instanceof ContextInterceptor )
 	    contextInterceptors.addElement( ri );
@@ -465,7 +469,7 @@ public class ContextManager {
      * WorkDir property - where all temporary files will be created
      */ 
     public void setWorkDir( String wd ) {
-	if(debug>0) log("set work dir " + wd, Logger.INFORMATION);
+	if(debug>0) log("set work dir " + wd);
 	this.workDir=wd;
     }
 
@@ -483,6 +487,7 @@ public class ContextManager {
     public void service( Request rrequest, Response rresponse ) {
 	//	log( "New  request " + rrequest );
 	try {
+	    //	    System.out.print("A");
 	    rrequest.setContextManager( this );
 	    rrequest.setResponse(rresponse);
 	    rresponse.setRequest(rrequest);
@@ -507,7 +512,7 @@ public class ContextManager {
 	} catch (Throwable t) {
 	    handleError( rrequest, rresponse, t, 0 );
 	}
-
+	//	System.out.print("B");
 	try {
 	    rresponse.finish();
 	    rrequest.recycle();
@@ -516,6 +521,7 @@ public class ContextManager {
 	    if(debug>0) log( "Error closing request " + ex);
 	}
 	//	log( "Done with request " + rrequest );
+	//	System.out.print("C");
 	return;
     }
 
@@ -525,7 +531,7 @@ public class ContextManager {
      */
     int processRequest( Request req ) {
 	req.setContextManager( this );
-	if(debug>0) log("ProcessRequest: "+req.toString(), Logger.DEBUG);
+	if(debug>0) log("ProcessRequest: "+req.toString());
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).contextMap( req );
@@ -535,7 +541,7 @@ public class ContextManager {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).requestMap( req );
 	}
 
-	if(debug>0) log("After processing: "+req.toString(), Logger.DEBUG);
+	if(debug>0) log("After processing: "+req.toString());
 
 	return 0;
     }
@@ -700,27 +706,29 @@ public class ContextManager {
 	debug=level;
     }
 
+    public final void log(String msg) {
+	if( msg.startsWith( "<l:" ))
+	    doLog( msg );
+	else
+	    doLog("<l:tc>" + msg + "</l:tc>");
+    }
+
     boolean firstLog = true;
     Logger cmLog = null;
     
-    public final void log(String msg) {
+    public final void doLog(String msg) {
 	if (firstLog == true) {
-	    cmLog = Logger.getLogger("log:cm");
+	    cmLog = Logger.getLogger("tc_log");
+	    cmLog.setCustomOutput("true");
+	    cmLog.setVerbosityLevel(Logger.INFORMATION);
 	    firstLog = false;
 	}
 
-	if (cmLog != null)
-	    cmLog.log(msg, Logger.DEBUG);
-    }
-
-    public final void log(String msg, int level) {
-	if (firstLog == true) {
-	    cmLog = Logger.getLogger("log:cm");
-	    firstLog = false;
+	if (cmLog != null) {
+	    // customOutput !
+	    cmLog.log(msg + "\n");
+	    // XXX \n should be added to logger, portable
 	}
-
-	if (cmLog != null)
-	    cmLog.log(msg, level);
     }
     
 }

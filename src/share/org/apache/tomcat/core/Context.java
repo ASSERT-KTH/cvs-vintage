@@ -561,42 +561,32 @@ public class Context {
 	return debug;
     }
 
-    boolean firstLog = true;
-    Logger cLog = null;
-    Logger csLog = null;
-
-    /** Internla log method
+    /** Internal log method
      */
     public final void log(String msg) {
-	if (firstLog == true) {
-	    cLog = Logger.getLogger("log:context");
-	    csLog = Logger.getLogger("log:servlet");
-	    firstLog = false;
-	}
-	if (cLog != null)
-	    cLog.log("Context(" + path  + "): " + msg, Logger.DEBUG);
+	// XXX \n
+	// Custom output -
+	if( msg.startsWith( "<l:" ))
+	    contextM.doLog( msg );
+	else
+	    contextM.doLog("<l:ctx path=\"" + path  + "\" >" + msg + "</l:ctx>");
     }
+
+    boolean firstLog = true;
+    Logger csLog = null;
 
     /** User-level log method ( called from a servlet)
      */
-    public void logServlet( String msg ) {
-	if (firstLog == true) {
-	    cLog = Logger.getLogger("log:context");
-	    csLog = Logger.getLogger("log:servlet");
-	    firstLog = false;
-	}
-	if (csLog != null)
-	    csLog.log("Context(" + path  + "): " + msg, Logger.DEBUG);
-    }
-
     public void logServlet( String msg , Throwable t ) {
 	if (firstLog == true) {
-	    cLog = Logger.getLogger("log:context");
-	    csLog = Logger.getLogger("log:servlet");
+	    csLog = Logger.getLogger("servlet_log");
+	    csLog.setCustomOutput("true");
+	    csLog.setVerbosityLevel(Logger.INFORMATION);
 	    firstLog = false;
 	}
-	if (csLog != null)
-	    csLog.log("Context(" + path  + "): " + msg, t, Logger.DEBUG);
+	if (csLog != null) {
+	    csLog.log("<l:context path=\"" + path  + "\" >" + msg + "</l:context>");
+	}
     }
     
     public String toString() {

@@ -83,7 +83,9 @@ public class TomcatLogger extends Logger {
 	Throwable t;
 	
 	LogEntry(String message, Throwable t) {
-	    this.date = System.currentTimeMillis();
+	    // avoid expensive system call
+	    if (TomcatLogger.this.timeStamp)
+		this.date = System.currentTimeMillis();
 	    this.message = message;
 	    this.t = t;
 	}
@@ -100,6 +102,11 @@ public class TomcatLogger extends Logger {
 	 * Format the log message nicely into a string.
 	 */
 	public String toString() {
+
+	    // custom output - do nothing
+	    if( TomcatLogger.this.custom )
+		return message;
+	    
 	    StringWriter sw = new StringWriter();
 	    PrintWriter w = new PrintWriter(sw);
 

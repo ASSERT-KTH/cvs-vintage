@@ -13,8 +13,6 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import org.w3c.dom.*;
 
-import org.apache.tomcat.logging.Logger;
-
 /** 
  * SAX Handler - it will read the XML and construct java objects
  *
@@ -144,9 +142,11 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
     public int getDebug() {
 	return debug;
     }
-    
+
     public void log(String msg) {
-	Logger.log("STARTUP_LOG", msg);
+	// log is for debug only, it should't be enabled for anything else
+	// ( no dependency on Logger or any external tomcat package )
+	System.out.println("XmlMapper: " + msg);
     }
 
     /** read an XML file, construct and return the object hierarchy

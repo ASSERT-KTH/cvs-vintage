@@ -19,22 +19,12 @@
             DEBUG
          -->
 
-    <Logger name="log:cm" 
-	    verbosityLevel = "DEBUG" 
-	    timestamp = "no" />
+    <Logger name="tc_log" 
+            customOutput="yes" />
 
-    <Logger name="log:context" 
-	    verbosityLevel = "DEBUG" 
-	    timestamp = "no"/>
-
-    <Logger name="log:servlet" 
+    <Logger name="servlet_log" 
             path="logs/servlet.log"
-	    verbosityLevel = "DEBUG" 
-	    timestamp = "no" />
-
-    <Logger name="log:startup"
-            verbosityLevel = "DEBUG"
-	    timestamp = "no" />
+            customOutput="yes" />
 
     <Logger name="JASPER_LOG" 
 	    path="logs/jasper.log"
@@ -53,11 +43,12 @@
         <RequestInterceptor className="org.apache.tomcat.request.SecurityCheck" />
         <RequestInterceptor className="org.apache.tomcat.request.FixHeaders" />
 
-        <Connector className="org.apache.tomcat.service.http.HttpAdapter">
+        <Connector className="org.apache.tomcat.service.SimpleTcpConnector">
+            <Parameter name="handler" value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
             <Parameter name="port" value="8080"/>
         </Connector>
 
-        <Connector className="org.apache.tomcat.service.TcpEndpointConnector">
+        <Connector className="org.apache.tomcat.service.SimpleTcpConnector">
             <Parameter name="handler" value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
             <Parameter name="port" value="8007"/>
         </Connector>

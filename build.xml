@@ -71,6 +71,13 @@
            destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes"
            classpath="${tomcat.build}/classes"/>
 
+    <!-- admin context -->
+    <mkdir dir="${tomcat.build}/webapps/admin"/>
+    <copydir src="src/admin" dest="${tomcat.build}/webapps/admin"/>
+    <javac srcdir="src/admin/WEB-INF/classes"
+           destdir="${tomcat.build}/webapps/admin/WEB-INF/classes"
+           classpath="${tomcat.build}/classes"/>
+
     <!-- Test application -->
     <mkdir dir="${tomcat.build}/webapps/test"/>
     <copydir src="src/tests/webpages" dest="${tomcat.build}/webapps/test"/>
@@ -118,6 +125,11 @@
            basedir="${tomcat.home}/webapps/examples"
            items="." /> 
     <deltree dir="${tomcat.home}/webapps/examples"/>
+
+    <jar   jarfile="${tomcat.home}/webapps/admin.war"
+           basedir="${tomcat.home}/webapps/admin"
+           items="." /> 
+    <deltree dir="${tomcat.home}/webapps/admin"/>
 
     <jar   jarfile="${tomcat.home}/webapps/ROOT.war"
            basedir="${tomcat.home}/webapps/ROOT"

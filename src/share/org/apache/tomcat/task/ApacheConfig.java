@@ -87,7 +87,7 @@ public class ApacheConfig  { // implements XXX
 	    String tomcatHome= cm.getHome();
 	    String apacheHome=findApache();
 	    
-	    System.out.println("Tomcat home= " + tomcatHome);
+	    //System.out.println("Tomcat home= " + tomcatHome);
 	    
 	    FileWriter configW=new FileWriter( tomcatHome + APACHE_CONFIG);
 	    PrintWriter pw=new PrintWriter( configW );

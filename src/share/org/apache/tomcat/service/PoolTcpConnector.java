@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpointConnector.java,v 1.5 2000/02/22 21:06:45 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/02/22 21:06:45 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpConnector.java,v 1.1 2000/02/22 21:06:43 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/02/22 21:06:43 $
  *
  * ====================================================================
  *
@@ -71,6 +71,16 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+//import org.apache.tomcat.server.HttpServer;
+
+/* Similar with MPM module in Apache2.0. Handles all the details related with
+   "tcp server" functionality - thread management, accept policy, etc.
+   It should do nothing more - as soon as it get a socket ( and all socket options
+   are set, etc), it just handle the stream to ConnectionHandler.processConnection. (costin)
+*/
+
+
+
 /**
  * Connector for a TCP-based connector using the API in tomcat.service.
  * You need to set a "connection.handler" property with the class name of
@@ -79,7 +89,7 @@ import java.util.*;
  * @author costin@eng.sun.com
  * @author Gal Shachor [shachor@il.ibm.com]
  */
-public abstract  class TcpEndpointConnector  implements ServerConnector {
+public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerConnector {
     // Attributes we accept ( to support the old model of
     // configuration, will be deprecated )
     public static final String VHOST_PORT="vhost_port";
@@ -94,16 +104,32 @@ public abstract  class TcpEndpointConnector  implements ServerConnector {
     public static final String PORT = "port";
     public static final String HANDLER = "handler";
 
+    /*
+     * Threading and mod_mpm style properties.
+     */
+    public static final String THREAD_POOL = "thread_pool";
+    public static final String MAX_THREADS = "max_threads";
+    public static final String MAX_SPARE_THREADS = "max_spare_threads";
+    public static final String MIN_SPARE_THREADS = "min_spare_threads";
+    public static final String BACKLOG = "backlog";
+
     // XXX define ConnectorException
     // XXX replace strings with sm.get...
     // XXX replace static strings with constants
     String handlerClassName;
+    PoolTcpEndpoint ep;
     TcpConnectionHandler con;
 
     ContextManager cm;
 
     private InetAddress address;
     private int port;
+
+    private int backlog = -1;
+    private boolean usePools = true;
+    private int maxThreads = -1;
+    private int maxSpareThreads = -1;
+    private int minSpareThreads = -1;
 
     int vport;
 
@@ -112,10 +138,42 @@ public abstract  class TcpEndpointConnector  implements ServerConnector {
 
     boolean running = true;
 
-    public abstract void start() throws Exception;
-    
-    public abstract void stop() throws Exception;
-    
+    public PoolTcpConnector() {
+    	ep = new PoolTcpEndpoint();
+    }
+
+    public void start() throws Exception {
+    	if(con==null)
+    	    throw new Exception( "Invalid ConnectionHandler");
+
+	    con.setAttribute("context.manager",cm );
+    	ep.setPort(port);
+    	ep.setPoolOn(usePools);
+    	if(backlog > 0) {
+    	    ep.setBacklog(backlog);
+    	}
+    	if(maxThreads > 0) {
+    	    ep.setMaxThreads(maxThreads);
+    	}
+    	if(maxSpareThreads > 0) {
+    	    ep.setMaxSpareThreads(maxSpareThreads);
+    	}
+    	if(minSpareThreads > 0) {
+    	    ep.setMinSpareThreads(minSpareThreads);
+    	}
+
+	if(socketFactory != null) {
+	    ep.setServerSocketFactory( socketFactory );
+	}
+	ep.setConnectionHandler( con );
+	ep.startEndpoint();
+	System.out.println("Starting tcp endpoint on " + port + " with " + con.getClass().getName());
+    }
+
+    public void stop() throws Exception {
+    	ep.stopEndpoint();
+    }
+
     public void setContextManager( ContextManager ctx ) {
 	    this.cm=ctx;
     }
@@ -145,11 +203,23 @@ public abstract  class TcpEndpointConnector  implements ServerConnector {
     	    setPort( value );
     	} else if(HANDLER.equals(prop)) {
     	    try {
-		Class chC=Class.forName( value );
+        		Class chC=Class.forName( value );
     	    	con=(TcpConnectionHandler)chC.newInstance();
     	    } catch( Exception ex) {
-		ex.printStackTrace();
+        		ex.printStackTrace();
     	    }
+    	} else if(THREAD_POOL.equals(prop)) {
+    	    if(value.equalsIgnoreCase("off")) {
+    	        usePools = false;
+    	    }
+    	} else if(MAX_THREADS.equals(prop)) {
+    	    maxThreads = string2Int(value);
+    	} else if(MAX_SPARE_THREADS.equals(prop)) {
+    	    maxSpareThreads = string2Int(value);
+    	} else if(MIN_SPARE_THREADS.equals(prop)) {
+    	    minSpareThreads = string2Int(value);
+    	} else if(BACKLOG.equals(prop)) {
+    	    backlog = string2Int(value);
     	}
     }
 
@@ -157,17 +227,17 @@ public abstract  class TcpEndpointConnector  implements ServerConnector {
     public void setAttribute( String prop, Object value) {
     	if(VHOST_NAME.equals(prop) ) {
 	        //vhost=(String)value;
-	} else if(VHOST_PORT.equals(prop) ) {
-	    vport=((Integer)value).intValue();
-	} else if(VHOST_ADDRESS.equals(prop)) {
-	    address=(InetAddress)value;
-	} else if(SERVER.equals(prop)) {
+	    } else if(VHOST_PORT.equals(prop) ) {
+	        vport=((Integer)value).intValue();
+	    } else if(VHOST_ADDRESS.equals(prop)) {
+	        address=(InetAddress)value;
+	    } else if(SERVER.equals(prop)) {
     	    //server=(HttpServer)value;
-	} else if(SOCKET_FACTORY.equals(prop)) {
+	    } else if(SOCKET_FACTORY.equals(prop)) {
     	    socketFactory=(ServerSocketFactory)value;
-	}
+	    }
     }
-    
+
     public Object getAttribute( String prop ) {
 	    return null;
     }
