@@ -61,7 +61,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.7 2001/11/02 22:49:45 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.8 2001/11/10 02:22:17 elicia Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -94,7 +94,7 @@ public abstract class ScarabTemplateAction extends TemplateAction
     }
 
     /**
-     * Returns the current template that is being executed, otherwisse
+     * Returns the current template that is being executed, otherwise
      * it returns defaultValue.
      */
     public String getCurrentTemplate(RunData data, String defaultValue)
@@ -140,6 +140,16 @@ public abstract class ScarabTemplateAction extends TemplateAction
     }
 
     /**
+     * Returns the other template that is being executed, otherwise
+     * it returns null.
+     */
+    public String getOtherTemplate(RunData data)
+    {
+        return data.getParameters()
+                            .getString(ScarabConstants.OTHER_TEMPLATE);
+    }
+
+    /**
      * Returns the backTemplate to be executed. Otherwise returns null.
      */
     public String getBackTemplate(RunData data)
@@ -169,16 +179,23 @@ public abstract class ScarabTemplateAction extends TemplateAction
         setTarget(data, getCancelTemplate(data));            
     }
 
+    public void doGonext( RunData data, TemplateContext context )
+        throws Exception
+    {
+        setTarget(data, getNextTemplate(data));            
+    }
+
+    public void doGotoothertemplate( RunData data, TemplateContext context )
+        throws Exception
+    {
+        setTarget(data, getOtherTemplate(data));            
+    }
+
     public void doRefresh( RunData data, TemplateContext context )
         throws Exception
     {
         setTarget(data, getCurrentTemplate(data));            
     }
         
-    public void doGonext( RunData data, TemplateContext context )
-        throws Exception
-    {
-        setTarget(data, getNextTemplate(data));            
-    }
         
 }

@@ -62,7 +62,7 @@ import org.tigris.scarab.screens.Default;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.14 2001/11/02 22:49:45 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.15 2001/11/10 02:22:17 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -166,6 +166,16 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     }
 
     /**
+     * Returns the other template that is being executed, otherwise
+     * it returns null.
+     */
+    public String getOtherTemplate(RunData data)
+    {
+        return data.getParameters()
+                            .getString(ScarabConstants.OTHER_TEMPLATE);
+    }
+
+    /**
      * Require people to implement this method
      */
     public abstract void doPerform( RunData data, TemplateContext context )
@@ -177,15 +187,22 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         setTarget(data, getCancelTemplate(data));            
     }
 
+    public void doGonext( RunData data, TemplateContext context )
+        throws Exception
+    {
+        setTarget(data, getNextTemplate(data));            
+    }
+
+    public void doGotoothertemplate( RunData data, TemplateContext context )
+        throws Exception
+    {
+        setTarget(data, getOtherTemplate(data));            
+    }
+
     public void doRefresh( RunData data, TemplateContext context )
         throws Exception
     {
         setTarget(data, getCurrentTemplate(data));            
     }
         
-    public void doGonext( RunData data, TemplateContext context )
-        throws Exception
-    {
-        setTarget(data, getNextTemplate(data));            
-    }
 }
