@@ -1,5 +1,5 @@
 @echo off
-rem $Id: tomcat.bat,v 1.9 2000/01/27 01:24:51 costin Exp $
+rem $Id: tomcat.bat,v 1.10 2000/02/10 09:32:22 rubys Exp $
 rem A batch file to start/stop tomcat server.
 
 rem This batch file written and tested under Windows NT
@@ -29,11 +29,11 @@ if "%1" == "run" goto runServer
 if "%1" == "env" goto setupEnv
 
 echo Usage:
-echo "tomcat (start|run|env|stop)"
-echo "        start - start tomcat in a separate window"
-echo "        run   - start tomcat in the current window"
-echo "        env   - setup the environment for tomcat"
-echo "        stop  - stop tomcat"
+echo tomcat (start^|run^|env^|stop)
+echo         start - start tomcat in a separate window
+echo         run   - start tomcat in the current window
+echo         env   - setup the environment for tomcat
+echo         stop  - stop tomcat
 goto cleanup
 
 :startServer
