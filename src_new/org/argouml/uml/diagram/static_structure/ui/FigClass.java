@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.123 2004/12/10 13:47:16 mvw Exp $
+// $Id: FigClass.java,v 1.124 2004/12/10 13:55:56 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1191,7 +1191,10 @@ public class FigClass extends FigNodeModelElement
                     oper = (CompartmentFigText) figs.elementAt(ocounter);
                 }
                 oper.setText(Notation.generate(this, bf));
-                oper.setOwner(bf);
+                oper.setOwner(bf); //TODO: update the model again here? 
+                /* This causes another event, and modelChanged() called, 
+                 * and updateOperations() called again... */
+                
                 // underline, if static
                 oper.setUnderline(ModelFacade.CLASSIFIER_SCOPEKIND
 				  .equals(ModelFacade.getOwnerScope(bf)));
