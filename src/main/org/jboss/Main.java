@@ -43,7 +43,7 @@ import org.jboss.system.URLClassLoader;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  *
  * <b>Revisions:</b>
  * <p>
@@ -74,7 +74,7 @@ public class Main
                String libDir,
                String spineDir)
    {
-      Date startTime = new Date();
+      long startTime = System.currentTimeMillis();
 
       try
       {
@@ -239,14 +239,13 @@ public class Main
       }
 
       // Done
-      Date lapsedTime = new Date(new Date().getTime() - startTime.getTime());
-      Calendar cal = Calendar.getInstance();
-      cal.setTime(lapsedTime);
-
+      long stopTime = System.currentTimeMillis();
+      long lapsedTime = stopTime - startTime;
+      long minutes = lapsedTime / 60000;
+      long seconds = (lapsedTime - 60000 * minutes) / 1000;
       System.out.println("JBoss " + version +
             " [" + version.getName() + "] Started in " +
-            cal.get(Calendar.MINUTE) + "m:" +
-            cal.get(Calendar.SECOND) + "s");
+            minutes  + "m:" + seconds  + "s");
    }
 
    /**
@@ -374,38 +373,4 @@ public class Main
          }
       }
    }
-
-   /*
-    * Setup security
-    * XXX marcf: what are the reason that would prevent us from making this an MBean
-    * Set the JAAS login config file if not already set
-    * if( System.getProperty("java.security.auth.login.config") == null )
-    * {
-    * URL loginConfig = mlet.getResource("auth.conf");
-    * if( loginConfig != null )
-    * {
-    * System.setProperty("java.security.auth.login.config", loginConfig.toExternalForm());
-    * System.out.println("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
-    * }
-    * else
-    * {
-    * System.out.println("Warning: no auth.conf found in config="+confName);
-    * }
-    * }
-    *
-    * Set security using the mlet, if a patch was passed it will look in that path first
-    * URL serverPolicy = mlet.getResource("server.policy");
-    *
-    * if ( serverPolicy == null )
-    * {
-    * throw new IOException("server.policy missing");
-    * }
-    *
-    * System.setProperty("java.security.policy", serverPolicy.getFile());
-    *
-    * Set security manager
-    * Optional for better performance
-    * if (System.getProperty("java.security.manager") != null)
-    * System.setSecurityManager((SecurityManager)Class.forName(System.getProperty("java.security.manager")).newInstance());
-    */
 }
