@@ -775,11 +775,10 @@ try{
             if ( key == null ) 
             {
                 // get new issue
-                reportingIssue = getCurrentModule().getNewIssue();
+                reportingIssue = getCurrentModule().getNewIssue(getCurrentIssueType());
                 key = ((ScarabUser)data.getUser())
                     .setReportingIssue(reportingIssue);
                 data.getParameters().add(ScarabConstants.REPORTING_ISSUE, key);
-                reportingIssue.setIssueType(getCurrentIssueType());
             }
             else 
             {
@@ -837,7 +836,8 @@ try{
                 String issueId =  issueGroup.get("Id").toString();
                 if ( issueId == null || issueId.length() == 0 )
                 {
-                    issue = new Issue();
+                    issue = getCurrentModule()
+                            .getNewIssue(getCurrentIssueType());
                 }
                 else 
                 {
