@@ -531,7 +531,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    try {
 		if(debug>1 )
 		    log( "Before " + pathMB.toString());
-		req.getURLDecoder().convert( pathMB );
+		req.getURLDecoder().convert( pathMB , false );
 		pathMB.resetStringValue();
 		if(debug>1 )
 		    log( "After " + pathMB.toString());
