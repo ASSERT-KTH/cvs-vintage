@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.6 2000/01/08 21:31:38 rubys Exp $
- * $Revision: 1.6 $
- * $Date: 2000/01/08 21:31:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.7 2000/01/21 04:17:21 rubys Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/01/21 04:17:21 $
  *
  * ====================================================================
  * 
@@ -189,8 +189,19 @@ public abstract class Compiler {
          */
         ByteArrayOutputStream out = new ByteArrayOutputStream (256);
     
-        javac.setOut(out);
-        boolean status = javac.compile(argv);
+        /**
+         * Configure the compiler object
+         */
+        javac.setEncoding(javaEncoding);
+        javac.setClasspath( System.getProperty("java.class.path")+ sep + 
+                            classpath + sep + ctxt.getOutputDir());
+        javac.setOutputDir(ctxt.getOutputDir());
+        javac.setMsgOutput(out);
+
+        /**
+         * Execute the compiler
+         */
+        boolean status = javac.compile(javaFileName);
 
         if (!ctxt.keepGenerated()) {
             File javaFile = new File(javaFileName);

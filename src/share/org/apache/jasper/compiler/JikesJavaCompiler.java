@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Attic/PluginJavaCompiler.java,v 1.1 1999/12/28 17:01:05 rubys Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JikesJavaCompiler.java,v 1.1 2000/01/21 04:17:22 rubys Exp $
  * $Revision: 1.1 $
- * $Date: 1999/12/28 17:01:05 $
+ * $Date: 2000/01/21 04:17:22 $
  *
  * ====================================================================
  *
@@ -66,36 +66,78 @@ import java.io.OutputStream;
 import java.io.IOException;
 
 /**
-  * A Plug-in class for specifying a 'javac' compiler.
+  * A Plug-in class for specifying a 'jikes' compile.
   *
   * @author Jeffrey Chiu
   */
-public class PluginJavaCompiler implements JavaCompiler {
+public class JikesJavaCompiler implements JavaCompiler {
 
     static final int OUTPUT_BUFFER_SIZE = 1024;
     static final int BUFFER_SIZE = 512;
 
+    String encoding;
+    String classpath;
+    String compilerPath = "jikes";
+    String outdir;
     OutputStream out;
-    String compilerPath;
 
-    public PluginJavaCompiler(String compilerPath) {
+    /**
+     * Specify where the compiler can be found
+     */ 
+    public void setCompilerPath(String compilerPath) {
 	this.compilerPath = compilerPath;
     }
 
-    public void setOut(OutputStream out) {
-	this.out = out;
+    /**
+     * Set the encoding (character set) of the source
+     */ 
+    public void setEncoding(String encoding) {
+      this.encoding = encoding;
     }
 
-    public boolean compile(String[] args) {
+    /**
+     * Set the class path for the compiler
+     */ 
+    public void setClasspath(String classpath) {
+      this.classpath = classpath;
+    }
+
+    /**
+     * Set the output directory
+     */ 
+    public void setOutputDir(String outdir) {
+      this.outdir = outdir;
+    }
+
+    /**
+     * Set where you want the compiler output (messages) to go 
+     */ 
+    public void setMsgOutput(OutputStream out) {
+      this.out = out;
+    }
+
+    /**
+     * Execute the compiler
+     * @param source - file name of the source to be compiled
+     */ 
+    public boolean compile(String source) {
 	Process p;
-	String[] compilerCmd = new String[args.length+1];
 	int exitValue = -1;
 
-	compilerCmd[0] = compilerPath;
-	for(int x = 0; x < args.length; x++) {
-	    compilerCmd[x+1] = args[x];
-	}
+	String[] compilerCmd = new String[] {
+	  compilerPath,
+          //XXX - add encoding once Jikes supports it
+          "-classpath", classpath,
+          "-d", outdir,
+          source
+        };
 
+        System.out.println(
+	  compilerPath +
+          //XXX - add encoding once Jikes supports it
+          " -classpath " + classpath +
+          " -d " + outdir +
+          source);
 	try {
 	    p = Runtime.getRuntime().exec(compilerCmd);
 

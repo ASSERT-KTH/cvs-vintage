@@ -34,6 +34,16 @@
         <servlet-class>
             org.apache.jasper.runtime.JspServlet
         </servlet-class>
+
+<!-- uncomment the following to use Jikes for JSP compilation
+
+        <init-param>
+            <param-name>jspCompilerPlugin</param-name>
+            <param-value>org.apache.jasper.compiler.JikesJavaCompiler</param-value>
+        </init-param>
+
+-->
+
 	<load-on-startup>
             -2147483646
 	</load-on-startup>

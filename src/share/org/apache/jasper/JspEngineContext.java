@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.3 1999/12/28 13:25:31 rubys Exp $
- * $Revision: 1.3 $
- * $Date: 1999/12/28 13:25:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.4 2000/01/21 04:17:21 rubys Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/21 04:17:21 $
  *
  * ====================================================================
  * 
@@ -77,7 +77,7 @@ import org.apache.jasper.compiler.TagLibraries;
 import org.apache.jasper.compiler.Compiler;
 import org.apache.jasper.compiler.JspCompiler;
 import org.apache.jasper.compiler.SunJavaCompiler;
-import org.apache.jasper.compiler.PluginJavaCompiler;
+import org.apache.jasper.compiler.JavaCompiler;
 
 /**
  * A place holder for various things that are used through out the JSP
@@ -283,19 +283,33 @@ public class JspEngineContext {
 
     /**
      * Create a "Compiler" object based on some init param data. If	
-     * jspCompilerPath is not specified or is not available, the 
+     * jspCompilerPlugin is not specified or is not available, the 
      * SunJavaCompiler is used.
      */
     public Compiler createCompiler() throws JasperException {
-        Compiler jspCompiler = new JspCompiler(this);
 	String compilerPath = options.getJspCompilerPath();
+	Class jspCompilerPlugin = options.getJspCompilerPlugin();
+        JavaCompiler javac;
 
-	if (compilerPath != null) {
-	    jspCompiler.setJavaCompiler(new PluginJavaCompiler(compilerPath));
+	if (jspCompilerPlugin != null) {
+            try {
+                javac = (JavaCompiler) jspCompilerPlugin.newInstance();
+            } catch (Exception ex) {
+		Constants.message("jsp.warning.compiler.class.cantcreate",
+				  new Object[] { jspCompilerPlugin, ex }, 
+				  Constants.FATAL_ERRORS);
+                javac = new SunJavaCompiler();
+	    }
 	} else {
-	    jspCompiler.setJavaCompiler(new SunJavaCompiler());
+            javac = new SunJavaCompiler();
 	}
 
+        if (compilerPath != null)
+            javac.setCompilerPath(compilerPath);
+
+        Compiler jspCompiler = new JspCompiler(this);
+	jspCompiler.setJavaCompiler(javac);
+         
         return jspCompiler;
     }
 }
