@@ -20,6 +20,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 
 /**
@@ -61,54 +62,51 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 		adapter = new FolderCommandAdapter(references);
 
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
-		
-		// get IMAP rootfolder 
+
+		// get IMAP rootfolder
 		IMAPRootFolder srcFolder = (IMAPRootFolder) r[0].getFolder();
 
-		boolean newMessages = false;
-
-		// we only check inbox
+        // we only check inbox
 		inboxFolder = (IMAPFolder) srcFolder.getChild("Inbox");
-		
-		// number of recent messages
+
+        // Find old numbers
+		int total  = inboxFolder.getMessageFolderInfo().getExists();
 		int recent = inboxFolder.getMessageFolderInfo().getRecent();
-		
-		// fetch headerlist
+        int unseen = inboxFolder.getMessageFolderInfo().getUnseen();
+
+        // check for new headers
 		inboxFolder.getHeaderList(worker);
 
-		// new recent message count
+        // Get the new numbers
+		int newTotal  = inboxFolder.getMessageFolderInfo().getExists();
 		int newRecent = inboxFolder.getMessageFolderInfo().getRecent();
+        int newUnseen = inboxFolder.getMessageFolderInfo().getUnseen();
 
-		// update tree information
-		MainInterface.treeModel.nodeChanged(inboxFolder);
+        // ALP 04/29/03
+        // Call updageGUI() if anything has changed
+		if (newRecent != recent || newTotal != total || newUnseen != unseen){
+          updateGUI();
+          ImapItem item = srcFolder.getAccountItem().getImapItem();
+          if((newRecent != recent) && (item.getBoolean("enable_sound"))){
+            // the number of "recent" messages has changed, so play a sound
+            // of told to for new messages on server
+            String file = item.get("sound_file");
 
-		// if recent message count changed...
-		if (newRecent != recent)
-			newMessages = true;
+            ColumbaLogger.log.info("playing sound file=" + file);
 
-	
-		if (newMessages == true) {
-			ImapItem item = srcFolder.getAccountItem().getImapItem();
-			// new messages on server
-			if (item.getBoolean("enable_sound")) {
-				String file = item.get("sound_file");
+            if (file.equalsIgnoreCase("default")) {
+              PlaySound.play("newmail.wav");
+            } else {
+              try {
+                PlaySound.play(new URL(file));
+              } catch (Exception ex) {
+                ex.printStackTrace();
+              }
 
-				ColumbaLogger.log.info("playing sound file=" + file);
-
-				if (file.equalsIgnoreCase("default")) {
-					PlaySound.play("newmail.wav");
-				} else {
-					try {
-						PlaySound.play(new URL(file));
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-
-				}
-			}
-		}
-
-	}
+            } //  END else
+          } //  END if((newRecent != recent) && (item.getBoolean...
+		} //  END if (newRecent != recent || newTotal != total ...
+	} //  END public void execute(Worker worker) throws Exception
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.command.Command#updateGUI()
@@ -117,6 +115,8 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 		// send update event to table
 		TableChangedEvent ev =
 			new TableChangedEvent(TableChangedEvent.UPDATE, inboxFolder);
+        MainInterface.treeModel.nodeChanged(inboxFolder);
+        MailFrameController.tableChanged(ev);
 	}
 
 }
