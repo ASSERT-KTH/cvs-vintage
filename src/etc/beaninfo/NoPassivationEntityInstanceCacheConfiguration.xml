@@ -1,6 +1,0 @@
-<bean 
-  class="org.jboss.ejb.deployment.NoPassivationEntityInstanceCacheConfiguration"
-  displayname="Non-passivating cache"
-  iconcolor16="/images/database.gif">
-</bean>
-   
