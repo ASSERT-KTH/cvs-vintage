@@ -1,4 +1,4 @@
-// $Id: SAXParserBase.java,v 1.24 2004/10/11 15:29:29 mkl Exp $
+// $Id: SAXParserBase.java,v 1.25 2004/12/17 17:41:29 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -193,20 +193,22 @@ public abstract class SAXParserBase extends DefaultHandler {
             Attributes atts) throws SAXException {
         if (isElementOfInterest(name)) {
 
-            XMLElement e = createXmlElement(name, atts);
+            XMLElement element = createXmlElement(name, atts);
             
             if (LOG.isDebugEnabled()) {
                 StringBuffer buf = new StringBuffer();
-                buf.append("START: " + name + " " + e);
+                buf.append("START: ").append(name).append(' ').append(element);
                 for (int i = 0; i < atts.getLength(); i++) {
-            	    buf.append("   ATT: " + atts.getLocalName(i) + " " 
-            		   + atts.getValue(i));
+            	    buf.append("   ATT: ")
+                        .append(atts.getLocalName(i))
+                            .append(' ')
+                                .append(atts.getValue(i));
                 }
                 LOG.debug(buf.toString());
             }
             
-            elements[nElements++] = e;
-            handleStartElement(e);
+            elements[nElements++] = element;
+            handleStartElement(element);
         }
     }
 

@@ -11,7 +11,7 @@
 <!-- files.  "tee" = Template with Embedded Expressions. -->
 
 <!-- Original Author: jrobbins@ics.uci.edu -->
-<!-- $Id: argo2.tee,v 1.1 2004/09/05 16:59:20 bobtarling Exp $ -->
+<!-- $Id: argo2.tee,v 1.2 2004/12/17 17:41:28 bobtarling Exp $ -->
 
 
 <!-- TO DO LIST: -->
@@ -32,8 +32,8 @@
       <ocl>self.description</ocl>
     </description>
   </documentation>
-  
   <searchpath href="<ocl>self.searchPath</ocl>" />
+  <diagramcount><ocl>self.diagramCount.intValue</ocl></diagramcount>
 
   <ocl>self.members</ocl>
 

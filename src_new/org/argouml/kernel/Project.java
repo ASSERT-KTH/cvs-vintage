@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.123 2004/12/11 18:27:30 mvw Exp $
+// $Id: Project.java,v 1.124 2004/12/17 17:41:29 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -726,6 +726,15 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     public Vector getDiagrams() {
         return diagrams;
+    }
+
+    /**
+     * Get the number of diagrams in this project.
+     * Used by argo2.tee!!
+     * @return the number of diagrams in this project.
+     */
+    public int getDiagramCount() {
+        return diagrams.size();
     }
 
     /**

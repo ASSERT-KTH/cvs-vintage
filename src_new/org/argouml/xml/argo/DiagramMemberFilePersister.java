@@ -1,4 +1,4 @@
-// $Id: DiagramMemberFilePersister.java,v 1.3 2004/10/23 11:05:48 mvw Exp $
+// $Id: DiagramMemberFilePersister.java,v 1.4 2004/12/17 17:41:28 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ class DiagramMemberFilePersister extends MemberFilePersister {
         this.attributes = attribs;
         try {
             inputStream =
-                new XmlInputStream(url.openStream(), "pgml", attribs);
+                new XmlInputStream(url.openStream(), "member", attribs, true);
             PGMLParser.getInstance().setOwnerRegistry(project.getUUIDRefs());
             ArgoDiagram d =
                     (ArgoDiagram) PGMLParser.getInstance().readDiagram(
