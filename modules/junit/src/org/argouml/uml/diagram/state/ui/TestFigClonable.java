@@ -1,4 +1,4 @@
-// $Id: TestFigClonable.java,v 1.5 2004/08/27 14:59:52 mvw Exp $
+// $Id: TestFigClonable.java,v 1.6 2004/09/03 20:02:02 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,21 +113,6 @@ public class TestFigClonable extends TestCase {
         }
         catch (Exception e) {
             assertTrue("FigForkState not clonable", false);
-        }
-    }
-
-    /** try to clone FigHistoryState in package diagram.state.ui.
-     */
-    public void testHistoryStateClonable() {
-        try {
-            FigHistoryState fig = new FigHistoryState();
-            FigHistoryState figclone;
-             
-            figclone = (FigHistoryState) fig.clone();
-            assertTrue("FigHistoryState cloned", true);
-        }
-        catch (Exception e) {
-            assertTrue("FigHistoryState not clonable", false);
         }
     }
 
