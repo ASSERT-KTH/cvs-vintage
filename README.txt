@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.67 2004/02/11 14:56:32 dep4b Exp $
+$Id: README.txt,v 1.68 2004/02/13 09:22:07 dep4b Exp $
 
 Welcome to Scarab!
 
@@ -99,8 +99,13 @@ system running.
 JAVA_HOME
 
 You must have the JAVA_HOME environment variable properly set to be the 
-location of your SDK installation directory. On MacOSX, this path is:
-/System/Library/Frameworks/JavaVM.framework/Home
+location of your SDK installation directory. 
+
+Note for MacOSX:
+
+On MacOSX this path is:
+
+        /System/Library/Frameworks/JavaVM.framework/Home
 
 
 ANT_HOME
@@ -182,14 +187,15 @@ port settings of the application server
 If you already have an existing webserver or service running on ports
 8080 and 8005, and you are using Scarab's version of Tomcat, you will
 need to change the port number to another unused port number by editing
-the /tomcat/conf/server.xml file.
+
+        /tomcat/conf/server.xml
 
 
 file permission settings
 
 By default, the web applications WEB-INF directory needs to have
-permissions set so that the userid which the JVM is running under can
-write into that directory.
+permissions set so that the userid which the JVM is running under 
+can write into that directory.
 
 
 XML-environment
@@ -207,42 +213,40 @@ ANT_HOME or in your CLASSPATH. Otherwise, you will get build errors.
 Here is a description of the Scarab directory tree:
 
 scarab
-  +- build      <-- This is where the Ant scripts are to build the sample webapp
-  |                 and create the sql scripts.  Additionally Ant can load the sql scripts.
-  +- extensions/usermods 
-  |             <-- This where the builder can place modifications to the standard
-  |                 distribution that will be incorporated into the build.
-  |                 This simplifies the process of replacing *.vm files,
-  |                 among other things.
-  +- extensions/scripts
-  |             <-- Helper shell scripts
-  +- extensions/dtd
-  |             <-- DTD's for validating XML files
-  +- extensions/bugzilla
-  |             <-- Scripts for converting from Bugzilla to Scarab
-  +- extensions/migration
-  |             <-- Ant task for migrating from b15 to b16
+  +- build          <-- Ant scripts for building the sample webapp
+  |                     and creating/loading the sql scripts.
+  +- extensions
+  |    +- usermods  <-- place your modifications to the standard
+  |    |                distribution here. These modificatins will be
+  |    |                incorporated into the build. This simplifies
+  |    |                the process of replacing *.vm files,
+  |    |                among other things.
+  |    +- scripts   <-- Helper shell scripts
+  |    +- dtd       <-- DTD's for validating XML files
+  |    +- bugzilla  <-- Scripts for converting from Bugzilla to Scarab
+  |    +- migration <-- Ant task for migrating from b15 to b16
   +- lib
-  +- www/repository
-  |             <-- These are the directories storing JAR files used by Scarab.
-  +- src        <-- This where the source files are stored.
-  +- tomcat     <-- This is the included Tomcat configured to be ready to run with Scarab.
-  +- www        <-- This is where the website homepage is stored
-  +- xdocs      <-- xml versions of manuals (admin guide, user guide, howtos etc)
+  +- www/repository <-- The .jar repository for jars used by Scarab.
+  +- src            <-- The source files.
+  +- tomcat         <-- Included Tomcat configured ready to run with Scarab.
+  +- www            <-- Scarab Website
+  +- xdocs          <-- xml versions of manuals (guides, howtos etc)
 
 Within the /src directory you find following subdirectories...
 
 src
-  +- conf/conf  <-- Various configuration files for Scarab.
-  |                 TurbineResources.properties and Scarab.properties
-  |                 live here.  Copied to WEB-INF/conf
-  +- conf/classes
-  |             <-- Various configuration files copied directly into the classpath.
-  +- java       <-- The Java source code for Scarab.
-  +- sql        <-- SQL files for defining the database.
-  +--webapp     <-- All the web resources required for Scarab like images, css files,
-  |                 javascript files, html files, velocity templates.
-  +--test       <-- Test suite code.
+  +- conf
+  |    +- conf      <-- Various configuration files for Scarab.
+  |    |                TurbineResources.properties and Scarab.properties
+  |    |                live here.  Copied to WEB-INF/conf
+  |    +- classes   <-- Various configuration files copied directly 
+  |                     into the classpath.
+  +- java           <-- The Java source code for Scarab.
+  +- sql            <-- SQL files for defining the database.
+  +--webapp         <-- All the web resources required for Scarab like 
+  |                     images, css files, javascript files, html files,
+  |                     velocity templates.
+  +--test           <-- Test suite code.
 
 
 ,-----------------------------------------------------------------------.
@@ -271,25 +275,44 @@ NOTE: The ~ character represents your user account home directory.
 
 Chances are that you are going to have to define your own database and
 mail server properties as well as a few other properties in the resulting
-Scarab WAR file.  There is no need to edit the WEB-INF/conf/TurbineResources.properties
-file in the WAR file.  Instead, put any properties you need to edit in 
-WEB-INF/conf/CustomSettings.properties.  
+Scarab WAR file.  There is no need to edit
 
-Alternatively, you can define environment properties in your servlet's JNDI tree.  You 
-can do this either via the Tomcat Admin application or by editing the appropriate files.
-To add a property that won't be overriden by each new .WAR file you install, edit your
-/tomcat/webapps/scarab.xml file and add entries to your <context/> entry for Scarab.  For 
-example, to set the system.mail.host property you would add this line:
+        WEB-INF/conf/TurbineResources.properties
 
-<Environment description="Mail Host to Use" name="system/mail/host" override="true" type="java.lang.String" value="127.0.0.1"/>
+within the WAR file. Instead, put any properties you need to edit in 
+
+        WEB-INF/conf/CustomSettings.properties.  
+
+Alternatively, you can define environment properties in your servlet's 
+JNDI tree. You can do this either via the Tomcat Admin application or 
+by editing the appropriate files. To add a property that won't be 
+overriden by each new .WAR file you install, edit
+
+        /tomcat/webapps/scarab.xml 
+
+and add entries to your <context/> entry for Scarab.  For 
+example, to set the system.mail.host property you would add 
+these line:
+
+<Environment description="Mail Host to Use"
+             name="system/mail/host"
+             override="true"
+             type="java.lang.String"
+             value="127.0.0.1"
+/>
 
 To set which database adapter to use you would add a line like this:
 
-<Environment description="Database Adapter" name="torque/database/scarab/adapter" override="true" type="java.lang.String" value="oracle"/>
+<Environment description="Database Adapter"
+             name="torque/database/scarab/adapter"
+             override="true"
+             type="java.lang.String"
+             value="oracle"/>
 
 
 
-For more information about other sources of Configuration data, read about Commons-Configuration:
+For more information about other sources of Configuration data, 
+read about Commons-Configuration:
 
         http://jakarta.apache.org/commons/configuration/
 
@@ -320,14 +343,14 @@ optimal place to store attachments potentially because of disk size
 issues. Therefore, one has one of two options to solve this problem.
 
 #1. On Unix, one can move the WEB-INF/attachments directory to another
-location and then create a symlink from that location to the
-WEB-INF/attachments.
+    location and then create a symlink from that location to the
+    WEB-INF/attachments.
 
 #2. On Unix and other platforms (Win32), one can set the
-scarab.attachments.path property to point at another directory. By
-default, this path is relative to the webapp directory and is set to
-"WEB-INF/attachments". It is also possible to define an absolute path
-such as "/bigdisk/scarab/attachments".
+    scarab.attachments.path property to point at another directory. By
+    default, this path is relative to the webapp directory and is set to
+    "WEB-INF/attachments". It is also possible to define an absolute path
+    such as "/bigdisk/scarab/attachments".
 
 It is also recommended to set the services.UploadService.repository property in
 CustomSettings.properties as well. This property is used as a temporary location
@@ -363,8 +386,8 @@ call in DetermineCharsetValve.  Removing this call weakens Scarab's
 support for character set encoding, but it allows running Scarab with
 Websphere 4.0 application server.
 
-To implement this feature, add the following line to the CustomSettings.properties
-file as documented above:
+To implement this feature, add the following line to the 
+CustomSettings.properties file as documented above:
 
 pipeline.default.descriptor=org/tigris/scarab/pipeline/scarab-pipeline22.xml
 
@@ -478,8 +501,12 @@ NOTE: If you get a 'Server configuration denies access to data source'
       for 'localhost'. One way to get around this is to use IP addresses
       in both the MySQL ACL as well as in the JDBC url.
 
-      At least one person has reported that using '127.0.0.1' instead of 'localhost'
-      resolved a 'Server configuration denies access to data source' connection issue.
+      At least one person has reported that using '127.0.0.1' instead 
+      of 'localhost' resolved a 
+
+        'Server configuration denies access to data source' 
+
+      connection issue.
 
       In order to setup the right permissions in MySQL, you may wish to
       try executing this command on a Unix command line (it has been
@@ -503,13 +530,13 @@ NOTE: If you get a 'Server configuration denies access to data source'
 The Tomcat bundled with Scarab is preconfigured to run scarab out of the 
 /target/scarab directory.  
 
-cd tomcat/bin
-scarab.sh     <-- Unix
-startup.bat <-- Win32
+        cd tomcat/bin
+        scarab.sh     <-- Unix
+        startup.bat   <-- Win32
 
 Then, in your web browser, go to:
 
-    <http://localhost:8080/scarab>
+        <http://localhost:8080/scarab>
 
 
 NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are 
@@ -520,7 +547,7 @@ NOTE: Substitute 'localhost' for the DNS name that the server is
       running on for remote access.
 
 NOTE: You can define your own URL by editing the WEB-INF/web.xml 
-	  and defining a different servlet mapping.
+      and defining a different servlet mapping.
 
 ,-----------------------------------------------------------------------.
 | C U S T O M I Z I N G   S C A R A B                                   |
@@ -531,18 +558,19 @@ will cause CVS to report those differences, and even worse, the custom
 modifications might get unintentionally checked into the Scarab CVS
 repository by a Scarab developer).
 
-The extensions/usermod directory structure allows this to be done fairly simply.
+The extensions/usermod directory structure allows this to be done 
+fairly simply.
 
-It contains three directories, lib, conf, and templates.  Any files in
+It contains three directories, lib, conf, and templates. Any files in
 the lib directory will be copied into the appropriate target
 directory _after_ any such files in the standard distribution,
 and will replace the standard distribution files.  Any files in the
 template directory will be copied to the target template directory
 _ONLY_IF_ the property "scarab.copy.templates" is set, again after
 the files from the standard distribution. 
-NOTE: It is the responsibility of the builder to ensure that any
-      subsequent changes to modified Velocity macros are transferred
-      to these replacements.
+
+NOTE: It is Your responsibility to ensure that any subsequent changes
+      to modified Velocity macros are transferred to these replacements.
 
 
 ,-----------------------------------------------------------------------.
