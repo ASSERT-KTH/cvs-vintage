@@ -3,11 +3,16 @@
    "-//JBoss//DTD JBOSS XMBEAN 1.1//EN"
    "http://www.jboss.org/j2ee/dtd/jboss_xmbean_1_1.dtd">
 
-<!-- $Id: TransactionManagerService-xmbean.xml,v 1.3 2003/12/20 21:12:07 pilhuhn Exp $ -->
+<!-- $Id: TransactionManagerService-xmbean.xml,v 1.4 2004/01/20 04:11:48 reverbel Exp $ -->
 <mbean>
 	 <description>TransactionManager Service.</description>
 	 <class>org.jboss.tm.TransactionManagerService</class>
 	 &defaultAttributes;
+	 <attribute access="read-write" getMethod="getGlobalIdsEnabled" setMethod="setGlobalIdsEnabled">
+	 	<description>Should be set to true for transaction demarcation over IIOP</description>
+	 	<name>GlobalIdsEnabled</name>
+	 	<type>boolean</type>
+	 </attribute>
 	 <attribute access="read-write" getMethod="getTransactionTimeout" setMethod="setTransactionTimeout">
 	 	<description>The transaction timeout in seconds</description>
 	 	<name>TransactionTimeout</name>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.95 2003/11/15 18:26:13 pilhuhn Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.96 2004/01/20 04:11:48 reverbel Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -203,7 +203,9 @@
       name="jboss:service=TransactionManager"
       xmbean-dd="resource:xmdesc/TransactionManagerService-xmbean.xml">
       <attribute name="TransactionTimeout">300</attribute>
-
+      <!-- (uncomment to enable transaction demarcation over IIOP)
+      <attribute name="GlobalIdsEnabled">true</attribute>
+      -->
       <depends optional-attribute-name="XidFactory">jboss:service=XidFactory</depends>
    </mbean>
    <!--
