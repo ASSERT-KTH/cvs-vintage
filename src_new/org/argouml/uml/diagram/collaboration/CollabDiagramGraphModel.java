@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.43 2005/01/04 18:41:54 mvw Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.44 2005/01/08 23:50:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -132,7 +132,9 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
      * @see org.tigris.gef.graph.BaseGraphModel#getSourcePort(java.lang.Object)
      */
     public Object getSourcePort(Object edge) {
-	if (ModelFacade.isARelationship(edge)) {
+        if (edge instanceof CommentEdge) {
+            return ((CommentEdge) edge).getSource();
+        } else if (ModelFacade.isARelationship(edge)) {
 	    return Model.getCoreHelper().getSource(/*(MRelationship)*/ edge);
 	}
 	LOG.debug("TODO: getSourcePort");
@@ -144,7 +146,9 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
      * @see org.tigris.gef.graph.BaseGraphModel#getDestPort(java.lang.Object)
      */
     public Object getDestPort(Object edge) {
-	if (ModelFacade.isARelationship(edge)) {
+        if (edge instanceof CommentEdge) {
+            return ((CommentEdge) edge).getDestination();
+        } else if (ModelFacade.isARelationship(edge)) {
 	    return Model.getCoreHelper().getDestination(edge);
 	}
 	LOG.debug("TODO: getDestPort");

@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.4 2005/01/07 18:45:59 linus Exp $
+// $Id: CoreHelperImpl.java,v 1.5 2005/01/08 23:50:05 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1160,9 +1160,6 @@ class CoreHelperImpl implements CoreHelper {
             // we use modelfacade here to cover up for a messup in NSUML
             return ModelFacade.getBase(include);
         }
-        if (relationship instanceof CommentEdge) {
-            return ((CommentEdge) relationship).getSource();
-        }
         if (relationship instanceof MAssociationEnd) {
             return ((MAssociationEnd) relationship).getAssociation();
         }
@@ -1192,7 +1189,6 @@ class CoreHelperImpl implements CoreHelper {
 
 	if (!(relationship instanceof MRelationship)
 	    && !(ModelFacade.isALink(relationship))
-	    && !(relationship instanceof CommentEdge)
 	    && !(ModelFacade.isAAssociationEnd(relationship))) {
 
 	    throw new IllegalArgumentException("Argument is not "
@@ -1248,9 +1244,6 @@ class CoreHelperImpl implements CoreHelper {
         if (relationship instanceof MInclude) {
             MInclude include = (MInclude) relationship;
             return ModelFacade.getAddition(include);
-        }
-        if (relationship instanceof CommentEdge) {
-            return ((CommentEdge) relationship).getDestination();
         }
         if (relationship instanceof MAssociationEnd) {
             return ((MAssociationEnd) relationship).getType();
