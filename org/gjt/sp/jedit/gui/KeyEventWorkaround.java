@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.39 2004/10/23 19:10:12 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.40 2005/01/09 01:47:38 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -110,6 +110,7 @@ public class KeyEventWorkaround
 					else if(!evt.isControlDown()
 						&& !evt.isAltDown())
 					{
+						/* This is bad for the numeric keypad */
 						lastKeyTime = 0L;
 
 						if(keyCode >= KeyEvent.VK_0

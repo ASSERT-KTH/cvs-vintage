@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * The default input handler. It maps sequences of keystrokes into actions
  * and inserts key typed events into the text area.
  * @author Slava Pestov
- * @version $Id: DefaultInputHandler.java,v 1.42 2004/09/13 12:59:25 spestov Exp $
+ * @version $Id: DefaultInputHandler.java,v 1.43 2005/01/09 01:47:38 spestov Exp $
  */
 public class DefaultInputHandler extends InputHandler
 {
@@ -160,15 +160,6 @@ public class DefaultInputHandler extends InputHandler
 			else
 				current.put(keyStroke,action);
 		}
-	} //}}}
-
-	//{{{ _addKeyBinding() method
-	/**
-	 * @deprecated Use <code>addKeyBinding()</code> instead.
-	 */
-	public void _addKeyBinding(String keyBinding, Object action)
-	{
-		addKeyBinding(keyBinding,action);
 	} //}}}
 
 	//{{{ removeKeyBinding() method
@@ -421,77 +412,6 @@ public class DefaultInputHandler extends InputHandler
 	public static String getModifierString(InputEvent evt)
 	{
 		return KeyEventTranslator.getModifierString(evt);
-	} //}}}
-
-	//{{{ parseKeyStroke() method
-	/**
-	 * @deprecated We don't use Swing KeyStrokes anymore.
-	 */
-	public static KeyStroke parseKeyStroke(String keyStroke)
-	{
-		if(keyStroke == null)
-			return null;
-		int modifiers = 0;
-		int index = keyStroke.indexOf('+');
-		if(index != -1)
-		{
-			for(int i = 0; i < index; i++)
-			{
-				switch(Character.toUpperCase(keyStroke
-					.charAt(i)))
-				{
-				case 'A':
-					modifiers |= KeyEventTranslator.a;
-					break;
-				case 'C':
-					modifiers |= KeyEventTranslator.c;
-					break;
-				case 'M':
-					modifiers |= KeyEventTranslator.m;
-					break;
-				case 'S':
-					modifiers |= KeyEventTranslator.s;
-					break;
-				}
-			}
-		}
-		String key = keyStroke.substring(index + 1);
-		if(key.length() == 1)
-		{
-			char ch = key.charAt(0);
-			if(modifiers == 0)
-				return KeyStroke.getKeyStroke(ch);
-			else
-			{
-				return KeyStroke.getKeyStroke(Character.toUpperCase(ch),
-					modifiers);
-			}
-		}
-		else if(key.length() == 0)
-		{
-			Log.log(Log.ERROR,DefaultInputHandler.class,
-				"Invalid key stroke: " + keyStroke);
-			return null;
-		}
-		else
-		{
-			int ch;
-
-			try
-			{
-				ch = KeyEvent.class.getField("VK_".concat(key))
-					.getInt(null);
-			}
-			catch(Exception e)
-			{
-				Log.log(Log.ERROR,DefaultInputHandler.class,
-					"Invalid key stroke: "
-					+ keyStroke);
-				return null;
-			}
-
-			return KeyStroke.getKeyStroke(ch,modifiers);
-		}
 	} //}}}
 
 	//{{{ Private members

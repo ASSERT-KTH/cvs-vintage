@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recent file list.
  * @author Slava Pestov
- * @version $Id: BufferHistory.java,v 1.16 2004/08/12 22:42:43 spestov Exp $
+ * @version $Id: BufferHistory.java,v 1.17 2005/01/09 01:47:37 spestov Exp $
  */
 public class BufferHistory
 {
@@ -77,19 +77,6 @@ public class BufferHistory
 	public static List getHistory()
 	{
 		return history;
-	} //}}}
-
-	//{{{ getBufferHistory() method
-	/**
-	 * @deprecated Call {@link #getHistory()} instead.
-	 */
-	public static Vector getBufferHistory()
-	{
-		Vector retVal = new Vector(history.size());
-		Iterator iter = history.iterator();
-		while(iter.hasNext())
-			retVal.add(iter.next());
-		return retVal;
 	} //}}}
 
 	//{{{ load() method
