@@ -108,7 +108,7 @@ public class MimeTreeRenderer {
 				if (actClass
 					.getSuperclass()
 					.getName()
-					.equals("org.columba.modules.mail.composer.MimePartRenderer")) {
+					.equals("org.columba.mail.composer.MimePartRenderer")) {
 
 					MimePartRenderer renderer =
 						(MimePartRenderer) actClass.newInstance();
