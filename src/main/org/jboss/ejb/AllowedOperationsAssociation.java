@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb;
 
-// $Id: AllowedOperationsAssociation.java,v 1.1 2004/04/15 14:30:27 tdiesler Exp $
+// $Id: AllowedOperationsAssociation.java,v 1.2 2004/04/22 17:40:36 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
@@ -26,7 +26,7 @@ import java.util.Stack;
  * For example ctx.getPrimaryKey() should throw an IllegalStateException when called from within ejbCreate()
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class AllowedOperationsAssociation
         implements AllowedOperationsFlags
@@ -93,6 +93,17 @@ public final class AllowedOperationsAssociation
       inMethodStack.pop();
    }
 
+   /**
+    * Return th ecurrent inMethodFlag, or -1 if there is none
+    */
+   public static int peekInMethodFlag()
+   {
+      Stack inMethodStack = (Stack)threadLocal.get();
+      if (inMethodStack.isEmpty() == false)
+         return ((Integer)inMethodStack.peek()).intValue();
+      else
+         return -1;
+   }
 
    /**
     * Throw an IllegalStateException if the current inMethodFlag
