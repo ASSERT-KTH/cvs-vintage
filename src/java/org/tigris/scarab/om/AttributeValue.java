@@ -424,6 +424,18 @@ public abstract class AttributeValue
         }
     }
 
+    /**
+     * Not implemented always throws an exception
+     *
+     * @return a <code>NumberKey[]</code> value
+     * @exception Exception if an error occurs
+     */
+    public NumberKey[] getUserIds()
+        throws Exception
+    {
+        throw new ScarabException("not implemented");
+    }
+
     public void setUserIds(NumberKey[] ids)
         throws Exception
     {

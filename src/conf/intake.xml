@@ -95,7 +95,7 @@
         <field name="Description" key="desc" type="String">
             <rule name="maxLength" value="255"/>
         </field>
-        <field name="Template" key="tem" type="boolean"/>
+        <field name="Template" key="tem" type="boolean" mapToProperty=""/>
         <field name="Deleted" key="del" type="boolean"/>
 </group>
 
