@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.20 2003/11/10 12:13:37 jhraigniac Exp $
+// $Id: Designer.java,v 1.21 2003/11/27 20:42:18 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.20 2003/11/10 12:13:37 jhraigniac Exp $
+// $Id: Designer.java,v 1.21 2003/11/27 20:42:18 mkl Exp $
 
 package org.argouml.cognitive;
 
@@ -62,7 +62,8 @@ import ru.novosoft.uml.MElementListener;
  *
  * <p>This class listens to property changes from ...?
  *
- * <p>This class implements Poster because ...?
+ * <p>A Designer can as well create ToDO Items, such as critics do. Hence he 
+ * implements the Poster interface.
  *
  * <p>TODO: implement as singleton?? There are comments that suggest this
  * should be done.
@@ -636,12 +637,15 @@ public class Designer
     
     /** needs documenting */
     public String toString() {
-        String printString = super.toString() + " [\n";
-        printString += "  " + "decisions: " + _decisions.toString() + "\n";
-        printString += "  " + "goals: " + _goals.toString() + "\n";
-        printString += "  " + "prefs: " + _prefs.toString() + "\n";
-        printString += "  " + "to do: " + _toDoList.toString() + "\n";
-        printString += "]\n";
+        //String printString = super.toString() + " [\n";
+        //printString += "  " + "decisions: " + _decisions.toString() + "\n";
+        //printString += "  " + "goals: " + _goals.toString() + "\n";
+        //printString += "  " + "prefs: " + _prefs.toString() + "\n";
+        //printString += "  " + "to do: " + _toDoList.toString() + "\n";
+        //printString += "]\n";
+        
+        // made change in respect to ToDo List Tree
+        String printString = "Designer [name?]";
         return printString;
     }
     
