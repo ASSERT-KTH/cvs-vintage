@@ -164,9 +164,14 @@ public class OutgoingServerPanel
             item.set("enable_ssl", secureCheckBox.isSelected());
 
             if (needAuthCheckBox.isSelected()) {
-                String loginMethod =
-                    (String) authenticationComboBox.getSelectedItem();
-                item.set("login_method", loginMethod);
+                if( authenticationComboBox.getSelectedIndex() == 0 ) {
+                    item.set("login_method", "DEFAULT");                 
+                } else {
+                    String loginMethod =
+                        (String) authenticationComboBox.getSelectedItem();
+                    item.set("login_method", loginMethod);
+                }
+                
             } else {
                 item.set("login_method", "NONE"); //$NON-NLS-1$
             }
