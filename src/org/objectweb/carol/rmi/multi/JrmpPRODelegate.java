@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JrmpPRODelegate.java,v 1.14 2005/03/11 14:00:59 benoitf Exp $
+ * $Id: JrmpPRODelegate.java,v 1.15 2005/03/16 14:28:51 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -75,10 +75,13 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
         cis = JInterceptorStore.getLocalClientInterceptors();
         try {
             RMIConfiguration rmiConfig = CarolConfiguration.getRMIConfiguration("jrmp");
-            String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
-            Properties p = rmiConfig.getConfigProperties();
-            if (p != null) {
-                this.port = PortNumber.strToint(p.getProperty(propertyName, "0"), propertyName);
+            // Could be within cmi
+            if (rmiConfig != null) {
+                String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
+                Properties p = rmiConfig.getConfigProperties();
+                if (p != null) {
+                    this.port = PortNumber.strToint(p.getProperty(propertyName, "0"), propertyName);
+                }
             }
         } catch (RMIConfigurationException rmice) {
             TraceCarol.error("Could not get current carol configuration, rmi port will use random port.");
