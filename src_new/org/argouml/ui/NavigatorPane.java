@@ -128,7 +128,7 @@ import ru.novosoft.uml.model_management.MSubsystem;
  *
  * <p>Perspectives are now built here.
  *
- * $Id: NavigatorPane.java,v 1.41 2003/05/05 11:25:38 kataka Exp $
+ * $Id: NavigatorPane.java,v 1.42 2003/05/23 10:49:14 mkl Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -893,10 +893,13 @@ public class NavigatorPane
                 if (obj instanceof MPackage || obj instanceof MModel) {
                     popup.add(ActionAddPackage.SINGLETON);
                 }
-                popup.add(
-                    new ActionGoToDetails(menuLocalize("action.properties")));
+                if (obj != null) { 
+                    popup.add(new ActionGoToDetails(menuLocalize("action.properties")));
+                }
             }
-            popup.show(_tree, me.getX(), me.getY());
+            if (popup.getComponentCount()>0) {
+                popup.show(_tree, me.getX(), me.getY());
+            }
         }
 
         /**
