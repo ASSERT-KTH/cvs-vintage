@@ -17,17 +17,23 @@
 </div>
 </p>
 
+## ARTIFACT TYPES
 #set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
 #if ($issueTypes.size() > 0)
-<div><small><strong>Artifact Types</strong></small>
+<div id="navcolumn">
+
+<div><strong><small>Artifact types</small></strong>
+<div><strong><small><a href="$link.setPage("SelectArtifactType.vm")">Index</a></small></strong></div>
 #foreach($issueType in $issueTypes)
-<div><small>
   #if ($issueType.equals($scarabR.CurrentIssueType))
-<b>$issueType.Name</b>
-  #else
-<a href="$link.setPage("SelectArtifactType.vm")">$issueType.Name</a>
-   #end
-</small></div>
-#end
+<div><strong><small>$issueType.Name</small></strong>
+<div><small>#if ($scarabR.CurrentModule.Dedupe) <a href="$link.setPage("entry,Wizard1.vm")"> #else <a href="$link.setPage("entry,Wizard3.vm")"> #end Enter new</a></small></div>
+<div><small><a href="$link.setPage("TemplateList.vm")">Template list</a></small></div>
+<div><small><a href="$link.setPage("reports,Step1.vm")">New report</a></small></div>
+<div><small><a href="">Saved reports</a></small></div>
 </div>
+  #else
+    <div><small><a href="$link.setPage("$scarabR.convertPath($data.Target)").setAction("SelectIssueType").addPathInfo("nextTemplate", $scarabR.convertPath($data.Target)).addPathInfo("newissuetype", "$issueType.IssueTypeId")">$issueType.Name</a></small></div>
+  #end
+#end
 #end
