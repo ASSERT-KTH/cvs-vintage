@@ -7,7 +7,7 @@
 
 package tests.jsp;
 
-import org.apache.tools.moo.TestableBase;
+import org.apache.tools.moo.ParameterizedTest;
 import org.apache.tools.moo.TestResult;
 import org.apache.tools.moo.SocketHelper;
 import java.net.*;
@@ -15,10 +15,14 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
-public class Jsp extends TestableBase {
+public class Jsp extends ParameterizedTest {
 
     public String getDescription() {
-        return "JSP Tests"; 
+        if (testsKey == null) {
+            return "JSP Tests"; 
+        } else {
+            return testsKey;
+        }
     }
 
     public TestResult runTest() {
@@ -29,7 +33,7 @@ public class Jsp extends TestableBase {
 
         boolean status = true;
         StringBuffer msg = new StringBuffer("");
-        String testsKey = props.getProperty("tests");
+        if (testsKey == null) testsKey = props.getProperty("tests");
         String debugS = props.getProperty("Debug");
         debug = Boolean.valueOf(debugS).booleanValue();   
 
@@ -43,6 +47,7 @@ public class Jsp extends TestableBase {
             }
 
             Enumeration testNames = tests.elements();
+            int count = tests.size();
   
             boolean debugSaved = debug;
             while (testNames.hasMoreElements()) {
@@ -51,12 +56,18 @@ public class Jsp extends TestableBase {
                 if (debugThis != null)
                     debug = Boolean.valueOf(debugThis).booleanValue();
 
+                String description = props.getProperty("test." + testId +
+                        ".request");
+
+                if (count > 1) 
+		    System.out.println("Testing " + description );
+                
                 if (! test(testId)) {
                      status = false;
-                     String description = props.getProperty("test." + testId +
-                        ".request");
-                     msg.append("\tTest " + testId + " : " +
-                         description + "\n");
+                     msg.append("\n\tTest " + testId + " : " +
+                         description);
+                } else if (count <= 1) {
+                     msg.append("\t"+description);
                 }
                 debug = debugSaved;
             }
@@ -105,7 +116,6 @@ public class Jsp extends TestableBase {
         if (ready()) {
             try {
 		String request = props.getProperty("test." + testId + ".request");
-		System.out.println("Testing " + request );
 		writeRequest(testId, request);
                 if (this.debug) 
                     System.out.println("<--BEG---");

@@ -28,7 +28,68 @@
      <java class="org.apache.tools.moo.RunTest"  args="tests.request.Get" />
      <java class="org.apache.tools.moo.RunTest"  args="tests.request.Post" />
      <java class="org.apache.tools.moo.RunTest"  args="tests.request.RequestMap" />
-     <java class="org.apache.tools.moo.RunTest"  args="tests.jsp.Jsp" />
+
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 1" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 2" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 3" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 4" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 5" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 6" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 7" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 8" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 9" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 10" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 11" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 12" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 13" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 14" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 15" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 16" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 17" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 18" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 19" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 20" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 21" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 22" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 23" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 24" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 25" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 26" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 27" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 28" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 29" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 30" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 31" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 32" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 33" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 34" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 35" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 36" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 37" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 38" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 39" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 40" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 42" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 43" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 44" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 45" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 46" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 47" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 48" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 49" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 50" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 51" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 52" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 53" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 54" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 55" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 56" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 57" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 58" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 59" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 60" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 61" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 63" />
    </target>
 
    <target name="shutdown">
