@@ -70,8 +70,10 @@ public class MessageFrameController extends AbstractMailFrameController
 		tableSelectionHandler = new FixedTableSelectionHandler(tableReference);
 		getSelectionManager().addSelectionHandler(tableSelectionHandler);
 
-		getSelectionManager().addSelectionHandler(
-				new AttachmentSelectionHandler(attachmentController.getView()));
+		AttachmentSelectionHandler attachmentHandler = new AttachmentSelectionHandler(attachmentController);		
+		getSelectionManager().addSelectionHandler(attachmentHandler);
+		// attachment viewer registers interest in table selection events
+		tableSelectionHandler.addSelectionListener(attachmentHandler);
 
 		getContainer().setContentPane(this);
 	}
@@ -148,7 +150,8 @@ public class MessageFrameController extends AbstractMailFrameController
 				this,
 				MailInterface.config.get("messageframe_toolbar").getElement(
 						"toolbar"));
-
+		
+		attachmentController.createPopupMenu();
 		
 		/*
 		 * if (viewItem.getBoolean("toolbars", "show_folderinfo") == true) {

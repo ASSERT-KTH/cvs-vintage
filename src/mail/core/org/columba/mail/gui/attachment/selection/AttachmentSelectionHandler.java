@@ -20,14 +20,21 @@ package org.columba.mail.gui.attachment.selection;
 import java.util.logging.Logger;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionHandler;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.attachment.AttachmentView;
+import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.frappucino.iconpanel.IconPanelSelectionListener;
 
 public class AttachmentSelectionHandler extends SelectionHandler implements
-		IconPanelSelectionListener {
+		IconPanelSelectionListener, SelectionListener {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -43,9 +50,15 @@ public class AttachmentSelectionHandler extends SelectionHandler implements
 
 	private boolean useLocalSelection;
 
-	public AttachmentSelectionHandler(AttachmentView view) {
+	private AttachmentController controller;
+
+	public AttachmentSelectionHandler(AttachmentController c) {
 		super("mail.attachment");
-		this.view = view;
+		this.view = c.getView();
+
+		TableController tableController = ((TableViewOwner) c
+				.getFrameController()).getTableController();
+
 		view.addIconPanelSelectionListener(this);
 
 		useLocalSelection = false;
@@ -70,11 +83,6 @@ public class AttachmentSelectionHandler extends SelectionHandler implements
 		LOG.warning("Not yet implemented!");
 	}
 
-	public void setMessage(MessageFolder folder, Object messageUid) {
-		this.folder = folder;
-		this.messageUid = messageUid;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -95,7 +103,26 @@ public class AttachmentSelectionHandler extends SelectionHandler implements
 
 	public void setLocalReference(FolderCommandReference r) {
 		// set selection
-		setMessage((MessageFolder) r.getFolder(), r.getUids()[0]);
+		this.folder = (MessageFolder) r.getFolder();
+		this.messageUid = r.getUids()[0];
+
 		useLocalSelection = true;
+	}
+
+	/**
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		AbstractFolder folder = ((TableSelectionChangedEvent) e).getFolder();
+		Object[] uids = ((TableSelectionChangedEvent) e).getUids();
+
+		if (uids.length != 0) {
+			this.folder = (MessageFolder) folder;
+			this.messageUid = uids[0];
+		} else {
+			this.folder = null;
+			this.messageUid = null;
+		}
 	}
 }

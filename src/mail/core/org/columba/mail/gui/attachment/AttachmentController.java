@@ -30,7 +30,6 @@ import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.attachment.action.OpenAction;
 import org.columba.mail.gui.attachment.command.SaveAttachmentTemporaryCommand;
-import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.ristretto.message.MimeTree;
 import org.frappucino.swing.DynamicFileFactory;
 
@@ -71,11 +70,6 @@ public class AttachmentController {
 		view.setTransferHandler(new AttachmentTransferHandler(
 				new FileGenerator()));
 
-		frameController.getSelectionManager().addSelectionHandler(
-				new AttachmentSelectionHandler(view));
-
-		getView().setDoubleClickAction(new OpenAction(superController));
-
 		MouseListener popupListener = new PopupListener();
 		getView().addMouseListener(popupListener);
 	}
@@ -100,12 +94,17 @@ public class AttachmentController {
 		//menu = new AttachmentMenu(getFrameController());
 		menu = new ColumbaPopupMenu(getFrameController(),
 				"org/columba/mail/action/attachment_contextmenu.xml");
+		
+		// set double-click action for attachment viewer
+		getView().setDoubleClickAction(new OpenAction(frameController));
 	}
 
 	private JPopupMenu getPopupMenu() {
 		// bug #999990 (fdietz): make sure popup menu is created correctly
-		if (menu == null)
+		if (menu == null) {
 			createPopupMenu();
+			
+		}
 
 		return menu;
 	}

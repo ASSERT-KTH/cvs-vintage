@@ -29,7 +29,6 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.MessageController;
@@ -69,15 +68,16 @@ public class ViewMessageCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		
+
 		MessageController messageController = ((MessageViewOwner) frameMediator)
-		.getMessageController();
+				.getMessageController();
 
 		// display changes
 		messageController.updateGUI();
 
-		if ( flags == null) return;
-		
+		if (flags == null)
+			return;
+
 		// if the message it not yet seen
 		if (!(flags.getSeen())) {
 			// restart timer which marks the message as read
@@ -95,13 +95,13 @@ public class ViewMessageCommand extends FolderCommand {
 	public void execute(WorkerStatusController wsc) throws Exception {
 		// get command reference
 		FolderCommandReference r = (FolderCommandReference) getReference();
-		
+
 		// get selected folder
 		srcFolder = (MessageFolder) r.getFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(wsc);
-		
+
 		// get selected message UID
 		uid = r.getUids()[0];
 
@@ -109,8 +109,9 @@ public class ViewMessageCommand extends FolderCommand {
 			// get attachment structure
 			mimePartTree = srcFolder.getMimePartTree(uid);
 
-			if ( mimePartTree == null ) return;
-			
+			if (mimePartTree == null)
+				return;
+
 			// get flags
 			flags = srcFolder.getFlags(uid);
 		} catch (FolderInconsistentException ex) {
@@ -132,27 +133,20 @@ public class ViewMessageCommand extends FolderCommand {
 				.getMessageController();
 
 		// if necessary decrypt/verify message
-		FolderCommandReference newRefs = messageController.getPgpFilter().filter(srcFolder, uid);
+		FolderCommandReference newRefs = messageController.getPgpFilter()
+				.filter(srcFolder, uid);
 
 		// pass work along to MessageController
-		if( newRefs != null ) {
-			srcFolder = (MessageFolder)newRefs.getFolder();
+		if (newRefs != null) {
+			srcFolder = (MessageFolder) newRefs.getFolder();
 			uid = newRefs.getUids()[0];
 			mimePartTree = srcFolder.getMimePartTree(uid);
-		} 
+		}
 		messageController.showMessage(srcFolder, uid);
-		
-		AttachmentSelectionHandler h = ((AttachmentSelectionHandler) frameMediator
-				.getSelectionManager().getHandler("mail.attachment"));
 
-		// this is a hack to notify the attachment selection handler which
-		// folder/uid is selected
-		// TODO (@author fdietz): use listener pattern instead
-		h.setMessage(srcFolder, uid);
-
-		
+		// TODO (@author fdietz) make this thread-safe
 		// update attachment model
 		messageController.getAttachmentController().setMimePartTree(
-				mimePartTree);		
+				mimePartTree);
 	}
 }

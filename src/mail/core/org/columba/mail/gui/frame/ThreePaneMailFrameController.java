@@ -101,8 +101,10 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		// table registers interest in tree selection events
 		treeHandler.addSelectionListener(tableHandler);
 
-		getSelectionManager().addSelectionHandler(
-				new AttachmentSelectionHandler(attachmentController.getView()));
+		AttachmentSelectionHandler attachmentHandler = new AttachmentSelectionHandler(attachmentController);		
+		getSelectionManager().addSelectionHandler(attachmentHandler);
+		// attachment viewer registers interest in table selection events
+		tableHandler.addSelectionListener(attachmentHandler);
 
 		RenameFolderAction renameFolderAction = new RenameFolderAction(this);
 
@@ -271,10 +273,12 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		getContainer().extendToolbar(this, MailInterface.config.get("main_toolbar")
 				.getElement("toolbar"));
 
+		
 		tableController.createPopupMenu();
 		treeController.createPopupMenu();
 		messageController.createPopupMenu();
 		attachmentController.createPopupMenu();
+		
 		
 		return panel;
 	}
