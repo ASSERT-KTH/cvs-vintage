@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.5 2000/12/26 23:35:34 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/12/26 23:35:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.6 2001/02/05 16:04:00 hgomez Exp $
+ * $Revision: 1.6 $
+ * $Date: 2001/02/05 16:04:00 $
  *
  * ====================================================================
  *
@@ -265,6 +265,7 @@ class Ajp13Response extends Response
     {
 	if(!finished) {
 	    super.finish();
+		finished = true; // Avoid END_OF_RESPONSE sent 2 times
 	    ajp13.finish();
 	}
     }
