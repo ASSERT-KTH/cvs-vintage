@@ -9,7 +9,7 @@
 #set ($attrValues = $search.ModuleAttributeValuesMap)
 
 #if ($searchTextAttributes.isEmpty() && $searchValues.isEmpty())
-    <p class="alert">$l10n.NoSimpleSearch</p> 
+    <p class="alert">$l10n.NoCustomSearch</p> 
     $renderer.render("screens", "AdvancedQuery.vm")
 #else
 
@@ -89,37 +89,43 @@
  </div>
 #end
 
-## FIXME: use intake
-<h3>$l10n.ResultDisplayOptions</h3>
-        
+<h3>$l10n.ResultPrefs</h3>
 <div class="axial">
-<table  cellpadding="3" cellspacing="2" border="1">
-  <tr>
-    <th width="120">$l10n.SortBy</th>
-    <td>
-      <select name="sortColumn">
-        #foreach ($attKey in $attrValues.sequence())
-           #set ($attVal = $attrValues.get($attKey))
-           <option value="$attVal.AttributeId">$attVal.Attribute.Name</option>
-        #end
-      </select>
-        &#160;
-      <select name="sortPolarity">
-        <option value="asc">$l10n.Ascending</option>
-        <option value="desc">$l10n.Descending</option>
-      </select>
-    </td>
-  </tr>
-  <tr>
-   <th>$l10n.IssuesPerPage</th>
-   <td>
-   <input type="hidden" name="pageNum" value="1" />
-   <input type="radio" name="resultsPerPage" value="25" checked="checked" />25 
-   <input type="radio" name="resultsPerPage" value="50" />50
-   <input type="radio" name="resultsPerPage" value="75" />75
-   <input type="radio" name="resultsPerPage" value="100" />100
-   </td>
-  </tr>
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th width="120">$l10n.SortBy</th>
+ <td>
+ <select name="$searchGroup.SortAttributeId.Key">
+    <option value="">$l10n.Choose</option>
+#foreach ($rmua in $scarabR.RModuleUserAttributes)
+#set ($attribute = $rmua.Attribute)
+   <option value="$attribute.AttributeId"
+     #if ($searchGroup.SortAttributeId.Value.equals($attribute.AttributeId))
+          selected="selected" #end>
+       $attribute.Name
+   </option>
+#end
+</select>&#160;
+<select name="$searchGroup.SortPolarity.Key">
+    <option value="asc"
+     #if ($searchGroup.SortPolarity.Value.equals("asc"))
+          selected="selected" #end>
+        $l10n.Ascending
+    </option>
+    <option value="desc"
+     #if ($searchGroup.SortPolarity.Value.equals("desc"))
+          selected="selected" #end>
+        $l10n.Descending
+    </option>
+</select>
+</td>
+</tr>
+<tr>
+<th width="120">$l10n.IssuesPerPage</th>
+<td>
+#resultsPerPageRadioSelect($data.getParameters().getInt("resultsperpage", 25))
+</td>
+</tr>
 </table>
 </div>
 
