@@ -15,11 +15,17 @@
 package org.columba.mail.folder.mailboximport;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
-import org.columba.core.util.SwingWorker;
+import javax.swing.JOptionPane;
+
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.util.ExceptionDialog;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.mail.folder.Folder;
 
-public abstract class DefaultMailboxImporter extends SwingWorker
+public abstract class DefaultMailboxImporter 
 {
 	public static int TYPE_FILE = 0;
 	public static int TYPE_DIRECTORY = 1;
@@ -51,7 +57,7 @@ public abstract class DefaultMailboxImporter extends SwingWorker
 	/**
 	 * this method does all the import work
 	 */
-	public abstract void importMailbox(File file) throws Exception;
+	public abstract void importMailbox(File file, WorkerStatusController worker) throws Exception;
 
 
 	/*********** intern methods (no need to overwrite these) ****************/
@@ -81,18 +87,18 @@ public abstract class DefaultMailboxImporter extends SwingWorker
 	 *  this method calls your overwritten importMailbox(File)-method
 	 *  and handles exceptions
 	 */
-	public Object construct()
+	public void run( WorkerStatusController worker )
 	{
 		// FIXME
 		
-		/*
-		setText("Importing messages...");
+		
+		worker.setDisplayText("Importing messages...");
 
-		startTimer();
+		
 
 		try
 		{
-			importMailbox(sourceFile);
+			importMailbox(sourceFile, worker);
 		}
 		catch (Exception ex)
 		{
@@ -111,25 +117,22 @@ public abstract class DefaultMailboxImporter extends SwingWorker
 			dialog.showDialog(
 				"Message import failed! No messages were added to your folder.");
 
-			stopTimer();
+			
 
-			unregister();
 			
 			
-			return null;
+			
+			return;
 		}
 
-		if (getCancel())
+		if (worker.cancelled())
 		{
 			NotifyDialog dialog = new NotifyDialog();
 			dialog.showDialog(
 				"You cancelled the import operation! No messages were added to your folder.");
 
-			stopTimer();
-
-			unregister();
-
-			return null;
+			
+			return;
 		}
 
 		if (getCount() == 0)
@@ -138,11 +141,9 @@ public abstract class DefaultMailboxImporter extends SwingWorker
 			dialog.showDialog(
 				"Message import failed! No messages were added to your folder.\nThis means that the parser didn't throw any exception even if it didn't recognize the mailbox format or simple the messagebox didn't contain any messages.");
 
-			stopTimer();
+			
 
-			unregister();
-
-			return null;
+			return;
 		}
 		else if (getCount() > 0)
 		{
@@ -153,12 +154,6 @@ public abstract class DefaultMailboxImporter extends SwingWorker
 			
 		}
 
-		stopTimer();
-
-		unregister();
-		*/
-		
-		return null;
 
 	}
 

@@ -25,8 +25,10 @@ import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.gui.util.wizard.DefaultWizardPanel;
-import org.columba.main.MainInterface;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
+import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.main.MainInterface;
 
 public class ImportWizard implements ActionListener
 {
@@ -145,18 +147,20 @@ public class ImportWizard implements ActionListener
 		}
 		else if (action.equals("DESTINATION"))
 		{
-			// FIXME
-			/*
-			SelectFolderDialog d = MainInterface.treeViewer.getSelectFolderDialog();
-			if (d.success())
-			{
-				destFolder = d.getSelectedFolder();
+			SelectFolderDialog dialog =
+				MainInterface
+					.frameController
+					.treeController
+					.getSelectFolderDialog();
+
+			if (dialog.success()) {
+
+				destFolder = dialog.getSelectedFolder();
 				String path = destFolder.getTreePath();
 
 				sourcePanel.setDestination(path);
-
 			}
-			*/
+			
 
 		}
 	}
@@ -165,7 +169,7 @@ public class ImportWizard implements ActionListener
 	{
 		// FIXME
 		
-		/*
+		
 		String className = listPanel.getSelection();
 
 		DefaultMailboxImporter importer = null;
@@ -176,7 +180,7 @@ public class ImportWizard implements ActionListener
 		{
 
 			actClass =
-				Class.forName("org.columba.modules.mail.folder.mailboximport." + className + "Importer");
+				Class.forName("org.columba.mail.folder.mailboximport." + className + "Importer");
 
 			importer = (DefaultMailboxImporter) actClass.newInstance();
 		}
@@ -189,11 +193,13 @@ public class ImportWizard implements ActionListener
 		importer.init();
 		importer.setDestinationFolder(destFolder);
 		importer.setSourceFile(sourceFile);
+		/*
 		importer.register(MainInterface.taskManager);
 		MainInterface.taskManager.register(importer, 30);
 		importer.start();
         destFolder.workerUpdate();
         */
+        
 	}
 
 }

@@ -387,6 +387,8 @@ public class MailMenu extends JMenuBar {
 					.tableController
 					.getActionListener()
 					.viewThreadedAction);
+		cbMenuItem.setSelected(true);
+		cbMenuItem.setSelected(false);
 
 		viewMenu.add(cbMenuItem);
 

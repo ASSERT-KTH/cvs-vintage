@@ -14,11 +14,11 @@
 
 package org.columba.mail.folder.mailboximport;
 
-import org.columba.main.*;
-import org.columba.mail.folder.*;
-import org.columba.mail.gui.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
-import java.io.*;
+import org.columba.core.command.WorkerStatusController;
 
 public class MBOXImporter extends DefaultMailboxImporter
 {
@@ -28,7 +28,7 @@ public class MBOXImporter extends DefaultMailboxImporter
 		return TYPE_FILE;
 	}
 	
-	public void importMailbox(File file) throws Exception
+	public void importMailbox(File file, WorkerStatusController worker) throws Exception
 	{
 
 		boolean success = false;
@@ -42,7 +42,7 @@ public class MBOXImporter extends DefaultMailboxImporter
 		while ((str = in.readLine()) != null)
 		{
 			// if user cancelled task exit immediately			
-			if (getCancel())
+			if ( worker.cancelled() )
 				return;
 
 			// if line doesn't start with "From" or line length is 0

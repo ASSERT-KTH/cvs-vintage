@@ -57,9 +57,10 @@ public class FilterActionListener implements ActionListener {
 
 				FilterToolbar toolbar = tableController.getFilterToolbar();
 
-				toolbar.newButton.setSelected(false);
-				//toolbar.oldButton.setSelected(true);
-				//toolbar.searchButton.setSelected(false);
+				// FIXME
+				//toolbar.newButton.setSelected(false);
+				
+				
 
 			} else if (action.equals("UNREAD")) {
 				TableModelFilteredView model =
@@ -78,7 +79,8 @@ public class FilterActionListener implements ActionListener {
 
 				FilterToolbar toolbar = tableController.getFilterToolbar();
 
-				toolbar.newButton.setSelected(true);
+				// FIXME
+				//toolbar.newButton.setSelected(true);
 
 				//toolbar.oldButton.setSelected(false);
 			}

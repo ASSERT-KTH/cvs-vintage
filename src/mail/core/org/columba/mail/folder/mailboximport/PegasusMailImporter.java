@@ -14,11 +14,11 @@
 
 package org.columba.mail.folder.mailboximport;
 
-import org.columba.main.*;
-import org.columba.mail.folder.*;
-import org.columba.mail.gui.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
-import java.io.*;
+import org.columba.core.command.WorkerStatusController;
 
 /**
  * @version 	1.0
@@ -35,7 +35,7 @@ public class PegasusMailImporter extends DefaultMailboxImporter
 	
 	
 
-	public void importMailbox(File file) throws Exception
+	public void importMailbox(File file, WorkerStatusController worker) throws Exception
 	{
 
 		int count = 0;
@@ -50,7 +50,7 @@ public class PegasusMailImporter extends DefaultMailboxImporter
 		while ((str = in.readLine()) != null)
 		{
 			// if user cancelled task exit immediately			
-			if (getCancel() == true)
+			if (worker.cancelled() == true)
 				return;
 
 			// if line doesn't start with "From ???@???" or line length is 0
