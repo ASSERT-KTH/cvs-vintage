@@ -479,6 +479,7 @@ public class TableController {
 				lastSelUids[0] = selectedNode.getUid();
 				// scrolling to the first row
 				getView().scrollRectToVisible(getView().getCellRect(0,0,false));
+				getView().requestFocus();
 				FolderCommandReference[] refNew = new FolderCommandReference[1]; 
 				refNew[0] = new FolderCommandReference( folder, lastSelUids); 
 				// view the message under the new node
@@ -496,6 +497,7 @@ public class TableController {
 			// ColumbaLogger.log.info("selRow: "+selRow);
 			// scroll to the position of the selection
 			getView().scrollRectToVisible(getView().getCellRect(selRow, 0, false));
+			getView().requestFocus();
 			FolderCommandReference[] refNew = new FolderCommandReference[1]; 
 			refNew[0] = new FolderCommandReference( folder, lastSelUids); 
 			// view the message under the new node
