@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommand;
@@ -69,9 +70,9 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
      * @param references
      * @param filterType  Which type of filter to create. Used defined constants
      */
-    public CreateFilterOnMessageCommand(DefaultCommandReference[] references,
+    public CreateFilterOnMessageCommand(FrameMediator frame, DefaultCommandReference[] references,
         String filterType) {
-        super(references);
+        super(frame, references);
         this.filterType = filterType;
     }
 

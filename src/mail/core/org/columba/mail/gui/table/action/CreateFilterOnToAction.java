@@ -62,7 +62,7 @@ public class CreateFilterOnToAction extends AbstractColumbaAction
         FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
 
         // add command for execution
-        CreateFilterOnMessageCommand c = new CreateFilterOnMessageCommand(r,
+        CreateFilterOnMessageCommand c = new CreateFilterOnMessageCommand(getFrameMediator(), r,
                 CreateFilterOnMessageCommand.FILTER_ON_TO);
         MainInterface.processor.addOp(c);
     }
