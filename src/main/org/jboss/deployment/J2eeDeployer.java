@@ -19,6 +19,10 @@ import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+import java.util.jar.Attributes;
 
 import javax.management.MBeanServer;
 import javax.management.MBeanException;
@@ -39,27 +43,25 @@ import org.w3c.dom.Element;
 
 
 /** J2eeDeployer allows to deploy single EJB.jars as well as Web.wars
-*  (if Tomcat runs within the same VM as jBoss) or even Application.ears. <br>
+*  (if a Servlet Container is present) or even Application.ears. <br>
 *  The deployment is done by determining the file type of the given url.
-*  The file must be a valid zip file and must contain either a META-INF/ejb-jar.xml
+*  The file must be a valid zip file or a directory and must contain either a META-INF/ejb-jar.xml
 *  or META-INF/application.xml or a WEB-INF/web.xml file.
 *  Depending on the file type, the whole file (EJBs, WARs)
 *  or only the relevant packages (EAR) becoming downloaded. <br>
 *  <i> replacing alternative DDs and validation is not yet implementet! </i>
 *  The uploaded files are getting passed through to the responsible deployer
 *  (ContainerFactory for jBoss and EmbededTomcatService for Tomcat).
-*  The state of deployments is persistent and becomes recovered after shutdown
-*  or crash.
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.4 $
+*   @version $Revision: 1.5 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
 implements J2eeDeployerMBean
 {
    // Constants -----------------------------------------------------
-   public String DEPLOYMENT_DIR = "/home/deployment"; // default? MUST BE ABSOLUTE PATH!!!
+   public File DEPLOYMENT_DIR = null;//"/home/deployment"; // default? MUST BE ABSOLUTE PATH!!!
    public String CONFIG = "deployment.cfg";   
    
    // Attributes ----------------------------------------------------
@@ -76,9 +78,6 @@ implements J2eeDeployerMBean
    // The logger for this service
    Log log = new Log(getName());
    
-   // the deployments
-   Hashtable deployments = new Hashtable ();
-   
    
    // Static --------------------------------------------------------
    /** only for testing...*/
@@ -91,7 +90,7 @@ implements J2eeDeployerMBean
    /** */
    public J2eeDeployer (String _deployDir, String jarDeployerName, String warDeployerName)
    {
-      DEPLOYMENT_DIR = _deployDir;
+      DEPLOYMENT_DIR = new File (_deployDir);
       
       this.jarDeployerName = jarDeployerName;
       this.warDeployerName = warDeployerName;
@@ -131,32 +130,53 @@ implements J2eeDeployerMBean
          
          log.log ("j2ee application: " + _url + " is deployed.");
       } 
-      catch (IOException _ioe)
+      catch (Exception _e)
       {
-         uninstallApplication (_url.substring(Math.max (0, _url.lastIndexOf("/"))));
-         throw _ioe;
-      }
-      catch (J2eeDeploymentException _e)
-      {
-         if (d != null) // start failed...
-            stopApplication (d);
-         
-         uninstallApplication (_url.substring(Math.max (0, _url.lastIndexOf("/"))));
-         throw _e;
+         if (_e instanceof J2eeDeploymentException)
+         {
+            if (d != null) // start failed...
+               stopApplication (d);
+            
+            uninstallApplication (getAppName (url));
+            throw (J2eeDeploymentException)_e;
+         }
+         else if (_e instanceof IOException)
+         {
+            // some download failed
+            uninstallApplication (getAppName (url));
+            throw (IOException)_e;
+         }
+         else
+         {
+            // Runtime Exception - shouldnt happen
+            log.exception (_e);
+            uninstallApplication (getAppName (url));
+            throw new J2eeDeploymentException ("fatal error: "+_e.toString ());
+         }
       }
    }
    
    /** Undeploys the given URL (if it is deployed).
-   *   Actually only the file name is of interest, so it dont has to be 
+   *   Actually only the file name is of interest, so it dont has to be
    *   an URL to be undeployed, the file name is ok as well.
-   *   @param _url the url to to undeploy 
+   *   @param _url the url to to undeploy
    *   @throws MalformedURLException in case of a malformed url
    *   @throws J2eeDeploymentException if something went wrong (but should have removed all files)
    *   @throws IOException if file removement fails
    */
    public void undeploy (String _app) throws IOException, J2eeDeploymentException
    {
-      String name = _app.substring(Math.max (0, _app.lastIndexOf("/")));
+      String name;
+      try
+      {
+         name = getAppName (new URL (_app));
+      }
+      catch (MalformedURLException _e)
+      {
+         // must be only the name
+         name = _app;
+      }
+      
       Deployment d = null;
       File f = new File (DEPLOYMENT_DIR + File.separator + name);
       if (f.exists())
@@ -165,16 +185,16 @@ implements J2eeDeployerMBean
          {
             d = loadConfig (name);
             stopApplication (d);
-         }   
+         }
          catch (IOException _ioe)
          {  // thrown by the load config
             throw _ioe;
          }
          catch (J2eeDeploymentException _e)
          {
-            throw _e;               
+            throw _e;
          }
-         finally 
+         finally
          {
             uninstallApplication (name);
          }
@@ -185,7 +205,7 @@ implements J2eeDeployerMBean
    }
    
    /** Checks if the given URL is currently deployed or not.
-   *   Actually only the file name is of interest, so it dont has to be 
+   *   Actually only the file name is of interest, so it dont has to be
    *   an URL to be undeployed, the file name is ok as well.
    *   @param _url the url to to check
    *   @return true if _url is deployed
@@ -196,14 +216,24 @@ implements J2eeDeployerMBean
    public boolean isDeployed (String _url) throws MalformedURLException, J2eeDeploymentException
    {
       // get Application name
-      String name = _url.substring(Math.max (0, _url.lastIndexOf("/")));
+      String name;
+      try
+      {
+         name = getAppName (new URL (_url));
+      }
+      catch (MalformedURLException _e)
+      {
+         // must be only the name
+         name = _url;
+      }
+      
       Deployment d = null;
       File f = new File (DEPLOYMENT_DIR + File.separator + name);
       if (f.exists())
       {
          try
          {
-            return checkApplication (loadConfig (name));         
+            return checkApplication (loadConfig (name));          
          } 
          catch (IOException e)
          {
@@ -235,67 +265,22 @@ implements J2eeDeployerMBean
    throws Exception
    {
       
-      //set the deployment directory
-      DEPLOYMENT_DIR = new File (DEPLOYMENT_DIR).getCanonicalPath ();
+      //check if the deployment dir was set meaningful
+      if (!DEPLOYMENT_DIR.exists ())
+         throw new IOException ("temporary directory \""+DEPLOYMENT_DIR.getCanonicalPath ()+"\" does not exist!");
       
       // Save JMX name of the deployers
       jarDeployer = new ObjectName(jarDeployerName);
       warDeployer= new ObjectName(warDeployerName);
-   
    }
    
-   /** tries to redeploy all deployments before shutdown.*/
+   /** */
    protected void startService()
    throws Exception
    {
       if (!warDeployerAvailable ())
          log.log ("No war deployer found - only EJB deployment available...");
-      
-      /*
-      // this doesnt work properly ?!
-      // when something was deployed on server stop and on server restart
-      // it becomes restarted (the same files) the ContainerFactory has a
-      // strange problem in handling its copys of the jar files in the tmp/deploy dir... 
-      
-      log.log ("trying to start all applications that were running before service.stop ()...");
-      
-      File f = new File (DEPLOYMENT_DIR);
-      File[] files =  f.listFiles();
-      int count = 0;
-      for (int i = 0, l = files.length; i<l; ++i)
-      {
-      if (files[i].isDirectory ())
-      {
-      // lets give it a try...
-      Deployment d = null;
-      try
-      {
-      d = loadConfig (files[i].getName());
-      }
-      catch (IOException _io)
-      {
-      continue;
-      }
-      
-      // ok, then lets start it
-      log.log ("starting application: " + d.name);
-      try
-      {
-      startApplication (d);
-      log.log ("application: " + d.name + " is started.");
-      ++count;
-      } 
-      catch (J2eeDeploymentException _e)
-      {
-      stopApplication (d);
-      uninstallApplication (files[i].getName());
-      
-      _e.printStackTrace();
-      }
-      }
-      }
-      log.log ("started "+count+" applications.");
-      */
+   
    }
    
    
@@ -304,8 +289,7 @@ implements J2eeDeployerMBean
    {
       log.log ("undeploying all applications.");
       
-      File f = new File (DEPLOYMENT_DIR);
-      File[] files =  f.listFiles();
+      File[] files =  DEPLOYMENT_DIR.listFiles();
       int count = 0;
       for (int i = 0, l = files.length; i<l; ++i)
       {
@@ -345,168 +329,242 @@ implements J2eeDeployerMBean
    *   by the given deployment of the given deployment. <br>
    *   This means download the needed packages do some validation...
    *   <i> Validation and do some other things is not yet implemented </i>
-   *   @param _d the deployment (= a J2ee application or module)
+   *   @param _downloadUrl the url that points to the app to install
    *   @throws IOException if the download fails
    *   @throws J2eeDeploymentException if the given package is somehow inconsistent
    */
    Deployment installApplication (URL _downloadUrl) throws IOException, J2eeDeploymentException
    {
-      // determine the file type by trying to access one of the possible
-      // deployment descriptors...
-      Element root = null;
-      String[] files = {"META-INF/ejb-jar.xml", "META-INF/application.xml", "WEB-INF/web.xml"};
+      // because of the URLClassLoader problem (doesnt notice when jar content changed)
+      // we first make a local copy of the file
       boolean directory = false;
+      URL localCopy = null;
+      
+      // determine if directory or not 
+      // directories are only local supported
+      if (_downloadUrl.getProtocol().equals ("file") && 
+         new File (_downloadUrl.getFile ()).isDirectory ())
+      {
+         directory = true;
+         localCopy = URLWizzard.downloadAndPackTemporary (_downloadUrl, DEPLOYMENT_DIR.toURL (), "copy", ".zip");
+      }
+      else
+         localCopy = URLWizzard.downloadTemporary (_downloadUrl, DEPLOYMENT_DIR.toURL (), "copy", ".zip");
+      
+      // determine the file type by trying to access one of its possible descriptors
+      Element root = null;
+      URLClassLoader cl = new URLClassLoader (new URL[] {localCopy});
+      String[] files = {"META-INF/ejb-jar.xml", "META-INF/application.xml", "WEB-INF/web.xml"};
+      
       for (int i = 0; i < files.length && root == null; ++i)
       {
-         // try it as if it is a jar file
          try {
-            root = XmlFileLoader.getDocument (new URL ("jar:" + _downloadUrl.toString () + "!/" + files[i])).getDocumentElement ();
+            root = XmlFileLoader.getDocument (cl.getResourceAsStream (files[i])).getDocumentElement ();
          } catch (Exception _e) {}
-
-         // try it, as if it is a directory
-         // but this cant be handled right now
-         // try {
-         //    root = XmlFileLoader.getDocument (new URL (_downloadUrl.toString () + "/" + files[i])).getDocumentElement ();
-         //    directory = true;
-         // } catch (Exception _e) {}
       }
+      
+      // dont need it anymore...
+      cl = null;
+      URLWizzard.deleteTree(localCopy);
       
       if (root == null)
+      {
          // no descriptor was found...
-      throw new J2eeDeploymentException ("No valid deployment descriptor was found within this URL: "+
-         _downloadUrl.toString ()+
-         "\nMake sure it points to a valid j2ee package (ejb.jar/web.war/app.ear)!");
+         throw new J2eeDeploymentException ("No valid deployment descriptor was found within this URL: "+
+            _downloadUrl.toString ()+
+            "\nMake sure it points to a valid j2ee package (ejb.jar/web.war/app.ear)!");
+      }
       
+      // valid descriptor found
       // create a Deployment
       Deployment d = new Deployment ();
-      URL currentDownload = null; // to give more precize info in error case which download failed
-      try {
-         d.name = Deployment.getAppName (_downloadUrl);
-         String localUrl = "file:"+DEPLOYMENT_DIR+"/"+d.name;
+      
+      d.name = getAppName (_downloadUrl);
+      d.localUrl = new File (DEPLOYMENT_DIR, d.name).toURL ();
+      log.log ("create application " + d.name);
+      
+      // do the app type dependent stuff...
+      if ("ejb-jar".equals (root.getTagName ()))
+      {
+         // its a EJB.jar... just take the package
+         installEJB (d, _downloadUrl, null);
+      } 
+      else if ("web-app".equals (root.getTagName ()))
+      {
+         // its a WAR.jar... just take the package
+         if (directory)
+            throw new J2eeDeploymentException ("Currently are only packed web.war archives supported.");
          
-         log.log ("create application " + d.name);
+         if (!warDeployerAvailable ())
+            throw new J2eeDeploymentException ("No WEB container available!");
          
+         String context = getWebContext (_downloadUrl);
+         installWAR (d, _downloadUrl, context, null);
+      } 
+      else if ("application".equals (root.getTagName ()))
+      {
+         // its a EAR.jar... hmmm, its a little more
+         if (directory)
+            throw new J2eeDeploymentException ("Application.ear files are only in packed archive format supported.");
          
-         // do the app type dependent stuff...
-         if ("ejb-jar".equals (root.getTagName ()))
+         // create a MetaData object...
+         J2eeApplicationMetaData app = null; 
+         try
          {
-            // its a EJB.jar... just take the package
-            Deployment.Module m = d.newModule ();
-            // localUrl: file:<download_dir> / <appName> / <appName>
-            m.name = Deployment.getFileName (_downloadUrl);
-            m.localUrl = new URL (localUrl+"/"+m.name);// should never throw an URLEx
-            
-            log.log ("downloading module " + m.name);
-            currentDownload = _downloadUrl;
-            URLWizzard.download (currentDownload, m.localUrl);
-            d.ejbModules.add (m);      		
-         } 
-         else if ("web-app".equals (root.getTagName ()))
-         {
-            // its a WAR.jar... just take the package
-            if (!warDeployerAvailable ())
-               throw new J2eeDeploymentException ("No war container available!");
-            
-            Deployment.Module m = d.newModule ();
-            m.name = Deployment.getFileName (_downloadUrl);
-            m.localUrl = new URL (localUrl+"/"+m.name);// should never throw an URLEx
-            m.webContext = Deployment.getWebContext (_downloadUrl);
-            
-            log.log ("downloading and inflating module " + m.name);
-            currentDownload = _downloadUrl;
-            URLWizzard.downloadAndInflate (currentDownload, m.localUrl);
-            d.webModules.add (m);      		
-         } 
-         else if ("application".equals (root.getTagName ()))
-         {
-            // its a EAR.jar... hmmm, its a little more
-            // create a MetaData object...
-            J2eeApplicationMetaData app;
             app = new J2eeApplicationMetaData (root);
+         }
+         catch (DeploymentException _de)
+         {
+            throw new J2eeDeploymentException ("error in parsing application.xml: "+_de.getMessage ());
+         }
+         
+         // currently we only take care for the modules
+         // no security stuff, no alternative DDs 
+         // no dependency and integrity checking... !!!
+         J2eeModuleMetaData mod;
+         Iterator it = app.getModules ();
+         for (int i = 0; it.hasNext (); ++i)
+         {
+            // iterate the ear modules
+            mod = (J2eeModuleMetaData) it.next ();
             
-            // currently we only take care for the modules
-            // no security stuff, no alternative DDs 
-            // no dependency and integrity checking... !!!
-            J2eeModuleMetaData mod;
-            Iterator it = app.getModules ();
-            while (it.hasNext ())
+            if (mod.isEjb ())
             {
-               mod = (J2eeModuleMetaData) it.next ();
-               // iterate the ear modules
-               if (mod.isEjb () || mod.isWeb ())
-               {
-                  
-                  // common stuff
-                  Deployment.Module m = d.newModule ();
-                  URL downloadUrl;
-                  try 
-                  {
-                     currentDownload = new URL ("jar:" + _downloadUrl.toString () + "!"+
-                        (mod.getFileName ().startsWith ("/") ? "" : "/")+
-                        mod.getFileName ());// chould throw an URLEx
-                     m.name = Deployment.getFileName (currentDownload);
-                     m.localUrl = new URL (localUrl + "/" + m.name);// should not throw an URLEx
-                  } 
-                  catch (MalformedURLException _mue) 
-                  { 
-                     throw new J2eeDeploymentException ("syntax error in module section in application DD (module uri: " + mod.getFileName()+")");
-                  }
-                  
-                  // web specific
-                  if (mod.isWeb ())
-                  {
-                     if (!warDeployerAvailable ())
-                        throw new J2eeDeploymentException ("Application containes .war file. No war container available!");
-                     
-                     m.webContext = mod.getWebContext ();
-                     if (m.webContext == null)
-                        m.webContext = Deployment.getWebContext (currentDownload);
-                     
-                     log.log ("downloading and inflating module " + m.name);
-                     URLWizzard.downloadAndInflate (currentDownload, m.localUrl);
-                     d.webModules.add (m);      		
-                  }
-                  // ejb specific
-                  else 
-                  {
-                     log.log ("downloading module " + m.name);
-                     URLWizzard.download (currentDownload, m.localUrl);
-                     d.ejbModules.add (m);
-                  }
-                  
-                  // here the code for checking and DD replacment...
-                  // ...
-               } 
+               URL src = new URL ("jar:"+_downloadUrl.toString ()+ "!"+
+                  (mod.getFileName ().startsWith ("/") ? "" : "/")+
+                  mod.getFileName ());
+               installEJB (d, src, null);
+            }
+            else if (mod.isWeb ())
+            {
+               if (!warDeployerAvailable ())
+                  throw new J2eeDeploymentException ("Application containes .war file. No war container available!");
+               
+               String context = mod.getWebContext ();
+               if (context == null)
+                  context = mod.getFileName ().substring (Math.max (0, mod.getFileName ().lastIndexOf ("/")));
+               
+               URL src = new URL ("jar:"+_downloadUrl.toString ()+ "!"+
+                  (mod.getFileName ().startsWith ("/") ? "" : "/")+
+                  mod.getFileName ());
+               installWAR (d, src, context, null);
             }
             // other packages we dont care about (currently)
-         }
-         // storing the deployment
-         currentDownload = null;
-         FileOutputStream fout = new FileOutputStream (localUrl.substring (5, localUrl.length ()) + File.separator + CONFIG);
-         ObjectOutputStream out = new ObjectOutputStream (fout);
-         out.writeObject (d);
-         out.flush ();
-         out.close ();
-         
-         return d;
-      } 
-      catch (IOException _ioe) //happens on downloading modules 
-      {
-         if (currentDownload == null)
-            throw new IOException ("Error in saving config file "+CONFIG +": "+_ioe.getMessage ());
-         else
-            throw new IOException ("Error in downloading "+currentDownload.toString() +
-            ": "+_ioe.getMessage ());
+         } 
       }
-      catch (DeploymentException _de) // happens on creating J2eeApplicationMetaData 
-      { 
-         throw new J2eeDeploymentException ("Error in scanning .ear file deploymnet descriptor: " + _de.getMessage ());
-      } 
-      catch (Exception _e) // when something goes really wrong (runtime exception) 
-      { 
-         _e.printStackTrace ();
-         throw new J2eeDeploymentException ("FATAL ERROR! "+_e.toString ());
-      }  			
+      saveConfig (d);
+      
+      return d;
+   }
+   
+   void installEJB (Deployment _d, URL _source, URL[] _altDD) throws IOException
+   {
+      Deployment.Module m = _d.newModule ();
+      m.name = getAppName (_source);
+      log.log ("intalling ejb package: " + m.name);
+      
+      // the base dir for this EJB package
+      URL destDir = URLWizzard.createTempDir (_d.localUrl, "ejb");
+      
+      // download the package...
+      URL localUrl = URLWizzard.download(_source, new URL (destDir, "ejb.jar"));
+      
+      // download alternative Descriptors (ejb-jar.xml, jboss.xml, ...)
+      // DOESNT WORK YET!!!
+      if (_altDD != null && _altDD.length > 0)
+      {
+         URL metaDir = new URL (destDir.getFile () + "/META-INF"); 
+         for (int i = 0, l = _altDD.length; i < l; ++i)
+         {
+            URLWizzard.download (_altDD[i], new URL (metaDir,"bla"));
+         }
+         // this in the classpath before the real jar file to find this descriptors first
+         m.localUrls.add (destDir);
+      }
+      
+      m.localUrls.add (localUrl);
+      
+      // download libraries we depend on
+      Manifest mf = new JarFile (localUrl.getFile ()).getManifest ();
+      addCommonLibs (_d, mf, _source);
+
+      // add module to the deployment
+      _d.ejbModules.add (m);
+   }
+   
+   
+   void installWAR (Deployment _d, URL _source, String _context, URL[] _altDD) throws IOException
+   {
+      Deployment.Module m = _d.newModule ();
+      m.name = getAppName (_source);
+      log.log ("intalling web package: " + m.name);
+      
+      // the base dir for this WAR package
+      URL destDir = URLWizzard.createTempDir (_d.localUrl, "war");
+      
+      // download the package...
+      URL localUrl = URLWizzard.downloadAndInflate (_source, new URL (destDir, "expandedWar"));
+      
+      // save the contextName
+      m.webContext = _context;
+      
+      // download alternative Descriptors (web.xml, ...)
+      // DOESNT WORK YET!!!
+      if (_altDD != null && _altDD.length > 0)
+      {
+         URL metaDir = new URL (destDir.getFile () + "/WEB-INF"); 
+         for (int i = 0, l = _altDD.length; i < l; ++i)
+         {
+            URLWizzard.download (_altDD[i], new URL (metaDir,"bla"));
+         }
+         m.localUrls.add (destDir);
+      }
+      
+      m.localUrls.add (localUrl);
+      
+      // download libraries we depend on
+      FileInputStream in = new FileInputStream (localUrl.getFile ()+File.separator+"META-INF"+File.separator+"MANIFEST.MF");
+      Manifest mf = new Manifest (in);
+      in.close ();
+      addCommonLibs (_d, mf, _source);
+
+      // add module to the deployment
+      _d.webModules.add (m);
+   }
+   
+   /** downloads all Class-Path: files of this manifest and adds the local urls 
+   *   to the deployments commonUrls.
+   *   @param _d the deployment
+   *   @param _mf the manifest
+   *   @param _base the base url to which the manifest entries are relative
+   *   @throws IOExcepiton in case of error while downloading
+   */
+   private void addCommonLibs (Deployment _d, Manifest _mf, URL _base) throws IOException
+   {
+      if (_d.commonLibs == null)
+         _d.commonLibs = URLWizzard.createTempDir (_d.localUrl, "common");
+
+      String cp = _mf.getMainAttributes ().getValue(Attributes.Name.CLASS_PATH);
+      
+      if (cp != null)
+      {
+         StringTokenizer cpTokens = new StringTokenizer (cp," ");
+         while (cpTokens.hasMoreTokens ())
+         {                     
+            String classPath = cpTokens.nextToken();
+            try
+            {
+               URL src = new URL(_base, classPath);
+               URL dest = new URL (_d.commonLibs, getAppName (src));
+               _d.commonUrls.add (URLWizzard.download (src, dest));
+               log.error("added " + classPath + " to common classpath");
+            } 
+            catch (Exception e)
+            {
+               log.error("Could not add " + classPath + " to common classpath");
+            }
+         }
+      }
    }
    
    /** Deletes the file tree of  the specified application. <br>
@@ -519,7 +577,7 @@ implements J2eeDeployerMBean
       URL url = null;
       try 
       {
-         url = new URL ("file:"+DEPLOYMENT_DIR+"/"+_name);
+         url = new URL (DEPLOYMENT_DIR.toURL (), _name);
          URLWizzard.deleteTree (url);      
          log.log ("file tree "+url.toString ()+" deleted.");
       } catch (MalformedURLException _mfe) { // should never happen
@@ -536,6 +594,9 @@ implements J2eeDeployerMBean
    */
    private void startApplication (Deployment _d) throws J2eeDeploymentException
    {
+      // save the old classloader 
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader ();
+      
       // set the context classloader for this application
       createContextClassLoader(_d);
       
@@ -549,10 +610,12 @@ implements J2eeDeployerMBean
          while (it.hasNext ())
          {
             m = (Deployment.Module)it.next ();
+            
             log.log ("starting module " + m.name);
+            
             // Call the ContainerFactory that is loaded in the JMX server
             server.invoke(jarDeployer, "deploy",
-               new Object[] { m.localUrl.toString () }, new String[] { "java.lang.String" });
+               new Object[] { m.localUrls.firstElement().toString () }, new String[] { "java.lang.String" });
          }
          
          
@@ -561,10 +624,12 @@ implements J2eeDeployerMBean
          while (it.hasNext ())
          {
             m = (Deployment.Module)it.next ();
+            
             log.log ("starting module " + m.name);
+            
             // Call the TomcatDeployer that is loaded in the JMX server
             server.invoke(warDeployer, "deploy",
-               new Object[] { m.webContext, m.localUrl.toString ()}, new String[] { "java.lang.String", "java.lang.String" });
+               new Object[] { m.webContext, m.localUrls.firstElement().toString ()}, new String[] { "java.lang.String", "java.lang.String" });
          }
       }
       catch (MBeanException _mbe) {
@@ -573,7 +638,9 @@ implements J2eeDeployerMBean
       } catch (JMException _jme){
          log.error ("starting failed!");
          throw new J2eeDeploymentException ("fatal error while interacting with deployer MBeans... " + _jme.getMessage ());
-      }  			
+      } finally {  			
+         Thread.currentThread().setContextClassLoader (oldCl);
+      }
    }
    
    /** Stops a running deployment. <br>
@@ -584,6 +651,9 @@ implements J2eeDeployerMBean
    */
    private void stopApplication (Deployment _d) throws J2eeDeploymentException
    {
+      // save the old classloader, tomcat replaces my classloader somehow?!
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader ();
+      
       StringBuffer error = new StringBuffer ();
       ObjectName[] container = new ObjectName[] {jarDeployer, warDeployer};
       Iterator modules[] = new Iterator[] {_d.ejbModules.iterator (),_d.webModules.iterator ()};
@@ -604,13 +674,13 @@ implements J2eeDeployerMBean
             {
                // Call the ContainerFactory/EmbededTomcat that is loaded in the JMX server
                Object result = server.invoke(container[i], "isDeployed",
-                  new Object[] { m.localUrl.toString () }, new String[] { "java.lang.String" });
+                  new Object[] { m.localUrls.firstElement ().toString () }, new String[] { "java.lang.String" });
                if (((Boolean)result).booleanValue ())
                {
                   
                   log.log ("stopping module " + m.name);
                   server.invoke(container[i], "undeploy",
-                     new Object[] { m.localUrl.toString () }, new String[] { "java.lang.String" });
+                     new Object[] { m.localUrls.firstElement ().toString () }, new String[] { "java.lang.String" });
                }
                else
                   log.log ("module " + m.name+" is not running");
@@ -633,6 +703,9 @@ implements J2eeDeployerMBean
       if (!error.toString ().equals (""))
          // there was at least one error...
       throw new J2eeDeploymentException ("error(s) on stopping application "+_d.name+":\n"+error.toString ());
+
+      // restore the classloader
+      Thread.currentThread().setContextClassLoader (oldCl);
    }
    
    /** Checks the Deplyment if it is correctly deployed.
@@ -668,8 +741,8 @@ implements J2eeDeployerMBean
                log.log ("checking module " + m.name);
                // Call the ContainerFactory/EmbededTomcat that is loaded in the JMX server
                o = server.invoke(container[i], "isDeployed",
-                  new Object[] { m.localUrl.toString () }, new String[] { "java.lang.String" });
-               
+                  new Object[] { m.localUrls.firstElement ().toString () }, new String[] { "java.lang.String" });
+            
             }
             catch (MBeanException _mbe) 
             {
@@ -679,7 +752,7 @@ implements J2eeDeployerMBean
             {
                log.error ("fatal error while checking module " + m.name + ": " + _jme.getMessage ());
             }
-
+            
             if (o == null) // had an exception
                ++others;
             else if (count++ == 0) // first module -> set state
@@ -719,12 +792,51 @@ implements J2eeDeployerMBean
       return d;
    }
    
-   /** tests if the web container deployer is available
+   /** Serializes Deployment as CONFIG file. <br>
+   *   saves DEPLOYMENT_DIR / _d.name / CONFIG
+   *   @param _app the name of the app
+   *   @throws IOException if an error occures
    */
+   private void saveConfig (Deployment _d) throws IOException
+   {          
+      ObjectOutputStream out = new ObjectOutputStream (
+         new FileOutputStream (DEPLOYMENT_DIR + File.separator + _d.name + File.separator + CONFIG));
+      out.writeObject (_d);
+      out.flush ();
+      out.close ();
+   }
+   
+   /** tests if the web container deployer is available */
    private boolean warDeployerAvailable ()
    {
       return server.isRegistered (warDeployer);
    }
+   
+   /** returns the filename this url points to */
+   public String getAppName (URL _url)
+   {
+      String s = _url.toString ();
+      
+      if (s.endsWith ("/"))
+         s = s.substring (0, s.length() - 1);
+      
+      s = s.substring (s.lastIndexOf ("/") + 1);
+      return s;
+   }
+   
+   /** composes a webContext name of the file this url points to */
+   public String getWebContext (URL _downloadUrl)
+   {
+      String s = getAppName (_downloadUrl);
+      
+      // truncate the file extension
+      int p = s.lastIndexOf (".");
+      if (p != -1)
+         s = s.substring (0, p);
+      
+      return "/" + s.replace ('.', '/');
+   }	  
+   
    
    
    /**
@@ -733,27 +845,18 @@ implements J2eeDeployerMBean
    */
    private void createContextClassLoader(Deployment deployment) {
       
-      // find all the urls to add
-      ArrayList urls = new ArrayList();
+      // get urls we want all classloaders of this application to share 
+      URL[] urls = new URL[deployment.commonUrls.size ()];
+      for (int i = 0, l = deployment.commonUrls.size (); i < l; ++i)
+         urls[i] = (URL)deployment.commonUrls.elementAt (i); 
       
-      // ejb applications
-      Iterator iterator = deployment.ejbModules.iterator();
-      while (iterator.hasNext()) {
-         // add the local url to the classloader
-         urls.add(((Deployment.Module)iterator.next()).localUrl);
-      }
-      
-      // TODO? web applications
-      // add WEB-INF/classes and WEB-INF/lib/* from webModules.localUrl
-      
-      // actually create the class loader. 
-      // Keep the current context class loader as a parent (jboss and tomcat classes are in it)
-      URL[] urlArray = (URL[])urls.toArray(new URL[urls.size()]);
+      // create classloader
       ClassLoader parent = Thread.currentThread().getContextClassLoader();
-      
-      URLClassLoader appCl = new URLClassLoader(urlArray, parent);
+      URLClassLoader appCl = new URLClassLoader(urls, parent);
       
       // set it as the context class loader for the deployment thread
       Thread.currentThread().setContextClassLoader(appCl);
    }
+
+
 }

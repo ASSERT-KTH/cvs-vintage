@@ -15,103 +15,67 @@ import java.util.Vector;
 /** Represents a J2EE application or module (EJB.jar, Web.war or App.ear). <br>
 *
 *  @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*  @version $Revision: 1.2 $
+*  @version $Revision: 1.3 $
 */
 public class Deployment
    implements java.io.Serializable
 {
-	// the applications name
+	/** the apploications name */
    protected String name;
-   // the url from which this app is downloaded and under which it is deployed 
-   //protected URL downloadUrl;
-   // the local position of the apps root directory
+   
+   /** the local position of the apps root directory */
    protected URL localUrl;
    
-   // the Modules for jBoss and Tomcat
-   protected Vector ejbModules;
-   protected Vector webModules;
+   /** the directory for common libraries */
+   protected URL commonLibs;
    
+   /** the content of the <code>commonLibs</code> directory as 
+   URL Collection */
+   protected Vector commonUrls;
+   
+   /** the EJB Modules */
+   protected Vector ejbModules;
+   
+   /** the WEB Modules */
+   protected Vector webModules;
 
-   /** Creates a new Deployment object.
-   */
+   /** Creates a new Deployment object.  */
    Deployment ()
    {
       ejbModules = new Vector ();
       webModules = new Vector ();
-
+      
+      commonUrls = new Vector ();
    }
 
+   /** returns a new instance of the Module innerclass */
    public Module newModule ()
    {
    	return new Module ();
    }
    
 
-   /** the name of the application.
-   *   @param the download URL
-   *   @return the app context as filename
-   */      
-   public static String getAppName (URL _url)
-   {
-    	String s = _url.getFile ();
-    	// if it is a jar:<something>!/path/file url
-    	if (_url.getProtocol ().equals ("jar"))
-    	{
-    		int p = s.lastIndexOf ("!");
-    		if (p != -1)
-       		s = s.substring (0, p);
-    	}
-    	
-    	return s.substring (Math.max (0, Math.min (s.length (), s.lastIndexOf ("/") + 1))); 
-   }
-
-   /** returns app name with relative path in case of url is jar url. jar:<something>!/
-   *   @param the download URL
-   *   @return  wether file:|http:<bla>/<RETURNVALUE> or jar:<something>!/<RETURNVALUE>
-   */      
-   public static String getFileName (URL _url)
-   {
-    	String s = _url.getFile ();
- 		int p = s.lastIndexOf ("!");
- 		if (p != -1)
- 			// jar url...
-       	s = s.substring (Math.min (p + 2, s.length ()));
-    	else
-    		s = s.substring (Math.max (0, Math.min (s.length (), s.lastIndexOf ("/") + 1))); 
-    	
-    	return s;
-   }
-
-   /** tries to compose a webcontext for WAR files from the given war file url */
-   public static String getWebContext (URL _downloadUrl)
-   {
-   	String s = getFileName (_downloadUrl);
-   	
-   	// truncate the file extension
-   	int p = s.lastIndexOf (".");
-      if (p != -1)
-         s = s.substring (0, p);
-
-      return "/" + s.replace ('.', '/');
-   }	  
-
-   /** Represents a J2ee module.
-   *   the downloadURL (in case of ear something like: jar:applicationURL!/packagename)
-   *   the localURL where the downloaded file is placed
-   *   the downloadURL for an alternative dd
-   *   in case of a web package the optional web root context
-   */
+   /** Represents a J2ee module. */
    class Module
       implements java.io.Serializable
    {
-   	// a short name for the module
+   	/** a short name for the module */
    	String name;
-   	// the url from which it is downloaded
-   	// (in case of ear module like: jar:<app.downloadUrl>!/<module>
-   	//URL downloadUrl;
-   	// the local url under which it is deployed by the special deployer
-   	URL localUrl;
-   	// the web root context in case of war file
-   	String webContext; 
+
+      /** a collection of urls that make this module. <br>
+      actually there is only one url for the modules jar file or 
+      in case of web the modules root directory needed. But to be able 
+      to allow alternative descriptors, the base directories of this alternative
+      descriptors can be put here before the real module url, so that these where 
+      found first */
+   	Vector localUrls;
+   	
+      /** the web root context in case of war file */
+   	String webContext;
+      
+      Module ()
+      {
+         localUrls = new Vector ();
+      }
    }
 }
