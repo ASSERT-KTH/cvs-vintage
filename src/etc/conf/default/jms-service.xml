@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <server>
-
-
  
   <classpath codebase="lib/ext" archives="*"/>
 
-
   <!-- ==================================================================== -->
-  <!-- JMS Stuff                                                       -->
+  <!-- JMS Stuff                                                            -->
   <!-- ==================================================================== -->
 
   <!-- The JMS provider loader -->
   <mbean code="org.jboss.jms.jndi.JMSProviderLoader"
-	 name="JBossMQ:service=JMSProviderLoader,name=JBossMQProvider">
+	 name="jboss.mq:service=JMSProviderLoader,name=JBossMQProvider">
     <attribute name="ProviderName">DefaultJMSProvider</attribute>
     <attribute name="ProviderAdapterClass">
       org.jboss.jms.jndi.JBossMQProvider
@@ -24,7 +21,7 @@
 
   <!-- The server session pool for Message Driven Beans -->
   <mbean code="org.jboss.jms.asf.ServerSessionPoolLoader"
-	 name="JBossMQ:service=ServerSessionPoolMBean,name=StdJMSPool">
+	 name="jboss.mq:service=ServerSessionPoolMBean,name=StdJMSPool">
     <attribute name="PoolName">StdJMSPool</attribute>
     <attribute name="PoolFactoryClass">
       org.jboss.jms.asf.StdServerSessionPoolFactory
@@ -33,10 +30,10 @@
 
   <!-- JMS XA Resource adapter, use this to get transacted JMS in beans -->
   <mbean code="org.jboss.resource.ConnectionFactoryLoader"
-         name="JCA:service=ConnectionFactoryLoader,name=JmsXA">
+         name="jboss.jca:service=ConnectionFactoryLoader,name=JmsXA">
     <attribute name="JndiName">JmsXA</attribute>
-    <depends optional-attribute-name="ResourceAdapterName">JCA:service=RARDeployment,name=JMS Adapter</depends>
-    <depends optional-attribute-name="ConnectionManagerFactoryLoaderName">JCA:service=ConnectionManagerFactoryLoader,name=MinervaXACMFactory</depends>
+    <depends optional-attribute-name="ResourceAdapterName">jboss.jca:service=RARDeployment,name=JMS Adapter</depends>
+    <depends optional-attribute-name="ConnectionManagerFactoryLoaderName">jboss.jca:service=ConnectionManagerFactoryLoader,name=MinervaXACMFactory</depends>
     <attribute name="ManagedConnectionFactoryProperties">
        SessionDefaultType=javax.jms.Topic
        #UserName=guest

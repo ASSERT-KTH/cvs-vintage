@@ -4,8 +4,8 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package org.jboss.deployment;
 
+package org.jboss.deployment;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -13,31 +13,29 @@ import javax.management.ObjectName;
 import org.jboss.system.ServiceMBean;
 
 /**
- *   @see 
- *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *   @version $Revision: 1.9 $
+ * ???
+ *
+ * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
+ * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ * @version $Revision: 1.10 $
  */
 public interface J2eeDeployerMBean
    extends DeployerMBean
 {
-   // Constants -----------------------------------------------------
-   public static final String OBJECT_NAME = "J2EE:service=J2eeDeployer";
+   String OBJECT_NAME = "jboss.j2ee:service=J2eeDeployer";
     
-   // Public --------------------------------------------------------
-   public void setDeployerName(String name);
-   public String getDeployerName();
+   void setDeployerName(String name);
+   String getDeployerName();
    
-   public void setJarDeployer(ObjectName jarDeployer);
-   public ObjectName getJarDeployer();
+   void setJarDeployer(ObjectName jarDeployer);
+   ObjectName getJarDeployer();
    
-   public void setWarDeployer(ObjectName warDeployer);
-   public ObjectName getWarDeployer();
+   void setWarDeployer(ObjectName warDeployer);
+   ObjectName getWarDeployer();
    
-   public void setRarDeployer(ObjectName rarDeployer);
-   public ObjectName getRarDeployer();
+   void setRarDeployer(ObjectName rarDeployer);
+   ObjectName getRarDeployer();
    
-   public void setServiceDeployer(ObjectName javaDeployer);
-   public ObjectName getServiceDeployer();
-
+   void setServiceDeployer(ObjectName javaDeployer);
+   ObjectName getServiceDeployer();
 }

@@ -2,13 +2,12 @@
 
 <server>
 
-
   <!-- ==================================================================== -->
   <!-- J2EE deployment                                                      -->
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.ejb.ContainerFactory"
-	 name="JBOSS-SYSTEM:service=ContainerFactory">
+	 name="jboss.j2ee:service=ContainerFactory">
     <attribute name="VerifyDeployments">true</attribute>
     <attribute name="ValidateDTDs">false</attribute>
     <attribute name="MetricsEnabled">false</attribute>
@@ -19,12 +18,12 @@
 
   <!-- Make sure you change EmbeddedTomcat to Jetty if you are using Jetty -->
   <mbean code="org.jboss.deployment.J2eeDeployer"
-	 name="J2EE:service=J2eeDeployer">
+	 name="jboss.j2ee:service=J2eeDeployer">
     <attribute name="DeployerName">Default</attribute>
-    <depends optional-attribute-name="JarDeployer">JBOSS-SYSTEM:service=ContainerFactory</depends>
-    <depends optional-attribute-name="RarDeployer">JCA:service=RARDeployer</depends>
-    <depends optional-attribute-name="WarDeployer">JBOSS-SYSTEM:service=Jetty</depends>
-    <depends optional-attribute-name="ServiceDeployer">JBOSS-SYSTEM:service=ServiceDeployer</depends>
+    <depends optional-attribute-name="JarDeployer">jboss.j2ee:service=ContainerFactory</depends>
+    <depends optional-attribute-name="RarDeployer">jboss.jca:service=RARDeployer</depends>
+    <depends optional-attribute-name="WarDeployer">jboss.web:service=Jetty</depends>
+    <depends optional-attribute-name="ServiceDeployer">jboss.system:service=ServiceDeployer</depends>
   </mbean>
 
   <!-- 
@@ -32,12 +31,12 @@
      | entry to enable an alternative "scoped" deployment
      |   
   <mbean code="org.jboss.deployment.scope.J2eeGlobalScopeDeployer"
-         name="J2EE:service=J2eeDeployer">
+         name="jboss.j2ee:service=J2eeDeployer">
     <attribute name="DeployerName">Default</attribute>
-    <depends optional-attribute-name="JarDeployer">JBOSS-SYSTEM:service=ContainerFactory</depends>
-    <depends optional-attribute-name="RarDeployer">JCA:service=RARDeployer</depends>
-    <depends optional-attribute-name="WarDeployer">JBOSS-SYSTEM:service=Jetty</depends>
-    <depends optional-attribute-name="ServiceDeployer">JBOSS-SYSTEM:service=ServiceDeployer</depends>
+    <depends optional-attribute-name="JarDeployer">jboss.j2ee:service=ContainerFactory</depends>
+    <depends optional-attribute-name="RarDeployer">jboss.jca:service=RARDeployer</depends>
+    <depends optional-attribute-name="WarDeployer">jboss.web:service=Jetty</depends>
+    <depends optional-attribute-name="ServiceDeployer">jboss.system:service=ServiceDeployer</depends>
   </mbean>
   -->
 </server>

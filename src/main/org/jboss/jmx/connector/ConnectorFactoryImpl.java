@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.jmx.connector;
 
 import java.util.Arrays;
@@ -37,8 +38,8 @@ import org.jboss.jmx.connector.rmi.RMIConnectorImpl;
  * @author    <A href="mailto:andreas@jboss.org">Andreas Schaefer</A>
  * @created   May 2, 2001
  **/
-public class ConnectorFactoryImpl {
-
+public class ConnectorFactoryImpl
+{
    // Constants -----------------------------------------------------
 
    // Static --------------------------------------------------------
@@ -139,7 +140,7 @@ public class ConnectorFactoryImpl {
             );
             mServer.registerMBean(
                lConnector,
-               new ObjectName( "JBOSS-SYSTEM:name=RMIConnectorTo" + pConnector.getServer() )
+               new ObjectName( "jboss:name=RMIConnectorTo" + pConnector.getServer() )
             );
          }
          catch( Exception e ) {
@@ -156,7 +157,7 @@ public class ConnectorFactoryImpl {
             );
             mServer.registerMBean(
                lConnector,
-               new ObjectName( "JBOSS-SYSTEM:name=EJBConnectorTo" + pConnector.getServer() )
+               new ObjectName( "jboss:name=EJBConnectorTo" + pConnector.getServer() )
             );
          }
          catch( Exception e ) {
@@ -177,7 +178,7 @@ public class ConnectorFactoryImpl {
       try {
          if( pConnector.getProtocol().equals( "rmi" ) ) {
             Set lConnectors = mServer.queryMBeans(
-               new ObjectName( "JBOSS-SYSTEM:name=RMIConnectorTo" + pConnector.getServer() ),
+               new ObjectName( "jboss:name=RMIConnectorTo" + pConnector.getServer() ),
                null
             );
             if( !lConnectors.isEmpty() ) {
@@ -198,7 +199,7 @@ public class ConnectorFactoryImpl {
          }
          else if( pConnector.getProtocol().equals( "ejb" ) ) {
             Set lConnectors = mServer.queryMBeans(
-               new ObjectName( "JBOSS-SYSTEM:name=EJBConnectorTo" + pConnector.getServer() ),
+               new ObjectName( "jboss:name=EJBConnectorTo" + pConnector.getServer() ),
                null
             );
             if( !lConnectors.isEmpty() ) {

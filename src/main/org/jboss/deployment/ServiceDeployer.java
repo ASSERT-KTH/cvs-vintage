@@ -1,11 +1,11 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
-package org.jboss.deployment;
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 
+package org.jboss.deployment;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -43,95 +43,93 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
-* This is the main Service Deployer API.
-*
-* @see       org.jboss.system.Service
-* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
-* @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version   $Revision: 1.21 $ <p>
-*
-*      <b>20010830 marc fleury:</b>
-*      <ul>initial import
-*        <li>
-*      </ul>
-*
-*      <p><b>20010905 david maplesden:</b>
-*      <ul>
-*      <li>Changed deployment procedure to deploy all listed mbeans, then
-*      initialise them all before finally starting them all.  Changed services
-*      sets to lists to maintain ordering.
-*      </ul>
-*
-*      <b>20010908 david jencks</b>
-*      <ol>
-*        <li> fixed tabs to spaces and log4j logging. Made the urlToServiceSet
-*        map actually use the url supplied to deploy. Made postRegister use
-*        deploy. Made undeploy work, and implemented sar dependency management
-*        and recursive deploy/undeploy.
-*      </ol>
-*
-*      <p><b>20010907 david maplesden:</b>
-*      <ul>
-*      <li>Added support for "depends" tag
-*      </ul>
-*
-*      <p><b>20011210 marc fleury:</b>
-*      <ul>
-*      <li>Removing the classpath dependency to explicit jars
-*      </ul>
-*      <p><b>20011211 marc fleury:</b>
-*      <ul>
-*      <li>rewrite
-*      </ul>
-*/
+ * This is the main Service Deployer API.
+ *
+ * @see       org.jboss.system.Service
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version   $Revision: 1.22 $ <p>
+ *
+ * <b>20010830 marc fleury:</b>
+ * <ul>initial import
+ *    <li>
+ * </ul>
+ *
+ * <p><b>20010905 david maplesden:</b>
+ * <ul>
+ *  <li>Changed deployment procedure to deploy all listed mbeans, then
+ *      initialise them all before finally starting them all.  Changed services
+ *      sets to lists to maintain ordering.
+ * </ul>
+ *
+ * <b>20010908 david jencks</b>
+ * <ol>
+ *   <li> fixed tabs to spaces and log4j logging. Made the urlToServiceSet
+ *        map actually use the url supplied to deploy. Made postRegister use
+ *        deploy. Made undeploy work, and implemented sar dependency management
+ *        and recursive deploy/undeploy.
+ * </ol>
+ 
+ * <p><b>20010907 david maplesden:</b>
+ * <ul>
+ *  <li>Added support for "depends" tag
+ * </ul>
+ *
+ * <p><b>20011210 marc fleury:</b>
+ * <ul>
+ *  <li>Removing the classpath dependency to explicit jars
+ * </ul>
+ * 
+ * <p><b>20011211 marc fleury:</b>
+ * <ul>
+ *   <li>rewrite
+ * </ul>
+ */
 public class ServiceDeployer
-extends DeployerMBeanSupport
-implements ServiceDeployerMBean
+   extends DeployerMBeanSupport
+   implements ServiceDeployerMBean
 {
    // Attributes --------------------------------------------------------
    private ObjectName objectName;
    
-   //Find all the deployment info for a url
+   // Find all the deployment info for a url
    private final Map urlToServiceDeploymentInfoMap = new HashMap();
    
-   //Find what package an mbean came from.
+   // Find what package an mbean came from.
    private final Map objectNameToSupplyingPackageMap = new HashMap();
-   
-   
    
    // Public --------------------------------------------------------
    
    /**
-   * Gets the Name of the ServiceDeployer object
-   *
-   * @return   returns "ServiceDeployer"
-   */
+    * Gets the Name of the ServiceDeployer object
+    *
+    * @return   returns "ServiceDeployer"
+    */
    public String getName()
    {
       return "ServiceDeployer";
    }
    
    /**
-   * Gets the FilenameFilter that the AutoDeployer uses to decide which files
-   * will be deployed by the ServiceDeployer. Currently .jsr, .sar, and files
-   * ending in service.xml are accepted.
-   *
-   * @return   The FileNameFilter for use by the AutoDeployer.
-   */
+    * Gets the FilenameFilter that the AutoDeployer uses to decide which files
+    * will be deployed by the ServiceDeployer. Currently .jsr, .sar, and files
+    * ending in service.xml are accepted.
+    *
+    * @return   The FileNameFilter for use by the AutoDeployer.
+    */
    public FilenameFilter getDeployableFilter()
    {
-      return
-      new FilenameFilter()
+      return new FilenameFilter()
       {
          /**
-         * Determines which files are accepted by the Deployer.
-         *
-         * @param dir       Directory of candidate file.
-         * @param filename  Filename of candidate file.
-         * @return          Whether candidate file should be deployed by
-         *      this deployer.
-         */
+          * Determines which files are accepted by the Deployer.
+          *
+          * @param dir       Directory of candidate file.
+          * @param filename  Filename of candidate file.
+          * @return          Whether candidate file should be deployed by
+          *      this deployer.
+          */
          public boolean accept(File dir, String filename)
          {
             filename = filename.toLowerCase();
@@ -141,29 +139,28 @@ implements ServiceDeployerMBean
       };
    }
    
-   
    /**
-   * Deploys a package identified by a url string. This stops if a previous
-   * version exists. The package can be a *service.xml file, a sar service
-   * archive, or a plain jar or zip file with no deployment descriptor.
-   * In any case, all classes found in the package or sar subpackages are
-   * added to the extensible classloader.  If there are classpath elements
-   * in the configuration file, the named packages are loaded
-   * (in separate classloaders) unless they have been explicitly undeployed,
-   * in which case deployment of this package is suspended until they have been
-   * redeployed.  Then the mbeans named in the configuration file are created
-   * using the ServiceController.  Dependencies between mbeans are handled by
-   * the ServiceController.
-   *
-   * @param urlString                  The location of the package to deploy
-   * @exception MalformedURLException  Thrown if a malformed url string is
-   *      supplied.
-   * @exception IOException            Thrown if some read operation failed.
-   * @exception DeploymentException    Thrown if the package could not be
-   *      deployed.
-   */
+    * Deploys a package identified by a url string. This stops if a previous
+    * version exists. The package can be a *service.xml file, a sar service
+    * archive, or a plain jar or zip file with no deployment descriptor.
+    * In any case, all classes found in the package or sar subpackages are
+    * added to the extensible classloader.  If there are classpath elements
+    * in the configuration file, the named packages are loaded
+    * (in separate classloaders) unless they have been explicitly undeployed,
+    * in which case deployment of this package is suspended until they have been
+    * redeployed.  Then the mbeans named in the configuration file are created
+    * using the ServiceController.  Dependencies between mbeans are handled by
+    * the ServiceController.
+    *
+    * @param urlString                  The location of the package to deploy
+    * @exception MalformedURLException  Thrown if a malformed url string is
+    *                                   supplied.
+    * @exception IOException            Thrown if some read operation failed.
+    * @exception DeploymentException    Thrown if the package could not be
+    *                                   deployed.
+    */
    public Object deploy(URL url)
-   throws MalformedURLException, IOException, DeploymentException
+       throws MalformedURLException, IOException, DeploymentException
    {
       ServiceDeploymentInfo sdi = getSdi(url, true);
       
@@ -182,13 +179,13 @@ implements ServiceDeployerMBean
       }
       
       // The deployment descriptor was loaded by deployLocalClasses
-      if(sdi.dd != null)
+      if (sdi.dd != null)
       {
          // In case there is a dependent classpath defined parse it
          // This creates 
          parseXMLClasspath(url, sdi);
          
-         //Copy local directory if local-directory element is present
+         // Copy local directory if local-directory element is present
          try
          {
             NodeList lds = sdi.dd.getElementsByTagName("local-directory");
@@ -198,6 +195,7 @@ implements ServiceDeployerMBean
                Element ld = (Element)lds.item(i);
                String path = ld.getAttribute("path");
                log.debug("about to copy local directory at " + path);
+               log.warn("using jboss.system.home property");
                File jbossHomeDir = new File(System.getProperty("jboss.system.home"));
                File localBaseDir = new File(jbossHomeDir, "db"+File.separator);
                //Get the url of the local copy from the classloader.
@@ -206,13 +204,12 @@ implements ServiceDeployerMBean
                log.debug("copying to " + localBaseDir);
                
                inflateJar(localUrl, localBaseDir, path);
-            } // end of for ()
-         
-         
-         } catch (Exception e)
+            }
+         }
+         catch (Exception e)
          {
             log.error("Problem copying local directory", e);
-         } // end of try-catch
+         }
          
          // install the MBeans in this descriptor
          log.debug("addMBeans: url " + url);
@@ -224,7 +221,6 @@ implements ServiceDeployerMBean
          
          for (int i = 0; i < nl.getLength(); i++)
          {
-            
             Element mbean = (Element)nl.item(i);
             
             log.debug("deploying with ServiceController mbean " + mbean);
@@ -272,18 +268,15 @@ implements ServiceDeployerMBean
       return sdi;
    }
    
-   
-   private ServiceDeploymentInfo loadFiles(URL url)
-   throws DeploymentException
+   private ServiceDeploymentInfo loadFiles(URL url) throws DeploymentException
    {
-      
       ServiceDeploymentInfo sdi = getSdi(url, true);
       
       if (sdi.state == ServiceDeploymentInfo.EMPTY)
       {
          try
          {
-            log.debug("deploying document " + url);
+            log.info("deploying: " + url);
             
             // A service can be as simple as a directory from which to load classes
             if(url.toString().endsWith("/"))  
@@ -294,7 +287,6 @@ implements ServiceDeployerMBean
             }
             else // That "service" is a file
             {
-               
                // Create a local copy of that File, the sdi keeps track of the copy directory
                File localFile = getLocalCopy(url, sdi);
                
@@ -313,8 +305,8 @@ implements ServiceDeployerMBean
                   sdi.state = ServiceDeploymentInfo.CLASSESLOADED;
                }
                
-               //a service archive with classes, jars, and META-INF/jboss-service.xml
-               //configuration file
+               // a service archive with classes, jars, and META-INF/jboss-service.xml
+               // configuration file
                else if (localFile.getName().endsWith(".sar"))
                {
                   sdi.createClassLoader();
@@ -325,20 +317,19 @@ implements ServiceDeployerMBean
                         URL docUrl = (URL)i.next();
                         if (docUrl.getFile().endsWith("META-INF/jboss-service.xml"))
                         {
-                           
                            sdi.dd = getDocument(docUrl);
                            
                            break docfound;
-                        } // end of if ()
+                        }
+                     }
                      
-                     } // end of for ()
                      throw new DeploymentException("No META-INF/jboss-service.xml found in alleged sar!");
                   }
                   //sdi.state = ServiceDeploymentInfo.CLASSESLOADED;
                   log.debug("got document jboss-service.xml from cl");
                }
                
-               //Or maybe its just a jar to be put in the extensible classloader.
+               // Or maybe its just a jar to be put in the extensible classloader.
                else if(localFile.getName().endsWith(".jar")
                   || localFile.getName().endsWith(".zip"))
                {
@@ -361,10 +352,10 @@ implements ServiceDeployerMBean
       } // end of if (EMPTY)
       
       return sdi;
-   
    }
    
-   private void parseXMLClasspath(URL url, ServiceDeploymentInfo sdi) throws DeploymentException
+   private void parseXMLClasspath(URL url, ServiceDeploymentInfo sdi) 
+       throws DeploymentException
    {
       Document dd = sdi.dd;
       
@@ -430,12 +421,12 @@ implements ServiceDeployerMBean
                   new java.io.FileFilter()
                   {
                      /**
-                     * filters for jar and zip files in the local directory.
-                     *
-                     * @param pathname  Path to the candidate file.
-                     * @return          True if the file is a jar or zip
-                     *      file.
-                     */
+                      * filters for jar and zip files in the local directory.
+                      *
+                      * @param pathname  Path to the candidate file.
+                      * @return          True if the file is a jar or zip
+                      *      file.
+                      */
                      public boolean accept(File pathname)
                      {
                         String name2 = pathname.getName();
@@ -458,7 +449,6 @@ implements ServiceDeployerMBean
          // We have an archive whatever the codebase go ahead and load the libraries
          else if (!archives.equals(""))
          {
-            
             // We have a real codebase specified in xml
             // We add it to the classpath so we load files from it (http/file will work)
             if (!codebase.equals(""))
@@ -472,7 +462,6 @@ implements ServiceDeployerMBean
                {
                   log.error("Couldn't create URL for codebase "+codebase, e2);
                   throw new DeploymentException(e2.getMessage());
-               
                }
             }
             
@@ -482,7 +471,9 @@ implements ServiceDeployerMBean
             if (archives.equals("*") || archives.equals("")) 
             {
                // Safeguard
-               if (!codebase.startsWith("file:") && archives.equals("*")) throw new DeploymentException("No wildcard permitted in http deployment you must specify individual jars");
+               if (!codebase.startsWith("file:") && archives.equals("*")) 
+                   throw new DeploymentException
+                       ("No wildcard permitted in http deployment you must specify individual jars");
                   
                try
                {
@@ -492,12 +483,11 @@ implements ServiceDeployerMBean
                      new java.io.FileFilter()
                      {
                         /**
-                        * filters for jar and zip files in the local directory.
-                        *
-                        * @param pathname  Path to the candidate file.
-                        * @return          True if the file is a jar or zip
-                        *      file.
-                        */
+                         * filters for jar and zip files in the local directory.
+                         *
+                         * @param pathname  Path to the candidate file.
+                         * @return          True if the file is a jar or zip file.
+                         */
                         public boolean accept(File pathname)
                         {
                            String name2 = pathname.getName();
@@ -505,6 +495,7 @@ implements ServiceDeployerMBean
                         }
                      }
                   );
+                  
                   for (int j = 0; jars != null && j < jars.length; j++)
                   {
                      classpath.add(jars[j].getCanonicalFile().toURL());
@@ -516,8 +507,6 @@ implements ServiceDeployerMBean
                   throw new DeploymentException(e.getMessage());
                }
             }
-            
-            
             else // A real archive listing (as opposed to wildcard)
             {
                StringTokenizer jars = new StringTokenizer(archives, ",");
@@ -531,14 +520,13 @@ implements ServiceDeployerMBean
                }
             }
          }
-         
          else //codebase is empty and archives is empty but we did have a classpath entry
          {
             throw new DeploymentException("A classpath entry was declared but no codebase and no jars specified. Please fix jboss-service.xml in your configuration");
          }
       }
       
-      //Ok, now we've found the list of urls we need... deploy their classes.
+      // Ok, now we've found the list of urls we need... deploy their classes.
       Iterator jars = classpath.iterator();
       
       URL neededUrl = null;
@@ -546,42 +534,39 @@ implements ServiceDeployerMBean
       {
          try
          {
-            
             neededUrl = (URL)jars.next();
             
             loadFiles(neededUrl);
             
             log.debug("deployed classes for " + neededUrl);
-         
-         
-         } catch (DeploymentException e) {
+         }
+         catch (DeploymentException e) {
             log.error("problem deploying classes for " + neededUrl, e);
             //put in list of failures TODO
-         } // end of try-catch
-      } // end of while ()
+         }
+      }
    }
    
-   
    /**
-   * Undeploys the package at the url string specified. This will: Undeploy
-   * packages depending on this one. Stop, destroy, and unregister all the
-   * specified mbeans Unload this package and packages this package deployed
-   * via the classpath tag. Keep track of packages depending on this one that
-   * we undeployed so that they can be redeployed should this one be
-   * redeployed.
-   *
-   * @param urlString                  The location of the package to be
-   *      undeployed (used to index the packages, not to read service.xml on
-   *      undeploy!
-   * @exception MalformedURLException  Thrown if the url string is not valid.
-   * @exception IOException            Thrown if something could not be read.
-   * @exception DeploymentException    Thrown if the package could not be
-   *      undeployed
-   */
+    * Undeploys the package at the url string specified. This will: Undeploy
+    * packages depending on this one. Stop, destroy, and unregister all the
+    * specified mbeans Unload this package and packages this package deployed
+    * via the classpath tag. Keep track of packages depending on this one that
+    * we undeployed so that they can be redeployed should this one be
+    * redeployed.
+    *
+    * @param urlString                  The location of the package to be
+    *                                   undeployed (used to index the packages, 
+    *                                   not to read service.xml on undeploy!
+    * @exception MalformedURLException  Thrown if the url string is not valid.
+    * @exception IOException            Thrown if something could not be read.
+    * @exception DeploymentException    Thrown if the package could not be
+    *                                   undeployed
+    */
    public void undeploy(URL url, Object localurlObject)
-   throws MalformedURLException, IOException, DeploymentException
+      throws MalformedURLException, IOException, DeploymentException
    {
-      log.debug("undeploying document " + url);
+      log.info("undeploying: " + url);
       
       ServiceDeploymentInfo sdi = getSdi(url, false);
       
@@ -599,17 +584,16 @@ implements ServiceDeployerMBean
       //Hey, man, we're all cleaned up!
    }
    
-   
    /**
-   * MBeanRegistration interface. Get the mbean server.
-   *
-   * @param server                   Our mbean server.
-   * @param name                     our proposed object name.
-   * @return                         our actual object name
-   * @exception java.lang.Exception  Thrown if we are supplied an invalid name.
-   */
+    * MBeanRegistration interface. Get the mbean server.
+    *
+    * @param server                   Our mbean server.
+    * @param name                     our proposed object name.
+    * @return                         our actual object name
+    * @exception java.lang.Exception  Thrown if we are supplied an invalid name.
+    */
    public ObjectName preRegister(MBeanServer server, ObjectName name)
-   throws java.lang.Exception
+       throws java.lang.Exception
    {
       super.preRegister(server, name);
       log.debug("ServiceDeployer preregistered with mbean server");
@@ -618,15 +602,14 @@ implements ServiceDeployerMBean
       return objectName;
    }
    
-   
    /**
-   * PostRegister initialized the ServiceDeployed mbean and tries to load a
-   * spine package to set up basic jboss. At the moment the spine package
-   * should be jboss-service.xml or (deprecated) jboss.jcml. Soon we should
-   * have an actual sar with the code as well as configuration info.
-   *
-   * @param registrationDone  Description of Parameter
-   */
+    * PostRegister initialized the ServiceDeployed mbean and tries to load a
+    * spine package to set up basic jboss. At the moment the spine package
+    * should be jboss-service.xml or (deprecated) jboss.jcml. Soon we should
+    * have an actual sar with the code as well as configuration info.
+    *
+    * @param registrationDone  Description of Parameter
+    */
    public void postRegister(java.lang.Boolean registrationDone)
    {
       try
@@ -651,7 +634,7 @@ implements ServiceDeployerMBean
    }
    
    protected Document getDocument(URL url)
-   throws DeploymentException
+       throws DeploymentException
    {
       try
       {
@@ -677,16 +660,15 @@ implements ServiceDeployerMBean
       } // end of try-catch
    }
    
-   
    // Private --------------------------------------------------------
    
-   
-   
-   private void removeMBeans(URL url, ServiceDeploymentInfo sdi) throws DeploymentException
+   private void removeMBeans(URL url, ServiceDeploymentInfo sdi) 
+       throws DeploymentException
    {
       log.debug("removeMBeans: url " + url);
       List services = sdi.mbeans;
       int lastService = services.size();
+      
       //stop services in reverse order.
       for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
       {
@@ -697,6 +679,7 @@ implements ServiceDeployerMBean
             new Object[] {name},
             new String[] {"javax.management.ObjectName"});
       }
+      
       for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
       {
          ObjectName name = (ObjectName)i.previous();
@@ -706,6 +689,7 @@ implements ServiceDeployerMBean
             new Object[] {name},
             new String[] {"javax.management.ObjectName"});
       }
+      
       for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
       {
          ObjectName name = (ObjectName)i.previous();
@@ -717,23 +701,22 @@ implements ServiceDeployerMBean
          //we don't supply it any more, maybe someone else will later.
          objectNameToSupplyingPackageMap.remove(name);
       }
+      
       sdi.state = ServiceDeploymentInfo.CLASSESLOADED;
    }
    
-   
-   
    /**
-   * Parse an object name from the given element attribute 'name'.
-   *
-   * @param element    Element to parse name from.
-   * @return           Object name.
-   *
-   * @throws ConfigurationException   Missing attribute 'name'
-   *                                  (thrown if 'name' is null or "").
-   * @throws MalformedObjectNameException
-   */
+    * Parse an object name from the given element attribute 'name'.
+    *
+    * @param element    Element to parse name from.
+    * @return           Object name.
+    *
+    * @throws ConfigurationException   Missing attribute 'name'
+    *                                  (thrown if 'name' is null or "").
+    * @throws MalformedObjectNameException
+    */
    private ObjectName parseObjectName(final Element element)
-   throws org.jboss.system.ConfigurationException, MalformedObjectNameException
+       throws org.jboss.system.ConfigurationException, MalformedObjectNameException
    {
       String name = ((org.w3c.dom.Text)element.getFirstChild()).getData().trim();
       if (name == null || name.trim().equals("")) {
@@ -743,9 +726,9 @@ implements ServiceDeployerMBean
       return new ObjectName(name);
    }
    
-   
-   /* Calls server.invoke, unwraps exceptions, and returns server output
-   */
+   /** 
+    * Calls server.invoke, unwraps exceptions, and returns server output
+    */
    private Object invoke(ObjectName name, String method, Object[] args, String[] sig)
    {
       try
@@ -779,8 +762,8 @@ implements ServiceDeployerMBean
       return null;
    }
    
-   
-   private ServiceDeploymentInfo getSdi(URL url, boolean createIfMissing) throws DeploymentException
+   private ServiceDeploymentInfo getSdi(URL url, boolean createIfMissing) 
+       throws DeploymentException
    {
       ServiceDeploymentInfo sdi = (ServiceDeploymentInfo)urlToServiceDeploymentInfoMap.get(url);
       if (sdi == null)
@@ -798,5 +781,3 @@ implements ServiceDeployerMBean
       return sdi;
    }
 }
-
-

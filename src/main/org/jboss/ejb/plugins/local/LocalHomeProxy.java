@@ -6,7 +6,6 @@
  */
 package org.jboss.ejb.plugins.local;
 
-
 import java.lang.reflect.Method;
 
 import javax.naming.Name;
@@ -16,7 +15,6 @@ import javax.ejb.EJBLocalObject;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 
-
 /**
  * The client-side proxy for an EJB Home object.
  *      
@@ -25,9 +23,6 @@ import javax.ejb.HomeHandle;
 public abstract class LocalHomeProxy
     extends LocalProxy
 {
-    
-    // Static --------------------------------------------------------
-
     /** {@link EJBHome#remove(Object)} method reference. */
     protected static final Method REMOVE_BY_PRIMARY_KEY;
 

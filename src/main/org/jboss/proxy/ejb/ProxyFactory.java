@@ -1,11 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.proxy.ejb;
-
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -38,10 +37,7 @@ import org.jboss.util.FinderResults;
 
 import org.jboss.logging.Logger;
 
-
 /**
- *  <description>
- *
  * As we remove the one one association between container STACK and invoker we keep this around
  * IN the future the creation of proxies is a task done on a container basis but the container
  * as a logical representation, in other words, the container "Entity with RMI/IIOP" is not a 
@@ -52,21 +48,18 @@ import org.jboss.logging.Logger;
  * In particular we declare that we "implement" the container invoker interface when we are
  * just implementing the Proxy generation calls. Separation of concern. 
  *
- *  @see <related>
  *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/12/30: billb</b>
  *  <ol>
  *   <li>made home and bean invokers pluggable
  *  </ol>
-*/
-
+ */
 public class ProxyFactory
-implements ContainerInvoker
+   implements ContainerInvoker
 {
-   
    // Metadata for the proxies
    public EJBMetaData ejbMetaData ;
    
@@ -84,7 +77,6 @@ implements ContainerInvoker
    // A pointer to the container this proxy factory is dedicated to
    Container container;
    
-   
    // Container plugin implementation -----------------------------------------
    
    public void setContainer(Container con)
@@ -92,8 +84,7 @@ implements ContainerInvoker
       this.container = con;
    }
    
-   public void create()
-   throws Exception
+   public void create() throws Exception
    {
       Context ctx = new InitialContext();
       
@@ -165,28 +156,34 @@ implements ContainerInvoker
       log.debug("Proxy Factory for "+jndiName+" initialized");
    }
    
-   
-   public void start()
-   throws Exception
+   public void start() throws Exception
    {
-      try{
-
-         // Get the local invoker
-         homeInvoker = (Invoker) Registry.lookup(new ObjectName(container.getBeanMetaData().getHomeInvoker()));
-         beanInvoker = (Invoker) Registry.lookup(new ObjectName(container.getBeanMetaData().getBeanInvoker()));
+      try {
+         ObjectName oname;
          
+         // Get the local invoker
+         oname = new ObjectName(container.getBeanMetaData().getHomeInvoker());
+         homeInvoker = (Invoker)Registry.lookup(oname);
+         if (homeInvoker == null)
+            throw new RuntimeException("homeInvoker is null: " + oname);
+         
+         oname = new ObjectName(container.getBeanMetaData().getBeanInvoker());
+         beanInvoker = (Invoker)Registry.lookup(oname);
+         if (beanInvoker == null)
+            throw new RuntimeException("beanInvoker is null: " + oname);
+            
          // FIXME FIXME In the near future move to 
          // invoker = (Invoker) Registry.lookup(new ObjectName(container.getInvokerType()));
          
          // Create the EJBHome
          this.home = 
-         (EJBHome)Proxy.newProxyInstance(
+            (EJBHome)Proxy.newProxyInstance(
             // Class loader pointing to the right classes from deployment
             ((ContainerInvokerContainer)container).getHomeClass().getClassLoader(),
             // The classes we want to implement home and handle
             new Class[] { ((ContainerInvokerContainer)container).getHomeClass(), Class.forName("javax.ejb.Handle")},
             // The home proxy as invocation handler
-            new HomeProxy(jndiName,homeInvoker, ejbMetaData));
+            new HomeProxy(jndiName, homeInvoker, ejbMetaData));
          
          // Create stateless session object
          // Same instance is used for all objects
@@ -203,8 +200,6 @@ implements ContainerInvoker
                new StatelessSessionProxy(jndiName, beanInvoker)
             );
          }
-         
-
          
          // Bind the home in the JNDI naming space
          rebind(
@@ -242,9 +237,7 @@ implements ContainerInvoker
    {
    }
    
-   
    // Container invoker implementation -------------------------------------
-   
    
    public EJBMetaData getEJBMetaData()
    {
@@ -300,7 +293,8 @@ implements ContainerInvoker
                   new Class[] { ((ContainerInvokerContainer)container).getRemoteClass(), ReadAheadBuffer.class },
                   new ListEntityProxy(jndiName, beanInvoker, idEnum.next(), list, listId, i)));        
          }
-      } else {
+      } 
+      else {
          while(idEnum.hasNext())
          {
             list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
@@ -312,7 +306,7 @@ implements ContainerInvoker
    }
    
    protected void rebind(Context ctx, String name, Object val)
-   throws NamingException
+      throws NamingException
    {
       // Bind val to name in ctx, and make sure that all intermediate contexts exist
       
@@ -329,8 +323,6 @@ implements ContainerInvoker
          }
          n = n.getSuffix(1);
       }
-      
       ctx.rebind(n.get(0), val);
    }
-
 }

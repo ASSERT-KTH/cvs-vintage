@@ -8,6 +8,7 @@
 package org.jboss;
 
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Provides an OS-independent way of shutting down JBoss.  This
@@ -23,12 +24,12 @@ import java.net.URL;
  *
  * @author <a href="mailto:dewayne@dmsoft.com">Dewayne McNair</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class Shutdown
 {
    private static final String COMMAND =
-      "/InvokeAction//JBOSS%2DSYSTEM%3Atype%3DShutdown/action=shutdown?action=shutdown";
+      "/InvokeAction//jboss%2Esystem%3Aservice%3DServer/action=shutdown?action=shutdown";
 
    /**
     * Parse the command line and shutdown the remote server.

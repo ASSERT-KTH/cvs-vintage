@@ -25,13 +25,13 @@ import org.jboss.system.ServiceMBean;
  * <p>Created: Wed Nov 29 16:20:17 2000
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface ServerSessionPoolLoaderMBean 
    extends ServiceMBean 
 {
    /** The default MBean object name. */
-   String OBJECT_NAME = ":service=ServerSessionPoolMBean";
+   String OBJECT_NAME = "jboss:service=ServerSessionPoolMBean";
 
    /**
     * Set the pool name.

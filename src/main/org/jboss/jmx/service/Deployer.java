@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.jmx.service;
 
 import java.io.File;
@@ -25,14 +26,14 @@ import javax.naming.NamingException;
 import org.jboss.jmx.connector.RemoteMBeanServer;
 
 /**
-* A JMX client to deploy an application into a running JBoss server.
-*
-* @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-* @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
-* @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-* @version $Revision: 1.3 $
-*/
+ * A JMX client to deploy an application into a running JBoss server.
+ *
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
+ * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
+ * @version $Revision: 1.4 $
+ */
 public class Deployer
 {
    /**
@@ -42,7 +43,8 @@ public class Deployer
     * server to use if not the local one
     */
    public static void main(final String[] args)
-      throws Exception {
+      throws Exception
+   {
       // Check for option "-server"
       String lServer = InetAddress.getLocalHost().getHostName();
       for( int i = 0; i < args.length; i++ ) {
@@ -50,13 +52,15 @@ public class Deployer
             lServer = args[ i + 1 ];
          }
       }
+      
       for (int count=0;count<args.length;count++) {            
          if (!args[count].equalsIgnoreCase("-undeploy")) { 
             System.out.println("Deploying " + args[count]);
             new Deployer( lServer ).deploy(args[count]);
             System.out.println(args[count] +
                                " has been deployed successfully");
-         } else {
+         }
+         else {
             System.out.println("Undeploying " + args[++count]);
             new Deployer( lServer ).undeploy(args[count]);
             System.out.println(args[count] +
@@ -68,13 +72,13 @@ public class Deployer
    private String mServerName;
    
    /**
-   * Creates a deployer accessing the RMI Connector for
-   * the given server
-   *
-   * @param pServerName Name of the server (how it is registered on
-   *                    the JNDI server as second part of the name
-   *                    (name spec is: "jmx:<server name>:rmi").
-   **/
+    * Creates a deployer accessing the RMI Connector for
+    * the given server
+    *
+    * @param pServerName Name of the server (how it is registered on
+    *                    the JNDI server as second part of the name
+    *                    (name spec is: "jmx:<server name>:rmi").
+    */
    public Deployer( String pServerName ) {
       mServerName = pServerName;
    }
@@ -109,7 +113,7 @@ public class Deployer
    protected ObjectName getFactoryName()
       throws MalformedObjectNameException
    {
-      return new ObjectName("J2EE:service=J2eeDeployer");
+      return new ObjectName("jboss.j2ee:service=J2eeDeployer");
    }
    
    /**
@@ -182,4 +186,3 @@ public class Deployer
       }
    }
 }
-

@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.metadata;
 
 import java.util.Iterator;
@@ -30,7 +31,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -106,13 +107,13 @@ public abstract class BeanMetaData
    /** what JRMP invokers do we use? **/
    private String homeInvoker = null;
    private String beanInvoker = null;
-   public static final String DEFAULT_HOME_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmp";
-   public static final String DEFAULT_BEAN_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmp";
-   public static final String DEFAULT_CLUSTERED_HOME_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=RoundRobin";
-   public static final String DEFAULT_CLUSTERED_SLSB_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=RoundRobin";
-   public static final String DEFAULT_CLUSTERED_SFSB_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=FirstAvailable";
-   public static final String DEFAULT_CLUSTERED_EB_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=FirstAvailable";
-   public static final String DEFAULT_CLUSTERED_BEAN_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=FirstAvailable";
+   public static final String DEFAULT_HOME_INVOKER = "jboss:service=invoker,type=jrmp";
+   public static final String DEFAULT_BEAN_INVOKER = "jboss:service=invoker,type=jrmp";
+   public static final String DEFAULT_CLUSTERED_HOME_INVOKER = "jboss:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=RoundRobin";
+   public static final String DEFAULT_CLUSTERED_SLSB_INVOKER = "jboss:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=RoundRobin";
+   public static final String DEFAULT_CLUSTERED_SFSB_INVOKER = "jboss:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=FirstAvailable";
+   public static final String DEFAULT_CLUSTERED_EB_INVOKER = "jboss:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=FirstAvailable";
+   public static final String DEFAULT_CLUSTERED_BEAN_INVOKER = "jboss:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=FirstAvailable";
    /** The cluster-config element info */
    private ClusterConfigMetaData clusterConfig = null;
 

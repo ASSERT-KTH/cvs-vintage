@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.logging;
 
 import java.io.File;
@@ -40,7 +41,7 @@ import org.apache.log4j.xml.DOMConfigurator;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class Log4jService
    implements Log4jServiceMBean, MBeanRegistration

@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.management.j2ee;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import org.jboss.logging.Logger;
 * Represents the single JBoss server management domain
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -43,9 +44,7 @@ public class SingleJBossServerManagement
    // -------------------------------------------------------------------------
    
    public SingleJBossServerManagement()
-      throws
-         MalformedObjectNameException,
-         InvalidParentException
+      throws MalformedObjectNameException, InvalidParentException
    {
       super( "SingleJBoss" );
    }
@@ -108,5 +107,4 @@ public class SingleJBossServerManagement
    public String toString() {
       return "SingleJBossServerManagement { " + super.toString() + " } []";
    }
-   
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!DOCTYPE server>
+<!-- $Id: jboss-service.xml,v 1.20 2002/01/03 04:00:56 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -7,29 +8,14 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.19 2001/12/18 21:45:31 mnf999 Exp $ -->
-
-<!-- 
-   |  This is where you can add and configure your MBeans.
-   |
-   |  *ATTENTION*
-   |
-   |  The order of the listing here is the same order as
-   |  the MBeans are loaded. Therefore if a MBean depends on another
-   |  MBean to be loaded and started it has to be listed after all
-   |  the MBeans it depends on.
-  -->
-
 <server>
 
-<!--
-
-	 The Classpath element is needed for http based installations 
-	 we need to list all the archives that the server needs at boot
-	 if the installation is local and the configuration is from file
-	 then there is no need to list the files and it should commented
--->
-
+  <!--
+     | The Classpath element is needed for http based installations 
+     | we need to list all the archives that the server needs at boot
+     | if the installation is local and the configuration is from file
+     | then there is no need to list the files and it should commented
+   -->
   <classpath codebase="lib/ext" archives="*"/>
 
   <!-- ==================================================================== -->
@@ -37,7 +23,7 @@
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.web.WebService"
-	 name="JBOSS-SYSTEM:service=Webserver">
+	 name="jboss:service=Webserver">
     <attribute name="Port">8083</attribute>
     <!-- Should resources and non-EJB classes be downloadable -->
     <attribute name="DownloadServerClasses">true</attribute>
@@ -47,6 +33,8 @@
   <!-- JSR-77 Single JBoss Server Management Domain                         -->
   <!-- ==================================================================== -->
 
+  <!-- TODO: rename jmx domain to jboss.management.single -->
+  
   <mbean code="org.jboss.management.j2ee.SingleJBossServerManagement"
 	 name="SingleJBoss:type=J2EEDomain,name=Manager" >
   </mbean>
@@ -56,24 +44,24 @@
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.naming.NamingService"
-	 name="JBOSS-SYSTEM:service=Naming">
+	 name="jboss:service=Naming">
     <attribute name="Port">1099</attribute>
   </mbean>
   <mbean code="org.jboss.naming.JNDIView" 
-	 name="JBOSS-SYSTEM:service=JNDIView"/>
+	 name="jboss:service=JNDIView"/>
 
   <!-- ==================================================================== -->
   <!-- Security                                                             -->
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.security.plugins.SecurityConfig"
-	 name="Security:name=SecurityConfig">
+	 name="jboss.security:name=SecurityConfig">
     <attribute name="AuthConf">auth.conf</attribute>
   </mbean>
 
   <!-- JAAS security manager and realm mapping -->
   <mbean code="org.jboss.security.plugins.JaasSecurityManagerService"
-	 name="Security:name=JaasSecurityManager">
+	 name="jboss.security:name=JaasSecurityManager">
     <attribute name="SecurityManagerClassName">
       org.jboss.security.plugins.JaasSecurityManager
     </attribute>
@@ -84,7 +72,7 @@
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.tm.TransactionManagerService" 
-	 name="JBOSS-SYSTEM:service=TransactionManager">
+	 name="jboss:service=TransactionManager">
     <attribute name="TransactionTimeout">300</attribute>
 
     <!-- Use this attribute if you need to use a specific Xid
@@ -99,13 +87,13 @@
      | the TransactionManagerService above.
      |
   <mbean code="org.jboss.tm.plugins.tyrex.TransactionManagerService"
-         name="JBOSS-SYSTEM:service=TransactionManager">
+         name="jboss:service=TransactionManager">
         <attribute name="ConfigFileName">../conf/default/domain.xml</attribute>
   </mbean>
   -->
 
   <mbean code="org.jboss.tm.usertx.server.ClientUserTransactionService"
-	 name="JBOSS-SYSTEM:service=ClientUserTransaction">
+	 name="jboss:service=ClientUserTransaction">
   </mbean>
 
 
@@ -113,12 +101,12 @@
   <!-- And now to get everything else going...                              -->
   <!-- ==================================================================== -->
 
-
-  <mbean code="org.jboss.deployment.AutoDeployer" name="JBOSS-SYSTEM:service=AutoDeployer">
+  <mbean code="org.jboss.deployment.AutoDeployer" 
+         name="jboss:service=AutoDeployer">
     <attribute name="Deployers">
-      JBOSS-SYSTEM:service=ServiceDeployer;
-      JCA:service=RARDeployer;
-      J2EE:service=J2eeDeployer
+      jboss.system:service=ServiceDeployer;
+      jboss.jca:service=RARDeployer;
+      jboss.j2ee:service=J2eeDeployer
     </attribute>
     <attribute name="URLs">
       ../deploy/lib,
@@ -135,7 +123,7 @@
 
   <!-- AS Temporary not available
   <mbean code="org.jboss.management.ServerDataCollector"
-         name="Management:service=Collector">
+         name="jboss.management:service=Collector">
     <attribute name="RefreshSleep">5000</attribute>
   </mbean>
   -->
@@ -146,7 +134,7 @@
 
   <!-- Uncomment to enable JMX monitoring of the bean cache
   <mbean code="org.jboss.monitor.BeanCacheMonitor" 
-         name="Monitor:name=BeanCacheMonitor"/>
+         name="jboss.jmx:name=BeanCacheMonitor"/>
   -->
 
 
@@ -155,7 +143,7 @@
   <!-- ==================================================================== -->
 
   <!-- Uncomment this to enable Scheduling
-  <mbean code="org.jboss.util.Scheduler" name=":service=Scheduler">
+  <mbean code="org.jboss.util.Scheduler" name="jboss:service=Scheduler">
     <constructor>
       <arg type="java.lang.String" value=":server=Scheduler"/>
       <arg type="java.lang.String" value="org.jboss.util.Scheduler$SchedulableExample"/>
@@ -170,7 +158,7 @@
 
   <!-- Uncomment this and set up according to manual to add Castor JDO service
   <mbean code="org.jboss.jdo.castor.CastorJDOImpl"
-         name="JBOSS-SYSTEM:service=CastorJDO,name=someName">
+         name="jboss:service=CastorJDO,name=someName">
     <attribute name="Configuration">
       file:../conf/default/database.xml
     </attribute>
@@ -181,19 +169,17 @@
   </mbean>
   -->
 
-
   <!-- ==================================================================== -->
   <!-- Mail Connection Factory                                              -->
   <!-- ==================================================================== -->
 
-  <mbean code="org.jboss.mail.MailService" name="JBOSS-SYSTEM:service=Mail">
+  <mbean code="org.jboss.mail.MailService"
+         name="jboss:service=Mail">
     <attribute name="JNDIName">Mail</attribute>
     <attribute name="ConfigurationFile">mail.properties</attribute>
     <attribute name="User">user_id</attribute>
     <attribute name="Password">password</attribute>
   </mbean>
-
-
 
   <!-- ==================================================================== -->
   <!-- Invokers to the JMX node                                             -->
@@ -201,15 +187,17 @@
 
   <!-- RMI/JRMP invoker -->
   <mbean code="org.jboss.invocation.jrmp.server.JRMPInvoker" 
-   name="JBOSS-SYSTEM:service=invoker,type=jrmp">
+   name="jboss:service=invoker,type=jrmp">
     <attribute name="RMIObjectPort">4444</attribute>
-    <!--<attribute name="RMIClientSocketFactory">custom</attribute>
+    <!--
+    <attribute name="RMIClientSocketFactory">custom</attribute>
     <attribute name="RMIServerSocketFactory">custom</attribute>
-    <attribute name="RMIServerSocketAddr">custom</attribute>-->
+    <attribute name="RMIServerSocketAddr">custom</attribute>
+    -->
   </mbean>
   
   <mbean code="org.jboss.invocation.local.LocalInvoker" 
-   name="JBOSS-SYSTEM:service=invoker,type=local">
+         name="jboss:service=invoker,type=local">
   </mbean>
   
   <!-- ==================================================================== -->
@@ -217,39 +205,9 @@
   <!-- USE A SAR/BARE XML IF YOU WANT DYNAMICITY OF REDEPLOY FOR MBEANS     -->
   <!-- ==================================================================== -->
 
+  <!-- 
+     | Might want to use a standard user-service.xml for this and leave
+     | this file for JBoss stuff only.
+   -->
+   
 </server>
-
-
-
-  <!-- ==================================================================== -->
-  <!-- IF YOU USE NET-BOOT YOU NEED TO SPECIFY THE LIBRARIES THROUGH HTTP   -->
-  <!-- ==================================================================== -->
-
-<!--
-  <classpath archives="
-  	 castor.jar,
-	 castor-jdo-plugin.jar,
-	 concurrent.jar,
-	 gnu-regexp.jar,
-	 jaas.jar,
-	 JavaGroups.jar,
-	 jbossha.jar,
-	 jboss-j2ee.jar,
-	 jboss.jar,
-	 jbossmx.jar,
-	 jbosssx.jar,
-	 jcert.jar,
-	 jmxtools.jar,
-	 jndi.jar,
-	 jnet.jar,
-	 jnpserver.jar,
-	 jpl-pattern.jar,
-	 jpl-util.jar,
-	 jsr77.jar,
-	 jsse.jar,
-	 jts.jar,
-	 mail.jar,
-	 tyrex.jar,
-	 tyrex-tm-plugin.jar,
-	 xalan.jar"/>
--->

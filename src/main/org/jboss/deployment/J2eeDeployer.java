@@ -55,7 +55,7 @@ import org.jboss.management.j2ee.J2EEApplication;
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  */
 public class J2eeDeployer
 extends ServiceMBeanSupport
@@ -92,7 +92,6 @@ implements J2eeDeployerMBean
    
    // <comment author="cgjung"> better be protected for subclassing </comment>
    protected InstallerFactory installer;
-   
    
    // Constructors --------------------------------------------------
    
@@ -169,16 +168,18 @@ implements J2eeDeployerMBean
       };
    }
    
-   /** Deploys the given URL independent if it is a EJB.jar, Web.war
-    *   or Application.ear. In case of already deployed, it performes a
-    *   redeploy.
-    *   @param _url the url (file or http) to the archiv to deploy
-    *   @throws MalformedURLException in case of a malformed url
-    *   @throws J2eeDeploymentException if something went wrong...
-    *   @throws IOException if trouble while file download occurs
+   /** 
+    * Deploys the given URL independent if it is a EJB.jar, Web.war
+    * or Application.ear. In case of already deployed, it performes a
+    * redeploy.
+    * 
+    * @param _url the url (file or http) to the archiv to deploy
+    * @throws MalformedURLException in case of a malformed url
+    * @throws J2eeDeploymentException if something went wrong...
+    * @throws IOException if trouble while file download occurs
     */
    public void deploy(String _url)
-   throws MalformedURLException, IOException, J2eeDeploymentException
+      throws MalformedURLException, IOException, J2eeDeploymentException
    {
       URL url = new URL(_url);
       
@@ -302,6 +303,8 @@ implements J2eeDeployerMBean
    }
 
    protected File getTempDir() throws IOException {
+      log.warn("using jboss.system.home property");
+      
       File dir = new File(System.getProperty("jboss.system.home"));
       dir = new File(dir, "tmp");
       dir = new File(dir, "deploy");
@@ -376,7 +379,8 @@ implements J2eeDeployerMBean
     *   @throws IOException if the download fails
     *   @throws J2eeDeploymentException if the given package is somehow inconsistent
     */
-   protected Deployment installApplication(URL _downloadUrl) throws IOException, J2eeDeploymentException
+   protected Deployment installApplication(URL _downloadUrl) 
+      throws IOException, J2eeDeploymentException
    {
       return installer.install(_downloadUrl);
    }

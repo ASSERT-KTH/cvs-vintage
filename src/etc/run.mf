@@ -1,2 +1,2 @@
 Main-Class: org.jboss.Main
-Class-Path: ../lib/jmxri.jar ../lib/jboss-boot.jar ../lib/crimson.jar ../lib/jaxp.jar
+Class-Path: ../lib/jmxri.jar ../lib/jboss-boot.jar ../lib/crimson.jar ../lib/jaxp.jar ../lib/getopt.jar

@@ -15,9 +15,7 @@ package org.jboss.jmx.adaptor.rmi;
 public interface RMIAdaptorServiceMBean
 	extends org.jboss.system.ServiceMBean
 {
-	// Constants -----------------------------------------------------
-	public static final String OBJECT_NAME = "JMX:type=adaptor,protocol=RMI";
+   String OBJECT_NAME = "jboss.jmx:type=adaptor,protocol=RMI";
 
-	// Public --------------------------------------------------------
-    public String getJNDIName();
+   String getJNDIName();
 }

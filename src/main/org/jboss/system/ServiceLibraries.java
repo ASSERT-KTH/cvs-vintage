@@ -4,21 +4,22 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.system;
 
 import java.net.URL;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import org.jboss.system.URLClassLoader;
-
-//import org.jboss.logging.log4j.JBossCategory;
 
 /**
  * Service Libraries. The service libraries is a central repository of all
@@ -27,7 +28,7 @@ import org.jboss.system.URLClassLoader;
  * @see <related>
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.10 $ <p>
+ * @version $Revision: 1.11 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -45,68 +46,59 @@ import org.jboss.system.URLClassLoader;
  *
  */
 public class ServiceLibraries
-       implements ServiceLibrariesMBean, MBeanRegistration
+   implements ServiceLibrariesMBean, MBeanRegistration
 {
-	/** The bootstrap interface to the log4j system */
-   private static BootstrapLogger log = BootstrapLogger.getLogger(ServiceLibraries.class);
+   /** The bootstrap interface to the log4j system */
+   private static BootstrapLogger log = 
+      BootstrapLogger.getLogger(ServiceLibraries.class);
 
-   // Static --------------------------------------------------------
    private static ServiceLibraries libraries;
 
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
-
-
    /**
-    *  The classloaders we use for loading classes here.
+    * The classloaders we use for loading classes here.
     */
    private Set classLoaders;
 
-   /*
-    *  Maps class names of the classes loaded here to the classes.
+   /**
+    * Maps class names of the classes loaded here to the classes.
     */
    private Map classes;
 
-   /*
-    *  Maps class loaders to the set of classes they loaded here.
+   /**
+    * Maps class loaders to the set of classes they loaded here.
     */
    private Map clToClassSetMap;
 
    /**
-    *  The version number of the {@link #clToClassSetMap} map.
-    *  If a lookup of a class detects a change in this while calling
-    *  the classloaders with locks removed, the {@link #clToClassSetMap}
-    *  and {@link #classes} fields should <em>only</em> be modified
-    *  if the classloader used for loading the class is still in the
-    *  {@link #classLoaders} set.
+    * The version number of the {@link #clToClassSetMap} map.
+    * If a lookup of a class detects a change in this while calling
+    * the classloaders with locks removed, the {@link #clToClassSetMap}
+    * and {@link #classes} fields should <em>only</em> be modified
+    * if the classloader used for loading the class is still in the
+    * {@link #classLoaders} set.
     */
    private long clToClassSetMapVersion = 0;
 
-   /*
-    *  Maps resource names of resources looked up here to the URLs used to
-    *  load them.
+   /**
+    * Maps resource names of resources looked up here to the URLs used to
+    * load them.
     */
    private Map resources;
 
-   /*
-    *  Maps class loaders to the set of resource names they looked up here.
+   /**
+    * Maps class loaders to the set of resource names they looked up here.
     */
    private Map clToResourceSetMap;
 
    /**
-    *  The version number of the {@link #clToResourceSetMap} map.
-    *  If a lookup of a resource detects a change in this while
-    *  calling the classloaders with locks removed, the
-    *  {@link #clToResourceSetMap} and {@link #resources} fields should
-    *  <em>only</em> be modified if the classloader used for loading
-    *  the class is still in the {@link #classLoaders} set.
+    * The version number of the {@link #clToResourceSetMap} map.
+    * If a lookup of a resource detects a change in this while
+    * calling the classloaders with locks removed, the
+    * {@link #clToResourceSetMap} and {@link #resources} fields should
+    * <em>only</em> be modified if the classloader used for loading
+    * the class is still in the {@link #classLoaders} set.
     */
    private long clToResourceSetMapVersion = 0;
-
-   // Constructors --------------------------------------------------
-
-   // Public --------------------------------------------------------
 
    /**
     * Gets the Libraries attribute of the ServiceLibraries class
@@ -130,17 +122,16 @@ public class ServiceLibraries
     */
    public String getName()
    {
-      return "Service Libraries";
+      return "ServiceLibraries";
    }
 
-
    /**
-    *  Find a resource in the ServiceLibraries object.
+    * Find a resource in the ServiceLibraries object.
     *
-    *  @param name The name of the resource
-    *  @param scl The asking class loader
-    *  @return An URL for reading the resource, or <code>null</code> if the
-    *          resource could not be found.
+    * @param name   The name of the resource
+    * @param scl    The asking class loader
+    * @return       An URL for reading the resource, or <code>null</code> if the
+    *               resource could not be found.
     */
    public URL getResource(String name, ClassLoader scl)
    {
@@ -217,11 +208,10 @@ public class ServiceLibraries
       return resource;
    }
 
-
    /**
-    *  Add a ClassLoader to the ServiceLibraries object.
+    * Add a ClassLoader to the ServiceLibraries object.
     *
-    *  @param cl The class loader to be added.
+    * @param cl The class loader to be added.
     */
    public synchronized void addClassLoader(URLClassLoader cl)
    {
@@ -248,9 +238,9 @@ public class ServiceLibraries
    }
 
    /**
-    *  Remove a ClassLoader from the ServiceLibraries object.
+    * Remove a ClassLoader from the ServiceLibraries object.
     *
-    *  @param cl The ClassLoader to be removed.
+    * @param cl The ClassLoader to be removed.
     */
    public synchronized void removeClassLoader(URLClassLoader cl)
    {
@@ -298,16 +288,15 @@ public class ServiceLibraries
       }
    }
 
-
    /**
-    *  Load a class in the ServiceLibraries object.
+    * Load a class in the ServiceLibraries object.
     *
-    *  @param name The name of the class
-    *  @param resolve If <code>true</code>, the class will be resolved
-    *  @param scl The asking class loader
-    *  @return The loaded class.
-    *          resource could not be found.
-    *  @throws ClassNotFoundException If the class could not be found.
+    * @param name The name of the class
+    * @param resolve If <code>true</code>, the class will be resolved
+    * @param scl The asking class loader
+    * @return The loaded class.
+    *         resource could not be found.
+    * @throws ClassNotFoundException If the class could not be found.
     */
    public Class loadClass(String name, boolean resolve, ClassLoader scl)
           throws ClassNotFoundException
@@ -407,20 +396,12 @@ public class ServiceLibraries
    }
 
    // The name of the system MLet
-   //   ObjectName mlet = new ObjectName(server.getDefaultDomain(), "service", "MLet");
+   // ObjectName mlet = new ObjectName(server.getDefaultDomain(), "service", "MLet");
 
-   /**
-    * #Description of the Method
-    *
-    * @param server Description of Parameter
-    * @param name Description of Parameter
-    * @return Description of the Returned Value
-    * @exception java.lang.Exception Description of Exception
-    */
    public ObjectName preRegister(MBeanServer server, ObjectName name)
-          throws java.lang.Exception
+      throws Exception
    {
-      //this.server = server;
+      // this.server = server;
 
       classLoaders = new HashSet();
       classes = new HashMap();
@@ -428,44 +409,19 @@ public class ServiceLibraries
       clToResourceSetMap = new HashMap();
       clToClassSetMap = new HashMap();
 
-      log.info("[GPA] Microkernel ClassLoaders and Libraries initialized");
+      log.info("ClassLoaders and ServiceLibraries initialized");
       return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
 
-
-   /**
-    * #Description of the Method
-    *
-    * @exception java.lang.Exception Description of Exception
-    */
-   public void preDeregister()
-          throws java.lang.Exception
+   public void preDeregister() throws Exception
    {
    }
 
-   /**
-    * #Description of the Method
-    *
-    * @param b Description of Parameter
-    */
    public void postRegister(Boolean b)
    {
    }
 
-   /**
-    * #Description of the Method
-    */
    public void postDeregister()
    {
    }
-   
-   // Y overrides ---------------------------------------------------
-
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
-
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
 }

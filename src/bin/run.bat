@@ -4,7 +4,7 @@
 
 REM Include the JDK javac compiler for JSP pages. The default is for a Sun JDK
 REM compatible distribution to which JAVA_HOME points
-set JAVAC_JAR=%JAVA_HOME%/lib/tools.jar
+set JAVAC_JAR=%JAVA_HOME%\lib\tools.jar
 set JBOSS_CLASSPATH=%JBOSS_CLASSPATH%;%JAVAC_JAR%;run.jar
 
 REM Setup JBoss sepecific properties

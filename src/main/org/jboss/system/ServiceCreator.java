@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.system;
 
 import java.lang.reflect.Constructor;
@@ -24,7 +25,7 @@ import org.w3c.dom.NodeList;
  * @see Service
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * 
  * <p><b>Revisions:</b>
  * <p><b>2001/08/03 marcf </b>
@@ -37,7 +38,7 @@ public class ServiceCreator
    // Attributes ----------------------------------------------------
 
    /** Instance logger. */
-   private final Logger log = Logger.getLogger(getClass());
+   private static final Logger log = Logger.getLogger(ServiceCreator.class);
    
    private MBeanServer server;
    
@@ -46,22 +47,23 @@ public class ServiceCreator
    }
    
    /**
-   * Parses the given configuration document and creates MBean
-   * instances in the current MBean server.
-   *
-   * @param configuration     The configuration document.
-   *
-   * @throws ConfigurationException   The configuration document contains
-   *                                  invalid or missing syntax.
-   * @throws Exception                Failed for some other reason.
-   */
+    * Parses the given configuration document and creates MBean
+    * instances in the current MBean server.
+    *
+    * @param configuration     The configuration document.
+    *
+    * @throws ConfigurationException   The configuration document contains
+    *                                  invalid or missing syntax.
+    * @throws Exception                Failed for some other reason.
+    */
    public ObjectInstance install(Element mbeanElement) throws Exception
    {
       ObjectName name = parseObjectName(mbeanElement);
       
       // marcf fixme add and remove the classlaoder from the controller
       
-      ObjectName loader = new ObjectName("ZClassLoaders:id="+name.hashCode());
+      ObjectName loader = new ObjectName("jboss.system.classloader:id=" + 
+                                         name.hashCode());
       
       MBeanClassLoader cl = new MBeanClassLoader(name);
       
@@ -78,7 +80,7 @@ public class ServiceCreator
       // get the constructor params/sig to use
       ConstructorInfo constructor =
 
-       ConstructorInfo.create(mbeanElement);
+      ConstructorInfo.create(mbeanElement);
       log.debug("About to create bean: "+name);
 		
       // Create the MBean instance
@@ -92,7 +94,6 @@ public class ServiceCreator
          log.debug("Created bean: "+name);
 		
          return instance;
-      
       } 
       catch (Exception e) 
       {
@@ -100,45 +101,50 @@ public class ServiceCreator
          try 
          {
             server.unregisterMBean(name);
-         } catch (Exception ignore)
-         { } // end of try-catch
+         }
+         catch (Exception ignore) {}
          
          throw e;
-      } // end of try-catch
-   
+      }
    }	
-   
    
    public void remove(ObjectName name) throws Exception
    {
+      // add defaut domain if there isn't one in this name
+      String domain = name.getDomain();
+      int hcode = name.hashCode();
+      if (domain == null || "".equals(domain)) {
+         name = new ObjectName(server.getDefaultDomain() + name);
+      }
       
       // Remove the MBean from the MBeanServer
       server.unregisterMBean(name);
       
       // Remove the MBeanClassLoader used by the MBean
-      ObjectName loader = new ObjectName("ZClassLoaders:id=" + name.hashCode());
+      ObjectName loader = new ObjectName("jboss.system.classloader:id=" + hcode);
       if (server.isRegistered(loader)) 
       {
          server.unregisterMBean(loader);
-      } // end of if ()
+         log.debug("unregistered caossloader for: " + name);
+      }
    }	
    
    /**
-   * Provides a wrapper around the information about which constructor
-   * that MBeanServer should use to construct a MBean.
-   * Please note that only basic datatypes (type is then the same as
-   * you use to declare it "short", "int", "float" etc.) and any class
-   * having a constructor taking a single "String" as only parameter.
-   *
-   * <p>XML syntax for contructor:
-   *   <pre>
-   *      <constructor>
-   *         <arg type="xxx" value="yyy"/>
-   *         ...
-   *         <arg type="xxx" value="yyy"/>
-   *      </constructor>
-   *   </pre>
-   */
+    * Provides a wrapper around the information about which constructor
+    * that MBeanServer should use to construct a MBean.
+    * Please note that only basic datatypes (type is then the same as
+    * you use to declare it "short", "int", "float" etc.) and any class
+    * having a constructor taking a single "String" as only parameter.
+    *
+    * <p>XML syntax for contructor:
+    *   <pre>
+    *      <constructor>
+    *         <arg type="xxx" value="yyy"/>
+    *         ...
+    *         <arg type="xxx" value="yyy"/>
+    *      </constructor>
+    *   </pre>
+    */
    private static class ConstructorInfo
    {
       /** An empty parameters list. */
@@ -154,15 +160,15 @@ public class ServiceCreator
       public Object[] params = EMPTY_PARAMS;
       
       /**
-      * Create a ConstructorInfo object for the given configuration.
-      *
-      * @param element   The element to build info for.
-      * @return          A constructor information object.
-      *
-      * @throws ConfigurationException   Failed to create info object.
-      */
+       * Create a ConstructorInfo object for the given configuration.
+       *
+       * @param element   The element to build info for.
+       * @return          A constructor information object.
+       *
+       * @throws ConfigurationException   Failed to create info object.
+       */
       public static ConstructorInfo create(Element element)
-      throws ConfigurationException
+         throws ConfigurationException
       {
          ConstructorInfo info = new ConstructorInfo();
          
@@ -250,17 +256,17 @@ public class ServiceCreator
    }
    
    /**
-   * Parse an object name from the given element attribute 'name'.
-   *
-   * @param element    Element to parse name from.
-   * @return           Object name.
-   *
-   * @throws ConfigurationException   Missing attribute 'name'
-   *                                  (thrown if 'name' is null or "").
-   * @throws MalformedObjectNameException
-   */
+    * Parse an object name from the given element attribute 'name'.
+    *
+    * @param element    Element to parse name from.
+    * @return           Object name.
+    *
+    * @throws ConfigurationException   Missing attribute 'name'
+    *                                  (thrown if 'name' is null or "").
+    * @throws MalformedObjectNameException
+    */
    private ObjectName parseObjectName(final Element element)
-   throws ConfigurationException, MalformedObjectNameException
+      throws ConfigurationException, MalformedObjectNameException
    {
       String name = element.getAttribute("name");
       if (name == null || name.trim().equals("")) {

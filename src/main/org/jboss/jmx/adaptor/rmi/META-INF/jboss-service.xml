@@ -2,7 +2,6 @@
 
 <server>
 
-
   <mbean code="org.jboss.jmx.adaptor.rmi.RMIAdaptorService" 
-	 name="JMX:name=Connector,type=RMI"/>
+	 name="jboss.jmx:type=Connector,name=RMI"/>
 </server>

@@ -7,10 +7,10 @@
 package org.jboss.system;
 
 /**
- * The Service interface for the JBOSS-SYSTEM.
+ * The Service interface.
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -25,7 +25,6 @@ package org.jboss.system;
  *   <li>init and destroy were put back by david
  *   <li>init becomes create
  * </ul>
-
  */
 public interface Service
 {
@@ -43,6 +42,7 @@ public interface Service
     * stop the service
     */
    void stop();
+   
    /**
     * destroy the service, tear down 
     */

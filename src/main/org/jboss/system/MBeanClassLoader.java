@@ -15,7 +15,7 @@ import javax.management.ObjectName;
  * The pupose of MBeanCL is to load the classes on behalf of an MBean.
  * 
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -28,8 +28,10 @@ public class MBeanClassLoader
 {
    /** All SCL are just in orbit around a basic ServiceLibraries */
    private static ServiceLibraries libraries;
-	/** The bootstrap interface to the log4j system */
-	private static BootstrapLogger log = BootstrapLogger.getLogger(MBeanClassLoader.class);
+	
+   /** The bootstrap interface to the log4j system */
+   private static BootstrapLogger log = 
+      BootstrapLogger.getLogger(MBeanClassLoader.class);
 
    private ObjectName objectName;
 	
@@ -86,7 +88,6 @@ public class MBeanClassLoader
 	
    public URL getResource(String name)
    {
-		
       if (name.endsWith("CHANGEME"))
       {
          log.debug("MCL GETRESOURCE " + name +

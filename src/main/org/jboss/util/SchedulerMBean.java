@@ -25,7 +25,7 @@ public interface SchedulerMBean
    // Constants
    // -------------------------------------------------------------------------  
 
-   public static final String OBJECT_NAME = "JBOSS-SYSTEM:service=Scheduler";
+   public static final String OBJECT_NAME = "jboss:service=Scheduler";
 
    // -------------------------------------------------------------------------
    // Methods

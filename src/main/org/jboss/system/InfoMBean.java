@@ -4,7 +4,10 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.system;
+
+import java.util.Map;
 
 /**
  * The management interface for the Info bean.
@@ -13,34 +16,26 @@ package org.jboss.system;
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleurY@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface InfoMBean
 {
-   String OBJECT_NAME = "JBOSS-SYSTEM:service=Info";
+   String OBJECT_NAME = ":service=Info";
 
-   String listMemoryUsage();
-   String listSystemInfo();
-   String listThreadDump();
-   String runGarbageCollector();
-   void traceMethodCalls(boolean flag);
-   void traceInstructions(boolean flag);
-	
-   /**
-    * Return the filesystem directory where JBoss is running on this node.
-    */
-   String getLocalJBossSystemHomeDirectory();
+   Map showProperties();
    
+   String showThreads();
+
    /**
     * Returns the installation URL.
     * 
     * can be local in a file: or remote with http:
-    * tells where the JBOSS-SYSTEM was loaded from
+    * tells where the jboss.system was loaded from
     * By default it is the systemHome.  In case of an http install the system
     * will be the local file system where the run is and the install will be
     * an http based install with centralized configuration for the farms.
     */
-   String getInstallationURL();
+   // String getInstallationURL();
 	
    /**
     * Returns the configuration directory.
@@ -56,7 +51,7 @@ public interface InfoMBean
     * www.jboss.org we need to have conf/acme-inc under the base directory of
     * JBoss installs.
     */
-   String getConfigurationDirectoryURL();
+   //String getConfigurationDirectoryURL();
 	
    /**
     * Returns the library directory.
@@ -64,19 +59,5 @@ public interface InfoMBean
     * Where to find basic libraries in this system. 
     * This is an absoluteURL
     */
-   String getLibraryDirectoryURL();
-
-   //
-   // Various System getters
-   //
-
-   String getJavaVersion();
-   String getJavaVendor();
-   String getJavaVMName();
-   String getJavaVMVersion();
-   String getJavaVMVendor();
-   String getOSName();
-   String getOSVersion();
-   String getOSArch();
-   String getJBossVersion();
+   //String getLibraryDirectoryURL();
 }

@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.naming;
 
 import java.io.InputStream;
@@ -28,18 +29,21 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerFactoryMBean;
 import org.jboss.system.ServiceMBeanSupport;
 
-/** A simple utlity mbean that allows one to recursively list the default
-JBoss InitialContext.
-
-Deploy by adding:
-<mbean code="org.jboss.naming.JNDIView" name="JBOSS-SYSTEM:service=JNDIView" />
-to the jboss.jcml file.
-
-@author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
-@author Vladimir Blagojevic <vladimir@xisnext.2y.net>
-@version $Revision: 1.12 $
-*/
-public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
+/**
+ * A simple utlity mbean that allows one to recursively list the default
+ * JBoss InitialContext.
+ *
+ * Deploy by adding:
+ * <mbean code="org.jboss.naming.JNDIView" name=":service=JNDIView" />
+ * to the jboss.jcml file.
+ *
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+ * @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
+ * @version $Revision: 1.13 $
+ */
+public class JNDIView 
+   extends ServiceMBeanSupport 
+   implements JNDIViewMBean
 {
     // Constants -----------------------------------------------------
 
@@ -71,10 +75,10 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
         try
         {
             applications = (Iterator) server.invoke(
-            new ObjectName(ContainerFactoryMBean.OBJECT_NAME),
-            "getDeployedApplications",
-            new Object[] { },
-            new String[] { });
+               new ObjectName(ContainerFactoryMBean.OBJECT_NAME),
+               "getDeployedApplications",
+               new Object[0],
+               new String[0]);
         }
         catch(Exception e)
         {

@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.deployment;
 
 import java.io.File;
@@ -58,15 +59,12 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class AutoDeployer
        extends ServiceMBeanSupport
        implements AutoDeployerMBean, NotificationListener, Runnable
 {
-   // Constants -----------------------------------------------------
-   // Attributes ----------------------------------------------------
-   
    /**
     * Callback to the JMX agent.
     */
@@ -143,7 +141,7 @@ public class AutoDeployer
     */
    public AutoDeployer(String urlList)
    {
-      this("J2EE:service=J2eeDeployer", urlList);
+      this("jboss.j2ee:service=J2eeDeployer", urlList);
    }
 
    /**
@@ -592,8 +590,6 @@ public class AutoDeployer
       }
    }
    
-   // Protected -----------------------------------------------------
-
    /**
     * Scan the watched directories list, add new deployement entires for each
     * that does not already exist in the watched urls map.
@@ -729,8 +725,6 @@ public class AutoDeployer
          throw e.getTargetError();
       }
    }
-
-   // Inner classes -------------------------------------------------
 
    /**
     * This class holds info about a deployement, such as the URL and the last

@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.48 2001/12/18 21:40:21 mnf999 Exp $ -->
+<!-- $Id: build.xml,v 1.49 2002/01/03 04:00:56 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -315,7 +315,12 @@
      |  documentation compiles.
     -->
   <target name="compile" 
-	  depends="compile-bean-sources, compile-classes, compile-rmi, compile-etc, compile-resources, compile-bin"
+	  depends="compile-bean-sources, 
+                   compile-classes, 
+                   compile-rmi, 
+                   compile-etc, 
+                   compile-resources, 
+                   compile-bin"
 	  description="Compile all source files."/>
 
   <!-- Compile EJB beans with XDoclet -->
@@ -467,17 +472,18 @@
     <mkdir dir="${build.lib}"/>
 
     <!-- Build jboss.jar -->
-    <jar jarfile="${build.lib}/jboss.jar"
-         manifest="${build.etc}/jboss.mf">
+    <jar jarfile="${build.lib}/jboss.jar" manifest="${build.etc}/jboss.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/**"/>
-        <!-- Exclude Main, it will go into run.jar -->
-        <exclude name="org/jboss/Main*"/>
-        <!-- Exclude JMX Connector stuff we will use the connector JSR for that -->
+        
+        <!-- Exclude command line utilities -->
+        <exclude name="org/jboss/*"/>
+        
+        <!-- Exclude JMX Connector stuff we will use the connector SAR for that -->
         <exclude name="org/jboss/jmx/**"/>
-        <!-- But include this interface because the Farm needs it -->
-        <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
       </fileset>
+      
+      <!-- HACK -->
       <fileset dir="${build.classes}">
         <!-- But include this interface because the Farm needs it -->
         <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
@@ -493,17 +499,23 @@
       </fileset>
     </jar>
 
-    <!-- Build jboss-boot.jar -->
+    <!-- 
+       | Build jboss-boot.jar
+       |
+       | This file is always local and contains the basic classed required
+       | to start the server and setup network service loading.
+     -->
     <jar jarfile="${build.lib}/jboss-boot.jar">
       <fileset dir="${build.classes}">
-        <include name="org/jboss/system/BootstrapLogger.class"/>
-        <include name="org/jboss/system/URLClassLoader.class"/>
-        <include name="org/jboss/system/URLClassLoaderMBean.class"/>
-        <include name="org/jboss/system/MBeanClassLoader.class"/>
-        <include name="org/jboss/system/MBeanClassLoaderMBean.class"/>
-        <include name="org/jboss/system/ServiceLibraries.class"/>
-        <include name="org/jboss/system/ServiceLibrariesMBean.class"/>
-        <include name="org/jboss/deployment/DeploymentException.class"/>
+        <include name="org/jboss/system/BootstrapLogger*"/>
+        <include name="org/jboss/system/URLClassLoader*"/>
+        <include name="org/jboss/system/MBeanClassLoader*"/>
+        <include name="org/jboss/system/ServiceLibraries*"/>
+        <include name="org/jboss/system/Server*"/>
+        <include name="org/jboss/Version*"/>
+      </fileset>
+      <fileset dir="${build.resources}">
+        <include name="org/jboss/version.properties"/>
       </fileset>
     </jar>
 
@@ -519,9 +531,7 @@
         <include name="org/jboss/system/ServiceConfigurator.class"/>
         <include name="org/jboss/system/ServiceControllerMBean.class"/>
         <include name="org/jboss/system/ConfigurationException.class"/>
-        <include name="org/jboss/system/Info.class"/>
-        <include name="org/jboss/system/InfoMBean.class"/>
-        <include name="org/jboss/system/Shutdown*.class"/>
+        <include name="org/jboss/system/Info*"/>
         <include name="org/jboss/system/ServiceContext.class"/>
         <include name="org/jboss/deployment/ServiceDeployer.class"/>
         <include name="org/jboss/deployment/ServiceDeployerMBean.class"/>
@@ -561,26 +571,16 @@
     </jar>
 
     <!-- Build run.jar -->
-    <!-- should use jlink for this, but jlink sucks -->
-    <unjar src="${gnu.getopt.lib}/getopt.jar" dest="${build.classes}"/> 
-    <jar jarfile="${build.lib}/run.jar"
-         manifest="${build.etc}/run.mf">
+    <jar jarfile="${build.lib}/run.jar" manifest="${build.etc}/run.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/Main*"/>
-        <include name="org/jboss/Version*"/>
-        <include name="gnu/getopt/**"/>
-      </fileset>
-      <fileset dir="${build.resources}">
-        <include name="org/jboss/version.properties"/>
       </fileset>
     </jar>
 
     <!-- Build shutdown.jar -->
-    <unjar src="${gnu.getopt.lib}/getopt.jar" dest="${build.classes}"/> 
-    <jar jarfile="${build.lib}/shutdown.jar">
+    <jar jarfile="${build.lib}/shutdown.jar" manifest="${build.etc}/shutdown.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/Shutdown*"/>
-        <include name="gnu/getopt/**"/>
       </fileset>
     </jar>
 

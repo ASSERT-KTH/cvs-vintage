@@ -12,7 +12,7 @@ package org.jboss.system;
  * @see ServiceLibraries
  * 
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b>
  * <p><b>2001/06/22 , marcf</b>:
@@ -22,7 +22,7 @@ package org.jboss.system;
  */
 public interface ServiceLibrariesMBean
 {
-   String OBJECT_NAME = "JBOSS-SYSTEM:service=Libraries";
+   String OBJECT_NAME = "jboss.system:service=Libraries";
 
    // The ServicesLibraries MBean should expose "soft" information like
    // the dependencies graph

@@ -1,81 +1,95 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.system;
 
 import java.net.URL;
 import java.io.InputStream;
 
-
-
 /**
-* The URLClassLoader is associated with a given URL.
-* It can load jar and sar (or jsr).
-* 
-* <p>The ServiceLibraries keeps track of the UCL and asks everyone for
-*    resources and classes.
-*
-* @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
-* @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
-* @version $Revision: 1.10 $
-* 
-* <p><b>20010830 marc fleury:</b>
-* <ul>
-*   <li>Initial import
-* </ul>
-* <p><b>20011009 cgj:</b>
-* <ul>
-*   <li>fixed default resolution behaviour
-* </ul>
-*/
+ * The URLClassLoader is associated with a given URL.
+ * It can load jar and sar.
+ * 
+ * <p>The ServiceLibraries keeps track of the UCL and asks everyone for
+ *    resources and classes.
+ *
+ * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
+ * @version $Revision: 1.11 $
+ * 
+ * <p><b>20010830 marc fleury:</b>
+ * <ul>
+ *   <li>Initial import
+ * </ul>
+ * <p><b>20011009 cgj:</b>
+ * <ul>
+ *   <li>fixed default resolution behaviour
+ * </ul>
+ */
 public class URLClassLoader
-extends java.net.URLClassLoader
-implements URLClassLoaderMBean
+   extends java.net.URLClassLoader
+   implements URLClassLoaderMBean
 {
-   /** One URL per classLoader in our case 
-   * This is just a key used for identifying the classloader,
-   * nothing is actually loaded from it.  Classes and resources are 
-   * loaded from local copies or unpacked local copies.
-   */   
-   private URL keyUrl = null;
+   /** 
+    * This is just a key used for identifying the classloader,
+    * nothing is actually loaded from it.  Classes and resources are 
+    * loaded from local copies or unpacked local copies.
+    *
+    * One URL per classLoader in our case.
+    */   
+   private URL keyUrl;
    
    /** An SCL can also be loading on behalf of an MBean */
    //private ObjectName mbean = null; not used
    
    /** All SCL are just in orbit around a basic ServiceLibraries */
    private static ServiceLibraries libraries;
+   
    /** The bootstrap interface to the log4j system */
    private static BootstrapLogger log = BootstrapLogger.getLogger(URLClassLoader.class);
    
    /**
-   * One url per SCL
-   *
-   * @param String application
-   * @param ClassLoader parent
-   */
-   public URLClassLoader(URL[] urls, URL keyUrl)
+    * One url per SCL
+    */
+   public URLClassLoader(final URL[] urls, final URL keyUrl)
    {
       super(urls);
       this.keyUrl = keyUrl;
+
       try
       {
-         
          if (libraries == null)
          {
             libraries = ServiceLibraries.getLibraries();
          }
          
-         // A URL enabled SCL must register itself with the libraries to
-         // be queried
+         // A URL enabled SCL must register itself with the libraries to be queried
          libraries.addClassLoader(this);
       }
       catch(Exception e)
       {
-         log.warn("URL "+keyUrl+" could not be opened");
+         // e.printStackTrace();
+         log.warn("Could not open URL: " + keyUrl, e);
       }
+   }
+   
+   /**
+    * Create a self keyed loader based on the given URL.
+    *
+    * <p>Only the boot urls are keyed on themselves.
+    *    Everything else is copied for loading but keyed on the
+    *    original deployed url.
+    *
+    * <p>Only Server needs to access this constructor, so make it package
+    *    private to avoid improper usage.
+    */
+   URLClassLoader(final URL url)
+   {
+      this (new URL[]{ url }, url);
    }
    
    public URL getKeyURL()
@@ -84,37 +98,23 @@ implements URLClassLoaderMBean
    }
    
    /**
-   * loadClass
-   *
-   * We intercept the load class to know exactly the dependencies
-   * of the underlying jar
-   */
-   
-   
-   /*
-   USE THIS TO TRACE CLASS LOADING
-   if (name.endsWith("CHANGEME"))
-   {
-   log.debug("UCL LOAD "+this.hashCode()+" in loadClass "+name);
-   }
-   */
-   
+    * We intercept the load class to know exactly the dependencies
+    * of the underlying jar
+    */
    public Class loadClass(String name, boolean resolve)
-   throws ClassNotFoundException
+      throws ClassNotFoundException
    {
       return libraries.loadClass(name, resolve, this);	
    }
    
-   
-   public Class loadClassLocally (String name, boolean resolve)
-   throws ClassNotFoundException
+   public Class loadClassLocally(String name, boolean resolve)
+      throws ClassNotFoundException
    {
       return super.loadClass(name, resolve);
    }
    
    public URL getResource(String name)
    {
-      
       URL resource = super.getResource(name);
       
       if (resource == null)
@@ -148,9 +148,7 @@ implements URLClassLoaderMBean
             return resourceUrl.openStream();
          }
       }
-      catch (Exception ignore)
-      {
-      }
+      catch (Exception ignore) {}
       
       return null;
    }

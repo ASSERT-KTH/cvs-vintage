@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.system;
 
 import javax.management.ObjectName;
@@ -14,13 +15,13 @@ import org.w3c.dom.NodeList;
 /** 
  * This is the main Service Controller API.
  * 
- * <p>A controller can deploy a service to a JBOSS-SYSTEM
+ * <p>A controller can deploy a service to a jboss.system
  *    It installs by delegating, it configures by delegating
  *
  * @see Service
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -34,10 +35,9 @@ import org.w3c.dom.NodeList;
  * </ul>
  */
 public interface ServiceControllerMBean
-   //   extends Service
 {
    /** The default object name. */
-   String OBJECT_NAME = "JBOSS-SYSTEM:spine=ServiceController";
+   String OBJECT_NAME = "jboss.system:service=ServiceController";
 
    /** Install a service, create the MBean and configure it**/
    ObjectName install(Element mbean) throws Exception;
@@ -57,7 +57,6 @@ public interface ServiceControllerMBean
    /** Remove a service, corresponds to install **/ 
    void remove(Element mbean) throws Exception;
    void remove(ObjectName mbeanName) throws Exception;
-
 
    /** Get a list of deployed elements, in the order they were deployed */
    ObjectName[] getDeployed();

@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <!-- ===================================================================== -->
 <!--                                                                       -->
 <!--  JBoss Server Configuration                                           -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: hsqldb-default-service.xml,v 1.6 2001/12/18 21:41:25 mnf999 Exp $ -->
-
+<!-- $Id: hsqldb-default-service.xml,v 1.7 2002/01/03 04:00:56 user57 Exp $ -->
 
 <server>
-
 
   <classpath archives="
 	 hsqldb.jar,
@@ -23,7 +20,7 @@
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.resource.ConnectionFactoryLoader" 
-	 name="JBOSS-SYSTEM:service=ConnectionFactoryLoader,name=DefaultDS">
+	 name=":service=ConnectionFactoryLoader,name=DefaultDS">
     <attribute name="ManagedConnectionFactoryProperties">ConnectionURL=jdbc:hsqldb:hsql://localhost:1476
   DriverClass=org.hsqldb.jdbcDriver
   UserName=sa</attribute>
@@ -35,12 +32,11 @@
         started by an mbean in the jboss jmx framework! The only example of this 
         we have right now is hsqldb! Do not use a line like this for external 
         databases. -->
-    <depends>JBOSS-SYSTEM:service=Hypersonic</depends>
+    <depends>:service=Hypersonic</depends>
 
-    <depends optional-attribute-name="ResourceAdapterName">JCA:service=RARDeployment,name=Minerva JDBC LocalTransaction ResourceAdapter</depends>
-    <depends optional-attribute-name="ConnectionManagerFactoryLoaderName">JCA:service=ConnectionManagerFactoryLoader,name=MinervaSharedLocalCMFactory</depends>
-    <attribute name="ConnectionManagerProperties">#
-      #Wed Aug 15 16:17:29 EDT 2001
+    <depends optional-attribute-name="ResourceAdapterName">jboss.jca:service=RARDeployment,name=Minerva JDBC LocalTransaction ResourceAdapter</depends>
+    <depends optional-attribute-name="ConnectionManagerFactoryLoaderName">jboss.jca:service=ConnectionManagerFactoryLoader,name=MinervaSharedLocalCMFactory</depends>
+    <attribute name="ConnectionManagerProperties">
       MinSize=0
       MaxSize=10
       BlockingTimeoutMillis=5000
@@ -55,7 +51,7 @@
   </mbean>
 
   <mbean code="org.jboss.resource.ConnectionFactoryLoader" 
-	 name="JBossMQ:service=ConnectionFactoryLoader,name=NoTransDS">
+	 name=":service=ConnectionFactoryLoader,name=NoTransDS">
     <attribute name="ManagedConnectionFactoryProperties">ConnectionURL=jdbc:hsqldb:hsql://localhost:1476
   DriverClass=org.hsqldb.jdbcDriver
   UserName=sa
@@ -64,12 +60,11 @@
     <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
 
     <!--Anonymous depends to database being started -->
-    <depends>JBOSS-SYSTEM:service=Hypersonic</depends>
+    <depends>:service=Hypersonic</depends>
 
-    <depends optional-attribute-name="ResourceAdapterName">JCA:service=RARDeployment,name=Minerva JDBC LocalTransaction ResourceAdapter</depends>
-    <depends optional-attribute-name="ConnectionManagerFactoryLoaderName">JCA:service=ConnectionManagerFactoryLoader,name=MinervaNoTransCMFactory</depends>
-    <attribute name="ConnectionManagerProperties">#
-      #Wed Aug 15 16:17:29 EDT 2001
+    <depends optional-attribute-name="ResourceAdapterName">jboss.jca:service=RARDeployment,name=Minerva JDBC LocalTransaction ResourceAdapter</depends>
+    <depends optional-attribute-name="ConnectionManagerFactoryLoaderName">jboss.jca:service=ConnectionManagerFactoryLoader,name=MinervaNoTransCMFactory</depends>
+    <attribute name="ConnectionManagerProperties">
       MinSize=0
       MaxSize=10
       BlockingTimeoutMillis=5000
@@ -83,10 +78,10 @@
     <attribute name="PrincipalMappingProperties">UserName=sa</attribute>
   </mbean>
 
-  <!-- Moved to end to test anonymous dependss -->
+  <!-- Moved to end to test anonymous depends -->
 
   <mbean code="org.jboss.jdbc.HypersonicDatabase" 
-	 name="JBOSS-SYSTEM:service=Hypersonic">
+	 name=":service=Hypersonic">
     <attribute name="Port">1476</attribute>
     <attribute name="Silent">true</attribute>
     <attribute name="Database">default</attribute>

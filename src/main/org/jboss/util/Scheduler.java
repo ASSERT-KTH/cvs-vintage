@@ -42,7 +42,7 @@ import org.jboss.system.ServiceMBeanSupport;
 * ATTENTION: The scheduler instance only allows to run one schedule at a time.
 * Therefore when you want to run two schedules create to instances with this
 * MBean. Suggested Object Name for the MBean are:<br>
-* JBOSS-SYSTEM:service=Scheduler,schedule=<you schedule name><br>
+* jboss:service=Scheduler,schedule=<you schedule name><br>
 * This way you should not run into a name conflict.
 *
 * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>

@@ -1,14 +1,22 @@
+/*
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.system;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
-/** A utility class that allows the use of log4j by classes that must be loaded
- from the system classpath. It uses reflection to obtain access to the log4j
- classes using the thread context class loader.
-
+/** 
+ * A utility class that allows the use of log4j by classes that must be loaded
+ * from the system classpath. It uses reflection to obtain access to the log4j
+ * classes using the thread context class loader.
+ *
  * @author  Scott.Stark@jboss.org
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class BootstrapLogger
 {

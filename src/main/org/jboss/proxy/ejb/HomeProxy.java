@@ -38,7 +38,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 * The client-side proxy for an EJB Home object.
 *      
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 *
 * <p><b>2001/11/21: marcf</b>
 * <ol>
@@ -46,7 +46,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 * </ol>
 */
 public class HomeProxy
-extends GenericProxy
+   extends GenericProxy
 {
    // Constants -----------------------------------------------------
 
@@ -187,21 +187,16 @@ extends GenericProxy
          return invoke(invocation);
       }
 
-
       // If not taken care of, go on and call the container
       else {
-
          // Create an Invocation
-
          return invoke(createInvocation(m, args));
       }
    }
 
-
    public Invocation createInvocation(Method m, Object[] arguments)
      throws Exception
    {
-
       Invocation invocation = new Invocation(new HashMap());
 
       invocation.setContainer(objectName);

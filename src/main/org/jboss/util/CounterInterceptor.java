@@ -19,7 +19,7 @@ import org.jboss.util.CounterService;
  * <p>First, the CounterService MBean must be installed in JBoss. To do this,
  * place the following in your JBoss.jcml file, near the very end.</p>
  * <code>
- * &lt;mbean code="org.jboss.util.CounterService" name="JBOSS-SYSTEM:service=CounterService" &gt; &lt;/mbean&gt;
+ * &lt;mbean code="org.jboss.util.CounterService" name="jboss:service=CounterService" &gt; &lt;/mbean&gt;
  * </code>
  * <p>This will start up and enable the centralized counter in your JBoss server
  * instance.

@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.system;
 
 /**
@@ -12,7 +13,7 @@ package org.jboss.system;
  * @see ConfigurationService
  *
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <pre>$Revision: 1.2 $</pre>
+ * @version <pre>$Revision: 1.3 $</pre>
  */
 public class ConfigurationException
    extends Exception

@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.deployment;
 
 import java.io.File;
@@ -30,35 +31,38 @@ import org.jboss.system.URLClassLoader;
 import java.util.List;
 
 /**
-* An abstract base class for deployer service implementations.
-*
-* @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
-* @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.15 $
-*
-* <p><b>Revisions:</b>
-*
-* <p><b>20010725 Toby Allsopp (patch from David Jencks)</b>
-* <ul><li>Added <code>getDeployments</code> method so that subclasses
-* can find out what has been deployed.</li></ul>
-* <p><b>20011219 Marc Fleury</b>
-* <ul><li>Factored out inner class for deployment info</li></ul>
-*/
+ * An abstract base class for deployer service implementations.
+ *
+ * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @version $Revision: 1.16 $
+ *
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20010725 Toby Allsopp (patch from David Jencks)</b>
+ * <ul><li>Added <code>getDeployments</code> method so that subclasses
+ * can find out what has been deployed.</li></ul>
+ * <p><b>20011219 Marc Fleury</b>
+ * <ul><li>Factored out inner class for deployment info</li></ul>
+ */
 public abstract class DeployerMBeanSupport
-extends ServiceMBeanSupport
-implements DeployerMBean
+   extends ServiceMBeanSupport
+   implements DeployerMBean
 {
    // Constants -----------------------------------------------------
 
-   private static final String SERVICE_CONTROLLER_NAME = "JBOSS-SYSTEM:spine=ServiceController";
+   private static final String SERVICE_CONTROLLER_NAME = 
+      "jboss.system:service=ServiceController";
+   
    // Attributes --------------------------------------------------------
+   
    private ObjectName serviceControllerName;
    private Map deployments = new HashMap();
    
    /**
-   *  The directory that will contain local copies of deployed packages
-   */
+    * The directory that will contain local copies of deployed packages
+    */
    private File deployDir;
    
    // Static --------------------------------------------------------
@@ -82,7 +86,7 @@ implements DeployerMBean
    // DeployerMBean implementation ----------------------------------
    
    public void deploy (String url)
-   throws MalformedURLException, IOException, DeploymentException
+      throws MalformedURLException, IOException, DeploymentException
    {
       URL u = new URL(url);
       synchronized (deployments)
@@ -113,7 +117,7 @@ implements DeployerMBean
    }
    
    public void undeploy (String url)
-   throws MalformedURLException, IOException, DeploymentException
+      throws MalformedURLException, IOException, DeploymentException
    {
       URL u = new URL(url);
       synchronized (deployments)
@@ -127,7 +131,7 @@ implements DeployerMBean
    }
    
    public boolean isDeployed (String url)
-   throws MalformedURLException, DeploymentException
+      throws MalformedURLException, DeploymentException
    {
       URL u = new URL(url);
       synchronized (deployments)
@@ -139,19 +143,17 @@ implements DeployerMBean
    // ServiceMBeanSupport overrides ---------------------------------
    
    /**
-   * The <code>startService</code> method sets up a temporary directory
-   * to hold the copies of deployed packages and possibly inflations
-   * of those copies.  The format is (jboss.system.home)/tmp/deploy/(deployername).
-   *
-   * @exception Exception if an error occurs
-   */
+    * The <code>startService</code> method sets up a temporary directory
+    * to hold the copies of deployed packages and possibly inflations
+    * of those copies.  The format is (jboss.system.home)/tmp/deploy/(deployername).
+    */
    protected void startService()
-   throws Exception
+      throws Exception
    {
-      
       // FIXME MARCF I think we should keep the old code around (would speed up boot time)
       // Just delete on undeploy and if there is new stuff
-      
+
+      log.warn("using jboss.system.home property");
       deployDir = new File(
          // from the top of the jboss home distribution
          System.getProperty("jboss.system.home"), 
@@ -180,10 +182,9 @@ implements DeployerMBean
    }
    
    /**
-   * The <code>stopService</code> method tries to remove the
-   * directory created in the createService method.
-   *
-   */
+    * The <code>stopService</code> method tries to remove the
+    * directory created in the createService method.
+    */
    protected void stopService()
    {
       // Remove our temp directory
@@ -200,16 +201,16 @@ implements DeployerMBean
    // Protected -----------------------------------------------------
    
    /**
-   * Retrieves the object associated with a deployment. This
-   * association is made during deployment using the object returned
-   * from <code>deploy(URL)</code>. If there is no such deployment,
-   * null is returned. Note that this is distinguishable from the
-   * case of a deployment with an null information object only using
-   * <code>isDeployed(URL)</code>.
-   *
-   * @param url the deployment for which information is required
-   * @return an object, possibly null
-   */
+    * Retrieves the object associated with a deployment. This
+    * association is made during deployment using the object returned
+    * from <code>deploy(URL)</code>. If there is no such deployment,
+    * null is returned. Note that this is distinguishable from the
+    * case of a deployment with an null information object only using
+    * <code>isDeployed(URL)</code>.
+    *
+    * @param url the deployment for which information is required
+    * @return an object, possibly null
+    */
    protected Object getInfo(URL url)
    {
       synchronized (deployments)
@@ -219,36 +220,36 @@ implements DeployerMBean
    }
    
    /**
-   * Subclasses override to perform actual deployment.
-   *
-   * @param url the location to be deployed
-   * @return an object, possibly null, that will be passed back to
-   *         <code>undeploy</code> and can be obtained using
-   *         <code>getInfo(URL)</code>
-   */
+    * Subclasses override to perform actual deployment.
+    *
+    * @param url the location to be deployed
+    * @return an object, possibly null, that will be passed back to
+    *         <code>undeploy</code> and can be obtained using
+    *         <code>getInfo(URL)</code>
+    */
    protected abstract Object deploy(URL url)
-   throws IOException, DeploymentException;
+      throws IOException, DeploymentException;
    
    /**
-   * Subclasses override to perform any actions neccessary for
-   * undeployment.
-   *
-   * @param url the location to be undeployed
-   * @param info the object that was returned by the corresponding
-   *             <code>deploy</code>
-   */
+    * Subclasses override to perform any actions neccessary for
+    * undeployment.
+    *
+    * @param url the location to be undeployed
+    * @param info the object that was returned by the corresponding
+    *             <code>deploy</code>
+    */
    protected abstract void undeploy(URL url, Object info)
-   throws IOException, DeploymentException;
+      throws IOException, DeploymentException;
    
    /**
-   * Returns the deployments that have been deployed by this
-   * deployer.  The <code>Map</code> returned from this method is a
-   * snapshot of the deployments at the time the method is called and
-   * will not reflect any subsequent deployments or undeployments.
-   *
-   * @return a mapping from <code>URL</code> to
-   *         <code>DeploymentInfo</code>
-   */
+    * Returns the deployments that have been deployed by this
+    * deployer.  The <code>Map</code> returned from this method is a
+    * snapshot of the deployments at the time the method is called and
+    * will not reflect any subsequent deployments or undeployments.
+    *
+    * @return a mapping from <code>URL</code> to
+    *         <code>DeploymentInfo</code>
+    */
    protected Map getDeployments()
    {
       Map ret = new HashMap();
@@ -259,25 +260,25 @@ implements DeployerMBean
       return ret;
    }
    
-   
    // Below here are helper methods to deal with copying packages,
    // unpacking packages recursively, finding things in packages,
    // and similar tasks needed for most deployment activities.
-   //
+
    /**
-   * The <code>inflateJar</code> copies the jar entries
-   * from the jar url jarUrl to the directory destDir.
-   * It can be used on the whole jar, a directory, or
-   * a specific file in the jar.
-   *
-   * @param jarUrl the <code>URL</code> if the directory or entry to copy.
-   * @param destDir the <code>File</code> value of the directory in which to
-   * place the inflated copies.
-   * @exception DeploymentException if an error occurs
-   * @exception IOException if an error occurs
-   */
+    * The <code>inflateJar</code> copies the jar entries
+    * from the jar url jarUrl to the directory destDir.
+    * It can be used on the whole jar, a directory, or
+    * a specific file in the jar.
+    *
+    * @param jarUrl    the <code>URL</code> if the directory or entry to copy.
+    * @param destDir   the <code>File</code> value of the directory in which to
+    *                  place the inflated copies.
+    *
+    * @throws DeploymentException   if an error occurs
+    * @throws IOException           if an error occurs
+    */
    protected void inflateJar(URL url, File destDir, String path)
-   throws DeploymentException, IOException
+      throws DeploymentException, IOException
    {
       /*
       //Why doesn't this work???? Maybe in java 1.4?
@@ -346,7 +347,7 @@ implements DeployerMBean
    }
    
    protected void extractPackages(URL url, ServiceDeploymentInfo di)
-   throws DeploymentException, IOException
+      throws DeploymentException, IOException
    {
       if (url.getFile().endsWith(".xml"))
       {
@@ -448,7 +449,7 @@ implements DeployerMBean
    }
    
    protected void copy(InputStream in, OutputStream out)
-   throws IOException
+      throws IOException
    {
       byte[] buffer = new byte[1024];
       int read;
@@ -476,9 +477,8 @@ implements DeployerMBean
    
    public File getDeployDir() { return deployDir; }
    
-   
    public File getLocalCopy(URL url, ServiceDeploymentInfo di)
-   throws IOException
+      throws IOException
    {
       // Create a directory into which we are going to put the bytes
       File localDir = new File(deployDir, generateUniqueDirName()+ File.separator);
@@ -529,17 +529,12 @@ implements DeployerMBean
       return serviceControllerName;
    }
    
-   
    // Private -------------------------------------------------------
-   
    
    private File getUniqueDir(ServiceDeploymentInfo di)
    {
-   File dir = new File(deployDir, generateUniqueDirName() + File.separator);
-   di.addDir(dir);
-   return dir;
+      File dir = new File(deployDir, generateUniqueDirName() + File.separator);
+      di.addDir(dir);
+      return dir;
    }
-   
-   // Inner classes -------------------------------------------------
-
 }

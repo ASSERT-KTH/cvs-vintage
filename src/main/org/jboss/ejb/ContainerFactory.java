@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.ejb;
 
 import java.net.MalformedURLException;
@@ -70,20 +71,31 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.106 $ 
+* @version $Revision: 1.107 $ 
 */
 public class ContainerFactory
 extends ServiceMBeanSupport
 implements ContainerFactoryMBean
 {
    // Constants -----------------------------------------------------
-   private static final String SERVICE_CONTROLLER_NAME = "JBOSS-SYSTEM:spine=ServiceController";
    
-   public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
-   public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";
-   public static String DEFAULT_ENTITY_BMP_CONFIGURATION = "Default BMP EntityBean";
-   public static String DEFAULT_ENTITY_CMP_CONFIGURATION = "Default CMP EntityBean";
-   public static String DEFAULT_MESSAGEDRIVEN_CONFIGURATION = "Default MesageDriven Bean";
+   private static final String SERVICE_CONTROLLER_NAME = 
+      "jboss.system:service=ServiceController";
+   
+   public static String DEFAULT_STATELESS_CONFIGURATION = 
+      "Default Stateless SessionBean";
+   
+   public static String DEFAULT_STATEFUL_CONFIGURATION = 
+      "Default Stateful SessionBean";
+   
+   public static String DEFAULT_ENTITY_BMP_CONFIGURATION = 
+      "Default BMP EntityBean";
+   
+   public static String DEFAULT_ENTITY_CMP_CONFIGURATION = 
+      "Default CMP EntityBean";
+   
+   public static String DEFAULT_MESSAGEDRIVEN_CONFIGURATION = 
+      "Default MesageDriven Bean";
    
    // Constants uses with container interceptor configurations
    public static final int BMT = 1;

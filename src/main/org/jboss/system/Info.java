@@ -4,9 +4,13 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.system;
 
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.management.ObjectName;
 import javax.management.MBeanServer;
@@ -22,109 +26,44 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
 {
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
-
    /** Class logger. */
-   private static Logger log = Logger.getLogger("org.jboss.system.GPA");
+   private static final Logger log = Logger.getLogger(Info.class);
 
-   //
-   // System information
-   //
-   
-   protected String javaVersion;
-   protected String javaVendor;
-   protected String javaVMName;
-   protected String javaVMVersion;
-   protected String libraryDirectory;
-   protected String javaVMVendor;
-   protected String osName;
-   protected String osVersion;
-   protected String osArch;
-   protected String jbossLocalHomeDirectory;
-   protected String installationURL;
-   protected String configurationDirectory;
-   protected String patchDirectory;
-   protected String jbossVersion;
-
-   /** When this instance was started. */
-   protected String jbossStarted;
-
-   
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-	
-   // Public --------------------------------------------------------
-	
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws Exception
    {
-      // VM stuff
-      javaVersion = System.getProperty("java.version");
-      javaVendor = System.getProperty("java.vendor");
-      javaVMName = System.getProperty("java.vm.name");
-      javaVMVersion = System.getProperty("java.vm.version");
-      javaVMVendor =  System.getProperty("java.vm.vendor");
-		
-      // OS stuff
-      osName = System.getProperty("os.name");
-      osVersion = System.getProperty("os.version");
-      osArch = System.getProperty("os.arch");
-		
-      // JBoss stuff
-      jbossVersion = System.getProperty("jboss.system.version");
-      jbossStarted = System.getProperty("jboss.system.started");
-      jbossLocalHomeDirectory = System.getProperty("jboss.system.home");
-      installationURL = System.getProperty("jboss.system.installationURL");
-      configurationDirectory = System.getProperty("jboss.system.configurationDirectory");
-      libraryDirectory = System.getProperty("jboss.system.libraryDirectory");
-      patchDirectory = System.getProperty("jboss.system.patchDirectory");
-		
-      log.info("General Purpose Architecture (GPA)");
-		
-      // Dump out basic info as INFO priority msgs
+      // Dump out basic JVM & OS info as INFO priority msgs
       log.info("Java version: " +
-              javaVersion + "," +
-              javaVendor);
+              System.getProperty("java.version") + "," +
+              System.getProperty("java.vendor"));
       
       log.info("Java VM: " +
-              javaVMName + " " +
-              javaVMVersion + "," +
-              javaVMVendor);
+              System.getProperty("java.vm.name") + " " +
+              System.getProperty("java.vm.version") + "," +
+              System.getProperty("java.vm.vendor"));
       
       log.info("OS-System: " +
-              osName + " " +
-              osVersion + "," +
-              osArch);
-      
-      log.info("JBoss Version: " + jbossVersion);
-      log.info("JBoss start time: " + jbossStarted);
-      log.info("Local Home Dir: " + jbossLocalHomeDirectory);
-      log.info("Installation URL: " + installationURL);
-      log.info("Configuration Dir: " + configurationDirectory);
-      log.info("Library Dir: " + libraryDirectory);
-      log.info("Local Patch Directory: " + patchDirectory);
-      log.info("Oh, and remember we love you");
-		
-      // dump out the entire system properties if debug is enabled
+              System.getProperty("os.name") + " " +
+              System.getProperty("os.version") + "," +
+              System.getProperty("os.arch"));
+
+      // Dump out the entire system properties if debug is enabled
       if (log.isDebugEnabled()) {
-         log.debug("+++ Full System Properties Dump");
+         log.debug("Full System Properties Dump");
          Enumeration names = System.getProperties().propertyNames();
          while (names.hasMoreElements())
          {
             String pname = (String)names.nextElement();
-            log.debug(pname + ": " + System.getProperty(pname));
+            log.debug("    " + pname + ": " + System.getProperty(pname));
          }
       }
-		
-      return new ObjectName(OBJECT_NAME);
+      
+      return (name != null ? name : new ObjectName(OBJECT_NAME));
    }
 	
    public void postRegister(Boolean registrationDone) {
@@ -139,30 +78,7 @@ public class Info
       // empty
    }
 	
-   public String getJavaVersion() { return javaVersion; } 
-   public String getJavaVendor() { return javaVendor; }
-   public String getJavaVMName() { return javaVMName; }
-   public String getJavaVMVersion() { return javaVMVersion; }
-   public String getJavaVMVendor() { return javaVMVendor; }
-   public String getOSName() { return osName; }
-   public String getOSVersion() { return osVersion; }
-   public String getOSArch() { return osArch; }
-   public String getLocalJBossSystemHomeDirectory() { return jbossLocalHomeDirectory; }
-   public String getLocalInstallationURL() { return installationURL; }
-   public String getConfigurationDirectoryURL() { return configurationDirectory; }
-   public String getLocalPatchDirectory() { return patchDirectory; }
-   public String getJBossVersion() { return jbossVersion; }
-   public String getLibraryDirectoryURL() { return libraryDirectory; }
-   public String getInstallationURL() { return installationURL; }
-
-   /**
-    * Return the time which this server instance was started.
-    */
-   public String getStartTime() {
-      return jbossStarted;
-   }
-   
-   public String getThreadGroupInfo(ThreadGroup group) {
+   private String getThreadGroupInfo(ThreadGroup group) {
       StringBuffer rc = new StringBuffer();
 		
       rc.append("<BR><B>");
@@ -189,56 +105,11 @@ public class Info
          rc.append(getThreadGroupInfo(groups[i]));
       }
       rc.append("</blockquote>");
+      
       return rc.toString();
    }
 	
-   public String runGarbageCollector() {
-      StringBuffer buff = new StringBuffer();
-      buff.append("<h3>Before</h3>");
-      buff.append(listMemoryUsage());
-      buff.append("<h3>After</h3>");
-		
-      log.debug("hinting the VM to run the garbage collector");
-      System.gc();
-		
-      buff.append(listMemoryUsage());
-      return buff.toString();
-   }
-	
-   public String listMemoryUsage() {
-      String rc= "<P><B>Total Memory: </B>" +
-         (Runtime.getRuntime().totalMemory()) +
-         " </P>" + "<P><B>Free Memory: </B>" +
-         (Runtime.getRuntime().freeMemory()) + " </P>";
-      return rc;
-   }
-	
-   public String listSystemInfo() {
-      // Dump out basic info as INFO priority msgs
-      StringBuffer rc= new StringBuffer();
-      rc.append("<pre>");
-      rc.append("Java version: " +
-                System.getProperty("java.version") + "," +
-                System.getProperty("java.vendor"));
-      rc.append("\n");
-      rc.append("Java VM: " +
-                System.getProperty("java.vm.name") + " " +
-                System.getProperty("java.vm.version") + "," +
-                System.getProperty("java.vm.vendor"));
-      rc.append("\n");
-      rc.append("System: " +
-                System.getProperty("os.name") + " " +
-                System.getProperty("os.version") + "," +
-                System.getProperty("os.arch"));
-      rc.append("\n");
-      rc.append("</pre>");
-		
-      // HRC: Should we also do a full system properties dump??
-		
-      return rc.toString();
-   }
-	
-   public String listThreadDump() {
+   public String showThreads() {
       // Get the root thread group
       ThreadGroup root= Thread.currentThread().getThreadGroup();
       while (root.getParent() != null) {
@@ -258,18 +129,25 @@ public class Info
          getThreadGroupInfo(root) ;
       return rc;
    }
-	
-   /**
-    * Enable or disable tracing method calls at the Runtime level.
-    */
-   public void traceMethodCalls(final boolean flag) {
-      Runtime.getRuntime().traceMethodCalls(flag);
-   }
-	
-   /**
-    * Enable or disable tracing instructions the Runtime level.
-    */
-   public void traceInstructions(final boolean flag) {
-      Runtime.getRuntime().traceInstructions(flag);
+   
+   public Map showProperties() {
+      return new HashMap(System.getProperties()) {
+         public String toString() {
+            StringBuffer buff = new StringBuffer();
+            buff.append("<table>");
+            Iterator iter = keySet().iterator();
+            while (iter.hasNext()) {
+               String key = (String)iter.next();
+               buff.append("<tr><td align=\"left\">")
+                  .append(key)
+                  .append("</td><td align=\"left\">")
+                  .append(get(key))
+                  .append("</td></tr>\n\r");
+            }
+            buff.append("</table>");
+            
+            return buff.toString();
+         }
+      };
    }
 }

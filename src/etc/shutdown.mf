@@ -1,0 +1,2 @@
+Main-Class: org.jboss.Shutdown
+Class-Path: ../lib/getopt.jar
