@@ -20,7 +20,7 @@
 	Filename: WindowMaximizer.java
 	Author: Hrk (Luca Santarelli) <hrk@users.sourceforge.net>
 	Comments: this class provides some methods to enlarge or maximise a java.awt.Component object.
-	It is needed to provide a true mazimisation on Win32 platform, which is not available in pure Java.
+	It is needed to provide a true maximisation on Win32 platform, which is not available in pure Java.
 	As of today, JDK 1.4.1, blame SUN for not having done this thing themself, since they promised it for JDK 1.3.
 */
 
@@ -100,15 +100,17 @@ public class WindowMaximizer {
 
 	public native boolean isWindowMaximized(String sClassName);
 
-	//This method loads the library.
+	//This method loads the library. It is needed only on Win32 platforms. Should it be needed on other platforms, simply change this if block.
 	static {
-		try {
-			System.loadLibrary(sLibrary);
-			bLibraryLoaded = true;
-System.out.println("Ho caricato");
-		}
-		catch (UnsatisfiedLinkError ex) {
-			ColumbaLogger.log.error("Library: '" + sLibrary + "' could not be found.");
+		if (OSInfo.isWin32Platform()) {
+			try {
+				System.loadLibrary(sLibrary);
+				bLibraryLoaded = true;
+				ColumbaLogger.log.error("Library: '" + sLibrary + "' was successfully loaded.");//THIS IS NOT AN ERROR. -> NEEDS A CHANGE
+			}
+			catch (UnsatisfiedLinkError ex) {
+				ColumbaLogger.log.error("Library: '" + sLibrary + "' could not be found.");
+			}
 		}
 	}
 };
