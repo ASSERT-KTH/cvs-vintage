@@ -141,6 +141,10 @@ $page.setTitle("Enter issue")
      #end
    #end
  </table>
+
+<div class="functnbar3">
+  <input type="submit" value="Delete attachment" name="eventSubmit_doRemovefile"  />
+</div>
 #end
 
 <h4>Add Attachment</h4>
@@ -169,8 +173,7 @@ $page.setTitle("Enter issue")
 </div>
 
 <div class="functnbar3">
-    <input type="submit" value="Add file" name="eventSubmit_doAddfile"  />&#160;
-    <input type="submit" value="Delete file" name="eventSubmit_doRemovefile"  />&#160;
+  <input type="submit" value="Add attachment" name="eventSubmit_doAddfile"  />
 </div>
 
 <h4>Submit new issue</h4>
