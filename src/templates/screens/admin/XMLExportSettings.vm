@@ -1,0 +1,28 @@
+<div id="xmlexportsettings" class="app">
+
+<h2>$page.Title</h2>
+
+<h3>$page.Title</h3>
+
+<form action="$link.setPage("admin,XMLExportSettings.vm")" method="post">
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Index.vm" />
+<input type="hidden" name="doExport" value="1" />
+
+<p>
+This screen allows you to export all of the settings for an installation
+of Scarab.
+</p>
+
+#if ($data.Parameters.getBoolean("doExport"))
+<textarea rows="15" cols="80">
+#XMLExportSettings()
+</textarea>
+#end
+
+<div class="functnbar2">
+  <input type="submit" name="export" value="Export" />&#160;
+  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+</div>
+
+</form>
+</div>
