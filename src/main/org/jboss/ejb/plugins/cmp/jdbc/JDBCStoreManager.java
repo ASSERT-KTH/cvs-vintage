@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Iterator;
+import java.rmi.RemoteException;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
@@ -58,7 +59,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.69 $
+ * @version $Revision: 1.70 $
  */
 public final class JDBCStoreManager implements JDBCEntityPersistenceStore
 {
@@ -258,17 +259,6 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
       return registry.unschedule(pk);
    }
 
-   /**
-    * Checks whether the instance was cascade-deleted.
-    * @param pk instance primary key.
-    * @return true if instance was cascade deleted, false otherwise.
-    */
-   public boolean wasCascadeDeleted(Object pk)
-   {
-      CascadeDeleteRegistry registry = (CascadeDeleteRegistry)cascadeDeleteSet.get();
-      return registry.wasCascadeDeleted(pk);
-   }
-   
    public Object getApplicationTxData(Object key)
    {
       Map map = getApplicationTxDataMap();
@@ -687,7 +677,7 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
       passivateEntityCommand.execute(ctx);
    }
 
-   public void removeEntity(EntityEnterpriseContext ctx) throws RemoveException
+   public void removeEntity(EntityEnterpriseContext ctx) throws RemoveException, RemoteException
    {
       removeEntityCommand.execute(ctx);
    }
@@ -747,27 +737,19 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
    private final class CascadeDeleteRegistry
    {
       private Set scheduled;
-      private Set deleted;
 
       public void scheduleAll(List pks)
       {
          if(scheduled == null)
          {
             scheduled = new HashSet();
-            deleted = new HashSet();
          }
          scheduled.addAll(pks);
-         deleted.addAll(pks);
       }
 
       public boolean unschedule(Object pk)
       {
          return scheduled.remove(pk);
-      }
-
-      public boolean wasCascadeDeleted(Object pk)
-      {
-         return (deleted == null ? false : deleted.contains(pk));
       }
    }
 }

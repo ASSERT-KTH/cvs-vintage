@@ -11,29 +11,28 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityCache;
 import org.jboss.logging.Logger;
 import org.jboss.deployment.DeploymentException;
-import org.jboss.invocation.InvocationType;
 import org.jboss.security.SecurityAssociation;
 
 import javax.ejb.RemoveException;
-import javax.ejb.EJBException;
+import javax.ejb.EJBObject;
+import javax.ejb.EJBLocalObject;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.lang.reflect.Method;
 import java.security.PrivilegedAction;
 import java.security.Principal;
 import java.security.AccessController;
+import java.rmi.RemoteException;
 
 /**
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public abstract class CascadeDeleteStrategy
 {
@@ -53,7 +52,7 @@ public abstract class CascadeDeleteStrategy
          cmrField.setInstanceValue(ctx, null);
       }
 
-      public void cascadeDelete(EntityEnterpriseContext ctx, List oldValues)
+      public void cascadeDelete(EntityEnterpriseContext ctx, List oldValues) throws RemoveException, RemoteException
       {
          boolean trace = log.isTraceEnabled();
          for(int i = 0; i < oldValues.size(); ++i)
@@ -94,7 +93,7 @@ public abstract class CascadeDeleteStrategy
          cmrField.setInstanceValue(ctx, null);
       }
 
-      public void cascadeDelete(EntityEnterpriseContext ctx, List oldValues)
+      public void cascadeDelete(EntityEnterpriseContext ctx, List oldValues) throws RemoveException, RemoteException
       {
          boolean trace = log.isTraceEnabled();
          for(int i = 0; i < oldValues.size(); ++i)
@@ -159,7 +158,7 @@ public abstract class CascadeDeleteStrategy
          scheduleCascadeDelete(oldRelationRefs, new ArrayList(ids));
       }
 
-      public void cascadeDelete(EntityEnterpriseContext ctx, List oldValues) throws RemoveException
+      public void cascadeDelete(EntityEnterpriseContext ctx, List oldValues) throws RemoveException, RemoteException
       {
          boolean didDelete = false;
          boolean trace = log.isTraceEnabled();
@@ -213,48 +212,19 @@ public abstract class CascadeDeleteStrategy
    protected final JDBCStoreManager relatedManager;
    protected final Logger log;
 
-   private Method removeMethod;
-   private InvocationType invocationType;
-
    public CascadeDeleteStrategy(JDBCCMRFieldBridge cmrField) throws DeploymentException
    {
       this.cmrField = cmrField;
       entity = (JDBCEntityBridge)cmrField.getEntity();
       relatedManager = cmrField.getRelatedManager();
 
-      Class localClass = relatedManager.getMetaData().getLocalClass();
-      if(localClass != null)
-      {
-         try
-         {
-            removeMethod = localClass.getMethod("remove", new Class[]{});
-         }
-         catch(NoSuchMethodException e)
-         {
-            throw new DeploymentException("Failed to obtain the remove method from " + localClass.getName(), e);
-         }
-         invocationType = InvocationType.LOCAL;
-      }
-      else
-      {
-         Class remoteClass = relatedManager.getMetaData().getRemoteClass();
-         try
-         {
-            removeMethod = remoteClass.getMethod("remove", new Class[]{});
-         }
-         catch(NoSuchMethodException e)
-         {
-            throw new DeploymentException("Failed to obtain the remove method from " + localClass.getName(), e);
-         }
-         invocationType = InvocationType.REMOTE;
-      }
-
       log = Logger.getLogger(getClass().getName() + "." + cmrField.getEntity().getEntityName());
    }
 
    public abstract void removedIds(EntityEnterpriseContext ctx, Object[] oldRelationRefs, List ids);
 
-   public abstract void cascadeDelete(EntityEnterpriseContext ctx, List oldValues) throws RemoveException;
+   public abstract void cascadeDelete(EntityEnterpriseContext ctx, List oldValues) throws RemoveException,
+      RemoteException;
 
    protected void scheduleCascadeDelete(Object[] oldRelationsRef, List values)
    {
@@ -310,10 +280,11 @@ public abstract class CascadeDeleteStrategy
          log.debug("Remove: Rows affected = " + rowsAffected);
    }
 
-   public void invokeRemoveRelated(Object relatedId)
+   public void invokeRemoveRelated(Object relatedId) throws RemoveException, RemoteException
    {
       EntityContainer container = relatedManager.getContainer();
 
+      /*
       try
       {
          EntityCache instanceCache = (EntityCache) container.getInstanceCache();
@@ -337,6 +308,22 @@ public abstract class CascadeDeleteStrategy
       catch(Exception e)
       {
          throw new EJBException("Error in remove instance", e);
+      }
+      */
+
+      /**
+       * Have to remove through EJB[Local}Object interface since the proxy contains the 'removed' flag
+       * to be set on removal.
+       */
+      if(container.getLocalProxyFactory() != null)
+      {
+         final EJBLocalObject ejbObject = container.getLocalProxyFactory().getEntityEJBLocalObject(relatedId);
+         ejbObject.remove();
+      }
+      else
+      {
+         final EJBObject ejbObject = (EJBObject)container.getProxyFactory().getEntityEJBObject(relatedId);
+         ejbObject.remove();
       }
    }
 

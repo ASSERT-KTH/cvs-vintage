@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.Principal;
+import java.rmi.RemoteException;
 import javax.ejb.EJBException;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBLocalHome;
@@ -76,7 +77,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.91 $
+ * @version $Revision: 1.92 $
  */
 public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
 {
@@ -400,7 +401,7 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
    }
 
    public void cascadeDelete(EntityEnterpriseContext ctx, List oldValues)
-      throws RemoveException
+      throws RemoveException, RemoteException
    {
       cascadeDeleteStrategy.cascadeDelete(ctx, oldValues);
    }
@@ -1855,10 +1856,12 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
             throw new IllegalArgumentException(e.getMessage());
          }
 
+         /*
          if(relatedManager.wasCascadeDeleted(relatedId))
          {
             throw new IllegalArgumentException("The instance was cascade-deleted: pk=" + relatedId);
          }
+         */
       }
       else
       {

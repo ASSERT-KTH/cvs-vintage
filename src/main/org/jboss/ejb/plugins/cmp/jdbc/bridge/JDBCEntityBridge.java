@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.rmi.RemoteException;
 
 import javax.ejb.EJBException;
 import javax.ejb.RemoveException;
@@ -64,7 +65,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  */
 public class JDBCEntityBridge implements JDBCAbstractEntityBridge
 {
@@ -311,7 +312,7 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
    }
 
    public void cascadeDelete(EntityEnterpriseContext ctx, Map oldRelations)
-      throws RemoveException
+      throws RemoveException, RemoteException
    {
       for(int i = 0; i < cmrFields.length; ++i)
       {
