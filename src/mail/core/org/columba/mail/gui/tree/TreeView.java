@@ -55,8 +55,7 @@ public class TreeView extends JTree {
      * Constructa a tree view
      * @param model the tree model that this JTree should use.
      */
-    public TreeView(TreeModel model) {
-        //super(frameController, model);
+    public TreeView(javax.swing.tree.TreeModel model) {
         super(model);
 
         ToolTipManager.sharedInstance().registerComponent(this);
