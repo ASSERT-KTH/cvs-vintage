@@ -147,7 +147,7 @@ public class Request {
     protected int contentLength = -1;
     protected String contentType = null;
     protected String charEncoding = null;
-    protected String serverName=null;
+    protected MessageBytes serverNameMB=new MessageBytes();
 
     // auth infor
     protected String authType;
@@ -273,19 +273,28 @@ public class Request {
 	protoMB.setString(protocol);
     }
 
-
-    /** Return the server name. If none was set,
-     *  extract it from the host header.
-     *
+    /** Return the buffer holding the server name, if
+     *  any. Use isNull() to check if there is no value
+     *  set.
+     *  This is the "virtual host", derived from the
+     *  Host: header.
      */
-    public String getServerName() {
-        return serverName;
+    public MessageBytes serverName() {
+	return serverNameMB;
     }
 
-    /** Virtual host */
-    public void setServerName(String serverName) {
-	this.serverName = serverName;
-    }
+//     /** Return the server name. If none was set,
+//      *  extract it from the host header.
+//      *
+//      */
+//     public String getServerName() {
+//         return serverName;
+//     }
+
+//     /** Virtual host */
+//     public void setServerName(String serverName) {
+// 	this.serverName = serverName;
+//     }
 
     
     public int getServerPort() {
@@ -567,10 +576,6 @@ public class Request {
 	    reqI[i].newSessionRequest( this, response );
 	}
 
-	if ( serverSession == null ) {
-	    return null;
-	}
-
 	return serverSession;
     }
 
@@ -842,7 +847,8 @@ public class Request {
         handler=null;
         jvmRoute = null;
         headers.clear(); // XXX use recycle pattern
-        serverName=null;
+        serverNameMB.recycle();
+	//serverName=null;
         serverPort=-1;
         sessionIdSource = null;
 	sessionId=null;

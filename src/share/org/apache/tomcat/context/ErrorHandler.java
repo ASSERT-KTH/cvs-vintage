@@ -579,7 +579,7 @@ class RedirectHandler extends Handler {
 
 	url.append (scheme);		// http, https
 	url.append ("://");
-	url.append (req.getServerName());
+	url.append (req.serverName().toString());
 	if ((scheme.equals ("http") && port != 80)
 		|| (scheme.equals ("https") && port != 443)) {
 	    url.append (':');

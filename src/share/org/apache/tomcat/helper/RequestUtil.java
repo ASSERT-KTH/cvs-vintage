@@ -137,7 +137,13 @@ public class RequestUtil {
 	throws NumberFormatException, StringIndexOutOfBoundsException
     {
         if (str == null)  return  null;
-
+	
+	// pay for what you use - unencoded requests will not get
+	// less overhead
+	// XXX this should be in the caller ?
+	if( str.indexOf( '+' ) <0 && str.indexOf( '%' ) < 0 )
+	    return str;
+	
         StringBuffer dec = new StringBuffer();    // decoded string output
         int strPos = 0;
         int strLen = str.length();

@@ -299,7 +299,16 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	
 	switch( ct.getMapType() ) {
 	case Container.PREFIX_MAP:
-	    return path.startsWith( ctPath.substring(0, ctPathL - 2  ));
+	    // original code: 
+	    // return path.startsWith( ctPath.substring(0, ctPathL - 2  ));
+	    // changed to eliminate the allocation ( will be changed again
+	    // when MessageBytes will be used in intercepotrs, now they are
+	    // in core
+	    for( int i=0; i< ctPathL - 2 ; i++ ) {
+		if( path.charAt( i ) != ctPath.charAt( i ))
+		    return false;
+	    }
+	    return true;
 	case Container.EXTENSION_MAP:
 	    return ctPath.substring( 1 ).equals( URLUtil.getExtension( path ));
 	case Container.PATH_MAP:

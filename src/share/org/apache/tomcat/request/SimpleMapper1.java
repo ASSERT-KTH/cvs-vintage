@@ -245,38 +245,33 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     /** First step of request porcessing is finding the Context.
      */
     public int contextMap( Request req ) {
-	String path = req.requestURI().toString();
-	if( path==null)
+	MessageBytes pathMB = req.requestURI();
+	if( pathMB.isNull())
 	    throw new RuntimeException("ASSERT: null path in request URI");
-	if( path.indexOf("?") >=0 )
-	    throw new RuntimeException("ASSERT: ? in requestURI");
+	// 	if( path.indexOf("?") >=0 )
+	// 	    throw new RuntimeException("ASSERT: ? in requestURI");
 
-	if (path.indexOf('%') >= 0) {
-		// XXX rewrite URLDecode to avoid allocation
-		path = RequestUtil.URLDecode(path);
+	if (pathMB.indexOf('%') >= 0 || pathMB.indexOf( '+' ) >= 0) {
+	    // XXX rewrite URLDecode to avoid allocation
+	    pathMB.setString( RequestUtil.URLDecode(pathMB.toString()) );
 	}
 	try {
-	    String host=null;
+	    //	    String host=null;
+	    MessageBytes hostMB=req.serverName();
 
-// 	    MimeHeaders headers=req.getMimeHeaders();
-// 	    MimeHeaderField hostH=headers.find("host");
+	    //	    host=req.serverName().toString();
 
-	    host=req.getServerName();
+	    if(debug>0) cm.log("Host = " + hostMB.toString());
 
-// 	    if( hostH==null ) host=req.getLocalHost();
-// 	    if(hostH==null) host="localhost";
-	    
-	    if(debug>0) cm.log("Host = " + host);
-
-	    Container container =(Container)map.getLongestPrefixMatch(  host,
-									path );
+	    Container container =(Container)map.
+		getLongestPrefixMatch(  hostMB, pathMB);
 	    
 	    if( container == null )
 		throw new RuntimeException( "Assertion failed: " +
 					    "container==null");
 
 	    if(debug>0)
-		cm.log("SM: Prefix match " + path + " -> " +
+		cm.log("SM: Prefix match " + pathMB.toString() + " -> " +
 		       container.getPath() + " " + container.getHandler()  +
 		       " " + container.getRoles());
 
@@ -284,7 +279,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    // If cached - we don't need to do it again ( since it is the
 	    // final Container,
 	    // either prefix or extension )
-	    fixRequestPaths( path, req, container );
+	    fixRequestPaths( pathMB.toString() /*XXX*/, req, container );
 	
 
 	    // if it's default container - try extension match
@@ -295,7 +290,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 		if( extC != null ) {
 		    // change the handler
 		    if( extC.getHandler() != null ) {
-			fixRequestPaths( path, req, extC );
+			fixRequestPaths( pathMB.toString(), req, extC );
 			container=extC;
 		    }
 		    if( debug > 0 )
@@ -310,7 +305,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 		Container ctxDef=req.getContext().getContainer();
 		Container defC=(Container)ctxDef.getNote( defaultMapNOTE );
 		if( defC != null && defC.getHandler() !=null ) {
-		    fixRequestPaths( path, req, defC );
+		    fixRequestPaths( pathMB.toString(), req, defC );
 
 		    if( debug > 0 )
 			log("SM: Found default mapping " +

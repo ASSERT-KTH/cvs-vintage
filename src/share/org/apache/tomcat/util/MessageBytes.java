@@ -314,14 +314,30 @@ public final class MessageBytes implements Cloneable, Serializable {
 	return bytes;
     }
 
+    public char[] getChars()
+    {
+	if( hasCharValue ) {
+	    return chars;
+	}
+	toString();
+	hasCharValue=true;
+	chars=strValue.toCharArray();
+	charsLen=chars.length;
+	charsOff=0;
+	return chars;
+    }
+    
     /**
      * Returns the start offset of the bytes.
      */
     public int getOffset() {
 	if(type==T_BYTES)
 	    return bytesOff;
-	if(type==T_CHARS)
+	if(type==T_CHARS) {
+	    if( ! hasCharValue )
+		getChars();
 	    return charsOff;
+	}
 	return 0;
     }
 
@@ -331,8 +347,11 @@ public final class MessageBytes implements Cloneable, Serializable {
     public int getLength() {
 	if(type==T_BYTES)
 	    return bytesLen;
-	if(type==T_CHARS)
+	if(type==T_CHARS) {
+	    if( ! hasCharValue )
+		getChars();
 	    return charsLen;
+	}
 	if(type==T_STR)
 	    return strValue.length();
 	toString();

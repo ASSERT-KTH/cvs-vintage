@@ -275,7 +275,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getServerName() {
-	return request.getServerName();
+	return request.serverName().toString();
     }
 
     public int getServerPort() {

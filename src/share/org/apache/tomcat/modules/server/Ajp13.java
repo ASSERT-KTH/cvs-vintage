@@ -193,7 +193,7 @@ public class Ajp13
 
         req.setRemoteAddr( msg.getString());
         req.setRemoteHost( msg.getString());
-        req.setServerName( msg.getString());
+        req.serverName().setString( msg.getString());
         req.setServerPort( msg.getInt());
 
 	bsc        = msg.getByte();

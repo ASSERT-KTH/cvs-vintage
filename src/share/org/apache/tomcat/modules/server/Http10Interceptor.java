@@ -250,10 +250,10 @@ class HttpRequest extends Request {
 	return localHost;
     }
 
-    public String getServerName(){
-        if(serverName!=null) return serverName;
+    public MessageBytes serverName(){
+        if(! serverNameMB.isNull()) return serverNameMB;
         parseHostHeader();
-        return serverName;
+        return serverNameMB;
     }
 
     public int getServerPort(){
@@ -263,12 +263,14 @@ class HttpRequest extends Request {
     }
 
     protected void parseHostHeader() {
-	String hostHeader = this.getHeader("host");
+	MessageBytes hH=getMimeHeaders().getValue("host");
         serverPort = socket.getLocalPort();
-	if (hostHeader != null) {
+	if (hH != null) {
+	    // XXX use MessageBytes
+	    String hostHeader = hH.toString();
 	    int i = hostHeader.indexOf(':');
 	    if (i > -1) {
-		serverName = hostHeader.substring(0,i);
+		serverNameMB.setString( hostHeader.substring(0,i));
                 hostHeader = hostHeader.substring(i+1);
                 try{
                     serverPort=Integer.parseInt(hostHeader);
@@ -278,11 +280,11 @@ class HttpRequest extends Request {
             return;
 	}
 	if( localHost != null ) {
-	    serverName = localHost;
+	    serverNameMB.setString( localHost );
 	}
 	// default to localhost - and warn
 	//	log("No server name, defaulting to localhost");
-        serverName=getLocalHost();
+        serverNameMB.setString( getLocalHost() );
     }
 }
 

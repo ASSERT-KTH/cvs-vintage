@@ -367,7 +367,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	// Does this URL match down to (and including) the context path?
 	if (!request.scheme().equalsIgnoreCase(url.getProtocol()))
 	    return (false);
-	if (!request.getServerName().equalsIgnoreCase(url.getHost()))
+	if (!request.serverName().equalsIgnoreCase(url.getHost()))
 	    return (false);
         // Set the URL port to HTTP default if not available before comparing
         int urlPort = url.getPort();

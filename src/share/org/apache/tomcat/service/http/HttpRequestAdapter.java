@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.33 2000/10/06 05:19:15 costin Exp $
- * $Revision: 1.33 $
- * $Date: 2000/10/06 05:19:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.34 2000/11/30 04:58:55 costin Exp $
+ * $Revision: 1.34 $
+ * $Date: 2000/11/30 04:58:55 $
  *
  * ====================================================================
  *
@@ -276,27 +276,26 @@ public class HttpRequestAdapter extends Request {
         return socket.getLocalPort();
     }
 
-    public String getServerName() {
-	if(serverName!=null) return serverName;
+    public MessageBytes serverName() {
+	if(! serverNameMB.isNull()) return serverNameMB;
 	
 	// XXX Move to interceptor!!!
+	// XXX optimize
 	String hostHeader = this.getHeader("host");
 	if (hostHeader != null) {
 	    int i = hostHeader.indexOf(':');
 	    if (i > -1) {
 		hostHeader = hostHeader.substring(0,i);
 	    }
-	    serverName=hostHeader;
-	    return serverName;
+	    serverNameMB.setString(hostHeader);
+	} else {
+	    // XXX
+	    // we need a better solution here
+	    loghelper.log( "Got serverName via localAddress ");
+	    InetAddress localAddress = socket.getLocalAddress();
+	    serverNameMB.setString( localAddress.getHostName() );
 	}
-
-	if (hostHeader == null) {
-		// XXX
-		// we need a better solution here
-		InetAddress localAddress = socket.getLocalAddress();
-		serverName = localAddress.getHostName();
-	}
-	return serverName;
+	return serverNameMB;
     }
     
     

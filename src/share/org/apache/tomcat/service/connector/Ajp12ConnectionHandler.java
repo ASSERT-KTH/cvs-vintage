@@ -250,8 +250,10 @@ class AJP12RequestAdapter extends Request {
 		    
 		    dummy = readString(ajpin, null);         //Servlet
 		    
-		    serverName = readString(ajpin, null);            //Server hostname
-		    if( doLog ) d("AJP: serverName=" + serverName );
+		    serverNameMB.setString(readString(ajpin, null));
+		    //Server hostname
+		    
+		    if( doLog ) d("AJP: serverName=" +serverNameMB.toString());
 		    
 		    dummy = readString(ajpin, null);               //Apache document root
 		    
@@ -295,8 +297,9 @@ class AJP12RequestAdapter extends Request {
 		    dummy = readString(ajpin, null);                   //script name
 		    //		System.out.println("AJP: Script name=" + dummy);
 
-		    serverName = readString(ajpin, "");                //server name
-		    if( doLog ) d("AJP: serverName=" + serverName );
+		    serverNameMB.setString( readString(ajpin, ""));
+		    //server name
+		    if( doLog ) d("AJP: serverName=" +serverNameMB.toString());
 		    try {
 			serverPort = Integer.parseInt(readString(ajpin, "80")); //server port
 		    } catch (Exception any) {

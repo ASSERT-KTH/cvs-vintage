@@ -740,7 +740,7 @@ public final class ContextManager implements LogAware{
 	lr.requestURI().setString( urlPath );
 	lr.queryString().setString(queryString );
 
-	if( host != null) lr.setServerName( host );
+	if( host != null) lr.serverName().setString( host );
 
 	return lr;
     }

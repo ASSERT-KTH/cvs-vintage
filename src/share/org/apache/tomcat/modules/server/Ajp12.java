@@ -135,7 +135,7 @@ class Ajp12 {
 		    dummy=readString(ajpin, null);
 		    
 		    //Server hostname
-		    req.setServerName( readString(ajpin, null) );
+		    req.serverName().setString(readString(ajpin, null) );
 
 		    //Apache document root
 		    dummy = readString(ajpin, null);               
@@ -161,7 +161,7 @@ class Ajp12 {
 		    dummy = readString(ajpin, null);
 		    //script name
 		    dummy = readString(ajpin, null);                   
-		    req.setServerName( readString(ajpin, ""));                
+		    req.serverName().setString( readString(ajpin, ""));       
 
 		    int serverPort=80;
 		    try {

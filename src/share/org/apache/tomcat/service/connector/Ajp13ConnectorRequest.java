@@ -1,7 +1,7 @@
-/*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.16 2000/11/15 11:40:03 hgomez Exp $
- * $Revision: 1.16 $
- * $Date: 2000/11/15 11:40:03 $
+ /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.17 2000/11/30 04:58:51 costin Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/11/30 04:58:51 $
  *
  * ====================================================================
  *
@@ -142,7 +142,7 @@ public class Ajp13ConnectorRequest extends Request
         uriMB.setString( msg.getString());
         remoteAddr = msg.getString();
         remoteHost = msg.getString();
-        serverName = msg.getString();
+        serverNameMB.setString( msg.getString());
         serverPort = msg.getInt();
         bsc        = msg.getByte();
         if(bsc != 0) {

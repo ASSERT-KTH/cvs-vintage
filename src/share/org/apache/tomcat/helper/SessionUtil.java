@@ -68,7 +68,7 @@ import org.apache.tomcat.util.*;
  * <code>Session</code> implementations.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.3 $ $Date: 2000/11/02 21:44:41 $
+ * @version $Revision: 1.4 $ $Date: 2000/11/30 04:58:43 $
  */
 
 public final class SessionUtil {
@@ -133,12 +133,16 @@ public final class SessionUtil {
 	}
 
 	// Encode all absolute URLs that return to this hostname
-	String serverName = req.getServerName();
-	String match = "http://" + serverName;
-	if (url.startsWith("http://" + serverName))
+	String serverName = req.serverName().toString();
+	if (url.startsWith("http://") &&
+	    url.indexOf( serverName )== 7 ) {
+	    // i.e. it starts with http://serverName
+	    // XXX should be "ignoreCase" and should also check for other
+	    // names. A lot of work to do to get this right
 	    return (encode(id, url));
-	else
+	} else {
 	    return (url);
+	}
 
     }
 
