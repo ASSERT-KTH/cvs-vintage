@@ -1,4 +1,4 @@
-//The Foo remote object server
+//The foo remote object server
 import java.rmi.RemoteException;
 
 public class Server {

@@ -237,7 +237,11 @@ public class RMIConfiguration {
      */
     public String toString() {
 	String result =                  "RMI " + rmiName + " Configuration: \n";
-	if (activate) result +=          "is activate\n";
+	if (activate) {
+	    result +=          "is activated\n";
+	} else {
+	    result +=          "is NOT activated\n";
+	}
         result +="Portable Remote Object Delegate Class: "+pro+"\n";
 	result +="JNDI Properties =\n" +jndiProperties +"\n";
 	return result;

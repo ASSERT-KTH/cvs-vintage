@@ -1,4 +1,4 @@
-//The Foo remote object server
+//The foo remote object server
 import java.rmi.RemoteException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

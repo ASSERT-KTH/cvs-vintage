@@ -1,9 +1,9 @@
-//The Foo object is a remote object
+//The foo object is a remote object
 import java.rmi.RemoteException;
 import javax.rmi.PortableRemoteObject;
 
 //The class foo extends PortableRemoteObject 
-//and implement the FooRemoteInterface interface 
+//and implements the FooRemoteInterface interface 
 public class Foo extends PortableRemoteObject 
 		 implements FooRemoteInterface {
 

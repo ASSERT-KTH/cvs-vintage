@@ -1,6 +1,6 @@
-//The FooRemoteInterface interface 
+//The foo remote interface 
 //extends only the Remote interface
-//and expose the remote methods
+//and exposes the remote methods
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 

@@ -1,7 +1,7 @@
-//The Foo object is a remote object
+//The foo object is a remote object
 import java.rmi.RemoteException;
 
-//The class foo implement only 
+//The class foo implements only 
 //the FooRemoteInterface interface 
 public class Foo implement FooRemoteInterface {
     

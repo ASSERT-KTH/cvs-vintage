@@ -18,7 +18,7 @@
 
   <glossentry><glossterm>JVM</glossterm>
     <glossdef>
-      <para> (Java Virtual Machine) The java virtual machine.
+      <para> (Java Virtual Machine) The Java virtual machine.
       </para>
     </glossdef>
   </glossentry>  
@@ -32,7 +32,7 @@
 
   <glossentry><glossterm>API</glossterm>
     <glossdef>
-      <para> (Application Programming Interface) Interface for using a library in programs.
+      <para> (Application Programming Interface) Interfaces allowing to use library in programs.
       </para>
     </glossdef>
   </glossentry>

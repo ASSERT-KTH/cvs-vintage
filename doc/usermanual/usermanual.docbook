@@ -2,7 +2,7 @@
 
   <!ENTITY bookinfo SYSTEM "bookinfo.docbook">
   <!ENTITY introduction SYSTEM "introduction.docbook">
-  <!ENTITY getting-started SYSTEM "getting-started.docbook">
+  <!ENTITY overview SYSTEM "overview.docbook">
   <!ENTITY configuration SYSTEM "configuration.docbook">
   <!ENTITY requirements SYSTEM "requirements.docbook">
   <!ENTITY links SYSTEM "links.docbook">
@@ -30,7 +30,7 @@
   &bookinfo;
 
   &introduction;
-  &getting-started;
+  &overview;
   &configuration;
   &requirements;
 

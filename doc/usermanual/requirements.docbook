@@ -1,56 +1,50 @@
 <chapter id="requirements">
   <title>CAROL requirements</title>
   <para>This chapter describe the system requirements for CAROL.</para>
-    <index>
-      <title>Web sites index</title>
-      <indexdiv>
-	<title>General CAROL requirements</title>
-	<indexentry>
-	  <primaryie>Java environment</primaryie>
-	  <secondaryie>Carol need a jdk 1.2 or sup</secondaryie>
-	</indexentry>
-	<indexentry>
-	  <primaryie><ulink url="http://www.objectweb.org/carol">CAROL</ulink></primaryie>
-	  <secondaryie>CAROL ObjectWeb web site</secondaryie>
-	</indexentry>
-	<indexentry>
-	  <primaryie><ulink url="http://www.objectweb.org/jonathan">JONATHAN</ulink></primaryie>
-	  <secondaryie>JONATHAN ObjectWeb web site</secondaryie>
-	</indexentry>
-      </indexdiv>  
-      <indexdiv>
-	<title>SUN web sites</title>
-	<indexentry>
-	  <primaryie><ulink url="http://www.java.sun.com">Java Sun</ulink></primaryie>
-	  <secondaryie>Java Sun main web site</secondaryie>
-	</indexentry>
-	<indexentry>
-	  <primaryie><ulink url="http://www.java.sun.com">JDK 1.4</ulink></primaryie>
-	  <secondaryie>Java JDK 1.4 API</secondaryie>
-	</indexentry>
-	<indexentry>
-	  <primaryie><ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi/index.html">RMI</ulink></primaryie>
-	  <secondaryie>RMI documentation and tutorial web site</secondaryie>
+  <index>
+    <title>Web sites index</title>
+    <indexdiv>
+      <title>General CAROL requirements</title>
+      <indexentry>
+	<primaryie>Java environment</primaryie>
+	<secondaryie>A CAROL Java server need a JDK 1.2 or greater</secondaryie>
+	<secondaryie>A CAROL Java server need the <filename>carol.jar</filename> file in it's classpath</secondaryie>
+      </indexentry>
+    </indexdiv>  
+    <indexdiv>
+      <title>CAROL RMI JRMP requirements</title>
+      <indexentry>
+	<primaryie>Server Environement</primaryie>
+	<secondaryie>A CAROL RMI JRMP Java server need a JDK 1.2 or greater</secondaryie>
       </indexentry>
       <indexentry>
-	  <primaryie><ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi-iiop/index.html">RMI IIOP</ulink></primaryie>
-	  <secondaryie>RMI IIOP documentation and tutorial web site</secondaryie>
-	</indexentry>
-      </indexdiv>  
-      <indexdiv>
-      <title>OMG web sites</title>
-	<indexentry>
-	  <primaryie><ulink url="http://www.omg.org">OMG</ulink></primaryie>
-	  <secondaryie>OMG main web site</secondaryie>
-	</indexentry>
-	<indexentry>
-	  <primaryie><ulink url="http://www.corba.org/">CORBA web page</ulink></primaryie>
-	  <secondaryie>CORBA web page</secondaryie>
-	</indexentry>
-	<indexentry>
-	  <primaryie><ulink url="http://www.omg.org/cgi-bin/doc?formal/01-02-57">PortableInterceptor</ulink></primaryie>
-	  <secondaryie>PortableInterceptor documentation</secondaryie>
+	<primaryie>Client Environement</primaryie>
+	<secondaryie>A CAROL RMI JRMP Java client need a JDK 1.2 or greater</secondaryie>
+	<secondaryie>A CAROL RMI JRMP Java client need the <filename>carol.jar</filename> file in it's classpath</secondaryie>
       </indexentry>
-      </indexdiv>
-    </index>
+    </indexdiv> 
+   <indexdiv>
+      <title>CAROL RMI IIOP requirements</title>
+      <indexentry>
+	<primaryie>Server Environement</primaryie>
+	<secondaryie>A CAROL RMI IIOP Java server need a JDK 1.4 or a 2.6 CORBA with RMI IIOP</secondaryie>
+      </indexentry>
+      <indexentry>
+	<primaryie>Client Environement</primaryie>
+	<secondaryie>A CAROL IIOP client need a CORBA 2.6</secondaryie>
+	<secondaryie>A CAROL RMI IIOP Java client need a JDK 1.4 or a 2.6 CORBA with RMI IIOP and the <filename>carol.jar</filename> file in it's classpath</secondaryie>
+      </indexentry>
+    </indexdiv>
+   <indexdiv>
+      <title>CAROL JEREMIE requirements</title>
+      <indexentry>
+	<primaryie>Server Environement</primaryie>
+	<secondaryie>A CAROL JEREMIE Java server need a JDK 1.2 and a Jonathan 3.0 alpha10 or greater</secondaryie>
+      </indexentry>
+      <indexentry>
+	<primaryie>Client Environement</primaryie>
+	<secondaryie>A CAROL JEREMIE Java client need a JDK 1.2 and a Jonathan 3.0 alpha10 or greater </secondaryie>
+      </indexentry>
+    </indexdiv>
+  </index>
 </chapter>

@@ -1,7 +1,7 @@
 <bookinfo>
 
   <title>CAROL Library User Manual</title>
-  <subtitle>CAROL (Common Architecture for RMI Objectweb Layer), a RMI IIOP Personnality</subtitle>
+  <subtitle>CAROL (Common Architecture for RMI ObjectWeb Layer), a RMI manager</subtitle>
 
   <authorgroup>
     
