@@ -54,7 +54,7 @@ import org.gjt.sp.jedit.textarea.*;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.39 2003/03/23 18:44:35 spestov Exp $
+ * @version $Id: EditPane.java,v 1.40 2003/03/29 20:29:31 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -86,6 +86,9 @@ public class EditPane extends JPanel implements EBComponent
 	 */
 	public void setBuffer(final Buffer buffer)
 	{
+		if(buffer == null)
+			throw new NullPointerException();
+
 		if(this.buffer == buffer)
 			return;
 

@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.14 2003/03/16 05:37:51 spestov Exp $
+ * @version $Id: EditServer.java,v 1.15 2003/03/29 20:29:31 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -193,7 +193,7 @@ public class EditServer extends Thread
 					buffer = jEdit.getFirstBuffer();
 				view = jEdit.newView(null,buffer);
 			}
-			else
+			else if(buffer != null)
 				view.setBuffer(buffer);
 		}
 		else if(newView)
