@@ -1,4 +1,4 @@
-$Id: recording-issues.txt,v 1.9 2002/12/13 01:30:04 jmcnally Exp $
+$Id: recording-issues.txt,v 1.10 2002/12/17 14:58:00 jon Exp $
 
 This document details all of the database modifications for each
 'action'. In other words, if you want to create a dependency (the
@@ -19,6 +19,14 @@ RULE #1:
     Comments (saved as Attachments) about the Activit(y/ies) are always
     added to the ActivitySet, not the Activity, regardless of the number
     of Activities in the ActivitySet.
+
+RULE #2:
+  > Why is it that for URLs and files, the attachment is associated with the 
+  > Activity, but for Comments, it asso. with the ActivitySet?
+
+The reason is that, based on the UI, a change to a URL or File could
+generate more than one activity record in the activity set with multiple
+attachments.
 
 
 Attributes:
@@ -586,7 +594,7 @@ File attachments:
 
         One ActivitySet
             TYPE_ID = 2 (or 1 depending on if this is an attachment during issue create/1 or issue edit/2)
-            AttachmentId = null (FIXME: currently is set to attachment in activity, should be set to attachment comment on creation. ui needs to be added for this.)
+            AttachmentId = null (FIXME: Should be set to optional attachment comment on creation. ui needs to be added for this.)
 
         Activity 1
             IssueId = SCB1 (100)
