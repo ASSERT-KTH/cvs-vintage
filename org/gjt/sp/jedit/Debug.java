@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.7 2003/04/29 01:05:42 spestov Exp $
+ * @version $Id: Debug.java,v 1.8 2003/04/29 01:13:48 spestov Exp $
  */
 public class Debug
 {
@@ -93,4 +93,9 @@ public class Debug
 	 * Disable monospaced font optimization.
 	 */
 	public static boolean DISABLE_MONOSPACE_HACK = false;
+
+	/**
+	 * Paint strings instead of glyph vectors.
+	 */
+	public static boolean DISABLE_GLYPH_VECTOR = false;
 }

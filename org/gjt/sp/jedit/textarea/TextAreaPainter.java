@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.80 2003/04/26 20:05:15 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.81 2003/04/29 01:13:48 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -1201,7 +1201,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 			{
 				x += Chunk.paintChunkList(lineInfo.chunks,
 					gfx,textArea.getHorizontalOffset(),
-					baseLine,true);
+					baseLine,!Debug.DISABLE_GLYPH_VECTOR);
 			}
 
 			if(!lineInfo.lastSubregion)
