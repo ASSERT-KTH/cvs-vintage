@@ -65,9 +65,35 @@
           classpath="${classpath}"/>
 
     <rmic base="${build.classes.dir}"
+          classname="org.jboss.jmx.server.RMIConnectorImpl"
+          stubVersion="1.2"
+          classpath="${classpath}"/>
+
+    <rmic base="${build.classes.dir}"
+          classname="org.jboss.jmx.client.RMIClientConnectorImpl.Listener"
+          stubVersion="1.2"
+          classpath="${classpath}"/>
+
+    <rmic base="${build.classes.dir}"
           classname="org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker"
           stubVersion="1.2"
           classpath="${classpath}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Compiles the source code for the Test Suite                         -->
+  <!-- AS: At the moment only necessary for JMX Connector Test Client      -->
+  <!-- =================================================================== -->
+  <target name="compileTest" depends="compile">
+    <javac srcdir="${src.dir}"
+           destdir="${build.classes.dir}"
+           classpath="${classpath}"
+           debug="on"
+           deprecation="off"
+           optimize="off"
+       includes="test/jboss/jmx/**"
+           excludes=""
+    />
   </target>
 
   <!-- =================================================================== -->
@@ -91,7 +117,7 @@
   <!-- =================================================================== -->
   <!-- Creates the jar archives                                            -->
   <!-- =================================================================== -->
-  <target name="jar" depends="xmlbeans">
+  <target name="jar" depends="xmlbeans,compileTest">
     <copydir src="${src.resources}" dest="${build.classes.dir}"/>
 
     <mkdir dir="${build.bin.dir}"/>
@@ -126,6 +152,12 @@
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/stop.mf"
          includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Stop.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class,org/jboss/ejb/CacheKey.class,org/jboss/util/FastKey.class"
+    />
+
+    <jar jarfile="${build.dir}/client//connector.jar"
+         basedir="${build.classes.dir}"
+         manifest="${etc.dir}/connector.mf"
+         includes="org/jboss/jmx/interfaces/MBeanServer.class,org/jboss/jmx/interfaces/JMXConnector.class,org/jboss/jmx/interfaces/JMXConnectorMBean.class,org/jboss/jmx/interfaces/RMIConnector.class,org/jboss/jmx/interfaces/RMINotificationListener.class,org/jboss/jmx/client/RMIClientConnectorImpl*.class,org/jboss/jmx/server/RMIConnectorImpl_Stub.class,org/jboss/jmx/server/ObjectHandler.class,org/jboss/jmx/client/ConnectorFactory*.class,org/jboss/util/Service*.class,org/jboss/logging/Log*.class,test/jboss/jmx/TestClient*.class"
     />
   </target>
 
