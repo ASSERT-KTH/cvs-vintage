@@ -23,6 +23,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.columba.core.gui.util.DialogStore;
 import org.columba.mail.util.MailResourceLoader;
@@ -35,6 +37,7 @@ public class ChooseViewerDialog implements ActionListener {
 	private JTextField viewerName;
 	private String viewer = null;
 	private JCheckBox saveCButton;
+        private JButton okButton;
 	private JDialog dialog;
 
 	public ChooseViewerDialog(
@@ -61,6 +64,21 @@ public class ChooseViewerDialog implements ActionListener {
 		viewerName = new JTextField(15);
 		viewerName.setActionCommand(CMD_OK);
 		viewerName.addActionListener(this);
+                viewerName.getDocument().addDocumentListener(new DocumentListener() {
+                    public void insertUpdate(DocumentEvent e) {
+                        refreshOkButton(e);
+                    }
+                    
+                    public void removeUpdate(DocumentEvent e) {
+                        refreshOkButton(e);
+                    }
+                    
+                    protected void refreshOkButton(DocumentEvent e) {
+                        okButton.setEnabled(e.getDocument().getLength() > 0);
+                    }
+                    
+                    public void changedUpdate(DocumentEvent e) {}
+                });
 		label.setLabelFor(viewerName);
 		viewerPanel.add(viewerName);
 		viewerPanel.add(Box.createHorizontalStrut(10));
@@ -75,9 +93,10 @@ public class ChooseViewerDialog implements ActionListener {
 		contentPane.add(saveCButton, BorderLayout.CENTER);
 		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		JButton okButton = new JButton(MailResourceLoader.getString("global", "ok"));
-		okButton.addActionListener(this);
+		okButton = new JButton(MailResourceLoader.getString("global", "ok"));
 		okButton.setActionCommand(CMD_OK);
+		okButton.addActionListener(this);
+                okButton.setEnabled(false);
 		buttonPanel.add(okButton);
 		JButton cancelButton = new JButton(MailResourceLoader.getString("global", "cancel"));
 		cancelButton.setActionCommand(CMD_CANCEL);
