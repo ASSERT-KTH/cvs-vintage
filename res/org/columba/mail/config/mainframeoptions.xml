@@ -4,8 +4,7 @@
 
 <options>
  <gui>
-  <table selected="Date" ascending="true"> 
-   <columnlist >
+  <table selected="Date" ascending="true">  
     <column name="Status" position="0" size="23" enabled="true" />
     <column name="Attachment" position="1" size="23" enabled="true" />
    	<column name="Flagged" position="2" size="23" enabled="true" />
@@ -20,8 +19,7 @@
    	<column name="Message-ID" position="11" size="100" enabled="false" />
    	<column name="In-Reply-To" position="12" size="100" enabled="false" />
    	<column name="References" position="13" size="100" enabled="false" />
-   	<column name="Content-Type" position="14" size="100" enabled="false" />
-   </columnlist>
+   	<column name="Content-Type" position="14" size="100" enabled="false" />  
   </table>
   <viewlist>
    <view id="0" >
