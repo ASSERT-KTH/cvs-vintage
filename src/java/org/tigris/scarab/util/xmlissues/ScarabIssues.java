@@ -155,12 +155,14 @@ public class ScarabIssues implements java.io.Serializable
             @OM@.TransactionType ttOM = @OM@.TransactionTypeManager.getInstance(transaction.getType());
             @OM@.ScarabUser createdByOM = @OM@.ScarabUserManager.getInstance(transaction.getCreatedBy(), 
                  module.getDomain());
-            // create the transaction (either creates a new one or saves an existing one)
-            transactionOM.create(ttOM, createdByOM, attachmentOM);
+            transactionOM.setTransactionType(ttOM);
+            transactionOM.setCreatedBy(createdByOM.getUserId());
+            transactionOM.setAttachment(attachmentOM);
+            transactionOM.save();
 
             // deal with the activities in the transaction
             List activities = transaction.getActivities();
-            log.debug("Number of activities in transaction '" + transactionOM.getTransactionId() + 
+            log.debug("Number of activities in transactionid '" + transactionOM.getTransactionId() + 
                 "': " + activities.size());
             for (Iterator itrb = activities.iterator(); itrb.hasNext();)
             {
@@ -221,6 +223,15 @@ public class ScarabIssues implements java.io.Serializable
                     log.debug("Found activity in database, do we want to be able to update it? I don't think so.");
                 }
             }
+        }
+
+        // deal with dependencies
+        List dependencies = issue.getDependencies();
+        log.debug("Number of dependencies found: " + dependencies.size());
+        for (Iterator depitr = dependencies.iterator(); depitr.hasNext();)
+        {
+            Dependency dependency = (Dependency) depitr.next();
+//            @OM@.Depend dependencyOM = @OM@.DependManager.getInstance(dependency.getChild(), dependency.getParent(), dependency.getType());
         }
     }
 
