@@ -47,6 +47,7 @@ package org.tigris.scarab.attribute;
  */ 
 
 import org.apache.turbine.util.RunData;
+import org.apache.turbine.om.security.Role;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserPeer;
 import org.tigris.scarab.om.*;
@@ -56,30 +57,85 @@ import org.apache.turbine.util.db.Criteria;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.1 $ $Date: 2001/05/01 00:03:37 $
+ * @version $Revision: 1.2 $ $Date: 2001/05/01 02:09:02 $
  */
 public class UserAttribute extends AttributeValue
 {
-    private Hashtable usersById;
-    private Vector users;
-    private ScarabUser user;
+    //private Hashtable usersById;
+    //private Vector users;
+    //private ScarabUser user;
+    private Role[] validRoles;
+    private Role[] invalidRoles;
 
+    
+    /**
+     * Get the value of validRoles.
+     * @return value of validRoles.
+     */
+    public Role[] getValidRoles() 
+    {
+        return validRoles;
+    }
+    
+    /**
+     * Set the value of validRoles.
+     * @param v  Value to assign to validRoles.
+     */
+    public void setValidRoles(Role[]  v) 
+    {
+        this.validRoles = v;
+    }
+    
+    
+    /**
+     * Get the value of invalidRoles.
+     * @return value of invalidRoles.
+     */
+    public Role[] getInvalidRoles() 
+    {
+        return invalidRoles;
+    }
+    
+    /**
+     * Set the value of invalidRoles.
+     * @param v  Value to assign to invalidRoles.
+     */
+    public void setInvalidRoles(Role[]  v) 
+    {
+        this.invalidRoles = v;
+    }
+    
     /**
      * Looks for users using prefix and suffix wildcards on the
      * username.
      */
     public List getMatchingUsers(Module module, String partialUserName)
+        throws Exception
     {
         // exclude users with Roles Guest or Observer 
         // !FIXME! these roles need to be defined
         Role[] excludeRoles = null;
 
-        List matches = module.getUsers(partialUserName, null, excludeRoles);
+        List matches = 
+            module.getUsers(partialUserName, null, excludeRoles);
         
         return matches;
     }
 
-    
+
+    public boolean isUserIdSet()
+        throws Exception
+    {
+        boolean isSet = (getUserId() == null);
+        if ( !isSet ) 
+        {
+            // see if value contains a valid username
+            List matches = getIssue().getModule()
+                .getUsers(getUserName(), getValidRoles(), getInvalidRoles());
+        }
+        
+        return isSet;   
+    }
 
     /** Gets the Value attribute of the Attribute object
      *

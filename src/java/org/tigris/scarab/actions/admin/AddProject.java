@@ -63,7 +63,7 @@ import org.tigris.scarab.om.*;
     This class will handle creation of a new project
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: AddProject.java,v 1.3 2001/03/03 00:07:07 jmcnally Exp $
+    @version $Id: AddProject.java,v 1.4 2001/05/01 02:09:02 jmcnally Exp $
 */
 public class AddProject extends RequireLoginFirstAction
 {
@@ -75,7 +75,7 @@ public class AddProject extends RequireLoginFirstAction
         try
         {
             // create the new project
-            ModuleManager.createNewProject(data);
+            //ModuleManager.createNewProject(data);
             
             data.setMessage("Addition Successful!");
         }
