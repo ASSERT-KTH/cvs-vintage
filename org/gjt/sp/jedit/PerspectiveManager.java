@@ -30,7 +30,7 @@ import org.gjt.sp.util.Log;
  * Manages persistence of open buffers and views across jEdit sessions.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: PerspectiveManager.java,v 1.7 2003/12/23 02:15:05 spestov Exp $
+ * @version $Id: PerspectiveManager.java,v 1.8 2004/01/25 01:38:30 spestov Exp $
  */
 public class PerspectiveManager
 {
@@ -125,7 +125,7 @@ public class PerspectiveManager
 			for(int i = 0; i < buffers.length; i++)
 			{
 				Buffer buffer = buffers[i];
-				if(buffer.isNewFile() && !autosave)
+				if(buffer.isNewFile())
 					continue;
 				out.write("<BUFFER>");
 				out.write(MiscUtilities.charsToEntities(buffer.getPath()));

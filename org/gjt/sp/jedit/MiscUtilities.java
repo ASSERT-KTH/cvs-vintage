@@ -68,7 +68,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.70 2004/01/06 20:47:21 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.71 2004/01/25 01:38:29 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -90,6 +90,9 @@ public class MiscUtilities
 	 */
 	public static String canonPath(String path)
 	{
+		if(path.length() == 0)
+			return path;
+
 		if(path.startsWith("file://"))
 			path = path.substring("file://".length());
 		else if(path.startsWith("file:"))
@@ -101,6 +104,11 @@ public class MiscUtilities
 		{
 			// get rid of mixed paths on Windows
 			path = path.replace('/','\\');
+			// also get rid of trailing spaces on Windows
+			int trim = path.length();
+			while(path.charAt(trim - 1) == ' ')
+				trim--;
+			path = path.substring(0,trim);
 		}
 		else if(OperatingSystem.isMacOS())
 		{
