@@ -8,8 +8,9 @@
 #if (!$issueList)
    #set ($issueList = $scarabR.CurrentSearchResults)
 #end
+#set ($issueListSize = $issueList.size())
 
-#if ($issueList.size() == 0)
+#if ($issueListSize == 0)
   <h3>$page.Title</h3>
   <p class="alert">There are no matching issues.</p>
 #else
@@ -30,7 +31,7 @@
 #if ($pageNum == 0)
   #set ($pageNum = 1)
 #end
-#if ($issueList.size() > $resultsPerPage)
+#if ($issueListSize > $resultsPerPage)
  #set ($paginated = "true")
  #set ($pagList = $scarabR.getPaginatedList($issueList, $pageNum.toString(), $resultsPerPage.toString()))
  #if ($pagList)
@@ -50,7 +51,7 @@
 </div>
 #end
 
-<h3>$page.Title</h3>
+<h3>$page.Title ($issueListSize #if ($issueListSize == 1)issue#else issues #end)</h3>
 
 <div class="colbar">
 <small>
