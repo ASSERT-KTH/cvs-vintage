@@ -41,14 +41,14 @@ import org.gjt.sp.util.Log;
  *
  * A plugin core class that extends the
  * {@link EBPlugin} abstract class (and whose name ends with
- * <code>Plugin<code> for identification purposes) will automatically be
+ * <code>Plugin</code> for identification purposes) will automatically be
  * added to the EditBus during jEdit's startup routine.  Any other
  * class - for example, a dockable window that needs to receive
  * notification of buffer changes - must perform its own registration by calling
  * {@link #addToBus(EBComponent)} during its initialization.
  * A convenient place to register in a class derived from <code>JComponent</code>
- * would be in an implementation of the <code>JComponent<code> method
- * <code>addNotify()<code>.<p>
+ * would be in an implementation of the <code>JComponent</code> method
+ * <code>addNotify()</code>.<p>
  *
  * Message types sent by jEdit can be found in the
  * {@link org.gjt.sp.jedit.msg} package.<p>
@@ -63,7 +63,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EditBus.java,v 1.8 2003/02/07 21:57:28 spestov Exp $
+ * @version $Id: EditBus.java,v 1.9 2003/02/08 18:53:02 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */

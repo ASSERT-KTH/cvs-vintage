@@ -50,12 +50,15 @@ import java.util.*;
  * <code>dockables.xml</code> file. This code will typically consist of a call
  * to the constructor of the dockable window component. The result of the
  * BeanShell expression, typically a newly constructed component, is placed
- * inside the docked or floating window managed by the
- * <code>DockableWindowManager</code>.
+ * in a window managed by this class. Windows can appear in
+ * above, below or to the left or right of the main editing pane. They can also
+ * be displayed in <quote>floating</quote> frames.
+ *
+ * @see org.gjt.sp.jedit.View#getDockableWindowManager()
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.47 2003/02/07 21:57:36 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.48 2003/02/08 18:53:02 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -651,7 +654,7 @@ public class DockableWindowManager extends JPanel
 	//{{{ getDockable() method
 	/**
 	 * Returns the specified dockable window. For historical reasons, this
-	 * does the same thing as {@link #getDockableWindow()}.
+	 * does the same thing as {@link #getDockableWindow(String)}.
 	 * @param name The name of the dockable window
 	 * @since jEdit 4.0pre1
 	 */

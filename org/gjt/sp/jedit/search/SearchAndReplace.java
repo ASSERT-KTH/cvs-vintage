@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.41 2003/02/07 21:57:41 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.42 2003/02/08 18:53:03 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -243,10 +243,11 @@ public class SearchAndReplace
 	//{{{ setSearchMatcher() method
 	/**
 	 * Sets a custom search string matcher. Note that calling
-	 * {@link #setSearchString}, {@link #setReplaceString},
-	 * {@link #setIgnoreCase}, {@link #setRegExp} {@link #setReverseSearch}
-	 * or {@link #setBeanShellReplace} will
-	 * reset the matcher to the default.
+	 * {@link #setSearchString(String)}, {@link #setReplaceString(String)},
+	 * {@link #setIgnoreCase(boolean)}, {@link #setRegexp(boolean)},
+	 * {@link #setReverseSearch(boolean)} or
+	 * {@link #setBeanShellReplace(boolean)} will reset the matcher to the
+	 * default.
 	 */
 	public static void setSearchMatcher(SearchMatcher matcher)
 	{
@@ -567,7 +568,7 @@ loop:			for(;;)
 	 * @param buffer The buffer
 	 * @param start Location where to start the search
 	 * @param firstTime See {@link SearchMatcher#nextMatch(CharIndexed,
-	 * boolean,boolean)}.
+	 * boolean,boolean,boolean,boolean)}.
 	 * @since jEdit 4.1pre7
 	 */
 	public static boolean find(View view, Buffer buffer, int start,

@@ -43,14 +43,14 @@ import org.gjt.sp.util.*;
  * Currently, it is used for the following:
  * <ul>
  * <li>Displaying caret position information
- * <li>Displaying {@link #readNextChar(String,String)} prompts
+ * <li>Displaying {@link InputHandler#readNextChar(String,String)} prompts
  * <li>Displaying {@link #setMessage(String)} messages
  * <li>Displaying I/O progress
  * <li>Displaying various editor settings
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.50 2003/02/07 21:57:37 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.51 2003/02/08 18:53:02 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */

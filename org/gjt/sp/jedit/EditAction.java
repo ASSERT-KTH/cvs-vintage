@@ -32,10 +32,14 @@ import java.awt.Component;
  * An action.<p>
  *
  * Instead of subclassing EditAction directly, you should now write an
- * actions.xml file.
+ * <code>actions.xml</code> file.
+ *
+ * @see jEdit#getAction(String)
+ * @see jEdit#getActions()
+ * @see ActionSet
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.14 2003/02/07 21:57:27 spestov Exp $
+ * @version $Id: EditAction.java,v 1.15 2003/02/08 18:53:02 spestov Exp $
  */
 public abstract class EditAction
 {
@@ -177,7 +181,7 @@ public abstract class EditAction
 		/**
 		 * Called when the user selects this action from a menu.
 		 * It passes the action through the
-		 * {@link org.gjt.sp.jedit.gui.InputHandler#executeAction(EditAction)}
+		 * {@link org.gjt.sp.jedit.gui.InputHandler#invokeAction(EditAction)}
 		 * method, which performs any recording or repeating.
 		 *
 		 * @param evt The action event

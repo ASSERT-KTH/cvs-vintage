@@ -67,7 +67,7 @@ import org.gjt.sp.util.Log;
  *
  * Here is an example set of plugin properties:
  *
- * <pre>plugin.QuickNotepadPlugin.name=QuickNotepad
+ * <pre> plugin.QuickNotepadPlugin.name=QuickNotepad
  * plugin.QuickNotepadPlugin.author=John Gellene
  * plugin.QuickNotepadPlugin.version=4.1
  * plugin.QuickNotepadPlugin.docs=QuickNotepad.html
@@ -87,7 +87,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EditPlugin.java,v 1.10 2003/02/07 21:57:28 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.11 2003/02/08 18:53:02 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin

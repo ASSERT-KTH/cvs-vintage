@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EBComponent.java,v 1.4 2003/02/07 21:57:27 spestov Exp $
+ * @version $Id: EBComponent.java,v 1.5 2003/02/08 18:53:02 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -42,7 +42,7 @@ public interface EBComponent
 	 * whether the message is an instance of a derived message class in
 	 * which the plugin has an interest. For example:
 	 *
-	 * <pre>if(msg instanceof BufferUpdate) {
+	 * <pre> if(msg instanceof BufferUpdate) {
          *     // a buffer's state has changed!
          * }
          * else if(msg instanceof ViewUpdate) {

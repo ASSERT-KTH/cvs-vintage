@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * Swing UI calls directly.
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.22 2003/02/07 21:57:40 spestov Exp $
+ * @author $Id: VFS.java,v 1.23 2003/02/08 18:53:03 spestov Exp $
  */
 public abstract class VFS
 {
@@ -210,12 +210,12 @@ public abstract class VFS
 	 *
 	 * Unless you are writing a VFS, this method should not be called
 	 * directly. To ensure correct behavior, you <b>must</b> call
-	 * {@link MiscUtilities#constructPath()} instead.
+	 * {@link org.gjt.sp.jedit.MiscUtilities#constructPath(String,String)}
+	 * instead.
 	 *
 	 * @param parent The parent directory
 	 * @param path The path
 	 * @since jEdit 2.6pre2
-	 * @see org.gjt.sp.jedit.MiscUtilities#constructPath(String,String)
 	 */
 	public String constructPath(String parent, String path)
 	{
