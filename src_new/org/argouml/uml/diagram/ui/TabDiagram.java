@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.10 2003/02/02 11:50:52 kataka Exp $
+// $Id: TabDiagram.java,v 1.11 2003/02/19 14:49:54 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -137,7 +137,9 @@ implements TabModelTarget, GraphSelectionListener, ModeChangeListener {
     public void setTarget(Object t) {
         if (!(t instanceof UMLDiagram)) {
             _shouldBeEnabled = false;
-            cat.warn("target is null in set target or not an instance of UMLDiagram");
+	    // This is perfectly normal and happens among other things
+	    // within the call to setDiagram (below).
+            cat.debug("target is null in set target or not an instance of UMLDiagram");
             return;
         }
         UMLDiagram target = (UMLDiagram)t;
