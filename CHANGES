@@ -1,3 +1,23 @@
+Version 0.12.1:
+
+bugfixes:
+# "Open with" action in attachment viewer wasn't working on type rfc822 message (fdietz)
+# jwizz library updated to v0.1.1 (fixes some theme specific problems) (javaprog)
+# addressbook import wizard wasn't working (fdietz)
+# File->New->Mail window wasn't working (fdietz)
+# nullpointer exception in local CachedFolder (fdietz)
+# collapse tree in SelectedFolderDialog from mail and addressbook (fdietz)
+# focus on login dialog fixed (fdietz)
+# removed windowsmaximizer.dll and replaced it with java code (fdietz)
+# make addressbook window remember its size (karlpeder)
+# reply-to-mailinglist uses X-BeenThere headerfield which works much better (fdietz)
+# automatically collection addresses wasn't checking for email lists, just
+  for single addresses (fdietz)
+# fixed regular expression for parsing urls in message viewer (fdietz)
+# attachment viewer context menu wasn't working (fdietz)
+
+
+
 Version 0.12.0:
 
 New Features:
