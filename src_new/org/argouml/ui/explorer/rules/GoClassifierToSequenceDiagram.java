@@ -1,4 +1,4 @@
-// $Id: GoClassifierToSequenceDiagram.java,v 1.4 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoClassifierToSequenceDiagram.java,v 1.5 2004/05/02 13:20:24 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ package org.argouml.ui.explorer.rules;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
