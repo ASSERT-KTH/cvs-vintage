@@ -65,8 +65,17 @@ public class PassiveHeaderParserInputStream extends FilterInputStream {
 		int character = super.read();
 		
 		if( mode == READING ) {
-			buffer.append((char)character);
-			checkHeaderReadComplete();
+			if( character == -1 ) {
+				// The Stream finished before the header was completely
+				// read!
+				
+				// Create a emtpy header an back off
+				header = new Header();
+				barrier.open();
+			} else {						
+				buffer.append((char)character);
+				checkHeaderReadComplete();
+			}
 		}
 		
 		return character;
@@ -92,8 +101,17 @@ public class PassiveHeaderParserInputStream extends FilterInputStream {
 		int read = super.read(arg0, arg1, arg2);
 		
 		if( mode == READING ) {
-			buffer.append(new String(arg0,"US-ASCII").toCharArray(), 0, read);
-			checkHeaderReadComplete();
+			if( read == -1 ) {
+				// The Stream finished before the header was completely
+				// read!
+				
+				// Create a emtpy header an back off
+				header = new Header();
+				barrier.open();
+			} else {			
+				buffer.append(new String(arg0,0,read,"US-ASCII"));
+				checkHeaderReadComplete();
+			}
 		}
 		
 		return read;
