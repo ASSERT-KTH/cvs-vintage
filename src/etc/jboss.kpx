@@ -1,0 +1,1884 @@
+<?xml version='1.0'?>
+<kawaproject timestamp="Mon Apr 24 09:14:04 2000">
+<versioninfo>
+<documentversion>
+<major>"0"</major>
+<minor>"1"</minor>
+</documentversion>
+<productversion>
+<value>"121"</value>
+</productversion>
+</versioninfo>
+<path>"H:\projects\jboss2\jboss\src\etc\"</path>
+<classpaths>
+<classpath enabled="1">
+<value>"&lt;Project Directory&gt;\..\..\dist\bin\run.jar"</value>
+</classpath>
+</classpaths>
+<profile>
+<name>"JDK1.3"</name>
+</profile>
+<runfile>
+<relativepath>"..\main\org\jboss\Main.java"</relativepath>
+</runfile>
+<items>
+<folder>
+<name>"jboss"</name>
+<relativepath>"jboss2\jboss\src\etc\jboss.kpx"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+<virtualfolder>
+<name>"beaninfo"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\ContainerConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\ContainerConfigurations.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"beaninfo\EjbJar.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"19"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\EjbReference.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"4"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"beaninfo\EnterpriseBeans.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"-1"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\Entity.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"33241"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"beaninfo\EntityContainerConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\EntityInstancePoolConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"842795533"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"jaws"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"beaninfo\jaws\CMPField.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"145"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\EjbJar.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"704"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"beaninfo\jaws\EnterpriseBeans.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"145"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"beaninfo\jaws\Entity.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"118155200"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"beaninfo\jaws\Finder.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\Mapping.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"164"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\TypeMapping.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"113"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\jaws\TypeMappings.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"32"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\JDBCResource.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1864397921"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\JRMPContainerInvokerConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1734960750"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"beaninfo\NoPassivationEntityInstanceCacheConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"173"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"beaninfo\RandomEntityInstanceCacheConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"3659872"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\ResourceManagers.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"105750976"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\ResourceReference.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1265"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\Session.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"beaninfo\StatelessSessionContainerConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"137169172"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"beaninfo\StatelessSessionInstancePoolConfiguration.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"102194232"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"config"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"conf\instantdb.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"conf\jboss.conf"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"conf\jboss.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"conf\jndi.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"conf\schema.ini"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"docs"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\docs\index.html"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"105851224"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\docs\styles.css"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"33"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"etc"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"build.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"ejxjaws.mf"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"33"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"ejxjboss.mf"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"114291764"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"jboss.mf"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"run.mf"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"conf\server.policy"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"17"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"jboss"</name>
+<virtualfolder>
+<name>"cluster"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\cluster\Cluster.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"112"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\cluster\ClusterInfo.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"544437352"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\cluster\ClusterMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\cluster\ClusterNode.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\cluster\ClusterRemote.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"ejb"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\Application.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1701734753"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\AutoDeployer.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\AutoDeployerMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\BeanClassLoader.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\Container.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\ContainerFactory.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"757935405"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\ContainerFactoryMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\ContainerInvoker.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\ContainerPlugin.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"deployment"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\ContainerConfiguration.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\ContainerConfigurations.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"editors"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\editors\ContainerInvokerTypeEditor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\editors\ContainerTypeEditor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\editors\EntityInstanceCacheTypeEditor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\editors\EntityInstancePoolTypeEditor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1667326821"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\editors\EntityPersistenceManagerTypeEditor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\editors\ResourceTypeEditor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\editors\StatelessSessionInstancePoolTypeEditor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\EjbJar.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\EjbReference.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\EnterpriseBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\EnterpriseBeans.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\Entity.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\EntityContainerConfiguration.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\EntityInstancePoolConfiguration.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\InstancePoolSupportConfiguration.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"101977976"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\jBossFileManager.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\jBossFileManagerFactory.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1328"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\JDBCResource.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\JRMPContainerInvokerConfiguration.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\NoPassivationEntityInstanceCacheConfiguration.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\RandomEntityInstanceCacheConfiguration.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\ResourceManager.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\ResourceManagers.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\ResourceReference.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\Session.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\StatelessSessionContainerConfiguration.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\StatelessSessionInstancePoolConfiguration.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\URLResource.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\DeploymentException.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\EJBClassLoader.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\EnterpriseContext.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\EntityContainer.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\EntityEnterpriseContext.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\EntityPersistenceManager.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\InstanceCache.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\InstancePool.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\Interceptor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"plugins"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\AbstractInstancePool.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\AbstractInterceptor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"activation"</name>
+<virtualfolder>
+<name>"server"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\activation\server\ActivationContainerInvoker.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\BMPPersistenceManager.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\CMPFilePersistenceManager.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\EntityInstanceInterceptor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\EntityInstancePool.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\EntitySynchronizationInterceptor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"jaws"</name>
+<virtualfolder>
+<name>"deployment"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\CMPField.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"editors"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\editors\JavaTypeEditor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\editors\JdbcTypeEditor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\editors\TypeMappingEditor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\EjbJar.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\EnterpriseBeans.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\Entity.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\Finder.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"96"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\JawsFileManager.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\JawsFileManagerFactory.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1008"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\Mapping.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\TypeMapping.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\TypeMappings.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\JAWSPersistenceManager.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"jrmp"</name>
+<virtualfolder>
+<name>"interfaces"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\ContainerRemote.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\EJBMetaDataImpl.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"102174736"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\EntityHandleImpl.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"112"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\EntityProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"784"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\HomeProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\IteratorImpl.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\MethodInvocation.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\SecureSocketFactory.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\StatefulSessionProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\StatelessHandleImpl.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\StatelessSessionProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"server"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\server\JRMPContainerInvoker.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+</virtualfolder>
+<virtualfolder>
+<name>"jrmp12"</name>
+<virtualfolder>
+<name>"interfaces"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\ContainerRemote.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"112"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\EntityHandleImpl.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\EntityProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\HomeProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\IteratorImpl.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\MethodInvocation.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"proxy"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\InvocationHandler.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"102305688"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\Proxies.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\Proxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"102219784"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\ProxyAssembler.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"49"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\ProxyCompiler.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\ProxyProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"102247424"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\Replaceable.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"102473552"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\StatefulSessionProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\StatelessHandleImpl.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\StatelessSessionProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"server"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\JRMPContainerInvoker.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\SecureSocketFactory.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\LogInterceptor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\NoPassivationEntityInstanceCache.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\RandomEntityInstanceCache.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"112"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\SecurityInterceptor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\SingletonStatelessSessionInstancePool.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\StatefulSessionFilePersistenceManager.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\StatelessSessionInstanceInterceptor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\StatelessSessionInstancePool.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\TxInterceptor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"102485120"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\StatefulSessionContainer.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\StatefulSessionEnterpriseContext.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\StatefulSessionPersistenceManager.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"112"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\StatelessSessionContainer.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\StatelessSessionEnterpriseContext.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"jdbc"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\jdbc\DataSourceImpl.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\jdbc\DataSourceImplMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\jdbc\HypersonicDatabase.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\jdbc\HypersonicDatabaseMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\jdbc\InstantDBDatabase.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\jdbc\InstantDBDatabaseMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\jdbc\JdbcProvider.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\jdbc\JdbcProviderMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"logging"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\logging\ConsoleLogging.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\logging\ConsoleLoggingMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1763730281"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\logging\FileLogging.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"112"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\logging\FileLoggingMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\logging\Log.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"543649385"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\logging\Logger.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\logging\LoggerMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\logging\LogStream.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\logging\ViewerLogging.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\logging\ViewerLoggingMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\Main.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"102837960"</userinteger>
+</scmstatus>
+</file>
+<virtualfolder>
+<name>"naming"</name>
+<virtualfolder>
+<name>"java"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\naming\java\javaURLContextFactory.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\naming\NamingProvider.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\naming\NamingProviderMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"tm"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\tm\TransactionImpl.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\tm\TxManager.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"112"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\tm\XidImpl.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"tomcat"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\tomcat\TomcatService.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\tomcat\TomcatServiceMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1701017669"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"util"</name>
+<virtualfolder>
+<name>"ant"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\ant\XMLBeans.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1869181801"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\ClassPathExtension.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\ClassPathExtensionMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\Executor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"757935405"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\ExecutorMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\Info.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\InfoMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\MBeanProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\Service.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\ServiceMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\ServiceMBeanSupport.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\SystemProperties.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\util\SystemPropertiesMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"706742797"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"web"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\web\WebProvider.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\web\WebProviderMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+</virtualfolder>
+<virtualfolder>
+<name>"resources"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\containerinvoker.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"101"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\containertypes.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\entityinstancecache.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"96"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\entityinstancepool.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\entitypersistencemanager.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"117608072"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\resourcetypes.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\statelessinstancepool.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"2"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+</folder>
+</items>
+<compileroptions debug="0" nowarning="0" optimize="0" verbose="0" deprecated="0">
+<outputdirvalues checked="0">
+<outputdirvalue selected="1">
+<value>"&lt;Project Directory&gt;\..\..\build\classes"</value>
+</outputdirvalue>
+</outputdirvalues>
+<customoptions checked="0">
+<customoption selected="0">
+<value>"-target 1.3 -O"</value>
+</customoption>
+<customoption selected="1">
+<value>"-O"</value>
+</customoption>
+</customoptions>
+</compileroptions>
+<interpreteroptions debug="0" nogc="0" verbosegc="0" verbose="0" checksrc="0" verifieroff="0" verifieron="0" verifierremote="0">
+<commandlineargs checked="0">
+</commandlineargs>
+<runclassnames checked="0">
+<runclassname selected="0">
+<value>""</value>
+</runclassname>
+</runclassnames>
+<executedirs checked="1">
+<executedir selected="1">
+<value>"H:\projects\jboss2\jboss\dist\bin\"</value>
+</executedir>
+</executedirs>
+<customoptions checked="0">
+<customoption selected="0">
+<value>""</value>
+</customoption>
+</customoptions>
+<maxmemory checked="0">
+<value>""</value>
+</maxmemory>
+<startmemory checked="0">
+<value>""</value>
+</startmemory>
+<javacodestack checked="0">
+<value>""</value>
+</javacodestack>
+<ccodestack checked="0">
+<value>""</value>
+</ccodestack>
+<propertyvalues checked="0">
+<propertyvalue selected="0">
+<value>""</value>
+</propertyvalue>
+</propertyvalues>
+<remotedebugvalues checked="0">
+<remotedebugvalue selected="0">
+<value>""</value>
+</remotedebugvalue>
+</remotedebugvalues>
+</interpreteroptions>
+<javadocoptions version="1" type="1" author="1" noindex="0" notree="0" nodeprecated="0">
+<outputdirvalues checked="1">
+<outputdirvalue selected="1">
+<value>"&lt;Project Directory&gt;\..\docs\api"</value>
+</outputdirvalue>
+</outputdirvalues>
+<customoptions checked="0">
+<customoption selected="0">
+<value>""</value>
+</customoption>
+</customoptions>
+</javadocoptions>
+<rmioptions useprojectclasspath="0" debugtables="0" depend="0" debug="0" optimize="0" nowarn="0" verbose="0" nowrite="0" keepgenerated="0" show="0">
+<outputdirs checked="0">
+<outputdir selected="0">
+<value>""</value>
+</outputdir>
+</outputdirs>
+<stubdirs checked="0">
+<stubdir selected="0">
+<value>""</value>
+</stubdir>
+</stubdirs>
+<skeldirs checked="0">
+<skeldir selected="0">
+<value>""</value>
+</skeldir>
+</skeldirs>
+<customoptions checked="0">
+<customoption selected="0">
+<value>""</value>
+</customoption>
+</customoptions>
+<files>
+<file>
+<directory>"account.AccountBeanH"</directory>
+</file>
+<file>
+<directory>"account.AccountBeanE"</directory>
+</file>
+</files>
+</rmioptions>
+<kawajar>
+<value>""</value>
+</kawajar>
+<breakpoints>
+</breakpoints>
+</kawaproject>

@@ -1,10 +1,2 @@
 Class-Path: ejxejb.jar
 EJX-plugin: org.jboss.ejb.deployment.jBossFileManagerFactory
-
-Name: org/jboss/ejb/deployment/
-Specification-Title: jBoss 2.0 Deployment
-Specification-Version: v0.2
-Specification-Vendor: The jBoss Organization
-Implementation-Title: ejxjboss
-Implementation-Version: build1
-Implementation-Vendor: The jBoss Organization

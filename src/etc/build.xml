@@ -28,8 +28,8 @@
     <property name="build.javadocs.dir" value="${build.dir}/docs/api"/>
     <property name="dist.dir" value="dist"/>
     
-    <property name="classpath" value="${build.classes.dir};${lib.dir}/awt.jar;${lib.dir}/xml.jar;${lib.ext.dir}/ejb.jar;${lib.ext.dir}/jndi.jar;${lib.ext.dir}/ejxjaws.jar;${lib.ext.dir}/ejxejb.jar;${lib.ext.dir}/ejxjboss.jar;${lib.dir}/jmxri.jar;${lib.ext.dir}/jta-spec1_0_1.jar;${lib.ext.dir}/jnpserver.jar;${lib.ext.dir}/dynaserver.jar;${lib.ext.dir}/hsql.jar;${lib.ext.dir}/webserver.jar;${lib.ext.dir}/idb.jar;${lib.ext.dir}/RMI_jonas.jar;${lib.ext.dir}/jdbc2_0-stdext.jar"/>
-    <property name="packages" value="org.jboss.*"/>
+    <property name="classpath" value="${build.classes.dir};${lib.dir}/awt.jar;${lib.dir}/xml.jar;${lib.ext.dir}/ejb.jar;${lib.ext.dir}/ejxeditor.jar;${lib.ext.dir}/jndi.jar;${lib.ext.dir}/ejxejb.jar;${lib.dir}/jmxri.jar;${lib.ext.dir}/jta-spec1_0_1.jar;${lib.ext.dir}/jnpserver.jar;${lib.ext.dir}/dynaserver.jar;${lib.ext.dir}/hsql.jar;${lib.ext.dir}/webserver.jar;${lib.ext.dir}/idb.jar;${lib.ext.dir}/jdbc2_0-stdext.jar"/>
+    <property name="packages" value="org.jboss,org.jboss.ejb,org.jboss.util,org.jboss.tm,org.jboss.logging,org.jboss.jdbc,org.jboss.naming,org.jboss.web"/>
 
     <property name="build.compiler" value="classic"/>
     
@@ -77,7 +77,7 @@
     <mkdir dir="${build.lib.dir}/ext"/>
     <jar jarfile="${build.lib.dir}/ext/jboss.jar"
          basedir="${build.classes.dir}"
-         manifest="${etc.dir}/manifest.mf"
+         manifest="${etc.dir}/jboss.mf"
          includes="org/jboss/**"
          excludes="org/jboss/Main*"
     />
