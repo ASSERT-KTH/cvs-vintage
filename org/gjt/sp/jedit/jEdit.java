@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.213 2004/02/22 20:51:18 spestov Exp $
+ * @version $Id: jEdit.java,v 1.214 2004/02/22 20:58:39 spestov Exp $
  */
 public class jEdit
 {
@@ -3182,12 +3182,8 @@ public class jEdit
 	 */
 	private static void initPLAF()
 	{
-		if(!OperatingSystem.hasJava15())
+		if(OperatingSystem.hasJava15())
 		{
-			theme = new JEditMetalTheme();
-			theme.propertiesChanged();
-			MetalLookAndFeel.setCurrentTheme(theme);
-
 			Font primaryFont = jEdit.getFontProperty(
 				"metal.primary.font");
 			if(primaryFont != null)
@@ -3227,6 +3223,12 @@ public class jEdit
 					"swing.plaf.metal.userFont",
 					secondaryFontString);
 			}
+		}
+		else
+		{
+			theme = new JEditMetalTheme();
+			theme.propertiesChanged();
+			MetalLookAndFeel.setCurrentTheme(theme);
 		}
 
 		try
