@@ -893,7 +893,7 @@ try{
     public List getScopes()
         throws Exception
     {
-       return ScopePeer.getAllScopes();
+        return ScopePeer.getAllScopes();
     }
 
     /**
