@@ -28,7 +28,7 @@ import org.gjt.sp.jedit.Buffer;
  * An adapter you can subclass to avoid having to implement all the methods
  * of the <code>BufferChangeListener</code> interface.
  * @author Slava Pestov
- * @version $Id: BufferChangeAdapter.java,v 1.3 2001/10/17 12:14:11 spestov Exp $
+ * @version $Id: BufferChangeAdapter.java,v 1.4 2001/11/12 09:28:48 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public abstract class BufferChangeAdapter implements BufferChangeListener
@@ -41,7 +41,7 @@ public abstract class BufferChangeAdapter implements BufferChangeListener
 	 * @param level The fold level
 	 * @since jEdit 4.0pre1
 	 */
-	public void foldLevelChanged(Buffer buffer, int line)
+	public void foldLevelChanged(Buffer buffer, int line, int level)
 	{
 	} //}}}
 

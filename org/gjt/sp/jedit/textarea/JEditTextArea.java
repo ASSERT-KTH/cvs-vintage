@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.27 2001/11/09 07:43:22 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.28 2001/11/12 09:28:48 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3291,7 +3291,9 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 				start--;
 			end--;
 		}
+		int x = offsetToX(caretLine,caret - start));
 		buffer.remove(start,end - start);
+		setCaretPosition(start + xToOffset(caretLine,x));
 	} //}}}
 
 	//{{{ deleteParagraph() method
@@ -5149,6 +5151,9 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		//{{{ focusLost() method
 		public void focusLost(FocusEvent evt)
 		{
+			if(bracketLine != -1)
+				invalidateLine(bracketLine);
+
 			invalidateLine(caretLine);
 		} //}}}
 	} //}}}

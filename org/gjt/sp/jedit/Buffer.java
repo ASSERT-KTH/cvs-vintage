@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.32 2001/11/10 10:56:14 spestov Exp $
+ * @version $Id: Buffer.java,v 1.33 2001/11/12 09:28:48 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -684,6 +684,8 @@ public class Buffer implements EBComponent
 						jEdit.updatePosition(Buffer.this);
 						setMode();
 					}
+					else
+						propertiesChanged();
 
 					if(file != null)
 						modTime = file.lastModified();
@@ -2236,9 +2238,19 @@ public class Buffer implements EBComponent
 			return false;
 
 		// Do it
-		remove(start,lineWidth);
-		insert(start,MiscUtilities.createWhiteSpace(
-			prevLineIndent,(noTabs ? 0 : tabSize)));
+		try
+		{
+			beginCompoundEdit();
+
+			remove(start,lineWidth);
+			insert(start,MiscUtilities.createWhiteSpace(
+				prevLineIndent,(noTabs ? 0 : tabSize)));
+		}
+		finally
+		{
+			endCompoundEdit();
+		}
+
 		return true;
 	} //}}}
 
@@ -2251,10 +2263,16 @@ public class Buffer implements EBComponent
 	 */
 	public void indentLines(int start, int end)
 	{
-		beginCompoundEdit();
-		for(int i = start; i <= end; i++)
-			indentLine(i,true,true);
-		endCompoundEdit();
+		try
+		{
+			beginCompoundEdit();
+			for(int i = start; i <= end; i++)
+				indentLine(i,true,true);
+		}
+		finally
+		{
+			endCompoundEdit();
+		}
 	} //}}}
 
 	//{{{ indentLines() method
@@ -2265,10 +2283,16 @@ public class Buffer implements EBComponent
 	 */
 	public void indentLines(int[] lines)
 	{
-		beginCompoundEdit();
-		for(int i = 0; i < lines.length; i++)
-			indentLine(lines[i],true,true);
-		endCompoundEdit();
+		try
+		{
+			beginCompoundEdit();
+			for(int i = 0; i < lines.length; i++)
+				indentLine(lines[i],true,true);
+		}
+		finally
+		{
+			endCompoundEdit();
+		}
 	} //}}}
 
 	//{{{ paintSyntaxLine() method
