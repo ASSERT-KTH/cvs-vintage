@@ -1,7 +1,3 @@
-<div><strong><a href="$link.setPage("Index.vm")">Index</a></strong></div>
-## ARTIFACT TYPES
-$renderer.render("navigations", $data, "ArtifactTypes.vm")
-
 <div><strong>
 #if ($data.User.hasLoggedIn())
     <a href="$link.setPage("SelectModule.vm")">Select Module</a>
@@ -9,6 +5,9 @@ $renderer.render("navigations", $data, "ArtifactTypes.vm")
     <a href="$link.setPage("Login.vm")">Login</a>
 #end
 </strong></div>
+
+## ARTIFACT TYPES
+$renderer.render("navigations", $data, "ArtifactTypes.vm")
 
 <div><strong>
 #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule))
