@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+
+<document>
+
+<properties>
+    <title>How to Build Scarab with Ant</title>
+    <author email="dabbous@saxess.com">Hussayn Dabbous</author>
+</properties>
+
+<body>
+
+
+<section name="Ant Build">
+
+<subsection name="Intro">
+<p>
+In the early days of Scarab the build system was entirely based on Ant.
+We have recently switched over to use Maven as our 
+<a href="maven-build-howto.html">primary build system</a>.
+But for quite a few reasons we continue supporting an Ant based build.
+The current Ant based build system has been stripped down to a basic
+subset of the original functionality. This subset allows to build
+a Scarab instance from the Source distribution, but all "special features"
+like building the documentation set or updating the jar repository and so
+on have been entirely moved to the Maven world. 
+</p>
+<p>
+<font color="red">NOTE:</font> The file location of the file build.properties 
+has changed! If you are upgrading from an old system, please ensure, that 
+your old build.properties file migrates to 
+</p>
+<code>$SCARAB_ROOT/build.properties</code> 
+<p>
+In most cases you will utilize Ant as follows:
+
+<source>
+1:> cd $SCARAB_ROOT/build
+2:> ant
+3:> ant create-db
+</source>
+
+<ul><li> 1: cd $SCARAB_ROOT/build<br/>
+         go to the build directory of your Scarab source installation.</li>
+    <li> 2: ant<br/>
+         Now start the default target (deploy)</li>
+    <li> 3: ant create-db<br/>
+         Finally create the database</li>
+</ul>
+
+You find other targets in the Ant driving file <code>build/build.xml</code>.
+Some of the targets are described below.
+
+</p>
+</subsection>
+
+
+<subsection name="common targets">
+
+<p><b>deploy</b> (default target)<br/>
+Builds all necessary preliminaries i.e. the Torque database layer
+and the java-classes. Then creates a ready to use Webapplication 
+in <code>../target/scarab</code>. Finally generates the default
+runtime properties as specified in <i>build.properties</i>
+The directory tree in <code>../target/scarab</code> is ready
+for use as a Webapplication.
+</p>
+
+<p><b>create-db</b><br/>
+Builds the initial database. You must ensure, your RDBM system is
+up and running and all necessary drivers have been added to your
+/lib directory before you started the deploy target (see above).
+For Hypersonic and MySQL everyting is allready setup for you. For
+other databases see the specific informations [FIXME] Where are these infos?[HD]
+</p>
+
+<p><b>create-custom-property-file</b><br/> 
+Regenerates the <i>custom.properties</i> from the <i>build.properties</i>
+You may use this target whenever you have changed properties in your 
+<i>build.properties</i> which must propagate to your runtime environment.
+If you don't want to redeploy the whole webapplication, just start
+this target and then restart tomcat. Please note, that in general
+it is NOT sufficient to simply copy your <i>build.properties</i>
+to your <i>custom.properties</i>.
+</p>
+
+<p><b>generate-om</b><br/>
+Generates the java-sources of the Torque Database layer. This target is
+normally used internally from other Ant tasks. But if you want to manually
+recreate the sources files alone, this target is your choice.
+</p>
+
+<p><b>compile</b><br/>
+Generates the class files out of the java sources.
+</p>
+
+<p><b>clean</b><br/>
+Removes the target files in ../target/scarab. You may want to clean
+your installation before rebuilding Scarab in order to ensure your
+runtime system is consistent with your source tree.
+</p>
+
+<p><b>clean-all</b><br/>
+Like clean but also removes any logfiles in the tomcat/logs directory
+</p>
+
+<p><b>war</b><br/>
+Creates a ready to distribute war file.
+</p>
+
+</subsection>
+</section>
+
+</body>
+</document>

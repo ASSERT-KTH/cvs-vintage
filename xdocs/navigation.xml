@@ -11,7 +11,7 @@
 
     <menu name="General Information">
       <item name="Overview"               href="/index.html"/>
-      <item name="Howto Build"            href="/howto/build-howto.html"/>
+      <item name="Installation"           href="/howto/build-howto.html"/>
       <item name="1.0 Roadmap"            href="/tasks-report.html"/>
     </menu>
   
@@ -25,7 +25,8 @@
       <item name="Properties Guide"       href="/scarab_properties_final.html"/> 
       <item name="FAQ"                    href="/faq.html"/>
       <item name="How-To's"               href="/howto/index.html" collapse="true">
-       <item name="Howto Build"           href="/howto/build-howto.html"/>
+       <item name="Maven Build"           href="/howto/maven-build-howto.html"/>
+       <item name="Ant Build"             href="/howto/ant-build-howto.html"/>
        <item name="Howto Build Docs"      href="/howto/build-docs-howto.html"/>
        <item name="Releasing Scarab"      href="/howto/release-howto.html"/>
        <item name="Scarab and Firewalls"  href="/howto/firewall-howto.html"/>

@@ -4,161 +4,838 @@
 
 <properties>
     <title>How to Build Scarab</title>
-    <author email="epugh@opensourceconnections.com">Eric Pugh</author>
+    <author email="dabbous@saxess.de">Hussayn Dabbous</author>
 </properties>
 
 <body>
 
 
-<section name=" Maven and/or Ant Build">
-<subsection name="Generating Database">
+<section name="The Scarab Build System">
+<subsection name="introduction">
+
 <p>
-    Now you can compile your code in either Ant or Maven.  This page is about using the Maven based build.  
-    You now generate your database by doing this:
-    <source>
-    maven scarab:database
-    </source>
-    This will create in <code>/target/sql</code> the various SQL files that you need.  It will also
-    install the database for certain types of databases.  You will be prompted for some information.  
+The installation and configuration of Scarab is intended to be as simple as 
+possible. This document outlines the directory structure of the distribution 
+(currently it mirrors the CVS tree), the requirements for running Scarab,
+the instructions for building and running an installation as well as 
+requirements for setting up the database.
 </p>
-</subsection>
-<subsection name="Generating Torque Objects">
 <p>
-    Because the the various Torque objects are not checked into CVS, but instead are generated based on 
-    your settings for the type of database, you still need to create the java files.
-    <source>
-    maven java:compile
-    </source>
-    This will create in <code>/src/java</code> the various Torque objects.  You can now perform all the
-    various functions of Maven that you would expect like running unit tests, producing WAR files, etc.
+If you are doing development work with Scarab, please make sure to read 
+</p>
+
+<source>
+<a href="http://scarab-gen.tigris.org/nonav/HEAD/">http://scarab-gen.tigris.org/nonav/HEAD/</a>
+<a href="http://scarab-gen.tigris.org/nonav/HEAD/howto/build-howto.html">http://scarab-gen.tigris.org/nonav/HEAD/howto/build-howto.html</a>
+</source>
+
+<p>
+We appreciate your deciding to try Scarab out and appreciate constructive 
+feedback on your success (or failure...we hope not!) in getting the 
+system running.
 </p>
 </subsection>
 
-<subsection name="Testing the code">
+<subsection name="requirements">
+
 <p>
-    To test that everything is working properly, you should run the unit tests!
-    <source>
-    maven test
-    </source>
-    This will compile your newly generated Torque classes and run the unit tests.
-    One thing to note is that in <code>/src/test/</code> are some config files that you probably will
-    need to update the database settings for.
+
+<ul>
+<li>SDK 1.3.1 or higher available from
+    <p>
+      <code>
+        <a href="http://java.sun.com/">http://java.sun.com/</a>
+      </code>
+    </p>
+    <p>
+      Make sure that you download the SDK and not the JRE!
+      On some operating systems (OS&#160;X, for instance), 
+      the SDK is included.
+    </p>
+    <p>
+      When compiling Scarab with Jikes, version 1.18 or higher is
+      required.  Please do not try with Jikes 1.17, as it is buggy.
+    </p>
+</li>
+
+<li>Maven-1.0 or higher available from
+    <p>
+      <code>
+        <a href="http://maven.apache.org/">http://maven.apache.org/</a>
+      </code>
+    </p>
+    <p>
+    Note: If you prefer to use Ant (see below), you don't need to install Maven.
+    If you want to contribute to Scarab Source code, or you need to rebuild all
+    bits and pieces of Scarab, you will be more happy with Maven though.
+    </p>
+</li>
+
+<li>Ant 1.5 or higher available from
+    <p>
+      <code>
+        <a href="http://ant.apache.org/">http://ant.apache.org/</a>
+      </code>
+    </p>
+    <p>
+    If you prefer to use Maven (see above), you don't need to install Ant.
+    If you only want to install, configure and use Scarab, Ant is your 
+    best choice.
+    </p>
+</li>
+
+<li>Tomcat 4.0.4 or higher available from
+    <p>
+      <code>
+        <a href="http://jakarta.apache.org/tomcat/">http://jakarta.apache.org/tomcat/</a>
+      </code>
+    </p>
+    <p>
+      Tomcat 4.1.x is included with Scarab.
+    </p>
+</li>
+
+<li>An RDBMS preferably one out of the list below
+    <p>
+      <ul>
+        <li>MySQL 3.23.x/4.0.x  available from
+            <p>
+              <code>
+                <a href="http://www.mysql.com/">http://www.mysql.com/</a>
+              </code>
+            </p>
+            <p>
+              If you want to use the faster/newer JDBC driver with MySQL, 
+              you can download it from the MySQL website and use them 
+              instead. We do not distribute it because it is GPL. 
+              To use it, just copy the .jar file into your scarab/lib 
+              directory and put this in your build.properties file: 
+            </p>
+            <p>
+              <code>
+                scarab.jdbc.driver.jar=mysql-connector*.jar
+              </code>
+            </p>
+            <p>
+              see: <a href="http://www.mysql.com/downloads/api-jdbc-dev.html">http://www.mysql.com/downloads/api-jdbc-dev.html</a>
+            </p>
+            <p>
+              Scarab will eventually require the transactional support 
+              present only in MySQL version 4 and higher, and will drop 
+              support for the transaction-less versions 3.23.x and lower.  
+              If getting started using MySQL, it's recommended that you 
+              install version 4 or higher.
+            </p>
+        </li>
+
+        <li>Postgresql 7.3.x available from
+            <p>
+              <code>
+                <a href="http://www.postgresql.org/">http://www.postgresql.org/</a>
+              </code>
+            </p>
+        </li>
+
+        <li>hypersonic 1.7.1 available from
+            <p>
+              <code>
+                <a href="http://hsqldb.sourceforge.net">http://hsqldb.sourceforge.net</a>
+              </code>
+            </p>
+        </li>
+      </ul>
+    </p>
+    <p>
+        NOTE: More detailed instructions for setting up the database on
+        different database vendors are available on our website.
+    </p>
+    <p>
+      There are also several other databases with partial support:
+      MS SQL Server, Oracle and DB2. At least oracle and
+      DB2 have known problems, but we do encourage people to try these
+      databases and submit fixes for them.
+    </p>
+</li>
+</ul>
+</p>
+
+</subsection>
+
+<subsection name="Environmental settings">
+
+  <p>
+    <b>JAVA_HOME</b>
+  </p>
+  <p>
+    You must have the JAVA_HOME environment variable properly set to be the 
+    location of your SDK installation directory. 
+  </p>
+  <p>
+    Note for MacOSX: On MacOSX this path is:
+    <code>
+      /System/Library/Frameworks/JavaVM.framework/Home
+    </code>
+  </p>
+
+  <p>
+    <b>Database settings (for MYSQL)</b>
+  </p>
+  <p>
+    The database is assumed to be installed and running with appropriately
+    configured access control setup (see below for more detail). You must
+    have the database binaries in your PATH (ie: $MYSQL_HOME/bin). 
+  </p>
+  
+  <p>
+    <b>Database settings for other RDBM's</b>
+  </p>
+  <p>
+    With the Scarab communities help, we will be supporting a wide range of
+    databases in the released version of Scarab, however, the Scarab 
+    developers are currently doing development primarily on MySQL and thus
+    do not guarantee that Scarab will work on other databases.
+  </p>
+  
+  <p>
+    <b>Example scripts</b>
+  </p>
+  <p>
+    The following scripts can be used as templates for your own
+    environmental setup. The templates have been created for 
+    use wih MySQL. You must modify them according to your
+    environment:
+  </p>
+  
+  <p>UNIX/LINUX sh/zsh/bash</p>
+<source>
+export MYSQL_HOME=/path/to/mysql-install
+export JAVA_HOME=/path/to/jdk-install
+export PATH=${PATH}:${ANT_HOME}/bin:${MYSQL_HOME}/bin:${JAVA_HOME}/bin
+</source>
+  <p>
+    	Put these settings into your ~/.bashrc or ~/.login file
+  </p>
+  
+  <p>UNIX/LINUX csh/tcsh</p>
+<source>
+setenv MYSQL_HOME /path/to/mysql-install
+setenv JAVA_HOME /path/to/jdk-install
+setenv PATH ${PATH}:${ANT_HOME}/bin:${MYSQL_HOME}/bin:${JAVA_HOME}/bin
+</source>
+  <p>        
+        Put these statements into your ~/.cshrc file
+  </p>
+
+  <p>WINDOWS</p>
+<source>
+set MYSQL_HOME=\path\to\mysql-install
+set JAVA_HOME=\path\to\jdk-install
+set PATH=%PATH%;%ANT_HOME%\bin;%MYSQL_HOME\bin;%JAVA_HOME%\bin
+</source>
+  <p>
+        Add these settings to your Environment ( start settings system )  
+  </p>
+
+<p>
+  <b>.jar files</b>
+</p>
+
+<p>
+All of the necessary .jar files for building and running Scarab are
+included in the <code>/www/repository/*</code> directories and the build 
+system is setup to include these into your classpath for you. Please do 
+not add any jar files to your CLASSPATH as it may cause compile errors.
+</p>
+
+<p><b>Port settings of the application server</b></p>
+<p>
+If you already have an existing webserver or service running on ports
+8080 and 8005, and you are using Scarab's version of Tomcat, you will
+need to change the port number to another unused port number by editing
+</p>
+<code>/tomcat/conf/server.xml</code>
+
+<p><b>File permission settings</b></p>
+
+<p>By default, the file permissions of the web application directory 
+tree <code>WEB-INF/...</code> must allow write access for the userid 
+which runs the application server.
+</p>
+
+<p><b>XML-environment</b></p>
+
+<p>
+NOTE: Make sure to use the copy of Xerces which is included 
+with the Scarab distribution in <code>/www/repository/xerces/jars</code> 
+and make sure that no other copies are in your JAVA_HOME or in your CLASSPATH. 
+Otherwise, you may get build errors.
+</p>
+
+</subsection>
+
+<subsection name="Directory structure">
+<p>
+Here is a description of the Scarab directory tree:
+</p>
+<source>
+scarab
+  +- build          &lt;-- Ant scripts for building the sample webapp
+  |                     and creating/loading the sql scripts.
+  +- extensions
+  |   +- usermods   &lt;-- place your modifications to the standard
+  |   |                    distribution here. These modifications will be
+  |   |                    incorporated into the build. This simplifies
+  |   |                    the process of replacing *.vm files,
+  |   |                    among other things.
+  |   +- scripts    &lt;-- Helper shell scripts
+  |   +- dtd        &lt;-- DTD's for validating XML files
+  |   +- bugzilla   &lt;-- Scripts for converting from Bugzilla to Scarab
+  +- lib
+  +- src            &lt;-- The source files.
+  +- tomcat         &lt;-- Included Tomcat configured ready to run with Scarab.
+  +- www            &lt;-- Scarab Website
+      +- repository &lt;-- The .jar repository for jars used by Scarab.
+  +- xdocs          &lt;-- xml versions of manuals (guides, howtos etc)
+</source>
+<p>
+Within the /src directory you find following subdirectories...
+</p>
+<source>
+src
+  +- conf
+  |    +- conf      &lt;-- Various configuration files for Scarab.
+  |    |                TurbineResources.properties and Scarab.properties
+  |    |                live here.  Copied to WEB-INF/conf
+  |    +- classes   &lt;-- Various configuration files copied directly 
+  |                     into the classpath.
+  +- java           &lt;-- The Java source code for Scarab.
+  +- migration      &lt;-- Java source for migration ant tasks
+  +- schema         &lt;-- database schema files
+  +- sql            &lt;-- SQL files for defining the database.
+  +- templates      &lt;-- ??? [FIXME] what is tis for ???
+  +--test           &lt;-- Test suite code.
+  +--webapp         &lt;-- All the web resources required for Scarab like 
+  |                     images, css files, javascript files, html files,
+  |                     velocity templates.
+
+</source>
+
+</subsection>
+
+<subsection name="Build properties">
+
+<p>
+The Scarab build process can be configured by adding properties to the
+file:
+</p>
+<code>build.properties</code>
+<p>
+This file does not exist by default, so you will first have to create
+it in the root of your Scarab installation directory. We have provided 
+another file, which contains many of the most likely to be modified 
+properties together with their default settings and some descriptions 
+about what they are used for:
+</p>
+<code>project.properties</code>
+<p>
+You can simply copy this file to your build.properties and then apply
+all your modifications to <code>build.properties</code>. 
+Or as an alternative you can copy <code>minimal.properties</code> 
+to your <code>build.properties</code>. 
+<code>minimal.properties</code> only contains the most important
+properties and is your choice if you are a casual administrator, or
+Scarab beginner.
 </p>
 <p>
-    If you want to see all the site documenation, then you can run
-    <source>
-    maven site
-    </source>
-    or, if you don't want to execute the unit tests (maybe they are failing)    
-    <source>
-    maven site -Dmaven.test.skip
-    </source>
+Please note that the properties modified in <code>build.properties</code>
+<b>only</b> affect the build. Changing them and then immediately restarting 
+your appliation server has no effect at all - see the following section 
+on runtime properties for more information.
+</p>
+<p>
+For users who have several development projects on their system, or
+even multiple Scarab distributions, the Scarab build-system also 
+reads properties from the following files:
+</p>
+<code>
+    ~/scarab.build.properties<br/>
+    ~/build.properties<br/>
+</code>
+<p>
+where '~' is your home directory. Any values set in these files override
+the ones in <code>build.properties</code>. The former is designed to hold
+properties that should be shared between different Scarab builds, while
+the latter is for common settings that are available in more than one
+project.
+</p>
+
+<p>
+You will find more information about how to build Scarab further below
+in the chapter "<a href="#Building_the_sandbox">Building&#160;the&#160;sandbox</a>"
 </p>
 </subsection>
 
-<subsection name="Creating a WAR file">
+
+
+<subsection name="Runtime properties general notes">
+
 <p>
-    Once things are to your liking you can use Maven to generate your WAR file:
-    <source>
+Scarab supports runtime properties which will be loaded each time the 
+server is restarted. So for example, if you want to change the address 
+of the mail server to use, all you would have to do is modify
+the appropriate runtime property and restart your application server.
+</p>
+<p>
+Where you change your runtime properties is dependent on how you install
+Scarab:
+</p>
+
+<p>
+<b>Developer's choice</b><br/>
+If you are a developer and you build Scarab on your own, your best 
+choice is to always modify <code>build.properties</code>.
+After deployment there is no further need for modifications and your 
+runtime properties are ready available in the file
+</p>
+<code>&lt;scarab webapp>/WEB-INF/conf/defaultCustom.properties</code>
+<p>
+Every time you rebuild Scarab from sratch, your runtime property settings 
+will be regenerated from the settings in <code>build.properties</code>.
+</p>
+<p>
+<b>Administrator's choice</b><br/>
+If you got a binary distribution of Scarab (i.e. a .war file or a .ear file), 
+either from you developer team or from the Scarab website (currently 
+under preparation), your best choice is probably to create/modify the file
+</p>
+
+<code>&lt;scarab webapp>/WEB-INF/conf/custom.properties</code>
+
+<p>
+Your best approach in this case would be to copy the file
+<code>&lt;scarab webapp>/WEB-INF/conf/defaultCustom.properties</code> 
+to <code>custom.properties</code> in the same directory and then modify 
+your settings in <code>custom.properties</code>. Note: The file 
+<code>custom.properties</code> exists and is empty by default.
+</p>
+
+<p>
+<b>Master of quality assurance choice</b><br/>
+If you need to often redeploy Scarab AND you want to frequently
+change your runtime settings, you will need to modify custom.properties
+<b>and</b> build.properties. Your best strategy would be to keep these files
+always identical.
+</p>
+
+<p>
+In addition to the build.properties and custom.properties file, you can 
+also define environment properties in your servlet's JNDI tree. You can 
+do this either via the Tomcat Admin application or by editing the appropriate
+files. To add a property that won't be overriden by each new .WAR file
+you install, edit
+</p>
+<code>/tomcat/webapps/scarab.xml </code>
+<p>
+and add entries to your &lt;context/> entry for Scarab.  For 
+example, to set the system.mail.host property you would add 
+these line:
+</p>
+<source>
+&lt;Environment description="Mail Host to Use"
+                name="system/mail/host"
+                override="true"
+                type="java.lang.String"
+                value="127.0.0.1"
+/>
+</source>
+<p>
+To set which database adapter to use you would add a line like this:
+</p>
+<source>
+&lt;Environment description="Database Adapter"
+                name="torque/database/scarab/adapter"
+                override="true"
+                type="java.lang.String"
+                value="oracle"
+/>
+</source>
+
+<p>
+For more information about other sources of Configuration data, 
+read about Commons-Configuration:
+</p>
+
+<code><a href="http://jakarta.apache.org/commons/configuration/">http://jakarta.apache.org/commons/configuration/</a></code>
+
+<p>
+  In the remainder of this text we will use the following notations:
+  <ul>
+   <li><i>build.properties</i><br/>
+       for the file <code>build.properties</code> in the Scarab Root installation 
+       directory.</li>
+   <li><i>custom.properties</i><br/>
+       for the file <code>WEB-INF/conf/custom.properties</code> in the 
+       webapplication directory tree.</li>
+  </ul>
+</p>
+
+</subsection>
+
+<subsection name="Mailserver settings">
+<p>
+Scarab is a "email-centric" application. Hence you need to set the 
+relay outgoing mail server so that email can be sent from Scarab. 
+This is important for many different aspects of Scarab, such as the 
+confirmation email sent when a user registers with the system. By 
+default, the mail server is defined as "localhost". Therefore if
+you don't change the settings, you must have an SMTP server running 
+on the same server where Scarab runs.
+</p>
+<p>
+You can set the location of your email server by modifying the property
+</p>
+<code>system.mail.host</code>
+<p>
+in <i>custom.properties</i> or by using the JNDI tree as discussed above.
+</p>
+<p>
+You will need to stop and restart Scarab/Tomcat for the changes to take
+effect.
+</p>
+
+</subsection>
+
+<subsection name="Upload Directory setting">
+<p>
+When users attach files to an issue, by default, the file is saved to
+disk in the <code>WEB-INF/attachments</code> directory. This may or may 
+not be an optimal place to store attachments potentially because of disk 
+size issues. Therefore you have two options:
+</p>
+<ol>
+<li> On Unix you can move the WEB-INF/attachments directory to another
+    location and then create a symlink from that location to
+    <code>WEB-INF/attachments</code>.</li>
+
+<li>On Unix and other platforms (Win32) you can set the property
+    <p>
+      <code>scarab.attachments.path</code>
+    </p>
+    <p>
+    to point at another directory. By default, this path is relative to 
+    the webapp directory and is set to <code>WEB-INF/attachments</code>. 
+    You can also define an absolute path such as 
+    </p>
+    <code>/bigdisk/scarab/attachments</code>.</li>
+</ol>
+<p>
+It is recommended to also set the property
+</p>
+<code>services.UploadService.repository</code>
+<p>
+in your <i>custom.properties</i>. This property is used as a temporary 
+location for the uploaded data during the upload process. 
+By default the temporary upload directory is <code>WEB-INF</code>.
+</p>
+
+</subsection>
+
+<subsection name="Indexes Directory settings">
+<p>
+Scarab uses Lucene to create searchable indexes for the issue data.
+Lucene needs to be able to store its indexes somewhere on disk. If the
+disk is low on space, it is recommended to put the indexes on another
+disk. This can be done by setting the property
+</p>
+<code>searchindex.path</code>
+<p>
+in your <i>custom.properties</i>. This path defaults to 
+<code>WEB-INF/index</code> and can be defined as either a 
+path relative to the webapp root directory or an absolute path
+anywhere in the file system (watch out for file write permissions!).
+</p>
+
+</subsection>
+
+<subsection name="Running with Servlet-2.2">
+<p>
+Non-current versions of some commonly used application servers may not
+support the servlet-2.3 specification. E.g. Websphere 4.0 only supports 
+the servlet-2.2 specification.
+</p>
+<p>
+While the Scarab project does not intend to officially maintain
+compatibility with the servlet-2.2 specification, there currently is only
+a single problem area, involving the HttpRequest.setCharacterEncoding()
+call in DetermineCharsetValve.  Removing this call weakens Scarab's
+support for character set encoding, but it allows running Scarab with
+the Websphere 4.0 application server.
+</p>
+<p>
+To enable this feature, add the property 
+</p>
+<code>pipeline.default.descriptor=org/tigris/scarab/pipeline/scarab-pipeline22.xml</code>
+<p>
+to your <i>custom.properties</i>
+</p>
+
+</subsection>
+
+<subsection name="Building the sandbox">
+<p>
+The Scarab sandbox contains everything you need in order to get started
+with Scarab. It includes a stripped down version of the Java Servlet
+Engine (Tomcat-4.1.*) pre-configured to run Scarab.
+</p>
+<p>
+To build the sandbox on your machine, you ensure, that the requirements in
+<a href="#requirements"/> are fullfilled. You must have a Scarab source
+distribution unpacked to any convenient place in your file system.
+Now go to the Scarab root directory and start the Scarab build system as 
+follows:
+</p>
+<source>
+with ant:
+
+    cd build
+    ant
+
+with Maven:
+
+    maven compile
     maven war
-    </source>
-    This will compile Scarab, run the unit tests, and then generate in <code>/target</code> a
-    WAR file that you can then use to deploy to any Servlet container.
-</p>
-<p>
-    If you don't already have a configured Tomcat servlet container setup, then you
-    can use the embedded Tomcat that comes with Scarab.  It is in the <code>/tomcat</code> directory.
-    To set it up, you just need to put your WAR file in <code>/tomcat/webapps/</code>.  Take the existing
-    <code>/tomcat/webapps/scarab.xml</code> file and rename it scarab.xml.off, as it is used for 
-    inplace development.
     
+</source>
+<p>
+After the build system finishes, the directory <code>target/scarab</code> 
+contains the Scarab webapplication. We provide additional informations about
+the <a href="ant-build-howto.html">Ant build system</a> 
+and the <a href="maven-build-howto.html">Maven build system</a>
+</p>
+<p>
+NOTE: Make sure that your TOMCAT_HOME environment variable is defined
+      correctly. If you are using the Tomcat that comes with Scarab, you
+      can safely undefine this value and follow the directions below for
+      running the sandbox.
+</p>
+<p>
+NOTE: If you already have an existing Tomcat installation and prefer
+      to run Scarab from there, first build Scarab and then copy the
+      directory
+      </p> 
+      <code>target/webapps/scarab</code>
+      <p>
+      into your own Tomcat installation.
+      Alternatively, add a new &lt;Context> entry to tomcat's server.xml
+      config file, pointing at the Scarab webapp (usually
+      &lt;scarab install dir>/target/scarab).
+</p>
+<p>
+NOTE: If you already have an existing webserver running on port 8080,
+      and you are using Scarab's version of Tomcat, you will need to
+      change the port number to another unused port by modifying the
+      /tomcat/conf/server.xml file and changing the 'port' attribute
+      on the &lt;Connector> element.
+</p>
+<p>      
+NOTE: There may be problems building and running Scarab with Tomcat 3.x.
+      We have not done testing with this version of Tomcat.
+</p>
+<p>
+NOTE: You should use the copy of Xerces that is included with Scarab
+      and make sure that no other copies of Xerces are in your 
+      JAVA_HOME, ANT_HOME or your CLASSPATH. Otherwise,
+      you may get build errors.
+</p>
+
+</subsection>
+
+<subsection name="Installing the database">
+<p>
+During the build of Scarab a set of database creation files is generated. 
+To install a fresh database from these files you need first to install 
+one of the supported RDBM's on your system and put the path to the database 
+binaries into your PATH environment variable.
+</p>
+<p>
+Simply put, the idea is that the database creation scripts and the Java
+database driver (JDBC) need the ability to connect to the database. In
+order to do this, the code needs to be given a host machine, database
+name, database-username and password.
+</p>
+<p>
+By default, the scripts assume a database called 'scarab' and no
+username/password to connect to the database on localhost. For example,
+if you have MySQL up and running with no username/password for localhost
+access, you can simply execute the following:
+</p>
+<source>
+with ant:
+
+    cd build
+    ant create-db
+
+with Maven:
+
+    maven scarab:database
+</source>
+<p>
+If you need to specify a host/username/password/databasename, you will
+need to edit your <i>build.properties</i>. Please modify at least the 
+follwing set of properties:
+</p>
+<source>
+scarab.database.type
+scarab.database.jdbc.driver
+scarab.database.url
+scarab.database.username 
+scarab.database.password
+</source>
+<p>
+You find more informations about the settings in <code>project.properties</code>
+</p>
+<p>
+NOTE: PostgreSQL users should follow a different procedure for creating
+      the database. See PostgreSQL.txt.
+</p>
+<p>
+NOTE: If you would like to only load the required database data and not
+      the sample/default data, you can do so by passing the property
+</p>
+      <source>ant create-db -Dskip.seed.data=true</source>
+<p>
+      to your JVM upon startup of the build processs or by adding the 
+      same property to your <i>build.properties</i>:  
+</p>
+      <code>skip.seed.data=true</code>
+<p>
+NOTE: More detailed instructions for setting up the database on
+      different database vendors is available on our website.
+</p>
+<code>
+<a href="http://scarab.tigris.org/project_docs.html">http://scarab.tigris.org/project_docs.html</a>
+</code>
+<p>
+NOTE: The create scripts will attempt to first drop your scarab database
+      and then recreate it. If you execute "ant create-db", all of your
+      previous data in that database will be lost without warning!
+</p>
+<p>
+NOTE (for MySQL only): If you get a 
+     'Server configuration denies access to data source'
+     or 'access denied' or 'Invalid authorization' or
+     'java.lang.NullPointerException: Connection object was null.'
+     error from MySQL in the log files, please read the MySQL
+     documentation on how to fix this error. We will not provide
+     support for this since it is really a MySQL configuration issue.
+</p>
+<p>
+NOTE: On some operating systems, there seems to be an unexpected
+      interation between the JVM, DNS resolution and the MySQL driver
+      where a JDBC url pointing to 'localhost' will resolve as
+      'localhost.localdomain' and will prevent the connection to MySQL
+      from authenticating correctly because most people configure MySQL
+      for 'localhost'. One way to get around this is to use IP addresses
+      in both the MySQL ACL as well as in the JDBC url.
+</p>
+<p>
+      At least one person has reported that using '127.0.0.1' instead 
+      of 'localhost' resolved a 
+      <code>'Server configuration denies access to data source'</code>
+      connection issue.
+</p>
+<p>
+      In order to setup the right permissions in MySQL, you may wish to
+      try executing this command on a Unix command line (it has been
+      reported to work for one person):
+<source>
+        echo "GRANT ALL ON scarab.* to ''@localhost" | mysql mysql
+</source>      
+      Here are a couple of links to also help you solve possible
+      permissions problems:
+</p>
+<code>
+      <a href="http://www.mysql.com/documentation/mysql/bychapter/manual_MySQL_Database_Administration.html#Access_denied">MySQL-manual</a><br/>
+      <a href="http://sourceforge.net/docman/display_doc.php?docid=8968&amp;group_id=15923">docman-display_doc.php</a><br/>
+</code>
+
+</subsection>
+
+<subsection name="Running the sandbox">
+<p>
+The Tomcat bundled with Scarab is preconfigured to run scarab out of the 
+/target/scarab directory.  
+</p>
+<source>
+cd tomcat/bin
+startup.sh    &lt;-- Unix
+startup.bat   &lt;-- Win32
+</source>
+<p>
+Then, in your web browser, go to:
+</p>
+<source>
+&lt;http://localhost:8080/scarab>
+</source>
+<p>
+NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are 
+      using the Tomcat that comes with Scarab, you can safely undefine
+      this environment variable.
+</p>
+<p>
+NOTE: Substitute 'localhost' for the DNS name that the server is
+      running on for remote access.
+</p>
+<p>
+NOTE: You can define your own URL by editing the <code>WEB-INF/web.xml</code>
+      and defining a different servlet mapping.
 </p>
 </subsection>
-</section>
-<section name="In Place Development">
-<subsection name="Intro">
+
+<subsection name="Customizing Scarab">
 <p>
-    Scarab is setup to do inplace development where the webapp is set
-    to be run from the <code>/src/webapp</code> directory.  This way you can change templates, edit
-    config files and have the changes show up immediatly.  No need to do a build/deploy/run.
+At times it may be useful to make minor modifications to Scarab without
+applying those changes directly to the Scarab sources (since this
+will cause CVS to report those differences, and even worse, the custom
+modifications might get unintentionally checked into the Scarab CVS
+repository by a Scarab developer).
 </p>
 <p>
-    Inplace development relies on the embedded Tomcat distribution at /tomcat.  The maven <code>scarab:inplace</code>
-    goal will automatically setup the correct scarab Context file in /tomcat/webapps/:
-    <source>
-    maven war:inplace
-    </source>    
-    This will customize the <code>/tomcat/webapps/scarab.xml</code> to point to <code>/src/webapp</code> as
-    the root instead of <code>/target/scarab</code>.    
+The extensions/usermod directory structure allows this to be done 
+fairly simply.
 </p>
 <p>
-    If you are using an IDE like Eclipse, most changes like editing a .java file will 
-    automatically restart Turbine for you.  
+It contains three directories, lib, conf, and templates. Any files in
+the lib directory will be copied into the appropriate target
+directory _after_ any such files in the standard distribution,
+and will replace the standard distribution files.  Any files in the
+template directory will be copied to the target template directory
+_ONLY_IF_ the property "scarab.copy.templates" is set, again after
+the files from the standard distribution. 
 </p>
+<p>
+NOTE: It is Your responsibility to ensure that any subsequent changes
+      to modified Velocity macros are transferred to these replacements.
+</p>
+
 </subsection>
-<subsection name="Eclipse Setup Directions">
+
+
+
+<subsection name="Questions/problems">
 <p>
-    By default, Scarab is setup to use Eclipse as it's IDE.  To setup Scarab in Eclipse first run
-    the eclipse plugin to generate the required files.
-    <source>
-    maven eclipse
-    </source>
-    Then you can open Eclipse and just import the Scarab directory.  The .classpath and .project files
-    will be created for you so you are ready.  After the import you will need to do an Ant build to
-    generate the Torque objects, to do this look at the section above labeled "Generating Torque Objects"
-    (in the future Maven will be set-up to do this step, but for now you must use Ant).  Do a build in
-    Eclipse to ensure everything compiles.
-</p>        
-<p> 
-    You will then need to download  and install the 
-    <a href="http://www.sysdeo.com/eclipse/tomcatPlugin.html">Sysdeo Tomcat</a> plugin.
+If you have problems or questions, please join the Scarab user mailing 
+list and post a detailed message describing your issue. :-)
 </p>
-<p>
-    Restart Eclipse and then go to Window > Preferences and select the Tomcat option.  
-</p>
-<p>
-    First select the Tomcat 4.1.x version of Tomcat, as that is what comes with Scarab.
-</p>
-<p>
-    Set the tomcat home to:<code>C:\java\scarab\tomcat</code>, then the configuration file should 
-    be set to: <code>C:\java\scarab\tomcat\conf\server.xml</code>.
-</p>
-<p>
-    Next you do the Maven part.  There is a file called maven.xml that contains all the goals needed
-    for setting up inplace development.  For other IDE's you may need to tweak this.
-</p>
-<p>
-    From the root directory run the inplace setup goal.
-    <source>
-    maven scarab:inplace
-    </source>
-    This copies all the jars, classes, config files needed into your <code>/src/webapp/</code> directory, creating
-    the <code>/src/webapp/WEB-INF/classes</code> and <code>/src/webapp/WEB-INF/conf</code> directories.  This
-    will also rename your  <code>/tomcat/webapps/scarab.xml</code> to  <code>scarab.regular.xml.off</code>
-    and take the special inplace file <code>scarab.inplace.xml.off</code> and rename it <code>scarab.xml</code>.    
-</p>
-<p>
-    Now, right click your project in Eclipse and choose properties and then Tomcat.  Checkbox the 
-    "Is Tomcat Project", set the context name to <code>scarab</code>, and UNCHECK the update server.xml.  Check the 
-    mark as reloadable and redirect logging to Eclipse options.  Set the web application root to
-    <code>/src/webapp</code>.  Save the changes and start up the Tomcat plugin.  Navigate in your browser to 
-    <a href="http://localhost:8080/scarab">http://localhost:8080/scarab</a> and you should see the login page!
-</p>
+
+<code>
+Homepage:      <a href="http://scarab.tigris.org">http://scarab.tigris.org</a><br/>
+Mailing lists: <a href="http://scarab.tigris.org/servlets/ProjectMailingListList">http://scarab.tigris.org/servlets/ProjectMailingListList</a><br/>
+Scarab-Wikiw:  <a href="http://www.saxess.de/scarab-wiki">http://www.saxess.de/scarab-wiki</a><br/>
+</code>
+
 </subsection>
-<subsection name="Eclipse Setup Directions">
-<p>
-Once you are done doing "in place" development, you can just run the goal to clean everything back up:
-    <source>
-    maven clean
-    </source>
-This will delete everything that was moved around by the inplace setup goal, as well as fix up your Scarab context
-entries as well.  Now, when you run:    
-    <source>
-    maven scarab:inplace
-    </source>
-Everything will be put back!    
-</p>
-</subsection>
+
 </section>
 
 </body>

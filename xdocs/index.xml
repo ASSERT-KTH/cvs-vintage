@@ -12,7 +12,7 @@
  <section name="What is Scarab?">
 
  <p>
-    Scarab is an Artifact tracking system that has the following features:
+    Scarab is an Artifact tracking system with the following feature set:
  </p>
  <ul>
     <li>A full feature set similar to those found in other Issue tracking
@@ -29,6 +29,8 @@
         configured for your specific tracking requirements.</li>
     <li>Built using Java Servlet technology for speed, scalability,
         maintainability, and ease of installation.</li>
+    <li>Fully localized using java conform resource bundles. Many
+        language integrations availabel (en,de,fr,ru,ko,ja,...)</li>
     <li>Import/Export ability via XML allowing for easy migration
         from other systems (e.g. Bugzilla).</li>
     <li>Modular code design that allows manageable modifications of

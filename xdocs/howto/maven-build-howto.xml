@@ -1,0 +1,257 @@
+<?xml version="1.0"?>
+
+<document>
+
+<properties>
+    <title>How to Build Scarab</title>
+    <author email="epugh@opensourceconnections.com">Eric Pugh</author>
+</properties>
+
+<body>
+
+
+<section name="Maven Build">
+
+<subsection name="Intro">
+<p>
+In the early days of Scarab the build system was entirely based on Ant.
+We have recently switched over to use Maven as our primary build system.
+But for quite a few reasons we continue supporting an 
+<a href="ant-build-howto.html">Ant based</a> build.
+</p>
+<p>
+The new Maven based build system allows to build a Scarab instance from 
+the Source distribution and in addition adds all functionality to build
+the documentation-set, update the jar-repository and so on.
+</p>
+<p>
+<font color="red">NOTE:</font> Like Ant the Maven build can be customized
+with the file <i>build.properties</i> . But beware, the location of this
+file is now the Scarab root directory. Otherwise Maven would not see this
+file. The Ant build system has been modifyed to use the same build.properties
+file, hence you can even intermix the usage of Ant and Maven without any
+problems. If you are upgrading from an old system, please ensure, that 
+your old build.properties file migrates to 
+</p>
+<code>$SCARAB_ROOT/build.properties</code> 
+<p>
+In most cases you will utilize Maven as follows:
+
+<source>
+1:> cd $SCARAB_ROOT
+2:> maven compile
+3:> maven scarab:database
+</source>
+
+<ul><li> 1: cd $SCARAB_ROOT<br/>
+         go to the root directory of your Scarab source installation.</li>
+    <li> 2: maven compile<br/>
+         Create the torque database layer and the java class files</li>
+    <li> 3: maven scarab:database<br/>
+         Finally create the database. You will be prompted for input.</li>
+</ul>
+
+The relevant Maven goals have been summarized and described in the remainder
+of this text.
+</p>
+</subsection>
+
+
+<subsection name="Generating Torque Objects">
+<p>
+    Because the the various Torque objects are not checked into CVS,
+    but instead are generated based on your settings for the type of 
+    database, you still need to create the java files.
+    <source>maven java:compile</source>
+    This will create in <code>/src/java</code> the various Torque objects.  
+</p>
+<p>
+    Only after you have initially generated the Torque objects, you 
+    can perform all the various functions of Maven that you would 
+    expect like running unit tests, producing WAR files, etc.
+</p>
+</subsection>
+
+
+<subsection name="Generating Database">
+<p>
+    You can generate your database by doing this:
+    <source>maven scarab:database</source>
+    This will create in <code>/target/sql</code> the various SQL files 
+    that you need.  It will also install the database for certain types 
+    of databases.  You will be prompted for some information.  
+</p>
+</subsection>
+
+<subsection name="Testing the code">
+<p>
+    To test that everything is working properly, you should run the unit tests!
+    <source>maven test</source>
+    This will compile your newly generated Torque classes and run the unit 
+    tests. One thing to note is that in <code>/src/test/</code> are some 
+    config files that you probably will need to update the database 
+    settings for.
+</p>
+</subsection>
+<subsection name="Generating the documentation">
+<p>
+    If you want to generate the entire site documenation, then you can run
+    <source>maven site</source>
+    or, if you don't want to execute the unit tests (maybe they are failing)    
+    <source>maven site -Dmaven.test.skip</source>
+</p>
+
+<p>
+    If you want to see only the subset of the documenation, which is 
+    generated from the xml-sources (the Scarab documentation manuals and 
+    Howto's), then you can run
+    <source>maven xdoc:transform</source>
+    This call is significantly faster than generating the whole site 
+    (order of seconds vs. order of minutes).
+</p>
+
+</subsection>
+
+<subsection name="Creating a WAR file">
+<p>
+    Once things are to your liking you can use Maven to generate your WAR file:
+    <source>maven war</source>
+    This will compile Scarab, run the unit tests, and then generate 
+    in <code>/target</code> a WAR file that you can then use to deploy
+    to any Servlet container.
+</p>
+<p>
+    If you don't already have a configured Tomcat servlet container setup,
+    then you can use the embedded Tomcat that comes with Scarab.  
+    It is in the <code>/tomcat</code> directory.
+    To set it up, you just need to put your WAR file in
+        <code>/tomcat/webapps/</code>.  
+    Take the existing
+        <code>/tomcat/webapps/scarab.xml</code> 
+    file and rename it scarab.xml.off, as it is used for  inplace development.
+    
+</p>
+</subsection>
+</section>
+<section name="In Place Development">
+<subsection name="Intro">
+<p>
+    Scarab is setup to do inplace development where the webapp is set
+    to be run from the <code>/src/webapp</code> directory.  
+    This way you can change templates, edit config files and have
+    the changes show up immediatly.  No need to do a build/deploy/run.
+</p>
+<p>
+    Inplace development relies on the embedded Tomcat distribution at /tomcat.  
+    The maven <code>scarab:inplace</code> goal will automatically setup the
+    correct scarab Context file in /tomcat/webapps/:
+    <source>maven war:inplace</source>    
+    This will customize the <code>/tomcat/webapps/scarab.xml</code> 
+    to point to <code>/src/webapp</code> as
+    the root instead of <code>/target/scarab</code>.    
+</p>
+<p>
+    If you are using an IDE like Eclipse, most changes like editing 
+    a .java file will automatically restart Turbine for you.  
+</p>
+</subsection>
+
+<subsection name="Updating the www/repository">
+<p>
+The www/repository is mainly used for the Ant build, because with
+ant it is not so easy to dynamically grab jar files from the network.
+Besides this we decided to also support offline generation when an
+online access to the network is not available. Therefore the www/repository
+contains all bits and pieces needed to build Scarab.
+</p>
+<p>
+It is not very handsome to maintain the www/repository by hand. Therefore 
+we have provided a Maven goal, that automatically updates the www/repository
+according to the maven dependency file. If you want to perform such an
+update (e.g. because you want to check in a new jar file or simply want to
+maintain the repository) you can call:
+<source> maven scarab:update-repo</source>
+This goal will remove unneeded jars from the repository and add
+needed jars to it. Maven gathers the jars from the network if needed.
+</p>
+</subsection>
+
+<subsection name="Eclipse Setup Directions">
+<p>
+    By default, Scarab is setup to use Eclipse as it's IDE. 
+    To setup Scarab in Eclipse first run the eclipse plugin 
+    to generate the required files.
+    <source>maven eclipse</source>
+    In the secnd step you must generate the Torque Objects once, see
+    <a href="#Generating_Torque_Objects">"Generating&#160;Torque&#160;Objects"</a>.
+    Finally you can open Eclipse and just import the Scarab directory.  
+    The .classpath and .project files will be created for you.
+</p>
+<p>  
+    After you have imported Scarab into eclipse, do a build in Eclipse
+    to ensure everything compiles.
+</p>        
+<p> 
+    You will then need to download  and install the 
+    <a href="http://www.sysdeo.com/eclipse/tomcatPlugin.html">Sysdeo Tomcat</a>
+     plugin.
+</p>
+<p>
+    Restart Eclipse and then go to Window > Preferences and select the Tomcat
+    option.  
+</p>
+<p>
+    First select the Tomcat 4.1.x version of Tomcat, as that is what comes 
+    with Scarab.
+</p>
+<p>
+    Set the tomcat home to:<code>C:\java\scarab\tomcat</code>, then the 
+    configuration file should be set to: 
+    <code>C:\java\scarab\tomcat\conf\server.xml</code>.
+</p>
+<p>
+    Next you do the Maven part.  There is a file called maven.xml that
+    contains all the goals needed for setting up inplace development.  
+    For other IDE's you may need to tweak this.
+</p>
+<p>
+    From the root directory run the inplace setup goal.
+    <source>maven scarab:inplace</source>
+    This copies all the jars, classes, config files needed into your 
+    <code>/src/webapp/</code> directory, creating
+    the <code>/src/webapp/WEB-INF/classes</code> and 
+    <code>/src/webapp/WEB-INF/conf</code> directories.  
+    This will also rename your  <code>/tomcat/webapps/scarab.xml</code> 
+    to  <code>scarab.regular.xml.off</code>
+    and take the special inplace file 
+    <code>scarab.inplace.xml.off</code> and rename it 
+    <code>scarab.xml</code>.    
+</p>
+<p>
+    Now, right click your project in Eclipse and choose properties and
+    then Tomcat.  Checkbox the "Is Tomcat Project", set the context name 
+    to <code>scarab</code>, and UNCHECK the update server.xml.  Check the 
+    mark as reloadable and redirect logging to Eclipse options.  
+    Set the web application root to <code>/src/webapp</code>.  
+    Save the changes and start up the Tomcat plugin.  
+    Navigate in your browser to 
+    <a href="http://localhost:8080/scarab">http://localhost:8080/scarab</a> 
+    and you should see the login page!
+</p>
+</subsection>
+<subsection name="Eclipse Setup Directions">
+<p>
+    Once you are done doing "in place" development, you can just run the goal 
+    to clean everything back up:
+    <source>maven clean</source>
+    This will delete everything that was moved around by the inplace setup
+    goal, as well as fix up your Scarab context entries as well.  
+    Now, when you run:    
+    <source>maven scarab:inplace</source>
+    Everything will be put back!    
+</p>
+</subsection>
+</section>
+
+</body>
+</document>
