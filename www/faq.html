@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.4 2002/08/07 04:31:09 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.5 2002/08/08 00:34:48 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -300,9 +300,9 @@ right url in the emails.
 
 <hr noshade="noshade" size="1" />
 
-<p><strong>How can I search across modules?</strong></p>
+<p><strong>How can I search across modules/issue types?</strong></p>
 
-<p>This functionality has been added after 1.0-b9. Previous
+<p>This functionality has been added after 1.0-b8. Previous
 versions of Scarab did not have this functionality.</p>
 
 <hr noshade="noshade" size="1" />
@@ -328,6 +328,33 @@ for each new version of Scarab. These scripts reside in the
 scarab/src/sql/upgrade directory. Some of these scripts are .sql files
 and some are unix shell .sh files. If you are using another database or 
 system, we welcome your contributions to port these files.
+</p>
+
+<p>
+To execute the .sql scripts you should type something along the lines
+of:
+</p>
+
+<p>
+mysql DATABASE_NAME < mysql-upgrade-1.0b8-1.0b9-1.sql
+</p>
+
+<p>
+To execute the .sh scripts you should type something along the lines
+of:
+</p>
+
+<p>
+./mysql-upgrade-1.0b8-1.0b9-3.sh --password
+</p>
+
+<p>
+Note that you will need to execute ALL of the scripts in order of
+upgrade version number and script order. For example, if you are
+upgrading from 1.0b8 to 1.0b9, then you should execute
+mysql*b8*b9-1.sql, mysql*b8*b9-2.sql, etc. Also note that the --password
+argument to the shell script is optional and not required if you do not
+need to specify a password.
 </p>
 
 <p>
