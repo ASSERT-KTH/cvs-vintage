@@ -24,11 +24,17 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.5 2002/04/04 14:56:03 jeremybennett Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.6 2002/05/03 19:17:04 jeremybennett Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
 // constructor made private, since it must never be called directly.
+
+// 11 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Removed dependency
+// relationship and added extension point button
+
+// 3 May 2002: Jeremy Bennett (mail@jeremybennett.com). Replaced dependency
+// relationship following review.
 
 
 package org.argouml.uml.diagram.use_case.ui;
@@ -45,6 +51,7 @@ import ru.novosoft.uml.behavior.use_cases.*;
 import org.tigris.gef.base.*;
 import org.tigris.gef.ui.*;
 
+import org.argouml.uml.ui.*;
 import org.argouml.uml.diagram.ui.*;
 import org.argouml.uml.diagram.use_case.*;
 
@@ -261,10 +268,15 @@ public class UMLUseCaseDiagram extends UMLDiagram {
         // Use case diagram specific edges
 
         _toolBar.add(_actionAssoc);
+        _toolBar.add(_actionDependency);
         _toolBar.add(_actionGeneralize);
         _toolBar.add(_actionExtend);
         _toolBar.add(_actionInclude);
-        _toolBar.add(_actionDependency);
+        _toolBar.addSeparator();
+
+        // The extension point button
+
+        _toolBar.add(ActionAddExtensionPoint.singleton());
         _toolBar.addSeparator();
 
         // General graphics actions

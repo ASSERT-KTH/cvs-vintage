@@ -24,7 +24,7 @@
 // File: Generator.java
 // Classes: Generator
 // Original Author:
-// $Id: Generator.java,v 1.8 2002/04/25 14:32:17 jeremybennett Exp $
+// $Id: Generator.java,v 1.9 2002/05/03 19:17:07 jeremybennett Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -79,8 +79,8 @@ implements NotationProvider {
   public String generate(Object o) {
     if (o == null)
       return "";
-    //    if (o instanceof MExtensionPoint)
-    //      return generateExtensionPoint((MExtensionPoint) o);
+    if (o instanceof MExtensionPoint)
+        return generateExtensionPoint((MExtensionPoint) o);
     if (o instanceof MOperation)
       return generateOperation((MOperation) o, false);
     if (o instanceof MAttribute)
@@ -128,7 +128,7 @@ implements NotationProvider {
     return o.toString();
   }
 
-  //public abstract String generateExtensionPoint(MExtensionPoint op);
+  public abstract String generateExtensionPoint(MExtensionPoint op);
   public abstract String generateOperation(MOperation op, boolean documented);
   public abstract String generateAttribute(MAttribute attr, boolean documented);
   public abstract String generateParameter(MParameter param);
