@@ -550,12 +550,11 @@ public  class ReportBridge
                         {
                             for (Iterator n = groups.iterator(); n.hasNext();) 
                             {
-                                reportModified |= 
-                                    removeStaleOptions( ((ReportGroup)n.next())
-                                    .getReportOptionAttributes(), mitList );
+                                ReportGroup group = (ReportGroup)n.next();
+                                reportModified |= removeStaleOptions(
+                                    group.getReportOptionAttributes(), mitList );
                                 reportModified |= removeStaleUserAttributes( 
-                                    ((ReportGroup)n.next())
-                                    .getReportUserAttributes(), mitList );
+                                    group.getReportUserAttributes(), mitList );
                             }
                         }
                     }
