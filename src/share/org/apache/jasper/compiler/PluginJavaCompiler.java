@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Attic/PluginJavaCompiler.java,v 1.1 1999/12/28 13:25:31 rubys Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Attic/PluginJavaCompiler.java,v 1.1 1999/12/28 17:01:05 rubys Exp $
  * $Revision: 1.1 $
- * $Date: 1999/12/28 13:25:31 $
+ * $Date: 1999/12/28 17:01:05 $
  *
  * ====================================================================
  *
