@@ -32,7 +32,7 @@ import java.util.Set;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class WebMetaData extends MetaData
 {
@@ -67,6 +67,8 @@ public class WebMetaData extends MetaData
 
    /** The web context class loader used to create the java:comp context */
    private ClassLoader encLoader;
+   /** The web context class loader, used to create the ws4ee service endpoint */
+   private ClassLoader cxtLoader;
 
    private ArrayList depends = new ArrayList();
 
@@ -251,6 +253,17 @@ public class WebMetaData extends MetaData
    public void setENCLoader(ClassLoader encLoader)
    {
       this.encLoader = encLoader;
+   }
+
+   public ClassLoader getContextLoader()
+   {
+      return cxtLoader;
+   }
+
+   /** Make sure this is called during performDeploy */
+   public void setContextLoader(ClassLoader cxtLoader)
+   {
+      this.cxtLoader = cxtLoader;
    }
 
    public int getSessionCookies()
