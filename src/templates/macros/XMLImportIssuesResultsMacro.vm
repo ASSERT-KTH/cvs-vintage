@@ -1,12 +1,12 @@
 <?xml version="1.0" standalone="no"?>
 <scarab-import-results>
 <result-code>$resultCode</result-code>
-#if ($resultString.length()>0)
+#if ($resultString.length() > 0)
 <result-string>$resultString</result-string>
 #else
 <result-string/>
 #end
-#if ($importErrors && $importErrors.size() > 0)
+#if ($importErrors && !$importErrors.isEmpty())
 <import-errors>
 #foreach ($error in $importErrors)
 <import-error>$error</import-error>
@@ -15,7 +15,7 @@
 #end
 #if ($issues)
 #set ($issuesMap = $issues.getIDs())
-#if ($issuesMap.size()>0)
+#if (!$issuesMap.isEmpty())
 <issues count="$issuesMap.size()">
 #foreach ($key in $issuesMap.keySet())
     <issue>
