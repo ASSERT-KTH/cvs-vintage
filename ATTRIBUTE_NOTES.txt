@@ -1,10 +1,16 @@
-$Id: ATTRIBUTE_NOTES.txt,v 1.2 2001/09/01 02:27:21 jon Exp $
+$Id: ATTRIBUTE_NOTES.txt,v 1.3 2001/09/09 22:37:03 jon Exp $
 
 TODO: 
     Define Attribute Security:
         Which Attributes can be shown/edited by which Permission.
 
+    Fill in more information about how the SCARAB_ISSUE_ATTRIBUTE_VALUE
+    table should work.
+    
 ---------------------------------------------------------------------------
+
+Attributes and Attribute Options
+---------------------------------
 
 Scarab has a concept called Attributes. An Attribute is defined as a
 value that describes an Issue. For instance, an Issue may have the
@@ -58,6 +64,13 @@ effect of nesting, it looks like this:
               Windows 98
               Windows 95
 
+Options also have a relationship associated with them. In other words,
+it is possible to define that an Option has a parent/child relationship
+with another option or that one Option is required to be listed
+before/after another Option.
+
+This nesting is described in the SCARAB_R_OPTION_OPTION table.
+
 It is important to note that there is also the ability to order the
 display of the Attribute Options. For example, if one wanted to display
 a specific order for the Options, then they would define things like
@@ -65,24 +78,39 @@ this:
 
     OS ->
           Windows           1
-              Windows 95    1
-              Windows 98    2
-              Windows 2000  3
+              Windows 95    2
+              Windows 98    3
+              Windows 2000  4
 
-          MacOS             2
-              MacOS 9       1
-              MacOS X       2
+          MacOS             5
+              MacOS 9       6
+              MacOS X       7
 
 This can also be shown like this:
 
-        id  parent
+        id  parent  option        preferred order
+        -----------------------------------------
          1  0       Windows       1
-         2  1       Windows 95    1
-         3  1       Windows 98    2
-         4  1       Windows 2000  3
-         5  0       MacOS         2
-         6  5       MacOS 9       1
-         7  5       MacOS X       2
+         2  1       Windows 95    2
+         3  1       Windows 98    3
+         4  1       Windows 2000  4
+         5  0       MacOS         5
+         6  5       MacOS 9       6
+         7  5       MacOS X       7
+
+All Attribute Options in the SCARAB_R_OPTION_OPTION table which do not
+have a parent that is directly another option_id will have a parent of
+'0' which is a special Attribute Option Id that is never shown in the
+user interface. This is required in order to allow the SQL select clause
+to work on the R_OPTION_OPTION table properly.
+
+The SQL used to generate the above listings looks like this:
+
+select   a1.OPTION_ID,a2.OPTION1_ID,a2.OPTION2_ID,
+         a1.OPTION_NAME,a1.WEIGHT,a2.PREFERRED_ORDER
+from     scarab_attribute_option a1, scarab_r_option_option a2
+where    a1.ATTRIBUTE_ID=4 and a1.OPTION_ID=a2.OPTION2_ID
+order by a2.PREFERRED_ORDER;
 
 The UI for entering an Issue does not show the Parent Option because we
 figure that a specific operating system choice is important with regards
@@ -91,10 +119,8 @@ then multiple Issues can be entered and then a dependency chain between
 those Issues can be established. It is our feeling that Issue entry
 should attempt to as specifically as possible report the event.
 
-Options also have a relationship associated with them. In other words,
-it is possible to define that an Option has a parent/child relationship
-with another option or that one Option is required to be listed
-before/after another Option.
+Modules and Attributes/Options
+------------------------------
 
 Attributes are associated to Modules in the SCARAB_R_MODULE_ATTRIBUTE
 table. This allows each Module to have a defined set of Attributes and
@@ -116,6 +142,18 @@ filling in an Issue.
 
 Which Attributes show up on the Quick Search page can also be customized
 through the SCARAB_R_MODULE_ATTRIBUTE table.
+
+Issues and Attributes/Options
+-----------------------------
+
+Each Issue has an associated Attribute Id and Option Id stored in the
+SCARAB_ISSUE_ATTRIBUTE_VALUE table. This is what gives an Issue its
+values. [FIXME: Need to add more about what column to use for what
+value, because John and Jon haven't thought of a better way to describe
+this yet.]
+
+Examples
+--------
 
 Examples of Attributes can be found in the
 src/sql/mysql-scarab-default-data.sql file.
