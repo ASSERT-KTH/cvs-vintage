@@ -1686,7 +1686,7 @@ diff -u -r1.5 project.xml
             <property name="torque.database.url"
 	              value="${scarab.database.url}"/>
             <property name="torque.database.user"
-	              value="${scarab.database.user}"/>
+	              value="${scarab.database.username}"/>
             <property name="torque.database.password"
 	              value="${scarab.database.password}"/>
         </ant>
