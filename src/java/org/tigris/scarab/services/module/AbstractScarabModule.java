@@ -113,7 +113,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.7 2002/01/04 23:16:17 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.8 2002/01/09 21:40:26 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -929,7 +929,6 @@ public abstract class AbstractScarabModule
             optionsMap.put(rmo.getOptionId(), null);
         }
 
-/*
         // remove options with descendants in the list
         for ( int i=rModOpts.size()-1; i>=0; i-- )
         {
@@ -950,7 +949,6 @@ public abstract class AbstractScarabModule
                 }
             }
         }
-*/
         return rModOpts;
     }
 
