@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/HexUtils.java,v 1.2 1999/10/28 17:02:57 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/28 17:02:57 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/HexUtils.java,v 1.3 1999/10/29 05:13:30 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/29 05:13:30 $
  *
  * ====================================================================
  *
@@ -167,9 +167,16 @@ public final class HexUtils {
 
     }
 
-    /** Convert 4 hex digits to an int.
+    /**
+     * Convert 4 hex digits to an int, and return the number of converted
+     * bytes.
+     *
+     * @param hex Byte array containing exactly four hexadecimal digits
+     *
+     * @exception IllegalArgumentException if an invalid hexadecimal digit
+     *  is included
      */
-    public int convert2Int( byte[] hex ) {
+    public static int convert2Int( byte[] hex ) {
 	// Code from Ajp11, from Apache's JServ
     
 	// assert b.length==4
