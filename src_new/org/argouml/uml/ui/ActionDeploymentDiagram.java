@@ -1,4 +1,4 @@
-// $Id: ActionDeploymentDiagram.java,v 1.8 2003/02/18 20:12:52 alexb Exp $
+// $Id: ActionDeploymentDiagram.java,v 1.9 2003/04/01 15:43:17 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
     // constructors
 
     private ActionDeploymentDiagram() {
-        super("DeploymentDiagram");
+        super("action.deployment-diagram");
     }
 
     ////////////////////////////////////////////////////////////////

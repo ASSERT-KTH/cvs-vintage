@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.15 2003/02/19 01:20:22 alexb Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.16 2003/04/01 15:43:17 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
     public static ActionCollaborationDiagram SINGLETON = new ActionCollaborationDiagram();
 
     private ActionCollaborationDiagram() {
-        super("CollaborationDiagram");
+        super("action.collaboration-diagram");
     }
 
     /**

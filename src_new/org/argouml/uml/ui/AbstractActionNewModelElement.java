@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionNewModelElement.java,v 1.4 2002/12/29 21:18:25 kataka Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.5 2003/04/01 15:45:17 jhraigniac Exp $
 package org.argouml.uml.ui;
 
 import org.argouml.application.api.Argo;
@@ -36,7 +36,7 @@ public abstract class AbstractActionNewModelElement extends UMLChangeAction {
     private MModelElement _target;
     
     protected AbstractActionNewModelElement() {
-        super(Argo.localize("CoreMenu", "New"), true, NO_ICON);
+        super(Argo.localize("CoreMenu", "action.new"), true, NO_ICON);
     }  
     
      /**

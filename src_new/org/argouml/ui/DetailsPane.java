@@ -67,7 +67,7 @@ import org.tigris.gef.presentation.Fig;
  * There are requests to have the cursor automatically
  * be set to the primary field.
  *
- * $Id: DetailsPane.java,v 1.20 2003/03/29 17:20:51 alexb Exp $
+ * $Id: DetailsPane.java,v 1.21 2003/04/01 15:40:53 jhraigniac Exp $
  */
 public class DetailsPane
     extends JPanel
@@ -145,6 +145,7 @@ public class DetailsPane
             JPanel t = (JPanel)_tabPanels.elementAt(i);
             if (t instanceof TabSpawnable)
                 title = ((TabSpawnable)t).getTitle();
+            title = Argo.localize("UMLMenu", title);
             if (t instanceof TabToDoTarget) {
                 _tabs.addTab(title, _leftArrowIcon, t);
             } else if (t instanceof TabModelTarget) {
@@ -334,8 +335,6 @@ public class DetailsPane
     }
 
     public boolean selectTabNamed(String tabName) {
-        ProjectBrowser pb = ProjectBrowser.TheInstance;
-
         int index = getIndexOfNamedTab(tabName);
         if (index != -1) {
             _tabs.setSelectedIndex(index);

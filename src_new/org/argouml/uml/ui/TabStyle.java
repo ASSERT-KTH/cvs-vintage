@@ -24,7 +24,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.7 2003/03/28 21:10:51 alexb Exp $
+// $Id: TabStyle.java,v 1.8 2003/04/01 15:45:17 jhraigniac Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -81,7 +81,7 @@ implements TabFigTarget, PropertyChangeListener, DelayedVChangeListener {
   }
 
   public TabStyle() {
-    this("Style", "style.StylePanel", "style.SP");
+    this("tab.style", "style.StylePanel", "style.SP");
   }
 
   protected void initPanels() {

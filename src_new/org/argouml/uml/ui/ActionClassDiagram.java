@@ -1,4 +1,4 @@
-// $Id: ActionClassDiagram.java,v 1.7 2003/01/09 19:52:15 kataka Exp $
+// $Id: ActionClassDiagram.java,v 1.8 2003/04/01 15:43:17 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class ActionClassDiagram extends ActionAddDiagram {
     // constructors
 
     private ActionClassDiagram() {
-        super("ClassDiagram");
+        super("action.class-diagram");
     }
 
     /**

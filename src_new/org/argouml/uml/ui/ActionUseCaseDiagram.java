@@ -1,4 +1,4 @@
-// $Id: ActionUseCaseDiagram.java,v 1.10 2003/01/09 19:52:15 kataka Exp $
+// $Id: ActionUseCaseDiagram.java,v 1.11 2003/04/01 15:43:18 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ public class ActionUseCaseDiagram extends ActionAddDiagram {
     public static ActionUseCaseDiagram SINGLETON = new ActionUseCaseDiagram();
 
     private ActionUseCaseDiagram() {
-        super("UseCaseDiagram");
+        super("action.usecase-diagram");
     }
 
     /**
