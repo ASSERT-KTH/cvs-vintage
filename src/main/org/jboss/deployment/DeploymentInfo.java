@@ -54,7 +54,7 @@ import org.w3c.dom.Document;
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
 * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
-* @version   $Revision: 1.2 $ <p>
+* @version   $Revision: 1.3 $ <p>
 *
 *      <b>20011211 marc fleury:</b>
 *      <ul>
@@ -224,6 +224,11 @@ public class DeploymentInfo
       
       if (!isXML)
          ServiceLibraries.getLibraries().removeClassLoader((UnifiedClassLoader) ucl);
+      
+      subDeployments.clear();
+      
+      mbeans.clear();
+         
    }
    
    
