@@ -63,12 +63,21 @@
     </ant:copy>
     <ant:copy todir="target/dist/tomcat">
       <ant:fileset dir="tomcat"
-          includes="**/*.*"/>
+          includes="**/*.*" excludes="**/webapps/*.*"/>
     </ant:copy>
     <ant:copy todir="target/dist/hypersonic">
       <ant:fileset dir="src/sql/hypersonic"
           includes="**/*.*"/>
     </ant:copy>
+    
+    <ant:copy todir="${warWebappBuildDir}/WEB-INF/classes">
+      <ant:fileset dir="${maven.src.dir}/conf/classes"
+          includes="**/*.*"/>
+    </ant:copy>
+    
+    <!-- Bring over the correct scarab.xml file with the right context settings -->
+    <ant:copy file="tomcat/webapps/scarab_all_in_one.xml" tofile="target/dist/tomcat/webapps/scarab.xml"/>
+            
     <attainGoal name="nsis"/>
   </goal>
   
