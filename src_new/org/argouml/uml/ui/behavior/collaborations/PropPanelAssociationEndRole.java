@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEndRole.java,v 1.22 2004/12/21 17:20:45 bobtarling Exp $
+// $Id: PropPanelAssociationEndRole.java,v 1.23 2005/01/03 09:30:44 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,8 +28,6 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
-
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelAssociationEnd;
 import org.argouml.util.ConfigLoader;

@@ -1,4 +1,4 @@
-// $Id: ActionAddMessagePredecessor.java,v 1.14 2005/01/02 16:43:43 linus Exp $
+// $Id: ActionAddMessagePredecessor.java,v 1.15 2005/01/03 09:30:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,12 +25,11 @@
 // $header$
 package org.argouml.uml.ui.behavior.collaborations;
 
+import java.util.Vector;
+
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import java.util.Vector;
-
-import org.argouml.model.uml.CollaborationsHelperImpl;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 
 /**

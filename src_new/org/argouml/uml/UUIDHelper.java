@@ -1,4 +1,4 @@
-// $Id: UUIDHelper.java,v 1.1 2004/12/28 19:04:49 bobtarling Exp $
+// $Id: UUIDHelper.java,v 1.2 2005/01/03 09:30:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,12 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml;
-
-import java.net.InetAddress;
-import java.util.Collection;
-import java.util.Iterator;
-import java.net.UnknownHostException;
-import java.rmi.server.UID;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
@@ -83,6 +77,9 @@ public class UUIDHelper {
         return ModelFacade.getUUID(base);
     }
     
+    /**
+     * @return a new UUID
+     */
     public String getNewUUID() {
         return org.argouml.model.UUIDManager.getInstance().getNewUUID();
     }

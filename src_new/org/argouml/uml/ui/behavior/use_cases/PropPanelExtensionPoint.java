@@ -1,4 +1,4 @@
-// $Id: PropPanelExtensionPoint.java,v 1.38 2005/01/02 16:43:42 linus Exp $
+// $Id: PropPanelExtensionPoint.java,v 1.39 2005/01/03 09:30:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import javax.swing.JTextField;
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UseCasesFactoryImpl;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;

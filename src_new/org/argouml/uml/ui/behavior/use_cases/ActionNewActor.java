@@ -1,4 +1,4 @@
-// $Id: ActionNewActor.java,v 1.4 2005/01/02 16:43:42 linus Exp $
+// $Id: ActionNewActor.java,v 1.5 2005/01/03 09:30:47 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,12 +32,8 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UseCasesFactoryImpl;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
-
-import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.model_management.MModel;
 
 
 /**

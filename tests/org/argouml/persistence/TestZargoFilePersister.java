@@ -1,4 +1,4 @@
-// $Id: TestZargoFilePersister.java,v 1.1 2004/12/31 19:52:57 bobtarling Exp $
+// $Id: TestZargoFilePersister.java,v 1.2 2005/01/03 09:30:48 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.argouml.kernel.Project;
-import org.argouml.persistence.LastLoadInfo;
-import org.argouml.persistence.OpenException;
-import org.argouml.persistence.ZargoFilePersister;
 
 /**
  * Testcase to load projects without exception.

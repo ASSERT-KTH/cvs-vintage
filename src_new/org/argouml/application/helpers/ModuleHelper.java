@@ -1,4 +1,4 @@
-// $Id: ModuleHelper.java,v 1.4 2004/09/11 09:25:58 mvw Exp $
+// $Id: ModuleHelper.java,v 1.5 2005/01/03 09:30:53 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,10 @@ import java.util.Vector;
 import org.argouml.application.api.ArgoModule;
 
 
+/**
+ * This class serves as a template of modules external to ArgoUML.
+ *
+ */
 public abstract class ModuleHelper 
     implements ArgoModule
 {

@@ -1,4 +1,4 @@
-// $Id: CheckUMLModelHelper.java,v 1.14 2005/01/02 16:43:55 linus Exp $
+// $Id: CheckUMLModelHelper.java,v 1.15 2005/01/03 09:30:46 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -297,9 +297,8 @@ public class CheckUMLModelHelper {
                             MInterface inter = 
                                 Model.getCoreFactory().createInterface();
                             MStereotype stereo3 = Model
-                                .getExtensionMechanismsFactory().buildStereotype(inter, 
-                                                              "test3", 
-                                                              ns);
+                                .getExtensionMechanismsFactory()
+                                .buildStereotype(inter, "test3", ns);
                             TestCase.assertTrue(
                                 "Unexpected invalid stereotype", 
                                 !Model.getExtensionMechanismsHelper()

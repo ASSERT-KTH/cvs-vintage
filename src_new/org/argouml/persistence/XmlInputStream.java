@@ -1,4 +1,4 @@
-// $Id: XmlInputStream.java,v 1.1 2004/12/23 18:27:53 bobtarling Exp $
+// $Id: XmlInputStream.java,v 1.2 2005/01/03 09:30:53 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -139,6 +139,10 @@ public class XmlInputStream extends BufferedInputStream {
     /**
      * Reopen a stream that has already reached the end
      * of an XML fragment.
+     *
+     * @param theTag the tag name
+     * @param attribs the attributes 
+     * @param child child only
      */
     public void reopen(
                 String theTag,
@@ -156,6 +160,8 @@ public class XmlInputStream extends BufferedInputStream {
     /**
      * Reopen a stream that has already reached the end
      * of an XML fragment.
+     *
+     * @param theTag the tag name
      */
     public void reopen(String theTag) {
         endStream = false;

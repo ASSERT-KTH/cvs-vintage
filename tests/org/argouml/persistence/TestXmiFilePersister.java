@@ -1,4 +1,4 @@
-// $Id: TestXmiFilePersister.java,v 1.5 2005/01/02 16:43:54 linus Exp $
+// $Id: TestXmiFilePersister.java,v 1.6 2005/01/03 09:30:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,11 +61,16 @@ public class TestXmiFilePersister extends TestCase {
         try {
             Project p = ProjectManager.getManager().makeEmptyProject();
             Object clazz = Model.getCoreFactory().buildClass(p.getModel());
-            Collection propertyChangeListeners = ProjectManager.getManager().getCurrentProject().findFigsForMember(clazz);
-            Object model = ProjectManager.getManager().getCurrentProject().getModel();
-            Object voidType = ProjectManager.getManager().getCurrentProject().findType("void");
-            Object oper = Model.getCoreFactory().buildOperation(clazz, model, voidType, propertyChangeListeners);
-            ModelFacade.setType(ModelFacade.getParameter(oper, 0), p.findType("String"));
+            Collection propertyChangeListeners = ProjectManager.getManager()
+                .getCurrentProject().findFigsForMember(clazz);
+            Object model = ProjectManager.getManager()
+                .getCurrentProject().getModel();
+            Object voidType = ProjectManager.getManager()
+                .getCurrentProject().findType("void");
+            Object oper = Model.getCoreFactory().buildOperation(clazz, model, 
+                        voidType, propertyChangeListeners);
+            ModelFacade.setType(ModelFacade.getParameter(oper, 0), 
+                    p.findType("String"));
             File file = new File("test.xmi");
             XmiFilePersister persister = new XmiFilePersister();
             p.preSave();

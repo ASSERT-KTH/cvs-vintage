@@ -1,4 +1,4 @@
-// $Id: ActionNewParameter.java,v 1.10 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionNewParameter.java,v 1.11 2005/01/03 09:30:50 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,10 +59,14 @@ public class ActionNewParameter extends AbstractActionNewModelElement {
         super.actionPerformed(e);
         //Object target =  getTarget(); // it is not set anywhere, pity...
         Object target =  TargetManager.getInstance().getModelTarget();
-        Object model = ProjectManager.getManager().getCurrentProject().getModel();
-        Object voidType = ProjectManager.getManager().getCurrentProject().findType("void");
-        Collection propertyChangeListeners = ProjectManager.getManager().getCurrentProject().findFigsForMember(target);
-        Object param = Model.getCoreFactory().buildParameter(target, model, voidType, propertyChangeListeners);
+        Object model = ProjectManager.getManager()
+            .getCurrentProject().getModel();
+        Object voidType = ProjectManager.getManager()
+            .getCurrentProject().findType("void");
+        Collection propertyChangeListeners = ProjectManager.getManager()
+            .getCurrentProject().findFigsForMember(target);
+        Object param = Model.getCoreFactory().buildParameter(target, model,
+                voidType, propertyChangeListeners);
         TargetManager.getInstance().setTarget(param);
     }
 

@@ -1,4 +1,4 @@
-// $Id: WizOperName.java,v 1.20 2005/01/02 10:08:15 linus Exp $
+// $Id: WizOperName.java,v 1.21 2005/01/03 09:30:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -125,7 +125,8 @@ public class WizOperName extends WizMEName {
 
         case 1:
             if (step1 == null) {
-                step1 = new WizStepChoice(this, getInstructions(), getOptions());
+                step1 = new WizStepChoice(this, getInstructions(), 
+                        getOptions());
                 step1.setTarget(getToDoItem());
             }
             return step1;
@@ -213,8 +214,8 @@ public class WizOperName extends WizMEName {
                 // put it there.
                 Object m = ModelFacade.getModel(oper);
                 Object theStereotype = null;
-                for (Iterator iter = ModelFacade.getOwnedElements(m).iterator(); iter
-                        .hasNext();) {
+                for (Iterator iter = ModelFacade.getOwnedElements(m).iterator();
+                                        iter.hasNext();) {
                     Object candidate = iter.next();
                     if (!(ModelFacade.isAStereotype(candidate))) {
                         continue;

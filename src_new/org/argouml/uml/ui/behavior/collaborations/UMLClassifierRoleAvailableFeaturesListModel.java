@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.20 2005/01/02 16:43:43 linus Exp $
+// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.21 2005/01/03 09:30:44 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.util.Iterator;
 
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CollaborationsHelperImpl;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 import org.tigris.gef.presentation.Fig;

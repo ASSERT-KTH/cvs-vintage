@@ -1,4 +1,4 @@
-// $Id: SettingsTabLayout.java,v 1.9 2004/12/27 23:34:37 mvw Exp $
+// $Id: SettingsTabLayout.java,v 1.10 2005/01/03 09:30:53 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,17 +36,16 @@ import javax.swing.SwingConstants;
 import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
-import org.argouml.application.api.SettingsTabPanel;
 import org.argouml.application.helpers.SettingsTabHelper;
 import org.argouml.cognitive.ui.TabToDo;
-import org.tigris.swidgets.Property;
-import org.tigris.swidgets.PropertyTable;
 import org.argouml.uml.ui.TabConstraints;
 import org.argouml.uml.ui.TabDocumentation;
 import org.argouml.uml.ui.TabProps;
 import org.argouml.uml.ui.TabSrc;
 import org.argouml.uml.ui.TabStyle;
 import org.argouml.uml.ui.TabTaggedValues;
+import org.tigris.swidgets.Property;
+import org.tigris.swidgets.PropertyTable;
 
 /**
  *  Settings dialog tab panel for layout options.

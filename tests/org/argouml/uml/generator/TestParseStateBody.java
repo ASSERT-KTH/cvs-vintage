@@ -1,4 +1,4 @@
-// $Id: TestParseStateBody.java,v 1.4 2005/01/02 16:43:52 linus Exp $
+// $Id: TestParseStateBody.java,v 1.5 2005/01/03 09:30:48 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 
+import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
@@ -59,12 +60,13 @@ public class TestParseStateBody extends TestCase {
     protected void setUp() {
         Object model =
             Model.getUmlFactory().getModelManagement().createModel();
+        Project p = ProjectManager.getManager().getCurrentProject();
         aClass = Model.getUmlFactory().getCore().buildClass(model);
-        Collection propertyChangeListeners = ProjectManager.getManager().getCurrentProject().findFigsForMember(aClass);
-        Object mdl = ProjectManager.getManager().getCurrentProject().getModel();
-        Object voidType = ProjectManager.getManager().getCurrentProject().findType("void");
-        aOper = Model.getUmlFactory().getCore()
-            .buildOperation(aClass, mdl, voidType, "myOper", propertyChangeListeners);
+        Collection propertyChangeListeners = p.findFigsForMember(aClass);
+        Object mdl = p.getModel();
+        Object voidType = p.findType("void");
+        aOper = Model.getUmlFactory().getCore().buildOperation(aClass, mdl, 
+                voidType, "myOper", propertyChangeListeners);
         aStateMachine = Model.getUmlFactory().getStateMachines()
             .buildStateMachine(aClass);
         Object top = ModelFacade.getTop(aStateMachine);

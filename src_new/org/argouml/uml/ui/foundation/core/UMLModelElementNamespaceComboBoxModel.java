@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.21 2005/01/02 16:43:46 linus Exp $
+// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.22 2005/01/03 09:30:50 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,9 +63,10 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
      */
     protected void buildModelList() {
-        Object model = ProjectManager.getManager().getCurrentProject().getRoot();
-        setElements(Model.getCoreHelper()
-		    .getAllPossibleNamespaces(/*(MModelElement)*/ getTarget(), model));
+        Object model = ProjectManager.getManager()
+            .getCurrentProject().getRoot();
+        setElements(Model.getCoreHelper().getAllPossibleNamespaces(
+                /*(MModelElement)*/ getTarget(), model));
     }
     
     /**

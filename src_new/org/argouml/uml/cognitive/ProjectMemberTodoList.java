@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.8 2005/01/02 16:43:55 linus Exp $
+// $Id: ProjectMemberTodoList.java,v 1.9 2005/01/03 09:30:49 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,26 +28,22 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Vector;
-import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ResolvedCritic;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.ocl.OCLExpander;
-import org.argouml.persistence.OpenException;
 import org.argouml.persistence.ResolvedCriticXMLHelper;
 import org.argouml.persistence.SaveException;
 import org.argouml.persistence.ToDoItemXMLHelper;
-import org.argouml.persistence.TodoParser;
 import org.tigris.gef.ocl.ExpansionException;
 import org.tigris.gef.ocl.TemplateReader;
-import org.xml.sax.SAXException;
 
 
 /**

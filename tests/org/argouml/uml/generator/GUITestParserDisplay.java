@@ -1,4 +1,4 @@
-// $Id: GUITestParserDisplay.java,v 1.20 2005/01/02 16:43:52 linus Exp $
+// $Id: GUITestParserDisplay.java,v 1.21 2005/01/03 09:30:48 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -996,9 +996,11 @@ public class GUITestParserDisplay extends TestCase {
             assertTrue(
             	   text + " gave wrong stereotype "
             	   + (ModelFacade.getStereotypes(feature).size() > 0
-            	      ? ModelFacade.getName(ModelFacade.getStereotypes(feature).get(0))
+            	      ? ModelFacade.getName(ModelFacade.getStereotypes(feature)
+                              .get(0))
             	      : "(null)"),
-            	   (val == null && ModelFacade.getStereotypes(feature).size() == 0)
+            	   (val == null 
+                           && ModelFacade.getStereotypes(feature).size() == 0)
             	   || (val != null
             	       && ModelFacade.getStereotypes(feature).size() > 0
             	       && val.equals(ModelFacade.getName(
@@ -1012,7 +1014,8 @@ public class GUITestParserDisplay extends TestCase {
                       ? ModelFacade.getName(
                               ModelFacade.getStereotypes(feature).get(0))
                       : "(null)"),
-                   (val == null && ModelFacade.getStereotypes(feature).size() == 0)
+                   (val == null 
+                           && ModelFacade.getStereotypes(feature).size() == 0)
                    || (val != null
                        && ModelFacade.getStereotypes(feature).size() > 0
                        && val.equals(ModelFacade.getName(
