@@ -50,6 +50,8 @@ public final class ColumbaLogger {
 
     private static final Logger LOG = Logger.getLogger("org.columba");
 
+    private static ConsoleHandler consoleHandler;
+    
     /**
     * Don't instanciate this class.
     */
@@ -77,25 +79,32 @@ public final class ColumbaLogger {
             //Since Columba is doing its own logging handlers, we should not
             //use handlers in the parent logger.
             LOG.setUseParentHandlers(false);
-            LOG.setLevel(Level.ALL);
+            
+            //LOG.setLevel(Level.ALL);
 
             //TODO (@author fdietz): only add console handler if command line option is given
             // init console handler
-            Handler consoleHandler = new ConsoleHandler();
+            consoleHandler = new ConsoleHandler();
 
-            if (Main.DEBUG) {
-                consoleHandler.setFormatter(new DebugFormatter());
-                consoleHandler.setLevel(Level.ALL);
-                //System.setProperty("javax.net.debug", "ssl,handshake,data,trustmanager"); // init java.net.ssl debugging
+            consoleHandler.setFormatter(new OneLineFormatter());
+            consoleHandler.setLevel(Level.SEVERE);
 
-                //TODO Ristretto should handle the logging of streams in another way.
-                RistrettoLogger.setLogStream(System.out);
-            } else {
-                consoleHandler.setFormatter(new OneLineFormatter());
-                consoleHandler.setLevel(Level.SEVERE);
-            }
             LOG.addHandler(consoleHandler);
         }
+    }
+    
+    public static void setDebugging(boolean debug) {
+        if (debug) {
+            consoleHandler.setFormatter(new DebugFormatter());
+            consoleHandler.setLevel(Level.ALL);
+            //System.setProperty("javax.net.debug", "ssl,handshake,data,trustmanager"); // init java.net.ssl debugging
+
+            //TODO Ristretto should handle the logging of streams in another way.
+            RistrettoLogger.setLogStream(System.out);
+        } else {
+            consoleHandler.setFormatter(new OneLineFormatter());
+            consoleHandler.setLevel(Level.SEVERE);
+        }    	
     }
 
     /**
