@@ -14,6 +14,9 @@
 //
 //All Rights Reserved.
 //$Log: DefaultWizardDialog.java,v $
+//Revision 1.5  2003/02/13 18:00:44  fdietz
+//[bug]dialog was creating two accounts instead of one
+//
 //Revision 1.4  2003/02/13 11:07:35  fdietz
 //[intern]more virtual folder framework fixes
 //
@@ -87,7 +90,7 @@ public abstract class DefaultWizardDialog {
 	public DefaultWizardDialog() throws HeadlessException {
 		dialog = DialogStore.getDialog();
 
-		DefaultWizardPanel p = getSequence().getFirstPanel();
+		//DefaultWizardPanel p = getSequence().getFirstPanel();
 
 		helpButton = new JButton("Help");
 		helpButton.setEnabled(false);
@@ -109,17 +112,17 @@ public abstract class DefaultWizardDialog {
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(new CancelActionListener());
 
+
+		/*
 		init(p);
 
 		dialog.getContentPane().add(p, BorderLayout.CENTER);
 
-		//nextButton.setEnabled(true);
-
 		updateWindow(p);
-
+		*/
 		dialog.setLocationRelativeTo(null);
 
-		dialog.setVisible(true);
+		//dialog.setVisible(true);
 
 	}
 

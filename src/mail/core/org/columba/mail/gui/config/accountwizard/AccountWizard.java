@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.wizard.DefaultWizardDialog;
+import org.columba.core.gui.util.wizard.DefaultWizardPanel;
 import org.columba.core.gui.util.wizard.WizardPanelSequence;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -50,14 +51,14 @@ public class AccountWizard
 
 	protected WizardPanelSequence sequence;
 
-	public AccountWizard() {
-		super();
-		add = false;
-	}
-
 	public AccountWizard(boolean b) {
 		super();
 		add = b;
+
+		DefaultWizardPanel p = getSequence().getFirstPanel();
+		init(p);
+
+		updateWindow(p);
 	}
 
 	public WizardPanelSequence getSequence() {
