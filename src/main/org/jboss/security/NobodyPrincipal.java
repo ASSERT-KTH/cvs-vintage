@@ -13,8 +13,11 @@ Any Principal or name of a Principal when compared to an NobodyPrincipal
 using {@link #equals(Object) equals} or {@link #compareTo(Object) compareTo} 
 will always be found not equal to the NobodyPrincipal.
 
+Note that this class is not likely to operate correctly in a collection
+since the hashCode() and equals() methods are not correlated.
+
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public class NobodyPrincipal implements Comparable, Principal
 {
