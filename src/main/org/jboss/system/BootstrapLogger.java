@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @author  <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class BootstrapLogger
 {
@@ -67,6 +67,9 @@ public class BootstrapLogger
    /** The threashold used when uninitialized */
    private static int threshold = INFO;
 
+   /** True to enable more verbose logging when log4j is not yet initialized. */
+   private static boolean verbose = false;
+   
    // Externalize behavior using properties
    static
    {
@@ -75,6 +78,7 @@ public class BootstrapLogger
          logInitFailures = Boolean.getBoolean("org.jboss.system.BootstrapLogger.logInitFailures");
          maxInitAttempts = Integer.getInteger("org.jboss.system.BootstrapLogger.maxInitAttempts", maxInitAttempts).intValue();
          threshold = Integer.getInteger("org.jboss.system.BootstrapLogger.threshold", threshold).intValue();
+         verbose = Boolean.getBoolean("org.jboss.system.BootstrapLogger.verbose");
       }
       catch(Exception e)
       {
@@ -220,6 +224,14 @@ public class BootstrapLogger
    }
 
    /** 
+    * A magical token to tell _log() which log4j varaity to use.
+    *
+    * If this value is passed as the second argument to _log(), then
+    * the single argument log4j method will be called.
+    */
+   private static final Object MAGIC_TOKEN = new Object();
+   
+   /** 
     * The log method is called by all explicit priority log methods
     * that do not accept a Throwable.
     *
@@ -229,7 +241,7 @@ public class BootstrapLogger
     */
    private void log(int idx, Object msg)
    {
-      _log(idx, msg, Void.class);
+      _log(idx, msg, MAGIC_TOKEN);
    }
 
    /** 
@@ -247,7 +259,7 @@ public class BootstrapLogger
    }
 
    /**
-    * Consolidates both logging calls.  If extends is Void.class then
+    * Consolidates both logging calls.  If ex is MAGIC_TOKEN then
     * the one argument log() method will be invoked, else the two
     * arg version will be used.
     */
@@ -261,11 +273,19 @@ public class BootstrapLogger
          {
             if (!isEnabledFor(idx)) return;
 
-            // Failed, dump the msg to System.out & print stack trace
-            System.out.println(PRIORITY_NAMES[idx] + " " + msg);
+            // construct the message to print
+            StringBuffer buff = new StringBuffer();
+            buff.append(PRIORITY_NAMES[idx]).append(" ");
+            if (verbose) {
+               buff.append("[").append(categoryType).append("] ");
+            }
+            buff.append(msg);
             
-            // If extends is not Void.class then it is an exception
-            if (ex != Void.class) {
+            // Failed, dump the msg to System.out & print stack trace
+            System.out.println(buff);
+            
+            // If ex is not MAGIC_TOKEN then it is an exception
+            if (ex != MAGIC_TOKEN) {
                if (ex != null) {
                   ((Throwable)ex).printStackTrace();
                }
@@ -283,7 +303,7 @@ public class BootstrapLogger
       {
          Object pri = log4jPriorities[idx];         
          Object[] args;
-         if (ex != Void.class) {
+         if (ex != MAGIC_TOKEN) {
             args = new Object[] { pri, msg, ex };
             log4jMethods[LOG_PRIORITY_MSG_EX].invoke(category, args);
          }
