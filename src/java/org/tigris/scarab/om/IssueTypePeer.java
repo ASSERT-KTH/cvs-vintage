@@ -115,7 +115,7 @@ public class IssueTypePeer
     private static Criteria addSortOrder(Criteria crit, 
                     String sortColumn, String sortPolarity)
     {
-        if (sortPolarity.equals("desc"))
+        if (sortPolarity != null && sortPolarity.equals("desc"))
         {
             crit.addDescendingOrderByColumn(sortColumn);
         }
