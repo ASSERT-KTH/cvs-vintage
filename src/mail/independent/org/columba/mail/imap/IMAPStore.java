@@ -174,7 +174,7 @@ public class IMAPStore {
 	/**
 	 * @return
 	 */
-	public StatusObservable getObservable() {
+	protected StatusObservable getObservable() {
 		return parent.getObservable();
 	}
 
@@ -207,7 +207,7 @@ public class IMAPStore {
 	/**
 	 * @return currenlty selected mailbox
 	 */
-	public String getSelectedFolderPath() {
+	protected String getSelectedFolderPath() {
 		return selectedFolderPath;
 	}
 
@@ -215,7 +215,7 @@ public class IMAPStore {
 	 * @param s
 	 *            currenlty selected mailbox
 	 */
-	public void setSelectedFolderPath(String s) {
+	protected void setSelectedFolderPath(String s) {
 		selectedFolderPath = s;
 	}
 
@@ -232,7 +232,7 @@ public class IMAPStore {
 	/**
 	 * @return current state
 	 */
-	public int getState() {
+	protected int getState() {
 		return state;
 	}
 
@@ -240,10 +240,11 @@ public class IMAPStore {
 	 * Login to IMAP server.
 	 * <p>
 	 * Ask user for password.
+	 * TODO: cleanup if all these ugly if, else cases
 	 * 
 	 * @throws Exception
 	 */
-	public void login() throws Exception {
+	protected void login() throws Exception {
 
 		PasswordDialog dialog = null;
 
@@ -282,77 +283,98 @@ public class IMAPStore {
 				// Try first communication with NOOP
 				getProtocol().noop();
 			} catch (Exception e1) {
+				// SSL doesn't work with this server
+				// -> disable SSL
 				getProtocol().setUseSSL(false);
 				getProtocol().openPort();
 
 				//update configuration
-				item.set("enable_ssl", "true");
+				item.set("enable_ssl", "false");
 			}
+		} else {
+			answer = false;
+			return;
+		}
 
-			while (!cancel) {
-				if (first) {
+		while (!cancel) {
+			if (first) {
 
-					if (item.get("password").length() != 0) {
+				if (item.get("password").length() != 0) {
+					try {
 						getProtocol().login(
 							item.get("user"),
 							item.get("password"));
-
 						state = STATE_AUTHENTICATE;
 						answer = true;
 						break;
+					} catch (CommandFailedException ex) {
+						// login failed
 					}
 
-					first = false;
 				}
 
-				dialog = new PasswordDialog();
-				dialog.showDialog(
-					item.get("user"),
-					item.get("host"),
-					item.get("password"),
-					item.getBoolean("save_password"));
+				first = false;
+			}
 
-				char[] name;
+			dialog = new PasswordDialog();
+			dialog.showDialog(
+				item.get("user"),
+				item.get("host"),
+				item.get("password"),
+				item.getBoolean("save_password"));
 
-				if (dialog.success()) {
-					// ok pressed
-					name = dialog.getPassword();
-					String password = new String(name);
-					//String user = dialog.getUser();
-					boolean save = dialog.getSave();
+			char[] name;
 
+			if (dialog.success()) {
+				// ok pressed
+
+				name = dialog.getPassword();
+				String password = new String(name);
+				//String user = dialog.getUser();
+				boolean save = dialog.getSave();
+
+				try {
 					getProtocol().login(item.get("user"), password);
-
 					answer = true;
 
 					state = STATE_AUTHENTICATE;
-
-					if (answer) {
-						cancel = true;
-
-						//item.setUser(user);
-
-						state = STATE_AUTHENTICATE;
-
-						item.set("save_password", save);
-
-						if (save)
-							item.set("password", password);
-
-					} else
-						cancel = false;
-				} else {
-					cancel = true;
-					answer = false;
-					// cancel pressed
+				} catch (CommandFailedException ex) {
+					// login failed
 				}
-			}
 
-		} else {
-			answer = false;
+				if (answer) {
+					// user logged in successfully
+
+					cancel = true;
+
+					//item.setUser(user);
+
+					state = STATE_AUTHENTICATE;
+
+					item.set("save_password", save);
+
+					if (save)
+						item.set("password", password);
+
+				} else {
+					// login failed!
+					cancel = false;
+					answer = false;
+
+					// start whole procedure again... 
+					// -> still in while loop
+
+				}
+			} else {
+				// user cancelled dialog
+				cancel = true;
+				answer = false;
+
+				// escape while loop
+				throw new UserCancelledException();
+			}
 		}
 
-		//System.out.println("login successful");
 	}
 
 	/**
@@ -364,7 +386,7 @@ public class IMAPStore {
 	 *            mailbox path
 	 * @throws Exception
 	 */
-	public void ensureSelectedState(String path) throws Exception {
+	protected void ensureSelectedState(String path) throws Exception {
 
 		// ensure that we are logged in already
 		ensureLoginState();
@@ -383,7 +405,7 @@ public class IMAPStore {
 		} else {
 			// force selection of correct folder
 
-			// currenlty selected folder == null
+			// currently selected folder == null
 			setSelectedFolderPath(null);
 
 			select(path);
@@ -399,7 +421,7 @@ public class IMAPStore {
 	 * @return @throws
 	 *         Exception
 	 */
-	public boolean select(String path) throws Exception {
+	protected boolean select(String path) throws Exception {
 
 		// make sure we are already logged in
 		ensureLoginState();
@@ -728,7 +750,11 @@ public class IMAPStore {
 	 */
 	public List fetchUIDList(String path) throws Exception {
 
-		ensureSelectedState(path);
+		try {
+			ensureSelectedState(path);
+		} catch (UserCancelledException e) {
+			return null;
+		}
 
 		try {
 			int count = messageFolderInfo.getExists();
@@ -904,7 +930,12 @@ public class IMAPStore {
 		throws Exception {
 
 		// make sure we are logged in
-		ensureLoginState();
+
+		try {
+			ensureLoginState();
+		} catch (UserCancelledException e) {
+			return;
+		}
 
 		// make sure this mailbox is selected
 		ensureSelectedState(path);
@@ -990,7 +1021,7 @@ public class IMAPStore {
 	 * 
 	 * @throws Exception
 	 */
-	public void ensureLoginState() throws Exception {
+	protected void ensureLoginState() throws Exception {
 		if ((getState() == STATE_AUTHENTICATE)
 			|| (getState() == STATE_SELECTED)) {
 			// ok, we are logged in
@@ -999,8 +1030,10 @@ public class IMAPStore {
 			// -> force new login
 			login();
 
-			// synchronize folder list with server
-			parent.syncSubscribedFolders();
+			// if login was successfull 
+			if (getState() == STATE_AUTHENTICATE)
+				// synchronize folder list with server
+				parent.syncSubscribedFolders();
 		}
 	}
 
