@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.23 $
+ *  @version $Revision: 1.24 $
  */
 public abstract class EnterpriseContext
 {
@@ -82,6 +82,13 @@ public abstract class EnterpriseContext
     { 
        return instance; 
     }
+    
+   /**
+    * Gets the container that manages the wrapped bean.
+    */
+   public Container getContainer() {
+   		return con;
+   	}
    
    public abstract void discard()
       throws RemoteException;
