@@ -28,7 +28,7 @@ public class AddressbookController extends FrameController {
 	 * Constructor for AddressbookController.
 	 */
 	public AddressbookController( String id ) {
-		super( id );
+		super( id, null );
 	}
 	
 	public void close() {}
@@ -36,6 +36,30 @@ public class AddressbookController extends FrameController {
 	public FrameView getView()
 	{
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameController#createView()
+	 */
+	protected FrameView createView() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameController#init()
+	 */
+	protected void init() {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameController#initInternActions()
+	 */
+	protected void initInternActions() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

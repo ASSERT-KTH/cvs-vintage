@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.plugin;
 
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy
@@ -29,12 +29,12 @@ import org.columba.core.main.MainInterface;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class MailDecorator {
+public class MailFacade {
 
 	/**
 	 * Constructor for MailDecorator.
 	 */
-	public MailDecorator() {
+	public MailFacade() {
 		super();
 	}
 
@@ -46,8 +46,9 @@ public class MailDecorator {
 	
 	public static void openComposer()
 	{
-		ComposerController c = new ComposerController();
-		c.showComposerWindow();
+		ComposerModel model = new ComposerModel();
+		
+		model.openView();
 	}
 	
 	public SelectFolderDialog getSelectFolderDialog()

@@ -31,19 +31,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.gui.util.AddressbookDNDListView;
 import org.columba.addressbook.gui.util.AddressbookListModel;
 import org.columba.core.gui.util.CTabbedPane;
-import org.columba.mail.gui.composer.ComposerInterface;
 import org.columba.core.main.MainInterface;
+import org.columba.mail.gui.composer.ComposerController;
 
 
 /**
@@ -55,7 +52,7 @@ public class AddressbookPanel
 	implements ActionListener, ChangeListener
 {
 	private AddressbookDNDListView addressbook;
-	private ComposerInterface composerInterface;
+	private ComposerController composerController;
 
 	private JLabel chooseLabel;
 	private JButton chooseButton;
@@ -69,9 +66,9 @@ public class AddressbookPanel
 
 	private CTabbedPane pane;
 
-	public AddressbookPanel(ComposerInterface composerInterface)
+	public AddressbookPanel(ComposerController c )
 	{
-		this.composerInterface = composerInterface;
+		this.composerController = c;
 
 		books = new int[2];
 		books[0] = 101;
@@ -187,6 +184,7 @@ public class AddressbookPanel
 	{
 		String action = ev.getActionCommand();
 
+		/*
 		if (action.equals("CHOOSE"))
 		{
 			SelectAddressbookFolderDialog dialog =
@@ -276,6 +274,7 @@ public class AddressbookPanel
 				}
 			}
 		}
+		*/
 
 	}
 

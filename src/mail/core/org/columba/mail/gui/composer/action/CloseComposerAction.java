@@ -65,8 +65,11 @@ public class CloseComposerAction extends ComposerAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
+		// TODO
+		/*
 		composerInterface.composerController.saveWindowPosition();
 		composerInterface.composerController.hideComposerWindow();
+		*/
 	}
 
 }

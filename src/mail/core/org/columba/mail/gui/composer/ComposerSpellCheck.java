@@ -20,35 +20,29 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpellcheckItem;
 import org.columba.mail.spellcheck.ASpellInterface;
 
-public class ComposerSpellCheck
-{
-    private ComposerInterface composerInterface=null;
-    private SpellcheckItem spellCheckConfig=null;
+public class ComposerSpellCheck {
+	private ComposerController composerController;
+	private SpellcheckItem spellCheckConfig = null;
 
-	public ComposerSpellCheck(ComposerInterface iface)
-    {
-		composerInterface = iface;
-        spellCheckConfig = MailConfig
-					.getComposerOptionsConfig()
-					.getSpellcheckItem();
-        System.out.println("Filename is " + spellCheckConfig.get("executable"));
-        ASpellInterface.setAspellExeFilename(spellCheckConfig.get("executable"));
-        
+	public ComposerSpellCheck(ComposerController composerController) {
+		this.composerController = composerController;
+		spellCheckConfig =
+			MailConfig.getComposerOptionsConfig().getSpellcheckItem();
+		System.out.println("Filename is " + spellCheckConfig.get("executable"));
+		ASpellInterface.setAspellExeFilename(
+			spellCheckConfig.get("executable"));
+
 	}
 
-	public String checkText(String text)
-    {
-        String checked =  ASpellInterface.checkBuffer(text);
+	public String checkText(String text) {
+		String checked = ASpellInterface.checkBuffer(text);
 
-        if (checked == null)
-        {
-            // Display error ?
-            // As it is inmutable
-            return text;
-        }
-        else
-        {
-            return checked;
-        }
+		if (checked == null) {
+			// Display error ?
+			// As it is inmutable
+			return text;
+		} else {
+			return checked;
+		}
 	}
 }

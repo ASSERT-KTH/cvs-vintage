@@ -43,13 +43,15 @@ public abstract class DefaultFrameModel {
 		defaultView .addElement(window);
 	}
 
-	public void openView() {
+	public FrameController openView() {
 
 		int id = nextId++;
 
 		FrameController c = createInstance(new Integer(id).toString());
 		c.getView().loadWindowPosition();
 		c.getView().setVisible(true);
+		
+		return c;
 	}
 
 	/**

@@ -21,17 +21,17 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.addressbook.gui.AddressbookPanel;
-import org.columba.mail.gui.composer.ComposerInterface;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.gui.composer.ComposerController;
 
 public class AddressBookIC {
 		
-	public static JFrame createAddressbookListFrame( ComposerInterface i)
+	public static JFrame createAddressbookListFrame( ComposerController controller)
 	{
 		JFrame frame = new JFrame();
 		frame.setIconImage( ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
-		frame.setContentPane( new AddressbookPanel( i ) );
+		frame.setContentPane( new AddressbookPanel( controller ) );
 		frame.pack();
 		Dimension size=frame.getSize();
 		Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();

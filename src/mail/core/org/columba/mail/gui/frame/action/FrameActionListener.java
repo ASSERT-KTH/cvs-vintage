@@ -23,7 +23,6 @@ import java.net.URL;
 import org.columba.core.action.BasicAction;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.AboutDialog;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.ThemeSwitcher;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -32,6 +31,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.config.general.GeneralOptionsDialog;
 import org.columba.mail.gui.config.mailboximport.ImportWizard;
 import org.columba.mail.gui.frame.MailFrameController;
@@ -40,7 +40,6 @@ import org.columba.mail.gui.util.URLController;
 import org.columba.mail.pop3.FetchNewMessagesCommand;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.smtp.SendAllMessagesCommand;
-import org.columba.mail.util.MailResourceLoader;
 
 public class FrameActionListener implements ActionListener {
 
@@ -363,8 +362,9 @@ public class FrameActionListener implements ActionListener {
 
 		} else if (action.equals("NEW_MESSAGE")) {
 
-			ComposerController controller = new ComposerController();
-			controller.showComposerWindow();
+			ComposerModel model = new ComposerModel();
+		
+			ComposerController controller = (ComposerController) model.openView();
 
 		} else if (action.equals("OPEN_NEW_WINDOW")) {
 			MainInterface.frameModel.openView();

@@ -17,31 +17,12 @@ package org.columba.mail.gui.composer.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
-import javax.swing.KeyStroke;
-
-import org.columba.addressbook.gui.SelectAddressDialog;
 import org.columba.core.action.BasicAction;
-import org.columba.core.config.ViewItem;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.SwingWorker;
-import org.columba.mail.command.ComposerCommandReference;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.config.SpecialFoldersItem;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.composer.ComposerInterface;
-import org.columba.mail.gui.composer.command.SaveMessageCommand;
-import org.columba.mail.gui.composer.util.ExternalEditor;
-import org.columba.mail.smtp.SendMessageCommand;
-import org.columba.mail.util.MailResourceLoader;
 
 public class ComposerActionListener implements ActionListener {
-	private ComposerInterface composerInterface;
+	//private ComposerInterface composerInterface;
 
 	public BasicAction undoAction;
 	public BasicAction redoAction;
@@ -68,10 +49,11 @@ public class ComposerActionListener implements ActionListener {
 	// Added as part of external editor support
 	public BasicAction externEditAction;
 
-	public ComposerActionListener(ComposerInterface iface) {
+	public ComposerActionListener(ComposerController c) {
+		/*
 		composerInterface = iface;
 		composerInterface.composerActionListener = this;
-
+		*/
 		initActions();
 	}
 
@@ -675,6 +657,7 @@ public class ComposerActionListener implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		/*
 		String command;
 
 		command = e.getActionCommand();
@@ -687,23 +670,11 @@ public class ComposerActionListener implements ActionListener {
 
 		if (command.equals("SEND")) {
 
-			/*
-			if (checkInformation() == false)
-				return;
-			*/
+			
 
 			if (composerInterface.composerController.checkState() == false)
 				return;
 
-			/*
-			ComposerOperation op =
-				new ComposerOperation(
-					Operation.COMPOSER_SEND,
-					0,
-					composerInterface.composerController);
-			
-			MainInterface.crossbar.operate(op);
-			*/
 
 			OutboxFolder outboxFolder =
 				(OutboxFolder) MainInterface.treeModel.getFolder(103);
@@ -745,23 +716,7 @@ public class ComposerActionListener implements ActionListener {
 			SaveMessageCommand c = new SaveMessageCommand(r);
 
 			MainInterface.processor.addOp(c);
-			/*
-			if (checkInformation() == false)
-				return;
-			*/
-
-			/*
-			if (composerInterface.composerController.checkState() == false)
-				return;
 			
-			ComposerOperation op =
-				new ComposerOperation(
-					Operation.COMPOSER_SENDLATER,
-					0,
-					composerInterface.composerController);
-			
-			MainInterface.crossbar.operate(op);
-			*/
 		}
 		if (command.equals("SAVEDRAFT")) {
 			if (composerInterface.composerController.checkState() == false)
@@ -788,15 +743,7 @@ public class ComposerActionListener implements ActionListener {
 
 			MainInterface.processor.addOp(c);
 
-			/*
-			ComposerOperation op =
-				new ComposerOperation(
-					Operation.COMPOSER_SAVEDRAFT,
-					0,
-					composerInterface.composerController);
 			
-			MainInterface.crossbar.operate(op);
-			*/
 
 		}
 		if (command.equals("SAVETEMPLATE")) {
@@ -823,15 +770,7 @@ public class ComposerActionListener implements ActionListener {
 			SaveMessageCommand c = new SaveMessageCommand(r);
 
 			MainInterface.processor.addOp(c);
-			/*
-			ComposerOperation op =
-				new ComposerOperation(
-					Operation.COMPOSER_SAVETEMPLATE,
-					0,
-					composerInterface.composerController);
 			
-				MainInterface.crossbar.operate(op);
-			*/
 		}
 		if (command.equals("ATTACH")) {
 			composerInterface.attachmentController.addFileAttachment();
@@ -964,7 +903,7 @@ public class ComposerActionListener implements ActionListener {
 			};
 			worker.start(); //required for SwingWorker 3
 		}
-
+		*/
 	}
 
 }

@@ -24,9 +24,10 @@ import javax.swing.JPopupMenu;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.core.main.MainInterface;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
+import org.columba.mail.gui.mimetype.MimeTypeViewer;
 
 public class URLController implements ActionListener {
 
@@ -83,11 +84,13 @@ public class URLController implements ActionListener {
 	}
 
 	public void compose(String address) {
-		ComposerController controller = new ComposerController();
+		ComposerModel model = new ComposerModel();
+		
+		ComposerController controller = (ComposerController) model.openView();
 
-		controller.getModel().setTo(address);
+		((ComposerModel)controller.getModel()).setTo(address);
 
-		controller.showComposerWindow();
+		
 	}
 
 	public void contact(String address) {

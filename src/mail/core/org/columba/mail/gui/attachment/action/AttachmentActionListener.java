@@ -21,15 +21,13 @@ import java.util.LinkedList;
 
 import org.columba.core.action.BasicAction;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.attachment.command.OpenAttachmentCommand;
 import org.columba.mail.gui.attachment.command.OpenWithAttachmentCommand;
 import org.columba.mail.gui.attachment.command.SaveAttachmentCommand;
 import org.columba.mail.message.MimePart;
-import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
 /**
  * Title:

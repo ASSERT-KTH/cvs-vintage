@@ -8,8 +8,9 @@ package org.columba.mail.gui.composer.action;
 
 import java.awt.event.ActionEvent;
 
+import org.columba.core.action.FrameAction;
+import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.action.ComposerAction;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -19,7 +20,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class SpellcheckAction extends ComposerAction {
+public class SpellcheckAction extends FrameAction {
 
 	/**
 	 * @param composerController
@@ -33,9 +34,9 @@ public class SpellcheckAction extends ComposerAction {
 	 * @param keyStroke
 	 * @param showToolbarText
 	 */
-	public SpellcheckAction(ComposerController composerController) {
+	public SpellcheckAction(FrameController frameController) {
 		super(
-			composerController,
+			frameController,
 			MailResourceLoader.getString(
 				"menu",
 				"composer",
@@ -64,11 +65,14 @@ public class SpellcheckAction extends ComposerAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		String checked =
-			composerInterface.composerSpellCheck.checkText(
-				composerInterface.editorController.getView().getText());
+		ComposerController composerController =
+			(ComposerController) getFrameController();
 
-		composerInterface.editorController.getView().setText(checked);
+		String checked =
+			composerController.getComposerSpellCheck().checkText(
+				composerController.getEditorController().getView().getText());
+
+		composerController.getEditorController().getView().setText(checked);
 	}
 
 }

@@ -22,6 +22,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilder;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.Message;
 import org.columba.mail.message.MimePartTree;
@@ -54,7 +55,7 @@ public class ReplyAsAttachmentCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		controller.showComposerWindow();
+		//controller.showComposerWindow();
 	}
 
 	/**
@@ -76,11 +77,13 @@ public class ReplyAsAttachmentCommand extends FolderCommand {
 		String source = folder.getMessageSource(uids[0], worker);
 		message.setSource(source);
 
-		controller = new ComposerController();
+		ComposerModel model = new ComposerModel();
+		
+		controller = (ComposerController) model.openView();
 
 		MessageBuilder.getInstance().createMessage(
 			message,
-			controller.getModel(),
+			model,
 			MessageBuilder.REPLY_AS_ATTACHMENT);
 
 	}

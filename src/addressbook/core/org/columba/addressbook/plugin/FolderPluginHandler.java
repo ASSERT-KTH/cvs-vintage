@@ -97,4 +97,12 @@ public class FolderPluginHandler extends AbstractPluginHandler {
 		}
 		return null;
 	}
+	/* (non-Javadoc)
+	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
+	 */
+	public void addExtension(String id, XmlElement extension) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

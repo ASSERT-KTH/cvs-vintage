@@ -31,12 +31,12 @@ import org.columba.core.xml.XmlElement;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class Decorator {
+public class Facade {
 
 	/**
 	 * Constructor for Decorator.
 	 */
-	public Decorator() {
+	public Facade() {
 		super();
 	}
 

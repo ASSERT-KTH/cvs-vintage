@@ -17,15 +17,16 @@ package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.message.HeaderInterface;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy
@@ -69,10 +70,10 @@ public class SaveMessageCommand extends FolderCommand {
 
 		ComposerController composerController = r[0].getComposerController();
 
-		AccountItem item = composerController.getModel().getAccountItem();
+		AccountItem item = ((ComposerModel)composerController.getModel()).getAccountItem();
 
 		SendableMessage message =
-			composerController.composerInterface.messageComposer.compose(worker);
+			composerController.getMessageComposer().compose(worker);
 
 		folder = (Folder) r[0].getFolder();
 

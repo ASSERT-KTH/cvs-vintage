@@ -241,7 +241,7 @@ public class Main {
 				frame.advance();
 
 				AddressbookMain.main(null);
-
+				
 				doGuiInits();
 
 				MainInterface.treeModel =
@@ -269,6 +269,7 @@ public class Main {
 			public void finished() {
 				frame.setVisible(false);
 
+				MainInterface.addressbookInterface.frame.setVisible(true);
 				//mainFrame.setVisible(true);
 
 				if (MailConfig.getAccountList().count() == 0)

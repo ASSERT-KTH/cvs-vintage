@@ -31,7 +31,6 @@ import org.columba.core.util.CharsetEvent;
 import org.columba.core.util.CharsetListener;
 import org.columba.core.util.CharsetManager;
 import org.columba.mail.composer.MessageComposer;
-import org.columba.mail.config.AccountItem;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.message.Message;
 
