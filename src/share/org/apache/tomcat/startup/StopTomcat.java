@@ -244,6 +244,15 @@ public class StopTomcat {
 	    Socket socket = new Socket(address, portInt);
 	    OutputStream os=socket.getOutputStream();
 	    sendAjp12Stop( os, secret );
+
+            // Setting soLinger to 0 will help make sure the connection is
+            // closed on NetWare.  If the other side closes the connection
+            // first, we get a SocketException so catch and ignore it
+            try {
+                socket.setSoLinger(true, 0);
+            }
+            catch (java.net.SocketException ignore) {
+            }
 	    os.flush();
 	    os.close();
 	    //	    socket.close();
@@ -264,6 +273,15 @@ public class StopTomcat {
 	os.write( stopMessage );
 	if(secret!=null ) 
 	    sendAjp12String( os, secret );
+
+        // flush the stream and give the backend a chance to read the request
+        // and shut down before we close the socket
+        os.flush();
+        try {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException ignore) {
+        }
     }
 
     /** Small AJP12 client util
