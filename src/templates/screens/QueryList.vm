@@ -100,7 +100,7 @@
 
 <div class="functnbar3">
 <input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
-<input type="submit" value="Copy" name="eventSubmit_doCopyquery" />
+<input type="submit" value="Copy selected" name="eventSubmit_doCopyquery" />
   #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE) || !$module.getPrivateQueries($user).isEmpty())
    &#160;<input type="submit" value="Delete selected" name="eventSubmit_doDeletequeries" />
   #end
