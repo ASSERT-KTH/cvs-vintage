@@ -60,8 +60,8 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.util.log.*;
-import org.apache.tomcat.util.hooks.*;
+import org.apache.tomcat.util.log.Log;
+import org.apache.tomcat.util.hooks.Hooks;
 
 /** Implement "Chain of Responsiblity" pattern ( == hooks ).
  *

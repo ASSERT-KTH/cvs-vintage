@@ -63,10 +63,9 @@ package org.apache.tomcat.core;
 import java.io.IOException;
 import java.util.Locale;
 
-import org.apache.tomcat.util.StringManager;
-import org.apache.tomcat.util.MimeHeaders;
+import org.apache.tomcat.util.res.StringManager;
 
-// XXX 
+import org.apache.tomcat.util.http.MimeHeaders;
 import org.apache.tomcat.util.http.ContentType;
 
 /**

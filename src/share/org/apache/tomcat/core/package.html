@@ -89,21 +89,25 @@
     <h2>Dependencies</h2>
 
     <ul>
-       <li>org.apache.tomcat.util.log.*</li>
-       <li>org.apache.tomcat.util.hooks.*</li>
+       <li>org.apache.tomcat.util.log.Log</li>
+       <li>org.apache.tomcat.util.hooks.Hooks</li>
        <li>org.apache.tomcat.util.http.*</li>
-       <li>org.apache.tomcat.util.StringManager; -> res</li>
+       <li>org.apache.tomcat.util.res.StringManager</li>
+       <li>org.apache.tomcat.util.buf.MessageBytes;</li>
 
-       <li>org.apache.tomcat.util.depend.*: Context/rm </li> 
+
        <li>org.apache.tomcat.util.threads.TimeStamp: ServerSession/rm </li>
 
-       <li>org.apache.tomcat.util.MessageBytes;</li>
-
-       <li>org.apache.tomcat.util.MimeMap -> http </li>
-       <li>org.apache.tomcat.util.MimeHeaders -> http </li>
-
-       <li>org.apache.tomcat.util.Counters - Handler/rm</li>
        <li>org.apache.tomcat.util.SimplePrincipal - Request/->facade</li>
+       <li>org.apache.tomcat.util.depend.*: Context/rm </li> 
+       <li>org.apache.tomcat.util.Counters - Handler/rm</li>
+
+    </ul>
+
+    Indirect dependencies:
+    <ul>
+      <li>FastDateFormat, collections.Queue ( Log implementation )</li>
+      <li>collections.MultipMap ( http )
 
     </ul>
   </body>

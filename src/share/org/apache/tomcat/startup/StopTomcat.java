@@ -58,7 +58,7 @@
  */
 package org.apache.tomcat.startup;
 
-import org.apache.tomcat.util.StringManager;
+import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.IntrospectionUtils;
 import java.io.*;
 import java.net.*;

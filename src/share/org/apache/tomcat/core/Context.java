@@ -61,8 +61,8 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.depend.*;
-import org.apache.tomcat.util.MimeMap;
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.http.MimeMap;
+import org.apache.tomcat.util.log.Log;
 
 import java.io.File;
 import java.net.FileNameMap;

@@ -59,7 +59,7 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.log.Log;
 
 import java.util.Hashtable;
 import java.util.Vector;

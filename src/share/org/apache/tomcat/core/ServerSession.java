@@ -65,8 +65,11 @@ import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.tomcat.util.MessageBytes;
+
+import org.apache.tomcat.util.buf.MessageBytes;
+
 import org.apache.tomcat.util.Counters;
+
 import org.apache.tomcat.util.threads.TimeStamp;
 
 /**

@@ -59,7 +59,7 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.util.hooks.*;
+import org.apache.tomcat.util.hooks.Hooks;
 import java.util.Hashtable;
 import java.util.Enumeration;
 

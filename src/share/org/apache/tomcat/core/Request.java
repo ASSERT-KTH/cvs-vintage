@@ -60,14 +60,17 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.util.MimeHeaders;
+import org.apache.tomcat.util.http.MimeHeaders;
+import org.apache.tomcat.util.http.Parameters;
+import org.apache.tomcat.util.http.ContentType;
+import org.apache.tomcat.util.http.Cookies;
+
 import org.apache.tomcat.util.Counters;
 import org.apache.tomcat.util.SimplePrincipal;
-import org.apache.tomcat.util.MessageBytes;
+import org.apache.tomcat.util.buf.MessageBytes;
 
-import org.apache.tomcat.util.http.ContentType;
 
-import org.apache.tomcat.util.http.*;
+//import org.apache.tomcat.util.http.*;
 
 import java.security.Principal;
 import java.io.IOException;
