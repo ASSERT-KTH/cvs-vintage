@@ -6,9 +6,7 @@ import java.util.Enumeration;
 
 import org.columba.core.config.Config;
 import org.columba.core.gui.FrameController;
-import org.columba.core.gui.statusbar.ImageSequenceTimer;
 import org.columba.core.gui.util.DialogStore;
-import org.columba.main.MainInterface;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.imap.IMAPFolder;
@@ -16,13 +14,14 @@ import org.columba.mail.folder.mh.CachedMHFolder;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.action.GlobalActionCollection;
 import org.columba.mail.gui.attachment.AttachmentController;
+import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.frame.action.FrameActionListener;
-import org.columba.mail.gui.header.HeaderController;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
+import org.columba.main.MainInterface;
 
 /**
  * @author freddy
@@ -86,7 +85,7 @@ public class MailFrameController extends FrameController {
 
 		//attachmentController.setSelectionManager( selectionManager);
 
-		headerController = new HeaderController();
+		//headerController = new HeaderController();
 
 		folderInfoPanel = new FolderInfoPanel();
 		view.setFolderInfoPanel(folderInfoPanel);

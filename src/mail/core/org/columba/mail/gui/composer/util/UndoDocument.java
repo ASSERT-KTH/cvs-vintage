@@ -15,14 +15,10 @@
 
 package org.columba.mail.gui.composer.util;
 
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.undo.*;
-import java.awt.*;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.undo.UndoManager;
 
-import org.columba.mail.gui.message.util.MessageDocument;
-
-public class UndoDocument extends MessageDocument
+public class UndoDocument extends DefaultStyledDocument
 {
     private UndoManager undoManager;
 

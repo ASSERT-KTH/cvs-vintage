@@ -22,6 +22,7 @@ import javax.swing.JTextPane;
 import org.columba.core.config.Config;
 import org.columba.mail.gui.composer.util.UndoDocument;
 
+
 /**
  * @author frd
  *

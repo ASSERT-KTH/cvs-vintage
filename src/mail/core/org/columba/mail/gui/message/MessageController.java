@@ -16,9 +16,15 @@ package org.columba.mail.gui.message;
 
 import java.awt.Font;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JPopupMenu;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 
 import org.columba.core.config.Config;
 import org.columba.mail.coder.CoderRouter;
@@ -26,12 +32,13 @@ import org.columba.mail.coder.Decoder;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
-import org.columba.mail.gui.header.HeaderView;
+
 import org.columba.mail.gui.message.action.MessageActionListener;
 import org.columba.mail.gui.message.action.MessageFocusListener;
 import org.columba.mail.gui.message.action.MessagePopupListener;
 import org.columba.mail.gui.message.menu.MessageMenu;
 import org.columba.mail.gui.table.MessageSelectionListener;
+import org.columba.mail.gui.util.URLController;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.MimePart;
 
@@ -39,9 +46,9 @@ import org.columba.mail.message.MimePart;
  * this class shows the messagebody
  */
 
-public class MessageController implements MessageSelectionListener//implements CharsetListener
+public class MessageController implements MessageSelectionListener, HyperlinkListener//implements CharsetListener
 {
-	private HeaderView messageHeader;
+	
 
 	private Folder folder;
 	private Object uid;
@@ -71,74 +78,35 @@ public class MessageController implements MessageSelectionListener//implements C
 
 		activeCharset = "auto";
 
-		view = new MessageView();
+		view = new MessageView(this);
+		view.addHyperlinkListener(this);
 
 		//messageSelectionManager = new MessageSelectionManager();
 		
 		actionListener = new MessageActionListener(this);
 
-		String[] keys = new String[4];
-		keys[0] = new String("Subject");
-		keys[1] = new String("From");
-		keys[2] = new String("Date");
-		keys[3] = new String("To");
-
-		Font mainFont =
-			new Font(
-				Config.getOptionsConfig().getThemeItem().getMainFontName(),
-				Font.PLAIN,
-				Config.getOptionsConfig().getThemeItem().getMainFontSize());
-
-		messageHeader = new HeaderView(keys, 2);
-
-		menu = new MessageMenu(this);
-
 		/*
-		setLayout(new BorderLayout());
-		
-		//focusListener = new MessageFocusListener();
-		popupListener = new MessagePopupListener(this);
-		
-		documentOperator = new MessageView(this);
-		documentOperator.setPopupListener(popupListener);
-		
-		add(documentOperator, BorderLayout.CENTER);
-		
 		String[] keys = new String[4];
 		keys[0] = new String("Subject");
 		keys[1] = new String("From");
 		keys[2] = new String("Date");
 		keys[3] = new String("To");
+		*/
 		
 		Font mainFont =
 			new Font(
 				Config.getOptionsConfig().getThemeItem().getMainFontName(),
 				Font.PLAIN,
 				Config.getOptionsConfig().getThemeItem().getMainFontSize());
+
 		
-		messageHeader = new HeaderView(keys, 2);
-		
-		add(messageHeader, BorderLayout.NORTH);
-		
-		actionListener = new MessageActionListener(this);
-		
+
 		menu = new MessageMenu(this);
+
 		
-		MainInterface.focusManager.registerComponent( new MessageFocusOwner(this) );
-		
-		button = new JButton("test - knopf");
-		
-		*/
 	}
 	
-	/*
-	public void setSelectionManager( SelectionManager m )
-	{
-		this.selectionManager = m;
-		
-		selectionManager.addMessageSelectionListener(this);
-	}
-	*/
+
 	
 	public void messageSelectionChanged( Object[] newUidList )
 	{
@@ -186,69 +154,13 @@ public class MessageController implements MessageSelectionListener//implements C
 		return menu.getPopupMenu();
 	}
 
-	/*
-	public void update(boolean b)
-	{
-		if (b == true)
-		{
-			if (view != null)
-				remove(view);
+
 	
-			add(view, BorderLayout.CENTER);
-		}
-	}
-	*/
-
-	public void createTextPane(boolean b, boolean htmlViewer) {
-
-		if (b == true) {
-			if (htmlViewer == true) {
-				// use the html viewer
-
-				//view.enableViewer(MessageView.HTML);
-
-				/*
-				if (view != null)
-					remove(view);
-				
-				add(view, BorderLayout.CENTER);
-				*/
-
-			} else {
-				// use the advanced viewer
-				/*
-				view.enableViewer(MessageView.ADVANCED);
-				
-				if (view != null)
-					remove(view);
-				
-				add(view, BorderLayout.CENTER);
-				*/
-
-			}
-		} else {
-			// use plain text viewer ( fast )
-
-			//view.enableViewer(MessageView.SIMPLE);
-
-			/*
-			if (view != null)
-			remove(view);
-			
-			add(view, BorderLayout.CENTER);
-			*/
-
-		}
-
-	}
 
 	public void setViewerFont(Font font) {
 		//textPane.setFont( font );
 	}
 
-	public void resetRenderer() {
-		messageHeader.resetRenderer();
-	}
 
 	public Object getUid() {
 		return uid;
@@ -314,49 +226,18 @@ public class MessageController implements MessageSelectionListener//implements C
 		getView().setDoc(header, decodedBody,htmlViewer);
 		
 		getView().getVerticalScrollBar().setValue(0);
-		// Show message in the MessageViewer
-		//HtmlViewer hv = new HtmlViewer();
-		//hv.setDoc(decodedBody);
-			
-			//getView().setDoc(decodedBody);
-		//getView().insertHtml(hv);
-			
-		/*	
-		if ( htmlViewer == true )
-		{
-			HtmlViewer hv = new HtmlViewer();
-			hv.setDoc(decodedBody);
-			
-			//getView().setDoc(decodedBody);
-			getView().insertHtml(hv);
-			
-			
-		}
-		else
-		{
-			getView().setDoc(decodedBody);
-		}
-		*/
 		
-		//insertText(decodedBody, htmlViewer);
 
 	}
 
-	/*
 	
-	public void setSecurityIndicator(int value)
-	{
-		messageHeader.setSecurityValue(value);
-	}
-	*/
 	
-	public void showMessageSource(String rawText)
+	public void showMessageSource(String rawText) throws Exception
 	{
 		getView().setDoc(null, rawText,false);
 		
 		getView().getVerticalScrollBar().setValue(0);
-		//insertText(rawText, false);
-		//view.setCaretPosition(0);
+		
 	}
 	/*
 	 * 
@@ -393,68 +274,39 @@ public class MessageController implements MessageSelectionListener//implements C
 	}
 	*/
 
-	protected void insertText(String s, boolean htmlView) {
-		boolean advanced =
-			MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.getAdvancedViewer();
-
-		if (htmlView == true) {
-
-			//boolean b = getView().enableViewer(MessageView.HTML);
-			//update(b);
-			//getView().setDoc(s);
-		} 
-		
-		/*else if (advanced == true) {
-
-			boolean b =
-				getView().enableViewer(MessageView.ADVANCED);
-			//update(b);
-			getView().setDoc(s);
-
-			//getView().setHeader( button );
-
-		} else {
-
-			boolean b = getView().enableViewer(MessageView.SIMPLE);
-			//update(b);
-			getView().setDoc(s);
-
-		}
-		*/
-	}
+	
 	/*	
 	public void charsetChanged( CharsetEvent e ) {
 		activeCharset = e.getValue();				
 	}
 	*/
 
-	/*
-	protected void scrollToBegin()
-	{
-		Runnable run = new Runnable()
-		{
-			public void run()
-			{
-				view.setCaretPosition(0);
+	
+	
+	
+	public void hyperlinkUpdate(HyperlinkEvent e) {
+		
+
+		if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+			JEditorPane pane = (JEditorPane) e.getSource();
+			if (e instanceof HTMLFrameHyperlinkEvent) {
+				HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent) e;
+				HTMLDocument doc = (HTMLDocument) pane.getDocument();
+				doc.processHTMLFrameHyperlinkEvent(evt);
+			} else {
+				URL url = e.getURL();
+				if (url == null) {
+					// found email address
+
+					System.out.println("found email address");
+				} else {
+					URLController c = new URLController();
+					c.open(url);
+				}
 			}
-		};
-		try
-		{
-			if (!SwingUtilities.isEventDispatchThread())
-				SwingUtilities.invokeAndWait(run);
-			else
-				SwingUtilities.invokeLater(run);
-	
 		}
-		catch (Exception ex)
-		{
-		}
-	
+
 	}
-	*/
 
 	/********************* context menu *******************************************/
 
