@@ -11,7 +11,7 @@ public class Unavailable extends HttpServlet {
 	System.out.println("Try to init ");
 	attempt++;
 	if( attempt < 2 ) 
-	    throw new UnavailableException( 10, this, "Testing " );
+	    throw new UnavailableException("Testing ", 10);
 	System.out.println("Init ok ");
     }
 
