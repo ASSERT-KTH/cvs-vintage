@@ -83,7 +83,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.25 2002/07/13 00:44:35 jmcnally Exp $
+    @version $Id: ConfigureIssueList.java,v 1.26 2002/07/23 21:49:33 jmcnally Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -96,6 +96,12 @@ public class ConfigureIssueList extends RequireLoginFirstAction
         // Add user's new selection of attributes
         ParameterParser params = data.getParameters();
         String[] ids = params.getStrings("attid");
+        if (ids == null || ids.length == 0) 
+        {
+            scarab.setAlertMessage("You must select at least one attribute.");
+        }
+        else
+        {
         String[] orders = params.getStrings("attorder");
         final Map orderMap = new HashMap();
         List attributes = new ArrayList(ids.length);
@@ -125,8 +131,9 @@ public class ConfigureIssueList extends RequireLoginFirstAction
             };
         Collections.sort(attributes, c);
         ((ScarabUser)data.getUser()).updateIssueListAttributes(attributes);
-            
+      
         data.setMessage(DEFAULT_MSG);
+        }
     }
 
     /**
