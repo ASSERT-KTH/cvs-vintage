@@ -4,6 +4,16 @@ TURBINE="../../jakarta-turbine"
 SCARAB=".."
 DIR=`pwd`
 CVSUPDATE=1
+MYSQL=/usr/local/mysql/bin
+
+## Environment variables
+JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home"
+export JAVA_HOME
+ANT_HOME="/usr/local/ant"
+export ANT_HOME
+PATH=${PATH}:/usr/local/bin:${ANT_HOME}/bin:${MYSQL}
+export PATH
+echo "Path: $PATH"
 
 ## Kill Catalina
 cd ${DIR}
@@ -15,8 +25,9 @@ else
 fi
 
 ## Clean up old builds
+cd ${DIR}
 if [ -d ${SCARAB}/target ] ; then
-    echo "Removing Scarab target directory..."
+    echo "Removing Scarab ${SCARAB}/target directory..."
     cd ${DIR}; cd ${SCARAB}
     rm -r target
 else
@@ -24,7 +35,7 @@ else
 fi
 cd ${DIR}
 if [ -d ${TURBINE}/bin ] ; then
-    echo "Removing Turbine bin directory..."
+    echo "Removing Turbine ${TURBINE}/bin directory..."
     cd ${DIR}; cd ${TURBINE}
     rm -r bin
 else
