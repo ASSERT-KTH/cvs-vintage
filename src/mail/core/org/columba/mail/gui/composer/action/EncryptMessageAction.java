@@ -46,7 +46,7 @@ public class EncryptMessageAction extends CheckBoxAction {
 				MailResourceLoader.getMnemonic(
 					"menu", "composer", "menu_message_encrypt"));
 
-		setEnabled(false);
+		//setEnabled(false);
 	}
 
 	/* (non-Javadoc)

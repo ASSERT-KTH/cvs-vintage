@@ -34,8 +34,9 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.message.PgpMimePart;
+import org.columba.mail.message.PGPMimePart;
 import org.columba.mail.message.SendableHeader;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.composer.MimeTreeRenderer;
@@ -491,14 +492,29 @@ public class MessageComposer {
 		}
 
 		if (model.isSignMessage()) {
-			PgpMimePart signPart =
-				new PgpMimePart(
-					new MimeHeader("multipart", "signed"),
-					model.getAccountItem().getPGPItem(),
-					PgpMimePart.SIGNED);
+			PGPItem item = model.getAccountItem().getPGPItem();
+			// Set id on from address
+			item.set("id",model.getAccountItem().getIdentityItem().get("address"));
+			PGPMimePart signPart =
+				new PGPMimePart(
+					new MimeHeader("multipart", "signed"), item
+					);
 
 			signPart.addChild(root);
 			root = signPart;
+		}
+		
+		if( model.isEncryptMessage()) {
+			PGPItem item = model.getAccountItem().getPGPItem(); 
+			// Set id on recipient
+			item.set("id",model.getRCPTVector().get(0).toString());
+			PGPMimePart signPart =
+				new PGPMimePart(
+					new MimeHeader("multipart", "encrypted"),
+					item);
+
+			signPart.addChild(root);
+			root = signPart;			
 		}
 
 		header.setRecipients(model.getRCPTVector());

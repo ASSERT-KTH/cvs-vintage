@@ -167,6 +167,9 @@ public class PGPController {
 	 */
 	public InputStream encrypt(InputStream message, PGPItem item) {
 		int exitVal = -1;
+		
+		this.getPassphrase(item);
+		
 		try {
 			exitVal = utils[GPG].encrypt(item, message);
 		} catch (Exception e) {

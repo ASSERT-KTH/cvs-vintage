@@ -14,6 +14,8 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.headercache.CachedHeaderfieldOwner;
 import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.pgp.MultipartEncryptedRenderer;
+import org.columba.mail.pgp.MultipartSignedRenderer;
 import org.columba.mail.plugin.FilterActionPluginHandler;
 import org.columba.mail.plugin.FilterPluginHandler;
 import org.columba.mail.plugin.FolderPluginHandler;
@@ -24,6 +26,7 @@ import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.composer.MimeTreeRenderer;
 
 /**
  * @author frd
@@ -75,7 +78,13 @@ public class MailMain extends DefaultMain {
 	 * @see org.columba.core.main.DefaultMain#initPlugins()
 	 */
 	public void initPlugins() {
+		
+		// Init PGP
+		MimeTreeRenderer renderer = MimeTreeRenderer.getInstance();
+		renderer.addMimePartRenderer(new MultipartSignedRenderer());
+		renderer.addMimePartRenderer(new MultipartEncryptedRenderer());
 
+		// Init Plugins
 		MainInterface.pluginManager.registerHandler(
 			new FilterActionPluginHandler());
 		MainInterface.pluginManager.registerHandler(new FilterPluginHandler());

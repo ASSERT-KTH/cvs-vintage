@@ -41,7 +41,7 @@ public class SignMessageAction extends CheckBoxAction {
 				MailResourceLoader.getMnemonic(
 					"menu", "composer", "menu_message_sign"));
 
-		setEnabled(false);
+		//setEnabled(false);
 	}
 
 	/* (non-Javadoc)
