@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.9 2002/05/16 08:26:35 spestov Exp $
+ * @version $Id: Java14.java,v 1.10 2002/10/23 21:14:58 spestov Exp $
  */
 public class Java14
 {
@@ -143,8 +143,17 @@ public class Java14
 			JEditTextArea textArea = (JEditTextArea)e.getSource();
 
 			int amt = e.getWheelRotation();
-
-			if(e.isShiftDown())
+			/****************************************************
+			 * move caret depending on pressed control-keys:
+			 * - Alt: move cursor, do not select
+			 * - Alt+(shift or control): move cursor, select
+			 * - shift: scroll page
+			 * - control: scroll single line
+			 * - <else>: scroll 3 lines
+			 ****************************************************/
+			if(e.isAltDown())
+				moveCaret(textArea,amt,e.isShiftDown() || e.isControlDown());
+			else if(e.isShiftDown())
 				scrollPage(textArea,amt);
 			else if(e.isControlDown())
 				scrollLine(textArea,amt);
@@ -163,6 +172,14 @@ public class Java14
 		private void scrollPage(JEditTextArea textArea, int amt)
 		{
 			scrollLine(textArea,amt * textArea.getVisibleLines());
+		}
+
+		private void moveCaret(JEditTextArea textArea, int amt, boolean select)
+		{
+			if (amt < 0)
+				textArea.goToPrevLine(select);
+			else
+				textArea.goToNextLine(select);
 		}
 	}
 }

@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.151 2002/10/16 19:31:34 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.152 2002/10/23 21:14:58 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4357,8 +4357,16 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			getToolkit().beep();
 		else
 		{
-			setSelectedText("\n");
-			buffer.indentLine(caretLine,true,false);
+			try
+			{
+				buffer.beginCompoundEdit();
+				setSelectedText("\n");
+				buffer.indentLine(caretLine,true,false);
+			}
+			finally
+			{
+				buffer.endCompoundEdit();
+			}
 		}
 	} //}}}
 
@@ -4378,7 +4386,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				&& buffer.indentLine(caretLine,true,false))
 				return;
 			else
-				insertTab();
+				userInput('\t');
 		}
 	} //}}}
 

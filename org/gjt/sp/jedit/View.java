@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.36 2002/09/04 20:44:06 spestov Exp $
+ * @version $Id: View.java,v 1.37 2002/10/23 21:14:58 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1334,8 +1334,10 @@ public class View extends JFrame implements EBComponent
 	//{{{ handleEditPaneUpdate() method
 	private void handleEditPaneUpdate(EditPaneUpdate msg)
 	{
-		if(msg.getEditPane().getView() == this
-			&& msg.getWhat() == EditPaneUpdate.BUFFER_CHANGED)
+		EditPane editPane = msg.getEditPane();
+		if(editPane.getView() == this
+			&& msg.getWhat() == EditPaneUpdate.BUFFER_CHANGED
+			&& editPane.getBuffer().isLoaded())
 		{
 			status.repaintCaretStatus();
 			status.updateBufferStatus();
@@ -1353,7 +1355,8 @@ public class View extends JFrame implements EBComponent
 		public void caretUpdate(CaretEvent evt)
 		{
 			status.repaintCaretStatus();
-			status.updateMiscStatus();
+			// no need for this?
+			//status.updateMiscStatus();
 		}
 	} //}}}
 
