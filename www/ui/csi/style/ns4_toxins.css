@@ -143,6 +143,13 @@ ul.tasks li {
  }
 
 /* Scarab/App - styles start here */
+.modbar {
+	background: #ccc;
+	}
+.modbar {
+	padding: 5px;
+	border-bottom: 1px solid #999; 
+	}
 .functnbar {
 	background: #999 url(../images/nw_min.gif) no-repeat top left;
 	}
