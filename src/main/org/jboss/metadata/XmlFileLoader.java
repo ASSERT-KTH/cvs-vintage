@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
  *   @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.27 $
+ *   @version $Revision: 1.28 $
  *
  *   Revisions:
  *
@@ -312,6 +312,8 @@ public class XmlFileLoader
          registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN", "application_1_2.dtd");
          registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN", "application_1_3.dtd");
          registerDTD("-//Sun Microsystems, Inc.//DTD Connector 1.0//EN", "connector_1_0.dtd");
+         registerDTD("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN", "web-app_2_2.dtd");
+         registerDTD("-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN", "web-app_2_3.dtd");
          registerDTD("-//JBoss//DTD JAWS//EN", "jaws.dtd");
          registerDTD("-//JBoss//DTD JAWS 2.4//EN", "jaws_2_4.dtd");
          registerDTD("-//JBoss//DTD JAWS 3.0//EN", "jaws_3_0.dtd");
