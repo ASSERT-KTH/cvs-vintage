@@ -73,6 +73,17 @@ public class ShutdownManager {
     private static ShutdownManager instance;
     
     /**
+     * Indicates whether this ShutdownManager instance is registered as a
+     * system shutdown hook.
+     */
+    private boolean shutdownHook = false;
+    
+    /**
+     * The thread performing the actual shutdown procedure.
+     */
+    protected final Thread shutdownThread;
+    
+    /**
      * The list of runnable plugins that should be executed on shutdown.
      */
     protected List list = new LinkedList();
@@ -81,26 +92,15 @@ public class ShutdownManager {
      * This constructor is only to be accessed by getShutdownManager() and
      * by subclasses.
      */
-    protected ShutdownManager() {}
-
-    /**
-     * Registers a runnable plugin that should be executed on shutdown.
-     */
-    public void register(Runnable plugin) {
-        list.add(0, plugin);
-    }
-    
-    /**
-     * Starts the shutdown procedure.
-     */
-    public void shutdown(final int status) {
-        new Thread(new Runnable() {
+    protected ShutdownManager() {
+        shutdownThread = new Thread(new Runnable() {
             public void run() {
                 // stop background-manager so it doesn't interfere with
                 // shutdown manager
                 MainInterface.backgroundTaskManager.stop();
 
-                while (MainInterface.processor.getTaskManager().count() > 0) {
+                while (!isShutdownHook() && 
+                        MainInterface.processor.getTaskManager().count() > 0) {
                     // ask user to kill pending running commands or wait
                     //TODO: i18n
                     Object[] options = { "Wait", "Exit" };
@@ -142,6 +142,50 @@ public class ShutdownManager {
                 //any, shutdown plugins only use this thread
 
                 dialog.setVisible(false);
+            }
+        }, "ShutdownManager");
+        setShutdownHook(true);
+    }
+
+    /**
+     * Registers a runnable plugin that should be executed on shutdown.
+     */
+    public void register(Runnable plugin) {
+        list.add(0, plugin);
+    }
+    
+    /**
+     * Returns whether this ShutdownManager instance runs inside a system
+     * shutdown hook.
+     */
+    public synchronized boolean isShutdownHook() {
+        return shutdownHook;
+    }
+    
+    /**
+     * Registers or unregisters this ShutdownManager instance as a system
+     * shutdown hook.
+     */
+    protected synchronized void setShutdownHook(boolean b) {
+        if (shutdownHook == b) {
+            return;
+        }
+        if (b) {
+            Runtime.getRuntime().addShutdownHook(shutdownThread);
+        } else {
+            Runtime.getRuntime().removeShutdownHook(shutdownThread);
+        }
+        shutdownHook = b;
+    }
+    
+    /**
+     * Starts the shutdown procedure.
+     */
+    public synchronized void shutdown(final int status) {
+        setShutdownHook(false);
+        new Thread(new Runnable() {
+            public void run() {
+                shutdownThread.run();
                 System.exit(status);
             }
         }, "ShutdownManager").start();
@@ -158,7 +202,7 @@ public class ShutdownManager {
         dialog.setLocationRelativeTo(null);
         return dialog;
     }
-
+    
     /**
      * Returns the singleton instance of this class.
      */
