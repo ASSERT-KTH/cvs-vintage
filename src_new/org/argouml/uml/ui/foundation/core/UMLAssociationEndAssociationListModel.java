@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndAssociationListModel.java,v 1.7 2003/11/11 21:54:10 linus Exp $
+// $Id: UMLAssociationEndAssociationListModel.java,v 1.8 2004/09/14 17:35:11 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,8 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 4, 2003
  */
-public class UMLAssociationEndAssociationListModel extends UMLModelElementListModel2 {
+public class UMLAssociationEndAssociationListModel 
+    extends UMLModelElementListModel2 {
     
     /**
      * Constructor for UMLAssociationEndAssociationListModel.
@@ -46,8 +47,8 @@ public class UMLAssociationEndAssociationListModel extends UMLModelElementListMo
      */
     protected void buildModelList() {
         removeAllElements();
-        if (_target != null) {
-            addElement(ModelFacade.getAssociation(_target));
+        if (getTarget() != null) {
+            addElement(ModelFacade.getAssociation(getTarget()));
         }
     }
 
@@ -55,7 +56,8 @@ public class UMLAssociationEndAssociationListModel extends UMLModelElementListMo
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ element) {
-        return org.argouml.model.ModelFacade.isAAssociation(element) && ModelFacade.getAssociation(_target).equals(element);
+        return org.argouml.model.ModelFacade.isAAssociation(element) 
+            && ModelFacade.getAssociation(getTarget()).equals(element);
     }
 
 }

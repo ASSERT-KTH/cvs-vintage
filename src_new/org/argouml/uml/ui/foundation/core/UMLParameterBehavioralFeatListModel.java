@@ -1,4 +1,4 @@
-// $Id: UMLParameterBehavioralFeatListModel.java,v 1.1 2004/07/28 13:16:29 mkl Exp $
+// $Id: UMLParameterBehavioralFeatListModel.java,v 1.2 2004/09/14 17:35:11 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,8 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
  * @since Jan 29, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class UMLParameterBehavioralFeatListModel extends UMLModelElementListModel2 {
+public class UMLParameterBehavioralFeatListModel 
+    extends UMLModelElementListModel2 {
 
     /**
      * Constructor for UMLParameterBehavioralFeatListModel
@@ -44,7 +45,7 @@ public class UMLParameterBehavioralFeatListModel extends UMLModelElementListMode
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-	if (_target != null) {
+	if (getTarget() != null) {
 	    removeAllElements();
 	    addElement(ModelFacade.getBehavioralFeature(getTarget()));
 	}

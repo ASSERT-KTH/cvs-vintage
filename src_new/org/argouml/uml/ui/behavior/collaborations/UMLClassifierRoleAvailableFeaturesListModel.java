@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.15 2004/02/08 12:45:26 mvw Exp $
+// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.16 2004/09/14 17:35:12 mvw Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,8 +52,8 @@ public class UMLClassifierRoleAvailableFeaturesListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        setAllElements(
-		       CollaborationsHelper.getHelper().allAvailableFeatures(getTarget()));
+        setAllElements(CollaborationsHelper.getHelper()
+                .allAvailableFeatures(getTarget()));
     }
 
     /**
@@ -73,7 +73,7 @@ public class UMLClassifierRoleAvailableFeaturesListModel
         } else if (
 		   e.getName().equals("feature")
 		   && ModelFacade.getBases(getTarget()).contains(
-									  e.getSource())) {
+			  e.getSource())) {
             addElement(getChangedElement(e));
         }
     }
@@ -83,44 +83,44 @@ public class UMLClassifierRoleAvailableFeaturesListModel
      * org.argouml.uml.ui.UMLModelElementListModel2#setTarget(java.lang.Object)
      */
     public void setTarget(Object target) {
-        if (_target != null) {
+        if (getTarget() != null) {
             Collection bases = ModelFacade.getBases(getTarget());
             Iterator it = bases.iterator();
             while (it.hasNext()) {
                 Object base = /*(MBase)*/ it.next();
                 UmlModelEventPump.getPump().removeModelEventListener(
-								     this,
-								     base,
-								     "feature");
+			this,
+			base,
+			"feature");
             }
             UmlModelEventPump.getPump().removeModelEventListener(
-								 this,
-								 /*(MBase)*/ getTarget(),
-								 "base");
+		this,
+		/*(MBase)*/ getTarget(),
+		"base");
         }
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
         if (!ModelFacade.isABase(target))
             return;
-        _target = target;
-        if (_target != null) {
-            Collection bases = ModelFacade.getBases(_target);
+        setListTarget(target);
+        if (getTarget() != null) {
+            Collection bases = ModelFacade.getBases(getTarget());
             Iterator it = bases.iterator();
             while (it.hasNext()) {
                 Object base = /*(MBase)*/ it.next();
                 UmlModelEventPump.getPump().addModelEventListener(
-								  this,
-								  base,
-								  "feature");
+			this,
+			base,
+			"feature");
             }
             // make sure we know it when a classifier is added as a base
             UmlModelEventPump.getPump().addModelEventListener(
-							      this,
-							      /*(MBase)*/ _target,
-							      "base");
+			this,
+			/*(MBase)*/ getTarget(),
+			"base");
             removeAllElements();
-            _buildingModel = true;
+            setBuildingModel(true);
             buildModelList();
-            _buildingModel = false;
+            setBuildingModel(false);
             if (getSize() > 0) {
                 fireIntervalAdded(this, 0, getSize() - 1);
             }
@@ -135,8 +135,7 @@ public class UMLClassifierRoleAvailableFeaturesListModel
     }
 
     /**
-     * @see
-     * ru.novosoft.uml.MElementListener#roleRemoved(ru.novosoft.uml.MElementEvent)
+     * @see ru.novosoft.uml.MElementListener#roleRemoved(ru.novosoft.uml.MElementEvent)
      */
     public void roleRemoved(MElementEvent e) {
         if (e.getName().equals("base") && e.getSource() == getTarget()) {
@@ -148,7 +147,7 @@ public class UMLClassifierRoleAvailableFeaturesListModel
         } else if (
 		   e.getName().equals("feature")
 		   && ModelFacade.getBases(getTarget()).contains(
-									 e.getSource())) {
+		           e.getSource())) {
             removeElement(getChangedElement(e));
         }
     }

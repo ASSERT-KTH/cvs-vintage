@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndRoleBaseListModel.java,v 1.13 2004/02/08 12:45:26 mvw Exp $
+// $Id: UMLAssociationEndRoleBaseListModel.java,v 1.14 2004/09/14 17:35:12 mvw Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class UMLAssociationEndRoleBaseListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        if (_target != null && ModelFacade.getBase(getTarget()) != null) {
+        if (getTarget() != null && ModelFacade.getBase(getTarget()) != null) {
             addElement(ModelFacade.getBase(getTarget()));
         }
     }
@@ -57,7 +57,9 @@ public class UMLAssociationEndRoleBaseListModel
         if (!ModelFacade.isAAssociationEnd(base)) return false;
         
         Object assocEndRole = /*(MAssociationEndRole)*/ getTarget();
-        Object assocRole = /*(MAssociationRole)*/ ModelFacade.getAssociation(assocEndRole);
-        return ModelFacade.getConnections(ModelFacade.getBase(assocRole)).contains(base);
+        Object assocRole = /*(MAssociationRole)*/ 
+            ModelFacade.getAssociation(assocEndRole);
+        return ModelFacade.getConnections(ModelFacade.getBase(assocRole))
+            .contains(base);
     }
 }

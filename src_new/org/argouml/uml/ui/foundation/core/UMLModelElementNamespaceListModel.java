@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceListModel.java,v 1.9 2004/02/08 12:45:28 mvw Exp $
+// $Id: UMLModelElementNamespaceListModel.java,v 1.10 2004/09/14 17:35:11 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,8 +46,8 @@ public class UMLModelElementNamespaceListModel
      */
     protected void buildModelList() {
         removeAllElements();
-        if (_target != null) {
-            addElement(ModelFacade.getNamespace(_target));
+        if (getTarget() != null) {
+            addElement(ModelFacade.getNamespace(getTarget()));
         }
     }
 

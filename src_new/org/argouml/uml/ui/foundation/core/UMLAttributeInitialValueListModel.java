@@ -1,4 +1,4 @@
-// $Id: UMLAttributeInitialValueListModel.java,v 1.6 2004/02/08 12:45:27 mvw Exp $
+// $Id: UMLAttributeInitialValueListModel.java,v 1.7 2004/09/14 17:35:11 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class UMLAttributeInitialValueListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-	if (_target != null) {
+	if (getTarget() != null) {
 	    removeAllElements();
 	    addElement(ModelFacade.getInitialValue(getTarget()));
 	}

@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndSpecificationListModel.java,v 1.8 2004/02/08 12:45:27 mvw Exp $
+// $Id: UMLAssociationEndSpecificationListModel.java,v 1.9 2004/09/14 17:35:11 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,8 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 4, 2003
  */
-public class UMLAssociationEndSpecificationListModel extends UMLModelElementListModel2 {
+public class UMLAssociationEndSpecificationListModel 
+    extends UMLModelElementListModel2 {
 
     /**
      * Constructor for UMLAssociationEndSpecificationListModel.
@@ -45,15 +46,16 @@ public class UMLAssociationEndSpecificationListModel extends UMLModelElementList
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        if (_target != null) 
-            setAllElements(ModelFacade.getSpecifications(_target));
+        if (getTarget() != null) 
+            setAllElements(ModelFacade.getSpecifications(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ o) {  
-        return org.argouml.model.ModelFacade.isAClassifier(o) && ModelFacade.getSpecifications(getTarget()).contains(o);
+        return org.argouml.model.ModelFacade.isAClassifier(o) 
+            && ModelFacade.getSpecifications(getTarget()).contains(o);
     }
 
 }
