@@ -4,7 +4,6 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.lang.reflect.Method;
@@ -44,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;
@@ -78,9 +77,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
          Object[] args,
          EntityEnterpriseContext ctx) throws FinderException {
 
-      ReadAheadCache selectReadAheadCache = null;
+      PrefetchCache selectPrefetchCache = null;
       if(selectEntity != null) {
-         selectReadAheadCache = selectManager.getReadAheadCache();
+         selectPrefetchCache = selectManager.getPrefetchCache();
       }
 
       List results = new ArrayList();
@@ -131,7 +130,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
 
                   // read the value and store it in the readahead cache
                   index = field.loadArgumentResults(rs, index, ref);
-                  selectReadAheadCache.addPreloadData(pk, field, ref[0]);
+                  selectPrefetchCache.addPrefetchData(pk, field, ref[0]);
                }
             }
          } else {
@@ -158,7 +157,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
 
       // add the results list to the cache
       JDBCReadAheadMetaData readAhead = queryMetaData.getReadAhead();
-      selectReadAheadCache.addFinderResults(results, readAhead);
+      selectPrefetchCache.addFinderResults(results, readAhead);
 
       // If this is a finder, we're done.
       if(queryMetaData.getMethod().getName().startsWith("find")) {

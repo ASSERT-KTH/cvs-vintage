@@ -65,7 +65,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -806,13 +806,13 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
                " cmrField="+getFieldName()+
                " pk="+myCtx.getId());
       }
-      manager.getReadAheadCache().load(myCtx);
+      manager.getPrefetchCache().loadPrefetchData(myCtx);
       if(fieldState.isLoaded()) {
          return;
       }
       
       // load the value from the database
-      load(myCtx, manager.loadRelation(this, myCtx.getId()));
+      load(myCtx, manager.loadRelation(this, myCtx));
 
       // we just loaded the results so we are clean
       setClean(myCtx);

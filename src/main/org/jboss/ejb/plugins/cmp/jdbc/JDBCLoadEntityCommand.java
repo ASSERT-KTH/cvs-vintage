@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class JDBCLoadEntityCommand {
    private final JDBCStoreManager manager;
@@ -70,17 +70,16 @@ public class JDBCLoadEntityCommand {
       entity.injectPrimaryKeyIntoInstance(ctx, ctx.getId());
 
       // get the read ahead cache
-      ReadAheadCache readAheadCache = manager.getReadAheadCache();
+      PrefetchCache prefetchCache = manager.getPrefetchCache();
 
-      // load any preloaded fields into the context
-      readAheadCache.load(ctx);
+      // load any prefetched data into the context context
+      prefetchCache.loadPrefetchData(ctx);
       
-      // get the finder results associated with this context, if it exists
-      ReadAheadCache.EntityReadAheadInfo info = 
-         readAheadCache.getEntityReadAheadInfo(ctx.getId());
-
       // determine the fields to load
-      List loadFields = getLoadFields(requiredField, info.getReadAhead(), ctx);
+      List loadFields = getLoadFields(
+            requiredField, 
+            JDBCContext.getReadAheadMetaData(ctx),
+            ctx);
 
       // if no there are not load fields return
       if(loadFields.size() == 0) {
@@ -88,7 +87,11 @@ public class JDBCLoadEntityCommand {
       }
 
       // get the keys to load
-      List loadKeys = info.getLoadKeys();
+      List loadKeys = JDBCContext.getLoadKeys(ctx);
+      if(loadKeys == null)
+      {
+         loadKeys = Collections.singletonList(ctx.getId());
+      }
 
       // generate the sql
       String sql = getSQL(loadFields, loadKeys.size());
@@ -160,7 +163,7 @@ public class JDBCLoadEntityCommand {
                   index = field.loadArgumentResults(rs, index, ref);
    
                   // cache the field value
-                  readAheadCache.addPreloadData(pk, field, ref[0]);
+                  prefetchCache.addPrefetchData(pk, field, ref[0]);
                }
             }
          }

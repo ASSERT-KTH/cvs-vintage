@@ -59,7 +59,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -81,7 +81,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
    
    private JDBCCommandFactory commandFactory;
    
-   private ReadAheadCache readAheadCache;
+   private PrefetchCache prefetchCache;
    
    // Manager life cycle commands
    private JDBCInitCommand initCommand;
@@ -167,9 +167,9 @@ public class JDBCStoreManager implements EntityPersistenceStore
       return commandFactory;
    }
    
-   public ReadAheadCache getReadAheadCache()
+   public PrefetchCache getPrefetchCache()
    {
-      return readAheadCache;
+      return prefetchCache;
    }
    
    //
@@ -264,32 +264,6 @@ public class JDBCStoreManager implements EntityPersistenceStore
       {
          map.remove(key);
       }
-   }
-   
-   public Map getEntityTxDataMap()
-   {
-      Map entityTxDataMap = (Map)getApplicationTxData(this);
-      if(entityTxDataMap == null)
-      {
-         entityTxDataMap = new HashMap();
-         putApplicationTxData(this, entityTxDataMap);
-      }
-      return entityTxDataMap;
-   }
-   
-   public Object getEntityTxData(Object key)
-   {
-      return getEntityTxDataMap().get(key);
-   }
-   
-   public void putEntityTxData(Object key, Object value)
-   {
-      getEntityTxDataMap().put(key, value);
-   }
-   
-   public void removeEntityTxData(Object key)
-   {
-      getEntityTxDataMap().remove(key);
    }
    
    private void initApplicationDataMap()
@@ -406,8 +380,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       catalog.addEntity(entityBridge);
       
       // create the read ahead cache
-      readAheadCache = new ReadAheadCache(this);
-      readAheadCache.create();
+      prefetchCache = new PrefetchCache(this);
       
       // Set up Commands
       commandFactory = new JDBCCommandFactory(this);
@@ -461,8 +434,6 @@ public class JDBCStoreManager implements EntityPersistenceStore
       // queries can opperate on other entities in the application, and
       // all entities are gaurenteed to be createed until the start phase.
       queryManager.start();
-      
-      readAheadCache.start();
    }
    
    public void stop()
@@ -472,8 +443,6 @@ public class JDBCStoreManager implements EntityPersistenceStore
       {
          stopCommand.execute();
       }
-      
-      readAheadCache.stop();
    }
    
    public void destroy()
@@ -484,11 +453,8 @@ public class JDBCStoreManager implements EntityPersistenceStore
          destroyCommand.execute();
       }
       
-      if(readAheadCache != null) {
-         readAheadCache.destroy();
-      }
+      prefetchCache = null;
 
-      readAheadCache = null;
       if(queryManager != null) {
          queryManager.clear();
       }
@@ -638,9 +604,11 @@ public class JDBCStoreManager implements EntityPersistenceStore
    //
    // Relationship Commands
    //
-   public Collection loadRelation(JDBCCMRFieldBridge cmrField, Object pk)
+   public Collection loadRelation(
+         JDBCCMRFieldBridge cmrField, 
+         EntityEnterpriseContext ctx)
    {
-      return loadRelationCommand.execute(cmrField, pk);
+      return loadRelationCommand.execute(cmrField, ctx);
    }
    
    public void deleteRelations(RelationData relationData)
