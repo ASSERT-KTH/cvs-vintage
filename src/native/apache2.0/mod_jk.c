@@ -496,7 +496,7 @@ static int jk_handler(request_rec *r)
     return HTTP_INTERNAL_SERVER_ERROR;
 }
 
-static void *create_jk_config(ap_context_t *p, server_rec *s)
+static void *create_jk_config(ap_pool_t *p, server_rec *s)
 {
     jk_server_conf_t *c =
         (jk_server_conf_t *) ap_pcalloc(p, sizeof(jk_server_conf_t));
@@ -517,7 +517,7 @@ static void *create_jk_config(ap_context_t *p, server_rec *s)
 }
 
 
-static void *merge_jk_config(ap_context_t *p, 
+static void *merge_jk_config(ap_pool_t *p, 
                              void *basev, 
                              void *overridesv)
 {
@@ -554,9 +554,42 @@ static void *merge_jk_config(ap_context_t *p,
     return overrides;
 }
 
-static void jk_post_config(ap_context_t *pconf, 
-                           ap_context_t *plog, 
-                           ap_context_t *ptemp, 
+static void jk_child_init(ap_pool_t *pconf, 
+			  server_rec *s)
+{
+    char *p = getenv("WAS_BORN_BY_APACHE");
+    jk_map_t *init_map = NULL;
+    jk_server_conf_t *conf =
+        (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
+
+    fprintf(stdout, "jk_post_config %s\n", p ? p : "NULL"); fflush(stdout);
+        
+    if(conf->log_file && conf->log_level >= 0) {
+        if(!jk_open_file_logger(&(conf->log), conf->log_file, conf->log_level)) {
+            conf->log = NULL;
+        } else {
+            main_log = conf->log;
+        }
+    }
+    
+    if(!uri_worker_map_alloc(&(conf->uw_map), conf->uri_to_context, conf->log)) {
+        jk_error_exit(APLOG_MARK, APLOG_EMERG, s, "Memory error");
+    }
+
+    if(map_alloc(&init_map)) {
+        if(map_read_properties(init_map, conf->worker_file)) {
+	    if(wc_open(init_map, conf->log)) {
+		return;
+                }            
+        }
+    }
+
+    jk_error_exit(APLOG_MARK, APLOG_EMERG, s, "Error while opening the workers");
+}
+
+static void jk_post_config(ap_pool_t *pconf, 
+                           ap_pool_t *plog, 
+                           ap_pool_t *ptemp, 
                            server_rec *s)
 {
     char *p = getenv("WAS_BORN_BY_APACHE");
@@ -618,11 +651,18 @@ static int jk_translate(request_rec *r)
 
 static void jk_register_hooks(void)
 {
-    ap_hook_post_config(jk_post_config,
+#ifdef LINUX
+        ap_hook_child_init(jk_child_init,
                         NULL,
                         NULL,
                         HOOK_MIDDLE);    
 
+#else
+       ap_hook_post_config(jk_post_config,
+                        NULL,
+                        NULL,
+                        HOOK_MIDDLE);    
+#endif
     ap_hook_translate_name(jk_translate,
                            NULL,
                            NULL,

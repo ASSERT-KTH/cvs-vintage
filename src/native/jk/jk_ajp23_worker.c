@@ -64,6 +64,7 @@
 #include "jk_pool.h"
 #include "jk_connect.h"
 #include "jk_util.h"
+#include "jk_msg_buff.h"
 #include "jk_sockbuf.h"
 
 #define AJP_DEF_HOST            ("localhost")
@@ -152,26 +153,6 @@ typedef struct ajp23_endpoint ajp23_endpoint_t;
 /* // XXX replace all return values with error codes */
 #define ERR_BAD_PACKET -5
 
-/* Data marshaling.
-   Uses a Buffer ( iovect later ), with 1 copy.
-   Simple marshaling, based on Ajp21.
- */
-
-/* strbuf ? */
-struct MsgBuffer_Simple {
-    jk_pool_t *pool;
-
-    unsigned char *buf;
-    int pos; /* XXX MT */
-    int len;
-    int maxlen;
-};
-
-typedef struct MsgBuffer_Simple MsgBuffer;
-
-MsgBuffer *new_MsgBuffer();
-
-
 /* -------------------- Method -------------------- */
 static int JK_METHOD validate(jk_worker_t *pThis,
                               jk_map_t *props,                            
@@ -251,201 +232,17 @@ static int JK_METHOD done(jk_endpoint_t **e,
     return JK_FALSE;
 }
 
-
-// ---------------------------------------- START MARSHALL ----------------------------------------
-
-
-/* XXX what's above this line can go to .h XXX */
-static void b_dump( MsgBuffer *msg, char *err ) {
-        int i=0;
-	printf("%s %d/%d/%d %x %x %x %x - %x %x %x %x - %x %x %x %x - %x %x %x %x\n", err, msg->pos, msg->len, msg->maxlen,  
-	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++],
-	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++],
-	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++],
-	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++]);
-
-	i=msg->pos - 4;
-	if( i<0 ) i=0;
-	
-        printf("        %x %x %x %x - %x %x %x %x --- %x %x %x %x - %x %x %x %x\n", 
-	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++],
-	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++],
-	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++],
-	       msg->buf[i++],msg->buf[i++],msg->buf[i++],msg->buf[i++]);
-
-}
-
-static void b_reset( MsgBuffer *msg ) {
-    msg->len =4;
-    msg->pos =4;
-}
-
-static void b_set_int( MsgBuffer *msg, int pos, unsigned int val ) {
-    /* XXX optimize - swap if needed or just copyb */
-    /* #if SWAP */
-    /*     swap_16( (unsigned char *)&val, msg->buf ) */
-    /* #else */
-    /*     ???	 */
-    /* #endif  */
-    msg->buf[pos++]=(unsigned char) ( (val >> 8) & 0xff );
-    msg->buf[pos]= (unsigned char) ( val & 0xff );
-}
-
-static int b_append_int( MsgBuffer *msg, unsigned int val ) {
-    if( msg->len + 2 > msg->maxlen ) 
-	return -1;
-
-    b_set_int( msg, msg->len, val );
-    msg->len +=2;
-    return 0;
-}
-
-
-static void b_end(MsgBuffer *msg) {
-    /* Ugly way to set the size in the right position */
-    b_set_int( msg, 2, msg->len - 4 ); /* see protocol */
-    b_set_int( msg, 0, 0x1234 );
-}
-
-
-/* XXX optimize it ( less function calls, macros )
-   Ugly pointer arithmetic code
- */
-/* XXX io_vec ? XXX just send/map the pool !!! */
-
-static MsgBuffer *b_new(jk_pool_t *p) {
-    MsgBuffer *msg=(MsgBuffer *)jk_pool_alloc( p, sizeof ( MsgBuffer ));
-    msg->pool=p;
-    if(msg==NULL) return NULL;
-}
-
-static int b_set_buffer( MsgBuffer *msg, char *data, int buffSize ) {
-    if(msg==NULL) return -1;
-
-    msg->len=0;
-    msg->buf=data;
-    msg->maxlen=buffSize;
-    /* XXX error checking !!! */
-    
-    return 0;
-}
-
-
-static int b_set_buffer_size( MsgBuffer *msg, int buffSize ) {
-
-    unsigned char *data=(unsigned char *)jk_pool_alloc( msg->pool, buffSize );
-    if( data==NULL ) {
-	/* Free - sub-pools */
-	return -1;
-    }
-
-    b_set_buffer( msg, data, buffSize );
-}
-
-static unsigned char *b_get_buff( MsgBuffer *msg ) {
-    return msg->buf;
-}
-
-static unsigned int b_get_pos( MsgBuffer *msg ) {
-    return msg->pos;
-}
-
-static unsigned int b_get_len( MsgBuffer *msg ) {
-    return msg->len;
-}
-
-static  void b_set_len( MsgBuffer *msg, int len ) {
-    msg->len=len;
-}
-
-static int b_get_size( MsgBuffer *msg ) {
-    return msg->maxlen;
-}
-
-/** Shame-less copy from somewhere.
-    assert (src != dst)
- */
-static void swap_16( unsigned char *src, unsigned char *dst) {
-    *dst++ = *(src + 1 );
-    *dst= *src;
-}
-
-static int b_append_string( MsgBuffer *msg, char *param ) {
-    int len;
-
-    if( param==NULL ) {
-	b_append_int( msg, 0xFFFF );
-	return 0; 
-    }
-
-    len=strlen(param);
-    if( msg->len + len + 2  > msg->maxlen )
-	return -1;
-
-    // ignore error - we checked once
-    b_append_int( msg, len );
-
-    // We checked for space !! 
-    strncpy( msg->buf + msg->len , param, len+1 ); // including \0
-    msg->len += len + 1;
-    return 0;
-}
-
-static int b_get_int( MsgBuffer *msg) {
-    int i;
-    if( msg->pos + 1 > msg->len ) {
-	printf( "Read after end \n");
-	return 0;
-    }
-    i= ((msg->buf[msg->pos++]&0xff)<<8);
-    i+= (msg->buf[(msg->pos++)] & 0xFF);
-    return i;
-}
-
-static int b_pget_int( MsgBuffer *msg, int pos) {
-    int i= ((msg->buf[pos++]&0xff)<<8);
-    i+= (msg->buf[pos] & 0xFF);
-    return i;
-}
-
-
-static int b_getCode( MsgBuffer *msg ) {
-    return b_pget_int( msg, 0 );
-}
-
-static unsigned char *b_get_string( MsgBuffer *msg) {
-    int size, start;
-    char *str;
-
-    /*     b_dump(msg, "Before GS: "); */
-    
-    size=b_get_int(msg);
-    start=msg->pos;
-    if(( size < 0 ) || ( size + start > msg->maxlen ) ) { 
-	b_dump(msg, "After get int"); 
-	printf("ERROR\n" );
-	return "ERROR"; /* XXX */
-    }
-
-    msg->pos += size;
-    msg->pos++; // end 0
-    str= msg->buf + start;
-    /*     printf( "Get_string %lx %lx %x\n", msg->buf,  str, size ); */
-    /*     printf( "Get_string %s \n", str ); */
-    return (unsigned char *)(msg->buf + start); 
-}
-
-static int b_append_headers( MsgBuffer *msg, jk_ws_service_t *s, jk_logger_t *l) {
+static int jk_b_append_headers( MsgBuffer *msg, jk_ws_service_t *s, jk_logger_t *l) {
     /* Send the request headers */
-    int err=b_append_int( msg, s->num_headers);
+    int err=jk_b_append_int( msg, s->num_headers);
     if(err<0) return err;
 
     if(s->num_headers) {
         unsigned  i;
         for(i = 0 ; i < s->num_headers ; ++i) {
-	    err=b_append_string( msg, s->headers_names[i] );
+	    err=jk_b_append_string( msg, s->headers_names[i] );
 	    if (err<0)  return err;
-	    err=b_append_string( msg, s->headers_values[i] );
+	    err=jk_b_append_string( msg, s->headers_values[i] );
 	    if (err<0)  return err;
 	}
     }
@@ -491,26 +288,26 @@ static int process_callback(  MsgBuffer *msg, jk_ws_service_t *r, jk_logger_t *l
    the method _name_ follows 
 */
 static void encode_env(  MsgBuffer *msg, jk_ws_service_t *r ) {
-    //    b_append_table( msg, r->subprocess_env );
+    //    jk_b_append_table( msg, r->subprocess_env );
     /* XXX use r instead of env */
-    b_append_int( msg, 6 );
-    b_append_string( msg, "REQUEST_METHOD" );
-    b_append_string( msg, r->method );
+    jk_b_append_int( msg, 6 );
+    jk_b_append_string( msg, "REQUEST_METHOD" );
+    jk_b_append_string( msg, r->method );
 
-    b_append_string( msg, "SERVER_PROTOCOL");
-    b_append_string( msg, r->protocol );
+    jk_b_append_string( msg, "SERVER_PROTOCOL");
+    jk_b_append_string( msg, r->protocol );
 
-    b_append_string( msg, "REQUEST_URI" );
-    b_append_string( msg, r->req_uri );
+    jk_b_append_string( msg, "REQUEST_URI" );
+    jk_b_append_string( msg, r->req_uri );
 
-    b_append_string( msg, "QUERY_STRING" );
-    b_append_string( msg, r->query_string );
+    jk_b_append_string( msg, "QUERY_STRING" );
+    jk_b_append_string( msg, r->query_string );
 
-    b_append_string( msg, "SERVER_PORT" );
-    b_append_string( msg, "8080" );
+    jk_b_append_string( msg, "SERVER_PORT" );
+    jk_b_append_string( msg, "8080" );
 
-    b_append_string( msg, "REMOTE_ADDR");
-    b_append_string( msg, r->remote_addr );
+    jk_b_append_string( msg, "REMOTE_ADDR");
+    jk_b_append_string( msg, r->remote_addr );
 
 }
 
@@ -522,20 +319,20 @@ static void encode_env(  MsgBuffer *msg, jk_ws_service_t *r ) {
 */
 static void encode_request( MsgBuffer *msg, jk_ws_service_t *r, jk_logger_t *l ) {
 
-    b_append_int( msg, REQUEST_FORWARD ); 
+    jk_b_append_int( msg, REQUEST_FORWARD ); 
     encode_env( msg, r );
-    b_append_headers( msg, r, l );
+    jk_b_append_headers( msg, r, l );
 
 /*     // Append first chunk of request body ( up to the buffer size ) */
     /*     printf("Encode request \n"); */
 /*     if ( ! ap_should_client_block(r)) { */
 /* 	// no body, send 0 */
 	/* printf("No body\n"); */
-	b_append_int( msg, 0 );
+	jk_b_append_int( msg, 0 );
 /*     } else { */
-/*         int maxsize=b_get_size( msg ); */
-/* 	char *buffer=b_get_buff(msg); */
-/* 	int posLen= b_get_len( msg ); */
+/*         int maxsize=jk_b_get_size( msg ); */
+/* 	char *buffer=jk_b_get_buff(msg); */
+/* 	int posLen= jk_b_get_len( msg ); */
 /* 	int pos=posLen +2 ; */
 /*         long rd; */
 
@@ -546,10 +343,10 @@ static void encode_request( MsgBuffer *msg, jk_ws_service_t *r, jk_logger_t *l )
 /* 	    pos=pos + rd; */
 /*         } */
 	/* 	printf( "End reading %d %d %d \n", posLen, pos, maxsize ); */
-/* 	b_set_int( msg, posLen, pos - posLen -2 ); */
-/* 	b_set_len( msg, pos ); */
-	/* 	b_dump(msg, "Post ");  */
-    /*     b_dump(msg, "Encode req"); */
+/* 	jk_b_set_int( msg, posLen, pos - posLen -2 ); */
+/* 	jk_b_set_len( msg, pos ); */
+	/* 	jk_b_dump(msg, "Post ");  */
+    /*     jk_b_dump(msg, "Encode req"); */
 }
 
 /** 
@@ -564,14 +361,14 @@ static int setHeaders( MsgBuffer *msg, jk_ws_service_t *r, jk_logger_t *l) {
     int status=200;
     
 
-    count= b_get_int( msg  );
+    count= jk_b_get_int( msg  );
     names=(char **) jk_pool_alloc( r->pool, ( count + 1 ) * sizeof( char * ));
     values=(char **) jk_pool_alloc( r->pool, ( count + 1 ) * sizeof( char * ));
 
     //    printf( "Header count: %x %x %x %x\n", count, pos, (int)msg[2], (int)msg[3] );
     for( i=0; i< count; i++ ) {
-	char *n=b_get_string( msg );
-	char *v=b_get_string( msg );
+	char *n=jk_b_get_string( msg );
+	char *v=jk_b_get_string( msg );
 	names[i]=n;
 	values[i]=v;
 
@@ -599,17 +396,17 @@ static int getBodyChunk( MsgBuffer *msg, jk_ws_service_t *r) {
     int count;
 
     /* No parameters, send body */
-    b_reset( msg );
-    b_append_int( msg, SEND_BODY_CHUNK );
+    jk_b_reset( msg );
+    jk_b_append_int( msg, SEND_BODY_CHUNK );
     
 /*     if ( ! ap_should_client_block(r)) { */
 /* 	// no body, send 0 */
 /* 	printf("No body\n"); */
-/* 	b_append_int( msg, 0 ); */
+/* 	jk_b_append_int( msg, 0 ); */
 /*     } else { */
-/*         int maxsize=b_get_size( msg ); */
-/* 	char *buffer=b_get_buff(msg); */
-/* 	int posLen= b_get_len( msg ); */
+/*         int maxsize=jk_b_get_size( msg ); */
+/* 	char *buffer=jk_b_get_buff(msg); */
+/* 	int posLen= jk_b_get_len( msg ); */
 /* 	int pos=posLen +2 ; */
 /*         long rd; */
 	
@@ -620,9 +417,9 @@ static int getBodyChunk( MsgBuffer *msg, jk_ws_service_t *r) {
 /* 	    pos=pos + rd; */
 /*         } */
 /* 	printf( "End reading %d %d %d \n", posLen, pos, maxsize ); */
-/* 	b_set_int( msg, posLen, pos - posLen -2 ); */
-/* 	b_set_len( msg, pos ); */
-/* 	b_dump(msg, "Post additional data");  */
+/* 	jk_b_set_int( msg, posLen, pos - posLen -2 ); */
+/* 	jk_b_set_len( msg, pos ); */
+/* 	jk_b_dump(msg, "Post additional data");  */
 /*     } */
     
     return HAS_RESPONSE;
@@ -635,13 +432,13 @@ static int getBodyChunk( MsgBuffer *msg, jk_ws_service_t *r) {
 int process_callback( MsgBuffer *msg, jk_ws_service_t *r, jk_logger_t *l) {
     int len;
 
-    /*     printf("Callback %x\n", b_getCode(msg)); */
-    switch( b_getCode(msg) ) {
+    /*     printf("Callback %x\n", jk_b_getCode(msg)); */
+    switch( jk_b_pget_int(msg,0 ) ) {
     case SET_HEADERS:
 	setHeaders( msg , r, l);
 	break;
     case SEND_BODY_CHUNK:
-	len=b_get_int( msg );
+	len=jk_b_get_int( msg );
 	r->write( r, msg->buf + msg->pos, len);
 	break;
     case GET_BODY_CHUNK:
@@ -651,9 +448,9 @@ int process_callback( MsgBuffer *msg, jk_ws_service_t *r, jk_logger_t *l) {
     case END_RESPONSE:
 	break;
     default:
-	b_dump( msg , "Invalid code");
+	jk_b_dump( msg , "Invalid code");
 	jk_log( l, JK_LOG_ERROR,
-		"Invalid code: %d\n", b_getCode(msg));
+		"Invalid code: %d\n", jk_b_pget_int(msg,0));
 	return -1;
     }
     
@@ -667,7 +464,7 @@ static int connection_tcp_send_message(  ajp23_endpoint_t *con, MsgBuffer *msg, 
     int sent=0;
     int i;
     
-    b_end( msg );
+    jk_b_end( msg );
     /*     printf("Sending %x %x %x %x\n", msg->buf[0],msg->buf[1],msg->buf[2],msg->buf[3]) ;  */
     while( sent < msg->len ) {
 	i=write( con->sd, msg->buf + sent , msg->len - sent );
@@ -748,7 +545,7 @@ static int connection_tcp_get_message( ajp23_endpoint_t *con, MsgBuffer *msg, jk
 
     /* printf( "Packet len %d %x\n", msglen, msglen ); */
 
-    if(msglen > b_get_size(msg) ) {
+    if(msglen > jk_b_get_size(msg) ) {
 	printf("Message too long ");
 	return -5; /* XXX */
 	/* 	sreq->message=(char *)ap_palloc( p, sreq->msglen ); */
@@ -761,7 +558,7 @@ static int connection_tcp_get_message( ajp23_endpoint_t *con, MsgBuffer *msg, jk
     i=read_full(con, msg->buf, msglen, l );
     if( i<0) return i;
     
-    /*     b_dump( msg, " RCV: " ); */
+    /*     jk_b_dump( msg, " RCV: " ); */
     return 0;
 }
 
@@ -802,10 +599,10 @@ static int JK_METHOD service(jk_endpoint_t *e,
             *is_recoverable_error = JK_FALSE;
             jk_sb_open(&p->sb, p->sd);
 
-	    msg = b_new( s->pool );
-	    b_set_buffer_size( msg, 2048); 
+	    msg = jk_b_new( s->pool );
+	    jk_b_set_buffer_size( msg, 2048); 
 
-	    b_reset( msg );
+	    jk_b_reset( msg );
 	    encode_request( msg , s, l );
     
 	    err= connection_tcp_send_message( p, msg, l );
@@ -819,14 +616,14 @@ static int JK_METHOD service(jk_endpoint_t *e,
 
 	    while( 1 ) {
 		int err=connection_tcp_get_message( p, msg, l );
-		/* 	b_dump(msg, "Get Message: " ); */
+		/* 	jk_b_dump(msg, "Get Message: " ); */
 		if( err < 0 ) {
 		    jk_log( l, JK_LOG_ERROR,
 				  "Error reading request %d\n", err);
 		    // XXX cleanup, close connection if packet error
 		    return JK_FALSE;
 		}
-		if( b_getCode( msg ) == END_RESPONSE )
+		if( jk_b_pget_int( msg, 0 ) == END_RESPONSE )
 		    break;
 		err=process_callback( msg, s, l );
 		if( err == HAS_RESPONSE ) {

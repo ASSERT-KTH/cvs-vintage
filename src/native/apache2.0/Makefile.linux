@@ -1,0 +1,42 @@
+## You need to edit this file - configure later :-)
+
+APACHE_HOME=/usr/local/apache-2.0
+OS=linux
+## I assume this one is set up already
+# JAVA_HOME=
+
+## 
+
+AP20_INCL=-I${APACHE_HOME}/include/apr  -I${APACHE_HOME}/include
+JAVA_INCL=-I${JAVA_HOME}/include -I${JAVA_HOME}/include/${OS}
+JAVA_LIB=-L${JAVA_HOME}/jre/lib/${ARCH} -L${JAVA_HOME}/lib/${ARCH}/native_threads
+
+
+## 
+AP20_SRC=/home/costin/src/jakarta/apache-2.0/src
+AP20SRC_INCL=-I. -I${AP20_SRC}/modules/standard -I${AP20_SRC} -I${AP20_SRC}/include -I${AP20_SRC}/lib/apr/include -I${AP20_SRC}/os/unix
+
+CFLAGS=-DHAVE_CONFIG_H -g -fpic  -DSHARED_MODULE -O2 -D_REENTRANT -pthread -DLINUX
+
+SRCS=jk_ajp12_worker.c jk_connect.c  jk_lb_worker.c  \
+     jk_map.c  jk_pool.c jk_sockbuf.c jk_uri_worker_map.c jk_util.c jk_worker.c \
+     jk_ajp23_worker.c jk_msg_buff.c jk_jni_worker.c
+
+OBJS=${patsubst %.c,%.o,${SRCS}}
+
+%.o: ../jk/%.c 
+	${CC} -c ${CFLAGS} ${JAVA_INCL} ${AP20SRC_INCL}  $< -o $@
+
+.c.o:
+	${CC} -c ${CFLAGS} ${JAVA_INCL} ${AP20SRC_INCL} -I../jk $<
+
+
+
+all: mod_jk.so
+
+mod_jk.so: ${OBJS} mod_jk.o
+	$(CC) -shared -o mod_jk.so ${OBJS} mod_jk.o
+
+clean:
+	rm *.o *.so
+
