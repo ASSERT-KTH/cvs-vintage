@@ -96,6 +96,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
     Vector additionalJars=new Vector();
     String additionalJarsS=null;
     String jarSeparator=":";
+    static final String clAttribute = "org.apache.tomcat.classloader";
     
     public LoaderInterceptor11() {
     }
@@ -230,13 +231,30 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 
     }
 
+    /** setup the ClassLoader for this context.
+     *  If this is a re-loaded context, do nothing.
+     */
     public void contextInit( Context ctx )
 	throws TomcatException
     {
 	// jsp will add it's own stuff
-	prepareClassLoader( ctx );
+	if(ctx.getAttribute(clAttribute) == null) {
+	    prepareClassLoader( ctx );
+	}
     }
-    
+
+    public void copyContext(Request req, Context oldC, Context newC)
+	throws TomcatException {
+	if(debug > 0)
+	    log( "Reload event " + newC.getPath() );
+	// construct a new loader
+	ClassLoader oldLoader=oldC.getClassLoader();
+
+	// will be used by reloader or other modules to try to
+	// migrate the data. 
+	newC.getContainer().setNote( "oldLoader", oldLoader);
+    }
+
     /** Construct another class loader, when the context is reloaded.
      */
     public void reload( Request req, Context context) throws TomcatException {
@@ -259,7 +277,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
         }
 
 	context.setClassLoader( loader );
-	context.setAttribute( "org.apache.tomcat.classloader", loader);
+	context.setAttribute( clAttribute, loader);
     }
 
     /** Initialize the class loader.
@@ -309,7 +327,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	context.setClassLoader( loader );
 
 	// support for jasper and other applications
-	context.setAttribute( "org.apache.tomcat.classloader",loader);
+	context.setAttribute(clAttribute, loader);
     }
     
     /** Override this method to provide an alternate loader
@@ -405,7 +423,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	    if (k.equals("org.apache.tomcat.jsp_classpath")) {
 		return getClassPath(ctx);
 	    }
-	    if(k.equals("org.apache.tomcat.classloader")) {
+	    if(k.equals(clAttribute)) {
 		return ctx.getClassLoader();
 	    }
 
