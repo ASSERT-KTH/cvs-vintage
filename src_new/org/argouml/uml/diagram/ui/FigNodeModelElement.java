@@ -24,7 +24,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.14 2001/12/22 23:25:35 thn Exp $
+// $Id: FigNodeModelElement.java,v 1.15 2002/01/08 21:32:14 thn Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -559,8 +559,8 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
   protected Dimension getUpdatedSize(FigGroup fg, int x, int y, int w, int h) {
 	int newW = w;
 	int n = fg.getFigs().size()-1;
-	int newH = Math.max(h,ROWHEIGHT*Math.max(1,n)+1);
-	int step = (n>0) ? newH / n : 0; // width step between FigText objects
+	int newH = Math.max(h,ROWHEIGHT*Math.max(1,n)+2);
+	int step = (n>0) ? (newH-1) / n : 0; // width step between FigText objects
 	//int maxA = Toolkit.getDefaultToolkit().getFontMetrics(LABEL_FONT).getMaxAscent();
 
 	//set new bounds for all included figs
