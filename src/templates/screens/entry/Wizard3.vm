@@ -201,6 +201,7 @@
     <p><small><strong>$l10n.MissedRequired1</strong> $l10n.MissedRequired2</small></p>
 #end
 #textAreaMedium("$intakeAttachment.Data.Key" $intakeAttachment.Data)
+#fieldErrorMsg($intakeAttachment.Data "")
    </td>
  </tr>
 

@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.241 2002/12/20 00:58:24 jon Exp $
+ * @version $Id: Issue.java,v 1.242 2002/12/20 01:52:16 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3093,7 +3093,7 @@ public class Issue
         {
             // Save activitySet record
             activitySet = ActivitySetManager
-                .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user, attachment);
+                .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
             activitySet.save();
         }
 
@@ -3113,7 +3113,21 @@ public class Issue
                     se.getMessage() + " Please start over.");    
             }
         }
-        save();
+        this.save();
+
+        // this needs to be done after the issue is created.
+        attachment.setIssue(this);
+        attachment.setTypeId(Attachment.MODIFICATION__PK);
+        attachment.setName("reason");
+        attachment.setCreatedBy(user.getUserId());
+        attachment.setMimeType("text/plain");
+        attachment.save();
+        activitySet.setAttachment(attachment);
+        activitySet.save();
+        // need to clear the cache since this is after the 
+        // issue is saved. for some reason, things don't
+        // show up properly right away.
+        ScarabCache.clear();
         return activitySet;
     }
 

@@ -90,7 +90,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.156 2002/12/20 00:07:10 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.157 2002/12/20 01:52:16 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -341,17 +341,24 @@ public class ReportIssue extends RequireLoginFirstAction
                 // only do this after setting the attributes above.
                 boolean saveIssue = true;
                 String summary = issue.getDefaultText();
-                Group commentGroup = intake.get("Attachment", "_1", false);
-                Field commentField = commentGroup.get("Data");
+                Group reasonGroup = intake.get("Attachment", "_1", false);
+                Field reasonField = reasonGroup.get("Data");
                 if ( summary == null || summary.length() == 0 ) 
                 {
-                    commentField.setRequired(true);
+                    reasonField.setRequired(true);
                     saveIssue = false;
                 }
 
+                // if the reason field is to long, then show an error.
+                String reasonString = reasonField.toString();
+                if (reasonString != null && reasonString.length() > 254)
+                {
+                    reasonField.setMessage("intake_ReasonMustBeLessThan256Characters");
+                    saveIssue = false;
+                }
                 // If there is a default text attribute,or if a comment has 
                 // Been provided, proceed.
-                if (commentField.isValid() || saveIssue)
+                if (reasonField.isValid() || saveIssue)
                 {
                     HashMap newValues = new HashMap();
                     List modAttrs = issue.getModule()
@@ -389,14 +396,14 @@ public class ReportIssue extends RequireLoginFirstAction
                     
                     // Save the Reason
                     ActivitySet activitySet = null;
-                    Attachment comment = null;
+                    Attachment reason = null;
                     try
                     {
                         // grab the comment data
-                        comment = new Attachment();
-                        commentField.setProperty(comment);
+                        reason = new Attachment();
+                        reasonField.setProperty(reason);
                         activitySet = issue
-                            .setInitialAttributeValues(null, comment, newValues, user);
+                            .setInitialAttributeValues(activitySet, reason, newValues, user);
                     }
                     catch (Exception se)
                     {
@@ -422,9 +429,9 @@ public class ReportIssue extends RequireLoginFirstAction
                 
                     // send email
                     // FIXME: get rid of this logic.
-                    if (summary.length() == 0 && comment != null)
+                    if (summary.length() == 0 && reason != null)
                     {
-                        summary = comment.getData();
+                        summary = reason.getData();
                     }
                     if (summary.length() > 60)
                     {
