@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.15 2001/08/09 19:38:18 jon Exp $
+$Id: README.txt,v 1.16 2001/08/20 22:02:46 jon Exp $
 
 Welcome to Scarab!
 
@@ -52,6 +52,21 @@ scarab/
     /target     <-- This is the output directory where the sandbox will be 
                     created. It doesn't exist until you run the build script.
     /www        <-- This is where the website is stored.
+
+Within the /src directory are a number of sub directories...
+
+/src
+    /conf       <-- Various configuration files for Scarab.
+    /dtd        <-- Intake and Torque DTD's.
+    /html       <-- Files which show up within the webapp directory.
+    /images     <-- Copied to the webapp/images directory.
+    /java       <-- The Java source code for Scarab.
+    /resources  <-- Resources for the UI Tool. Not currently used.
+    /sql        <-- SQL files for defining the database.
+    /templates  <-- Velocity templates for the HTML and Email.
+    /tomcat-4.0 <-- A minimal copy of Tomcat 4.0 for use with the Scarab
+                    sandbox.
+    /usecases   <-- Old usecase documentation. Currently out of date.
 
 
 -------------------------------------------------------------------------
