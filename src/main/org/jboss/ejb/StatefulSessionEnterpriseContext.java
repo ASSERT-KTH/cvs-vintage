@@ -20,7 +20,7 @@ import javax.ejb.SessionContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -29,11 +29,9 @@ public class StatefulSessionEnterpriseContext
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   EJBObject ejbObject;
-   Object cacheCtx;
-   Object persistenceCtx;
+   private EJBObject ejbObject;
 	
-	SessionContext ctx;
+   private SessionContext ctx;
     
    // Static --------------------------------------------------------
    
@@ -61,16 +59,18 @@ public class StatefulSessionEnterpriseContext
    public void setInstance(Object instance) 
     { 
        this.instance = instance; 
+	   try 
+	   {
+	      ((SessionBean)instance).setSessionContext(ctx);
+	   }
+	   catch (Exception x) 
+	   {
+		   org.jboss.logging.Logger.exception(x);
+	   }
     }
    
    public void setEJBObject(EJBObject eo) { ejbObject = eo; }
    public EJBObject getEJBObject() { return ejbObject; }
-   
-   public void setPersistenceContext(Object ctx) { this.persistenceCtx = ctx; }
-   public Object getPersistenceContext() { return persistenceCtx; }
-   
-   public void setCacheContext(Object ctx) { this.cacheCtx = ctx; }
-   public Object getCacheContext() { return cacheCtx; }
 	
 	public SessionContext getSessionContext()
 	{
