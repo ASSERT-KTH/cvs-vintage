@@ -47,7 +47,7 @@ public class CancelAction
 		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0));
 		
 		// set JavaHelp topic ID
-		setTopicID("cancel");
+		//setTopicID("cancel");
 
 		setEnabled(false);
 		MainInterface.processor.getTaskManager().addWorkerListChangeListener(
