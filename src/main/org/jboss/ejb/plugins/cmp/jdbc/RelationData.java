@@ -18,9 +18,10 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * committed these list are retrieved and used to update the relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
-public final class RelationData {
+public final class RelationData
+{
    private final JDBCCMRFieldBridge leftCMRField;
    private final JDBCCMRFieldBridge rightCMRField;
 
@@ -28,11 +29,9 @@ public final class RelationData {
    public final Set removedRelations = new HashSet();
    public final Set notRelatedPairs = new HashSet();
 
-   public RelationData(
-      JDBCCMRFieldBridge leftCMRField,
-      JDBCCMRFieldBridge rightCMRField)
+   public RelationData(JDBCCMRFieldBridge leftCMRField,
+                       JDBCCMRFieldBridge rightCMRField)
    {
-
       this.leftCMRField = leftCMRField;
       this.rightCMRField = rightCMRField;
    }
@@ -47,16 +46,15 @@ public final class RelationData {
       return rightCMRField;
    }
 
-   public void addRelation(
-      JDBCCMRFieldBridge leftCMRField, Object leftId,
-      JDBCCMRFieldBridge rightCMRField, Object rightId)
+   public void addRelation(JDBCCMRFieldBridge leftCMRField,
+                           Object leftId,
+                           JDBCCMRFieldBridge rightCMRField,
+                           Object rightId)
    {
-
       // only need to bother if neither side has a foreign key
       if(!leftCMRField.hasForeignKey() && !rightCMRField.hasForeignKey())
       {
-         RelationPair pair = createRelationPair(
-            leftCMRField, leftId, rightCMRField, rightId);
+         RelationPair pair = createRelationPair(leftCMRField, leftId, rightCMRField, rightId);
          if(removedRelations.contains(pair))
          {
             // we were going to remove this relation
@@ -79,16 +77,15 @@ public final class RelationData {
       }
    }
 
-   public void removeRelation(
-      JDBCCMRFieldBridge leftCMRField, Object leftId,
-      JDBCCMRFieldBridge rightCMRField, Object rightId)
+   public void removeRelation(JDBCCMRFieldBridge leftCMRField,
+                              Object leftId,
+                              JDBCCMRFieldBridge rightCMRField,
+                              Object rightId)
    {
-
       // only need to bother if neither side has a foreign key
       if(!leftCMRField.hasForeignKey() && !rightCMRField.hasForeignKey())
       {
-         RelationPair pair = createRelationPair(
-            leftCMRField, leftId, rightCMRField, rightId);
+         RelationPair pair = createRelationPair(leftCMRField, leftId, rightCMRField, rightId);
          if(addedRelations.contains(pair))
          {
             // we were going to add this relation
@@ -122,25 +119,22 @@ public final class RelationData {
       return addedRelations.size() > 0 || removedRelations.size() > 0;
    }
 
-   private RelationPair createRelationPair(
-      JDBCCMRFieldBridge leftCMRField, Object leftId,
-      JDBCCMRFieldBridge rightCMRField, Object rightId)
+   private RelationPair createRelationPair(JDBCCMRFieldBridge leftCMRField,
+                                           Object leftId,
+                                           JDBCCMRFieldBridge rightCMRField,
+                                           Object rightId)
    {
-
       if(this.leftCMRField == leftCMRField &&
          this.rightCMRField == rightCMRField)
       {
-
          return new RelationPair(leftCMRField, leftId, rightCMRField, rightId);
       }
+
       if(this.leftCMRField == rightCMRField &&
          this.rightCMRField == leftCMRField)
       {
-
          return new RelationPair(rightCMRField, rightId, leftCMRField, leftId);
       }
       throw new EJBException("Error: cmrFields are of wrong type");
    }
 }
-
-
