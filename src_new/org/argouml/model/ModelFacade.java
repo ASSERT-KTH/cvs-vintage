@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.163 2003/11/23 23:39:00 linus Exp $
+// $Id: ModelFacade.java,v 1.164 2003/11/24 16:58:13 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3557,7 +3557,7 @@ public class ModelFacade {
      * @param classifier the classifier you want to have the operations for
      * @return a collection of the operations
      */
-    public static Collection getOperations(MClassifier mclassifier) {
+    protected static Collection getOperations(MClassifier mclassifier) {
         Collection result = new ArrayList();
         Iterator features = mclassifier.getFeatures().iterator();
         while (features.hasNext()) {
