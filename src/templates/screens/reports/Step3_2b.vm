@@ -97,7 +97,6 @@
  </table>
 </div>
 #addReportHiddenInputs($report "reports,Step3_2b")
-##addReportHiddenInputs($reportParameters)
 $intake.declareGroups()
 </form>
 </div>

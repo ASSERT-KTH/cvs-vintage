@@ -110,7 +110,6 @@ column.</p>
 </table>
 </div>
 #addReportHiddenInputs($report "reports,Step2b.vm")
-##addReportHiddenInputs($reportParameters)
 $intake.declareGroups()
 </form>
 </div>

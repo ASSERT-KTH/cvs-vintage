@@ -90,18 +90,6 @@
 #end
 
 
-#*
-#macro ( addReportHiddenInputs $reportParameters)
-foo $reportParameters
-
-#foreach ($param in $reportParameters.keySet())
-    <input type="hidden" name="$param" 
-        value="$reportParameters.getString($param)" />
-#end    
-bar
-#end
-*#
-
 #macro ( addReportHiddenInputs $report $template)
 
 #set ( $ir = $intake.Report.mapTo($report) )
