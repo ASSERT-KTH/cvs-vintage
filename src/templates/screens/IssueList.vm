@@ -11,7 +11,7 @@
 #set ($issueListSize = $issueList.size())
 
 #if ($issueListSize == 0)
-  <h3>$page.Title</h3>
+  <h3>$page.Title for $scarabR.CurrentIssueType.Name</h3>
   <p class="alert">There are no matching issues.</p>
 #else
 
@@ -51,7 +51,8 @@
 </div>
 #end
 
-<h3>$page.Title ($issueListSize #if ($issueListSize == 1)issue#else issues#end)</h3>
+<h3>$page.Title for $scarabR.CurrentIssueType.Name 
+($issueListSize #if ($issueListSize == 1)issue#else issues#end)</h3>
 
 <div class="colbar">
 <small>
