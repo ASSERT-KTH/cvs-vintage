@@ -56,7 +56,7 @@
        in your customized custom.properties
        The file custom.properties will never be overridden during an upgrade.
     
-     $Id: scarab_properties.xml,v 1.3 2004/12/23 13:37:16 dabbous Exp $
+     $Id: scarab_properties.xml,v 1.4 2004/12/30 02:42:13 dabbous Exp $
     
      Structure of this file
      ----------------------
@@ -841,6 +841,9 @@
         <file/>
       </property>
 
+    </group>
+
+    <group name="user-administration">
       <property>
         <name>scarab.admin.password.reset.allowed</name>
         <default>true</default>
@@ -852,6 +855,22 @@
           This property controls, whether the administrator 
           may reset the password of other users. Per default
           this property is set to false.
+        </details>
+      </property>
+
+      <property>
+        <name>scarab.anonymous.username</name>
+        <default>anonymous</default>
+        <comment>Allow anonymous users and choose which user will act as Anonymous</comment>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+        <details>
+          Allow anonymous users and choose which user will act as Anonymous user.
+          If you do not want an anonymous user, please set this property to "":
+
+              scarab.anonymous.username=
+
         </details>
       </property>
     </group>
